@@ -2,7 +2,12 @@
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 @import views.html.helpers._
 
-@(rebasedValueForm: Form[RebasedValueModel])(implicit request: Request[_])
+@(rebasedValueForm: Form[RebasedValueModel], hasAcquisitionDate: String)(implicit request: Request[_])
+
+@hiddenHelpTextContent = {
+    <p>@Messages("calc.rebasedValue.helpHidden.content")</p>
+    <p>@Messages("calc.rebasedValue.helpHidden.contentTwo")</p>
+}
 
 @main_template(Messages("calc.rebasedValue.question")) {
 
@@ -22,10 +27,14 @@
                         rebasedValueForm,
                         "rebasedValueAmt",
                         Messages("calc.rebasedValue.questionTwo")
-                )
+                ),
+                if (hasAcquisitionDate.equals("No")) {Some(Messages("calc.rebasedValue.helpText"))}
+                else{None}
         )
 
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+
+        @hiddenHelpText("whyHelp", Messages("calc.rebasedValue.helpHidden.title"), hiddenHelpTextContent)
 
     }
 }

@@ -116,9 +116,13 @@ calc.acquisitionValue.errorDecimalPlaces = The amount you paid has too many numb
 ## Rebased Value ##
 calc.rebasedValue.question = Do you know how much the property was worth on 5 April 2015?
 calc.rebasedValue.questionTwo = What was the value of the property?
+calc.rebasedValue.helpText = Only tell us if you owned the property on that date
 calc.rebasedValue.errorNegative = Enter a positive value for your property on 5 April 2015
 calc.rebasedValue.error.no.value.supplied = Enter a value for your property on 5 April 2015
 calc.rebasedValue.errorDecimalPlaces = The value for your property on 5 April 2015 has too many numbers after the decimal point
+calc.rebasedValue.helpHidden.title = Why we''re asking for this
+calc.rebasedValue.helpHidden.content = When you''ve answered the questions you''ll have a choice about how we work out your total.
+calc.rebasedValue.helpHidden.contentTwo = This value lets us calculate your tax in different ways, giving you more options.
 
 ## Rebased Costs ##
 calc.rebasedCosts.question = Did you pay for the valuation?
