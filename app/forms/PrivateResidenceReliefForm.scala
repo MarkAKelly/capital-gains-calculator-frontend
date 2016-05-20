@@ -24,35 +24,35 @@ import play.api.i18n.Messages
 
 object PrivateResidenceReliefForm {
 
-  def verifyAmountSupplied(data: PrivateResidenceReliefModel): Boolean = {
+  def verifyAmountSupplied(data: PrivateResidenceReliefModel, showBefore: Boolean, showAfter: Boolean): Boolean = {
     data.isClaimingPRR match {
-      case "Yes" => data.daysClaimed.isDefined || data.daysClaimedAfter.isDefined
-      case "No" => true
+      case "Yes" if showBefore || showAfter => data.daysClaimed.isDefined || data.daysClaimedAfter.isDefined
+      case _ => true
     }
   }
 
-  def verifyPositive (data: PrivateResidenceReliefModel): Boolean = {
+  def verifyPositive (data: PrivateResidenceReliefModel, showBefore: Boolean, showAfter: Boolean): Boolean = {
     data.isClaimingPRR match {
-      case "Yes" => isPositive(data.daysClaimed.getOrElse(0)) && isPositive(data.daysClaimedAfter.getOrElse(0))
-      case "No" => true
+      case "Yes" if showBefore || showAfter => isPositive(data.daysClaimed.getOrElse(0)) && isPositive(data.daysClaimedAfter.getOrElse(0))
+      case _ => true
     }
   }
 
-  def verifyNoDecimalPlaces (data: PrivateResidenceReliefModel): Boolean = {
+  def verifyNoDecimalPlaces (data: PrivateResidenceReliefModel, showBefore: Boolean, showAfter: Boolean): Boolean = {
     data.isClaimingPRR match {
-      case "Yes" => hasNoDecimalPlaces(data.daysClaimed.getOrElse(0)) && hasNoDecimalPlaces(data.daysClaimedAfter.getOrElse(0))
-      case "No" => true
+      case "Yes" if showBefore || showAfter => hasNoDecimalPlaces(data.daysClaimed.getOrElse(0)) && hasNoDecimalPlaces(data.daysClaimedAfter.getOrElse(0))
+      case _ => true
     }
   }
 
-  val privateResidenceReliefForm = Form(
+  def privateResidenceReliefForm (showBefore: Boolean, showAfter: Boolean) = Form(
     mapping(
       "isClaimingPRR" -> nonEmptyText,
       "daysClaimed" -> optional(bigDecimal),
       "daysClaimedAfter" -> optional(bigDecimal)
     )(PrivateResidenceReliefModel.apply)(PrivateResidenceReliefModel.unapply)
-      .verifying(Messages("calc.privateResidenceRelief.error.noValueProvided"), improvementsForm => verifyAmountSupplied(improvementsForm))
-      .verifying(Messages("calc.privateResidenceRelief.error.errorNegative"), improvementsForm => verifyPositive(improvementsForm))
-      .verifying(Messages("calc.privateResidenceRelief.error.errorDecimalPlaces"), improvementsForm => verifyNoDecimalPlaces(improvementsForm))
+      .verifying(Messages("calc.privateResidenceRelief.error.noValueProvided"), improvementsForm => verifyAmountSupplied(improvementsForm, showBefore, showAfter))
+      .verifying(Messages("calc.privateResidenceRelief.error.errorNegative"), improvementsForm => verifyPositive(improvementsForm, showBefore, showAfter))
+      .verifying(Messages("calc.privateResidenceRelief.error.errorDecimalPlaces"), improvementsForm => verifyNoDecimalPlaces(improvementsForm, showBefore, showAfter))
   )
 }
