@@ -22,6 +22,6 @@ object DefaultRoutes extends DefaultRoutes
 
 trait DefaultRoutes {
 
-  val missingDataRoute = routes.IntroductionController.introduction().url
+  val missingDataRoute = routes.StartController.start().url
 
 }

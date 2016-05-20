@@ -25,19 +25,19 @@ import views.html.introduction._
 
 import scala.concurrent.Future
 
-object IntroductionController extends IntroductionController
+object StartController extends StartController
 
-trait IntroductionController extends FrontendController {
+trait StartController extends FrontendController {
   
   implicit val hc = new HeaderCarrier()
 
-  def introduction:Action[AnyContent] = Action.async { implicit request =>
+  def start:Action[AnyContent] = Action.async { implicit request =>
     if (request.session.get(SessionKeys.sessionId).isEmpty) {
       val sessionId = UUID.randomUUID.toString
-      Future.successful(Ok(intro()).withSession(request.session + (SessionKeys.sessionId -> s"session-$sessionId")))
+      Future.successful(Redirect(routes.CalculationController.customerType()).withSession(request.session + (SessionKeys.sessionId -> s"session-$sessionId")))
     }
     else {
-      Future.successful(Ok(intro()))
+      Future.successful(Redirect(routes.CalculationController.customerType()))
     }
   }
 }

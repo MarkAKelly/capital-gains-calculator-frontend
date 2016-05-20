@@ -2,9 +2,9 @@
 
 GET         /assets/*file            controllers.Assets.at(path="/public", file)
 
-#Introduction route
+#Start route
 ########################################################
-GET         /                        controllers.IntroductionController.introduction
+GET         /                        controllers.StartController.start
 ########################################################
 
 
