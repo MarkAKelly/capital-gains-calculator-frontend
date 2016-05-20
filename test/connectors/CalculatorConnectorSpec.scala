@@ -217,7 +217,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
   "Calculator Connector" should {
 
     "fetch and get from keystore" in {
-      val testModel = CustomerTypeModel("trustee")
+      val testModel = CustomerTypeModel(CustomerTypeKeys.trustee)
       when(mockSessionCache.fetchAndGetEntry[CustomerTypeModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(Option(testModel)))
 
@@ -226,7 +226,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     }
 
     "save data to keystore" in {
-      val testModel = CustomerTypeModel("trustee")
+      val testModel = CustomerTypeModel(CustomerTypeKeys.trustee)
       val returnedCacheMap = CacheMap(KeystoreKeys.customerType, Map("data" -> Json.toJson(testModel)))
       when(mockSessionCache.cache[CustomerTypeModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(returnedCacheMap))

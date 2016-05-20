@@ -55,7 +55,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
 
     "return a string from the baseCalcUrl as a trustee with a prior disposal" in {
       val sumModelTrustee = SummaryModel(
-        CustomerTypeModel("trustee"),
+        CustomerTypeModel(CustomerTypeKeys.trustee),
         Some(DisabledTrusteeModel("No")),
         None,
         None,
