@@ -21,7 +21,7 @@ import models._
 object TestModels {
 
   val sumModelFlat = SummaryModel(
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(11100)),
@@ -46,7 +46,7 @@ object TestModels {
   )
 
   val sumModelTA = SummaryModel(
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(11100)),
@@ -71,7 +71,7 @@ object TestModels {
   )
 
   val sumModelRebased = SummaryModel(
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(11100)),
@@ -100,7 +100,7 @@ object TestModels {
   val calcModelLoss = CalculationResultModel(0, -10000, 0, 18, None, None, None)
 
   val summaryIndividualFlatLoss = SummaryModel (
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(9000)),
@@ -125,7 +125,7 @@ object TestModels {
   )
 
   val summaryIndividualFlatWithoutAEA = SummaryModel (
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(9000)),
@@ -150,7 +150,7 @@ object TestModels {
   )
 
   val summaryIndividualFlatWithAEA = SummaryModel (
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(9000)),
@@ -175,7 +175,7 @@ object TestModels {
   )
 
   val summaryTrusteeTAWithAEA = SummaryModel (
-    CustomerTypeModel("trustee"),
+    CustomerTypeModel(CustomerTypeKeys.trustee),
     Some(DisabledTrusteeModel("No")),
     None,
     None,
@@ -200,7 +200,7 @@ object TestModels {
   )
 
   val summaryTrusteeTAWithoutAEA = SummaryModel (
-    CustomerTypeModel("trustee"),
+    CustomerTypeModel(CustomerTypeKeys.trustee),
     Some(DisabledTrusteeModel("No")),
     None,
     None,
@@ -225,7 +225,7 @@ object TestModels {
   )
 
   val summaryDisabledTrusteeTAWithAEA = SummaryModel (
-    CustomerTypeModel("trustee"),
+    CustomerTypeModel(CustomerTypeKeys.trustee),
     Some(DisabledTrusteeModel("Yes")),
     None,
     None,
@@ -250,7 +250,7 @@ object TestModels {
   )
 
   val summaryDisabledTrusteeTAWithoutAEA = SummaryModel (
-    CustomerTypeModel("trustee"),
+    CustomerTypeModel(CustomerTypeKeys.trustee),
     Some(DisabledTrusteeModel("Yes")),
     None,
     None,
@@ -275,7 +275,7 @@ object TestModels {
   )
 
   val summaryRepresentativeFlatWithoutAEA = SummaryModel (
-    CustomerTypeModel("personalRep"),
+    CustomerTypeModel(CustomerTypeKeys.personalRep),
     None,
     None,
     None,
@@ -300,7 +300,7 @@ object TestModels {
   )
 
   val summaryRepresentativeFlatWithAEA = SummaryModel (
-    CustomerTypeModel("personalRep"),
+    CustomerTypeModel(CustomerTypeKeys.personalRep),
     None,
     None,
     None,
@@ -325,7 +325,7 @@ object TestModels {
   )
 
   val summaryIndividualAcqDateAfter = SummaryModel (
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(9000)),
@@ -350,7 +350,7 @@ object TestModels {
   )
 
   val summaryIndividualImprovementsNoRebasedModel = SummaryModel (
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(9000)),
@@ -375,7 +375,7 @@ object TestModels {
   )
 
   val summaryIndividualImprovementsWithRebasedModel = SummaryModel (
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(9000)),
@@ -400,7 +400,7 @@ object TestModels {
   )
 
   val summaryIndividualRebased = SummaryModel (
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(9000)),
@@ -425,7 +425,7 @@ object TestModels {
   )
 
   val summaryIndividualRebasedNoAcqDate = SummaryModel (
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(9000)),
@@ -450,7 +450,7 @@ object TestModels {
   )
 
   val summaryIndividualRebasedNoRebasedCosts = SummaryModel (
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(9000)),
@@ -475,7 +475,7 @@ object TestModels {
   )
 
   val summaryIndividualRebasedNoAcqDateOrRebasedCosts = SummaryModel (
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(9000)),
@@ -500,7 +500,7 @@ object TestModels {
   )
 
   val summaryIndividualRebasedNoImprovements = SummaryModel (
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(9000)),
@@ -525,7 +525,7 @@ object TestModels {
   )
 
   val summaryIndividualRebasedNoneImprovements = SummaryModel (
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(9000)),
@@ -550,7 +550,7 @@ object TestModels {
   )
 
   val summaryIndividualRebasedAcqDateAfter = SummaryModel (
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(9000)),
@@ -575,7 +575,7 @@ object TestModels {
   )
 
   val summaryIndividualPRRAcqDateAfterAndDisposalDateBefore = SummaryModel (
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(9000)),
@@ -600,7 +600,7 @@ object TestModels {
   )
 
   val summaryIndividualPRRAcqDateAfterAndNoRebased = SummaryModel (
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(9000)),
@@ -625,7 +625,7 @@ object TestModels {
   )
 
   val summaryIndividualPRRAcqDateAfterAndDisposalDateAfter = SummaryModel (
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(9000)),
@@ -650,7 +650,7 @@ object TestModels {
   )
 
   val summaryIndividualPRRAcqDateAfterAndDisposalDateBeforeWithRebased = SummaryModel (
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(9000)),
@@ -675,7 +675,7 @@ object TestModels {
   )
 
   val summaryIndividualPRRNoAcqDateAndDisposalDateAfterWithRebased = SummaryModel (
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(9000)),
@@ -700,7 +700,7 @@ object TestModels {
   )
 
   val summaryIndividualPRRAcqDateAfterAndDisposalDateAfterWithRebased = SummaryModel (
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(9000)),
@@ -725,7 +725,7 @@ object TestModels {
   )
 
   val summaryIndividualPRRAcqDateBeforeAndDisposalDateAfterWithRebased = SummaryModel (
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(9000)),
@@ -750,7 +750,7 @@ object TestModels {
   )
 
   val summaryIndividualWithAllOptions = SummaryModel (
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(9000)),

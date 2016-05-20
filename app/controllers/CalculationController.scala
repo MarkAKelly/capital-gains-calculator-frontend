@@ -19,7 +19,7 @@ package controllers
 import java.text.SimpleDateFormat
 
 import connectors.CalculatorConnector
-import common.{Dates, KeystoreKeys}
+import common.{CustomerTypeKeys, Dates, KeystoreKeys}
 import constructors.CalculationElectionConstructor
 import forms.OtherPropertiesForm._
 import forms.AcquisitionValueForm._
@@ -76,9 +76,9 @@ trait CalculationController extends FrontendController {
       success => {
         calcConnector.saveFormData(KeystoreKeys.customerType, success)
         success.customerType match {
-          case "individual" => Future.successful(Redirect(routes.CalculationController.currentIncome()))
-          case "trustee" => Future.successful(Redirect(routes.CalculationController.disabledTrustee()))
-          case "personalRep" => Future.successful(Redirect(routes.CalculationController.otherProperties()))
+          case CustomerTypeKeys.individual => Future.successful(Redirect(routes.CalculationController.currentIncome()))
+          case CustomerTypeKeys.trustee => Future.successful(Redirect(routes.CalculationController.disabledTrustee()))
+          case CustomerTypeKeys.personalRep => Future.successful(Redirect(routes.CalculationController.otherProperties()))
         }
       }
     )
@@ -184,7 +184,7 @@ trait CalculationController extends FrontendController {
 
     def trusteeAEA(customerTypeVal: String)(implicit hc: HeaderCarrier): Future[Boolean] = {
       customerTypeVal match {
-        case "trustee" =>
+        case CustomerTypeKeys.trustee =>
           calcConnector.fetchAndGetFormData[DisabledTrusteeModel](KeystoreKeys.disabledTrustee).map {
             disabledTrusteeModel => if (disabledTrusteeModel.get.isVulnerable == "No") false else true
           }

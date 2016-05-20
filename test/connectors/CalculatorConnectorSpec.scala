@@ -18,7 +18,7 @@ package connectors
 
 import java.util.UUID
 
-import common.KeystoreKeys
+import common.{CustomerTypeKeys, KeystoreKeys}
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -115,7 +115,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
   }
 
   val sumModelFlat = SummaryModel(
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(11100)),
@@ -140,7 +140,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
   )
 
   val sumModelTA = SummaryModel(
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(11100)),
@@ -165,7 +165,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
   )
 
   val sumModelRebased = SummaryModel(
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(11100)),
@@ -190,7 +190,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
   )
 
   val sumModelFlatDefaulted = SummaryModel(
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(11100)),

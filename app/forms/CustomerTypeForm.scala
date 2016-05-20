@@ -16,6 +16,7 @@
 
 package forms
 
+import common.CustomerTypeKeys
 import play.api.data._
 import play.api.data.Forms._
 import models._
@@ -25,9 +26,9 @@ object CustomerTypeForm {
 
   def validate(customerType:String): Option[CustomerTypeModel] = {
     customerType match {
-      case "individual" => Some(CustomerTypeModel(customerType))
-      case "trustee" => Some(CustomerTypeModel(customerType))
-      case "personalRep" => Some(CustomerTypeModel(customerType))
+      case CustomerTypeKeys.individual => Some(CustomerTypeModel(customerType))
+      case CustomerTypeKeys.trustee => Some(CustomerTypeModel(customerType))
+      case CustomerTypeKeys.personalRep => Some(CustomerTypeModel(customerType))
       case _ => None
     }
   }

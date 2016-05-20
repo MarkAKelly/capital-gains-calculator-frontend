@@ -16,14 +16,14 @@
 
 package constructors
 
-import common.TestModels
+import common.{CustomerTypeKeys, TestModels}
 import models._
 import uk.gov.hmrc.play.test.UnitSpec
 
 class CalculateRequestConstructorSpec extends UnitSpec {
 
   val sumModel = SummaryModel(
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(11100)),
