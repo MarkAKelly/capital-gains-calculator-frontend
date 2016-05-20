@@ -304,13 +304,23 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.select("#purchaseDetails").text should include(Messages("calc.summary.purchase.details.title"))
             }
 
+            "include the question for whether the acquisition date is provided" in {
+              document.select("#purchaseDetails").text should include(Messages("calc.acquisitionDate.question"))
+            }
+
+            "have an answer to the question for providing an acquisition date of 'No'" in {
+              document.body().getElementById("purchaseDetails(0)").text() shouldBe Messages("No")
+              document.body().getElementById("purchaseDetails(0)").attr("href") shouldEqual routes.CalculationController.acquisitionDate().toString()
+
+            }
+
             "include the question 'How much did you pay for the property?'" in {
               document.select("#purchaseDetails").text should include(Messages("calc.acquisitionValue.question"))
             }
 
             "have an acquisition value of £100000 and link to the acquisition value page" in {
-              document.body().getElementById("purchaseDetails(0)").text() shouldBe "£100000.00"
-              document.body().getElementById("purchaseDetails(0)").attr("href") shouldEqual routes.CalculationController.acquisitionValue().toString()
+              document.body().getElementById("purchaseDetails(1)").text() shouldBe "£100000.00"
+              document.body().getElementById("purchaseDetails(1)").attr("href") shouldEqual routes.CalculationController.acquisitionValue().toString()
             }
 
             "include the question 'How much did you pay in costs when you became the property owner?'" in {
@@ -318,8 +328,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "have a acquisition costs of £0 and link to the acquisition-costs page" in {
-              document.body().getElementById("purchaseDetails(1)").text() shouldBe "£0.00"
-              document.body().getElementById("purchaseDetails(1)").attr("href") shouldEqual routes.CalculationController.acquisitionCosts().toString()
+              document.body().getElementById("purchaseDetails(2)").text() shouldBe "£0.00"
+              document.body().getElementById("purchaseDetails(2)").attr("href") shouldEqual routes.CalculationController.acquisitionCosts().toString()
             }
           }
 
@@ -462,8 +472,16 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
           document.body().getElementById("saleDetails(2)").text shouldBe "£600.00"
         }
 
+        "include the question for whether the acquisition date is provided" in {
+          document.select("#purchaseDetails").text should include(Messages("calc.acquisitionDate.question"))
+        }
+
+        "have an answer to the question for providing an acquisition date of 'No'" in {
+          document.body().getElementById("purchaseDetails(0)").text() shouldBe Messages("No")
+        }
+
         "have a acquisition costs of £300" in {
-          document.body().getElementById("purchaseDetails(1)").text() shouldBe "£300.00"
+          document.body().getElementById("purchaseDetails(2)").text() shouldBe "£300.00"
         }
 
         "the value of allowable losses should be £50000" in {
@@ -708,6 +726,14 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
           document.body().getElementById("calcDetails(0)").text() shouldBe Messages("calc.summary.calculation.details.rebasedCalculation")
         }
 
+        "include the question for whether the acquisition date is provided" in {
+          document.select("#purchaseDetails").text should include(Messages("calc.acquisitionDate.question"))
+        }
+
+        "have an answer to the question for providing an acquisition date of 'No'" in {
+          document.body().getElementById("purchaseDetails(0)").text() shouldBe Messages("No")
+        }
+
         "the value of allowable losses should be £0" in {
           document.body().getElementById("deductions(1)").text shouldBe "£0.00"
         }
@@ -743,7 +769,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val document = Jsoup.parse(bodyOf(result))
 
         "have no value for the rebased costs" in {
-          document.body.getElementById("purchaseDetails(1)").text() shouldBe "£0.00"
+          document.body.getElementById("purchaseDetails(2)").text() shouldBe "£0.00"
         }
       }
     }
