@@ -1,4 +1,4 @@
-@(summary: SummaryModel, result: CalculationResultModel)(implicit request: Request[_])
+@(summary: SummaryModel, result: CalculationResultModel, backUrl: String)(implicit request: Request[_])
 
 @import views.html.helpers._
 @import org.apache.commons.lang3.text.WordUtils
@@ -6,10 +6,11 @@
 @import java.util.Date
 @import java.util.GregorianCalendar
 @import constructors._
+@import common._
 
 @main_template(Messages("calc.summary.title"), articleLayout = false) {
 
-    <a id="back-link" class="back-link" href="#">@Messages("calc.base.back")</a>
+    <a id="back-link" class="back-link" href="@backUrl">@Messages("calc.base.back")</a>
 
     @*
     *  Calculated Tax Owed
@@ -20,6 +21,13 @@
             <b>&pound;@result.taxOwed.setScale(2)</b>
         </h1>
     </div>
+
+    @{if (Dates.dateInsideTaxYear(summary.disposalDateModel.day, summary.disposalDateModel.month, summary.disposalDateModel.year)) {}
+    else {
+        taxYearWarningNotice()
+    }}
+
+    <div class=font-medium">
 
     @SummaryConstructor.calculationDetails(result, summary)
 
@@ -32,6 +40,8 @@
     @SummaryConstructor.saleDetails(result, summary)
 
     @SummaryConstructor.deductions(result, summary)
+
+    </div>
 
 
     <div class="grid-layout__column grid-layout__column--2-3">
