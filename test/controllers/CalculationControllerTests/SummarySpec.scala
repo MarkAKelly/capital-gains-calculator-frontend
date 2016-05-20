@@ -148,7 +148,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "have an 'individual' owner and link to the customer-type page" in {
-              document.body().getElementById("personalDetails(0)").text() shouldBe CustomerTypeKeys.individual
+              document.body().getElementById("personalDetails(0)").text() shouldBe "Individual"
               document.body().getElementById("personalDetails(0)").attr("href") shouldEqual routes.CalculationController.customerType().toString()
             }
 
@@ -387,7 +387,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "have a 'trustee' owner" in {
-          document.body().getElementById("personalDetails(0)").text() shouldBe CustomerTypeKeys.trustee
+          document.body().getElementById("personalDetails(0)").text() shouldBe "Trustee"
         }
 
         "have an answer of 'No to the disabled trustee question" in {
