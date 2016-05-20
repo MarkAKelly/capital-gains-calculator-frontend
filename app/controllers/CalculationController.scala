@@ -557,8 +557,8 @@ trait CalculationController extends FrontendController {
       val disposalDateLess18Months = Dates.dateMinusMonths(disposalDate,18)
 
       calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief).map {
-        case Some(data) => Ok(calculation.privateResidenceRelief(privateResidenceReliefForm.fill(data), showBetweenQuestion, showBeforeQuestion, disposalDateLess18Months))
-        case None => Ok(calculation.privateResidenceRelief(privateResidenceReliefForm, showBetweenQuestion, showBeforeQuestion, disposalDateLess18Months))
+        case Some(data) => Ok(calculation.privateResidenceRelief(privateResidenceReliefForm(showBeforeQuestion, showBetweenQuestion).fill(data), showBetweenQuestion, showBeforeQuestion, disposalDateLess18Months))
+        case None => Ok(calculation.privateResidenceRelief(privateResidenceReliefForm(showBeforeQuestion, showBetweenQuestion), showBetweenQuestion, showBeforeQuestion, disposalDateLess18Months))
       }
 
     }
@@ -574,12 +574,11 @@ trait CalculationController extends FrontendController {
   val submitPrivateResidenceRelief = Action.async { implicit request =>
 
     def action(disposalDate: Option[Date], acquisitionDate: Option[Date], hasRebasedValue: Boolean) = {
-
-      privateResidenceReliefForm.bindFromRequest.fold(
+      val showBetweenQuestion = displayBetweenQuestion(disposalDate, acquisitionDate, hasRebasedValue)
+      val showBeforeQuestion = displayBeforeQuestion(disposalDate, acquisitionDate, hasRebasedValue)
+      val disposalDateLess18Months = Dates.dateMinusMonths(disposalDate,18)
+      privateResidenceReliefForm(showBeforeQuestion, showBetweenQuestion).bindFromRequest.fold(
         errors => {
-          val showBetweenQuestion = displayBetweenQuestion(disposalDate, acquisitionDate, hasRebasedValue)
-          val showBeforeQuestion = displayBeforeQuestion(disposalDate, acquisitionDate, hasRebasedValue)
-          val disposalDateLess18Months = Dates.dateMinusMonths(disposalDate,18)
           Future.successful(BadRequest(calculation.privateResidenceRelief(errors,showBetweenQuestion, showBeforeQuestion, disposalDateLess18Months)))
         },
         success => {
