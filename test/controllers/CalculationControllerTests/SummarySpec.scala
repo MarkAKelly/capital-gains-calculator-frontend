@@ -17,7 +17,7 @@
 package controllers.CalculationControllerTests
 
 import common.DefaultRoutes._
-import common.{KeystoreKeys, TestModels}
+import common.{CustomerTypeKeys, KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
 import constructors.CalculationElectionConstructor
 import controllers.{routes, CalculationController}

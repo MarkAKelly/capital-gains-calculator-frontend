@@ -16,6 +16,7 @@
 
 package controllers.CalculationControllerTests
 
+import common.CustomerTypeKeys
 import constructors.CalculationElectionConstructor
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -42,7 +43,7 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
   def setupTarget(
                    getData: Option[AnnualExemptAmountModel],
                    postData: Option[AnnualExemptAmountModel],
-                   customerType: String = "individual",
+                   customerType: String = CustomerTypeKeys.individual,
                    disabledTrustee: String = ""
                  ): CalculationController = {
 
@@ -169,7 +170,7 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
 
     "submitting a valid form" should {
 
-      lazy val result = executeTargetWithMockData("1000", "individual", "")
+      lazy val result = executeTargetWithMockData("1000", CustomerTypeKeys.individual, "")
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -178,7 +179,7 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
 
     "submitting an invalid form with no value" should {
 
-      lazy val result = executeTargetWithMockData("", "individual", "")
+      lazy val result = executeTargetWithMockData("", CustomerTypeKeys.individual, "")
 
       "return a 400" in {
         status(result) shouldBe 400
@@ -187,7 +188,7 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
 
     "submitting an valid form below the maximum value for a non-vulnerable trustee" should {
 
-      lazy val result = executeTargetWithMockData("5550", "trustee", "No")
+      lazy val result = executeTargetWithMockData("5550", CustomerTypeKeys.trustee, "No")
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -205,7 +206,7 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
 
     "submitting a value above the maximum amount for a non-vulnerable trustee" should {
 
-      lazy val result = executeTargetWithMockData("5550.01", "trustee", "No") //failing
+      lazy val result = executeTargetWithMockData("5550.01", CustomerTypeKeys.trustee, "No") //failing
 
       "return a 400" in {
         status(result) shouldBe 400
@@ -214,7 +215,7 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
 
     "submitting an invalid form above the maximum value for a vulnerable trustee" should {
 
-      lazy val result = executeTargetWithMockData("11100.01", "trustee", "Yes")
+      lazy val result = executeTargetWithMockData("11100.01", CustomerTypeKeys.trustee, "Yes")
 
       "return a 400" in {
         status(result) shouldBe 400
@@ -223,7 +224,7 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
 
     "submitting an invalid form above the maximum value for a non-Trustee customer type" should {
 
-      lazy val result = executeTargetWithMockData("11100.01", "individual", "")
+      lazy val result = executeTargetWithMockData("11100.01", CustomerTypeKeys.individual, "")
 
       "return a 400" in {
         status(result) shouldBe 400
@@ -232,7 +233,7 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
 
     "submitting an invalid form below the minimum" should {
 
-      lazy val result = executeTargetWithMockData("-1000", "individual", "")
+      lazy val result = executeTargetWithMockData("-1000", CustomerTypeKeys.individual, "")
 
       "return a 400" in {
         status(result) shouldBe 400
@@ -241,7 +242,7 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
 
     "submitting an invalid form with value 1.111" should {
 
-      lazy val result = executeTargetWithMockData("1.111", "individual", "")
+      lazy val result = executeTargetWithMockData("1.111", CustomerTypeKeys.individual, "")
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {

@@ -150,7 +150,7 @@ object SummaryConstructor {
   def personalDetails(result: CalculationResultModel, summary: SummaryModel) = {
     summaryPageSection("personalDetails", Messages("calc.summary.personal.details.title"),
       summary.customerTypeModel.customerType match {
-        case "trustee" => summary.otherPropertiesModel.otherProperties match {
+        case CustomerTypeKeys.trustee => summary.otherPropertiesModel.otherProperties match {
           case "Yes" => Array(
             SummaryDataItemModel(
               Messages("calc.customerType.question"),
@@ -191,7 +191,7 @@ object SummaryConstructor {
             )
           )
         }
-        case "individual" => summary.otherPropertiesModel.otherProperties match {
+        case CustomerTypeKeys.individual => summary.otherPropertiesModel.otherProperties match {
           case "Yes" => Array(
             SummaryDataItemModel(
               Messages("calc.customerType.question"),
@@ -242,7 +242,7 @@ object SummaryConstructor {
             )
           )
         }
-        case "personalRep" => summary.otherPropertiesModel.otherProperties match {
+        case CustomerTypeKeys.personalRep => summary.otherPropertiesModel.otherProperties match {
           case "Yes" => Array(
             SummaryDataItemModel(
               Messages("calc.customerType.question"),
