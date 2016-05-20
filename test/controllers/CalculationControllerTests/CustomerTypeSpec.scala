@@ -88,11 +88,6 @@ class CustomerTypeSpec extends UnitSpec with WithFakeApplication with MockitoSug
           document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
         }
 
-        s"have a 'Back' link to ${routes.IntroductionController.introduction}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.IntroductionController.introduction.toString()
-        }
-
         "have the question 'Who owned the property?' as the legend of the input" in {
           document.body.getElementsByTag("legend").text shouldEqual Messages("calc.customerType.question")
         }
