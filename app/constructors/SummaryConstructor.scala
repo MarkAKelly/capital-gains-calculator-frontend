@@ -290,6 +290,11 @@ object SummaryConstructor {
           )
           case "No" => Array(
             SummaryDataItemModel(
+              Messages("calc.acquisitionDate.question"),
+              summary.acquisitionDateModel.hasAcquisitionDate,
+              Some(routes.CalculationController.acquisitionDate().toString())
+            ),
+            SummaryDataItemModel(
               Messages("calc.rebasedValue.questionTwo"),
               "&pound;" + summary.rebasedValueModel.get.rebasedValueAmt.get.setScale(2).toString,
               Some(routes.CalculationController.rebasedValue().toString())
@@ -326,6 +331,11 @@ object SummaryConstructor {
             )
           )
           case "No" => Array(
+            SummaryDataItemModel(
+              Messages("calc.acquisitionDate.question"),
+              summary.acquisitionDateModel.hasAcquisitionDate,
+              Some(routes.CalculationController.acquisitionDate().toString())
+            ),
             SummaryDataItemModel(
               Messages("calc.acquisitionValue.question"),
               "&pound;" + summary.acquisitionValueModel.acquisitionValueAmt.setScale(2).toString,
