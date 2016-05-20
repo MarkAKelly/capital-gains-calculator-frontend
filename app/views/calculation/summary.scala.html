@@ -7,6 +7,8 @@
 @import java.util.GregorianCalendar
 @import constructors._
 @import common._
+@import uk.gov.hmrc.play.views.formatting.Money._
+@import uk.gov.hmrc.play.views.helpers._
 
 @main_template(Messages("calc.summary.title"), articleLayout = false) {
 
@@ -18,7 +20,7 @@
     <div>
         <h1 class="heading-xlarge heading-xxlarge">
             <span class="heading-secondary">@Messages("calc.summary.secondaryHeading")</span>
-            <b>&pound;@result.taxOwed.setScale(2)</b>
+            <b>&pound;@MoneyPounds(result.taxOwed).quantity</b>
         </h1>
     </div>
 
