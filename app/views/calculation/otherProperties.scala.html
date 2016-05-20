@@ -4,11 +4,35 @@
 
 @(otherPropertiesForm: Form[OtherPropertiesModel], backUrl: String)(implicit request: Request[_])
 
-@hiddenYesNoContent = {
-    @formInputMoney(otherPropertiesForm, "otherPropertiesAmt", Messages("calc.otherProperties.questionTwo"))
+@helpTextWithLink = {
+    @Messages("calc.otherProperties.questionTwo.helpText.start")
+    <a id="helpTextLink" href="https://www.gov.uk/capital-gains-tax/work-out-need-to-pay" target="_blank">
+        @Messages("calc.otherProperties.questionTwo.helpText.linkText")
+    </a>
 }
 
-@main_template(Messages("calc.otherProperties.question")) {
+@hiddenYesNoContent = {
+
+    @formInputMoney(
+        otherPropertiesForm,
+        "otherPropertiesAmt",
+        Messages("calc.otherProperties.questionTwo"),
+        Some(helpTextWithLink.toString())
+    )
+}
+
+@sidebar = {
+    <ul>
+        <li>
+            <a id="helpLink1" href="https://www.gov.uk/capital-gains-tax" target="_blank">@Messages("calc.otherProperties.link.one")</a>
+        </li>
+        <li>
+            <a id="helpLink2" href="https://www.gov.uk/income-tax-rates/previous-tax-years" target="_blank">@Messages("calc.otherProperties.link.two")</a>
+        </li>
+    </ul>
+}
+
+@main_template(Messages("calc.otherProperties.question"), sidebarLinks = Some(sidebar)) {
 
     <a id="back-link" class="back-link" href="@backUrl">@Messages("calc.base.back")</a>
 
@@ -17,11 +41,21 @@
     <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
 
     @govHelpers.form(action = routes.CalculationController.submitOtherProperties) {
+
+        <legend>
+            <p>@Messages("calc.otherProperties.question")</p>
+            <p>@Messages("calc.otherProperties.thisIncludes")</p>
+            <ul class="list list-bullet">
+                <li>@Messages("calc.otherProperties.thisIncludes.bulletOne")</li>
+                <li>@Messages("calc.otherProperties.thisIncludes.bulletTwo")</li>
+                <li>@Messages("calc.otherProperties.thisIncludes.bulletThree")</li>
+            </ul>
+        </legend>
         <div class="inline form-group">
             @formHiddenYesNoRadio(
                 otherPropertiesForm,
                 "otherProperties",
-                Messages("calc.otherProperties.question"),
+                "",
                 hiddenYesNoContent
             )
 

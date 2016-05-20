@@ -15,7 +15,7 @@
 
     @govHelpers.form(action = routes.CalculationController.submitDisposalValue) {
 
-        @formInputMoney(disposalValueForm, "disposalValue", Messages("calc.disposalValue.question"))
+        @formInputMoney(disposalValueForm, "disposalValue", Messages("calc.disposalValue.question"), Some(Messages("calc.disposalValue.hint")))
 
         <button id="continue-button" class="button">@Messages("calc.base.button.continue")</button>
 

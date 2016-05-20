@@ -101,8 +101,41 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
             document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.personalAllowance().url
           }
 
-          "have the question 'Did you sell or give away any other properties in that tax year?' as the legend of the input" in {
-            document.body.getElementsByTag("legend").text shouldEqual Messages("calc.otherProperties.question")
+          s"have the question '${Messages("calc.otherProperties.question")}' as the legend of the input" in {
+            document.body.getElementsByTag("legend").text should include (Messages("calc.otherProperties.question"))
+          }
+
+          s"include a paragraph with '${Messages("calc.otherProperties.thisIncludes")}'" in {
+            document.body.getElementsByTag("p").text should include (Messages("calc.otherProperties.thisIncludes"))
+          }
+
+          "include a bulletted list that" should {
+
+            s"include '${Messages("calc.otherProperties.thisIncludes.bulletOne")}'" in {
+              document.body.getElementsByTag("li").text should include (Messages("calc.otherProperties.thisIncludes.bulletOne"))
+            }
+
+            s"include '${Messages("calc.otherProperties.thisIncludes.bulletTwo")}'" in {
+              document.body.getElementsByTag("li").text should include (Messages("calc.otherProperties.thisIncludes.bulletTwo"))
+            }
+
+            s"include '${Messages("calc.otherProperties.thisIncludes.bulletThree")}'" in {
+              document.body.getElementsByTag("li").text should include (Messages("calc.otherProperties.thisIncludes.bulletThree"))
+            }
+          }
+
+          "include a read more section that" should {
+
+            s"include a link to https://www.gov.uk/capital-gains-tax with text '${Messages("calc.otherProperties.link.one")}'" in {
+              document.body.getElementById("helpLink1").text shouldEqual Messages("calc.otherProperties.link.one")
+              document.body.getElementById("helpLink1").attr("href") shouldEqual "https://www.gov.uk/capital-gains-tax"
+            }
+
+            s"include a link to https://www.gov.uk/income-tax-rates/previous-tax-years with text '${Messages("calc.otherProperties.link.two")}'" in {
+              document.body.getElementById("helpLink2").text shouldEqual Messages("calc.otherProperties.link.two")
+              document.body.getElementById("helpLink2").attr("href") shouldEqual "https://www.gov.uk/income-tax-rates/previous-tax-years"
+            }
+
           }
 
           "display a radio button with the option `Yes`" in {

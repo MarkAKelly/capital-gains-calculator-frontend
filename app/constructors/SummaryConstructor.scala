@@ -445,6 +445,11 @@ object SummaryConstructor {
       summary.calculationElectionModel.calculationType match {
         case "flat" => Array(
           SummaryDataItemModel(
+            Messages("calc.privateResidenceRelief.question"),
+            simplePRRResult(result.simplePRR, summary.privateResidenceReliefModel),
+            Some(routes.CalculationController.privateResidenceRelief().toString())
+          ),
+          SummaryDataItemModel(
             Messages("calc.entrepreneursRelief.question"),
             summary.entrepreneursReliefModel.entReliefClaimed,
             Some(routes.CalculationController.entrepreneursRelief().toString())
@@ -464,14 +469,14 @@ object SummaryConstructor {
               case None => "0.00"
             }),
             Some(routes.CalculationController.otherReliefs().toString())
-          ),
+          )
+        )
+        case "time" => Array(
           SummaryDataItemModel(
             Messages("calc.privateResidenceRelief.question"),
             simplePRRResult(result.simplePRR, summary.privateResidenceReliefModel),
             Some(routes.CalculationController.privateResidenceRelief().toString())
-          )
-        )
-        case "time" => Array(
+          ),
           SummaryDataItemModel(
             Messages("calc.entrepreneursRelief.question"),
             summary.entrepreneursReliefModel.entReliefClaimed,
@@ -492,14 +497,14 @@ object SummaryConstructor {
               case None => "0.00"
             }),
             Some(routes.CalculationController.otherReliefsTA().toString())
-          ),
+          )
+        )
+        case "rebased" => Array(
           SummaryDataItemModel(
             Messages("calc.privateResidenceRelief.question"),
             simplePRRResult(result.simplePRR, summary.privateResidenceReliefModel),
             Some(routes.CalculationController.privateResidenceRelief().toString())
-          )
-        )
-        case "rebased" => Array(
+          ),
           SummaryDataItemModel(
             Messages("calc.entrepreneursRelief.question"),
             summary.entrepreneursReliefModel.entReliefClaimed,
@@ -520,11 +525,6 @@ object SummaryConstructor {
               case None => "0.00"
             }),
             Some(routes.CalculationController.otherReliefsRebased().toString())
-          ),
-          SummaryDataItemModel(
-            Messages("calc.privateResidenceRelief.question"),
-            simplePRRResult(result.simplePRR, summary.privateResidenceReliefModel),
-            Some(routes.CalculationController.privateResidenceRelief().toString())
           )
         )
       }
