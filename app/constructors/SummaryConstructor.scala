@@ -24,6 +24,8 @@ import play.twirl.api.Html
 import views.html.helpers._
 import common._
 import Validation._
+import uk.gov.hmrc.play.views.formatting.Money._
+import uk.gov.hmrc.play.views.helpers._
 
 object SummaryConstructor {
 
@@ -37,7 +39,7 @@ object SummaryConstructor {
 
   def simplePRRResult (simplePRR: Option[BigDecimal], privateResidenceReliefModel: Option[PrivateResidenceReliefModel]) = {
     simplePRR match {
-      case Some(data) => "&pound;" + data.setScale(2)
+      case Some(data) => "&pound;" + MoneyPounds(data).quantity
       case None => privateResidenceReliefModel match {
         case Some(data) => data.isClaimingPRR match {
           case "Yes" => "&pound;0.00"
@@ -61,19 +63,20 @@ object SummaryConstructor {
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalGain"),
-          "&pound;" + result.totalGain.abs.setScale(2).toString,
+          "&pound;" + MoneyPounds(result.totalGain.abs,0).quantity,
           None
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.taxableGain"),
-          "&pound;" + result.taxableGain.setScale(2).toString,
+          "&pound;" + MoneyPounds(result.taxableGain,0).quantity,
           None
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.taxRate"),
           (isGreaterThanZero(result.baseTaxGain), isGreaterThanZero(result.upperTaxGain.getOrElse(0))) match {
             case (true, true)  =>
-              s"&pound;${result.baseTaxGain.setScale(2)} at ${result.baseTaxRate}%<br>&pound;${result.upperTaxGain.get.setScale(2)} at ${result.upperTaxRate.get}%"
+              s"&pound;${MoneyPounds(result.baseTaxGain,0).quantity} at ${result.baseTaxRate}%" +
+                s"<br>&pound;${MoneyPounds(result.upperTaxGain.get,0).quantity} at ${result.upperTaxRate.get}%"
             case (false, true) =>
               s"${result.upperTaxRate.get}%"
             case _ =>
@@ -91,12 +94,12 @@ object SummaryConstructor {
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalGain"),
-          "&pound;" + result.totalGain.abs.setScale(2).toString,
+          "&pound;" + MoneyPounds(result.totalGain.abs,0).quantity,
           None
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.lossCarriedForward"),
-          "&pound;" + result.taxableGain.abs.setScale(2).toString,
+          "&pound;" + MoneyPounds(result.taxableGain.abs,0).quantity,
           None
         )
       )
@@ -109,7 +112,7 @@ object SummaryConstructor {
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalLoss"),
-          "&pound;" + result.totalGain.abs.setScale(2).toString,
+          "&pound;" + MoneyPounds(result.totalGain.abs,0).quantity,
           None
         )
       )
@@ -122,12 +125,12 @@ object SummaryConstructor {
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalGain"),
-          "&pound;" + result.totalGain.abs.setScale(2).toString,
+          "&pound;" + MoneyPounds(result.totalGain.abs,0).quantity,
           None
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.taxableGain"),
-          "&pound;" + result.taxableGain.setScale(2).toString,
+          "&pound;" + MoneyPounds(result.taxableGain,0).quantity,
           None
         )
       )
@@ -140,7 +143,7 @@ object SummaryConstructor {
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalGain"),
-          "&pound;" + result.totalGain.abs.setScale(2).toString,
+          "&pound;" + MoneyPounds(result.totalGain.abs,0).quantity,
           None
         )
       )
@@ -164,12 +167,12 @@ object SummaryConstructor {
             ),
             SummaryDataItemModel(
               Messages("calc.otherProperties.questionTwo"),
-              "&pound;" + summary.otherPropertiesModel.otherPropertiesAmt.get.setScale(2).toString,
+              "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
               Some(routes.CalculationController.otherProperties().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.annualExemptAmount.question"),
-              "&pound;" + summary.annualExemptAmountModel.get.annualExemptAmount.setScale(2).toString,
+              "&pound;" + MoneyPounds(summary.annualExemptAmountModel.get.annualExemptAmount).quantity,
               Some(routes.CalculationController.annualExemptAmount().toString())
             )
           )
@@ -200,22 +203,22 @@ object SummaryConstructor {
             ),
             SummaryDataItemModel(
               Messages("calc.currentIncome.question"),
-              "&pound;" + summary.currentIncomeModel.get.currentIncome.setScale(2),
+              "&pound;" + MoneyPounds(summary.currentIncomeModel.get.currentIncome).quantity,
               Some(routes.CalculationController.currentIncome().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.personalAllowance.question"),
-              "&pound;" + summary.personalAllowanceModel.get.personalAllowanceAmt.setScale(2),
+              "&pound;" + MoneyPounds(summary.personalAllowanceModel.get.personalAllowanceAmt).quantity,
               Some(routes.CalculationController.personalAllowance().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.otherProperties.questionTwo"),
-              "&pound;" + summary.otherPropertiesModel.otherPropertiesAmt.get.setScale(2).toString,
+              "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
               Some(routes.CalculationController.otherProperties().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.annualExemptAmount.question"),
-              "&pound;" + summary.annualExemptAmountModel.get.annualExemptAmount.setScale(2).toString,
+              "&pound;" + MoneyPounds(summary.annualExemptAmountModel.get.annualExemptAmount).quantity,
               Some(routes.CalculationController.annualExemptAmount().toString())
             )
           )
@@ -227,12 +230,12 @@ object SummaryConstructor {
             ),
             SummaryDataItemModel(
               Messages("calc.currentIncome.question"),
-              "&pound;" + summary.currentIncomeModel.get.currentIncome.setScale(2),
+              "&pound;" + MoneyPounds(summary.currentIncomeModel.get.currentIncome).quantity,
               Some(routes.CalculationController.currentIncome().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.personalAllowance.question"),
-              "&pound;" + summary.personalAllowanceModel.get.personalAllowanceAmt.setScale(2),
+              "&pound;" + MoneyPounds(summary.personalAllowanceModel.get.personalAllowanceAmt).quantity,
               Some(routes.CalculationController.personalAllowance().toString())
             ),
             SummaryDataItemModel(
@@ -251,12 +254,12 @@ object SummaryConstructor {
             ),
             SummaryDataItemModel(
               Messages("calc.otherProperties.questionTwo"),
-              "&pound;" + summary.otherPropertiesModel.otherPropertiesAmt.get.setScale(2).toString,
+              "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
               Some(routes.CalculationController.otherProperties().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.annualExemptAmount.question"),
-              "&pound;" + summary.annualExemptAmountModel.get.annualExemptAmount.setScale(2).toString,
+              "&pound;" + MoneyPounds(summary.annualExemptAmountModel.get.annualExemptAmount).quantity,
               Some(routes.CalculationController.annualExemptAmount().toString())
             )
           )
@@ -289,13 +292,13 @@ object SummaryConstructor {
             ),
             SummaryDataItemModel(
               Messages("calc.rebasedValue.questionTwo"),
-              "&pound;" + summary.rebasedValueModel.get.rebasedValueAmt.get.setScale(2).toString,
+              "&pound;" + MoneyPounds(summary.rebasedValueModel.get.rebasedValueAmt.get).quantity,
               Some(routes.CalculationController.rebasedValue().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.rebasedCosts.questionTwo"),
               "&pound;" + (summary.rebasedCostsModel.get.hasRebasedCosts match {
-                case "Yes" => summary.rebasedCostsModel.get.rebasedCosts.get.setScale(2).toString
+                case "Yes" => MoneyPounds(summary.rebasedCostsModel.get.rebasedCosts.get).quantity
                 case "No" => "0.00"
               }),
               Some(routes.CalculationController.rebasedCosts().toString())
@@ -309,13 +312,13 @@ object SummaryConstructor {
             ),
             SummaryDataItemModel(
               Messages("calc.rebasedValue.questionTwo"),
-              "&pound;" + summary.rebasedValueModel.get.rebasedValueAmt.get.setScale(2).toString,
+              "&pound;" + MoneyPounds(summary.rebasedValueModel.get.rebasedValueAmt.get).quantity,
               Some(routes.CalculationController.rebasedValue().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.rebasedCosts.questionTwo"),
               "&pound;" + (summary.rebasedCostsModel.get.hasRebasedCosts match {
-                case "Yes" => summary.rebasedCostsModel.get.rebasedCosts.get.setScale(2).toString
+                case "Yes" => MoneyPounds(summary.rebasedCostsModel.get.rebasedCosts.get).quantity
                 case "No" => "0.00"
               }),
               Some(routes.CalculationController.rebasedCosts().toString())
@@ -331,13 +334,13 @@ object SummaryConstructor {
             ),
             SummaryDataItemModel(
               Messages("calc.acquisitionValue.question"),
-              "&pound;" + summary.acquisitionValueModel.acquisitionValueAmt.setScale(2).toString,
+              "&pound;" + MoneyPounds(summary.acquisitionValueModel.acquisitionValueAmt).quantity,
               Some(routes.CalculationController.acquisitionValue().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.acquisitionCosts.question"),
               "&pound;" + (summary.acquisitionCostsModel.acquisitionCostsAmt match {
-                case Some(data) => data.setScale(2).toString
+                case Some(data) => MoneyPounds(data).quantity
                 case None => "0.00"
               }),
               Some(routes.CalculationController.acquisitionCosts().toString())
@@ -351,13 +354,13 @@ object SummaryConstructor {
             ),
             SummaryDataItemModel(
               Messages("calc.acquisitionValue.question"),
-              "&pound;" + summary.acquisitionValueModel.acquisitionValueAmt.setScale(2).toString,
+              "&pound;" + MoneyPounds(summary.acquisitionValueModel.acquisitionValueAmt).quantity,
               Some(routes.CalculationController.acquisitionValue().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.acquisitionCosts.question"),
               "&pound;" + (summary.acquisitionCostsModel.acquisitionCostsAmt match {
-                case Some(data) => data.setScale(2).toString
+                case Some(data) => MoneyPounds(data).quantity
                 case None => "0.00"
               }),
               Some(routes.CalculationController.acquisitionCosts().toString())
@@ -381,7 +384,7 @@ object SummaryConstructor {
             ),
             SummaryDataItemModel(
               Messages("calc.improvements.questionFour"),
-              "&pound;" + summary.improvementsModel.improvementsAmtAfter.getOrElse(BigDecimal(0)).setScale(2),
+              "&pound;" + MoneyPounds(summary.improvementsModel.improvementsAmtAfter.getOrElse(BigDecimal(0))).quantity,
               Some(routes.CalculationController.improvements().toString())
             )
           )
@@ -393,8 +396,8 @@ object SummaryConstructor {
             ),
             SummaryDataItemModel(
               Messages("calc.improvements.questionTwo"),
-              "&pound;" + {summary.improvementsModel.improvementsAmt.getOrElse(BigDecimal(0))
-                .+(summary.improvementsModel.improvementsAmtAfter.getOrElse(BigDecimal(0))).setScale(2)
+              "&pound;" + {MoneyPounds(summary.improvementsModel.improvementsAmt.getOrElse(BigDecimal(0))
+                .+(summary.improvementsModel.improvementsAmtAfter.getOrElse(BigDecimal(0)))).quantity
               },
               Some(routes.CalculationController.improvements().toString())
             )
@@ -422,13 +425,13 @@ object SummaryConstructor {
         ),
         SummaryDataItemModel(
           Messages("calc.disposalValue.question"),
-          "&pound;" + summary.disposalValueModel.disposalValue.setScale(2).toString,
+          "&pound;" + MoneyPounds(summary.disposalValueModel.disposalValue).quantity,
           Some(routes.CalculationController.disposalValue().toString())
         ),
         SummaryDataItemModel(
           Messages("calc.disposalCosts.question"),
           "&pound;" + (summary.disposalCostsModel.disposalCosts match {
-            case Some(data) => data.setScale(2).toString
+            case Some(data) => MoneyPounds(data).quantity
             case None => "0.00"
           }),
           Some(routes.CalculationController.disposalCosts().toString())
@@ -454,7 +457,7 @@ object SummaryConstructor {
           SummaryDataItemModel(
             Messages("calc.allowableLosses.question.two"),
             "&pound;" + (summary.allowableLossesModel.isClaimingAllowableLosses match {
-              case "Yes" => summary.allowableLossesModel.allowableLossesAmt.get.setScale(2).toString
+              case "Yes" => MoneyPounds(summary.allowableLossesModel.allowableLossesAmt.get).quantity
               case "No" => "0.00"
             }),
             Some(routes.CalculationController.allowableLosses().toString())
@@ -462,7 +465,7 @@ object SummaryConstructor {
           SummaryDataItemModel(
             Messages("calc.otherReliefs.question"),
             "&pound;" + (summary.otherReliefsModelFlat.otherReliefs match {
-              case Some(data) => data.setScale(2).toString
+              case Some(data) => MoneyPounds(data).quantity
               case None => "0.00"
             }),
             Some(routes.CalculationController.otherReliefs().toString())
@@ -482,7 +485,7 @@ object SummaryConstructor {
           SummaryDataItemModel(
             Messages("calc.allowableLosses.question.two"),
             "&pound;" + (summary.allowableLossesModel.isClaimingAllowableLosses match {
-              case "Yes" => summary.allowableLossesModel.allowableLossesAmt.get.setScale(2).toString
+              case "Yes" => MoneyPounds(summary.allowableLossesModel.allowableLossesAmt.get).quantity
               case "No" => "0.00"
             }),
             Some(routes.CalculationController.allowableLosses().toString())
@@ -490,7 +493,7 @@ object SummaryConstructor {
           SummaryDataItemModel(
             Messages("calc.otherReliefs.question"),
             "&pound;" + (summary.otherReliefsModelTA.otherReliefs match {
-              case Some(data) => data.setScale(2).toString
+              case Some(data) => MoneyPounds(data).quantity
               case None => "0.00"
             }),
             Some(routes.CalculationController.otherReliefsTA().toString())
@@ -510,7 +513,7 @@ object SummaryConstructor {
           SummaryDataItemModel(
             Messages("calc.allowableLosses.question.two"),
             "&pound;" + (summary.allowableLossesModel.isClaimingAllowableLosses match {
-              case "Yes" => summary.allowableLossesModel.allowableLossesAmt.get.setScale(2).toString
+              case "Yes" => MoneyPounds(summary.allowableLossesModel.allowableLossesAmt.get).quantity
               case "No" => "0.00"
             }),
             Some(routes.CalculationController.allowableLosses().toString())
@@ -518,7 +521,7 @@ object SummaryConstructor {
           SummaryDataItemModel(
             Messages("calc.otherReliefs.question"),
             "&pound;" + (summary.otherReliefsModelRebased.otherReliefs match {
-              case Some(data) => data.setScale(2).toString
+              case Some(data) => MoneyPounds(data).quantity
               case None => "0.00"
             }),
             Some(routes.CalculationController.otherReliefsRebased().toString())

@@ -202,8 +202,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             document.select("h1 span").text shouldEqual Messages("calc.summary.secondaryHeading")
           }
 
-          "have a result amount currently set to £8000.00" in {
-            document.select("h1 b").text shouldEqual "£8000.00"
+          "have a result amount currently set to £8,000.00" in {
+            document.select("h1 b").text shouldEqual "£8,000.00"
           }
 
           "have a 'Calculation details' section that" should {
@@ -224,24 +224,24 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.totalGain"))
             }
 
-            "have a total gain equal to £40000.00" in {
-              document.body().getElementById("calcDetails(1)").text() shouldBe "£40000.00"
+            "have a total gain equal to £40,000.00" in {
+              document.body().getElementById("calcDetails(1)").text() shouldBe "£40,000"
             }
 
             "include 'Your taxable gain'" in {
               document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.taxableGain"))
             }
 
-            "have a taxable gain equal to £40000.00" in {
-              document.body().getElementById("calcDetails(2)").text() shouldBe "£40000.00"
+            "have a taxable gain equal to £40,000" in {
+              document.body().getElementById("calcDetails(2)").text() shouldBe "£40,000"
             }
 
             "include 'Your tax rate'" in {
               document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.taxRate"))
             }
 
-            "have a combined tax rate of £32000 and £8000" in {
-              document.body().getElementById("calcDetails(3)").text() shouldBe "£32000.00 at 18% £8000.00 at 28%"
+            "have a combined tax rate of £32,000 and £8,000" in {
+              document.body().getElementById("calcDetails(3)").text() shouldBe "£32,000 at 18% £8,000 at 28%"
             }
 
           }
@@ -265,8 +265,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.select("#personalDetails").text should include(Messages("calc.currentIncome.question"))
             }
 
-            "have an total income of £1000 and link to the current-income screen" in {
-              document.body().getElementById("personalDetails(1)").text() shouldBe "£1000.00"
+            "have an total income of £1,000 and link to the current-income screen" in {
+              document.body().getElementById("personalDetails(1)").text() shouldBe "£1,000.00"
               document.body().getElementById("personalDetails(1)").attr("href") shouldEqual routes.CalculationController.currentIncome().toString()
             }
 
@@ -274,8 +274,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.select("#personalDetails").text should include(Messages("calc.personalAllowance.question"))
             }
 
-            "have a personal allowance of £9000 that has a link to the personal allowance page." in {
-              document.body().getElementById("personalDetails(2)").text() shouldBe "£9000.00"
+            "have a personal allowance of £9,000 that has a link to the personal allowance page." in {
+              document.body().getElementById("personalDetails(2)").text() shouldBe "£9,000.00"
               document.body().getElementById("personalDetails(2)").attr("href") shouldEqual routes.CalculationController.personalAllowance().toString()
             }
 
@@ -283,8 +283,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.select("#personalDetails").text should include(Messages("calc.otherProperties.questionTwo"))
             }
 
-            "have a total taxable gain of prior disposals of £9600 and link to the other-properties page" in {
-              document.body().getElementById("personalDetails(3)").text() shouldBe "£9600.00"
+            "have a total taxable gain of prior disposals of £9,600 and link to the other-properties page" in {
+              document.body().getElementById("personalDetails(3)").text() shouldBe "£9,600.00"
               document.body().getElementById("personalDetails(3)").attr("href") shouldEqual routes.CalculationController.otherProperties().toString()
             }
 
@@ -292,8 +292,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.select("#personalDetails").text should include(Messages("calc.annualExemptAmount.question"))
             }
 
-            "have a remaining CGT Allowance of £1500 and link to the allowance page" in {
-              document.body().getElementById("personalDetails(4)").text() shouldBe "£1500.00"
+            "have a remaining CGT Allowance of £1,500 and link to the allowance page" in {
+              document.body().getElementById("personalDetails(4)").text() shouldBe "£1,500.00"
               document.body().getElementById("personalDetails(4)").attr("href") shouldEqual routes.CalculationController.annualExemptAmount().toString()
             }
           }
@@ -318,8 +318,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.select("#purchaseDetails").text should include(Messages("calc.acquisitionValue.question"))
             }
 
-            "have an acquisition value of £100000 and link to the acquisition value page" in {
-              document.body().getElementById("purchaseDetails(1)").text() shouldBe "£100000.00"
+            "have an acquisition value of £100,000 and link to the acquisition value page" in {
+              document.body().getElementById("purchaseDetails(1)").text() shouldBe "£100,000.00"
               document.body().getElementById("purchaseDetails(1)").attr("href") shouldEqual routes.CalculationController.acquisitionValue().toString()
             }
 
@@ -368,8 +368,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.select("#saleDetails").text should include(Messages("calc.disposalValue.question"))
             }
 
-            "the value of the sale should be £150000 and link to the disposal-value page" in {
-              document.body().getElementById("saleDetails(1)").text shouldBe "£150000.00"
+            "the value of the sale should be £150,000 and link to the disposal-value page" in {
+              document.body().getElementById("saleDetails(1)").text shouldBe "£150,000.00"
               document.body().getElementById("saleDetails(1)").attr("href") shouldEqual routes.CalculationController.disposalValue().toString()
             }
 
@@ -464,8 +464,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
           document.body.getElementById("propertyDetails(0)").text shouldBe "Yes"
         }
 
-        "the value of the improvements should be £8000" in {
-          document.body.getElementById("propertyDetails(1)").text shouldBe "£8000.00"
+        "the value of the improvements should be £8,000" in {
+          document.body.getElementById("propertyDetails(1)").text shouldBe "£8,000.00"
         }
 
         "the value of the disposal costs should be £600" in {
@@ -484,8 +484,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
           document.body().getElementById("purchaseDetails(2)").text() shouldBe "£300.00"
         }
 
-        "the value of allowable losses should be £50000" in {
-          document.body().getElementById("deductions(2)").text shouldBe "£50000.00"
+        "the value of allowable losses should be £50,000" in {
+          document.body().getElementById("deductions(2)").text shouldBe "£50,000.00"
         }
 
         "the value of other reliefs should be £999" in {
@@ -511,8 +511,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
           document.body.getElementById("calcDetails").text() should include (Messages("calc.summary.calculation.details.totalLoss"))
         }
 
-        s"have £10000.00 loss" in {
-          document.body.getElementById("calcDetails(1)").text() shouldBe "£10000.00"
+        s"have £10,000.00 loss" in {
+          document.body.getElementById("calcDetails(1)").text() shouldBe "£10,000"
         }
       }
     }
@@ -545,12 +545,12 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
           document.body().getElementById("personalDetails(1)").text() shouldBe "No"
         }
 
-        "have a total taxable gain of prior disposals of £9600" in {
-          document.body.getElementById("personalDetails(2)").text() shouldBe "£9600.00"
+        "have a total taxable gain of prior disposals of £9,600" in {
+          document.body.getElementById("personalDetails(2)").text() shouldBe "£9,600.00"
         }
 
-        "have a remaining CGT Allowance of £1500" in {
-          document.body().getElementById("personalDetails(3)").text() shouldBe "£1500.00"
+        "have a remaining CGT Allowance of £1,500" in {
+          document.body().getElementById("personalDetails(3)").text() shouldBe "£1,500.00"
         }
 
         "have a base tax rate of 20%" in {
@@ -594,8 +594,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
           document.body().getElementById("personalDetails(1)").text() shouldBe "Yes"
         }
 
-        "have a remaining CGT Allowance of £1500" in {
-          document.body().getElementById("personalDetails(3)").text() shouldBe "£1500.00"
+        "have a remaining CGT Allowance of £1,500" in {
+          document.body().getElementById("personalDetails(3)").text() shouldBe "£1,500.00"
         }
       }
 
@@ -635,12 +635,12 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
           document.body().getElementById("personalDetails(0)").text() shouldBe "Personal Representative"
         }
 
-        "have a total taxable gain of prior disposals of £9600" in {
-          document.body.getElementById("personalDetails(1)").text() shouldBe "£9600.00"
+        "have a total taxable gain of prior disposals of £9,600" in {
+          document.body.getElementById("personalDetails(1)").text() shouldBe "£9,600.00"
         }
 
-        "have a remaining CGT Allowance of £1500" in {
-          document.body().getElementById("personalDetails(2)").text() shouldBe "£1500.00"
+        "have a remaining CGT Allowance of £1,500" in {
+          document.body().getElementById("personalDetails(2)").text() shouldBe "£1,500.00"
         }
       }
 
@@ -686,7 +686,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "have a value for the rebased value" in {
-          document.body.getElementById("purchaseDetails(1)").text() shouldBe "£150000.00"
+          document.body.getElementById("purchaseDetails(1)").text() shouldBe "£150,000.00"
         }
 
         "include the question for the rebased costs" in {
@@ -694,7 +694,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "have a value for the rebased costs" in {
-          document.body.getElementById("purchaseDetails(2)").text() shouldBe "£1000.00"
+          document.body.getElementById("purchaseDetails(2)").text() shouldBe "£1,000.00"
         }
 
         "include the question for the improvements after" in {
@@ -702,7 +702,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "have a value for the improvements after" in {
-          document.body.getElementById("propertyDetails(1)").text() shouldBe "£3000.00"
+          document.body.getElementById("propertyDetails(1)").text() shouldBe "£3,000.00"
         }
 
         "have a value for the other reliefs rebased" in {
@@ -793,8 +793,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.lossCarriedForward"))
       }
 
-      "return a value of £10000 for loss carried forward" in {
-        document.body.getElementById("calcDetails(2)").text() shouldBe "£10000.00"
+      "return a value of £10,000 for loss carried forward" in {
+        document.body.getElementById("calcDetails(2)").text() shouldBe "£10,000"
       }
     }
 
@@ -803,8 +803,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
       lazy val result = target.summary()(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
 
-      "return a value of £0.00 for taxable gain" in {
-        document.body.getElementById("calcDetails(2)").text() shouldBe "£0.00"
+      "return a value of £0 for taxable gain" in {
+        document.body.getElementById("calcDetails(2)").text() shouldBe "£0"
       }
     }
 
@@ -813,8 +813,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
       lazy val result = target.summary()(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
 
-      "return a value of £0.00 for total gain" in {
-        document.body.getElementById("calcDetails(1)").text() shouldBe "£0.00"
+      "return a value of £0 for total gain" in {
+        document.body.getElementById("calcDetails(1)").text() shouldBe "£0"
       }
     }
 
@@ -823,8 +823,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
       lazy val result = target.summary()(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
 
-      "return a value of £10000 for the simple PRR" in {
-        document.body.getElementById("deductions(0)").text() shouldBe "£10000.00"
+      "return a value of £10,000 for the simple PRR" in {
+        document.body.getElementById("deductions(0)").text() shouldBe "£10,000.00"
       }
     }
 
@@ -833,7 +833,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
       lazy val result = target.summary()(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
 
-      "return a value of £10000 for the simple PRR" in {
+      "return a value of £0 for the simple PRR" in {
         document.body.getElementById("deductions(0)").text() shouldBe "£0.00"
       }
     }
