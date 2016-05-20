@@ -311,15 +311,17 @@ trait CalculationController extends FrontendController {
 
   //################### Rebased value methods #######################
   val rebasedValue = Action.async {implicit request =>
+    calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap(acquisitionDateModel =>
     calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).map {
-      case Some(data) => Ok(calculation.rebasedValue(rebasedValueForm.fill(data)))
-      case None => Ok(calculation.rebasedValue(rebasedValueForm))
-    }
+      case Some(data) => Ok(calculation.rebasedValue(rebasedValueForm.fill(data), acquisitionDateModel.get.hasAcquisitionDate))
+      case None => Ok(calculation.rebasedValue(rebasedValueForm, acquisitionDateModel.get.hasAcquisitionDate))
+    })
   }
 
   val submitRebasedValue = Action.async { implicit request =>
     rebasedValueForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(calculation.rebasedValue(errors))),
+      errors =>  calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap(acquisitionDateModel =>
+        Future.successful(BadRequest(calculation.rebasedValue(errors, acquisitionDateModel.get.hasAcquisitionDate)))),
       success => {
         calcConnector.saveFormData(KeystoreKeys.rebasedValue, success)
         success.hasRebasedValue match {
