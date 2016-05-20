@@ -137,6 +137,7 @@ calc.disposalDate.question = When did you sign the contract that made someone el
 calc.disposalValue.question = How much did you sell or give away the property for?
 calc.disposalValue.errorNegative = Enter a positive number for the amount you sold the property for
 calc.disposalValue.errorDecimalPlaces = The amount you sold the property for has too many numbers after the decimal point
+calc.disposalValue.hint = If you gave the property away, put how much it was worth at the time
 
 ## Acquisition Costs ##
 calc.acquisitionCosts.question = How much did you pay in costs when you became the property owner?
