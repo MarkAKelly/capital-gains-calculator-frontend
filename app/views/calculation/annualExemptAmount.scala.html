@@ -7,7 +7,7 @@
 @import views.html.helpers._
 
 @sidebar = {
-    <a id="helpLink1" href="https://www.gov.uk/capital-gains-tax/allowances" target="_blank" data-journey-click="help:govUK:allowances">@Messages("calc.annualExemptAmount.link.one")</a>
+    <a id="helpLink1" class="external-link" rel="external" href="https://www.gov.uk/capital-gains-tax/allowances" target="_blank" data-journey-click="help:govUK:allowances">@Messages("calc.annualExemptAmount.link.one")</a>
 }
 
 @main_template(Messages("calc.annualExemptAmount.question"), sidebarLinks = Some(sidebar)) {

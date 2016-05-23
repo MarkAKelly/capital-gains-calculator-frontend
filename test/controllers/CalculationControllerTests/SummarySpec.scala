@@ -212,7 +212,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.title"))
             }
 
-            "include 'How would you like to work out your tax?'" in {
+            "include 'What would you like to base your tax on?'" in {
               document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.calculationElection"))
             }
 

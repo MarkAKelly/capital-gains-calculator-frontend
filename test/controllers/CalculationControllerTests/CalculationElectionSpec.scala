@@ -100,12 +100,25 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
           charset(result) shouldBe Some("utf-8")
         }
 
-        "have the title Which method of calculation would you like?" in {
+        s"have the title '${Messages("calc.calculationElection.question")}'" in {
           document.title shouldEqual Messages("calc.calculationElection.question")
         }
 
-        "have the heading Calculate your tax (non-residents) " in {
-          document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
+        s"have the heading '${Messages("calc.base.pageHeading")}'" in {
+          document.body.getElementsByTag("h1").text shouldEqual Messages("calc.calculationElection.pageHeading")
+        }
+
+        s"have the class 'heading-xlarge' on the H1 tag" in {
+          document.body.getElementsByTag("h1").hasClass("heading-xlarge") shouldBe true
+        }
+
+        s"have a 'Read more' section that" should {
+
+          "have a link to 'https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-calculating-taxable-gain-or-loss'" +
+            s"with text '${Messages("calc.calculationElection.link.one")}'" in {
+              document.body.getElementById("helpLink1").text shouldEqual Messages("calc.calculationElection.link.one")
+              document.body.getElementById("helpLink1").attr("href") shouldEqual "https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-calculating-taxable-gain-or-loss"
+          }
         }
 
         s"have a 'Back' link to ${routes.CalculationController.allowableLosses}" in {
@@ -113,8 +126,20 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
           document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.allowableLosses.toString()
         }
 
-        "have the paragraph You can decide what to base your Capital Gains Tax on. It affects how much you'll pay." in {
-          document.body.getElementById("calculationElection").text shouldEqual Messages("calc.calculationElection.message")
+        s"have the paragraph '${Messages("calc.calculationElection.paragraph.one")}'" in {
+          document.body.getElementsByTag("p").text should include (Messages("calc.calculationElection.paragraph.one"))
+        }
+
+        s"have a H2 sub-heading with text '${Messages("calc.calculationElection.h2")}'" in {
+          document.body.getElementsByTag("h2").text should include (Messages("calc.calculationElection.h2"))
+        }
+
+        s"have the paragraph '${Messages("calc.calculationElection.paragraph.two")}'" in {
+          document.body.getElementsByTag("p").text should include (Messages("calc.calculationElection.paragraph.two"))
+        }
+
+        s"have the paragraph '${Messages("calc.calculationElection.paragraph.three")}'" in {
+          document.body.getElementsByTag("p").text should include (Messages("calc.calculationElection.paragraph.three"))
         }
 
         "have a calculationElectionHelper for the option of a flat calculation rendered on the page" in {
@@ -126,9 +151,11 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
           document.body.getElementById("continue-button").text shouldEqual Messages("calc.base.continue")
         }
 
-        "display a concertina information box with 'They sometimes qualify for larger tax reliefs. This can lower the amount you owe or even reduce it to zero' as the content" in {
+        s"display a concertina information box with '${Messages("calc.calculationElection.whyMoreDetails.one")} " +
+          s"${Messages("calc.calculationElection.whyMoreDetails.two")}' as the content" in {
           document.select("summary span.summary").text shouldEqual Messages("calc.calculationElection.message.whyMore")
-          document.select("div#details-content-0 p").text shouldEqual Messages("calc.calculationElection.message.whyMoreDetails")
+          document.select("div#details-content-0 p").text should include (Messages("calc.calculationElection.whyMoreDetails.one"))
+          document.select("div#details-content-0 p").text should include ( Messages("calc.calculationElection.whyMoreDetails.one"))
         }
 
         "have no pre-selected option" in {
