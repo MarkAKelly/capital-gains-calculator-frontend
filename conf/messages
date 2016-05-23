@@ -205,8 +205,9 @@ calc.calculationElection.message.timeDate = 5 April 2015
 calc.calculationElection.message.rebased = How much you''ve gained on the property since
 calc.calculationElection.message.rebasedDate = 5 April 2015
 calc.calculationElection.message.flat = How much you''ve gained on the property since you became the owner
-calc.calculationElection.message.whyMore = Why would you choose higher totals?
-calc.calculationElection.message.whyMoreDetails = They sometimes qualify for larger tax reliefs. This can lower the amount you owe or even reduce it to zero.
+calc.calculationElection.message.whyMore = Why you might choose a higher total
+calc.calculationElection.whyMoreDetails.one = You might pick a higher total if you''re planning to add more tax reliefs.
+calc.calculationElection.whyMoreDetails.two = Higher totals sometimes qualify for larger reliefs, which can reduce the amount you owe.
 
 
 ## Other Reliefs ##

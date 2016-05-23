@@ -151,9 +151,11 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
           document.body.getElementById("continue-button").text shouldEqual Messages("calc.base.continue")
         }
 
-        "display a concertina information box with 'They sometimes qualify for larger tax reliefs. This can lower the amount you owe or even reduce it to zero' as the content" in {
+        s"display a concertina information box with '${Messages("calc.calculationElection.whyMoreDetails.one")} " +
+          s"${Messages("calc.calculationElection.whyMoreDetails.two")}' as the content" in {
           document.select("summary span.summary").text shouldEqual Messages("calc.calculationElection.message.whyMore")
-          document.select("div#details-content-0 p").text shouldEqual Messages("calc.calculationElection.message.whyMoreDetails")
+          document.select("div#details-content-0 p").text should include (Messages("calc.calculationElection.whyMoreDetails.one"))
+          document.select("div#details-content-0 p").text should include ( Messages("calc.calculationElection.whyMoreDetails.one"))
         }
 
         "have no pre-selected option" in {

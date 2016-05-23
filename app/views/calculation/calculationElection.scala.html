@@ -36,6 +36,14 @@
 
     <p>@Messages("calc.calculationElection.paragraph.three")</p>
 
+    <details role="group">
+        <summary role="button" aria-controls="details-content-0" aria-expanded="false"><span class="summary">@Messages("calc.calculationElection.message.whyMore")</span></summary>
+        <div class="panel panel-indent" id="details-content-0" aria-hidden="true">
+            <p>@Messages("calc.calculationElection.whyMoreDetails.one")</p>
+            <p>@Messages("calc.calculationElection.whyMoreDetails.two")</p>
+        </div>
+    </details>
+
     @govHelpers.form(action = routes.CalculationController.submitCalculationElection) {
 
         <div class="form-group">
@@ -51,11 +59,4 @@
             <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
         </div>
     }
-
-    <details role="group">
-        <summary role="button" aria-controls="details-content-0" aria-expanded="false"><span class="summary">@Messages("calc.calculationElection.message.whyMore")</span></summary>
-        <div class="panel panel-indent" id="details-content-0" aria-hidden="true">
-            <p>@Messages("calc.calculationElection.message.whyMoreDetails")</p>
-        </div>
-    </details>
 }
