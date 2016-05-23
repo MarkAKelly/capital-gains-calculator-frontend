@@ -796,8 +796,8 @@ trait CalculationController extends FrontendController {
 
     def action (dataResult: Option[CalculationResultModel], backUrl: String) = {
       calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
-        case Some(data) => Ok(calculation.otherReliefs(otherReliefsForm.fill(data), dataResult.get, true, backUrl))
-        case None => Ok(calculation.otherReliefs(otherReliefsForm, dataResult.get, false, backUrl))
+        case Some(data) if data.otherReliefs.isDefined => Ok(calculation.otherReliefs(otherReliefsForm.fill(data), dataResult.get, true, backUrl))
+        case _ => Ok(calculation.otherReliefs(otherReliefsForm, dataResult.get, false, backUrl))
       }
     }
 
@@ -812,7 +812,11 @@ trait CalculationController extends FrontendController {
   val submitOtherReliefs = Action.async { implicit request =>
 
     def action (dataResult: Option[CalculationResultModel], construct: SummaryModel, backUrl: String) = otherReliefsForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(calculation.otherReliefs(errors, dataResult.get, true, backUrl))),
+      errors =>
+        calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
+          case Some(data) if data.otherReliefs.isDefined => BadRequest(calculation.otherReliefs(errors, dataResult.get, true, backUrl))
+          case _ => BadRequest(calculation.otherReliefs(errors, dataResult.get, false, backUrl))
+        },
       success => {
         calcConnector.saveFormData(KeystoreKeys.otherReliefsFlat, success)
         construct.acquisitionDateModel.hasAcquisitionDate match {
