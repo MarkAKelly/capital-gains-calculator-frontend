@@ -23,7 +23,10 @@
             <ul class="list list-bullet">
                 <li id="totalGain">&pound;@{MoneyPounds(result.totalGain,0).quantity}<br><span class="font-xsmall">@SummaryConstructor.gainMessage(result)</span></li>
 
-                <li id="taxableGain">&pound;@{MoneyPounds(result.taxableGain,0).quantity}<br><span class="font-xsmall">@Messages("calc.otherReliefs.taxableGain")</span></li>
+                <li id="taxableGain">&pound;@{MoneyPounds(result.taxableGain,0).quantity}<br><span class="font-xsmall">@{
+                    if (result.taxableGain >= 0) Messages("calc.otherReliefs.taxableGain")
+                    else Messages("calc.summary.calculation.details.lossCarriedForward")
+                    }</span></li>
             </ul>
         </div>
 
