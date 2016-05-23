@@ -781,4 +781,29 @@ object TestModels {
     Some(PrivateResidenceReliefModel("Yes", Some(100), Some(50)))
   )
 
+  val summaryPriorDisposalNoTaxableGain = SummaryModel(
+    CustomerTypeModel(CustomerTypeKeys.individual),
+    None,
+    Some(CurrentIncomeModel(1000)),
+    Some(PersonalAllowanceModel(11100)),
+    OtherPropertiesModel("Yes", Some(0)),
+    Some(AnnualExemptAmountModel(4300)),
+    AcquisitionDateModel("Yes", Some(9), Some(9), Some(1990)),
+    AcquisitionValueModel(100000),
+    Some(RebasedValueModel("No", None)),
+    None,
+    ImprovementsModel("No", None),
+    DisposalDateModel(10, 10, 2010),
+    DisposalValueModel(150000),
+    AcquisitionCostsModel(None),
+    DisposalCostsModel(None),
+    EntrepreneursReliefModel("No"),
+    AllowableLossesModel("No", None),
+    CalculationElectionModel("flat"),
+    OtherReliefsModel(None),
+    OtherReliefsModel(None),
+    OtherReliefsModel(None),
+    Some(PrivateResidenceReliefModel("No", None, None))
+  )
+
 }
