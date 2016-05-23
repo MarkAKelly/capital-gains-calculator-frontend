@@ -79,9 +79,14 @@ class CalculateRequestConstructorSpec extends UnitSpec {
         Some(PrivateResidenceReliefModel("No", None, None))
       )
 
-      CalculateRequestConstructor.baseCalcUrl(sumModelTrustee) shouldEqual "customerType=trustee&priorDisposal=Yes&annualExemptAmount=5000" +
+      CalculateRequestConstructor.baseCalcUrl(sumModelTrustee) shouldEqual "customerType=trustee&priorDisposal=Yes" +
         "&otherPropertiesAmt=6100&isVulnerable=No" +
         "&disposalValue=150000&disposalCosts=0&allowableLossesAmt=1000&entReliefClaimed=No&disposalDate=2010-10-10"
+    }
+
+    "return a string from the baseCalcUrl when a prior disposal with no taxable gain is made" in {
+      CalculateRequestConstructor.baseCalcUrl(TestModels.summaryPriorDisposalNoTaxableGain) shouldEqual "customerType=individual&priorDisposal=Yes&annualExemptAmount=4300" +
+        "&otherPropertiesAmt=0&currentIncome=1000&personalAllowanceAmt=11100&disposalValue=150000&disposalCosts=0&allowableLossesAmt=0&entReliefClaimed=No&disposalDate=2010-10-10"
     }
 
     "return a string from the flatCalcUrlExtra with no improvements" in {
