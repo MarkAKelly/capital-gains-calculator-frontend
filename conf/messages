@@ -192,6 +192,10 @@ calc.allowableLosses.errorDecimal = There are too many numbers after the decimal
 ## Calculation Election ##
 calc.calculationElection.pageHeading = Working out your total
 calc.calculationElection.question = Which method of calculation would you like?
+calc.calculationElection.h2 = How this affects your tax
+calc.calculationElection.paragraph.one = We can work out your tax in a number of ways. Before we give you a final total you have a choice about what to base it on.
+calc.calculationElection.paragraph.two = Because the options take different things into account they''ll usually give you different totals. Some totals may be much larger than others.
+calc.calculationElection.paragraph.three = Unless you want to add more tax reliefs, the total you choose is the amount of tax you''ll pay.
 calc.calculationElection.message = You can decide what to base your Capital Gains Tax on. It affects how much you''ll pay.
 calc.calculationElection.based = Based on
 calc.calculationElection.link.one = Different ways of working out Capital Gains Tax

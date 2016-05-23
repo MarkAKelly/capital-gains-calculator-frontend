@@ -126,8 +126,20 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
           document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.allowableLosses.toString()
         }
 
-        "have the paragraph You can decide what to base your Capital Gains Tax on. It affects how much you'll pay." in {
-          document.body.getElementById("calculationElection").text shouldEqual Messages("calc.calculationElection.message")
+        s"have the paragraph '${Messages("calc.calculationElection.paragraph.one")}'" in {
+          document.body.getElementsByTag("p").text should include (Messages("calc.calculationElection.paragraph.one"))
+        }
+
+        s"have a H2 sub-heading with text '${Messages("calc.calculationElection.h2")}'" in {
+          document.body.getElementsByTag("h2").text should include (Messages("calc.calculationElection.h2"))
+        }
+
+        s"have the paragraph '${Messages("calc.calculationElection.paragraph.two")}'" in {
+          document.body.getElementsByTag("p").text should include (Messages("calc.calculationElection.paragraph.two"))
+        }
+
+        s"have the paragraph '${Messages("calc.calculationElection.paragraph.three")}'" in {
+          document.body.getElementsByTag("p").text should include (Messages("calc.calculationElection.paragraph.three"))
         }
 
         "have a calculationElectionHelper for the option of a flat calculation rendered on the page" in {
