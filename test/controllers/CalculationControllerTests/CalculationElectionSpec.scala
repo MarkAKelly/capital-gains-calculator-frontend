@@ -100,12 +100,16 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
           charset(result) shouldBe Some("utf-8")
         }
 
-        "have the title Which method of calculation would you like?" in {
+        s"have the title '${Messages("calc.calculationElection.question")}'" in {
           document.title shouldEqual Messages("calc.calculationElection.question")
         }
 
-        "have the heading Calculate your tax (non-residents) " in {
-          document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
+        s"have the heading '${Messages("calc.base.pageHeading")}'" in {
+          document.body.getElementsByTag("h1").text shouldEqual Messages("calc.calculationElection.pageHeading")
+        }
+
+        s"have the class 'heading-xlarge' on the H1 tag" in {
+          document.body.getElementsByTag("h1").hasClass("heading-xlarge") shouldBe true
         }
 
         s"have a 'Back' link to ${routes.CalculationController.allowableLosses}" in {
