@@ -18,7 +18,7 @@ package connectors
 
 import java.util.UUID
 
-import common.KeystoreKeys
+import common.{CustomerTypeKeys, KeystoreKeys}
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -115,7 +115,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
   }
 
   val sumModelFlat = SummaryModel(
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(11100)),
@@ -140,7 +140,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
   )
 
   val sumModelTA = SummaryModel(
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(11100)),
@@ -165,7 +165,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
   )
 
   val sumModelRebased = SummaryModel(
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(11100)),
@@ -190,7 +190,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
   )
 
   val sumModelFlatDefaulted = SummaryModel(
-    CustomerTypeModel("individual"),
+    CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(11100)),
@@ -217,7 +217,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
   "Calculator Connector" should {
 
     "fetch and get from keystore" in {
-      val testModel = CustomerTypeModel("trustee")
+      val testModel = CustomerTypeModel(CustomerTypeKeys.trustee)
       when(mockSessionCache.fetchAndGetEntry[CustomerTypeModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(Option(testModel)))
 
@@ -226,7 +226,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     }
 
     "save data to keystore" in {
-      val testModel = CustomerTypeModel("trustee")
+      val testModel = CustomerTypeModel(CustomerTypeKeys.trustee)
       val returnedCacheMap = CacheMap(KeystoreKeys.customerType, Map("data" -> Json.toJson(testModel)))
       when(mockSessionCache.cache[CustomerTypeModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(returnedCacheMap))
@@ -238,7 +238,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
 
   "Calling calculateFlat" should {
 
-    val validResponse = CalculationResultModel(8000, 40000, 32000, 18, Some(8000), Some(28))
+    val validResponse = CalculationResultModel(8000, 40000, 32000, 18, Some(8000), Some(28), None)
     when(mockHttp.GET[Option[CalculationResultModel]](Matchers.anyString())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(validResponse)))
 
@@ -250,7 +250,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
   }
 
   "Calling calculateTA" should {
-    val validResponse = CalculationResultModel(8000, 40000, 32000, 18, Some(8000), Some(28))
+    val validResponse = CalculationResultModel(8000, 40000, 32000, 18, Some(8000), Some(28), None)
     when(mockHttp.GET[Option[CalculationResultModel]](Matchers.anyString())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(validResponse)))
 
@@ -262,7 +262,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
   }
 
   "Calling calculateRebased" should {
-    val validResponse = CalculationResultModel(8000, 40000, 32000, 18, Some(8000), Some(28))
+    val validResponse = CalculationResultModel(8000, 40000, 32000, 18, Some(8000), Some(28), None)
     when(mockHttp.GET[Option[CalculationResultModel]](Matchers.anyString())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(validResponse)))
 

@@ -83,11 +83,18 @@ calc.personalAllowance.errorMaxLimitEnd = or less
 
 ## Other Properties ##
 calc.otherProperties.question = In the tax year when you stopped owning the property, did you sell or give away anything else that''s covered by Capital Gains Tax?
-calc.otherProperties.questionTwo = What was the total taxable gain of your previous Capital Gains in the tax year you stopped owning the property?
+calc.otherProperties.questionTwo = What was your taxable gain?
+calc.otherProperties.questionTwo.helpText.start = How to
+calc.otherProperties.questionTwo.helpText.linkText = work out your total taxable gains
 calc.otherProperties.errorNegative = Enter a positive number for your taxable gain
 calc.otherProperties.errorDecimalPlaces = Your taxable gain has too many numbers after the decimal point
 calc.otherProperties.errorQuestion = Enter a value for your taxable gain
-
+calc.otherProperties.thisIncludes = This includes things like:
+calc.otherProperties.thisIncludes.bulletOne = shares
+calc.otherProperties.thisIncludes.bulletTwo = antiques
+calc.otherProperties.thisIncludes.bulletThree = other UK residential properties
+calc.otherProperties.link.one = Capital Gains Tax
+calc.otherProperties.link.two = Previous tax years
 
 ## Annual Exempt Amount ##
 calc.annualExemptAmount.question = How much of your Capital Gains Tax allowance have you got left?
@@ -109,9 +116,13 @@ calc.acquisitionValue.errorDecimalPlaces = The amount you paid has too many numb
 ## Rebased Value ##
 calc.rebasedValue.question = Do you know how much the property was worth on 5 April 2015?
 calc.rebasedValue.questionTwo = What was the value of the property?
+calc.rebasedValue.helpText = Only tell us if you owned the property on that date
 calc.rebasedValue.errorNegative = Enter a positive value for your property on 5 April 2015
 calc.rebasedValue.error.no.value.supplied = Enter a value for your property on 5 April 2015
 calc.rebasedValue.errorDecimalPlaces = The value for your property on 5 April 2015 has too many numbers after the decimal point
+calc.rebasedValue.helpHidden.title = Why we''re asking for this
+calc.rebasedValue.helpHidden.content = When you''ve answered the questions you''ll have a choice about how we work out your total.
+calc.rebasedValue.helpHidden.contentTwo = This value lets us calculate your tax in different ways, giving you more options.
 
 ## Rebased Costs ##
 calc.rebasedCosts.question = Did you pay for the valuation?
@@ -137,6 +148,7 @@ calc.disposalDate.question = When did you sign the contract that made someone el
 calc.disposalValue.question = How much did you sell or give away the property for?
 calc.disposalValue.errorNegative = Enter a positive number for the amount you sold the property for
 calc.disposalValue.errorDecimalPlaces = The amount you sold the property for has too many numbers after the decimal point
+calc.disposalValue.hint = If you gave the property away, put how much it was worth at the time
 
 ## Acquisition Costs ##
 calc.acquisitionCosts.question = How much did you pay in costs when you became the property owner?
@@ -205,7 +217,7 @@ calc.summary.title = Summary
 calc.summary.secondaryHeading = You owe
 calc.summary.calculation.details.title = Calculation details
 calc.summary.calculation.details.totalGain = Your total gain
-calc.summary.calculation.details.totalLoss = Your total loss
+calc.summary.calculation.details.totalLoss = Loss
 calc.summary.calculation.details.taxableGain = Your taxable gain
 calc.summary.calculation.details.taxRate = Your tax rate
 calc.summary.personal.details.title = Personal details
@@ -220,4 +232,7 @@ calc.summary.calculation.details.calculationElection = How would you like to wor
 calc.summary.calculation.details.timeCalculation = The percentage of your total gain you''ve made since
 calc.summary.calculation.details.flatCalculation = How much you''ve gained on the property since you became the owner
 calc.summary.calculation.details.rebasedCalculation = How much you''ve gained on the property since 5 April 2015
+calc.summary.calculation.details.lossCarriedForward = Loss carried forward
+calc.summary.warning.taxYear = Your total might be less accurate because you didn't sell or give away your property in this tax year
+
 

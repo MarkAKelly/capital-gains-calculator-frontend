@@ -97,6 +97,10 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
           document.body.getElementsByTag("label").text should include (Messages("calc.disposalValue.question"))
         }
 
+        s"include the helptext form hint '${Messages("calc.disposalValue.hint")}'" in {
+          document.body.select("span.form-hint").text should include (Messages("calc.disposalValue.hint"))
+        }
+
         "display an input box for the Annual Exempt Amount" in {
           document.body.getElementById("disposalValue").tagName() shouldEqual "input"
         }

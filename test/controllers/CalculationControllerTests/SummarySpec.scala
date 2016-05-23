@@ -16,11 +16,12 @@
 
 package controllers.CalculationControllerTests
 
-import common.TestModels
+import common.DefaultRoutes._
+import common.{CustomerTypeKeys, KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
 import constructors.CalculationElectionConstructor
 import controllers.{routes, CalculationController}
-import models.{CalculationResultModel, SummaryModel}
+import models.{AcquisitionDateModel, RebasedValueModel, CalculationResultModel, SummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -37,11 +38,19 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
   implicit val hc = new HeaderCarrier()
   def setupTarget(
                    summary: SummaryModel,
-                   result: CalculationResultModel
+                   result: CalculationResultModel,
+                   acquisitionDateData: Option[AcquisitionDateModel],
+                   rebasedValueData: Option[RebasedValueModel]
                  ): CalculationController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
+
+    when(mockCalcConnector.fetchAndGetFormData[RebasedValueModel](Matchers.eq(KeystoreKeys.rebasedValue))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(rebasedValueData))
+
+    when(mockCalcConnector.fetchAndGetFormData[AcquisitionDateModel](Matchers.eq(KeystoreKeys.acquisitionDate))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(acquisitionDateData))
 
     when(mockCalcConnector.createSummary(Matchers.any()))
       .thenReturn(Future.successful(summary))
@@ -64,10 +73,114 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
   "In CalculationController calling the .summary action" when {
     lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/summary").withSession(SessionKeys.sessionId -> "12345")
 
+    "Testing the back links for all user types" when {
+
+      "Acquisition Date is > 5 April 2015" should {
+        val target = setupTarget(
+          TestModels.summaryIndividualFlatWithAEA,
+          TestModels.calcModelTwoRates,
+          Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
+          None
+        )
+        lazy val result = target.summary()(fakeRequest)
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        s"have a 'Back' link to ${routes.CalculationController.otherReliefs().url}" in {
+          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.otherReliefs().url
+        }
+      }
+
+      "Acquisition Date is not supplied and no rebased value has been supplied" should {
+        val target = setupTarget(
+          TestModels.summaryIndividualFlatWithAEA,
+          TestModels.calcModelTwoRates,
+          Some(AcquisitionDateModel("No", None,None,None)),
+          Some(RebasedValueModel("No", None))
+        )
+        lazy val result = target.summary()(fakeRequest)
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        s"have a 'Back' link to ${routes.CalculationController.otherReliefs().url}" in {
+          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.otherReliefs().url
+        }
+      }
+
+      "Acquisition Date is not supplied and rebased value is supplied" should {
+        val target = setupTarget(
+          TestModels.summaryIndividualFlatWithAEA,
+          TestModels.calcModelTwoRates,
+          Some(AcquisitionDateModel("No", None,None,None)),
+          Some(RebasedValueModel("Yes", Some(500)))
+        )
+        lazy val result = target.summary()(fakeRequest)
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        s"have a 'Back' link to ${routes.CalculationController.calculationElection().url}" in {
+          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.calculationElection().url
+        }
+      }
+
+      "Acquisition Date <= 5 April 2015" should {
+        val target = setupTarget(
+          TestModels.summaryIndividualFlatWithAEA,
+          TestModels.calcModelTwoRates,
+          Some(AcquisitionDateModel("Yes", Some(1),Some(1),Some(2014))),
+          Some(RebasedValueModel("Yes", Some(500)))
+        )
+        lazy val result = target.summary()(fakeRequest)
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        s"have a 'Back' link to ${routes.CalculationController.calculationElection().url}" in {
+          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.calculationElection().url
+        }
+      }
+
+      "Acquisition Date Model is not supplied" should {
+        val target = setupTarget(
+          TestModels.summaryIndividualFlatWithAEA,
+          TestModels.calcModelTwoRates,
+          None,
+          Some(RebasedValueModel("Yes", Some(500)))
+        )
+        lazy val result = target.summary()(fakeRequest)
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        s"have a 'Back' link to ${missingDataRoute} " in {
+          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
+        }
+      }
+
+      "Acquisition Date Model is supplied with no date but Rebased Value Model is not" should {
+        val target = setupTarget(
+          TestModels.summaryIndividualFlatWithAEA,
+          TestModels.calcModelTwoRates,
+          Some(AcquisitionDateModel("No", None,None,None)),
+          None
+        )
+        lazy val result = target.summary()(fakeRequest)
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        s"have a 'Back' link to ${missingDataRoute} " in {
+          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
+        }
+      }
+    }
+
     "individual is chosen with a flat calculation" when {
 
       "the user has provided a value for the AEA" should {
-        val target = setupTarget(TestModels.summaryIndividualFlatWithAEA, TestModels.calcModelTwoRates)
+        val target = setupTarget(
+          TestModels.summaryIndividualFlatWithAEA,
+          TestModels.calcModelTwoRates,
+          Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
+          None
+        )
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -89,8 +202,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             document.select("h1 span").text shouldEqual Messages("calc.summary.secondaryHeading")
           }
 
-          "have a result amount currently set to £8000.00" in {
-            document.select("h1 b").text shouldEqual "£8000.00"
+          "have a result amount currently set to £8,000.00" in {
+            document.select("h1 b").text shouldEqual "£8,000.00"
           }
 
           "have a 'Calculation details' section that" should {
@@ -111,28 +224,24 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.totalGain"))
             }
 
-            "have a total gain equal to £40000.00" in {
-              document.body().getElementById("calcDetails(1)").text() shouldBe "£40000.00"
+            "have a total gain equal to £40,000.00" in {
+              document.body().getElementById("calcDetails(1)").text() shouldBe "£40,000"
             }
 
             "include 'Your taxable gain'" in {
               document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.taxableGain"))
             }
 
-            "have a taxable gain equal to £40000.00" in {
-              document.body().getElementById("calcDetails(2)").text() shouldBe "£40000.00"
+            "have a taxable gain equal to £40,000" in {
+              document.body().getElementById("calcDetails(2)").text() shouldBe "£40,000"
             }
 
             "include 'Your tax rate'" in {
               document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.taxRate"))
             }
 
-            "have a base tax rate of £32000" in {
-              document.body().getElementById("calcDetails(3)").text() shouldBe "£32000.00 at 18%"
-            }
-
-            "have an upper tax rate of £8000" in {
-              document.body().getElementById("calcDetails(4)").text() shouldBe "£8000.00 at 28%"
+            "have a combined tax rate of £32,000 and £8,000" in {
+              document.body().getElementById("calcDetails(3)").text() shouldBe "£32,000 at 18% £8,000 at 28%"
             }
 
           }
@@ -156,8 +265,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.select("#personalDetails").text should include(Messages("calc.currentIncome.question"))
             }
 
-            "have an total income of £1000 and link to the current-income screen" in {
-              document.body().getElementById("personalDetails(1)").text() shouldBe "£1000.00"
+            "have an total income of £1,000 and link to the current-income screen" in {
+              document.body().getElementById("personalDetails(1)").text() shouldBe "£1,000.00"
               document.body().getElementById("personalDetails(1)").attr("href") shouldEqual routes.CalculationController.currentIncome().toString()
             }
 
@@ -165,8 +274,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.select("#personalDetails").text should include(Messages("calc.personalAllowance.question"))
             }
 
-            "have a personal allowance of £9000 that has a link to the personal allowance page." in {
-              document.body().getElementById("personalDetails(2)").text() shouldBe "£9000.00"
+            "have a personal allowance of £9,000 that has a link to the personal allowance page." in {
+              document.body().getElementById("personalDetails(2)").text() shouldBe "£9,000.00"
               document.body().getElementById("personalDetails(2)").attr("href") shouldEqual routes.CalculationController.personalAllowance().toString()
             }
 
@@ -174,8 +283,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.select("#personalDetails").text should include(Messages("calc.otherProperties.questionTwo"))
             }
 
-            "have a total taxable gain of prior disposals of £9600 and link to the other-properties page" in {
-              document.body().getElementById("personalDetails(3)").text() shouldBe "£9600.00"
+            "have a total taxable gain of prior disposals of £9,600 and link to the other-properties page" in {
+              document.body().getElementById("personalDetails(3)").text() shouldBe "£9,600.00"
               document.body().getElementById("personalDetails(3)").attr("href") shouldEqual routes.CalculationController.otherProperties().toString()
             }
 
@@ -183,8 +292,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.select("#personalDetails").text should include(Messages("calc.annualExemptAmount.question"))
             }
 
-            "have a remaining CGT Allowance of £1500 and link to the allowance page" in {
-              document.body().getElementById("personalDetails(4)").text() shouldBe "£1500.00"
+            "have a remaining CGT Allowance of £1,500 and link to the allowance page" in {
+              document.body().getElementById("personalDetails(4)").text() shouldBe "£1,500.00"
               document.body().getElementById("personalDetails(4)").attr("href") shouldEqual routes.CalculationController.annualExemptAmount().toString()
             }
           }
@@ -195,13 +304,23 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.select("#purchaseDetails").text should include(Messages("calc.summary.purchase.details.title"))
             }
 
+            "include the question for whether the acquisition date is provided" in {
+              document.select("#purchaseDetails").text should include(Messages("calc.acquisitionDate.question"))
+            }
+
+            "have an answer to the question for providing an acquisition date of 'No'" in {
+              document.body().getElementById("purchaseDetails(0)").text() shouldBe Messages("No")
+              document.body().getElementById("purchaseDetails(0)").attr("href") shouldEqual routes.CalculationController.acquisitionDate().toString()
+
+            }
+
             "include the question 'How much did you pay for the property?'" in {
               document.select("#purchaseDetails").text should include(Messages("calc.acquisitionValue.question"))
             }
 
-            "have an acquisition value of £100000 and link to the acquisition value page" in {
-              document.body().getElementById("purchaseDetails(0)").text() shouldBe "£100000.00"
-              document.body().getElementById("purchaseDetails(0)").attr("href") shouldEqual routes.CalculationController.acquisitionValue().toString()
+            "have an acquisition value of £100,000 and link to the acquisition value page" in {
+              document.body().getElementById("purchaseDetails(1)").text() shouldBe "£100,000.00"
+              document.body().getElementById("purchaseDetails(1)").attr("href") shouldEqual routes.CalculationController.acquisitionValue().toString()
             }
 
             "include the question 'How much did you pay in costs when you became the property owner?'" in {
@@ -209,8 +328,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "have a acquisition costs of £0 and link to the acquisition-costs page" in {
-              document.body().getElementById("purchaseDetails(1)").text() shouldBe "£0.00"
-              document.body().getElementById("purchaseDetails(1)").attr("href") shouldEqual routes.CalculationController.acquisitionCosts().toString()
+              document.body().getElementById("purchaseDetails(2)").text() shouldBe "£0.00"
+              document.body().getElementById("purchaseDetails(2)").attr("href") shouldEqual routes.CalculationController.acquisitionCosts().toString()
             }
           }
 
@@ -249,8 +368,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.select("#saleDetails").text should include(Messages("calc.disposalValue.question"))
             }
 
-            "the value of the sale should be £150000 and link to the disposal-value page" in {
-              document.body().getElementById("saleDetails(1)").text shouldBe "£150000.00"
+            "the value of the sale should be £150,000 and link to the disposal-value page" in {
+              document.body().getElementById("saleDetails(1)").text shouldBe "£150,000.00"
               document.body().getElementById("saleDetails(1)").attr("href") shouldEqual routes.CalculationController.disposalValue().toString()
             }
 
@@ -275,8 +394,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "have the answer to entrepreneurs relief question be 'No' and link to the entrepreurs-relief page" in {
-              document.body().getElementById("deductions(0)").text shouldBe "No"
-              document.body().getElementById("deductions(0)").attr("href") shouldEqual routes.CalculationController.entrepreneursRelief().toString()
+              document.body().getElementById("deductions(1)").text shouldBe "No"
+              document.body().getElementById("deductions(1)").attr("href") shouldEqual routes.CalculationController.entrepreneursRelief().toString()
             }
 
             "include the question 'Whats the total value of your allowable losses?'" in {
@@ -284,8 +403,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "the value of allowable losses should be £0 and link to the allowable-losses page" in {
-              document.body().getElementById("deductions(1)").text shouldBe "£0.00"
-              document.body().getElementById("deductions(1)").attr("href") shouldEqual routes.CalculationController.allowableLosses().toString()
+              document.body().getElementById("deductions(2)").text shouldBe "£0.00"
+              document.body().getElementById("deductions(2)").attr("href") shouldEqual routes.CalculationController.allowableLosses().toString()
             }
 
             "include the question 'What other reliefs are you claiming?'" in {
@@ -293,8 +412,17 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "the value of other reliefs should be £0 and link to the other-reliefs page" in {
-              document.body().getElementById("deductions(2)").text shouldBe "£0.00"
-              document.body().getElementById("deductions(2)").attr("href") shouldEqual routes.CalculationController.otherReliefs().toString()
+              document.body().getElementById("deductions(3)").text shouldBe "£0.00"
+              document.body().getElementById("deductions(3)").attr("href") shouldEqual routes.CalculationController.otherReliefs().toString()
+            }
+
+            "include the question 'Are you claiming private residence relief'" in {
+              document.select("#deductions").text should include(Messages("calc.privateResidenceRelief.question"))
+            }
+
+            "the PRR claimed question's answer should be 'No' and be a link to the PRR page" in {
+              document.body().getElementById("deductions(0)").text shouldBe "No"
+              document.body().getElementById("deductions(0)").attr("href") shouldEqual routes.CalculationController.privateResidenceRelief().toString()
             }
 
           }
@@ -319,36 +447,49 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
       }
 
       "the user has provided no value for the AEA" should {
-        val target = setupTarget(TestModels.summaryIndividualFlatWithoutAEA, TestModels.calcModelOneRate)
+        val target = setupTarget(
+          TestModels.summaryIndividualFlatWithoutAEA,
+          TestModels.calcModelOneRate,
+          Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
+          None
+        )
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        "have a remaining CGT Allowance of £11100" in {
-          document.body().getElementById("personalDetails(3)").text() shouldBe "£11100.00"
+        "have the answer for Previous Disposals (Other Properties) of 'No'" in {
+          document.body().getElementById("personalDetails(3)").text() shouldBe "No"
         }
 
         "the answer to the improvements question should be Yes" in {
           document.body.getElementById("propertyDetails(0)").text shouldBe "Yes"
         }
 
-        "the value of the improvements should be £8000" in {
-          document.body.getElementById("propertyDetails(1)").text shouldBe "£8000.00"
+        "the value of the improvements should be £8,000" in {
+          document.body.getElementById("propertyDetails(1)").text shouldBe "£8,000.00"
         }
 
         "the value of the disposal costs should be £600" in {
           document.body().getElementById("saleDetails(2)").text shouldBe "£600.00"
         }
 
-        "have a acquisition costs of £300" in {
-          document.body().getElementById("purchaseDetails(1)").text() shouldBe "£300.00"
+        "include the question for whether the acquisition date is provided" in {
+          document.select("#purchaseDetails").text should include(Messages("calc.acquisitionDate.question"))
         }
 
-        "the value of allowable losses should be £50000" in {
-          document.body().getElementById("deductions(1)").text shouldBe "£50000.00"
+        "have an answer to the question for providing an acquisition date of 'No'" in {
+          document.body().getElementById("purchaseDetails(0)").text() shouldBe Messages("No")
+        }
+
+        "have a acquisition costs of £300" in {
+          document.body().getElementById("purchaseDetails(2)").text() shouldBe "£300.00"
+        }
+
+        "the value of allowable losses should be £50,000" in {
+          document.body().getElementById("deductions(2)").text shouldBe "£50,000.00"
         }
 
         "the value of other reliefs should be £999" in {
-          document.body().getElementById("deductions(2)").text shouldBe "£999.00"
+          document.body().getElementById("deductions(3)").text shouldBe "£999.00"
         }
 
         "have a base tax rate of 20%" in {
@@ -357,7 +498,12 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
       }
 
       "users calculation results in a loss" should {
-        val target = setupTarget(TestModels.summaryIndividualFlatLoss, TestModels.calcModelLoss)
+        val target = setupTarget(
+          TestModels.summaryIndividualFlatLoss,
+          TestModels.calcModelLoss,
+          Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
+          None
+        )
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -365,8 +511,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
           document.body.getElementById("calcDetails").text() should include (Messages("calc.summary.calculation.details.totalLoss"))
         }
 
-        s"have £10000.00 loss" in {
-          document.body.getElementById("calcDetails(1)").text() shouldBe "£10000.00"
+        s"have £10,000.00 loss" in {
+          document.body.getElementById("calcDetails(1)").text() shouldBe "£10,000"
         }
       }
     }
@@ -374,7 +520,12 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
     "regular trustee is chosen with a time apportioned calculation" when {
 
       "the user has provided a value for the AEA" should {
-        val target = setupTarget(TestModels.summaryTrusteeTAWithAEA, TestModels.calcModelOneRate)
+        val target = setupTarget(
+          TestModels.summaryTrusteeTAWithAEA,
+          TestModels.calcModelOneRate,
+          Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
+          None
+        )
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -394,12 +545,12 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
           document.body().getElementById("personalDetails(1)").text() shouldBe "No"
         }
 
-        "have a total taxable gain of prior disposals of £9600" in {
-          document.body.getElementById("personalDetails(2)").text() shouldBe "£9600.00"
+        "have a total taxable gain of prior disposals of £9,600" in {
+          document.body.getElementById("personalDetails(2)").text() shouldBe "£9,600.00"
         }
 
-        "have a remaining CGT Allowance of £1500" in {
-          document.body().getElementById("personalDetails(3)").text() shouldBe "£1500.00"
+        "have a remaining CGT Allowance of £1,500" in {
+          document.body().getElementById("personalDetails(3)").text() shouldBe "£1,500.00"
         }
 
         "have a base tax rate of 20%" in {
@@ -408,7 +559,12 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
       }
 
       "the user has provided no value for the AEA" should {
-        val target = setupTarget(TestModels.summaryTrusteeTAWithoutAEA, TestModels.calcModelTwoRates)
+        val target = setupTarget(
+          TestModels.summaryTrusteeTAWithoutAEA,
+          TestModels.calcModelTwoRates,
+          Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
+          None
+        )
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -416,8 +572,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
          document.getElementById("personalDetails(1)").text() shouldBe "No"
         }
 
-        "have a remaining CGT Allowance of £5050" in {
-         document.getElementById("personalDetails(2)").text() shouldBe "£5050.00"
+        "have the answer for Previous Disposals (Other Properties) of 'No'" in {
+          document.body().getElementById("personalDetails(2)").text() shouldBe "No"
         }
       }
     }
@@ -425,7 +581,12 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
     "disabled trustee is chosen with a time apportioned calculation" when {
 
       "the user has provided a value for the AEA" should {
-        val target = setupTarget(TestModels.summaryDisabledTrusteeTAWithAEA, TestModels.calcModelTwoRates)
+        val target = setupTarget(
+          TestModels.summaryDisabledTrusteeTAWithAEA,
+          TestModels.calcModelTwoRates,
+          Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
+          None
+        )
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -433,13 +594,18 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
           document.body().getElementById("personalDetails(1)").text() shouldBe "Yes"
         }
 
-        "have a remaining CGT Allowance of £1500" in {
-          document.body().getElementById("personalDetails(3)").text() shouldBe "£1500.00"
+        "have a remaining CGT Allowance of £1,500" in {
+          document.body().getElementById("personalDetails(3)").text() shouldBe "£1,500.00"
         }
       }
 
       "the user has provided no value for the AEA" should {
-        val target = setupTarget(TestModels.summaryDisabledTrusteeTAWithoutAEA, TestModels.calcModelTwoRates)
+        val target = setupTarget(
+          TestModels.summaryDisabledTrusteeTAWithoutAEA,
+          TestModels.calcModelTwoRates,
+          Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
+          None
+        )
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -447,8 +613,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
           document.body().getElementById("personalDetails(1)").text() shouldBe "Yes"
         }
 
-        "have a remaining CGT Allowance of £11100" in {
-          document.body().getElementById("personalDetails(2)").text() shouldBe "£11100.00"
+        "have the answer for Previous Disposals (Other Properties) of 'No'" in {
+          document.body().getElementById("personalDetails(2)").text() shouldBe "No"
         }
       }
     }
@@ -456,7 +622,12 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
     "personal representative is chosen with a flat calculation" when {
 
       "the user has provided a value for the AEA" should {
-        val target = setupTarget(TestModels.summaryRepresentativeFlatWithAEA, TestModels.calcModelTwoRates)
+        val target = setupTarget(
+          TestModels.summaryRepresentativeFlatWithAEA,
+          TestModels.calcModelTwoRates,
+          Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
+          None
+        )
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -464,17 +635,22 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
           document.body().getElementById("personalDetails(0)").text() shouldBe "Personal Representative"
         }
 
-        "have a total taxable gain of prior disposals of £9600" in {
-          document.body.getElementById("personalDetails(1)").text() shouldBe "£9600.00"
+        "have a total taxable gain of prior disposals of £9,600" in {
+          document.body.getElementById("personalDetails(1)").text() shouldBe "£9,600.00"
         }
 
-        "have a remaining CGT Allowance of £1500" in {
-          document.body().getElementById("personalDetails(2)").text() shouldBe "£1500.00"
+        "have a remaining CGT Allowance of £1,500" in {
+          document.body().getElementById("personalDetails(2)").text() shouldBe "£1,500.00"
         }
       }
 
       "the user has provided no value for the AEA" should {
-        val target = setupTarget(TestModels.summaryRepresentativeFlatWithoutAEA, TestModels.calcModelTwoRates)
+        val target = setupTarget(
+          TestModels.summaryRepresentativeFlatWithoutAEA,
+          TestModels.calcModelTwoRates,
+          Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
+          None
+        )
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -482,16 +658,22 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
           document.body().getElementById("personalDetails(0)").text() shouldBe "Personal Representative"
         }
 
-        "have a remaining CGT Allowance of £11100" in {
-          document.body().getElementById("personalDetails(1)").text() shouldBe "£11100.00"
+        "have the answer for Previous Disposals (Other Properties) of 'No'" in {
+          document.body().getElementById("personalDetails(1)").text() shouldBe "No"
         }
       }
 
     }
+    
     "individual is chosen with a rebased calculation" when {
 
       "user provides no acquisition date and has two tax rates" should {
-        val target = setupTarget(TestModels.summaryIndividualRebased, TestModels.calcModelTwoRates)
+        val target = setupTarget(
+          TestModels.summaryIndividualRebased,
+          TestModels.calcModelTwoRates,
+          Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
+          None
+        )
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -504,7 +686,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "have a value for the rebased value" in {
-          document.body.getElementById("purchaseDetails(1)").text() shouldBe "£150000.00"
+          document.body.getElementById("purchaseDetails(1)").text() shouldBe "£150,000.00"
         }
 
         "include the question for the rebased costs" in {
@@ -512,15 +694,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "have a value for the rebased costs" in {
-          document.body.getElementById("purchaseDetails(2)").text() shouldBe "£1000.00"
-        }
-
-        "include the question for the improvements before" in {
-          document.select("#propertyDetails").text should include(Messages("calc.improvements.questionThree"))
-        }
-
-        "have a value for the improvements before" in {
-          document.body.getElementById("propertyDetails(1)").text() shouldBe "£2000.00"
+          document.body.getElementById("purchaseDetails(2)").text() shouldBe "£1,000.00"
         }
 
         "include the question for the improvements after" in {
@@ -528,18 +702,23 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "have a value for the improvements after" in {
-          document.body.getElementById("propertyDetails(2)").text() shouldBe "£3000.00"
+          document.body.getElementById("propertyDetails(1)").text() shouldBe "£3,000.00"
         }
 
         "have a value for the other reliefs rebased" in {
-          document.body.getElementById("deductions(2)").text() shouldBe "£777.00"
-          document.body().getElementById("deductions(2)").attr("href") shouldEqual routes.CalculationController.otherReliefsRebased().toString()
+          document.body.getElementById("deductions(3)").text() shouldBe "£777.00"
+          document.body().getElementById("deductions(3)").attr("href") shouldEqual routes.CalculationController.otherReliefsRebased().toString()
         }
 
       }
 
       "user provides no acquisition date and has one tax rate" should {
-        val target = setupTarget(TestModels.summaryIndividualRebasedNoAcqDate, TestModels.calcModelOneRate)
+        val target = setupTarget(
+          TestModels.summaryIndividualRebasedNoAcqDate,
+          TestModels.calcModelOneRate,
+          Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
+          None
+        )
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -547,17 +726,30 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
           document.body().getElementById("calcDetails(0)").text() shouldBe Messages("calc.summary.calculation.details.rebasedCalculation")
         }
 
+        "include the question for whether the acquisition date is provided" in {
+          document.select("#purchaseDetails").text should include(Messages("calc.acquisitionDate.question"))
+        }
+
+        "have an answer to the question for providing an acquisition date of 'No'" in {
+          document.body().getElementById("purchaseDetails(0)").text() shouldBe Messages("No")
+        }
+
         "the value of allowable losses should be £0" in {
-          document.body().getElementById("deductions(1)").text shouldBe "£0.00"
+          document.body().getElementById("deductions(2)").text shouldBe "£0.00"
         }
 
         "the value of other reliefs should be £0" in {
-          document.body().getElementById("deductions(2)").text shouldBe "£0.00"
+          document.body().getElementById("deductions(3)").text shouldBe "£0.00"
         }
       }
 
       "user provides acquisition date and no rebased costs" should {
-        val target = setupTarget(TestModels.summaryIndividualRebasedNoRebasedCosts, TestModels.calcModelOneRate)
+        val target = setupTarget(
+          TestModels.summaryIndividualRebasedNoRebasedCosts,
+          TestModels.calcModelOneRate,
+          Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
+          None
+        )
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -567,20 +759,94 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
       }
 
       "user provides no acquisition date and no rebased costs" should {
-        val target = setupTarget(TestModels.summaryIndividualRebasedNoAcqDateOrRebasedCosts, TestModels.calcModelOneRate)
+        val target = setupTarget(
+          TestModels.summaryIndividualRebasedNoAcqDateOrRebasedCosts,
+          TestModels.calcModelOneRate,
+          Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
+          None
+        )
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
         "have no value for the rebased costs" in {
-          document.body.getElementById("purchaseDetails(1)").text() shouldBe "£0.00"
+          document.body.getElementById("purchaseDetails(2)").text() shouldBe "£0.00"
         }
+      }
+    }
+
+    "only an upper rate result is returned" should {
+      val target = setupTarget(TestModels.summaryIndividualFlatWithAEA, TestModels.calcModelUpperRate, None, None)
+      lazy val result = target.summary()(fakeRequest)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a value of 28% for the tax rate" in {
+        document.body.getElementById("calcDetails(3)").text() shouldBe "28%"
+      }
+    }
+
+    "a negative taxable gain is returned" should {
+      val target = setupTarget(TestModels.summaryIndividualFlatWithAEA, TestModels.calcModelNegativeTaxable, None, None)
+      lazy val result = target.summary()(fakeRequest)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "include 'Loss carried forward'" in {
+        document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.lossCarriedForward"))
+      }
+
+      "return a value of £10,000 for loss carried forward" in {
+        document.body.getElementById("calcDetails(2)").text() shouldBe "£10,000"
+      }
+    }
+
+    "a zero taxable gain is returned" should {
+      val target = setupTarget(TestModels.summaryIndividualFlatWithAEA, TestModels.calcModelZeroTaxable, None, None)
+      lazy val result = target.summary()(fakeRequest)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a value of £0 for taxable gain" in {
+        document.body.getElementById("calcDetails(2)").text() shouldBe "£0"
+      }
+    }
+
+    "a total gain of zero is returned" should {
+      val target = setupTarget(TestModels.summaryIndividualFlatWithAEA, TestModels.calcModelZeroTotal, None, None)
+      lazy val result = target.summary()(fakeRequest)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a value of £0 for total gain" in {
+        document.body.getElementById("calcDetails(1)").text() shouldBe "£0"
+      }
+    }
+
+    "a value with some PRR is returned" should {
+      val target = setupTarget(TestModels.summaryIndividualFlatWithAEA, TestModels.calcModelSomePRR, None, None)
+      lazy val result = target.summary()(fakeRequest)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a value of £10,000 for the simple PRR" in {
+        document.body.getElementById("deductions(0)").text() shouldBe "£10,000.00"
+      }
+    }
+
+    "a value with PRR claimed but no value" should {
+      val target = setupTarget(TestModels.summaryIndividualWithAllOptions, TestModels.calcModelOneRate, None, None)
+      lazy val result = target.summary()(fakeRequest)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a value of £0 for the simple PRR" in {
+        document.body.getElementById("deductions(0)").text() shouldBe "£0.00"
       }
     }
   }
 
   "calling the .restart action" should {
     lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/restart").withSession(SessionKeys.sessionId -> "12345")
-    val target = setupTarget(TestModels.summaryIndividualFlatWithAEA, TestModels.calcModelTwoRates)
+    val target = setupTarget(
+      TestModels.summaryIndividualFlatWithAEA,
+      TestModels.calcModelTwoRates,
+      Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
+      None
+    )
     lazy val result = target.restart()(fakeRequest)
     lazy val document = Jsoup.parse(bodyOf(result))
 

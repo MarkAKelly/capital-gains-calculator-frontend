@@ -25,7 +25,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class IntroductionControllerSpec extends UnitSpec with WithFakeApplication {
+class StartControllerSpec extends UnitSpec with WithFakeApplication {
 
   class fakeRequestTo(url : String, controllerAction : Action[AnyContent]) {
     val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/" + url)
@@ -44,46 +44,22 @@ class IntroductionControllerSpec extends UnitSpec with WithFakeApplication {
 
     "when called with no session" should {
 
-      object IntroductionTestDataItem extends fakeRequestTo("", IntroductionController.introduction)
+      object IntroductionTestDataItem extends fakeRequestTo("", StartController.start)
 
-      "return a 200" in {
-        status(IntroductionTestDataItem.result) shouldBe 200
-      }
-
-      "return HTML that" should {
-
-        "contain some text and use the character set utf-8" in {
-          contentType(IntroductionTestDataItem.result) shouldBe Some("text/html")
-          charset(IntroductionTestDataItem.result) shouldBe Some("utf-8")
-        }
-
-        "display the beta banner" in {
-          IntroductionTestDataItem.jsoupDoc.body.getElementById("phase").text shouldEqual ("BETA")
-        }
-        "have the title 'Introduction'" in {
-          IntroductionTestDataItem.jsoupDoc.title shouldEqual Messages("calc.introduction.title")
-        }
-        "contain a start button" in {
-          IntroductionTestDataItem.jsoupDoc.body.getElementById("start").text shouldEqual Messages("calc.introduction.start")
-        }
+      "return a 303" in {
+        status(IntroductionTestDataItem.result) shouldBe 303
       }
     }
 
+
     "when called with a session" should {
 
-      object IntroductionWithSessionTestDataItem extends fakeRequestToWithSessionId("introduction", IntroductionController.introduction)
+      object IntroductionWithSessionTestDataItem extends fakeRequestToWithSessionId("", StartController.start)
 
-      "return a 200" in {
-        status(IntroductionWithSessionTestDataItem.result) shouldBe 200
+      "return a 303" in {
+        status(IntroductionWithSessionTestDataItem.result) shouldBe 303
       }
 
-      "return HTML that" should {
-
-        "contain some text and use character set utf-8" in {
-          contentType(IntroductionWithSessionTestDataItem.result) shouldBe Some("text/html")
-          charset(IntroductionWithSessionTestDataItem.result) shouldBe Some("utf-8")
-        }
-      }
     }
   }
 }

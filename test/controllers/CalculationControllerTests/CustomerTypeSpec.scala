@@ -16,6 +16,7 @@
 
 package controllers.CalculationControllerTests
 
+import common.CustomerTypeKeys
 import constructors.CalculationElectionConstructor
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -87,11 +88,6 @@ class CustomerTypeSpec extends UnitSpec with WithFakeApplication with MockitoSug
           document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
         }
 
-        s"have a 'Back' link to ${routes.IntroductionController.introduction}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.IntroductionController.introduction.toString()
-        }
-
         "have the question 'Who owned the property?' as the legend of the input" in {
           document.body.getElementsByTag("legend").text shouldEqual Messages("calc.customerType.question")
         }
@@ -120,7 +116,7 @@ class CustomerTypeSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
     "supplied with a pre-existing stored model" should {
 
-      val target = setupTarget(Some(CustomerTypeModel("individual")), None)
+      val target = setupTarget(Some(CustomerTypeModel(CustomerTypeKeys.individual)), None)
       lazy val result = target.customerType(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -158,7 +154,7 @@ class CustomerTypeSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
     "submitting a valid form with 'individual'" should {
 
-      lazy val result = executeTargetWithMockData("individual")
+      lazy val result = executeTargetWithMockData(CustomerTypeKeys.individual)
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -167,7 +163,7 @@ class CustomerTypeSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
     "submitting a valid form with 'trustee'" should {
 
-      lazy val result = executeTargetWithMockData("trustee")
+      lazy val result = executeTargetWithMockData(CustomerTypeKeys.trustee)
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -176,7 +172,7 @@ class CustomerTypeSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
     "submitting a valid form with 'personalRep'" should {
 
-      lazy val result = executeTargetWithMockData("personalRep")
+      lazy val result = executeTargetWithMockData(CustomerTypeKeys.personalRep)
 
       "return a 303" in {
         status(result) shouldBe 303

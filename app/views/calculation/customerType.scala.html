@@ -5,9 +5,9 @@
 
 @(customerTypeForm: Form[CustomerTypeModel])(implicit request: Request[_])
 
-@main_template(title = Messages("calc.customerType.question")) {
+@import common.CustomerTypeKeys
 
-  <a id="back-link" class="back-link" href="@routes.IntroductionController.introduction">@Messages("calc.base.back")</a>
+@main_template(title = Messages("calc.customerType.question")) {
 
   @govHelpers.errorSummary(Messages("calc.error.summary.heading"), customerTypeForm)
 
@@ -19,9 +19,9 @@
         @formInputRadioGroup(
             field = customerTypeForm("customerType"),
             Seq(
-                "individual"->Messages("calc.customerType.individual"),
-                "trustee"->Messages("calc.customerType.trustee"),
-                "personalRep"->Messages("calc.customerType.personalRep")),
+                CustomerTypeKeys.individual ->Messages("calc.customerType.individual"),
+                CustomerTypeKeys.trustee ->Messages("calc.customerType.trustee"),
+                CustomerTypeKeys.personalRep ->Messages("calc.customerType.personalRep")),
             '_legend -> Messages("calc.customerType.question"),
             '_labelClass -> "block-label",
             '_legendID -> "customerType"

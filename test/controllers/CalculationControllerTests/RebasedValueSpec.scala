@@ -16,6 +16,7 @@
 
 package controllers.CalculationControllerTests
 
+import common.KeystoreKeys
 import constructors.CalculationElectionConstructor
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -39,13 +40,16 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget(getData: Option[RebasedValueModel], postData: Option[RebasedValueModel]): CalculationController = {
+  def setupTarget(getData: Option[RebasedValueModel], postData: Option[RebasedValueModel], acquisitionDateModel: Option[AcquisitionDateModel]): CalculationController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
-    when(mockCalcConnector.fetchAndGetFormData[RebasedValueModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[RebasedValueModel](Matchers.eq(KeystoreKeys.rebasedValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.fetchAndGetFormData[AcquisitionDateModel](Matchers.eq(KeystoreKeys.acquisitionDate))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(acquisitionDateModel))
 
     lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(RebasedValueModel("", None)))))
     when(mockCalcConnector.saveFormData[RebasedValueModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
@@ -64,7 +68,7 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
     "not supplied with a pre-existing stored model" should {
 
-      val target = setupTarget(None, None)
+      val target = setupTarget(None, None, Some(AcquisitionDateModel("No", None, None, None)))
       lazy val result = target.rebasedValue(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -85,6 +89,10 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
         s"Have the question ${Messages("calc.rebasedValue.question")}" in {
           document.getElementsByTag("legend").text should include(Messages("calc.rebasedValue.question"))
+        }
+
+        s"have help text with the wording${Messages("calc.rebasedValue.helpText")}" in {
+          document.getElementsByClass("form-hint").text should include(Messages("calc.rebasedValue.helpText"))
         }
 
         "display the correct wording for radio option `yes`" in {
@@ -111,12 +119,16 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with MockitoSug
         "Have a continue button" in {
           document.getElementById("continue-button").tagName() shouldBe "button"
         }
+
+        s"Have a hidden help section with title ${Messages("calc.rebasedValue.helpHidden.title")}" in {
+          document.getElementsByClass("summary").text shouldEqual Messages("calc.rebasedValue.helpHidden.title")
+        }
       }
     }
 
     "supplied with a pre-existing model with 'Yes' checked and value already entered" should {
 
-      val target = setupTarget(Some(RebasedValueModel("Yes", Some(10000))), None)
+      val target = setupTarget(Some(RebasedValueModel("Yes", Some(10000))), None, Some(AcquisitionDateModel("Yes", Some(9), Some(9), Some(2013))))
       lazy val result = target.rebasedValue(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -135,7 +147,7 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
     "supplied with a pre-existing model with 'No' checked and value not entered" should {
 
-      val target = setupTarget(Some(RebasedValueModel("No", Some(0))), None)
+      val target = setupTarget(Some(RebasedValueModel("No", Some(0))), None, Some(AcquisitionDateModel("No", None, None, None)))
       lazy val result = target.rebasedValue(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -167,7 +179,7 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with MockitoSug
         case "fhu39awd8" => RebasedValueModel(selection, None) // required for real number test ONLY
         case _ => RebasedValueModel(selection, Some(BigDecimal(amount)))
       }
-      val target = setupTarget(None, Some(mockData))
+      val target = setupTarget(None, Some(mockData), Some(AcquisitionDateModel("No", None, None, None)))
       target.submitRebasedValue(fakeRequest)
     }
 
