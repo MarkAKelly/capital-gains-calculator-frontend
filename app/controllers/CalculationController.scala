@@ -845,10 +845,11 @@ trait CalculationController extends FrontendController {
   }
 
   //################### Time Apportioned Other Reliefs methods #######################
-  def otherReliefsTA: Action[AnyContent] = Action.async { implicit request =>
+  val otherReliefsTA: Action[AnyContent] = Action.async { implicit request =>
+
     def action (dataResult: Option[CalculationResultModel]) = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA).map {
-      case Some(data) => Ok(calculation.otherReliefsTA(otherReliefsForm.fill(data), dataResult.get, true))
-      case None => Ok(calculation.otherReliefsTA(otherReliefsForm, dataResult.get, false))
+      case Some(data) if data.otherReliefs.isDefined=> Ok(calculation.otherReliefsTA(otherReliefsForm.fill(data), dataResult.get, true))
+      case _ => Ok(calculation.otherReliefsTA(otherReliefsForm, dataResult.get, false))
     }
 
     for {
@@ -860,7 +861,11 @@ trait CalculationController extends FrontendController {
 
   val submitOtherReliefsTA = Action.async { implicit request =>
     def action(dataResult: Option[CalculationResultModel]) = otherReliefsForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(calculation.otherReliefsTA(errors, dataResult.get, true))),
+      errors =>
+        calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA).map {
+          case Some(data) if data.otherReliefs.isDefined => BadRequest(calculation.otherReliefsTA(errors, dataResult.get, true))
+          case _ => BadRequest(calculation.otherReliefsTA(errors, dataResult.get, false))
+        },
       success => {
         calcConnector.saveFormData(KeystoreKeys.otherReliefsTA, success)
         Future.successful(Redirect(routes.CalculationController.calculationElection()))
@@ -877,8 +882,8 @@ trait CalculationController extends FrontendController {
   //################### Rebased Other Reliefs methods #######################
   val otherReliefsRebased = Action.async { implicit request =>
     def action (dataResult: Option[CalculationResultModel]) = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map {
-      case Some(data) => Ok(calculation.otherReliefsRebased(otherReliefsForm.fill(data), dataResult.get, true))
-      case None => Ok(calculation.otherReliefsRebased(otherReliefsForm, dataResult.get, false))
+      case Some(data) if data.otherReliefs.isDefined => Ok(calculation.otherReliefsRebased(otherReliefsForm.fill(data), dataResult.get, true))
+      case _ => Ok(calculation.otherReliefsRebased(otherReliefsForm, dataResult.get, false))
     }
 
     for {
@@ -890,7 +895,11 @@ trait CalculationController extends FrontendController {
 
   val submitOtherReliefsRebased = Action.async { implicit request =>
     def action(dataResult: Option[CalculationResultModel]) = otherReliefsForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(calculation.otherReliefsRebased(errors, dataResult.get, true))),
+      errors =>
+        calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map {
+          case Some(data) if data.otherReliefs.isDefined => BadRequest(calculation.otherReliefsRebased(errors, dataResult.get, true))
+          case _ => BadRequest(calculation.otherReliefsRebased(errors, dataResult.get, false))
+        },
       success => {
         calcConnector.saveFormData(KeystoreKeys.otherReliefsRebased, success)
         Future.successful(Redirect(routes.CalculationController.calculationElection()))
