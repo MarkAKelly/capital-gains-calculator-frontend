@@ -8,15 +8,42 @@
 
 @(calculationElectionForm: Form[CalculationElectionModel], summaryModel: SummaryModel, content: Seq[(String, String, String, Option[String], String)])(implicit request: Request[_], hc: HeaderCarrier)
 
-@main_template(Messages("calc.calculationElection.question"), articleLayout = false) {
+@sidebar = {
+    <ul>
+        <li>
+            <a class="external-link" rel="external" id="helpLink1" target="_blank"
+               href="https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-calculating-taxable-gain-or-loss">
+                @Messages("calc.calculationElection.link.one")
+            </a>
+        </li>
+    </ul>
+}
+
+@main_template(Messages("calc.calculationElection.question"), sidebarLinks = Some(sidebar)) {
 
     <a id="back-link" class="back-link" href="@routes.CalculationController.allowableLosses">@Messages("calc.base.back")</a>
 
     @govHelpers.errorSummary(Messages("calc.error.summary.heading"), calculationElectionForm)
 
     <div class="grid-row">
-        <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
+        <h1 class="heading-xlarge">@Messages("calc.calculationElection.pageHeading")</h1>
     </div>
+
+    <p>@Messages("calc.calculationElection.paragraph.one")</p>
+
+    <h2 class="heading-small">@Messages("calc.calculationElection.h2")</h2>
+
+    <p>@Messages("calc.calculationElection.paragraph.two")</p>
+
+    <p>@Messages("calc.calculationElection.paragraph.three")</p>
+
+    <details role="group">
+        <summary role="button" aria-controls="details-content-0" aria-expanded="false"><span class="summary">@Messages("calc.calculationElection.message.whyMore")</span></summary>
+        <div class="panel panel-indent" id="details-content-0" aria-hidden="true">
+            <p>@Messages("calc.calculationElection.whyMoreDetails.one")</p>
+            <p>@Messages("calc.calculationElection.whyMoreDetails.two")</p>
+        </div>
+    </details>
 
     @govHelpers.form(action = routes.CalculationController.submitCalculationElection) {
 
@@ -25,7 +52,8 @@
                 field = calculationElectionForm("calculationElection"),
                 content,
                 '_labelClass -> "block-label",
-                '_legend -> Messages("calc.calculationElection.message"),
+                '_legend -> Messages("calc.calculationElection.legend"),
+                '_legendClass -> "bold-medium",
                 '_legendID -> "calculationElection")
         </div>
 
@@ -33,11 +61,4 @@
             <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
         </div>
     }
-
-    <details role="group">
-        <summary role="button" aria-controls="details-content-0" aria-expanded="false"><span class="summary">@Messages("calc.calculationElection.message.whyMore")</span></summary>
-        <div class="panel panel-indent" id="details-content-0" aria-hidden="true">
-            <p>@Messages("calc.calculationElection.message.whyMoreDetails")</p>
-        </div>
-    </details>
 }
