@@ -112,6 +112,15 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
           document.body.getElementsByTag("h1").hasClass("heading-xlarge") shouldBe true
         }
 
+        s"have a 'Read more' section that" should {
+
+          "have a link to 'https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-calculating-taxable-gain-or-loss'" +
+            s"with text '${Messages("calc.calculationElection.link.one")}'" in {
+              document.body.getElementById("helpLink1").text shouldEqual Messages("calc.calculationElection.link.one")
+              document.body.getElementById("helpLink1").attr("href") shouldEqual "https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-calculating-taxable-gain-or-loss"
+          }
+        }
+
         s"have a 'Back' link to ${routes.CalculationController.allowableLosses}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
           document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.allowableLosses.toString()

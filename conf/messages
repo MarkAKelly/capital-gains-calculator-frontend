@@ -194,6 +194,7 @@ calc.calculationElection.pageHeading = Working out your total
 calc.calculationElection.question = Which method of calculation would you like?
 calc.calculationElection.message = You can decide what to base your Capital Gains Tax on. It affects how much you''ll pay.
 calc.calculationElection.based = Based on
+calc.calculationElection.link.one = Different ways of working out Capital Gains Tax
 calc.calculationElection.otherRelief = Add other tax relief
 calc.calculationElection.message.time = The percentage of your total gain you''ve made since
 calc.calculationElection.message.timeDate = 5 April 2015

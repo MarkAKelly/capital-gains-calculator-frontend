@@ -8,7 +8,17 @@
 
 @(calculationElectionForm: Form[CalculationElectionModel], summaryModel: SummaryModel, content: Seq[(String, String, String, Option[String], String)])(implicit request: Request[_], hc: HeaderCarrier)
 
-@main_template(Messages("calc.calculationElection.question"), articleLayout = false) {
+@sidebar = {
+    <ul>
+        <li>
+            <a id="helpLink1" href="https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-calculating-taxable-gain-or-loss" target="_blank">
+                @Messages("calc.calculationElection.link.one")
+            </a>
+        </li>
+    </ul>
+}
+
+@main_template(Messages("calc.calculationElection.question"), sidebarLinks = Some(sidebar)) {
 
     <a id="back-link" class="back-link" href="@routes.CalculationController.allowableLosses">@Messages("calc.base.back")</a>
 
