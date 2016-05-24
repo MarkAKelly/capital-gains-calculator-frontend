@@ -16,7 +16,7 @@
 
 package models
 
-import play.api.libs.json.Json
+import common.CalculationType
 
 case class SummaryModel (
                           customerTypeModel: CustomerTypeModel,
@@ -41,7 +41,12 @@ case class SummaryModel (
                           otherReliefsModelTA: OtherReliefsModel,
                           otherReliefsModelRebased: OtherReliefsModel,
                           privateResidenceReliefModel: Option[PrivateResidenceReliefModel]
-                        )
+                        ) {
 
-
-
+  def reliefApplied(): String = calculationElectionModel.calculationType match {
+    case CalculationType.flat if otherReliefsModelFlat.otherReliefs.getOrElse(BigDecimal(0)) > 0 => CalculationType.flat
+    case CalculationType.rebased if otherReliefsModelRebased.otherReliefs.getOrElse(BigDecimal(0)) > 0 => CalculationType.rebased
+    case CalculationType.timeApportioned if otherReliefsModelTA.otherReliefs.getOrElse(BigDecimal(0)) > 0 => CalculationType.timeApportioned
+    case _ => "none"
+  }
+}
