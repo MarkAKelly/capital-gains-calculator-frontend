@@ -77,7 +77,7 @@ calc.personalAllowance.question = In the tax year when you stopped owning the pr
 calc.personalAllowance.linkOne = Income Tax rates and Personal Allowances
 calc.personalAllowance.linkTwo = Tax on your UK income if you live abroad
 calc.personalAllowance.errorNegative = Enter a positive number for your Personal Allowance
-calc.personalAllowance.errorDecimalPlaces = Your Personal Allowance has too many numbers after the decimal point
+calc.personalAllowance.errorDecimalPlaces = Enter a whole number for your Personal Allowance
 calc.personalAllowance.errorMaxLimit = Enter a Personal Allowance that’s £
 calc.personalAllowance.errorMaxLimitEnd = or less
 
