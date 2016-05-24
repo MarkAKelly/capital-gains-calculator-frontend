@@ -6,7 +6,10 @@
 @import uk.gov.hmrc.play.http.HeaderCarrier
 @import scala.concurrent.Future
 
-@(calculationElectionForm: Form[CalculationElectionModel], summaryModel: SummaryModel, content: Seq[(String, String, String, Option[String], String)])(implicit request: Request[_], hc: HeaderCarrier)
+@(  calculationElectionForm: Form[CalculationElectionModel],
+    summaryModel: SummaryModel,
+    content: Seq[(String, String, String, Option[String], String, Option[BigDecimal])])(implicit request: Request[_], hc: HeaderCarrier
+)
 
 @sidebar = {
     <ul>
@@ -58,7 +61,7 @@
         </div>
 
         <div class="grid-row form-group">
-            <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+            <button class="button" name="action" value="continue" id="continue-button">@Messages("calc.base.continue")</button>
         </div>
     }
 }

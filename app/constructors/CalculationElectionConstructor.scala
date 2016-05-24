@@ -35,14 +35,24 @@ trait CalculationElectionConstructor {
   val calcConnector: CalculatorConnector
 
   //scalastyle:off
-  def generateElection(summary: SummaryModel, hc: HeaderCarrier, flatResult: Option[CalculationResultModel], timeResult: Option[CalculationResultModel], rebasedResult: Option[CalculationResultModel]): Seq[(String, String, String, Option[String], String)]= {
+  def generateElection(
+                        summary: SummaryModel,
+                        hc: HeaderCarrier,
+                        flatResult: Option[CalculationResultModel],
+                        timeResult: Option[CalculationResultModel],
+                        rebasedResult: Option[CalculationResultModel],
+                        otherReliefsFlat: Option[BigDecimal],
+                        otherReliefsTA: Option[BigDecimal],
+                        otherReliefsRebased: Option[BigDecimal]
+                      ): Seq[(String, String, String, Option[String], String, Option[BigDecimal])] = {
     summary.acquisitionDateModel.hasAcquisitionDate match {
       case "Yes" if Dates.dateAfterStart(summary.acquisitionDateModel.day.get,
         summary.acquisitionDateModel.month.get, summary.acquisitionDateModel.year.get) => {
         Seq(("flat", flatResult.get.taxOwed.setScale(2).toString(),
           Messages("calc.calculationElection.message.flat"),
           None,
-          routes.CalculationController.otherReliefs().toString()))
+          routes.CalculationController.otherReliefs().toString(),
+          otherReliefsFlat))
       }
       case "Yes" if !Dates.dateAfterStart(summary.acquisitionDateModel.day.get,
         summary.acquisitionDateModel.month.get,
@@ -53,15 +63,18 @@ trait CalculationElectionConstructor {
             ("flat", flatResult.get.taxOwed.setScale(2).toString(),
               Messages("calc.calculationElection.message.flat"),
               None,
-              routes.CalculationController.otherReliefs().toString()),
+              routes.CalculationController.otherReliefs().toString(),
+              otherReliefsFlat),
             ("time", timeResult.get.taxOwed.setScale(2).toString(),
               Messages("calc.calculationElection.message.time"),
               Some(Messages("calc.calculationElection.message.timeDate")),
-              routes.CalculationController.otherReliefsTA().toString()),
+              routes.CalculationController.otherReliefsTA().toString(),
+              otherReliefsTA),
             ("rebased", rebasedResult.get.taxOwed.setScale(2).toString(),
               Messages("calc.calculationElection.message.rebased"),
               Some(Messages("calc.calculationElection.message.rebasedDate")),
-              routes.CalculationController.otherReliefsRebased().toString())
+              routes.CalculationController.otherReliefsRebased().toString(),
+              otherReliefsRebased)
           )
         }
         else {
@@ -69,11 +82,13 @@ trait CalculationElectionConstructor {
             ("flat", flatResult.get.taxOwed.setScale(2).toString(),
               Messages("calc.calculationElection.message.flat"),
               None,
-              routes.CalculationController.otherReliefs().toString()),
+              routes.CalculationController.otherReliefs().toString(),
+              otherReliefsFlat),
             ("time", timeResult.get.taxOwed.setScale(2).toString(),
               Messages("calc.calculationElection.message.time"),
               Some(Messages("calc.calculationElection.message.timeDate")),
-              routes.CalculationController.otherReliefsTA().toString())
+              routes.CalculationController.otherReliefsTA().toString(),
+              otherReliefsTA)
           )
         }
       }
@@ -83,16 +98,21 @@ trait CalculationElectionConstructor {
             ("flat", flatResult.get.taxOwed.setScale(2).toString(),
               Messages("calc.calculationElection.message.flat"),
               None,
-              routes.CalculationController.otherReliefs().toString()),
+              routes.CalculationController.otherReliefs().toString(),
+              otherReliefsFlat),
             ("rebased", rebasedResult.get.taxOwed.setScale(2).toString(),
               Messages("calc.calculationElection.message.rebased"),
               Some(Messages("calc.calculationElection.message.rebasedDate")),
-              routes.CalculationController.otherReliefsRebased().toString())
+              routes.CalculationController.otherReliefsRebased().toString(),
+              otherReliefsRebased)
           )
         }
         else {
-          Seq(("flat", flatResult.get.taxOwed.setScale(2).toString(), Messages("calc.calculationElection.message.flat"),
-            None, routes.CalculationController.otherReliefs().toString())
+          Seq(("flat", flatResult.get.taxOwed.setScale(2).toString(),
+            Messages("calc.calculationElection.message.flat"),
+            None,
+            routes.CalculationController.otherReliefs().toString(),
+            otherReliefsFlat)
           )
         }
       }
