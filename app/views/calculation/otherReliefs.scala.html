@@ -4,7 +4,7 @@
 @import views.html.helpers._
 @import uk.gov.hmrc.play.views.helpers._
 
-@(otherReliefsForm: Form[OtherReliefsModel], result: CalculationResultModel, backUrl: String)(implicit request: Request[_])
+@(otherReliefsForm: Form[OtherReliefsModel], result: CalculationResultModel, buttonWording: Boolean, backUrl: String)(implicit request: Request[_])
 
 @main_template(Messages("calc.otherReliefs.question")) {
 
@@ -31,6 +31,10 @@
 
         @formInputMoney(otherReliefsForm, "otherReliefs", "")
 
-        <button id="add-relief-button" class="button">@Messages("calc.otherReliefs.button.addRelief")</button>
+        @if(buttonWording) {
+            <button id="add-relief-button" class="button">@Messages("calc.otherReliefs.button.updateRelief")</button>
+        } else {
+            <button id="add-relief-button" class="button">@Messages("calc.otherReliefs.button.addRelief")</button>
+        }
     }
 }
