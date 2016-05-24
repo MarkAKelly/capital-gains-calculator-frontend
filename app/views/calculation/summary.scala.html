@@ -1,14 +1,9 @@
 @(summary: SummaryModel, result: CalculationResultModel, backUrl: String)(implicit request: Request[_])
 
-@import views.html.helpers._
-@import org.apache.commons.lang3.text.WordUtils
-@import java.text.SimpleDateFormat
-@import java.util.Date
-@import java.util.GregorianCalendar
-@import constructors._
 @import common._
-@import uk.gov.hmrc.play.views.formatting.Money._
+@import constructors._
 @import uk.gov.hmrc.play.views.helpers._
+@import views.html.helpers._
 
 @main_template(Messages("calc.summary.title"), articleLayout = false) {
 
@@ -17,19 +12,16 @@
     @*
     *  Calculated Tax Owed
     *@
-    <div>
+    <div data-journey="summary:customer-type:@summary.customerTypeModel.customerType">
         <h1 class="heading-xlarge heading-xxlarge">
             <span class="heading-secondary">@Messages("calc.summary.secondaryHeading")</span>
             <b>&pound;@MoneyPounds(result.taxOwed).quantity</b>
         </h1>
     </div>
 
-    @{if (Dates.dateInsideTaxYear(summary.disposalDateModel.day, summary.disposalDateModel.month, summary.disposalDateModel.year)) {}
-    else {
-        taxYearWarningNotice()
-    }}
+    @(if (!Dates.dateInsideTaxYear(summary.disposalDateModel.day, summary.disposalDateModel.month, summary.disposalDateModel.year)) taxYearWarningNotice())
 
-    <div class=font-medium">
+    <div class=font-medium" data-journey="summary:calc-election:@summary.calculationElectionModel.calculationType">
 
     @SummaryConstructor.calculationDetails(result, summary)
 
@@ -46,7 +38,7 @@
     </div>
 
 
-    <div class="grid-layout__column grid-layout__column--2-3">
+    <div class="grid-layout__column grid-layout__column--2-3" data-journey="summary:relief-type:@summary.reliefApplied()">
 
         @*
         *  What to do next
@@ -55,14 +47,15 @@
             <h2 class="heading-medium">@Messages("calc.common.next.actions.heading")</h2>
             <p>
                 @Messages("calc.summary.next.actions.text")
-                <a class="external-link" rel="external" href="https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-uk-residential-property" target="_blank">@Messages("calc.summary.next.actions.link")</a>
+                <a class="external-link" rel="external" href="https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-uk-residential-property"
+                    target="_blank" data-journey-click="nav:calc:kana-nrcgt">@Messages("calc.summary.next.actions.link")</a>
             </p>
         </div>
 
         @*
         *  Start Again
         *@
-        <a id="startAgain" class="bold-medium" href="@routes.CalculationController.restart">@Messages("calc.summary.startAgain")</a>
+        <a id="startAgain" class="bold-medium" href="@routes.CalculationController.restart" data-journey-click="nav:calc:restart">@Messages("calc.summary.startAgain")</a>
 
     </div>
 }

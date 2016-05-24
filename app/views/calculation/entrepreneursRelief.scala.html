@@ -5,7 +5,9 @@
 @import views.html.helpers._
 
 @sidebar = {
-    <a id="helpLink1" class="external-link" rel="external" href="https://www.gov.uk/entrepreneurs-relief" target="_blank">@Messages("calc.entrepreneursRelief.link")</a>
+
+    <a id="helpLink1" class="external-link" rel="external" href="https://www.gov.uk/entrepreneurs-relief"
+        target="_blank" data-journey-click="help:govUK:entrepreneursRelief">@Messages("calc.entrepreneursRelief.link")</a>
 }
 
 @main_template(Messages("calc.entrepreneursRelief.question"), sidebarLinks = Some(sidebar)) {
