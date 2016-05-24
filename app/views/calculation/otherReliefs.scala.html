@@ -2,8 +2,9 @@
 @import models._
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 @import views.html.helpers._
+@import uk.gov.hmrc.play.views.helpers._
 
-@(otherReliefsForm: Form[OtherReliefsModel], result: CalculationResultModel, backUrl: String)(implicit request: Request[_])
+@(otherReliefsForm: Form[OtherReliefsModel], result: CalculationResultModel, hasExistingReliefAmount: Boolean, backUrl: String)(implicit request: Request[_])
 
 @main_template(Messages("calc.otherReliefs.question")) {
 
@@ -19,14 +20,21 @@
 
         <div class="panel-indent">
             <ul class="list list-bullet">
-                <li id="totalGain">&pound;@SummaryConstructor.setPositive(result)<br><span class="font-xsmall">@SummaryConstructor.gainMessage(result)</span></li>
+                <li id="totalGain">&pound;@{MoneyPounds(result.totalGain,0).quantity}<br><span class="font-xsmall">@SummaryConstructor.gainMessage(result)</span></li>
 
-                <li id="taxableGain">&pound;@{{result.taxableGain}.setScale(2).toString}<br><span class="font-xsmall">@Messages("calc.otherReliefs.taxableGain")</span></li>
+                <li id="taxableGain">&pound;@{MoneyPounds(result.taxableGain,0).quantity}<br><span class="font-xsmall">@{
+                    if (result.taxableGain >= 0) Messages("calc.otherReliefs.taxableGain")
+                    else Messages("calc.summary.calculation.details.lossCarriedForward")
+                    }</span></li>
             </ul>
         </div>
 
         @formInputMoney(otherReliefsForm, "otherReliefs", "")
 
-        <button id="add-relief-button" class="button">@Messages("calc.otherReliefs.button.addRelief")</button>
+        @if(hasExistingReliefAmount) {
+            <button id="add-relief-button" class="button">@Messages("calc.otherReliefs.button.updateRelief")</button>
+        } else {
+            <button id="add-relief-button" class="button">@Messages("calc.otherReliefs.button.addRelief")</button>
+        }
     }
 }

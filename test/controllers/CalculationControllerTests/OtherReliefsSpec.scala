@@ -123,7 +123,7 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
           }
 
           "have a value for your gain" in {
-            document.getElementById("totalGain").text() shouldBe "£40000.00 Total gain"
+            document.getElementById("totalGain").text() shouldBe "£40,000 Total gain"
           }
 
           "display an input box for the Other Tax Reliefs" in {
@@ -271,7 +271,7 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         }
 
         "have a value for your loss" in {
-          document.getElementById("totalGain").text() shouldBe "£10000.00 Total loss"
+          document.getElementById("totalGain").text() shouldBe "£10,000 Total loss"
         }
       }
     }
