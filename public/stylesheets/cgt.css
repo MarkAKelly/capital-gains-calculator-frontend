@@ -70,7 +70,12 @@ section {
 .additional-option-block {
     padding-left: 44px;
     border-left-width: 10px;
-    margin-bottom: 0.7894736842em
+    margin-bottom: 0.7894736842em;
+    display: table;
+}
+
+.align-bottom {
+    vertical-align: bottom;
 }
 
 .block-label input {

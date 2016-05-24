@@ -205,6 +205,20 @@ class PersonalAllowanceSpec extends UnitSpec with WithFakeApplication with Mocki
 
       "submitting a form which exceeds the maximum PA amount" should {
 
+        lazy val result = executeTargetWithMockData("12102")
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        "return a 400" in {
+          status(result) shouldBe 400
+        }
+
+        s"fail with message ${Messages("calc.personalAllowance.errorMaxLimit")}" in {
+          document.getElementsByClass("error-notification").text should include(Messages("calc.personalAllowance.errorMaxLimit"))
+        }
+      }
+
+      "submitting a form which exceeds the maximum PA amount and has fractional pounds" should {
+
         lazy val result = executeTargetWithMockData("12100.01")
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -214,6 +228,7 @@ class PersonalAllowanceSpec extends UnitSpec with WithFakeApplication with Mocki
 
         s"fail with message ${Messages("calc.personalAllowance.errorMaxLimit")}" in {
           document.getElementsByClass("error-notification").text should include(Messages("calc.personalAllowance.errorMaxLimit"))
+          document.getElementsByClass("error-notification").text should include(Messages("calc.personalAllowance.errorDecimalPlaces"))
         }
       }
     }
