@@ -1,6 +1,5 @@
 @import models.CustomerTypeModel
-@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-@import play.api.data._
+@import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
 
 @(customerTypeForm: Form[CustomerTypeModel])(implicit request: Request[_])
@@ -9,11 +8,11 @@
 
 @main_template(title = Messages("calc.customerType.question")) {
 
-  @govHelpers.errorSummary(Messages("calc.error.summary.heading"), customerTypeForm)
+  @errorSummary(customerTypeForm, "customer-type")
 
   <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1> 
 
-  @govHelpers.form(action = routes.CalculationController.submitCustomerType) {
+  @form(action = routes.CalculationController.submitCustomerType) {
 
     <div class="form-group">
         @formInputRadioGroup(

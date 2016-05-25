@@ -1,6 +1,6 @@
+@import models.AllowableLossesModel
+@import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
-@import play.api.data._
-@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 
 @(allowableLossesForm: Form[AllowableLossesModel])(implicit request: Request[_])
 
@@ -21,12 +21,12 @@
 
     <a id="back-link" class="back-link" href="@routes.CalculationController.entrepreneursRelief">Back</a>
 
-    @govHelpers.errorSummary(Messages("calc.error.summary.heading"), allowableLossesForm)
+    @errorSummary(allowableLossesForm, "allowable-losses")
 
     <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
 
     <div class="form-group">
-        @govHelpers.form(action = routes.CalculationController.submitAllowableLosses) {
+        @form(action = routes.CalculationController.submitAllowableLosses) {
 
             @formHiddenYesNoRadio(
                 allowableLossesForm,

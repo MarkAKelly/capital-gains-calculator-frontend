@@ -1,6 +1,6 @@
 @import models.AnnualExemptAmountModel
-@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-@import play.api.data._
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import views.html.helpers._
 
 @(annualExemptAmountForm: Form[AnnualExemptAmountModel])(implicit request: Request[_])
 
@@ -14,11 +14,11 @@
 
     <a id="back-link" class="back-link" href="@routes.CalculationController.otherProperties">Back</a>
 
-    @govHelpers.errorSummary(Messages("calc.error.summary.heading"), annualExemptAmountForm)
+    @errorSummary(annualExemptAmountForm, "annual-exempt-amount")
 
     <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
 
-    @govHelpers.form(action = routes.CalculationController.submitAnnualExemptAmount) {
+    @form(action = routes.CalculationController.submitAnnualExemptAmount) {
 
         @formInputMoney(annualExemptAmountForm, "annualExemptAmount", Messages("calc.annualExemptAmount.question"))
 

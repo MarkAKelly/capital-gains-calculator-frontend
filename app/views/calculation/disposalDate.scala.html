@@ -1,6 +1,6 @@
-@import play.api.data._
+@import models.DisposalDateModel
+@import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
-@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 
 @(disposalDateForm: Form[DisposalDateModel])(implicit request: Request[_])
 
@@ -8,11 +8,11 @@
 
     <a id="back-link" class="back-link" href="@routes.CalculationController.improvements">@Messages("calc.base.back")</a>
 
-    @govHelpers.errorSummary(Messages("calc.error.summary.heading"), disposalDateForm)
+    @errorSummary(disposalDateForm, "disposal-date")
 
     <h1 class="heading-large">@Messages("calc.base.calculate.tax.heading")</h1>
 
-    @govHelpers.form(action = routes.CalculationController.submitDisposalDate) {
+    @form(action = routes.CalculationController.submitDisposalDate) {
 
         @formInlineDateInput(disposalDateForm, "disposalDate", Messages("calc.disposalDate.question"))
 

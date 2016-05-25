@@ -1,7 +1,6 @@
 @import models.DisposalValueModel
+@import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
-@import play.api.data._
-@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 
 @(disposalValueForm: Form[DisposalValueModel])(implicit request: Request[_])
 
@@ -9,11 +8,11 @@
 
     <a id="back-link" class="back-link" href="@routes.CalculationController.disposalDate">@Messages("calc.base.back")</a>
 
-    @govHelpers.errorSummary(Messages("calc.error.summary.heading"), disposalValueForm)
+    @errorSummary(disposalValueForm, "disposal-value")
 
     <h1 class="heading-large">@Messages("calc.base.calculate.tax.heading")</h1>
 
-    @govHelpers.form(action = routes.CalculationController.submitDisposalValue) {
+    @form(action = routes.CalculationController.submitDisposalValue) {
 
         @formInputMoney(disposalValueForm, "disposalValue", Messages("calc.disposalValue.question"), Some(Messages("calc.disposalValue.hint")))
 
