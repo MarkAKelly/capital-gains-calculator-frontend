@@ -1,8 +1,8 @@
-@(entrepreneursReliefForm: Form[EntrepreneursReliefModel], backUrl: String)(implicit request: Request[_])
-
-@import models.OtherPropertiesModel
-@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+@import models.EntrepreneursReliefModel
+@import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
+
+@(entrepreneursReliefForm: Form[EntrepreneursReliefModel], backUrl: String)(implicit request: Request[_])
 
 @sidebar = {
 
@@ -14,11 +14,11 @@
 
     <a id="back-link" class="back-link" href="@backUrl">@Messages("calc.base.back")</a>
 
-    @govHelpers.errorSummary(Messages("calc.error.summary.heading"), entrepreneursReliefForm)
+    @errorSummary(entrepreneursReliefForm, "entrepreneurs-relief")
 
     <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
 
-    @govHelpers.form(action = routes.CalculationController.submitEntrepreneursRelief) {
+    @form(action = routes.CalculationController.submitEntrepreneursRelief) {
 
     <div class="inline form-group">
         @formInputRadioGroup(

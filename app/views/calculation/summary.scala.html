@@ -1,9 +1,9 @@
-@(summary: SummaryModel, result: CalculationResultModel, backUrl: String)(implicit request: Request[_])
-
-@import common._
-@import constructors._
+@import common.Dates
+@import constructors.SummaryConstructor
 @import uk.gov.hmrc.play.views.helpers._
 @import views.html.helpers._
+
+@(summary: SummaryModel, result: CalculationResultModel, backUrl: String)(implicit request: Request[_])
 
 @main_template(Messages("calc.summary.title"), articleLayout = false) {
 

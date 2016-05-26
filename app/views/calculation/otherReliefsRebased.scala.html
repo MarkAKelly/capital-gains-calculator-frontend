@@ -1,9 +1,8 @@
-@import constructors._
-@import models._
-@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+@import models.OtherReliefsModel
+@import constructors.SummaryConstructor
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import uk.gov.hmrc.play.views.helpers.MoneyPounds
 @import views.html.helpers._
-@import uk.gov.hmrc.play.views.helpers._
-
 
 @(otherReliefsForm: Form[OtherReliefsModel], result: CalculationResultModel, hasExistingReliefAmount: Boolean)(implicit request: Request[_])
 
@@ -11,11 +10,11 @@
 
     <a id="back-link" class="back-link" href="@routes.CalculationController.calculationElection">@Messages("calc.base.back")</a>
 
-    @govHelpers.errorSummary(Messages("calc.error.summary.heading"), otherReliefsForm)
+    @errorSummary(otherReliefsForm, "other-reliefs-rebased")
 
     <h1 class="heading-large">@Messages("calc.base.calculate.tax.heading")</h1>
 
-    @govHelpers.form(action = routes.CalculationController.submitOtherReliefsRebased) {
+    @form(action = routes.CalculationController.submitOtherReliefsRebased) {
 
         <label for="otherReliefs">@Messages("calc.otherReliefs.question")</label>
 

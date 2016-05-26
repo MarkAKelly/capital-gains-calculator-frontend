@@ -1,5 +1,5 @@
 @import models.RebasedCostsModel
-@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+@import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
 
 @(rebasedCosts: Form[RebasedCostsModel])(implicit request: Request[_])
@@ -8,11 +8,11 @@
 
     <a id="back-link" class="back-link" href="@routes.CalculationController.rebasedValue">Back</a>
 
-    @govHelpers.errorSummary(Messages("calc.error.summary.heading"), rebasedCosts)
+    @errorSummary(rebasedCosts, "rebased-costs")
 
     <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
 
-    @govHelpers.form(action = routes.CalculationController.submitRebasedCosts) {
+    @form(action = routes.CalculationController.submitRebasedCosts) {
 
         @formHiddenYesNoRadio(rebasedCosts,
                               "hasRebasedCosts",

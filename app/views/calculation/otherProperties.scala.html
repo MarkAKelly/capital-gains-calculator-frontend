@@ -1,5 +1,5 @@
 @import models.OtherPropertiesModel
-@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+@import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
 
 @(otherPropertiesForm: Form[OtherPropertiesModel], backUrl: String)(implicit request: Request[_])
@@ -36,11 +36,11 @@
 
     <a id="back-link" class="back-link" href="@backUrl">@Messages("calc.base.back")</a>
 
-    @govHelpers.errorSummary(Messages("calc.error.summary.heading"), otherPropertiesForm)
+    @errorSummary(otherPropertiesForm, "other-properties")
 
     <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
 
-    @govHelpers.form(action = routes.CalculationController.submitOtherProperties) {
+    @form(action = routes.CalculationController.submitOtherProperties) {
 
         <legend>
             <p>@Messages("calc.otherProperties.question")</p>
