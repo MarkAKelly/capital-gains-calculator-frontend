@@ -492,11 +492,12 @@ trait CalculationController extends FrontendController {
 
   def getAcquisitionDate(implicit hc: HeaderCarrier): Future[Option[Date]] =
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).map {
-      case Some(data) => data.hasAcquisitionDate match {
-        case "Yes" => Some(Dates.constructDate(data.day.get, data.month.get, data.year.get))
-        case _ => None
-    }
-    case _ => None
+      case Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year))) => Some(Dates.constructDate(day, month, year))
+//      case Some(data) => data.hasAcquisitionDate match {
+//        case "Yes" => Some(Dates.constructDate(data.day.get, data.month.get, data.year.get))
+//        case _ => None
+//    }
+      case _ => None
   }
 
   def getRebasedAmount(implicit hc: HeaderCarrier): Future[Boolean] =
