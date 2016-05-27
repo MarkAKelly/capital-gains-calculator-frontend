@@ -24,7 +24,7 @@ import play.api.i18n.Messages
 
 object DisposalDateForm {
 
-  val disposalDateForm = Form(
+  def disposalDateForm(acquisitionDateModel: Option[AcquisitionDateModel]): Form[DisposalDateModel] = Form(
     mapping(
       "disposalDate.day" -> number,
       "disposalDate.month" -> number,
