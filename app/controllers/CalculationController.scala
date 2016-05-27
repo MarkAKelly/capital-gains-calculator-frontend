@@ -142,11 +142,6 @@ trait CalculationController extends FrontendController {
     case Some(CustomerTypeModel("individual")) => routes.CalculationController.personalAllowance().url
     case Some(CustomerTypeModel("trustee")) => routes.CalculationController.disabledTrustee().url
     case Some(_) => routes.CalculationController.customerType().url
-//    case Some(data) => data.customerType match {
-//      case "individual" => routes.CalculationController.personalAllowance().url
-//      case "trustee" => routes.CalculationController.disabledTrustee().url
-//      case _ => routes.CalculationController.customerType().url
-//    }
     case _ => missingDataRoute
   }
 
@@ -173,14 +168,10 @@ trait CalculationController extends FrontendController {
           Future.successful(BadRequest(calculation.otherProperties(errors, backUrl))),
         success => {
           calcConnector.saveFormData(KeystoreKeys.otherProperties, success)
-          success.otherProperties match {
-            case "Yes" =>
-              success.otherPropertiesAmt match {
-                case Some(data) if data.equals(BigDecimal(0)) => Future.successful(Redirect(routes.CalculationController.annualExemptAmount()))
-                case _ => calcConnector.saveFormData("annualExemptAmount", AnnualExemptAmountModel(0))
-                  Future.successful(Redirect(routes.CalculationController.acquisitionDate()))
-              }
-            case "No" => Future.successful(Redirect(routes.CalculationController.acquisitionDate()))
+          success match {
+            case OtherPropertiesModel("Yes", Some(value)) if value.equals(BigDecimal(0)) => Future.successful(Redirect(routes.CalculationController.annualExemptAmount()))
+            case _ => calcConnector.saveFormData("annualExemptAmount", AnnualExemptAmountModel(0))
+              Future.successful(Redirect(routes.CalculationController.acquisitionDate()))
           }
         }
       )
