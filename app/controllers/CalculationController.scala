@@ -228,14 +228,9 @@ trait CalculationController extends FrontendController {
   //################### Acquisition Date methods #######################
   def acquisitionDateBackUrl(implicit hc: HeaderCarrier): Future[String] = {
     calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.otherProperties).map {
-      case Some(data) if data.otherProperties == "Yes" =>
-        if (data.otherPropertiesAmt.get == 0) {
-          routes.CalculationController.annualExemptAmount().url
-        } else {
-          routes.CalculationController.otherProperties().url
-        }
-      case Some(data) if data.otherProperties == "No" => routes.CalculationController.otherProperties().url
-      case _ => missingDataRoute
+      case Some(OtherPropertiesModel("Yes", Some(value))) if value == BigDecimal(0) => routes.CalculationController.annualExemptAmount().url
+      case None => missingDataRoute
+      case _ => routes.CalculationController.otherProperties().url
     }
   }
 
