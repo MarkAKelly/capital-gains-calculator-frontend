@@ -16,6 +16,7 @@
 
 package controllers.CalculationControllerTests
 
+import common.KeystoreKeys
 import constructors.CalculationElectionConstructor
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -40,13 +41,19 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget(getData: Option[DisposalDateModel], postData: Option[DisposalDateModel]): CalculationController = {
+  def setupTarget(getData: Option[DisposalDateModel],
+                  postData: Option[DisposalDateModel],
+                  acquisitionData: Option[AcquisitionDateModel] = None
+                 ): CalculationController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
-    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.fetchAndGetFormData[AcquisitionDateModel](Matchers.eq(KeystoreKeys.acquisitionDate))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(acquisitionData))
 
     lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(DisposalDateModel(1, 1, 1)))))
     when(mockCalcConnector.saveFormData[DisposalDateModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
@@ -147,10 +154,10 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 
-    def executeTargetWithMockData(day: String, month: String, year: String): Future[Result] = {
+    def executeTargetWithMockData(day: String, month: String, year: String, acquisitionDateData: Option[AcquisitionDateModel] = None): Future[Result] = {
       lazy val fakeRequest = buildRequest(("disposalDate.day", day), ("disposalDate.month", month), ("disposalDate.year", year))
       val mockData = new DisposalDateModel(getIntOrDefault(day), getIntOrDefault(month), getIntOrDefault(year))
-      val target = setupTarget(None, Some(mockData))
+      val target = setupTarget(None, Some(mockData), acquisitionDateData)
       target.submitDisposalDate(fakeRequest)
     }
 
@@ -177,6 +184,20 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
       s"redirect to ${routes.CalculationController.disposalValue()}" in {
         redirectLocation(result) shouldBe Some(s"${routes.CalculationController.disposalValue()}")
+      }
+    }
+
+    "submitting a disposal date of 22/02/1990 which is before acquisition date 22/01/2000" should {
+
+      lazy val result = executeTargetWithMockData("22", "2", "1990", Some(AcquisitionDateModel("Yes",Some(22),Some(1),Some(2000))))
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 400" in {
+        status(result) shouldBe 400
+      }
+
+      s"should error with message '${Messages("calc.disposalDate.error.disposalDateAfterAcquisition")}'" in {
+        document.select(".error-notification").text should include (Messages("calc.disposalDate.error.disposalDateAfterAcquisition"))
       }
     }
 
