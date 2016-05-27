@@ -180,7 +180,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.customerType.question"),
               WordUtils.capitalize(summary.customerTypeModel.customerType),
-              Some(routes.CalculationController.calculationElection().toString())
+              Some(routes.CalculationController.customerType().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.disabledTrustee.question"),
