@@ -20,15 +20,26 @@ import play.api.data._
 import play.api.data.Forms._
 import models._
 import common.Validation._
+import common.Dates._
 import play.api.i18n.Messages
+import java.util.Date
 
 object DisposalDateForm {
 
-  val disposalDateForm = Form(
+  def isAfterAcquisitionDate(day: Int, month: Int, year: Int, acquisitionDate: Option[Date]): Boolean = acquisitionDate match {
+    case Some(acquisitionDateValue) => constructDate(day,month,year).after(acquisitionDateValue)
+    case _ => true
+  }
+
+  def disposalDateForm(acquisitionDate: Option[Date]): Form[DisposalDateModel] = Form(
     mapping(
       "disposalDate.day" -> number,
       "disposalDate.month" -> number,
       "disposalDate.year" -> number
-    )(DisposalDateModel.apply)(DisposalDateModel.unapply) verifying(Messages("calc.common.date.error.invalidDate"), fields =>
-      isValidDate(fields.day, fields.month, fields.year)))
+    )(DisposalDateModel.apply)(DisposalDateModel.unapply)
+      .verifying(Messages("calc.common.date.error.invalidDate"), fields =>
+        isValidDate(fields.day, fields.month, fields.year))
+      .verifying(Messages("calc.disposalDate.error.disposalDateAfterAcquisition"), fields =>
+        isAfterAcquisitionDate(fields.day, fields.month, fields.year, acquisitionDate))
+  )
 }

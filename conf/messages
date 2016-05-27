@@ -143,6 +143,7 @@ calc.improvements.errorDecimalPlaces = The cost of your improvements has too man
 
 ## Disposal Date ##
 calc.disposalDate.question = When did you sign the contract that made someone else the owner?
+calc.disposalDate.error.disposalDateAfterAcquisition = This can''t be before the date you became the owner
 
 ## Disposal Value ##
 calc.disposalValue.question = How much did you sell or give away the property for?
