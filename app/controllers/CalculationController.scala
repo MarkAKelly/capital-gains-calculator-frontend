@@ -61,6 +61,17 @@ trait CalculationController extends FrontendController {
   val calcConnector: CalculatorConnector
   val calcElectionConstructor: CalculationElectionConstructor
 
+  //################### Shared/Common methods #######################
+  def getAcquisitionDate(implicit hc: HeaderCarrier): Future[Option[Date]] = {
+    calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).map {
+      case Some(data) => data.hasAcquisitionDate match {
+        case "Yes" => Some(Dates.constructDate(data.day.get, data.month.get, data.year.get))
+        case _ => None
+      }
+      case _ => None
+    }
+  }
+
   //################### Customer Type methods #######################
   val customerType = Action.async { implicit request =>
     calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).map {
@@ -417,20 +428,36 @@ trait CalculationController extends FrontendController {
 
   //################### Disposal Date methods #######################
   val disposalDate = Action.async { implicit request =>
-    calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.disposalDate).map {
-      case Some(data) => Ok(calculation.disposalDate(disposalDateForm.fill(data)))
-      case None => Ok(calculation.disposalDate(disposalDateForm))
+
+    def routeRequest(acquisitionDate: Option[Date]): Future[Result] = {
+      calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.disposalDate).map {
+        case Some(data) => Ok(calculation.disposalDate(disposalDateForm(acquisitionDate).fill(data)))
+        case None => Ok(calculation.disposalDate(disposalDateForm(acquisitionDate)))
+      }
     }
+
+    for {
+      acquisitionDate <- getAcquisitionDate
+      route <- routeRequest(acquisitionDate)
+    } yield route
   }
 
   val submitDisposalDate = Action.async { implicit request =>
-    disposalDateForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(calculation.disposalDate(errors))),
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.disposalDate, success)
-        Future.successful(Redirect(routes.CalculationController.disposalValue()))
-      }
-    )
+
+    def routeRequest(acquisitionDate: Option[Date]): Future[Result] = {
+      disposalDateForm(acquisitionDate).bindFromRequest.fold(
+        errors => Future.successful(BadRequest(calculation.disposalDate(errors))),
+        success => {
+          calcConnector.saveFormData(KeystoreKeys.disposalDate, success)
+          Future.successful(Redirect(routes.CalculationController.disposalValue()))
+        }
+      )
+    }
+
+    for {
+      acquisitionDate <- getAcquisitionDate
+      route <- routeRequest(acquisitionDate)
+    } yield route
   }
 
   //################### Disposal Value methods #######################
@@ -505,15 +532,6 @@ trait CalculationController extends FrontendController {
     calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.disposalDate).map {
       case Some(data) => Some(Dates.constructDate(data.day, data.month, data.year))
       case _ => None
-  }
-
-  def getAcquisitionDate(implicit hc: HeaderCarrier): Future[Option[Date]] =
-    calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).map {
-      case Some(data) => data.hasAcquisitionDate match {
-        case "Yes" => Some(Dates.constructDate(data.day.get, data.month.get, data.year.get))
-        case _ => None
-    }
-    case _ => None
   }
 
   def getRebasedAmount(implicit hc: HeaderCarrier): Future[Boolean] =

@@ -21,10 +21,11 @@ import play.api.data.Forms._
 import models._
 import common.Validation._
 import play.api.i18n.Messages
+import java.util.Date
 
 object DisposalDateForm {
 
-  def disposalDateForm(acquisitionDateModel: Option[AcquisitionDateModel]): Form[DisposalDateModel] = Form(
+  def disposalDateForm(acquisitionDate: Option[Date]): Form[DisposalDateModel] = Form(
     mapping(
       "disposalDate.day" -> number,
       "disposalDate.month" -> number,
