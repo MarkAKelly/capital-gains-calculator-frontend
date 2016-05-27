@@ -509,21 +509,13 @@ trait CalculationController extends FrontendController {
       case _ => false
     }
 
-  def displayBeforeQuestion(disposalDate: Option[Date], acquisitionDate: Option[Date], hasRebasedValue: Boolean): Boolean = disposalDate match {
-    case Some(disposalDateValue) =>
-      if (Dates.dateAfterOctober(disposalDateValue)) {
-        acquisitionDate match {
-          case Some(acquisitionDateValue) => true
-          case _ => false
-        }
-      } else {
-        acquisitionDate match {
-          case Some(acquisitionDateValue) if !Dates.dateAfterStart(acquisitionDateValue) => true
-          case _ => false
-        }
-      }
-    case _ => false
-  }
+  def displayBeforeQuestion(disposalDate: Option[Date], acquisitionDate: Option[Date], hasRebasedValue: Boolean): Boolean =
+    (disposalDate, acquisitionDate) match {
+      case (Some(dDate), Some(aDate)) if Dates.dateAfterOctober(dDate) => true
+      case (Some(dDate), Some(aDate)) if !Dates.dateAfterStart(aDate) => true
+      case _ => false
+    }
+
 
   val privateResidenceRelief = Action.async { implicit request =>
 
