@@ -344,23 +344,17 @@ trait CalculationController extends FrontendController {
 
     def checkRebasedValue = {
       calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
-        case Some(rebasedData) if rebasedData.hasRebasedValue == "Yes" =>
-          Future.successful(routes.CalculationController.rebasedCosts().url)
-        case Some(rebasedData) if rebasedData.hasRebasedValue == "No" =>
-          Future.successful(routes.CalculationController.rebasedValue().url)
+        case Some(RebasedValueModel("Yes", data)) => Future.successful(routes.CalculationController.rebasedCosts().url)
+        case Some(RebasedValueModel("No", data)) => Future.successful(routes.CalculationController.rebasedValue().url)
         case _ => Future.successful(missingDataRoute)
       }
     }
 
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
-      case Some(acquisitionData) if acquisitionData.hasAcquisitionDate == "Yes" =>
-        if (Dates.dateAfterStart(acquisitionData.day.get, acquisitionData.month.get, acquisitionData.year.get))
-          Future.successful(routes.CalculationController.acquisitionValue().url)
-        else
-          checkRebasedValue
-      case Some(acquisitionData) if acquisitionData.hasAcquisitionDate == "No" =>
-        checkRebasedValue
-      case _ => Future.successful(missingDataRoute)
+      case Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year))) if Dates.dateAfterStart(day, month, year) =>
+        Future.successful(routes.CalculationController.acquisitionValue().url)
+      case None => Future.successful(missingDataRoute)
+      case _ => checkRebasedValue
     }
   }
 
