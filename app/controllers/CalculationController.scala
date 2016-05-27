@@ -139,11 +139,14 @@ trait CalculationController extends FrontendController {
 
   //################### Other Properties methods #######################
   def otherPropertiesBackUrl(implicit hc: HeaderCarrier): Future[String] = calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).map {
-    case Some(data) => data.customerType match {
-      case "individual" => routes.CalculationController.personalAllowance().url
-      case "trustee" => routes.CalculationController.disabledTrustee().url
-      case _ => routes.CalculationController.customerType().url
-    }
+    case Some(CustomerTypeModel("individual")) => routes.CalculationController.personalAllowance().url
+    case Some(CustomerTypeModel("trustee")) => routes.CalculationController.disabledTrustee().url
+    case Some(_) => routes.CalculationController.customerType().url
+//    case Some(data) => data.customerType match {
+//      case "individual" => routes.CalculationController.personalAllowance().url
+//      case "trustee" => routes.CalculationController.disabledTrustee().url
+//      case _ => routes.CalculationController.customerType().url
+//    }
     case _ => missingDataRoute
   }
 
