@@ -493,10 +493,6 @@ trait CalculationController extends FrontendController {
   def getAcquisitionDate(implicit hc: HeaderCarrier): Future[Option[Date]] =
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).map {
       case Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year))) => Some(Dates.constructDate(day, month, year))
-//      case Some(data) => data.hasAcquisitionDate match {
-//        case "Yes" => Some(Dates.constructDate(data.day.get, data.month.get, data.year.get))
-//        case _ => None
-//    }
       case _ => None
   }
 
@@ -507,16 +503,11 @@ trait CalculationController extends FrontendController {
   }
 
   def displayBetweenQuestion(disposalDate: Option[Date], acquisitionDate: Option[Date], hasRebasedValue: Boolean): Boolean =
-    disposalDate match {
-      case Some(date) =>
-        if (Dates.dateAfterOctober(date)) {
-          acquisitionDate match {
-            case Some(acquisitionDateValue) if !Dates.dateAfterStart(acquisitionDateValue) => true
-            case _ => if (hasRebasedValue) true else false
-          }
-        } else false
+    (disposalDate, acquisitionDate) match {
+      case (Some(dDate), Some(aDate)) if Dates.dateAfterOctober(dDate) && !Dates.dateAfterStart(aDate)  => true
+      case (Some(dDate), aDateOption) if Dates.dateAfterOctober(dDate) && hasRebasedValue => true
       case _ => false
-  }
+    }
 
   def displayBeforeQuestion(disposalDate: Option[Date], acquisitionDate: Option[Date], hasRebasedValue: Boolean): Boolean = disposalDate match {
     case Some(disposalDateValue) =>
