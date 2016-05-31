@@ -779,20 +779,13 @@ trait CalculationController extends FrontendController {
   //################### Other Reliefs methods #######################
   def otherReliefsBackUrl(implicit hc: HeaderCarrier): Future[String] = {
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
-      case Some(acquisitionData) if acquisitionData.hasAcquisitionDate == "Yes" =>
-        if (Dates.dateAfterStart(acquisitionData.day.get, acquisitionData.month.get, acquisitionData.year.get)) {
-          Future.successful(routes.CalculationController.allowableLosses().url)
-        } else {
-          Future.successful(routes.CalculationController.calculationElection().url)
-        }
-      case Some(acquisitionData) if acquisitionData.hasAcquisitionDate == "No" =>
+      case (Some(AcquisitionDateModel("Yes", day, month, year))) if Dates.dateAfterStart(day.get, month.get, year.get) =>
+        Future.successful(routes.CalculationController.allowableLosses().url)
+      case (Some(AcquisitionDateModel("Yes", day, month, year))) => Future.successful(routes.CalculationController.calculationElection().url)
+      case (Some(AcquisitionDateModel("No", _, _, _))) =>
         calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
-          case Some(rebasedData) =>
-            if (rebasedData.hasRebasedValue == "Yes") {
-              Future.successful(routes.CalculationController.calculationElection().url)
-            } else {
-              Future.successful(routes.CalculationController.allowableLosses().url)
-            }
+          case Some(RebasedValueModel("Yes", _)) => Future.successful(routes.CalculationController.calculationElection().url)
+          case Some(RebasedValueModel("No", _)) => Future.successful(routes.CalculationController.allowableLosses().url)
           case _ => Future.successful(missingDataRoute)
         }
       case _ => Future.successful(missingDataRoute)
