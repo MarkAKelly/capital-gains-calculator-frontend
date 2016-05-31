@@ -108,17 +108,10 @@ object CalculateRequestConstructor {
   }
 
   def improvements (input: SummaryModel) = s"&improvementsAmt=${
-    input.improvementsModel.isClaimingImprovements match {
-      case "Yes" => {
-        input.rebasedValueModel match {
-          case Some(data) => data.hasRebasedValue match {
-            case "Yes" => input.improvementsModel.improvementsAmtAfter.getOrElse(BigDecimal(0)) + input.improvementsModel.improvementsAmt.getOrElse(BigDecimal(0))
-            case "No" => input.improvementsModel.improvementsAmt.getOrElse(0)
-          }
-          case None => input.improvementsModel.improvementsAmt.getOrElse(0)
-        }
-      }
-      case "No" => 0
+    (input.improvementsModel.isClaimingImprovements, input.rebasedValueModel) match {
+      case ("Yes", Some(RebasedValueModel("Yes", _))) => input.improvementsModel.improvementsAmtAfter.getOrElse(BigDecimal(0)) + input.improvementsModel.improvementsAmt.getOrElse(BigDecimal(0))
+      case ("No", _) => 0
+      case _ => input.improvementsModel.improvementsAmt.getOrElse(0)
     }
   }"
 
