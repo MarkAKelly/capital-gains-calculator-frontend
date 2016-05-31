@@ -38,18 +38,12 @@ object SummaryConstructor {
   }
 
   def simplePRRResult (simplePRR: Option[BigDecimal], privateResidenceReliefModel: Option[PrivateResidenceReliefModel]) = {
-    simplePRR match {
-      case Some(data) => "&pound;" + MoneyPounds(data).quantity
-      case None => privateResidenceReliefModel match {
-        case Some(data) => data.isClaimingPRR match {
-          case "Yes" => "&pound;0.00"
-          case "No" => data.isClaimingPRR
-        }
-        case _ => "No"
-      }
+    (simplePRR, privateResidenceReliefModel) match {
+      case (Some(data), _) => "&pound;" + MoneyPounds(data).quantity
+      case (None, Some(PrivateResidenceReliefModel("Yes", _, _))) => "&pound;0.00"
+      case _ => "No"
     }
   }
-
 
   //scalastyle:off
 
