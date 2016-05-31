@@ -819,19 +819,13 @@ trait CalculationController extends FrontendController {
         },
       success => {
         calcConnector.saveFormData(KeystoreKeys.otherReliefsFlat, success)
-        construct.acquisitionDateModel.hasAcquisitionDate match {
-          case "Yes" if Dates.dateAfterStart(construct.acquisitionDateModel.day.get,
+        (construct.acquisitionDateModel.hasAcquisitionDate, construct.rebasedValueModel.getOrElse(RebasedValueModel("No", None)).hasRebasedValue) match {
+          case ("Yes", _) if Dates.dateAfterStart(construct.acquisitionDateModel.day.get,
             construct.acquisitionDateModel.month.get, construct.acquisitionDateModel.year.get) => {
             Future.successful(Redirect(routes.CalculationController.summary()))
           }
-          case "Yes" if !Dates.dateAfterStart(construct.acquisitionDateModel.day.get,
-            construct.acquisitionDateModel.month.get, construct.acquisitionDateModel.year.get) => {
-            Future.successful(Redirect(routes.CalculationController.calculationElection()))
-          }
-          case "No" => construct.rebasedValueModel.getOrElse(RebasedValueModel("No", None)).hasRebasedValue match {
-            case "Yes" => Future.successful(Redirect(routes.CalculationController.calculationElection()))
-            case "No" => Future.successful(Redirect(routes.CalculationController.summary()))
-          }
+          case ("No", "No") => Future.successful(Redirect(routes.CalculationController.summary()))
+          case _ => Future.successful(Redirect(routes.CalculationController.calculationElection()))
         }
       }
     )
@@ -916,20 +910,13 @@ trait CalculationController extends FrontendController {
   //################### Summary Methods ##########################
   def summaryBackUrl(implicit hc: HeaderCarrier): Future[String] = {
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
-      case Some(acquisitionData) if acquisitionData.hasAcquisitionDate == "Yes" =>
-        if (Dates.dateAfterStart(acquisitionData.day.get, acquisitionData.month.get, acquisitionData.year.get)) {
-          Future.successful(routes.CalculationController.otherReliefs().url)
-        } else {
-          Future.successful(routes.CalculationController.calculationElection().url)
-        }
-      case Some(acquisitionData) if acquisitionData.hasAcquisitionDate == "No" =>
+      case Some(AcquisitionDateModel("Yes", day, month, year)) if Dates.dateAfterStart(day.get, month.get, year.get) =>
+        Future.successful(routes.CalculationController.otherReliefs().url)
+      case Some(AcquisitionDateModel("Yes", _, _, _)) => Future.successful(routes.CalculationController.calculationElection().url)
+      case Some(AcquisitionDateModel("No", _, _, _)) =>
         calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
-          case Some(rebasedData) =>
-            if (rebasedData.hasRebasedValue == "Yes") {
-              Future.successful(routes.CalculationController.calculationElection().url)
-            } else {
-              Future.successful(routes.CalculationController.otherReliefs().url)
-            }
+          case Some(RebasedValueModel("Yes", _)) => Future.successful(routes.CalculationController.calculationElection().url)
+          case Some(RebasedValueModel("No", _)) => Future.successful(routes.CalculationController.otherReliefs().url)
           case _ => Future.successful(missingDataRoute)
         }
       case _ => Future.successful(missingDataRoute)
