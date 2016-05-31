@@ -733,28 +733,18 @@ trait CalculationController extends FrontendController {
 
     def calcTimeCall(summary: SummaryModel): Future[Option[CalculationResultModel]] = {
       summary.acquisitionDateModel.hasAcquisitionDate match {
-        case "Yes" => if (Dates.dateAfterStart(summary.acquisitionDateModel.day.get, summary.acquisitionDateModel.month.get, summary.acquisitionDateModel.year.get)) {
-          Future(None)
-        }
-        else {
+        case "Yes" if !Dates.dateAfterStart(summary.acquisitionDateModel.day.get, summary.acquisitionDateModel.month.get, summary.acquisitionDateModel.year.get) =>
           calcConnector.calculateTA(summary)
-        }
-        case "No" => Future(None)
+        case _ => Future(None)
       }
     }
 
     def calcRebasedCall(summary: SummaryModel): Future[Option[CalculationResultModel]] = {
-      summary.rebasedValueModel.getOrElse(RebasedValueModel("No", None)).hasRebasedValue match {
-        case "Yes" => summary.acquisitionDateModel.hasAcquisitionDate match {
-          case "Yes" => if (Dates.dateAfterStart(summary.acquisitionDateModel.day.get, summary.acquisitionDateModel.month.get, summary.acquisitionDateModel.year.get)) {
-            Future(None)
-          }
-          else {
-            calcConnector.calculateRebased(summary)
-          }
-          case "No" => calcConnector.calculateRebased(summary)
-        }
-        case "No" => Future(None)
+      (summary.rebasedValueModel.getOrElse(RebasedValueModel("No", None)).hasRebasedValue, summary.acquisitionDateModel.hasAcquisitionDate) match {
+        case ("Yes", "Yes") if !Dates.dateAfterStart(summary.acquisitionDateModel.day.get, summary.acquisitionDateModel.month.get, summary.acquisitionDateModel.year.get) =>
+          calcConnector.calculateRebased(summary)
+        case ("Yes", "No") => calcConnector.calculateRebased(summary)
+        case _ => Future(None)
       }
     }
 
