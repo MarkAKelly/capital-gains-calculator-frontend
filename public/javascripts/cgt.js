@@ -24,23 +24,31 @@ $(document).ready($(function() {
         });
     });
 
-    $(function() {
-        $('input[type="radio"]').each(function() {
-            var o = $(this).parent().next('.additional-option-block');
-            if ($(this).prop('checked')) {
-                o.show();
-            } else {
-                o.hide();
-            }
-        });
+    var radioOptions = $('input[type="radio"]');
 
-        $('input[type="radio"]').on('click', function(e){
-            var o = $(this).parent().next('.additional-option-block');
-            if(o.index() == 1){
-                $('.additional-option-block').hide();
-                o.show();
-            }
-        });
+    radioOptions.each(function() {
+        var o = $(this).parent().next('.additional-option-block');
+        if ($(this).prop('checked')) {
+            o.show();
+        } else {
+            o.hide();
+        }
     });
+
+    radioOptions.on('click', function(e){
+        var o = $(this).parent().next('.additional-option-block');
+        if(o.index() == 1){
+            $('.additional-option-block').hide();
+            o.show();
+        }
+    });
+
+    $('[data-metrics]').each(function() {
+        var metrics = $(this).attr('data-metrics');
+        var parts = metrics.split(':');
+        ga('send', 'event', parts[0], parts[1], parts[2]);
+        console.log("sending: " + parts[0] + " - " + parts[1] + " - " + parts[2])
+    });
+
 }));
 
