@@ -12,7 +12,7 @@
     @*
     *  Calculated Tax Owed
     *@
-    <div data-journey="summary:customer-type:@summary.customerTypeModel.customerType">
+    <div data-metrics="summary:customer-type:@summary.customerTypeModel.customerType">
         <h1 class="heading-xlarge heading-xxlarge">
             <span class="heading-secondary">@Messages("calc.summary.secondaryHeading")</span>
             <b>&pound;@MoneyPounds(result.taxOwed).quantity</b>
@@ -21,7 +21,7 @@
 
     @(if (!Dates.dateInsideTaxYear(summary.disposalDateModel.day, summary.disposalDateModel.month, summary.disposalDateModel.year)) taxYearWarningNotice())
 
-    <div class=font-medium" data-journey="summary:calc-election:@summary.calculationElectionModel.calculationType">
+    <div class=font-medium" data-metrics="summary:calc-election:@summary.calculationElectionModel.calculationType">
 
     @SummaryConstructor.calculationDetails(result, summary)
 
@@ -38,7 +38,7 @@
     </div>
 
 
-    <div class="grid-layout__column grid-layout__column--2-3" data-journey="summary:relief-type:@summary.reliefApplied()">
+    <div class="grid-layout__column grid-layout__column--2-3" data-metrics="summary:relief-type:@summary.reliefApplied()">
 
         @*
         *  What to do next
