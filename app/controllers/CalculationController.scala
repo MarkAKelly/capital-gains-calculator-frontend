@@ -46,7 +46,7 @@ import java.util.{Calendar, Date}
 import play.api.mvc.{Result, AnyContent, Action}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HeaderCarrier
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{Future, Await}
 import views.html._
 import common.DefaultRoutes._
 import scala.concurrent.duration.Duration
@@ -641,23 +641,16 @@ trait CalculationController extends FrontendController {
       success => {
         calcConnector.saveFormData(KeystoreKeys.allowableLosses, success)
         calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
-          case Some(data) if data.hasAcquisitionDate == "Yes" =>
-              if (Dates.dateAfterStart(data.day.get, data.month.get, data.year.get)) {
-                calcConnector.saveFormData(KeystoreKeys.calculationElection, CalculationElectionModel("flat"))
-                Future.successful(Redirect(routes.CalculationController.otherReliefs()))
-              }
-              else Future.successful(Redirect(routes.CalculationController.calculationElection()))
-          case _ => {
+          case Some(data) if data.hasAcquisitionDate == "Yes" && !Dates.dateAfterStart(data.day.get, data.month.get, data.year.get) =>
+            Future.successful(Redirect(routes.CalculationController.calculationElection()))
+          case _ =>
             calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
-              case Some(rebasedData) if rebasedData.hasRebasedValue == "Yes" => {
+              case Some(rebasedData) if rebasedData.hasRebasedValue == "Yes" =>
                 Future.successful(Redirect(routes.CalculationController.calculationElection()))
-              }
-              case _ => {
+              case _ =>
                 calcConnector.saveFormData(KeystoreKeys.calculationElection, CalculationElectionModel("flat"))
                 Future.successful(Redirect(routes.CalculationController.otherReliefs()))
-              }
             }
-          }
         }
       }
     )
