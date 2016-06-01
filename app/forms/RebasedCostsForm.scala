@@ -45,6 +45,13 @@ object RebasedCostsForm {
     }
   }
 
+  def validateMax(data: RebasedCostsModel): Boolean = {
+    data.hasRebasedCosts match {
+      case "Yes" => isLessThanEqualMaxNumeric(data.rebasedCosts.getOrElse(0))
+      case "No" => true
+    }
+  }
+
   val rebasedCostsForm = Form(
     mapping(
       "hasRebasedCosts" -> nonEmptyText,
@@ -56,5 +63,7 @@ object RebasedCostsForm {
         rebasedCostsForm => verifyPositive(rebasedCostsForm))
       .verifying(Messages("calc.rebasedCosts.errorDecimalPlaces"),
         rebasedCostsForm => verifyTwoDecimalPlaces(rebasedCostsForm))
+      .verifying(Messages("calc.common.error.maxNumericExceeded"),
+        rebasedValueForm => validateMax(rebasedValueForm))
   )
 }
