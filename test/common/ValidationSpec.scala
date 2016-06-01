@@ -92,4 +92,20 @@ class ValidationSpec extends UnitSpec {
       isMaxTwoDecimalPlaces(1.111) shouldBe false
     }
   }
+
+  //############# Tests for isLessThanMaxNumber ##########################################
+  "calling common.Validation.isLessThanMaxNumber(amount) " should {
+
+    "with a value of 1000000000" in {
+      isLessThanMaxNumber(1000000000) shouldBe true
+    }
+
+    "with a value of 1000000000.01" in {
+      isLessThanMaxNumber(1000000000.01) shouldBe true
+    }
+
+    "with a value of 999999999.99" in {
+      isLessThanMaxNumber(999999999.99) shouldBe true
+    }
+  }
 }
