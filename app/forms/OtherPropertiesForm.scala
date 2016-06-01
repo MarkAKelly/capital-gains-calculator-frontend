@@ -45,6 +45,13 @@ object OtherPropertiesForm {
     }
   }
 
+  def validateMax(data: OtherPropertiesModel) = {
+    data.otherProperties match {
+      case "Yes" => isLessThanEqualMaxNumeric(data.otherPropertiesAmt.getOrElse(0))
+      case "No" => true
+    }
+  }
+
   val otherPropertiesForm = Form (
     mapping(
       "otherProperties" -> nonEmptyText,
@@ -55,5 +62,7 @@ object OtherPropertiesForm {
         otherPropertiesForm => validateMinimum(otherPropertiesForm))
       .verifying(Messages("calc.otherProperties.errorDecimalPlaces"),
         otherPropertiesForm => validateTwoDec(otherPropertiesForm))
+      .verifying(Messages("calc.common.error.maxNumericExceeded"),
+        otherPropertiesForm => validateMax(otherPropertiesForm))
   )
 }
