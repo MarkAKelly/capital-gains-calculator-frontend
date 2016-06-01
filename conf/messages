@@ -29,6 +29,7 @@ calc.common.date.error.invalidDate = Enter a real date
 calc.common.readMore = Read more
 calc.common.next.actions.heading = What to do next
 calc.common.invalidError = Invalid selection!
+calc.common.error.maxNumericExceeded = !Wording to be confirmed by Content Designer!
 
 ## Introduction ##
 calc.introduction.title = Introduction

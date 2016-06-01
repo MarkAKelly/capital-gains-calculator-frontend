@@ -29,6 +29,7 @@ object CurrentIncomeForm {
       "currentIncome" -> bigDecimal
         .verifying(Messages("calc.currentIncome.errorNegative"), currentIncome => isPositive(currentIncome))
         .verifying(Messages("calc.currentIncome.errorDecimalPlaces"), currentIncome => isMaxTwoDecimalPlaces(currentIncome))
+        .verifying(Messages("calc.common.error.maxNumericExceeded"), currentIncome => isLessThanEqualMaxNumeric(currentIncome))
     )(CurrentIncomeModel.apply)(CurrentIncomeModel.unapply)
   )
 }

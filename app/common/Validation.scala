@@ -59,7 +59,7 @@ object Validation {
     else false
   }
 
-  def isGreaterThanMaxNumeric(amount: BigDecimal): Boolean = {
-    amount > maxNumeric
+  def isLessThanEqualMaxNumeric(amount: BigDecimal): Boolean = {
+    amount <= maxNumeric
   }
 }

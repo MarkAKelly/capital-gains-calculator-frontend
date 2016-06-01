@@ -205,5 +205,19 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
         document.getElementsByClass("error-notification").text should include (Messages("calc.currentIncome.errorDecimalPlaces"))
       }
     }
+
+    "submitting a value which exceeds the maximum numeric" should {
+
+      lazy val result = executeTargetWithMockData("1000000000.01")
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 400" in {
+        status(result) shouldBe 400
+      }
+
+      s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
+        document.getElementsByClass("error-notification").text should include (Messages("calc.common.error.maxNumericExceeded"))
+      }
+    }
   }
 }
