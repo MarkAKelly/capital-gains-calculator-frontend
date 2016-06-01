@@ -97,15 +97,15 @@ class ValidationSpec extends UnitSpec {
   "calling common.Validation.isGreaterThanMaxNumeric(amount) " should {
 
     "with a value of 1000000000" in {
-      isLessThanEqualMaxNumeric(1000000000) shouldBe false
+      isLessThanEqualMaxNumeric(1000000000) shouldBe true
     }
 
     "with a value of 1000000000.01" in {
-      isLessThanEqualMaxNumeric(1000000000.01) shouldBe true
+      isLessThanEqualMaxNumeric(1000000000.01) shouldBe false
     }
 
     "with a value of 999999999.99" in {
-      isLessThanEqualMaxNumeric(999999999.99) shouldBe false
+      isLessThanEqualMaxNumeric(999999999.99) shouldBe true
     }
   }
 }

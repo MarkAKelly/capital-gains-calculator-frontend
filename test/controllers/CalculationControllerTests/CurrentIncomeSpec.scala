@@ -16,9 +16,10 @@
 
 package controllers.CalculationControllerTests
 
+import common.Constants
 import connectors.CalculatorConnector
 import constructors.CalculationElectionConstructor
-import controllers.{routes, CalculationController}
+import controllers.{CalculationController, routes}
 import models.CurrentIncomeModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -26,12 +27,12 @@ import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
 import play.api.libs.json.Json
-import play.api.mvc.{Result, AnyContentAsFormUrlEncoded}
+import play.api.mvc.{AnyContentAsFormUrlEncoded, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
-import uk.gov.hmrc.play.http.{SessionKeys, HeaderCarrier}
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
+import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
@@ -208,7 +209,7 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
     "submitting a value which exceeds the maximum numeric" should {
 
-      lazy val result = executeTargetWithMockData("1000000000.01")
+      lazy val result = executeTargetWithMockData(Constants.maxNumeric+0.01.toString())
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {
