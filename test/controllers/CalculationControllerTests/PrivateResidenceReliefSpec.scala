@@ -754,7 +754,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "return HTML that displays the error message " in {
-        document.select("span.error-notification").text shouldEqual "Real number value expected"
+        document.select("span.error-notification").text shouldEqual Messages("error.real")
       }
     }
   }

@@ -299,7 +299,7 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
       }
 
       "return HTML that displays the error message " in {
-        document.select("div#hidden span.error-notification").text shouldEqual "Real number value expected"
+        document.select("div#hidden span.error-notification").text shouldEqual Messages("error.real")
       }
     }
 
