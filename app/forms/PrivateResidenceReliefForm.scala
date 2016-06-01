@@ -26,7 +26,8 @@ object PrivateResidenceReliefForm {
 
   def verifyAmountSupplied(data: PrivateResidenceReliefModel, showBefore: Boolean, showAfter: Boolean): Boolean = {
     data.isClaimingPRR match {
-      case "Yes" if showBefore || showAfter => data.daysClaimed.isDefined || data.daysClaimedAfter.isDefined
+      case "Yes" if showBefore && showAfter => data.daysClaimed.isDefined
+      case "Yes" if showBefore ^ showAfter => data.daysClaimed.isDefined || data.daysClaimedAfter.isDefined
       case _ => true
     }
   }

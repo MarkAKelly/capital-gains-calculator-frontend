@@ -14,6 +14,16 @@
 }
 
 @hiddenContent = {
+    @if(daysBeforeShow){
+        <div class="form-group">
+            @input(
+            privateResidenceReliefForm("daysClaimed"),
+            '_label -> (Messages("calc.privateResidenceRelief.questionBefore.partOne") + " " + disposalDateLess18Months + " " + Messages("calc.privateResidenceRelief.questionBefore.partTwo")),
+            '_type -> "text",
+            '_inputClass -> "form-field"
+            )
+        </div>
+    }
     @if(daysBetweenShow){
         <div class="form-group">
             @input(
@@ -24,16 +34,7 @@
             )
         </div>
     }
-    @if(daysBeforeShow){
-        <div class="form-group">
-            @input(
-                privateResidenceReliefForm("daysClaimed"),
-                '_label -> (Messages("calc.privateResidenceRelief.questionBefore.partOne") + " " + disposalDateLess18Months + " " + Messages("calc.privateResidenceRelief.questionBefore.partTwo")),
-                '_type -> "text",
-                '_inputClass -> "form-field"
-            )
-        </div>
-    }
+
 }
 
 @main_template(Messages("calc.privateResidenceRelief.question"), sidebarLinks = Some(sidebar)) {
