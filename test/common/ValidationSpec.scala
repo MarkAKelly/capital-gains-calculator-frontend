@@ -94,18 +94,18 @@ class ValidationSpec extends UnitSpec {
   }
 
   //############# Tests for isLessThanMaxNumber ##########################################
-  "calling common.Validation.isLessThanMaxNumber(amount) " should {
+  "calling common.Validation.isGreaterThanMaxNumeric(amount) " should {
 
     "with a value of 1000000000" in {
-      isLessThanMaxNumber(1000000000) shouldBe true
+      isGreaterThanMaxNumeric(1000000000) shouldBe false
     }
 
     "with a value of 1000000000.01" in {
-      isLessThanMaxNumber(1000000000.01) shouldBe true
+      isGreaterThanMaxNumeric(1000000000.01) shouldBe true
     }
 
     "with a value of 999999999.99" in {
-      isLessThanMaxNumber(999999999.99) shouldBe true
+      isGreaterThanMaxNumeric(999999999.99) shouldBe false
     }
   }
 }

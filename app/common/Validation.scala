@@ -20,6 +20,8 @@ import java.text.SimpleDateFormat
 
 object Validation {
 
+  val maxNumeric = 1000000000
+
   def isValidDate(day:Int,month:Int,year:Int): Boolean = {
     try {
       val fmt = new SimpleDateFormat("dd/MM/yyyy")
@@ -55,5 +57,9 @@ object Validation {
   def isGreaterThanZero (amount: BigDecimal): Boolean = {
     if (amount > 0) true
     else false
+  }
+
+  def isGreaterThanMaxNumeric(amount: BigDecimal): Boolean = {
+    amount > maxNumeric
   }
 }
