@@ -52,6 +52,16 @@ object ImprovementsForm {
     })
   }
 
+  def validateMax(data: ImprovementsModel): Boolean = {
+    (data.isClaimingImprovements match {
+      case "Yes" => isLessThanEqualMaxNumeric(data.improvementsAmt.getOrElse(0))
+      case "No" => true
+    }) && (data.isClaimingImprovements match {
+      case "Yes" => isLessThanEqualMaxNumeric(data.improvementsAmtAfter.getOrElse(0))
+      case "No" => true
+    })
+  }
+
   val improvementsForm = Form(
     mapping(
       "isClaimingImprovements" -> text,
@@ -64,5 +74,7 @@ object ImprovementsForm {
         improvementsForm => verifyPositive(improvementsForm))
       .verifying(Messages("calc.improvements.errorDecimalPlaces"),
         improvementsForm => verifyTwoDecimalPlaces(improvementsForm))
+      .verifying(Messages("calc.common.error.maxNumericExceeded"),
+        improvementsForm => validateMax(improvementsForm))
   )
 }
