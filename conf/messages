@@ -13,6 +13,10 @@ calc.base.optionReqError = Choose one of the options
 ## Error Summary ##
 calc.error.summary.heading = This page has errors
 
+## PLAY! Error Overrides ##
+error.number=Enter a number
+error.real=Enter a number
+
 ## Feedback ##
 feedback.title = Feedback
 
