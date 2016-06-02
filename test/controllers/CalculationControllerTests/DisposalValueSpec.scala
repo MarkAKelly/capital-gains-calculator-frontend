@@ -84,7 +84,7 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
           document.title shouldEqual Messages("calc.disposalValue.question")
         }
 
-        "have the heading Calculate your tax (non-residents) " in {
+        "have the heading Calculate your Non-resident Capital Gains Tax " in {
           document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
         }
 
