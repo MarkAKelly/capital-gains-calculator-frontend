@@ -81,8 +81,8 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
           charset(result) shouldBe Some("utf-8")
         }
 
-        "have the title 'Calculate your Capital Gains Tax" in {
-          document.getElementsByTag("h1").text shouldBe "Calculate your Capital Gains Tax"
+        "have the title 'Calculate your Non-resident Capital Gains Tax" in {
+          document.getElementsByTag("h1").text shouldBe Messages("calc.base.pageHeading")
         }
 
         "have the question 'Did you pay for the valuation?" in {

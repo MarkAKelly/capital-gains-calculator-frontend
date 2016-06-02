@@ -84,8 +84,8 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with MockitoSug
           charset(result) shouldBe Some("utf-8")
         }
 
-        "Have the title 'Calculate your Capital Gains Tax" in {
-          document.getElementsByTag("h1").text shouldBe "Calculate your Capital Gains Tax"
+        "Have the title 'Calculate your Non-resident Capital Gains Tax" in {
+          document.getElementsByTag("h1").text shouldBe Messages("calc.base.pageHeading")
         }
 
         s"Have the question ${Messages("calc.rebasedValue.question")}" in {
