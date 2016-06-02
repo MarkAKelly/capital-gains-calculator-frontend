@@ -45,6 +45,13 @@ object AllowableLossesForm {
     }
   }
 
+  def validateMax(data: AllowableLossesModel): Boolean = {
+    data.isClaimingAllowableLosses match {
+      case "Yes" => isLessThanEqualMaxNumeric(data.allowableLossesAmt.getOrElse(0))
+      case "No" => true
+    }
+  }
+
   val allowableLossesForm = Form(
     mapping(
       "isClaimingAllowableLosses" -> nonEmptyText,
@@ -56,5 +63,7 @@ object AllowableLossesForm {
         allowableLossesForm => validateMinimum(AllowableLossesModel(allowableLossesForm.isClaimingAllowableLosses, allowableLossesForm.allowableLossesAmt)))
       .verifying(Messages("calc.allowableLosses.errorDecimal"),
         allowableLossesForm => validateTwoDec(AllowableLossesModel(allowableLossesForm.isClaimingAllowableLosses, allowableLossesForm.allowableLossesAmt)))
+      .verifying(Messages("calc.common.error.maxNumericExceeded"),
+        allowableLossesForm => validateMax(AllowableLossesModel(allowableLossesForm.isClaimingAllowableLosses, allowableLossesForm.allowableLossesAmt)))
   )
 }
