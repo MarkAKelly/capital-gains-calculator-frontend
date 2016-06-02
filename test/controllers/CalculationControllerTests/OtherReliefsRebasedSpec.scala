@@ -16,10 +16,10 @@
 
 package controllers.CalculationControllerTests
 
-import common.TestModels
+import common.{Constants, TestModels}
 import connectors.CalculatorConnector
 import constructors.CalculationElectionConstructor
-import controllers.{routes, CalculationController}
+import controllers.{CalculationController, routes}
 import models.{CalculationResultModel, OtherReliefsModel, SummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -228,6 +228,20 @@ class OtherReliefsRebasedSpec extends UnitSpec with WithFakeApplication with Moc
 
       "return a 400" in {
         status(result) shouldBe 400
+      }
+    }
+
+    "submitting a value which exceeds the maximum numeric" should {
+
+      lazy val result = executeTargetWithMockData((Constants.maxNumeric + 0.01).toString, TestModels.summaryIndividualFlatWithoutAEA)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 400" in {
+        status(result) shouldBe 400
+      }
+
+      s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
+        document.getElementsByClass("error-notification").text should include (Messages("calc.common.error.maxNumericExceeded"))
       }
     }
   }

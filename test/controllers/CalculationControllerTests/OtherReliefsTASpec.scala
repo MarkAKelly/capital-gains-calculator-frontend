@@ -16,23 +16,23 @@
 
 package controllers.CalculationControllerTests
 
-import common.TestModels
+import common.{Constants, TestModels}
 import connectors.CalculatorConnector
 import constructors.CalculationElectionConstructor
-import controllers.{routes, CalculationController}
-import models.{CalculationResultModel, SummaryModel, OtherReliefsModel}
+import controllers.{CalculationController, routes}
+import models.{CalculationResultModel, OtherReliefsModel, SummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
 import play.api.libs.json.Json
-import play.api.mvc.{Result, AnyContentAsFormUrlEncoded}
+import play.api.mvc.{AnyContentAsFormUrlEncoded, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
-import uk.gov.hmrc.play.http.{SessionKeys, HeaderCarrier}
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
+import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
@@ -211,6 +211,20 @@ class OtherReliefsTASpec extends UnitSpec with WithFakeApplication with MockitoS
 
       "return a 400" in {
         status(result) shouldBe 400
+      }
+    }
+
+    "submitting a value which exceeds the maximum numeric" should {
+
+      lazy val result = executeTargetWithMockData((Constants.maxNumeric + 0.01).toString, TestModels.summaryIndividualFlatWithoutAEA)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 400" in {
+        status(result) shouldBe 400
+      }
+
+      s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
+        document.getElementsByClass("error-notification").text should include (Messages("calc.common.error.maxNumericExceeded"))
       }
     }
   }

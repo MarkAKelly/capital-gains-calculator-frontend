@@ -29,7 +29,7 @@ object OtherReliefsForm {
       "otherReliefs" -> optional(bigDecimal)
         .verifying(Messages("calc.otherReliefs.errorMinimum"), otherReliefs => isPositive(otherReliefs.getOrElse(0)))
         .verifying(Messages("calc.otherReliefs.errorDecimal"), otherReliefs => isMaxTwoDecimalPlaces(otherReliefs.getOrElse(0)))
+        .verifying(Messages("calc.common.error.maxNumericExceeded"), otherReliefs => isLessThanEqualMaxNumeric(otherReliefs.getOrElse(0)))
     )(OtherReliefsModel.apply)(OtherReliefsModel.unapply)
   )
 }
-
