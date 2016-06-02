@@ -28,6 +28,7 @@ object DisposalCostsForm {
       "disposalCosts" -> optional(bigDecimal)
         .verifying(Messages("calc.disposalCosts.errorNegativeNumber"), disposalCosts => isPositive(disposalCosts.getOrElse(0)))
         .verifying(Messages("calc.disposalCosts.errorDecimalPlaces"), disposalCosts => isMaxTwoDecimalPlaces(disposalCosts.getOrElse(0)))
+        .verifying(Messages("calc.common.error.maxNumericExceeded"), disposalCosts => isLessThanEqualMaxNumeric(disposalCosts.getOrElse(0)))
     )(DisposalCostsModel.apply)(DisposalCostsModel.unapply)
   )
 }

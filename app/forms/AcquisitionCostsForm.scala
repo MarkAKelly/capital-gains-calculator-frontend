@@ -29,7 +29,7 @@ object AcquisitionCostsForm {
       "acquisitionCosts" -> optional(bigDecimal)
         .verifying(Messages("calc.acquisitionCosts.errorNegative"), costs => isPositive(costs.getOrElse(0)))
         .verifying(Messages("calc.acquisitionCosts.errorDecimalPlaces"), costs => isMaxTwoDecimalPlaces(costs.getOrElse(0)))
-        .verifying(Messages("calc.common.error.maxNumericExceeded"), costs => isLessThanEqualMaxNumeric(costs))
+        .verifying(Messages("calc.common.error.maxNumericExceeded"), costs => isLessThanEqualMaxNumeric(costs.getOrElse(0)))
     )(AcquisitionCostsModel.apply)(AcquisitionCostsModel.unapply)
   )
 
