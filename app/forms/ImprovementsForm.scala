@@ -16,6 +16,7 @@
 
 package forms
 
+import common.Constants
 import play.api.data._
 import play.api.data.Forms._
 import models._
@@ -74,7 +75,7 @@ object ImprovementsForm {
         improvementsForm => verifyPositive(improvementsForm))
       .verifying(Messages("calc.improvements.errorDecimalPlaces"),
         improvementsForm => verifyTwoDecimalPlaces(improvementsForm))
-      .verifying(Messages("calc.common.error.maxNumericExceeded"),
+      .verifying(Messages("calc.common.error.maxNumericExceeded")  + Constants.maxNumeric,
         improvementsForm => validateMax(improvementsForm))
   )
 }

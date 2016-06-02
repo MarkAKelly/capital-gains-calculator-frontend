@@ -16,6 +16,7 @@
 
 package forms
 
+import common.Constants
 import play.api.data._
 import play.api.data.Forms._
 import models._
@@ -29,7 +30,7 @@ object CurrentIncomeForm {
       "currentIncome" -> bigDecimal
         .verifying(Messages("calc.currentIncome.errorNegative"), currentIncome => isPositive(currentIncome))
         .verifying(Messages("calc.currentIncome.errorDecimalPlaces"), currentIncome => isMaxTwoDecimalPlaces(currentIncome))
-        .verifying(Messages("calc.common.error.maxNumericExceeded"), currentIncome => isLessThanEqualMaxNumeric(currentIncome))
+        .verifying(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric, currentIncome => isLessThanEqualMaxNumeric(currentIncome))
     )(CurrentIncomeModel.apply)(CurrentIncomeModel.unapply)
   )
 }

@@ -16,6 +16,7 @@
 
 package forms
 
+import common.Constants
 import common.Validation._
 import models._
 import play.api.data.Forms._
@@ -63,7 +64,7 @@ object RebasedValueForm {
         rebasedValueForm => verifyPositive(rebasedValueForm))
       .verifying(Messages("calc.rebasedValue.errorDecimalPlaces"),
         rebasedValueForm => verifyTwoDecimalPlaces(rebasedValueForm))
-      .verifying(Messages("calc.common.error.maxNumericExceeded"),
+      .verifying(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric,
         rebasedValueForm => validateMax(rebasedValueForm))
   )
 }

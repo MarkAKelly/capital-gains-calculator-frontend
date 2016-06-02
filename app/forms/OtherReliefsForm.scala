@@ -16,6 +16,7 @@
 
 package forms
 
+import common.Constants
 import play.api.data._
 import play.api.data.Forms._
 import models._
@@ -29,7 +30,7 @@ object OtherReliefsForm {
       "otherReliefs" -> optional(bigDecimal)
         .verifying(Messages("calc.otherReliefs.errorMinimum"), otherReliefs => isPositive(otherReliefs.getOrElse(0)))
         .verifying(Messages("calc.otherReliefs.errorDecimal"), otherReliefs => isMaxTwoDecimalPlaces(otherReliefs.getOrElse(0)))
-        .verifying(Messages("calc.common.error.maxNumericExceeded"), otherReliefs => isLessThanEqualMaxNumeric(otherReliefs.getOrElse(0)))
+        .verifying(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric, otherReliefs => isLessThanEqualMaxNumeric(otherReliefs.getOrElse(0)))
     )(OtherReliefsModel.apply)(OtherReliefsModel.unapply)
   )
 }

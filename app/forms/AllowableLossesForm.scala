@@ -16,6 +16,7 @@
 
 package forms
 
+import common.Constants
 import play.api.data._
 import play.api.data.Forms._
 import models._
@@ -63,7 +64,7 @@ object AllowableLossesForm {
         allowableLossesForm => validateMinimum(AllowableLossesModel(allowableLossesForm.isClaimingAllowableLosses, allowableLossesForm.allowableLossesAmt)))
       .verifying(Messages("calc.allowableLosses.errorDecimal"),
         allowableLossesForm => validateTwoDec(AllowableLossesModel(allowableLossesForm.isClaimingAllowableLosses, allowableLossesForm.allowableLossesAmt)))
-      .verifying(Messages("calc.common.error.maxNumericExceeded"),
+      .verifying(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric,
         allowableLossesForm => validateMax(AllowableLossesModel(allowableLossesForm.isClaimingAllowableLosses, allowableLossesForm.allowableLossesAmt)))
   )
 }

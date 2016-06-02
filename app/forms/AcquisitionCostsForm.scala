@@ -16,6 +16,7 @@
 
 package forms
 
+import common.Constants
 import play.api.data._
 import play.api.data.Forms._
 import models._
@@ -29,7 +30,7 @@ object AcquisitionCostsForm {
       "acquisitionCosts" -> optional(bigDecimal)
         .verifying(Messages("calc.acquisitionCosts.errorNegative"), costs => isPositive(costs.getOrElse(0)))
         .verifying(Messages("calc.acquisitionCosts.errorDecimalPlaces"), costs => isMaxTwoDecimalPlaces(costs.getOrElse(0)))
-        .verifying(Messages("calc.common.error.maxNumericExceeded"), costs => isLessThanEqualMaxNumeric(costs.getOrElse(0)))
+        .verifying(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric, costs => isLessThanEqualMaxNumeric(costs.getOrElse(0)))
     )(AcquisitionCostsModel.apply)(AcquisitionCostsModel.unapply)
   )
 
