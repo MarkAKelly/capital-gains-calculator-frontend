@@ -670,7 +670,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
     }
 
     "submitting a valid result of 'Yes' with claimed value" should {
-      lazy val result = executeTargetWithMockData("Yes", "100", "", testDisposalDate, testAcquisitionDate)
+      lazy val result = executeTargetWithMockData("Yes", "100", "0", testDisposalDate, testAcquisitionDate)
 
       "return a 303 code" in {
         status(result) shouldBe 303
@@ -733,7 +733,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
     }
 
     "submitting an invalid result with an answer 'Yes' but negative value data" should {
-      lazy val result = executeTargetWithMockData("Yes", "-1000", "", testDisposalDate, testAcquisitionDate, testRebasedValue)
+      lazy val result = executeTargetWithMockData("Yes", "-1000", "0", testDisposalDate, testAcquisitionDate, testRebasedValue)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 400 code" in {
