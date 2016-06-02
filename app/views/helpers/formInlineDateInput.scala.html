@@ -27,6 +27,7 @@
         formItem(s"${fieldName}.day"),
         '_label -> Messages("calc.common.date.fields.day"),
         '_labelClass -> "form-group form-group-day",
+        '_type -> "number",
         '_inputClass -> s"input--xxsmall input--no-spinner",
         '_maxlength -> "2"
     )
@@ -35,6 +36,7 @@
         formItem(s"${fieldName}.month"),
         '_label -> Messages("calc.common.date.fields.month"),
         '_labelClass -> "form-group form-group-month",
+        '_type -> "number",
         '_inputClass -> s"input--xxsmall input--no-spinner",
         '_maxlength -> "2"
     )
@@ -43,6 +45,7 @@
         formItem(s"${fieldName}.year"),
         '_label -> Messages("calc.common.date.fields.year"),
         '_labelClass -> "form-group form-group-year",
+        '_type -> "number",
         '_inputClass -> s"input--small input--no-spinner",
         '_maxlength -> "4"
     )

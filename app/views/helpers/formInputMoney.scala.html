@@ -12,6 +12,8 @@
         @moneyInputFormat(
             inputForm(fieldName),
             '_label -> questionText,
-            '_inputHint -> Html(helpText.getOrElse(""))
+            '_inputHint -> Html(helpText.getOrElse("")),
+            '_type -> "number",
+            '_inputClass -> "input--no-spinner"
         )
     </div>
