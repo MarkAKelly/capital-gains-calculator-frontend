@@ -29,6 +29,7 @@ object DisposalValueForm {
       "disposalValue" -> bigDecimal
         .verifying(Messages("calc.disposalValue.errorNegative"), disposalValue => isPositive(disposalValue))
         .verifying(Messages("calc.disposalValue.errorDecimalPlaces"), disposalValue => isMaxTwoDecimalPlaces(disposalValue))
+        .verifying(Messages("calc.common.error.maxNumericExceeded"), disposalValue => isLessThanEqualMaxNumeric(disposalValue))
     )(DisposalValueModel.apply)(DisposalValueModel.unapply)
   )
 }
