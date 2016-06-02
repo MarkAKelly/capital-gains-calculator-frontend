@@ -8,11 +8,17 @@
     <ul>
         <li>
             <a id="helpLink1" class="external-link" rel="external" href="https://www.gov.uk/income-tax-rates/current-rates-and-allowances"
-                target="_blank" data-journey-click="help:govUK:currentRatesAndAllowances">@Messages("calc.personalAllowance.linkOne")</a>
+                target="_blank" data-journey-click="help:govUK:currentRatesAndAllowances">
+                @Messages("calc.personalAllowance.linkOne")
+                <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
+            </a>
         </li>
         <li>
             <a id="helpLink2" class="external-link" rel="external" href="https://www.gov.uk/tax-uk-income-live-abroad/personal-allowance"
-                target="_blank" data-journey-click="help:govUK:personalAllowances">@Messages("calc.personalAllowance.linkTwo")</a>
+                target="_blank" data-journey-click="help:govUK:personalAllowances">
+                @Messages("calc.personalAllowance.linkTwo")
+                <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
+            </a>
         </li>
     </ul>
 }

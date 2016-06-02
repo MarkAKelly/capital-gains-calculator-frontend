@@ -9,6 +9,7 @@ calc.base.yes = Yes
 calc.base.no = No
 calc.base.back = Back
 calc.base.optionReqError = Choose one of the options
+calc.base.externalLink = opens in a new window
 
 ## Error Summary ##
 calc.error.summary.heading = This page has errors

@@ -128,12 +128,12 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
           "include a read more section that" should {
 
             s"include a link to https://www.gov.uk/capital-gains-tax with text '${Messages("calc.otherProperties.link.one")}'" in {
-              document.body.getElementById("helpLink1").text shouldEqual Messages("calc.otherProperties.link.one")
+              document.body.getElementById("helpLink1").text shouldEqual s"${Messages("calc.otherProperties.link.one")} ${Messages("calc.base.externalLink")}"
               document.body.getElementById("helpLink1").attr("href") shouldEqual "https://www.gov.uk/capital-gains-tax"
             }
 
             s"include a link to https://www.gov.uk/income-tax-rates/previous-tax-years with text '${Messages("calc.otherProperties.link.two")}'" in {
-              document.body.getElementById("helpLink2").text shouldEqual Messages("calc.otherProperties.link.two")
+              document.body.getElementById("helpLink2").text shouldEqual s"${Messages("calc.otherProperties.link.two")} ${Messages("calc.base.externalLink")}"
               document.body.getElementById("helpLink2").attr("href") shouldEqual "https://www.gov.uk/income-tax-rates/previous-tax-years"
             }
 
