@@ -30,7 +30,7 @@ object CurrentIncomeForm {
       "currentIncome" -> bigDecimal
         .verifying(Messages("calc.currentIncome.errorNegative"), currentIncome => isPositive(currentIncome))
         .verifying(Messages("calc.currentIncome.errorDecimalPlaces"), currentIncome => isMaxTwoDecimalPlaces(currentIncome))
-        .verifying(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric, currentIncome => isLessThanEqualMaxNumeric(currentIncome))
+        .verifying(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"), currentIncome => isLessThanEqualMaxNumeric(currentIncome))
     )(CurrentIncomeModel.apply)(CurrentIncomeModel.unapply)
   )
 }

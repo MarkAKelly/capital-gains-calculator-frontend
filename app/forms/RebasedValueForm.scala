@@ -64,7 +64,7 @@ object RebasedValueForm {
         rebasedValueForm => verifyPositive(rebasedValueForm))
       .verifying(Messages("calc.rebasedValue.errorDecimalPlaces"),
         rebasedValueForm => verifyTwoDecimalPlaces(rebasedValueForm))
-      .verifying(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric,
+      .verifying(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"),
         rebasedValueForm => validateMax(rebasedValueForm))
   )
 }

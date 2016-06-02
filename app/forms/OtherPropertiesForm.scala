@@ -16,6 +16,7 @@
 
 package forms
 
+import common.Constants
 import models.OtherPropertiesModel
 import play.api.data.Forms._
 import play.api.data._
@@ -62,7 +63,7 @@ object OtherPropertiesForm {
         otherPropertiesForm => validateMinimum(otherPropertiesForm))
       .verifying(Messages("calc.otherProperties.errorDecimalPlaces"),
         otherPropertiesForm => validateTwoDec(otherPropertiesForm))
-      .verifying(Messages("calc.common.error.maxNumericExceeded"),
+      .verifying(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"),
         otherPropertiesForm => validateMax(otherPropertiesForm))
   )
 }

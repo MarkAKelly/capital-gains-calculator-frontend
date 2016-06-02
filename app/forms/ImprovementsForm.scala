@@ -75,7 +75,7 @@ object ImprovementsForm {
         improvementsForm => verifyPositive(improvementsForm))
       .verifying(Messages("calc.improvements.errorDecimalPlaces"),
         improvementsForm => verifyTwoDecimalPlaces(improvementsForm))
-      .verifying(Messages("calc.common.error.maxNumericExceeded")  + Constants.maxNumeric,
+      .verifying(Messages("calc.common.error.maxNumericExceeded")  + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"),
         improvementsForm => validateMax(improvementsForm))
   )
 }

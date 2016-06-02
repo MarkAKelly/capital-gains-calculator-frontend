@@ -234,7 +234,8 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
       }
 
       s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
-        document.getElementsByClass("error-notification").text should include (Messages("calc.common.error.maxNumericExceeded"))
+        document.getElementsByClass("error-notification").text should
+          include (Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
       }
     }
   }

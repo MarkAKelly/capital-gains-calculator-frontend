@@ -30,7 +30,8 @@ object AcquisitionValueForm {
       "acquisitionValue" -> bigDecimal
         .verifying(Messages("calc.acquisitionValue.errorNegative"), acquisitionValue => isPositive(acquisitionValue))
         .verifying(Messages("calc.acquisitionValue.errorDecimalPlaces"), acquisitionValue => isMaxTwoDecimalPlaces(acquisitionValue))
-        .verifying(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric, acquisitionValue => isLessThanEqualMaxNumeric(acquisitionValue))
+        .verifying(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"),
+          acquisitionValue => isLessThanEqualMaxNumeric(acquisitionValue))
     )(AcquisitionValueModel.apply)(AcquisitionValueModel.unapply)
   )
 }
