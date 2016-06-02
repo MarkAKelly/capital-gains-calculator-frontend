@@ -106,25 +106,6 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
             document.body.getElementsByTag("legend").text should include (Messages("calc.otherProperties.question"))
           }
 
-          s"include a paragraph with '${Messages("calc.otherProperties.thisIncludes")}'" in {
-            document.body.getElementsByTag("p").text should include (Messages("calc.otherProperties.thisIncludes"))
-          }
-
-          "include a bulletted list that" should {
-
-            s"include '${Messages("calc.otherProperties.thisIncludes.bulletOne")}'" in {
-              document.body.getElementsByTag("li").text should include (Messages("calc.otherProperties.thisIncludes.bulletOne"))
-            }
-
-            s"include '${Messages("calc.otherProperties.thisIncludes.bulletTwo")}'" in {
-              document.body.getElementsByTag("li").text should include (Messages("calc.otherProperties.thisIncludes.bulletTwo"))
-            }
-
-            s"include '${Messages("calc.otherProperties.thisIncludes.bulletThree")}'" in {
-              document.body.getElementsByTag("li").text should include (Messages("calc.otherProperties.thisIncludes.bulletThree"))
-            }
-          }
-
           "include a read more section that" should {
 
             s"include a link to https://www.gov.uk/capital-gains-tax with text '${Messages("calc.otherProperties.link.one")}'" in {
