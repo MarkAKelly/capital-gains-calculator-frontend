@@ -16,6 +16,7 @@
 
 package forms
 
+import common.Constants
 import common.Validation._
 import models._
 import play.api.data.Forms._
@@ -45,6 +46,13 @@ object RebasedCostsForm {
     }
   }
 
+  def validateMax(data: RebasedCostsModel): Boolean = {
+    data.hasRebasedCosts match {
+      case "Yes" => isLessThanEqualMaxNumeric(data.rebasedCosts.getOrElse(0))
+      case "No" => true
+    }
+  }
+
   val rebasedCostsForm = Form(
     mapping(
       "hasRebasedCosts" -> nonEmptyText,
@@ -56,5 +64,7 @@ object RebasedCostsForm {
         rebasedCostsForm => verifyPositive(rebasedCostsForm))
       .verifying(Messages("calc.rebasedCosts.errorDecimalPlaces"),
         rebasedCostsForm => verifyTwoDecimalPlaces(rebasedCostsForm))
+      .verifying(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"),
+        rebasedValueForm => validateMax(rebasedValueForm))
   )
 }

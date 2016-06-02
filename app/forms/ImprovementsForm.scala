@@ -16,6 +16,7 @@
 
 package forms
 
+import common.Constants
 import play.api.data._
 import play.api.data.Forms._
 import models._
@@ -52,6 +53,16 @@ object ImprovementsForm {
     })
   }
 
+  def validateMax(data: ImprovementsModel): Boolean = {
+    (data.isClaimingImprovements match {
+      case "Yes" => isLessThanEqualMaxNumeric(data.improvementsAmt.getOrElse(0))
+      case "No" => true
+    }) && (data.isClaimingImprovements match {
+      case "Yes" => isLessThanEqualMaxNumeric(data.improvementsAmtAfter.getOrElse(0))
+      case "No" => true
+    })
+  }
+
   val improvementsForm = Form(
     mapping(
       "isClaimingImprovements" -> text,
@@ -64,5 +75,7 @@ object ImprovementsForm {
         improvementsForm => verifyPositive(improvementsForm))
       .verifying(Messages("calc.improvements.errorDecimalPlaces"),
         improvementsForm => verifyTwoDecimalPlaces(improvementsForm))
+      .verifying(Messages("calc.common.error.maxNumericExceeded")  + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"),
+        improvementsForm => validateMax(improvementsForm))
   )
 }

@@ -16,17 +16,18 @@
 
 package controllers.CalculationControllerTests
 
+import common.Constants
 import connectors.CalculatorConnector
 import constructors.CalculationElectionConstructor
 import models._
-import controllers.{routes, CalculationController}
+import controllers.{CalculationController, routes}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
 import play.api.libs.json.Json
-import play.api.mvc.{Result, AnyContentAsFormUrlEncoded}
+import play.api.mvc.{AnyContentAsFormUrlEncoded, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -768,6 +769,32 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
       "return HTML that displays the error message " in {
         document.select("span.error-notification").text shouldEqual Messages("error.real")
+      }
+    }
+
+    "submitting an invalid result with an answer 'Yes' where daysBefore exceeds max numeric" should {
+      lazy val result = executeTargetWithMockData("Yes", (Constants.maxNumeric + 1).toString, "100", testDisposalDate, testAcquisitionDate, testRebasedValue)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 400 code" in {
+        status(result) shouldBe 400
+      }
+
+      "return HTML that displays the error message " in {
+        document.select("span.error-notification").text shouldEqual Messages("calc.privateResidenceRelief.error.maxNumericExceeded") + " " + Constants.maxNumeric + " " + Messages("calc.privateResidenceRelief.error.maxNumericExceeded.OrLess")
+      }
+    }
+
+    "submitting an invalid result with an answer 'Yes' where daysAfter exceeds max numeric" should {
+      lazy val result = executeTargetWithMockData("Yes", "100", (Constants.maxNumeric + 1).toString, testDisposalDate, testAcquisitionDate, testRebasedValue)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 400 code" in {
+        status(result) shouldBe 400
+      }
+
+      "return HTML that displays the error message " in {
+        document.select("span.error-notification").text shouldEqual Messages("calc.privateResidenceRelief.error.maxNumericExceeded") + " " + Constants.maxNumeric + " " + Messages("calc.privateResidenceRelief.error.maxNumericExceeded.OrLess")
       }
     }
   }

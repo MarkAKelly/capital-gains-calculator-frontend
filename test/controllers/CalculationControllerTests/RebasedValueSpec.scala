@@ -16,7 +16,7 @@
 
 package controllers.CalculationControllerTests
 
-import common.KeystoreKeys
+import common.{Constants, KeystoreKeys}
 import constructors.CalculationElectionConstructor
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -32,8 +32,9 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
+
 import scala.concurrent.Future
-import controllers.{routes, CalculationController}
+import controllers.{CalculationController, routes}
 import play.api.mvc.Result
 
 class RebasedValueSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
@@ -254,6 +255,21 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
       "return HTML that displays the error message " in {
         document.select("div#hidden span.error-notification").text shouldEqual Messages("calc.rebasedValue.errorDecimalPlaces")
+      }
+    }
+
+    "submitting a value which exceeds the maximum numeric" should {
+
+      lazy val result = executeTargetWithMockData("Yes", Constants.maxNumeric+0.01.toString())
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 400" in {
+        status(result) shouldBe 400
+      }
+
+      s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
+        document.getElementsByClass("error-notification").text should
+          include (Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
       }
     }
   }

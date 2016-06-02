@@ -16,6 +16,7 @@
 
 package controllers.CalculationControllerTests
 
+import common.Constants
 import constructors.CalculationElectionConstructor
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -190,6 +191,21 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
       s"fail with message ${Messages("calc.disposalValue.errorDecimalPlaces")}" in {
         document.getElementsByClass("error-notification").text should include (Messages("calc.disposalValue.errorDecimalPlaces"))
+      }
+    }
+
+    "submitting a value which exceeds the maximum numeric" should {
+
+      lazy val result = executeTargetWithMockData((Constants.maxNumeric + 0.01).toString)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 400" in {
+        status(result) shouldBe 400
+      }
+
+      s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
+        document.getElementsByClass("error-notification").text should
+          include (Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
       }
     }
   }

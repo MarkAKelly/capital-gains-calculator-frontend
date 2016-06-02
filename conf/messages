@@ -33,6 +33,8 @@ calc.common.date.error.invalidDate = Enter a real date
 calc.common.readMore = Read more
 calc.common.next.actions.heading = What to do next
 calc.common.invalidError = Invalid selection!
+calc.common.error.maxNumericExceeded = Enter an amount that''s £
+calc.common.error.maxNumericExceeded.OrLess = or less
 
 ## Introduction ##
 calc.introduction.title = Introduction
@@ -176,6 +178,8 @@ calc.privateResidenceRelief.helpLink = Private Residence Relief
 calc.privateResidenceRelief.error.noValueProvided = Enter the value for your days claimed
 calc.privateResidenceRelief.error.errorNegative = Enter a positive number for your days claimed
 calc.privateResidenceRelief.error.errorDecimalPlaces = There are too many numbers after the decimal point in your days claimed
+calc.privateResidenceRelief.error.maxNumericExceeded = Enter a value for your days claimed that''s
+calc.privateResidenceRelief.error.maxNumericExceeded.OrLess = or less
 
 
 ## Entrepreneurs Relief ##
