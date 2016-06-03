@@ -10,16 +10,16 @@
 
 <fieldset class="form-group form-date @fieldsetClasses" id="@fieldName-fieldset">
 
+    <legend>
+        @questionText
+    </legend>
+
     @if(formItem.hasErrors) {
         @formItem.errors.filter(_.key == "").map { error => <span class="error-notification">@error.message</span>}
         @if(formItem.errors.find(_.key != "").isDefined) {
             <span class="error-notification">@Messages("calc.common.date.error.invalidDate")</span>
         }
     }
-
-    <legend>
-        @questionText
-    </legend>
 
     <span class="form-hint">@Messages("calc.common.date.hint")</span>
 
