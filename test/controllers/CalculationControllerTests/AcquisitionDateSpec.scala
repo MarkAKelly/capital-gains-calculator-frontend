@@ -118,9 +118,9 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
           }
 
           "display three input boxes with labels Day, Month and Year respectively" in {
-            document.select("label[for=acquisitionDate.day]").text shouldEqual Messages("calc.common.date.fields.day")
-            document.select("label[for=acquisitionDate.month]").text shouldEqual Messages("calc.common.date.fields.month")
-            document.select("label[for=acquisitionDate.year]").text shouldEqual Messages("calc.common.date.fields.year")
+            document.select("label[for=acquisitionDateDay]").text shouldEqual Messages("calc.common.date.fields.day")
+            document.select("label[for=acquisitionDateMonth]").text shouldEqual Messages("calc.common.date.fields.month")
+            document.select("label[for=acquisitionDateYear]").text shouldEqual Messages("calc.common.date.fields.year")
           }
 
           "display a 'Continue' button " in {
@@ -184,9 +184,9 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
         }
 
         "have the date 10, 12, 2016 pre-populated" in {
-          document.body.getElementById("acquisitionDate.day").attr("value") shouldEqual testAcquisitionDateModel.day.get.toString
-          document.body.getElementById("acquisitionDate.month").attr("value") shouldEqual testAcquisitionDateModel.month.get.toString
-          document.body.getElementById("acquisitionDate.year").attr("value") shouldEqual testAcquisitionDateModel.year.get.toString
+          document.body.getElementById("acquisitionDateDay").attr("value") shouldEqual testAcquisitionDateModel.day.get.toString
+          document.body.getElementById("acquisitionDateMonth").attr("value") shouldEqual testAcquisitionDateModel.month.get.toString
+          document.body.getElementById("acquisitionDateYear").attr("value") shouldEqual testAcquisitionDateModel.year.get.toString
         }
       }
     }
@@ -207,9 +207,9 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
     ): Future[Result] = {
       lazy val fakeRequest = buildRequest(
         ("hasAcquisitionDate", hasAcquisitionDate),
-        ("acquisitionDate.day", day.getOrElse("").toString),
-        ("acquisitionDate.month", month.getOrElse("").toString),
-        ("acquisitionDate.year", year.getOrElse("").toString))
+        ("acquisitionDateDay", day.getOrElse("").toString),
+        ("acquisitionDateMonth", month.getOrElse("").toString),
+        ("acquisitionDateYear", year.getOrElse("").toString))
       val mockData = new AcquisitionDateModel("Yes",day,month,year)
       val target = setupTarget(None, Some(mockData), Some(OtherPropertiesModel("No",None)))
       target.submitAcquisitionDate(fakeRequest)

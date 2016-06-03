@@ -33,9 +33,9 @@ object DisposalDateForm {
 
   def disposalDateForm(acquisitionDate: Option[Date]): Form[DisposalDateModel] = Form(
     mapping(
-      "disposalDate.day" -> number,
-      "disposalDate.month" -> number,
-      "disposalDate.year" -> number
+      "disposalDateDay" -> number,
+      "disposalDateMonth" -> number,
+      "disposalDateYear" -> number
     )(DisposalDateModel.apply)(DisposalDateModel.unapply)
       .verifying(Messages("calc.common.date.error.invalidDate"), fields =>
         isValidDate(fields.day, fields.month, fields.year))
