@@ -104,9 +104,9 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         }
 
         "display three input boxes with labels Day, Month and Year respectively" in {
-          document.select("label[for=disposalDate.day]").text shouldEqual Messages("calc.common.date.fields.day")
-          document.select("label[for=disposalDate.month]").text shouldEqual Messages("calc.common.date.fields.month")
-          document.select("label[for=disposalDate.year]").text shouldEqual Messages("calc.common.date.fields.year")
+          document.select("label[for=disposalDateDay]").text shouldEqual Messages("calc.common.date.fields.day")
+          document.select("label[for=disposalDateMonth]").text shouldEqual Messages("calc.common.date.fields.month")
+          document.select("label[for=disposalDateYear]").text shouldEqual Messages("calc.common.date.fields.year")
         }
 
         "display a 'Continue' button " in {
@@ -132,9 +132,9 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         }
 
         "be pre-populated with the date 10, 12, 2016" in {
-          document.body.getElementById("disposalDate.day").attr("value") shouldEqual "10"
-          document.body.getElementById("disposalDate.month").attr("value") shouldEqual "12"
-          document.body.getElementById("disposalDate.year").attr("value") shouldEqual "2016"
+          document.body.getElementById("disposalDateDay").attr("value") shouldEqual "10"
+          document.body.getElementById("disposalDateMonth").attr("value") shouldEqual "12"
+          document.body.getElementById("disposalDateYear").attr("value") shouldEqual "2016"
         }
       }
     }
@@ -155,7 +155,7 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
       .withFormUrlEncodedBody(body: _*)
 
     def executeTargetWithMockData(day: String, month: String, year: String, acquisitionDateData: Option[AcquisitionDateModel] = None): Future[Result] = {
-      lazy val fakeRequest = buildRequest(("disposalDate.day", day), ("disposalDate.month", month), ("disposalDate.year", year))
+      lazy val fakeRequest = buildRequest(("disposalDateDay", day), ("disposalDateMonth", month), ("disposalDateYear", year))
       val mockData = new DisposalDateModel(getIntOrDefault(day), getIntOrDefault(month), getIntOrDefault(year))
       val target = setupTarget(None, Some(mockData), acquisitionDateData)
       target.submitDisposalDate(fakeRequest)

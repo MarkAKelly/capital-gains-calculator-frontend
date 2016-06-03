@@ -26,10 +26,10 @@ object AcquisitionDateForm {
 
   val acquisitionDateForm = Form(
     mapping(
-      "hasAcquisitionDate" -> text,
-      "acquisitionDate.day" -> optional(number),
-      "acquisitionDate.month" -> optional(number),
-      "acquisitionDate.year" -> optional(number)
+      "hasAcquisitionDate" -> nonEmptyText,
+      "acquisitionDateDay" -> optional(number),
+      "acquisitionDateMonth" -> optional(number),
+      "acquisitionDateYear" -> optional(number)
     )(AcquisitionDateModel.apply)(AcquisitionDateModel.unapply).verifying(Messages("calc.common.date.error.invalidDate"), fields =>
-      if(fields.hasAcquisitionDate == "No") true else isValidDate(fields.day.getOrElse(0), fields.month.getOrElse(0), fields.year.getOrElse(0))))
+      if(fields.hasAcquisitionDate == "Yes") {isValidDate(fields.day.getOrElse(0), fields.month.getOrElse(0), fields.year.getOrElse(0))} else true))
 }
