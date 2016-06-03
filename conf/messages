@@ -14,8 +14,8 @@ calc.base.optionReqError = Choose one of the options
 calc.error.summary.heading = This page has errors
 
 ## PLAY! Error Overrides ##
-error.number=Enter a number
-error.real=Enter a number
+error.number=Enter a number without commas, for example 10000.00
+error.real=Enter a number without commas, for example 10000.00
 
 ## Feedback ##
 feedback.title = Feedback
