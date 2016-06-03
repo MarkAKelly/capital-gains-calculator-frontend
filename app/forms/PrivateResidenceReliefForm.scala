@@ -16,6 +16,7 @@
 
 package forms
 
+import common.Constants
 import play.api.data._
 import play.api.data.Forms._
 import models._
@@ -26,7 +27,7 @@ object PrivateResidenceReliefForm {
 
   def verifyAmountSupplied(data: PrivateResidenceReliefModel, showBefore: Boolean, showAfter: Boolean): Boolean = {
     data.isClaimingPRR match {
-      case "Yes" if showBefore && showAfter => data.daysClaimed.isDefined
+      case "Yes" if showBefore && showAfter => data.daysClaimed.isDefined && data.daysClaimedAfter.isDefined
       case "Yes" if showBefore ^ showAfter => data.daysClaimed.isDefined || data.daysClaimedAfter.isDefined
       case _ => true
     }
@@ -46,7 +47,15 @@ object PrivateResidenceReliefForm {
     }
   }
 
-  def privateResidenceReliefForm (showBefore: Boolean, showAfter: Boolean) = Form(
+  def validateMax (data: PrivateResidenceReliefModel, showBefore: Boolean, showAfter: Boolean): Boolean = {
+    data.isClaimingPRR match {
+      case "Yes" if showBefore && showAfter => isLessThanEqualMaxNumeric(data.daysClaimed.getOrElse(0)) && isLessThanEqualMaxNumeric(data.daysClaimedAfter.getOrElse(0))
+      case "Yes" if showBefore || showAfter => isLessThanEqualMaxNumeric(data.daysClaimed.getOrElse(0)) && isLessThanEqualMaxNumeric(data.daysClaimedAfter.getOrElse(0))
+      case _ => true
+    }
+  }
+
+  def privateResidenceReliefForm (showBefore: Boolean, showAfter: Boolean): Form[PrivateResidenceReliefModel] = Form(
     mapping(
       "isClaimingPRR" -> nonEmptyText,
       "daysClaimed" -> optional(bigDecimal),
@@ -55,5 +64,8 @@ object PrivateResidenceReliefForm {
       .verifying(Messages("calc.privateResidenceRelief.error.noValueProvided"), improvementsForm => verifyAmountSupplied(improvementsForm, showBefore, showAfter))
       .verifying(Messages("calc.privateResidenceRelief.error.errorNegative"), improvementsForm => verifyPositive(improvementsForm, showBefore, showAfter))
       .verifying(Messages("calc.privateResidenceRelief.error.errorDecimalPlaces"), improvementsForm => verifyNoDecimalPlaces(improvementsForm, showBefore, showAfter))
+      .verifying(Messages("calc.privateResidenceRelief.error.maxNumericExceeded") + " " + Constants.maxNumeric + " " + Messages("calc.privateResidenceRelief.error.maxNumericExceeded.OrLess"),
+        improvementsForm => validateMax(improvementsForm, showBefore, showAfter)
+      )
   )
 }

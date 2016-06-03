@@ -56,4 +56,8 @@ object Validation {
     if (amount > 0) true
     else false
   }
+
+  def isLessThanEqualMaxNumeric(amount: BigDecimal): Boolean = {
+    amount <= Constants.maxNumeric
+  }
 }

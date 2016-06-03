@@ -16,6 +16,7 @@
 
 package forms
 
+import common.Constants
 import play.api.data._
 import play.api.data.Forms._
 import models._
@@ -29,6 +30,7 @@ object DisposalValueForm {
       "disposalValue" -> bigDecimal
         .verifying(Messages("calc.disposalValue.errorNegative"), disposalValue => isPositive(disposalValue))
         .verifying(Messages("calc.disposalValue.errorDecimalPlaces"), disposalValue => isMaxTwoDecimalPlaces(disposalValue))
+        .verifying(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"), disposalValue => isLessThanEqualMaxNumeric(disposalValue))
     )(DisposalValueModel.apply)(DisposalValueModel.unapply)
   )
 }
