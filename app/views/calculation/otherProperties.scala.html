@@ -42,24 +42,26 @@
 
     @form(action = routes.CalculationController.submitOtherProperties) {
 
-        <legend>
-            <p>@Messages("calc.otherProperties.question")</p>
-            <p>@Messages("calc.otherProperties.thisIncludes")</p>
+        <fieldset>
+            <legend>
+                <p>@Messages("calc.otherProperties.question")</p>
+                <p>@Messages("calc.otherProperties.thisIncludes")</p>
+            </legend>
             <ul class="list list-bullet">
                 <li>@Messages("calc.otherProperties.thisIncludes.bulletOne")</li>
                 <li>@Messages("calc.otherProperties.thisIncludes.bulletTwo")</li>
                 <li>@Messages("calc.otherProperties.thisIncludes.bulletThree")</li>
             </ul>
-        </legend>
-        <div class="inline form-group">
-            @formHiddenYesNoRadio(
-                otherPropertiesForm,
-                "otherProperties",
-                "",
-                hiddenYesNoContent
-            )
+            <div class="inline form-group">
+                @formHiddenYesNoRadio(
+                    otherPropertiesForm,
+                    "otherProperties",
+                    "",
+                    hiddenYesNoContent
+                )
 
-        </div>
+            </div>
+        </fieldset>
         <button class="button" type="submit" id="continue-button" >@Messages("calc.base.continue")</button>
     }
 }
