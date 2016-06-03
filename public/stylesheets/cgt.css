@@ -57,7 +57,7 @@
     left: -9999em;
 }
 
-section {
+.summary-section {
     margin: 3em 0;
     padding-bottom: 2em;
     border-bottom: 2px solid #BFC1C3;
