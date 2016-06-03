@@ -116,6 +116,7 @@ class EntrepreneursReliefSpec extends UnitSpec with WithFakeApplication with Moc
 
           "have a sidebar with additional links" in {
             document.body.getElementsByClass("sidebar")
+            document.select("aside a").first.text shouldBe s"${Messages("calc.entrepreneursRelief.link")} ${Messages("calc.base.externalLink")}"
           }
         }
       }

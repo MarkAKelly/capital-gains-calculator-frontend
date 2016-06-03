@@ -112,7 +112,9 @@ class PersonalAllowanceSpec extends UnitSpec with WithFakeApplication with Mocki
         "should contain a Read more sidebar with a link to personal allowances and taxation abroad" in {
           document.select("aside h2").text shouldBe Messages("calc.common.readMore")
           document.select("aside a").first().attr("href") shouldBe "https://www.gov.uk/income-tax-rates/current-rates-and-allowances"
+          document.select("aside a").first.text shouldBe s"${Messages("calc.personalAllowance.linkOne")} ${Messages("calc.base.externalLink")}"
           document.select("aside a").last().attr("href") shouldBe "https://www.gov.uk/tax-uk-income-live-abroad/personal-allowance"
+          document.select("aside a").last.text shouldBe s"${Messages("calc.personalAllowance.linkTwo")} ${Messages("calc.base.externalLink")}"
         }
       }
     }

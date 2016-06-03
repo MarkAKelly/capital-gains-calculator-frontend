@@ -121,6 +121,12 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
         "Not show the Days Before question" in {
           document.body.getElementById("daysClaimed") shouldEqual null
         }
+
+        "should contain a Read more sidebar with a link to private residence relief" in {
+          document.select("aside h2").text shouldBe Messages("calc.common.readMore")
+          document.select("aside a").first().attr("href") shouldBe "https://www.gov.uk/tax-sell-home/private-residence-relief"
+          document.select("aside a").first.text shouldBe s"${Messages("calc.privateResidenceRelief.helpLink")} ${Messages("calc.base.externalLink")}"
+        }
       }
     }
 

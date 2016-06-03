@@ -122,7 +122,7 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
 
         "should contain a Read more sidebar with a link to CGT allowances" in {
           document.select("aside h2").text shouldBe Messages("calc.common.readMore")
-          document.select("aside a").text shouldBe Messages("calc.annualExemptAmount.link.one")
+          document.select("aside a").text shouldBe s"${Messages("calc.annualExemptAmount.link.one")} ${Messages("calc.base.externalLink")}"
         }
       }
     }

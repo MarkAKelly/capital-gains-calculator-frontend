@@ -115,8 +115,8 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
         "should contain a Read more sidebar with a link to CGT allowances" in {
           document.select("aside h2").text shouldBe Messages("calc.common.readMore")
-          document.select("aside a").first.text shouldBe Messages("calc.currentIncome.link.one")
-          document.select("aside a").last.text shouldBe Messages("calc.currentIncome.link.two")
+          document.select("aside a").first.text shouldBe s"${Messages("calc.currentIncome.link.one")} ${Messages("calc.base.externalLink")}"
+          document.select("aside a").last.text shouldBe s"${Messages("calc.currentIncome.link.two")} ${Messages("calc.base.externalLink")}"
         }
       }
     }

@@ -8,6 +8,7 @@
     @Messages("calc.otherProperties.questionTwo.helpText.start")
     <a id="helpTextLink" class="external-link" rel="external" href="https://www.gov.uk/capital-gains-tax/work-out-need-to-pay" target="_blank">
         @Messages("calc.otherProperties.questionTwo.helpText.linkText")
+        <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
     </a>
 }
 
@@ -24,10 +25,16 @@
 @sidebar = {
     <ul>
         <li>
-            <a id="helpLink1" class="external-link" rel="external" href="https://www.gov.uk/capital-gains-tax" target="_blank">@Messages("calc.otherProperties.link.one")</a>
+            <a id="helpLink1" class="external-link" rel="external" href="https://www.gov.uk/capital-gains-tax" target="_blank">
+                @Messages("calc.otherProperties.link.one")
+                <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
+            </a>
         </li>
         <li>
-            <a id="helpLink2" class="external-link" rel="external" href="https://www.gov.uk/income-tax-rates/previous-tax-years" target="_blank">@Messages("calc.otherProperties.link.two")</a>
+            <a id="helpLink2" class="external-link" rel="external" href="https://www.gov.uk/income-tax-rates/previous-tax-years" target="_blank">
+                @Messages("calc.otherProperties.link.two")
+                <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
+            </a>
         </li>
     </ul>
 }
