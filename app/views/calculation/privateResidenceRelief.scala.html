@@ -23,7 +23,8 @@
             privateResidenceReliefForm("daysClaimed"),
             '_label -> (Messages("calc.privateResidenceRelief.questionBefore.partOne") + " " + disposalDateLess18Months + " " + Messages("calc.privateResidenceRelief.questionBefore.partTwo")),
             '_type -> "text",
-            '_inputClass -> "form-group"
+            '_inputClass -> "form-group input--no-spinner",
+            '_type -> "number"
             )
         </div>
     }
@@ -33,7 +34,8 @@
                 privateResidenceReliefForm("daysClaimedAfter"),
                 '_label -> (Messages("calc.privateResidenceRelief.questionBetween.partOne") + " " + disposalDateLess18Months + " " + Messages("calc.privateResidenceRelief.questionBetween.partTwo")),
                 '_type -> "text",
-                '_inputClass -> "form-group"
+                '_inputClass -> "form-group input--no-spinner",
+                '_type -> "number"
             )
         </div>
     }
