@@ -16,6 +16,7 @@
 
 package controllers.CalculationControllerTests
 
+import common.Constants
 import connectors.CalculatorConnector
 import constructors.CalculationElectionConstructor
 import controllers.{CalculationController, routes}
@@ -305,6 +306,20 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
 
       s"redirect to ${routes.CalculationController.otherReliefs()}" in {
         redirectLocation(result) shouldBe Some(s"${routes.CalculationController.otherReliefs()}")
+      }
+    }
+
+    "submitting a value which exceeds the maximum numeric" should {
+      lazy val result = executeTargetWithMockData("Yes", (Constants.maxNumeric + 0.01).toString , AcquisitionDateModel("No", None, None, None))
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 400" in {
+        status(result) shouldBe 400
+      }
+
+      s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
+        document.getElementsByClass("error-notification").text should
+          include (Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
       }
     }
   }

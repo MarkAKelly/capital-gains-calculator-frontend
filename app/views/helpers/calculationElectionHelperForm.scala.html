@@ -11,7 +11,7 @@
 @fieldsetClass = {@elements.args.get('_groupClass)}
 @labelAfter = @{ elements.args.get('_labelAfter).getOrElse(true).asInstanceOf[Boolean] }
 <div class="@if(elements.hasErrors){ form-field--error}">
-    <fieldset class="@fieldsetClass"
+    <fieldset id="@field.id" class="@fieldsetClass"
         @if(elements.args.get('_fieldsetAttributes).isDefined) {@elements.args.get('_fieldsetAttributes)}>
         @if(elements.args.get('_legend).isDefined) {
             <legend @if(elements.args.get('_legendClass).isDefined) {class="@elements.args.get('_legendClass)"}

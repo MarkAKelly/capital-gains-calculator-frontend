@@ -8,7 +8,10 @@
 <ul>
     <li>
         <a id="helpLink1" class="external-link" rel="external" href="https://www.gov.uk/tax-sell-home/private-residence-relief"
-            target="_blank" data-journey-click="help:govUK:privateResidenceRelief">@Messages("calc.privateResidenceRelief.helpLink")</a>
+            target="_blank" data-journey-click="help:govUK:privateResidenceRelief">
+            @Messages("calc.privateResidenceRelief.helpLink")
+            <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
+        </a>
     </li>
 </ul>
 }
@@ -20,7 +23,7 @@
             privateResidenceReliefForm("daysClaimed"),
             '_label -> (Messages("calc.privateResidenceRelief.questionBefore.partOne") + " " + disposalDateLess18Months + " " + Messages("calc.privateResidenceRelief.questionBefore.partTwo")),
             '_type -> "text",
-            '_inputClass -> "form-field input--no-spinner",
+            '_inputClass -> "form-group input--no-spinner",
             '_type -> "number"
             )
         </div>
@@ -31,7 +34,7 @@
                 privateResidenceReliefForm("daysClaimedAfter"),
                 '_label -> (Messages("calc.privateResidenceRelief.questionBetween.partOne") + " " + disposalDateLess18Months + " " + Messages("calc.privateResidenceRelief.questionBetween.partTwo")),
                 '_type -> "text",
-                '_inputClass -> "form-field input--no-spinner",
+                '_inputClass -> "form-group input--no-spinner",
                 '_type -> "number"
             )
         </div>
@@ -43,7 +46,12 @@
 
     <a id="back-link" class="back-link" href="@routes.CalculationController.disposalCosts">@Messages("calc.base.back")</a>
 
-    @errorSummary(privateResidenceReliefForm, "private-residence-relief")
+    @if(daysBeforeShow){@errorSummary(privateResidenceReliefForm, "private-residence-relief", "daysClaimed")
+    } else {
+        @if(daysBetweenShow) {@errorSummary(privateResidenceReliefForm, "private-residence-relief", "daysClaimedAfter")
+        } else {@errorSummary(privateResidenceReliefForm, "private-residence-relief")}
+    }
+
 
     <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
 

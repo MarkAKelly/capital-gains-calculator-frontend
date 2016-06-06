@@ -16,17 +16,18 @@
 
 package controllers.CalculationControllerTests
 
+import common.Constants
 import connectors.CalculatorConnector
 import constructors.CalculationElectionConstructor
 import models._
-import controllers.{routes, CalculationController}
+import controllers.{CalculationController, routes}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
 import play.api.libs.json.Json
-import play.api.mvc.{Result, AnyContentAsFormUrlEncoded}
+import play.api.mvc.{AnyContentAsFormUrlEncoded, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -119,6 +120,12 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
         "Not show the Days Before question" in {
           document.body.getElementById("daysClaimed") shouldEqual null
+        }
+
+        "should contain a Read more sidebar with a link to private residence relief" in {
+          document.select("aside h2").text shouldBe Messages("calc.common.readMore")
+          document.select("aside a").first().attr("href") shouldBe "https://www.gov.uk/tax-sell-home/private-residence-relief"
+          document.select("aside a").first.text shouldBe s"${Messages("calc.privateResidenceRelief.helpLink")} ${Messages("calc.base.externalLink")}"
         }
       }
     }
@@ -670,7 +677,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
     }
 
     "submitting a valid result of 'Yes' with claimed value" should {
-      lazy val result = executeTargetWithMockData("Yes", "100", "", testDisposalDate, testAcquisitionDate)
+      lazy val result = executeTargetWithMockData("Yes", "100", "0", testDisposalDate, testAcquisitionDate)
 
       "return a 303 code" in {
         status(result) shouldBe 303
@@ -733,7 +740,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
     }
 
     "submitting an invalid result with an answer 'Yes' but negative value data" should {
-      lazy val result = executeTargetWithMockData("Yes", "-1000", "", testDisposalDate, testAcquisitionDate, testRebasedValue)
+      lazy val result = executeTargetWithMockData("Yes", "-1000", "0", testDisposalDate, testAcquisitionDate, testRebasedValue)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 400 code" in {
@@ -768,6 +775,32 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
       "return HTML that displays the error message " in {
         document.select("span.error-notification").text shouldEqual Messages("error.real")
+      }
+    }
+
+    "submitting an invalid result with an answer 'Yes' where daysBefore exceeds max numeric" should {
+      lazy val result = executeTargetWithMockData("Yes", (Constants.maxNumeric + 1).toString, "100", testDisposalDate, testAcquisitionDate, testRebasedValue)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 400 code" in {
+        status(result) shouldBe 400
+      }
+
+      "return HTML that displays the error message " in {
+        document.select("span.error-notification").text shouldEqual Messages("calc.privateResidenceRelief.error.maxNumericExceeded") + " " + Constants.maxNumeric + " " + Messages("calc.privateResidenceRelief.error.maxNumericExceeded.OrLess")
+      }
+    }
+
+    "submitting an invalid result with an answer 'Yes' where daysAfter exceeds max numeric" should {
+      lazy val result = executeTargetWithMockData("Yes", "100", (Constants.maxNumeric + 1).toString, testDisposalDate, testAcquisitionDate, testRebasedValue)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 400 code" in {
+        status(result) shouldBe 400
+      }
+
+      "return HTML that displays the error message " in {
+        document.select("span.error-notification").text shouldEqual Messages("calc.privateResidenceRelief.error.maxNumericExceeded") + " " + Constants.maxNumeric + " " + Messages("calc.privateResidenceRelief.error.maxNumericExceeded.OrLess")
       }
     }
   }
