@@ -160,8 +160,8 @@ object SummaryConstructor {
               Some(routes.CalculationController.disabledTrustee().toString())
             ),
             SummaryDataItemModel(
-              Messages("calc.otherProperties.questionTwo"),
-              "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
+              Messages("calc.otherProperties.question"),
+              summary.otherPropertiesModel.otherProperties.toString,
               Some(routes.CalculationController.otherProperties().toString())
             ),
             SummaryDataItemModel(
@@ -247,8 +247,8 @@ object SummaryConstructor {
               Some(routes.CalculationController.customerType().toString())
             ),
             SummaryDataItemModel(
-              Messages("calc.otherProperties.questionTwo"),
-              "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
+              Messages("calc.otherProperties.question"),
+              summary.otherPropertiesModel.otherProperties.toString,
               Some(routes.CalculationController.otherProperties().toString())
             ),
             SummaryDataItemModel(

@@ -545,8 +545,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
           document.body().getElementById("personalDetails(1)").text() shouldBe "No"
         }
 
-        "have a total taxable gain of prior disposals of £9,600" in {
-          document.body.getElementById("personalDetails(2)").text() shouldBe "£9,600.00"
+        "have the answer for Previous Disposals (Other Properties) of 'Yes'" in {
+          document.body.getElementById("personalDetails(2)").text() shouldBe "Yes"
         }
 
         "have a remaining CGT Allowance of £1,500" in {
@@ -635,8 +635,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
           document.body().getElementById("personalDetails(0)").text() shouldBe "Personal Representative"
         }
 
-        "have a total taxable gain of prior disposals of £9,600" in {
-          document.body.getElementById("personalDetails(1)").text() shouldBe "£9,600.00"
+        "have the answer for Previous Disposals (Other Properties) of 'Yes' " in {
+          document.body.getElementById("personalDetails(1)").text() shouldBe "Yes"
         }
 
         "have a remaining CGT Allowance of £1,500" in {
