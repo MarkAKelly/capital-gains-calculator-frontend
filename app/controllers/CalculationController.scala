@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat
 import connectors.CalculatorConnector
 import common.{CustomerTypeKeys, Dates, KeystoreKeys}
 import constructors.CalculationElectionConstructor
+import controllers.features.FeatureLock
 import forms.OtherPropertiesForm._
 import forms.AcquisitionValueForm._
 import forms.CustomerTypeForm._
@@ -50,18 +51,20 @@ import scala.concurrent.{Future, Await}
 import views.html._
 import common.DefaultRoutes._
 import scala.concurrent.duration.Duration
+import scala.util.{Failure, Success, Try}
 
 object CalculationController extends CalculationController {
   val calcConnector = CalculatorConnector
   val calcElectionConstructor = CalculationElectionConstructor
 }
 
-trait CalculationController extends FrontendController {
+trait CalculationController extends FrontendController with FeatureLock {
 
   val calcConnector: CalculatorConnector
   val calcElectionConstructor: CalculationElectionConstructor
 
   //################### Shared/Common methods #######################
+
   def getAcquisitionDate(implicit hc: HeaderCarrier): Future[Option[Date]] =
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).map {
       case Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year))) => Some(Dates.constructDate(day, month, year))
@@ -945,7 +948,7 @@ trait CalculationController extends FrontendController {
     } yield route
   }
 
-  def restart() = Action.async { implicit request =>
+  def restart(): Action[AnyContent] = Action.async { implicit request =>
     calcConnector.clearKeystore()
     Future.successful(Redirect(routes.StartController.start()))
   }

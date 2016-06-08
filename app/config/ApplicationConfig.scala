@@ -27,14 +27,18 @@ trait AppConfig {
   val contactFrontendPartialBaseUrl: String
   val reportAProblemPartialUrl: String
   val reportAProblemNonJSUrl: String
+  val featureRTTEnabled: Boolean
 }
 
 object ApplicationConfig extends AppConfig with ServicesConfig {
 
   private def loadConfig(key: String) = configuration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
+  private def getFeature(key: String) = configuration.getBoolean(key).getOrElse(false)
 
   private val contactFrontendService = baseUrl("contact-frontend")
   private val contactHost = configuration.getString(s"$env.microservice.services.contact-frontend.host").getOrElse("")
+
+  override lazy val featureRTTEnabled = getFeature(s"$env.features.RTT")
 
   override lazy val assetsPrefix = loadConfig(s"assets.url") + loadConfig(s"assets.version")
   override lazy val analyticsToken = loadConfig(s"google-analytics.token")
