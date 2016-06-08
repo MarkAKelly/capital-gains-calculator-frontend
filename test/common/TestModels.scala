@@ -106,6 +106,56 @@ object TestModels {
   val calcModelSomePRR = CalculationResultModel(0, 0, 0, 0, None, None, Some(10000))
 
 
+  val summaryIndividualFlatNoIncomeOtherPropNo = SummaryModel(
+    CustomerTypeModel(CustomerTypeKeys.individual),
+    None,
+    Some(CurrentIncomeModel(0)),
+    None,
+    OtherPropertiesModel("No", None),
+    None,
+    AcquisitionDateModel("No", None, None, None),
+    AcquisitionValueModel(100000),
+    Some(RebasedValueModel("No", None)),
+    None,
+    ImprovementsModel("No", None),
+    DisposalDateModel(10, 10, 2010),
+    DisposalValueModel(150000),
+    AcquisitionCostsModel(None),
+    DisposalCostsModel(None),
+    EntrepreneursReliefModel("No"),
+    AllowableLossesModel("No", None),
+    CalculationElectionModel("flat"),
+    OtherReliefsModel(None),
+    OtherReliefsModel(None),
+    OtherReliefsModel(None),
+    None
+  )
+
+  val summaryIndividualFlatNoIncomeOtherPropYes = SummaryModel(
+    CustomerTypeModel(CustomerTypeKeys.individual),
+    None,
+    Some(CurrentIncomeModel(0)),
+    None,
+    OtherPropertiesModel("Yes", Some(0)),
+    Some(AnnualExemptAmountModel(1500)),
+    AcquisitionDateModel("No", None, None, None),
+    AcquisitionValueModel(100000),
+    Some(RebasedValueModel("No", None)),
+    None,
+    ImprovementsModel("No", None),
+    DisposalDateModel(10, 10, 2010),
+    DisposalValueModel(150000),
+    AcquisitionCostsModel(None),
+    DisposalCostsModel(None),
+    EntrepreneursReliefModel("No"),
+    AllowableLossesModel("No", None),
+    CalculationElectionModel("flat"),
+    OtherReliefsModel(None),
+    OtherReliefsModel(None),
+    OtherReliefsModel(None),
+    None
+  )
+
   val summaryIndividualFlatLoss = SummaryModel (
     CustomerTypeModel(CustomerTypeKeys.individual),
     None,
