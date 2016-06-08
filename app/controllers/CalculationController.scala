@@ -121,7 +121,8 @@ trait CalculationController extends FrontendController {
      errors => Future.successful(BadRequest(calculation.currentIncome(errors))),
      success => {
        calcConnector.saveFormData(KeystoreKeys.currentIncome, success)
-       Future.successful(Redirect(routes.CalculationController.personalAllowance()))
+       if (success.currentIncome > 0) Future.successful(Redirect(routes.CalculationController.personalAllowance()))
+       else Future.successful(Redirect(routes.CalculationController.otherProperties()))
      }
    )
   }
@@ -145,11 +146,16 @@ trait CalculationController extends FrontendController {
   }
 
   //################### Other Properties methods #######################
-  def otherPropertiesBackUrl(implicit hc: HeaderCarrier): Future[String] = calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).map {
-    case Some(CustomerTypeModel("individual")) => routes.CalculationController.personalAllowance().url
-    case Some(CustomerTypeModel("trustee")) => routes.CalculationController.disabledTrustee().url
-    case Some(_) => routes.CalculationController.customerType().url
-    case _ => missingDataRoute
+  def otherPropertiesBackUrl(implicit hc: HeaderCarrier): Future[String] =
+    calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).flatMap {
+      case Some(CustomerTypeModel("individual")) =>
+        calcConnector.fetchAndGetFormData[CurrentIncomeModel](KeystoreKeys.currentIncome).flatMap {
+          case Some(data) if data.currentIncome == 0 => Future.successful(routes.CalculationController.currentIncome().url)
+          case _ => Future.successful(routes.CalculationController.personalAllowance().url)
+        }
+      case Some(CustomerTypeModel("trustee")) => Future.successful(routes.CalculationController.disabledTrustee().url)
+      case Some(_) => Future.successful(routes.CalculationController.customerType().url)
+      case _ => Future.successful(missingDataRoute)
   }
 
   val otherProperties = Action.async { implicit request =>

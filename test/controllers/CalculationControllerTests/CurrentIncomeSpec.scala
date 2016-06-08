@@ -175,6 +175,19 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
       }
     }
 
+    "submitting a valid form with a £0 amount" should {
+
+      lazy val result = executeTargetWithMockData("0")
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      s"redirect to ${routes.CalculationController.otherProperties()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.otherProperties()}")
+      }
+    }
+
     "submitting an invalid form with no data" should {
 
       lazy val result = executeTargetWithMockData("")
