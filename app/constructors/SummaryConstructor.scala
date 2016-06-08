@@ -444,11 +444,6 @@ object SummaryConstructor {
             Some(routes.CalculationController.privateResidenceRelief().toString())
           ),
           SummaryDataItemModel(
-            Messages("calc.entrepreneursRelief.question"),
-            summary.entrepreneursReliefModel.entReliefClaimed,
-            Some(routes.CalculationController.entrepreneursRelief().toString())
-          ),
-          SummaryDataItemModel(
             Messages("calc.allowableLosses.question.two"),
             "&pound;" + (summary.allowableLossesModel.isClaimingAllowableLosses match {
               case "Yes" => MoneyPounds(summary.allowableLossesModel.allowableLossesAmt.get).quantity
@@ -472,11 +467,6 @@ object SummaryConstructor {
             Some(routes.CalculationController.privateResidenceRelief().toString())
           ),
           SummaryDataItemModel(
-            Messages("calc.entrepreneursRelief.question"),
-            summary.entrepreneursReliefModel.entReliefClaimed,
-            Some(routes.CalculationController.entrepreneursRelief().toString())
-          ),
-          SummaryDataItemModel(
             Messages("calc.allowableLosses.question.two"),
             "&pound;" + (summary.allowableLossesModel.isClaimingAllowableLosses match {
               case "Yes" => MoneyPounds(summary.allowableLossesModel.allowableLossesAmt.get).quantity
@@ -498,11 +488,6 @@ object SummaryConstructor {
             Messages("calc.privateResidenceRelief.question"),
             simplePRRResult(result.simplePRR, summary.privateResidenceReliefModel),
             Some(routes.CalculationController.privateResidenceRelief().toString())
-          ),
-          SummaryDataItemModel(
-            Messages("calc.entrepreneursRelief.question"),
-            summary.entrepreneursReliefModel.entReliefClaimed,
-            Some(routes.CalculationController.entrepreneursRelief().toString())
           ),
           SummaryDataItemModel(
             Messages("calc.allowableLosses.question.two"),
