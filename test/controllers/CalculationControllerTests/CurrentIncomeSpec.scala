@@ -141,6 +141,19 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
     }
   }
 
+  "In CalculationController calling the .currentIncome action " when {
+
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/current-income")
+    s"redirect to ${routes.TimeoutController.timeout()}" in {
+
+      val target = setupTarget(None, None)
+      lazy val result = target.currentIncome(fakeRequest)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      redirectLocation(result) shouldBe Some(s"${routes.TimeoutController.timeout()}")
+    }
+  }
+
   //POST Tests
   "In CalculationController calling the .submitCurrentIncome action " when {
 

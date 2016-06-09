@@ -1,0 +1,11 @@
+@import views.html.helpers._
+
+@()(implicit request: Request[_])
+
+@main_template("Hard coded title") {
+
+<a id="back-link" class="back-link" href="#">@Messages("calc.base.back")</a>
+
+<h1 class="heading-large">"Hard coded title"</h1>
+
+}

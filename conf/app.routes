@@ -7,6 +7,10 @@ GET         /assets/*file            controllers.Assets.at(path="/public", file)
 GET         /                        controllers.StartController.start
 ########################################################
 
+#Session Timeout route
+########################################################
+GET         /session-timeout         controllers.TimeoutController.timeout
+########################################################
 
 #Calculation controller routes
 ########################################################
