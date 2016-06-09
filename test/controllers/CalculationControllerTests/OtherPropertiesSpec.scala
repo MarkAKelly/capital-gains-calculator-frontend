@@ -382,9 +382,23 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
         target.submitOtherProperties(fakeRequest)
       }
 
-      "submitting a valid form with 'Yes'" should {
+      "submitting a valid form with 'Yes' selected" should {
 
         lazy val result = executeTargetWithMockData("Yes", "")
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        "return a 303" in {
+          status(result) shouldBe 303
+        }
+
+        "should redirect to the annual exempt amount page" in {
+          redirectLocation(result) shouldBe Some(s"${routes.CalculationController.annualExemptAmount()}")
+        }
+      }
+
+      "submitting a valid form with 'No' selected" should {
+
+        lazy val result = executeTargetWithMockData("No", "")
         lazy val document = Jsoup.parse(bodyOf(result))
 
         "return a 303" in {
@@ -408,9 +422,23 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
         target.submitOtherProperties(fakeRequest)
       }
 
-      "submitting a valid form with 'Yes'" should {
+      "submitting a valid form with 'Yes' selected" should {
 
         lazy val result = executeTargetWithMockData("Yes", "")
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        "return a 303" in {
+          status(result) shouldBe 303
+        }
+
+        "should redirect to the annual exempt amount page" in {
+          redirectLocation(result) shouldBe Some(s"${routes.CalculationController.annualExemptAmount()}")
+        }
+      }
+
+      "submitting a valid form with 'No' selected" should {
+
+        lazy val result = executeTargetWithMockData("No", "")
         lazy val document = Jsoup.parse(bodyOf(result))
 
         "return a 303" in {

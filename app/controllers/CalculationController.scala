@@ -183,6 +183,7 @@ trait CalculationController extends FrontendController {
           calcConnector.saveFormData(KeystoreKeys.otherProperties, success)
           success match {
             case OtherPropertiesModel("Yes", Some(value)) if value.equals(BigDecimal(0)) => Future.successful(Redirect(routes.CalculationController.annualExemptAmount()))
+            case OtherPropertiesModel("Yes", None) if !showHiddenQuestion => Future.successful(Redirect(routes.CalculationController.annualExemptAmount()))
             case _ => calcConnector.saveFormData("annualExemptAmount", AnnualExemptAmountModel(0))
               Future.successful(Redirect(routes.CalculationController.acquisitionDate()))
           }
