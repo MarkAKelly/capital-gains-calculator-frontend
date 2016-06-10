@@ -81,10 +81,11 @@ class NoCapitalGainsTaxSpec extends UnitSpec with WithFakeApplication with Mocki
         document.body.getElementsByTag("h1").text shouldEqual Messages("nocgt.invaliddate.title")
       }
 
-      "Contain the content 'This is because you sold or gave away the property before 6 April 2015.' " +
-        "and 'You've told us that you sold or gave away the property on'" in {
-        document.body.select("article p").text shouldEqual (Messages("nocgt.content.one") + " " + Messages("nocgt.content.two"))
-      }
+//      "Contain the content 'This is because you sold or gave away the property before 6 April 2015.' " +
+//        "and 'You've told us that you sold or gave away the property on'" in {
+//        document.body.select("article p").text should contain("This is because you sold or gave away the property before 6 April 2015." +
+//          " " + "You've told us that you sold or gave away the property on")
+//      }
 
       "should contain a Read more sidebar with a link to CGT allowances" in {
         document.select("aside h2").text shouldBe Messages("calc.common.readMore")
@@ -93,6 +94,10 @@ class NoCapitalGainsTaxSpec extends UnitSpec with WithFakeApplication with Mocki
 
       "should contain a change link to the disposal date page" in {
         document.select("a#change-link").text shouldBe Messages("nocgt.content.change")
+      }
+
+      "should display a date of -- -- ----" in {
+
       }
     }
 

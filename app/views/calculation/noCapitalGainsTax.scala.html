@@ -1,6 +1,11 @@
 @import views.html.helpers._
+@import constructors.NoTaxDateConstructor
 
 @()(implicit request: Request[_])
+
+@date = {
+    @NoTaxDateConstructor.buildDate(new DisposalDateModel(1, 4, 2013))
+}
 
 @sidebar = {
     <ul>
@@ -20,7 +25,7 @@
     <p>
         @Messages("nocgt.content.two")
         <span class="no-wrap">
-            <span class="bold-small"> DYNAMICALLY GENERATED DATE</span>
+            <span class="bold-small">@date</span>
             <a id="change-link" href="@routes.CalculationController.disposalDate">@Messages("nocgt.content.change")</a>
         </span>
     </p>
