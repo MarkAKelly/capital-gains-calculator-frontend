@@ -389,22 +389,13 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.select("#deductions").text should include(Messages("calc.summary.deductions.title"))
             }
 
-            "include the question 'Are you claiming Entrepreneurs' Relief?'" in {
-              document.select("#deductions").text should include(Messages("calc.entrepreneursRelief.question"))
-            }
-
-            "have the answer to entrepreneurs relief question be 'No' and link to the entrepreurs-relief page" in {
-              document.body().getElementById("deductions(1)").text shouldBe "No"
-              document.body().getElementById("deductions(1)").attr("href") shouldEqual routes.CalculationController.entrepreneursRelief().toString()
-            }
-
             "include the question 'Whats the total value of your allowable losses?'" in {
               document.select("#deductions").text should include(Messages("calc.allowableLosses.question.two"))
             }
 
             "the value of allowable losses should be £0 and link to the allowable-losses page" in {
-              document.body().getElementById("deductions(2)").text shouldBe "£0.00"
-              document.body().getElementById("deductions(2)").attr("href") shouldEqual routes.CalculationController.allowableLosses().toString()
+              document.body().getElementById("deductions(1)").text shouldBe "£0.00"
+              document.body().getElementById("deductions(1)").attr("href") shouldEqual routes.CalculationController.allowableLosses().toString()
             }
 
             "include the question 'What other reliefs are you claiming?'" in {
@@ -412,8 +403,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "the value of other reliefs should be £0 and link to the other-reliefs page" in {
-              document.body().getElementById("deductions(3)").text shouldBe "£0.00"
-              document.body().getElementById("deductions(3)").attr("href") shouldEqual routes.CalculationController.otherReliefs().toString()
+              document.body().getElementById("deductions(2)").text shouldBe "£0.00"
+              document.body().getElementById("deductions(2)").attr("href") shouldEqual routes.CalculationController.otherReliefs().toString()
             }
 
             "include the question 'Are you claiming private residence relief'" in {
@@ -485,11 +476,11 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "the value of allowable losses should be £50,000" in {
-          document.body().getElementById("deductions(2)").text shouldBe "£50,000.00"
+          document.body().getElementById("deductions(1)").text shouldBe "£50,000.00"
         }
 
         "the value of other reliefs should be £999" in {
-          document.body().getElementById("deductions(3)").text shouldBe "£999.00"
+          document.body().getElementById("deductions(2)").text shouldBe "£999.00"
         }
 
         "have a base tax rate of 20%" in {
@@ -737,8 +728,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "have a value for the other reliefs rebased" in {
-          document.body.getElementById("deductions(3)").text() shouldBe "£777.00"
-          document.body().getElementById("deductions(3)").attr("href") shouldEqual routes.CalculationController.otherReliefsRebased().toString()
+          document.body.getElementById("deductions(2)").text() shouldBe "£777.00"
+          document.body().getElementById("deductions(2)").attr("href") shouldEqual routes.CalculationController.otherReliefsRebased().toString()
         }
 
       }
@@ -766,11 +757,11 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "the value of allowable losses should be £0" in {
-          document.body().getElementById("deductions(2)").text shouldBe "£0.00"
+          document.body().getElementById("deductions(1)").text shouldBe "£0.00"
         }
 
         "the value of other reliefs should be £0" in {
-          document.body().getElementById("deductions(3)").text shouldBe "£0.00"
+          document.body().getElementById("deductions(2)").text shouldBe "£0.00"
         }
       }
 

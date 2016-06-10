@@ -34,7 +34,6 @@ case class SummaryModel (
                           disposalValueModel: DisposalValueModel,
                           acquisitionCostsModel: AcquisitionCostsModel,
                           disposalCostsModel : DisposalCostsModel,
-                          entrepreneursReliefModel : EntrepreneursReliefModel,
                           allowableLossesModel : AllowableLossesModel,
                           calculationElectionModel: CalculationElectionModel,
                           otherReliefsModelFlat : OtherReliefsModel,

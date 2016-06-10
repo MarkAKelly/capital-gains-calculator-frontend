@@ -30,7 +30,6 @@ import forms.DisposalDateForm._
 import forms.DisposalValueForm._
 import forms.OtherReliefsForm._
 import forms.AllowableLossesForm._
-import forms.EntrepreneursReliefForm._
 import forms.DisposalCostsForm._
 import forms.ImprovementsForm._
 import forms.PersonalAllowanceForm._
@@ -503,7 +502,7 @@ trait CalculationController extends FrontendController {
                 Future.successful(Redirect(routes.CalculationController.privateResidenceRelief()))
               }
               case _ => {
-                Future.successful(Redirect(routes.CalculationController.entrepreneursRelief()))
+                Future.successful(Redirect(routes.CalculationController.allowableLosses()))
               }
             }
           }
@@ -575,7 +574,7 @@ trait CalculationController extends FrontendController {
         },
         success => {
           calcConnector.saveFormData(KeystoreKeys.privateResidenceRelief, success)
-          Future.successful(Redirect(routes.CalculationController.entrepreneursRelief()))
+          Future.successful(Redirect(routes.CalculationController.allowableLosses()))
         }
       )
     }
@@ -588,8 +587,8 @@ trait CalculationController extends FrontendController {
     } yield finalResult
   }
 
-  //################### Entrepreneurs Relief methods #######################
-  def entrepreneursReliefBackUrl(implicit hc: HeaderCarrier): Future[String] = {
+  //################### Allowable Losses methods #######################
+  def allowableLossesBackLink(implicit hc: HeaderCarrier): Future[String] = {
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
       case Some(acquisitionData) if acquisitionData.hasAcquisitionDate == "Yes" =>
         Future.successful(routes.CalculationController.privateResidenceRelief().url)
@@ -600,66 +599,46 @@ trait CalculationController extends FrontendController {
       }
     }
   }
-
-  val entrepreneursRelief = Action.async { implicit request =>
+  val allowableLosses = Action.async { implicit request =>
     def routeRequest(backUrl: String) = {
-      calcConnector.fetchAndGetFormData[EntrepreneursReliefModel](KeystoreKeys.entrepreneursRelief).map {
-        case Some(data) => Ok(calculation.entrepreneursRelief(entrepreneursReliefForm.fill(data), backUrl))
-        case _ => Ok(calculation.entrepreneursRelief(entrepreneursReliefForm, backUrl))
+      calcConnector.fetchAndGetFormData[AllowableLossesModel](KeystoreKeys.allowableLosses).map {
+        case Some(data) => Ok(calculation.allowableLosses(allowableLossesForm.fill(data), backUrl))
+        case None => Ok(calculation.allowableLosses(allowableLossesForm, backUrl))
       }
     }
 
     for {
-      backUrl <- entrepreneursReliefBackUrl
+      backUrl <- allowableLossesBackLink
       route <- routeRequest(backUrl)
     } yield route
   }
 
-  val submitEntrepreneursRelief = Action.async { implicit request =>
-
+  val submitAllowableLosses = Action.async { implicit request =>
     def routeRequest(backUrl: String) = {
-      entrepreneursReliefForm.bindFromRequest.fold(
-        errors => Future.successful(BadRequest(calculation.entrepreneursRelief(errors, backUrl))),
+      allowableLossesForm.bindFromRequest.fold(
+        errors => Future.successful(BadRequest(calculation.allowableLosses(errors, backUrl))),
         success => {
-          calcConnector.saveFormData(KeystoreKeys.entrepreneursRelief, success)
-          Future.successful(Redirect(routes.CalculationController.allowableLosses()))
+          calcConnector.saveFormData(KeystoreKeys.allowableLosses, success)
+          calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
+            case Some(data) if data.hasAcquisitionDate == "Yes" && !Dates.dateAfterStart(data.day.get, data.month.get, data.year.get) =>
+              Future.successful(Redirect(routes.CalculationController.calculationElection()))
+            case _ =>
+              calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
+                case Some(rebasedData) if rebasedData.hasRebasedValue == "Yes" =>
+                  Future.successful(Redirect(routes.CalculationController.calculationElection()))
+                case _ =>
+                  calcConnector.saveFormData(KeystoreKeys.calculationElection, CalculationElectionModel("flat"))
+                  Future.successful(Redirect(routes.CalculationController.otherReliefs()))
+              }
+          }
         }
       )
     }
 
     for {
-      backUrl <- entrepreneursReliefBackUrl
+      backUrl <- allowableLossesBackLink
       route <- routeRequest(backUrl)
     } yield route
-  }
-
-  //################### Allowable Losses methods #######################
-  val allowableLosses = Action.async { implicit request =>
-    calcConnector.fetchAndGetFormData[AllowableLossesModel](KeystoreKeys.allowableLosses).map {
-      case Some(data) => Ok(calculation.allowableLosses(allowableLossesForm.fill(data)))
-      case None => Ok(calculation.allowableLosses(allowableLossesForm))
-    }
-  }
-
-  val submitAllowableLosses = Action.async { implicit request =>
-    allowableLossesForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(calculation.allowableLosses(errors))),
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.allowableLosses, success)
-        calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
-          case Some(data) if data.hasAcquisitionDate == "Yes" && !Dates.dateAfterStart(data.day.get, data.month.get, data.year.get) =>
-            Future.successful(Redirect(routes.CalculationController.calculationElection()))
-          case _ =>
-            calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
-              case Some(rebasedData) if rebasedData.hasRebasedValue == "Yes" =>
-                Future.successful(Redirect(routes.CalculationController.calculationElection()))
-              case _ =>
-                calcConnector.saveFormData(KeystoreKeys.calculationElection, CalculationElectionModel("flat"))
-                Future.successful(Redirect(routes.CalculationController.otherReliefs()))
-            }
-        }
-      }
-    )
   }
 
   //################### Calculation Election methods #######################
