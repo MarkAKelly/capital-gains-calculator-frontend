@@ -16,11 +16,11 @@
 
 package controllers.CalculationControllerTests
 
-import common.Constants
+import common.{Constants, KeystoreKeys}
 import connectors.CalculatorConnector
 import constructors.CalculationElectionConstructor
 import controllers.{CalculationController, routes}
-import models.CurrentIncomeModel
+import models.{CurrentIncomeModel, DisposalDateModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -40,10 +40,13 @@ class NoCapitalGainsTaxSpec extends UnitSpec with WithFakeApplication with Mocki
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget(): CalculationController = {
+  def setupTarget(getData: Option[DisposalDateModel]): CalculationController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
+
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(getData))
 
     new CalculationController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -52,55 +55,67 @@ class NoCapitalGainsTaxSpec extends UnitSpec with WithFakeApplication with Mocki
     }
   }
 
-
   //GET Tests
   "In CalculationController calling the .noCapitalGainsTax action " should {
 
     lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/no-capital-gains-tax").withSession(SessionKeys.sessionId -> "12345")
 
-    val target = setupTarget()
-    lazy val result = target.noCapitalGainsTax(fakeRequest)
-    lazy val document = Jsoup.parse(bodyOf(result))
+    "when supplied with a model for the date 01 January 2015" should {
 
-    "return a 200" in {
-      status(result) shouldBe 200
+      val target = setupTarget(Some(DisposalDateModel(1, 1, 2015)))
+      lazy val result = target.noCapitalGainsTax(fakeRequest)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return some HTML that" should {
+
+        "contain some text and use the character set utf-8" in {
+          contentType(result) shouldBe Some("text/html")
+          charset(result) shouldBe Some("utf-8")
+        }
+
+        "have the title 'You have no Capital Gains Tax to pay'" in {
+          document.title shouldEqual Messages("nocgt.invaliddate.title")
+        }
+
+        "have the heading 'You have no Capital Gains Tax to pay'" in {
+          document.body.getElementsByTag("h1").text shouldEqual Messages("nocgt.invaliddate.title")
+        }
+
+        //      "Contain the content 'This is because you sold or gave away the property before 6 April 2015.' " +
+        //        "and 'You've told us that you sold or gave away the property on'" in {
+        //        document.body.select("article p").text should contain("This is because you sold or gave away the property before 6 April 2015." +
+        //          " " + "You've told us that you sold or gave away the property on")
+        //      }
+
+        "should contain a Read more sidebar with a link to CGT allowances" in {
+          document.select("aside h2").text shouldBe Messages("calc.common.readMore")
+          document.select("aside a").first.text shouldBe s"${Messages("nocgt.sidebar.linkone")} ${Messages("calc.base.externalLink")}"
+        }
+
+        "should contain a change link to the disposal date page" in {
+          document.select("a#change-link").text shouldBe Messages("nocgt.content.change")
+        }
+
+        "should display a date of 01 January 2015" in {
+          document.select("span.bold-small").text shouldEqual "01 January 2015"
+        }
+      }
     }
 
-    "return some HTML that" should {
+    "when supplied with a model for the date 03 Decemeber 2014" should {
 
-      "contain some text and use the character set utf-8" in {
-        contentType(result) shouldBe Some("text/html")
-        charset(result) shouldBe Some("utf-8")
-      }
+      val target = setupTarget(Some(DisposalDateModel(3, 12, 2014)))
+      lazy val result = target.noCapitalGainsTax(fakeRequest)
+      lazy val document = Jsoup.parse(bodyOf(result))
 
-      "have the title 'You have no Capital Gains Tax to pay'" in {
-        document.title shouldEqual Messages("nocgt.invaliddate.title")
-      }
-
-      "have the heading 'You have no Capital Gains Tax to pay'" in {
-        document.body.getElementsByTag("h1").text shouldEqual Messages("nocgt.invaliddate.title")
-      }
-
-//      "Contain the content 'This is because you sold or gave away the property before 6 April 2015.' " +
-//        "and 'You've told us that you sold or gave away the property on'" in {
-//        document.body.select("article p").text should contain("This is because you sold or gave away the property before 6 April 2015." +
-//          " " + "You've told us that you sold or gave away the property on")
-//      }
-
-      "should contain a Read more sidebar with a link to CGT allowances" in {
-        document.select("aside h2").text shouldBe Messages("calc.common.readMore")
-        document.select("aside a").first.text shouldBe s"${Messages("nocgt.sidebar.linkone")} ${Messages("calc.base.externalLink")}"
-      }
-
-      "should contain a change link to the disposal date page" in {
-        document.select("a#change-link").text shouldBe Messages("nocgt.content.change")
-      }
-
-      "should display a date of -- -- ----" in {
-
+      "should display a date of 03 December 2014" in {
+        document.select("span.bold-small").text shouldEqual "03 December 2014"
       }
     }
-
   }
 }
 
