@@ -102,7 +102,7 @@ calc.otherProperties.link.two = Previous tax years
 ## Annual Exempt Amount ##
 calc.annualExemptAmount.question = How much of your Capital Gains Tax allowance have you got left?
 calc.annualExemptAmount.link.one = Capital Gains Tax allowances
-calc.annualExemptAmount.errorMax = Enter a Personal Allowance that’s £
+calc.annualExemptAmount.errorMax = Enter a Capital Gains Tax allowance that''s £
 calc.annualExemptAmount.errorMaxEnd = or less
 calc.annualExemptAmount.errorNegative = Enter a positive number for your allowance
 calc.annualExemptAmount.errorDecimalPlaces = Your allowance has too many numbers after the decimal point
