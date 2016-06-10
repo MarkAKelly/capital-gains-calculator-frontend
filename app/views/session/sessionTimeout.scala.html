@@ -4,8 +4,8 @@
 
 @main_template("Hard coded title") {
 
-<a id="back-link" class="back-link" href="#">@Messages("calc.base.back")</a>
+    <h1 class="heading-large">@Messages("session.timeout.message")</h1>
 
-<h1 class="heading-large">"Hard coded title"</h1>
+    <a id="startAgain" class="bold-medium" href="@routes.CalculationController.restart" data-journey-click="nav:calc:restart">@Messages("calc.summary.startAgain")</a>
 
 }
