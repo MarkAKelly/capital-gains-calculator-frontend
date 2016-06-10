@@ -20,6 +20,8 @@
 
 @main_template(Messages("nocgt.invaliddate.title"), sidebarLinks = Some(sidebar)) {
 
+    <a id="back-link" class="back-link" href="@routes.CalculationController.acquisitionCosts">Back</a>
+
     <h1 class="heading-xlarge">@Messages("nocgt.invaliddate.title")</h1>
     <p>@Messages("nocgt.content.one")</p>
     <p>
