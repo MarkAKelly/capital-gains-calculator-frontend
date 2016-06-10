@@ -92,9 +92,6 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     when(mockSessionCache.fetchAndGetEntry[DisposalCostsModel](Matchers.eq("disposalCosts"))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(summary.disposalCostsModel)))
 
-    when(mockSessionCache.fetchAndGetEntry[EntrepreneursReliefModel](Matchers.eq("entrepreneursRelief"))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(summary.entrepreneursReliefModel)))
-
     when(mockSessionCache.fetchAndGetEntry[AllowableLossesModel](Matchers.eq("allowableLosses"))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(summary.allowableLossesModel)))
 
@@ -130,7 +127,6 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     DisposalValueModel(150000),
     AcquisitionCostsModel(None),
     DisposalCostsModel(None),
-    EntrepreneursReliefModel("No"),
     AllowableLossesModel("No", None),
     CalculationElectionModel("flat"),
     OtherReliefsModel(None),
@@ -155,7 +151,6 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     DisposalValueModel(150000),
     AcquisitionCostsModel(None),
     DisposalCostsModel(None),
-    EntrepreneursReliefModel("No"),
     AllowableLossesModel("No", None),
     CalculationElectionModel("time-apportioned-calculation"),
     OtherReliefsModel(None),
@@ -180,7 +175,6 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     DisposalValueModel(150000),
     AcquisitionCostsModel(None),
     DisposalCostsModel(None),
-    EntrepreneursReliefModel("No"),
     AllowableLossesModel("No", None),
     CalculationElectionModel("rebased"),
     OtherReliefsModel(None),
@@ -205,7 +199,6 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     DisposalValueModel(150000),
     AcquisitionCostsModel(None),
     DisposalCostsModel(None),
-    EntrepreneursReliefModel("No"),
     AllowableLossesModel("No", None),
     CalculationElectionModel(""),
     OtherReliefsModel(None),

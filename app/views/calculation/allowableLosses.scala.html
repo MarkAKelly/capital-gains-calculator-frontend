@@ -2,7 +2,7 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
 
-@(allowableLossesForm: Form[AllowableLossesModel])(implicit request: Request[_])
+@(allowableLossesForm: Form[AllowableLossesModel], backUrl: String)(implicit request: Request[_])
 
 @hiddenYesNoContent = {
     @formInputMoney(allowableLossesForm, "allowableLossesAmt", Messages("calc.allowableLosses.question.two"))
@@ -19,7 +19,7 @@
 
 @main_template(Messages("calc.allowableLosses.question.one")) {
 
-    <a id="back-link" class="back-link" href="@routes.CalculationController.entrepreneursRelief">Back</a>
+    <a id="back-link" class="back-link" href="@backUrl">Back</a>
 
     @errorSummary(allowableLossesForm, "allowable-losses", "allowableLossesAmt")
 

@@ -95,7 +95,6 @@ trait CalculatorConnector {
     val disposalValue = fetchAndGetFormData[DisposalValueModel](KeystoreKeys.disposalValue).map(formData => formData.get)
     val acquisitionCosts = fetchAndGetFormData[AcquisitionCostsModel](KeystoreKeys.acquisitionCosts).map(formData => formData.get)
     val disposalCosts = fetchAndGetFormData[DisposalCostsModel](KeystoreKeys.disposalCosts).map(formData => formData.get)
-    val entrepreneursRelief = fetchAndGetFormData[EntrepreneursReliefModel](KeystoreKeys.entrepreneursRelief).map(formData => formData.get)
     val allowableLosses = fetchAndGetFormData[AllowableLossesModel](KeystoreKeys.allowableLosses).map(formData => formData.get)
     val calculationElection = fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection).map(formData => formData.getOrElse(CalculationElectionModel("")))
     val otherReliefsFlat = fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map(formData => formData.getOrElse(OtherReliefsModel(None)))
@@ -120,7 +119,6 @@ trait CalculatorConnector {
       disposalValueModel <- disposalValue
       acquisitionCostsModel <- acquisitionCosts
       disposalCostsModel <- disposalCosts
-      entrepreneursReliefModel <- entrepreneursRelief
       allowableLossesModel <- allowableLosses
       calculationElectionModel <- calculationElection
       otherReliefsFlatModel <- otherReliefsFlat
@@ -129,7 +127,7 @@ trait CalculatorConnector {
       privateResidenceReliefModel <- privateResidenceRelief
     } yield SummaryModel(customerTypeModel, disabledTrusteeModel, currentIncomeModel, personalAllowanceModel, otherPropertiesModel,
       annualExemptAmountModel, acquisitionDateModel, acquisitionValueModel, rebasedValueModel, rebasedCostsModel, improvementsModel,
-      disposalDateModel, disposalValueModel, acquisitionCostsModel, disposalCostsModel, entrepreneursReliefModel, allowableLossesModel,
+      disposalDateModel, disposalValueModel, acquisitionCostsModel, disposalCostsModel, allowableLossesModel,
       calculationElectionModel, otherReliefsFlatModel, otherReliefsTAModel, otherReliefsRebasedModel, privateResidenceReliefModel)
   }
 

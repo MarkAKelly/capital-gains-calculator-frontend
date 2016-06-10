@@ -38,7 +38,6 @@ class CalculateRequestConstructorSpec extends UnitSpec {
     DisposalValueModel(150000),
     AcquisitionCostsModel(None),
     DisposalCostsModel(None),
-    EntrepreneursReliefModel("No"),
     AllowableLossesModel("No", None),
     CalculationElectionModel("flat"),
     OtherReliefsModel(None),
@@ -50,7 +49,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
   "CalculateRequest Constructor" should {
     "return a string from the baseCalcUrl as an individual with no prior disposal" in {
       CalculateRequestConstructor.baseCalcUrl(sumModel) shouldEqual "customerType=individual&priorDisposal=No&currentIncome=1000" +
-        "&personalAllowanceAmt=11100&disposalValue=150000&disposalCosts=0&allowableLossesAmt=0&entReliefClaimed=No&disposalDate=2010-10-10"
+        "&personalAllowanceAmt=11100&disposalValue=150000&disposalCosts=0&allowableLossesAmt=0&disposalDate=2010-10-10"
     }
 
     "return a string from the baseCalcUrl as a trustee with a prior disposal" in {
@@ -70,7 +69,6 @@ class CalculateRequestConstructorSpec extends UnitSpec {
         DisposalValueModel(150000),
         AcquisitionCostsModel(None),
         DisposalCostsModel(None),
-        EntrepreneursReliefModel("No"),
         AllowableLossesModel("Yes", Some(1000)),
         CalculationElectionModel("flat"),
         OtherReliefsModel(None),
@@ -81,12 +79,12 @@ class CalculateRequestConstructorSpec extends UnitSpec {
 
       CalculateRequestConstructor.baseCalcUrl(sumModelTrustee) shouldEqual "customerType=trustee&priorDisposal=Yes" +
         "&otherPropertiesAmt=6100&isVulnerable=No" +
-        "&disposalValue=150000&disposalCosts=0&allowableLossesAmt=1000&entReliefClaimed=No&disposalDate=2010-10-10"
+        "&disposalValue=150000&disposalCosts=0&allowableLossesAmt=1000&disposalDate=2010-10-10"
     }
 
     "return a string from the baseCalcUrl when a prior disposal with no taxable gain is made" in {
       CalculateRequestConstructor.baseCalcUrl(TestModels.summaryPriorDisposalNoTaxableGain) shouldEqual "customerType=individual&priorDisposal=Yes&annualExemptAmount=4300" +
-        "&otherPropertiesAmt=0&currentIncome=1000&personalAllowanceAmt=11100&disposalValue=150000&disposalCosts=0&allowableLossesAmt=0&entReliefClaimed=No&disposalDate=2010-10-10"
+        "&otherPropertiesAmt=0&currentIncome=1000&personalAllowanceAmt=11100&disposalValue=150000&disposalCosts=0&allowableLossesAmt=0&disposalDate=2010-10-10"
     }
 
     "return a string from the flatCalcUrlExtra with no improvements" in {
