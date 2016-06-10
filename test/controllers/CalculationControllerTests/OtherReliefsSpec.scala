@@ -122,6 +122,10 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
             document.body.getElementsByTag("label").text should include(Messages("calc.otherReliefs.question"))
           }
 
+          "have the help text 'For example, lettings relief'" in {
+            document.body.getElementsByClass("form-hint").text should include(Messages("calc.otherReliefs.help"))
+          }
+
           "have a value for your gain" in {
             document.getElementById("totalGain").text() shouldBe "£40,000 Total gain"
           }

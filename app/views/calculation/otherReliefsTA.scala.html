@@ -18,6 +18,9 @@
 
         <label for="otherReliefs">@Messages("calc.otherReliefs.question")</label>
 
+        <span class="form-hint">@Messages("calc.otherReliefs.help")</span>
+
+
         <div class="panel-indent">
             <ul class="list list-bullet">
                 <li id="totalGain">&pound;@{MoneyPounds(result.totalGain,0).quantity}<br><span class="font-xsmall">@SummaryConstructor.gainMessage(result)</span></li>
