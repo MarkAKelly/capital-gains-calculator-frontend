@@ -1,10 +1,10 @@
 @import views.html.helpers._
 @import constructors.NoTaxDateConstructor
 
-@()(implicit request: Request[_])
+@(data: DisposalDateModel)(implicit request: Request[_])
 
 @date = {
-    @NoTaxDateConstructor.buildDate(new DisposalDateModel(1, 4, 2013))
+    @NoTaxDateConstructor.buildDate(data)
 }
 
 @sidebar = {
