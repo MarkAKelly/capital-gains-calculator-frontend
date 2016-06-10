@@ -1,0 +1,27 @@
+@import views.html.helpers._
+
+@()(implicit request: Request[_])
+
+@sidebar = {
+    <ul>
+        <li>
+            <a href="https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-uk-residential-property" target="_blank"
+               rel="external">@Messages("nocgt.sidebar.linkone")
+                <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
+            </a>
+        </li>
+    </ul>
+}
+
+@main_template(Messages("nocgt.invaliddate.title"), sidebarLinks = Some(sidebar)) {
+
+    <h1 class="heading-xlarge">@Messages("nocgt.invaliddate.title")</h1>
+    <p>@Messages("nocgt.content.one")</p>
+    <p>
+        @Messages("nocgt.content.two")
+        <span class="no-wrap">
+            <span class="bold-small"> DYNAMICALLY GENERATED DATE</span>
+            <a id="change-link" href="@routes.CalculationController.disposalDate">@Messages("nocgt.content.change")</a>
+        </span>
+    </p>
+}

@@ -148,6 +148,13 @@ calc.improvements.errorDecimalPlaces = The cost of your improvements has too man
 calc.disposalDate.question = When did you sign the contract that made someone else the owner?
 calc.disposalDate.error.disposalDateAfterAcquisition = This can''t be before the date you became the owner
 
+## No Capital Gains Tax ##
+nocgt.invaliddate.title = You have no Capital Gains Tax to pay
+nocgt.content.one = This is because you sold or gave away the property before 6 April 2015.
+nocgt.content.two = You''ve told us that you sold or gave away the property on
+nocgt.content.change = (Change)
+nocgt.sidebar.linkone = Capital Gains Tax for non-residents
+
 ## Disposal Value ##
 calc.disposalValue.question = How much did you sell or give away the property for?
 calc.disposalValue.errorNegative = Enter a positive number for the amount you sold the property for

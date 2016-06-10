@@ -439,6 +439,12 @@ trait CalculationController extends FrontendController {
     } yield route
   }
 
+  //################### No Capital Gains Tax #######################
+
+  val noCapitalGainsTax = Action.async { implicit request =>
+    Future.successful(Ok(calculation.noCapitalGainsTax()))
+  }
+
   //################### Disposal Value methods #######################
   val disposalValue = Action.async { implicit request =>
     calcConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.disposalValue).map {

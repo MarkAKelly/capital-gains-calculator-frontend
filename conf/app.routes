@@ -58,6 +58,9 @@ POST        /improvements            controllers.CalculationController.submitImp
 GET         /disposal-date           controllers.CalculationController.disposalDate
 POST        /disposal-date           controllers.CalculationController.submitDisposalDate
 
+#No Capital Gains Tax
+GET         /no-capital-gains-tax    controllers.CalculationController.noCapitalGainsTax
+
 #Disposal Value
 GET         /disposal-value          controllers.CalculationController.disposalValue
 POST        /disposal-value          controllers.CalculationController.submitDisposalValue
