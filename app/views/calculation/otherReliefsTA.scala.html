@@ -29,7 +29,7 @@
             </ul>
         </div>
 
-        @formInputMoney(otherReliefsForm, "otherReliefs", "")
+        @formInputMoney(otherReliefsForm, "otherReliefs", "", Some(Messages("calc.otherReliefs.help))
 
         @if(hasExistingReliefAmount) {
             <button id="add-relief-button" class="button">@Messages("calc.otherReliefs.button.updateRelief")</button>
