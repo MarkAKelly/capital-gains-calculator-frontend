@@ -54,8 +54,6 @@ object CalculateRequestConstructor {
         case "Yes" => input.allowableLossesModel.allowableLossesAmt.get
         case "No" => 0
       }
-    }&entReliefClaimed=${
-      input.entrepreneursReliefModel.entReliefClaimed
     }&disposalDate=${
       input.disposalDateModel.year}-${input.disposalDateModel.month}-${input.disposalDateModel.day
     }"

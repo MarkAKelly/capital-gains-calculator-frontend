@@ -75,7 +75,7 @@ calc.disabledTrustee.helptext = A person''s vulnerable if they''re disabled, or 
 calc.currentIncome.question = In the tax year when you stopped owning the property, what was your total UK income?
 calc.currentIncome.link.one = Income Tax
 calc.currentIncome.link.two = Previous tax years
-calc.currentIncome.helpText = Tax years start on 6 April
+calc.currentIncome.helpText = You can give an estimate if this was in the current tax year
 calc.currentIncome.errorNegative = Enter a positive number for your current income
 calc.currentIncome.errorDecimalPlaces = Your current income has too many numbers after the decimal point
 
@@ -102,7 +102,7 @@ calc.otherProperties.link.two = Previous tax years
 ## Annual Exempt Amount ##
 calc.annualExemptAmount.question = How much of your Capital Gains Tax allowance have you got left?
 calc.annualExemptAmount.link.one = Capital Gains Tax allowances
-calc.annualExemptAmount.errorMax = Enter a Personal Allowance that’s £
+calc.annualExemptAmount.errorMax = Enter a Capital Gains Tax allowance that''s £
 calc.annualExemptAmount.errorMaxEnd = or less
 calc.annualExemptAmount.errorNegative = Enter a positive number for your allowance
 calc.annualExemptAmount.errorDecimalPlaces = Your allowance has too many numbers after the decimal point
@@ -226,6 +226,7 @@ calc.otherReliefs.button.addRelief = Add relief
 calc.otherReliefs.button.updateRelief = Update relief
 calc.otherReliefs.errorMinimum = Enter a positive number for your other reliefs
 calc.otherReliefs.errorDecimal = There are too many numbers after the decimal point in your other reliefs
+calc.otherReliefs.help = For example, lettings relief
 
 ## Summary ##
 calc.summary.title = Summary
