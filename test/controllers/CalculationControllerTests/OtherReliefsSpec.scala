@@ -105,8 +105,9 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
             contentType(result) shouldBe Some("text/html")
             charset(result) shouldBe Some("utf-8")
           }
-          "have the title 'How much extra tax relief are you claiming?'" in {
-            document.title shouldEqual Messages("calc.otherReliefs.question")
+
+          "have the title 'Do you want to add other tax relief?'" in {
+            document.title shouldEqual Messages("calc.otherReliefs.questionTwo")
           }
 
           "have the heading Calculate your tax (non-residents) " in {
@@ -118,8 +119,13 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
             document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.allowableLosses().url
           }
 
+          "have a yes no helper with hidden content and question 'Do you want to add other tax relief?'" in {
+            document.body.getElementById("isClaimingOtherReliefs-yes").parent.text shouldBe Messages("calc.base.yes")
+            document.body.getElementById("isClaimingOtherReliefs-no").parent.text shouldBe Messages("calc.base.no")
+          }
+
           "have the question 'How much extra tax relief are you claiming?' as the legend of the input" in {
-            document.body.getElementsByTag("label").text should include(Messages("calc.otherReliefs.question"))
+            document.body.getElementsByTag("legend").text shouldBe Messages("calc.otherReliefs.questionTwo")
           }
 
           "have the help text 'For example, lettings relief'" in {
@@ -127,15 +133,15 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
           }
 
           "have a value for your gain" in {
-            document.getElementById("totalGain").text() shouldBe "£40,000 Total gain"
+            document.getElementById("totalGain").text() shouldBe "Total gain £40,000"
           }
 
           "display an input box for the Other Tax Reliefs" in {
             document.body.getElementById("otherReliefs").tagName() shouldEqual "input"
           }
 
-          "display an 'Add relief' button " in {
-            document.body.getElementById("add-relief-button").text shouldEqual Messages("calc.otherReliefs.button.addRelief")
+          "display a 'Continue' button " in {
+            document.body.getElementById("add-relief-button").text shouldEqual Messages("calc.otherReliefs.button.continue")
           }
 
           "include helptext for 'Total gain'" in {
@@ -275,7 +281,7 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         }
 
         "have a value for your loss" in {
-          document.getElementById("totalGain").text() shouldBe "£10,000 Total loss"
+          document.getElementById("totalGain").text() shouldBe "Total loss £10,000"
         }
       }
     }
