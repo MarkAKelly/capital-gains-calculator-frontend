@@ -98,6 +98,21 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
           document.body.getElementsByTag("label").text should include (Messages("calc.disposalValue.question"))
         }
 
+        "have the bullet list content title and content" in {
+          document.select("p#bullet-list-title").text shouldEqual Messages("calc.disposalValue.bullet.title")
+        }
+
+        "Have the bullet content" in {
+          document.select("ul li").text should include(Messages("calc.disposalValue.bullet.one"))
+          document.select("ul li").text should include(Messages("calc.disposalValue.bullet.two"))
+          document.select("ul li").text should include(Messages("calc.disposalValue.bullet.three"))
+        }
+
+        "have a link with a hidden external link field" in {
+          document.select("ul li a#lossesLink").text should include(Messages("calc.disposalValue.bullet.two.link"))
+          document.select("span.visuallyhidden").text shouldEqual Messages("calc.base.externalLink")
+        }
+
         s"include the helptext form hint '${Messages("calc.disposalValue.hint")}'" in {
           document.body.select("span.form-hint").text should include (Messages("calc.disposalValue.hint"))
         }
