@@ -17,7 +17,7 @@
 package controllers.CalculationControllerTests
 
 import common.DefaultRoutes._
-import common.{Constants, KeystoreKeys}
+import common.{Constants, CustomerTypeKeys, KeystoreKeys}
 import constructors.CalculationElectionConstructor
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -44,7 +44,8 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
 
   def setupTarget(getData: Option[OtherPropertiesModel],
                   postData: Option[OtherPropertiesModel],
-                  customerTypeData: Option[CustomerTypeModel]): CalculationController = {
+                  customerTypeData: Option[CustomerTypeModel],
+                  currentIncomeData: Option[CurrentIncomeModel] = None): CalculationController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -54,6 +55,9 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
 
     when(mockCalcConnector.fetchAndGetFormData[CustomerTypeModel](Matchers.eq(KeystoreKeys.customerType))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(customerTypeData))
+
+    when(mockCalcConnector.fetchAndGetFormData[CurrentIncomeModel](Matchers.eq(KeystoreKeys.currentIncome))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(currentIncomeData))
 
     lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(OtherPropertiesModel("", Some(0))))))
     when(mockCalcConnector.saveFormData[OtherPropertiesModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
@@ -74,7 +78,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
 
       "for a customer type of Individual" should {
 
-        val target = setupTarget(None, None, Some(CustomerTypeModel("individual")))
+        val target = setupTarget(None, None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
         lazy val result = target.otherProperties(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -139,9 +143,21 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
         }
       }
 
+      "for a Customer Type of Individual with no Current Income" should {
+
+        val target = setupTarget(None, None, Some(CustomerTypeModel(CustomerTypeKeys.individual)), Some(CurrentIncomeModel(0)))
+        lazy val result = target.otherProperties(fakeRequest)
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        s"have a 'Back' link to ${routes.CalculationController.currentIncome().url}" in {
+          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.currentIncome().url
+        }
+      }
+
       "for a Customer Type of Trustee" should {
 
-        val target = setupTarget(None, None, Some(CustomerTypeModel("trustee")))
+        val target = setupTarget(None, None, Some(CustomerTypeModel(CustomerTypeKeys.trustee)))
         lazy val result = target.otherProperties(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -153,7 +169,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
 
       "for a Customer Type of Personal Rep" should {
 
-        val target = setupTarget(None, None, Some(CustomerTypeModel("personalRep")))
+        val target = setupTarget(None, None, Some(CustomerTypeModel(CustomerTypeKeys.personalRep)))
         lazy val result = target.otherProperties(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -179,7 +195,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
 
       "for an individual" should {
 
-        val target = setupTarget(Some(OtherPropertiesModel("Yes", Some(2100))), None, Some(CustomerTypeModel("individual")))
+        val target = setupTarget(Some(OtherPropertiesModel("Yes", Some(2100))), None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
         lazy val result = target.otherProperties(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -205,7 +221,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
 
       "for a trustee" should {
 
-        val target = setupTarget(Some(OtherPropertiesModel("Yes", None)), None, Some(CustomerTypeModel("trustee")))
+        val target = setupTarget(Some(OtherPropertiesModel("Yes", None)), None, Some(CustomerTypeModel(CustomerTypeKeys.trustee)))
         lazy val result = target.otherProperties(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -226,7 +242,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
 
         "for a personal rep" should {
 
-          val target = setupTarget(Some(OtherPropertiesModel("Yes", None)), None, Some(CustomerTypeModel("personalRep")))
+          val target = setupTarget(Some(OtherPropertiesModel("Yes", None)), None, Some(CustomerTypeModel(CustomerTypeKeys.personalRep)))
           lazy val result = target.otherProperties(fakeRequest)
           lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -264,7 +280,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
           case "" => OtherPropertiesModel(selection, None)
           case _ => OtherPropertiesModel(selection, Some(BigDecimal(amount)))
         }
-        val target = setupTarget(None, Some(mockData), Some(CustomerTypeModel("individual")))
+        val target = setupTarget(None, Some(mockData), Some(CustomerTypeModel(CustomerTypeKeys.individual)))
         target.submitOtherProperties(fakeRequest)
       }
 
@@ -378,7 +394,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
           case "" => OtherPropertiesModel(selection, None)
           case _ => OtherPropertiesModel(selection, Some(BigDecimal(amount)))
         }
-        val target = setupTarget(None, Some(mockData), Some(CustomerTypeModel("trustee")))
+        val target = setupTarget(None, Some(mockData), Some(CustomerTypeModel(CustomerTypeKeys.trustee)))
         target.submitOtherProperties(fakeRequest)
       }
 
@@ -418,7 +434,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
           case "" => OtherPropertiesModel(selection, None)
           case _ => OtherPropertiesModel(selection, Some(BigDecimal(amount)))
         }
-        val target = setupTarget(None, Some(mockData), Some(CustomerTypeModel("personalRep")))
+        val target = setupTarget(None, Some(mockData), Some(CustomerTypeModel(CustomerTypeKeys.personalRep)))
         target.submitOtherProperties(fakeRequest)
       }
 
