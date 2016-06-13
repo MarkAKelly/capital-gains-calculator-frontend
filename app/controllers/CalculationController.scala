@@ -157,31 +157,38 @@ trait CalculationController extends FrontendController {
       case _ => Future.successful(missingDataRoute)
   }
 
+  def showOtherPropertiesAmt(implicit hc: HeaderCarrier): Future[Boolean] = calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).map {
+      case Some(CustomerTypeModel("individual")) => true
+      case _ => false
+  }
+
   val otherProperties = Action.async { implicit request =>
 
-    def routeRequest(backUrl: String): Future[Result] = {
+    def routeRequest(backUrl: String, showHiddenQuestion: Boolean): Future[Result] = {
       calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.otherProperties).map {
-        case Some(data) => Ok(calculation.otherProperties(otherPropertiesForm.fill(data), backUrl))
-        case _ => Ok(calculation.otherProperties(otherPropertiesForm, backUrl))
+        case Some(data) => Ok(calculation.otherProperties(otherPropertiesForm(showHiddenQuestion).fill(data), backUrl, showHiddenQuestion))
+        case _ => Ok(calculation.otherProperties(otherPropertiesForm(showHiddenQuestion), backUrl, showHiddenQuestion))
       }
     }
 
     for {
       backUrl <- otherPropertiesBackUrl
-      finalResult <- routeRequest(backUrl)
+      showHiddenQuestion <- showOtherPropertiesAmt
+      finalResult <- routeRequest(backUrl, showHiddenQuestion)
     } yield finalResult
   }
 
   val submitOtherProperties = Action.async { implicit request =>
 
-    def routeRequest(backUrl: String): Future[Result] = {
-      otherPropertiesForm.bindFromRequest.fold(
+    def routeRequest(backUrl: String, showHiddenQuestion: Boolean): Future[Result] = {
+      otherPropertiesForm(showHiddenQuestion).bindFromRequest.fold(
         errors =>
-          Future.successful(BadRequest(calculation.otherProperties(errors, backUrl))),
+          Future.successful(BadRequest(calculation.otherProperties(errors, backUrl, showHiddenQuestion))),
         success => {
           calcConnector.saveFormData(KeystoreKeys.otherProperties, success)
           success match {
             case OtherPropertiesModel("Yes", Some(value)) if value.equals(BigDecimal(0)) => Future.successful(Redirect(routes.CalculationController.annualExemptAmount()))
+            case OtherPropertiesModel("Yes", None) if !showHiddenQuestion => Future.successful(Redirect(routes.CalculationController.annualExemptAmount()))
             case _ => calcConnector.saveFormData("annualExemptAmount", AnnualExemptAmountModel(0))
               Future.successful(Redirect(routes.CalculationController.acquisitionDate()))
           }
@@ -190,7 +197,8 @@ trait CalculationController extends FrontendController {
     }
     for {
       backUrl <- otherPropertiesBackUrl
-      finalResult <- routeRequest(backUrl)
+      showHiddenQuestion <- showOtherPropertiesAmt
+      finalResult <- routeRequest(backUrl, showHiddenQuestion)
     } yield finalResult
   }
 

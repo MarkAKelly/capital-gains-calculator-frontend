@@ -25,45 +25,45 @@ import play.api.i18n.Messages
 
 object OtherPropertiesForm {
 
-  def validate(data: OtherPropertiesModel) = {
+  def validate(data: OtherPropertiesModel, showHiddenQuestion: Boolean) = {
     data.otherProperties match {
-      case "Yes" => data.otherPropertiesAmt.isDefined
-      case "No" => true
+        case "Yes" if showHiddenQuestion => data.otherPropertiesAmt.isDefined
+        case _ => true
     }
   }
 
-  def validateMinimum(data: OtherPropertiesModel) = {
+  def validateMinimum(data: OtherPropertiesModel, showHiddenQuestion: Boolean) = {
     data.otherProperties match {
-      case "Yes" => isPositive(data.otherPropertiesAmt.getOrElse(0))
-      case "No" => true
+        case "Yes" if showHiddenQuestion => isPositive(data.otherPropertiesAmt.getOrElse(0))
+        case _ => true
     }
   }
 
-  def validateTwoDec(data: OtherPropertiesModel) = {
+  def validateTwoDec(data: OtherPropertiesModel, showHiddenQuestion: Boolean) = {
     data.otherProperties match {
-      case "Yes" => isMaxTwoDecimalPlaces(data.otherPropertiesAmt.getOrElse(0))
-      case "No" => true
+        case "Yes" if showHiddenQuestion => isMaxTwoDecimalPlaces(data.otherPropertiesAmt.getOrElse(0))
+        case _ => true
     }
   }
 
-  def validateMax(data: OtherPropertiesModel) = {
-    data.otherProperties match {
-      case "Yes" => isLessThanEqualMaxNumeric(data.otherPropertiesAmt.getOrElse(0))
-      case "No" => true
-    }
+  def validateMax(data: OtherPropertiesModel, showHiddenQuestion: Boolean) = {
+      data.otherProperties match {
+        case "Yes" if showHiddenQuestion => isLessThanEqualMaxNumeric(data.otherPropertiesAmt.getOrElse(0))
+        case _ => true
+      }
   }
 
-  val otherPropertiesForm = Form (
+  def otherPropertiesForm (showHiddenQuestion: Boolean): Form[OtherPropertiesModel] = Form (
     mapping(
       "otherProperties" -> nonEmptyText,
       "otherPropertiesAmt" -> optional(bigDecimal)
     )(OtherPropertiesModel.apply)(OtherPropertiesModel.unapply).verifying(Messages("calc.otherProperties.errorQuestion"),
-      otherPropertiesForm => validate(otherPropertiesForm))
+      otherPropertiesForm => validate(otherPropertiesForm, showHiddenQuestion))
       .verifying(Messages("calc.otherProperties.errorNegative"),
-        otherPropertiesForm => validateMinimum(otherPropertiesForm))
+        otherPropertiesForm => validateMinimum(otherPropertiesForm, showHiddenQuestion))
       .verifying(Messages("calc.otherProperties.errorDecimalPlaces"),
-        otherPropertiesForm => validateTwoDec(otherPropertiesForm))
+        otherPropertiesForm => validateTwoDec(otherPropertiesForm, showHiddenQuestion))
       .verifying(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"),
-        otherPropertiesForm => validateMax(otherPropertiesForm))
+        otherPropertiesForm => validateMax(otherPropertiesForm, showHiddenQuestion))
   )
 }
