@@ -16,21 +16,18 @@
 
 package controllers.CalculationControllerTests
 
-import common.{Constants, KeystoreKeys}
+import common.KeystoreKeys
 import connectors.CalculatorConnector
 import constructors.CalculationElectionConstructor
-import controllers.{CalculationController, routes}
-import models.{CurrentIncomeModel, DisposalDateModel}
+import controllers.CalculationController
+import models.DisposalDateModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
-import play.api.libs.json.Json
-import play.api.mvc.{AnyContentAsFormUrlEncoded, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
@@ -84,12 +81,12 @@ class NoCapitalGainsTaxSpec extends UnitSpec with WithFakeApplication with Mocki
         "have the heading 'You have no Capital Gains Tax to pay'" in {
           document.body.getElementsByTag("h1").text shouldEqual Messages("nocgt.invaliddate.title")
         }
-
-        //      "Contain the content 'This is because you sold or gave away the property before 6 April 2015.' " +
-        //        "and 'You've told us that you sold or gave away the property on'" in {
-        //        document.body.select("article p").text should contain("This is because you sold or gave away the property before 6 April 2015." +
-        //          " " + "You've told us that you sold or gave away the property on")
-        //      }
+        "Contain the content 'This is because you sold or gave away the property before 6 April 2015.'" in {
+          document.body.select("article p").text should include("This is because you sold or gave away the property before 6 April 2015.")
+        }
+        "Contain the content 'You've told us that you sold or gave away the property on'" in {
+          document.body.select("article p").text should include("You've told us that you sold or gave away the property on")
+        }
 
         "should contain a Read more sidebar with a link to CGT allowances" in {
           document.select("aside h2").text shouldBe Messages("calc.common.readMore")

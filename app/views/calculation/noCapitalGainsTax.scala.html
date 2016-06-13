@@ -1,10 +1,10 @@
 @import views.html.helpers._
-@import constructors.NoTaxDateConstructor
+@import common.Dates
 
 @(data: DisposalDateModel)(implicit request: Request[_])
 
 @date = {
-    @NoTaxDateConstructor.buildDate(data)
+    @Dates.datePageFormat.format(Dates.constructDate(data.day, data.month, data.year))
 }
 
 @sidebar = {
