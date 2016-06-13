@@ -33,13 +33,6 @@ class TimeoutControllerSpec extends UnitSpec with WithFakeApplication {
     val jsoupDoc = Jsoup.parse(bodyOf(result))
   }
 
-//  class fakeRequestToWithSessionId(url : String, controllerAction : Action[AnyContent]) {
-//    val sessionId = UUID.randomUUID.toString
-//    val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/" + url).withSession(SessionKeys.sessionId -> s"session-$sessionId")
-//    val result = controllerAction(fakeRequest)
-//    val jsoupDoc = Jsoup.parse(bodyOf(result))
-//  }
-
   "TimeoutController.timeout" should {
 
     "when called with no session" should {

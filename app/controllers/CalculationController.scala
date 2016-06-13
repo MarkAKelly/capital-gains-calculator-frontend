@@ -77,7 +77,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     }
   }
 
-  val submitCustomerType = Action.async { implicit request =>
+  val submitCustomerType = ValidateSession.async { implicit request =>
     customerTypeForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(calculation.customerType(errors))),
       success => {
@@ -99,7 +99,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     }
   }
 
-  val submitDisabledTrustee = Action.async { implicit request =>
+  val submitDisabledTrustee = ValidateSession.async { implicit request =>
     disabledTrusteeForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(calculation.disabledTrustee(errors))),
       success => {
@@ -118,7 +118,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     }
   }
 
-  val submitCurrentIncome = Action.async { implicit request =>
+  val submitCurrentIncome = ValidateSession.async { implicit request =>
    currentIncomeForm.bindFromRequest.fold(
      errors => Future.successful(BadRequest(calculation.currentIncome(errors))),
      success => {
@@ -137,7 +137,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     }
   }
 
-  val submitPersonalAllowance = Action.async { implicit request =>
+  val submitPersonalAllowance = ValidateSession.async { implicit request =>
     personalAllowanceForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(calculation.personalAllowance(errors))),
       success => {
@@ -181,7 +181,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     } yield finalResult
   }
 
-  val submitOtherProperties = Action.async { implicit request =>
+  val submitOtherProperties = ValidateSession.async { implicit request =>
 
     def routeRequest(backUrl: String, showHiddenQuestion: Boolean): Future[Result] = {
       otherPropertiesForm(showHiddenQuestion).bindFromRequest.fold(
@@ -213,7 +213,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     }
   }
 
-  val submitAnnualExemptAmount =  Action.async { implicit request =>
+  val submitAnnualExemptAmount =  ValidateSession.async { implicit request =>
 
     def customerType(implicit hc: HeaderCarrier): Future[String] = {
       calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).map {
@@ -273,7 +273,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     } yield finalResult
   }
 
-  val submitAcquisitionDate = Action.async { implicit request =>
+  val submitAcquisitionDate = ValidateSession.async { implicit request =>
     def routeRequest(backUrl: String): Future[Result] = {
       acquisitionDateForm.bindFromRequest.fold(
         errors => Future.successful(BadRequest(calculation.acquisitionDate(errors, backUrl))),
@@ -298,7 +298,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     }
   }
 
-  val submitAcquisitionValue = Action.async { implicit request =>
+  val submitAcquisitionValue = ValidateSession.async { implicit request =>
     acquisitionValueForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(calculation.acquisitionValue(errors))),
       success => {
@@ -329,7 +329,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     })
   }
 
-  val submitRebasedValue = Action.async { implicit request =>
+  val submitRebasedValue = ValidateSession.async { implicit request =>
     rebasedValueForm.bindFromRequest.fold(
       errors =>  calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap(acquisitionDateModel =>
         Future.successful(BadRequest(calculation.rebasedValue(errors, acquisitionDateModel.get.hasAcquisitionDate)))),
@@ -351,7 +351,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     }
   }
 
-  val submitRebasedCosts = Action.async {implicit request =>
+  val submitRebasedCosts = ValidateSession.async {implicit request =>
     rebasedCostsForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(calculation.rebasedCosts(errors))),
       success => {
@@ -399,7 +399,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     } yield route
   }
 
-  val submitImprovements = Action.async { implicit request =>
+  val submitImprovements = ValidateSession.async { implicit request =>
 
     def routeRequest(backUrl: String): Future[Result] = {
       improvementsForm.bindFromRequest.fold(
@@ -436,7 +436,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     } yield route
   }
 
-  val submitDisposalDate = Action.async { implicit request =>
+  val submitDisposalDate = ValidateSession.async { implicit request =>
 
     def routeRequest(acquisitionDate: Option[Date]): Future[Result] = {
       disposalDateForm(acquisitionDate).bindFromRequest.fold(
@@ -460,7 +460,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
 
   //################### No Capital Gains Tax #######################
 
-  val noCapitalGainsTax = Action.async { implicit request =>
+  val noCapitalGainsTax = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.disposalDate).map {
       result => Ok(calculation.noCapitalGainsTax(result.get))
     }
@@ -474,7 +474,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     }
   }
 
-  val submitDisposalValue = Action.async { implicit request =>
+  val submitDisposalValue = ValidateSession.async { implicit request =>
     disposalValueForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(calculation.disposalValue(errors))),
       success => {
@@ -492,7 +492,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     }
   }
 
-  val submitAcquisitionCosts = Action.async { implicit request =>
+  val submitAcquisitionCosts = ValidateSession.async { implicit request =>
     acquisitionCostsForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(calculation.acquisitionCosts(errors))),
       success => {
@@ -510,7 +510,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     }
   }
 
-  val submitDisposalCosts = Action.async { implicit request =>
+  val submitDisposalCosts = ValidateSession.async { implicit request =>
     disposalCostsForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(calculation.disposalCosts(errors))),
       success => {
@@ -584,7 +584,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     } yield finalResult
   }
 
-  val submitPrivateResidenceRelief = Action.async { implicit request =>
+  val submitPrivateResidenceRelief = ValidateSession.async { implicit request =>
 
     def action(disposalDate: Option[Date], acquisitionDate: Option[Date], hasRebasedValue: Boolean) = {
       val showBetweenQuestion = displayBetweenQuestion(disposalDate, acquisitionDate, hasRebasedValue)
@@ -622,7 +622,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     }
   }
 
-  val allowableLosses = Action.async { implicit request =>
+  val allowableLosses = ValidateSession.async { implicit request =>
     def routeRequest(backUrl: String) = {
       calcConnector.fetchAndGetFormData[AllowableLossesModel](KeystoreKeys.allowableLosses).map {
         case Some(data) => Ok(calculation.allowableLosses(allowableLossesForm.fill(data), backUrl))
@@ -636,7 +636,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     } yield route
   }
 
-  val submitAllowableLosses = Action.async { implicit request =>
+  val submitAllowableLosses = ValidateSession.async { implicit request =>
     def routeRequest(backUrl: String) = {
       allowableLossesForm.bindFromRequest.fold(
         errors => Future.successful(BadRequest(calculation.allowableLosses(errors, backUrl))),
@@ -737,7 +737,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     } yield finalResult
   }
 
-  val submitCalculationElection = Action.async { implicit request =>
+  val submitCalculationElection = ValidateSession.async { implicit request =>
 
     def calcTimeCall(summary: SummaryModel): Future[Option[CalculationResultModel]] = {
       summary.acquisitionDateModel.hasAcquisitionDate match {
@@ -817,7 +817,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     } yield finalResult
   }
 
-  val submitOtherReliefs = Action.async { implicit request =>
+  val submitOtherReliefs = ValidateSession.async { implicit request =>
 
     def action (dataResult: Option[CalculationResultModel], construct: SummaryModel, backUrl: String) = otherReliefsForm.bindFromRequest.fold(
       errors =>
@@ -861,7 +861,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     } yield finalResult
   }
 
-  val submitOtherReliefsTA = Action.async { implicit request =>
+  val submitOtherReliefsTA = ValidateSession.async { implicit request =>
     def action(dataResult: Option[CalculationResultModel]) = otherReliefsForm.bindFromRequest.fold(
       errors =>
         calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA).map {
@@ -895,7 +895,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     } yield finalResult
   }
 
-  val submitOtherReliefsRebased = Action.async { implicit request =>
+  val submitOtherReliefsRebased = ValidateSession.async { implicit request =>
     def action(dataResult: Option[CalculationResultModel]) = otherReliefsForm.bindFromRequest.fold(
       errors =>
         calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map {

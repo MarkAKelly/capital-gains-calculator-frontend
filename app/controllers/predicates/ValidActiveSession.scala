@@ -39,9 +39,6 @@ trait ValidActiveSession extends FrontendController {
         }
       }
     }
-
-    def apply(action: PlayRequest): Action[AnyContent] = async(request => Future.successful(action(request)))
-
   }
 
   object ValidateSession extends ValidateSession()
