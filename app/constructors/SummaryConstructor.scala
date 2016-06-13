@@ -61,6 +61,11 @@ object SummaryConstructor {
           None
         ),
         SummaryDataItemModel(
+          Messages("calc.summary.calculation.details.usedAEA"),
+          "&pound;" + MoneyPounds(result.usedAnnualExemptAmount, 0).quantity,
+          None
+        ),
+        SummaryDataItemModel(
           Messages("calc.summary.calculation.details.taxableGain"),
           "&pound;" + MoneyPounds(result.taxableGain,0).quantity,
           None
@@ -92,6 +97,11 @@ object SummaryConstructor {
           None
         ),
         SummaryDataItemModel(
+          Messages("calc.summary.calculation.details.usedAEA"),
+          "&pound;" + MoneyPounds(result.usedAnnualExemptAmount, 0).quantity,
+          None
+        ),
+        SummaryDataItemModel(
           Messages("calc.summary.calculation.details.lossCarriedForward"),
           "&pound;" + MoneyPounds(result.taxableGain.abs,0).quantity,
           None
@@ -120,6 +130,11 @@ object SummaryConstructor {
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalGain"),
           "&pound;" + MoneyPounds(result.totalGain.abs,0).quantity,
+          None
+        ),
+        SummaryDataItemModel(
+          Messages("calc.summary.calculation.details.usedAEA"),
+          "&pound;" + MoneyPounds(result.usedAnnualExemptAmount, 0).quantity,
           None
         ),
         SummaryDataItemModel(

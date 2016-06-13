@@ -228,12 +228,20 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.body().getElementById("calcDetails(1)").text() shouldBe "£40,000"
             }
 
+            "include 'Capital Gains Tax allowance used" in {
+              document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.usedAEA"))
+            }
+
+            "have a used AEA value equal to £0" in {
+              document.body().getElementById("calcDetails(2)").text() shouldBe "£0"
+            }
+
             "include 'Your taxable gain'" in {
               document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.taxableGain"))
             }
 
             "have a taxable gain equal to £40,000" in {
-              document.body().getElementById("calcDetails(2)").text() shouldBe "£40,000"
+              document.body().getElementById("calcDetails(3)").text() shouldBe "£40,000"
             }
 
             "include 'Your tax rate'" in {
@@ -241,7 +249,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "have a combined tax rate of £32,000 and £8,000" in {
-              document.body().getElementById("calcDetails(3)").text() shouldBe "£32,000 at 18% £8,000 at 28%"
+              document.body().getElementById("calcDetails(4)").text() shouldBe "£32,000 at 18% £8,000 at 28%"
             }
 
           }
@@ -484,7 +492,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "have a base tax rate of 20%" in {
-          document.body().getElementById("calcDetails(3)").text() shouldBe "20%"
+          document.body().getElementById("calcDetails(4)").text() shouldBe "20%"
         }
       }
 
@@ -576,7 +584,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "have a base tax rate of 20%" in {
-          document.body().getElementById("calcDetails(3)").text() shouldBe "20%"
+          document.body().getElementById("calcDetails(4)").text() shouldBe "20%"
         }
       }
 
@@ -802,7 +810,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a value of 28% for the tax rate" in {
-        document.body.getElementById("calcDetails(3)").text() shouldBe "28%"
+        document.body.getElementById("calcDetails(4)").text() shouldBe "28%"
       }
     }
 
@@ -816,7 +824,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
       }
 
       "return a value of £10,000 for loss carried forward" in {
-        document.body.getElementById("calcDetails(2)").text() shouldBe "£10,000"
+        document.body.getElementById("calcDetails(3)").text() shouldBe "£10,000"
       }
     }
 
@@ -826,7 +834,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a value of £0 for taxable gain" in {
-        document.body.getElementById("calcDetails(2)").text() shouldBe "£0"
+        document.body.getElementById("calcDetails(3)").text() shouldBe "£0"
       }
     }
 

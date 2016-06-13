@@ -93,14 +93,14 @@ object TestModels {
   )
 
 
-  val calcModelTwoRates = CalculationResultModel(8000, 40000, 32000, 18, Some(8000), Some(28), None)
-  val calcModelOneRate = CalculationResultModel(8000, 40000, 32000, 20, None, None, None)
-  val calcModelLoss = CalculationResultModel(0, -10000, 0, 18, None, None, None)
-  val calcModelUpperRate = CalculationResultModel(8000, 40000, 0, 0, Some(32000), Some(28), None)
-  val calcModelNegativeTaxable = CalculationResultModel(0, 50000, -10000, 0, None, None, None)
-  val calcModelZeroTaxable = CalculationResultModel(0, 50000, 0, 0, None, None, None)
-  val calcModelZeroTotal = CalculationResultModel(0, 0, 0, 0, None, None, None)
-  val calcModelSomePRR = CalculationResultModel(0, 0, 0, 0, None, None, Some(10000))
+  val calcModelTwoRates = CalculationResultModel(8000, 40000, 32000, 18, 0, Some(8000), Some(28), None)
+  val calcModelOneRate = CalculationResultModel(8000, 40000, 32000, 20, 8000, None, None, None)
+  val calcModelLoss = CalculationResultModel(0, -10000, 0, 18, 0, None, None, None)
+  val calcModelUpperRate = CalculationResultModel(8000, 40000, 0, 0, 8000, Some(32000), Some(28), None)
+  val calcModelNegativeTaxable = CalculationResultModel(0, 50000, -10000, 0, 0, None, None, None)
+  val calcModelZeroTaxable = CalculationResultModel(0, 50000, 0, 0, 11000, None, None, None)
+  val calcModelZeroTotal = CalculationResultModel(0, 0, 0, 0, 0, None, None, None)
+  val calcModelSomePRR = CalculationResultModel(0, 0, 0, 0, 0, None, None, Some(10000))
 
 
   val summaryIndividualFlatNoIncomeOtherPropNo = SummaryModel(
