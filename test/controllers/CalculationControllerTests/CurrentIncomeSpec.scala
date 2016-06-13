@@ -97,7 +97,7 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
           document.body.getElementsByTag("label").text.contains(Messages("calc.currentIncome.question")) shouldBe true
         }
 
-        "have the help text 'Tax years start on 6 April' as the form-hint of the input" in {
+        "have the help text 'You can give an estimate if this was in the current tax year' as the form-hint of the input" in {
           document.body.getElementsByClass("form-hint").text shouldEqual Messages("calc.currentIncome.helpText")
         }
 
