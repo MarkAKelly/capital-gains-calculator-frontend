@@ -49,21 +49,6 @@ class TimeoutControllerSpec extends UnitSpec with WithFakeApplication {
       "return a 200" in {
         status(timeoutTestDataItem.result) shouldBe 200
       }
-
-      "and have the title 'Hard coded title'" in {
-        timeoutTestDataItem.jsoupDoc.title() shouldBe "Hard coded title"
-      }
     }
-
-//
-//    "when called with a session" should {
-//
-//      object IntroductionWithSessionTestDataItem extends fakeRequestToWithSessionId("", StartController.start)
-//
-//      "return a 303" in {
-//        status(IntroductionWithSessionTestDataItem.result) shouldBe 303
-//      }
-//
-//    }
   }
 }
