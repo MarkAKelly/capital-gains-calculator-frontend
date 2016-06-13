@@ -207,7 +207,7 @@ class PersonalAllowanceSpec extends UnitSpec with WithFakeApplication with Mocki
 
       "submitting a form which exceeds the maximum PA amount" should {
 
-        lazy val result = executeTargetWithMockData("12102")
+        lazy val result = executeTargetWithMockData("11001")
         lazy val document = Jsoup.parse(bodyOf(result))
 
         "return a 400" in {
