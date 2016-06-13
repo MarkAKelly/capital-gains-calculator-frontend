@@ -103,6 +103,54 @@ object TestModels {
   val calcModelSomePRR = CalculationResultModel(0, 0, 0, 0, None, None, Some(10000))
 
 
+  val summaryIndividualFlatNoIncomeOtherPropNo = SummaryModel(
+    CustomerTypeModel(CustomerTypeKeys.individual),
+    None,
+    Some(CurrentIncomeModel(0)),
+    None,
+    OtherPropertiesModel("No", None),
+    None,
+    AcquisitionDateModel("No", None, None, None),
+    AcquisitionValueModel(100000),
+    Some(RebasedValueModel("No", None)),
+    None,
+    ImprovementsModel("No", None),
+    DisposalDateModel(10, 10, 2010),
+    DisposalValueModel(150000),
+    AcquisitionCostsModel(None),
+    DisposalCostsModel(None),
+    AllowableLossesModel("No", None),
+    CalculationElectionModel("flat"),
+    OtherReliefsModel(None),
+    OtherReliefsModel(None),
+    OtherReliefsModel(None),
+    None
+  )
+
+  val summaryIndividualFlatNoIncomeOtherPropYes = SummaryModel(
+    CustomerTypeModel(CustomerTypeKeys.individual),
+    None,
+    Some(CurrentIncomeModel(0)),
+    None,
+    OtherPropertiesModel("Yes", Some(0)),
+    Some(AnnualExemptAmountModel(1500)),
+    AcquisitionDateModel("No", None, None, None),
+    AcquisitionValueModel(100000),
+    Some(RebasedValueModel("No", None)),
+    None,
+    ImprovementsModel("No", None),
+    DisposalDateModel(10, 10, 2010),
+    DisposalValueModel(150000),
+    AcquisitionCostsModel(None),
+    DisposalCostsModel(None),
+    AllowableLossesModel("No", None),
+    CalculationElectionModel("flat"),
+    OtherReliefsModel(None),
+    OtherReliefsModel(None),
+    OtherReliefsModel(None),
+    None
+  )
+
   val summaryIndividualFlatLoss = SummaryModel (
     CustomerTypeModel(CustomerTypeKeys.individual),
     None,
@@ -180,7 +228,7 @@ object TestModels {
     Some(DisabledTrusteeModel("No")),
     None,
     None,
-    OtherPropertiesModel("Yes", Some(9600)),
+    OtherPropertiesModel("Yes", None),
     Some(AnnualExemptAmountModel(1500)),
     AcquisitionDateModel("Yes", Some(9), Some(9), Some(1999)),
     AcquisitionValueModel(100000),
@@ -228,7 +276,7 @@ object TestModels {
     Some(DisabledTrusteeModel("Yes")),
     None,
     None,
-    OtherPropertiesModel("Yes", Some(9600)),
+    OtherPropertiesModel("Yes", None),
     Some(AnnualExemptAmountModel(1500)),
     AcquisitionDateModel("Yes", Some(9), Some(9), Some(1999)),
     AcquisitionValueModel(100000),
@@ -300,7 +348,7 @@ object TestModels {
     None,
     None,
     None,
-    OtherPropertiesModel("Yes", Some(9600)),
+    OtherPropertiesModel("Yes", None),
     Some(AnnualExemptAmountModel(1500)),
     AcquisitionDateModel("No", None, None, None),
     AcquisitionValueModel(100000),

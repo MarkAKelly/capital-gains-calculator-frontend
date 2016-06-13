@@ -17,7 +17,7 @@
 package controllers.CalculationControllerTests
 
 import common.DefaultRoutes._
-import common.{Constants, KeystoreKeys}
+import common.{Constants, CustomerTypeKeys, KeystoreKeys}
 import constructors.CalculationElectionConstructor
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -44,7 +44,8 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
 
   def setupTarget(getData: Option[OtherPropertiesModel],
                   postData: Option[OtherPropertiesModel],
-                  customerTypeData: Option[CustomerTypeModel]): CalculationController = {
+                  customerTypeData: Option[CustomerTypeModel],
+                  currentIncomeData: Option[CurrentIncomeModel] = None): CalculationController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -54,6 +55,9 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
 
     when(mockCalcConnector.fetchAndGetFormData[CustomerTypeModel](Matchers.eq(KeystoreKeys.customerType))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(customerTypeData))
+
+    when(mockCalcConnector.fetchAndGetFormData[CurrentIncomeModel](Matchers.eq(KeystoreKeys.currentIncome))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(currentIncomeData))
 
     lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(OtherPropertiesModel("", Some(0))))))
     when(mockCalcConnector.saveFormData[OtherPropertiesModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
@@ -74,7 +78,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
 
       "for a customer type of Individual" should {
 
-        val target = setupTarget(None, None, Some(CustomerTypeModel("individual")))
+        val target = setupTarget(None, None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
         lazy val result = target.otherProperties(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -128,15 +132,32 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
             document.body.getElementById("otherProperties-no").parent.text shouldEqual Messages("calc.base.no")
           }
 
+          "have a hidden monetary input with question 'What was your taxable gain?'" in {
+            document.body.getElementById("otherPropertiesAmt").tagName shouldEqual "input"
+            document.select("label[for=otherPropertiesAmt]").text should include(Messages("calc.otherProperties.questionTwo"))
+          }
+
           "display a 'Continue' button " in {
             document.body.getElementById("continue-button").text shouldEqual Messages("calc.base.continue")
           }
         }
       }
 
+      "for a Customer Type of Individual with no Current Income" should {
+
+        val target = setupTarget(None, None, Some(CustomerTypeModel(CustomerTypeKeys.individual)), Some(CurrentIncomeModel(0)))
+        lazy val result = target.otherProperties(fakeRequest)
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        s"have a 'Back' link to ${routes.CalculationController.currentIncome().url}" in {
+          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.currentIncome().url
+        }
+      }
+
       "for a Customer Type of Trustee" should {
 
-        val target = setupTarget(None, None, Some(CustomerTypeModel("trustee")))
+        val target = setupTarget(None, None, Some(CustomerTypeModel(CustomerTypeKeys.trustee)))
         lazy val result = target.otherProperties(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -148,7 +169,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
 
       "for a Customer Type of Personal Rep" should {
 
-        val target = setupTarget(None, None, Some(CustomerTypeModel("personalRep")))
+        val target = setupTarget(None, None, Some(CustomerTypeModel(CustomerTypeKeys.personalRep)))
         lazy val result = target.otherProperties(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -172,26 +193,73 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
 
     "supplied with a model that already contains data" should {
 
-      val target = setupTarget(Some(OtherPropertiesModel("Yes", Some(2100))), None, Some(CustomerTypeModel("individual")))
-      lazy val result = target.otherProperties(fakeRequest)
-      lazy val document = Jsoup.parse(bodyOf(result))
+      "for an individual" should {
 
-      "return a 200" in {
-        status(result) shouldBe 200
+        val target = setupTarget(Some(OtherPropertiesModel("Yes", Some(2100))), None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
+        lazy val result = target.otherProperties(fakeRequest)
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        "return a 200" in {
+          status(result) shouldBe 200
+        }
+
+        "return some HTML that" should {
+          "contain some text and use the character set utf-8" in {
+            contentType(result) shouldBe Some("text/html")
+            charset(result) shouldBe Some("utf-8")
+          }
+
+          "have the radio option `Yes` selected by default" in {
+            document.body.getElementById("otherProperties-yes").parent.classNames().contains("selected") shouldBe true
+          }
+
+          "have the value 2100 auto filled" in {
+            document.body().getElementById("otherPropertiesAmt").attr("value") shouldBe "2100"
+          }
+        }
       }
 
-      "return some HTML that" should {
-        "contain some text and use the character set utf-8" in {
-          contentType(result) shouldBe Some("text/html")
-          charset(result) shouldBe Some("utf-8")
+      "for a trustee" should {
+
+        val target = setupTarget(Some(OtherPropertiesModel("Yes", None)), None, Some(CustomerTypeModel(CustomerTypeKeys.trustee)))
+        lazy val result = target.otherProperties(fakeRequest)
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        "return a 200" in {
+          status(result) shouldBe 200
         }
 
-        "have the radio option `Yes` selected by default" in {
-          document.body.getElementById("otherProperties-yes").parent.classNames().contains("selected") shouldBe true
+        "return some HTML that" should {
+          "contain some text and use the character set utf-8" in {
+            contentType(result) shouldBe Some("text/html")
+            charset(result) shouldBe Some("utf-8")
+          }
+
+          "have the radio option `Yes` selected by default" in {
+            document.body.getElementById("otherProperties-yes").parent.classNames().contains("selected") shouldBe true
+          }
         }
 
-        "have the value 2100 auto filled" in {
-          document.body().getElementById("otherPropertiesAmt").attr("value") shouldBe "2100"
+        "for a personal rep" should {
+
+          val target = setupTarget(Some(OtherPropertiesModel("Yes", None)), None, Some(CustomerTypeModel(CustomerTypeKeys.personalRep)))
+          lazy val result = target.otherProperties(fakeRequest)
+          lazy val document = Jsoup.parse(bodyOf(result))
+
+          "return a 200" in {
+            status(result) shouldBe 200
+          }
+
+          "return some HTML that" should {
+            "contain some text and use the character set utf-8" in {
+              contentType(result) shouldBe Some("text/html")
+              charset(result) shouldBe Some("utf-8")
+            }
+
+            "have the radio option `Yes` selected by default" in {
+              document.body.getElementById("otherProperties-yes").parent.classNames().contains("selected") shouldBe true
+            }
+          }
         }
       }
     }
@@ -204,115 +272,198 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 
-    def executeTargetWithMockData(selection: String, amount: String): Future[Result] = {
-      lazy val fakeRequest = buildRequest(("otherProperties", selection), ("otherPropertiesAmt", amount))
-      val mockData = amount match {
-        case "" => OtherPropertiesModel(selection, None)
-        case _ => OtherPropertiesModel(selection, Some(BigDecimal(amount)))
+    "for an individual" should {
+
+      def executeTargetWithMockData(selection: String, amount: String): Future[Result] = {
+        lazy val fakeRequest = buildRequest(("otherProperties", selection), ("otherPropertiesAmt", amount))
+        val mockData = amount match {
+          case "" => OtherPropertiesModel(selection, None)
+          case _ => OtherPropertiesModel(selection, Some(BigDecimal(amount)))
+        }
+        val target = setupTarget(None, Some(mockData), Some(CustomerTypeModel(CustomerTypeKeys.individual)))
+        target.submitOtherProperties(fakeRequest)
       }
-      val target = setupTarget(None, Some(mockData), Some(CustomerTypeModel("individual")))
-      target.submitOtherProperties(fakeRequest)
+
+      "submitting a valid form with 'Yes' and a non-zero amount" should {
+
+        lazy val result = executeTargetWithMockData("Yes", "2100")
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        "return a 303" in {
+          status(result) shouldBe 303
+        }
+
+        "should redirect to the acquisitionDate page" in {
+          redirectLocation(result) shouldBe Some(s"${routes.CalculationController.acquisitionDate()}")
+        }
+      }
+
+      "submitting a valid form with 'Yes' and a nil amount" should {
+
+        lazy val result = executeTargetWithMockData("Yes", "0")
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        "return a 303" in {
+          status(result) shouldBe 303
+        }
+
+        "should redirect to the annualExemptAmountPage page" in {
+          redirectLocation(result) shouldBe Some(s"${routes.CalculationController.annualExemptAmount()}")
+        }
+      }
+
+      "submitting a valid form with 'No'" should {
+
+        lazy val result = executeTargetWithMockData("No", "")
+
+        "return a 303" in {
+          status(result) shouldBe 303
+        }
+
+        "should redirect to the acquisitionDate page" in {
+          redirectLocation(result) shouldBe Some(s"${routes.CalculationController.acquisitionDate()}")
+        }
+      }
+
+      "submitting an form with no data" should {
+
+        lazy val result = executeTargetWithMockData("", "")
+
+        "return a 400" in {
+          status(result) shouldBe 400
+        }
+      }
+
+      "submitting an invalid form with 'Yes' selection and a no amount" should {
+
+        lazy val result = executeTargetWithMockData("Yes", "")
+
+        "return a 400" in {
+          status(result) shouldBe 400
+        }
+      }
+
+      "submitting an invalid form with 'Yes' selection and an amount with three decimal places" should {
+
+        lazy val result = executeTargetWithMockData("Yes", "1000.111")
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        "return a 400" in {
+          status(result) shouldBe 400
+        }
+
+        s"fail with message ${Messages("calc.otherProperties.errorDecimalPlaces")}" in {
+          document.getElementsByClass("error-notification").text should include(Messages("calc.otherProperties.errorDecimalPlaces"))
+        }
+      }
+
+      "submitting an invalid form with 'Yes' selection and a negative amount" should {
+
+        lazy val result = executeTargetWithMockData("Yes", "-1000")
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        "return a 400" in {
+          status(result) shouldBe 400
+        }
+
+        s"fail with message ${Messages("calc.otherProperties.errorNegative")}" in {
+          document.getElementsByClass("error-notification").text should include(Messages("calc.otherProperties.errorNegative"))
+        }
+      }
+
+      "submitting a value which exceeds the maximum numeric" should {
+
+        lazy val result = executeTargetWithMockData("Yes", Constants.maxNumeric + 0.01.toString())
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        "return a 400" in {
+          status(result) shouldBe 400
+        }
+
+        s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
+          document.getElementsByClass("error-notification").text should
+            include(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+        }
+      }
     }
 
-    "submitting a valid form with 'Yes' and a non-zero amount" should {
-
-      lazy val result = executeTargetWithMockData("Yes", "2100")
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 303" in {
-        status(result) shouldBe 303
+    "for a trustee" should {
+      def executeTargetWithMockData(selection: String, amount: String): Future[Result] = {
+        lazy val fakeRequest = buildRequest(("otherProperties", selection), ("otherPropertiesAmt", amount))
+        val mockData = amount match {
+          case "" => OtherPropertiesModel(selection, None)
+          case _ => OtherPropertiesModel(selection, Some(BigDecimal(amount)))
+        }
+        val target = setupTarget(None, Some(mockData), Some(CustomerTypeModel(CustomerTypeKeys.trustee)))
+        target.submitOtherProperties(fakeRequest)
       }
 
-      "should redirect to the acquisitionDate page" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.acquisitionDate()}")
-      }
-    }
+      "submitting a valid form with 'Yes' selected" should {
 
-    "submitting a valid form with 'Yes' and a nil amount" should {
+        lazy val result = executeTargetWithMockData("Yes", "")
+        lazy val document = Jsoup.parse(bodyOf(result))
 
-      lazy val result = executeTargetWithMockData("Yes", "0")
-      lazy val document = Jsoup.parse(bodyOf(result))
+        "return a 303" in {
+          status(result) shouldBe 303
+        }
 
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "should redirect to the annualExemptAmountPage page" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.annualExemptAmount()}")
-      }
-    }
-
-    "submitting a valid form with 'No'" should {
-
-      lazy val result = executeTargetWithMockData("No", "")
-
-      "return a 303" in {
-        status(result) shouldBe 303
+        "should redirect to the annual exempt amount page" in {
+          redirectLocation(result) shouldBe Some(s"${routes.CalculationController.annualExemptAmount()}")
+        }
       }
 
-      "should redirect to the acquisitionDate page" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.acquisitionDate()}")
-      }
-    }
+      "submitting a valid form with 'No' selected" should {
 
-    "submitting an form with no data" should {
+        lazy val result = executeTargetWithMockData("No", "")
+        lazy val document = Jsoup.parse(bodyOf(result))
 
-      lazy val result = executeTargetWithMockData("", "")
+        "return a 303" in {
+          status(result) shouldBe 303
+        }
 
-      "return a 400" in {
-        status(result) shouldBe 400
+        "should redirect to the acquisitionDate page" in {
+          redirectLocation(result) shouldBe Some(s"${routes.CalculationController.acquisitionDate()}")
+        }
       }
     }
 
-    "submitting an invalid form with 'Yes' selection and a no amount" should {
-
-      lazy val result = executeTargetWithMockData("Yes", "")
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-    }
-
-    "submitting an invalid form with 'Yes' selection and an amount with three decimal places" should {
-
-      lazy val result = executeTargetWithMockData("Yes", "1000.111")
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
+    "for a personal rep" should {
+      def executeTargetWithMockData(selection: String, amount: String): Future[Result] = {
+        lazy val fakeRequest = buildRequest(("otherProperties", selection), ("otherPropertiesAmt", amount))
+        val mockData = amount match {
+          case "" => OtherPropertiesModel(selection, None)
+          case _ => OtherPropertiesModel(selection, Some(BigDecimal(amount)))
+        }
+        val target = setupTarget(None, Some(mockData), Some(CustomerTypeModel(CustomerTypeKeys.personalRep)))
+        target.submitOtherProperties(fakeRequest)
       }
 
-      s"fail with message ${Messages("calc.otherProperties.errorDecimalPlaces")}" in {
-        document.getElementsByClass("error-notification").text should include (Messages("calc.otherProperties.errorDecimalPlaces"))
-      }
-    }
+      "submitting a valid form with 'Yes' selected" should {
 
-    "submitting an invalid form with 'Yes' selection and a negative amount" should {
+        lazy val result = executeTargetWithMockData("Yes", "")
+        lazy val document = Jsoup.parse(bodyOf(result))
 
-      lazy val result = executeTargetWithMockData("Yes", "-1000")
-      lazy val document = Jsoup.parse(bodyOf(result))
+        "return a 303" in {
+          status(result) shouldBe 303
+        }
 
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"fail with message ${Messages("calc.otherProperties.errorNegative")}" in {
-        document.getElementsByClass("error-notification").text should include (Messages("calc.otherProperties.errorNegative"))
-      }
-    }
-
-    "submitting a value which exceeds the maximum numeric" should {
-
-      lazy val result = executeTargetWithMockData("Yes", Constants.maxNumeric+0.01.toString())
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
+        "should redirect to the annual exempt amount page" in {
+          redirectLocation(result) shouldBe Some(s"${routes.CalculationController.annualExemptAmount()}")
+        }
       }
 
-      s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
-        document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+      "submitting a valid form with 'No' selected" should {
+
+        lazy val result = executeTargetWithMockData("No", "")
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        "return a 303" in {
+          status(result) shouldBe 303
+        }
+
+        "should redirect to the acquisitionDate page" in {
+          redirectLocation(result) shouldBe Some(s"${routes.CalculationController.acquisitionDate()}")
+        }
       }
     }
   }
