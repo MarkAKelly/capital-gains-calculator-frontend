@@ -129,9 +129,9 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     DisposalCostsModel(None),
     AllowableLossesModel("No", None),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(None),
-    OtherReliefsModel(None),
-    OtherReliefsModel(None),
+    OtherReliefsModel(Some("No"), None),
+    OtherReliefsModel(Some("No"), None),
+    OtherReliefsModel(Some("No"), None),
     None
   )
 
@@ -153,9 +153,9 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     DisposalCostsModel(None),
     AllowableLossesModel("No", None),
     CalculationElectionModel("time-apportioned-calculation"),
-    OtherReliefsModel(None),
-    OtherReliefsModel(None),
-    OtherReliefsModel(None),
+    OtherReliefsModel(None, None),
+    OtherReliefsModel(None, None),
+    OtherReliefsModel(None, None),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -177,9 +177,9 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     DisposalCostsModel(None),
     AllowableLossesModel("No", None),
     CalculationElectionModel("rebased"),
-    OtherReliefsModel(None),
-    OtherReliefsModel(None),
-    OtherReliefsModel(None),
+    OtherReliefsModel(None, None),
+    OtherReliefsModel(None, None),
+    OtherReliefsModel(None, None),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -201,9 +201,9 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     DisposalCostsModel(None),
     AllowableLossesModel("No", None),
     CalculationElectionModel(""),
-    OtherReliefsModel(None),
-    OtherReliefsModel(None),
-    OtherReliefsModel(None),
+    OtherReliefsModel(Some("No"), None),
+    OtherReliefsModel(Some("No"), None),
+    OtherReliefsModel(Some("No"), None),
     None
   )
 
@@ -269,7 +269,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
   "Calling create summary" should {
 
     "produce a non-empty summary with calculation selection or reliefs provided" in {
-      mockFetchAndGetFormData(sumModelFlat, Some(CalculationElectionModel("flat")), Some(OtherReliefsModel(None)))
+      mockFetchAndGetFormData(sumModelFlat, Some(CalculationElectionModel("flat")), Some(OtherReliefsModel(Some("No"), None)))
       lazy val result = TargetCalculatorConnector.createSummary
       await(result) shouldBe sumModelFlat
     }

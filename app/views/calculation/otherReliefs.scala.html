@@ -4,7 +4,7 @@
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 @import views.html.helpers._
 
-@(otherReliefsForm: Form[OtherReliefsModel], result: CalculationResultModel, hasExistingReliefAmount: Boolean, backUrl: String, flatOnlyOption: Boolean)(implicit request: Request[_])
+@(otherReliefsForm: Form[OtherReliefsModel], result: CalculationResultModel)(implicit request: Request[_])
 
 @hiddenYesNoContent = {
     <ul class="list">
@@ -20,14 +20,13 @@
     </ul>
 
     @formInputMoney(otherReliefsForm, "otherReliefs", Messages("calc.otherReliefs.question"))
-
 }
 
 @main_template(Messages("calc.otherReliefs.questionTwo")) {
 
-    <a id="back-link" class="back-link" href="@backUrl">@Messages("calc.base.back")</a>
+    <a id="back-link" class="back-link" href="@routes.CalculationController.allowableLosses">@Messages("calc.base.back")</a>
 
-    @errorSummary(otherReliefsForm, "other-reliefs-flat")
+    @errorSummary(otherReliefsForm, "isClaimingOtherReliefs", "otherReliefs")
 
     <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
 
@@ -41,13 +40,11 @@
             otherReliefsForm,
             "isClaimingOtherReliefs",
             "",
-            hiddenYesNoContent
+            hiddenYesNoContent,
+            None,
+            true
         )
 
-        @if(hasExistingReliefAmount) {
-            <button id="add-relief-button" class="button">@Messages("calc.otherReliefs.button.updateRelief")</button>
-        } else {
-            <button id="add-relief-button" class="button">@Messages("calc.otherReliefs.button.addRelief")</button>
-        }
+        <button id="button" class="submit">@Messages("calc.base.button.continue")</button>
     }
 }

@@ -18,7 +18,8 @@ package models
 
 import play.api.libs.json.Json
 
-case class OtherReliefsModel (otherReliefs: Option[BigDecimal])
+case class OtherReliefsModel (isClaimingOtherReliefs: Option[String],
+                              otherReliefs: Option[BigDecimal])
 
 object OtherReliefsModel {
   implicit val format = Json.format[OtherReliefsModel]

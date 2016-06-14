@@ -36,6 +36,7 @@ calc.common.next.actions.heading = What to do next
 calc.common.invalidError = Invalid selection!
 calc.common.error.maxNumericExceeded = Enter an amount that''s £
 calc.common.error.maxNumericExceeded.OrLess = or less
+calc.common.error.fieldRequired = This field is required
 
 ## Introduction ##
 calc.introduction.title = Introduction
@@ -225,7 +226,6 @@ calc.otherReliefs.totalLoss = Total loss
 calc.otherReliefs.taxableGain = Taxable gain
 calc.otherReliefs.button.addRelief = Add relief
 calc.otherReliefs.button.updateRelief = Update relief
-calc.otherReliefs.button.continue = Continue
 calc.otherReliefs.errorMinimum = Enter a positive number for your other reliefs
 calc.otherReliefs.errorDecimal = There are too many numbers after the decimal point in your other reliefs
 calc.otherReliefs.help = For example, lettings relief

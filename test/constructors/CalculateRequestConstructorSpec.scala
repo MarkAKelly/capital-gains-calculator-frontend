@@ -40,9 +40,9 @@ class CalculateRequestConstructorSpec extends UnitSpec {
     DisposalCostsModel(None),
     AllowableLossesModel("No", None),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(None),
-    OtherReliefsModel(None),
-    OtherReliefsModel(None),
+    OtherReliefsModel(None, None),
+    OtherReliefsModel(None, None),
+    OtherReliefsModel(None, None),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -71,9 +71,9 @@ class CalculateRequestConstructorSpec extends UnitSpec {
         DisposalCostsModel(None),
         AllowableLossesModel("Yes", Some(1000)),
         CalculationElectionModel("flat"),
-        OtherReliefsModel(None),
-        OtherReliefsModel(None),
-        OtherReliefsModel(None),
+        OtherReliefsModel(None, None),
+        OtherReliefsModel(None, None),
+        OtherReliefsModel(None, None),
         Some(PrivateResidenceReliefModel("No", None, None))
       )
 

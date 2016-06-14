@@ -59,7 +59,7 @@ class OtherReliefsRebasedSpec extends UnitSpec with WithFakeApplication with Moc
     when(mockCalcConnector.calculateRebased(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(Some(result)))
 
-    lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(OtherReliefsModel(Some(1000))))))
+    lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(OtherReliefsModel(None, Some(1000))))))
     when(mockCalcConnector.saveFormData[OtherReliefsModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
@@ -137,7 +137,7 @@ class OtherReliefsRebasedSpec extends UnitSpec with WithFakeApplication with Moc
 
     "when supplied with a previous value" should {
       lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/other-reliefs-rebased").withSession(SessionKeys.sessionId -> "12345")
-      val model = OtherReliefsModel(Some(1000))
+      val model = OtherReliefsModel(None, Some(1000))
       val target = setupTarget(Some(model), None, TestModels.summaryIndividualRebased, TestModels.calcModelTwoRates)
       lazy val result = target.otherReliefsRebased(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
@@ -158,10 +158,10 @@ class OtherReliefsRebasedSpec extends UnitSpec with WithFakeApplication with Moc
       val numeric = "(-?\\d*.\\d*)".r
       val mockData = amount match {
         case numeric(money) => {
-          OtherReliefsModel(Some(BigDecimal(money)))
+          OtherReliefsModel(None, Some(BigDecimal(money)))
         }
         case _ => {
-          OtherReliefsModel(None)
+          OtherReliefsModel(None, None)
         }
       }
       val target = setupTarget(None, Some(mockData), summary, TestModels.calcModelOneRate)

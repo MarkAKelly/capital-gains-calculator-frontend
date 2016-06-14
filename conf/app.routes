@@ -86,6 +86,9 @@ POST        /calculation-election    controllers.CalculationController.submitCal
 GET         /other-reliefs           controllers.CalculationController.otherReliefs
 POST        /other-reliefs           controllers.CalculationController.submitOtherReliefs
 
+GET         /other-reliefs-flat      controllers.CalculationController.otherReliefsFlat
+POST        /other-reliefs-flat      controllers.CalculationController.submitOtherReliefsFlat
+
 GET         /other-reliefs-time-apportioned     controllers.CalculationController.otherReliefsTA
 POST        /other-reliefs-time-apportioned     controllers.CalculationController.submitOtherReliefsTA
 

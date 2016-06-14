@@ -25,13 +25,24 @@ import common.Validation._
 
 object OtherReliefsForm {
 
-  val otherReliefsForm = Form(
+  def validateReliefSupplied(data: OtherReliefsModel) = {
+    data.isClaimingOtherReliefs match {
+      case Some("Yes") => data.otherReliefs.isDefined
+      case _ => true
+    }
+  }
+
+  def otherReliefsForm (electionMade: Boolean): Form[OtherReliefsModel] = Form (
     mapping(
+      "isClaimingOtherReliefs" -> optional(text)
+        .verifying(Messages("calc.common.error.fieldRequired"), isClaimingOtherReliefs => if (!electionMade) {isClaimingOtherReliefs.isDefined} else true),
       "otherReliefs" -> optional(bigDecimal)
         .verifying(Messages("calc.otherReliefs.errorMinimum"), otherReliefs => isPositive(otherReliefs.getOrElse(0)))
         .verifying(Messages("calc.otherReliefs.errorDecimal"), otherReliefs => isMaxTwoDecimalPlaces(otherReliefs.getOrElse(0)))
         .verifying(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"),
           otherReliefs => isLessThanEqualMaxNumeric(otherReliefs.getOrElse(0)))
     )(OtherReliefsModel.apply)(OtherReliefsModel.unapply)
+      .verifying(Messages("calc.common.error.fieldRequired"),
+        otherReliefsForm => if(!electionMade) {validateReliefSupplied(otherReliefsForm)} else true)
   )
 }
