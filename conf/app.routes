@@ -2,15 +2,10 @@
 
 GET         /assets/*file            controllers.Assets.at(path="/public", file)
 
-#Start route
-########################################################
-GET         /                        controllers.StartController.start
-########################################################
-
-
 #Calculation controller routes
 ########################################################
 #Customer Type
+GET         /                        controllers.CalculationController.customerType
 GET         /customer-type           controllers.CalculationController.customerType
 POST        /customer-type           controllers.CalculationController.submitCustomerType
 
@@ -58,6 +53,9 @@ POST        /improvements            controllers.CalculationController.submitImp
 GET         /disposal-date           controllers.CalculationController.disposalDate
 POST        /disposal-date           controllers.CalculationController.submitDisposalDate
 
+#No Capital Gains Tax
+GET         /no-capital-gains-tax    controllers.CalculationController.noCapitalGainsTax
+
 #Disposal Value
 GET         /disposal-value          controllers.CalculationController.disposalValue
 POST        /disposal-value          controllers.CalculationController.submitDisposalValue
@@ -73,10 +71,6 @@ POST        /disposal-costs          controllers.CalculationController.submitDis
 #Private Residence Relief
 GET         /private-residence-relief controllers.CalculationController.privateResidenceRelief
 POST        /private-residence-relief controllers.CalculationController.submitPrivateResidenceRelief
-
-#Entrepreneurs Relief
-GET         /entrepreneurs-relief    controllers.CalculationController.entrepreneursRelief
-POST        /entrepreneurs-relief    controllers.CalculationController.submitEntrepreneursRelief
 
 #Allowable Losses
 GET         /allowable-losses        controllers.CalculationController.allowableLosses

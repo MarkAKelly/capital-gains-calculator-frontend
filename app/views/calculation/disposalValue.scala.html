@@ -4,6 +4,23 @@
 
 @(disposalValueForm: Form[DisposalValueModel])(implicit request: Request[_])
 
+@contentLink = {
+    <a id="lossesLink" class="external-link" rel="external" href="https://www.gov.uk/capital-gains-tax/losses"
+       target="_blank" data-journey-click="help:govUK:disposal-cgt-losses">
+        @Messages("calc.disposalValue.bullet.two.link")
+        <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
+    </a>
+}
+
+@bulletContent = {
+    <p id="bullet-list-title">@Messages("calc.disposalValue.bullet.title") </p>
+    <ul class="list-bullet">
+        <li>@Messages("calc.disposalValue.bullet.one")</li>
+        <li>@Messages("calc.disposalValue.bullet.two") @contentLink</li>
+        <li>@Messages("calc.disposalValue.bullet.three")</li>
+    </ul>
+}
+
 @main_template(Messages("calc.disposalValue.question")) {
 
     <a id="back-link" class="back-link" href="@routes.CalculationController.disposalDate">@Messages("calc.base.back")</a>
@@ -14,7 +31,7 @@
 
     @form(action = routes.CalculationController.submitDisposalValue) {
 
-        @formInputMoney(disposalValueForm, "disposalValue", Messages("calc.disposalValue.question"), Some(Messages("calc.disposalValue.hint")))
+        @formInputMoney(disposalValueForm, "disposalValue", Messages("calc.disposalValue.question"), additionalHTMLContent = Some(bulletContent.toString()))
 
         <button id="continue-button" class="button">@Messages("calc.base.button.continue")</button>
 

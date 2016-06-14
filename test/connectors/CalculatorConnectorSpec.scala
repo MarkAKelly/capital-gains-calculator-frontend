@@ -92,9 +92,6 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     when(mockSessionCache.fetchAndGetEntry[DisposalCostsModel](Matchers.eq("disposalCosts"))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(summary.disposalCostsModel)))
 
-    when(mockSessionCache.fetchAndGetEntry[EntrepreneursReliefModel](Matchers.eq("entrepreneursRelief"))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(summary.entrepreneursReliefModel)))
-
     when(mockSessionCache.fetchAndGetEntry[AllowableLossesModel](Matchers.eq("allowableLosses"))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(summary.allowableLossesModel)))
 
@@ -130,7 +127,6 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     DisposalValueModel(150000),
     AcquisitionCostsModel(None),
     DisposalCostsModel(None),
-    EntrepreneursReliefModel("No"),
     AllowableLossesModel("No", None),
     CalculationElectionModel("flat"),
     OtherReliefsModel(None),
@@ -155,7 +151,6 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     DisposalValueModel(150000),
     AcquisitionCostsModel(None),
     DisposalCostsModel(None),
-    EntrepreneursReliefModel("No"),
     AllowableLossesModel("No", None),
     CalculationElectionModel("time-apportioned-calculation"),
     OtherReliefsModel(None),
@@ -180,7 +175,6 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     DisposalValueModel(150000),
     AcquisitionCostsModel(None),
     DisposalCostsModel(None),
-    EntrepreneursReliefModel("No"),
     AllowableLossesModel("No", None),
     CalculationElectionModel("rebased"),
     OtherReliefsModel(None),
@@ -205,7 +199,6 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     DisposalValueModel(150000),
     AcquisitionCostsModel(None),
     DisposalCostsModel(None),
-    EntrepreneursReliefModel("No"),
     AllowableLossesModel("No", None),
     CalculationElectionModel(""),
     OtherReliefsModel(None),
@@ -238,7 +231,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
 
   "Calling calculateFlat" should {
 
-    val validResponse = CalculationResultModel(8000, 40000, 32000, 18, Some(8000), Some(28), None)
+    val validResponse = CalculationResultModel(8000, 40000, 32000, 18, 0, Some(8000), Some(28), None)
     when(mockHttp.GET[Option[CalculationResultModel]](Matchers.anyString())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(validResponse)))
 
@@ -250,7 +243,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
   }
 
   "Calling calculateTA" should {
-    val validResponse = CalculationResultModel(8000, 40000, 32000, 18, Some(8000), Some(28), None)
+    val validResponse = CalculationResultModel(8000, 40000, 32000, 18, 0, Some(8000), Some(28), None)
     when(mockHttp.GET[Option[CalculationResultModel]](Matchers.anyString())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(validResponse)))
 
@@ -262,7 +255,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
   }
 
   "Calling calculateRebased" should {
-    val validResponse = CalculationResultModel(8000, 40000, 32000, 18, Some(8000), Some(28), None)
+    val validResponse = CalculationResultModel(8000, 40000, 32000, 18, 0, Some(8000), Some(28), None)
     when(mockHttp.GET[Option[CalculationResultModel]](Matchers.anyString())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(validResponse)))
 

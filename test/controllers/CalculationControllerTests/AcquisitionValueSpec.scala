@@ -104,6 +104,21 @@ class AcquisitionValueSpec extends UnitSpec with WithFakeApplication with Mockit
           document.body.getElementsByTag("label").text should include (Messages("calc.acquisitionValue.question"))
         }
 
+        "have the bullet list content title and content" in {
+          document.select("p#bullet-list-title").text shouldEqual Messages("calc.acquisitionValue.bullet.title")
+        }
+
+        "Have the bullet content" in {
+          document.select("ul li").text should include(Messages("calc.acquisitionValue.bullet.one"))
+          document.select("ul li").text should include(Messages("calc.acquisitionValue.bullet.two"))
+          document.select("ul li").text should include(Messages("calc.acquisitionValue.bullet.three"))
+          document.select("ul li").text should include(Messages("calc.acquisitionValue.bullet.four"))
+          document.select("ul li").text should include(Messages("calc.acquisitionValue.bullet.five"))
+        }
+        "have a link with a hidden external link field" in {
+          document.select("ul li a#lossesLink").text should include(Messages("calc.acquisitionValue.bullet.three.link"))
+          document.select("span.visuallyhidden").text shouldEqual Messages("calc.base.externalLink")
+        }
         "display an input box for the Acquisition Value" in {
           document.body.getElementById("acquisitionValue").tagName shouldEqual "input"
         }

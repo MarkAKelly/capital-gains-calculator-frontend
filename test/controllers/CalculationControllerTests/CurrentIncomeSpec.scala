@@ -97,7 +97,7 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
           document.body.getElementsByTag("label").text.contains(Messages("calc.currentIncome.question")) shouldBe true
         }
 
-        "have the help text 'Tax years start on 6 April' as the form-hint of the input" in {
+        "have the help text 'You can give an estimate if this was in the current tax year' as the form-hint of the input" in {
           document.body.getElementsByClass("form-hint").text shouldEqual Messages("calc.currentIncome.helpText")
         }
 
@@ -172,6 +172,19 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
       s"redirect to ${routes.CalculationController.personalAllowance()}" in {
         redirectLocation(result) shouldBe Some(s"${routes.CalculationController.personalAllowance()}")
+      }
+    }
+
+    "submitting a valid form with a £0 amount" should {
+
+      lazy val result = executeTargetWithMockData("0")
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      s"redirect to ${routes.CalculationController.otherProperties()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.otherProperties()}")
       }
     }
 

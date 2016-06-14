@@ -26,7 +26,7 @@ object CalculateRequestConstructor {
       input.customerTypeModel.customerType}&priorDisposal=${
       input.otherPropertiesModel.otherProperties}${
       input.otherPropertiesModel match {
-        case OtherPropertiesModel("Yes", data) if data.getOrElse(0) == 0 => "&annualExemptAmount=" + input.annualExemptAmountModel.get.annualExemptAmount + "&otherPropertiesAmt=" + input.otherPropertiesModel.otherPropertiesAmt.get
+        case OtherPropertiesModel("Yes", data) if data.getOrElse(0) == 0 => "&annualExemptAmount=" + input.annualExemptAmountModel.get.annualExemptAmount + "&otherPropertiesAmt=" + input.otherPropertiesModel.otherPropertiesAmt.getOrElse(0)
         case OtherPropertiesModel("Yes", data) if data.get > 0 => "&otherPropertiesAmt=" + input.otherPropertiesModel.otherPropertiesAmt.get
         case _ => ""
       }
@@ -54,8 +54,6 @@ object CalculateRequestConstructor {
         case "Yes" => input.allowableLossesModel.allowableLossesAmt.get
         case "No" => 0
       }
-    }&entReliefClaimed=${
-      input.entrepreneursReliefModel.entReliefClaimed
     }&disposalDate=${
       input.disposalDateModel.year}-${input.disposalDateModel.month}-${input.disposalDateModel.day
     }"
