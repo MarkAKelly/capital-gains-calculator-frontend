@@ -4,7 +4,19 @@
 
 @(disabledTrusteeForm: Form[DisabledTrusteeModel])(implicit request: Request[_])
 
-@main_template(Messages("calc.disabledTrustee.question")) {
+@sidebar = {
+    <ul>
+        <li>
+            <a id="helpLink1" class="external-link" rel="external" href="https://www.gov.uk/trusts-taxes/trusts-and-capital-gains-tax"
+               target="_blank" data-journey-click="help:govUK:trustsAndCapitalGainsTax">
+                @Messages("calc.disabledTrustee.linkOne")
+                <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
+            </a>
+        </li>
+    </ul>
+}
+
+@main_template(Messages("calc.disabledTrustee.question"), sidebarLinks = Some(sidebar)) {
 
     <a id="back-link" class="back-link" href="@routes.CalculationController.customerType">Back</a>
 

@@ -102,6 +102,15 @@ class DisabledTrusteeSpec extends UnitSpec with WithFakeApplication with Mockito
           document.body.getElementById("isVulnerable-no").parent.text shouldEqual Messages("calc.base.no")
         }
 
+        "should contain a Read more sidebar" in {
+          document.select("aside h2").text shouldBe Messages("calc.common.readMore")
+        }
+
+        "should contain a Read more link to 'Trusts and Capital Gains Tax'" in {
+          document.select("aside a").first().text should include ("Trusts and Capital Gains Tax")
+          document.select("aside a").first().attr("href") shouldBe "https://www.gov.uk/trusts-taxes/trusts-and-capital-gains-tax"
+        }
+
         "display a 'Continue' button " in {
           document.body.getElementById("continue-button").text shouldEqual Messages("calc.base.continue")
         }
