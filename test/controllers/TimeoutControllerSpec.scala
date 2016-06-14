@@ -43,6 +43,10 @@ class TimeoutControllerSpec extends UnitSpec with WithFakeApplication {
         status(timeoutTestDataItem.result) shouldBe 200
       }
 
+      "have the title" in {
+        timeoutTestDataItem.jsoupDoc.getElementsByTag("title").text shouldEqual Messages("session.timeout.message")
+      }
+
       "contain the heading 'Your session has timeed out." in {
         timeoutTestDataItem.jsoupDoc.select("h1").text shouldEqual Messages("session.timeout.message")
       }
