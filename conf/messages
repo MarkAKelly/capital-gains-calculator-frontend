@@ -15,7 +15,7 @@ calc.base.externalLink = opens in a new window
 calc.error.summary.heading = This page has errors
 
 ## Session Timeout message ##
-session.timeout.message = 
+session.timeout.message = Your session has ended
 
 ## PLAY! Error Overrides ##
 error.number=Enter a number without commas, for example 10000.00
