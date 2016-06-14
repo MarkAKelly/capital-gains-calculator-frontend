@@ -61,6 +61,11 @@ object SummaryConstructor {
           None
         ),
         SummaryDataItemModel(
+          Messages("calc.summary.calculation.details.usedAEA"),
+          "&pound;" + MoneyPounds(result.usedAnnualExemptAmount, 0).quantity,
+          None
+        ),
+        SummaryDataItemModel(
           Messages("calc.summary.calculation.details.taxableGain"),
           "&pound;" + MoneyPounds(result.taxableGain,0).quantity,
           None
@@ -92,6 +97,11 @@ object SummaryConstructor {
           None
         ),
         SummaryDataItemModel(
+          Messages("calc.summary.calculation.details.usedAEA"),
+          "&pound;" + MoneyPounds(result.usedAnnualExemptAmount, 0).quantity,
+          None
+        ),
+        SummaryDataItemModel(
           Messages("calc.summary.calculation.details.lossCarriedForward"),
           "&pound;" + MoneyPounds(result.taxableGain.abs,0).quantity,
           None
@@ -120,6 +130,11 @@ object SummaryConstructor {
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalGain"),
           "&pound;" + MoneyPounds(result.totalGain.abs,0).quantity,
+          None
+        ),
+        SummaryDataItemModel(
+          Messages("calc.summary.calculation.details.usedAEA"),
+          "&pound;" + MoneyPounds(result.usedAnnualExemptAmount, 0).quantity,
           None
         ),
         SummaryDataItemModel(
@@ -160,8 +175,8 @@ object SummaryConstructor {
               Some(routes.CalculationController.disabledTrustee().toString())
             ),
             SummaryDataItemModel(
-              Messages("calc.otherProperties.questionTwo"),
-              "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
+              Messages("calc.otherProperties.question"),
+              summary.otherPropertiesModel.otherProperties.toString,
               Some(routes.CalculationController.otherProperties().toString())
             ),
             SummaryDataItemModel(
@@ -189,55 +204,104 @@ object SummaryConstructor {
           )
         }
         case CustomerTypeKeys.individual => summary.otherPropertiesModel.otherProperties match {
-          case "Yes" => Array(
-            SummaryDataItemModel(
-              Messages("calc.customerType.question"),
-              WordUtils.capitalize(summary.customerTypeModel.customerType),
-              Some(routes.CalculationController.customerType().toString())
-            ),
-            SummaryDataItemModel(
-              Messages("calc.currentIncome.question"),
-              "&pound;" + MoneyPounds(summary.currentIncomeModel.get.currentIncome).quantity,
-              Some(routes.CalculationController.currentIncome().toString())
-            ),
-            SummaryDataItemModel(
-              Messages("calc.personalAllowance.question"),
-              "&pound;" + MoneyPounds(summary.personalAllowanceModel.get.personalAllowanceAmt).quantity,
-              Some(routes.CalculationController.personalAllowance().toString())
-            ),
-            SummaryDataItemModel(
-              Messages("calc.otherProperties.questionTwo"),
-              "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
-              Some(routes.CalculationController.otherProperties().toString())
-            ),
-            SummaryDataItemModel(
-              Messages("calc.annualExemptAmount.question"),
-              "&pound;" + MoneyPounds(summary.annualExemptAmountModel.get.annualExemptAmount).quantity,
-              Some(routes.CalculationController.annualExemptAmount().toString())
-            )
-          )
-          case "No" => Array(
-            SummaryDataItemModel(
-              Messages("calc.customerType.question"),
-              WordUtils.capitalize(summary.customerTypeModel.customerType),
-              Some(routes.CalculationController.customerType().toString())
-            ),
-            SummaryDataItemModel(
-              Messages("calc.currentIncome.question"),
-              "&pound;" + MoneyPounds(summary.currentIncomeModel.get.currentIncome).quantity,
-              Some(routes.CalculationController.currentIncome().toString())
-            ),
-            SummaryDataItemModel(
-              Messages("calc.personalAllowance.question"),
-              "&pound;" + MoneyPounds(summary.personalAllowanceModel.get.personalAllowanceAmt).quantity,
-              Some(routes.CalculationController.personalAllowance().toString())
-            ),
-            SummaryDataItemModel(
-              Messages("calc.otherProperties.question"),
-              summary.otherPropertiesModel.otherProperties.toString,
-              Some(routes.CalculationController.otherProperties().toString())
-            )
-          )
+          case "Yes" =>
+            summary.personalAllowanceModel match {
+              case Some(x) =>
+                Array(
+                  SummaryDataItemModel(
+                    Messages("calc.customerType.question"),
+                    WordUtils.capitalize(summary.customerTypeModel.customerType),
+                    Some(routes.CalculationController.customerType().toString())
+                  ),
+                  SummaryDataItemModel(
+                    Messages("calc.currentIncome.question"),
+                    "&pound;" + MoneyPounds(summary.currentIncomeModel.get.currentIncome).quantity,
+                    Some(routes.CalculationController.currentIncome().toString())
+                  ),
+                  SummaryDataItemModel(
+                    Messages("calc.personalAllowance.question"),
+                    "&pound;" + MoneyPounds(summary.personalAllowanceModel.get.personalAllowanceAmt).quantity,
+                    Some(routes.CalculationController.personalAllowance().toString())
+                  ),
+                  SummaryDataItemModel(
+                    Messages("calc.otherProperties.questionTwo"),
+                    "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
+                    Some(routes.CalculationController.otherProperties().toString())
+                  ),
+                  SummaryDataItemModel(
+                    Messages("calc.annualExemptAmount.question"),
+                    "&pound;" + MoneyPounds(summary.annualExemptAmountModel.get.annualExemptAmount).quantity,
+                    Some(routes.CalculationController.annualExemptAmount().toString())
+                  )
+                )
+              case _ =>
+                Array(
+                  SummaryDataItemModel(
+                    Messages("calc.customerType.question"),
+                    WordUtils.capitalize(summary.customerTypeModel.customerType),
+                    Some(routes.CalculationController.customerType().toString())
+                  ),
+                  SummaryDataItemModel(
+                    Messages("calc.currentIncome.question"),
+                    "&pound;" + MoneyPounds(summary.currentIncomeModel.get.currentIncome).quantity,
+                    Some(routes.CalculationController.currentIncome().toString())
+                  ),
+                  SummaryDataItemModel(
+                    Messages("calc.otherProperties.questionTwo"),
+                    "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
+                    Some(routes.CalculationController.otherProperties().toString())
+                  ),
+                  SummaryDataItemModel(
+                    Messages("calc.annualExemptAmount.question"),
+                    "&pound;" + MoneyPounds(summary.annualExemptAmountModel.get.annualExemptAmount).quantity,
+                    Some(routes.CalculationController.annualExemptAmount().toString())
+                  )
+                )
+            }
+          case "No" =>
+            summary.personalAllowanceModel match {
+              case Some(x) =>
+                Array(
+                  SummaryDataItemModel(
+                    Messages("calc.customerType.question"),
+                    WordUtils.capitalize(summary.customerTypeModel.customerType),
+                    Some(routes.CalculationController.customerType().toString())
+                  ),
+                  SummaryDataItemModel(
+                    Messages("calc.currentIncome.question"),
+                    "&pound;" + MoneyPounds(summary.currentIncomeModel.get.currentIncome).quantity,
+                    Some(routes.CalculationController.currentIncome().toString())
+                  ),
+                  SummaryDataItemModel(
+                    Messages("calc.personalAllowance.question"),
+                    "&pound;" + MoneyPounds(summary.personalAllowanceModel.get.personalAllowanceAmt).quantity,
+                    Some(routes.CalculationController.personalAllowance().toString())
+                  ),
+                  SummaryDataItemModel(
+                    Messages("calc.otherProperties.question"),
+                    summary.otherPropertiesModel.otherProperties.toString,
+                    Some(routes.CalculationController.otherProperties().toString())
+                  )
+                )
+              case _ =>
+                Array(
+                  SummaryDataItemModel(
+                    Messages("calc.customerType.question"),
+                    WordUtils.capitalize(summary.customerTypeModel.customerType),
+                    Some(routes.CalculationController.customerType().toString())
+                  ),
+                  SummaryDataItemModel(
+                    Messages("calc.currentIncome.question"),
+                    "&pound;" + MoneyPounds(summary.currentIncomeModel.get.currentIncome).quantity,
+                    Some(routes.CalculationController.currentIncome().toString())
+                  ),
+                  SummaryDataItemModel(
+                    Messages("calc.otherProperties.question"),
+                    summary.otherPropertiesModel.otherProperties.toString,
+                    Some(routes.CalculationController.otherProperties().toString())
+                  )
+                )
+            }
         }
         case CustomerTypeKeys.personalRep => summary.otherPropertiesModel.otherProperties match {
           case "Yes" => Array(
@@ -247,8 +311,8 @@ object SummaryConstructor {
               Some(routes.CalculationController.customerType().toString())
             ),
             SummaryDataItemModel(
-              Messages("calc.otherProperties.questionTwo"),
-              "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
+              Messages("calc.otherProperties.question"),
+              summary.otherPropertiesModel.otherProperties.toString,
               Some(routes.CalculationController.otherProperties().toString())
             ),
             SummaryDataItemModel(

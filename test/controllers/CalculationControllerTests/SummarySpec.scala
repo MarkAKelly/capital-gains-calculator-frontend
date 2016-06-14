@@ -228,12 +228,20 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.body().getElementById("calcDetails(1)").text() shouldBe "£40,000"
             }
 
+            "include 'Capital Gains Tax allowance used" in {
+              document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.usedAEA"))
+            }
+
+            "have a used AEA value equal to £0" in {
+              document.body().getElementById("calcDetails(2)").text() shouldBe "£0"
+            }
+
             "include 'Your taxable gain'" in {
               document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.taxableGain"))
             }
 
             "have a taxable gain equal to £40,000" in {
-              document.body().getElementById("calcDetails(2)").text() shouldBe "£40,000"
+              document.body().getElementById("calcDetails(3)").text() shouldBe "£40,000"
             }
 
             "include 'Your tax rate'" in {
@@ -241,7 +249,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "have a combined tax rate of £32,000 and £8,000" in {
-              document.body().getElementById("calcDetails(3)").text() shouldBe "£32,000 at 18% £8,000 at 28%"
+              document.body().getElementById("calcDetails(4)").text() shouldBe "£32,000 at 18% £8,000 at 28%"
             }
 
           }
@@ -484,9 +492,40 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "have a base tax rate of 20%" in {
-          document.body().getElementById("calcDetails(3)").text() shouldBe "20%"
+          document.body().getElementById("calcDetails(4)").text() shouldBe "20%"
         }
       }
+
+      "the user has £0 current income, with no other properties" should {
+        val target = setupTarget(
+          TestModels.summaryIndividualFlatNoIncomeOtherPropNo,
+          TestModels.calcModelOneRate,
+          Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
+          None
+        )
+        lazy val result = target.summary()(fakeRequest)
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        "Element 3 of the personalDetails array should be 'No' for Other Properties no Personal Allowance" in {
+          document.body().getElementById("personalDetails(2)").text() shouldBe "No"
+        }
+      }
+
+      "the user has £0 current income, with other properties" should {
+        val target = setupTarget(
+          TestModels.summaryIndividualFlatNoIncomeOtherPropYes,
+          TestModels.calcModelOneRate,
+          Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
+          None
+        )
+        lazy val result = target.summary()(fakeRequest)
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        "Element 3 of the personalDetails array should be £0.00 for Other Properties Gain not Personal Allowance" in {
+          document.body().getElementById("personalDetails(2)").text() shouldBe "£0.00"
+        }
+      }
+
 
       "users calculation results in a loss" should {
         val target = setupTarget(
@@ -536,8 +575,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
           document.body().getElementById("personalDetails(1)").text() shouldBe "No"
         }
 
-        "have a total taxable gain of prior disposals of £9,600" in {
-          document.body.getElementById("personalDetails(2)").text() shouldBe "£9,600.00"
+        "have the answer for Previous Disposals (Other Properties) of 'Yes'" in {
+          document.body.getElementById("personalDetails(2)").text() shouldBe "Yes"
         }
 
         "have a remaining CGT Allowance of £1,500" in {
@@ -545,7 +584,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "have a base tax rate of 20%" in {
-          document.body().getElementById("calcDetails(3)").text() shouldBe "20%"
+          document.body().getElementById("calcDetails(4)").text() shouldBe "20%"
         }
       }
 
@@ -626,8 +665,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
           document.body().getElementById("personalDetails(0)").text() shouldBe "Personal Representative"
         }
 
-        "have a total taxable gain of prior disposals of £9,600" in {
-          document.body.getElementById("personalDetails(1)").text() shouldBe "£9,600.00"
+        "have the answer for Previous Disposals (Other Properties) of 'Yes' " in {
+          document.body.getElementById("personalDetails(1)").text() shouldBe "Yes"
         }
 
         "have a remaining CGT Allowance of £1,500" in {
@@ -771,7 +810,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a value of 28% for the tax rate" in {
-        document.body.getElementById("calcDetails(3)").text() shouldBe "28%"
+        document.body.getElementById("calcDetails(4)").text() shouldBe "28%"
       }
     }
 
@@ -785,7 +824,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
       }
 
       "return a value of £10,000 for loss carried forward" in {
-        document.body.getElementById("calcDetails(2)").text() shouldBe "£10,000"
+        document.body.getElementById("calcDetails(3)").text() shouldBe "£10,000"
       }
     }
 
@@ -795,7 +834,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a value of £0 for taxable gain" in {
-        document.body.getElementById("calcDetails(2)").text() shouldBe "£0"
+        document.body.getElementById("calcDetails(3)").text() shouldBe "£0"
       }
     }
 

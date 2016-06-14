@@ -41,13 +41,16 @@ import forms.RebasedValueForm._
 import forms.RebasedCostsForm._
 import forms.PrivateResidenceReliefForm._
 import models._
-import java.util.{Calendar, Date}
-import play.api.mvc.{Result, AnyContent, Action}
+import java.util.{Calendar, Date, UUID}
+
+import play.api.mvc.{Action, AnyContent, Result}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.HeaderCarrier
-import scala.concurrent.{Future, Await}
+import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
+
+import scala.concurrent.{Await, Future}
 import views.html._
 import common.DefaultRoutes._
+
 import scala.concurrent.duration.Duration
 
 object CalculationController extends CalculationController {
@@ -69,9 +72,15 @@ trait CalculationController extends FrontendController {
 
   //################### Customer Type methods #######################
   val customerType = Action.async { implicit request =>
-    calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).map {
-      case Some(data) => Ok(calculation.customerType(customerTypeForm.fill(data)))
-      case None => Ok(calculation.customerType(customerTypeForm))
+    if (request.session.get(SessionKeys.sessionId).isEmpty) {
+      val sessionId = UUID.randomUUID.toString
+      Future.successful(Ok(calculation.customerType(customerTypeForm)).withSession(request.session + (SessionKeys.sessionId -> s"session-$sessionId")))
+    }
+    else {
+      calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).map {
+        case Some(data) => Ok(calculation.customerType(customerTypeForm.fill(data)))
+        case None => Ok(calculation.customerType(customerTypeForm))
+      }
     }
   }
 
@@ -120,7 +129,8 @@ trait CalculationController extends FrontendController {
      errors => Future.successful(BadRequest(calculation.currentIncome(errors))),
      success => {
        calcConnector.saveFormData(KeystoreKeys.currentIncome, success)
-       Future.successful(Redirect(routes.CalculationController.personalAllowance()))
+       if (success.currentIncome > 0) Future.successful(Redirect(routes.CalculationController.personalAllowance()))
+       else Future.successful(Redirect(routes.CalculationController.otherProperties()))
      }
    )
   }
@@ -144,38 +154,50 @@ trait CalculationController extends FrontendController {
   }
 
   //################### Other Properties methods #######################
-  def otherPropertiesBackUrl(implicit hc: HeaderCarrier): Future[String] = calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).map {
-    case Some(CustomerTypeModel("individual")) => routes.CalculationController.personalAllowance().url
-    case Some(CustomerTypeModel("trustee")) => routes.CalculationController.disabledTrustee().url
-    case Some(_) => routes.CalculationController.customerType().url
-    case _ => missingDataRoute
+  def otherPropertiesBackUrl(implicit hc: HeaderCarrier): Future[String] =
+    calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).flatMap {
+      case Some(CustomerTypeModel("individual")) =>
+        calcConnector.fetchAndGetFormData[CurrentIncomeModel](KeystoreKeys.currentIncome).flatMap {
+          case Some(data) if data.currentIncome == 0 => Future.successful(routes.CalculationController.currentIncome().url)
+          case _ => Future.successful(routes.CalculationController.personalAllowance().url)
+        }
+      case Some(CustomerTypeModel("trustee")) => Future.successful(routes.CalculationController.disabledTrustee().url)
+      case Some(_) => Future.successful(routes.CalculationController.customerType().url)
+      case _ => Future.successful(missingDataRoute)
+  }
+
+  def showOtherPropertiesAmt(implicit hc: HeaderCarrier): Future[Boolean] = calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).map {
+      case Some(CustomerTypeModel("individual")) => true
+      case _ => false
   }
 
   val otherProperties = Action.async { implicit request =>
 
-    def routeRequest(backUrl: String): Future[Result] = {
+    def routeRequest(backUrl: String, showHiddenQuestion: Boolean): Future[Result] = {
       calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.otherProperties).map {
-        case Some(data) => Ok(calculation.otherProperties(otherPropertiesForm.fill(data), backUrl))
-        case _ => Ok(calculation.otherProperties(otherPropertiesForm, backUrl))
+        case Some(data) => Ok(calculation.otherProperties(otherPropertiesForm(showHiddenQuestion).fill(data), backUrl, showHiddenQuestion))
+        case _ => Ok(calculation.otherProperties(otherPropertiesForm(showHiddenQuestion), backUrl, showHiddenQuestion))
       }
     }
 
     for {
       backUrl <- otherPropertiesBackUrl
-      finalResult <- routeRequest(backUrl)
+      showHiddenQuestion <- showOtherPropertiesAmt
+      finalResult <- routeRequest(backUrl, showHiddenQuestion)
     } yield finalResult
   }
 
   val submitOtherProperties = Action.async { implicit request =>
 
-    def routeRequest(backUrl: String): Future[Result] = {
-      otherPropertiesForm.bindFromRequest.fold(
+    def routeRequest(backUrl: String, showHiddenQuestion: Boolean): Future[Result] = {
+      otherPropertiesForm(showHiddenQuestion).bindFromRequest.fold(
         errors =>
-          Future.successful(BadRequest(calculation.otherProperties(errors, backUrl))),
+          Future.successful(BadRequest(calculation.otherProperties(errors, backUrl, showHiddenQuestion))),
         success => {
           calcConnector.saveFormData(KeystoreKeys.otherProperties, success)
           success match {
             case OtherPropertiesModel("Yes", Some(value)) if value.equals(BigDecimal(0)) => Future.successful(Redirect(routes.CalculationController.annualExemptAmount()))
+            case OtherPropertiesModel("Yes", None) if !showHiddenQuestion => Future.successful(Redirect(routes.CalculationController.annualExemptAmount()))
             case _ => calcConnector.saveFormData("annualExemptAmount", AnnualExemptAmountModel(0))
               Future.successful(Redirect(routes.CalculationController.acquisitionDate()))
           }
@@ -184,7 +206,8 @@ trait CalculationController extends FrontendController {
     }
     for {
       backUrl <- otherPropertiesBackUrl
-      finalResult <- routeRequest(backUrl)
+      showHiddenQuestion <- showOtherPropertiesAmt
+      finalResult <- routeRequest(backUrl, showHiddenQuestion)
     } yield finalResult
   }
 
@@ -427,7 +450,11 @@ trait CalculationController extends FrontendController {
         errors => Future.successful(BadRequest(calculation.disposalDate(errors))),
         success => {
           calcConnector.saveFormData(KeystoreKeys.disposalDate, success)
-          Future.successful(Redirect(routes.CalculationController.disposalValue()))
+          if (!Dates.dateAfterStart(success.day, success.month, success.year)) {
+            Future.successful(Redirect(routes.CalculationController.noCapitalGainsTax()))
+          } else {
+            Future.successful(Redirect(routes.CalculationController.disposalValue()))
+          }
         }
       )
     }
@@ -436,6 +463,14 @@ trait CalculationController extends FrontendController {
       acquisitionDate <- getAcquisitionDate
       route <- routeRequest(acquisitionDate)
     } yield route
+  }
+
+  //################### No Capital Gains Tax #######################
+
+  val noCapitalGainsTax = Action.async { implicit request =>
+    calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.disposalDate).map {
+      result => Ok(calculation.noCapitalGainsTax(result.get))
+    }
   }
 
   //################### Disposal Value methods #######################
@@ -958,8 +993,8 @@ trait CalculationController extends FrontendController {
     } yield route
   }
 
-  def restart() = Action.async { implicit request =>
+  def restart(): Action[AnyContent] = Action.async { implicit request =>
     calcConnector.clearKeystore()
-    Future.successful(Redirect(routes.StartController.start()))
+    Future.successful(Redirect(routes.CalculationController.customerType()))
   }
 }
