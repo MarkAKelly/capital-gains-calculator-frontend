@@ -107,7 +107,7 @@ class DisabledTrusteeSpec extends UnitSpec with WithFakeApplication with Mockito
         }
 
         "should contain a Read more link to 'Trusts and Capital Gains Tax'" in {
-          document.select("aside a").first().text shouldBe "Trusts and Capital Gains Tax"
+          document.select("aside a").first().text should include ("Trusts and Capital Gains Tax")
           document.select("aside a").first().attr("href") shouldBe "https://www.gov.uk/trusts-taxes/trusts-and-capital-gains-tax"
         }
 
