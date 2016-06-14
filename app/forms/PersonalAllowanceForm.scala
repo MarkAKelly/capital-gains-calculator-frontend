@@ -24,7 +24,7 @@ import common.Validation._
 
 object PersonalAllowanceForm {
 
-  val maxPA = 12100
+  val maxPA = 11000
 
   val personalAllowanceForm = Form (
     mapping(

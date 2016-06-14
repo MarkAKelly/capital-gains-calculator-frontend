@@ -170,7 +170,11 @@ nocgt.sidebar.linkone = Capital Gains Tax for non-residents
 calc.disposalValue.question = How much did you sell or give away the property for?
 calc.disposalValue.errorNegative = Enter a positive number for the amount you sold the property for
 calc.disposalValue.errorDecimalPlaces = The amount you sold the property for has too many numbers after the decimal point
-calc.disposalValue.hint = If you gave the property away, put how much it was worth at the time
+calc.disposalValue.bullet.title = Put the market value of the property instead if you:
+calc.disposalValue.bullet.one = gave it away as a gift
+calc.disposalValue.bullet.two = sold it to a relative, business partner or
+calc.disposalValue.bullet.two.link = someone else you''re connected to
+calc.disposalValue.bullet.three = sold it for less than it''s worth to help the buyer
 
 ## Acquisition Costs ##
 calc.acquisitionCosts.question = How much did you pay in costs when you became the property owner?
