@@ -41,13 +41,16 @@ import forms.RebasedValueForm._
 import forms.RebasedCostsForm._
 import forms.PrivateResidenceReliefForm._
 import models._
-import java.util.{Calendar, Date}
-import play.api.mvc.{Result, AnyContent, Action}
+import java.util.{Calendar, Date, UUID}
+
+import play.api.mvc.{Action, AnyContent, Result}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.HeaderCarrier
-import scala.concurrent.{Future, Await}
+import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
+
+import scala.concurrent.{Await, Future}
 import views.html._
 import common.DefaultRoutes._
+
 import scala.concurrent.duration.Duration
 
 object CalculationController extends CalculationController {
@@ -69,9 +72,15 @@ trait CalculationController extends FrontendController {
 
   //################### Customer Type methods #######################
   val customerType = Action.async { implicit request =>
-    calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).map {
-      case Some(data) => Ok(calculation.customerType(customerTypeForm.fill(data)))
-      case None => Ok(calculation.customerType(customerTypeForm))
+    if (request.session.get(SessionKeys.sessionId).isEmpty) {
+      val sessionId = UUID.randomUUID.toString
+      Future.successful(Ok(calculation.customerType(customerTypeForm)).withSession(request.session + (SessionKeys.sessionId -> s"session-$sessionId")))
+    }
+    else {
+      calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).map {
+        case Some(data) => Ok(calculation.customerType(customerTypeForm.fill(data)))
+        case None => Ok(calculation.customerType(customerTypeForm))
+      }
     }
   }
 
@@ -950,8 +959,8 @@ trait CalculationController extends FrontendController {
     } yield route
   }
 
-  def restart() = Action.async { implicit request =>
+  def restart(): Action[AnyContent] = Action.async { implicit request =>
     calcConnector.clearKeystore()
-    Future.successful(Redirect(routes.StartController.start()))
+    Future.successful(Redirect(routes.CalculationController.customerType()))
   }
 }
