@@ -22,6 +22,7 @@ case class CalculationResultModel(taxOwed: BigDecimal,
                                   totalGain: BigDecimal,
                                   baseTaxGain: BigDecimal,
                                   baseTaxRate: Int,
+                                  usedAnnualExemptAmount: BigDecimal,
                                   upperTaxGain: Option[BigDecimal],
                                   upperTaxRate: Option[Int],
                                   simplePRR: Option[BigDecimal]) {
