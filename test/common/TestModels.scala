@@ -121,9 +121,9 @@ object TestModels {
     DisposalCostsModel(None),
     AllowableLossesModel("No", None),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(None),
-    OtherReliefsModel(None),
-    OtherReliefsModel(None),
+    OtherReliefsModel(None, None),
+    OtherReliefsModel(None, None),
+    OtherReliefsModel(None, None),
     None
   )
 
@@ -145,9 +145,9 @@ object TestModels {
     DisposalCostsModel(None),
     AllowableLossesModel("No", None),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(None),
-    OtherReliefsModel(None),
-    OtherReliefsModel(None),
+    OtherReliefsModel(None, None),
+    OtherReliefsModel(None, None),
+    OtherReliefsModel(None, None),
     None
   )
 

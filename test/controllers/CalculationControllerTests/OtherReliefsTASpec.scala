@@ -107,6 +107,10 @@ class OtherReliefsTASpec extends UnitSpec with WithFakeApplication with MockitoS
         document.body.getElementsByClass("form-hint").text should include(Messages("calc.otherReliefs.help"))
       }
 
+      "have a value for your gain" in {
+        document.getElementById("totalGain").text() shouldBe "Total gain £40,000"
+      }
+
       "display an input box for the Other Tax Reliefs" in {
         document.body.getElementById("otherReliefs").tagName() shouldEqual "input"
       }
