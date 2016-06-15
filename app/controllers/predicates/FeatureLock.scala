@@ -35,7 +35,7 @@ trait FeatureLock extends ValidActiveSession {
           action(request)
         }
         else {
-          Future.successful(Redirect(routes.FeatureController.disabled()))
+          Future.successful(NotFound)
         }
       }
     }
