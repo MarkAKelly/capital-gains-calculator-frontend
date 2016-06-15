@@ -39,8 +39,6 @@ trait FeatureLock extends ValidActiveSession {
         }
       }
     }
-
-    def apply(action: PlayRequest): Action[AnyContent] = async(request => Future.successful(action(request)))
   }
 
   object FeatureLockForRTT extends FeatureLockFor(RTTCondition)

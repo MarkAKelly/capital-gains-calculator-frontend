@@ -54,7 +54,6 @@ import views.html._
 import common.DefaultRoutes._
 
 import scala.concurrent.duration.Duration
-import scala.util.{Failure, Success, Try}
 
 object CalculationController extends CalculationController {
   val calcConnector = CalculatorConnector
@@ -67,7 +66,6 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   val calcElectionConstructor: CalculationElectionConstructor
 
   //################### Shared/Common methods #######################
-
   def getAcquisitionDate(implicit hc: HeaderCarrier): Future[Option[Date]] =
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).map {
       case Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year))) => Some(Dates.constructDate(day, month, year))
