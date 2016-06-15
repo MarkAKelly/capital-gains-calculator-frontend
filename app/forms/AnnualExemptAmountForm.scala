@@ -34,10 +34,10 @@ object AnnualExemptAmountForm {
     Messages("calc.annualExemptAmount.errorMax") + maxAEA + " " + Messages("calc.annualExemptAmount.errorMaxEnd")
   }
 
-  def annualExemptAmountForm (maxAEA: Option[BigDecimal] = None): Form[AnnualExemptAmountModel] = Form(
+  def annualExemptAmountForm (maxAEA: BigDecimal = BigDecimal(0)): Form[AnnualExemptAmountModel] = Form(
     mapping(
       "annualExemptAmount" -> bigDecimal
-        .verifying(errorMaxMessage(maxAEA.get), annualExemptAmount => validateMaximum(maxAEA.get, annualExemptAmount))
+        .verifying(errorMaxMessage(maxAEA), annualExemptAmount => validateMaximum(maxAEA, annualExemptAmount))
         .verifying(Messages("calc.annualExemptAmount.errorNegative"), annualExemptAmount => isPositive(annualExemptAmount))
         .verifying(Messages("calc.annualExemptAmount.errorDecimalPlaces"), annualExemptAmount => isMaxTwoDecimalPlaces(annualExemptAmount))
     )(AnnualExemptAmountModel.apply)(AnnualExemptAmountModel.unapply)

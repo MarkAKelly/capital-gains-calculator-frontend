@@ -148,7 +148,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
 
   val submitPersonalAllowance = ValidateSession.async { implicit request =>
     calcConnector.getPA("2017").flatMap { pa =>
-      personalAllowanceForm(pa.get).bindFromRequest.fold(
+      personalAllowanceForm(pa.get.personalAllowanceAmt).bindFromRequest.fold(
         errors => Future.successful(BadRequest(calculation.personalAllowance(errors))),
         success => {
           calcConnector.saveFormData(KeystoreKeys.personalAllowance, success)
@@ -242,7 +242,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
       }
     }
 
-    def routeRequest(maxAEA: Option[BigDecimal])(implicit hc: HeaderCarrier): Future[Result] = {
+    def routeRequest(maxAEA: BigDecimal)(implicit hc: HeaderCarrier): Future[Result] = {
       annualExemptAmountForm(maxAEA).bindFromRequest.fold(
         errors => Future.successful(BadRequest(calculation.annualExemptAmount(errors))),
         success => {
@@ -252,7 +252,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
       )
     }
 
-    def fetchAEA(isFullAEA: Boolean)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
+    def fetchAEA(isFullAEA: Boolean)(implicit hc: HeaderCarrier): Future[Option[AnnualExemptAmountModel]] = {
       if (isFullAEA) {
         calcConnector.getFullAEA("2017")
       }
@@ -265,7 +265,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
       customerTypeVal <- customerType
       isDisabledTrustee <- trusteeAEA(customerTypeVal)
       maxAEA <- fetchAEA(isDisabledTrustee)
-      finalResult <- routeRequest(maxAEA)
+      finalResult <- routeRequest(maxAEA.get.annualExemptAmount)
     } yield finalResult
   }
 
