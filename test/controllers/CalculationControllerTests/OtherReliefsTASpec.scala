@@ -60,7 +60,7 @@ class OtherReliefsTASpec extends UnitSpec with WithFakeApplication with MockitoS
     when(mockCalcConnector.calculateTA(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(Some(result)))
 
-    lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(OtherReliefsModel(Some(1000))))))
+    lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(OtherReliefsModel(None, Some(1000))))))
     when(mockCalcConnector.saveFormData[OtherReliefsModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
@@ -108,6 +108,10 @@ class OtherReliefsTASpec extends UnitSpec with WithFakeApplication with MockitoS
         document.body.getElementsByClass("form-hint").text should include(Messages("calc.otherReliefs.help"))
       }
 
+      "have a value for your gain" in {
+        document.getElementById("totalGain").text() shouldBe "Total gain £40,000"
+      }
+
       "display an input box for the Other Tax Reliefs" in {
         document.body.getElementById("otherReliefs").tagName() shouldEqual "input"
       }
@@ -138,7 +142,7 @@ class OtherReliefsTASpec extends UnitSpec with WithFakeApplication with MockitoS
 
     "when supplied with a previous value" should {
       lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/other-reliefs-time-apportioned").withSession(SessionKeys.sessionId -> "12345")
-      val testModel = OtherReliefsModel(Some(1000))
+      val testModel = OtherReliefsModel(None, Some(1000))
       val target = setupTarget(Some(testModel), None, TestModels.summaryTrusteeTAWithAEA, TestModels.calcModelTwoRates)
       lazy val result = target.otherReliefsTA(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
@@ -158,8 +162,8 @@ class OtherReliefsTASpec extends UnitSpec with WithFakeApplication with MockitoS
       lazy val fakeRequest = buildRequest(("otherReliefs", amount))
       val numeric = "(-?\\d*.\\d*)".r
       val mockData = amount match {
-        case numeric(money) => OtherReliefsModel(Some(BigDecimal(money)))
-        case _ => OtherReliefsModel(None)
+        case numeric(money) => OtherReliefsModel(None, Some(BigDecimal(money)))
+        case _ => OtherReliefsModel(None, None)
       }
       val target = setupTarget(None, Some(mockData), summary, TestModels.calcModelOneRate)
       target.submitOtherReliefsTA(fakeRequest)

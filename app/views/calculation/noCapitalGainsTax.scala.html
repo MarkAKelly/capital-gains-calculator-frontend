@@ -4,7 +4,7 @@
 @(data: DisposalDateModel)(implicit request: Request[_])
 
 @date = {
-    @Dates.datePageFormat.format(Dates.constructDate(data.day, data.month, data.year))
+    @Dates.datePageFormatNoZero.format(Dates.constructDate(data.day, data.month, data.year))
 }
 
 @sidebar = {

@@ -515,15 +515,31 @@ object SummaryConstructor {
             }),
             Some(routes.CalculationController.allowableLosses().toString())
           ),
+        summary.otherReliefsModelFlat.isClaimingOtherReliefs match {
+          case Some("No") =>
           SummaryDataItemModel(
+            Messages("calc.otherReliefs.questionTwo"),
+            summary.otherReliefsModelFlat.isClaimingOtherReliefs match {
+              case Some(data) => summary.otherReliefsModelFlat.isClaimingOtherReliefs.get
+              case None => "No"
+            },
+            Some(routes.CalculationController.otherReliefs().toString())
+          )
+          case Some("Yes") => SummaryDataItemModel(
             Messages("calc.otherReliefs.question"),
             "&pound;" + (summary.otherReliefsModelFlat.otherReliefs match {
               case Some(data) => MoneyPounds(data).quantity
               case None => "0.00"
             }),
-            Some(routes.CalculationController.otherReliefs().toString())
-          )
-        )
+            Some(routes.CalculationController.otherReliefs().toString()))
+          case _ => SummaryDataItemModel(
+            Messages("calc.otherReliefs.question"),
+            "&pound;" + (summary.otherReliefsModelFlat.otherReliefs match {
+              case Some(data) => MoneyPounds(data).quantity
+              case None => "0.00"
+            }),
+            Some(routes.CalculationController.otherReliefsFlat().toString()))
+        })
         case "time" => Array(
           SummaryDataItemModel(
             Messages("calc.privateResidenceRelief.question"),
