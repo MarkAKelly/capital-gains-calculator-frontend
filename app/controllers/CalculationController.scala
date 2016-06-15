@@ -141,19 +141,21 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   //################### Personal Allowance methods #######################
   val personalAllowance = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[PersonalAllowanceModel](KeystoreKeys.personalAllowance).map {
-      case Some(data) => Ok(calculation.personalAllowance(personalAllowanceForm.fill(data)))
-      case None => Ok(calculation.personalAllowance(personalAllowanceForm))
+      case Some(data) => Ok(calculation.personalAllowance(personalAllowanceForm().fill(data)))
+      case None => Ok(calculation.personalAllowance(personalAllowanceForm()))
     }
   }
 
   val submitPersonalAllowance = ValidateSession.async { implicit request =>
-    personalAllowanceForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(calculation.personalAllowance(errors))),
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.personalAllowance, success)
-        Future.successful(Redirect(routes.CalculationController.otherProperties()))
-      }
-    )
+    calcConnector.getPA("2017").flatMap { pa =>
+      personalAllowanceForm(pa.get.personalAllowanceAmt).bindFromRequest.fold(
+        errors => Future.successful(BadRequest(calculation.personalAllowance(errors))),
+        success => {
+          calcConnector.saveFormData(KeystoreKeys.personalAllowance, success)
+          Future.successful(Redirect(routes.CalculationController.otherProperties()))
+        }
+      )
+    }
   }
 
   //################### Other Properties methods #######################
@@ -217,8 +219,8 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   //################### Annual Exempt Amount methods #######################
   val annualExemptAmount = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](KeystoreKeys.annualExemptAmount).map {
-      case Some(data) => Ok(calculation.annualExemptAmount(annualExemptAmountForm(true).fill(data)))
-      case None => Ok(calculation.annualExemptAmount(annualExemptAmountForm(true)))
+      case Some(data) => Ok(calculation.annualExemptAmount(annualExemptAmountForm().fill(data)))
+      case None => Ok(calculation.annualExemptAmount(annualExemptAmountForm()))
     }
   }
 
@@ -240,8 +242,8 @@ trait CalculationController extends FrontendController with ValidActiveSession {
       }
     }
 
-    def routeRequest(isDisabledTrustee: Boolean)(implicit hc: HeaderCarrier): Future[Result] = {
-      annualExemptAmountForm(isDisabledTrustee).bindFromRequest.fold(
+    def routeRequest(maxAEA: BigDecimal)(implicit hc: HeaderCarrier): Future[Result] = {
+      annualExemptAmountForm(maxAEA).bindFromRequest.fold(
         errors => Future.successful(BadRequest(calculation.annualExemptAmount(errors))),
         success => {
           calcConnector.saveFormData(KeystoreKeys.annualExemptAmount, success)
@@ -250,10 +252,20 @@ trait CalculationController extends FrontendController with ValidActiveSession {
       )
     }
 
+    def fetchAEA(isFullAEA: Boolean)(implicit hc: HeaderCarrier): Future[Option[AnnualExemptAmountModel]] = {
+      if (isFullAEA) {
+        calcConnector.getFullAEA("2017")
+      }
+      else {
+        calcConnector.getPartialAEA("2017")
+      }
+    }
+
     for {
       customerTypeVal <- customerType
       isDisabledTrustee <- trusteeAEA(customerTypeVal)
-      finalResult <- routeRequest(isDisabledTrustee)
+      maxAEA <- fetchAEA(isDisabledTrustee)
+      finalResult <- routeRequest(maxAEA.get.annualExemptAmount)
     } yield finalResult
   }
 

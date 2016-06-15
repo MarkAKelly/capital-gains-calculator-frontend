@@ -74,6 +74,18 @@ trait CalculatorConnector {
     }")
   }
 
+  def getFullAEA (input: String)(implicit hc: HeaderCarrier): Future[Option[AnnualExemptAmountModel]] = {
+    http.GET[Option[AnnualExemptAmountModel]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-full-aea?taxYear=$input")
+  }
+
+  def getPartialAEA (input: String)(implicit hc: HeaderCarrier): Future[Option[AnnualExemptAmountModel]] = {
+    http.GET[Option[AnnualExemptAmountModel]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-partial-aea?taxYear=$input")
+  }
+
+  def getPA (input: String)(implicit hc: HeaderCarrier): Future[Option[PersonalAllowanceModel]] = {
+    http.GET[Option[PersonalAllowanceModel]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-pa?taxYear=$input")
+  }
+
   def clearKeystore()(implicit hc: HeaderCarrier) = {
     sessionCache.remove()
   }

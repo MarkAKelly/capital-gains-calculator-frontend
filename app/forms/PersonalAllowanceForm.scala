@@ -25,9 +25,7 @@ import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object PersonalAllowanceForm {
 
-  val maxPA = 11000
-
-  val personalAllowanceForm = Form (
+  def personalAllowanceForm (maxPA: BigDecimal = BigDecimal(0)) = Form (
     mapping(
       "personalAllowance" -> bigDecimal
         .verifying(Messages("calc.personalAllowance.errorNegative"), personalAllowance => isPositive(personalAllowance))

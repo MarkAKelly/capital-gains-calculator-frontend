@@ -48,6 +48,9 @@ class PersonalAllowanceSpec extends UnitSpec with WithFakeApplication with Mocki
     when(mockCalcConnector.fetchAndGetFormData[PersonalAllowanceModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
+    when(mockCalcConnector.getPA(Matchers.anyString())(Matchers.any()))
+      .thenReturn(Some(PersonalAllowanceModel(BigDecimal(11000))))
+
     lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(PersonalAllowanceModel(0)))))
     when(mockCalcConnector.saveFormData[PersonalAllowanceModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
