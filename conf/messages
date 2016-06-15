@@ -161,10 +161,10 @@ calc.disposalDate.question = When did you sign the contract that made someone el
 calc.disposalDate.error.disposalDateAfterAcquisition = This can''t be before the date you became the owner
 
 ## No Capital Gains Tax ##
-nocgt.invaliddate.title = You have no Capital Gains Tax to pay
-nocgt.content.one = This is because you sold or gave away the property before 6 April 2015.
+nocgt.invaliddate.title = You have no tax to pay
+nocgt.content.one = This is because Capital Gains Tax for non-residents only applies to properties which were sold or given away after 5 April 2015.
 nocgt.content.two = You''ve told us that you sold or gave away the property on
-nocgt.content.change = (Change)
+nocgt.content.change = Change
 nocgt.sidebar.linkone = Capital Gains Tax for non-residents
 
 ## Disposal Value ##
