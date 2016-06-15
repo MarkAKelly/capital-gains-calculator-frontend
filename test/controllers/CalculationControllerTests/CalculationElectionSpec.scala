@@ -260,9 +260,9 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
         None,
         TestModels.summaryTrusteeTAWithoutAEA,
         None,
-        Some(OtherReliefsModel(Some(500))),
-        Some(OtherReliefsModel(Some(600))),
-        Some(OtherReliefsModel(Some(700)))
+        Some(OtherReliefsModel(None, Some(500))),
+        Some(OtherReliefsModel(None, Some(600))),
+        Some(OtherReliefsModel(None, Some(700)))
       )
       lazy val result = target.calculationElection(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
@@ -364,7 +364,7 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
       }
 
       "redirect to the other reliefs page" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.otherReliefs()}")
+        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.otherReliefsFlat()}")
       }
     }
 
