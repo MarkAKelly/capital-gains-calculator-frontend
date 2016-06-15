@@ -2,6 +2,16 @@
 
 GET         /assets/*file            controllers.Assets.at(path="/public", file)
 
+#Session Timeout route
+########################################################
+GET         /session-timeout         controllers.TimeoutController.timeout
+########################################################
+
+#Disabled Feature route
+########################################################
+GET         /unavailable             controllers.FeatureController.disabled
+########################################################
+
 #Calculation controller routes
 ########################################################
 #Customer Type

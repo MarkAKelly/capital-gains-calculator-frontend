@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package controllers.features
+package controllers.predicates
 
-import config.AppConfig
+import config.ApplicationConfig
 import controllers.routes
-import play.api.mvc._
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.SessionKeys
+import play.api.mvc.{Action, Result, AnyContent, Request}
 
 import scala.concurrent.Future
 
-trait FeatureLock extends FrontendController with AppConfig{
+trait FeatureLock extends ValidActiveSession {
 
   private type PlayRequest = Request[AnyContent] => Result
   private type AsyncPlayRequest = Request[AnyContent] => Future[Result]
@@ -32,12 +30,12 @@ trait FeatureLock extends FrontendController with AppConfig{
   class FeatureLockFor(condition: Boolean) {
 
     def async(action: AsyncPlayRequest): Action[AnyContent] = {
-      Action.async { implicit request =>
-        if (condition && request.session.get(SessionKeys.sessionId).isDefined) {
+      ValidateSession.async { implicit request =>
+        if (condition) {
           action(request)
         }
         else {
-          Future.successful(Redirect(routes.StartController.start()))
+          Future.successful(Redirect(routes.FeatureController.disabled()))
         }
       }
     }
@@ -46,8 +44,6 @@ trait FeatureLock extends FrontendController with AppConfig{
   }
 
   object FeatureLockForRTT extends FeatureLockFor(RTTCondition)
-  object FeatureLockForNRCGT extends FeatureLockFor(NRCGTCondition)
 
-  lazy val RTTCondition = featureRTTEnabled
-  val NRCGTCondition = true
+  lazy val RTTCondition = ApplicationConfig.featureRTTEnabled
 }
