@@ -6,13 +6,13 @@
 
 @main_template(Messages("calc.disabledTrustee.question")) {
 
-    <a id="back-link" class="back-link" href="@routes.CalculationController.customerType">Back</a>
+    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.CalculationController.customerType">Back</a>
 
     @errorSummary(disabledTrusteeForm, "disabled-trustee")
 
     <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
 
-        @form(action = routes.CalculationController.submitDisabledTrustee) {
+        @form(action = controllers.nonresident.routes.CalculationController.submitDisabledTrustee) {
 
         <div class="form-group">
             @formInputRadioGroup(

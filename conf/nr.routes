@@ -1,0 +1,102 @@
+#Non Resident Calculation controller routes
+########################################################
+
+GET         /assets/*file            controllers.Assets.at(path="/public", file)
+
+#Customer Type
+GET         /                        controllers.nonresident.CalculationController.customerType
+GET         /customer-type           controllers.nonresident.CalculationController.customerType
+POST        /customer-type           controllers.nonresident.CalculationController.submitCustomerType
+
+#Disabled Trustee
+GET         /disabled-trustee        controllers.nonresident.CalculationController.disabledTrustee
+POST        /disabled-trustee        controllers.nonresident.CalculationController.submitDisabledTrustee
+
+#Current Income
+GET         /current-income          controllers.nonresident.CalculationController.currentIncome
+POST        /current-income          controllers.nonresident.CalculationController.submitCurrentIncome
+
+#Personal Allowance
+GET         /personal-allowance      controllers.nonresident.CalculationController.personalAllowance
+POST        /personal-allowance      controllers.nonresident.CalculationController.submitPersonalAllowance
+
+#Other Properties
+GET         /other-properties        controllers.nonresident.CalculationController.otherProperties
+POST        /other-properties        controllers.nonresident.CalculationController.submitOtherProperties
+
+#Allowance
+GET         /allowance               controllers.nonresident.CalculationController.annualExemptAmount
+POST        /allowance               controllers.nonresident.CalculationController.submitAnnualExemptAmount
+
+#Acquisition Date
+GET         /acquisition-date        controllers.nonresident.CalculationController.acquisitionDate
+POST        /acquisition-date        controllers.nonresident.CalculationController.submitAcquisitionDate
+
+#Acquisition Value
+GET         /acquisition-value       controllers.nonresident.CalculationController.acquisitionValue
+POST        /acquisition-value       controllers.nonresident.CalculationController.submitAcquisitionValue
+
+#Rebased Value
+GET         /rebased-value           controllers.nonresident.CalculationController.rebasedValue
+POST        /rebased-value           controllers.nonresident.CalculationController.submitRebasedValue
+
+#Rebased Costs
+GET         /rebased-costs           controllers.nonresident.CalculationController.rebasedCosts
+POST        /rebased-costs           controllers.nonresident.CalculationController.submitRebasedCosts
+
+#Improvements
+GET         /improvements            controllers.nonresident.CalculationController.improvements
+POST        /improvements            controllers.nonresident.CalculationController.submitImprovements
+
+#Disposal Date
+GET         /disposal-date           controllers.nonresident.CalculationController.disposalDate
+POST        /disposal-date           controllers.nonresident.CalculationController.submitDisposalDate
+
+#No Capital Gains Tax
+GET         /no-capital-gains-tax    controllers.nonresident.CalculationController.noCapitalGainsTax
+
+#Disposal Value
+GET         /disposal-value          controllers.nonresident.CalculationController.disposalValue
+POST        /disposal-value          controllers.nonresident.CalculationController.submitDisposalValue
+
+#Acquisition Costs
+GET         /acquisition-costs       controllers.nonresident.CalculationController.acquisitionCosts
+POST        /acquisition-costs       controllers.nonresident.CalculationController.submitAcquisitionCosts
+
+#Disposal Costs
+GET         /disposal-costs          controllers.nonresident.CalculationController.disposalCosts
+POST        /disposal-costs          controllers.nonresident.CalculationController.submitDisposalCosts
+
+#Private Residence Relief
+GET         /private-residence-relief controllers.nonresident.CalculationController.privateResidenceRelief
+POST        /private-residence-relief controllers.nonresident.CalculationController.submitPrivateResidenceRelief
+
+#Allowable Losses
+GET         /allowable-losses        controllers.nonresident.CalculationController.allowableLosses
+POST        /allowable-losses        controllers.nonresident.CalculationController.submitAllowableLosses
+
+#Calculation Election
+GET         /calculation-election    controllers.nonresident.CalculationController.calculationElection
+POST        /calculation-election    controllers.nonresident.CalculationController.submitCalculationElection
+
+#Other Reliefs
+GET         /other-reliefs           controllers.nonresident.CalculationController.otherReliefs
+POST        /other-reliefs           controllers.nonresident.CalculationController.submitOtherReliefs
+
+GET         /other-reliefs-time-apportioned     controllers.nonresident.CalculationController.otherReliefsTA
+POST        /other-reliefs-time-apportioned     controllers.nonresident.CalculationController.submitOtherReliefsTA
+
+GET         /other-reliefs-rebased              controllers.nonresident.CalculationController.otherReliefsRebased
+POST        /other-reliefs-rebased              controllers.nonresident.CalculationController.submitOtherReliefsRebased
+########################################################
+
+
+#Summary screen route
+########################################################
+GET         /summary                 controllers.nonresident.CalculationController.summary
+GET         /restart                 controllers.nonresident.CalculationController.restart
+
+#Feedback routes
+GET         /feedback               controllers.FeedbackController.show
+POST        /feedback               controllers.FeedbackController.submit
+GET         /thankyou               controllers.FeedbackController.thankyou

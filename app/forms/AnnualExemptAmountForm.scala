@@ -21,8 +21,6 @@ import play.api.data.Forms._
 import models._
 import play.api.i18n.Messages
 import common.Validation._
-import uk.gov.hmrc.play.http.HeaderCarrier
-import controllers.CalculationController._
 
 object AnnualExemptAmountForm {
 

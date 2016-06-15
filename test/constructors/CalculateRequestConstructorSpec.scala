@@ -16,7 +16,8 @@
 
 package constructors
 
-import common.{CustomerTypeKeys, TestModels}
+import common.nonresident.CustomerTypeKeys
+import common.TestModels
 import models._
 import uk.gov.hmrc.play.test.UnitSpec
 

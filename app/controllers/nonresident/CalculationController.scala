@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package controllers
-
-import java.text.SimpleDateFormat
+package controllers.nonresident
 
 import connectors.CalculatorConnector
-import common.{CustomerTypeKeys, Dates, KeystoreKeys}
+import common.Dates
+import common.nonresident.CustomerTypeKeys
 import constructors.CalculationElectionConstructor
 import forms.OtherPropertiesForm._
 import forms.AcquisitionValueForm._
@@ -41,22 +40,16 @@ import forms.RebasedValueForm._
 import forms.RebasedCostsForm._
 import forms.PrivateResidenceReliefForm._
 import models._
-import java.util.{Calendar, Date, UUID}
+import java.util.{Date, UUID}
 
 import play.api.mvc.{Action, AnyContent, Result}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 
-import scala.concurrent.{Await, Future}
-import views.html._
+import scala.concurrent.Future
+import views.html.nonresident._
 import common.DefaultRoutes._
-
-import scala.concurrent.duration.Duration
-
-object CalculationController extends CalculationController {
-  val calcConnector = CalculatorConnector
-  val calcElectionConstructor = CalculationElectionConstructor
-}
+import common.nonresident.KeystoreKeys
 
 trait CalculationController extends FrontendController {
 
@@ -963,4 +956,9 @@ trait CalculationController extends FrontendController {
     calcConnector.clearKeystore()
     Future.successful(Redirect(routes.CalculationController.customerType()))
   }
+}
+
+object CalculationController extends CalculationController {
+  val calcConnector = CalculatorConnector
+  val calcElectionConstructor = CalculationElectionConstructor
 }

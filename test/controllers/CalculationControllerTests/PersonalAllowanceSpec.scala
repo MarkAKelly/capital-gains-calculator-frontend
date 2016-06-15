@@ -33,7 +33,7 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.{CalculationController, routes}
+import controllers.nonresident.{CalculationController, routes}
 import play.api.mvc.Result
 
 class PersonalAllowanceSpec extends UnitSpec with WithFakeApplication with MockitoSugar {

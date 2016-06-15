@@ -18,7 +18,7 @@
 
 @main_template(Messages("calc.calculationElection.question"), sidebarLinks = Some(sidebar)) {
 
-    <a id="back-link" class="back-link" href="@routes.CalculationController.allowableLosses">@Messages("calc.base.back")</a>
+    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.CalculationController.allowableLosses">@Messages("calc.base.back")</a>
 
     @errorSummary(calculationElectionForm, "calculation-election")
 
@@ -42,7 +42,7 @@
         </div>
     </details>
 
-    @form(action = routes.CalculationController.submitCalculationElection) {
+    @form(action = controllers.nonresident.routes.CalculationController.submitCalculationElection) {
 
         <div class="form-group">
             @calculationElectionHelperForm(

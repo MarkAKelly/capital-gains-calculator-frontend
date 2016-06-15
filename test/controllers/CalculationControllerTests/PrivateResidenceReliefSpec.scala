@@ -20,7 +20,7 @@ import common.Constants
 import connectors.CalculatorConnector
 import constructors.CalculationElectionConstructor
 import models._
-import controllers.{CalculationController, routes}
+import controllers.nonresident.{CalculationController, routes}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._

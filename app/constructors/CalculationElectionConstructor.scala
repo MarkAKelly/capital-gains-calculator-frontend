@@ -18,7 +18,7 @@ package constructors
 
 import common.Dates
 import connectors.CalculatorConnector
-import controllers.{routes, CalculationController}
+import controllers.nonresident.{routes, CalculationController}
 import models.{CalculationResultModel, SummaryModel}
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.http.HeaderCarrier

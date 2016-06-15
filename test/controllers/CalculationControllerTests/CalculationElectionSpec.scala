@@ -16,7 +16,8 @@
 
 package controllers.CalculationControllerTests
 
-import common.{KeystoreKeys, TestModels}
+import common.TestModels
+import common.nonresident.KeystoreKeys
 import constructors.CalculationElectionConstructor
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -32,8 +33,9 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
+
 import scala.concurrent.Future
-import controllers.{routes, CalculationController}
+import controllers.nonresident.{CalculationController, routes}
 import play.api.mvc.Result
 
 class CalculationElectionSpec extends UnitSpec with WithFakeApplication with MockitoSugar {

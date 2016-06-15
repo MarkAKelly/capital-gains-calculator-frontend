@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package common
-
-object CustomerTypeKeys extends CustomerTypeKeys
+package common.nonresident
 
 trait CustomerTypeKeys {
 
@@ -25,3 +23,5 @@ trait CustomerTypeKeys {
   val personalRep = "personalRep"
 
 }
+
+object CustomerTypeKeys extends CustomerTypeKeys

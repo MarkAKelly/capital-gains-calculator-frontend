@@ -17,10 +17,11 @@
 package controllers.CalculationControllerTests
 
 import common.DefaultRoutes._
-import common.{Constants, KeystoreKeys, TestModels}
+import common.nonresident.KeystoreKeys
+import common.{Constants, TestModels}
 import connectors.CalculatorConnector
 import constructors.CalculationElectionConstructor
-import controllers.{CalculationController, routes}
+import controllers.nonresident.{CalculationController, routes}
 import models._
 import org.jsoup.Jsoup
 import org.mockito.Matchers

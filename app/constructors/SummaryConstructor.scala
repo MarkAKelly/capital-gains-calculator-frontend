@@ -16,13 +16,14 @@
 
 package constructors
 
-import controllers.routes
+import controllers.nonresident.routes
 import models._
 import org.apache.commons.lang3.text.WordUtils
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import views.html.helpers._
 import common._
+import common.nonresident._
 import Validation._
 import uk.gov.hmrc.play.views.formatting.Money._
 import uk.gov.hmrc.play.views.helpers._

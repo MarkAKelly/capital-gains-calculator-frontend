@@ -16,10 +16,10 @@
 
 package controllers.CalculationControllerTests
 
-import common.KeystoreKeys
+import common.nonresident.KeystoreKeys
 import connectors.CalculatorConnector
 import constructors.CalculationElectionConstructor
-import controllers.CalculationController
+import controllers.nonresident.CalculationController
 import models.DisposalDateModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers

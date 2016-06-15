@@ -16,7 +16,7 @@
 
 package controllers.CalculationControllerTests
 
-import common.KeystoreKeys
+import common.nonresident.KeystoreKeys
 import constructors.CalculationElectionConstructor
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -34,7 +34,7 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.{CalculationController, routes}
+import controllers.nonresident.{CalculationController, routes}
 import play.api.mvc.Result
 
 class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSugar {

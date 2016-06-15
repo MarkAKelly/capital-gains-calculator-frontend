@@ -19,7 +19,7 @@ package controllers.CalculationControllerTests
 import common.{Constants, TestModels}
 import connectors.CalculatorConnector
 import constructors.CalculationElectionConstructor
-import controllers.{CalculationController, routes}
+import controllers.nonresident.{CalculationController, routes}
 import models.{CalculationResultModel, OtherReliefsModel, SummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers

@@ -16,7 +16,7 @@
 
 package models
 
-import common.CalculationType
+import common.nonresident.CalculationType
 
 case class SummaryModel (
                           customerTypeModel: CustomerTypeModel,

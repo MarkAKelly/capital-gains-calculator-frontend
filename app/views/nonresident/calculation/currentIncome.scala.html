@@ -27,13 +27,13 @@
 
 @main_template(Messages("calc.currentIncome.question"), sidebarLinks = Some(sidebar)) {
 
-    <a id="back-link" class="back-link" href="@routes.CalculationController.customerType">Back</a>
+    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.CalculationController.customerType">Back</a>
 
     @errorSummary(currentIncomeForm, "current-income")
 
     <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
 
-    @form(action = routes.CalculationController.submitCurrentIncome) {
+    @form(action = controllers.nonresident.routes.CalculationController.submitCurrentIncome) {
 
         @formInputMoney(currentIncomeForm, "currentIncome", Messages("calc.currentIncome.question"),Some(Messages("calc.currentIncome.helpText")))
 

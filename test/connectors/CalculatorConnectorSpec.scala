@@ -18,7 +18,8 @@ package connectors
 
 import java.util.UUID
 
-import common.{CustomerTypeKeys, KeystoreKeys}
+import common.nonresident.CustomerTypeKeys
+import common.nonresident.KeystoreKeys
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -29,7 +30,6 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet}
 import uk.gov.hmrc.play.http.logging.SessionId
 import uk.gov.hmrc.play.test.UnitSpec
 
-import scala.concurrent
 import scala.concurrent.Future
 
 class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package common
+package common.nonresident
 
 object CalculationType {
   val flat: String = "flat"

@@ -17,7 +17,8 @@
 package controllers.CalculationControllerTests
 
 import common.DefaultRoutes._
-import common.{Constants, CustomerTypeKeys, KeystoreKeys}
+import common.nonresident.KeystoreKeys
+import common.{Constants, CustomerTypeKeys}
 import constructors.CalculationElectionConstructor
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -35,7 +36,7 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.{CalculationController, routes}
+import controllers.nonresident.{CalculationController, routes}
 import play.api.mvc.Result
 
 class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with MockitoSugar {

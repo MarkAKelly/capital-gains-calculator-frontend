@@ -16,11 +16,11 @@
 @import views.html.helpers._
 
 @scriptElement = {
-    <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/cgt.js")'></script>
+    <script type="text/javascript" src='@routes.Assets.at("javascripts/cgt.js")'></script>
 }
 
 @linksElement = {
-    <link rel="stylesheet" type="text/css" href='@controllers.routes.Assets.at("stylesheets/cgt.css")'>
+    <link rel="stylesheet" type="text/css" href='@routes.Assets.at("stylesheets/cgt.css")'>
 }
 
 @head = {
@@ -32,7 +32,7 @@
 }
 
 @headerNavLinks = {
-  <li><a id="homeNavHref" href="@controllers.routes.CalculationController.customerType"
+  <li><a id="homeNavHref" href="@controllers.nonresident.routes.CalculationController.customerType"
          data-journey-click="primary-navigation:Click:Home">Home</a></li>
 }
 

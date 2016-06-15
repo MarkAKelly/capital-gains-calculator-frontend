@@ -17,19 +17,21 @@
 package controllers.CalculationControllerTests
 
 import common.DefaultRoutes._
-import common.{CustomerTypeKeys, KeystoreKeys, TestModels}
+import common.nonresident.KeystoreKeys
+import common.{CustomerTypeKeys, TestModels}
+import common.nonresident.C
 import connectors.CalculatorConnector
 import constructors.CalculationElectionConstructor
-import controllers.{routes, CalculationController}
-import models.{AcquisitionDateModel, RebasedValueModel, CalculationResultModel, SummaryModel}
+import controllers.nonresident.{CalculationController, routes}
+import models.{AcquisitionDateModel, CalculationResultModel, RebasedValueModel, SummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import uk.gov.hmrc.play.http.{SessionKeys, HeaderCarrier}
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
+import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 

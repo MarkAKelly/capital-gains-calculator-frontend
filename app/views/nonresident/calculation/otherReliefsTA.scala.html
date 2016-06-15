@@ -4,21 +4,22 @@
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 @import views.html.helpers._
 
-@(otherReliefsForm: Form[OtherReliefsModel], result: CalculationResultModel, hasExistingReliefAmount: Boolean, backUrl: String)(implicit request: Request[_])
+@(otherReliefsForm: Form[OtherReliefsModel], result: CalculationResultModel, hasExistingReliefAmount: Boolean)(implicit request: Request[_])
 
 @main_template(Messages("calc.otherReliefs.question")) {
 
-    <a id="back-link" class="back-link" href="@backUrl">@Messages("calc.base.back")</a>
+    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.CalculationController.calculationElection">@Messages("calc.base.back")</a>
 
-    @errorSummary(otherReliefsForm, "other-reliefs-flat")
+    @errorSummary(otherReliefsForm, "other-reliefs-time-apportionment")
 
     <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
 
-    @form(action = routes.CalculationController.submitOtherReliefs) {
+    @form(action = controllers.nonresident.routes.CalculationController.submitOtherReliefsTA) {
 
         <label for="otherReliefs">@Messages("calc.otherReliefs.question")</label>
 
         <span class="form-hint">@Messages("calc.otherReliefs.help")</span>
+
 
         <div class="panel-indent">
             <ul class="list list-bullet">

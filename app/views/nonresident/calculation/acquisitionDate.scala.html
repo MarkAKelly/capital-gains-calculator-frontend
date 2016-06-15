@@ -12,7 +12,7 @@
 
     <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
 
-    @form(action = routes.CalculationController.submitAcquisitionDate) {
+    @form(action = controllers.nonresident.routes.CalculationController.submitAcquisitionDate) {
 
         @formHiddenYesNoRadioNoError(
                 acquisitionDateForm,

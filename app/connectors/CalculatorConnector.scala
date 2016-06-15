@@ -17,6 +17,7 @@
 package connectors
 
 import akka.actor.Status.Success
+import common.nonresident.KeystoreKeys
 import config.{CalculatorSessionCache, WSHttp}
 import constructors.CalculateRequestConstructor
 import models._
@@ -24,10 +25,8 @@ import play.api.libs.json.Format
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
+
 import scala.concurrent.ExecutionContext.Implicits.global
-
-import common.KeystoreKeys
-
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 

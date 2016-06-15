@@ -16,7 +16,7 @@
 
 package forms
 
-import common.CustomerTypeKeys
+import common.nonresident.CustomerTypeKeys
 import play.api.data._
 import play.api.data.Forms._
 import models._
