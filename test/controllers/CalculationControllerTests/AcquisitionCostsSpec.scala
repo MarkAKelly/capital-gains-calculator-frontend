@@ -33,6 +33,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 import scala.concurrent.Future
 
@@ -234,7 +235,7 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
 
         s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
           document.getElementsByClass("error-notification").text should
-            include (Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+            include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
         }
 
         "display a visible Error Summary field" in {

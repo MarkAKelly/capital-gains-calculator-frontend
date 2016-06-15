@@ -23,6 +23,7 @@ import play.api.i18n.Messages
 import common.Validation._
 import uk.gov.hmrc.play.http.HeaderCarrier
 import controllers.CalculationController._
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object AnnualExemptAmountForm {
 
@@ -38,8 +39,8 @@ object AnnualExemptAmountForm {
 
   def errorMaxMessage(isAllowedMaxAEA: Boolean): String = {
     isAllowedMaxAEA match {
-      case true => Messages("calc.annualExemptAmount.errorMax") + maxAEA + " " + Messages("calc.annualExemptAmount.errorMaxEnd")
-      case false => Messages("calc.annualExemptAmount.errorMax") + maxNonVulnerableTrusteeAEA + " " + Messages("calc.annualExemptAmount.errorMaxEnd")
+      case true => Messages("calc.annualExemptAmount.errorMax") + MoneyPounds(maxAEA, 0).quantity + " " + Messages("calc.annualExemptAmount.errorMaxEnd")
+      case false => Messages("calc.annualExemptAmount.errorMax") + MoneyPounds(maxNonVulnerableTrusteeAEA, 0).quantity + " " + Messages("calc.annualExemptAmount.errorMaxEnd")
     }
   }
 
