@@ -122,7 +122,7 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
           "have a yes no helper with hidden content and question 'Do you want to add other tax relief?'" in {
             document.body.getElementById("isClaimingOtherReliefs-yes").parent.text shouldBe Messages("calc.base.yes")
             document.body.getElementById("isClaimingOtherReliefs-no").parent.text shouldBe Messages("calc.base.no")
-            document.body.getElementsByTag("label").text should include(Messages("calc.otherReliefs.questionTwo"))
+            document.body.getElementsByTag("legend").text shouldBe Messages("calc.otherReliefs.questionTwo")
           }
 
           "have the help text 'For example, lettings relief'" in {
@@ -139,7 +139,7 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
           }
 
           "display a 'Continue' button " in {
-            document.body.getElementById("button").text shouldEqual Messages("calc.base.continue")
+            document.body.getElementById("continue-button").text shouldEqual Messages("calc.base.continue")
           }
 
           "include helptext for 'Total gain'" in {

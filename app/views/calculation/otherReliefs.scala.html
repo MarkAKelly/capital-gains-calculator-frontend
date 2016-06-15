@@ -26,25 +26,23 @@
 
     <a id="back-link" class="back-link" href="@routes.CalculationController.allowableLosses">@Messages("calc.base.back")</a>
 
-    @errorSummary(otherReliefsForm, "isClaimingOtherReliefs", "otherReliefs")
+    @errorSummary(otherReliefsForm, "other-reliefs", "otherReliefs")
 
     <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
 
-    @form(action = routes.CalculationController.submitOtherReliefs) {
+    <div class="form-group">
+        @form(action = routes.CalculationController.submitOtherReliefs) {
 
-        <label for="otherReliefs">@Messages("calc.otherReliefs.questionTwo")</label>
+            @formHiddenYesNoRadio(
+                otherReliefsForm,
+                "isClaimingOtherReliefs",
+                Messages("calc.otherReliefs.questionTwo"),
+                hiddenYesNoContent,
+                Some(Messages("calc.otherReliefs.help"))
+            )
 
-        <span class="form-hint">@Messages("calc.otherReliefs.help")</span>
-
-        @formHiddenYesNoRadio(
-            otherReliefsForm,
-            "isClaimingOtherReliefs",
-            "",
-            hiddenYesNoContent,
-            None,
-            true
-        )
-
-        <button id="button" class="submit">@Messages("calc.base.button.continue")</button>
+        <button class="button" class="submit" id="continue-button">@Messages("calc.base.button.continue")</button>
     }
+
+    </div>
 }
