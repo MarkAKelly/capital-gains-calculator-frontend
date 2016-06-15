@@ -22,6 +22,7 @@ import play.api.data.Forms._
 import models._
 import play.api.i18n.Messages
 import common.Validation._
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object AcquisitionCostsForm {
 
@@ -30,7 +31,7 @@ object AcquisitionCostsForm {
       "acquisitionCosts" -> optional(bigDecimal)
         .verifying(Messages("calc.acquisitionCosts.errorNegative"), costs => isPositive(costs.getOrElse(0)))
         .verifying(Messages("calc.acquisitionCosts.errorDecimalPlaces"), costs => isMaxTwoDecimalPlaces(costs.getOrElse(0)))
-        .verifying(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"),
+        .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"),
           costs => isLessThanEqualMaxNumeric(costs.getOrElse(0)))
     )(AcquisitionCostsModel.apply)(AcquisitionCostsModel.unapply)
   )
