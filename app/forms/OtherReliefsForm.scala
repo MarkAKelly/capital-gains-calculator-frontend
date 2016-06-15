@@ -42,7 +42,7 @@ object OtherReliefsForm {
         .verifying(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"),
           otherReliefs => isLessThanEqualMaxNumeric(otherReliefs.getOrElse(0)))
     )(OtherReliefsModel.apply)(OtherReliefsModel.unapply)
-      .verifying(Messages("calc.common.error.fieldRequired"),
+      .verifying(Messages("calc.otherReliefs.errorNoValue"),
         otherReliefsForm => if(!electionMade) {validateReliefSupplied(otherReliefsForm)} else true)
   )
 }
