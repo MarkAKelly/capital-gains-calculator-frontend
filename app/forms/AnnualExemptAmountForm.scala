@@ -26,27 +26,18 @@ import controllers.CalculationController._
 
 object AnnualExemptAmountForm {
 
-  val maxAEA = 11100
-  val maxNonVulnerableTrusteeAEA = 5550
-
-  def validateMaximum(isAllowedMaxAEA: Boolean, aea: BigDecimal): Boolean = {
-    isAllowedMaxAEA match {
-      case true => if (aea > maxAEA) false else true
-      case false => if (aea > maxNonVulnerableTrusteeAEA) false else true
-    }
+  def validateMaximum(maxAEA: BigDecimal, aea: BigDecimal): Boolean = {
+    if (aea > maxAEA) false else true
   }
 
-  def errorMaxMessage(isAllowedMaxAEA: Boolean): String = {
-    isAllowedMaxAEA match {
-      case true => Messages("calc.annualExemptAmount.errorMax") + maxAEA + " " + Messages("calc.annualExemptAmount.errorMaxEnd")
-      case false => Messages("calc.annualExemptAmount.errorMax") + maxNonVulnerableTrusteeAEA + " " + Messages("calc.annualExemptAmount.errorMaxEnd")
-    }
+  def errorMaxMessage(maxAEA: BigDecimal): String = {
+    Messages("calc.annualExemptAmount.errorMax") + maxAEA + " " + Messages("calc.annualExemptAmount.errorMaxEnd")
   }
 
-  def annualExemptAmountForm (isAllowedMaxAEA: Boolean): Form[AnnualExemptAmountModel] = Form(
+  def annualExemptAmountForm (maxAEA: Option[BigDecimal] = None): Form[AnnualExemptAmountModel] = Form(
     mapping(
       "annualExemptAmount" -> bigDecimal
-        .verifying(errorMaxMessage(isAllowedMaxAEA), annualExemptAmount => validateMaximum(isAllowedMaxAEA, annualExemptAmount))
+        .verifying(errorMaxMessage(maxAEA.get), annualExemptAmount => validateMaximum(maxAEA.get, annualExemptAmount))
         .verifying(Messages("calc.annualExemptAmount.errorNegative"), annualExemptAmount => isPositive(annualExemptAmount))
         .verifying(Messages("calc.annualExemptAmount.errorDecimalPlaces"), annualExemptAmount => isMaxTwoDecimalPlaces(annualExemptAmount))
     )(AnnualExemptAmountModel.apply)(AnnualExemptAmountModel.unapply)
