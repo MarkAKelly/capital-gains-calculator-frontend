@@ -22,6 +22,7 @@ import play.api.data.Forms._
 import models._
 import play.api.i18n.Messages
 import common.Validation._
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object CurrentIncomeForm {
 
@@ -30,7 +31,7 @@ object CurrentIncomeForm {
       "currentIncome" -> bigDecimal
         .verifying(Messages("calc.currentIncome.errorNegative"), currentIncome => isPositive(currentIncome))
         .verifying(Messages("calc.currentIncome.errorDecimalPlaces"), currentIncome => isMaxTwoDecimalPlaces(currentIncome))
-        .verifying(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"), currentIncome => isLessThanEqualMaxNumeric(currentIncome))
+        .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"), currentIncome => isLessThanEqualMaxNumeric(currentIncome))
     )(CurrentIncomeModel.apply)(CurrentIncomeModel.unapply)
   )
 }

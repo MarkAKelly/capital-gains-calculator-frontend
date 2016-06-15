@@ -21,6 +21,7 @@ import play.api.data.Forms._
 import models._
 import play.api.i18n.Messages
 import common.Validation._
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object PersonalAllowanceForm {
 
@@ -29,7 +30,7 @@ object PersonalAllowanceForm {
       "personalAllowance" -> bigDecimal
         .verifying(Messages("calc.personalAllowance.errorNegative"), personalAllowance => isPositive(personalAllowance))
         .verifying(Messages("calc.personalAllowance.errorDecimalPlaces"), personalAllowance => hasNoDecimalPlaces(personalAllowance))
-        .verifying(Messages("calc.personalAllowance.errorMaxLimit") + maxPA + " " + Messages("calc.personalAllowance.errorMaxLimitEnd"), personalAllowance => personalAllowance <= maxPA)
+        .verifying(Messages("calc.personalAllowance.errorMaxLimit") + MoneyPounds(maxPA, 0).quantity + " " + Messages("calc.personalAllowance.errorMaxLimitEnd"), personalAllowance => personalAllowance <= maxPA)
     )(PersonalAllowanceModel.apply)(PersonalAllowanceModel.unapply)
   )
 }

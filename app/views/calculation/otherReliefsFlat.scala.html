@@ -10,16 +10,15 @@
 
     <a id="back-link" class="back-link" href="@routes.CalculationController.calculationElection">@Messages("calc.base.back")</a>
 
-    @errorSummary(otherReliefsForm, "other-reliefs-time-apportionment")
+    @errorSummary(otherReliefsForm, "other-reliefs-flat")
 
     <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
 
-    @form(action = routes.CalculationController.submitOtherReliefsTA) {
+    @form(action = routes.CalculationController.submitOtherReliefsFlat) {
 
         <label for="otherReliefs">@Messages("calc.otherReliefs.question")</label>
 
         <span class="form-hint">@Messages("calc.otherReliefs.help")</span>
-
 
         <div class="panel-indent">
             <ul class="list">
@@ -42,5 +41,6 @@
         } else {
             <button id="add-relief-button" class="button">@Messages("calc.otherReliefs.button.addRelief")</button>
         }
+
     }
 }

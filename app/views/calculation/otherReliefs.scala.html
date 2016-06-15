@@ -4,39 +4,45 @@
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 @import views.html.helpers._
 
-@(otherReliefsForm: Form[OtherReliefsModel], result: CalculationResultModel, hasExistingReliefAmount: Boolean, backUrl: String)(implicit request: Request[_])
+@(otherReliefsForm: Form[OtherReliefsModel], result: CalculationResultModel)(implicit request: Request[_])
 
-@main_template(Messages("calc.otherReliefs.question")) {
+@hiddenYesNoContent = {
+    <ul class="list">
+        <li id="totalGain">@SummaryConstructor.gainMessage(result)
+            <b> &pound;@{MoneyPounds(result.totalGain,0).quantity}</b>
+        </li>
 
-    <a id="back-link" class="back-link" href="@backUrl">@Messages("calc.base.back")</a>
+        <li id="taxableGain">@{if (result.taxableGain >= 0) Messages("calc.otherReliefs.taxableGain")
+            else Messages("calc.summary.calculation.details.lossCarriedForward")
+            }
+            <b> &pound;@{MoneyPounds(result.taxableGain,0).quantity}</b>
+        </li>
+    </ul>
 
-    @errorSummary(otherReliefsForm, "other-reliefs-flat")
+    @formInputMoney(otherReliefsForm, "otherReliefs", Messages("calc.otherReliefs.question"))
+}
+
+@main_template(Messages("calc.otherReliefs.questionTwo")) {
+
+    <a id="back-link" class="back-link" href="@routes.CalculationController.allowableLosses">@Messages("calc.base.back")</a>
+
+    @errorSummary(otherReliefsForm, "other-reliefs", "otherReliefs")
 
     <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
 
-    @form(action = routes.CalculationController.submitOtherReliefs) {
+    <div class="form-group">
+        @form(action = routes.CalculationController.submitOtherReliefs) {
 
-        <label for="otherReliefs">@Messages("calc.otherReliefs.question")</label>
+            @formHiddenYesNoRadio(
+                otherReliefsForm,
+                "isClaimingOtherReliefs",
+                Messages("calc.otherReliefs.questionTwo"),
+                hiddenYesNoContent,
+                Some(Messages("calc.otherReliefs.help"))
+            )
 
-        <span class="form-hint">@Messages("calc.otherReliefs.help")</span>
-
-        <div class="panel-indent">
-            <ul class="list list-bullet">
-                <li id="totalGain">&pound;@{MoneyPounds(result.totalGain,0).quantity}<br><span class="font-xsmall">@SummaryConstructor.gainMessage(result)</span></li>
-
-                <li id="taxableGain">&pound;@{MoneyPounds(result.taxableGain,0).quantity}<br><span class="font-xsmall">@{
-                    if (result.taxableGain >= 0) Messages("calc.otherReliefs.taxableGain")
-                    else Messages("calc.summary.calculation.details.lossCarriedForward")
-                    }</span></li>
-            </ul>
-        </div>
-
-        @formInputMoney(otherReliefsForm, "otherReliefs", "")
-
-        @if(hasExistingReliefAmount) {
-            <button id="add-relief-button" class="button">@Messages("calc.otherReliefs.button.updateRelief")</button>
-        } else {
-            <button id="add-relief-button" class="button">@Messages("calc.otherReliefs.button.addRelief")</button>
-        }
+        <button class="button" class="submit" id="continue-button">@Messages("calc.base.button.continue")</button>
     }
+
+    </div>
 }

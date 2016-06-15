@@ -22,6 +22,7 @@ import play.api.data.Forms._
 import play.api.data._
 import common.Validation._
 import play.api.i18n.Messages
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object OtherPropertiesForm {
 
@@ -63,7 +64,7 @@ object OtherPropertiesForm {
         otherPropertiesForm => validateMinimum(otherPropertiesForm, showHiddenQuestion))
       .verifying(Messages("calc.otherProperties.errorDecimalPlaces"),
         otherPropertiesForm => validateTwoDec(otherPropertiesForm, showHiddenQuestion))
-      .verifying(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"),
+      .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"),
         otherPropertiesForm => validateMax(otherPropertiesForm, showHiddenQuestion))
   )
 }

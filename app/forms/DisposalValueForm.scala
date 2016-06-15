@@ -22,6 +22,7 @@ import play.api.data.Forms._
 import models._
 import play.api.i18n.Messages
 import common.Validation._
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object DisposalValueForm {
 
@@ -30,7 +31,7 @@ object DisposalValueForm {
       "disposalValue" -> bigDecimal
         .verifying(Messages("calc.disposalValue.errorNegative"), disposalValue => isPositive(disposalValue))
         .verifying(Messages("calc.disposalValue.errorDecimalPlaces"), disposalValue => isMaxTwoDecimalPlaces(disposalValue))
-        .verifying(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"), disposalValue => isLessThanEqualMaxNumeric(disposalValue))
+        .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"), disposalValue => isLessThanEqualMaxNumeric(disposalValue))
     )(DisposalValueModel.apply)(DisposalValueModel.unapply)
   )
 }

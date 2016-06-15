@@ -33,6 +33,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 import scala.concurrent.Future
 
@@ -787,7 +788,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "return HTML that displays the error message " in {
-        document.select("span.error-notification").text shouldEqual Messages("calc.privateResidenceRelief.error.maxNumericExceeded") + " " + Constants.maxNumeric + " " + Messages("calc.privateResidenceRelief.error.maxNumericExceeded.OrLess")
+        document.select("span.error-notification").text shouldEqual Messages("calc.privateResidenceRelief.error.maxNumericExceeded") + " " + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.privateResidenceRelief.error.maxNumericExceeded.OrLess")
       }
     }
 
@@ -800,7 +801,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "return HTML that displays the error message " in {
-        document.select("span.error-notification").text shouldEqual Messages("calc.privateResidenceRelief.error.maxNumericExceeded") + " " + Constants.maxNumeric + " " + Messages("calc.privateResidenceRelief.error.maxNumericExceeded.OrLess")
+        document.select("span.error-notification").text shouldEqual Messages("calc.privateResidenceRelief.error.maxNumericExceeded") + " " + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.privateResidenceRelief.error.maxNumericExceeded.OrLess")
       }
     }
   }

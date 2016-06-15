@@ -37,6 +37,7 @@ import org.scalatest.mock.MockitoSugar
 import scala.concurrent.Future
 import controllers.{CalculationController, routes}
 import play.api.mvc.Result
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
@@ -358,7 +359,7 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
       s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
         document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
       }
     }
   }

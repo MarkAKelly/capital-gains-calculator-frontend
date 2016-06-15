@@ -406,16 +406,16 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.body().getElementById("deductions(1)").attr("href") shouldEqual routes.CalculationController.allowableLosses().toString()
             }
 
-            "include the question 'What other reliefs are you claiming?'" in {
-              document.select("#deductions").text should include(Messages("calc.otherReliefs.question"))
+            "include the question 'How much extra tax relief are you claiming?'" in {
+              document.select("#deductions").text should include(Messages("calc.otherReliefs.questionTwo"))
             }
 
-            "the value of other reliefs should be £0 and link to the other-reliefs page" in {
-              document.body().getElementById("deductions(2)").text shouldBe "£0.00"
+            "the answer to question should be No and link to the other-reliefs page" in {
+              document.body().getElementById("deductions(2)").text shouldBe "No"
               document.body().getElementById("deductions(2)").attr("href") shouldEqual routes.CalculationController.otherReliefs().toString()
             }
 
-            "include the question 'Are you claiming private residence relief'" in {
+            "include the question 'Do you want to add other tax relief?'" in {
               document.select("#deductions").text should include(Messages("calc.privateResidenceRelief.question"))
             }
 
@@ -445,7 +445,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
       }
 
-      "the user has provided no value for the AEA" should {
+      "the user has provided no value for the AEA and elected Flat calc" should {
         val target = setupTarget(
           TestModels.summaryIndividualFlatWithoutAEA,
           TestModels.calcModelOneRate,

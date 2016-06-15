@@ -22,6 +22,7 @@ import play.api.data._
 import play.api.data.Forms._
 import models._
 import play.api.i18n.Messages
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object DisposalCostsForm {
   val disposalCostsForm = Form(
@@ -29,7 +30,7 @@ object DisposalCostsForm {
       "disposalCosts" -> optional(bigDecimal)
         .verifying(Messages("calc.disposalCosts.errorNegativeNumber"), disposalCosts => isPositive(disposalCosts.getOrElse(0)))
         .verifying(Messages("calc.disposalCosts.errorDecimalPlaces"), disposalCosts => isMaxTwoDecimalPlaces(disposalCosts.getOrElse(0)))
-        .verifying(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"), disposalCosts => isLessThanEqualMaxNumeric(disposalCosts.getOrElse(0)))
+        .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"), disposalCosts => isLessThanEqualMaxNumeric(disposalCosts.getOrElse(0)))
     )(DisposalCostsModel.apply)(DisposalCostsModel.unapply)
   )
 }

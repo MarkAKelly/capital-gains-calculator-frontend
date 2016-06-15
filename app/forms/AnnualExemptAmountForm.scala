@@ -23,6 +23,7 @@ import play.api.i18n.Messages
 import common.Validation._
 import uk.gov.hmrc.play.http.HeaderCarrier
 import controllers.CalculationController._
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object AnnualExemptAmountForm {
 
@@ -31,7 +32,7 @@ object AnnualExemptAmountForm {
   }
 
   def errorMaxMessage(maxAEA: BigDecimal): String = {
-    Messages("calc.annualExemptAmount.errorMax") + maxAEA + " " + Messages("calc.annualExemptAmount.errorMaxEnd")
+    Messages("calc.annualExemptAmount.errorMax") + MoneyPounds(maxAEA, 0).quantity + " " + Messages("calc.annualExemptAmount.errorMaxEnd")
   }
 
   def annualExemptAmountForm (maxAEA: BigDecimal = BigDecimal(0)): Form[AnnualExemptAmountModel] = Form(

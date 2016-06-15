@@ -22,6 +22,7 @@ import models._
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.Messages
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object RebasedValueForm {
 
@@ -64,7 +65,7 @@ object RebasedValueForm {
         rebasedValueForm => verifyPositive(rebasedValueForm))
       .verifying(Messages("calc.rebasedValue.errorDecimalPlaces"),
         rebasedValueForm => verifyTwoDecimalPlaces(rebasedValueForm))
-      .verifying(Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"),
+      .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"),
         rebasedValueForm => validateMax(rebasedValueForm))
   )
 }

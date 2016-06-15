@@ -22,6 +22,7 @@ import play.api.data.Forms._
 import models._
 import common.Validation._
 import play.api.i18n.Messages
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object PrivateResidenceReliefForm {
 
@@ -64,7 +65,7 @@ object PrivateResidenceReliefForm {
       .verifying(Messages("calc.privateResidenceRelief.error.noValueProvided"), improvementsForm => verifyAmountSupplied(improvementsForm, showBefore, showAfter))
       .verifying(Messages("calc.privateResidenceRelief.error.errorNegative"), improvementsForm => verifyPositive(improvementsForm, showBefore, showAfter))
       .verifying(Messages("calc.privateResidenceRelief.error.errorDecimalPlaces"), improvementsForm => verifyNoDecimalPlaces(improvementsForm, showBefore, showAfter))
-      .verifying(Messages("calc.privateResidenceRelief.error.maxNumericExceeded") + " " + Constants.maxNumeric + " " + Messages("calc.privateResidenceRelief.error.maxNumericExceeded.OrLess"),
+      .verifying(Messages("calc.privateResidenceRelief.error.maxNumericExceeded") + " " + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.privateResidenceRelief.error.maxNumericExceeded.OrLess"),
         improvementsForm => validateMax(improvementsForm, showBefore, showAfter)
       )
   )
