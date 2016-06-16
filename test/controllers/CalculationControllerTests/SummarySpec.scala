@@ -18,8 +18,7 @@ package controllers.CalculationControllerTests
 
 import common.DefaultRoutes._
 import common.nonresident.KeystoreKeys
-import common.{CustomerTypeKeys, TestModels}
-import common.nonresident.C
+import common.TestModels
 import connectors.CalculatorConnector
 import constructors.CalculationElectionConstructor
 import controllers.nonresident.{CalculationController, routes}
