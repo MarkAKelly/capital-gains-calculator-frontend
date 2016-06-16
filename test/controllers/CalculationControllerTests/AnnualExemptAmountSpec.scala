@@ -17,10 +17,10 @@
 package controllers.CalculationControllerTests
 
 import common.nonresident.CustomerTypeKeys
-import constructors.CalculationElectionConstructor
+import connectors.nonresident.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
-import connectors.CalculatorConnector
+import constructors.nonresident.CalculationElectionConstructor
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -35,6 +35,7 @@ import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
 import controllers.nonresident.{CalculationController, routes}
+import models.nonresident.{AnnualExemptAmountModel, CustomerTypeModel, DisabledTrusteeModel}
 import play.api.mvc.Result
 
 class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
@@ -59,6 +60,12 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
 
     when(mockCalcConnector.fetchAndGetFormData[AnnualExemptAmountModel](Matchers.eq("annualExemptAmount"))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.getFullAEA(Matchers.anyString())(Matchers.any()))
+      .thenReturn(Some(AnnualExemptAmountModel(BigDecimal(11100))))
+
+    when(mockCalcConnector.getPartialAEA(Matchers.anyString())(Matchers.any()))
+      .thenReturn(Some(AnnualExemptAmountModel(BigDecimal(5550))))
 
     lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(AnnualExemptAmountModel(0)))))
     when(mockCalcConnector.saveFormData[AnnualExemptAmountModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))

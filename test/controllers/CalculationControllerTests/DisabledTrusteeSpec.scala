@@ -16,10 +16,10 @@
 
 package controllers.CalculationControllerTests
 
-import constructors.CalculationElectionConstructor
+import connectors.nonresident.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
-import connectors.CalculatorConnector
+import constructors.nonresident.CalculationElectionConstructor
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -31,8 +31,10 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
+
 import scala.concurrent.Future
-import controllers.nonresident.{routes, CalculationController}
+import controllers.nonresident.{CalculationController, routes}
+import models.nonresident.DisabledTrusteeModel
 import play.api.mvc.Result
 
 class DisabledTrusteeSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
@@ -100,6 +102,15 @@ class DisabledTrusteeSpec extends UnitSpec with WithFakeApplication with Mockito
         }
         "display a radio button with the option 'No'" in {
           document.body.getElementById("isVulnerable-no").parent.text shouldEqual Messages("calc.base.no")
+        }
+
+        "should contain a Read more sidebar" in {
+          document.select("aside h2").text shouldBe Messages("calc.common.readMore")
+        }
+
+        "should contain a Read more link to 'Trusts and Capital Gains Tax'" in {
+          document.select("aside a").first().text should include ("Trusts and Capital Gains Tax")
+          document.select("aside a").first().attr("href") shouldBe "https://www.gov.uk/trusts-taxes/trusts-and-capital-gains-tax"
         }
 
         "display a 'Continue' button " in {

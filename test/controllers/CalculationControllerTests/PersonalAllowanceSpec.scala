@@ -16,10 +16,10 @@
 
 package controllers.CalculationControllerTests
 
-import constructors.CalculationElectionConstructor
+import connectors.nonresident.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
-import connectors.CalculatorConnector
+import constructors.nonresident.CalculationElectionConstructor
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -34,6 +34,7 @@ import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
 import controllers.nonresident.{CalculationController, routes}
+import models.nonresident.PersonalAllowanceModel
 import play.api.mvc.Result
 
 class PersonalAllowanceSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
@@ -47,6 +48,9 @@ class PersonalAllowanceSpec extends UnitSpec with WithFakeApplication with Mocki
 
     when(mockCalcConnector.fetchAndGetFormData[PersonalAllowanceModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.getPA(Matchers.anyString())(Matchers.any()))
+      .thenReturn(Some(PersonalAllowanceModel(BigDecimal(11000))))
 
     lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(PersonalAllowanceModel(0)))))
     when(mockCalcConnector.saveFormData[PersonalAllowanceModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))

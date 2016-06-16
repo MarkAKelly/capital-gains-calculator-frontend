@@ -17,10 +17,11 @@
 package controllers.CalculationControllerTests
 
 import common.Constants
-import connectors.CalculatorConnector
-import constructors.CalculationElectionConstructor
+import connectors.nonresident.CalculatorConnector
+import constructors.nonresident.CalculationElectionConstructor
 import models._
 import controllers.nonresident.{CalculationController, routes}
+import models.nonresident.{AcquisitionDateModel, DisposalDateModel, PrivateResidenceReliefModel, RebasedValueModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -33,6 +34,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 import scala.concurrent.Future
 
@@ -787,7 +789,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "return HTML that displays the error message " in {
-        document.select("span.error-notification").text shouldEqual Messages("calc.privateResidenceRelief.error.maxNumericExceeded") + " " + Constants.maxNumeric + " " + Messages("calc.privateResidenceRelief.error.maxNumericExceeded.OrLess")
+        document.select("span.error-notification").text shouldEqual Messages("calc.privateResidenceRelief.error.maxNumericExceeded") + " " + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.privateResidenceRelief.error.maxNumericExceeded.OrLess")
       }
     }
 
@@ -800,7 +802,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "return HTML that displays the error message " in {
-        document.select("span.error-notification").text shouldEqual Messages("calc.privateResidenceRelief.error.maxNumericExceeded") + " " + Constants.maxNumeric + " " + Messages("calc.privateResidenceRelief.error.maxNumericExceeded.OrLess")
+        document.select("span.error-notification").text shouldEqual Messages("calc.privateResidenceRelief.error.maxNumericExceeded") + " " + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.privateResidenceRelief.error.maxNumericExceeded.OrLess")
       }
     }
   }

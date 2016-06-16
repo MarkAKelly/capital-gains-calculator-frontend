@@ -83,6 +83,9 @@ POST        /calculation-election    controllers.nonresident.CalculationControll
 GET         /other-reliefs           controllers.nonresident.CalculationController.otherReliefs
 POST        /other-reliefs           controllers.nonresident.CalculationController.submitOtherReliefs
 
+GET         /other-reliefs-flat      controllers.nonresident.CalculationController.otherReliefsFlat
+POST        /other-reliefs-flat      controllers.nonresident.CalculationController.submitOtherReliefsFlat
+
 GET         /other-reliefs-time-apportioned     controllers.nonresident.CalculationController.otherReliefsTA
 POST        /other-reliefs-time-apportioned     controllers.nonresident.CalculationController.submitOtherReliefsTA
 
@@ -95,6 +98,11 @@ POST        /other-reliefs-rebased              controllers.nonresident.Calculat
 ########################################################
 GET         /summary                 controllers.nonresident.CalculationController.summary
 GET         /restart                 controllers.nonresident.CalculationController.restart
+
+#Session Timeout route
+########################################################
+GET         /session-timeout         controllers.TimeoutController.timeout
+########################################################
 
 #Feedback routes
 GET         /feedback               controllers.FeedbackController.show

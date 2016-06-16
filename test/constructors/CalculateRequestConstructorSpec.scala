@@ -18,7 +18,9 @@ package constructors
 
 import common.nonresident.CustomerTypeKeys
 import common.TestModels
+import constructors.nonresident.CalculateRequestConstructor
 import models._
+import models.nonresident._
 import uk.gov.hmrc.play.test.UnitSpec
 
 class CalculateRequestConstructorSpec extends UnitSpec {
@@ -41,9 +43,9 @@ class CalculateRequestConstructorSpec extends UnitSpec {
     DisposalCostsModel(None),
     AllowableLossesModel("No", None),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(None),
-    OtherReliefsModel(None),
-    OtherReliefsModel(None),
+    OtherReliefsModel(None, None),
+    OtherReliefsModel(None, None),
+    OtherReliefsModel(None, None),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -72,9 +74,9 @@ class CalculateRequestConstructorSpec extends UnitSpec {
         DisposalCostsModel(None),
         AllowableLossesModel("Yes", Some(1000)),
         CalculationElectionModel("flat"),
-        OtherReliefsModel(None),
-        OtherReliefsModel(None),
-        OtherReliefsModel(None),
+        OtherReliefsModel(None, None),
+        OtherReliefsModel(None, None),
+        OtherReliefsModel(None, None),
         Some(PrivateResidenceReliefModel("No", None, None))
       )
 

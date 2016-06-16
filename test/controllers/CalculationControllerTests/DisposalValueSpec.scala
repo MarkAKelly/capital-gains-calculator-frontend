@@ -17,10 +17,10 @@
 package controllers.CalculationControllerTests
 
 import common.Constants
-import constructors.CalculationElectionConstructor
+import connectors.nonresident.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
-import connectors.CalculatorConnector
+import constructors.nonresident.CalculationElectionConstructor
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -35,7 +35,9 @@ import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
 import controllers.nonresident.{CalculationController, routes}
+import models.nonresident.DisposalValueModel
 import play.api.mvc.Result
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
@@ -216,7 +218,7 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
       s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
         document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
       }
     }
   }
