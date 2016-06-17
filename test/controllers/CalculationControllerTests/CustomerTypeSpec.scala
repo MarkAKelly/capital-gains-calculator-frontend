@@ -17,7 +17,7 @@
 package controllers.CalculationControllerTests
 
 import common.nonresident.CustomerTypeKeys
-import connectors.nonresident.CalculatorConnector
+import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.CalculationElectionConstructor
@@ -63,7 +63,7 @@ class CustomerTypeSpec extends UnitSpec with WithFakeApplication with MockitoSug
   // GET Tests
   "Calling the CalculationController.customerType" when {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/customer-type").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/customer-type").withSession(SessionKeys.sessionId -> "12345")
 
     "not supplied with a pre-existing stored model" should {
 
@@ -143,7 +143,8 @@ class CustomerTypeSpec extends UnitSpec with WithFakeApplication with MockitoSug
   // POST Tests
   "In CalculationController calling the .submitCustomerType action" when {
 
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/customer-type")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/customer-type")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 

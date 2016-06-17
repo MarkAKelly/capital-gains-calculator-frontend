@@ -18,7 +18,7 @@ package controllers.CalculationControllerTests
 
 import common.nonresident.KeystoreKeys
 import common.{Constants, TestModels}
-import connectors.nonresident.CalculatorConnector
+import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
 import controllers.nonresident.CalculationController
 import models.nonresident._
@@ -79,7 +79,7 @@ class OtherReliefsFlatSpec extends UnitSpec with WithFakeApplication with Mockit
   }
 
   "In CalculationController calling the .otherReliefsFlat action " when {
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/other-reliefs-flat").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/other-reliefs-flat").withSession(SessionKeys.sessionId -> "12345")
 
     "not supplied with a pre-existing stored model" should {
 
@@ -187,7 +187,8 @@ class OtherReliefsFlatSpec extends UnitSpec with WithFakeApplication with Mockit
   }
 
   "In CalculationController calling the .submitOtherReliefsFlat action" when {
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/other-reliefs-flat")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/other-reliefs-flat")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 

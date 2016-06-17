@@ -18,7 +18,6 @@ package controllers.nonresident
 
 import common.Dates
 import common.nonresident.CustomerTypeKeys
-
 import forms.nonresident.ImprovementsForm._
 import forms.nonresident.PrivateResidenceReliefForm._
 import forms.nonresident.OtherReliefsForm._
@@ -38,7 +37,6 @@ import forms.nonresident.DisposalDateForm._
 import forms.nonresident.DisposalCostsForm._
 import forms.nonresident.DisposalValueForm._
 import forms.nonresident.DisabledTrusteeForm._
-
 import java.util.{Date, UUID}
 
 import play.api.mvc.{Action, AnyContent, Result}
@@ -49,7 +47,7 @@ import scala.concurrent.Future
 import views.html._
 import common.DefaultRoutes._
 import common.nonresident.KeystoreKeys
-import connectors.nonresident.CalculatorConnector
+import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
 import controllers.predicates.ValidActiveSession
 import models.nonresident._

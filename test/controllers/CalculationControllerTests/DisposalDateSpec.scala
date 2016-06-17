@@ -17,7 +17,7 @@
 package controllers.CalculationControllerTests
 
 import common.nonresident.KeystoreKeys
-import connectors.nonresident.CalculatorConnector
+import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.CalculationElectionConstructor
@@ -69,7 +69,7 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
   // GET Tests
   "Calling the CalculationController.disposalDate" when {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/disposal-date").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/disposal-date").withSession(SessionKeys.sessionId -> "12345")
 
     "not supplied with a pre-existing stored model" should {
 
@@ -151,7 +151,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
       case _ => 0
     }
 
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/disposal-date")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/disposal-date")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 

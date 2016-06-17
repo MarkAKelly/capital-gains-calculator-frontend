@@ -17,7 +17,7 @@
 package controllers.CalculationControllerTests
 
 import common.Constants
-import connectors.nonresident.CalculatorConnector
+import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.CalculationElectionConstructor
@@ -64,7 +64,7 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
   //GET Tests
   "In CalculationController calling the .disposalValue action " when {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/disposal-value").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/disposal-value").withSession(SessionKeys.sessionId -> "12345")
 
     "not supplied with a pre-existing stored model" should {
 
@@ -152,7 +152,8 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
   "In CalculationController calling the .submitDisposalValue action" when {
 
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/disposal-value")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/disposal-value")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 
@@ -218,7 +219,8 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
       s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
         document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
+            " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
       }
     }
   }

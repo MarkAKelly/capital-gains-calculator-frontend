@@ -18,7 +18,7 @@ package controllers.CalculationControllerTests
 
 import common.DefaultRoutes._
 import common.nonresident.KeystoreKeys
-import connectors.nonresident.CalculatorConnector
+import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.CalculationElectionConstructor

@@ -18,10 +18,7 @@ package connectors
 
 import java.util.UUID
 
-import common.nonresident.CustomerTypeKeys
-import common.nonresident.KeystoreKeys
-import connectors.nonresident.CalculatorConnector
-import models._
+import common.nonresident.{CustomerTypeKeys, KeystoreKeys}
 import models.nonresident._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -49,67 +46,67 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
   implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(sessionId.toString)))
 
   def mockFetchAndGetFormData (summary: SummaryModel, calculationElectionModel: Option[CalculationElectionModel], otherReliefsModel: Option[OtherReliefsModel]) = {
-    when(mockSessionCache.fetchAndGetEntry[CustomerTypeModel](Matchers.eq("customerType"))(Matchers.any(), Matchers.any()))
+    when(mockSessionCache.fetchAndGetEntry[CustomerTypeModel](Matchers.eq(KeystoreKeys.customerType))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(summary.customerTypeModel)))
 
-    when(mockSessionCache.fetchAndGetEntry[DisabledTrusteeModel](Matchers.eq("disabledTrustee"))(Matchers.any(), Matchers.any()))
+    when(mockSessionCache.fetchAndGetEntry[DisabledTrusteeModel](Matchers.eq(KeystoreKeys.disabledTrustee))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(summary.disabledTrusteeModel))
 
-    when(mockSessionCache.fetchAndGetEntry[CurrentIncomeModel](Matchers.eq("currentIncome"))(Matchers.any(), Matchers.any()))
+    when(mockSessionCache.fetchAndGetEntry[CurrentIncomeModel](Matchers.eq(KeystoreKeys.currentIncome))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(summary.currentIncomeModel))
 
-    when(mockSessionCache.fetchAndGetEntry[PersonalAllowanceModel](Matchers.eq("personalAllowance"))(Matchers.any(), Matchers.any()))
+    when(mockSessionCache.fetchAndGetEntry[PersonalAllowanceModel](Matchers.eq(KeystoreKeys.personalAllowance))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(summary.personalAllowanceModel))
 
-    when(mockSessionCache.fetchAndGetEntry[OtherPropertiesModel](Matchers.eq("otherProperties"))(Matchers.any(), Matchers.any()))
+    when(mockSessionCache.fetchAndGetEntry[OtherPropertiesModel](Matchers.eq(KeystoreKeys.otherProperties))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(summary.otherPropertiesModel)))
 
-    when(mockSessionCache.fetchAndGetEntry[AnnualExemptAmountModel](Matchers.eq("annualExemptAmount"))(Matchers.any(), Matchers.any()))
+    when(mockSessionCache.fetchAndGetEntry[AnnualExemptAmountModel](Matchers.eq(KeystoreKeys.annualExemptAmount))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(summary.annualExemptAmountModel))
 
-    when(mockSessionCache.fetchAndGetEntry[AcquisitionDateModel](Matchers.eq("acquisitionDate"))(Matchers.any(), Matchers.any()))
+    when(mockSessionCache.fetchAndGetEntry[AcquisitionDateModel](Matchers.eq(KeystoreKeys.acquisitionDate))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(summary.acquisitionDateModel)))
 
-    when(mockSessionCache.fetchAndGetEntry[AcquisitionValueModel](Matchers.eq("acquisitionValue"))(Matchers.any(), Matchers.any()))
+    when(mockSessionCache.fetchAndGetEntry[AcquisitionValueModel](Matchers.eq(KeystoreKeys.acquisitionValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(summary.acquisitionValueModel)))
 
-    when(mockSessionCache.fetchAndGetEntry[RebasedValueModel](Matchers.eq("rebasedValue"))(Matchers.any(), Matchers.any()))
+    when(mockSessionCache.fetchAndGetEntry[RebasedValueModel](Matchers.eq(KeystoreKeys.rebasedValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(summary.rebasedValueModel))
 
-    when(mockSessionCache.fetchAndGetEntry[RebasedCostsModel](Matchers.eq("rebasedCosts"))(Matchers.any(), Matchers.any()))
+    when(mockSessionCache.fetchAndGetEntry[RebasedCostsModel](Matchers.eq(KeystoreKeys.rebasedCosts))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(summary.rebasedCostsModel))
 
-    when(mockSessionCache.fetchAndGetEntry[ImprovementsModel](Matchers.eq("improvements"))(Matchers.any(), Matchers.any()))
+    when(mockSessionCache.fetchAndGetEntry[ImprovementsModel](Matchers.eq(KeystoreKeys.improvements))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(summary.improvementsModel)))
 
-    when(mockSessionCache.fetchAndGetEntry[DisposalDateModel](Matchers.eq("disposalDate"))(Matchers.any(), Matchers.any()))
+    when(mockSessionCache.fetchAndGetEntry[DisposalDateModel](Matchers.eq(KeystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(summary.disposalDateModel)))
 
-    when(mockSessionCache.fetchAndGetEntry[DisposalValueModel](Matchers.eq("disposalValue"))(Matchers.any(), Matchers.any()))
+    when(mockSessionCache.fetchAndGetEntry[DisposalValueModel](Matchers.eq(KeystoreKeys.disposalValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(summary.disposalValueModel)))
 
-    when(mockSessionCache.fetchAndGetEntry[AcquisitionCostsModel](Matchers.eq("acquisitionCosts"))(Matchers.any(), Matchers.any()))
+    when(mockSessionCache.fetchAndGetEntry[AcquisitionCostsModel](Matchers.eq(KeystoreKeys.acquisitionCosts))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(summary.acquisitionCostsModel)))
 
-    when(mockSessionCache.fetchAndGetEntry[DisposalCostsModel](Matchers.eq("disposalCosts"))(Matchers.any(), Matchers.any()))
+    when(mockSessionCache.fetchAndGetEntry[DisposalCostsModel](Matchers.eq(KeystoreKeys.disposalCosts))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(summary.disposalCostsModel)))
 
-    when(mockSessionCache.fetchAndGetEntry[AllowableLossesModel](Matchers.eq("allowableLosses"))(Matchers.any(), Matchers.any()))
+    when(mockSessionCache.fetchAndGetEntry[AllowableLossesModel](Matchers.eq(KeystoreKeys.allowableLosses))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(summary.allowableLossesModel)))
 
-    when(mockSessionCache.fetchAndGetEntry[CalculationElectionModel](Matchers.eq("calculationElection"))(Matchers.any(), Matchers.any()))
+    when(mockSessionCache.fetchAndGetEntry[CalculationElectionModel](Matchers.eq(KeystoreKeys.calculationElection))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(calculationElectionModel))
 
-    when(mockSessionCache.fetchAndGetEntry[OtherReliefsModel](Matchers.eq("otherReliefsFlat"))(Matchers.any(), Matchers.any()))
+    when(mockSessionCache.fetchAndGetEntry[OtherReliefsModel](Matchers.eq(KeystoreKeys.otherReliefsFlat))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(otherReliefsModel))
 
-    when(mockSessionCache.fetchAndGetEntry[OtherReliefsModel](Matchers.eq("otherReliefsTA"))(Matchers.any(), Matchers.any()))
+    when(mockSessionCache.fetchAndGetEntry[OtherReliefsModel](Matchers.eq(KeystoreKeys.otherReliefsTA))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(otherReliefsModel))
 
-    when(mockSessionCache.fetchAndGetEntry[OtherReliefsModel](Matchers.eq("otherReliefsRebased"))(Matchers.any(), Matchers.any()))
+    when(mockSessionCache.fetchAndGetEntry[OtherReliefsModel](Matchers.eq(KeystoreKeys.otherReliefsRebased))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(otherReliefsModel))
 
-    when(mockSessionCache.fetchAndGetEntry[PrivateResidenceReliefModel](Matchers.eq("privateResidenceRelief"))(Matchers.any(), Matchers.any()))
+    when(mockSessionCache.fetchAndGetEntry[PrivateResidenceReliefModel](Matchers.eq(KeystoreKeys.privateResidenceRelief))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(summary.privateResidenceReliefModel))
   }
 

@@ -19,7 +19,7 @@ package controllers.CalculationControllerTests
 import common.DefaultRoutes._
 import common.nonresident.KeystoreKeys
 import common.TestModels
-import connectors.nonresident.CalculatorConnector
+import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
 import controllers.nonresident.{CalculationController, routes}
 import models.nonresident.{AcquisitionDateModel, CalculationResultModel, RebasedValueModel, SummaryModel}
@@ -72,7 +72,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
   }
 
   "In CalculationController calling the .summary action" when {
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/summary").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/summary").withSession(SessionKeys.sessionId -> "12345")
 
     "Testing the back links for all user types" when {
 

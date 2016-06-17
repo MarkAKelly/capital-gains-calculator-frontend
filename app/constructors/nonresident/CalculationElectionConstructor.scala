@@ -17,7 +17,7 @@
 package constructors.nonresident
 
 import common.Dates
-import connectors.nonresident.CalculatorConnector
+import connectors.CalculatorConnector
 import controllers.nonresident.routes
 import models.nonresident.{CalculationResultModel, SummaryModel}
 import play.api.i18n.Messages

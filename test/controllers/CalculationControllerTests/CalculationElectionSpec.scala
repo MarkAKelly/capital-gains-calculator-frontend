@@ -18,7 +18,7 @@ package controllers.CalculationControllerTests
 
 import common.TestModels
 import common.nonresident.KeystoreKeys
-import connectors.nonresident.CalculatorConnector
+import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.CalculationElectionConstructor
@@ -113,7 +113,7 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
   // GET Tests
   "In CalculationController calling the .calculationElection action" when {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/calculation-election").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/calculation-election").withSession(SessionKeys.sessionId -> "12345")
 
     "supplied with no pre-existing data" should {
 
@@ -341,7 +341,8 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
 
   "In CalculationController calling the .submitCalculationElection action" when {
 
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/calculation-election")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/calculation-election")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 

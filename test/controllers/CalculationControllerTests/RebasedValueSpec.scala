@@ -18,7 +18,7 @@ package controllers.CalculationControllerTests
 
 import common.Constants
 import common.nonresident.KeystoreKeys
-import connectors.nonresident.CalculatorConnector
+import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.CalculationElectionConstructor
@@ -44,7 +44,10 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget(getData: Option[RebasedValueModel], postData: Option[RebasedValueModel], acquisitionDateModel: Option[AcquisitionDateModel]): CalculationController = {
+  def setupTarget(getData: Option[RebasedValueModel],
+                  postData: Option[RebasedValueModel],
+                  acquisitionDateModel: Option[AcquisitionDateModel]
+                 ): CalculationController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -68,7 +71,7 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with MockitoSug
   //GET tests
   "In CalculationController calling the .rebasedValue action " when {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/rebased-value").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/rebased-value").withSession(SessionKeys.sessionId -> "12345")
 
     "not supplied with a pre-existing stored model" should {
 
@@ -172,7 +175,8 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with MockitoSug
   //POST Tests
   "In CalculationController calling the .submitRebasedValue action " when {
 
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/rebased-value")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/rebased-value")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 
@@ -272,7 +276,8 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
       s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
         document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
+            " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
       }
     }
   }

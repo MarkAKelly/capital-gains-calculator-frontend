@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package connectors.nonresident
+package connectors
 
 import common.nonresident.KeystoreKeys
 import config.{CalculatorSessionCache, WSHttp}
 import constructors.nonresident.CalculateRequestConstructor
-import models._
 import models.nonresident._
 import play.api.libs.json.Format
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}

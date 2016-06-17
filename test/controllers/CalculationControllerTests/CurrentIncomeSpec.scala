@@ -17,7 +17,7 @@
 package controllers.CalculationControllerTests
 
 import common.Constants
-import connectors.nonresident.CalculatorConnector
+import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
 import controllers.nonresident.{CalculationController, routes}
 import models.nonresident.CurrentIncomeModel
@@ -62,7 +62,7 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
   //GET Tests
   "In CalculationController calling the .currentIncome action " when {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/current-income").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/current-income").withSession(SessionKeys.sessionId -> "12345")
 
     "not supplied with a pre-existing stored model" should {
 
@@ -146,7 +146,7 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
     "called with no active session or valid session Id" should {
 
-      lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/current-income")
+      lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/current-income")
       s"redirect to ${controllers.routes.TimeoutController.timeout()}" in {
 
         val target = setupTarget(None, None)
@@ -162,7 +162,8 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
   //POST Tests
   "In CalculationController calling the .submitCurrentIncome action " when {
 
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/current-income")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/current-income")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 
@@ -249,7 +250,8 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
       s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
         document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
+            " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
       }
     }
   }

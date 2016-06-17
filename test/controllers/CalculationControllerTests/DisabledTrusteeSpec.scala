@@ -16,7 +16,7 @@
 
 package controllers.CalculationControllerTests
 
-import connectors.nonresident.CalculatorConnector
+import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.CalculationElectionConstructor
@@ -62,7 +62,7 @@ class DisabledTrusteeSpec extends UnitSpec with WithFakeApplication with Mockito
   // GET Tests
   "Calling the CalculationController.disabledTrustee" when {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/disabled-trustee").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/disabled-trustee").withSession(SessionKeys.sessionId -> "12345")
 
     "not supplied with a pre-existing stored model" should {
 
@@ -156,7 +156,8 @@ class DisabledTrusteeSpec extends UnitSpec with WithFakeApplication with Mockito
   // POST Tests
   "In CalculationController calling the .submitDisabledTrustee action" when {
 
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/disabled-trustee")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/disabled-trustee")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 
