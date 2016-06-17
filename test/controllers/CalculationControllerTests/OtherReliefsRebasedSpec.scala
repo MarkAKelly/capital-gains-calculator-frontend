@@ -18,9 +18,9 @@ package controllers.CalculationControllerTests
 
 import common.{Constants, TestModels}
 import connectors.CalculatorConnector
-import constructors.CalculationElectionConstructor
-import controllers.{CalculationController, routes}
-import models.{CalculationResultModel, OtherReliefsModel, SummaryModel}
+import constructors.nonresident.CalculationElectionConstructor
+import controllers.nonresident.{CalculationController, routes}
+import models.nonresident.{CalculationResultModel, OtherReliefsModel, SummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -71,7 +71,7 @@ class OtherReliefsRebasedSpec extends UnitSpec with WithFakeApplication with Moc
   }
 
   "In CalculationController calling the .otherReliefsRebased action " should {
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/other-reliefs-rebased").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/other-reliefs-rebased").withSession(SessionKeys.sessionId -> "12345")
     val target = setupTarget(None, None, TestModels.summaryIndividualRebased, TestModels.calcModelTwoRates)
     lazy val result = target.otherReliefsRebased(fakeRequest)
     lazy val document = Jsoup.parse(bodyOf(result))
@@ -130,7 +130,8 @@ class OtherReliefsRebasedSpec extends UnitSpec with WithFakeApplication with Moc
     }
 
     "when not supplied with any previous value" should {
-      lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/other-reliefs-rebased").withSession(SessionKeys.sessionId -> "12345")
+      lazy val fakeRequest = FakeRequest("GET",
+        "/calculate-your-capital-gains/non-resident/other-reliefs-rebased").withSession(SessionKeys.sessionId -> "12345")
       val target = setupTarget(None, None, TestModels.summaryIndividualRebased, TestModels.calcModelTwoRates)
       lazy val result = target.otherReliefsRebased(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
@@ -141,7 +142,8 @@ class OtherReliefsRebasedSpec extends UnitSpec with WithFakeApplication with Moc
     }
 
     "when supplied with a previous value" should {
-      lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/other-reliefs-rebased").withSession(SessionKeys.sessionId -> "12345")
+      lazy val fakeRequest = FakeRequest("GET",
+        "/calculate-your-capital-gains/non-resident/other-reliefs-rebased").withSession(SessionKeys.sessionId -> "12345")
       val model = OtherReliefsModel(None, Some(1000))
       val target = setupTarget(Some(model), None, TestModels.summaryIndividualRebased, TestModels.calcModelTwoRates)
       lazy val result = target.otherReliefsRebased(fakeRequest)
@@ -154,7 +156,8 @@ class OtherReliefsRebasedSpec extends UnitSpec with WithFakeApplication with Moc
   }
 
   "In CalculationController calling the .submitOtherReliefsRebased action" when {
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/other-reliefs-rebased")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/other-reliefs-rebased")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 

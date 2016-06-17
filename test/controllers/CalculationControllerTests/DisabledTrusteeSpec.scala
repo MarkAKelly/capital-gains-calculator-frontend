@@ -16,10 +16,10 @@
 
 package controllers.CalculationControllerTests
 
-import constructors.CalculationElectionConstructor
+import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
-import connectors.CalculatorConnector
+import constructors.nonresident.CalculationElectionConstructor
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -31,8 +31,10 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
+
 import scala.concurrent.Future
-import controllers.{routes, CalculationController}
+import controllers.nonresident.{CalculationController, routes}
+import models.nonresident.DisabledTrusteeModel
 import play.api.mvc.Result
 
 class DisabledTrusteeSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
@@ -60,7 +62,7 @@ class DisabledTrusteeSpec extends UnitSpec with WithFakeApplication with Mockito
   // GET Tests
   "Calling the CalculationController.disabledTrustee" when {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/disabled-trustee").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/disabled-trustee").withSession(SessionKeys.sessionId -> "12345")
 
     "not supplied with a pre-existing stored model" should {
 
@@ -154,7 +156,8 @@ class DisabledTrusteeSpec extends UnitSpec with WithFakeApplication with Mockito
   // POST Tests
   "In CalculationController calling the .submitDisabledTrustee action" when {
 
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/disabled-trustee")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/disabled-trustee")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 

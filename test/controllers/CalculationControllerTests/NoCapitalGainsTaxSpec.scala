@@ -16,11 +16,11 @@
 
 package controllers.CalculationControllerTests
 
-import common.KeystoreKeys
+import common.nonresident.KeystoreKeys
 import connectors.CalculatorConnector
-import constructors.CalculationElectionConstructor
-import controllers.CalculationController
-import models.DisposalDateModel
+import constructors.nonresident.CalculationElectionConstructor
+import controllers.nonresident.CalculationController
+import models.nonresident.DisposalDateModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -55,7 +55,7 @@ class NoCapitalGainsTaxSpec extends UnitSpec with WithFakeApplication with Mocki
   //GET Tests
   "In CalculationController calling the .noCapitalGainsTax action " should {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/no-capital-gains-tax").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/no-capital-gains-tax").withSession(SessionKeys.sessionId -> "12345")
 
     "when supplied with a model for the date 01 January 2015" should {
 

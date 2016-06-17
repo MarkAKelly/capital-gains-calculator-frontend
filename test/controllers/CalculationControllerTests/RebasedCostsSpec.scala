@@ -17,10 +17,11 @@
 package controllers.CalculationControllerTests
 
 import common.Constants
-import constructors.CalculationElectionConstructor
+import common.nonresident.KeystoreKeys
+import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
-import connectors.CalculatorConnector
+import constructors.nonresident.CalculationElectionConstructor
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -34,7 +35,8 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.{CalculationController, routes}
+import controllers.nonresident.{CalculationController, routes}
+import models.nonresident.RebasedCostsModel
 import play.api.mvc.Result
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
@@ -47,7 +49,7 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
-    when(mockCalcConnector.fetchAndGetFormData[RebasedCostsModel](Matchers.eq("rebasedCosts"))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[RebasedCostsModel](Matchers.eq(KeystoreKeys.rebasedCosts))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
     lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(RebasedCostsModel("No", None)))))
@@ -63,7 +65,7 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
   // GET Tests
   "Calling the CalculationController.rebasedCosts" when {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/rebased-costs").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/rebased-costs").withSession(SessionKeys.sessionId -> "12345")
 
     "not supplied with a pre-existing stored model" should {
 
@@ -135,7 +137,8 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
   // POST Tests
   "In CalculationController calling the .submitRebasedCosts action" when {
 
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/rebased-costs")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/rebased-costs")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 
@@ -236,7 +239,8 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
       s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
         document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
+            " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
       }
     }
   }

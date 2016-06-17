@@ -16,10 +16,10 @@
 
 package controllers.CalculationControllerTests
 
-import constructors.CalculationElectionConstructor
+import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
-import connectors.CalculatorConnector
+import constructors.nonresident.CalculationElectionConstructor
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -33,7 +33,8 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.{CalculationController, routes}
+import controllers.nonresident.{CalculationController, routes}
+import models.nonresident.PersonalAllowanceModel
 import play.api.mvc.Result
 
 class PersonalAllowanceSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
@@ -64,7 +65,7 @@ class PersonalAllowanceSpec extends UnitSpec with WithFakeApplication with Mocki
   // GET Tests
   "Calling the CalculationController.customerType" when {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/personal-allowance").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/personal-allowance").withSession(SessionKeys.sessionId -> "12345")
 
     "not supplied with a pre-existing stored model" should {
 
@@ -149,7 +150,8 @@ class PersonalAllowanceSpec extends UnitSpec with WithFakeApplication with Mocki
   // POST Tests
   "In CalculationController calling the .submitPersonalAllowance action" when {
 
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/personal-allowance")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/personal-allowance")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 

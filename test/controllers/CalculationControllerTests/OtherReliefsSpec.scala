@@ -17,11 +17,13 @@
 package controllers.CalculationControllerTests
 
 import common.DefaultRoutes._
-import common.{Constants, KeystoreKeys, TestModels}
+import common.nonresident.KeystoreKeys
+import common.{Constants, TestModels}
 import connectors.CalculatorConnector
-import constructors.CalculationElectionConstructor
-import controllers.{CalculationController, routes}
+import constructors.nonresident.CalculationElectionConstructor
+import controllers.nonresident.{CalculationController, routes}
 import models._
+import models.nonresident._
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -79,7 +81,7 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
   }
 
   "In CalculationController calling the .otherReliefs action " when {
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/other-reliefs").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/other-reliefs").withSession(SessionKeys.sessionId -> "12345")
 
     "not supplied with a pre-existing stored model" should {
 
@@ -190,7 +192,8 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
   }
 
   "In CalculationController calling the .submitOtherReliefs action" when {
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/other-reliefs")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/other-reliefs")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 
@@ -285,7 +288,8 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
       s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
         document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
+            " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
       }
     }
   }

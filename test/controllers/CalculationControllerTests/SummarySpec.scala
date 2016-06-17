@@ -17,19 +17,20 @@
 package controllers.CalculationControllerTests
 
 import common.DefaultRoutes._
-import common.{CustomerTypeKeys, KeystoreKeys, TestModels}
+import common.nonresident.KeystoreKeys
+import common.TestModels
 import connectors.CalculatorConnector
-import constructors.CalculationElectionConstructor
-import controllers.{routes, CalculationController}
-import models.{AcquisitionDateModel, RebasedValueModel, CalculationResultModel, SummaryModel}
+import constructors.nonresident.CalculationElectionConstructor
+import controllers.nonresident.{CalculationController, routes}
+import models.nonresident.{AcquisitionDateModel, CalculationResultModel, RebasedValueModel, SummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import uk.gov.hmrc.play.http.{SessionKeys, HeaderCarrier}
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
+import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
@@ -71,7 +72,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
   }
 
   "In CalculationController calling the .summary action" when {
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/summary").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/summary").withSession(SessionKeys.sessionId -> "12345")
 
     "Testing the back links for all user types" when {
 

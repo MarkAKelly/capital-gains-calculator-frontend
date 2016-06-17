@@ -17,10 +17,11 @@
 package controllers.CalculationControllerTests
 
 import common.Constants
-import constructors.CalculationElectionConstructor
+import common.nonresident.KeystoreKeys
+import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
-import connectors.CalculatorConnector
+import constructors.nonresident.CalculationElectionConstructor
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -34,7 +35,8 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.{CalculationController, routes}
+import controllers.nonresident.{CalculationController, routes}
+import models.nonresident.{AcquisitionDateModel, DisposalCostsModel, RebasedValueModel}
 import play.api.mvc.Result
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
@@ -53,10 +55,10 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
     when(mockCalcConnector.fetchAndGetFormData[DisposalCostsModel](Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
-    when(mockCalcConnector.fetchAndGetFormData[AcquisitionDateModel](Matchers.eq("acquisitionDate"))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[AcquisitionDateModel](Matchers.eq(KeystoreKeys.acquisitionDate))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(acquisitionDate))
 
-    when(mockCalcConnector.fetchAndGetFormData[RebasedValueModel](Matchers.eq("rebasedValue"))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[RebasedValueModel](Matchers.eq(KeystoreKeys.rebasedValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(rebasedData))
 
     lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(DisposalCostsModel(None)))))
@@ -72,7 +74,7 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
   //GET Tests
   "In CalculationController calling the .disposalCosts action " should {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/rebased-costs").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/rebased-costs").withSession(SessionKeys.sessionId -> "12345")
 
     "not supplied with a pre-existing stored model" should {
 
@@ -154,7 +156,8 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
   //POST Tests
   "In CalculationController calling the .submitDisposalCosts action" when {
 
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/disposal-costs")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/disposal-costs")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 
@@ -271,7 +274,8 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
       }
 
       "display the error message 'Disposal costs cannot be negative' and 'The costs have too many decimal places'" in {
-        document.select("div label span.error-notification").text shouldEqual (Messages("calc.disposalCosts.errorNegativeNumber") + " " + Messages("calc.disposalCosts.errorDecimalPlaces"))
+        document.select("div label span.error-notification").text shouldEqual (Messages("calc.disposalCosts.errorNegativeNumber") +
+          " " + Messages("calc.disposalCosts.errorDecimalPlaces"))
       }
     }
 
@@ -286,7 +290,8 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
       s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
         document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
+            " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
       }
     }
   }

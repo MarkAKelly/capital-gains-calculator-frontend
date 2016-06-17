@@ -16,12 +16,12 @@
 
 package controllers.CalculationControllerTests
 
-import common.DefaultRoutes._
-import common.{Constants, KeystoreKeys, TestModels}
+import common.nonresident.KeystoreKeys
+import common.{Constants, TestModels}
 import connectors.CalculatorConnector
-import constructors.CalculationElectionConstructor
-import controllers.{CalculationController, routes}
-import models._
+import constructors.nonresident.CalculationElectionConstructor
+import controllers.nonresident.CalculationController
+import models.nonresident._
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -79,7 +79,7 @@ class OtherReliefsFlatSpec extends UnitSpec with WithFakeApplication with Mockit
   }
 
   "In CalculationController calling the .otherReliefsFlat action " when {
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/other-reliefs-flat").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/other-reliefs-flat").withSession(SessionKeys.sessionId -> "12345")
 
     "not supplied with a pre-existing stored model" should {
 
@@ -115,9 +115,9 @@ class OtherReliefsFlatSpec extends UnitSpec with WithFakeApplication with Mockit
             document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
           }
 
-          s"have a 'Back' link to ${routes.CalculationController.calculationElection().url}" in {
+          s"have a 'Back' link to ${controllers.nonresident.routes.CalculationController.calculationElection().url}" in {
             document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-            document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.calculationElection().url
+            document.body.getElementById("back-link").attr("href") shouldEqual controllers.nonresident.routes.CalculationController.calculationElection().url
           }
 
           "have the question 'How much extra tax relief are you claiming?' as the legend of the input" in {
@@ -187,7 +187,8 @@ class OtherReliefsFlatSpec extends UnitSpec with WithFakeApplication with Mockit
   }
 
   "In CalculationController calling the .submitOtherReliefsFlat action" when {
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/other-reliefs-flat")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/other-reliefs-flat")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 

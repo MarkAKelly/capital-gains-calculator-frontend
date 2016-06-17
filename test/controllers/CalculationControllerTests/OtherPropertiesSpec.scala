@@ -17,11 +17,12 @@
 package controllers.CalculationControllerTests
 
 import common.DefaultRoutes._
-import common.{Constants, CustomerTypeKeys, KeystoreKeys}
-import constructors.CalculationElectionConstructor
+import common.nonresident.{CustomerTypeKeys, KeystoreKeys}
+import common.Constants
+import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
-import connectors.CalculatorConnector
+import constructors.nonresident.CalculationElectionConstructor
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -35,7 +36,8 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.{CalculationController, routes}
+import controllers.nonresident.{CalculationController, routes}
+import models.nonresident.{CurrentIncomeModel, CustomerTypeModel, OtherPropertiesModel}
 import play.api.mvc.Result
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
@@ -73,7 +75,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
   // GET Tests
   "Calling the CalculationController.otherProperties" when {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/other-properties").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/other-properties").withSession(SessionKeys.sessionId -> "12345")
 
     "not supplied with a pre-existing stored model" should {
 
@@ -269,7 +271,8 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
   // POST Tests
   "In CalculationController calling the .submitOtherProperties action" when {
 
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/other-properties")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/other-properties")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 
@@ -383,7 +386,8 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
 
         s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
           document.getElementsByClass("error-notification").text should
-            include(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+            include(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
+              " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
         }
       }
     }

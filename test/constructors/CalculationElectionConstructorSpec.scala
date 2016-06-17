@@ -18,7 +18,9 @@ package constructors
 
 import common.TestModels
 import connectors.CalculatorConnector
+import constructors.nonresident.CalculationElectionConstructor
 import models._
+import models.nonresident.CalculationResultModel
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar

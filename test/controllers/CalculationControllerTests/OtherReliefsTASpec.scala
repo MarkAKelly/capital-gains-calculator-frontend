@@ -18,9 +18,9 @@ package controllers.CalculationControllerTests
 
 import common.{Constants, TestModels}
 import connectors.CalculatorConnector
-import constructors.CalculationElectionConstructor
-import controllers.{CalculationController, routes}
-import models.{CalculationResultModel, OtherReliefsModel, SummaryModel}
+import constructors.nonresident.CalculationElectionConstructor
+import controllers.nonresident.{CalculationController, routes}
+import models.nonresident.{CalculationResultModel, OtherReliefsModel, SummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -71,7 +71,8 @@ class OtherReliefsTASpec extends UnitSpec with WithFakeApplication with MockitoS
   }
 
   "In CalculationController calling the .otherReliefsTA action " should {
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/other-reliefs-time-apportioned").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET",
+      "/calculate-your-capital-gains/non-resident/other-reliefs-time-apportioned").withSession(SessionKeys.sessionId -> "12345")
     val target = setupTarget(None, None, TestModels.summaryTrusteeTAWithAEA, TestModels.calcModelTwoRates)
     lazy val result = target.otherReliefsTA(fakeRequest)
     lazy val document = Jsoup.parse(bodyOf(result))
@@ -130,7 +131,8 @@ class OtherReliefsTASpec extends UnitSpec with WithFakeApplication with MockitoS
     }
 
     "when not supplied with any previous value" should {
-      lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/other-reliefs-time-apportioned").withSession(SessionKeys.sessionId -> "12345")
+      lazy val fakeRequest = FakeRequest("GET",
+        "/calculate-your-capital-gains/non-resident/other-reliefs-time-apportioned").withSession(SessionKeys.sessionId -> "12345")
       val target = setupTarget(None, None, TestModels.summaryTrusteeTAWithAEA, TestModels.calcModelTwoRates)
       lazy val result = target.otherReliefsTA(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
@@ -141,7 +143,8 @@ class OtherReliefsTASpec extends UnitSpec with WithFakeApplication with MockitoS
     }
 
     "when supplied with a previous value" should {
-      lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/other-reliefs-time-apportioned").withSession(SessionKeys.sessionId -> "12345")
+      lazy val fakeRequest = FakeRequest("GET",
+        "/calculate-your-capital-gains/non-resident/other-reliefs-time-apportioned").withSession(SessionKeys.sessionId -> "12345")
       val testModel = OtherReliefsModel(None, Some(1000))
       val target = setupTarget(Some(testModel), None, TestModels.summaryTrusteeTAWithAEA, TestModels.calcModelTwoRates)
       lazy val result = target.otherReliefsTA(fakeRequest)
@@ -154,7 +157,8 @@ class OtherReliefsTASpec extends UnitSpec with WithFakeApplication with MockitoS
   }
 
   "In CalculationController calling the .submitOtherReliefsTA action" when {
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/other-reliefs-time-apportioned")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/other-reliefs-time-apportioned")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 
@@ -234,7 +238,8 @@ class OtherReliefsTASpec extends UnitSpec with WithFakeApplication with MockitoS
 
       s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
         document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
+            " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
       }
     }
   }

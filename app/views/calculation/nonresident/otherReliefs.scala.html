@@ -1,0 +1,48 @@
+@import models.nonresident._
+@import constructors.nonresident.SummaryConstructor
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import uk.gov.hmrc.play.views.helpers.MoneyPounds
+@import views.html.helpers._
+
+@(otherReliefsForm: Form[OtherReliefsModel], result: CalculationResultModel)(implicit request: Request[_])
+
+@hiddenYesNoContent = {
+    <ul class="list">
+        <li id="totalGain">@SummaryConstructor.gainMessage(result)
+            <b> &pound;@{MoneyPounds(result.totalGain,0).quantity}</b>
+        </li>
+
+        <li id="taxableGain">@{if (result.taxableGain >= 0) Messages("calc.otherReliefs.taxableGain")
+            else Messages("calc.summary.calculation.details.lossCarriedForward")
+            }
+            <b> &pound;@{MoneyPounds(result.taxableGain,0).quantity}</b>
+        </li>
+    </ul>
+
+    @formInputMoney(otherReliefsForm, "otherReliefs", Messages("calc.otherReliefs.question"))
+}
+
+@main_template(Messages("calc.otherReliefs.questionTwo")) {
+
+    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.CalculationController.allowableLosses">@Messages("calc.base.back")</a>
+
+    @errorSummary(otherReliefsForm, "other-reliefs", "otherReliefs")
+
+    <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
+
+    <div class="form-group">
+        @form(action = controllers.nonresident.routes.CalculationController.submitOtherReliefs) {
+
+            @formHiddenYesNoRadio(
+                otherReliefsForm,
+                "isClaimingOtherReliefs",
+                Messages("calc.otherReliefs.questionTwo"),
+                hiddenYesNoContent,
+                Some(Messages("calc.otherReliefs.help"))
+            )
+
+        <button class="button" class="submit" id="continue-button">@Messages("calc.base.button.continue")</button>
+    }
+
+    </div>
+}

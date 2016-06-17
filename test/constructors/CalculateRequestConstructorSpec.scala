@@ -16,8 +16,11 @@
 
 package constructors
 
-import common.{CustomerTypeKeys, TestModels}
+import common.nonresident.CustomerTypeKeys
+import common.TestModels
+import constructors.nonresident.CalculateRequestConstructor
 import models._
+import models.nonresident._
 import uk.gov.hmrc.play.test.UnitSpec
 
 class CalculateRequestConstructorSpec extends UnitSpec {
