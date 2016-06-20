@@ -16,11 +16,11 @@
 
 package controllers.CalculationControllerTests
 
-import common.CustomerTypeKeys
-import constructors.CalculationElectionConstructor
+import common.nonresident.{CustomerTypeKeys, KeystoreKeys}
+import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
-import connectors.CalculatorConnector
+import constructors.nonresident.CalculationElectionConstructor
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -32,8 +32,10 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
+
 import scala.concurrent.Future
-import controllers.{routes, CalculationController}
+import controllers.nonresident.{CalculationController, routes}
+import models.nonresident.{AnnualExemptAmountModel, CustomerTypeModel, DisabledTrusteeModel}
 import play.api.mvc.Result
 
 class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
@@ -50,14 +52,20 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
-    when(mockCalcConnector.fetchAndGetFormData[DisabledTrusteeModel](Matchers.eq("disabledTrustee"))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[DisabledTrusteeModel](Matchers.eq(KeystoreKeys.disabledTrustee))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(DisabledTrusteeModel(disabledTrustee))))
 
-    when(mockCalcConnector.fetchAndGetFormData[CustomerTypeModel](Matchers.eq("customerType"))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[CustomerTypeModel](Matchers.eq(KeystoreKeys.customerType))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(CustomerTypeModel(customerType))))
 
-    when(mockCalcConnector.fetchAndGetFormData[AnnualExemptAmountModel](Matchers.eq("annualExemptAmount"))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[AnnualExemptAmountModel](Matchers.eq(KeystoreKeys.annualExemptAmount))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.getFullAEA(Matchers.anyString())(Matchers.any()))
+      .thenReturn(Some(AnnualExemptAmountModel(BigDecimal(11100))))
+
+    when(mockCalcConnector.getPartialAEA(Matchers.anyString())(Matchers.any()))
+      .thenReturn(Some(AnnualExemptAmountModel(BigDecimal(5550))))
 
     lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(AnnualExemptAmountModel(0)))))
     when(mockCalcConnector.saveFormData[AnnualExemptAmountModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
@@ -72,7 +80,7 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
   // GET Tests
   "Calling the CalculationController.annualExemptAmount action" when {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/allowance").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/allowance").withSession(SessionKeys.sessionId -> "12345")
 
     "not supplied with a pre-existing stored model" should {
 
@@ -154,7 +162,8 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
   // POST Tests
   "In CalculationController calling the .submitAnnualExemptAmount action" when {
 
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/allowance")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/allowance")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 

@@ -17,10 +17,12 @@
 package controllers.CalculationControllerTests
 
 import common.Constants
+import common.nonresident.KeystoreKeys
 import connectors.CalculatorConnector
-import constructors.CalculationElectionConstructor
+import constructors.nonresident.CalculationElectionConstructor
 import models._
-import controllers.{CalculationController, routes}
+import controllers.nonresident.{CalculationController, routes}
+import models.nonresident.{AcquisitionDateModel, DisposalDateModel, PrivateResidenceReliefModel, RebasedValueModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -33,6 +35,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 import scala.concurrent.Future
 
@@ -52,16 +55,16 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
-    when(mockCalcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.eq("privateResidenceRelief"))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.eq(KeystoreKeys.privateResidenceRelief))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
-    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq("disposalDate"))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(disposalDateData))
 
-    when(mockCalcConnector.fetchAndGetFormData[AcquisitionDateModel](Matchers.eq("acquisitionDate"))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[AcquisitionDateModel](Matchers.eq(KeystoreKeys.acquisitionDate))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(acquisitionDateData))
 
-    when(mockCalcConnector.fetchAndGetFormData[RebasedValueModel](Matchers.eq("rebasedValue"))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[RebasedValueModel](Matchers.eq(KeystoreKeys.rebasedValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(rebasedValueData))
 
     lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(PrivateResidenceReliefModel("", None)))))
@@ -79,7 +82,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
     "when not supplied wth a pre-existing stored model" should {
 
-      lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+      lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
       val target = setupTarget(None, None)
       lazy val result = target.privateResidenceRelief(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
@@ -173,7 +176,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
       "when disposal date is >= 6 October 2016, no acquisition date supplied with rebased value and daysClaimedAfter of 45" should {
 
-        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
         val target = setupTarget(
           Some(PrivateResidenceReliefModel("Yes", None, Some(45))),
           None,
@@ -213,7 +216,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       "when disposal date is >= 6 October 2016 and no rebased value" should {
         //This is an impossible scenario, as the Private Residence Relief screen would not be routed to, included for completenetss
 
-        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
         val target = setupTarget(
           Some(PrivateResidenceReliefModel("Yes", None, None)),
           None,
@@ -247,7 +250,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       "when disposal date is >= 6 October 2016, acquisition date < 6 April 2015 " +
         "with rebased value, daysClaimed of 23 daysClaimedAfter of 45" should {
 
-        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
         val target = setupTarget(
           Some(PrivateResidenceReliefModel("Yes", Some(23), Some(45))),
           None,
@@ -293,7 +296,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       "when disposal date is >= 6 October 2016, acquisition < 6 April 2015 " +
         "with no rebased value, daysClaimed of 23 daysClaimedAfter of 45" should {
 
-        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
         val target = setupTarget(
           Some(PrivateResidenceReliefModel("Yes", Some(23), Some(45))),
           None,
@@ -339,7 +342,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       "when disposal date is >= 6 October 2016, acquisition date >= 6 April 2015 " +
         "with no rebased value, daysClaimed of 23" should {
 
-        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
         val target = setupTarget(
           Some(PrivateResidenceReliefModel("Yes", Some(23), Some(45))),
           None,
@@ -378,7 +381,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
       "when disposal date is < 6 October 2016, no acquisition date with rebased value" should {
 
-        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
         val target = setupTarget(
           Some(PrivateResidenceReliefModel("Yes", None, None)),
           None,
@@ -396,7 +399,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
         "when disposal date is < 6 October 2016, no acquisition date with rebased value" should {
 
-          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
           val target = setupTarget(
             Some(PrivateResidenceReliefModel("Yes", None, None)),
             None,
@@ -429,7 +432,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
         "when disposal date is < 6 October 2016 with rebased value" should {
 
-          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
           val target = setupTarget(
             Some(PrivateResidenceReliefModel("Yes", None, None)),
             None,
@@ -462,7 +465,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
         "when disposal date is < 6 October 2016, no acquisition date with no rebased value" should {
 
-          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
           val target = setupTarget(
             Some(PrivateResidenceReliefModel("Yes", None, None)),
             None,
@@ -495,7 +498,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
         "when disposal date is < 6 October 2016, acquisition date < 6 April 15 with rebased value" should {
 
-          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
           val target = setupTarget(
             Some(PrivateResidenceReliefModel("Yes", Some(23), None)),
             None,
@@ -534,7 +537,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
         "when disposal date is < 6 October 2016, acquisition date < 6 April 15 with no rebased value" should {
 
-          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
           val target = setupTarget(
             Some(PrivateResidenceReliefModel("Yes", Some(23), None)),
             None,
@@ -573,7 +576,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
         "when disposal date is < 6 October 2016, acquisition date >= 6 April 15 with rebased value" should {
 
-          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
           val target = setupTarget(
             Some(PrivateResidenceReliefModel("Yes", None, None)),
             None,
@@ -606,7 +609,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
         "when disposal date is < 6 October 2016, acquisition date >= 6 April 15 with no rebased value" should {
 
-          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
           val target = setupTarget(
             Some(PrivateResidenceReliefModel("Yes", None, None)),
             None,
@@ -643,7 +646,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
   //POST Tests
   "In CalculationController calling the .submitPrivateResidenceRelief action " when {
 
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/private-residence-relief")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/private-residence-relief")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 
@@ -787,7 +791,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "return HTML that displays the error message " in {
-        document.select("span.error-notification").text shouldEqual Messages("calc.privateResidenceRelief.error.maxNumericExceeded") + " " + Constants.maxNumeric + " " + Messages("calc.privateResidenceRelief.error.maxNumericExceeded.OrLess")
+        document.select("span.error-notification").text shouldEqual Messages("calc.privateResidenceRelief.error.maxNumericExceeded") +
+          " " + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.privateResidenceRelief.error.maxNumericExceeded.OrLess")
       }
     }
 
@@ -800,7 +805,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "return HTML that displays the error message " in {
-        document.select("span.error-notification").text shouldEqual Messages("calc.privateResidenceRelief.error.maxNumericExceeded") + " " + Constants.maxNumeric + " " + Messages("calc.privateResidenceRelief.error.maxNumericExceeded.OrLess")
+        document.select("span.error-notification").text shouldEqual Messages("calc.privateResidenceRelief.error.maxNumericExceeded") +
+          " " + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.privateResidenceRelief.error.maxNumericExceeded.OrLess")
       }
     }
   }

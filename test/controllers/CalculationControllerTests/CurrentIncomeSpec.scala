@@ -18,9 +18,9 @@ package controllers.CalculationControllerTests
 
 import common.Constants
 import connectors.CalculatorConnector
-import constructors.CalculationElectionConstructor
-import controllers.{CalculationController, routes}
-import models.CurrentIncomeModel
+import constructors.nonresident.CalculationElectionConstructor
+import controllers.nonresident.{CalculationController, routes}
+import models.nonresident.CurrentIncomeModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -33,6 +33,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 import scala.concurrent.Future
 
@@ -61,7 +62,7 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
   //GET Tests
   "In CalculationController calling the .currentIncome action " when {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/current-income").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/current-income").withSession(SessionKeys.sessionId -> "12345")
 
     "not supplied with a pre-existing stored model" should {
 
@@ -145,14 +146,14 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
     "called with no active session or valid session Id" should {
 
-      lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/current-income")
-      s"redirect to ${routes.TimeoutController.timeout()}" in {
+      lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/current-income")
+      s"redirect to ${controllers.routes.TimeoutController.timeout()}" in {
 
         val target = setupTarget(None, None)
         lazy val result = target.currentIncome(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        redirectLocation(result) shouldBe Some(s"${routes.TimeoutController.timeout()}")
+        redirectLocation(result) shouldBe Some(s"${controllers.routes.TimeoutController.timeout()}")
       }
     }
   }
@@ -161,7 +162,8 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
   //POST Tests
   "In CalculationController calling the .submitCurrentIncome action " when {
 
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/current-income")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/current-income")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 
@@ -248,7 +250,8 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
       s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
         document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
+            " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
       }
     }
   }

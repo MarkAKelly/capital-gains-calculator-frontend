@@ -17,11 +17,13 @@
 package controllers.CalculationControllerTests
 
 import common.DefaultRoutes._
-import common.{Constants, KeystoreKeys, TestModels}
+import common.nonresident.KeystoreKeys
+import common.{Constants, TestModels}
 import connectors.CalculatorConnector
-import constructors.CalculationElectionConstructor
-import controllers.{CalculationController, routes}
+import constructors.nonresident.CalculationElectionConstructor
+import controllers.nonresident.{CalculationController, routes}
 import models._
+import models.nonresident._
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -34,6 +36,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 import scala.concurrent.Future
 
@@ -67,7 +70,7 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
     when(mockCalcConnector.calculateFlat(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(Some(result)))
 
-    lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(OtherReliefsModel(Some(1000))))))
+    lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(OtherReliefsModel(Some("Yes"), Some(1000))))))
     when(mockCalcConnector.saveFormData[OtherReliefsModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
@@ -78,7 +81,7 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
   }
 
   "In CalculationController calling the .otherReliefs action " when {
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/other-reliefs").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/other-reliefs").withSession(SessionKeys.sessionId -> "12345")
 
     "not supplied with a pre-existing stored model" should {
 
@@ -105,8 +108,9 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
             contentType(result) shouldBe Some("text/html")
             charset(result) shouldBe Some("utf-8")
           }
-          "have the title 'How much extra tax relief are you claiming?'" in {
-            document.title shouldEqual Messages("calc.otherReliefs.question")
+
+          "have the title 'Do you want to add other tax relief?'" in {
+            document.title shouldEqual Messages("calc.otherReliefs.questionTwo")
           }
 
           "have the heading Calculate your tax (non-residents) " in {
@@ -118,8 +122,10 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
             document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.allowableLosses().url
           }
 
-          "have the question 'How much extra tax relief are you claiming?' as the legend of the input" in {
-            document.body.getElementsByTag("label").text should include(Messages("calc.otherReliefs.question"))
+          "have a yes no helper with hidden content and question 'Do you want to add other tax relief?'" in {
+            document.body.getElementById("isClaimingOtherReliefs-yes").parent.text shouldBe Messages("calc.base.yes")
+            document.body.getElementById("isClaimingOtherReliefs-no").parent.text shouldBe Messages("calc.base.no")
+            document.body.getElementsByTag("legend").text shouldBe Messages("calc.otherReliefs.questionTwo")
           }
 
           "have the help text 'For example, lettings relief'" in {
@@ -127,15 +133,16 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
           }
 
           "have a value for your gain" in {
-            document.getElementById("totalGain").text() shouldBe "£40,000 Total gain"
+            document.getElementById("totalGain").text() shouldBe "Total gain £40,000"
           }
 
-          "display an input box for the Other Tax Reliefs" in {
+          "display an input box for the Other Tax Reliefs with question 'How much extra tax relief are you claiming?" in {
             document.body.getElementById("otherReliefs").tagName() shouldEqual "input"
+            document.select("label[for=otherReliefs]").text should include(Messages("calc.otherReliefs.question"))
           }
 
-          "display an 'Add relief' button " in {
-            document.body.getElementById("add-relief-button").text shouldEqual Messages("calc.otherReliefs.button.addRelief")
+          "display a 'Continue' button " in {
+            document.body.getElementById("continue-button").text shouldEqual Messages("calc.base.continue")
           }
 
           "include helptext for 'Total gain'" in {
@@ -147,107 +154,10 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
           }
         }
       }
-
-      "when Acquisition Date <= 5 April 2015" should {
-
-        val target = setupTarget(
-          None,
-          None,
-          TestModels.summaryIndividualFlatWithoutAEA,
-          TestModels.calcModelTwoRates,
-          Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2014))),
-          None
-        )
-        lazy val result = target.otherReliefs(fakeRequest)
-        lazy val document = Jsoup.parse(bodyOf(result))
-
-        s"have a 'Back' link to ${routes.CalculationController.calculationElection().url}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.calculationElection().url
-        }
-      }
-
-      "when Acquisition Date is not supplied and " +
-        "rebased value is not supplied" should {
-
-        val target = setupTarget(
-          None,
-          None,
-          TestModels.summaryIndividualFlatWithoutAEA,
-          TestModels.calcModelTwoRates,
-          Some(AcquisitionDateModel("No", None,None,None)),
-          Some(RebasedValueModel("No", None))
-        )
-        lazy val result = target.otherReliefs(fakeRequest)
-        lazy val document = Jsoup.parse(bodyOf(result))
-
-        s"have a 'Back' link to ${routes.CalculationController.allowableLosses().url}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.allowableLosses().url
-        }
-      }
-
-      "when Acquisition Date is not supplied and " +
-        "rebased value is supplied" should {
-
-        val target = setupTarget(
-          None,
-          None,
-          TestModels.summaryIndividualFlatWithoutAEA,
-          TestModels.calcModelTwoRates,
-          Some(AcquisitionDateModel("No", None,None,None)),
-          Some(RebasedValueModel("Yes", Some(500)))
-        )
-        lazy val result = target.otherReliefs(fakeRequest)
-        lazy val document = Jsoup.parse(bodyOf(result))
-
-        s"have a 'Back' link to ${routes.CalculationController.calculationElection().url}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.calculationElection().url
-        }
-      }
-
-      "when Acquisition Date model is not supplied" should {
-
-        val target = setupTarget(
-          None,
-          None,
-          TestModels.summaryIndividualFlatWithoutAEA,
-          TestModels.calcModelTwoRates,
-          None,
-          Some(RebasedValueModel("Yes", Some(500)))
-        )
-        lazy val result = target.otherReliefs(fakeRequest)
-        lazy val document = Jsoup.parse(bodyOf(result))
-
-        s"have a 'Back' link to ${missingDataRoute} " in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
-        }
-      }
-
-      "when Rebased Value Model is not supplied" should {
-
-        val target = setupTarget(
-          None,
-          None,
-          TestModels.summaryIndividualFlatWithoutAEA,
-          TestModels.calcModelTwoRates,
-          Some(AcquisitionDateModel("No", None,None,None)),
-          None
-        )
-        lazy val result = target.otherReliefs(fakeRequest)
-        lazy val document = Jsoup.parse(bodyOf(result))
-
-        s"have a 'Back' link to ${missingDataRoute} " in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
-        }
-      }
-
     }
+
     "supplied with a pre-existing stored model and a loss" should {
-      val testOtherReliefsModel = OtherReliefsModel(Some(5000))
+      val testOtherReliefsModel = OtherReliefsModel(Some("Yes"), Some(5000))
       val target = setupTarget(
         Some(testOtherReliefsModel),
         None,
@@ -275,23 +185,25 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         }
 
         "have a value for your loss" in {
-          document.getElementById("totalGain").text() shouldBe "£10,000 Total loss"
+          document.getElementById("totalGain").text() shouldBe "Total loss £10,000"
         }
       }
     }
   }
 
   "In CalculationController calling the .submitOtherReliefs action" when {
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/other-reliefs")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/other-reliefs")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 
-    def executeTargetWithMockData(amount: String, summary: SummaryModel): Future[Result] = {
-      lazy val fakeRequest = buildRequest(("otherReliefs", amount))
+    def executeTargetWithMockData(selection: String, amount: String, summary: SummaryModel): Future[Result] = {
+      lazy val fakeRequest = buildRequest(("isClaimingOtherReliefs", selection), ("otherReliefs", amount))
       val numeric = "(0-9*)".r
-      val mockData = amount match {
-        case numeric(money) => OtherReliefsModel(Some(BigDecimal(money)))
-        case _ => OtherReliefsModel(None)
+      val mockData = (selection, amount) match {
+        case ("", "") => OtherReliefsModel(None, None)
+        case ("Yes", numeric(money)) => OtherReliefsModel(Some("Yes"), Some(BigDecimal(money)))
+        case _ => OtherReliefsModel(Some("No"), None)
       }
       val target = setupTarget(
         None,
@@ -307,64 +219,67 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
     "submitting a valid form with and an amount of 1000" should {
 
       "return a 303 with no Acquisition date" in {
-        lazy val result = executeTargetWithMockData("1000", TestModels.summaryIndividualFlatWithoutAEA)
-        status(result) shouldBe 303
-      }
-
-      "return a 303 with an Acquisition date before the start date" in {
-        lazy val result = executeTargetWithMockData("1000", TestModels.summaryTrusteeTAWithAEA)
+        lazy val result = executeTargetWithMockData("Yes", "1000", TestModels.summaryIndividualFlatWithoutAEA)
         status(result) shouldBe 303
       }
 
       "return a 303 with an Acquisition date after the start date" in {
-        lazy val result = executeTargetWithMockData("1000", TestModels.summaryIndividualAcqDateAfter)
+        lazy val result = executeTargetWithMockData("Yes", "1000", TestModels.summaryIndividualAcqDateAfter)
         status(result) shouldBe 303
       }
     }
 
     "submitting a valid form with and an amount with two decimal places" should {
-      lazy val result = executeTargetWithMockData("1000.11", TestModels.summaryIndividualFlatWithoutAEA)
+      lazy val result = executeTargetWithMockData("Yes", "1000.11", TestModels.summaryIndividualFlatWithoutAEA)
 
       "return a 303" in {
         status(result) shouldBe 303
       }
     }
 
-    "submitting an valid form with no value" should {
-      lazy val result = executeTargetWithMockData("0", TestModels.summaryIndividualFlatWithoutAEA)
+    "submitting an invalid form with no radio button selected" should {
+      lazy val result = executeTargetWithMockData("", "", TestModels.summaryIndividualFlatWithoutAEA)
 
-      "return a 303" in {
+      "return a 400" in {
+        status(result) shouldBe 400
+      }
+    }
+
+    "submitting an invalid form with 'Yes' selected and no value supplied" should {
+      lazy val result = executeTargetWithMockData("Yes", "0", TestModels.summaryIndividualFlatWithoutAEA)
+
+      "return a 400" in {
         status(result) shouldBe 303
       }
     }
 
-    "submitting an invalid form with an amount with three decimal places" should {
-      lazy val result = executeTargetWithMockData("0.111", TestModels.summaryIndividualFlatWithoutAEA)
+    "submitting an invalid form with 'Yes' and an amount with three decimal places" should {
+      lazy val result = executeTargetWithMockData("Yes", "0.111", TestModels.summaryIndividualFlatWithoutAEA)
 
       "return a 400" in {
         status(result) shouldBe 400
       }
     }
 
-    "submitting an invalid form with a negative value" should {
-      lazy val result = executeTargetWithMockData("-1000", TestModels.summaryIndividualFlatWithoutAEA)
+    "submitting an invalid form with 'Yes' and a negative value" should {
+      lazy val result = executeTargetWithMockData("Yes", "-1000", TestModels.summaryIndividualFlatWithoutAEA)
 
       "return a 400" in {
         status(result) shouldBe 400
       }
     }
 
-    "submitting an invalid form with an value of shdgsaf" should {
-      lazy val result = executeTargetWithMockData("shdgsaf", TestModels.summaryIndividualFlatWithoutAEA)
+    "submitting an invalid form with 'Yes' and a value of shdgsaf" should {
+      lazy val result = executeTargetWithMockData("Yes", "shdgsaf", TestModels.summaryIndividualFlatWithoutAEA)
 
       "return a 400" in {
         status(result) shouldBe 400
       }
     }
 
-    "submitting a value which exceeds the maximum numeric" should {
+    "submitting a value with 'Yes' and value exceeds the maximum numeric" should {
 
-      lazy val result = executeTargetWithMockData((Constants.maxNumeric + 0.01).toString, TestModels.summaryIndividualFlatWithoutAEA)
+      lazy val result = executeTargetWithMockData("Yes", (Constants.maxNumeric + 0.01).toString, TestModels.summaryIndividualFlatWithoutAEA)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {
@@ -373,7 +288,8 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
       s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
         document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
+            " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
       }
     }
   }

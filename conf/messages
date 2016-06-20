@@ -43,6 +43,7 @@ calc.common.next.actions.heading = What to do next
 calc.common.invalidError = Invalid selection!
 calc.common.error.maxNumericExceeded = Enter an amount that''s £
 calc.common.error.maxNumericExceeded.OrLess = or less
+calc.common.error.fieldRequired = This field is required
 
 ## Introduction ##
 calc.introduction.title = Introduction
@@ -165,10 +166,10 @@ calc.disposalDate.question = When did you sign the contract that made someone el
 calc.disposalDate.error.disposalDateAfterAcquisition = This can''t be before the date you became the owner
 
 ## No Capital Gains Tax ##
-nocgt.invaliddate.title = You have no Capital Gains Tax to pay
-nocgt.content.one = This is because you sold or gave away the property before 6 April 2015.
+nocgt.invaliddate.title = You have no tax to pay
+nocgt.content.one = This is because Capital Gains Tax for non-residents only applies to properties which were sold or given away after 5 April 2015.
 nocgt.content.two = You''ve told us that you sold or gave away the property on
-nocgt.content.change = (Change)
+nocgt.content.change = Change
 nocgt.sidebar.linkone = Capital Gains Tax for non-residents
 
 ## Disposal Value ##
@@ -246,6 +247,7 @@ calc.calculationElection.whyMoreDetails.two = Higher totals sometimes qualify fo
 
 ## Other Reliefs ##
 calc.otherReliefs.question = How much extra tax relief are you claiming?
+calc.otherReliefs.questionTwo = Do you want to add other tax relief?
 calc.otherReliefs.totalGain = Total gain
 calc.otherReliefs.totalLoss = Total loss
 calc.otherReliefs.taxableGain = Taxable gain
@@ -253,6 +255,7 @@ calc.otherReliefs.button.addRelief = Add relief
 calc.otherReliefs.button.updateRelief = Update relief
 calc.otherReliefs.errorMinimum = Enter a positive number for your other reliefs
 calc.otherReliefs.errorDecimal = There are too many numbers after the decimal point in your other reliefs
+calc.otherReliefs.errorNoValue = Enter the value for your relief
 calc.otherReliefs.help = For example, lettings relief
 
 ## Summary ##

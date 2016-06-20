@@ -16,11 +16,11 @@
 
 package controllers.CalculationControllerTests
 
-import common.KeystoreKeys
-import constructors.CalculationElectionConstructor
+import common.nonresident.KeystoreKeys
+import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
-import connectors.CalculatorConnector
+import constructors.nonresident.CalculationElectionConstructor
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -34,7 +34,8 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.{CalculationController, routes}
+import controllers.nonresident.{CalculationController, routes}
+import models.nonresident.{AcquisitionDateModel, DisposalDateModel}
 import play.api.mvc.Result
 
 class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
@@ -68,7 +69,7 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
   // GET Tests
   "Calling the CalculationController.disposalDate" when {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/disposal-date").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/disposal-date").withSession(SessionKeys.sessionId -> "12345")
 
     "not supplied with a pre-existing stored model" should {
 
@@ -150,7 +151,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
       case _ => 0
     }
 
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/disposal-date")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/disposal-date")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 

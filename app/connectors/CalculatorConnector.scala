@@ -16,20 +16,17 @@
 
 package connectors
 
-import akka.actor.Status.Success
+import common.nonresident.KeystoreKeys
 import config.{CalculatorSessionCache, WSHttp}
-import constructors.CalculateRequestConstructor
-import models._
+import constructors.nonresident.CalculateRequestConstructor
+import models.nonresident._
 import play.api.libs.json.Format
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet}
+
 import scala.concurrent.ExecutionContext.Implicits.global
-
-import common.KeystoreKeys
-
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 
 object CalculatorConnector extends CalculatorConnector with ServicesConfig {
   override val sessionCache = CalculatorSessionCache
@@ -74,6 +71,18 @@ trait CalculatorConnector {
     }")
   }
 
+  def getFullAEA (input: String)(implicit hc: HeaderCarrier): Future[Option[AnnualExemptAmountModel]] = {
+    http.GET[Option[AnnualExemptAmountModel]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-full-aea?taxYear=$input")
+  }
+
+  def getPartialAEA (input: String)(implicit hc: HeaderCarrier): Future[Option[AnnualExemptAmountModel]] = {
+    http.GET[Option[AnnualExemptAmountModel]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-partial-aea?taxYear=$input")
+  }
+
+  def getPA (input: String)(implicit hc: HeaderCarrier): Future[Option[PersonalAllowanceModel]] = {
+    http.GET[Option[PersonalAllowanceModel]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-pa?taxYear=$input")
+  }
+
   def clearKeystore()(implicit hc: HeaderCarrier) = {
     sessionCache.remove()
   }
@@ -97,9 +106,9 @@ trait CalculatorConnector {
     val disposalCosts = fetchAndGetFormData[DisposalCostsModel](KeystoreKeys.disposalCosts).map(formData => formData.get)
     val allowableLosses = fetchAndGetFormData[AllowableLossesModel](KeystoreKeys.allowableLosses).map(formData => formData.get)
     val calculationElection = fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection).map(formData => formData.getOrElse(CalculationElectionModel("")))
-    val otherReliefsFlat = fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map(formData => formData.getOrElse(OtherReliefsModel(None)))
-    val otherReliefsTA = fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA).map(formData => formData.getOrElse(OtherReliefsModel(None)))
-    val otherReliefsRebased = fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map(formData => formData.getOrElse(OtherReliefsModel(None)))
+    val otherReliefsFlat = fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map(formData => formData.getOrElse(OtherReliefsModel(Some("No"), None)))
+    val otherReliefsTA = fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA).map(formData => formData.getOrElse(OtherReliefsModel(Some("No"), None)))
+    val otherReliefsRebased = fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map(formData => formData.getOrElse(OtherReliefsModel(Some("No"), None)))
     val privateResidenceRelief = fetchAndGetFormData[PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief)
 
 

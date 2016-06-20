@@ -1,0 +1,22 @@
+@import models.nonresident.DisposalCostsModel
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import views.html.helpers._
+
+@(disposalCostsForm: Form[DisposalCostsModel])(implicit request: Request[_])
+
+@main_template(Messages("calc.disposalCosts.question")) {
+
+    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.CalculationController.acquisitionCosts">Back</a>
+
+    @errorSummary(disposalCostsForm, "disposal-costs")
+
+    <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
+
+    @form(action = controllers.nonresident.routes.CalculationController.submitDisposalCosts) {
+
+        @formInputMoney(disposalCostsForm, "disposalCosts", Messages("calc.disposalCosts.question"))
+
+        <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+
+    }
+}
