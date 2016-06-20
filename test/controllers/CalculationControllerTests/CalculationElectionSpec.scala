@@ -16,11 +16,12 @@
 
 package controllers.CalculationControllerTests
 
-import common.{KeystoreKeys, TestModels}
-import constructors.CalculationElectionConstructor
+import common.TestModels
+import common.nonresident.KeystoreKeys
+import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
-import connectors.CalculatorConnector
+import constructors.nonresident.CalculationElectionConstructor
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -32,8 +33,10 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
+
 import scala.concurrent.Future
-import controllers.{routes, CalculationController}
+import controllers.nonresident.{CalculationController, routes}
+import models.nonresident.{CalculationElectionModel, CalculationResultModel, OtherReliefsModel, SummaryModel}
 import play.api.mvc.Result
 
 class CalculationElectionSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
@@ -110,7 +113,7 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
   // GET Tests
   "In CalculationController calling the .calculationElection action" when {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/calculation-election").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/calculation-election").withSession(SessionKeys.sessionId -> "12345")
 
     "supplied with no pre-existing data" should {
 
@@ -260,9 +263,9 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
         None,
         TestModels.summaryTrusteeTAWithoutAEA,
         None,
-        Some(OtherReliefsModel(Some(500))),
-        Some(OtherReliefsModel(Some(600))),
-        Some(OtherReliefsModel(Some(700)))
+        Some(OtherReliefsModel(None, Some(500))),
+        Some(OtherReliefsModel(None, Some(600))),
+        Some(OtherReliefsModel(None, Some(700)))
       )
       lazy val result = target.calculationElection(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
@@ -338,7 +341,8 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
 
   "In CalculationController calling the .submitCalculationElection action" when {
 
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/calculation-election")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/calculation-election")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 
@@ -364,7 +368,7 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
       }
 
       "redirect to the other reliefs page" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.otherReliefs()}")
+        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.otherReliefsFlat()}")
       }
     }
 

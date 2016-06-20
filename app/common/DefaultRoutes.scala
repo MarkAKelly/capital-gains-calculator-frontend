@@ -16,7 +16,7 @@
 
 package common
 
-import controllers.routes
+import controllers.nonresident.routes
 
 object DefaultRoutes extends DefaultRoutes
 

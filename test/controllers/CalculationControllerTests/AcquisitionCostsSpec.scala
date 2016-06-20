@@ -18,9 +18,9 @@ package controllers.CalculationControllerTests
 
 import common.Constants
 import connectors.CalculatorConnector
-import constructors.CalculationElectionConstructor
-import controllers.{CalculationController, routes}
-import models.AcquisitionCostsModel
+import constructors.nonresident.CalculationElectionConstructor
+import controllers.nonresident.{CalculationController, routes}
+import models.nonresident.AcquisitionCostsModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -33,6 +33,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 import scala.concurrent.Future
 
@@ -59,7 +60,7 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
 
   "In CalculationController calling the .acquisitionCosts action " should {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/acquisition-costs").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/acquisition-costs").withSession(SessionKeys.sessionId -> "12345")
 
     "not supplied with a pre-existing stored model" should {
       val target = setupTarget(None, None)
@@ -137,7 +138,8 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
   }
 
   "In CalculationController calling the .submitAcquisitionCosts action" when {
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/acquisition-date")
+    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
+      "/calculate-your-capital-gains/non-resident/acquisition-date")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 
@@ -234,7 +236,8 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
 
         s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
           document.getElementsByClass("error-notification").text should
-            include (Messages("calc.common.error.maxNumericExceeded") + Constants.maxNumeric + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+            include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
+              " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
         }
 
         "display a visible Error Summary field" in {

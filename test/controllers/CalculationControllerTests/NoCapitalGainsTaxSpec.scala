@@ -16,11 +16,11 @@
 
 package controllers.CalculationControllerTests
 
-import common.KeystoreKeys
+import common.nonresident.KeystoreKeys
 import connectors.CalculatorConnector
-import constructors.CalculationElectionConstructor
-import controllers.CalculationController
-import models.DisposalDateModel
+import constructors.nonresident.CalculationElectionConstructor
+import controllers.nonresident.CalculationController
+import models.nonresident.DisposalDateModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -55,7 +55,7 @@ class NoCapitalGainsTaxSpec extends UnitSpec with WithFakeApplication with Mocki
   //GET Tests
   "In CalculationController calling the .noCapitalGainsTax action " should {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/no-capital-gains-tax").withSession(SessionKeys.sessionId -> "12345")
+    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/no-capital-gains-tax").withSession(SessionKeys.sessionId -> "12345")
 
     "when supplied with a model for the date 01 January 2015" should {
 
@@ -74,15 +74,17 @@ class NoCapitalGainsTaxSpec extends UnitSpec with WithFakeApplication with Mocki
           charset(result) shouldBe Some("utf-8")
         }
 
-        "have the title 'You have no Capital Gains Tax to pay'" in {
+        "have the title 'You have no tax to pay'" in {
           document.title shouldEqual Messages("nocgt.invaliddate.title")
         }
 
-        "have the heading 'You have no Capital Gains Tax to pay'" in {
+        "have the heading 'You have no tax to pay'" in {
           document.body.getElementsByTag("h1").text shouldEqual Messages("nocgt.invaliddate.title")
         }
-        "Contain the content 'This is because you sold or gave away the property before 6 April 2015.'" in {
-          document.body.select("article p").text should include("This is because you sold or gave away the property before 6 April 2015.")
+        "Contain the content " +
+          "'This is because Capital Gains Tax for non-residents only applies to properties which were sold or given away after 5 April 2015.'" in {
+          document.body.select("article p").text should include("This is because Capital Gains Tax for non-residents " +
+            "only applies to properties which were sold or given away after 5 April 2015.")
         }
         "Contain the content 'You've told us that you sold or gave away the property on'" in {
           document.body.select("article p").text should include("You've told us that you sold or gave away the property on")
@@ -97,20 +99,20 @@ class NoCapitalGainsTaxSpec extends UnitSpec with WithFakeApplication with Mocki
           document.select("a#change-link").text shouldBe Messages("nocgt.content.change")
         }
 
-        "should display a date of 01 January 2015" in {
-          document.select("span.bold-small").text shouldEqual "01 January 2015"
+        "should display a date of 1 January 2015" in {
+          document.select("span.bold-small").text shouldEqual "1 January 2015"
         }
       }
     }
 
-    "when supplied with a model for the date 03 Decemeber 2014" should {
+    "when supplied with a model for the date 13 Decemeber 2014" should {
 
-      val target = setupTarget(Some(DisposalDateModel(3, 12, 2014)))
+      val target = setupTarget(Some(DisposalDateModel(13, 12, 2014)))
       lazy val result = target.noCapitalGainsTax(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
 
-      "should display a date of 03 December 2014" in {
-        document.select("span.bold-small").text shouldEqual "03 December 2014"
+      "should display a date of 13 December 2014" in {
+        document.select("span.bold-small").text shouldEqual "13 December 2014"
       }
     }
   }
