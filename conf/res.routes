@@ -1,0 +1,16 @@
+#Routes file for the resident routes.
+
+#Disposal Date Routes
+
+#Disposal Value or Market Value Routes
+GET     /disposal-value                   controllers.resident.GainController.disposalValue
+
+#Disposal Costs Routes
+
+#Acquisition Value or Market Value Routes
+
+#Acquisition Costs Routes
+
+#Improvements Routes
+
+#First Summary Routes
