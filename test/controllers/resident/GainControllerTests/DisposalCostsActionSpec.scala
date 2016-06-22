@@ -24,19 +24,27 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication {
 
-  "Calling .disposalCosts from the GainCalculationController" should {
+  lazy val fakeRequstWithSession = FakeRequest("GET", "").withSession((SessionKeys.sessionId, ""))
+
+  "Calling .disposalCosts from the GainCalculationController with session" should {
+
     "return a status of 200" in {
-      val fakeRequest = FakeRequest("GET", "/").withSession((SessionKeys.sessionId, ""))
-      val result = GainController.disposalCosts(fakeRequest)
+      val result = GainController.disposalCosts(fakeRequstWithSession)
       status(result) shouldBe 200
     }
   }
 
   "Calling .disposalCosts from the GainCalculationController with no session" should {
+
+    lazy val fakeRequest = FakeRequest("GET", "")
+    lazy val result = GainController.disposalCosts(fakeRequest)
+
     "return a status of 303" in {
-      val fakeRequest = FakeRequest("GET", "")
-      val result = GainController.disposalCosts(fakeRequest)
       status(result) shouldBe 303
+    }
+
+    "return you to the session timeout view" in {
+      redirectLocation(result).get shouldBe "/calculate-your-capital-gains/non-resident/session-timeout"
     }
   }
 }
