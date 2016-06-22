@@ -42,7 +42,7 @@ trait GainController extends FeatureLock {
   }
 
   val acquisitionValue = FeatureLockForRTT.async { implicit request =>
-    Future.successful(Ok(""))
+    Future.successful(Ok(views.acquisitionValue()))
   }
   val disposalCosts = FeatureLockForRTT.async { implicit request =>
     Future.successful(Ok(views.disposalCosts()))

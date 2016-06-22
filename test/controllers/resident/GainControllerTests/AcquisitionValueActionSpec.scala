@@ -15,23 +15,33 @@
  */
 
 package controllers.resident.GainControllerTests
+
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.GainController
+import org.jsoup.Jsoup
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Calling .acquisitionCosts from the GainCalculationController with session" should {
+  "Calling .acquisitionValue from the GainCalculationController with session" should {
 
     lazy val result = GainController.acquisitionValue(fakeRequestWithSession)
 
     "return a status of 200" in {
       status(result) shouldBe 200
     }
+
+    "return some html" in {
+      contentType(result) shouldBe Some("text/html")
+    }
+
+    "display the Acquisition Value view" in {
+      Jsoup.parse(bodyOf(result)).title shouldBe "AcquisitionValue"
+    }
   }
 
-  "Calling .acquisitionCosts from the GainCalculationController with no session" should {
+  "Calling .acquisitionValue from the GainCalculationController with no session" should {
 
     lazy val result = GainController.acquisitionValue(fakeRequest)
 
