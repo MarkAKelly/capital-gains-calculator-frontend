@@ -30,6 +30,9 @@ object MessageLookup {
     val title = "When did you sign the contract that made someone else the owner?"
     val question = "When did you sign the contract that made someone else the owner?"
     val helpText = "For example, 4 9 2016"
+    val day = "Day"
+    val month = "Month"
+    val year = "Year"
   }
 
   //Disposal Value messages

@@ -21,6 +21,7 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 import forms.resident.DisposalDateForm._
 import assets.MessageLookup.{disposalDate => messages}
+import assets.MessageLookup._
 
 class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
@@ -46,19 +47,19 @@ class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     }
 
     "have an input box for day" in {
-      doc.body.getElementById("disposalDateDay").parent.text shouldBe "Day"
+      doc.body.getElementById("disposalDateDay").parent.text shouldBe messages.day
     }
 
     "have an input box for month" in {
-      doc.body.getElementById("disposalDateMonth").parent.text shouldBe "Month"
+      doc.body.getElementById("disposalDateMonth").parent.text shouldBe messages.month
     }
 
     "have an input box for year" in {
-      doc.body.getElementById("disposalDateYear").parent.text shouldBe "Year"
+      doc.body.getElementById("disposalDateYear").parent.text shouldBe messages.year
     }
 
     "have a button with the text 'Continue'" in {
-      doc.body.getElementById("continue-button").text shouldBe "Continue"
+      doc.body.getElementById("continue-button").text shouldBe calcBaseContinue
     }
   }
 }
