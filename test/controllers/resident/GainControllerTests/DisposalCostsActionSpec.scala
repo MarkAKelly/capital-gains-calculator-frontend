@@ -17,6 +17,7 @@
 package controllers.resident.GainControllerTests
 
 import controllers.resident.GainController
+import org.jsoup.Jsoup
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.http.SessionKeys
@@ -35,6 +36,10 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication {
 
     "return some html" in {
       contentType(result) shouldBe Some("text/html")
+    }
+
+    "display the Disposal Costs view" in {
+      Jsoup.parse(bodyOf(result)).title shouldBe "DisposalCosts"
     }
   }
 
