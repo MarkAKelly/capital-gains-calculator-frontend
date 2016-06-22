@@ -9,6 +9,7 @@ GET     /disposal-value                   controllers.resident.GainController.di
 #Disposal Costs Routes
 
 #Acquisition Value or Market Value Routes
+GET     /acquisition-value                controllers.resident.GainController.acquisitionValue
 
 #Acquisition Costs Routes
 
