@@ -17,32 +17,30 @@
 package controllers.resident.GainControllerTests
 
 import controllers.resident.GainController
-import play.api.test.FakeRequest
+import controllers.helpers.FakeRequestHelper
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 
-class DisposalDateActionSpec extends UnitSpec with WithFakeApplication {
+class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Calling .disposalDate from the GainCalculationController" should {
 
+    lazy val result = GainController.disposalDate(fakeRequstWithSession)
+
     "return a status of 200" in {
-      val fakeRequest = FakeRequest("GET", "").withSession((SessionKeys.sessionId, ""))
-      val result = GainController.disposalDate(fakeRequest)
       status(result) shouldBe 200
     }
 
     "return some html" in {
-      val fakeRequest = FakeRequest("GET", "").withSession((SessionKeys.sessionId, ""))
-      val result = GainController.disposalDate(fakeRequest)
       contentType(result) shouldBe Some("text/html")
     }
   }
 
   "Calling .disposalDate from the GainCalculationController with no session" should {
+
+    lazy val result = GainController.disposalDate(fakeRequest)
+
     "return a status of 200" in {
-      val fakeRequest = FakeRequest("GET", "")
-      val result = GainController.disposalDate(fakeRequest)
       status(result) shouldBe 200
     }
   }

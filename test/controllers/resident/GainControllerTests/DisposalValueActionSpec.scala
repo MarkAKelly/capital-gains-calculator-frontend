@@ -17,34 +17,31 @@
 package controllers.resident.GainControllerTests
 
 import controllers.resident.GainController
-import play.api.test.FakeRequest
+import controllers.helpers.FakeRequestHelper
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class DisposalValueActionSpec extends UnitSpec with WithFakeApplication {
+class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Calling .disposalValue from the GainCalculationController" should {
+
+    lazy val result = GainController.disposalValue(fakeRequstWithSession)
+
     "return a status of 200" in {
-      val fakeRequest = FakeRequest("GET", "/").withSession((SessionKeys.sessionId, ""))
-      val result = GainController.disposalValue(fakeRequest)
       status(result) shouldBe 200
+    }
+
+    "return some html" in {
+      contentType(result) shouldBe Some("text/html")
     }
   }
 
   "Calling .disposalValue from the GainCalculationController with no session" should {
-    "return a status of 303" in {
-      val fakeRequest = FakeRequest("GET", "")
-      val result = GainController.disposalValue(fakeRequest)
-      status(result) shouldBe 303
-    }
-  }
 
-  "Calling .disposalValue from the GainCalculationController" should {
-    "return some html" in {
-      val fakeRequest = FakeRequest("GET", "").withSession((SessionKeys.sessionId, ""))
-      val result = GainController.disposalValue(fakeRequest)
-      contentType(result) shouldBe Some("text/html")
+    lazy val result = GainController.disposalValue(fakeRequest)
+
+    "return a status of 303" in {
+      status(result) shouldBe 303
     }
   }
 }
