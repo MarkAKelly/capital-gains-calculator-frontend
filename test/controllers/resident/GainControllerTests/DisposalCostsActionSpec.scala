@@ -24,13 +24,17 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication {
 
-  lazy val fakeRequstWithSession = FakeRequest("GET", "").withSession((SessionKeys.sessionId, ""))
-
   "Calling .disposalCosts from the GainCalculationController with session" should {
 
+    lazy val fakeRequstWithSession = FakeRequest("GET", "").withSession((SessionKeys.sessionId, ""))
+    lazy val result = GainController.disposalCosts(fakeRequstWithSession)
+
     "return a status of 200" in {
-      val result = GainController.disposalCosts(fakeRequstWithSession)
       status(result) shouldBe 200
+    }
+
+    "return some html" in {
+      contentType(result) shouldBe Some("text/html")
     }
   }
 

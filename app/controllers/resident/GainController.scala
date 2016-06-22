@@ -17,6 +17,8 @@
 package controllers.resident
 
 import controllers.predicates.FeatureLock
+import play.twirl.api.Html
+
 import scala.concurrent.Future
 import views.html.calculation.{resident => views}
 
@@ -29,6 +31,6 @@ trait GainController extends FeatureLock {
   }
 
   val disposalCosts = FeatureLockForRTT.async { implicit request =>
-    Future.successful(Ok("dummy"))
+    Future.successful(Ok(Html("dummy")))
   }
 }
