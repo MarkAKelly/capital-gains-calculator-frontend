@@ -1,7 +1,22 @@
 @()(implicit request: Request[_])
 
+@bulletContent = {
+<p id="bullet-list-title">@Messages("calc.resident.disposal.value.bullet.title") </p>
+<!--<ul class="list-bullet">-->
+    <!--<li>@Messages("calc.disposalValue.bullet.one")</li>-->
+    <!--<li>@Messages("calc.disposalValue.bullet.two") </li>-->
+    <!--<li>@Messages("calc.disposalValue.bullet.three")</li>-->
+<!--</ul>-->
+}
+
 @main_template(title = Messages("calc.resident.disposal.value.title")) {
 
-    <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
+    <h1 class="heading-large">@Messages("calc.resident.disposal.value.question")</h1>
+
+    <div class="panel-indent">
+        @bulletContent
+    </div>
+
+
 
 }

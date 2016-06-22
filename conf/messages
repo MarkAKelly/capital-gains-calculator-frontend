@@ -289,6 +289,9 @@ calc.summary.warning.taxYear = Your total might be less accurate because you did
 
 ## Disposal Value messages
 calc.resident.disposal.value.title = How much did you sell the property for?
+calc.resident.disposal.value.question = How much did you sell the property for?
+calc.resident.disposal.value.bullet.title = Put the market value of the property instead if you:
+
 
 
 ## Disposal Costs messages

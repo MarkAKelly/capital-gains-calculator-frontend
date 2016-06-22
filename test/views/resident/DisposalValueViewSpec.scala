@@ -34,10 +34,21 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication {
     }
 
     s"have the title of the page s${MessageLookup.disposalValueTitle}" in {
-
       val view = views.html.calculation.resident.disposalValue()(fakeRequest)
       val doc = Jsoup.parse(view.body)
       doc.title shouldEqual MessageLookup.disposalValueTitle
+    }
+
+    s"have the question of the page s${MessageLookup.disposalValueQuestion}" in {
+      val view = views.html.calculation.resident.disposalValue()(fakeRequest)
+      val doc = Jsoup.parse(view.body)
+      doc.select("h1").text() shouldEqual MessageLookup.disposalValueQuestion
+    }
+
+    s"have bullet point list title of s${MessageLookup.disposalValueBulletListTitle}" in {
+      val view = views.html.calculation.resident.disposalValue()(fakeRequest)
+      val doc = Jsoup.parse(view.body)
+      doc.select("div.panel-indent p#bullet-list-title").text() shouldEqual MessageLookup.disposalValueBulletListTitle
     }
   }
 }

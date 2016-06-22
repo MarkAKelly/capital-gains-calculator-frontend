@@ -29,6 +29,9 @@ object MessageLookup {
 
   //Disposal Value messages
   val disposalValueTitle = "How much did you sell the property for?"
+  val disposalValueQuestion = "How much did you sell the property for?"
+  val disposalValueBulletListTitle = "Put the market value of the property instead if you:"
+
 
   //Disposal Costs messages
 
