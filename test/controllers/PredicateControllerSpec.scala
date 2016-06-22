@@ -34,7 +34,15 @@ class PredicateControllerSpec extends UnitSpec with WithFakeApplication with Fro
     Future.successful(Ok("Hello"))
   }
 
+  val featureLockTestTrueNoTimeout = FeatureLockForTrue.asyncNoTimeout { implicit request =>
+    Future.successful(Ok("Hello"))
+  }
+
   val featureLockTestFalse = FeatureLockForFalse.async { implicit request =>
+    Future.successful(Ok("Hello"))
+  }
+
+  val featureLockTestFalseNoTimeout = FeatureLockForFalse.asyncNoTimeout { implicit request =>
     Future.successful(Ok("Hello"))
   }
 
@@ -53,9 +61,29 @@ class PredicateControllerSpec extends UnitSpec with WithFakeApplication with Fro
 
   }
 
+  "Calling FeatureLockTestController.featureLockTestTrueNoTimeout" should {
+
+    object featureLockTestDataItem extends fakeRequestTo("", featureLockTestTrueNoTimeout)
+
+    "return status ok (200)" in {
+      status(featureLockTestDataItem.result) shouldBe 200
+    }
+
+  }
+
   "Calling FeatureLockTestController.featureLockTestFalse" should {
 
     object featureLockTestDataItem extends fakeRequestTo("", featureLockTestFalse)
+
+    "return status NotFound (404)" in {
+      status(featureLockTestDataItem.result) shouldBe 404
+    }
+
+  }
+
+  "Calling FeatureLockTestController.featureLockTestFalseNoTimeout" should {
+
+    object featureLockTestDataItem extends fakeRequestTo("", featureLockTestFalseNoTimeout)
 
     "return status NotFound (404)" in {
       status(featureLockTestDataItem.result) shouldBe 404

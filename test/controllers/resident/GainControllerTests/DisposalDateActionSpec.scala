@@ -20,35 +20,30 @@ import controllers.resident.GainController
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.http.SessionKeys
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 
-class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication {
+class DisposalDateActionSpec extends UnitSpec with WithFakeApplication {
 
-  "Calling .disposalCosts from the GainCalculationController with session" should {
-
-    lazy val fakeRequestWithSession = FakeRequest().withSession((SessionKeys.sessionId, ""))
-    lazy val result = GainController.disposalCosts(fakeRequestWithSession)
+  "Calling .disposalDate from the GainCalculationController" should {
 
     "return a status of 200" in {
+      val fakeRequest = FakeRequest("GET", "").withSession((SessionKeys.sessionId, ""))
+      val result = GainController.disposalDate(fakeRequest)
       status(result) shouldBe 200
     }
 
     "return some html" in {
+      val fakeRequest = FakeRequest("GET", "").withSession((SessionKeys.sessionId, ""))
+      val result = GainController.disposalDate(fakeRequest)
       contentType(result) shouldBe Some("text/html")
     }
   }
 
-  "Calling .disposalCosts from the GainCalculationController with no session" should {
-
-    lazy val fakeRequest = FakeRequest()
-    lazy val result = GainController.disposalCosts(fakeRequest)
-
-    "return a status of 303" in {
-      status(result) shouldBe 303
-    }
-
-    "return you to the session timeout view" in {
-      redirectLocation(result).get shouldBe "/calculate-your-capital-gains/non-resident/session-timeout"
+  "Calling .disposalDate from the GainCalculationController with no session" should {
+    "return a status of 200" in {
+      val fakeRequest = FakeRequest("GET", "")
+      val result = GainController.disposalDate(fakeRequest)
+      status(result) shouldBe 200
     }
   }
 }
