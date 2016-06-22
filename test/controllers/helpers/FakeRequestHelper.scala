@@ -21,5 +21,5 @@ import uk.gov.hmrc.play.http.SessionKeys
 
 trait FakeRequestHelper {
   lazy val fakeRequest = FakeRequest()
-  lazy val fakeRequstWithSession = fakeRequest.withSession((SessionKeys.sessionId, ""))
+  lazy val fakeRequestWithSession = fakeRequest.withSession((SessionKeys.sessionId, ""))
 }

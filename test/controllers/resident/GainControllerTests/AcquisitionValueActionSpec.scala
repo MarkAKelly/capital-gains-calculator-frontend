@@ -24,7 +24,7 @@ class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with 
 
   "Calling .acquisitionCosts from the GainCalculationController with session" should {
 
-    lazy val result = GainController.acquisitionValue(fakeRequstWithSession)
+    lazy val result = GainController.acquisitionValue(fakeRequestWithSession)
 
     "return a status of 200" in {
       status(result) shouldBe 200

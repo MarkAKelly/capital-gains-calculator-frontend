@@ -25,7 +25,7 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
 
   "Calling .disposalDate from the GainCalculationController" should {
 
-    lazy val result = GainController.disposalDate(fakeRequstWithSession)
+    lazy val result = GainController.disposalDate(fakeRequestWithSession)
 
     "return a status of 200" in {
       status(result) shouldBe 200
