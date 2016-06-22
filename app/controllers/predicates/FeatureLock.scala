@@ -39,6 +39,17 @@ trait FeatureLock extends ValidActiveSession {
         }
       }
     }
+
+    def asyncNoTimeout(action: AsyncPlayRequest): Action[AnyContent] = {
+      Action.async { implicit request =>
+        if (condition) {
+          action(request)
+        }
+        else {
+          Future.successful(NotFound)
+        }
+      }
+    }
   }
 
   object FeatureLockForRTT extends FeatureLockFor(RTTCondition)
