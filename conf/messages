@@ -244,7 +244,6 @@ calc.calculationElection.message.whyMore = Why you might choose a higher total
 calc.calculationElection.whyMoreDetails.one = You might pick a higher total if you''re planning to add more tax reliefs.
 calc.calculationElection.whyMoreDetails.two = Higher totals sometimes qualify for larger reliefs, which can reduce the amount you owe.
 
-
 ## Other Reliefs ##
 calc.otherReliefs.question = How much extra tax relief are you claiming?
 calc.otherReliefs.questionTwo = Do you want to add other tax relief?
@@ -282,4 +281,22 @@ calc.summary.calculation.details.rebasedCalculation = How much you''ve gained on
 calc.summary.calculation.details.lossCarriedForward = Loss carried forward
 calc.summary.warning.taxYear = Your total might be less accurate because you didn't sell or give away your property in this tax year
 
+###############################################################################################
+## Resident messages ##
+###############################################################################################
 
+## Disposal Date messages
+
+## Disposal Value messages
+calc.resident.disposal.value.title = How much did you sell the property for?
+
+
+## Disposal Costs messages
+
+## Acquisition Value messages
+
+## Acquisition Costs messages
+
+## Improvements messages
+
+## First Summary messages

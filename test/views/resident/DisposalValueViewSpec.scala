@@ -17,16 +17,27 @@
 package views.resident
 
 import org.jsoup.Jsoup
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import assets.MessageLookup
+import play.api.test.FakeRequest
 
-class DisposalValueViewSpec extends UnitSpec {
+class DisposalValueViewSpec extends UnitSpec with WithFakeApplication {
 
   "Disposal Value View" should {
 
+    val fakeRequest = FakeRequest("GET", "")
+
     "have charset UTF-8" in {
-      val view = views.html.calculation.resident.disposalValue()
+      val view = views.html.calculation.resident.disposalValue()(fakeRequest)
       val doc = Jsoup.parse(view.body)
       doc.charset.toString shouldBe "UTF-8"
+    }
+
+    s"have the title of the page s${MessageLookup.disposalValueTitle}" in {
+
+      val view = views.html.calculation.resident.disposalValue()(fakeRequest)
+      val doc = Jsoup.parse(view.body)
+      doc.title shouldEqual MessageLookup.disposalValueTitle
     }
   }
 }
