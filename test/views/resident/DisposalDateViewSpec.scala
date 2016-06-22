@@ -20,6 +20,7 @@ import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 import forms.resident.DisposalDateForm._
+import assets.MessageLookup.{disposalDate => messages}
 
 class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
@@ -33,15 +34,15 @@ class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     }
 
     "have the title 'When did you sign the contract that made someone else the owner?'" in {
-      doc.title() shouldBe "When did you sign the contract that made someone else the owner?"
+      doc.title() shouldBe messages.title
     }
 
     "have the heading question 'When did you sign the contract that made someone else the owner?'" in {
-      doc.body.getElementsByTag("h1").text should include("When did you sign the contract that made someone else the owner?")
+      doc.body.getElementsByTag("h1").text should include(messages.question)
     }
 
     "have the helptext 'For example, 4 9 2016'" in {
-      doc.body.getElementsByClass("form-hint").text should include("For example, 4 9 2016")
+      doc.body.getElementsByClass("form-hint").text should include(messages.helpText)
     }
 
     "have an input box for day" in {

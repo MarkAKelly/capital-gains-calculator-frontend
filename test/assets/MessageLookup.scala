@@ -26,6 +26,11 @@ object MessageLookup {
   //Common messages
 
   //Disposal Date messages
+  object disposalDate {
+    val title = "When did you sign the contract that made someone else the owner?"
+    val question = "When did you sign the contract that made someone else the owner?"
+    val helpText = "For example, 4 9 2016"
+  }
 
   //Disposal Value messages
   val disposalValueTitle = "How much did you sell the property for?"
