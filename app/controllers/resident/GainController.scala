@@ -19,7 +19,6 @@ package controllers.resident
 import java.util.UUID
 
 import controllers.predicates.FeatureLock
-import play.twirl.api.Html
 import uk.gov.hmrc.play.http.SessionKeys
 import scala.concurrent.Future
 import views.html.calculation.{resident => views}
