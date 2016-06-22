@@ -40,10 +40,10 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication {
   }
 
   "Calling .disposalDate from the GainCalculationController with no session" should {
-    "return a status of 303" in {
+    "return a status of 200" in {
       val fakeRequest = FakeRequest("GET", "")
       val result = GainController.disposalDate(fakeRequest)
-      status(result) shouldBe 303
+      status(result) shouldBe 200
     }
   }
 }

@@ -16,8 +16,10 @@
 
 package controllers.resident
 
+import java.util.UUID
+
 import controllers.predicates.FeatureLock
-import play.api.mvc.Action
+import uk.gov.hmrc.play.http.SessionKeys
 import scala.concurrent.Future
 import views.html.calculation.{resident => views}
 
@@ -25,8 +27,14 @@ object GainController extends GainController
 
 trait GainController extends FeatureLock {
 
-  val disposalDate = FeatureLockForRTT.async { implicit request =>
-    Future.successful(Ok(views.disposalDate()))
+  val disposalDate = FeatureLockForRTT.asyncNoTimeout { implicit request =>
+    if (request.session.get(SessionKeys.sessionId).isEmpty) {
+      val sessionId = UUID.randomUUID.toString
+      Future.successful(Ok(views.disposalDate()).withSession(request.session + (SessionKeys.sessionId -> s"session-$sessionId")))
+    }
+    else {
+      Future.successful(Ok(views.disposalDate()))
+    }
   }
 
   val disposalValue = FeatureLockForRTT.async { implicit request =>
