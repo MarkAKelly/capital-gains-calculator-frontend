@@ -16,19 +16,23 @@
 
 package forms.resident
 
-import models.resident.DisposalDateModel
-import play.api.data.Forms._
-import play.api.data._
-import common.Validation._
+import uk.gov.hmrc.play.test.UnitSpec
+import models.resident.DisposalValueModel
+import forms.resident.DisposalValueForm._
 
-object DisposalDateForm {
+class DisposalValueFormSpec extends UnitSpec {
 
-  def disposalDateForm() = Form(
-    mapping(
-      "disposalDateDay" -> number,
-      "disposalDateMonth" -> number,
-      "disposalDateYear" -> number
-    )(DisposalDateModel.apply)(DisposalDateModel.unapply)
-      .verifying("error-placeholder", fields => isValidDate(fields.day, fields.month, fields.year))
-  )
+  "Creating the Form for the Disposal Value" should {
+    "return a populated form using .fill" in {
+      val model = DisposalValueModel(1.0)
+      val form = disposalValueForm.fill(model)
+      form.value.get shouldBe DisposalValueModel(1.0)
+    }
+
+    "return a None if a model without a numeric value is supplied using .bind" in {
+      val map = Map(("amount", "a"))
+      val form = disposalValueForm.bind(map)
+      form.value shouldBe None
+    }
+  }
 }

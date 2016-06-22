@@ -47,16 +47,32 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
 
   "Calling .submitDisposalDate from the GainCalculationController" should {
 
-    lazy val fakeRequestWithSession = GainController.submitDisposalDate(fakeRequest)
+    "when there is a valid form" should {
 
-    "return a status of 303" in {
-      status(fakeRequestWithSession) shouldBe 303
+      lazy val fakePostRequest = fakeRequestToPOSTWithSession(("disposalDateDay", "30"), ("disposalDateMonth", "4"), ("disposalDateYear", "2016"))
+      lazy val result = GainController.submitDisposalDate(fakePostRequest)
+
+      "return a status of 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the Disposal Value page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/disposal-value")
+      }
     }
 
-    "return a status of 500 with an invalid POST" in {
-      fakeRequestWithSession.form
+    "when there is an invalid form" should {
+
+      lazy val fakePostRequest = fakeRequestToPOSTWithSession(("disposalDateDay", "32"), ("disposalDateMonth", "4"), ("disposalDateYear", "2016"))
+      lazy val result = GainController.submitDisposalDate(fakePostRequest)
+
+      "return a status of 400 with an invalid POST" in {
+        status(result) shouldBe 400
+      }
+
+      "return some html" in {
+        contentType(result) shouldBe Some("text/html")
+      }
     }
   }
-
-
 }

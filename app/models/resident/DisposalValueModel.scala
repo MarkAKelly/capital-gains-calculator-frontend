@@ -14,21 +14,12 @@
  * limitations under the License.
  */
 
-package forms.resident
+package models.resident
 
-import models.resident.DisposalDateModel
-import play.api.data.Forms._
-import play.api.data._
-import common.Validation._
+import play.api.libs.json.Json
 
-object DisposalDateForm {
+case class DisposalValueModel(amount: BigDecimal)
 
-  def disposalDateForm() = Form(
-    mapping(
-      "disposalDateDay" -> number,
-      "disposalDateMonth" -> number,
-      "disposalDateYear" -> number
-    )(DisposalDateModel.apply)(DisposalDateModel.unapply)
-      .verifying("error-placeholder", fields => isValidDate(fields.day, fields.month, fields.year))
-  )
+object DisposalValueModel {
+  implicit val format = Json.format[DisposalValueModel]
 }
