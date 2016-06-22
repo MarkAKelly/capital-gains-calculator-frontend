@@ -42,25 +42,25 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication {
     s"have the question of the page ${MessageLookup.disposalValueQuestion}" in {
       val view = views.html.calculation.resident.disposalValue()(fakeRequest)
       val doc = Jsoup.parse(view.body)
-      doc.select("h1").text() shouldEqual MessageLookup.disposalValueQuestion
+      doc.select("h1.visuallyhidden").text() shouldEqual MessageLookup.disposalValueQuestion
     }
 
     s"have bullet point list title of ${MessageLookup.disposalValueBulletListTitle}" in {
       val view = views.html.calculation.resident.disposalValue()(fakeRequest)
       val doc = Jsoup.parse(view.body)
-      doc.select("div.panel-indent p#bullet-list-title").text() shouldEqual MessageLookup.disposalValueBulletListTitle
+      doc.select("div.indent p#bullet-list-title").text() shouldEqual MessageLookup.disposalValueBulletListTitle
     }
 
     s"have first bullet point of ${MessageLookup.disposalValueBulletListOne}" in {
       val view = views.html.calculation.resident.disposalValue()(fakeRequest)
       val doc = Jsoup.parse(view.body)
-      doc.select("div.panel-indent li#bullet-list-one").text() shouldEqual MessageLookup.disposalValueBulletListOne
+      doc.select("div.indent li#bullet-list-one").text() shouldEqual MessageLookup.disposalValueBulletListOne
     }
 
     s"have second bullet point of ${MessageLookup.disposalValueBulletListTwo} with link text ${MessageLookup.disposalValueBulletListTwoLink}" in {
       val view = views.html.calculation.resident.disposalValue()(fakeRequest)
       val doc = Jsoup.parse(view.body)
-      doc.select("div.panel-indent li#bullet-list-two").text() shouldEqual MessageLookup.disposalValueBulletListTwo +
+      doc.select("div.indent li#bullet-list-two").text() shouldEqual MessageLookup.disposalValueBulletListTwo +
       " " + MessageLookup.disposalValueBulletListTwoLink + " " + MessageLookup.calcBaseExternalLink
     }
 
@@ -73,7 +73,20 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication {
     s"have third bullet point of ${MessageLookup.disposalValueBulletListThree}" in {
       val view = views.html.calculation.resident.disposalValue()(fakeRequest)
       val doc = Jsoup.parse(view.body)
-      doc.select("div.panel-indent li#bullet-list-three").text() shouldEqual MessageLookup.disposalValueBulletListThree
+      doc.select("div.indent li#bullet-list-three").text() shouldEqual MessageLookup.disposalValueBulletListThree
+    }
+
+    s"have an input field with id amount and the label displays the text of ${MessageLookup.disposalValueQuestion}" in {
+      val view = views.html.calculation.resident.disposalValue()(fakeRequest)
+      val doc = Jsoup.parse(view.body)
+      doc.select("span.heading-large").text() shouldEqual MessageLookup.disposalValueQuestion
+      doc.body.getElementById("amount").tagName() shouldEqual "input"
+    }
+
+    "have continue button " in {
+      val view = views.html.calculation.resident.disposalValue()(fakeRequest)
+      val doc = Jsoup.parse(view.body)
+      doc.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
     }
   }
 

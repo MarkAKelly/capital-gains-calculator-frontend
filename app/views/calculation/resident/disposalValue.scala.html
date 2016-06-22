@@ -1,4 +1,6 @@
-@import 
+@import play.api.i18n._
+@import forms.resident.DisposalValueForm._
+@import views.html.helpers._
 
 @()(implicit request: Request[_])
 
@@ -21,12 +23,11 @@
 
 @main_template(title = Messages("calc.resident.disposal.value.title")) {
 
-    <h1 class="heading-large">@Messages("calc.resident.disposal.value.question")</h1>
+    <h1 class="visuallyhidden">@Messages("calc.resident.disposal.value.question")</h1>
 
-    @formInputMoney()
+    @formInputMoney(disposalValueForm, "amount", Messages("calc.resident.disposal.value.question"), additionalHTMLContent = Some(bulletContent.toString()), labelAsHeading = Some(true))
 
-    <div class="panel-indent">
-        @bulletContent
-    </div>
+<button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+
 
 }
