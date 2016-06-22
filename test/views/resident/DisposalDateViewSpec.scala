@@ -16,39 +16,48 @@
 
 package views.resident
 
+import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
-import play.api.test.FakeRequest
 import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 import forms.resident.DisposalDateForm._
 
-class DisposalDateViewSpec extends UnitSpec with WithFakeApplication {
+class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Disposal Date view" should {
 
-    val fakeRequest = FakeRequest("GET", "")
+    lazy val view = views.html.calculation.resident.disposalDate(disposalDateForm)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
 
     "have charset UTF-8" in {
-      val view = views.html.calculation.resident.disposalDate(disposalDateForm)(fakeRequest)
-      val doc = Jsoup.parse(view.body)
       doc.charset().toString shouldBe "UTF-8"
     }
 
     "have the title 'When did you sign the contract that made someone else the owner?'" in {
-      val view = views.html.calculation.resident.disposalDate(disposalDateForm)(fakeRequest)
-      val doc = Jsoup.parse(view.body)
       doc.title() shouldBe "When did you sign the contract that made someone else the owner?"
     }
 
     "have the heading question 'When did you sign the contract that made someone else the owner?'" in {
-      val view = views.html.calculation.resident.disposalDate(disposalDateForm)(fakeRequest)
-      val doc = Jsoup.parse(view.body)
       doc.body.getElementsByTag("h1").text should include("When did you sign the contract that made someone else the owner?")
     }
 
     "have the helptext 'For example, 4 9 2016'" in {
-      val view = views.html.calculation.resident.disposalDate(disposalDateForm)(fakeRequest)
-      val doc = Jsoup.parse(view.body)
       doc.body.getElementsByClass("form-hint").text should include("For example, 4 9 2016")
+    }
+
+    "have an input box for day" in {
+      doc.body.getElementById("disposalDateDay").parent.text shouldBe "Day"
+    }
+
+    "have an input box for month" in {
+      doc.body.getElementById("disposalDateMonth").parent.text shouldBe "Month"
+    }
+
+    "have an input box for year" in {
+      doc.body.getElementById("disposalDateYear").parent.text shouldBe "Year"
+    }
+
+    "have a button with the text 'Continue'" in {
+      doc.body.getElementById("continue-button").text shouldBe "Continue"
     }
   }
 }
