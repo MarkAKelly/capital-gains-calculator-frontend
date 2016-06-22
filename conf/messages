@@ -282,4 +282,5 @@ calc.summary.calculation.details.rebasedCalculation = How much you''ve gained on
 calc.summary.calculation.details.lossCarriedForward = Loss carried forward
 calc.summary.warning.taxYear = Your total might be less accurate because you didn't sell or give away your property in this tax year
 
-
+## Resident ##
+calc.resident.disposalDate.question = When did you sign the contract that made someone else the owner?

@@ -22,6 +22,8 @@ import controllers.predicates.FeatureLock
 import uk.gov.hmrc.play.http.SessionKeys
 import scala.concurrent.Future
 import views.html.calculation.{resident => views}
+import forms.resident.DisposalDateForm._
+
 
 object GainController extends GainController
 
@@ -30,10 +32,10 @@ trait GainController extends FeatureLock {
   val disposalDate = FeatureLockForRTT.asyncNoTimeout { implicit request =>
     if (request.session.get(SessionKeys.sessionId).isEmpty) {
       val sessionId = UUID.randomUUID.toString
-      Future.successful(Ok(views.disposalDate()).withSession(request.session + (SessionKeys.sessionId -> s"session-$sessionId")))
+      Future.successful(Ok(views.disposalDate(disposalDateForm)).withSession(request.session + (SessionKeys.sessionId -> s"session-$sessionId")))
     }
     else {
-      Future.successful(Ok(views.disposalDate()))
+      Future.successful(Ok(views.disposalDate(disposalDateForm)))
     }
   }
 

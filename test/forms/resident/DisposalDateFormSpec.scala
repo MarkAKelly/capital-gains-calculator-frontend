@@ -29,14 +29,20 @@ class DisposalDateFormSpec extends UnitSpec {
       form.value.get shouldBe DisposalDateModel(10, 10, 2016)
     }
 
-    "return a Some if a model with valid inputs is supplied using .bind" should {
+    "return a Some if a model with valid inputs is supplied using .bind" in {
       val map = Map(("day", "10"), ("month", "10"), ("year", "2016"))
       val form = disposalDateForm.bind(map)
       form.value shouldBe Some(DisposalDateModel(10, 10, 2016))
     }
 
-    "return a None if a model with non-numeric inputs is supplied using .bind" should {
+    "return a None if a model with non-numeric inputs is supplied using .bind" in {
       val map = Map(("day", "a"), ("month", "b"), ("year", "c"))
+      val form = disposalDateForm.bind(map)
+      form.value shouldBe None
+    }
+
+    "return a None if a model with a non-valid date input is supplied using .bind" in {
+      val map = Map(("day", "32"), ("month", "4"), ("year", "2016"))
       val form = disposalDateForm.bind(map)
       form.value shouldBe None
     }

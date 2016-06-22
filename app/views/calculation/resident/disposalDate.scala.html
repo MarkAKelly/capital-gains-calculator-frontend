@@ -1,0 +1,15 @@
+@import models.resident.DisposalDateModel
+@import views.html.helpers._
+
+
+@(disposalDateForm: Form[DisposalDateModel])(implicit request: Request[_])
+
+@main_template(Messages("calc.resident.disposalDate.question")){
+
+    <h1 class="heading-large">@Messages("calc.resident.disposalDate.question")</h1>
+
+    @formInlineDateInput(disposalDateForm,
+                            "disposalDate",
+                            Messages("calc.resident.disposalDate.question"),
+                            '_visually_hidden -> true)
+}

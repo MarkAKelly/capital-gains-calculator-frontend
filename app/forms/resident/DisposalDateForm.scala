@@ -19,14 +19,16 @@ package forms.resident
 import models.resident.DisposalDateModel
 import play.api.data.Forms._
 import play.api.data._
+import common.Validation._
 
 object DisposalDateForm {
 
-  def disposalDateForm() = Form (
+  def disposalDateForm() = Form(
     mapping(
       "day" -> number,
       "month" -> number,
       "year" -> number
     )(DisposalDateModel.apply)(DisposalDateModel.unapply)
+      .verifying("error-placeholder", fields => isValidDate(fields.day, fields.month, fields.year))
   )
 }
