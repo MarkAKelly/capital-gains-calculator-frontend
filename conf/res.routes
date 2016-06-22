@@ -7,8 +7,10 @@ GET     /disposal-date                    controllers.resident.GainController.di
 GET     /disposal-value                   controllers.resident.GainController.disposalValue
 
 #Disposal Costs Routes
+GET     /disposal-costs                   controllers.resident.GainController.disposalCosts
 
 #Acquisition Value or Market Value Routes
+GET     /acquisition-value                controllers.resident.GainController.acquisitionValue
 
 #Acquisition Costs Routes
 

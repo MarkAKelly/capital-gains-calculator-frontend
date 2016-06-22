@@ -17,15 +17,18 @@
 package controllers.resident.GainControllerTests
 
 import controllers.resident.GainController
-import controllers.helpers.FakeRequestHelper
+import org.jsoup.Jsoup
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication {
 
-  "Calling .disposalValue from the GainCalculationController" should {
+  "Calling .disposalCosts from the GainCalculationController with session" should {
 
-    lazy val result = GainController.disposalValue(fakeRequestWithSession)
+    lazy val fakeRequestWithSession = FakeRequest().withSession((SessionKeys.sessionId, ""))
+    lazy val result = GainController.disposalCosts(fakeRequestWithSession)
 
     "return a status of 200" in {
       status(result) shouldBe 200
@@ -34,14 +37,23 @@ class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with Fak
     "return some html" in {
       contentType(result) shouldBe Some("text/html")
     }
+
+    "display the Disposal Costs view" in {
+      Jsoup.parse(bodyOf(result)).title shouldBe "DisposalCosts"
+    }
   }
 
-  "Calling .disposalValue from the GainCalculationController with no session" should {
+  "Calling .disposalCosts from the GainCalculationController with no session" should {
 
-    lazy val result = GainController.disposalValue(fakeRequest)
+    lazy val fakeRequest = FakeRequest()
+    lazy val result = GainController.disposalCosts(fakeRequest)
 
     "return a status of 303" in {
       status(result) shouldBe 303
+    }
+
+    "return you to the session timeout view" in {
+      redirectLocation(result).get shouldBe "/calculate-your-capital-gains/non-resident/session-timeout"
     }
   }
 }
