@@ -38,6 +38,9 @@ object MessageLookup {
 
 
   //Disposal Costs messages
+  object disposalValue {
+    val title = "How much did you pay in costs when you stopped owning the property?"
+  }
 
   //Acquisition Value messages
 

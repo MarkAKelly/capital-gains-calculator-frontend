@@ -16,6 +16,7 @@
 
 package controllers.resident.GainControllerTests
 
+import assets.MessageLookup.{disposalValue => messages}
 import controllers.resident.GainController
 import org.jsoup.Jsoup
 import play.api.test.FakeRequest
@@ -39,7 +40,7 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication {
     }
 
     "display the Disposal Costs view" in {
-      Jsoup.parse(bodyOf(result)).title shouldBe "DisposalCosts"
+      Jsoup.parse(bodyOf(result)).title shouldBe messages.title
     }
   }
 
