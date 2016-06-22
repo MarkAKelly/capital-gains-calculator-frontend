@@ -16,6 +16,7 @@
 
 package views.resident
 
+import assets.{MessageLookup => commonMessages}
 import assets.MessageLookup.{disposalValue => messages}
 import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
@@ -34,6 +35,23 @@ class DisposalCostsViewSpec extends UnitSpec with WithFakeApplication with FakeR
 
     "have the correct page title" in {
       doc.title shouldBe messages.title
+    }
+
+    "have a back button that" should {
+
+      lazy val backLink = doc.select("a#back-link")
+
+      "have the correct back link text" in {
+        backLink.text shouldBe commonMessages.calcBaseBack
+      }
+
+      "have the back-link class" in {
+        backLink.hasClass("back-link") shouldBe true
+      }
+
+//      "have a link to Disposal Value" in {
+//        backLink.attr("href") shouldBe controllers.resident.routes.GainController.disposalValue().toString
+//      }
     }
   }
 }
