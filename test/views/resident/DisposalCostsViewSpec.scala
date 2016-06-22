@@ -16,22 +16,24 @@
 
 package views.resident
 
+import assets.MessageLookup.{disposalValue => messages}
+import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class DisposalCostsViewSpec extends UnitSpec with WithFakeApplication {
+class DisposalCostsViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Disposal Costs view" should {
 
-    lazy val view = views.html.calculation.resident.disposalCosts()
+    lazy val view = views.html.calculation.resident.disposalCosts()(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have charset UTF-8" in {
       doc.charset().toString shouldBe "UTF-8"
     }
 
-    "have title DisposalCosts" in {
-      doc.title shouldBe "DisposalCosts"
+    "have the correct page title" in {
+      doc.title shouldBe messages.title
     }
   }
 }
