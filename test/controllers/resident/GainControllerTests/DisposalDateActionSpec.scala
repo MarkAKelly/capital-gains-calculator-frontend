@@ -44,4 +44,19 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
       status(result) shouldBe 200
     }
   }
+
+  "Calling .submitDisposalDate from the GainCalculationController" should {
+
+    lazy val fakeRequestWithSession = GainController.submitDisposalDate(fakeRequest)
+
+    "return a status of 303" in {
+      status(fakeRequestWithSession) shouldBe 303
+    }
+
+    "return a status of 500 with an invalid POST" in {
+      fakeRequestWithSession.form
+    }
+  }
+
+
 }
