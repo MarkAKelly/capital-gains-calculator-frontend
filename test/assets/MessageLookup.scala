@@ -34,7 +34,7 @@ object MessageLookup {
   val disposalValueBulletListOne = "gave it away as a gift"
   val disposalValueBulletListTwo = "sold it to a relative, business partner or"
   val disposalValueBulletListTwoLink = "someone else you're connected to"
-
+  val disposalValueBulletListThree = "sold it for less than it’s worth to help the buyer"
 
 
   //Disposal Costs messages

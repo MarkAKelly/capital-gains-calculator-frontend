@@ -69,6 +69,12 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication {
       val doc = Jsoup.parse(view.body)
       doc.select("span.visuallyhidden").text() shouldEqual MessageLookup.calcBaseExternalLink
     }
+
+    s"have third bullet point of ${MessageLookup.disposalValueBulletListThree}" in {
+      val view = views.html.calculation.resident.disposalValue()(fakeRequest)
+      val doc = Jsoup.parse(view.body)
+      doc.select("div.panel-indent li#bullet-list-three").text() shouldEqual MessageLookup.disposalValueBulletListThree
+    }
   }
 
 }
