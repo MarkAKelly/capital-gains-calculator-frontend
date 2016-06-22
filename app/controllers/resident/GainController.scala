@@ -17,6 +17,7 @@
 package controllers.resident
 
 import controllers.predicates.FeatureLock
+import play.api.mvc.Action
 import scala.concurrent.Future
 import views.html.calculation.{resident => views}
 
@@ -24,7 +25,9 @@ object GainController extends GainController
 
 trait GainController extends FeatureLock {
 
-  val disposalDate = TODO
+  val disposalDate = FeatureLockForRTT.async { implicit request =>
+    Future.successful(Ok("Hello"))
+  }
 
   val disposalValue = FeatureLockForRTT.async { implicit request =>
     Future.successful(Ok(views.disposalValue()))
