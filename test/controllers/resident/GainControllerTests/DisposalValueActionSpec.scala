@@ -33,12 +33,12 @@ import scala.concurrent.Future
 
 class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  def setupTarget(getData : Option[DisposalValueModel]): GainController = {
+  def setupTarget(getData: Option[DisposalValueModel]): GainController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
     when(mockCalcConnector.fetchAndGetFormData[DisposalValueModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalValue))(Matchers.any(), Matchers.any()))
-        .thenReturn(Future.successful(getData))
+      .thenReturn(Future.successful(getData))
 
     new GainController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -73,9 +73,9 @@ class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with Fak
       status(result) shouldBe 200
     }
 
-    s"return some html with title of ${MessageLookup.disposalValueQuestion}" in {
+    s"return some html with title of ${MessageLookup.disposalValue.Question}" in {
       contentType(result) shouldBe Some("text/html")
-      Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.disposalValueQuestion
+      Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.disposalValue.Question
     }
   }
 
@@ -87,7 +87,6 @@ class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with Fak
       status(result) shouldBe 303
     }
   }
-
 
   "Calling .submitDisposalValue from the GainController" should {
 
@@ -106,7 +105,7 @@ class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "render the disposal value page when supplied with an invalid form" in {
       status(result) shouldEqual 400
-      Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.disposalValueTitle
+      Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.disposalValue.Title
     }
   }
 }

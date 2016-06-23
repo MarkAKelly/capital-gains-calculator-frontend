@@ -25,6 +25,13 @@ import controllers.helpers.FakeRequestHelper
 
 class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
+  case class fakePOSTRequest(value: String) {
+    lazy val fakePOSTRequest = fakeRequestToPOSTWithSession(("amount", value))
+    lazy val fakePOSTForm = DisposalValueForm.disposalValueForm.bind(Map(("amount", value)))
+    lazy val fakePOSTView = views.html.calculation.resident.disposalValue(fakePOSTForm)(fakePOSTRequest)
+    lazy val fakePOSTDoc = Jsoup.parse(fakePOSTView.body)
+  }
+
   "Disposal Value View" should {
 
     val fakeRequest = FakeRequest("GET", "")
@@ -33,50 +40,54 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
     lazy val view = views.html.calculation.resident.disposalValue(fakeForm)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
-    lazy val fakePOSTRequest = fakeRequestToPOSTWithSession(("amount", ""))
-    lazy val fakePOSTForm = DisposalValueForm.disposalValueForm.bind(Map(("amount", "")))
-    lazy val fakePOSTView = views.html.calculation.resident.disposalValue(fakePOSTForm)(fakePOSTRequest)
-    lazy val fakePOSTDoc = Jsoup.parse(fakePOSTView.body)
-
     "have charset UTF-8" in {
       doc.charset.toString shouldBe "UTF-8"
     }
 
-    s"have the title of the page ${MessageLookup.disposalValueTitle}" in {
-      doc.title shouldEqual MessageLookup.disposalValueTitle
+    s"have the title of the page ${MessageLookup.disposalValue.Title}" in {
+      doc.title shouldEqual MessageLookup.disposalValue.Title
     }
 
-    s"have the question of the page ${MessageLookup.disposalValueQuestion}" in {
-      doc.select("h1.visuallyhidden").text() shouldEqual MessageLookup.disposalValueQuestion
+    s"have a back link to the Disposal Date Page with text ${MessageLookup.calcBaseBack}" in {
+      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/disposal-date"
     }
 
-    s"have bullet point list title of ${MessageLookup.disposalValueBulletListTitle}" in {
-      doc.select("div.indent p#bullet-list-title").text() shouldEqual MessageLookup.disposalValueBulletListTitle
+    s"have the question of the page ${MessageLookup.disposalValue.Question}" in {
+      doc.select("h1.visuallyhidden").text() shouldEqual MessageLookup.disposalValue.Question
     }
 
-    s"have first bullet point of ${MessageLookup.disposalValueBulletListOne}" in {
-      doc.select("div.indent li#bullet-list-one").text() shouldEqual MessageLookup.disposalValueBulletListOne
+    s"have bullet point list title of ${MessageLookup.disposalValue.BulletListTitle}" in {
+      doc.select("div.indent p#bullet-list-title").text() shouldEqual MessageLookup.disposalValue.BulletListTitle
     }
 
-    s"have second bullet point of ${MessageLookup.disposalValueBulletListTwo} with link text ${MessageLookup.disposalValueBulletListTwoLink}" in {
-      doc.select("div.indent li#bullet-list-two").text() shouldEqual MessageLookup.disposalValueBulletListTwo +
-      " " + MessageLookup.disposalValueBulletListTwoLink + " " + MessageLookup.calcBaseExternalLink
+    s"have first bullet point of ${MessageLookup.disposalValue.BulletListOne}" in {
+      doc.select("div.indent li#bullet-list-one").text() shouldEqual MessageLookup.disposalValue.BulletListOne
     }
 
-    s"have the second bullet point link ${MessageLookup.disposalValueBulletListTwoLink} with a visually hidden content span" in {
+    s"have second bullet point of ${MessageLookup.disposalValue.BulletListTwo} with link text ${MessageLookup.disposalValue.BulletListTwoLink}" in {
+      doc.select("div.indent li#bullet-list-two").text() shouldEqual MessageLookup.disposalValue.BulletListTwo +
+        " " + MessageLookup.disposalValue.BulletListTwoLink + " " + MessageLookup.calcBaseExternalLink
+    }
+
+    s"the second bullet point link ${MessageLookup.disposalValue.BulletListTwoLink} should have a visually hidden content span" in {
       doc.select("span.visuallyhidden").text() shouldEqual MessageLookup.calcBaseExternalLink
     }
 
-    s"have third bullet point of ${MessageLookup.disposalValueBulletListThree}" in {
-      doc.select("div.indent li#bullet-list-three").text() shouldEqual MessageLookup.disposalValueBulletListThree
+    s"the second bullet point link ${MessageLookup.disposalValue.BulletListTwoLink} should " +
+      "have the address Some(https://www.gov.uk/capital-gains-tax/losses)" in {
+      doc.select("a#lossesLink").attr("href") shouldEqual "https://www.gov.uk/capital-gains-tax/losses"
     }
 
-    "render a form tag with id of with a submit action" in {
+    s"have third bullet point of ${MessageLookup.disposalValue.BulletListThree}" in {
+      doc.select("div.indent li#bullet-list-three").text() shouldEqual MessageLookup.disposalValue.BulletListThree
+    }
+
+    "render a form tag with a submit action" in {
       doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/disposal-value"
     }
 
-    s"have an input field with id amount and the label displays the text of ${MessageLookup.disposalValueQuestion}" in {
-      doc.select("span.heading-large").text() shouldEqual MessageLookup.disposalValueQuestion
+    s"have an input field with id amount and the label displays the text of ${MessageLookup.disposalValue.Question}" in {
+      doc.select("span.heading-large").text() shouldEqual MessageLookup.disposalValue.Question
       doc.body.getElementById("amount").tagName() shouldEqual "input"
     }
 
@@ -84,40 +95,32 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
       doc.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
     }
 
-    s"render a view with an error message ${MessageLookup.undefinedMessage} when supplied with an invalid form" in {
-      lazy val fakePOSTRequest = fakeRequestToPOSTWithSession(("amount", ""))
-      lazy val fakePOSTForm = DisposalValueForm.disposalValueForm.bind(Map(("amount", "")))
-      lazy val fakePOSTView = views.html.calculation.resident.disposalValue(fakePOSTForm)(fakePOSTRequest)
-      lazy val fakePOSTDoc = Jsoup.parse(fakePOSTView.body)
-      fakePOSTDoc.select("span.error-notification").text shouldEqual MessageLookup.undefinedMessage
-      fakePOSTDoc.select("a#amount-error-summary").text shouldEqual MessageLookup.undefinedMessage
+    s"render a view with an error message ${MessageLookup.undefinedMessage} in both a summary and a span " +
+      "when supplied with an empty form" in {
+      val fakePOST = fakePOSTRequest("")
+      fakePOST.fakePOSTDoc.select("span.error-notification").text shouldEqual MessageLookup.undefinedMessage
+      fakePOST.fakePOSTDoc.select("a#amount-error-summary").text shouldEqual MessageLookup.undefinedMessage
     }
 
-    s"render a view with an error message ${MessageLookup.undefinedMessage} when a number that has more than 2 decimal places is supplied" in {
-      lazy val fakePOSTRequest = fakeRequestToPOSTWithSession(("amount", "100.0000"))
-      lazy val fakePOSTForm = DisposalValueForm.disposalValueForm.bind(Map(("amount", "100.0000")))
-      lazy val fakePOSTView = views.html.calculation.resident.disposalValue(fakePOSTForm)(fakePOSTRequest)
-      lazy val fakePOSTDoc = Jsoup.parse(fakePOSTView.body)
-      fakePOSTDoc.select("span.error-notification").text shouldEqual MessageLookup.undefinedMessage
-      fakePOSTDoc.select("a#amount-error-summary").text shouldEqual MessageLookup.undefinedMessage
+    s"render a view with an error message ${MessageLookup.undefinedMessage} in both a summary and a span " +
+      "when a number that has more than 2 decimal places is supplied" in {
+      val fakePOST = fakePOSTRequest("100.0000")
+      fakePOST.fakePOSTDoc.select("span.error-notification").text shouldEqual MessageLookup.undefinedMessage
+      fakePOST.fakePOSTDoc.select("a#amount-error-summary").text shouldEqual MessageLookup.undefinedMessage
     }
 
-    s"render a view with an error message ${MessageLookup.undefinedMessage} when a number that is greater than the maximum value is supplied" in {
-      lazy val fakePOSTRequest = fakeRequestToPOSTWithSession(("amount", "11000000000"))
-      lazy val fakePOSTForm = DisposalValueForm.disposalValueForm.bind(Map(("amount", "11000000000")))
-      lazy val fakePOSTView = views.html.calculation.resident.disposalValue(fakePOSTForm)(fakePOSTRequest)
-      lazy val fakePOSTDoc = Jsoup.parse(fakePOSTView.body)
-      fakePOSTDoc.select("span.error-notification").text shouldEqual MessageLookup.undefinedMessage
-      fakePOSTDoc.select("a#amount-error-summary").text shouldEqual MessageLookup.undefinedMessage
+    s"render a view with an error message ${MessageLookup.undefinedMessage} in both a summary and a span " +
+      "when a number that is greater than the maximum value is supplied" in {
+      val fakePOST = fakePOSTRequest("11000000000")
+      fakePOST.fakePOSTDoc.select("span.error-notification").text shouldEqual MessageLookup.undefinedMessage
+      fakePOST.fakePOSTDoc.select("a#amount-error-summary").text shouldEqual MessageLookup.undefinedMessage
     }
 
-    s"render a view with an error message ${MessageLookup.undefinedMessage} when a number that is not a positive value is supplied" in {
-      lazy val fakePOSTRequest = fakeRequestToPOSTWithSession(("amount", "-11000"))
-      lazy val fakePOSTForm = DisposalValueForm.disposalValueForm.bind(Map(("amount", "-11000")))
-      lazy val fakePOSTView = views.html.calculation.resident.disposalValue(fakePOSTForm)(fakePOSTRequest)
-      lazy val fakePOSTDoc = Jsoup.parse(fakePOSTView.body)
-      fakePOSTDoc.select("span.error-notification").text shouldEqual MessageLookup.undefinedMessage
-      fakePOSTDoc.select("a#amount-error-summary").text shouldEqual MessageLookup.undefinedMessage
+    s"render a view with an error message ${MessageLookup.undefinedMessage} in both a summary and a span " +
+      "when a number that is not a positive value is supplied" in {
+      val fakePOST = fakePOSTRequest("-1000")
+      fakePOST.fakePOSTDoc.select("span.error-notification").text shouldEqual MessageLookup.undefinedMessage
+      fakePOST.fakePOSTDoc.select("a#amount-error-summary").text shouldEqual MessageLookup.undefinedMessage
     }
   }
 }

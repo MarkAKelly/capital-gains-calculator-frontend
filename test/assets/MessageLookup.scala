@@ -25,7 +25,6 @@ object MessageLookup {
   val undefinedMessage = "Undefined message"
 
   //Common messages
-  val emptyTextError = "This field is required"
 
   //Disposal Date messages
   object disposalDate {
@@ -42,14 +41,15 @@ object MessageLookup {
   }
 
   //Disposal Value messages
-  val disposalValueTitle = "How much did you sell the property for?"
-  val disposalValueQuestion = "How much did you sell the property for?"
-  val disposalValueBulletListTitle = "Put the market value of the property instead if you:"
-  val disposalValueBulletListOne = "gave it away as a gift"
-  val disposalValueBulletListTwo = "sold it to a relative, business partner or"
-  val disposalValueBulletListTwoLink = "someone else you're connected to"
-  val disposalValueBulletListThree = "sold it for less than it’s worth to help the buyer"
-
+  object disposalValue {
+    val Title = "How much did you sell the property for?"
+    val Question = "How much did you sell the property for?"
+    val BulletListTitle = "Put the market value of the property instead if you:"
+    val BulletListOne = "gave it away as a gift"
+    val BulletListTwo = "sold it to a relative, business partner or"
+    val BulletListTwoLink = "someone else you're connected to"
+    val BulletListThree = "sold it for less than it’s worth to help the buyer"
+  }
 
   //Disposal Costs messages
   object disposalCosts {

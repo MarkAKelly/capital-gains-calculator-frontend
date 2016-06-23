@@ -38,6 +38,7 @@ trait GainController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
 
+  //################# Disposal Date Actions ####################
   val disposalDate = FeatureLockForRTT.asyncNoTimeout { implicit request =>
     if (request.session.get(SessionKeys.sessionId).isEmpty) {
       val sessionId = UUID.randomUUID.toString
@@ -60,7 +61,7 @@ trait GainController extends FeatureLock {
     )
   }
 
-  //################ Disposal Value Methods ######################
+  //################ Disposal Value Actions ######################
   val disposalValue = FeatureLockForRTT.async { implicit request =>
     calcConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.ResidentKeys.disposalValue).map {
       case Some(data) => Ok(views.disposalValue(disposalValueForm.fill(data)))
@@ -74,6 +75,8 @@ trait GainController extends FeatureLock {
       success => Future.successful(Redirect(routes.GainController.disposalCosts()))
     )
   }
+
+  //################# Acquisition Value Actions ########################
   val acquisitionValue = FeatureLockForRTT.async { implicit request =>
     Future.successful(Ok(views.acquisitionValue()))
   }
