@@ -23,6 +23,8 @@
 
 @main_template(title = Messages("calc.resident.disposal.value.title")) {
 
+    @errorSummary(disposalValueForm, "amount")
+
     <h1 class="visuallyhidden">@Messages("calc.resident.disposal.value.question")</h1>
 
     @form(action = controllers.resident.routes.GainController.submitDisposalValue) {

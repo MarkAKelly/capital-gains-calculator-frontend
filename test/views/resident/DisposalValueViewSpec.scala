@@ -91,6 +91,7 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
       lazy val fakePOSTView = views.html.calculation.resident.disposalValue(fakePOSTForm)(fakePOSTRequest)
       lazy val fakePOSTDoc = Jsoup.parse(fakePOSTView.body)
       fakePOSTDoc.select("span.error-notification").text shouldEqual MessageLookup.undefinedMessage
+      fakePOSTDoc.select("a#amount-error-summary").text shouldEqual MessageLookup.undefinedMessage
     }
 
     s"render a view with an error message ${MessageLookup.undefinedMessage} when a number that has more than 2 decimal places is supplied" in {
@@ -99,13 +100,16 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
       lazy val fakePOSTView = views.html.calculation.resident.disposalValue(fakePOSTForm)(fakePOSTRequest)
       lazy val fakePOSTDoc = Jsoup.parse(fakePOSTView.body)
       fakePOSTDoc.select("span.error-notification").text shouldEqual MessageLookup.undefinedMessage
+      fakePOSTDoc.select("a#amount-error-summary").text shouldEqual MessageLookup.undefinedMessage
     }
+
     s"render a view with an error message ${MessageLookup.undefinedMessage} when a number that is greater than the maximum value is supplied" in {
       lazy val fakePOSTRequest = fakeRequestToPOSTWithSession(("amount", "11000000000"))
       lazy val fakePOSTForm = DisposalValueForm.disposalValueForm.bind(Map(("amount", "11000000000")))
       lazy val fakePOSTView = views.html.calculation.resident.disposalValue(fakePOSTForm)(fakePOSTRequest)
       lazy val fakePOSTDoc = Jsoup.parse(fakePOSTView.body)
       fakePOSTDoc.select("span.error-notification").text shouldEqual MessageLookup.undefinedMessage
+      fakePOSTDoc.select("a#amount-error-summary").text shouldEqual MessageLookup.undefinedMessage
     }
 
     s"render a view with an error message ${MessageLookup.undefinedMessage} when a number that is not a positive value is supplied" in {
@@ -114,6 +118,7 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
       lazy val fakePOSTView = views.html.calculation.resident.disposalValue(fakePOSTForm)(fakePOSTRequest)
       lazy val fakePOSTDoc = Jsoup.parse(fakePOSTView.body)
       fakePOSTDoc.select("span.error-notification").text shouldEqual MessageLookup.undefinedMessage
+      fakePOSTDoc.select("a#amount-error-summary").text shouldEqual MessageLookup.undefinedMessage
     }
   }
 }
