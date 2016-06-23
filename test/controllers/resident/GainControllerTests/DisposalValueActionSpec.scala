@@ -67,7 +67,8 @@ class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with Fak
 
   "Calling .disposalValue from the GainCalculationController" should {
 
-    lazy val result = GainController.disposalValue(fakeRequestWithSession)
+    lazy val target = setupTarget(None)
+    lazy val result = target.disposalValue(fakeRequestWithSession)
 
     "return a status of 200" in {
       status(result) shouldBe 200
@@ -81,7 +82,8 @@ class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with Fak
 
   "Calling .disposalValue from the GainCalculationController with no session" should {
 
-    lazy val result = GainController.disposalValue(fakeRequest)
+    lazy val target = setupTarget(None)
+    lazy val result = target.disposalValue(fakeRequest)
 
     "return a status of 303" in {
       status(result) shouldBe 303
