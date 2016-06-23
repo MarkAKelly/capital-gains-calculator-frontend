@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-package forms.resident
+package controllers.helpers
 
-import play.api.data.Forms._
-import play.api.data._
-import models.resident.DisposalValueModel
+import play.api.test.FakeRequest
+import uk.gov.hmrc.play.http.SessionKeys
 
-object DisposalValueForm {
+trait FakeRequestHelper {
+  lazy val fakeRequest = FakeRequest()
+  lazy val fakeRequestWithSession = fakeRequest.withSession((SessionKeys.sessionId, ""))
 
-  val disposalValueForm = Form(
-    mapping(
-      "amount" -> nonEmptyText
-        .transform(amount => BigDecimal(amount), (amount: BigDecimal) => amount.toString())
-    )(DisposalValueModel.apply)(DisposalValueModel.unapply)
-  )
+  def fakeRequestToPOSTWithSession (input: (String, String)*) = fakeRequestWithSession.withFormUrlEncodedBody(input: _*)
 }

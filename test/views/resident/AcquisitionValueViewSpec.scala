@@ -14,18 +14,24 @@
  * limitations under the License.
  */
 
-package forms.resident
+package views.resident
 
-import play.api.data.Forms._
-import play.api.data._
-import models.resident.DisposalValueModel
+import org.jsoup.Jsoup
+import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 
-object DisposalValueForm {
+class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication {
 
-  val disposalValueForm = Form(
-    mapping(
-      "amount" -> nonEmptyText
-        .transform(amount => BigDecimal(amount), (amount: BigDecimal) => amount.toString())
-    )(DisposalValueModel.apply)(DisposalValueModel.unapply)
-  )
+  "Acquisition Value view" should {
+
+    lazy val view = views.html.calculation.resident.acquisitionValue()
+    lazy val doc = Jsoup.parse(view.body)
+
+    "have charset UTF-8" in {
+      doc.charset().toString shouldBe "UTF-8"
+    }
+
+    "have title AcquisitionValue" in {
+      doc.title shouldBe "AcquisitionValue"
+    }
+  }
 }

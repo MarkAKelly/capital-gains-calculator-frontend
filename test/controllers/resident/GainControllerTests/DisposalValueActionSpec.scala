@@ -16,35 +16,57 @@
 
 package controllers.resident.GainControllerTests
 
+import assets.MessageLookup
 import controllers.resident.GainController
-import play.api.test.FakeRequest
+import controllers.helpers.FakeRequestHelper
+import org.jsoup.Jsoup
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.http.SessionKeys
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class DisposalValueActionSpec extends UnitSpec with WithFakeApplication {
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import org.scalatest.mock.MockitoSugar
+
+class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
   "Calling .disposalValue from the GainCalculationController" should {
+
+    lazy val result = GainController.disposalValue(fakeRequestWithSession)
+
     "return a status of 200" in {
-      val fakeRequest = FakeRequest("GET", "/").withSession((SessionKeys.sessionId, ""))
-      val result = GainController.disposalValue(fakeRequest)
       status(result) shouldBe 200
+    }
+
+    s"return some html with title of ${MessageLookup.disposalValueQuestion}" in {
+      contentType(result) shouldBe Some("text/html")
+      Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.disposalValueQuestion
     }
   }
 
   "Calling .disposalValue from the GainCalculationController with no session" should {
+
+    lazy val result = GainController.disposalValue(fakeRequest)
+
     "return a status of 303" in {
-      val fakeRequest = FakeRequest("GET", "")
-      val result = GainController.disposalValue(fakeRequest)
       status(result) shouldBe 303
     }
   }
 
-  "Calling .disposalValue from the GainCalculationController" should {
-    "return some html" in {
-      val fakeRequest = FakeRequest("GET", "").withSession((SessionKeys.sessionId, ""))
-      val result = GainController.disposalValue(fakeRequest)
-      contentType(result) shouldBe Some("text/html")
+  "Calling .submitDisposalValue from the GainController" should {
+
+    lazy val request = fakeRequestToPOSTWithSession(("amount", "100"))
+    lazy val result = GainController.submitDisposalValue(request)
+
+    "re-direct to the disposal Costs page when supplied with a valid form" in {
+      status(result) shouldEqual 303
+    }
+  }
+
+  "Calling .submitDisposalValue from the GainController" should {
+    lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
+    lazy val result = GainController.submitDisposalValue(request)
+
+    "render the disposal value page when supplied with an invalid form" in {
+      status(result) shouldEqual 400
+      Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.disposalValueTitle
     }
   }
 }

@@ -24,6 +24,7 @@ object MessageLookup {
   val calcBaseExternalLink = "opens in a new window"
 
   //Common messages
+  val emptyTextError = "This field is required"
 
   //Disposal Date messages
 
@@ -38,6 +39,9 @@ object MessageLookup {
 
 
   //Disposal Costs messages
+  object disposalCosts {
+    val title = "How much did you pay in costs when you stopped owning the property?"
+  }
 
   //Acquisition Value messages
 

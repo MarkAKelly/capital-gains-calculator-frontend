@@ -299,6 +299,7 @@ calc.resident.disposal.value.bullet.three = sold it for less than it’s worth t
 
 
 ## Disposal Costs messages
+calc.resident.disposalCosts.title = 'How much did you pay in costs when you stopped owning the property?'
 
 ## Acquisition Value messages
 
