@@ -71,4 +71,11 @@ object Validation {
       case Failure(_) => false
     }
   }
+
+  def isBigDecimalNumber (input: String): Boolean = {
+    Try (BigDecimal(input)) match {
+      case Success(_) => true
+      case Failure(_) => false
+    }
+  }
 }

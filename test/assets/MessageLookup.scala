@@ -53,6 +53,8 @@ object MessageLookup {
   //Disposal Costs messages
   object disposalCosts {
     val title = "How much did you pay in costs when you stopped owning the property?"
+    val pageHeading = "How much did you pay in costs when you stopped owning the property?"
+    val helpText = "Costs include agent fees, legal fees and surveys"
   }
 
   //Acquisition Value messages

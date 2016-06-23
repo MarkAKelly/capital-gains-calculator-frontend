@@ -27,6 +27,7 @@ import uk.gov.hmrc.play.http.SessionKeys
 import scala.concurrent.Future
 import views.html.calculation.{resident => views}
 import forms.resident.DisposalDateForm._
+import forms.resident.DisposalCostsForm._
 import models.resident.DisposalDateModel
 
 
@@ -69,6 +70,6 @@ trait GainController extends FeatureLock {
   }
   
   val disposalCosts = FeatureLockForRTT.async { implicit request =>
-    Future.successful(Ok(views.disposalCosts()))
+    Future.successful(Ok(views.disposalCosts(disposalCostsForm.bind(Map("amount" -> "")))))
   }
 }

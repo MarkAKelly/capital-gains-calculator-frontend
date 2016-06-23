@@ -107,5 +107,17 @@ class ValidationSpec extends UnitSpec {
     "with a value of 999999999.99" in {
       isLessThanEqualMaxNumeric(999999999.99) shouldBe true
     }
+
+    //############# Tests for isBigDecimalNumber ##########################################
+    "calling common.Validation.isBigDecimalNumber" should {
+
+      "return false with a non-numeric value" in {
+        isBigDecimalNumber("a") shouldBe false
+      }
+
+      "return true with a valid numeric value" in {
+        isBigDecimalNumber("100") shouldBe true
+      }
+    }
   }
 }
