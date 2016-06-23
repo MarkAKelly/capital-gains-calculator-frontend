@@ -43,4 +43,8 @@ trait KeystoreKeys {
   val otherReliefsRebased = "nr:otherReliefsRebased"
   val privateResidenceRelief = "nr:privateResidenceRelief"
 
+  object ResidentKeys {
+    val disposalDate = "res:disposalDate"
+  }
+
 }

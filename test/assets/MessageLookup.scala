@@ -22,11 +22,24 @@ object MessageLookup {
   val calcBaseBack = "Back"
   val calcBaseContinue = "Continue"
   val calcBaseExternalLink = "opens in a new window"
+  val undefinedMessage = "Undefined message"
 
   //Common messages
   val emptyTextError = "This field is required"
 
   //Disposal Date messages
+  object disposalDate {
+    val title = "When did you sign the contract that made someone else the owner?"
+    val question = "When did you sign the contract that made someone else the owner?"
+    val helpText = "For example, 4 9 2016"
+    val day = "Day"
+    val month = "Month"
+    val year = "Year"
+    val invalidDateError = "error-placeholder"
+    val emptyDateFieldError = "empty-error-placeholder"
+    val realDateError = "Enter a real date"
+    val nonNumericError = "non-numeric-placeholder"
+  }
 
   //Disposal Value messages
   val disposalValueTitle = "How much did you sell the property for?"
