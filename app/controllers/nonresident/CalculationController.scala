@@ -16,7 +16,7 @@
 
 package controllers.nonresident
 
-import common.Dates
+import common.{Dates, KeystoreKeys}
 import common.nonresident.CustomerTypeKeys
 import forms.nonresident.ImprovementsForm._
 import forms.nonresident.PrivateResidenceReliefForm._
@@ -46,7 +46,6 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import scala.concurrent.Future
 import views.html._
 import common.DefaultRoutes._
-import common.nonresident.KeystoreKeys
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
 import controllers.predicates.ValidActiveSession

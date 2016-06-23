@@ -18,7 +18,7 @@ package controllers.resident
 
 import java.util.UUID
 
-import common.nonresident.KeystoreKeys
+import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import play.api.mvc.Action
@@ -28,7 +28,7 @@ import scala.concurrent.Future
 import views.html.calculation.{resident => views}
 import forms.resident.DisposalValueForm._
 import forms.resident.DisposalDateForm._
-import models.resident.DisposalDateModel
+import models.resident.{DisposalDateModel, DisposalValueModel}
 
 object GainController extends GainController {
   val calcConnector = CalculatorConnector
@@ -60,8 +60,12 @@ trait GainController extends FeatureLock {
     )
   }
 
+  //################ Disposal Value Methods ######################
   val disposalValue = FeatureLockForRTT.async { implicit request =>
-    Future.successful(Ok(views.disposalValue(disposalValueForm)))
+    calcConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.ResidentKeys.disposalValue).map {
+      case Some(data) => Ok(views.disposalValue(disposalValueForm.fill(data)))
+      case None => Ok(views.disposalValue(disposalValueForm))
+    }
   }
 
   val submitDisposalValue = FeatureLockForRTT.async { implicit request =>

@@ -16,8 +16,7 @@
 
 package controllers.CalculationControllerTests
 
-import common.nonresident.KeystoreKeys
-import common.{Constants, TestModels}
+import common.{Constants, KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
 import controllers.nonresident.CalculationController

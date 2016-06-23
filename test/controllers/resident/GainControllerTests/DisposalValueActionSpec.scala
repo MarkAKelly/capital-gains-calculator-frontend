@@ -17,15 +17,53 @@
 package controllers.resident.GainControllerTests
 
 import assets.MessageLookup
+import common.KeystoreKeys
+import connectors.CalculatorConnector
 import controllers.resident.GainController
 import controllers.helpers.FakeRequestHelper
+import models.resident.DisposalValueModel
 import org.jsoup.Jsoup
+import org.mockito.Matchers
 import play.api.test.Helpers._
-
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.scalatest.mock.MockitoSugar
+import org.mockito.Mockito._
+
+import scala.concurrent.Future
 
 class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
+
+  def setupTarget(getData : Option[DisposalValueModel]): GainController = {
+
+    val mockCalcConnector = mock[CalculatorConnector]
+
+    when(mockCalcConnector.fetchAndGetFormData[DisposalValueModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalValue))(Matchers.any(), Matchers.any()))
+        .thenReturn(Future.successful(getData))
+
+    new GainController {
+      override val calcConnector: CalculatorConnector = mockCalcConnector
+    }
+  }
+
+  "Calling .disposalValue from the GainCalculationController" when {
+    "there is no keystore data" should {
+      lazy val target = setupTarget(None)
+      lazy val result = target.disposalValue(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldEqual 200
+      }
+    }
+
+    "there is keystore data" should {
+      lazy val target = setupTarget(Some(DisposalValueModel(100)))
+      lazy val result = target.disposalValue(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldEqual 200
+      }
+    }
+  }
 
   "Calling .disposalValue from the GainCalculationController" should {
 
@@ -50,6 +88,7 @@ class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with Fak
     }
   }
 
+
   "Calling .submitDisposalValue from the GainController" should {
 
     lazy val request = fakeRequestToPOSTWithSession(("amount", "100"))
@@ -57,6 +96,7 @@ class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "re-direct to the disposal Costs page when supplied with a valid form" in {
       status(result) shouldEqual 303
+      redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/disposal-costs")
     }
   }
 

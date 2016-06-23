@@ -22,7 +22,6 @@ import assets.MessageLookup
 import forms.resident.DisposalValueForm
 import play.api.test.FakeRequest
 import controllers.helpers.FakeRequestHelper
-import models.resident.DisposalValueModel
 
 class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 

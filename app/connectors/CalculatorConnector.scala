@@ -16,7 +16,7 @@
 
 package connectors
 
-import common.nonresident.KeystoreKeys
+import common.KeystoreKeys
 import config.{CalculatorSessionCache, WSHttp}
 import constructors.nonresident.CalculateRequestConstructor
 import models.nonresident._
