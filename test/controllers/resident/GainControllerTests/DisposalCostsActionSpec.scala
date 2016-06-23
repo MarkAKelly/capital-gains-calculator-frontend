@@ -16,7 +16,7 @@
 
 package controllers.resident.GainControllerTests
 
-import assets.MessageLookup.{disposalValue => messages}
+import assets.MessageLookup.{disposalCosts => messages}
 import controllers.resident.GainController
 import org.jsoup.Jsoup
 import play.api.test.FakeRequest

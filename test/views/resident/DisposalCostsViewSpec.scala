@@ -17,7 +17,7 @@
 package views.resident
 
 import assets.{MessageLookup => commonMessages}
-import assets.MessageLookup.{disposalValue => messages}
+import assets.MessageLookup.{disposalCosts => messages}
 import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
