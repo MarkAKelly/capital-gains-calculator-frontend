@@ -22,6 +22,7 @@ object MessageLookup {
   val calcBaseBack = "Back"
   val calcBaseContinue = "Continue"
   val calcBaseExternalLink = "opens in a new window"
+  val undefinedMessage = "Undefined message"
 
   //Common messages
 
@@ -33,6 +34,10 @@ object MessageLookup {
     val day = "Day"
     val month = "Month"
     val year = "Year"
+    val invalidDateError = "error-placeholder"
+    val emptyDateFieldError = "empty-error-placeholder"
+    val realDateError = "Enter a real date"
+    val nonNumericError = "non-numeric-placeholder"
   }
 
   //Disposal Value messages

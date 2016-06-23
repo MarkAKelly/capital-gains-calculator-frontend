@@ -1,11 +1,16 @@
 @import models.resident.DisposalDateModel
+@import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
 
 @(disposalDateForm: Form[DisposalDateModel])(implicit request: Request[_])
 
 @main_template(Messages("calc.resident.disposalDate.question")){
 
+    @errorSummary(disposalDateForm, "disposal-date", "disposalDateDay")
+
     <h1 class="heading-large">@Messages("calc.resident.disposalDate.question")</h1>
+
+    @form(action = controllers.resident.routes.GainController.submitDisposalDate){
 
     @formInlineDateInput(disposalDateForm,
                         "disposalDate",
@@ -13,5 +18,7 @@
                         '_visually_hidden -> true)
 
     <button id="continue-button" class="button">@Messages("calc.base.button.continue")</button>
+
+    }
 
 }

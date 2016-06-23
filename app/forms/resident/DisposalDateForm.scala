@@ -20,15 +20,25 @@ import models.resident.DisposalDateModel
 import play.api.data.Forms._
 import play.api.data._
 import common.Validation._
+import play.api.i18n.Messages
 
 object DisposalDateForm {
 
-  def disposalDateForm() = Form(
+  def disposalDateForm(): Form[DisposalDateModel] = Form(
     mapping(
-      "disposalDateDay" -> number,
-      "disposalDateMonth" -> number,
-      "disposalDateYear" -> number
+      "disposalDateDay" -> text
+        .verifying(Messages("calc.base.undefinedMessage"), day => isNotEmpty(day))
+          .verifying(Messages("calc.base.undefinedMessage"), day => isIntNumber(day))
+        .transform[Int](day => day.toInt, day => day.toString),
+      "disposalDateMonth" -> text
+        .verifying(Messages("calc.base.undefinedMessage"), month => isNotEmpty(month))
+        .verifying(Messages("calc.base.undefinedMessage"), month => isIntNumber(month))
+        .transform[Int](month => month.toInt, month => month.toString),
+      "disposalDateYear" -> text
+        .verifying(Messages("calc.base.undefinedMessage"), year => isNotEmpty(year))
+        .verifying(Messages("calc.base.undefinedMessage"), year => isIntNumber(year))
+        .transform[Int](year => year.toInt, year => year.toString)
     )(DisposalDateModel.apply)(DisposalDateModel.unapply)
-      .verifying("error-placeholder", fields => isValidDate(fields.day, fields.month, fields.year))
+      .verifying(Messages("calc.base.undefinedMessage"), fields => isValidDate(fields.day, fields.month, fields.year))
   )
 }
