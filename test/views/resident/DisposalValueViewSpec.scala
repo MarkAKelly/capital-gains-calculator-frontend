@@ -85,12 +85,35 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
       doc.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
     }
 
-    s"render a view with and error message ${MessageLookup.emptyTextError} when supplied with an invalid form" in {
-      fakePOSTDoc.select("span.error-notification").text shouldEqual MessageLookup.emptyTextError
+    s"render a view with an error message ${MessageLookup.undefinedMessage} when supplied with an invalid form" in {
+      lazy val fakePOSTRequest = fakeRequestToPOSTWithSession(("amount", ""))
+      lazy val fakePOSTForm = DisposalValueForm.disposalValueForm.bind(Map(("amount", "")))
+      lazy val fakePOSTView = views.html.calculation.resident.disposalValue(fakePOSTForm)(fakePOSTRequest)
+      lazy val fakePOSTDoc = Jsoup.parse(fakePOSTView.body)
+      fakePOSTDoc.select("span.error-notification").text shouldEqual MessageLookup.undefinedMessage
     }
 
-    
+    s"render a view with an error message ${MessageLookup.undefinedMessage} when a number that has more than 2 decimal places is supplied" in {
+      lazy val fakePOSTRequest = fakeRequestToPOSTWithSession(("amount", "100.0000"))
+      lazy val fakePOSTForm = DisposalValueForm.disposalValueForm.bind(Map(("amount", "100.0000")))
+      lazy val fakePOSTView = views.html.calculation.resident.disposalValue(fakePOSTForm)(fakePOSTRequest)
+      lazy val fakePOSTDoc = Jsoup.parse(fakePOSTView.body)
+      fakePOSTDoc.select("span.error-notification").text shouldEqual MessageLookup.undefinedMessage
+    }
+    s"render a view with an error message ${MessageLookup.undefinedMessage} when a number that is greater than the maximum value is supplied" in {
+      lazy val fakePOSTRequest = fakeRequestToPOSTWithSession(("amount", "11000000000"))
+      lazy val fakePOSTForm = DisposalValueForm.disposalValueForm.bind(Map(("amount", "11000000000")))
+      lazy val fakePOSTView = views.html.calculation.resident.disposalValue(fakePOSTForm)(fakePOSTRequest)
+      lazy val fakePOSTDoc = Jsoup.parse(fakePOSTView.body)
+      fakePOSTDoc.select("span.error-notification").text shouldEqual MessageLookup.undefinedMessage
+    }
 
-//    "render the specific error message ...... when supplied with a form with error ....." in {  ???  }
+    s"render a view with an error message ${MessageLookup.undefinedMessage} when a number that is not a positive value is supplied" in {
+      lazy val fakePOSTRequest = fakeRequestToPOSTWithSession(("amount", "-11000"))
+      lazy val fakePOSTForm = DisposalValueForm.disposalValueForm.bind(Map(("amount", "-11000")))
+      lazy val fakePOSTView = views.html.calculation.resident.disposalValue(fakePOSTForm)(fakePOSTRequest)
+      lazy val fakePOSTDoc = Jsoup.parse(fakePOSTView.body)
+      fakePOSTDoc.select("span.error-notification").text shouldEqual MessageLookup.undefinedMessage
+    }
   }
 }
