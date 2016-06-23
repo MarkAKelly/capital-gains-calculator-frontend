@@ -18,8 +18,10 @@ package controllers.resident.GainControllerTests
 
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.GainController
+import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.test.Helpers._
+import assets.MessageLookup.{acquisitionCosts => messages}
 
 
 class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper{
@@ -29,6 +31,7 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
     "request has a valid session" should {
 
       lazy val result = GainController.acquisitionCosts(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a status of 200" in {
         status(result) shouldBe 200
@@ -36,6 +39,10 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
 
       "return some Html" in {
         contentType(result) shouldBe Some("text/html")
+      }
+
+      s"have a title of ${messages.title}" in {
+        doc.title() shouldBe messages.title
       }
     }
 

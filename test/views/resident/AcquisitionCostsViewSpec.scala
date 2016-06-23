@@ -17,17 +17,24 @@
 package views.resident
 
 import org.jsoup.Jsoup
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import assets.MessageLookup.{acquisitionCosts => messages}
+import controllers.helpers.FakeRequestHelper
 
-class AcquisitionCostsViewSpec extends UnitSpec {
+
+class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Acquisition Costs view" should {
 
-    lazy val view = views.html.calculation.resident.acquisitionCosts()
+    lazy val view = views.html.calculation.resident.acquisitionCosts()(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
       doc.charset().toString shouldBe "UTF-8"
+    }
+
+    s"have a title of ${messages.title}" in {
+      doc.title() shouldBe messages.title
     }
   }
 
