@@ -10,6 +10,7 @@ calc.base.no = No
 calc.base.back = Back
 calc.base.optionReqError = Choose one of the options
 calc.base.externalLink = opens in a new window
+calc.base.undefinedMessage = Undefined message
 
 ## Error Summary ##
 calc.error.summary.heading = This page has errors
@@ -286,6 +287,7 @@ calc.summary.warning.taxYear = Your total might be less accurate because you did
 ###############################################################################################
 
 ## Disposal Date messages
+calc.resident.disposalDate.question = When did you sign the contract that made someone else the owner?
 
 ## Disposal Value messages
 calc.resident.disposal.value.title = How much did you sell the property for?

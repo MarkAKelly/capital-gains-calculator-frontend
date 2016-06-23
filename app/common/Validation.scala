@@ -18,6 +18,8 @@ package common
 
 import java.text.SimpleDateFormat
 
+import scala.util.{Failure, Success, Try}
+
 object Validation {
 
   def isValidDate(day:Int,month:Int,year:Int): Boolean = {
@@ -59,5 +61,14 @@ object Validation {
 
   def isLessThanEqualMaxNumeric(amount: BigDecimal): Boolean = {
     amount <= Constants.maxNumeric
+  }
+
+  def isNotEmpty (input: String): Boolean = !input.isEmpty
+
+  def isIntNumber (input: String): Boolean = {
+    Try (input.toInt) match {
+      case Success(_) => true
+      case Failure(_) => false
+    }
   }
 }
