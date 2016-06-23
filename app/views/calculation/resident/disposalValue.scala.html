@@ -1,8 +1,8 @@
-@import play.api.i18n._
-@import forms.resident.DisposalValueForm._
+@import models.resident.DisposalValueModel
+@import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
 
-@()(implicit request: Request[_])
+@(disposalValueForm : Form[DisposalValueModel])(implicit request: Request[_])
 
 @contentLink = {
     <a id="lossesLink" class="external-link" rel="external" href="https://www.gov.uk/capital-gains-tax/losses"
@@ -25,8 +25,10 @@
 
     <h1 class="visuallyhidden">@Messages("calc.resident.disposal.value.question")</h1>
 
-    @formInputMoney(disposalValueForm, "amount", Messages("calc.resident.disposal.value.question"), additionalHTMLContent = Some(bulletContent.toString()), labelAsHeading = Some(true))
+    @form(action = controllers.resident.routes.GainController.submitDisposalValue) {
 
-    <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+        @formInputMoney(disposalValueForm, "amount", Messages("calc.resident.disposal.value.question"), additionalHTMLContent = Some(bulletContent.toString()), labelAsHeading = Some(true))
 
+        <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+    }
 }

@@ -76,6 +76,12 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication {
       doc.select("div.indent li#bullet-list-three").text() shouldEqual MessageLookup.disposalValueBulletListThree
     }
 
+    "renders a form tag with id of with a submit action" in {
+      val view = views.html.calculation.resident.disposalValue()(fakeRequest)
+      val doc = Jsoup.parse(view.body)
+      doc.select("form").attr("action") shouldEqual "calculate-your-capital-gains/resident/disposal-value"
+    }
+
     s"have an input field with id amount and the label displays the text of ${MessageLookup.disposalValueQuestion}" in {
       val view = views.html.calculation.resident.disposalValue()(fakeRequest)
       val doc = Jsoup.parse(view.body)

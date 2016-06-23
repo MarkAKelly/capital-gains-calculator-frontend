@@ -22,6 +22,7 @@ import controllers.predicates.FeatureLock
 import uk.gov.hmrc.play.http.SessionKeys
 import scala.concurrent.Future
 import views.html.calculation.{resident => views}
+import forms.resident.DisposalValueForm._
 
 object GainController extends GainController
 
@@ -39,5 +40,12 @@ trait GainController extends FeatureLock {
 
   val disposalValue = FeatureLockForRTT.async { implicit request =>
     Future.successful(Ok(views.disposalValue()))
+  }
+
+  val submitDisposalValue = FeatureLockForRTT.async { implicit request =>
+    disposalValueForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.disposalValue(errors))),
+      success => Future.successful(Redirect(routes.GainController.disposalCosts))
+    )
   }
 }
