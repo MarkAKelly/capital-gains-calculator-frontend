@@ -25,6 +25,8 @@ object MessageLookup {
   val undefinedMessage = "Undefined message"
 
   //Common messages
+  val maxNumericExceededStart = "Enter an amount that's £"
+  val maxNumericExceededEnd = "or less"
 
   //Disposal Date messages
   object disposalDate {

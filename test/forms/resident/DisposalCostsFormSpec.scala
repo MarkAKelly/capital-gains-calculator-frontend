@@ -19,9 +19,12 @@ package forms.resident
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import models.resident.DisposalCostsModel
 import forms.resident.DisposalCostsForm._
-import assets.{MessageLookup => messages}
+import assets.{MessageLookup => commonMessages}
+import common.Constants
 import controllers.helpers.FakeRequestHelper
+import play.api.i18n.Messages
 import play.api.mvc.Request
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 class DisposalCostsFormSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
@@ -48,33 +51,75 @@ class DisposalCostsFormSpec extends UnitSpec with WithFakeApplication with FakeR
 
     "supplied with no data for amount" should {
 
-      val form = disposalCostsForm.bind(Map("amount" -> ""))
+      lazy val form = disposalCostsForm.bind(Map("amount" -> ""))
 
       "raise form error" in {
         form.hasErrors shouldBe true
       }
 
-      "fail when a non-numeric value is supplied for amount" in {
-        val form = disposalCostsForm.bind(Map("amount" -> "a"))
+      s"error with message '${commonMessages.undefinedMessage}'" in {
+        form.error("amount").get.message shouldBe commonMessages.undefinedMessage
+      }
+    }
+
+    "supplied with a non-numeric value for amount" should {
+
+      lazy val form = disposalCostsForm.bind(Map("amount" -> "a"))
+
+      "raise a form error" in {
         form.hasErrors shouldBe true
       }
 
-      "fail when amount supplied is too big" in {
-        val form = disposalCostsForm.bind(Map("amount" -> "9999999999999"))
+      s"error with message '${commonMessages.undefinedMessage}'" in {
+        form.error("amount").get.message shouldBe commonMessages.undefinedMessage
+      }
+    }
+
+    "supplied with an amount that is too big" should {
+
+      lazy val form = disposalCostsForm.bind(Map("amount" -> "9999999999999"))
+
+      "raise form error" in {
         form.hasErrors shouldBe true
       }
 
-      "fail when amount supplied is negative" in {
-        val form = disposalCostsForm.bind(Map("amount" -> "-1000"))
+      s"error with message '${
+        commonMessages.maxNumericExceededStart +
+          MoneyPounds(Constants.maxNumeric, 0).quantity + " " +
+          commonMessages.maxNumericExceededEnd
+      }'" in {
+
+        form.error("amount").get.message shouldBe commonMessages.maxNumericExceededStart +
+          MoneyPounds(Constants.maxNumeric, 0).quantity + " " +
+          commonMessages.maxNumericExceededEnd
+      }
+    }
+
+    "supplied with a negative amount" should {
+
+      lazy val form = disposalCostsForm.bind(Map("amount" -> "-1000"))
+
+      "raise form error" in {
         form.hasErrors shouldBe true
       }
 
-      "fail when amount supplied has too many decimal placed" in {
-        val form = disposalCostsForm.bind(Map("amount" -> "100.1234"))
+      s"error with message '${commonMessages.undefinedMessage}'" in {
+        form.error("amount").get.message shouldBe commonMessages.undefinedMessage
+      }
+    }
+
+    "supplied with an amount that has too many decimal placed" should {
+
+      lazy val form = disposalCostsForm.bind(Map("amount" -> "100.1234"))
+
+      "raise form error" in {
         form.hasErrors shouldBe true
+      }
+
+      s"error with message '${commonMessages.undefinedMessage}'" in {
+        form.error("amount").get.message shouldBe commonMessages.undefinedMessage
       }
     }
   }
-
-
 }
+

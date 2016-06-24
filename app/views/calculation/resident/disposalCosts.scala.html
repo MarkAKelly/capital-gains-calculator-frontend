@@ -10,8 +10,11 @@
 
     <h1 class="visuallyhidden">@Messages("calc.resident.disposalCosts.pageHeading")</h1>
 
-    @formInputMoney(disposalCostsForm, "amount", Messages("calc.resident.disposalCosts.pageHeading"), Some(Messages("calc.resident.disposalCosts.helpText")),labelAsHeading = Some(true))
+    @form(action = controllers.resident.routes.GainController.submitDisposalCosts){
 
-    <button id="continue-button" class="button" type="submit">@Messages("calc.base.continue")</button>
+        @formInputMoney(disposalCostsForm, "amount", Messages("calc.resident.disposalCosts.pageHeading"), Some(Messages("calc.resident.disposalCosts.helpText")),labelAsHeading = Some(true))
 
+        <button id="continue-button" class="button" type="submit">@Messages("calc.base.continue")</button>
+
+    }
 }

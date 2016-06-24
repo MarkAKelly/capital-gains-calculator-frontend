@@ -70,6 +70,16 @@ class DisposalCostsViewSpec extends UnitSpec with WithFakeApplication with FakeR
 
     "have a form" which {
 
+      lazy val form = doc.getElementsByTag("form")
+
+      s"has the action '${controllers.resident.routes.GainController.submitDisposalCosts().toString}'" in {
+        form.attr("action") shouldBe controllers.resident.routes.GainController.submitDisposalCosts().toString
+      }
+
+      "has the method of POST" in {
+        form.attr("method") shouldBe "POST"
+      }
+
       "has a label that" should {
 
         lazy val label = doc.body.getElementsByTag("label")
@@ -88,6 +98,32 @@ class DisposalCostsViewSpec extends UnitSpec with WithFakeApplication with FakeR
         s"have the text ${messages.helpText}" in {
           doc.body.getElementsByClass("form-hint").text shouldBe messages.helpText
         }
+      }
+
+      "has a numeric input field" which {
+
+        lazy val input = doc.body.getElementsByTag("input")
+
+        "has the id 'amount'" in {
+          input.attr("id") shouldBe "amount"
+        }
+
+        "has the name 'amount'" in {
+          input.attr("name") shouldBe "amount"
+        }
+
+        "is of type number" in {
+          input.attr("type") shouldBe "number"
+        }
+
+        "has a step value of '0.01'" in {
+          input.attr("step") shouldBe "0.01"
+        }
+
+        s"has placeholder 'eg. 25000.00'" in {
+          input.attr("placeholder") shouldBe "eg. 25000.00"
+        }
+
       }
     }
 

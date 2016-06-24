@@ -36,7 +36,7 @@ object DisposalCostsForm {
           MoneyPounds(Constants.maxNumeric, 0).quantity + " " +
           Messages("calc.common.error.maxNumericExceeded.OrLess"),
           amt => isLessThanEqualMaxNumeric(amt))
-        .verifying(Messages("calc.base.underfinedMessage"), amt => isGreaterThanZero(amt))
+        .verifying(Messages("calc.base.undefinedMessage"), amt => isGreaterThanZero(amt))
         .verifying(Messages("calc.base.undefinedMessage"),amt => isMaxTwoDecimalPlaces(amt))
     )(DisposalCostsModel.apply)(DisposalCostsModel.unapply)
   )
