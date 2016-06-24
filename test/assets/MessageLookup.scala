@@ -72,6 +72,8 @@ object MessageLookup {
     val title = "How much have you spent on improvements since you became the property owner?"
   }
 
-  //First Summary messages
-
+  //Summary messages
+  object summary {
+    val title = "Summary"
+  }
 }
