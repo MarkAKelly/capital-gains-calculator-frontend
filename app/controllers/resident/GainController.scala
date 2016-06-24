@@ -18,7 +18,7 @@ package controllers.resident
 
 import java.util.UUID
 
-import common.nonresident.KeystoreKeys
+import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import play.api.mvc.Action
@@ -26,10 +26,10 @@ import uk.gov.hmrc.play.http.SessionKeys
 
 import scala.concurrent.Future
 import views.html.calculation.{resident => views}
+import forms.resident.DisposalValueForm._
 import forms.resident.DisposalDateForm._
 import forms.resident.DisposalCostsForm._
-import models.resident.DisposalDateModel
-
+import models.resident.{DisposalDateModel, DisposalValueModel}
 
 object GainController extends GainController {
   val calcConnector = CalculatorConnector
@@ -39,6 +39,7 @@ trait GainController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
 
+  //################# Disposal Date Actions ####################
   val disposalDate = FeatureLockForRTT.asyncNoTimeout { implicit request =>
     if (request.session.get(SessionKeys.sessionId).isEmpty) {
       val sessionId = UUID.randomUUID.toString
@@ -61,15 +62,35 @@ trait GainController extends FeatureLock {
     )
   }
 
+  //################ Disposal Value Actions ######################
   val disposalValue = FeatureLockForRTT.async { implicit request =>
-    Future.successful(Ok(views.disposalValue()))
+    calcConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.ResidentKeys.disposalValue).map {
+      case Some(data) => Ok(views.disposalValue(disposalValueForm.fill(data)))
+      case None => Ok(views.disposalValue(disposalValueForm))
+    }
   }
 
+  val submitDisposalValue = FeatureLockForRTT.async { implicit request =>
+    disposalValueForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.disposalValue(errors))),
+      success => Future.successful(Redirect(routes.GainController.disposalCosts()))
+    )
+  }
+
+  //################# Acquisition Value Actions ########################
   val acquisitionValue = FeatureLockForRTT.async { implicit request =>
     Future.successful(Ok(views.acquisitionValue()))
+  }
+
+  val acquisitionCosts = FeatureLockForRTT.async { implicit request =>
+    Future.successful(Ok(views.acquisitionCosts()))
   }
   
   val disposalCosts = FeatureLockForRTT.async { implicit request =>
     Future.successful(Ok(views.disposalCosts(disposalCostsForm.bind(Map("amount" -> "")))))
+  }
+
+  val improvements = Action.async { implicit request =>
+    Future.successful(Ok(views.improvements()))
   }
 }

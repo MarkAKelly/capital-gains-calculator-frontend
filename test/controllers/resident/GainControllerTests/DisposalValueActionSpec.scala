@@ -16,32 +16,98 @@
 
 package controllers.resident.GainControllerTests
 
+import assets.MessageLookup
+import common.KeystoreKeys
+import connectors.CalculatorConnector
 import controllers.resident.GainController
 import controllers.helpers.FakeRequestHelper
+import models.resident.DisposalValueModel
+import org.jsoup.Jsoup
+import org.mockito.Matchers
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import org.scalatest.mock.MockitoSugar
+import org.mockito.Mockito._
 
-class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+import scala.concurrent.Future
+
+class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
+
+  def setupTarget(getData: Option[DisposalValueModel]): GainController = {
+
+    val mockCalcConnector = mock[CalculatorConnector]
+
+    when(mockCalcConnector.fetchAndGetFormData[DisposalValueModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalValue))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(getData))
+
+    new GainController {
+      override val calcConnector: CalculatorConnector = mockCalcConnector
+    }
+  }
+
+  "Calling .disposalValue from the GainCalculationController" when {
+    "there is no keystore data" should {
+      lazy val target = setupTarget(None)
+      lazy val result = target.disposalValue(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldEqual 200
+      }
+    }
+
+    "there is keystore data" should {
+      lazy val target = setupTarget(Some(DisposalValueModel(100)))
+      lazy val result = target.disposalValue(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldEqual 200
+      }
+    }
+  }
 
   "Calling .disposalValue from the GainCalculationController" should {
 
-    lazy val result = GainController.disposalValue(fakeRequestWithSession)
+    lazy val target = setupTarget(None)
+    lazy val result = target.disposalValue(fakeRequestWithSession)
 
     "return a status of 200" in {
       status(result) shouldBe 200
     }
 
-    "return some html" in {
+    s"return some html with title of ${MessageLookup.disposalValue.question}" in {
       contentType(result) shouldBe Some("text/html")
+      Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.disposalValue.question
     }
   }
 
   "Calling .disposalValue from the GainCalculationController with no session" should {
 
-    lazy val result = GainController.disposalValue(fakeRequest)
+    lazy val target = setupTarget(None)
+    lazy val result = target.disposalValue(fakeRequest)
 
     "return a status of 303" in {
       status(result) shouldBe 303
+    }
+  }
+
+  "Calling .submitDisposalValue from the GainController" should {
+
+    lazy val request = fakeRequestToPOSTWithSession(("amount", "100"))
+    lazy val result = GainController.submitDisposalValue(request)
+
+    "re-direct to the disposal Costs page when supplied with a valid form" in {
+      status(result) shouldEqual 303
+      redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/disposal-costs")
+    }
+  }
+
+  "Calling .submitDisposalValue from the GainController" should {
+    lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
+    lazy val result = GainController.submitDisposalValue(request)
+
+    "render the disposal value page when supplied with an invalid form" in {
+      status(result) shouldEqual 400
+      Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.disposalValue.title
     }
   }
 }

@@ -42,6 +42,13 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
+  "The URL for the submit disposal value Action" should {
+    "be equal to /calculate-your-capital-gains/resident/disposal-value" in {
+      val path = controllers.resident.routes.GainController.submitDisposalValue.toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/disposal-value"
+    }
+  }
+
   "The URL for the acquisition value or market value Action" should {
     "be equal to /calculate-your-capital-gains/resident/acquisition-value" in {
       val path = controllers.resident.routes.GainController.acquisitionValue.toString()
@@ -53,6 +60,20 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     "be equal to /calculate-your-capital-gains/resident/disposal-costs" in {
       val path = controllers.resident.routes.GainController.disposalCosts.toString()
       path shouldEqual "/calculate-your-capital-gains/resident/disposal-costs"
+    }
+  }
+
+  "The URL for the acquisition costs action" should {
+    "be equal to /calculate-your-capital-gains/resident/acquisition-costs" in {
+      val path = controllers.resident.routes.GainController.acquisitionCosts.toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/acquisition-costs"
+    }
+  }
+
+  "The URL for the improvements Action" should {
+    s"be equal to /calculate-your-capital-gains/resident/improvements" in {
+      val path = controllers.resident.routes.GainController.improvements.toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/improvements"
     }
   }
 }

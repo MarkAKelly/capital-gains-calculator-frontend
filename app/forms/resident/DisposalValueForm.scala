@@ -16,15 +16,23 @@
 
 package forms.resident
 
+import common.Validation._
 import play.api.data.Forms._
 import play.api.data._
 import models.resident.DisposalValueModel
+import play.api.i18n.Messages
 
 object DisposalValueForm {
 
   val disposalValueForm = Form(
     mapping(
-      "amount" -> bigDecimal
+      "amount" -> text
+        .verifying(Messages("calc.base.undefinedMessage"), amount => isNotEmpty(amount))
+        .verifying(Messages("calc.base.undefinedMessage"), amount => isDoubleNumber(amount))
+        .transform(amount => BigDecimal(amount), (amount: BigDecimal) => amount.toString())
+        .verifying(Messages("calc.base.undefinedMessage"), amount => isMaxTwoDecimalPlaces(amount))
+        .verifying(Messages("calc.base.undefinedMessage"), amount => isLessThanEqualMaxNumeric(amount))
+        .verifying(Messages("calc.base.undefinedMessage"), amount => isPositive(amount))
     )(DisposalValueModel.apply)(DisposalValueModel.unapply)
   )
 }

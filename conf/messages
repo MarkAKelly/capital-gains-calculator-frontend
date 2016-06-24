@@ -308,7 +308,9 @@ calc.resident.disposalCosts.helpText = Costs include agent fees, legal fees and 
 ## Acquisition Value messages
 
 ## Acquisition Costs messages
+calc.resident.acquisitionCosts.title = How much did you pay in costs when you became the property owner?
 
 ## Improvements messages
+calc.resident.improvements.title = How much have you spent on improvements since you became the property owner?
 
 ## First Summary messages
