@@ -306,6 +306,7 @@ calc.resident.disposalCosts.title = 'How much did you pay in costs when you stop
 ## Acquisition Value messages
 
 ## Acquisition Costs messages
+calc.resident.acquisitionCosts.title = How much did you pay in costs when you became the property owner?
 
 ## Improvements messages
 

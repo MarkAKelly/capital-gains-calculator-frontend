@@ -55,4 +55,11 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
       path shouldEqual "/calculate-your-capital-gains/resident/disposal-costs"
     }
   }
+
+  "The URL for the acquisition costs action" should {
+    "be equal to /calculate-your-capital-gains/resident/acquisition-costs" in {
+      val path = controllers.resident.routes.GainController.acquisitionCosts.toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/acquisition-costs"
+    }
+  }
 }
