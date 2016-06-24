@@ -22,12 +22,13 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.test.Helpers._
 import assets.MessageLookup.{improvements => messages}
 import org.jsoup.Jsoup
+import play.api.test.FakeRequest
 
 class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Calling .improvements from the GainCalculationController" should {
+  "Calling .improvements from the GainController" should {
 
-    lazy val result = GainController.improvements(fakeRequest)
+    lazy val result = GainController.improvements(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(bodyOf(result))
 
     "return a status of 200" in {
@@ -43,4 +44,17 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
     }
   }
 
+  "Calling .improvements from the GainController with no session" should {
+
+    lazy val fakeRequest = FakeRequest()
+    lazy val result = GainController.improvements(fakeRequest)
+
+    "return a status of 303" in {
+      status(result) shouldBe 303
+    }
+
+    "return you to the session timeout view" in {
+      redirectLocation(result).get shouldBe "/calculate-your-capital-gains/non-resident/session-timeout"
+    }
+  }
 }
