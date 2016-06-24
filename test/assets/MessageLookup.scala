@@ -64,6 +64,9 @@ object MessageLookup {
   }
 
   //Improvements messages
+  object improvements {
+    val title = "How much have you spent on improvements since you became the property owner?"
+  }
 
   //Summary messages
   object summary {
