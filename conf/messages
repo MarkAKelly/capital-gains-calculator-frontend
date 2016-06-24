@@ -309,5 +309,6 @@ calc.resident.disposalCosts.title = 'How much did you pay in costs when you stop
 calc.resident.acquisitionCosts.title = How much did you pay in costs when you became the property owner?
 
 ## Improvements messages
+calc.resident.improvements.title = How much have you spent on improvements since you became the property owner?
 
 ## First Summary messages

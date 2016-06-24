@@ -24,7 +24,7 @@ import play.api.i18n.Messages
 
 object DisposalDateForm {
 
-  def disposalDateForm(): Form[DisposalDateModel] = Form(
+  val disposalDateForm = Form(
     mapping(
       "disposalDateDay" -> text
         .verifying(Messages("calc.base.undefinedMessage"), day => isNotEmpty(day))
