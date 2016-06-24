@@ -28,6 +28,7 @@ object DisposalValueForm {
     mapping(
       "amount" -> text
         .verifying(Messages("calc.base.undefinedMessage"), amount => isNotEmpty(amount))
+        .verifying(Messages("calc.base.undefinedMessage"), amount => isDoubleNumber(amount))
         .transform(amount => BigDecimal(amount), (amount: BigDecimal) => amount.toString())
         .verifying(Messages("calc.base.undefinedMessage"), amount => isMaxTwoDecimalPlaces(amount))
         .verifying(Messages("calc.base.undefinedMessage"), amount => isLessThanEqualMaxNumeric(amount))

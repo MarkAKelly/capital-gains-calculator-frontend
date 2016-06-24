@@ -71,4 +71,11 @@ object Validation {
       case Failure(_) => false
     }
   }
+
+  def isDoubleNumber (input: String): Boolean = {
+    Try (input.toDouble) match {
+      case Success(_) => true
+      case Failure(_) => false
+    }
+  }
 }
