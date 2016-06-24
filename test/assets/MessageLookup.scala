@@ -41,14 +41,15 @@ object MessageLookup {
   }
 
   //Disposal Value messages
-  val disposalValueTitle = "How much did you sell the property for?"
-  val disposalValueQuestion = "How much did you sell the property for?"
-  val disposalValueBulletListTitle = "Put the market value of the property instead if you:"
-  val disposalValueBulletListOne = "gave it away as a gift"
-  val disposalValueBulletListTwo = "sold it to a relative, business partner or"
-  val disposalValueBulletListTwoLink = "someone else you're connected to"
-  val disposalValueBulletListThree = "sold it for less than it’s worth to help the buyer"
-
+  object disposalValue {
+    val title = "How much did you sell the property for?"
+    val question = "How much did you sell the property for?"
+    val bulletListTitle = "Put the market value of the property instead if you:"
+    val bulletListOne = "gave it away as a gift"
+    val bulletListTwo = "sold it to a relative, business partner or"
+    val bulletListTwoLink = "someone else you're connected to"
+    val bulletListThree = "sold it for less than it’s worth to help the buyer"
+  }
 
   //Disposal Costs messages
   object disposalCosts {

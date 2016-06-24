@@ -30,7 +30,7 @@ class DisposalValueFormSpec extends UnitSpec {
     }
 
     "return a None if a model without a numeric value is supplied using .bind" in {
-      val map = Map(("amount", "a"))
+      val map = Map(("amount", ""))
       val form = disposalValueForm.bind(map)
       form.value shouldBe None
     }
