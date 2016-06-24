@@ -18,7 +18,8 @@ package connectors
 
 import java.util.UUID
 
-import common.nonresident.{CustomerTypeKeys, KeystoreKeys}
+import common.KeystoreKeys
+import common.nonresident.CustomerTypeKeys
 import models.nonresident._
 import org.mockito.Matchers
 import org.mockito.Mockito._

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package common.nonresident
+package common
 
 object KeystoreKeys extends KeystoreKeys
 
@@ -45,6 +45,7 @@ trait KeystoreKeys {
 
   object ResidentKeys {
     val disposalDate = "res:disposalDate"
+    val disposalValue = "res:disposalValue"
   }
 
 }

@@ -22,7 +22,7 @@ import org.jsoup.Jsoup
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{disposalDate => messages}
-import common.nonresident.KeystoreKeys
+import common.KeystoreKeys
 import connectors.CalculatorConnector
 import models.resident.DisposalDateModel
 import org.mockito.Matchers
