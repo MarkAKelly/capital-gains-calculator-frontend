@@ -51,6 +51,7 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
 
       lazy val target = setupTarget(None)
       lazy val result = target.disposalDate(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a status of 200" in {
         status(result) shouldBe 200
@@ -58,6 +59,10 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
 
       "return some html" in {
         contentType(result) shouldBe Some("text/html")
+      }
+
+      s"return a page with the title ${messages.title}" in {
+        doc.title shouldBe messages.title
       }
     }
 
@@ -65,6 +70,7 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
 
       lazy val target = setupTarget(Some(DisposalDateModel(10, 10, 2016)))
       lazy val result = target.disposalDate(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a status of 200" in {
         status(result) shouldBe 200
@@ -72,6 +78,10 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
 
       "return some html" in {
         contentType(result) shouldBe Some("text/html")
+      }
+
+      s"return a page with the title ${messages.title}" in {
+        doc.title shouldBe messages.title
       }
     }
   }
