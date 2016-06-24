@@ -33,55 +33,62 @@ import scala.concurrent.Future
 
 class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar{
 
-  def setupTarget(getData: Option[DisposalDateModel]): GainController = {
+  case class FakeGETRequest (storedData: Option[DisposalDateModel]) {
+    def setupTarget(getData: Option[DisposalDateModel]): GainController = {
 
-    val mockCalcConnector = mock[CalculatorConnector]
+      val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalDate))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(getData))
+      when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalDate))(Matchers.any(), Matchers.any()))
+        .thenReturn(Future.successful(getData))
 
-    new GainController {
-      override val calcConnector: CalculatorConnector = mockCalcConnector
+      new GainController {
+        override val calcConnector: CalculatorConnector = mockCalcConnector
+      }
     }
+    val target = setupTarget(storedData)
+    val result = target.disposalDate(fakeRequestWithSession)
+    val doc = Jsoup.parse(bodyOf(result))
+  }
+
+  case class FakePOSTRequest (input: (String, String)*) {
+    lazy val target = fakeRequestToPOSTWithSession(input: _*)
+    lazy val result = GainController.submitDisposalDate(target)
+    lazy val doc = Jsoup.parse(bodyOf(result))
   }
 
   "Calling .disposalDate from the GainCalculationController" should {
 
     "when there is no keystore data" should {
 
-      lazy val target = setupTarget(None)
-      lazy val result = target.disposalDate(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
+      lazy val request = FakeGETRequest(None)
 
       "return a status of 200" in {
-        status(result) shouldBe 200
+        status(request.result) shouldBe 200
       }
 
       "return some html" in {
-        contentType(result) shouldBe Some("text/html")
+        contentType(request.result) shouldBe Some("text/html")
       }
 
       s"return a page with the title ${messages.title}" in {
-        doc.title shouldBe messages.title
+        request.doc.title shouldBe messages.title
       }
     }
 
     "when there is keystore data" should {
 
-      lazy val target = setupTarget(Some(DisposalDateModel(10, 10, 2016)))
-      lazy val result = target.disposalDate(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
+      lazy val request = FakeGETRequest(Some(DisposalDateModel(10, 10, 2016)))
 
       "return a status of 200" in {
-        status(result) shouldBe 200
+        status(request.result) shouldBe 200
       }
 
       "return some html" in {
-        contentType(result) shouldBe Some("text/html")
+        contentType(request.result) shouldBe Some("text/html")
       }
 
       s"return a page with the title ${messages.title}" in {
-        doc.title shouldBe messages.title
+        request.doc.title shouldBe messages.title
       }
     }
   }
@@ -99,30 +106,27 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     "when there is a valid form" should {
 
-      lazy val fakePostRequest = fakeRequestToPOSTWithSession(("disposalDateDay", "30"), ("disposalDateMonth", "4"), ("disposalDateYear", "2016"))
-      lazy val result = GainController.submitDisposalDate(fakePostRequest)
+      lazy val request = FakePOSTRequest(("disposalDateDay", "30"), ("disposalDateMonth", "4"), ("disposalDateYear", "2016"))
 
       "return a status of 303" in {
-        status(result) shouldBe 303
+        status(request.result) shouldBe 303
       }
 
       "redirect to the Disposal Value page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/disposal-value")
+        redirectLocation(request.result) shouldBe Some("/calculate-your-capital-gains/resident/disposal-value")
       }
     }
 
     "when there is an invalid form" should {
 
-      lazy val fakePostRequest = fakeRequestToPOSTWithSession(("disposalDateDay", "32"), ("disposalDateMonth", "4"), ("disposalDateYear", "2016"))
-      lazy val result = GainController.submitDisposalDate(fakePostRequest)
-      lazy val doc = Jsoup.parse(bodyOf(result))
+      lazy val request = FakePOSTRequest(("disposalDateDay", "32"), ("disposalDateMonth", "4"), ("disposalDateYear", "2016"))
 
       "return a status of 400 with an invalid POST" in {
-        status(result) shouldBe 400
+        status(request.result) shouldBe 400
       }
 
       "return a page with the title ''When did you sign the contract that made someone else the owner?'" in {
-        doc.title() shouldBe messages.title
+        request.doc.title() shouldBe messages.title
       }
     }
   }
