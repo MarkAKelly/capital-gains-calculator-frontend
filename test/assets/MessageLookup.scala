@@ -65,6 +65,8 @@ object MessageLookup {
 
   //Improvements messages
 
-  //First Summary messages
-
+  //Summary messages
+  object summary {
+    val title = "Summary"
+  }
 }

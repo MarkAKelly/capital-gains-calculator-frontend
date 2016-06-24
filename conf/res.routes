@@ -19,4 +19,5 @@ GET     /acquisition-costs                controllers.resident.GainController.ac
 
 #Improvements Routes
 
-#First Summary Routes
+#Summary Routes
+GET     /summary                          controllers.resident.SummaryController.summary
