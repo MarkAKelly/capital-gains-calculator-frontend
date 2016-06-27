@@ -67,6 +67,7 @@ object MessageLookup {
     val bulletListThreeLink = "someone else you're connected to"
     val bulletListFour = "bought it for less than it’s worth because the seller wanted to help you"
     val bulletListFive = "became the owner before 1 April 1982"
+    val bulletLink = "https://www.gov.uk/capital-gains-tax/losses"
   }
 
   //Acquisition Costs messages

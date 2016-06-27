@@ -116,6 +116,10 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Fa
           doc.select("span.visuallyhidden").text() shouldEqual commonMessages.calcBaseExternalLink
         }
 
+        s"have a link to ${messages.bulletLink}" in {
+          doc.getElementById("lossesLink").attr("href") shouldBe messages.bulletLink
+        }
+
         s"have a fourth bullet point of ${messages.bulletListFour}" in {
           doc.select("div.indent li#bullet-list-four").text() shouldEqual messages.bulletListFour
         }
