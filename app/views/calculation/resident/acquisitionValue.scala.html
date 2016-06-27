@@ -1,3 +1,5 @@
+@import uk.gov.hmrc.play.views.html.helpers.form
+
 @()(implicit request: Request[_])
 
 @main_template(Messages("calc.resident.acquisitionValue.title")) {
@@ -5,5 +7,9 @@
     <a id="back-link" class="back-link" href="@controllers.resident.routes.GainController.disposalCosts().toString">@Messages("calc.base.back")</a>
 
     <h1 class="visuallyhidden">@Messages("calc.resident.acquisitionValue.question")</h1>
+
+    @form(action = controllers.resident.routes.GainController.submitAcquisitionValue) {
+
+    }
 
 }

@@ -65,5 +65,32 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Fa
         h1Tag.hasClass("visuallyhidden") shouldBe true
       }
     }
+
+
+    "have a form" which {
+
+      lazy val form = doc.getElementsByTag("form")
+
+      s"has the action '${controllers.resident.routes.GainController.submitAcquisitionValue().toString}'" in {
+        form.attr("action") shouldBe controllers.resident.routes.GainController.submitAcquisitionValue().toString
+      }
+
+      "has the method of POST" in {
+        form.attr("method") shouldBe "POST"
+      }
+//
+//      "has a label that" should {
+//
+//        lazy val label = doc.body.getElementsByTag("label")
+//
+//        s"have the question ${messages.pageHeading}" in {
+//          label.text should include(messages.pageHeading)
+//        }
+//
+//        "have the class 'heading-large'" in {
+//          label.select("span").hasClass("heading-large") shouldBe true
+//        }
+//      }
+    }
   }
 }
