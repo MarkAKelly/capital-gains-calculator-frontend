@@ -29,7 +29,7 @@ import views.html.calculation.{resident => views}
 import forms.resident.DisposalValueForm._
 import forms.resident.DisposalDateForm._
 import forms.resident.AcquisitionValueForm._
-import models.resident.{DisposalDateModel, DisposalValueModel}
+import models.resident.{AcquisitionValueModel, DisposalDateModel, DisposalValueModel}
 
 object GainController extends GainController {
   val calcConnector = CalculatorConnector
@@ -79,13 +79,18 @@ trait GainController extends FeatureLock {
 
   //################# Acquisition Value Actions ########################
   val acquisitionValue = FeatureLockForRTT.async { implicit request =>
-    Future.successful(Ok(views.acquisitionValue(acquisitionValueForm)))
+    calcConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.ResidentKeys.acquisitionValue).map {
+      case Some(data) => Ok(views.acquisitionValue(acquisitionValueForm.fill(data)))
+      case None => Ok(views.acquisitionValue(acquisitionValueForm))
+    }
   }
 
   val submitAcquisitionValue = FeatureLockForRTT.async { implicit request =>
     acquisitionValueForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.acquisitionValue(errors))),
-      success => Future.successful(Redirect(routes.GainController.acquisitionCosts()))
+      success => {
+        calcConnector.saveFormData(KeystoreKeys.ResidentKeys.acquisitionValue, success)
+        Future.successful(Redirect(routes.GainController.acquisitionCosts()))}
     )
   }
 

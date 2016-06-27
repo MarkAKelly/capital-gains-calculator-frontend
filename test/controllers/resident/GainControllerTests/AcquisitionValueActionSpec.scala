@@ -22,23 +22,65 @@ import org.jsoup.Jsoup
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{acquisitionValue => messages}
+import common.KeystoreKeys
+import connectors.CalculatorConnector
+import models.resident.AcquisitionValueModel
+import org.mockito.Matchers
+import org.mockito.Mockito._
+import org.scalatest.mock.MockitoSugar
 
-class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+import scala.concurrent.Future
 
-  "Calling .acquisitionValue from the GainCalculationController with session" should {
+class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar{
 
-    lazy val result = GainController.acquisitionValue(fakeRequestWithSession)
+  def setupTarget(getData: Option[AcquisitionValueModel]): GainController = {
 
-    "return a status of 200" in {
-      status(result) shouldBe 200
+    val mockCalcConnector = mock[CalculatorConnector]
+
+    when(mockCalcConnector.fetchAndGetFormData[AcquisitionValueModel](Matchers.eq(KeystoreKeys.ResidentKeys.acquisitionValue))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(getData))
+
+    new GainController {
+      override val calcConnector: CalculatorConnector = mockCalcConnector
+    }
+  }
+
+  "Calling .acquisitionValue from the GainCalculationController with session" when {
+
+    "there is no keystore data" should {
+
+      lazy val target = setupTarget(None)
+      lazy val result = target.acquisitionValue(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return some html" in {
+        contentType(result) shouldBe Some("text/html")
+      }
+
+      "display the Acquisition Value view" in {
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+      }
     }
 
-    "return some html" in {
-      contentType(result) shouldBe Some("text/html")
-    }
+    "there is some keystore data" should {
 
-    "display the Acquisition Value view" in {
-      Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+      lazy val target = setupTarget(Some(AcquisitionValueModel(1000)))
+      lazy val result = target.acquisitionValue(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return some html" in {
+        contentType(result) shouldBe Some("text/html")
+      }
+
+      "display the Acquisition Value view" in {
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+      }
     }
   }
 
