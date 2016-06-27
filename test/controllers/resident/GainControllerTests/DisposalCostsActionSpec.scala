@@ -60,18 +60,18 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "supplied with no pre-existing stored data" should {
 
-      lazy val result = GainController.disposalCosts(fakeRequestWithSession)
+      lazy val request = FakeGETRequest(None)
 
       "return a status of 200" in {
-        status(result) shouldBe 200
+        status(request.result) shouldBe 200
       }
 
       "return some html" in {
-        contentType(result) shouldBe Some("text/html")
+        contentType(request.result) shouldBe Some("text/html")
       }
 
       "display the Disposal Costs view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+        Jsoup.parse(bodyOf(request.result)).title shouldBe messages.title
       }
     }
 
