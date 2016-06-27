@@ -54,4 +54,34 @@ class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with 
       redirectLocation(result).get shouldBe "/calculate-your-capital-gains/non-resident/session-timeout"
     }
   }
+
+  "Calling .submitAcquisitionValue from the GainCalculationConroller" when {
+
+    "a valid form is submitted" should {
+      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+      lazy val result = GainController.submitAcquisitionValue(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the acquisition costs page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/acquisition-costs")
+      }
+    }
+
+    "an invalid form is submitted" should {
+      lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
+      lazy val result = GainController.submitAcquisitionValue(request)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "return a 400" in {
+        status(result) shouldBe 400
+      }
+
+      "render the acquisition value page" in {
+        doc.title() shouldEqual messages.title
+      }
+    }
+  }
 }

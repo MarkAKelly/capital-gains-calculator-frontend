@@ -82,7 +82,12 @@ trait GainController extends FeatureLock {
     Future.successful(Ok(views.acquisitionValue(acquisitionValueForm)))
   }
 
-  val submitAcquisitionValue = TODO
+  val submitAcquisitionValue = FeatureLockForRTT.async { implicit request =>
+    acquisitionValueForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.acquisitionValue(errors))),
+      success => Future.successful(Redirect(routes.GainController.acquisitionCosts()))
+    )
+  }
 
   val acquisitionCosts = FeatureLockForRTT.async { implicit request =>
     Future.successful(Ok(views.acquisitionCosts()))
