@@ -306,6 +306,13 @@ calc.resident.disposalCosts.title = 'How much did you pay in costs when you stop
 ## Acquisition Value messages
 calc.resident.acquisitionValue.title = How much did you pay for the property?
 calc.resident.acquisitionValue.question = How much did you pay for the property?
+calc.resident.acquisitionValue.bullet.title = Put the market value of the property instead if you:
+calc.resident.acquisitionValue.bullet.one = inherited it
+calc.resident.acquisitionValue.bullet.two = got it as a gift
+calc.resident.acquisitionValue.bullet.three = bought it from a relative, business partner or
+calc.resident.acquisitionValue.bullet.three.link = someone else you''re connected to
+calc.resident.acquisitionValue.bullet.four = bought it for less than it’s worth because the seller wanted to help you
+calc.resident.acquisitionValue.bullet.five = became the owner before 1 April 1982
 
 ## Acquisition Costs messages
 calc.resident.acquisitionCosts.title = How much did you pay in costs when you became the property owner?

@@ -28,6 +28,7 @@ import scala.concurrent.Future
 import views.html.calculation.{resident => views}
 import forms.resident.DisposalValueForm._
 import forms.resident.DisposalDateForm._
+import forms.resident.AcquisitionValueForm._
 import models.resident.{DisposalDateModel, DisposalValueModel}
 
 object GainController extends GainController {
@@ -78,7 +79,7 @@ trait GainController extends FeatureLock {
 
   //################# Acquisition Value Actions ########################
   val acquisitionValue = FeatureLockForRTT.async { implicit request =>
-    Future.successful(Ok(views.acquisitionValue()))
+    Future.successful(Ok(views.acquisitionValue(acquisitionValueForm)))
   }
 
   val submitAcquisitionValue = TODO

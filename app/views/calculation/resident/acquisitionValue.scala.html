@@ -1,15 +1,41 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
+@import models.resident.AcquisitionValueModel
+@import views.html.helpers._
 
-@()(implicit request: Request[_])
+@(acquisitionValueForm: Form[AcquisitionValueModel])(implicit request: Request[_])
+
+@contentLink = {
+<a id="lossesLink" class="external-link" rel="external" href="https://www.gov.uk/capital-gains-tax/losses"
+   target="_blank" data-journey-click="help:govUK:acquisition-cgt-losses">
+    @Messages("calc.resident.acquisitionValue.bullet.three.link")
+    <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
+</a>
+}
+
+@bulletContent = {
+    <p id="bullet-list-title">@Messages("calc.resident.acquisitionValue.bullet.title") </p>
+    <ul class="list-bullet">
+        <li id="bullet-list-one">@Messages("calc.resident.acquisitionValue.bullet.one")</li>
+        <li id="bullet-list-two">@Messages("calc.resident.acquisitionValue.bullet.two")</li>
+        <li id="bullet-list-three">@Messages("calc.resident.acquisitionValue.bullet.three")@contentLink</li>
+        <li id="bullet-list-four">@Messages("calc.resident.acquisitionValue.bullet.four")</li>
+        <li id="bullet-list-five">@Messages("calc.resident.acquisitionValue.bullet.five")</li>
+    </ul>
+}
 
 @main_template(Messages("calc.resident.acquisitionValue.title")) {
 
     <a id="back-link" class="back-link" href="@controllers.resident.routes.GainController.disposalCosts().toString">@Messages("calc.base.back")</a>
 
+    @errorSummary(acquisitionValueForm, "amount")
+
     <h1 class="visuallyhidden">@Messages("calc.resident.acquisitionValue.question")</h1>
 
     @form(action = controllers.resident.routes.GainController.submitAcquisitionValue) {
 
+        @formInputMoney(acquisitionValueForm, "amount", Messages("calc.resident.acquisitionValue.question"), additionalHTMLContent = Some(bulletContent.toString()), labelAsHeading = Some(true))
+
+        <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
     }
 
 }
