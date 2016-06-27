@@ -57,6 +57,10 @@ object MessageLookup {
   }
 
   //Acquisition Value messages
+  object acquisitionValue {
+    val title = "How much did you pay for the property?"
+    val pageHeading = "How much did you pay for the property?"
+  }
 
   //Acquisition Costs messages
   object acquisitionCosts {

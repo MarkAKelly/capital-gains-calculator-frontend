@@ -21,6 +21,7 @@ import controllers.resident.GainController
 import org.jsoup.Jsoup
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import assets.MessageLookup.{acquisitionValue => messages}
 
 class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
@@ -37,7 +38,7 @@ class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with 
     }
 
     "display the Acquisition Value view" in {
-      Jsoup.parse(bodyOf(result)).title shouldBe "AcquisitionValue"
+      Jsoup.parse(bodyOf(result)).title shouldBe messages.title
     }
   }
 

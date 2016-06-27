@@ -17,21 +17,53 @@
 package views.resident
 
 import org.jsoup.Jsoup
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{acquisitionValue => messages}
+import controllers.helpers.FakeRequestHelper
 
-class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication {
+class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Acquisition Value view" should {
 
-    lazy val view = views.html.calculation.resident.acquisitionValue()
+    lazy val view = views.html.calculation.resident.acquisitionValue()(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have charset UTF-8" in {
       doc.charset().toString shouldBe "UTF-8"
     }
 
-    "have title AcquisitionValue" in {
-      doc.title shouldBe "AcquisitionValue"
+    s"have title ${messages.title}" in {
+      doc.title shouldBe messages.title
+    }
+
+    "have a back button that" should {
+
+      lazy val backLink = doc.select("a#back-link")
+
+      "have the correct back link text" in {
+        backLink.text shouldBe commonMessages.calcBaseBack
+      }
+
+      "have the back-link class" in {
+        backLink.hasClass("back-link") shouldBe true
+      }
+
+      "have a link to Disposal Value" in {
+        backLink.attr("href") shouldBe controllers.resident.routes.GainController.disposalCosts().toString
+      }
+    }
+
+    "have a H1 tag that" should {
+      lazy val h1Tag = doc.select("H1")
+
+      s"have the page heading '${messages.pageHeading}'" in {
+        h1Tag.text shouldBe messages.pageHeading
+      }
+
+      "have the visuallyhidden class" in {
+        h1Tag.hasClass("visuallyhidden") shouldBe true
+      }
     }
   }
 }

@@ -304,6 +304,8 @@ calc.resident.disposal.value.bullet.three = sold it for less than it’s worth t
 calc.resident.disposalCosts.title = 'How much did you pay in costs when you stopped owning the property?'
 
 ## Acquisition Value messages
+calc.resident.acquisitionValue.title = How much did you pay for the property?
+calc.resident.acquisitionValue.question = How much did you pay for the property?
 
 ## Acquisition Costs messages
 calc.resident.acquisitionCosts.title = How much did you pay in costs when you became the property owner?

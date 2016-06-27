@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>AcquisitionValue</title>
-</head>
-<body>
+@()(implicit request: Request[_])
 
-</body>
-</html>
+@main_template(Messages("calc.resident.acquisitionValue.title")) {
+
+    <a id="back-link" class="back-link" href="@controllers.resident.routes.GainController.disposalCosts().toString">@Messages("calc.base.back")</a>
+
+    <h1 class="visuallyhidden">@Messages("calc.resident.acquisitionValue.question")</h1>
+
+}
