@@ -83,7 +83,7 @@ object Validation {
     case Failure(_) => false
   }
 
-  val mandatoryCheck: String => Boolean = (input) => !input.isEmpty
+  val mandatoryCheck: String => Boolean = (input) => input.trim != ""
 
   val decimalPlacesCheck: BigDecimal => Boolean = (input) => input.scale < 3
 
