@@ -20,7 +20,7 @@ import controllers.helpers.FakeRequestHelper
 import controllers.resident.GainController
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.test.Helpers._
-import assets.MessageLookup.{improvements => messages}
+import assets.MessageLookup.{improvementsView => messages}
 import org.jsoup.Jsoup
 import play.api.test.FakeRequest
 

@@ -19,13 +19,14 @@ package views.resident
 import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.{improvements => messages}
+import assets.MessageLookup.{improvementsView => messages}
+import forms.resident.ImprovementsForm.improvementsForm
 
 class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Improvements view" should {
 
-    lazy val view = views.html.calculation.resident.improvements()(fakeRequest)
+    lazy val view = views.html.calculation.resident.improvements(improvementsForm)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -35,6 +36,20 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     s"have a title of ${messages.title}" in {
       doc.title() shouldBe messages.title
     }
-  }
 
+    s"have the correct note" in {
+      val note = doc.select(".panel.panel-border-wide>p")
+      note.text() shouldBe messages.note
+    }
+
+    s"have the correct label" in {
+      val label = doc.select("label")
+      label.text() should startWith(messages.label)
+    }
+
+    s"have the correct hint" in {
+      val hint = doc.select("label .form-hint")
+      hint.text() shouldBe messages.hint
+    }
+  }
 }
