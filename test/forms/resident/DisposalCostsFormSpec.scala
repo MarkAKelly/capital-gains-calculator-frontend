@@ -22,8 +22,6 @@ import forms.resident.DisposalCostsForm._
 import assets.{MessageLookup => commonMessages}
 import common.Constants
 import controllers.helpers.FakeRequestHelper
-import play.api.i18n.Messages
-import play.api.mvc.Request
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 class DisposalCostsFormSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {

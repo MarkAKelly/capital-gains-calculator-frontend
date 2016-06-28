@@ -29,14 +29,14 @@ object DisposalCostsForm {
   val disposalCostsForm = Form(
     mapping(
       "amount" -> text
-        .verifying(Messages("calc.base.undefinedMessage"), amt => amt != "")
+        .verifying(Messages("calc.base.undefinedMessage"), amt => !amt.isEmpty)
         .verifying(Messages("calc.base.undefinedMessage"), amt => isBigDecimalNumber(amt))
         .transform[BigDecimal](amt => BigDecimal(amt), amt => amt.toString())
         .verifying(Messages("calc.common.error.maxNumericExceeded") +
           MoneyPounds(Constants.maxNumeric, 0).quantity + " " +
           Messages("calc.common.error.maxNumericExceeded.OrLess"),
           amt => isLessThanEqualMaxNumeric(amt))
-        .verifying(Messages("calc.base.undefinedMessage"), amt => isGreaterThanZero(amt))
+        .verifying(Messages("calc.base.undefinedMessage"), amt => isPositive(amt))
         .verifying(Messages("calc.base.undefinedMessage"),amt => isMaxTwoDecimalPlaces(amt))
     )(DisposalCostsModel.apply)(DisposalCostsModel.unapply)
   )
