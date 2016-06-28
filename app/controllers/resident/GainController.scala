@@ -28,8 +28,9 @@ import scala.concurrent.Future
 import views.html.calculation.{resident => views}
 import forms.resident.DisposalValueForm._
 import forms.resident.DisposalDateForm._
+import forms.resident.DisposalCostsForm._
 import forms.resident.AcquisitionValueForm._
-import models.resident.{AcquisitionValueModel, DisposalDateModel, DisposalValueModel}
+import models.resident.{AcquisitionValueModel, DisposalDateModel, DisposalValueModel, DisposalCostsModel}
 
 object GainController extends GainController {
   val calcConnector = CalculatorConnector
@@ -79,6 +80,23 @@ trait GainController extends FeatureLock {
     )
   }
 
+  //################# Disposal Costs Actions ########################
+  val disposalCosts = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[DisposalCostsModel](KeystoreKeys.ResidentKeys.disposalCosts).map {
+      case Some(data) => Ok(views.disposalCosts(disposalCostsForm.fill(data)))
+      case None => Ok(views.disposalCosts(disposalCostsForm))
+    }
+  }
+
+  val submitDisposalCosts = FeatureLockForRTT.async { implicit request =>
+    disposalCostsForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.disposalCosts(errors))),
+      success => {
+        calcConnector.saveFormData(KeystoreKeys.ResidentKeys.disposalCosts, success)
+        Future.successful(Redirect(routes.GainController.acquisitionValue()))}
+    )
+  }
+
   //################# Acquisition Value Actions ########################
   val acquisitionValue = FeatureLockForRTT.async { implicit request =>
     calcConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.ResidentKeys.acquisitionValue).map {
@@ -99,10 +117,8 @@ trait GainController extends FeatureLock {
   val acquisitionCosts = FeatureLockForRTT.async { implicit request =>
     Future.successful(Ok(views.acquisitionCosts()))
   }
-  
-  val disposalCosts = FeatureLockForRTT.async { implicit request =>
-    Future.successful(Ok(views.disposalCosts()))
-  }
+
+
 
   val improvements = Action.async { implicit request =>
     Future.successful(Ok(views.improvements()))
