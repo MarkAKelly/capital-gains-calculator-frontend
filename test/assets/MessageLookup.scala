@@ -25,6 +25,8 @@ object MessageLookup {
   val undefinedMessage = "Undefined message"
 
   //Common messages
+  val maxNumericExceededStart = "Enter an amount that's £"
+  val maxNumericExceededEnd = "or less"
 
   //Disposal Date messages
   object disposalDate {
@@ -54,6 +56,8 @@ object MessageLookup {
   //Disposal Costs messages
   object disposalCosts {
     val title = "How much did you pay in costs when you stopped owning the property?"
+    val pageHeading = "How much did you pay in costs when you stopped owning the property?"
+    val helpText = "Costs include agent fees, legal fees and surveys"
   }
 
   //Acquisition Value messages
@@ -73,6 +77,8 @@ object MessageLookup {
   //Acquisition Costs messages
   object acquisitionCosts {
     val title = "How much did you pay in costs when you became the property owner?"
+    val pageHeading = "How much did you pay in costs when you became the property owner?"
+    val helpText = "Costs include agent fees, legal fees and surveys"
   }
 
   //Improvements messages
