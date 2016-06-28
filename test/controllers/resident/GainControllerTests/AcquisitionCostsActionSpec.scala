@@ -48,16 +48,16 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
 
   "Calling .acquisitionCosts from the GainCalculationController" when {
 
-    "request has a valid session" should {
+    "there is no keystore data" should {
 
-      lazy val result = GainController.acquisitionCosts(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
+      lazy val target = setupTarget(None)
+      lazy val result = target.acquisitionCosts(fakeRequestWithSession)
 
       "return a status of 200" in {
         status(result) shouldBe 200
       }
 
-      "return some Html" in {
+      "return some html" in {
         contentType(result) shouldBe Some("text/html")
       }
 
