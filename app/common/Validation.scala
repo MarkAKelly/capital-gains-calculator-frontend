@@ -17,7 +17,6 @@
 package common
 
 import java.text.SimpleDateFormat
-
 import scala.util.{Failure, Success, Try}
 
 object Validation {
@@ -78,4 +77,17 @@ object Validation {
       case Failure(_) => false
     }
   }
+
+  val isNotBigDecimal: String => Boolean = (input) => Try(BigDecimal(input)) match {
+    case Success(_) => true
+    case Failure(_) => false
+  }
+
+  val mandatoryCheck: String => Boolean = (input) => !input.isEmpty
+
+  val decimalPlacesCheck: BigDecimal => Boolean = (input) => input.scale < 3
+
+  val maxCheck: BigDecimal => Boolean = (input) => input <= Constants.maxNumeric
+
+  val minCheck: BigDecimal => Boolean = (input) => input >= 0
 }
