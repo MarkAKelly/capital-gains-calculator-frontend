@@ -18,6 +18,7 @@ POST    /acquisition-value                controllers.resident.GainController.su
 
 #Acquisition Costs Routes
 GET     /acquisition-costs                controllers.resident.GainController.acquisitionCosts
+POST    /acquisition-costs                controllers.resident.GainController.submitAcquisitionCosts
 
 #Improvements Routes
 GET     /improvements                     controllers.resident.GainController.improvements

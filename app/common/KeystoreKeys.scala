@@ -48,6 +48,7 @@ trait KeystoreKeys {
     val disposalValue = "res:disposalValue"
     val disposalCosts = "res:disposalCosts"
     val acquisitionValue = "res:acquisitionValue"
+    val acquisitionCosts = "res:acquisitionCosts"
   }
 
 }

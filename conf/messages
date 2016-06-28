@@ -318,6 +318,8 @@ calc.resident.acquisitionValue.bullet.five = became the owner before 1 April 198
 
 ## Acquisition Costs messages
 calc.resident.acquisitionCosts.title = How much did you pay in costs when you became the property owner?
+calc.resident.acquisitionCosts.question = How much did you pay in costs when you became the property owner?
+calc.resident.acquisitionCosts.helpText = Costs include agent fees, legal fees and surveys
 
 ## Improvements messages
 calc.resident.improvements.title = How much have you spent on improvements since you became the property owner?
