@@ -108,4 +108,16 @@ class ValidationSpec extends UnitSpec {
       isLessThanEqualMaxNumeric(999999999.99) shouldBe true
     }
   }
+
+  "calling isNotBigDecimal with non-numeric characters" should {
+    "result in false" in {
+      bigDecimalCheck("abc") shouldBe false
+    }
+  }
+
+  "calling isNotBigDecimal with numeric characters" should {
+    "result in true" in {
+      bigDecimalCheck("123") shouldBe true
+    }
+  }
 }
