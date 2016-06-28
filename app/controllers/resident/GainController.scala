@@ -73,7 +73,9 @@ trait GainController extends FeatureLock {
   val submitDisposalValue = FeatureLockForRTT.async { implicit request =>
     disposalValueForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.disposalValue(errors))),
-      success => Future.successful(Redirect(routes.GainController.disposalCosts()))
+      success => {
+        calcConnector.saveFormData[DisposalValueModel](KeystoreKeys.ResidentKeys.disposalValue, success)
+        Future.successful(Redirect(routes.GainController.disposalCosts()))}
     )
   }
 
