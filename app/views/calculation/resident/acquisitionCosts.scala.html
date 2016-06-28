@@ -1,4 +1,21 @@
-@()(implicit request: Request[_])
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import models.resident.AcquisitionCostsModel
+@import views.html.helpers._
+
+@(acquisitionCostsForm: Form[AcquisitionCostsModel])(implicit request: Request[_])
 
 @main_template(Messages("calc.resident.acquisitionCosts.title")) {
+
+    <a id="back-link" class="back-link" href="@controllers.resident.routes.GainController.disposalCosts().toString">@Messages("calc.base.back")</a>
+
+    @errorSummary(acquisitionCostsForm, "amount")
+
+    <h1 class="visuallyhidden">@Messages("calc.resident.acquisitionCosts.question")</h1>
+
+    @form(action = controllers.resident.routes.GainController.submitAcquisitionCosts) {
+
+        @formInputMoney(acquisitionCostsForm, "amount", Messages("calc.resident.acquisitionCosts.question"), Some(Messages("calc.resident.acquisitionCosts.helpText")), labelAsHeading = Some(true))
+
+        <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+    }
 }
