@@ -10,6 +10,7 @@ POST    /disposal-value                   controllers.resident.GainController.su
 
 #Disposal Costs Routes
 GET     /disposal-costs                   controllers.resident.GainController.disposalCosts
+POST    /disposal-costs                   controllers.resident.GainController.submitDisposalCosts
 
 #Acquisition Value or Market Value Routes
 GET     /acquisition-value                controllers.resident.GainController.acquisitionValue

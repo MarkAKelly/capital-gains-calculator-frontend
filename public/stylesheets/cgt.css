@@ -87,3 +87,9 @@
     width: 29px;
     height: 29px;
 }
+
+.resident span.heading-large {
+    display: block;
+    margin-top: 0em;
+    margin-bottom: 1em;
+}
