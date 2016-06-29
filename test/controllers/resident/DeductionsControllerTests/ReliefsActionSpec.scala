@@ -129,7 +129,7 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         status(result) shouldBe 400
       }
 
-      "render the acquisition costs page" in {
+      "render the reliefs page" in {
         doc.title() shouldEqual messages.title
       }
     }
