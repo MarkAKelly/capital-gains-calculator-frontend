@@ -330,3 +330,6 @@ calc.resident.improvements.hint = Improvements are permanent changes that raise 
 
 ## Summary messages
 calc.resident.summary.title = Summary
+
+## Reliefs messages
+calc.resident.reliefs.title = Do you want to claim any tax reliefs on your total gain?
