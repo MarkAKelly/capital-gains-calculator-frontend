@@ -34,7 +34,6 @@ object DeductionsController extends DeductionsController {
 }
 
 trait DeductionsController extends FeatureLock {
-  val calcConnector: CalculatorConnector
 
   val calcConnector: CalculatorConnector
 
