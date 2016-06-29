@@ -17,29 +17,61 @@
 package controllers.resident.DeductionsControllerTests
 
 import assets.MessageLookup.{otherProperties => messages}
+import common.KeystoreKeys
+import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.DeductionsController
+import models.resident.OtherPropertiesModel
 import org.jsoup.Jsoup
+import org.mockito.Matchers
+import org.mockito.Mockito._
+import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import scala.concurrent.Future
 
-class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  "Calling .otherProperties from the DeductionsController" should {
+  def setupTarget(getData: Option[OtherPropertiesModel]): DeductionsController = {
 
-    lazy val result = DeductionsController.otherProperties(fakeRequest)
-    lazy val doc = Jsoup.parse(bodyOf(result))
+    val mockCalcConnector = mock[CalculatorConnector]
 
-    "return a status of 200" in {
-      status(result) shouldBe 200
+    when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.eq(KeystoreKeys.ResidentKeys.otherProperties))(Matchers.any(), Matchers.any()))
+    .thenReturn(Future.successful(getData))
+
+    new DeductionsController {
+      override val calcConnector: CalculatorConnector = mockCalcConnector
+    }
+  }
+
+  "Calling .otherProperties from the DeductionsController" when {
+
+    "request has a valid session and no keystore value" should {
+
+      lazy val target = setupTarget(None)
+      lazy val result = DeductionsController.otherProperties(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return some html" in {
+        contentType(result) shouldBe Some("text/html")
+      }
+
+      s"have a title of ${messages.title}" in {
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+      }
     }
 
-    "return some html" in {
-      contentType(result) shouldBe Some("text/html")
-    }
+    "request has no session" should {
 
-    s"have a title of ${messages.title}" in {
-      doc.title() shouldBe messages.title
+      lazy val target = setupTarget(None)
+      lazy val result = target.otherProperties(fakeRequest)
+
+      "return a status of 303" in {
+        status(result) shouldBe 303
+      }
     }
   }
 }

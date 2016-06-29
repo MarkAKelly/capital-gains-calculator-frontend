@@ -18,8 +18,11 @@ package controllers.resident
 
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
+import models.resident.OtherPropertiesModel
 import play.api.mvc.Action
 import views.html.calculation.{resident => views}
+import forms.resident.OtherPropertiesForm._
+import common.KeystoreKeys
 
 import scala.concurrent.Future
 
@@ -29,6 +32,8 @@ object DeductionsController extends DeductionsController {
 }
 
 trait DeductionsController extends FeatureLock {
+
+  val calcConnector: CalculatorConnector
 
   //################# Reliefs Actions ########################
   val reliefs = Action.async { implicit request =>
@@ -41,8 +46,11 @@ trait DeductionsController extends FeatureLock {
   }
 
   //################# Other Properties Actions #########################
-  val otherProperties = Action.async { implicit request =>
-    Future.successful(Ok(views.otherProperties()))
+  val otherProperties = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.ResidentKeys.otherProperties).map {
+      case Some(data) => Ok(views.otherProperties(otherPropertiesForm.fill(data)))
+      case None => Ok(views.otherProperties(otherPropertiesForm))
+    }
   }
 
   val submitOtherProperties = TODO

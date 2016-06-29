@@ -21,12 +21,13 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 import assets.MessageLookup.{otherProperties => messages}
 import assets.MessageLookup._
+import forms.resident.OtherPropertiesForm._
 
 class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Other Properties view" should {
 
-    lazy val view = views.html.calculation.resident.otherProperties()(fakeRequest)
+    lazy val view = views.html.calculation.resident.otherProperties(otherPropertiesForm)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -60,6 +61,19 @@ class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with Fak
 
       s"have the page heading '${messages.pageHeading}'" in {
         h1Tag.hasClass("visuallyhidden") shouldBe true
+      }
+    }
+
+    "have a form" which {
+
+      lazy val form = doc.getElementsByTag("form")
+
+      s"has the action '${controllers.resident.routes.DeductionsController.submitOtherProperties().toString}'" in {
+        form.attr("action") shouldBe controllers.resident.routes.DeductionsController.submitOtherProperties().toString()
+      }
+
+      "has the method of POST" in {
+        form.attr("method") shouldBe "POST"
       }
     }
   }

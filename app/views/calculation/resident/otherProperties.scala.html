@@ -1,8 +1,29 @@
-@(backUrl: String = "")(implicit request: Request[_])
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import models.resident.OtherPropertiesModel
+@import views.html.helpers._
+
+@(otherPropertiesForm: Form[OtherPropertiesModel], backUrl: String = "")(implicit request: Request[_])
 
 @main_template(title = Messages("calc.resident.otherProperties.title")) {
 
     <a id="back-link" class="back-link" href="@backUrl">@Messages("calc.base.back")</a>
 
-    <h1 class="visuallyhidden">@Messages("calc.resident.otherProperties.question")</h1>
+    <h1 class="visuallyhidden">@Messages("calc.resident.otherProperties.title")</h1>
+
+    @form(action = controllers.resident.routes.DeductionsController.submitOtherProperties) {
+
+        @formInputRadioGroup(
+            field = otherPropertiesForm("hasOtherProperties"),
+            Seq(
+                "Yes" -> Messages("calc.base.yes"),
+                "No" -> Messages("calc.base.no")),
+            '_legend -> Messages("calc.resident.otherProperties.pageHeading"),
+            '_legendID -> "hasOtherProperties",
+            '_legendClass -> "visuallyhidden",
+            '_helpText -> "",
+            '_labelAfter -> true,
+            '_labelClass -> "block-label",
+            '_groupClass -> "inline form-group"
+        )
+    }
 }
