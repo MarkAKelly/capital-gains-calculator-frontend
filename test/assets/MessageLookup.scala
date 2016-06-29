@@ -82,8 +82,11 @@ object MessageLookup {
   }
 
   //Improvements messages
-  object improvements {
+  object improvementsView {
     val title = "How much have you spent on improvements since you became the property owner?"
+    val note = "If you used the market value of the property, tell us how much you've spent on improvements since the date of the valuation."
+    val label = "How much have you spent on improvements since you became the property owner?"
+    val hint = "Improvements are permanent changes that raise the value of a property, like adding extensions or garages"
   }
 
   //Summary messages
@@ -105,6 +108,11 @@ object MessageLookup {
   object otherProperties {
     val title = "In the 2015/2016 tax year, did you sell or give away anything else that's covered by Capital Gains Tax?"
     val pageHeading = "In the 2015/2016 tax year, did you sell or give away anything else that's covered by Capital Gains Tax?"
+  }
+
+  //Allowable Losses Value messages
+  object allowableLossesValue {
+    val title = "What's the total value of your allowable losses?"
   }
 
   //Losses Brought Forward messages
