@@ -119,6 +119,20 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
+  "The URL for the other properties action" should {
+    "be equal to /calculate-your-capital-gains/resident/other-properties" in {
+      val path = controllers.resident.routes.DeductionsController.otherProperties.toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/other-properties"
+    }
+  }
+
+  "The URL for the allowable losses value action" should {
+    "be equal to /calculate-your-capital-gains/resident/allowable-losses-value" in {
+      val path = controllers.resident.routes.DeductionsController.allowableLossesValue.toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/allowable-losses-value"
+    }
+  }
+
   "The URL for the lossesBroughtForward action" should {
     "be equal to /calculate-your-capital-gains/resident/losses-brought-forward" in {
       val path = controllers.resident.routes.DeductionsController.lossesBroughtForward.toString()
