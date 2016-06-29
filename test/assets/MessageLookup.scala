@@ -100,4 +100,9 @@ object MessageLookup {
   object reliefsValue {
     val title = "How much tax relief are you claiming?"
   }
+
+  //Losses Brought Forward messages
+  object lossesBroughtForward {
+    val title = "Are there any previous losses you want to bring forward?"
+  }
 }
