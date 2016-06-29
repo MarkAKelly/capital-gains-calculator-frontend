@@ -1,4 +1,9 @@
 @()(implicit request: Request[_])
 
-@main_template(title = Messages("calc.resident.reliefsValue.title")) {
+@resident_main_template(title = Messages("calc.resident.reliefsValue.title"), backLink = Some(controllers.resident.routes.DeductionsController.reliefs().toString)) {
+
+    <h1>@Messages("calc.resident.reliefsValue.question")</h1>
+
+    
+
 }

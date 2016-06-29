@@ -102,6 +102,7 @@ object MessageLookup {
   //Reliefs Value messages
   object reliefsValue {
     val title = "How much tax relief are you claiming?"
+    val question = "How much tax relief are you claiming?"
   }
 
   //Other Properties messages

@@ -16,6 +16,7 @@
 
 package views.resident
 
+import assets.MessageLookup
 import assets.MessageLookup.{reliefsValue => messages}
 import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
@@ -29,12 +30,19 @@ class ReliefsValueViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
-      doc.charset().toString shouldBe "UTF-8"
+      doc.charset.toString shouldBe "UTF-8"
     }
 
     s"have a title ${messages.title}" in {
-      doc.title() shouldBe messages.title
+      doc.title shouldBe messages.title
+    }
+
+    s"have a back link to the Reliefs Page with text ${MessageLookup.calcBaseBack}" in {
+      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/reliefs"
+    }
+
+    s"have the question of the page ${messages.question}" in {
+      doc.select("h1").text shouldEqual messages.question
     }
   }
-
 }
