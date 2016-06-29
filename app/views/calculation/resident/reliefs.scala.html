@@ -4,9 +4,7 @@
 
 @(reliefsForm: Form[ReliefsModel])(implicit request: Request[_])
 
-@main_template(title = Messages("calc.resident.reliefs.title")) {
-
-    <a id="back-link" class="back-link" href="@controllers.resident.routes.GainController.improvements.toString()">@Messages("calc.base.back")</a>
+@resident_main_template(title = Messages("calc.resident.reliefs.title"), backLink = Some(controllers.resident.routes.GainController.improvements.toString())) {
 
     @errorSummary(reliefsForm, "isClaiming")
 
