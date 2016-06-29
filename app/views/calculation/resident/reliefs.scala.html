@@ -1,4 +1,45 @@
-@()(implicit request: Request[_])
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import views.html.helpers._
+@import models.resident.ReliefsModel
 
-@main_template(title = Messages("calc.resident.reliefs.title")) {
+@(reliefsForm: Form[ReliefsModel])(implicit request: Request[_])
+
+@resident_main_template(title = Messages("calc.resident.reliefs.title"), backLink = Some(controllers.resident.routes.GainController.improvements.toString())) {
+
+    @errorSummary(reliefsForm, "isClaiming")
+
+    <h1>@Messages("calc.resident.reliefs.question")</h1>
+
+    @form(action = controllers.resident.routes.DeductionsController.submitReliefs) {
+
+        @formInputRadioGroup(
+            field = reliefsForm("isClaiming"),
+            Seq(
+            "Yes"->Messages("calc.base.yes"),
+            "No"->Messages("calc.base.no")),
+            '_legend -> Messages("calc.resident.reliefs.question"),
+            '_legendID -> "isClaiming",
+            '_legendClass -> "visuallyhidden",
+            '_helpText -> Messages("calc.resident.reliefs.helpText"),
+            '_labelAfter -> true,
+            '_labelClass -> "block-label",
+            '_groupClass -> "inline form-group"
+        )
+
+        <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+
+    }
+
+    <p>@Messages("calc.resident.reliefs.additionalContent.one")</p>
+    <ul class="list-bullet">
+        <li>
+            <a target="_blank" href="https://www.gov.uk/tax-sell-home/absence-from-home">@Messages("calc.resident.reliefs.link.one")
+                <span class="visuallyhidden">@Messages("calc.base.externalLink")</span></a>
+        </li>
+        <li>
+            <a target="_blank" href="https://www.gov.uk/tax-sell-home/let-out-part-of-home">@Messages("calc.resident.reliefs.link.two")
+                <span class="visuallyhidden">@Messages("calc.base.externalLink")</span></a>
+        </li>
+    </ul>
+    <p>@Messages("calc.resident.reliefs.additionalContent.two")</p>
 }
