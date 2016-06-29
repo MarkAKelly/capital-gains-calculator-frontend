@@ -10,11 +10,11 @@
 
     @errorSummary(acquisitionCostsForm, "amount")
 
-    <h1 class="visuallyhidden">@Messages("calc.resident.acquisitionCosts.question")</h1>
+    <h1 class="heading-large">@Messages("calc.resident.acquisitionCosts.question")</h1>
 
     @form(action = controllers.resident.routes.GainController.submitAcquisitionCosts) {
 
-        @formInputMoney(acquisitionCostsForm, "amount", Messages("calc.resident.acquisitionCosts.question"), Some(Messages("calc.resident.acquisitionCosts.helpText")), labelAsHeading = Some(true))
+        @formInputMoney(acquisitionCostsForm, "amount", Messages("calc.resident.acquisitionCosts.question"), Some(Messages("calc.resident.acquisitionCosts.helpText")), hideLabel = true)
 
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
     }

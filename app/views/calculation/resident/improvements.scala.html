@@ -14,11 +14,11 @@
 
     @errorSummary(improvementsForm, "improvements")
 
-    <h1 class="visuallyhidden">@Messages("calc.resident.improvements.title")</h1>
+    <h1 class="heading-large">@Messages("calc.resident.improvements.title")</h1>
 
     @form(action = controllers.resident.routes.GainController.submitImprovements) {
 
-        @formInputMoney(improvementsForm, "amount", Messages("calc.resident.improvements.label"), Some(Messages("calc.resident.improvements.hint")), labelAsHeading = Some(true), additionalHTMLContent = Some(note.toString()))
+        @formInputMoney(improvementsForm, "amount", Messages("calc.resident.improvements.label"), Some(Messages("calc.resident.improvements.hint")), hideLabel = true, additionalHTMLContent = Some(note.toString()))
 
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
     }

@@ -27,11 +27,11 @@
 
     @errorSummary(disposalValueForm, "amount")
 
-    <h1 class="visuallyhidden">@Messages("calc.resident.disposal.value.question")</h1>
+    <h1 class="heading-large">@Messages("calc.resident.disposal.value.question")</h1>
 
     @form(action = controllers.resident.routes.GainController.submitDisposalValue) {
 
-        @formInputMoney(disposalValueForm, "amount", Messages("calc.resident.disposal.value.question"), additionalHTMLContent = Some(bulletContent.toString()), labelAsHeading = Some(true))
+        @formInputMoney(disposalValueForm, "amount", Messages("calc.resident.disposal.value.question"), additionalHTMLContent = Some(bulletContent.toString()), hideLabel = true)
 
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
     }
