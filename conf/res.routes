@@ -28,3 +28,6 @@ GET     /summary                          controllers.resident.SummaryController
 
 #Reliefs Routes
 GET     /reliefs                          controllers.resident.DeductionsController.reliefs
+
+#Other Properties Routes
+GET     /other-properties                 controllers.resident.DeductionsController.otherProperties
