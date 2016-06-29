@@ -14,31 +14,32 @@
  * limitations under the License.
  */
 
-package controllers.resident.DeductionsControllerTests
+package controllers.resident.GainControllerTests
 
-import assets.MessageLookup.{lossesBroughtForward => messages}
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.DeductionsController
 import org.jsoup.Jsoup
 import play.api.test.Helpers._
+import assets.MessageLookup.{otherProperties => messages}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class LossesBroughtForwardActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Calling .lossesBroughtForward from the resident DeductionsController" should {
+  "Calling .otherProperties from the DeductionsController" should {
 
-    lazy val result = DeductionsController.lossesBroughtForward(fakeRequestWithSession)
+    lazy val result = DeductionsController.otherProperties(fakeRequest)
+    lazy val doc = Jsoup.parse(bodyOf(result))
 
     "return a status of 200" in {
       status(result) shouldBe 200
     }
 
-    s"return some html with " in {
+    "return some html" in {
       contentType(result) shouldBe Some("text/html")
     }
 
-    s"return a title of ${messages.title}" in {
-      Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+    s"have a title of ${messages.title}" in {
+      doc.title() shouldBe messages.title
     }
   }
 }
