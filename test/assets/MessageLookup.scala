@@ -82,8 +82,11 @@ object MessageLookup {
   }
 
   //Improvements messages
-  object improvements {
+  object improvementsView {
     val title = "How much have you spent on improvements since you became the property owner?"
+    val note = "If you used the market value of the property, tell us how much you've spent on improvements since the date of the valuation."
+    val label = "How much have you spent on improvements since you became the property owner?"
+    val hint = "Improvements are permanent changes that raise the value of a property, like adding extensions or garages"
   }
 
   //Summary messages
@@ -94,6 +97,12 @@ object MessageLookup {
   //Reliefs messages
   object reliefs {
     val title = "Do you want to claim any tax reliefs on your total gain?"
+    val question = "Do you want to claim any tax reliefs on your total gain?"
+    val help = "For example, lettings relief"
+    val helpOne = "Tax reliefs can lower the amount of tax you owe. For example, you might be able to claim:"
+    val helpLinkOne = "Private Residence Relief"
+    val helpLinkTwo = "Lettings Relief"
+    val helpTwo = "Tax reliefs are different from your Capital Gains Tax Allowance and Personal Allowance."
   }
 
   //Reliefs Value messages
@@ -114,6 +123,11 @@ object MessageLookup {
   //Losses Brought Forward messages
   object lossesBroughtForward {
     val title = "Are there any previous losses you want to bring forward?"
+  }
+
+  //Losses Brought Forward Value messages
+  object lossesBroughtForwardValue {
+    val title = "What's the total value of the loss to bring forward?"
   }
 
   //Annual Exempt Amount messages

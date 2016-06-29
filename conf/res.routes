@@ -22,12 +22,14 @@ POST    /acquisition-costs                controllers.resident.GainController.su
 
 #Improvements Routes
 GET     /improvements                     controllers.resident.GainController.improvements
+POST    /improvements                     controllers.resident.GainController.submitImprovements
 
 #Summary Routes
 GET     /summary                          controllers.resident.SummaryController.summary
 
 #Reliefs Routes
 GET     /reliefs                          controllers.resident.DeductionsController.reliefs
+POST    /reliefs                          controllers.resident.DeductionsController.submitReliefs
 
 #Reliefs Value Routes
 GET     /reliefs-value                    controllers.resident.DeductionsController.reliefsValue
@@ -43,3 +45,6 @@ GET     /losses-brought-forward           controllers.resident.DeductionsControl
 
 #Annual Exempt Amount Routes
 GET     /annual-exempt-amount             controllers.resident.DeductionsController.annualExemptAmount
+
+#Losses Brought Forward Value Routes
+GET     /losses-brought-forward-value     controllers.resident.DeductionsController.lossesBroughtForwardValue

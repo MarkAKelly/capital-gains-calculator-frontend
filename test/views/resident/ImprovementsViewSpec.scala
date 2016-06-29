@@ -19,21 +19,79 @@ package views.resident
 import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.{improvements => messages}
+import assets.MessageLookup.{improvementsView => messages}
+import forms.resident.ImprovementsForm.improvementsForm
+import views.html.calculation.resident.improvements
 
 class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Improvements view" should {
 
-    lazy val view = views.html.calculation.resident.improvements()(fakeRequest)
+    lazy val view = improvements(improvementsForm)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
-      doc.charset().toString shouldBe "UTF-8"
+      doc.charset.toString shouldBe "UTF-8"
     }
 
     s"have a title of ${messages.title}" in {
-      doc.title() shouldBe messages.title
+      doc.title shouldBe messages.title
+    }
+
+    "have a H1 tag that" should {
+
+      lazy val heading = doc.select("H1")
+
+      s"have the page heading '${messages.title}'" in {
+        heading.text shouldBe messages.title
+      }
+
+      "have the heading-large class" in {
+        heading.hasClass("heading-large") shouldBe true
+      }
+    }
+
+    "have the correct note" in {
+      val note = doc.select(".panel.panel-border-wide>p")
+      note.text shouldBe messages.note
+    }
+
+    "have the correct label" in {
+      val label = doc.select("label")
+      label.text should startWith(messages.label)
+    }
+
+    "have a hidden label" in {
+      val label = doc.select("label > span")
+      label.hasClass("visuallyhidden") shouldBe true
+    }
+
+    "have the correct hint" in {
+      val hint = doc.select("label .form-hint")
+      hint.text shouldBe messages.hint
+    }
+
+    "not display an error summary message for the amount" in {
+      doc.body.select("#amount-error-summary").size shouldBe 0
+    }
+
+    "not display an error message for the input" in {
+      doc.body.select(".form-group .error-notification").size shouldBe 0
+    }
+  }
+
+  "Improvements View with form with errors" should {
+
+    val form = improvementsForm.bind(Map("amount" -> ""))
+    lazy val view = improvements(form)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "display an error summary message for the amount" in {
+      doc.body.select("#amount-error-summary").size shouldBe 1
+    }
+
+    "display an error message for the input" in {
+      doc.body.select(".form-group .error-notification").size shouldBe 1
     }
   }
 
