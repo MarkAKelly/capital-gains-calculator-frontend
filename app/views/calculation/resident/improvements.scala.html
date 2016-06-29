@@ -4,14 +4,16 @@
 
 @(improvementsForm : Form[ImprovementsModel])(implicit request: Request[_])
 
-@main_template(title = Messages("calc.resident.improvements.title")) {
+@note = {
     <div class="panel panel-border-wide">
         <p>@Messages("calc.resident.improvements.note")</p>
     </div>
+}
+@resident_main_template(title = Messages("calc.resident.improvements.title"), backLink = Some(controllers.resident.routes.GainController.acquisitionCosts().toString)) {
 
     @form(action = controllers.resident.routes.GainController.improvements) {
 
-        @formInputMoney(improvementsForm, "amount", Messages("calc.resident.improvements.label"), Some(Messages("calc.resident.improvements.hint")), labelAsHeading = Some(true))
+        @formInputMoney(improvementsForm, "amount", Messages("calc.resident.improvements.label"), Some(Messages("calc.resident.improvements.hint")), labelAsHeading = Some(true), additionalHTMLContent = Some(note.toString()))
 
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
     }
