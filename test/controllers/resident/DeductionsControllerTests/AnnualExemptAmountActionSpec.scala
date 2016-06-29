@@ -34,8 +34,11 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
       status(result) shouldBe 200
     }
 
-    s"return some html with title of ${messages.title}" in {
+    "return some html with " in {
       contentType(result) shouldBe Some("text/html")
+    }
+
+    s"return some html with title of ${messages.title}" in {
       Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
     }
   }
