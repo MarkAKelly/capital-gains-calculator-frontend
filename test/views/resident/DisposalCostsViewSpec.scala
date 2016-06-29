@@ -63,8 +63,8 @@ class DisposalCostsViewSpec extends UnitSpec with WithFakeApplication with FakeR
         h1Tag.text shouldBe messages.pageHeading
       }
 
-      "have the visuallyhidden class" in {
-        h1Tag.hasClass("visuallyhidden") shouldBe true
+      "have the heading-large class" in {
+        h1Tag.hasClass("heading-large") shouldBe true
       }
     }
 
@@ -88,8 +88,8 @@ class DisposalCostsViewSpec extends UnitSpec with WithFakeApplication with FakeR
           label.text should include(messages.pageHeading)
         }
 
-        "have the class 'heading-large'" in {
-          label.select("span").hasClass("heading-large") shouldBe true
+        "have the class 'visuallyhidden'" in {
+          label.select("span.visuallyhidden").size shouldBe 1
         }
       }
 
