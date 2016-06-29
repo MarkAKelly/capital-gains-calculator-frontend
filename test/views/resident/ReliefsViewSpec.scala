@@ -78,12 +78,17 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
     }
   }
 
-  "Reliefs view errors" should {
+  "Reliefs view with errors" should {
     lazy val form = reliefsForm.bind(Map(("isClaiming", "")))
     lazy val view = views.reliefs(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
-    "have an error-summary" in {
+    "display an error summary message for the amount" in {
+      doc.body.select("#amount-error-summary").size shouldBe 1
+    }
+
+    "display an error message for the input" in {
+      doc.body.select(".form-group .error-notification").size shouldBe 1
     }
   }
 }
