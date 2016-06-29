@@ -1,4 +1,8 @@
-@()(implicit request: Request[_])
+@(backUrl: String = "")(implicit request: Request[_])
 
 @main_template(title = Messages("calc.resident.otherProperties.title")) {
+
+    <a id="back-link" class="back-link" href="@backUrl">@Messages("calc.base.back")</a>
+
+    <h1 class="visuallyhidden">@Messages("calc.resident.otherProperties.question")</h1>
 }

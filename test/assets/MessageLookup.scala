@@ -104,6 +104,7 @@ object MessageLookup {
   //Other Properties messages
   object otherProperties {
     val title = "In the 2015/2016 tax year, did you sell or give away anything else that's covered by Capital Gains Tax?"
+    val pageHeading = "In the 2015/2016 tax year, did you sell or give away anything else that's covered by Capital Gains Tax?"
   }
 
   //Losses Brought Forward messages

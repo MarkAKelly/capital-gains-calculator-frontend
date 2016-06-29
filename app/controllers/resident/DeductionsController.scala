@@ -45,6 +45,8 @@ trait DeductionsController extends FeatureLock {
     Future.successful(Ok(views.otherProperties()))
   }
 
+  val submitOtherProperties = TODO
+
   //################# Allowable Losses Actions #########################
 
   //################# Allowable Losses Input Actions ############################

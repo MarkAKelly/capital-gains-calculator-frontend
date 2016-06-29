@@ -20,6 +20,7 @@ import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 import assets.MessageLookup.{otherProperties => messages}
+import assets.MessageLookup._
 
 class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
@@ -34,6 +35,32 @@ class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with Fak
 
     s"have a title of ${messages.title}" in {
       doc.title() shouldBe messages.title
+    }
+
+    "have a back button that" should {
+
+      lazy val backLink = doc.select("a#back-link")
+
+      "have the correct back link text" in {
+        backLink.text shouldBe calcBaseBack
+      }
+
+      "have the correct back link class" in {
+        backLink.hasClass("back-link") shouldBe true
+      }
+
+      "have the correct back link" in {
+        //merge other reliefs first
+      }
+    }
+
+    "have a h1 tag that" should {
+
+      lazy val h1Tag = doc.select("h1")
+
+      s"have the page heading '${messages.pageHeading}'" in {
+        h1Tag.hasClass("visuallyhidden") shouldBe true
+      }
     }
   }
 }
