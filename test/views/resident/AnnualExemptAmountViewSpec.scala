@@ -24,7 +24,7 @@ import views.html.calculation.{resident => views}
 
 class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Reliefs view" should {
+  "The Annual Exempt Amount view" should {
 
     lazy val view = views.annualExemptAmount()(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
