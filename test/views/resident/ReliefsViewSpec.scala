@@ -66,6 +66,34 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
     s"have an input field with id isClaiming-no " in {
       doc.body.getElementById("isClaiming-no").tagName() shouldEqual "input"
     }
+
+    "have a continue button " in {
+      doc.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
+    }
+
+    s"have an additional line help line ${messages.helpOne}" in {
+      doc.body.getElementsByTag("p").text() should include(messages.helpOne)
+    }
+
+    s"have bullet list help line ${messages.helpLinkOne}" in {
+      doc.body.select("ul.list-bullet li a").first.text() should include(messages.helpLinkOne)
+    }
+
+    "have a bullet list link to https://www.gov.uk/tax-sell-home/absence-from-home" in {
+      doc.body.select("ul.list-bullet li a").first.attr("href") shouldBe "https://www.gov.uk/tax-sell-home/absence-from-home"
+    }
+
+    s"have bullet list help line ${messages.helpLinkTwo}" in {
+      doc.body.select("ul.list-bullet li a").last.text() should include(messages.helpLinkTwo)
+    }
+
+    "have a bullet list link to https://www.gov.uk/tax-sell-home/let-out-part-of-home" in {
+      doc.body.select("ul.list-bullet li a").last.attr("href") shouldBe "https://www.gov.uk/tax-sell-home/let-out-part-of-home"
+    }
+
+    s"have an additional line help line ${messages.helpTwo}" in {
+      doc.body.getElementsByTag("p").text() should include(messages.helpTwo)
+    }
   }
 
   "Reliefs view with pre-selected values" should {
@@ -84,11 +112,11 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {
-      doc.body.select("#amount-error-summary").size shouldBe 1
+      doc.body.select("#isClaiming-error-summary").size shouldBe 1
     }
 
     "display an error message for the input" in {
-      doc.body.select(".form-group .error-notification").size shouldBe 1
+      doc.body.select("span.error-notification").size shouldBe 1
     }
   }
 }

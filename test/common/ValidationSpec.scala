@@ -121,7 +121,6 @@ class ValidationSpec extends UnitSpec {
     }
   }
 
-<<<<<<< HEAD
   //############# Tests for isYesNo ##########################################
   "calling common.Validation.isYesNo" should {
 
@@ -137,8 +136,7 @@ class ValidationSpec extends UnitSpec {
       isYesNo("No") shouldBe true
     }
   }
-}
-=======
+
   "calling bigDecimalCheck" when {
 
     "input contains non-numeric characters" should {
@@ -256,4 +254,3 @@ class ValidationSpec extends UnitSpec {
     }
   }
 }
->>>>>>> master

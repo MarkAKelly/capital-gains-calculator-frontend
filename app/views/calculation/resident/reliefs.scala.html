@@ -8,6 +8,8 @@
 
     <a id="back-link" class="back-link" href="@controllers.resident.routes.GainController.improvements.toString()">@Messages("calc.base.back")</a>
 
+    @errorSummary(reliefsForm, "isClaiming")
+
     <h1>@Messages("calc.resident.reliefs.question")</h1>
 
     @form(action = controllers.resident.routes.DeductionsController.submitReliefs) {
@@ -23,7 +25,23 @@
             '_helpText -> Messages("calc.resident.reliefs.helpText"),
             '_labelAfter -> true,
             '_labelClass -> "block-label",
-            '_groupClass -> "inline"
+            '_groupClass -> "inline form-group"
         )
+
+        <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+
     }
+
+    <p>@Messages("calc.resident.reliefs.additionalContent.one")</p>
+    <ul class="list-bullet">
+        <li>
+            <a target="_blank" href="https://www.gov.uk/tax-sell-home/absence-from-home">@Messages("calc.resident.reliefs.link.one")
+                <span class="visuallyhidden">@Messages("calc.base.externalLink")</span></a>
+        </li>
+        <li>
+            <a target="_blank" href="https://www.gov.uk/tax-sell-home/let-out-part-of-home">@Messages("calc.resident.reliefs.link.two")
+                <span class="visuallyhidden">@Messages("calc.base.externalLink")</span></a>
+        </li>
+    </ul>
+    <p>@Messages("calc.resident.reliefs.additionalContent.two")</p>
 }

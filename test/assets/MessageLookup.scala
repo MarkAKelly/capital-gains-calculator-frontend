@@ -99,6 +99,10 @@ object MessageLookup {
     val title = "Do you want to claim any tax reliefs on your total gain?"
     val question = "Do you want to claim any tax reliefs on your total gain?"
     val help = "For example, lettings relief"
+    val helpOne = "Tax reliefs can lower the amount of tax you owe. For example, you might be able to claim:"
+    val helpLinkOne = "Private Residence Relief"
+    val helpLinkTwo = "Lettings Relief"
+    val helpTwo = "Tax reliefs are different from your Capital Gains Tax Allowance and Personal Allowance."
   }
 
   //Reliefs Value messages

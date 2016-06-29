@@ -16,6 +16,7 @@
 
 package controllers.resident
 
+import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import play.api.mvc.Action
@@ -31,16 +32,21 @@ object DeductionsController extends DeductionsController {
 }
 
 trait DeductionsController extends FeatureLock {
+  val calcConnector: CalculatorConnector
 
   //################# Reliefs Actions ########################
   val reliefs = FeatureLockForRTT.async { implicit request =>
-    Future.successful(Ok(views.reliefs(reliefsForm)))
+    calcConnector.fetchAndGetFormData[ReliefsModel](KeystoreKeys.ResidentKeys.reliefs).map {
+      case Some(data) => Ok(views.reliefs(reliefsForm.fill(data)))
+      case None => Ok(views.reliefs(reliefsForm))
+    }
   }
 
   val submitReliefs = Action.async {implicit request =>
     reliefsForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.reliefs(errors))),
       success => {
+        calcConnector.saveFormData[ReliefsModel](KeystoreKeys.ResidentKeys.reliefs, success)
         success match {
           case ReliefsModel("Yes") => Future.successful(Redirect(routes.DeductionsController.reliefsValue()))
           case _ => Future.successful(Redirect(routes.DeductionsController.otherProperties()))

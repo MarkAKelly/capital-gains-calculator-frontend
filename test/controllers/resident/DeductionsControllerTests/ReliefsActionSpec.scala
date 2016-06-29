@@ -17,20 +17,55 @@
 package controllers.resident.DeductionsControllerTests
 
 import assets.MessageLookup.{reliefs => messages}
+import common.KeystoreKeys
+import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.DeductionsController
+import models.resident.ReliefsModel
 import org.jsoup.Jsoup
+import org.mockito.Matchers
+import org.scalatest.mock.MockitoSugar
+import org.mockito.Mockito._
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+import scala.concurrent.Future
 
+class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
+
+  def setupTarget(getData: Option[ReliefsModel]): DeductionsController = {
+
+    val mockCalcConnector = mock[CalculatorConnector]
+
+    when(mockCalcConnector.fetchAndGetFormData[ReliefsModel](Matchers.eq(KeystoreKeys.ResidentKeys.reliefs))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(getData))
+
+    new DeductionsController {
+      override val calcConnector: CalculatorConnector = mockCalcConnector
+    }
+  }
 
   "Calling .reliefs from the resident DeductionsController" when {
 
-    "request has a valid session" should {
+    "request has a valid session and no keystore value" should {
 
-      lazy val result = DeductionsController.reliefs(fakeRequestWithSession)
+      lazy val target = setupTarget(None)
+      lazy val result = target.reliefs(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      s"return some html with title of ${messages.title}" in {
+        contentType(result) shouldBe Some("text/html")
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+      }
+    }
+
+    "request has a valid session and some keystore value" should {
+
+      lazy val target = setupTarget(Some(ReliefsModel("Yes")))
+      lazy val result = target.reliefs(fakeRequestWithSession)
 
       "return a status of 200" in {
         status(result) shouldBe 200
@@ -44,7 +79,8 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
 
     "request has an invalid session" should {
 
-      lazy val result = DeductionsController.reliefs(fakeRequest)
+      lazy val target = setupTarget(None)
+      lazy val result = target.reliefs(fakeRequest)
 
       "return a status of 303" in {
         status(result) shouldBe 303
