@@ -36,6 +36,8 @@ trait DeductionsController extends FeatureLock {
   }
 
   //############## Other Properties Actions ##################
-  val otherProperties = TODO
-  
+  val otherProperties = Action.async { implicit request =>
+    Future.successful(Ok(views.otherProperties()))
+  }
+
 }
