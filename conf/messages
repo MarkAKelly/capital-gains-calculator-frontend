@@ -44,6 +44,7 @@ calc.common.next.actions.heading = What to do next
 calc.common.invalidError = Invalid selection!
 calc.common.error.maxNumericExceeded = Enter an amount that''s £
 calc.common.error.maxNumericExceeded.OrLess = or less
+calc.common.error.maxAmountExceeded = Enter an amount that''s £{0} or less
 calc.common.error.fieldRequired = This field is required
 
 ## Introduction ##
