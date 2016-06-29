@@ -23,7 +23,7 @@ import org.jsoup.Jsoup
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class LossesBroughtForwardSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class LossesBroughtForwardActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Calling .lossesBroughtForward from the resident DeductionsController" should {
 
