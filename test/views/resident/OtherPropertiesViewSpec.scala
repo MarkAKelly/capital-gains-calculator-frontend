@@ -21,13 +21,14 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 import assets.MessageLookup.{otherProperties => messages}
 import assets.MessageLookup._
+import views.html.calculation.{resident => views}
 import forms.resident.OtherPropertiesForm._
 
 class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Other Properties view" should {
 
-    lazy val view = views.html.calculation.resident.otherProperties(otherPropertiesForm)(fakeRequest)
+    lazy val view = views.otherProperties(otherPropertiesForm)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
