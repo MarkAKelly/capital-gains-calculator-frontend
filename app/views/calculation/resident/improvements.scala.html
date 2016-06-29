@@ -10,6 +10,8 @@
     </div>
 }
 
+@errorSummary(improvementsForm, "improvements")
+
 <h1 class="visuallyhidden">@Messages("calc.resident.improvements.title")</h1>
 
 @resident_main_template(title = Messages("calc.resident.improvements.title"), backLink = Some(controllers.resident.routes.GainController.acquisitionCosts().toString)) {

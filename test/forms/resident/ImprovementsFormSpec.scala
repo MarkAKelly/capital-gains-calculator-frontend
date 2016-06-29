@@ -53,6 +53,10 @@ class ImprovementsFormSpec extends UnitSpec with WithFakeApplication with FakeRe
         form.hasErrors shouldBe true
       }
 
+      "raise 1 form error" in {
+        form.errors.length shouldBe 1
+      }
+
       "associate the correct error message to the error" in {
         form.error("amount").get.message shouldBe MessageLookup.undefinedMessage
       }
@@ -64,6 +68,11 @@ class ImprovementsFormSpec extends UnitSpec with WithFakeApplication with FakeRe
 
       "raise form error" in {
         form.hasErrors shouldBe true
+      }
+
+
+      "raise 1 form error" in {
+        form.errors.length shouldBe 1
       }
 
       "associate the correct error message to the error" in {
@@ -79,6 +88,10 @@ class ImprovementsFormSpec extends UnitSpec with WithFakeApplication with FakeRe
         form.hasErrors shouldBe true
       }
 
+      "raise 1 form error" in {
+        form.errors.length shouldBe 1
+      }
+
       "associate the correct error message to the error" in {
         form.error("amount").get.message shouldBe MessageLookup.undefinedMessage
       }
@@ -90,6 +103,10 @@ class ImprovementsFormSpec extends UnitSpec with WithFakeApplication with FakeRe
 
       "raise form error" in {
         form.hasErrors shouldBe true
+      }
+
+      "raise 1 form error" in {
+        form.errors.length shouldBe 1
       }
 
       "associate the correct error message to the error" in {
@@ -105,6 +122,10 @@ class ImprovementsFormSpec extends UnitSpec with WithFakeApplication with FakeRe
         form.hasErrors shouldBe true
       }
 
+      "raise 1 form error" in {
+        form.errors.length shouldBe 1
+      }
+
       "associate the correct error message to the error" in {
         form.error("amount").get.message shouldBe MessageLookup.undefinedMessage
       }
@@ -116,6 +137,10 @@ class ImprovementsFormSpec extends UnitSpec with WithFakeApplication with FakeRe
 
       "raise form error" in {
         form.hasErrors shouldBe true
+      }
+
+      "raise 1 form error" in {
+        form.errors.length shouldBe 1
       }
 
       "associate the correct error message to the error" in {

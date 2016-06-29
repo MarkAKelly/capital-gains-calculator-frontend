@@ -85,9 +85,12 @@ object Validation {
     }
   }
 
-  val bigDecimalCheck: String => Boolean = (input) => Try(BigDecimal(input)) match {
-    case Success(_) => true
-    case Failure(_) => false
+  val bigDecimalCheck: String => Boolean = (input) => {
+    Try(BigDecimal(input)) match {
+      case Success(_) => true
+      case Failure(_) if input.trim == "" => true
+      case Failure(_) => false
+    }
   }
 
   val mandatoryCheck: String => Boolean = (input) => input.trim != ""
