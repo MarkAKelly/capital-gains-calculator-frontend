@@ -21,9 +21,7 @@
     </ul>
 }
 
-@main_template(title = Messages("calc.resident.disposal.value.title")) {
-
-    <a id="back-link" class="back-link" href="@controllers.resident.routes.GainController.disposalDate.toString()">@Messages("calc.base.back")</a>
+@resident_main_template(title = Messages("calc.resident.disposal.value.title"), backLink = Some(controllers.resident.routes.GainController.disposalDate().toString)) {
 
     @errorSummary(disposalValueForm, "amount")
 
