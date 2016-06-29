@@ -23,9 +23,7 @@
     </ul>
 }
 
-@main_template(Messages("calc.resident.acquisitionValue.title")) {
-
-    <a id="back-link" class="back-link" href="@controllers.resident.routes.GainController.disposalCosts().toString">@Messages("calc.base.back")</a>
+@resident_main_template(Messages("calc.resident.acquisitionValue.title"), backLink = Some(controllers.resident.routes.GainController.disposalCosts().toString)) {
 
     @errorSummary(acquisitionValueForm, "amount")
 
