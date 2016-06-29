@@ -129,6 +129,18 @@ class ValidationSpec extends UnitSpec {
       }
     }
 
+    "empty input" should {
+      "pass" in {
+        bigDecimalCheck("") shouldBe true
+      }
+    }
+
+    "empty space" should {
+      "pass" in {
+        bigDecimalCheck("   ") shouldBe true
+      }
+    }
+
     "input only contains numeric characters" should {
       "pass" in {
         bigDecimalCheck("123") shouldBe true

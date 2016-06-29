@@ -152,15 +152,14 @@ class ImprovementsFormSpec extends UnitSpec with WithFakeApplication with FakeRe
   "Creating a form using a valid post" when {
 
     "supplied with valid amount" should {
+
+      lazy val form = improvementsForm.bind(Map("amount" -> "1"))
+
       "build a model with the correct amount" in {
-        val form = improvementsForm.bind(Map("amount" -> "1"))
         form.value.get shouldBe ImprovementsModel(BigDecimal(1))
       }
-    }
 
-    "supplied with valid amount" should {
       "not raise form error" in {
-        val form = improvementsForm.bind(Map("amount" -> "1"))
         form.hasErrors shouldBe false
       }
     }
