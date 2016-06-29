@@ -19,6 +19,7 @@ package views.resident
 import assets.MessageLookup
 import assets.MessageLookup.{reliefsValue => messages}
 import controllers.helpers.FakeRequestHelper
+import forms.resident.ReliefsValueForm._
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
@@ -26,7 +27,8 @@ class ReliefsValueViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
   "Reliefs Value view" should {
 
-    lazy val view = views.html.calculation.resident.reliefsValue()(fakeRequest)
+    lazy val form = reliefsValueForm.bind(Map("amount" -> "10"))
+    lazy val view = views.html.calculation.resident.reliefsValue(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -43,6 +45,30 @@ class ReliefsValueViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     s"have the question of the page ${messages.question}" in {
       doc.select("h1").text shouldEqual messages.question
+    }
+
+    "render a form element" in {
+      
+    }
+
+    s"have a hidden legend with the text ${messages.question}" in {
+      doc.select("label.visuallyhidden").text shouldEqual messages.question
+    }
+
+    "render an input field for the reliefs amount" in {
+      doc.select("#amount").toString() shouldBe "<input type=\"number\" class=\"moneyField  input--no-spinner \" placeholder=\"eg. 25000.00\" name=\"amount\" id=\"amount\" value=\"10\" step=\"0.01\">"
+    }
+
+    "not display an error summary message for the amount" in {
+      doc.body.select("#amount-error-summary").size shouldBe 0
+    }
+
+    "not display an error message for the input" in {
+      doc.body.select(".form-group .error-notification").size shouldBe 0
+    }
+
+    "have continue button " in {
+      doc.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
     }
   }
 }

@@ -1,9 +1,15 @@
-@()(implicit request: Request[_])
+@import models.resident.ReliefsValueModel
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import views.html.helpers._
+
+
+@(reliefsValueForm : Form[ReliefsValueModel])(implicit request: Request[_])
 
 @resident_main_template(title = Messages("calc.resident.reliefsValue.title"), backLink = Some(controllers.resident.routes.DeductionsController.reliefs().toString)) {
 
     <h1>@Messages("calc.resident.reliefsValue.question")</h1>
 
-    
+    @formInputMoney(reliefsValueForm, "amount", Messages("calc.resident.reliefsValue.question"))
 
+    <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
 }

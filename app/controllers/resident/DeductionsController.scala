@@ -18,6 +18,8 @@ package controllers.resident
 
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
+import models.resident.ReliefsValueModel
+import forms.resident.ReliefsValueForm._
 import play.api.mvc.Action
 import views.html.calculation.{resident => views}
 
@@ -37,7 +39,7 @@ trait DeductionsController extends FeatureLock {
 
   //################# Reliefs Value Input Actions ########################
   val reliefsValue = Action.async { implicit request =>
-    Future.successful(Ok(views.reliefsValue()))
+    Future.successful(Ok(views.reliefsValue(reliefsValueForm)))
   }
 
   //################# Other Properties Actions #########################
