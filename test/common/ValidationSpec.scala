@@ -27,31 +27,31 @@ class ValidationSpec extends UnitSpec {
   "calling common.Validation.isValidDate(day, month, year) " should {
 
     "with no day value supplied 'isValidDate(0,1,2016)' return false" in {
-      isValidDate(0,1,2016) shouldBe false
+      isValidDate(0, 1, 2016) shouldBe false
     }
 
     "with no month value supplied 'isValidDate(1,0,2016)' return false" in {
-      isValidDate(1,0,2016) shouldBe false
+      isValidDate(1, 0, 2016) shouldBe false
     }
 
     "with no year value supplied 'isValidDate(0,1,2016)' return false" in {
-      isValidDate(1,1,0) shouldBe false
+      isValidDate(1, 1, 0) shouldBe false
     }
 
     "with invalid date 'isValidDate(32,1,2016)' return false" in {
-      isValidDate(32,1,2016) shouldBe false
+      isValidDate(32, 1, 2016) shouldBe false
     }
 
     "with invalid leap year date 'isValidDate(29,2,2017)' return false" in {
-      isValidDate(29,2,2017) shouldBe false
+      isValidDate(29, 2, 2017) shouldBe false
     }
 
     "with valid leap year date 'isValidDate(29,2,2016)' return true" in {
-      isValidDate(29,2,2016) shouldBe true
+      isValidDate(29, 2, 2016) shouldBe true
     }
 
     "with valid  date 'isValidDate(12,09,1990)' return true" in {
-      isValidDate(12,9,1990) shouldBe true
+      isValidDate(12, 9, 1990) shouldBe true
     }
   }
 
@@ -117,6 +117,123 @@ class ValidationSpec extends UnitSpec {
 
       "return true with a valid numeric value" in {
         isBigDecimalNumber("100") shouldBe true
+      }
+    }
+  }
+
+  "calling bigDecimalCheck" when {
+
+    "input contains non-numeric characters" should {
+      "fail" in {
+        bigDecimalCheck("abc") shouldBe false
+      }
+    }
+
+    "empty input" should {
+      "pass" in {
+        bigDecimalCheck("") shouldBe true
+      }
+    }
+
+    "empty space" should {
+      "pass" in {
+        bigDecimalCheck("   ") shouldBe true
+      }
+    }
+
+    "input only contains numeric characters" should {
+      "pass" in {
+        bigDecimalCheck("123") shouldBe true
+      }
+    }
+  }
+
+  "calling mandatoryCheck" when {
+
+    "input contains no data" should {
+      "fail" in {
+        mandatoryCheck("") shouldBe false
+      }
+    }
+
+    "input contains only empty space" should {
+      "fail" in {
+        mandatoryCheck("    ") shouldBe false
+      }
+    }
+
+    "input contains data" should {
+      "pass" in {
+        mandatoryCheck("123") shouldBe true
+      }
+    }
+  }
+
+  "calling decimalPlacesCheck" when {
+
+    "input has no decimal places" should {
+      "pass" in {
+        decimalPlacesCheck(BigDecimal(1)) shouldBe true
+      }
+    }
+
+    "input has 1 decimal place" should {
+      "pass" in {
+        decimalPlacesCheck(BigDecimal(1.1)) shouldBe true
+      }
+    }
+
+    "input has 2 decimal places" should {
+      "pass" in {
+        decimalPlacesCheck(BigDecimal(1.11)) shouldBe true
+      }
+    }
+
+    "input has 3 decimal places" should {
+      "fail" in {
+        decimalPlacesCheck(BigDecimal(1.111)) shouldBe false
+      }
+    }
+  }
+
+  "calling maxCheck" when {
+
+    "input is less than max value" should {
+      "pass" in {
+        maxCheck(BigDecimal(900000000.99999)) shouldBe true
+      }
+    }
+
+    "input is equal to max value" should {
+      "pass" in {
+        maxCheck(BigDecimal(1000000000)) shouldBe true
+      }
+    }
+
+    "input is greater than max value" should {
+      "fail" in {
+        maxCheck(BigDecimal(1000000001)) shouldBe false
+      }
+    }
+  }
+
+  "calling minCheck" when {
+
+    "input is more than min value" should {
+      "pass" in {
+        minCheck(BigDecimal(0.01)) shouldBe true
+      }
+    }
+
+    "input is equal to min value" should {
+      "pass" in {
+        minCheck(BigDecimal(0)) shouldBe true
+      }
+    }
+
+    "input is less than min value" should {
+      "fail" in {
+        minCheck(BigDecimal(-0.01)) shouldBe false
       }
     }
   }

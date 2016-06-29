@@ -82,8 +82,11 @@ object MessageLookup {
   }
 
   //Improvements messages
-  object improvements {
+  object improvementsView {
     val title = "How much have you spent on improvements since you became the property owner?"
+    val note = "If you used the market value of the property, tell us how much you've spent on improvements since the date of the valuation."
+    val label = "How much have you spent on improvements since you became the property owner?"
+    val hint = "Improvements are permanent changes that raise the value of a property, like adding extensions or garages"
   }
 
   //Summary messages
