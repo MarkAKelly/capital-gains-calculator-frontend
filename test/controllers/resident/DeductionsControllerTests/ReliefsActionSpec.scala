@@ -26,17 +26,33 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
 
-  "Calling .reliefs from the resident DeductionsController" should {
+  "Calling .reliefs from the resident DeductionsController" when {
 
-    lazy val result = DeductionsController.reliefs(fakeRequestWithSession)
+    "request has a valid session" should {
 
-    "return a status of 200" in {
-      status(result) shouldBe 200
+      lazy val result = DeductionsController.reliefs(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      s"return some html with title of ${messages.title}" in {
+        contentType(result) shouldBe Some("text/html")
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+      }
     }
 
-    s"return some html with title of ${messages.title}" in {
-      contentType(result) shouldBe Some("text/html")
-      Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+    "request has an invalid session" should {
+
+      lazy val result = DeductionsController.reliefs(fakeRequest)
+
+      "return a status of 303" in {
+        status(result) shouldBe 303
+      }
+
+      "return you to the session timeout page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/non-resident/session-timeout")
+      }
     }
   }
 }

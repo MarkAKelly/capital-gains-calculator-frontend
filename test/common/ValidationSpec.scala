@@ -120,4 +120,20 @@ class ValidationSpec extends UnitSpec {
       }
     }
   }
+
+  //############# Tests for isYesNo ##########################################
+  "calling common.Validation.isYesNo" should {
+
+    "return false with a non yes/no value" in {
+      isYesNo("a") shouldBe false
+    }
+
+    "return true with a yes value" in {
+      isYesNo("Yes") shouldBe true
+    }
+
+    "return true with a no value" in {
+      isYesNo("No") shouldBe true
+    }
+  }
 }

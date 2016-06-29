@@ -31,7 +31,7 @@ object DeductionsController extends DeductionsController {
 trait DeductionsController extends FeatureLock {
 
   //################# Reliefs Actions ########################
-  val reliefs = Action.async { implicit request =>
+  val reliefs = FeatureLockForRTT.async { implicit request =>
     Future.successful(Ok(views.reliefs()))
   }
 
