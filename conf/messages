@@ -335,3 +335,7 @@ calc.resident.reliefsValue.title = How much tax relief are you claiming?
 
 ##Losses Brought Forward messages
 calc.resident.lossesBroughtForward.title = Are there any previous losses you want to bring forward?
+
+## Allowable Losses messages
+calc.resident.allowableLosses.title = Are you claiming any allowable losses from tax years before 2015/16?
+

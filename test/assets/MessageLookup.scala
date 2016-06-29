@@ -105,4 +105,9 @@ object MessageLookup {
   object lossesBroughtForward {
     val title = "Are there any previous losses you want to bring forward?"
   }
+
+  //Losses Brought Forward messages
+  object allowableLosses {
+    val title = "Are you claiming any allowable losses from tax years before 2015/16?"
+  }
 }
