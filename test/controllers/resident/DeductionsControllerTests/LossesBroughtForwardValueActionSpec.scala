@@ -25,20 +25,34 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Calling .lossesBroughtForwardValue from the resident DeductionsController" should {
+  "Calling .lossesBroughtForwardValue from the resident DeductionsController" when {
 
-    lazy val result = DeductionsController.lossesBroughtForwardValue(fakeRequestWithSession)
+    "request has a valid session" should {
+      lazy val result = DeductionsController.lossesBroughtForwardValue(fakeRequestWithSession)
 
-    "return a status of 200" in {
-      status(result) shouldBe 200
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      s"return some html with " in {
+        contentType(result) shouldBe Some("text/html")
+      }
+
+      s"return a title of ${messages.title}" in {
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+      }
     }
 
-    s"return some html with " in {
-      contentType(result) shouldBe Some("text/html")
-    }
+    "request has an invalid session" should {
+      lazy val result = DeductionsController.lossesBroughtForwardValue(fakeRequest)
 
-    s"return a title of ${messages.title}" in {
-      Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+      "return a status of 303" in {
+        status(result) shouldBe 303
+      }
+
+      "return you to the session timeout page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/non-resident/session-timeout")
+      }
     }
   }
 }

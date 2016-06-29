@@ -78,7 +78,7 @@ trait DeductionsController extends FeatureLock {
   }
 
   //################# Brought Forward Losses Value Actions ##############################
-  val lossesBroughtForwardValue = Action.async { implicit request =>
+  val lossesBroughtForwardValue = FeatureLockForRTT.async { implicit request =>
     Future.successful(Ok(views.lossesBroughtForwardValue()))
   }
 
