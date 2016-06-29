@@ -67,6 +67,25 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
       doc.body.getElementById("isClaiming-no").tagName() shouldEqual "input"
     }
   }
+
+  "Reliefs view with pre-selected values" should {
+    lazy val form = reliefsForm.bind(Map(("isClaiming", "Yes")))
+    lazy val view = views.reliefs(form)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "have the option 'Yes' auto selected" in {
+      doc.body.getElementById("isClaiming-yes").parent.className should include("selected")
+    }
+  }
+
+  "Reliefs view errors" should {
+    lazy val form = reliefsForm.bind(Map(("isClaiming", "")))
+    lazy val view = views.reliefs(form)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "have an error-summary" in {
+    }
+  }
 }
 
 
