@@ -49,7 +49,7 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
     }
 
     s"have the question of the page ${MessageLookup.disposalValue.question}" in {
-      doc.select("h1.visuallyhidden").text() shouldEqual MessageLookup.disposalValue.question
+      doc.select("h1").text shouldEqual MessageLookup.disposalValue.question
     }
 
     s"have bullet point list title of ${MessageLookup.disposalValue.bulletListTitle}" in {
@@ -66,7 +66,7 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
     }
 
     s"the second bullet point link ${MessageLookup.disposalValue.bulletListTwoLink} should have a visually hidden content span" in {
-      doc.select("span.visuallyhidden").text() shouldEqual MessageLookup.calcBaseExternalLink
+      doc.select("#bullet-list-two span.visuallyhidden").text() shouldEqual MessageLookup.calcBaseExternalLink
     }
 
     s"the second bullet point link ${MessageLookup.disposalValue.bulletListTwoLink} should " +
@@ -83,7 +83,7 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
     }
 
     s"have a label for an input with text ${MessageLookup.disposalValue.question}" in {
-      doc.select("span.heading-large").text() shouldEqual MessageLookup.disposalValue.question
+      doc.select("label > span.visuallyhidden").text() shouldEqual MessageLookup.disposalValue.question
     }
 
     s"have an input field with id amount " in {

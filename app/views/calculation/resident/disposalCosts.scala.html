@@ -8,11 +8,11 @@
 
     @errorSummary(disposalCostsForm, "disposal-costs")
 
-    <h1 class="visuallyhidden">@Messages("calc.resident.disposalCosts.pageHeading")</h1>
+    <h1 class="heading-large">@Messages("calc.resident.disposalCosts.pageHeading")</h1>
 
     @form(action = controllers.resident.routes.GainController.submitDisposalCosts){
 
-        @formInputMoney(disposalCostsForm, "amount", Messages("calc.resident.disposalCosts.pageHeading"), Some(Messages("calc.resident.disposalCosts.helpText")),labelAsHeading = Some(true))
+        @formInputMoney(disposalCostsForm, "amount", Messages("calc.resident.disposalCosts.pageHeading"), Some(Messages("calc.resident.disposalCosts.helpText")), hideLabel = true)
 
         <button id="continue-button" class="button" type="submit">@Messages("calc.base.continue")</button>
 
