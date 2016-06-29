@@ -101,6 +101,11 @@ object MessageLookup {
     val title = "How much tax relief are you claiming?"
   }
 
+  //Other Properties messages
+  object otherProperties {
+    val title = "In the 2015/2016 tax year, did you sell or give away anything else that's covered by Capital Gains Tax?"
+  }
+
   //Allowable Losses Value messages
   object allowableLossesValue {
     val title = "What's the total value of your allowable losses?"
