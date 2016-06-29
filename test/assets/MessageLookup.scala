@@ -94,6 +94,8 @@ object MessageLookup {
   //Reliefs messages
   object reliefs {
     val title = "Do you want to claim any tax reliefs on your total gain?"
+    val question = "Do you want to claim any tax reliefs on your total gain?"
+    val help = "For example, lettings relief"
   }
 
   //Reliefs Value messages

@@ -55,4 +55,47 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       }
     }
   }
+
+  "Calling .submitReliefs from the DeductionsController" when {
+
+    "a valid form 'Yes' is submitted" should {
+      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "Yes"))
+      lazy val result = DeductionsController.submitReliefs(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the reliefs entry page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/reliefs-value")
+      }
+    }
+
+    "a valid form 'No' is submitted" should {
+      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "No"))
+      lazy val result = DeductionsController.submitReliefs(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the other properties page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/other-properties")
+      }
+    }
+
+    "an invalid form is submitted" should {
+      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", ""))
+      lazy val result = DeductionsController.submitReliefs(request)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "return a 400" in {
+        status(result) shouldBe 400
+      }
+
+      "render the acquisition costs page" in {
+        doc.title() shouldEqual messages.title
+      }
+    }
+  }
 }

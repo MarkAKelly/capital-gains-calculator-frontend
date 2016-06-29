@@ -20,6 +20,8 @@ import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import play.api.mvc.Action
 import views.html.calculation.{resident => views}
+import forms.resident.ReliefsForm._
+import models.resident.ReliefsModel
 
 import scala.concurrent.Future
 
@@ -32,7 +34,19 @@ trait DeductionsController extends FeatureLock {
 
   //################# Reliefs Actions ########################
   val reliefs = FeatureLockForRTT.async { implicit request =>
-    Future.successful(Ok(views.reliefs()))
+    Future.successful(Ok(views.reliefs(reliefsForm)))
+  }
+
+  val submitReliefs = Action.async {implicit request =>
+    reliefsForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.reliefs(errors))),
+      success => {
+        success match {
+          case ReliefsModel("Yes") => Future.successful(Redirect(routes.DeductionsController.reliefsValue()))
+          case _ => Future.successful(Redirect(routes.DeductionsController.otherProperties()))
+        }
+      }
+    )
   }
 
   //################# Reliefs Value Input Actions ########################
