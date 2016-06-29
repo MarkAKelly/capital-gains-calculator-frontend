@@ -24,7 +24,7 @@ import views.html.calculation.{resident => views}
 
 class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Summary view" should {
+  "Reliefs view" should {
 
     lazy val view = views.reliefs()(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
