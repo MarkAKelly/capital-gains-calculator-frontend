@@ -22,13 +22,14 @@ import controllers.helpers.FakeRequestHelper
 import forms.resident.ReliefsValueForm._
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import views.html.calculation.resident._
 
 class ReliefsValueViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Reliefs Value view" should {
 
     lazy val form = reliefsValueForm.bind(Map("amount" -> "10"))
-    lazy val view = views.html.calculation.resident.reliefsValue(form)(fakeRequest)
+    lazy val view = reliefsValue(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -43,20 +44,20 @@ class ReliefsValueViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/reliefs"
     }
 
-    s"have the question of the page ${messages.question}" in {
+    s"have the text ${messages.question} as the h1 tag" in {
       doc.select("h1").text shouldEqual messages.question
     }
 
     "render a form element" in {
-      
+      doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/reliefs-value"
     }
 
     s"have a hidden legend with the text ${messages.question}" in {
-      doc.select("label.visuallyhidden").text shouldEqual messages.question
+      doc.select("label span.visuallyhidden").text shouldEqual messages.question
     }
 
     "render an input field for the reliefs amount" in {
-      doc.select("#amount").toString() shouldBe "<input type=\"number\" class=\"moneyField  input--no-spinner \" placeholder=\"eg. 25000.00\" name=\"amount\" id=\"amount\" value=\"10\" step=\"0.01\">"
+      doc.select("input").attr("id") shouldBe "amount"
     }
 
     "not display an error summary message for the amount" in {
@@ -69,6 +70,21 @@ class ReliefsValueViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     "have continue button " in {
       doc.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
+    }
+  }
+
+  "Improvements View with form with errors" should {
+
+    val form = reliefsValueForm.bind(Map("amount" -> ""))
+    lazy val view = reliefsValue(form)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "display an error summary message for the amount" in {
+      doc.body.select("#amount-error-summary").size shouldBe 1
+    }
+
+    "display an error message for the input" in {
+      doc.body.select(".form-group .error-notification").size shouldBe 1
     }
   }
 }

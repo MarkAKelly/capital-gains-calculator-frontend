@@ -16,6 +16,7 @@
 
 package controllers.resident
 
+import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import models.resident.ReliefsValueModel
@@ -32,14 +33,30 @@ object DeductionsController extends DeductionsController {
 
 trait DeductionsController extends FeatureLock {
 
+  val calcConnector: CalculatorConnector
+
   //################# Reliefs Actions ########################
   val reliefs = Action.async { implicit request =>
     Future.successful(Ok(views.reliefs()))
   }
 
   //################# Reliefs Value Input Actions ########################
-  val reliefsValue = Action.async { implicit request =>
-    Future.successful(Ok(views.reliefsValue(reliefsValueForm)))
+
+  val reliefsValue = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[ReliefsValueModel](KeystoreKeys.ResidentKeys.reliefsValue).map {
+      case Some(data) => Ok(views.reliefsValue(reliefsValueForm.fill(data)))
+      case None => Ok(views.reliefsValue(reliefsValueForm))
+    }
+  }
+
+  val submitReliefsValue = FeatureLockForRTT.async { implicit request =>
+    reliefsValueForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.reliefsValue(errors))),
+      success => {
+        calcConnector.saveFormData[ReliefsValueModel](KeystoreKeys.ResidentKeys.reliefsValue, success)
+        Future.successful(Redirect(routes.DeductionsController.otherProperties()))
+      }
+    )
   }
 
   //################# Other Properties Actions #########################
