@@ -16,45 +16,114 @@
 
 package controllers.resident.GainControllerTests
 
+import assets.MessageLookup.{improvementsView => messages}
+import common.KeystoreKeys
+import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.GainController
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import play.api.test.Helpers._
-import assets.MessageLookup.{improvementsView => messages}
+import models.resident.ImprovementsModel
 import org.jsoup.Jsoup
-import play.api.test.FakeRequest
+import org.mockito.Matchers
+import org.mockito.Mockito._
+import org.scalatest.mock.MockitoSugar
+import play.api.test.Helpers._
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+import scala.concurrent.Future
 
-  "Calling .improvements from the GainController" should {
+class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-    lazy val result = GainController.improvements(fakeRequestWithSession)
-    lazy val doc = Jsoup.parse(bodyOf(result))
+  def setupTarget(getData: Option[ImprovementsModel]): GainController = {
 
-    "return a status of 200" in {
-      status(result) shouldBe 200
-    }
+    val mockCalcConnector = mock[CalculatorConnector]
 
-    "return some html" in {
-      contentType(result) shouldBe Some("text/html")
-    }
+    when(mockCalcConnector.fetchAndGetFormData[ImprovementsModel](Matchers.eq(KeystoreKeys.ResidentKeys.improvements))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(getData))
 
-    s"have a title of ${messages.title}" in {
-      doc.title() shouldBe messages.title
+    new GainController {
+      override val calcConnector: CalculatorConnector = mockCalcConnector
     }
   }
 
-  "Calling .improvements from the GainController with no session" should {
+  "Calling .improvements from the GainCalculationController" when {
 
-    lazy val fakeRequest = FakeRequest()
+    "there is no keystore data" should {
+
+      lazy val target = setupTarget(None)
+      lazy val result = target.improvements(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return some html" in {
+        contentType(result) shouldBe Some("text/html")
+      }
+
+      "display the improvements view" in {
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+      }
+    }
+
+    "there is some keystore data" should {
+
+      lazy val target = setupTarget(Some(ImprovementsModel(1000)))
+      lazy val result = target.improvements(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return some html" in {
+        contentType(result) shouldBe Some("text/html")
+      }
+
+      "display the Improvements view" in {
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+      }
+    }
+  }
+
+  "request has an invalid session" should {
+
     lazy val result = GainController.improvements(fakeRequest)
 
     "return a status of 303" in {
       status(result) shouldBe 303
     }
 
-    "return you to the session timeout view" in {
-      redirectLocation(result).get shouldBe "/calculate-your-capital-gains/non-resident/session-timeout"
+    "return you to the session timeout page" in {
+      redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/non-resident/session-timeout")
+    }
+  }
+
+  "Calling .submitImprovements from the GainCalculationConroller" when {
+
+    "a valid form is submitted" should {
+      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+      lazy val result = GainController.submitImprovements(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the improvements page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/summary")
+      }
+    }
+
+    "an invalid form is submitted" should {
+      lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
+      lazy val result = GainController.submitImprovements(request)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "return a 400" in {
+        status(result) shouldBe 400
+      }
+
+      "render the Improvements page" in {
+        doc.title() shouldEqual messages.title
+      }
     }
   }
 }
