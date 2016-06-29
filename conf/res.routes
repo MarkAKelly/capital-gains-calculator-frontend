@@ -22,6 +22,7 @@ POST    /acquisition-costs                controllers.resident.GainController.su
 
 #Improvements Routes
 GET     /improvements                     controllers.resident.GainController.improvements
+POST    /improvements                     controllers.resident.GainController.submitImprovements
 
 #Summary Routes
 GET     /summary                          controllers.resident.SummaryController.summary

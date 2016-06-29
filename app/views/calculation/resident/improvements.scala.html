@@ -10,13 +10,13 @@
     </div>
 }
 
-@errorSummary(improvementsForm, "improvements")
-
-<h1 class="visuallyhidden">@Messages("calc.resident.improvements.title")</h1>
-
 @resident_main_template(title = Messages("calc.resident.improvements.title"), backLink = Some(controllers.resident.routes.GainController.acquisitionCosts().toString)) {
 
-    @form(action = controllers.resident.routes.GainController.improvements) {
+    @errorSummary(improvementsForm, "improvements")
+
+    <h1 class="visuallyhidden">@Messages("calc.resident.improvements.title")</h1>
+
+    @form(action = controllers.resident.routes.GainController.submitImprovements) {
 
         @formInputMoney(improvementsForm, "amount", Messages("calc.resident.improvements.label"), Some(Messages("calc.resident.improvements.hint")), labelAsHeading = Some(true), additionalHTMLContent = Some(note.toString()))
 
