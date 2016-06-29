@@ -30,26 +30,39 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
-      doc.charset().toString shouldBe "UTF-8"
+      doc.charset.toString shouldBe "UTF-8"
     }
 
     s"have a title of ${messages.title}" in {
-      doc.title() shouldBe messages.title
+      doc.title shouldBe messages.title
     }
 
-    s"have the correct note" in {
+    "have a H1 tag that" should {
+
+      lazy val heading = doc.select("H1")
+
+      s"have the page heading '${messages.title}'" in {
+        heading.text shouldBe messages.title
+      }
+
+      "have the visuallyhidden class" in {
+        heading.hasClass("visuallyhidden") shouldBe true
+      }
+    }
+
+    "have the correct note" in {
       val note = doc.select(".panel.panel-border-wide>p")
-      note.text() shouldBe messages.note
+      note.text shouldBe messages.note
     }
 
-    s"have the correct label" in {
+    "have the correct label" in {
       val label = doc.select("label")
-      label.text() should startWith(messages.label)
+      label.text should startWith(messages.label)
     }
 
-    s"have the correct hint" in {
+    "have the correct hint" in {
       val hint = doc.select("label .form-hint")
-      hint.text() shouldBe messages.hint
+      hint.text shouldBe messages.hint
     }
   }
 }
