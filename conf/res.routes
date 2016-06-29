@@ -28,3 +28,6 @@ GET     /summary                          controllers.resident.SummaryController
 
 #Reliefs Routes
 GET     /reliefs                          controllers.resident.DeductionsController.reliefs
+
+#Losses Brought Forward Routes
+GET     /losses-brought-forward           controllers.resident.DeductionsController.lossesBroughtForward

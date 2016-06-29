@@ -329,3 +329,6 @@ calc.resident.summary.title = Summary
 
 ## Reliefs messages
 calc.resident.reliefs.title = Do you want to claim any tax reliefs on your total gain?
+
+##Losses Brought Forward messages
+calc.resident.lossesBroughtForward.title = Are there any previous losses you want to bring forward?

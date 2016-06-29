@@ -14,28 +14,27 @@
  * limitations under the License.
  */
 
-package controllers.resident
+package views.resident
 
-import connectors.CalculatorConnector
-import controllers.predicates.FeatureLock
-import play.api.mvc.Action
+import assets.MessageLookup.{lossesBroughtForward => messages}
+import controllers.helpers.FakeRequestHelper
+import org.jsoup.Jsoup
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.{resident => views}
 
-import scala.concurrent.Future
+class LossesBroughtForwardViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
+  "Reliefs view" should {
 
-object DeductionsController extends DeductionsController {
-  val calcConnector = CalculatorConnector
-}
+    lazy val view = views.lossesBroughtForward()(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
 
-trait DeductionsController extends FeatureLock {
+    "have a charset of UTF-8" in {
+      doc.charset().toString shouldBe "UTF-8"
+    }
 
-  //################# Reliefs Actions ########################
-  val reliefs = Action.async { implicit request =>
-    Future.successful(Ok(views.reliefs()))
-  }
-
-  val lossesBroughtForward = Action.async { implicit request =>
-    Future.successful(Ok(views.lossesBroughtForward()))
+    s"have a title ${messages.title}" in {
+      doc.title() shouldBe messages.title
+    }
   }
 }
