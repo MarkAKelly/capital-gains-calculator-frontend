@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package controllers.resident.GainControllerTests
+package controllers.resident.DeductionsControllerTests
 
+import assets.MessageLookup.{otherProperties => messages}
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.DeductionsController
 import org.jsoup.Jsoup
 import play.api.test.Helpers._
-import assets.MessageLookup.{otherProperties => messages}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
