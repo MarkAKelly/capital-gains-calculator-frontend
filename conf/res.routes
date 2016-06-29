@@ -29,6 +29,7 @@ GET     /summary                          controllers.resident.SummaryController
 
 #Reliefs Routes
 GET     /reliefs                          controllers.resident.DeductionsController.reliefs
+POST    /reliefs                          controllers.resident.DeductionsController.submitReliefs
 
 #Reliefs Value Routes
 GET     /reliefs-value                    controllers.resident.DeductionsController.reliefsValue
@@ -42,3 +43,6 @@ GET     /allowable-losses-value           controllers.resident.DeductionsControl
 
 #Losses Brought Forward Routes
 GET     /losses-brought-forward           controllers.resident.DeductionsController.lossesBroughtForward
+
+#Losses Brought Forward Value Routes
+GET     /losses-brought-forward-value     controllers.resident.DeductionsController.lossesBroughtForwardValue

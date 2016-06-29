@@ -4,9 +4,7 @@
 
 @(acquisitionCostsForm: Form[AcquisitionCostsModel])(implicit request: Request[_])
 
-@main_template(Messages("calc.resident.acquisitionCosts.title")) {
-
-    <a id="back-link" class="back-link" href="@controllers.resident.routes.GainController.acquisitionValue().toString">@Messages("calc.base.back")</a>
+@resident_main_template(Messages("calc.resident.acquisitionCosts.title"), backLink = Some(controllers.resident.routes.GainController.acquisitionValue().toString)) {
 
     @errorSummary(acquisitionCostsForm, "amount")
 
