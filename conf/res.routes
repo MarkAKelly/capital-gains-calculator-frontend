@@ -25,3 +25,6 @@ GET     /improvements                     controllers.resident.GainController.im
 
 #Summary Routes
 GET     /summary                          controllers.resident.SummaryController.summary
+
+#Reliefs Routes
+GET     /reliefs                          controllers.resident.DeductionsController.reliefs

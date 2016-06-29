@@ -326,3 +326,6 @@ calc.resident.improvements.title = How much have you spent on improvements since
 
 ## Summary messages
 calc.resident.summary.title = Summary
+
+## Reliefs messages
+calc.resident.reliefs.title = Do you want to claim any tax reliefs on your total gain?

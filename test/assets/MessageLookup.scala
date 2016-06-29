@@ -90,4 +90,9 @@ object MessageLookup {
   object summary {
     val title = "Summary"
   }
+
+  //Reliefs messages
+  object reliefs {
+    val title = "Do you want to claim any tax reliefs on your total gain?"
+  }
 }
