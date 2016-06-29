@@ -101,6 +101,11 @@ object MessageLookup {
     val title = "How much tax relief are you claiming?"
   }
 
+  //Allowable Losses Value messages
+  object allowableLossesValue {
+    val title = "What's the total value of your allowable losses?"
+  }
+
   //Losses Brought Forward messages
   object lossesBroughtForward {
     val title = "Are there any previous losses you want to bring forward?"
