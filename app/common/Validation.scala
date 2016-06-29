@@ -86,10 +86,7 @@ object Validation {
   }
 
   def isYesNo (input: String): Boolean = {
-    if (input.equals("Yes")) true
-    else if (input.equals("No")) true
-    else if (input.equals("")) true
-    else false
+    input.equals("Yes") || input.equals("No") || input.equals("")
   }
 
   val bigDecimalCheck: String => Boolean = (input) => {
