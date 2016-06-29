@@ -22,6 +22,7 @@ POST    /acquisition-costs                controllers.resident.GainController.su
 
 #Improvements Routes
 GET     /improvements                     controllers.resident.GainController.improvements
+POST    /improvements                     controllers.resident.GainController.submitImprovements
 
 #Summary Routes
 GET     /summary                          controllers.resident.SummaryController.summary
@@ -35,10 +36,11 @@ GET     /reliefs-value                    controllers.resident.DeductionsControl
 #Other Properties Routes
 GET     /other-properties                 controllers.resident.DeductionsController.otherProperties
 
+#Allowable Losses Value Routes
+GET     /allowable-losses-value           controllers.resident.DeductionsController.allowableLossesValue
+
 #Losses Brought Forward Routes
 GET     /losses-brought-forward           controllers.resident.DeductionsController.lossesBroughtForward
 
-
 #Allowable Losses Routes
 GET     /allowable-losses                 controllers.resident.DeductionsController.allowableLosses
-
