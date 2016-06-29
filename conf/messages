@@ -354,3 +354,5 @@ calc.resident.allowableLossesValue.title = What''s the total value of your allow
 ##Losses Brought Forward messages
 calc.resident.lossesBroughtForward.title = Are there any previous losses you want to bring forward?
 
+##Losses Brought Forward Value messages
+calc.resident.lossesBroughtForwardValue.title = What''s the total value of the loss to bring forward?

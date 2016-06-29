@@ -56,14 +56,14 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Fa
     }
 
     "have a H1 tag that" should {
-      lazy val h1Tag = doc.select("H1")
+      lazy val heading = doc.select("h1")
 
       s"have the page heading '${messages.pageHeading}'" in {
-        h1Tag.text shouldBe messages.pageHeading
+        heading.text shouldBe messages.pageHeading
       }
 
-      "have the visuallyhidden class" in {
-        h1Tag.hasClass("visuallyhidden") shouldBe true
+      "have the heading-large class" in {
+        heading.hasClass("heading-large") shouldBe true
       }
     }
 
@@ -88,8 +88,8 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Fa
           label.text should include(messages.pageHeading)
         }
 
-        "have the class 'heading-large'" in {
-          label.select("span").hasClass("heading-large") shouldBe true
+        "have the class 'visuallyhidden'" in {
+          label.select("span").hasClass("visuallyhidden") shouldBe true
         }
       }
 
@@ -113,7 +113,7 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Fa
         }
 
         s"have a third bullet point link ${messages.bulletListThreeLink} with a visually hidden content span" in {
-          doc.select("span.visuallyhidden").text() shouldEqual commonMessages.calcBaseExternalLink
+          doc.select("#bullet-list-three span.visuallyhidden").text() shouldEqual commonMessages.calcBaseExternalLink
         }
 
         s"have a link to ${messages.bulletLink}" in {
