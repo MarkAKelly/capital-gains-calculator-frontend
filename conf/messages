@@ -333,5 +333,8 @@ calc.resident.reliefs.title = Do you want to claim any tax reliefs on your total
 ## Reliefs Value messages
 calc.resident.reliefsValue.title = How much tax relief are you claiming?
 
-##Losses Brought Forward messages
+## Losses Brought Forward messages
 calc.resident.lossesBroughtForward.title = Are there any previous losses you want to bring forward?
+
+## Annual Exempt Amount messages
+calc.resident.annualExemptAmount.title = How much of your Capital Gains Tax allowance have you got left?

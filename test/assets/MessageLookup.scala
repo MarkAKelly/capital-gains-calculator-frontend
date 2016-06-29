@@ -105,4 +105,9 @@ object MessageLookup {
   object lossesBroughtForward {
     val title = "Are there any previous losses you want to bring forward?"
   }
+
+  //Annual Exempt Amount messages
+  object annualExemptAmount {
+    val title = "How much of your Capital Gains Tax allowance have you got left?"
+  }
 }
