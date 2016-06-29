@@ -34,4 +34,23 @@ trait DeductionsController extends FeatureLock {
   val reliefs = Action.async { implicit request =>
     Future.successful(Ok(views.reliefs()))
   }
+
+  //################# Reliefs Value Input Actions ########################
+  val reliefsValue = Action.async { implicit request =>
+    Future.successful(Ok(views.reliefsValue()))
+  }
+
+  //################# Other Properties Actions #########################
+
+  //################# Allowable Losses Actions #########################
+
+  //################# Allowable Losses Input Actions ############################
+
+  //################# Brought Forward Losses Actions ############################
+
+  //################# Brought Forward Losses Value Actions ##############################
+
+  //################# Annual Exempt Amount Input Actions #############################
+
+  //################# Second Summary Actions ###############################
 }

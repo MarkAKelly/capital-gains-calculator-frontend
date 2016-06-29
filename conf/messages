@@ -329,3 +329,6 @@ calc.resident.summary.title = Summary
 
 ## Reliefs messages
 calc.resident.reliefs.title = Do you want to claim any tax reliefs on your total gain?
+
+## Reliefs Value messages
+calc.resident.reliefsValue.title = How much tax relief are you claiming?
