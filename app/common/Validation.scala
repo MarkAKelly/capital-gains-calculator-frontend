@@ -85,4 +85,8 @@ object Validation {
       case Failure(_) => false
     }
   }
+
+  def isYesNo (input: String): Boolean = {
+    input.equals("Yes") || input.equals("No")
+  }
 }
