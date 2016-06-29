@@ -62,6 +62,8 @@ trait DeductionsController extends FeatureLock {
     Future.successful(Ok(views.lossesBroughtForwardValue()))
   }
 
+  val submitLossesBroughtForwardValue = TODO
+
   //################# Annual Exempt Amount Input Actions #############################
 
   //################# Second Summary Actions ###############################

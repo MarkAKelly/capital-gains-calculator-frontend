@@ -44,3 +44,5 @@ GET     /losses-brought-forward           controllers.resident.DeductionsControl
 
 #Losses Brought Forward Value Routes
 GET     /losses-brought-forward-value     controllers.resident.DeductionsController.lossesBroughtForwardValue
+POST    /losses-brought-forward-value     controllers.resident.DeductionsController.submitLossesBroughtForwardValue
+
