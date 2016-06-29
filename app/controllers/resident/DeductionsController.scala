@@ -16,13 +16,15 @@
 
 package controllers.resident
 
+import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import models.resident.OtherPropertiesModel
 import play.api.mvc.Action
 import views.html.calculation.{resident => views}
 import forms.resident.OtherPropertiesForm._
-import common.KeystoreKeys
+import forms.resident.ReliefsForm._
+import models.resident.ReliefsModel
 
 import scala.concurrent.Future
 
@@ -32,12 +34,27 @@ object DeductionsController extends DeductionsController {
 }
 
 trait DeductionsController extends FeatureLock {
-
   val calcConnector: CalculatorConnector
 
   //################# Reliefs Actions ########################
-  val reliefs = Action.async { implicit request =>
-    Future.successful(Ok(views.reliefs()))
+  val reliefs = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[ReliefsModel](KeystoreKeys.ResidentKeys.reliefs).map {
+      case Some(data) => Ok(views.reliefs(reliefsForm.fill(data)))
+      case None => Ok(views.reliefs(reliefsForm))
+    }
+  }
+
+  val submitReliefs = Action.async {implicit request =>
+    reliefsForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.reliefs(errors))),
+      success => {
+        calcConnector.saveFormData[ReliefsModel](KeystoreKeys.ResidentKeys.reliefs, success)
+        success match {
+          case ReliefsModel("Yes") => Future.successful(Redirect(routes.DeductionsController.reliefsValue()))
+          case _ => Future.successful(Redirect(routes.DeductionsController.otherProperties()))
+        }
+      }
+    )
   }
 
   //################# Reliefs Value Input Actions ########################

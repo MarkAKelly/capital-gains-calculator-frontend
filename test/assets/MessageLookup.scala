@@ -97,6 +97,12 @@ object MessageLookup {
   //Reliefs messages
   object reliefs {
     val title = "Do you want to claim any tax reliefs on your total gain?"
+    val question = "Do you want to claim any tax reliefs on your total gain?"
+    val help = "For example, lettings relief"
+    val helpOne = "Tax reliefs can lower the amount of tax you owe. For example, you might be able to claim:"
+    val helpLinkOne = "Private Residence Relief"
+    val helpLinkTwo = "Lettings Relief"
+    val helpTwo = "Tax reliefs are different from your Capital Gains Tax Allowance and Personal Allowance."
   }
 
   //Reliefs Value messages
@@ -108,6 +114,10 @@ object MessageLookup {
   object otherProperties {
     val title = "In the 2015/2016 tax year, did you sell or give away anything else that's covered by Capital Gains Tax?"
     val pageHeading = "In the 2015/2016 tax year, did you sell or give away anything else that's covered by Capital Gains Tax?"
+    val help = "This includes things like:"
+    val helpOne = "shares"
+    val helpTwo = "antiques"
+    val helpThree = "other UK residential properties"
   }
 
   //Allowable Losses Value messages

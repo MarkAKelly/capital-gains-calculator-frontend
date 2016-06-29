@@ -333,6 +333,14 @@ calc.resident.summary.title = Summary
 
 ## Reliefs messages
 calc.resident.reliefs.title = Do you want to claim any tax reliefs on your total gain?
+calc.resident.reliefs.question = Do you want to claim any tax reliefs on your total gain?
+calc.resident.reliefs.helpText = For example, lettings relief
+calc.resident.reliefs.additionalContent.one = Tax reliefs can lower the amount of tax you owe. For example, you might be able to claim:
+calc.resident.reliefs.link.one = Private Residence Relief
+calc.resident.reliefs.link.two = Lettings Relief
+calc.resident.reliefs.additionalContent.two = Tax reliefs are different from your Capital Gains Tax Allowance and Personal Allowance.
+
+
 
 ## Reliefs Value messages
 calc.resident.reliefsValue.title = How much tax relief are you claiming?
@@ -340,6 +348,10 @@ calc.resident.reliefsValue.title = How much tax relief are you claiming?
 ## Other Properties messages
 calc.resident.otherProperties.title = In the 2015/2016 tax year, did you sell or give away anything else that''s covered by Capital Gains Tax?
 calc.resident.otherProperties.pageHeading = In the 2015/2016 tax year, did you sell or give away anything else that''s covered by Capital Gains Tax?
+calc.resident.otherProperties.bullet.title = This includes things like:
+calc.resident.otherProperties.bullet.one = shares
+calc.resident.otherProperties.bullet.two = antiques
+calc.resident.otherProperties.bullet.three = other UK residential properties
 
 ## Allowable Losses Value messages
 calc.resident.allowableLossesValue.title = What''s the total value of your allowable losses?

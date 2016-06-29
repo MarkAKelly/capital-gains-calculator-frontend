@@ -4,11 +4,22 @@
 
 @(otherPropertiesForm: Form[OtherPropertiesModel], backUrl: String = "")(implicit request: Request[_])
 
+@helpText = {
+    <p>@Messages("calc.resident.otherProperties.bullet.title")</p>
+    <ul class="list-bullet">
+        <li>@Messages("calc.resident.otherProperties.bullet.one")</li>
+        <li>@Messages("calc.resident.otherProperties.bullet.two")</li>
+        <li>@Messages("calc.resident.otherProperties.bullet.three")</li>
+    </ul>
+}
+
 @resident_main_template(Messages("calc.resident.otherProperties.title"), backLink = Some(backUrl)) {
 
-    <h1 class="visuallyhidden">@Messages("calc.resident.otherProperties.title")</h1>
+    @errorSummary(otherPropertiesForm, "hasOtherProperties")
 
-    @form(action = controllers.resident.routes.DeductionsController.submitOtherProperties) {
+    <h1>@Messages("calc.resident.otherProperties.pageHeading")</h1>
+
+@form(action = controllers.resident.routes.DeductionsController.submitOtherProperties) {
 
         @formInputRadioGroup(
             field = otherPropertiesForm("hasOtherProperties"),
@@ -18,10 +29,12 @@
             '_legend -> Messages("calc.resident.otherProperties.pageHeading"),
             '_legendID -> "hasOtherProperties",
             '_legendClass -> "visuallyhidden",
-            '_helpText -> "",
+            '_helpText -> helpText,
             '_labelAfter -> true,
             '_labelClass -> "block-label",
             '_groupClass -> "inline form-group"
         )
+
+        <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
     }
 }

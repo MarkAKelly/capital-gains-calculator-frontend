@@ -29,6 +29,7 @@ GET     /summary                          controllers.resident.SummaryController
 
 #Reliefs Routes
 GET     /reliefs                          controllers.resident.DeductionsController.reliefs
+POST    /reliefs                          controllers.resident.DeductionsController.submitReliefs
 
 #Reliefs Value Routes
 GET     /reliefs-value                    controllers.resident.DeductionsController.reliefsValue
