@@ -27,7 +27,7 @@ object BroughtForwardLossesForm {
   val broughtForwardLossesForm = Form(
     mapping(
       "option" -> text
-        .transform[String](stringToBoolean, _.toString())
+        .transform[Boolean](stringToBoolean, _.toString())
         .verifying(Messages("calc.base.undefinedMessage"), mandatoryCheck)
         .verifying(Messages("calc.base.undefinedMessage"), yesNoCheck)
     )(BroughtForwardLossesModel.apply)(BroughtForwardLossesModel.unapply)
