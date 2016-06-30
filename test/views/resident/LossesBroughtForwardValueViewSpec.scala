@@ -133,8 +133,32 @@ class LossesBroughtForwardValueViewSpec extends UnitSpec with WithFakeApplicatio
         "have the class 'button'" in {
           continueButton.hasClass("button") shouldBe true
         }
-
       }
+    }
+  }
+
+  "Losses Brought Forward Value view with stored values" should {
+    lazy val form = lossesBroughtForwardValueForm.bind(Map(("amount", "1000")))
+    lazy val view = views.lossesBroughtForwardValue(form)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "have the value of 1000 auto-filled in the input" in {
+      lazy val input = doc.body.getElementsByTag("input")
+      input.`val` shouldBe "1000"
+    }
+  }
+
+  "Losses Brought Forward Value view with errors" should {
+    lazy val form = lossesBroughtForwardValueForm.bind(Map(("amount", "")))
+    lazy val view = views.lossesBroughtForwardValue(form)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "display an error summary message for the amount" in {
+      doc.body.select("#amount-error-summary").size shouldBe 1
+    }
+
+    "display an error message for the input" in {
+      doc.body.select("span.error-notification").size shouldBe 1
     }
   }
 }

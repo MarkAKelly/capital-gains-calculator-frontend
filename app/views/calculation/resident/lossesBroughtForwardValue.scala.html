@@ -6,6 +6,8 @@
 
 @resident_main_template(title = Messages("calc.resident.lossesBroughtForwardValue.title"), backLink = Some(controllers.resident.routes.DeductionsController.lossesBroughtForward.toString)) {
 
+    @errorSummary(lossesBroughtForwardValueForm, "losses-brought-forward-value")
+
     <h1 class="heading-large">@Messages("calc.resident.lossesBroughtForwardValue.pageHeading")</h1>
 
     @form(action = controllers.resident.routes.DeductionsController.submitLossesBroughtForwardValue()) {
