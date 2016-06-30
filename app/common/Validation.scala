@@ -17,7 +17,6 @@
 package common
 
 import java.text.SimpleDateFormat
-
 import scala.util.{Failure, Success, Try}
 
 object Validation {
@@ -85,4 +84,32 @@ object Validation {
       case Failure(_) => false
     }
   }
+
+  def isYesNo (input: String): Boolean = {
+    input.equals("Yes") || input.equals("No") || input.equals("")
+  }
+
+  val bigDecimalCheck: String => Boolean = (input) => {
+    Try(BigDecimal(input)) match {
+      case Success(_) => true
+      case Failure(_) if input.trim == "" => true
+      case Failure(_) => false
+    }
+  }
+
+  val integerCheck: String => Boolean = (input) => {
+    Try(input.trim.toInt) match {
+      case Success(_) => true
+      case Failure(_) if input.trim == "" => true
+      case Failure(_) => false
+    }
+  }
+
+  val mandatoryCheck: String => Boolean = (input) => input.trim != ""
+
+  val decimalPlacesCheck: BigDecimal => Boolean = (input) => input.scale < 3
+
+  val maxCheck: BigDecimal => Boolean = (input) => input <= Constants.maxNumeric
+
+  val minCheck: BigDecimal => Boolean = (input) => input >= 0
 }

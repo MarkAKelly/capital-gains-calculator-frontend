@@ -21,17 +21,15 @@
     </ul>
 }
 
-@main_template(title = Messages("calc.resident.disposal.value.title")) {
-
-    <a id="back-link" class="back-link" href="@controllers.resident.routes.GainController.disposalDate.toString()">@Messages("calc.base.back")</a>
+@resident_main_template(title = Messages("calc.resident.disposal.value.title"), backLink = Some(controllers.resident.routes.GainController.disposalDate().toString)) {
 
     @errorSummary(disposalValueForm, "amount")
 
-    <h1 class="visuallyhidden">@Messages("calc.resident.disposal.value.question")</h1>
+    <h1 class="heading-large">@Messages("calc.resident.disposal.value.question")</h1>
 
     @form(action = controllers.resident.routes.GainController.submitDisposalValue) {
 
-        @formInputMoney(disposalValueForm, "amount", Messages("calc.resident.disposal.value.question"), additionalHTMLContent = Some(bulletContent.toString()), labelAsHeading = Some(true))
+        @formInputMoney(disposalValueForm, "amount", Messages("calc.resident.disposal.value.question"), additionalHTMLContent = Some(bulletContent.toString()), hideLabel = true)
 
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
     }

@@ -45,6 +45,7 @@ calc.common.next.actions.heading = What to do next
 calc.common.invalidError = Invalid selection!
 calc.common.error.maxNumericExceeded = Enter an amount that''s £
 calc.common.error.maxNumericExceeded.OrLess = or less
+calc.common.error.maxAmountExceeded = Enter an amount that''s £{0} or less
 calc.common.error.fieldRequired = This field is required
 
 ## Introduction ##
@@ -324,6 +325,10 @@ calc.resident.acquisitionCosts.helpText = Costs include agent fees, legal fees a
 
 ## Improvements messages
 calc.resident.improvements.title = How much have you spent on improvements since you became the property owner?
+calc.resident.improvements.note = If you used the market value of the property, tell us how much you''ve spent on improvements since the date of the valuation.
+calc.resident.improvements.label = How much have you spent on improvements since you became the property owner?
+calc.resident.improvements.hint = Improvements are permanent changes that raise the value of a property, like adding extensions or garages
+
 
 ## Summary messages
 calc.resident.summary.title = Summary
@@ -334,13 +339,27 @@ calc.resident.summary.yourAnswersHeading = Your answers
 
 ## Reliefs messages
 calc.resident.reliefs.title = Do you want to claim any tax reliefs on your total gain?
+calc.resident.reliefs.question = Do you want to claim any tax reliefs on your total gain?
+calc.resident.reliefs.helpText = For example, lettings relief
+calc.resident.reliefs.additionalContent.one = Tax reliefs can lower the amount of tax you owe. For example, you might be able to claim:
+calc.resident.reliefs.link.one = Private Residence Relief
+calc.resident.reliefs.link.two = Lettings Relief
+calc.resident.reliefs.additionalContent.two = Tax reliefs are different from your Capital Gains Tax Allowance and Personal Allowance.
+
+
 
 ## Reliefs Value messages
 calc.resident.reliefsValue.title = How much tax relief are you claiming?
+calc.resident.reliefsValue.question = How much tax relief are you claiming?
 
 ## Other Properties messages
 calc.resident.otherProperties.title = In the 2015/2016 tax year, did you sell or give away anything else that''s covered by Capital Gains Tax?
 
+## Allowable Losses Value messages
+calc.resident.allowableLossesValue.title = What''s the total value of your allowable losses?
+
 ##Losses Brought Forward messages
 calc.resident.lossesBroughtForward.title = Are there any previous losses you want to bring forward?
 
+##Losses Brought Forward Value messages
+calc.resident.lossesBroughtForwardValue.title = What''s the total value of the loss to bring forward?
