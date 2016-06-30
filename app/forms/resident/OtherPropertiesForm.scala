@@ -21,6 +21,7 @@ import models.resident.OtherPropertiesModel
 import play.api.data.Forms._
 import play.api.data.Form
 import play.api.i18n.Messages
+import common.Transformers._
 
 object OtherPropertiesForm {
 
@@ -29,6 +30,7 @@ object OtherPropertiesForm {
       "hasOtherProperties" -> text
         .verifying(Messages("calc.base.undefinedMessage"), _.nonEmpty)
         .verifying(Messages("calc.base.undefinedMessage"), isYesNo(_))
+        .transform[Boolean](stringToBoolean, _.toString())
     )(OtherPropertiesModel.apply)(OtherPropertiesModel.unapply)
   )
 }

@@ -79,7 +79,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
 
     "reliefs model is populated with 'Yes'" should {
 
-      lazy val target = setupTarget(None, Some(ReliefsModel("Yes")))
+      lazy val target = setupTarget(None, Some(ReliefsModel(true)))
       lazy val result = target.otherProperties(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
@@ -94,7 +94,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
 
     "reliefs model is populated with 'No'" should {
 
-      lazy val target = setupTarget(None, Some(ReliefsModel("No")))
+      lazy val target = setupTarget(None, Some(ReliefsModel(false)))
       lazy val result = target.otherProperties(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 

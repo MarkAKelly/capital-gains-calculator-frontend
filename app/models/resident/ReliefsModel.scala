@@ -18,7 +18,7 @@ package models.resident
 
 import play.api.libs.json.Json
 
-case class ReliefsModel (isClaiming: String)
+case class ReliefsModel (isClaiming: Boolean)
 
 object ReliefsModel {
   implicit val format = Json.format[ReliefsModel]

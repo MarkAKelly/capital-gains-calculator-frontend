@@ -25,15 +25,15 @@ class OtherPropertiesFormSpec extends UnitSpec with WithFakeApplication {
 
   "Creating the form for Other Properties from a valid selection" should {
     "return a populated form using .fill" in {
-      val model = OtherPropertiesModel("Yes")
+      val model = OtherPropertiesModel(true)
       val form = otherPropertiesForm.fill(model)
 
-      form.value.get shouldBe OtherPropertiesModel("Yes")
+      form.value.get shouldBe OtherPropertiesModel(true)
     }
 
     "return a valid model if supplied with valid selection" in {
       val form = otherPropertiesForm.bind(Map(("hasOtherProperties", "Yes")))
-      form.value shouldBe Some(OtherPropertiesModel("Yes"))
+      form.value shouldBe Some(OtherPropertiesModel(true))
     }
   }
 

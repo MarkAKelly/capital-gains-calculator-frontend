@@ -18,7 +18,7 @@ package models.resident
 
 import play.api.libs.json.Json
 
-case class OtherPropertiesModel (hasOtherProperties: String)
+case class OtherPropertiesModel (hasOtherProperties: Boolean)
 
 object OtherPropertiesModel {
   implicit val format = Json.format[OtherPropertiesModel]

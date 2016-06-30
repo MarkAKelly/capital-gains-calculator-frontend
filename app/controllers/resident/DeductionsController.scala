@@ -54,7 +54,7 @@ trait DeductionsController extends FeatureLock {
       success => {
         calcConnector.saveFormData[ReliefsModel](KeystoreKeys.ResidentKeys.reliefs, success)
         success match {
-          case ReliefsModel("Yes") => Future.successful(Redirect(routes.DeductionsController.reliefsValue()))
+          case ReliefsModel(true) => Future.successful(Redirect(routes.DeductionsController.reliefsValue()))
           case _ => Future.successful(Redirect(routes.DeductionsController.otherProperties()))
         }
       }
@@ -83,7 +83,7 @@ trait DeductionsController extends FeatureLock {
   //################# Other Properties Actions #########################
   def otherPropertiesBackUrl(implicit hc: HeaderCarrier): Future[String] = {
     calcConnector.fetchAndGetFormData[ReliefsModel](KeystoreKeys.ResidentKeys.reliefs).flatMap {
-      case Some(ReliefsModel("Yes")) => Future.successful(routes.DeductionsController.reliefsValue().url)
+      case Some(ReliefsModel(true)) => Future.successful(routes.DeductionsController.reliefsValue().url)
       case _ => Future.successful(routes.DeductionsController.reliefs().url)
     }
   }
@@ -111,7 +111,7 @@ trait DeductionsController extends FeatureLock {
         success => {
           calcConnector.saveFormData[OtherPropertiesModel](KeystoreKeys.ResidentKeys.otherProperties, success)
           success match {
-            case OtherPropertiesModel("Yes") => Future.successful(Redirect(routes.DeductionsController.allowableLosses()))
+            case OtherPropertiesModel(true) => Future.successful(Redirect(routes.DeductionsController.allowableLosses()))
             case _ => Future.successful(Redirect(routes.DeductionsController.lossesBroughtForward()))
           }
         }

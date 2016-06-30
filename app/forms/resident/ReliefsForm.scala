@@ -16,6 +16,7 @@
 
 package forms.resident
 
+import common.Transformers._
 import models.resident.ReliefsModel
 import play.api.data.Form
 import play.api.data.Forms._
@@ -30,6 +31,7 @@ object ReliefsForm {
       "isClaiming" -> text
         .verifying(Messages("calc.base.undefinedMessage"), _.nonEmpty)
         .verifying(Messages("calc.base.undefinedMessage"), isYesNo(_))
+        .transform[Boolean](stringToBoolean, _.toString())
     )(ReliefsModel.apply)(ReliefsModel.unapply)
   )
 }
