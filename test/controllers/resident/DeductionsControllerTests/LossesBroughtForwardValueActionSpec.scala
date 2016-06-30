@@ -55,4 +55,9 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
       }
     }
   }
+
+  "Calling .submitLossesBroughtForwardValue from the resident DeductionsController" when {
+
+
+  }
 }
