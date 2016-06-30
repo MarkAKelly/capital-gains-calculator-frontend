@@ -16,22 +16,21 @@
 
 package forms.resident
 
-import common.Transformers._
-import models.resident.ReliefsModel
-import play.api.data.Form
-import play.api.data.Forms._
-import play.api.i18n.Messages
 import common.Validation._
+import models.resident.OtherPropertiesModel
+import play.api.data.Forms._
+import play.api.data.Form
+import play.api.i18n.Messages
+import common.Transformers._
 
+object OtherPropertiesForm {
 
-object ReliefsForm {
-
-  val reliefsForm = Form(
+  val otherPropertiesForm = Form(
     mapping(
-      "isClaiming" -> text
+      "hasOtherProperties" -> text
         .verifying(Messages("calc.base.undefinedMessage"), _.nonEmpty)
         .verifying(Messages("calc.base.undefinedMessage"), yesNoCheck)
         .transform[Boolean](stringToBoolean, booleanToString)
-    )(ReliefsModel.apply)(ReliefsModel.unapply)
+    )(OtherPropertiesModel.apply)(OtherPropertiesModel.unapply)
   )
 }

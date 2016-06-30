@@ -114,6 +114,11 @@ object MessageLookup {
   //Other Properties messages
   object otherProperties {
     val title = "In the 2015/2016 tax year, did you sell or give away anything else that's covered by Capital Gains Tax?"
+    val pageHeading = "In the 2015/2016 tax year, did you sell or give away anything else that's covered by Capital Gains Tax?"
+    val help = "This includes things like:"
+    val helpOne = "shares"
+    val helpTwo = "antiques"
+    val helpThree = "other UK residential properties"
   }
 
   //Allowable Losses Value messages
@@ -135,5 +140,10 @@ object MessageLookup {
   //Losses Brought Forward Value messages
   object lossesBroughtForwardValue {
     val title = "What's the total value of the loss to bring forward?"
+  }
+
+  //Annual Exempt Amount messages
+  object annualExemptAmount {
+    val title = "How much of your Capital Gains Tax allowance have you got left?"
   }
 }

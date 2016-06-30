@@ -26,9 +26,9 @@ class ReliefsFormSpec extends UnitSpec with WithFakeApplication {
   "Creating a form using a valid model" should {
 
     "return a form with the data specified in the model" in {
-      lazy val model = ReliefsModel("Yes")
+      lazy val model = ReliefsModel(true)
       lazy val form = reliefsForm.fill(model)
-      form.value shouldBe Some(ReliefsModel("Yes"))
+      form.value shouldBe Some(ReliefsModel(true))
     }
   }
 
@@ -36,7 +36,7 @@ class ReliefsFormSpec extends UnitSpec with WithFakeApplication {
 
     "return a form with the data specified in the model" in {
       lazy val form = reliefsForm.bind(Map(("isClaiming", "Yes")))
-      form.value shouldBe Some(ReliefsModel("Yes"))
+      form.value shouldBe Some(ReliefsModel(true))
     }
   }
 
