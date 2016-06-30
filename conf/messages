@@ -345,6 +345,7 @@ calc.resident.reliefs.additionalContent.two = Tax reliefs are different from you
 
 ## Reliefs Value messages
 calc.resident.reliefsValue.title = How much tax relief are you claiming?
+calc.resident.reliefsValue.question = How much tax relief are you claiming?
 
 ## Other Properties messages
 calc.resident.otherProperties.title = In the 2015/2016 tax year, did you sell or give away anything else that''s covered by Capital Gains Tax?
