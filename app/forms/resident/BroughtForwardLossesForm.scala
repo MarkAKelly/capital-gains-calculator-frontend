@@ -17,6 +17,7 @@
 package forms.resident
 
 import common.Validation._
+import common.Transformers._
 import models.resident.BroughtForwardLossesModel
 import play.api.data.Forms._
 import play.api.data._
@@ -27,9 +28,9 @@ object BroughtForwardLossesForm {
   val broughtForwardLossesForm = Form(
     mapping(
       "option" -> text
-        .transform[Boolean](stringToBoolean, _.toString())
         .verifying(Messages("calc.base.undefinedMessage"), mandatoryCheck)
         .verifying(Messages("calc.base.undefinedMessage"), yesNoCheck)
+        .transform[Boolean](stringToBoolean, _.toString())
     )(BroughtForwardLossesModel.apply)(BroughtForwardLossesModel.unapply)
   )
 }
