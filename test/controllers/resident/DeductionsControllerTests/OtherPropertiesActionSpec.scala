@@ -21,7 +21,7 @@ import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.DeductionsController
-import models.resident.OtherPropertiesModel
+import models.resident.{ReliefsModel, OtherPropertiesModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -32,12 +32,16 @@ import scala.concurrent.Future
 
 class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  def setupTarget(getData: Option[OtherPropertiesModel]): DeductionsController = {
+  def setupTarget(getData: Option[OtherPropertiesModel],
+                  reliefsData: Option[ReliefsModel] ): DeductionsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
     when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.eq(KeystoreKeys.ResidentKeys.otherProperties))(Matchers.any(), Matchers.any()))
     .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.fetchAndGetFormData[ReliefsModel](Matchers.eq(KeystoreKeys.ResidentKeys.reliefs))(Matchers.any(), Matchers.any()))
+    .thenReturn(Future.successful(reliefsData))
 
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -47,7 +51,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
   "Calling .otherProperties from the DeductionsController" when {
     "request has a valid session and no keystore value" should {
 
-      lazy val target = setupTarget(None)
+      lazy val target = setupTarget(None, None)
       lazy val result = DeductionsController.otherProperties(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -65,11 +69,41 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
 
     "request has no session" should {
 
-      lazy val target = setupTarget(None)
+      lazy val target = setupTarget(None, None)
       lazy val result = target.otherProperties(fakeRequest)
 
       "return a status of 303" in {
         status(result) shouldBe 303
+      }
+    }
+
+    "reliefs model is populated with 'Yes'" should {
+
+      lazy val target = setupTarget(None, Some(ReliefsModel("Yes")))
+      lazy val result = target.otherProperties(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "return a 200" in {
+        status(result) shouldBe 200
+      }
+
+      "have a back link to reliefs value page" in {
+        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/reliefs-value"
+      }
+    }
+
+    "reliefs model is populated with 'No'" should {
+
+      lazy val target = setupTarget(None, Some(ReliefsModel("No")))
+      lazy val result = target.otherProperties(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "return a 200" in {
+        status(result) shouldBe 200
+      }
+
+      "have a back link to reliefs page" in {
+        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/reliefs"
       }
     }
   }

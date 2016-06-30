@@ -20,6 +20,7 @@ import models.resident.DisposalDateModel
 import play.api.data.Forms._
 import play.api.data._
 import common.Validation._
+import common.Transformers._
 import play.api.i18n.Messages
 
 object DisposalDateForm {
@@ -27,17 +28,17 @@ object DisposalDateForm {
   val disposalDateForm = Form(
     mapping(
       "disposalDateDay" -> text
-        .verifying(Messages("calc.base.undefinedMessage"), day => isNotEmpty(day))
-          .verifying(Messages("calc.base.undefinedMessage"), day => isIntNumber(day))
-        .transform[Int](day => day.toInt, day => day.toString),
+        .verifying(Messages("calc.base.undefinedMessage"), mandatoryCheck)
+        .verifying(Messages("calc.base.undefinedMessage"), integerCheck)
+        .transform[Int](stringToInteger, _.toString),
       "disposalDateMonth" -> text
-        .verifying(Messages("calc.base.undefinedMessage"), month => isNotEmpty(month))
-        .verifying(Messages("calc.base.undefinedMessage"), month => isIntNumber(month))
-        .transform[Int](month => month.toInt, month => month.toString),
+        .verifying(Messages("calc.base.undefinedMessage"), mandatoryCheck)
+        .verifying(Messages("calc.base.undefinedMessage"), integerCheck)
+        .transform[Int](stringToInteger, _.toString),
       "disposalDateYear" -> text
-        .verifying(Messages("calc.base.undefinedMessage"), year => isNotEmpty(year))
-        .verifying(Messages("calc.base.undefinedMessage"), year => isIntNumber(year))
-        .transform[Int](year => year.toInt, year => year.toString)
+        .verifying(Messages("calc.base.undefinedMessage"), mandatoryCheck)
+        .verifying(Messages("calc.base.undefinedMessage"), integerCheck)
+        .transform[Int](stringToInteger, _.toString)
     )(DisposalDateModel.apply)(DisposalDateModel.unapply)
       .verifying(Messages("calc.base.undefinedMessage"), fields => isValidDate(fields.day, fields.month, fields.year))
   )

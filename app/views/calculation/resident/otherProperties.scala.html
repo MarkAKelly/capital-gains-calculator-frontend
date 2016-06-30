@@ -2,7 +2,7 @@
 @import models.resident.OtherPropertiesModel
 @import views.html.helpers._
 
-@(otherPropertiesForm: Form[OtherPropertiesModel], backUrl: String = "")(implicit request: Request[_])
+@(otherPropertiesForm: Form[OtherPropertiesModel], backUrl: String)(implicit request: Request[_])
 
 @helpText = {
     <p>@Messages("calc.resident.otherProperties.bullet.title")</p>

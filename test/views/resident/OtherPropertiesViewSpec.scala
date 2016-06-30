@@ -28,7 +28,7 @@ class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with Fak
 
   "Other Properties view" should {
 
-    lazy val view = views.otherProperties(otherPropertiesForm)(fakeRequest)
+    lazy val view = views.otherProperties(otherPropertiesForm, "")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -104,7 +104,7 @@ class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with Fak
     "Other Properties view with pre-selected values" should {
 
       lazy val form = otherPropertiesForm.bind(Map(("hasOtherProperties", "Yes")))
-      lazy val view = views.otherProperties(form)(fakeRequest)
+      lazy val view = views.otherProperties(form, "")(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
 
       "have the option 'Yes' auto selected" in {
@@ -115,7 +115,7 @@ class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with Fak
     "Other Properties view with errors" should {
 
       lazy val form = otherPropertiesForm.bind(Map(("hasOtherProperties", "")))
-      lazy val view = views.otherProperties(form)(fakeRequest)
+      lazy val view = views.otherProperties(form, "")(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
 
       "display an error summary message for the amount" in {

@@ -16,6 +16,7 @@
 
 package forms.resident
 
+import common.Transformers._
 import common.Validation._
 import play.api.data.Forms._
 import play.api.data._
@@ -27,12 +28,12 @@ object DisposalValueForm {
   val disposalValueForm = Form(
     mapping(
       "amount" -> text
-        .verifying(Messages("calc.base.undefinedMessage"), amount => isNotEmpty(amount))
-        .verifying(Messages("calc.base.undefinedMessage"), amount => isBigDecimalNumber(amount))
-        .transform(amount => BigDecimal(amount), (amount: BigDecimal) => amount.toString())
-        .verifying(Messages("calc.base.undefinedMessage"), amount => isMaxTwoDecimalPlaces(amount))
-        .verifying(Messages("calc.base.undefinedMessage"), amount => isLessThanEqualMaxNumeric(amount))
-        .verifying(Messages("calc.base.undefinedMessage"), amount => isPositive(amount))
+        .verifying(Messages("calc.base.undefinedMessage"), mandatoryCheck)
+        .verifying(Messages("calc.base.undefinedMessage"), bigDecimalCheck)
+        .transform[BigDecimal](stringToBigDecimal, _.toString())
+        .verifying(Messages("calc.base.undefinedMessage"), maxCheck)
+        .verifying(Messages("calc.base.undefinedMessage"), minCheck)
+        .verifying(Messages("calc.base.undefinedMessage"), decimalPlacesCheck)
     )(DisposalValueModel.apply)(DisposalValueModel.unapply)
   )
 }
