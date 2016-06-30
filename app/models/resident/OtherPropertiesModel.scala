@@ -14,24 +14,12 @@
  * limitations under the License.
  */
 
-package forms.resident
+package models.resident
 
-import common.Transformers._
-import models.resident.ReliefsModel
-import play.api.data.Form
-import play.api.data.Forms._
-import play.api.i18n.Messages
-import common.Validation._
+import play.api.libs.json.Json
 
+case class OtherPropertiesModel (hasOtherProperties: Boolean)
 
-object ReliefsForm {
-
-  val reliefsForm = Form(
-    mapping(
-      "isClaiming" -> text
-        .verifying(Messages("calc.base.undefinedMessage"), _.nonEmpty)
-        .verifying(Messages("calc.base.undefinedMessage"), yesNoCheck)
-        .transform[Boolean](stringToBoolean, booleanToString)
-    )(ReliefsModel.apply)(ReliefsModel.unapply)
-  )
+object OtherPropertiesModel {
+  implicit val format = Json.format[OtherPropertiesModel]
 }

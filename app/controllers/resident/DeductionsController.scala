@@ -19,10 +19,13 @@ package controllers.resident
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
+import models.resident.OtherPropertiesModel
 import models.resident.ReliefsValueModel
 import forms.resident.ReliefsValueForm._
-import play.api.mvc.Action
+import play.api.mvc.{Action, Result}
+import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation.{resident => views}
+import forms.resident.OtherPropertiesForm._
 import forms.resident.ReliefsForm._
 import models.resident.ReliefsModel
 
@@ -51,7 +54,7 @@ trait DeductionsController extends FeatureLock {
       success => {
         calcConnector.saveFormData[ReliefsModel](KeystoreKeys.ResidentKeys.reliefs, success)
         success match {
-          case ReliefsModel("Yes") => Future.successful(Redirect(routes.DeductionsController.reliefsValue()))
+          case ReliefsModel(true) => Future.successful(Redirect(routes.DeductionsController.reliefsValue()))
           case _ => Future.successful(Redirect(routes.DeductionsController.otherProperties()))
         }
       }
@@ -78,8 +81,46 @@ trait DeductionsController extends FeatureLock {
   }
 
   //################# Other Properties Actions #########################
-  val otherProperties = Action.async { implicit request =>
-    Future.successful(Ok(views.otherProperties()))
+  def otherPropertiesBackUrl(implicit hc: HeaderCarrier): Future[String] = {
+    calcConnector.fetchAndGetFormData[ReliefsModel](KeystoreKeys.ResidentKeys.reliefs).flatMap {
+      case Some(ReliefsModel(true)) => Future.successful(routes.DeductionsController.reliefsValue().url)
+      case _ => Future.successful(routes.DeductionsController.reliefs().url)
+    }
+  }
+
+  val otherProperties = FeatureLockForRTT.async { implicit request =>
+
+    def routeRequest(backUrl: String): Future[Result] = {
+      calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.ResidentKeys.otherProperties).map {
+        case Some(data) => Ok(views.otherProperties(otherPropertiesForm.fill(data), backUrl))
+        case None => Ok(views.otherProperties(otherPropertiesForm, backUrl))
+      }
+    }
+
+    for {
+      backUrl <- otherPropertiesBackUrl
+      finalResult <- routeRequest(backUrl)
+    } yield finalResult
+  }
+
+  val submitOtherProperties = Action.async { implicit request =>
+
+    def routeRequest(backUrl: String): Future[Result] = {
+      otherPropertiesForm.bindFromRequest.fold(
+        errors => Future.successful(BadRequest(views.otherProperties(errors, backUrl))),
+        success => {
+          calcConnector.saveFormData[OtherPropertiesModel](KeystoreKeys.ResidentKeys.otherProperties, success)
+          success match {
+            case OtherPropertiesModel(true) => Future.successful(Redirect(routes.DeductionsController.allowableLosses()))
+            case _ => Future.successful(Redirect(routes.DeductionsController.lossesBroughtForward()))
+          }
+        }
+      )
+    }
+    for {
+      backUrl <- otherPropertiesBackUrl
+      route <- routeRequest(backUrl)
+    } yield route
   }
 
   //################# Allowable Losses Actions #########################

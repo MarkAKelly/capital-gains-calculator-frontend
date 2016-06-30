@@ -64,7 +64,7 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
 
     "request has a valid session and some keystore value" should {
 
-      lazy val target = setupTarget(Some(ReliefsModel("Yes")))
+      lazy val target = setupTarget(Some(ReliefsModel(true)))
       lazy val result = target.reliefs(fakeRequestWithSession)
 
       "return a status of 200" in {
