@@ -356,6 +356,11 @@ calc.resident.allowableLossesValue.title = What''s the total value of your allow
 ##Losses Brought Forward messages
 calc.resident.lossesBroughtForward.title = Are there any previous losses you want to bring forward?
 
+
+## Allowable Losses messages
+calc.resident.allowableLosses.title = Are you claiming any allowable losses from tax years before 2015/16?
+
+
 ##Losses Brought Forward Value messages
 calc.resident.lossesBroughtForwardValue.title = What''s the total value of the loss to bring forward?
 calc.resident.lossesBroughtForwardValue.pageHeading = What''s the total value of the loss to bring forward?

@@ -83,6 +83,9 @@ trait DeductionsController extends FeatureLock {
   }
 
   //################# Allowable Losses Actions #########################
+  val allowableLosses = Action.async { implicit request =>
+    Future.successful(Ok(views.allowableLosses()))
+  }
 
   //################# Allowable Losses Value Actions ############################
   val allowableLossesValue = Action.async { implicit request =>
