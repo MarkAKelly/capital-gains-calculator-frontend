@@ -29,7 +29,7 @@ object OtherPropertiesForm {
     mapping(
       "hasOtherProperties" -> text
         .verifying(Messages("calc.base.undefinedMessage"), _.nonEmpty)
-        .verifying(Messages("calc.base.undefinedMessage"), isYesNo(_))
+        .verifying(Messages("calc.base.undefinedMessage"), yesNoCheck)
         .transform[Boolean](stringToBoolean, _.toString())
     )(OtherPropertiesModel.apply)(OtherPropertiesModel.unapply)
   )
