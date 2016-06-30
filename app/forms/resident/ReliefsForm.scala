@@ -30,8 +30,8 @@ object ReliefsForm {
     mapping(
       "isClaiming" -> text
         .verifying(Messages("calc.base.undefinedMessage"), _.nonEmpty)
-        .verifying(Messages("calc.base.undefinedMessage"), isYesNo(_))
-        .transform[Boolean](stringToBoolean, _.toString())
+        .verifying(Messages("calc.base.undefinedMessage"), yesNoCheck)
+        .transform[Boolean](stringToBoolean, booleanToString)
     )(ReliefsModel.apply)(ReliefsModel.unapply)
   )
 }
