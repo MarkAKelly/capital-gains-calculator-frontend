@@ -253,4 +253,44 @@ class ValidationSpec extends UnitSpec {
       }
     }
   }
+  
+  "calling yesNoCheck" when {
+
+    "input is 'Yes'" should {
+      "pass" in {
+        yesNoCheck("Yes") shouldBe true
+      }
+    }
+
+    "input is 'No'" should {
+      "pass" in {
+        yesNoCheck("No") shouldBe true
+      }
+    }
+
+    "input is empty" should {
+      "pass" in {
+        yesNoCheck("") shouldBe true
+      }
+    }
+
+    "input is 'yEs'" should {
+      "fail" in {
+        yesNoCheck("yEs") shouldBe false
+      }
+    }
+
+    "input is 'nO'" should {
+      "fail" in {
+        yesNoCheck("nO") shouldBe false
+      }
+    }
+
+    "input is empty space" should {
+      "fail" in {
+        yesNoCheck("    ") shouldBe false
+      }
+    }
+
+  }
 }

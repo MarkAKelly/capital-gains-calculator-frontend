@@ -33,6 +33,7 @@ POST    /reliefs                          controllers.resident.DeductionsControl
 
 #Reliefs Value Routes
 GET     /reliefs-value                    controllers.resident.DeductionsController.reliefsValue
+POST    /reliefs-value                    controllers.resident.DeductionsController.submitReliefsValue
 
 #Other Properties Routes
 GET     /other-properties                 controllers.resident.DeductionsController.otherProperties
@@ -45,6 +46,9 @@ GET     /losses-brought-forward           controllers.resident.DeductionsControl
 
 #Annual Exempt Amount Routes
 GET     /annual-exempt-amount             controllers.resident.DeductionsController.annualExemptAmount
+
+#Allowable Losses Routes
+GET     /allowable-losses                 controllers.resident.DeductionsController.allowableLosses
 
 #Losses Brought Forward Value Routes
 GET     /losses-brought-forward-value     controllers.resident.DeductionsController.lossesBroughtForwardValue

@@ -97,6 +97,14 @@ object Validation {
     }
   }
 
+  val integerCheck: String => Boolean = (input) => {
+    Try(input.trim.toInt) match {
+      case Success(_) => true
+      case Failure(_) if input.trim == "" => true
+      case Failure(_) => false
+    }
+  }
+
   val mandatoryCheck: String => Boolean = (input) => input.trim != ""
 
   val decimalPlacesCheck: BigDecimal => Boolean = (input) => input.scale < 3
@@ -104,4 +112,12 @@ object Validation {
   val maxCheck: BigDecimal => Boolean = (input) => input <= Constants.maxNumeric
 
   val minCheck: BigDecimal => Boolean = (input) => input >= 0
+
+  val yesNoCheck: String =>  Boolean = {
+    case "Yes" => true
+    case "No" => true
+    case "" => true
+    case _ => false
+  }
+
 }

@@ -17,6 +17,7 @@
 package forms.resident
 
 import common.Constants
+import common.Transformers._
 import play.api.data.Forms._
 import play.api.data._
 import models.resident.DisposalCostsModel
@@ -29,15 +30,12 @@ object DisposalCostsForm {
   val disposalCostsForm = Form(
     mapping(
       "amount" -> text
-        .verifying(Messages("calc.base.undefinedMessage"), amt => !amt.isEmpty)
-        .verifying(Messages("calc.base.undefinedMessage"), amt => isBigDecimalNumber(amt))
-        .transform[BigDecimal](amt => BigDecimal(amt), amt => amt.toString())
-        .verifying(Messages("calc.common.error.maxNumericExceeded") +
-          MoneyPounds(Constants.maxNumeric, 0).quantity + " " +
-          Messages("calc.common.error.maxNumericExceeded.OrLess"),
-          amt => isLessThanEqualMaxNumeric(amt))
-        .verifying(Messages("calc.base.undefinedMessage"), amt => isPositive(amt))
-        .verifying(Messages("calc.base.undefinedMessage"),amt => isMaxTwoDecimalPlaces(amt))
+        .verifying(Messages("calc.base.undefinedMessage"), mandatoryCheck)
+        .verifying(Messages("calc.base.undefinedMessage"), bigDecimalCheck)
+        .transform[BigDecimal](stringToBigDecimal, _.toString())
+        .verifying(Messages("calc.common.error.maxAmountExceeded", MoneyPounds(Constants.maxNumeric, 0).quantity), maxCheck)
+        .verifying(Messages("calc.base.undefinedMessage"), minCheck)
+        .verifying(Messages("calc.base.undefinedMessage"), decimalPlacesCheck)
     )(DisposalCostsModel.apply)(DisposalCostsModel.unapply)
   )
 }

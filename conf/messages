@@ -44,6 +44,7 @@ calc.common.next.actions.heading = What to do next
 calc.common.invalidError = Invalid selection!
 calc.common.error.maxNumericExceeded = Enter an amount that''s £
 calc.common.error.maxNumericExceeded.OrLess = or less
+calc.common.error.maxAmountExceeded = Enter an amount that''s £{0} or less
 calc.common.error.fieldRequired = This field is required
 
 ## Introduction ##
@@ -344,6 +345,7 @@ calc.resident.reliefs.additionalContent.two = Tax reliefs are different from you
 
 ## Reliefs Value messages
 calc.resident.reliefsValue.title = How much tax relief are you claiming?
+calc.resident.reliefsValue.question = How much tax relief are you claiming?
 
 ## Losses Brought Forward messages
 calc.resident.lossesBroughtForward.title = Are there any previous losses you want to bring forward?
@@ -359,6 +361,11 @@ calc.resident.annualExemptAmount.title = How much of your Capital Gains Tax allo
 
 ##Losses Brought Forward messages
 calc.resident.lossesBroughtForward.title = Are there any previous losses you want to bring forward?
+
+
+## Allowable Losses messages
+calc.resident.allowableLosses.title = Are you claiming any allowable losses from tax years before 2015/16?
+
 
 ##Losses Brought Forward Value messages
 calc.resident.lossesBroughtForwardValue.title = What''s the total value of the loss to bring forward?

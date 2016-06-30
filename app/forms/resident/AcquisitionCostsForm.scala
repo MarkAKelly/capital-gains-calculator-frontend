@@ -16,7 +16,8 @@
 
 package forms.resident
 
-import common.Validation
+import common.Validation._
+import common.Transformers.stringToBigDecimal
 import models.resident.AcquisitionCostsModel
 import play.api.data.Form
 import play.api.data.Forms._
@@ -27,12 +28,12 @@ object AcquisitionCostsForm {
   val acquisitionCostsForm = Form(
     mapping(
       "amount" -> text
-        .verifying(Messages("calc.base.undefinedMessage"), Validation.isNotEmpty(_))
-        .verifying(Messages("calc.base.undefinedMessage"), Validation.isBigDecimalNumber(_))
-        .transform[BigDecimal](BigDecimal(_), _.toString())
-        .verifying(Messages("calc.base.undefinedMessage"), Validation.isLessThanEqualMaxNumeric(_))
-        .verifying(Messages("calc.base.undefinedMessage"), Validation.isGreaterThanZero(_))
-        .verifying(Messages("calc.base.undefinedMessage"), Validation.isMaxTwoDecimalPlaces(_))
+        .verifying(Messages("calc.base.undefinedMessage"), mandatoryCheck)
+        .verifying(Messages("calc.base.undefinedMessage"), bigDecimalCheck)
+        .transform[BigDecimal](stringToBigDecimal, _.toString())
+        .verifying(Messages("calc.base.undefinedMessage"), maxCheck)
+        .verifying(Messages("calc.base.undefinedMessage"), minCheck)
+        .verifying(Messages("calc.base.undefinedMessage"), decimalPlacesCheck)
     )(AcquisitionCostsModel.apply)(AcquisitionCostsModel.unapply)
   )
 }

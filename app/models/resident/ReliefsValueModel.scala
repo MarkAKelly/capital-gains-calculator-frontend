@@ -14,27 +14,12 @@
  * limitations under the License.
  */
 
-package common
+package models.resident
 
-import scala.util.{Failure, Success, Try}
+import play.api.libs.json.Json
 
-object Transformers {
+case class ReliefsValueModel(amount: BigDecimal)
 
-  val stringToBigDecimal: String => BigDecimal = (input) => Try(BigDecimal(input.trim)) match {
-    case Success(value) => value
-    case Failure(_) => BigDecimal(0)
-  }
-
-  val stringToInteger: String => Int = (input) => Try(input.trim.toInt) match {
-    case Success(value) => value
-    case Failure(_) => 0
-  }
-
-  val stringToBoolean: String => Boolean = {
-    case "Yes" => true
-    case _ => false
-  }
-
-  val booleanToString: Boolean => String = (input) => if (input) "Yes" else "No"
-
+object ReliefsValueModel {
+  implicit val format = Json.format[ReliefsValueModel]
 }
