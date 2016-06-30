@@ -21,6 +21,7 @@ import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import models.resident.ReliefsValueModel
 import forms.resident.ReliefsValueForm._
+import forms.resident.LossesBroughtForwardValueForm._
 import play.api.mvc.Action
 import views.html.calculation.{resident => views}
 import forms.resident.ReliefsForm._
@@ -96,7 +97,7 @@ trait DeductionsController extends FeatureLock {
 
   //################# Brought Forward Losses Value Actions ##############################
   val lossesBroughtForwardValue = FeatureLockForRTT.async { implicit request =>
-    Future.successful(Ok(views.lossesBroughtForwardValue()))
+    Future.successful(Ok(views.lossesBroughtForwardValue(lossesBroughtForwardValueForm)))
   }
 
   val submitLossesBroughtForwardValue = TODO

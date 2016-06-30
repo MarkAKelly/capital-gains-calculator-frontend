@@ -358,3 +358,4 @@ calc.resident.lossesBroughtForward.title = Are there any previous losses you wan
 
 ##Losses Brought Forward Value messages
 calc.resident.lossesBroughtForwardValue.title = What''s the total value of the loss to bring forward?
+calc.resident.lossesBroughtForwardValue.pageHeading = What''s the total value of the loss to bring forward?

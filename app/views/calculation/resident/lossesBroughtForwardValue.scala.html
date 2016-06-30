@@ -1,4 +1,19 @@
-@()(implicit request: Request[_])
+@import models.resident.LossesBroughtForwardValueModel
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import views.html.helpers._
 
-@main_template(title = Messages("calc.resident.lossesBroughtForwardValue.title")) {
+@(lossesBroughtForwardValueForm: Form[LossesBroughtForwardValueModel])(implicit request: Request[_])
+
+@resident_main_template(title = Messages("calc.resident.lossesBroughtForwardValue.title"), backLink = Some(controllers.resident.routes.DeductionsController.lossesBroughtForward.toString)) {
+
+    <h1 class="heading-large">@Messages("calc.resident.lossesBroughtForwardValue.pageHeading")</h1>
+
+    @form(action = controllers.resident.routes.DeductionsController.submitLossesBroughtForwardValue()) {
+
+        @formInputMoney(lossesBroughtForwardValueForm, "amount", Messages("calc.resident.lossesBroughtForwardValue.pageHeading"), None, hideLabel = true)
+
+        <button id="continue-button" class="button" type="submit">@Messages("calc.base.continue")</button>
+
+    }
+
 }
