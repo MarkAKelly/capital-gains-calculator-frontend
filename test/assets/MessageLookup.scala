@@ -145,6 +145,7 @@ object MessageLookup {
   //Losses Brought Forward Value messages
   object lossesBroughtForwardValue {
     val title = "What's the total value of the loss to bring forward?"
+    val question = "What's the total value of the loss to bring forward?"
   }
 
   //Annual Exempt Amount messages

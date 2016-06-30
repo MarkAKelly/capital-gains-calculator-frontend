@@ -19,7 +19,8 @@ package controllers.resident
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
-import models.resident.{OtherPropertiesModel, ReliefsModel, ReliefsValueModel, YourAnswersSummaryModel}
+import models.resident.{LossesBroughtForwardValueModel, ReliefsModel, ReliefsValueModel, OtherPropertiesModel, YourAnswersSummaryModel}
+import forms.resident.LossesBroughtForwardValueForm._
 import forms.resident.ReliefsValueForm._
 import play.api.mvc.{Action, Result}
 import uk.gov.hmrc.play.http.HeaderCarrier
@@ -161,8 +162,21 @@ trait DeductionsController extends FeatureLock {
   }
 
   //################# Brought Forward Losses Value Actions ##############################
-  val lossesBroughtForwardValue = Action.async { implicit request =>
-    Future.successful(Ok(views.lossesBroughtForwardValue()))
+  val lossesBroughtForwardValue = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[LossesBroughtForwardValueModel](KeystoreKeys.ResidentKeys.lossesBroughtForwardValue).map {
+      case Some(data) => Ok(views.lossesBroughtForwardValue(lossesBroughtForwardValueForm.fill(data)))
+      case None => Ok(views.lossesBroughtForwardValue(lossesBroughtForwardValueForm))
+    }
+  }
+
+  val submitLossesBroughtForwardValue = FeatureLockForRTT.async {implicit request =>
+    lossesBroughtForwardValueForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.lossesBroughtForwardValue(errors))),
+      success => calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.ResidentKeys.otherProperties).flatMap {
+        case Some(OtherPropertiesModel(true)) => Future.successful(Redirect(routes.DeductionsController.annualExemptAmount()))
+        case _ => Future.successful(Redirect(routes.SummaryController.summary()))
+      }
+    )
   }
 
   //################# Annual Exempt Amount Input Actions #############################

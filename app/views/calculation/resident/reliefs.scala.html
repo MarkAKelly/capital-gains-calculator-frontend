@@ -7,7 +7,7 @@
 
 @resident_main_template(title = Messages("calc.resident.reliefs.title", MoneyPounds(totalGain, 0).quantity), backLink = Some(controllers.resident.routes.GainController.improvements.toString())) {
 
-    @errorSummary(reliefsForm, "isClaiming")
+    @errorSummary(reliefsForm, "reliefs")
 
     <h1>@Messages("calc.resident.reliefs.question", MoneyPounds(totalGain, 0).quantity)</h1>
 
