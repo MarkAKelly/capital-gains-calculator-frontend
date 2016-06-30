@@ -359,6 +359,11 @@ calc.resident.lossesBroughtForward.title = Are there any previous losses you wan
 
 ## Allowable Losses messages
 calc.resident.allowableLosses.title = Are you claiming any allowable losses from tax years before 2015/16?
+calc.resident.allowableLosses.helpInfo.title = What are allowable losses?
+calc.resident.allowableLosses.helpInfo.subtitle = They''re losses you''ve made that:
+calc.resident.allowableLosses.helpInfo.point1 = are covered by Capital Gains Tax
+calc.resident.allowableLosses.helpInfo.point2 = you''ve declared within 4 years of making the loss
+calc.resident.allowableLosses.helpInfo.point3 = you haven''t already used in an allowable losses claim
 
 
 ##Losses Brought Forward Value messages

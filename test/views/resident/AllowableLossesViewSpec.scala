@@ -18,6 +18,7 @@ package views.resident
 
 import assets.MessageLookup.{allowableLosses => messages}
 import controllers.helpers.FakeRequestHelper
+import forms.resident.AllowableLossesForm.allowableLossesForm
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.{resident => views}
@@ -26,7 +27,7 @@ class AllowableLossesViewSpec extends UnitSpec with WithFakeApplication with Fak
 
   "Allowable Losses view" should {
 
-    lazy val view = views.allowableLosses()(fakeRequest)
+    lazy val view = views.allowableLosses(allowableLossesForm)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -36,5 +37,48 @@ class AllowableLossesViewSpec extends UnitSpec with WithFakeApplication with Fak
     s"have a title ${messages.title}" in {
       doc.title() shouldBe messages.title
     }
-  }
+
+    "have a H1 tag that" should {
+
+      lazy val heading = doc.select("H1")
+
+      s"have the page heading '${messages.title}'" in {
+        heading.text shouldBe messages.title
+      }
+
+      "have the heading-large class" in {
+        heading.hasClass("heading-large") shouldBe true
+      }
+    }
+
+    "have a hidden legend" in {
+      val legend = doc.select("legend")
+      legend.hasClass("visuallyhidden") shouldBe true
+    }
+
+    "have the correct help info title" in {
+      val element = doc.select("#helpInfo > p:eq(0)")
+      element.text shouldBe messages.helpInfoTitle
+    }
+
+    "have the correct help info subtitle" in {
+      val element = doc.select("#helpInfo > p:eq(1)")
+      element.text shouldBe messages.helpInfoSubtitle
+    }
+
+    "have the correct help info bullet point #1" in {
+      val element = doc.select("#helpInfo > ul > li:eq(0)")
+      element.text shouldBe messages.helpInfoPoint1
+    }
+
+    "have the correct help info bullet point #2" in {
+      val element = doc.select("#helpInfo > ul > li:eq(1)")
+      element.text shouldBe messages.helpInfoPoint2
+    }
+
+    "have the correct help info bullet point #3" in {
+      val element = doc.select("#helpInfo > ul > li:eq(2)")
+      element.text shouldBe messages.helpInfoPoint3
+    }
+ }
 }

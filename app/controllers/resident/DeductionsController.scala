@@ -21,6 +21,7 @@ import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import models.resident.ReliefsValueModel
 import forms.resident.ReliefsValueForm._
+import forms.resident.AllowableLossesForm._
 import play.api.mvc.Action
 import views.html.calculation.{resident => views}
 import forms.resident.ReliefsForm._
@@ -84,7 +85,7 @@ trait DeductionsController extends FeatureLock {
 
   //################# Allowable Losses Actions #########################
   val allowableLosses = Action.async { implicit request =>
-    Future.successful(Ok(views.allowableLosses()))
+    Future.successful(Ok(views.allowableLosses(allowableLossesForm)))
   }
 
   //################# Allowable Losses Value Actions ############################
