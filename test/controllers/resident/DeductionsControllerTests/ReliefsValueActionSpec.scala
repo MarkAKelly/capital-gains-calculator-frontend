@@ -78,7 +78,7 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
         contentType(result) shouldBe Some("text/html")
       }
 
-      "display the Improvements view" in {
+      "display the Reliefs Value view" in {
         Jsoup.parse(bodyOf(result)).title shouldBe messages.title
       }
     }

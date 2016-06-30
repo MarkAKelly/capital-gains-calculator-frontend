@@ -90,11 +90,11 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       doc.body.select("#amount").attr("value") shouldEqual "100"
     }
 
-    "display an error summary message for the amount" in {
+    "display no error summary message for the amount" in {
       doc.body.select("#amount-error-summary").size shouldBe 0
     }
 
-    "display an error message for the input" in {
+    "display no error message for the input" in {
       doc.body.select(".form-group .error-notification").size shouldBe 0
     }
   }
