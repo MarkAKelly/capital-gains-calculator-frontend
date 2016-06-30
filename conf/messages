@@ -381,3 +381,5 @@ calc.resident.allowableLosses.title = Are you claiming any allowable losses from
 
 ##Losses Brought Forward Value messages
 calc.resident.lossesBroughtForwardValue.title = What''s the total value of the loss to bring forward?
+calc.resident.lossesBroughtForwardValue.pageHeading = What''s the total value of the loss to bring forward?
+

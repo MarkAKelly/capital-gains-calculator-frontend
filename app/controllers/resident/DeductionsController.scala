@@ -19,15 +19,15 @@ package controllers.resident
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
+import models.resident.{LossesBroughtForwardValueModel, ReliefsModel, ReliefsValueModel}
+import forms.resident.LossesBroughtForwardValueForm._
 import models.resident.OtherPropertiesModel
-import models.resident.ReliefsValueModel
 import forms.resident.ReliefsValueForm._
 import play.api.mvc.{Action, Result}
 import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation.{resident => views}
 import forms.resident.OtherPropertiesForm._
 import forms.resident.ReliefsForm._
-import models.resident.ReliefsModel
 
 import scala.concurrent.Future
 
@@ -139,8 +139,21 @@ trait DeductionsController extends FeatureLock {
   }
 
   //################# Brought Forward Losses Value Actions ##############################
-  val lossesBroughtForwardValue = Action.async { implicit request =>
-    Future.successful(Ok(views.lossesBroughtForwardValue()))
+  val lossesBroughtForwardValue = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[LossesBroughtForwardValueModel](KeystoreKeys.ResidentKeys.lossesBroughtForwardValue).map {
+      case Some(data) => Ok(views.lossesBroughtForwardValue(lossesBroughtForwardValueForm.fill(data)))
+      case None => Ok(views.lossesBroughtForwardValue(lossesBroughtForwardValueForm))
+    }
+  }
+
+  val submitLossesBroughtForwardValue = FeatureLockForRTT.async {implicit request =>
+    lossesBroughtForwardValueForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.lossesBroughtForwardValue(errors))),
+      success => calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.ResidentKeys.otherProperties).flatMap {
+        case Some(OtherPropertiesModel(true)) => Future.successful(Redirect(routes.DeductionsController.annualExemptAmount()))
+        case _ => Future.successful(Redirect(routes.SummaryController.summary()))
+      }
+    )
   }
 
   //################# Annual Exempt Amount Input Actions #############################
