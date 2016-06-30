@@ -268,6 +268,12 @@ class ValidationSpec extends UnitSpec {
       }
     }
 
+    "input is empty" should {
+      "fail" in {
+        yesNoCheck("") shouldBe true
+      }
+    }
+
     "input is 'yEs'" should {
       "fail" in {
         yesNoCheck("yEs") shouldBe false
@@ -277,12 +283,6 @@ class ValidationSpec extends UnitSpec {
     "input is 'nO'" should {
       "fail" in {
         yesNoCheck("nO") shouldBe false
-      }
-    }
-
-    "input is empty" should {
-      "fail" in {
-        yesNoCheck("") shouldBe false
       }
     }
 
