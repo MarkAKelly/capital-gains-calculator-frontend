@@ -29,25 +29,29 @@ trait SummaryController extends FeatureLock {
 
   val calculatorConnector: CalculatorConnector
 
-  def getYourAnswers(implicit hc: HeaderCarrier): Future[YourAnswersModel] = {
-    val acquisitionValue = calculatorConnector.fetchAndGetFormData[AcquisitionValueModel](ResidentKeys.acquisitionValue).map(formData => formData.get.amount)
+  def getYourAnswers(implicit hc: HeaderCarrier): Future[YourAnswersSummaryModel] = {
+    val acquisitionValue = calculatorConnector.fetchAndGetFormData[AcquisitionValueModel](ResidentKeys.acquisitionValue).map(_.get.amount)
     val disposalDate = calculatorConnector.fetchAndGetFormData[DisposalDateModel](ResidentKeys.disposalDate).map(formData => constructDate(formData.get.day, formData.get.month, formData.get.year))
-    val disposalValue = calculatorConnector.fetchAndGetFormData[DisposalValueModel](ResidentKeys.disposalValue).map(formData => formData.get.amount)
-    val acquisitionCosts = calculatorConnector.fetchAndGetFormData[AcquisitionCostsModel](ResidentKeys.acquisitionCosts).map(formData => formData.get.amount)
-    val disposalCosts = calculatorConnector.fetchAndGetFormData[DisposalCostsModel](ResidentKeys.disposalCosts).map(formData => formData.get.amount)
+    val disposalValue = calculatorConnector.fetchAndGetFormData[DisposalValueModel](ResidentKeys.disposalValue).map(_.get.amount)
+    val acquisitionCosts = calculatorConnector.fetchAndGetFormData[AcquisitionCostsModel](ResidentKeys.acquisitionCosts).map(_.get.amount)
+    val disposalCosts = calculatorConnector.fetchAndGetFormData[DisposalCostsModel](ResidentKeys.disposalCosts).map(_.get.amount)
+    val improvements = calculatorConnector.fetchAndGetFormData[ImprovementsModel](ResidentKeys.improvements).map(_.get.amount)
 
     for {
-      acquisitionValueModel <- acquisitionValue
-      disposalDateModel <- disposalDate
-      disposalValueModel <- disposalValue
-      acquisitionCostsModel <- acquisitionCosts
-      disposalCostsModel <- disposalCosts
-    } yield YourAnswersModel(
-      disposalDateModel,
-      disposalValueModel,
-      disposalCostsModel,
-      acquisitionValueModel,
-      acquisitionCostsModel)
+      acquisitionValue <- acquisitionValue
+      disposalDate <- disposalDate
+      disposalValue <- disposalValue
+      acquisitionCosts <- acquisitionCosts
+      disposalCosts <- disposalCosts
+      improvements <- improvements
+    } yield YourAnswersSummaryModel(
+      disposalDate,
+      disposalValue,
+      disposalCosts,
+      acquisitionValue,
+      acquisitionCosts,
+      improvements
+    )
   }
 
   val summary = FeatureLockForRTT.async { implicit request =>

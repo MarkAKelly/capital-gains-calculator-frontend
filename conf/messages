@@ -335,6 +335,8 @@ calc.resident.summary.title = Summary
 calc.resident.summary.pageHeading = Tax owed
 calc.resident.summary.calcDetailsHeading = Calculation details
 calc.resident.summary.yourAnswersHeading = Your answers
+calc.resident.summary.totalGain = Total gain
+calc.resident.summary.totalLoss = Loss
 
 
 ## Reliefs messages

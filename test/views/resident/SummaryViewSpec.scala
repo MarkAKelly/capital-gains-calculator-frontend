@@ -20,23 +20,24 @@ import assets.{MessageLookup => commonMessages}
 import assets.MessageLookup.{summary => messages}
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.routes
-import models.resident.YourAnswersModel
+import models.resident.YourAnswersSummaryModel
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import java.util.Date
+import common.Dates._
 
 class SummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Summary view" should {
 
-    val testModel = YourAnswersModel(
-      new Date(),
+    val testModel = YourAnswersSummaryModel(
+      constructDate(12,9,1990),
       10,
       20,
       30,
-      40
+      40,
+      50
     )
-    lazy val view = views.html.calculation.resident.summary(testModel,-200)(fakeRequest)
+    lazy val view = views.html.calculation.resident.summary(testModel,-2000)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -94,6 +95,17 @@ class SummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
           doc.select("section#calcDetails h2").hasClass("heading-large") shouldBe true
         }
       }
+
+      "has a numeric output row for the gain" which {
+
+        "should have the question text 'Loss'" in {
+          doc.select("#gain-question").text shouldBe messages.totalLoss
+        }
+
+        "should have the value '£2,000'" in {
+          doc.select("#gain-amount").text shouldBe "£2,000"
+        }
+      }
     }
 
     s"have a section for Your answers" which {
@@ -113,6 +125,101 @@ class SummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
         "has the class 'heading-large'" in {
           doc.select("section#yourAnswers h2").hasClass("heading-large") shouldBe true
         }
+      }
+
+      "has a date output row for the Disposal Date" which {
+
+        s"should have the question text '${commonMessages.disposalDate.question}'" in {
+          doc.select("#disposalDate-question").text shouldBe commonMessages.disposalDate.question
+        }
+
+        "should have the value '£2,000'" in {
+          doc.select("#disposalDate-date span").text shouldBe "12 September 1990"
+        }
+
+        s"should have a change link to ${routes.GainController.disposalDate().url}" in {
+          doc.select("#disposalDate-date a").attr("href") shouldBe routes.GainController.disposalDate().url
+        }
+      }
+
+      "has a numeric output row for the Disposal Value" which {
+
+        s"should have the question text '${commonMessages.disposalValue.question}'" in {
+          doc.select("#disposalValue-question").text shouldBe commonMessages.disposalValue.question
+        }
+
+        "should have the value '£10'" in {
+          doc.select("#disposalValue-amount span").text shouldBe "£10"
+        }
+
+        s"should have a change link to ${routes.GainController.disposalValue().url}" in {
+          doc.select("#disposalValue-amount a").attr("href") shouldBe routes.GainController.disposalValue().url
+        }
+
+      }
+
+      "has a numeric output row for the Disposal Costs" which {
+
+        s"should have the question text '${commonMessages.disposalCosts.title}'" in {
+          doc.select("#disposalCosts-question").text shouldBe commonMessages.disposalCosts.title
+        }
+
+        "should have the value '£20'" in {
+          doc.select("#disposalCosts-amount span").text shouldBe "£20"
+        }
+
+        s"should have a change link to ${routes.GainController.disposalCosts().url}" in {
+          doc.select("#disposalCosts-amount a").attr("href") shouldBe routes.GainController.disposalCosts().url
+        }
+
+      }
+
+      "has a numeric output row for the Acquisition Value" which {
+
+        s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
+          doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
+        }
+
+        "should have the value '£30'" in {
+          doc.select("#acquisitionValue-amount span").text shouldBe "£30"
+        }
+
+        s"should have a change link to ${routes.GainController.acquisitionValue().url}" in {
+          doc.select("#acquisitionValue-amount a").attr("href") shouldBe routes.GainController.acquisitionValue().url
+        }
+
+      }
+
+      "has a numeric output row for the Acquisition Costs" which {
+
+        s"should have the question text '${commonMessages.acquisitionCosts.title}'" in {
+          doc.select("#acquisitionCosts-question").text shouldBe commonMessages.acquisitionCosts.title
+        }
+
+        "should have the value '£40'" in {
+          doc.select("#acquisitionCosts-amount span").text shouldBe "£40"
+        }
+
+        s"should have a change link to ${routes.GainController.acquisitionCosts().url}" in {
+          doc.select("#acquisitionCosts-amount a").attr("href") shouldBe routes.GainController.acquisitionCosts().url
+        }
+
+      }
+
+      "has a numeric output row for the Improvements" which {
+
+        s"should have the question text '${commonMessages.improvementsView.title}'" in {
+          doc.select("#improvements-question").text shouldBe commonMessages.improvementsView.title
+        }
+
+        "should have the value '£50'" in {
+          doc.select("#improvements-amount span").text shouldBe "£50"
+        }
+
+        s"should have a change link to ${routes.GainController.improvements().url}" in {
+          doc.select("#improvements-amount a").attr("href") shouldBe routes.GainController.improvements().url
+        }
+
       }
     }
   }

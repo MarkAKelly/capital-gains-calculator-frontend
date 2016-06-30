@@ -19,14 +19,16 @@ package models.resident
 import java.util.Date
 import play.api.libs.json.Json
 
-case class YourAnswersModel(
-                             disposalDate: Date,
-                             disposalValue: BigDecimal,
-                             disposalCosts: BigDecimal,
-                             acquisitionValue: BigDecimal,
-                             acquisitionCosts: BigDecimal
-                           )
+case class YourAnswersSummaryModel
+(
+  disposalDate: Date,
+  disposalValue: BigDecimal,
+  disposalCosts: BigDecimal,
+  acquisitionValue: BigDecimal,
+  acquisitionCosts: BigDecimal,
+  improvements: BigDecimal
+)
 
-object YourAnswersModel {
-  implicit val format = Json.format[YourAnswersModel]
+object YourAnswersSummaryModel {
+  implicit val format = Json.format[YourAnswersSummaryModel]
 }

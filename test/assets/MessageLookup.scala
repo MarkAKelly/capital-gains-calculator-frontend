@@ -96,6 +96,8 @@ object MessageLookup {
     val pageHeading = "Tax owed"
     val calcDetailsHeading = "Calculation details"
     val yourAnswersHeading = "Your answers"
+    val totalLoss = "Loss"
+    val totalGain = "Total gain"
   }
 
   //Reliefs messages

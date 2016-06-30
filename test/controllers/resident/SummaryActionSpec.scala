@@ -43,6 +43,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     disposalCostsData: Option[DisposalCostsModel],
     acquisitionValueData: Option[AcquisitionValueModel],
     acquisitionCostsData: Option[AcquisitionCostsModel],
+    improvementsData: Option[ImprovementsModel],
     grossGain: BigDecimal
   ): SummaryController = {
 
@@ -63,6 +64,9 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     when(mockCalculatorConnector.fetchAndGetFormData[AcquisitionCostsModel](Matchers.eq(ResidentKeys.acquisitionCosts))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(acquisitionCostsData))
 
+    when(mockCalculatorConnector.fetchAndGetFormData[ImprovementsModel](Matchers.eq(ResidentKeys.improvements))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(improvementsData))
+
     when(mockCalculatorConnector.calculateRttGrossGain(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(grossGain))
 
@@ -79,6 +83,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       Some(DisposalCostsModel(10)),
       Some(AcquisitionValueModel(5000)),
       Some(AcquisitionCostsModel(5)),
+      Some(ImprovementsModel(0)),
       -6000
     )
     lazy val result = target.summary()(fakeRequestWithSession)

@@ -98,3 +98,10 @@
     padding-bottom: 0.5em;
     border-bottom: 2px solid #BFC1C3;
 }
+
+.resident section {
+    margin: 0em 0em;
+    padding-bottom: 1em;
+    padding-top: 1em;
+    border-bottom: 0px;
+}
