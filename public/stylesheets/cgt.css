@@ -93,3 +93,8 @@
     margin-top: 0em;
     margin-bottom: 1em;
 }
+
+.resident .summary-underline {
+    padding-bottom: 0.5em;
+    border-bottom: 2px solid #BFC1C3;
+}

@@ -1,0 +1,23 @@
+@(sectionId: String, sectionTitle: String, sectionContent: Array[SummaryDataItemModel])
+
+<section id="@sectionId">
+
+    <h2 class="heading-large summary-underline">
+        @sectionTitle
+    </h2>
+    @for(i <- 0 until sectionContent.length) {
+        <div class="grid-layout grid-layout--stacked form-group font-medium">
+            <div id="question-@{i+1}" class="grid-layout__column grid-layout__column--1-2">
+                @sectionContent(i).question
+            </div>
+            <div id="answer-@{i+1}" class="grid-layout__column grid-layout__column--1-2">
+                @if(sectionContent(i).link.isDefined) {
+                    <span class="bold-medium">@Html(sectionContent(i).answer)</span><br>
+                    <a href="@sectionContent(i).link" class="font-xsmall">@Messages("calc.base.change")</a>
+                } else {
+                    <span class="bold-medium">@Html(sectionContent(i).answer)</span>
+                }
+            </div>
+        </div>
+    }
+</section>

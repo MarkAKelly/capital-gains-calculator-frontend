@@ -22,6 +22,7 @@ object MessageLookup {
   val calcBaseBack = "Back"
   val calcBaseContinue = "Continue"
   val calcBaseExternalLink = "opens in a new window"
+  val calcBaseChange = "change"
   val undefinedMessage = "Undefined message"
 
   //Common messages
@@ -89,6 +90,9 @@ object MessageLookup {
   //Summary messages
   object summary {
     val title = "Summary"
+    val pageHeading = "Tax owed"
+    val calcDetailsHeading = "Calculation details"
+    val yourAnswersHeading = "Your answers"
   }
 
   //Reliefs messages

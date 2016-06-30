@@ -1,4 +1,46 @@
-@()(implicit request: Request[_])
+@import views.html.helpers.resident._
+@import models.SummaryDataItemModel
+@import models.resident._
 
-@main_template(title = Messages("calc.resident.summary.title")) {
+@(answers: YourAnswersModel, grossGain: BigDecimal)(implicit request: Request[_])
+
+@resident_main_template(
+    title = Messages("calc.resident.summary.title"),
+    backLink = Some(controllers.resident.routes.GainController.improvements().toString),
+    articleLayout = false
+) {
+
+    <h1>
+        <span class="pre-heading">@Messages("calc.resident.summary.pageHeading")</span>
+        &pound;0.00
+    </h1>
+
+    @summarySectionHelper("calcDetails", Messages("calc.resident.summary.calcDetailsHeading"), Array())
+
+    @summarySectionHelper(
+        Messages("yourAnswers"),
+        Messages("calc.resident.summary.yourAnswersHeading"),
+        Array(
+            SummaryDataItemModel(
+                Messages("calc.resident.disposalDate.question"),
+                answers.disposalDate.toString
+            ),
+            SummaryDataItemModel(
+                Messages("calc.resident.disposalValue.question"),
+                answers.disposalValue.toString
+            ),
+            SummaryDataItemModel(
+                Messages("calc.resident.disposalCosts.question"),
+                answers.disposalCosts.toString
+            ),
+            SummaryDataItemModel(
+                Messages("calc.resident.acquisitionValue.question"),
+                answers.acquisitionValue.toString
+            ),
+            SummaryDataItemModel(
+                Messages("calc.resident.acquisitionCosts.question"),
+                answers.acquisitionCosts.toString
+            )
+        )
+    )
 }

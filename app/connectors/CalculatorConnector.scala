@@ -20,6 +20,7 @@ import common.KeystoreKeys
 import config.{CalculatorSessionCache, WSHttp}
 import constructors.nonresident.CalculateRequestConstructor
 import models.nonresident._
+import models.resident.YourAnswersModel
 import play.api.libs.json.Format
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -138,6 +139,15 @@ trait CalculatorConnector {
       annualExemptAmountModel, acquisitionDateModel, acquisitionValueModel, rebasedValueModel, rebasedCostsModel, improvementsModel,
       disposalDateModel, disposalValueModel, acquisitionCostsModel, disposalCostsModel, allowableLossesModel,
       calculationElectionModel, otherReliefsFlatModel, otherReliefsTAModel, otherReliefsRebasedModel, privateResidenceReliefModel)
+  }
+
+  def calculateRttGrossGain (input: YourAnswersModel)(implicit hc: HeaderCarrier): Future[BigDecimal] = {
+    http.GET[BigDecimal](s"$serviceUrl/capital-gains-calculator/calculate-total-gain" +
+      s"?disposalValue=${input.disposalValue}" +
+      s"&disposalCosts=${input.disposalCosts}" +
+      s"&acquisitionValue=${input.acquisitionValue}" +
+      s"&acquisitionCosts=${input.acquisitionCosts}"
+    )
   }
 
 }
