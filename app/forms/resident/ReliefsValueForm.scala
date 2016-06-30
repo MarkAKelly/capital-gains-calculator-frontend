@@ -16,24 +16,24 @@
 
 package forms.resident
 
-import common.Transformers._
+import common.Transformers.stringToBigDecimal
 import common.Validation._
-import models.resident.AcquisitionValueModel
-import play.api.data.Form
+import models.resident.ReliefsValueModel
 import play.api.data.Forms._
+import play.api.data._
 import play.api.i18n.Messages
 
-object AcquisitionValueForm {
+object ReliefsValueForm {
 
-  val acquisitionValueForm = Form(
+  val reliefsValueForm = Form(
     mapping(
       "amount" -> text
         .verifying(Messages("calc.base.undefinedMessage"), mandatoryCheck)
         .verifying(Messages("calc.base.undefinedMessage"), bigDecimalCheck)
-        .transform[BigDecimal](stringToBigDecimal, _.toString())
+        .transform[BigDecimal](stringToBigDecimal, _.toString)
+        .verifying(Messages("calc.base.undefinedMessage"), decimalPlacesCheck)
         .verifying(Messages("calc.base.undefinedMessage"), maxCheck)
         .verifying(Messages("calc.base.undefinedMessage"), minCheck)
-        .verifying(Messages("calc.base.undefinedMessage"), decimalPlacesCheck)
-    )(AcquisitionValueModel.apply)(AcquisitionValueModel.unapply)
+    )(ReliefsValueModel.apply)(ReliefsValueModel.unapply)
   )
 }
