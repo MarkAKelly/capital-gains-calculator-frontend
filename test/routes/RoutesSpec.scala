@@ -22,9 +22,9 @@ import org.scalatest._
 class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
 
   "The URL for the disposal date Action" should {
-   "be equal to /calculate-your-capital-gains/resident/disposal-date" in {
-     val path = controllers.resident.routes.GainController.disposalDate.toString()
-     path shouldEqual "/calculate-your-capital-gains/resident/disposal-date"
+    "be equal to /calculate-your-capital-gains/resident/disposal-date" in {
+      val path = controllers.resident.routes.GainController.disposalDate.toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/disposal-date"
     }
   }
 
@@ -78,10 +78,10 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
   }
 
   "The URL for the submit acquisition costs action" should {
-        "be equal to /calculate-your-capital-gains/resident/acquisition-costs" in {
-            val path = controllers.resident.routes.GainController.acquisitionCosts.toString()
-            path shouldEqual "/calculate-your-capital-gains/resident/acquisition-costs"
-        }
+    "be equal to /calculate-your-capital-gains/resident/acquisition-costs" in {
+      val path = controllers.resident.routes.GainController.acquisitionCosts.toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/acquisition-costs"
+    }
   }
 
   "The URL for the improvements Action" should {
@@ -144,6 +144,13 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     "be equal to /calculate-your-capital-gains/resident/losses-brought-forward" in {
       val path = controllers.resident.routes.DeductionsController.lossesBroughtForward.toString()
       path shouldEqual "/calculate-your-capital-gains/resident/losses-brought-forward"
+    }
+  }
+
+  "The URL for the annualExemptAmount action" should {
+    "be equal to /calculate-your-capital-gains/resident/annual-exempt-amount" in {
+      val path = controllers.resident.routes.DeductionsController.annualExemptAmount.toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/annual-exempt-amount"
     }
   }
 

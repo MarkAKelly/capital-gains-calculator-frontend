@@ -103,6 +103,10 @@ trait DeductionsController extends FeatureLock {
   }
 
   //################# Annual Exempt Amount Input Actions #############################
+  val annualExemptAmount = Action.async { implicit request =>
+    Future.successful(Ok(views.annualExemptAmount()))
+
+  }
 
   //################# Second Summary Actions ###############################
 
