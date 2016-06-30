@@ -19,10 +19,8 @@ package controllers.resident
 import common.Dates._
 import common.KeystoreKeys.ResidentKeys
 import connectors.CalculatorConnector
-import connectors.resident.SummaryConnector
 import controllers.predicates.FeatureLock
-import models.resident.{DisposalCostsModel, _}
-import play.api.mvc.Action
+import models.resident._
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future

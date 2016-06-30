@@ -23,7 +23,6 @@ import play.api.test.Helpers._
 import assets.MessageLookup.{summary => messages}
 import common.KeystoreKeys.ResidentKeys
 import connectors.CalculatorConnector
-import connectors.resident.SummaryConnector
 import models.resident._
 import org.mockito.Matchers
 import org.mockito.Mockito._
