@@ -19,12 +19,13 @@ package controllers.resident
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
-import models.resident.ReliefsValueModel
+import models.resident.{LossesBroughtForwardModel, OtherPropertiesModel, AllowableLossesModel, ReliefsModel, ReliefsValueModel}
 import forms.resident.ReliefsValueForm._
-import play.api.mvc.Action
+import forms.resident.LossesBroughtForwardForm._
+import play.api.mvc.{Action, Result}
 import views.html.calculation.{resident => views}
 import forms.resident.ReliefsForm._
-import models.resident.ReliefsModel
+import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future
 
@@ -93,9 +94,49 @@ trait DeductionsController extends FeatureLock {
   }
 
   //################# Brought Forward Losses Actions ############################
-  val lossesBroughtForward = Action.async { implicit request =>
-    Future.successful(Ok(views.lossesBroughtForward()))
+
+  def lossesBroughtForwardBackUrlOtherProps(implicit hc: HeaderCarrier): Boolean = {
+    calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.ResidentKeys.otherProperties).map {
+      case Some(OtherPropertiesModel(false)) => false
+      case Some(OtherPropertiesModel(true)) => true
+    }
   }
+
+  def lossesBroughtForwardBackUrlAllowableLosses(implicit hc: HeaderCarrier): Boolean ={
+    calcConnector.fetchAndGetFormData[AllowableLossesModel](KeystoreKeys.ResidentKeys.allowableLosses).map {
+      case Some(AllowableLossesModel(false)) => false
+      case Some(AllowableLossesModel(true)) => true
+    }
+  }
+
+  def lossesBroughtForwardBackUrl(implicit hc: HeaderCarrier): Future[String] = {
+
+    for {
+      otherPropertiesCheck <- lossesBroughtForwardBackUrlOtherProps
+      allowableLossesCheck <- lossesBroughtForwardBackUrlAllowableLosses
+    } yield (otherPropertiesCheck, allowableLossesCheck)
+        
+    match {
+      case (false, _) => routes.DeductionsController.otherProperties().url
+      case (true, false) => routes.DeductionsController.allowableLosses().url
+      case (true, true) => routes.DeductionsController.allowableLossesValue().url
+    }
+  }
+
+  val lossesBroughtForward = ValidateSession.async { implicit request =>
+
+    def routeRequest(backUrl: String): Future[Result] = {
+      calcConnector.fetchAndGetFormData[LossesBroughtForwardModel](KeystoreKeys.ResidentKeys.lossesBroughtForward).map {
+        case Some(data) => Ok(views.lossesBroughtForward(lossesBroughtForwardForm.fill(data)))
+        case None => Ok(views.lossesBroughtForward(lossesBroughtForwardForm))
+      }
+    }
+    for {
+      backUrl <- lossesBroughtForwardBackUrl
+      finalResult <- routeRequest(backUrl)
+    } yield finalResult
+  }
+
 
   //################# Brought Forward Losses Value Actions ##############################
   val lossesBroughtForwardValue = Action.async { implicit request =>

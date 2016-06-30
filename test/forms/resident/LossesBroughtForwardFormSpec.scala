@@ -19,23 +19,23 @@ package forms.resident
 import assets.MessageLookup
 import models.resident.{AcquisitionValueModel, BroughtForwardLossesModel}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import forms.resident.BroughtForwardLossesForm._
+import forms.resident.LossesBroughtForwardForm._
 import assets.MessageLookup._
 
-class BroughtForwardLossesFormSpec extends UnitSpec with WithFakeApplication {
+class LossesBroughtForwardFormSpec extends UnitSpec with WithFakeApplication {
 
   "Creating the form with an empty model" should {
 
-    lazy val form = broughtForwardLossesForm
+    lazy val form = lossesBroughtForwardForm
 
     "create an empty form" in {
       form.data.isEmpty shouldEqual true
     }
   }
 
-  "Creating a form with an valid yes model" should {
+  "Creating a form with an valid 'yes' model" should {
 
-    lazy val form = broughtForwardLossesForm.bind(Map("option" -> "Yes"))
+    lazy val form = lossesBroughtForwardForm.bind(Map("option" -> "Yes"))
 
     "create a form with the data from the model" in {
       form.data("option") shouldEqual "Yes"
@@ -50,9 +50,9 @@ class BroughtForwardLossesFormSpec extends UnitSpec with WithFakeApplication {
     }
   }
 
-  "Creating a form with a valid no model" should {
+  "Creating a form with a valid 'no' model" should {
 
-    lazy val form = broughtForwardLossesForm.bind(Map("option" -> "No"))
+    lazy val form = lossesBroughtForwardForm.bind(Map("option" -> "No"))
 
     "create a form with the data from the model" in {
       form.data("option") shouldEqual "No"
@@ -71,7 +71,7 @@ class BroughtForwardLossesFormSpec extends UnitSpec with WithFakeApplication {
 
     "supplied with no data for option" should {
 
-      lazy val form = broughtForwardLossesForm.bind(Map("option" -> ""))
+      lazy val form = lossesBroughtForwardForm.bind(Map("option" -> ""))
 
       "raise form error" in {
         form.hasErrors shouldBe true
@@ -88,7 +88,7 @@ class BroughtForwardLossesFormSpec extends UnitSpec with WithFakeApplication {
 
     "supplied with invalid data for option" should {
 
-      lazy val form = broughtForwardLossesForm.bind(Map("option" -> "asdas"))
+      lazy val form = lossesBroughtForwardForm.bind(Map("option" -> "asdas"))
 
       "raise form error" in {
         form.hasErrors shouldBe true

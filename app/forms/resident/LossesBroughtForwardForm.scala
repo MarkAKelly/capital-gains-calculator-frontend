@@ -18,19 +18,19 @@ package forms.resident
 
 import common.Validation._
 import common.Transformers._
-import models.resident.BroughtForwardLossesModel
+import models.resident.LossesBroughtForwardModel
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.Messages
 
-object BroughtForwardLossesForm {
+object LossesBroughtForwardForm {
 
-  val broughtForwardLossesForm = Form(
+  val lossesBroughtForwardForm = Form(
     mapping(
       "option" -> text
         .verifying(Messages("calc.base.undefinedMessage"), mandatoryCheck)
         .verifying(Messages("calc.base.undefinedMessage"), yesNoCheck)
         .transform[Boolean](stringToBoolean, _.toString())
-    )(BroughtForwardLossesModel.apply)(BroughtForwardLossesModel.unapply)
+    )(LossesBroughtForwardModel.apply)(LossesBroughtForwardModel.unapply)
   )
 }

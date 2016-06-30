@@ -22,13 +22,13 @@ import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.{resident => views}
-import
+import forms.resident.LossesBroughtForwardForm._
 
 class LossesBroughtForwardViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Reliefs view" should {
 
-    lazy val view = views.lossesBroughtForward()(fakeRequest)
+    lazy val view = views.lossesBroughtForward(lossesBroughtForwardForm)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {

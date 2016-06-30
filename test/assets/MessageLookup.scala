@@ -124,6 +124,7 @@ object MessageLookup {
   //Losses Brought Forward messages
   object lossesBroughtForward {
     val title = "Are there any previous losses you want to bring forward?"
+    val question = "Are there any previous losses you want to bring forward?"
   }
 
   //Losses Brought Forward messages
