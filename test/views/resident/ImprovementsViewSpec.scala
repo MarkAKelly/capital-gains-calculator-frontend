@@ -80,6 +80,25 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     }
   }
 
+  "Improvements View with form without errors" should {
+
+    val form = improvementsForm.bind(Map("amount" -> "100"))
+    lazy val view = improvements(form)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "display the value of the form" in {
+      doc.body.select("#amount").attr("value") shouldEqual "100"
+    }
+
+    "display no error summary message for the amount" in {
+      doc.body.select("#amount-error-summary").size shouldBe 0
+    }
+
+    "display no error message for the input" in {
+      doc.body.select(".form-group .error-notification").size shouldBe 0
+    }
+  }
+
   "Improvements View with form with errors" should {
 
     val form = improvementsForm.bind(Map("amount" -> ""))

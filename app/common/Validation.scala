@@ -113,5 +113,9 @@ object Validation {
 
   val minCheck: BigDecimal => Boolean = (input) => input >= 0
 
-  val yesNoCheck: String => Boolean = (input) => input.equals("Yes") || input.equals("No") || input.equals("")
+  val yesNoCheck: String =>  Boolean = {
+    case "Yes" => true
+    case "No" => true
+    case _ => false
+  }
 }

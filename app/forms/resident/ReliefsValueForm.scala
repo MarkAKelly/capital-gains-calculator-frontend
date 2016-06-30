@@ -16,20 +16,24 @@
 
 package forms.resident
 
+import common.Transformers.stringToBigDecimal
 import common.Validation._
-import models.resident.BroughtForwardLossesModel
+import models.resident.ReliefsValueModel
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.Messages
 
-object BroughtForwardLossesForm {
+object ReliefsValueForm {
 
-  val broughtForwardLossesForm = Form(
+  val reliefsValueForm = Form(
     mapping(
-      "option" -> text
-        .transform[String](stringToBoolean, _.toString())
+      "amount" -> text
         .verifying(Messages("calc.base.undefinedMessage"), mandatoryCheck)
-        .verifying(Messages("calc.base.undefinedMessage"), yesNoCheck)
-    )(BroughtForwardLossesModel.apply)(BroughtForwardLossesModel.unapply)
+        .verifying(Messages("calc.base.undefinedMessage"), bigDecimalCheck)
+        .transform[BigDecimal](stringToBigDecimal, _.toString)
+        .verifying(Messages("calc.base.undefinedMessage"), decimalPlacesCheck)
+        .verifying(Messages("calc.base.undefinedMessage"), maxCheck)
+        .verifying(Messages("calc.base.undefinedMessage"), minCheck)
+    )(ReliefsValueModel.apply)(ReliefsValueModel.unapply)
   )
 }

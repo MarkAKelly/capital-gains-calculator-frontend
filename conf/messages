@@ -345,6 +345,7 @@ calc.resident.reliefs.additionalContent.two = Tax reliefs are different from you
 
 ## Reliefs Value messages
 calc.resident.reliefsValue.title = How much tax relief are you claiming?
+calc.resident.reliefsValue.question = How much tax relief are you claiming?
 
 ## Other Properties messages
 calc.resident.otherProperties.title = In the 2015/2016 tax year, did you sell or give away anything else that''s covered by Capital Gains Tax?
@@ -354,6 +355,11 @@ calc.resident.allowableLossesValue.title = What''s the total value of your allow
 
 ##Losses Brought Forward messages
 calc.resident.lossesBroughtForward.title = Are there any previous losses you want to bring forward?
+
+
+## Allowable Losses messages
+calc.resident.allowableLosses.title = Are you claiming any allowable losses from tax years before 2015/16?
+
 
 ##Losses Brought Forward Value messages
 calc.resident.lossesBroughtForwardValue.title = What''s the total value of the loss to bring forward?
