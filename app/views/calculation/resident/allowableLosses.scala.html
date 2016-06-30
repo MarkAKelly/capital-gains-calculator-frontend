@@ -12,16 +12,16 @@
 
     @form(action = controllers.resident.routes.DeductionsController.submitAllowableLosses) {
         @formInputRadioGroup(
-                    field = allowableLossesForm("isClaiming"),
-                    Seq(
-        "Yes" -> Messages("calc.base.yes"),
-        "No" -> Messages("calc.base.no")),
-        '_legend -> Messages("calc.resident.reliefs.question"),
-        '_legendID -> "isClaiming",
-        '_legendClass -> "visuallyhidden",
-        '_labelAfter -> true,
-        '_labelClass -> "block-label",
-        '_groupClass -> "inline form-group radio-list"
+            field = allowableLossesForm("isClaiming"),
+            Seq(
+                "Yes" -> Messages("calc.base.yes"),
+                "No" -> Messages("calc.base.no")),
+            '_legend -> Messages("calc.resident.reliefs.question"),
+            '_legendID -> "isClaiming",
+            '_legendClass -> "visuallyhidden",
+            '_labelAfter -> true,
+            '_labelClass -> "block-label",
+            '_groupClass -> "inline form-group radio-list"
         )
 
         <input type="hidden" name="isClaiming" value="" />

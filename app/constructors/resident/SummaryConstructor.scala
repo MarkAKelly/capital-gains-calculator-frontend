@@ -14,24 +14,14 @@
  * limitations under the License.
  */
 
-package forms.resident
+package constructors.resident
 
-import common.Transformers._
-import models.resident.ReliefsModel
-import play.api.data.Form
-import play.api.data.Forms._
 import play.api.i18n.Messages
-import common.Validation._
 
+object SummaryConstructor {
 
-object ReliefsForm {
-
-  val reliefsForm = Form(
-    mapping(
-      "isClaiming" -> text
-        .verifying(Messages("calc.base.undefinedMessage"), _.nonEmpty)
-        .verifying(Messages("calc.base.undefinedMessage"), yesNoCheck)
-        .transform[Boolean](stringToBoolean, booleanToString)
-    )(ReliefsModel.apply)(ReliefsModel.unapply)
-  )
+  def gainMessage (result: BigDecimal): String = {
+    if (result >= 0) Messages("calc.resident.summary.totalGain")
+    else Messages("calc.resident.summary.totalLoss")
+  }
 }

@@ -14,12 +14,21 @@
  * limitations under the License.
  */
 
-package models.nonresident
+package models.resident
 
+import java.util.Date
 import play.api.libs.json.Json
 
-case class SummaryDataItemModel (question: String, answer: String, link: Option[String])
+case class YourAnswersSummaryModel
+(
+  disposalDate: Date,
+  disposalValue: BigDecimal,
+  disposalCosts: BigDecimal,
+  acquisitionValue: BigDecimal,
+  acquisitionCosts: BigDecimal,
+  improvements: BigDecimal
+)
 
-object SummaryDataItemModel {
-  implicit val format = Json.format[SummaryDataItemModel]
+object YourAnswersSummaryModel {
+  implicit val format = Json.format[YourAnswersSummaryModel]
 }

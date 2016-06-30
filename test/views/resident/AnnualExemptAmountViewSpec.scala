@@ -14,31 +14,26 @@
  * limitations under the License.
  */
 
-package controllers.resident.GainControllerTests
+package views.resident
 
+import assets.MessageLookup.{annualExemptAmount => messages}
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.DeductionsController
 import org.jsoup.Jsoup
-import play.api.test.Helpers._
-import assets.MessageLookup.{otherProperties => messages}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import views.html.calculation.{resident => views}
 
-class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Calling .otherProperties from the DeductionsController" should {
+  "The Annual Exempt Amount view" should {
 
-    lazy val result = DeductionsController.otherProperties(fakeRequest)
-    lazy val doc = Jsoup.parse(bodyOf(result))
+    lazy val view = views.annualExemptAmount()(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
 
-    "return a status of 200" in {
-      status(result) shouldBe 200
+    "have a charset of UTF-8" in {
+      doc.charset().toString shouldBe "UTF-8"
     }
 
-    "return some html" in {
-      contentType(result) shouldBe Some("text/html")
-    }
-
-    s"have a title of ${messages.title}" in {
+    s"have a title ${messages.title}" in {
       doc.title() shouldBe messages.title
     }
   }

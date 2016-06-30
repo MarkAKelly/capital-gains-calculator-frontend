@@ -19,15 +19,16 @@ package controllers.resident
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
-import models.resident.{AllowableLossesModel, ReliefsModel, ReliefsValueModel}
-import forms.resident.ReliefsValueForm._
-import forms.resident.AllowableLossesForm._
-import play.api.mvc.Action
-import views.html.calculation.{resident => views}
+import models.resident._
+import forms.resident.LossesBroughtForwardValueForm._
+import forms.resident.OtherPropertiesForm._
 import forms.resident.ReliefsForm._
-
+import forms.resident.AllowableLossesForm._
+import forms.resident.ReliefsValueForm._
+import play.api.mvc.{Action, Result}
+import uk.gov.hmrc.play.http.HeaderCarrier
+import views.html.calculation.{resident => views}
 import scala.concurrent.Future
-
 
 object DeductionsController extends DeductionsController {
   val calcConnector = CalculatorConnector
@@ -45,13 +46,13 @@ trait DeductionsController extends FeatureLock {
     }
   }
 
-  val submitReliefs = Action.async {implicit request =>
+  val submitReliefs = Action.async { implicit request =>
     reliefsForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.reliefs(errors))),
       success => {
         calcConnector.saveFormData[ReliefsModel](KeystoreKeys.ResidentKeys.reliefs, success)
         success match {
-          case ReliefsModel("Yes") => Future.successful(Redirect(routes.DeductionsController.reliefsValue()))
+          case ReliefsModel(true) => Future.successful(Redirect(routes.DeductionsController.reliefsValue()))
           case _ => Future.successful(Redirect(routes.DeductionsController.otherProperties()))
         }
       }
@@ -78,8 +79,46 @@ trait DeductionsController extends FeatureLock {
   }
 
   //################# Other Properties Actions #########################
-  val otherProperties = Action.async { implicit request =>
-    Future.successful(Ok(views.otherProperties()))
+  def otherPropertiesBackUrl(implicit hc: HeaderCarrier): Future[String] = {
+    calcConnector.fetchAndGetFormData[ReliefsModel](KeystoreKeys.ResidentKeys.reliefs).flatMap {
+      case Some(ReliefsModel(true)) => Future.successful(routes.DeductionsController.reliefsValue().url)
+      case _ => Future.successful(routes.DeductionsController.reliefs().url)
+    }
+  }
+
+  val otherProperties = FeatureLockForRTT.async { implicit request =>
+
+    def routeRequest(backUrl: String): Future[Result] = {
+      calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.ResidentKeys.otherProperties).map {
+        case Some(data) => Ok(views.otherProperties(otherPropertiesForm.fill(data), backUrl))
+        case None => Ok(views.otherProperties(otherPropertiesForm, backUrl))
+      }
+    }
+
+    for {
+      backUrl <- otherPropertiesBackUrl
+      finalResult <- routeRequest(backUrl)
+    } yield finalResult
+  }
+
+  val submitOtherProperties = Action.async { implicit request =>
+
+    def routeRequest(backUrl: String): Future[Result] = {
+      otherPropertiesForm.bindFromRequest.fold(
+        errors => Future.successful(BadRequest(views.otherProperties(errors, backUrl))),
+        success => {
+          calcConnector.saveFormData[OtherPropertiesModel](KeystoreKeys.ResidentKeys.otherProperties, success)
+          success match {
+            case OtherPropertiesModel(true) => Future.successful(Redirect(routes.DeductionsController.allowableLosses()))
+            case _ => Future.successful(Redirect(routes.DeductionsController.lossesBroughtForward()))
+          }
+        }
+      )
+    }
+    for {
+      backUrl <- otherPropertiesBackUrl
+      route <- routeRequest(backUrl)
+    } yield route
   }
 
   //################# Allowable Losses Actions #########################
@@ -116,11 +155,28 @@ trait DeductionsController extends FeatureLock {
   }
 
   //################# Brought Forward Losses Value Actions ##############################
-  val lossesBroughtForwardValue = Action.async { implicit request =>
-    Future.successful(Ok(views.lossesBroughtForwardValue()))
+  val lossesBroughtForwardValue = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[LossesBroughtForwardValueModel](KeystoreKeys.ResidentKeys.lossesBroughtForwardValue).map {
+      case Some(data) => Ok(views.lossesBroughtForwardValue(lossesBroughtForwardValueForm.fill(data)))
+      case None => Ok(views.lossesBroughtForwardValue(lossesBroughtForwardValueForm))
+    }
+  }
+
+  val submitLossesBroughtForwardValue = FeatureLockForRTT.async { implicit request =>
+    lossesBroughtForwardValueForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.lossesBroughtForwardValue(errors))),
+      success => calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.ResidentKeys.otherProperties).flatMap {
+        case Some(OtherPropertiesModel(true)) => Future.successful(Redirect(routes.DeductionsController.annualExemptAmount()))
+        case _ => Future.successful(Redirect(routes.SummaryController.summary()))
+      }
+    )
   }
 
   //################# Annual Exempt Amount Input Actions #############################
+  val annualExemptAmount = Action.async { implicit request =>
+    Future.successful(Ok(views.annualExemptAmount()))
+
+  }
 
   //################# Second Summary Actions ###############################
 
