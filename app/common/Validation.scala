@@ -116,6 +116,7 @@ object Validation {
   val yesNoCheck: String =>  Boolean = {
     case "Yes" => true
     case "No" => true
+    case "" => true
     case _ => false
   }
 
