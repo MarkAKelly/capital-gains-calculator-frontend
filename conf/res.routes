@@ -33,6 +33,7 @@ POST    /reliefs                          controllers.resident.DeductionsControl
 
 #Reliefs Value Routes
 GET     /reliefs-value                    controllers.resident.DeductionsController.reliefsValue
+POST    /reliefs-value                    controllers.resident.DeductionsController.submitReliefsValue
 
 #Other Properties Routes
 GET     /other-properties                 controllers.resident.DeductionsController.otherProperties
