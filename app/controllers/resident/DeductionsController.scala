@@ -19,13 +19,12 @@ package controllers.resident
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
-import models.resident.ReliefsValueModel
+import models.resident.{AllowableLossesModel, ReliefsModel, ReliefsValueModel}
 import forms.resident.ReliefsValueForm._
 import forms.resident.AllowableLossesForm._
 import play.api.mvc.Action
 import views.html.calculation.{resident => views}
 import forms.resident.ReliefsForm._
-import models.resident.ReliefsModel
 
 import scala.concurrent.Future
 
@@ -84,8 +83,26 @@ trait DeductionsController extends FeatureLock {
   }
 
   //################# Allowable Losses Actions #########################
-  val allowableLosses = Action.async { implicit request =>
-    Future.successful(Ok(views.allowableLosses(allowableLossesForm)))
+  val allowableLosses = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[AllowableLossesModel](KeystoreKeys.ResidentKeys.allowableLosses).map {
+      case Some(data) => Ok(views.allowableLosses(allowableLossesForm.fill(data)))
+      case None => Ok(views.allowableLosses(allowableLossesForm))
+    }
+  }
+
+  val submitAllowableLosses = Action.async { implicit request =>
+    allowableLossesForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.allowableLosses(errors))),
+      success => {
+        calcConnector.saveFormData[AllowableLossesModel](KeystoreKeys.ResidentKeys.allowableLosses, success)
+        if (success.isClaiming) {
+          Future.successful(Redirect(routes.DeductionsController.allowableLossesValue()))
+        }
+        else {
+          Future.successful(Redirect(routes.DeductionsController.lossesBroughtForward()))
+        }
+      }
+    )
   }
 
   //################# Allowable Losses Value Actions ############################

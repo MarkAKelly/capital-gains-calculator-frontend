@@ -81,4 +81,28 @@ class AllowableLossesViewSpec extends UnitSpec with WithFakeApplication with Fak
       element.text shouldBe messages.helpInfoPoint3
     }
  }
+
+  "Allowable Losses view with pre-selected values" should {
+    lazy val form = allowableLossesForm.bind(Map(("isClaiming", "Yes")))
+    lazy val view = views.allowableLosses(form)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "have the option 'Yes' auto selected" in {
+      doc.body.getElementById("isClaiming-yes").parent.className should include("selected")
+    }
+  }
+
+  "Allowable Losses view with errors" should {
+    lazy val form = allowableLossesForm.bind(Map(("isClaiming", "")))
+    lazy val view = views.allowableLosses(form)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "display an error summary message for the amount" in {
+      doc.body.select("#isClaiming-error-summary").size shouldBe 1
+    }
+
+    "display an error message for the input" in {
+      doc.body.select("span.error-notification").size shouldBe 1
+    }
+  }
 }
