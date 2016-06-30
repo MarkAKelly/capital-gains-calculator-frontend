@@ -10,24 +10,22 @@
 
     <h1 class="heading-large">@Messages("calc.resident.allowableLosses.title")</h1>
 
-    @form(action = controllers.resident.routes.DeductionsController.submitReliefs) {
-
+    @form(action = controllers.resident.routes.DeductionsController.submitAllowableLosses) {
         @formInputRadioGroup(
-            field = allowableLossesForm("isClaiming"),
-            Seq(
-                "Yes" -> Messages("calc.base.yes"),
-                "No" -> Messages("calc.base.no")),
-            '_legend -> Messages("calc.resident.reliefs.question"),
-            '_legendID -> "isClaiming",
-            '_legendClass -> "visuallyhidden",
-            '_helpText -> Messages("calc.resident.reliefs.helpText"),
-            '_labelAfter -> true,
-            '_labelClass -> "block-label",
-            '_groupClass -> "inline form-group"
+                    field = allowableLossesForm("isClaiming"),
+                    Seq(
+        "Yes" -> Messages("calc.base.yes"),
+        "No" -> Messages("calc.base.no")),
+        '_legend -> Messages("calc.resident.reliefs.question"),
+        '_legendID -> "isClaiming",
+        '_legendClass -> "visuallyhidden",
+        '_labelAfter -> true,
+        '_labelClass -> "block-label",
+        '_groupClass -> "inline form-group radio-list"
         )
 
-        <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
-
+        <input type="hidden" name="isClaiming" value="" />
+        <button class="button yes-no-button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
     }
 
     <div id="helpInfo">

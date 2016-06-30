@@ -93,3 +93,11 @@
     margin-top: 0em;
     margin-bottom: 1em;
 }
+
+.resident .inline.form-group {
+    margin-bottom: 0;
+}
+
+.yes-no-button {
+    margin-top: 1em;
+}
