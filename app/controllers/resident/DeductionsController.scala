@@ -21,6 +21,7 @@ import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import models.resident.OtherPropertiesModel
 import play.api.mvc.Action
+import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation.{resident => views}
 import forms.resident.OtherPropertiesForm._
 import forms.resident.ReliefsForm._
@@ -63,6 +64,13 @@ trait DeductionsController extends FeatureLock {
   }
 
   //################# Other Properties Actions #########################
+  def otherPropertiesBackUrl(implicit hc: HeaderCarrier): Future[String] = {
+    calcConnector.fetchAndGetFormData[ReliefsModel](KeystoreKeys.ResidentKeys.reliefs).flatMap {
+      case Some(ReliefsModel("Yes")) => Future.successful(routes.DeductionsController.reliefsValue().url)
+      case _ => Future.successful(routes.DeductionsController.reliefs().url)
+    }
+  }
+
   val otherProperties = FeatureLockForRTT.async { implicit request =>
     calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.ResidentKeys.otherProperties).map {
       case Some(data) => Ok(views.otherProperties(otherPropertiesForm.fill(data)))
@@ -70,9 +78,24 @@ trait DeductionsController extends FeatureLock {
     }
   }
 
-  val submitOtherProperties = TODO
+  val submitOtherProperties = Action.async { implicit request =>
+    otherPropertiesForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.otherProperties(errors))),
+      success => {
+        calcConnector.saveFormData[OtherPropertiesModel](KeystoreKeys.ResidentKeys.otherProperties, success)
+        success match {
+          case OtherPropertiesModel("Yes") => Future.successful(Redirect(routes.DeductionsController.allowableLosses()))
+          case _ => Future.successful(Redirect(routes.DeductionsController.lossesBroughtForward()))
+        }
+      }
+    )
+  }
 
   //################# Allowable Losses Actions #########################
+
+  val allowableLosses = Action.async { implicit request =>
+    Future.successful(Ok(views.allowableLosses()))
+  }
 
   //################# Allowable Losses Value Actions ############################
   val allowableLossesValue = Action.async { implicit request =>

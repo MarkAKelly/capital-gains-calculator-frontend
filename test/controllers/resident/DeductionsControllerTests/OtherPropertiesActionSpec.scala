@@ -45,7 +45,6 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
   }
 
   "Calling .otherProperties from the DeductionsController" when {
-
     "request has a valid session and no keystore value" should {
 
       lazy val target = setupTarget(None)
@@ -71,6 +70,50 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
 
       "return a status of 303" in {
         status(result) shouldBe 303
+      }
+    }
+  }
+
+  "Calling .submitOtherProperties from the DeductionsController" when {
+    "a valid form 'Yes' is submitted" should {
+
+      lazy val request = fakeRequestToPOSTWithSession(("hasOtherProperties", "Yes"))
+      lazy val result = DeductionsController.submitOtherProperties(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the allowable losses page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/allowable-losses")
+      }
+    }
+
+    "a valid form 'No' is submitted" should {
+
+      lazy val request = fakeRequestToPOSTWithSession(("hasOtherProperties", "No"))
+      lazy val result = DeductionsController.submitOtherProperties(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the allowable losses page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/losses-brought-forward")
+      }
+    }
+
+    "an invalid form is submitted" should {
+
+      lazy val request = fakeRequestToPOSTWithSession(("hasOtherProperties", ""))
+      lazy val result = DeductionsController.submitOtherProperties(request)
+
+      "return a 400" in {
+        status(result) shouldBe 400
+      }
+
+      "render the other properties page" in {
+        Jsoup.parse(bodyOf(result)).title() shouldEqual messages.title
       }
     }
   }
