@@ -269,7 +269,7 @@ class ValidationSpec extends UnitSpec {
     }
 
     "input is empty" should {
-      "fail" in {
+      "pass" in {
         yesNoCheck("") shouldBe true
       }
     }
