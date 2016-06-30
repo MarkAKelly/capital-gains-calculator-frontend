@@ -52,7 +52,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
     "request has a valid session and no keystore value" should {
 
       lazy val target = setupTarget(None, None)
-      lazy val result = DeductionsController.otherProperties(fakeRequestWithSession)
+      lazy val result = target.otherProperties(fakeRequestWithSession)
 
       "return a status of 200" in {
         status(result) shouldBe 200
@@ -111,8 +111,9 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
   "Calling .submitOtherProperties from the DeductionsController" when {
     "a valid form 'Yes' is submitted" should {
 
+      lazy val target = setupTarget(None, Some(ReliefsModel(true)))
       lazy val request = fakeRequestToPOSTWithSession(("hasOtherProperties", "Yes"))
-      lazy val result = DeductionsController.submitOtherProperties(request)
+      lazy val result = target.submitOtherProperties(request)
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -125,8 +126,9 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
 
     "a valid form 'No' is submitted" should {
 
+      lazy val target = setupTarget(None, Some(ReliefsModel(true)))
       lazy val request = fakeRequestToPOSTWithSession(("hasOtherProperties", "No"))
-      lazy val result = DeductionsController.submitOtherProperties(request)
+      lazy val result = target.submitOtherProperties(request)
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -139,8 +141,9 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
 
     "an invalid form is submitted" should {
 
+      lazy val target = setupTarget(None, Some(ReliefsModel(true)))
       lazy val request = fakeRequestToPOSTWithSession(("hasOtherProperties", ""))
-      lazy val result = DeductionsController.submitOtherProperties(request)
+      lazy val result = target.submitOtherProperties(request)
 
       "return a 400" in {
         status(result) shouldBe 400
