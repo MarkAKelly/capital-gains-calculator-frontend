@@ -112,4 +112,6 @@ object Validation {
   val maxCheck: BigDecimal => Boolean = (input) => input <= Constants.maxNumeric
 
   val minCheck: BigDecimal => Boolean = (input) => input >= 0
+
+  val yesNoCheck: String => Boolean = (input) => input.equals("Yes") || input.equals("No") || input.equals("")
 }
