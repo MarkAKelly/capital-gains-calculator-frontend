@@ -20,6 +20,7 @@ import assets.MessageLookup.{lossesBroughtForwardValue => messages}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.DeductionsController
+import models.resident.OtherPropertiesModel
 import models.resident.LossesBroughtForwardValueModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -93,6 +94,60 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
 
   "Calling .submitLossesBroughtForwardValue from the resident DeductionsController" when {
 
+    def setPostTarget(otherPropertiesModel: Option[OtherPropertiesModel]): DeductionsController = {
 
+      val mockCalcConnector = mock[CalculatorConnector]
+
+      when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
+        .thenReturn(otherPropertiesModel)
+
+      new DeductionsController {
+        override val calcConnector = mockCalcConnector
+      }
+    }
+
+    "given a valid form" when {
+
+      "the user has disposed of other properties" should {
+        lazy val target = setPostTarget(Some(OtherPropertiesModel(true)))
+        lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+        lazy val result = target.submitLossesBroughtForwardValue(request)
+
+        "return a status of 303" in {
+          status(result) shouldBe 303
+        }
+
+        s"redirect to '${controllers.resident.routes.DeductionsController.annualExemptAmount().toString}'" in {
+          redirectLocation(result).get shouldBe controllers.resident.routes.DeductionsController.annualExemptAmount().toString
+        }
+      }
+
+      "the user has not disposed of other properties" should {
+        lazy val target = setPostTarget(Some(OtherPropertiesModel(false)))
+        lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+        lazy val result = target.submitLossesBroughtForwardValue(request)
+
+        "return a status of 303" in {
+          status(result) shouldBe 303
+        }
+
+        s"redirect to '${controllers.resident.routes.SummaryController.summary().toString}'" in {
+          redirectLocation(result).get shouldBe controllers.resident.routes.SummaryController.summary().toString
+        }
+      }
+    }
+
+    "given an invalid form" should {
+      lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
+      lazy val result = DeductionsController.submitLossesBroughtForwardValue(request)
+
+      "return a status of 400" in {
+        status(result) shouldBe 400
+      }
+
+      s"return a title of ${messages.title}" in {
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+      }
+    }
   }
 }

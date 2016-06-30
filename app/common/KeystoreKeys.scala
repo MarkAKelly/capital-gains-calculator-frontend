@@ -53,6 +53,7 @@ trait KeystoreKeys {
     val reliefs = "res:reliefs"
     val reliefsValue = "res:reliefsValue"
     val lossesBroughtForwardValue = "res:lossesBroughtForwardValue"
+    val otherProperties = "res.otherProperties"
   }
 
 }
