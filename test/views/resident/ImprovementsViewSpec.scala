@@ -46,8 +46,8 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         heading.text shouldBe messages.title
       }
 
-      "have the visuallyhidden class" in {
-        heading.hasClass("visuallyhidden") shouldBe true
+      "have the heading-large class" in {
+        heading.hasClass("heading-large") shouldBe true
       }
     }
 
@@ -59,6 +59,11 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     "have the correct label" in {
       val label = doc.select("label")
       label.text should startWith(messages.label)
+    }
+
+    "have a hidden label" in {
+      val label = doc.select("label > span")
+      label.hasClass("visuallyhidden") shouldBe true
     }
 
     "have the correct hint" in {
