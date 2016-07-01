@@ -29,6 +29,13 @@ object MessageLookup {
   val maxNumericExceededStart = "Enter an amount that's £"
   val maxNumericExceededEnd = "or less"
 
+  object errorMessages {
+    val mandatoryAmount = "Enter an amount"
+    val minimumAmount = "Enter an amount that's £0 or more"
+    val maximumAmount = "Enter an amount that's £1,000,000,000 or less"
+    val invalidAmount = "Enter an amount in the correct format e.g. 10000.00"
+  }
+
   //Disposal Date messages
   object disposalDate {
     val title = "When did you sign the contract that made someone else the owner?"

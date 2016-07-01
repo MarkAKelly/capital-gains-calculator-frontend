@@ -16,16 +16,11 @@
 
 package forms.resident
 
-import assets.MessageLookup._
+import assets.MessageLookup.errorMessages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import models.resident.AcquisitionCostsModel
 import forms.resident.AcquisitionCostsForm._
-import assets.{MessageLookup => commonMessages}
-import common.Constants
 import controllers.helpers.FakeRequestHelper
-import play.api.i18n.Messages
-import play.api.mvc.Request
-import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 class AcquisitionCostsFormSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
@@ -58,8 +53,8 @@ class AcquisitionCostsFormSpec extends UnitSpec with WithFakeApplication with Fa
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${commonMessages.undefinedMessage}'" in {
-        form.error("amount").get.message shouldBe commonMessages.undefinedMessage
+      s"error with message '${errorMessages.mandatoryAmount}'" in {
+        form.error("amount").get.message shouldBe errorMessages.mandatoryAmount
       }
     }
 
@@ -71,8 +66,8 @@ class AcquisitionCostsFormSpec extends UnitSpec with WithFakeApplication with Fa
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${commonMessages.undefinedMessage}'" in {
-        form.error("amount").get.message shouldBe commonMessages.undefinedMessage
+      s"error with message '${errorMessages.invalidAmount}'" in {
+        form.error("amount").get.message shouldBe errorMessages.invalidAmount
       }
     }
 
@@ -83,8 +78,8 @@ class AcquisitionCostsFormSpec extends UnitSpec with WithFakeApplication with Fa
         form.hasErrors shouldBe true
       }
 
-      s"return a form with the error message $undefinedMessage" in {
-        form.error("amount").get.message shouldBe undefinedMessage
+      s"return a form with the error message ${errorMessages.maximumAmount}" in {
+        form.error("amount").get.message shouldBe errorMessages.maximumAmount
       }
     }
 
@@ -96,8 +91,8 @@ class AcquisitionCostsFormSpec extends UnitSpec with WithFakeApplication with Fa
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${commonMessages.undefinedMessage}'" in {
-        form.error("amount").get.message shouldBe commonMessages.undefinedMessage
+      s"error with message '${errorMessages.minimumAmount}'" in {
+        form.error("amount").get.message shouldBe errorMessages.minimumAmount
       }
     }
 
@@ -109,8 +104,8 @@ class AcquisitionCostsFormSpec extends UnitSpec with WithFakeApplication with Fa
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${commonMessages.undefinedMessage}'" in {
-        form.error("amount").get.message shouldBe commonMessages.undefinedMessage
+      s"error with message '${errorMessages.invalidAmount}'" in {
+        form.error("amount").get.message shouldBe errorMessages.invalidAmount
       }
     }
   }

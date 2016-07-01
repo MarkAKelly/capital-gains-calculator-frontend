@@ -19,7 +19,7 @@ package forms.resident
 import models.resident.AcquisitionValueModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import forms.resident.AcquisitionValueForm._
-import assets.MessageLookup._
+import assets.MessageLookup.errorMessages
 
 class AcquisitionValueFormSpec extends UnitSpec with WithFakeApplication {
 
@@ -45,8 +45,8 @@ class AcquisitionValueFormSpec extends UnitSpec with WithFakeApplication {
         form.hasErrors shouldBe true
       }
 
-      s"return a form with the error message $undefinedMessage" in {
-        form.error("amount").get.message shouldBe undefinedMessage
+      s"return a form with the error message ${errorMessages.mandatoryAmount}" in {
+        form.error("amount").get.message shouldBe errorMessages.mandatoryAmount
       }
     }
 
@@ -57,8 +57,8 @@ class AcquisitionValueFormSpec extends UnitSpec with WithFakeApplication {
         form.hasErrors shouldBe true
       }
 
-      s"return a form with the error message $undefinedMessage" in {
-        form.error("amount").get.message shouldBe undefinedMessage
+      s"return a form with the error message ${errorMessages.invalidAmount}" in {
+        form.error("amount").get.message shouldBe errorMessages.invalidAmount
       }
     }
 
@@ -69,8 +69,8 @@ class AcquisitionValueFormSpec extends UnitSpec with WithFakeApplication {
         form.hasErrors shouldBe true
       }
 
-      s"return a form with the error message $undefinedMessage" in {
-        form.error("amount").get.message shouldBe undefinedMessage
+      s"return a form with the error message ${errorMessages.maximumAmount}" in {
+        form.error("amount").get.message shouldBe errorMessages.maximumAmount
       }
     }
 
@@ -81,8 +81,8 @@ class AcquisitionValueFormSpec extends UnitSpec with WithFakeApplication {
         form.hasErrors shouldBe true
       }
 
-      s"return a form with the error message $undefinedMessage" in {
-        form.error("amount").get.message shouldBe undefinedMessage
+      s"return a form with the error message ${errorMessages.minimumAmount}" in {
+        form.error("amount").get.message shouldBe errorMessages.minimumAmount
       }
     }
 
@@ -93,8 +93,8 @@ class AcquisitionValueFormSpec extends UnitSpec with WithFakeApplication {
         form.hasErrors shouldBe true
       }
 
-      s"return a form with the error message $undefinedMessage" in {
-        form.error("amount").get.message shouldBe undefinedMessage
+      s"return a form with the error message ${errorMessages.invalidAmount}" in {
+        form.error("amount").get.message shouldBe errorMessages.invalidAmount
       }
     }
   }

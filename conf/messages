@@ -47,6 +47,10 @@ calc.common.error.maxNumericExceeded = Enter an amount that''s £
 calc.common.error.maxNumericExceeded.OrLess = or less
 calc.common.error.maxAmountExceeded = Enter an amount that''s £{0} or less
 calc.common.error.fieldRequired = This field is required
+calc.common.error.mandatoryAmount = Enter an amount
+calc.common.error.minimumAmount = Enter an amount that''s £0 or more
+calc.common.error.maximumAmount = Enter an amount that''s £1,000,000,000 or less
+calc.common.error.invalidAmount = Enter an amount in the correct format e.g. 10000.00
 
 ## Introduction ##
 calc.introduction.title = Introduction
@@ -350,8 +354,6 @@ calc.resident.reliefs.additionalContent.one = Tax reliefs can lower the amount o
 calc.resident.reliefs.link.one = Private Residence Relief
 calc.resident.reliefs.link.two = Lettings Relief
 calc.resident.reliefs.additionalContent.two = Tax reliefs are different from your Capital Gains Tax Allowance and Personal Allowance.
-
-
 
 ## Reliefs Value messages
 calc.resident.reliefsValue.title = How much tax relief are you claiming?
