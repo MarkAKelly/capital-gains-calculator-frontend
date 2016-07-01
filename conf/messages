@@ -373,6 +373,7 @@ calc.resident.annualExemptAmount.title = How much of your Capital Gains Tax allo
 
 ##Losses Brought Forward messages
 calc.resident.lossesBroughtForward.title = Are there any previous losses you want to bring forward?
+calc.resident.lossesBroughtForward.question = Are there any previous losses you want to bring forward?
 
 
 ## Allowable Losses messages
