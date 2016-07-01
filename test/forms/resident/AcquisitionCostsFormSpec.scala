@@ -16,7 +16,7 @@
 
 package forms.resident
 
-import assets.MessageLookup._
+import assets.MessageLookup.errorMessages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import models.resident.AcquisitionCostsModel
 import forms.resident.AcquisitionCostsForm._

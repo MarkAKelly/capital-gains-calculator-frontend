@@ -20,10 +20,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import models.resident.DisposalCostsModel
 import forms.resident.DisposalCostsForm._
 import assets.MessageLookup.errorMessages
-import assets.{MessageLookup => commonMessages}
-import common.Constants
 import controllers.helpers.FakeRequestHelper
-import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 class DisposalCostsFormSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
@@ -56,7 +53,7 @@ class DisposalCostsFormSpec extends UnitSpec with WithFakeApplication with FakeR
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${commonMessages.undefinedMessage}'" in {
+      s"error with message '${errorMessages.mandatoryAmount}'" in {
         form.error("amount").get.message shouldBe errorMessages.mandatoryAmount
       }
     }
@@ -69,7 +66,7 @@ class DisposalCostsFormSpec extends UnitSpec with WithFakeApplication with FakeR
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${commonMessages.undefinedMessage}'" in {
+      s"error with message '${errorMessages.invalidAmount}'" in {
         form.error("amount").get.message shouldBe errorMessages.invalidAmount
       }
     }
@@ -95,7 +92,7 @@ class DisposalCostsFormSpec extends UnitSpec with WithFakeApplication with FakeR
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${commonMessages.undefinedMessage}'" in {
+      s"error with message '${errorMessages.minimumAmount}'" in {
         form.error("amount").get.message shouldBe errorMessages.minimumAmount
       }
     }
@@ -108,7 +105,7 @@ class DisposalCostsFormSpec extends UnitSpec with WithFakeApplication with FakeR
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${commonMessages.undefinedMessage}'" in {
+      s"error with message '${errorMessages.invalidAmount}'" in {
         form.error("amount").get.message shouldBe errorMessages.invalidAmount
       }
     }
