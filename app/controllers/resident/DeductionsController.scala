@@ -46,7 +46,7 @@ trait DeductionsController extends FeatureLock {
     }
   }
 
-  val submitReliefs = Action.async { implicit request =>
+  val submitReliefs = FeatureLockForRTT.async { implicit request =>
     reliefsForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.reliefs(errors))),
       success => {
@@ -101,7 +101,7 @@ trait DeductionsController extends FeatureLock {
     } yield finalResult
   }
 
-  val submitOtherProperties = Action.async { implicit request =>
+  val submitOtherProperties = FeatureLockForRTT.async { implicit request =>
 
     def routeRequest(backUrl: String): Future[Result] = {
       otherPropertiesForm.bindFromRequest.fold(
