@@ -25,7 +25,7 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import common.Dates._
 
-class SummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Summary view" should {
 
@@ -37,7 +37,7 @@ class SummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
       40,
       50
     )
-    lazy val view = views.html.calculation.resident.summary(testModel,-2000)(fakeRequest)
+    lazy val view = views.html.calculation.resident.gainSummary(testModel,-2000)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {

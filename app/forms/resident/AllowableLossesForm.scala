@@ -17,20 +17,20 @@
 package forms.resident
 
 import common.Validation._
-import models.resident.OtherPropertiesModel
-import play.api.data.Forms._
-import play.api.data.Form
-import play.api.i18n.Messages
 import common.Transformers._
+import models.resident.AllowableLossesModel
+import play.api.data.Form
+import play.api.data.Forms._
+import play.api.i18n.Messages
 
-object OtherPropertiesForm {
+object AllowableLossesForm {
 
-  val otherPropertiesForm = Form(
+  val allowableLossesForm = Form(
     mapping(
-      "hasOtherProperties" -> text
+      "isClaiming" -> text
         .verifying(Messages("calc.base.undefinedMessage"), mandatoryCheck)
         .verifying(Messages("calc.base.undefinedMessage"), yesNoCheck)
         .transform[Boolean](stringToBoolean, booleanToString)
-    )(OtherPropertiesModel.apply)(OtherPropertiesModel.unapply)
+    )(AllowableLossesModel.apply)(AllowableLossesModel.unapply)
   )
 }
