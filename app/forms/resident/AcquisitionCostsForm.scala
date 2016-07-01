@@ -17,7 +17,7 @@
 package forms.resident
 
 import common.Validation._
-import common.Transformers.stringToBigDecimal
+import common.Transformers._
 import models.resident.AcquisitionCostsModel
 import play.api.data.Form
 import play.api.data.Forms._
@@ -30,7 +30,7 @@ object AcquisitionCostsForm {
       "amount" -> text
         .verifying(Messages("calc.base.undefinedMessage"), mandatoryCheck)
         .verifying(Messages("calc.base.undefinedMessage"), bigDecimalCheck)
-        .transform[BigDecimal](stringToBigDecimal, _.toString())
+        .transform[BigDecimal](stringToBigDecimal, bigDecimalToString)
         .verifying(Messages("calc.base.undefinedMessage"), maxCheck)
         .verifying(Messages("calc.base.undefinedMessage"), minCheck)
         .verifying(Messages("calc.base.undefinedMessage"), decimalPlacesCheck)

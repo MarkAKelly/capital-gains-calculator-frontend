@@ -25,6 +25,11 @@ object Transformers {
     case Failure(_) => BigDecimal(0)
   }
 
+  val bigDecimalToString: BigDecimal => String = (input) => input.scale match {
+    case 1 => input.setScale(2).toString()
+    case _ => input.toString
+  }
+
   val stringToInteger: String => Int = (input) => Try(input.trim.toInt) match {
     case Success(value) => value
     case Failure(_) => 0
