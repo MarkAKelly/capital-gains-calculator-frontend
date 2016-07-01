@@ -49,6 +49,10 @@ class AllowableLossesFormSpec extends UnitSpec with WithFakeApplication {
         form.hasErrors shouldBe true
       }
 
+      "return 1 error" in {
+        form.errors.size shouldBe 1
+      }
+
       s"return an error with message ${commonMessages.undefinedMessage}" in {
         form.error("isClaiming").get.message shouldBe commonMessages.undefinedMessage
       }
@@ -59,6 +63,10 @@ class AllowableLossesFormSpec extends UnitSpec with WithFakeApplication {
 
       "return a form with errors" in {
         form.hasErrors shouldBe true
+      }
+
+      "return 1 error" in {
+        form.errors.size shouldBe 1
       }
 
       s"return an error with message ${commonMessages.undefinedMessage}" in {

@@ -129,7 +129,7 @@ trait DeductionsController extends FeatureLock {
     }
   }
 
-  val submitAllowableLosses = Action.async { implicit request =>
+  val submitAllowableLosses = FeatureLockForRTT.async { implicit request =>
     allowableLossesForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.allowableLosses(errors))),
       success => {

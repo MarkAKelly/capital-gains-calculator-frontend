@@ -56,7 +56,7 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
         status(result) shouldBe 200
       }
 
-      s"return some html with " in {
+      "return some html" in {
         contentType(result) shouldBe Some("text/html")
       }
 
@@ -105,7 +105,7 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
         status(result) shouldBe 303
       }
 
-      "redirect to the reliefs entry page" in {
+      "redirect to the allowable losses value page" in {
         redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/allowable-losses-value")
       }
     }
@@ -118,7 +118,7 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
         status(result) shouldBe 303
       }
 
-      "redirect to the other properties page" in {
+      "redirect to the losses brought forward page" in {
         redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/losses-brought-forward")
       }
     }
@@ -132,7 +132,7 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
         status(result) shouldBe 400
       }
 
-      "render the reliefs page" in {
+      "render the allowable losses" in {
         doc.title() shouldEqual messages.title
       }
     }
