@@ -18,9 +18,7 @@ package common
 
 import controllers.nonresident.routes
 
-object DefaultRoutes extends DefaultRoutes
-
-trait DefaultRoutes {
+object DefaultRoutes {
 
   val missingDataRoute = routes.CalculationController.customerType().url
 
