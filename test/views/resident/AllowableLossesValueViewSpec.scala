@@ -16,9 +16,10 @@
 
 package views.resident
 
+import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{allowableLossesValue => messages}
 
 class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
@@ -34,6 +35,23 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
 
     s"have a title of ${messages.title}" in {
       doc.title() shouldBe messages.title
+    }
+
+    "have a back button" which {
+
+      lazy val backLink = doc.select("a#back-link")
+
+      "has the correct back link text" in {
+        backLink.text shouldBe commonMessages.calcBaseBack
+      }
+
+      "has the back-link class" in {
+        backLink.hasClass("back-link") shouldBe true
+      }
+
+      "has a link to Allowable Losses" in {
+        backLink.attr("href") shouldBe controllers.resident.routes.DeductionsController.allowableLosses().toString
+      }
     }
   }
 }

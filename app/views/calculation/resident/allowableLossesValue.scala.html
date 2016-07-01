@@ -1,4 +1,6 @@
 @()(implicit request: Request[_])
 
-@main_template(title = Messages("calc.resident.allowableLossesValue.title")) {
+@resident_main_template(
+    title = Messages("calc.resident.allowableLossesValue.title"),
+    backLink = Some(controllers.resident.routes.DeductionsController.allowableLosses().toString)) {
 }
