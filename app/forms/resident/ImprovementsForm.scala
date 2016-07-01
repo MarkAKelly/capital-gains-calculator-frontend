@@ -16,7 +16,7 @@
 
 package forms.resident
 
-import common.Transformers.stringToBigDecimal
+import common.Transformers._
 import common.Validation._
 import models.resident.ImprovementsModel
 import play.api.data.Forms._
@@ -30,7 +30,7 @@ object ImprovementsForm {
       "amount" -> text
         .verifying(Messages("calc.base.undefinedMessage"), mandatoryCheck)
         .verifying(Messages("calc.base.undefinedMessage"), bigDecimalCheck)
-        .transform[BigDecimal](stringToBigDecimal, _.toString)
+        .transform[BigDecimal](stringToBigDecimal, bigDecimalToString)
         .verifying(Messages("calc.base.undefinedMessage"), decimalPlacesCheck)
         .verifying(Messages("calc.base.undefinedMessage"), maxCheck)
         .verifying(Messages("calc.base.undefinedMessage"), minCheck)

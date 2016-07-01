@@ -30,7 +30,7 @@ object LossesBroughtForwardValueForm {
       "amount" -> text
         .verifying(Messages("calc.base.undefinedMessage"), mandatoryCheck)
         .verifying(Messages("calc.base.undefinedMessage"), bigDecimalCheck)
-        .transform[BigDecimal](stringToBigDecimal, _.toString())
+        .transform[BigDecimal](stringToBigDecimal, bigDecimalToString)
         .verifying(Messages("calc.base.undefinedMessage"), maxCheck)
         .verifying(Messages("calc.base.undefinedMessage"), minCheck)
         .verifying(Messages("calc.base.undefinedMessage"), decimalPlacesCheck)
