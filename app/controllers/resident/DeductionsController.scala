@@ -23,15 +23,16 @@ import models.resident._
 
 import forms.resident.LossesBroughtForwardForm._
 import forms.resident.LossesBroughtForwardValueForm._
-import forms.resident.OtherPropertiesForm._
-import forms.resident.ReliefsForm._
 import forms.resident.AllowableLossesForm._
 import forms.resident.ReliefsValueForm._
+import forms.resident.OtherPropertiesForm._
+import forms.resident.ReliefsForm._
 
 import play.api.mvc.{Action, Result}
 import views.html.calculation.{resident => views}
 
 import uk.gov.hmrc.play.http.HeaderCarrier
+import play.api.data.Form
 import scala.concurrent.Future
 
 object DeductionsController extends DeductionsController {
@@ -43,16 +44,38 @@ trait DeductionsController extends FeatureLock {
   val calcConnector: CalculatorConnector
 
   //################# Reliefs Actions ########################
+
+  def totalGain(answerSummary: YourAnswersSummaryModel, hc: HeaderCarrier): Future[BigDecimal] = calcConnector.calculateRttGrossGain(answerSummary)(hc)
+
+  def answerSummary(hc: HeaderCarrier): Future[YourAnswersSummaryModel] = calcConnector.getYourAnswers(hc)
+
   val reliefs = FeatureLockForRTT.async { implicit request =>
-    calcConnector.fetchAndGetFormData[ReliefsModel](KeystoreKeys.ResidentKeys.reliefs).map {
-      case Some(data) => Ok(views.reliefs(reliefsForm.fill(data)))
-      case None => Ok(views.reliefs(reliefsForm))
+
+    def routeRequest(totalGain: BigDecimal): Future[Result] = {
+      calcConnector.fetchAndGetFormData[ReliefsModel](KeystoreKeys.ResidentKeys.reliefs).map {
+        case Some(data) => Ok(views.reliefs(reliefsForm.fill(data), totalGain))
+        case None => Ok(views.reliefs(reliefsForm, totalGain))
+      }
     }
+
+    for {
+      answerSummary <- answerSummary(hc)
+      totalGain <- totalGain(answerSummary, hc)
+      route <- routeRequest(totalGain)
+    } yield route
   }
 
-  val submitReliefs = Action.async { implicit request =>
+  val submitReliefs = FeatureLockForRTT.async { implicit request =>
+    def routeRequest(errors: Form[ReliefsModel], totalGain: BigDecimal): Future[Result] = {
+      Future.successful(BadRequest(views.reliefs(errors, totalGain)))
+    }
+
     reliefsForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.reliefs(errors))),
+      errors => {for {
+        answerSummary <- answerSummary(hc)
+        totalGain <- totalGain(answerSummary, hc)
+        route <- routeRequest(errors, totalGain)
+      } yield route},
       success => {
         calcConnector.saveFormData[ReliefsModel](KeystoreKeys.ResidentKeys.reliefs, success)
         success match {
@@ -105,7 +128,7 @@ trait DeductionsController extends FeatureLock {
     } yield finalResult
   }
 
-  val submitOtherProperties = Action.async { implicit request =>
+  val submitOtherProperties = FeatureLockForRTT.async { implicit request =>
 
     def routeRequest(backUrl: String): Future[Result] = {
       otherPropertiesForm.bindFromRequest.fold(
