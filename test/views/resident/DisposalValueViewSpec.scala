@@ -93,60 +93,39 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
       "have continue button " in {
       doc.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
     }
+  }
 
-    s"render a view with an error message ${MessageLookup.undefinedMessage} in a summary " +
-      "when supplied with an empty form" in {
-      val fakePOST = FakePOST("")
-      fakePOST.doc.select("a#amount-error-summary").text should include(MessageLookup.undefinedMessage)
-    }
-    s"render a view with an error message ${MessageLookup.undefinedMessage} in a span " +
-      "when supplied with an empty form" in {
-      val fakePOST = FakePOST("")
-      fakePOST.doc.select("span.error-notification").text should include(MessageLookup.undefinedMessage)
-    }
+  "Disposal Value View with form without errors" should {
 
-    s"render a view with an error message ${MessageLookup.undefinedMessage} in a summary " +
-      "when supplied with a value that cannot be turned to double" in {
-      val fakePOST = FakePOST("ee")
-      fakePOST.doc.select("a#amount-error-summary").text should include(MessageLookup.undefinedMessage)
-    }
-    s"render a view with an error message ${MessageLookup.undefinedMessage} in a span " +
-      "when supplied with a value that cannot be turned to double" in {
-      val fakePOST = FakePOST("ee")
-      fakePOST.doc.select("span.error-notification").text should include(MessageLookup.undefinedMessage)
+    val form = disposalValueForm.bind(Map("amount" -> "100"))
+    lazy val view = views.html.calculation.resident.disposalValue(form)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "display the value of the form" in {
+      doc.body.select("#amount").attr("value") shouldEqual "100"
     }
 
-    s"render a view with an error message ${MessageLookup.undefinedMessage} in a summary " +
-      "when a number that has more than 2 decimal places is supplied" in {
-      val fakePOST = FakePOST("100.0000")
-      fakePOST.doc.select("a#amount-error-summary").text shouldEqual MessageLookup.undefinedMessage
-    }
-    s"render a view with an error message ${MessageLookup.undefinedMessage} in a span " +
-      "when a number that has more than 2 decimal places is supplied" in {
-      val fakePOST = FakePOST("100.0000")
-      fakePOST.doc.select("span.error-notification").text shouldEqual MessageLookup.undefinedMessage
+    "display no error summary message for the amount" in {
+      doc.body.select("#amount-error-summary").size shouldBe 0
     }
 
-    s"render a view with an error message ${MessageLookup.undefinedMessage} in a summary " +
-      "when a number that is greater than the maximum value is supplied" in {
-      val fakePOST = FakePOST("11000000000")
-      fakePOST.doc.select("a#amount-error-summary").text shouldEqual MessageLookup.undefinedMessage
+    "display no error message for the input" in {
+      doc.body.select(".form-group .error-notification").size shouldBe 0
     }
-    s"render a view with an error message ${MessageLookup.undefinedMessage} in a span " +
-      "when a number that is greater than the maximum value is supplied" in {
-      val fakePOST = FakePOST("11000000000")
-      fakePOST.doc.select("span.error-notification").text shouldEqual MessageLookup.undefinedMessage
+  }
+
+  "Disposal Value View with form with errors" should {
+
+    val form = disposalValueForm.bind(Map("amount" -> ""))
+    lazy val view = views.html.calculation.resident.disposalValue(form)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "display an error summary message for the amount" in {
+      doc.body.select("#amount-error-summary").size shouldBe 1
     }
 
-    s"render a view with an error message ${MessageLookup.undefinedMessage} in a summary " +
-      "when a number that is not a positive value is supplied" in {
-      val fakePOST = FakePOST("-1000")
-      fakePOST.doc.select("a#amount-error-summary").text shouldEqual MessageLookup.undefinedMessage
-    }
-    s"render a view with an error message ${MessageLookup.undefinedMessage} in a span " +
-      "when a number that is not a positive value is supplied" in {
-      val fakePOST = FakePOST("-1000")
-      fakePOST.doc.select("span.error-notification").text shouldEqual MessageLookup.undefinedMessage
+    "display an error message for the input" in {
+      doc.body.select(".form-group .error-notification").size shouldBe 1
     }
   }
 }
