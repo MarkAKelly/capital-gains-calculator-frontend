@@ -17,11 +17,12 @@
 package controllers.resident.GainControllerTests
 
 import assets.MessageLookup.{improvementsView => messages}
+import common.Dates._
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.GainController
-import models.resident.ImprovementsModel
+import models.resident.{ImprovementsModel, YourAnswersSummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -33,12 +34,20 @@ import scala.concurrent.Future
 
 class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  def setupTarget(getData: Option[ImprovementsModel]): GainController = {
+  val summaryModel = mock[YourAnswersSummaryModel]
+
+  def setupTarget(getData: Option[ImprovementsModel], gainAnswers: YourAnswersSummaryModel, totalGain: BigDecimal): GainController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
     when(mockCalcConnector.fetchAndGetFormData[ImprovementsModel](Matchers.eq(KeystoreKeys.ResidentKeys.improvements))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.getYourAnswers(Matchers.any()))
+      .thenReturn(Future.successful(gainAnswers))
+
+    when(mockCalcConnector.calculateRttGrossGain(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(totalGain))
 
     new GainController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -49,7 +58,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     "there is no keystore data" should {
 
-      lazy val target = setupTarget(None)
+      lazy val target = setupTarget(None, summaryModel, BigDecimal(0))
       lazy val result = target.improvements(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -67,7 +76,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     "there is some keystore data" should {
 
-      lazy val target = setupTarget(Some(ImprovementsModel(1000)))
+      lazy val target = setupTarget(Some(ImprovementsModel(1000)), summaryModel, BigDecimal(0))
       lazy val result = target.improvements(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -99,16 +108,45 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
 
   "Calling .submitImprovements from the GainCalculationConroller" when {
 
-    "a valid form is submitted" should {
+    "a valid form is submitted with a zero gain result" should {
+      lazy val target = setupTarget(None, summaryModel, BigDecimal(0))
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
-      lazy val result = GainController.submitImprovements(request)
+      lazy val result = target.submitImprovements(request)
 
       "return a 303" in {
         status(result) shouldBe 303
       }
 
-      "redirect to the improvements page" in {
+      "redirect to the summary page" in {
         redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/summary")
+      }
+    }
+
+    "a valid form is submitted with a negative gain result" should {
+      lazy val target = setupTarget(None, summaryModel, BigDecimal(-1000))
+      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+      lazy val result = target.submitImprovements(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the summary page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/summary")
+      }
+    }
+
+    "a valid form is submitted with a positive gain result" should {
+      lazy val target = setupTarget(None, summaryModel, BigDecimal(1000))
+      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+      lazy val result = target.submitImprovements(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the reliefs page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/reliefs")
       }
     }
 
