@@ -163,4 +163,13 @@ object MessageLookup {
     val helpLinkOne = "Tax-free allowances for Capital Gains Tax"
   }
 
+  //Previous Taxable Gains messages
+  object previousTaxableGains {
+    val title = "What was your taxable gain?"
+  }
+
+  //Current Income messages
+
+  //Personal Allowance messages
+
 }
