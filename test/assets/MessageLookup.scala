@@ -156,6 +156,10 @@ object MessageLookup {
   //Annual Exempt Amount messages
   object annualExemptAmount {
     val title = "How much of your Capital Gains Tax allowance have you got left?"
+    val question = "Do you want to claim any tax reliefs on your total gain?"
+    val help = "This is the amount you can make in capital gains before you have to pay tax."
+    val helpOne = "It's £11,100 a year."
+    val helpLinkOne = "Tax-free allowances for Capital Gains Tax"
   }
 
 }

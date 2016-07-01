@@ -1,4 +1,34 @@
-@()(implicit request: Request[_])
+@import models.resident.AnnualExemptAmountModel
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import views.html.helpers._
 
-@main_template(title = Messages("calc.resident.annualExemptAmount.title")) {
+@(annualExemptAmountForm: Form[AnnualExemptAmountModel])(implicit request: Request[_])
+
+@import views.html.helpers._
+
+@sidebar = {
+
+<a target="_blank" href="https://www.gov.uk/capital-gains-tax/allowances">@Messages("calc.resident.annualExemptAmount.link.one")
+    <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
+</a>
+
+
+}
+
+@main_template(Messages("calc.resident.annualExemptAmount.title"), sidebarLinks = Some(sidebar)) {
+
+<a id="back-link" class="back-link" href="@controllers.resident.routes.DeductionsController.lossesBroughtForward">Back</a>
+
+@errorSummary(annualExemptAmountForm, "amount")
+
+<<h1 class="heading-large">@Messages("calc.resident.annualExemptAmount.title")</h1>
+
+@form(action = controllers.resident.routes.DeductionsController.submitAnnualExemptAmount) {
+
+@formInputMoney(annualExemptAmountForm, "amount", "", Some(Messages("calc.resident.annualExemptAmount.helpText.one") + "<br>" + Messages("calc.resident.annualExemptAmount.helpText.two")))
+
+<button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+
+}
+
 }

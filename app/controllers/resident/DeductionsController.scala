@@ -25,6 +25,7 @@ import forms.resident.OtherPropertiesForm._
 import forms.resident.ReliefsForm._
 import forms.resident.AllowableLossesForm._
 import forms.resident.ReliefsValueForm._
+import forms.resident.AnnualExemptAmountForm._
 import play.api.mvc.{Action, Result}
 import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation.{resident => views}
@@ -173,9 +174,19 @@ trait DeductionsController extends FeatureLock {
   }
 
   //################# Annual Exempt Amount Input Actions #############################
-  val annualExemptAmount = Action.async { implicit request =>
-    Future.successful(Ok(views.annualExemptAmount()))
-
+  val annualExemptAmount = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](KeystoreKeys.ResidentKeys.annualExemptAmount).map {
+      case Some(data) => Ok(views.annualExemptAmount(annualExemptAmountForm.fill(data)))
+      case None => Ok(views.annualExemptAmount(annualExemptAmountForm))
+    }
+  }
+  val submitAnnualExemptAmount = FeatureLockForRTT.async { implicit request =>
+    annualExemptAmountForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.annualExemptAmount(errors))),
+      success => {
+        calcConnector.saveFormData(KeystoreKeys.ResidentKeys.annualExemptAmount, success)
+        Future.successful(Redirect(routes.SummaryController.summary()))}
+    )
   }
 
   //################# Second Summary Actions ###############################
