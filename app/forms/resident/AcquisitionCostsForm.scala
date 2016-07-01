@@ -18,7 +18,7 @@ package forms.resident
 
 import common.Constants
 import common.Validation._
-import common.Transformers.stringToBigDecimal
+import common.Transformers._
 import models.resident.AcquisitionCostsModel
 import play.api.data.Form
 import play.api.data.Forms._

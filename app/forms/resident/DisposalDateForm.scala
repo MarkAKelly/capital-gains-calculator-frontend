@@ -28,18 +28,18 @@ object DisposalDateForm {
   val disposalDateForm = Form(
     mapping(
       "disposalDateDay" -> text
-        .verifying(Messages("calc.base.undefinedMessage"), mandatoryCheck)
-        .verifying(Messages("calc.base.undefinedMessage"), integerCheck)
+        .verifying(Messages("calc.resident.disposalDate.invalidDayError"), mandatoryCheck)
+        .verifying(Messages("calc.resident.disposalDate.invalidDayError"), integerCheck)
         .transform[Int](stringToInteger, _.toString),
       "disposalDateMonth" -> text
-        .verifying(Messages("calc.base.undefinedMessage"), mandatoryCheck)
-        .verifying(Messages("calc.base.undefinedMessage"), integerCheck)
+        .verifying(Messages("calc.resident.disposalDate.invalidMonthError"), mandatoryCheck)
+        .verifying(Messages("calc.resident.disposalDate.invalidMonthError"), integerCheck)
         .transform[Int](stringToInteger, _.toString),
       "disposalDateYear" -> text
-        .verifying(Messages("calc.base.undefinedMessage"), mandatoryCheck)
-        .verifying(Messages("calc.base.undefinedMessage"), integerCheck)
+        .verifying(Messages("calc.resident.disposalDate.invalidYearError"), mandatoryCheck)
+        .verifying(Messages("calc.resident.disposalDate.invalidYearError"), integerCheck)
         .transform[Int](stringToInteger, _.toString)
     )(DisposalDateModel.apply)(DisposalDateModel.unapply)
-      .verifying(Messages("calc.base.undefinedMessage"), fields => isValidDate(fields.day, fields.month, fields.year))
+      .verifying(Messages("calc.common.date.error.invalidDate"), fields => isValidDate(fields.day, fields.month, fields.year))
   )
 }

@@ -44,10 +44,10 @@ object MessageLookup {
     val day = "Day"
     val month = "Month"
     val year = "Year"
-    val invalidDateError = "error-placeholder"
-    val emptyDateFieldError = "empty-error-placeholder"
+    val invalidDayError = "Enter a day"
+    val invalidMonthError = "Enter a month"
+    val invalidYearError = "Enter a year"
     val realDateError = "Enter a real date"
-    val nonNumericError = "non-numeric-placeholder"
   }
 
   //Disposal Value messages
@@ -109,8 +109,8 @@ object MessageLookup {
 
   //Reliefs messages
   object reliefs {
-    val title = "Do you want to claim any tax reliefs on your total gain?"
-    val question = "Do you want to claim any tax reliefs on your total gain?"
+    val title = "Do you want to claim any tax reliefs on your total gain of £10,000?"
+    val question = "Do you want to claim any tax reliefs on your total gain of £100?"
     val help = "For example, lettings relief"
     val helpOne = "Tax reliefs can lower the amount of tax you owe. For example, you might be able to claim:"
     val helpLinkOne = "Private Residence Relief"
@@ -142,6 +142,7 @@ object MessageLookup {
   //Losses Brought Forward messages
   object lossesBroughtForward {
     val title = "Are there any previous losses you want to bring forward?"
+    val question = "Are there any previous losses you want to bring forward?"
   }
 
   //Losses Brought Forward messages
@@ -163,6 +164,19 @@ object MessageLookup {
   //Annual Exempt Amount messages
   object annualExemptAmount {
     val title = "How much of your Capital Gains Tax allowance have you got left?"
+    val question = "How much of your Capital Gains Tax allowance have you got left?"
+    val help = "This is the amount you can make in capital gains before you have to pay tax."
+    val helpOne = "It's £11,100 a year."
+    val helpLinkOne = "Tax-free allowances for Capital Gains Tax"
   }
+
+  //Previous Taxable Gains messages
+  object previousTaxableGains {
+    val title = "What was your taxable gain?"
+  }
+
+  //Current Income messages
+
+  //Personal Allowance messages
 
 }

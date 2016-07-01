@@ -7,7 +7,17 @@
         @question
     </div>
     <div id="@{rowId}-amount" class="grid-layout__column grid-layout__column--1-2">
-        <span class="bold-medium">&pound;@MoneyPounds(amount.abs,0).quantity</span>
+        @amount.scale match {
+            case 0 => {
+                <span class="bold-medium">&pound;@MoneyPounds(amount, 0).quantity</span>
+            }
+            case _ if amount == amount.setScale(0, BigDecimal.RoundingMode.FLOOR) => {
+                <span class="bold-medium">&pound;@MoneyPounds(amount, 0).quantity</span>
+            }
+            case _ => {
+                <span class="bold-medium">&pound;@MoneyPounds(amount, 2).quantity</span>
+            }
+        }
         @if(link.isDefined){<br><a href="@link" class="font-xsmall">@Messages("calc.base.change")</a>}
     </div>
 </div>

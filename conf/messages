@@ -294,6 +294,9 @@ calc.summary.warning.taxYear = Your total might be less accurate because you did
 
 ## Disposal Date messages
 calc.resident.disposalDate.question = When did you sign the contract that made someone else the owner?
+calc.resident.disposalDate.invalidDayError = Enter a day
+calc.resident.disposalDate.invalidMonthError = Enter a month
+calc.resident.disposalDate.invalidYearError = Enter a year
 
 ## Disposal Value messages
 calc.resident.disposal.value.title = How much did you sell the property for?
@@ -344,8 +347,8 @@ calc.resident.summary.totalLoss = Loss
 
 
 ## Reliefs messages
-calc.resident.reliefs.title = Do you want to claim any tax reliefs on your total gain?
-calc.resident.reliefs.question = Do you want to claim any tax reliefs on your total gain?
+calc.resident.reliefs.title = Do you want to claim any tax reliefs on your total gain of £{0}?
+calc.resident.reliefs.question = Do you want to claim any tax reliefs on your total gain of £{0}?
 calc.resident.reliefs.helpText = For example, lettings relief
 calc.resident.reliefs.additionalContent.one = Tax reliefs can lower the amount of tax you owe. For example, you might be able to claim:
 calc.resident.reliefs.link.one = Private Residence Relief
@@ -372,9 +375,14 @@ calc.resident.allowableLossesValue.title = What''s the total value of your allow
 
 ## Annual Exempt Amount messages
 calc.resident.annualExemptAmount.title = How much of your Capital Gains Tax allowance have you got left?
+calc.resident.annualExemptAmount.question = How much of your Capital Gains Tax allowance have you got left?
+calc.resident.annualExemptAmount.link.one = Tax-free allowances for Capital Gains Tax
+calc.resident.annualExemptAmount.helpText.one = This is the amount you can make in capital gains before you have to pay tax.
+calc.resident.annualExemptAmount.helpText.two = It''s £11,100 a year.
 
 ##Losses Brought Forward messages
 calc.resident.lossesBroughtForward.title = Are there any previous losses you want to bring forward?
+calc.resident.lossesBroughtForward.question = Are there any previous losses you want to bring forward?
 
 
 ## Allowable Losses messages
@@ -390,3 +398,9 @@ calc.resident.allowableLosses.helpInfo.point3 = you haven''t already used in an 
 calc.resident.lossesBroughtForwardValue.title = What''s the total value of the loss to bring forward?
 calc.resident.lossesBroughtForwardValue.pageHeading = What''s the total value of the loss to bring forward?
 
+## Previous Taxable Gains messages
+calc.resident.previousTaxableGains.title = What was your taxable gain?
+
+## Current Income messages
+
+## Personal Allowance messages

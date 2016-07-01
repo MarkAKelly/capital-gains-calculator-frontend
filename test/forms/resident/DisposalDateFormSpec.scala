@@ -17,40 +17,81 @@
 package forms.resident
 
 import models.resident.DisposalDateModel
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import forms.resident.DisposalDateForm._
+import assets.MessageLookup.{disposalDate => messages}
+import controllers.helpers.FakeRequestHelper
 
-class DisposalDateFormSpec extends UnitSpec {
+class DisposalDateFormSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Creating the form for the disposal date" should {
     "return a populated form using .fill" in {
-      val model = DisposalDateModel(10, 10, 2016)
-      val form = disposalDateForm.fill(model)
+      lazy val model = DisposalDateModel(10, 10, 2016)
+      lazy val form = disposalDateForm.fill(model)
       form.value.get shouldBe DisposalDateModel(10, 10, 2016)
     }
 
     "return a Some if a model with valid inputs is supplied using .bind" in {
-      val map = Map(("disposalDateDay", "10"), ("disposalDateMonth", "10"), ("disposalDateYear", "2016"))
-      val form = disposalDateForm.bind(map)
+      lazy val map = Map(("disposalDateDay", "10"), ("disposalDateMonth", "10"), ("disposalDateYear", "2016"))
+      lazy val form = disposalDateForm.bind(map)
       form.value shouldBe Some(DisposalDateModel(10, 10, 2016))
     }
+  }
+  "Creating an invalid form for the disposal date" when {
 
-    "return a None if a model with non-numeric inputs is supplied using .bind" in {
-      val map = Map(("disposalDateDay", "a"), ("disposalDateMonth", "b"), ("disposalDateYear", "c"))
-      val form = disposalDateForm.bind(map)
-      form.hasErrors shouldBe true
+    "empty fields are entered" should {
+      lazy val map = Map(("disposalDateDay", ""), ("disposalDateMonth", ""), ("disposalDateYear", ""))
+      lazy val form = disposalDateForm.bind(map)
+
+      "return a form with errors" in {
+        form.hasErrors shouldBe true
+      }
+
+      s"have an error message for day of ${messages.invalidDayError}" in {
+        form.error("disposalDateDay").get.message shouldBe messages.invalidDayError
+      }
+
+      s"have an error message for month of ${messages.invalidMonthError}" in {
+        form.error("disposalDateMonth").get.message shouldBe messages.invalidMonthError
+      }
+
+      s"have an error message for year of ${messages.invalidYearError}" in {
+        form.error("disposalDateYear").get.message shouldBe messages.invalidYearError
+      }
     }
 
-    "return a None if a model with a non-valid date input is supplied using .bind" in {
-      val map = Map(("disposalDateDay", "32"), ("disposalDateMonth", "4"), ("disposalDateYear", "2016"))
-      val form = disposalDateForm.bind(map)
-      form.hasErrors shouldBe true
+    "non-numeric fields are entered" should {
+      lazy val map = Map(("disposalDateDay", "a"), ("disposalDateMonth", "b"), ("disposalDateYear", "c"))
+      lazy val form = disposalDateForm.bind(map)
+
+      "return a form with errors" in {
+        form.hasErrors shouldBe true
+      }
+
+      s"have an error message for day of ${messages.invalidDayError}" in {
+        form.error("disposalDateDay").get.message shouldBe messages.invalidDayError
+      }
+
+      s"have an error message for month of ${messages.invalidMonthError}" in {
+        form.error("disposalDateMonth").get.message shouldBe messages.invalidMonthError
+      }
+
+      s"have an error message for year of ${messages.invalidYearError}" in {
+        form.error("disposalDateYear").get.message shouldBe messages.invalidYearError
+      }
     }
 
-    "return a None if a model with an empty input is supplied using .bind" in {
-      val map = Map(("disposalDateDay", ""), ("disposalDateMonth", "4"), ("disposalDateYear", "2016"))
-      val form = disposalDateForm.bind(map)
-      form.hasErrors shouldBe true
+    "an invalid date is entered" should {
+      lazy val map = Map(("disposalDateDay", "32"), ("disposalDateMonth", "4"), ("disposalDateYear", "2016"))
+      lazy val form = disposalDateForm.bind(map)
+
+      "return a form with errors" in {
+        form.hasErrors shouldBe true
+      }
+
+      s"have an error message for the date of ${messages.realDateError}" in {
+        form.errors.apply(0).message shouldBe messages.realDateError
+      }
     }
   }
 }
