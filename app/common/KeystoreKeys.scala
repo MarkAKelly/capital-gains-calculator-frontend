@@ -50,6 +50,7 @@ trait KeystoreKeys {
     val acquisitionValue = "res:acquisitionValue"
     val acquisitionCosts = "res:acquisitionCosts"
     val improvements = "res:improvements"
+    val allowableLosses = "res:allowableLosses"
     val reliefs = "res:reliefs"
     val reliefsValue = "res:reliefsValue"
     val lossesBroughtForward = "res:lossesBroughtForward"
