@@ -41,6 +41,7 @@ POST    /other-properties                 controllers.resident.DeductionsControl
 
 #Allowable Losses Routes
 GET     /allowable-losses                 controllers.resident.DeductionsController.allowableLosses
+POST    /allowable-losses                 controllers.resident.DeductionsController.submitAllowableLosses
 
 #Allowable Losses Value Routes
 GET     /allowable-losses-value           controllers.resident.DeductionsController.allowableLossesValue

@@ -58,7 +58,7 @@ trait SummaryController extends FeatureLock {
     for {
       answers <- getYourAnswers
       grossGain <- calculatorConnector.calculateRttGrossGain(answers)
-    } yield Ok(views.html.calculation.resident.summary(answers, grossGain))
+    } yield Ok(views.html.calculation.resident.gainSummary(answers, grossGain))
   }
 }
 
