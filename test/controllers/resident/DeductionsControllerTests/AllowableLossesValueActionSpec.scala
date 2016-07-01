@@ -46,7 +46,7 @@ class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication w
     }
   }
 
-  "Calling .allowableLossesValue from the DeductionsController" should {
+  "Calling .allowableLossesValue from the DeductionsController" when {
 
     "there is no keystore data" should {
 
@@ -81,7 +81,7 @@ class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication w
         contentType(result) shouldBe Some("text/html")
       }
 
-      "display the Reliefs Value view" in {
+      "display the Allowable Losses Value view" in {
         doc.title shouldBe messages.title
       }
 
@@ -128,7 +128,7 @@ class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication w
         status(result) shouldBe 400
       }
 
-      "render the Reliefs Value page" in {
+      "render the Allowable Losses Value page" in {
         doc.title() shouldEqual messages.title
       }
     }
