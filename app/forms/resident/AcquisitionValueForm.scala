@@ -16,24 +16,26 @@
 
 package forms.resident
 
+import common.Constants
 import common.Transformers._
 import common.Validation._
 import models.resident.AcquisitionValueModel
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.Messages
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object AcquisitionValueForm {
 
   val acquisitionValueForm = Form(
     mapping(
       "amount" -> text
-        .verifying(Messages("calc.base.undefinedMessage"), mandatoryCheck)
-        .verifying(Messages("calc.base.undefinedMessage"), bigDecimalCheck)
+        .verifying(Messages("calc.common.error.mandatoryAmount"), mandatoryCheck)
+        .verifying(Messages("calc.common.error.invalidAmount"), bigDecimalCheck)
         .transform[BigDecimal](stringToBigDecimal, _.toString())
-        .verifying(Messages("calc.base.undefinedMessage"), maxCheck)
-        .verifying(Messages("calc.base.undefinedMessage"), minCheck)
-        .verifying(Messages("calc.base.undefinedMessage"), decimalPlacesCheck)
+        .verifying(Messages("calc.common.error.maxAmountExceeded", MoneyPounds(Constants.maxNumeric, 0).quantity), maxCheck)
+        .verifying(Messages("calc.common.error.minimumAmount"), minCheck)
+        .verifying(Messages("calc.common.error.invalidAmount"), decimalPlacesCheck)
     )(AcquisitionValueModel.apply)(AcquisitionValueModel.unapply)
   )
 }
