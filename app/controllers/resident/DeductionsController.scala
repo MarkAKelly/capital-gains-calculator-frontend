@@ -112,9 +112,10 @@ trait DeductionsController extends FeatureLock {
         errors => Future.successful(BadRequest(views.otherProperties(errors, backUrl))),
         success => {
           calcConnector.saveFormData[OtherPropertiesModel](KeystoreKeys.ResidentKeys.otherProperties, success)
-          success match {
-            case OtherPropertiesModel(true) => Future.successful(Redirect(routes.DeductionsController.allowableLosses()))
-            case _ => Future.successful(Redirect(routes.DeductionsController.lossesBroughtForward()))
+          if (success.hasOtherProperties) {
+            Future.successful(Redirect(routes.DeductionsController.allowableLosses()))
+          } else {
+            Future.successful(Redirect(routes.DeductionsController.lossesBroughtForward()))
           }
         }
       )
@@ -158,6 +159,7 @@ trait DeductionsController extends FeatureLock {
   def otherPropertiesCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
     calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.ResidentKeys.otherProperties).map {
       case Some(data) => data.hasOtherProperties
+      case None => false
     }
   }
 
@@ -183,12 +185,12 @@ trait DeductionsController extends FeatureLock {
     }
   }
 
-  val lossesBroughtForward = ValidateSession.async { implicit request =>
+  val lossesBroughtForward = FeatureLockForRTT.async { implicit request =>
 
     def routeRequest(backUrl: String): Future[Result] = {
       calcConnector.fetchAndGetFormData[LossesBroughtForwardModel](KeystoreKeys.ResidentKeys.lossesBroughtForward).map {
-        case Some(data) => Ok(views.lossesBroughtForward(lossesBroughtForwardForm.fill(data)))
-        case None => Ok(views.lossesBroughtForward(lossesBroughtForwardForm))
+        case Some(data) => Ok(views.lossesBroughtForward(lossesBroughtForwardForm.fill(data), backUrl))
+        case _ => Ok(views.lossesBroughtForward(lossesBroughtForwardForm, backUrl))
       }
     }
     for {
@@ -197,7 +199,7 @@ trait DeductionsController extends FeatureLock {
     } yield finalResult
   }
 
-  def claimingBFLossesCheck(model: LossesBroughtForwardModel)(implicit hc: HeaderCarrier): Future[Boolean] ={
+  def claimingBFLossesCheck(model: LossesBroughtForwardModel)(implicit hc: HeaderCarrier): Future[Boolean] = {
     Future(model.option)
   }
 
@@ -208,16 +210,16 @@ trait DeductionsController extends FeatureLock {
     } yield (broughtForwardLossesClaimed, otherPropertiesClaimed)
 
     match {
-      case (true, _) => Future.successful(Redirect(routes.DeductionsController.lossesBroughtForwardValue()))
-      case (false, true) => Future.successful(Redirect(routes.DeductionsController.annualExemptAmount()))
-      case _ => Future.successful(Redirect(routes.SummaryController.summary()))
+      case (true, _) => Redirect(routes.DeductionsController.lossesBroughtForwardValue())
+      case (false, true) => Redirect(routes.DeductionsController.annualExemptAmount())
+      case _ => Redirect(routes.SummaryController.summary())
     }
   }
 
-  val submitLossesBroughtForward = ValidateSession.async { implicit request =>
+  val submitLossesBroughtForward = FeatureLockForRTT.async { implicit request =>
     def routeRequest(backUrl: String): Future[Result] = {
       lossesBroughtForwardForm.bindFromRequest.fold(
-        errors => Future.successful(BadRequest(views.lossesBroughtForward(errors))),
+        errors => Future.successful(BadRequest(views.lossesBroughtForward(errors, backUrl))),
         success => {
           calcConnector.saveFormData[LossesBroughtForwardModel](KeystoreKeys.ResidentKeys.lossesBroughtForward, success)
           broughtForwardLossesContinueRoute(success)

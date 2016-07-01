@@ -17,7 +17,7 @@
 package forms.resident
 
 import assets.MessageLookup
-import models.resident.{AcquisitionValueModel, BroughtForwardLossesModel}
+import models.resident._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import forms.resident.LossesBroughtForwardForm._
 import assets.MessageLookup._

@@ -2,15 +2,15 @@
 @import views.html.helpers._
 @import models.resident.LossesBroughtForwardModel
 
-@(lossesBroughtForwardForm : Form[LossesBroughtForwardModel])(implicit request: Request[_])
+@(lossesBroughtForwardForm : Form[LossesBroughtForwardModel], backLinkUrl : String)(implicit request: Request[_])
 
-@resident_main_template(title = Messages("calc.resident.lossesBroughtForward.title"), backLink = Some("")) {
+@resident_main_template(title = Messages("calc.resident.lossesBroughtForward.title"), backLink = Some(backLinkUrl)) {
 
     @errorSummary(lossesBroughtForwardForm, "option")
 
-    <h1>@Messages("calc.resident.lossesBroughtForward.question")</h1>
+    <h1 class="heading-large">@Messages("calc.resident.lossesBroughtForward.question")</h1>
 
-    @form(action = controllers.resident.routes.DeductionsController.lossesBroughtForward) {
+    @form(action = controllers.resident.routes.DeductionsController.submitLossesBroughtForward) {
 
         @formInputRadioGroup(
             field = lossesBroughtForwardForm("option"),
@@ -22,10 +22,11 @@
             '_legendClass -> "visuallyhidden",
             '_labelAfter -> true,
             '_labelClass -> "block-label",
-            '_groupClass -> "inline form-group"
+            '_groupClass -> "inline form-group radio-list"
         )
 
-    <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+        <input type="hidden" name="isClaiming" value="" />
+        <button class="button yes-no-button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
 
     }
 

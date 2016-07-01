@@ -30,7 +30,7 @@ object LossesBroughtForwardForm {
       "option" -> text
         .verifying(Messages("calc.base.undefinedMessage"), mandatoryCheck)
         .verifying(Messages("calc.base.undefinedMessage"), yesNoCheck)
-        .transform[Boolean](stringToBoolean, _.toString())
+        .transform[Boolean](stringToBoolean, booleanToString)
     )(LossesBroughtForwardModel.apply)(LossesBroughtForwardModel.unapply)
   )
 }
