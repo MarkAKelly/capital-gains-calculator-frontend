@@ -21,6 +21,7 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.test.Helpers._
 import assets.MessageLookup.{summary => messages}
+import common.Dates._
 import common.KeystoreKeys.ResidentKeys
 import connectors.CalculatorConnector
 import models.resident._
@@ -49,23 +50,15 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
 
     val mockCalculatorConnector = mock[CalculatorConnector]
 
-    when(mockCalculatorConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(ResidentKeys.disposalDate))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(disposalDateData))
+    val answersModel = YourAnswersSummaryModel(constructDate(disposalDateData.get.day, disposalDateData.get.month, disposalDateData.get.year),
+      disposalValueData.get.amount,
+      disposalCostsData.get.amount,
+      acquisitionValueData.get.amount,
+      acquisitionCostsData.get.amount,
+      improvementsData.get.amount)
 
-    when(mockCalculatorConnector.fetchAndGetFormData[DisposalValueModel](Matchers.eq(ResidentKeys.disposalValue))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(disposalValueData))
-
-    when(mockCalculatorConnector.fetchAndGetFormData[DisposalCostsModel](Matchers.eq(ResidentKeys.disposalCosts))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(disposalCostsData))
-
-    when(mockCalculatorConnector.fetchAndGetFormData[AcquisitionValueModel](Matchers.eq(ResidentKeys.acquisitionValue))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(acquisitionValueData))
-
-    when(mockCalculatorConnector.fetchAndGetFormData[AcquisitionCostsModel](Matchers.eq(ResidentKeys.acquisitionCosts))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(acquisitionCostsData))
-
-    when(mockCalculatorConnector.fetchAndGetFormData[ImprovementsModel](Matchers.eq(ResidentKeys.improvements))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(improvementsData))
+    when(mockCalculatorConnector.getYourAnswers(Matchers.any()))
+        .thenReturn(Future.successful(answersModel))
 
     when(mockCalculatorConnector.calculateRttGrossGain(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(grossGain))

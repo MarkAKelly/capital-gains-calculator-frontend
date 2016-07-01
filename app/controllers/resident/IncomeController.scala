@@ -18,23 +18,22 @@ package controllers.resident
 
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
-import models.resident._
-import uk.gov.hmrc.play.http.HeaderCarrier
+import play.api.mvc.Action
 
 import scala.concurrent.Future
 
-trait SummaryController extends FeatureLock {
+object IncomeController extends IncomeController {
 
-  val calculatorConnector: CalculatorConnector
+  val calcConnector = CalculatorConnector
 
-  val summary = FeatureLockForRTT.async { implicit request =>
-    for {
-      answers <- calculatorConnector.getYourAnswers
-      grossGain <- calculatorConnector.calculateRttGrossGain(answers)
-    } yield Ok(views.html.calculation.resident.gainSummary(answers, grossGain))
-  }
 }
 
-object SummaryController extends SummaryController {
-  val calculatorConnector = CalculatorConnector
+trait IncomeController extends FeatureLock {
+
+  val calcConnector: CalculatorConnector
+
+  val previousTaxableGains = FeatureLockForRTT.async {implicit request =>
+    Future.successful(Ok(views.html.calculation.resident.previousTaxableGains()))
+  }
+
 }

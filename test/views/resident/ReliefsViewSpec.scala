@@ -26,9 +26,9 @@ import forms.resident.ReliefsForm._
 
 class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Reliefs view" should {
+  "Reliefs view with a gain of £10000" should {
 
-    lazy val view = views.reliefs(reliefsForm)(fakeRequest)
+    lazy val view = views.reliefs(reliefsForm, BigDecimal(10000))(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -43,16 +43,16 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
       doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/improvements"
     }
 
-    s"have the question of the page ${messages.question}" in {
-      doc.select("h1").text() shouldEqual messages.question
+    s"have the question of the page ${messages.title}" in {
+      doc.select("h1").text() shouldEqual messages.title
     }
 
     "render a form tag with a submit action" in {
       doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/reliefs"
     }
 
-    s"have a legend for an input with text ${messages.question}" in {
-      doc.select("legend.visuallyhidden").text() shouldEqual messages.question
+    s"have a legend for an input with text ${messages.title}" in {
+      doc.select("legend.visuallyhidden").text() shouldEqual messages.title
     }
 
     s"have help text with the message ${messages.help}" in {
@@ -96,19 +96,31 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
     }
   }
 
-  "Reliefs view with pre-selected values" should {
+  "Reliefs view with pre-selected values and a gain of £100" should {
     lazy val form = reliefsForm.bind(Map(("isClaiming", "Yes")))
-    lazy val view = views.reliefs(form)(fakeRequest)
+    lazy val view = views.reliefs(form, BigDecimal(100))(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have the option 'Yes' auto selected" in {
       doc.body.getElementById("isClaiming-yes").parent.className should include("selected")
     }
+
+    s"have a title ${messages.question}" in {
+      doc.title() shouldBe messages.question
+    }
+
+    s"have the question of the page ${messages.question}" in {
+      doc.select("h1").text() shouldEqual messages.question
+    }
+
+    s"have a legend for an input with text ${messages.question}" in {
+      doc.select("legend.visuallyhidden").text() shouldEqual messages.question
+    }
   }
 
   "Reliefs view with errors" should {
     lazy val form = reliefsForm.bind(Map(("isClaiming", "")))
-    lazy val view = views.reliefs(form)(fakeRequest)
+    lazy val view = views.reliefs(form, BigDecimal(10000))(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {

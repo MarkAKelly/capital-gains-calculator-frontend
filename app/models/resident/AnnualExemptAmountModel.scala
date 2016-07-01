@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package common
+package models.resident
 
-import controllers.nonresident.routes
+import play.api.libs.json.Json
 
-object DefaultRoutes {
+case class AnnualExemptAmountModel(amount: BigDecimal)
 
-  val missingDataRoute = routes.CalculationController.customerType().url
-
+object AnnualExemptAmountModel {
+  implicit val format = Json.format[AnnualExemptAmountModel]
 }

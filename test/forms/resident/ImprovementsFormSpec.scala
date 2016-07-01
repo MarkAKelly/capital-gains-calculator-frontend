@@ -16,7 +16,7 @@
 
 package forms.resident
 
-import assets.MessageLookup
+import assets.MessageLookup.errorMessages
 import controllers.helpers.FakeRequestHelper
 import forms.resident.ImprovementsForm._
 import models.resident.ImprovementsModel
@@ -58,7 +58,7 @@ class ImprovementsFormSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.undefinedMessage
+        form.error("amount").get.message shouldBe errorMessages.mandatoryAmount
       }
     }
 
@@ -76,7 +76,7 @@ class ImprovementsFormSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.undefinedMessage
+        form.error("amount").get.message shouldBe errorMessages.mandatoryAmount
       }
     }
 
@@ -93,7 +93,7 @@ class ImprovementsFormSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.undefinedMessage
+        form.error("amount").get.message shouldBe errorMessages.invalidAmount
       }
     }
 
@@ -110,7 +110,7 @@ class ImprovementsFormSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.undefinedMessage
+        form.error("amount").get.message shouldBe errorMessages.invalidAmount
       }
     }
 
@@ -127,7 +127,7 @@ class ImprovementsFormSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.undefinedMessage
+        form.error("amount").get.message shouldBe errorMessages.maximumAmount
       }
     }
 
@@ -144,7 +144,7 @@ class ImprovementsFormSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.undefinedMessage
+        form.error("amount").get.message shouldBe errorMessages.minimumAmount
       }
     }
   }

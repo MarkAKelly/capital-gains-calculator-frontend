@@ -49,11 +49,19 @@ POST    /allowable-losses-value           controllers.resident.DeductionsControl
 
 #Losses Brought Forward Routes
 GET     /losses-brought-forward           controllers.resident.DeductionsController.lossesBroughtForward
+POST    /losses-brought-forward           controllers.resident.DeductionsController.submitLossesBroughtForward
 
 #Annual Exempt Amount Routes
 GET     /annual-exempt-amount             controllers.resident.DeductionsController.annualExemptAmount
+POST    /annual-exempt-amount             controllers.resident.DeductionsController.submitAnnualExemptAmount
 
 #Losses Brought Forward Value Routes
 GET     /losses-brought-forward-value     controllers.resident.DeductionsController.lossesBroughtForwardValue
 POST    /losses-brought-forward-value     controllers.resident.DeductionsController.submitLossesBroughtForwardValue
 
+#Previous Taxable Gains Routes
+GET     /previous-taxable-gains           controllers.resident.IncomeController.previousTaxableGains
+
+#Current Income Routes
+
+#Personal Allowance Routes

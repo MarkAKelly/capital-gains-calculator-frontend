@@ -16,25 +16,21 @@
 
 package forms.resident
 
-import models.resident.LossesBroughtForwardValueModel
+import common.Validation._
+import common.Transformers._
+import models.resident.LossesBroughtForwardModel
 import play.api.data.Forms._
 import play.api.data._
-import common.Transformers._
-import common.Validation._
 import play.api.i18n.Messages
 
-object LossesBroughtForwardValueForm {
+object LossesBroughtForwardForm {
 
-  val lossesBroughtForwardValueForm = Form(
+  val lossesBroughtForwardForm = Form(
     mapping(
-      "amount" -> text
+      "option" -> text
         .verifying(Messages("calc.base.undefinedMessage"), mandatoryCheck)
-        .verifying(Messages("calc.base.undefinedMessage"), bigDecimalCheck)
-        .transform[BigDecimal](stringToBigDecimal, bigDecimalToString)
-        .verifying(Messages("calc.base.undefinedMessage"), maxCheck)
-        .verifying(Messages("calc.base.undefinedMessage"), minCheck)
-        .verifying(Messages("calc.base.undefinedMessage"), decimalPlacesCheck)
-    )(LossesBroughtForwardValueModel.apply)(LossesBroughtForwardValueModel.unapply)
+        .verifying(Messages("calc.base.undefinedMessage"), yesNoCheck)
+        .transform[Boolean](stringToBoolean, booleanToString)
+    )(LossesBroughtForwardModel.apply)(LossesBroughtForwardModel.unapply)
   )
-
 }

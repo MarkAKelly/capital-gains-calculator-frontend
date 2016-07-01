@@ -15,97 +15,74 @@
  */
 
 package forms.resident
-
-import assets.MessageLookup.errorMessages
+import assets.MessageLookup._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import models.resident.AcquisitionCostsModel
-import forms.resident.AcquisitionCostsForm._
+import forms.resident.AnnualExemptAmountForm._
+import assets.{MessageLookup => commonMessages}
+import common.Constants
 import controllers.helpers.FakeRequestHelper
-
-class AcquisitionCostsFormSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
-
+import models.resident.AnnualExemptAmountModel
+import play.api.i18n.Messages
+import play.api.mvc.Request
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
+class AnnualExemptAmountFormSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
   "Creating a form using an empty model" should {
-
-    val form = acquisitionCostsForm
-
+    val form = annualExemptAmountForm
     "return an empty string for amount" in {
       form.data.isEmpty shouldBe true
     }
   }
-
   "Creating a form using a valid model" should {
-
     "return a form with the data specified in the model" in {
-      val model = AcquisitionCostsModel(1)
-      val form = acquisitionCostsForm.fill(model)
+      val model = AnnualExemptAmountModel(1)
+      val form = annualExemptAmountForm.fill(model)
       form.data("amount") shouldBe "1"
     }
-
   }
-
   "Creating a form using an invalid post" when {
-
     "supplied with no data for amount" should {
-
-      lazy val form = acquisitionCostsForm.bind(Map("amount" -> ""))
-
+      lazy val form = annualExemptAmountForm.bind(Map("amount" -> ""))
       "raise form error" in {
         form.hasErrors shouldBe true
       }
-
-      s"error with message '${errorMessages.mandatoryAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.mandatoryAmount
+      s"error with message '${commonMessages.undefinedMessage}'" in {
+        form.error("amount").get.message shouldBe commonMessages.undefinedMessage
       }
     }
-
     "supplied with a non-numeric value for amount" should {
-
-      lazy val form = acquisitionCostsForm.bind(Map("amount" -> "a"))
-
+      lazy val form = annualExemptAmountForm.bind(Map("amount" -> "a"))
       "raise a form error" in {
         form.hasErrors shouldBe true
       }
-
-      s"error with message '${errorMessages.invalidAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.invalidAmount
+      s"error with message '${commonMessages.undefinedMessage}'" in {
+        form.error("amount").get.message shouldBe commonMessages.undefinedMessage
       }
     }
-
     "supplied with an amount that is too big" should {
-      lazy val form = acquisitionCostsForm.bind(Map(("amount", "9999999999999")))
-
+      lazy val form = annualExemptAmountForm.bind(Map(("amount", "9999999999999")))
       "return a form with errors" in {
         form.hasErrors shouldBe true
       }
-
-      s"return a form with the error message ${errorMessages.maximumAmount}" in {
-        form.error("amount").get.message shouldBe errorMessages.maximumAmount
+      s"return a form with the error message $undefinedMessage" in {
+        form.error("amount").get.message shouldBe undefinedMessage
       }
     }
-
     "supplied with a negative amount" should {
-
-      lazy val form = acquisitionCostsForm.bind(Map("amount" -> "-1000"))
-
+      lazy val form = annualExemptAmountForm.bind(Map("amount" -> "-1000"))
       "raise form error" in {
         form.hasErrors shouldBe true
       }
-
-      s"error with message '${errorMessages.minimumAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.minimumAmount
+      s"error with message '${commonMessages.undefinedMessage}'" in {
+        form.error("amount").get.message shouldBe commonMessages.undefinedMessage
       }
     }
-
     "supplied with an amount that has too many decimal places" should {
-
-      lazy val form = acquisitionCostsForm.bind(Map("amount" -> "100.1234"))
-
+      lazy val form = annualExemptAmountForm.bind(Map("amount" -> "100.1234"))
       "raise form error" in {
         form.hasErrors shouldBe true
       }
-
-      s"error with message '${errorMessages.invalidAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.invalidAmount
+      s"error with message '${commonMessages.undefinedMessage}'" in {
+        form.error("amount").get.message shouldBe commonMessages.undefinedMessage
       }
     }
   }

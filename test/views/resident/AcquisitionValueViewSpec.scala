@@ -178,20 +178,12 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Fa
     lazy val view = views.html.calculation.resident.acquisitionValue(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
-    "output an error summary" in {
-      doc.body.getElementsByAttributeValueContaining("id", "amount-error-summary").isEmpty shouldBe false
+    "display an error summary message for the amount" in {
+      doc.body.select("#amount-error-summary").size shouldBe 1
     }
 
-    s"contain an error summary message of ${commonMessages.undefinedMessage}" in {
-      doc.body.getElementById("amount-error-summary").text should include(commonMessages.undefinedMessage)
-    }
-
-    "output an error notification" in {
-      doc.body.getElementsByAttributeValueContaining("class", "error-notification").isEmpty shouldBe false
-    }
-
-    s"contain an error notification message of ${commonMessages.undefinedMessage}" in {
-      doc.body.getElementsByClass("error-notification").text should include(commonMessages.undefinedMessage)
+    "display an error message for the input" in {
+      doc.body.select(".form-group .error-notification").size shouldBe 1
     }
   }
 }

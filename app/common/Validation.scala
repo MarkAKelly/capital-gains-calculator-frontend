@@ -119,5 +119,4 @@ object Validation {
     case "" => true
     case _ => false
   }
-
 }

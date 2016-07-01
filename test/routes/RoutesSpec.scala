@@ -168,6 +168,13 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
+  "The URL for the submit annualExemptAmount action" should {
+    "be equal to /calculate-your-capital-gains/resident/annual-exempt-amount" in {
+      val path = controllers.resident.routes.DeductionsController.submitAnnualExemptAmount().toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/annual-exempt-amount"
+    }
+  }
+
   "The URL for the allowableLosses action" should {
     "be equal to /calculate-your-capital-gains/resident/allowable-losses" in {
       val path = controllers.resident.routes.DeductionsController.allowableLosses.toString()
@@ -186,6 +193,13 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     "be equal to /calculate-your-capital-gains/resident/losses-brought-forward-value" in {
       val path = controllers.resident.routes.DeductionsController.submitLossesBroughtForwardValue.toString()
       path shouldEqual "/calculate-your-capital-gains/resident/losses-brought-forward-value"
+    }
+  }
+
+  "The URL for the previousTaxableGains action" should {
+    "be equal to /calculate-your-capital-gains/resident/previous-taxable-gains" in {
+      val path = controllers.resident.routes.IncomeController.previousTaxableGains.toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/previous-taxable-gains"
     }
   }
 }
