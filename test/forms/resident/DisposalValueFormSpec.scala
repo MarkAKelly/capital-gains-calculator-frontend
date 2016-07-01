@@ -16,7 +16,7 @@
 
 package forms.resident
 
-import assets.MessageLookup
+import assets.MessageLookup.errorMessages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import models.resident.DisposalValueModel
 import forms.resident.DisposalValueForm._
@@ -57,7 +57,7 @@ class DisposalValueFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.undefinedMessage
+        form.error("amount").get.message shouldBe errorMessages.mandatoryAmount
       }
     }
 
@@ -75,7 +75,7 @@ class DisposalValueFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.undefinedMessage
+        form.error("amount").get.message shouldBe errorMessages.mandatoryAmount
       }
     }
 
@@ -92,7 +92,7 @@ class DisposalValueFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.undefinedMessage
+        form.error("amount").get.message shouldBe errorMessages.invalidAmount
       }
     }
 
@@ -109,7 +109,7 @@ class DisposalValueFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.undefinedMessage
+        form.error("amount").get.message shouldBe errorMessages.invalidAmount
       }
     }
 
@@ -126,7 +126,7 @@ class DisposalValueFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.undefinedMessage
+        form.error("amount").get.message shouldBe errorMessages.maximumAmount
       }
     }
 
@@ -143,7 +143,7 @@ class DisposalValueFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.undefinedMessage
+        form.error("amount").get.message shouldBe errorMessages.minimumAmount
       }
     }
   }
