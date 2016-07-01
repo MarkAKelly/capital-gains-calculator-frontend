@@ -119,6 +119,18 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
       }
     }
   }
+
+  "Annual Exempt Amount view with stored values" should {
+    lazy val form = annualExemptAmountForm.bind(Map(("amount", "1000")))
+    lazy val view = views.annualExemptAmount(form)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "have the value of 1000 auto-filled in the input" in {
+      lazy val input = doc.body.getElementsByTag("input")
+      input.`val` shouldBe "1000"
+    }
+  }
+
   "Annual Exempt Amount View with form with errors" which {
     "is due to mandatory field error" should {
       val form = annualExemptAmountForm.bind(Map("amount" -> ""))
