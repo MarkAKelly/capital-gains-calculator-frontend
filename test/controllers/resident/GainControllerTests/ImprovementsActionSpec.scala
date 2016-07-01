@@ -17,7 +17,6 @@
 package controllers.resident.GainControllerTests
 
 import assets.MessageLookup.{improvementsView => messages}
-import common.Dates._
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
