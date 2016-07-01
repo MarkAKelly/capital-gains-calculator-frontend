@@ -16,11 +16,13 @@
 
 package connectors
 
+import common.Dates._
 import common.KeystoreKeys
+import common.KeystoreKeys.ResidentKeys
 import config.{CalculatorSessionCache, WSHttp}
 import constructors.nonresident.CalculateRequestConstructor
 import models.nonresident._
-import models.resident.YourAnswersSummaryModel
+import models.resident
 import play.api.libs.json.Format
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -141,13 +143,38 @@ trait CalculatorConnector {
       calculationElectionModel, otherReliefsFlatModel, otherReliefsTAModel, otherReliefsRebasedModel, privateResidenceReliefModel)
   }
 
-  def calculateRttGrossGain(input: YourAnswersSummaryModel)(implicit hc: HeaderCarrier): Future[BigDecimal] = {
+  def calculateRttGrossGain(input: resident.YourAnswersSummaryModel)(implicit hc: HeaderCarrier): Future[BigDecimal] = {
     http.GET[BigDecimal](s"$serviceUrl/capital-gains-calculator/calculate-total-gain" +
       s"?disposalValue=${input.disposalValue}" +
       s"&disposalCosts=${input.disposalCosts}" +
       s"&acquisitionValue=${input.acquisitionValue}" +
       s"&acquisitionCosts=${input.acquisitionCosts}" +
       s"&improvements=${input.improvements}"
+    )
+  }
+
+  def getYourAnswers(implicit hc: HeaderCarrier): Future[resident.YourAnswersSummaryModel] = {
+    val acquisitionValue = fetchAndGetFormData[resident.AcquisitionValueModel](ResidentKeys.acquisitionValue).map(_.get.amount)
+    val disposalDate = fetchAndGetFormData[resident.DisposalDateModel](ResidentKeys.disposalDate).map(formData => constructDate(formData.get.day, formData.get.month, formData.get.year))
+    val disposalValue = fetchAndGetFormData[resident.DisposalValueModel](ResidentKeys.disposalValue).map(_.get.amount)
+    val acquisitionCosts = fetchAndGetFormData[resident.AcquisitionCostsModel](ResidentKeys.acquisitionCosts).map(_.get.amount)
+    val disposalCosts = fetchAndGetFormData[resident.DisposalCostsModel](ResidentKeys.disposalCosts).map(_.get.amount)
+    val improvements = fetchAndGetFormData[resident.ImprovementsModel](ResidentKeys.improvements).map(_.get.amount)
+
+    for {
+      acquisitionValue <- acquisitionValue
+      disposalDate <- disposalDate
+      disposalValue <- disposalValue
+      acquisitionCosts <- acquisitionCosts
+      disposalCosts <- disposalCosts
+      improvements <- improvements
+    } yield resident.YourAnswersSummaryModel(
+      disposalDate,
+      disposalValue,
+      disposalCosts,
+      acquisitionValue,
+      acquisitionCosts,
+      improvements
     )
   }
 
