@@ -388,3 +388,9 @@ calc.resident.allowableLosses.helpInfo.point3 = you haven''t already used in an 
 calc.resident.lossesBroughtForwardValue.title = What''s the total value of the loss to bring forward?
 calc.resident.lossesBroughtForwardValue.pageHeading = What''s the total value of the loss to bring forward?
 
+## Previous Taxable Gains messages
+calc.resident.previousTaxableGains.title = What was your taxable gain?
+
+## Current Income messages
+
+## Personal Allowance messages

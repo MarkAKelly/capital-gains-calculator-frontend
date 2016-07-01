@@ -158,4 +158,13 @@ object MessageLookup {
     val title = "How much of your Capital Gains Tax allowance have you got left?"
   }
 
+  //Previous Taxable Gains messages
+  object previousTaxableGains {
+    val title = "What was your taxable gain?"
+  }
+
+  //Current Income messages
+
+  //Personal Allowance messages
+
 }
