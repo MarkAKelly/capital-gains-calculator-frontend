@@ -290,6 +290,9 @@ calc.summary.warning.taxYear = Your total might be less accurate because you did
 
 ## Disposal Date messages
 calc.resident.disposalDate.question = When did you sign the contract that made someone else the owner?
+calc.resident.disposalDate.invalidDayError = Enter a day
+calc.resident.disposalDate.invalidMonthError = Enter a month
+calc.resident.disposalDate.invalidYearError = Enter a year
 
 ## Disposal Value messages
 calc.resident.disposal.value.title = How much did you sell the property for?
@@ -377,6 +380,7 @@ calc.resident.annualExemptAmount.helpText.two = It''s £11,100 a year.
 
 ##Losses Brought Forward messages
 calc.resident.lossesBroughtForward.title = Are there any previous losses you want to bring forward?
+calc.resident.lossesBroughtForward.question = Are there any previous losses you want to bring forward?
 
 
 ## Allowable Losses messages

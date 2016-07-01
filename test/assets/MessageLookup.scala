@@ -37,10 +37,10 @@ object MessageLookup {
     val day = "Day"
     val month = "Month"
     val year = "Year"
-    val invalidDateError = "error-placeholder"
-    val emptyDateFieldError = "empty-error-placeholder"
+    val invalidDayError = "Enter a day"
+    val invalidMonthError = "Enter a month"
+    val invalidYearError = "Enter a year"
     val realDateError = "Enter a real date"
-    val nonNumericError = "non-numeric-placeholder"
   }
 
   //Disposal Value messages
@@ -135,6 +135,7 @@ object MessageLookup {
   //Losses Brought Forward messages
   object lossesBroughtForward {
     val title = "Are there any previous losses you want to bring forward?"
+    val question = "Are there any previous losses you want to bring forward?"
   }
 
   //Losses Brought Forward messages

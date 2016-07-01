@@ -16,9 +16,7 @@
 
 package common
 
-object KeystoreKeys extends KeystoreKeys
-
-trait KeystoreKeys {
+object KeystoreKeys {
 
   val customerType = "nr:customerType"
   val disabledTrustee = "nr:disabledTrustee"
@@ -53,9 +51,11 @@ trait KeystoreKeys {
     val allowableLosses = "res:allowableLosses"
     val reliefs = "res:reliefs"
     val reliefsValue = "res:reliefsValue"
+    val lossesBroughtForward = "res:lossesBroughtForward"
     val lossesBroughtForwardValue = "res:lossesBroughtForwardValue"
     val otherProperties = "res.otherProperties"
     val annualExemptAmount = "res:annualExemptAmount"
+
   }
 
 }

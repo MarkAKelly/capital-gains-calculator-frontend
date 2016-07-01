@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package common
+package models.resident
 
-import controllers.nonresident.routes
+import play.api.libs.json.Json
 
-object DefaultRoutes {
+case class LossesBroughtForwardModel(option : Boolean)
 
-  val missingDataRoute = routes.CalculationController.customerType().url
-
+object LossesBroughtForwardModel {
+  implicit val format = Json.format[LossesBroughtForwardModel]
 }
+
