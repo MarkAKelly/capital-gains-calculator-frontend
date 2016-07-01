@@ -23,6 +23,8 @@ import models.resident.{LossesBroughtForwardValueModel, ReliefsModel, ReliefsVal
 import forms.resident.LossesBroughtForwardValueForm._
 import models.resident.OtherPropertiesModel
 import forms.resident.ReliefsValueForm._
+import forms.resident.AllowableLossesValueForm._
+import models.resident.AllowableLossesValueModel
 import play.api.mvc.{Action, Result}
 import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation.{resident => views}
@@ -129,9 +131,14 @@ trait DeductionsController extends FeatureLock {
   }
 
   //################# Allowable Losses Value Actions ############################
-  val allowableLossesValue = Action.async { implicit request =>
-    Future.successful(Ok(views.allowableLossesValue()))
+  val allowableLossesValue = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[AllowableLossesValueModel](KeystoreKeys.ResidentKeys.allowableLossesValue).map {
+      case Some(data) => Ok(views.allowableLossesValue(allowableLossesValueForm.fill(data)))
+      case None => Ok(views.allowableLossesValue(allowableLossesValueForm))
+    }
   }
+
+  val submitAllowableLossesValue = TODO
 
   //################# Brought Forward Losses Actions ############################
   val lossesBroughtForward = Action.async { implicit request =>
