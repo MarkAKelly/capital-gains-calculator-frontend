@@ -9,6 +9,8 @@
     backLink = Some(controllers.resident.routes.DeductionsController.allowableLosses().toString)
 ){
 
+    @errorSummary(allowableLossesValueForm, "amount")
+
     <h1 class="heading-large">@Messages("calc.resident.allowableLossesValue.question")</h1>
 
     @form(action = controllers.resident.routes.DeductionsController.submitAllowableLossesValue){

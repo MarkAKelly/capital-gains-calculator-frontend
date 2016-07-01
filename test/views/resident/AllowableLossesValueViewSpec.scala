@@ -25,7 +25,7 @@ import forms.resident.AllowableLossesValueForm._
 
 class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Allowable Losses Value view" should {
+  "Allowable Losses Value view with no form errors" should {
 
     lazy val view = views.html.calculation.resident.allowableLossesValue(allowableLossesValueForm)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
@@ -136,6 +136,28 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
         continueButton.hasClass("button") shouldBe true
       }
 
+    }
+  }
+
+  "Allowable Losses Value View with form with errors" should {
+    val form = allowableLossesValueForm.bind(Map("amount" -> ""))
+    lazy val view = views.html.calculation.resident.allowableLossesValue(form)(fakeRequestWithSession)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "output an error summary" in {
+      doc.body.getElementsByAttributeValueContaining("id", "amount-error-summary").isEmpty shouldBe false
+    }
+
+    s"contain an error summary message of ${commonMessages.undefinedMessage}" in {
+      doc.body.getElementById("amount-error-summary").text should include(commonMessages.undefinedMessage)
+    }
+
+    "output an error notification" in {
+      doc.body.getElementsByAttributeValueContaining("class", "error-notification").isEmpty shouldBe false
+    }
+
+    s"contain an error notification message of ${commonMessages.undefinedMessage}" in {
+      doc.body.getElementsByClass("error-notification").text should include(commonMessages.undefinedMessage)
     }
   }
 }

@@ -138,7 +138,15 @@ trait DeductionsController extends FeatureLock {
     }
   }
 
-  val submitAllowableLossesValue = TODO
+  val submitAllowableLossesValue = FeatureLockForRTT.async { implicit request =>
+    allowableLossesValueForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.allowableLossesValue(errors))),
+      success => {
+        calcConnector.saveFormData[AllowableLossesValueModel](KeystoreKeys.ResidentKeys.allowableLossesValue, success)
+        Future.successful(Redirect(routes.DeductionsController.lossesBroughtForward()))
+      }
+    )
+  }
 
   //################# Brought Forward Losses Actions ############################
   val lossesBroughtForward = Action.async { implicit request =>

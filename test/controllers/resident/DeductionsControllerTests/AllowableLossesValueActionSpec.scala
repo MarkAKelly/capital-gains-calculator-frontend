@@ -102,6 +102,35 @@ class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication w
         redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/non-resident/session-timeout")
       }
     }
+  }
 
+  "Calling .submitAllowableLossesValue from the DeductionsController" when {
+
+    "a valid form is submitted" should {
+      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+      lazy val result = DeductionsController.submitAllowableLossesValue(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the brought forward losses page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/losses-brought-forward")
+      }
+    }
+
+    "an invalid form is submitted" should {
+      lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
+      lazy val result = DeductionsController.submitAllowableLossesValue(request)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "return a 400" in {
+        status(result) shouldBe 400
+      }
+
+      "render the Reliefs Value page" in {
+        doc.title() shouldEqual messages.title
+      }
+    }
   }
 }
