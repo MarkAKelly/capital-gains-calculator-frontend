@@ -140,6 +140,11 @@ object MessageLookup {
   //Losses Brought Forward messages
   object allowableLosses {
     val title = "Are you claiming any allowable losses from tax years before 2015/16?"
+    val helpInfoTitle = "What are allowable losses?"
+    val helpInfoSubtitle = "They're losses you've made that:"
+    val helpInfoPoint1 = "are covered by Capital Gains Tax"
+    val helpInfoPoint2 = "you've declared within 4 years of making the loss"
+    val helpInfoPoint3 = "you haven't already used in an allowable losses claim"
   }
 
   //Losses Brought Forward Value messages
@@ -152,4 +157,5 @@ object MessageLookup {
   object annualExemptAmount {
     val title = "How much of your Capital Gains Tax allowance have you got left?"
   }
+
 }

@@ -1,4 +1,40 @@
-@()(implicit request: Request[_])
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import views.html.helpers._
+@import models.resident.AllowableLossesModel
 
-@main_template(title = Messages("calc.resident.allowableLosses.title")) {
+@(allowableLossesForm: Form[AllowableLossesModel])(implicit request: Request[_])
+
+@resident_main_template(title = Messages("calc.resident.allowableLosses.title"), backLink = Some(controllers.resident.routes.DeductionsController.otherProperties.toString())) {
+
+    @errorSummary(allowableLossesForm, "isClaiming")
+
+    <h1 class="heading-large">@Messages("calc.resident.allowableLosses.title")</h1>
+
+    @form(action = controllers.resident.routes.DeductionsController.submitAllowableLosses) {
+        @formInputRadioGroup(
+            field = allowableLossesForm("isClaiming"),
+            Seq(
+                "Yes" -> Messages("calc.base.yes"),
+                "No" -> Messages("calc.base.no")),
+            '_legend -> Messages("calc.resident.reliefs.question"),
+            '_legendID -> "isClaiming",
+            '_legendClass -> "visuallyhidden",
+            '_labelAfter -> true,
+            '_labelClass -> "block-label",
+            '_groupClass -> "inline form-group radio-list"
+        )
+
+        <input type="hidden" name="isClaiming" value="" />
+        <button class="button yes-no-button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+    }
+
+    <div id="helpInfo">
+        <p>@Messages("calc.resident.allowableLosses.helpInfo.title")</p>
+        <p>@Messages("calc.resident.allowableLosses.helpInfo.subtitle")</p>
+        <ul class="list-bullet">
+            <li>@Messages("calc.resident.allowableLosses.helpInfo.point1")</li>
+            <li>@Messages("calc.resident.allowableLosses.helpInfo.point2")</li>
+            <li>@Messages("calc.resident.allowableLosses.helpInfo.point3")</li>
+        </ul>
+    </div>
 }
