@@ -154,14 +154,13 @@ class DisposalCostsViewSpec extends UnitSpec with WithFakeApplication with FakeR
       lazy val view = views.html.calculation.resident.disposalCosts(form)(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
 
-      s"output an error summary with message '${commonMessages.undefinedMessage}'" in {
-        doc.body.getElementById("amount-error-summary").text should include(commonMessages.undefinedMessage)
+      "display an error summary message for the amount" in {
+        doc.body.select("#amount-error-summary").size shouldBe 1
       }
 
-      s"have the input error message '${commonMessages.undefinedMessage}'" in {
-        doc.body.getElementsByClass("error-notification").text should include (commonMessages.undefinedMessage)
+      "display an error message for the input" in {
+        doc.body.select(".form-group .error-notification").size shouldBe 1
       }
-
     }
   }
 }
