@@ -11,6 +11,7 @@ calc.base.back = Back
 calc.base.optionReqError = Choose one of the options
 calc.base.externalLink = opens in a new window
 calc.base.undefinedMessage = Undefined message
+calc.base.change = change
 
 ## Error Summary ##
 calc.error.summary.heading = This page has errors
@@ -331,6 +332,12 @@ calc.resident.improvements.hint = Improvements are permanent changes that raise 
 
 ## Summary messages
 calc.resident.summary.title = Summary
+calc.resident.summary.pageHeading = Tax owed
+calc.resident.summary.calcDetailsHeading = Calculation details
+calc.resident.summary.yourAnswersHeading = Your answers
+calc.resident.summary.totalGain = Total gain
+calc.resident.summary.totalLoss = Loss
+
 
 ## Reliefs messages
 calc.resident.reliefs.title = Do you want to claim any tax reliefs on your total gain?
@@ -375,3 +382,5 @@ calc.resident.allowableLosses.title = Are you claiming any allowable losses from
 
 ##Losses Brought Forward Value messages
 calc.resident.lossesBroughtForwardValue.title = What''s the total value of the loss to bring forward?
+calc.resident.lossesBroughtForwardValue.pageHeading = What''s the total value of the loss to bring forward?
+

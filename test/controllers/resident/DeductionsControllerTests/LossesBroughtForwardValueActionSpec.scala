@@ -17,28 +17,137 @@
 package controllers.resident.DeductionsControllerTests
 
 import assets.MessageLookup.{lossesBroughtForwardValue => messages}
+import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.DeductionsController
+import models.resident.OtherPropertiesModel
+import models.resident.LossesBroughtForwardValueModel
 import org.jsoup.Jsoup
+import org.mockito.Matchers
+import org.scalatest.mock.MockitoSugar
+import org.mockito.Mockito._
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar{
 
-  "Calling .lossesBroughtForwardValue from the resident DeductionsController" should {
+  "Calling .lossesBroughtForwardValue from the resident DeductionsController" when {
 
-    lazy val result = DeductionsController.lossesBroughtForwardValue(fakeRequestWithSession)
+    def setGetTarget(getData: Option[LossesBroughtForwardValueModel]): DeductionsController = {
 
-    "return a status of 200" in {
-      status(result) shouldBe 200
+      val mockCalcConnector = mock[CalculatorConnector]
+
+      when(mockCalcConnector.fetchAndGetFormData[LossesBroughtForwardValueModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
+        .thenReturn(getData)
+
+      new DeductionsController {
+        override val calcConnector = mockCalcConnector
+      }
     }
 
-    s"return some html with " in {
-      contentType(result) shouldBe Some("text/html")
+    "request has a valid session with no keystore data" should {
+      lazy val target = setGetTarget(None)
+      lazy val result = target.lossesBroughtForwardValue(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      s"return some html with " in {
+        contentType(result) shouldBe Some("text/html")
+      }
+
+      s"return a title of ${messages.title}" in {
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+      }
     }
 
-    s"return a title of ${messages.title}" in {
-      Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+    "request has a valid session with some keystore data" should {
+      lazy val target = setGetTarget(Some(LossesBroughtForwardValueModel(BigDecimal(1000))))
+      lazy val result = target.lossesBroughtForwardValue(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      s"return some html with " in {
+        contentType(result) shouldBe Some("text/html")
+      }
+
+      s"return a title of ${messages.title}" in {
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+      }
+    }
+
+    "request has an invalid session" should {
+      lazy val result = DeductionsController.lossesBroughtForwardValue(fakeRequest)
+
+      "return a status of 303" in {
+        status(result) shouldBe 303
+      }
+
+      "return you to the session timeout page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/non-resident/session-timeout")
+      }
+    }
+  }
+
+  "Calling .submitLossesBroughtForwardValue from the resident DeductionsController" when {
+
+    def setPostTarget(otherPropertiesModel: Option[OtherPropertiesModel]): DeductionsController = {
+
+      val mockCalcConnector = mock[CalculatorConnector]
+
+      when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
+        .thenReturn(otherPropertiesModel)
+
+      new DeductionsController {
+        override val calcConnector = mockCalcConnector
+      }
+    }
+
+    "given a valid form" when {
+
+      "the user has disposed of other properties" should {
+        lazy val target = setPostTarget(Some(OtherPropertiesModel(true)))
+        lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+        lazy val result = target.submitLossesBroughtForwardValue(request)
+
+        "return a status of 303" in {
+          status(result) shouldBe 303
+        }
+
+        s"redirect to '${controllers.resident.routes.DeductionsController.annualExemptAmount().toString}'" in {
+          redirectLocation(result).get shouldBe controllers.resident.routes.DeductionsController.annualExemptAmount().toString
+        }
+      }
+
+      "the user has not disposed of other properties" should {
+        lazy val target = setPostTarget(Some(OtherPropertiesModel(false)))
+        lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+        lazy val result = target.submitLossesBroughtForwardValue(request)
+
+        "return a status of 303" in {
+          status(result) shouldBe 303
+        }
+
+        s"redirect to '${controllers.resident.routes.SummaryController.summary().toString}'" in {
+          redirectLocation(result).get shouldBe controllers.resident.routes.SummaryController.summary().toString
+        }
+      }
+    }
+
+    "given an invalid form" should {
+      lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
+      lazy val result = DeductionsController.submitLossesBroughtForwardValue(request)
+
+      "return a status of 400" in {
+        status(result) shouldBe 400
+      }
+
+      s"return a title of ${messages.title}" in {
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+      }
     }
   }
 }

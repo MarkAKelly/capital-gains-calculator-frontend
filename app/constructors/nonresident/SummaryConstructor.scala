@@ -21,7 +21,7 @@ import common._
 import common.nonresident._
 import controllers.nonresident.routes
 import models._
-import models.nonresident.{CalculationResultModel, PrivateResidenceReliefModel, SummaryDataItemModel, SummaryModel}
+import models.nonresident.{CalculationResultModel, PrivateResidenceReliefModel, SummaryModel}
 import org.apache.commons.lang3.text.WordUtils
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.views.helpers._
