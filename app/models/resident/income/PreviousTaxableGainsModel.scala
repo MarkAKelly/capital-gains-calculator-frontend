@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package models.resident
+package models.resident.income
 
 import play.api.libs.json.Json
 
-case class PersonalAllowanceModel(amount: BigDecimal)
+case class PreviousTaxableGainsModel(amount: BigDecimal)
 
-object PersonalAllowanceModel {
-  implicit val format = Json.format[PersonalAllowanceModel]
+object PreviousTaxableGainsModel {
+  implicit val format = Json.format[PreviousTaxableGainsModel]
 }
