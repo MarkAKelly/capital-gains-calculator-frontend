@@ -16,24 +16,39 @@
 
 package controllers.resident
 
+import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
-import play.api.mvc.Action
+import play.api.mvc.Result
 
 import scala.concurrent.Future
+import views.html.calculation.resident.{income => views}
+import forms.resident.income.PreviousTaxableGainsForm._
+import models.resident.income._
 
 object IncomeController extends IncomeController {
-
   val calcConnector = CalculatorConnector
-
 }
 
 trait IncomeController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
 
-  val previousTaxableGains = FeatureLockForRTT.async {implicit request =>
-    Future.successful(Ok(views.html.calculation.resident.income.previousTaxableGains()))
+  val previousTaxableGains = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[PreviousTaxableGainsModel](KeystoreKeys.ResidentKeys.previousTaxableGains).map {
+      case Some(data) => Ok(views.previousTaxableGains(previousTaxableGainsForm.fill(data)))
+      case None => Ok(views.previousTaxableGains(previousTaxableGainsForm))
+    }
   }
 
+  val submitPreviousTaxableGains = FeatureLockForRTT.async { implicit request =>
+
+    previousTaxableGainsForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.previousTaxableGains(errors))),
+      success => {
+        calcConnector.saveFormData(KeystoreKeys.ResidentKeys.previousTaxableGains, success)
+        Future.successful(Redirect(routes.IncomeController.previousTaxableGains()))
+      }
+    )
+  }
 }
