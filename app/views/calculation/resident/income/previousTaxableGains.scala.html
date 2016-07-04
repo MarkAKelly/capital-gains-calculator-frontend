@@ -3,9 +3,9 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
 
-@(previousTaxableGainsForm : Form[PreviousTaxableGainsModel])(implicit request: Request[_])
+@(previousTaxableGainsForm: Form[PreviousTaxableGainsModel], backUrl: String)(implicit request: Request[_])
 
-@resident_main_template(Messages("calc.resident.previousTaxableGains.title"), backLink = Some(controllers.resident.routes.DeductionsController.annualExemptAmount().toString)) {
+@resident_main_template(Messages("calc.resident.previousTaxableGains.title"), backLink = Some(backUrl)) {
 
     @errorSummary(previousTaxableGainsForm, "previousTaxableGains")
 

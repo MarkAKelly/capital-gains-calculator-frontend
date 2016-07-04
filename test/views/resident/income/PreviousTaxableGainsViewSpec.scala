@@ -27,7 +27,7 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
 
   "Previous taxable gains view" should {
 
-    lazy val view = previousTaxableGains(previousTaxableGainsForm)(fakeRequest)
+    lazy val view = previousTaxableGains(previousTaxableGainsForm, "#")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -53,7 +53,7 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
 
     "have the correct back link" in {
       val link = doc.select("#back-link")
-      link.attr("href") shouldBe controllers.resident.routes.DeductionsController.annualExemptAmount().toString
+      link.attr("href") shouldBe "#"
     }
 
     "have the correct label" in {
@@ -78,7 +78,7 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
   "Previous taxable gains view with form without errors" should {
 
     val form = previousTaxableGainsForm.bind(Map("amount" -> "100"))
-    lazy val view = previousTaxableGains(form)(fakeRequest)
+    lazy val view = previousTaxableGains(form, "#")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display the value of the form" in {
@@ -97,7 +97,7 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
   "Previous taxable gains view with form with errors" should {
 
     val form = previousTaxableGainsForm.bind(Map("amount" -> ""))
-    lazy val view = previousTaxableGains(form)(fakeRequest)
+    lazy val view = previousTaxableGains(form, "#")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {

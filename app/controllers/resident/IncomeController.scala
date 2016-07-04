@@ -19,10 +19,14 @@ package controllers.resident
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
+
 import scala.concurrent.Future
 import views.html.calculation.resident.{income => views}
 import forms.resident.income.PreviousTaxableGainsForm._
+import models.resident._
 import models.resident.income._
+import play.api.mvc.Result
+import uk.gov.hmrc.play.http.HeaderCarrier
 
 object IncomeController extends IncomeController {
   val calcConnector = CalculatorConnector
@@ -32,18 +36,54 @@ trait IncomeController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
 
-  //################################# Previous Taxable Gain Actions ##########################################
-  val previousTaxableGains = FeatureLockForRTT.async { implicit request =>
-    calcConnector.fetchAndGetFormData[PreviousTaxableGainsModel](KeystoreKeys.ResidentKeys.previousTaxableGains).map {
-      case Some(data) => Ok(views.previousTaxableGains(previousTaxableGainsForm.fill(data)))
-      case None => Ok(views.previousTaxableGains(previousTaxableGainsForm))
+  def otherPropertiesResponse(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.ResidentKeys.otherProperties).map {
+      case Some(OtherPropertiesModel(response)) => response
+      case None => false
     }
+  }
+
+  def lossesBroughtForwardResponse(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[LossesBroughtForwardModel](KeystoreKeys.ResidentKeys.lossesBroughtForward).map {
+      case Some(LossesBroughtForwardModel(response)) => response
+      case None => false
+    }
+  }
+
+  //################################# Previous Taxable Gain Actions ##########################################
+  def buildPreviousTaxableGainsBackUrl(implicit hc: HeaderCarrier): Future[String] = {
+
+    for {
+      hasOtherProperties <- otherPropertiesResponse
+      hasLossesBroughtForward <- lossesBroughtForwardResponse
+    } yield (hasOtherProperties, hasLossesBroughtForward)
+
+    match {
+      case (true, _) => routes.DeductionsController.annualExemptAmount().url
+      case (false, true) => routes.DeductionsController.lossesBroughtForwardValue().url
+      case (false, false) => routes.DeductionsController.lossesBroughtForward().url
+    }
+  }
+
+  val previousTaxableGains = FeatureLockForRTT.async { implicit request =>
+
+    def routeRequest(backUrl: String): Future[Result] = {
+      calcConnector.fetchAndGetFormData[PreviousTaxableGainsModel](KeystoreKeys.ResidentKeys.previousTaxableGains).map {
+        case Some(data) => Ok(views.previousTaxableGains(previousTaxableGainsForm.fill(data), backUrl))
+        case None => Ok(views.previousTaxableGains(previousTaxableGainsForm, backUrl))
+      }
+    }
+
+    for {
+      backUrl <- buildPreviousTaxableGainsBackUrl
+      finalResult <- routeRequest(backUrl)
+    } yield finalResult
   }
 
   val submitPreviousTaxableGains = FeatureLockForRTT.async { implicit request =>
 
     previousTaxableGainsForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.previousTaxableGains(errors))),
+      errors => buildPreviousTaxableGainsBackUrl.flatMap(url => Future.successful(BadRequest(views.previousTaxableGains(errors, url)))),
       success => {
         calcConnector.saveFormData(KeystoreKeys.ResidentKeys.previousTaxableGains, success)
         Future.successful(Redirect(routes.IncomeController.previousTaxableGains()))
