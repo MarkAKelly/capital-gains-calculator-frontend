@@ -67,3 +67,4 @@ GET     /current-income                   controllers.resident.IncomeController.
 
 #Personal Allowance Routes
 GET     /personal-allowance               controllers.resident.IncomeController.personalAllowance
+POST    /personal-allowance               controllers.resident.IncomeController.submitPersonalAllowance
