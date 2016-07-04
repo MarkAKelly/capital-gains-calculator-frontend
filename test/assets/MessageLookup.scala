@@ -178,7 +178,12 @@ object MessageLookup {
   }
 
   //Current Income messages
+  object currentIncome {
+    val title = "In the tax year 2015/16 when you stopped owning the property, what was your income?"
+  }
 
   //Personal Allowance messages
-
+  object personalAllowance {
+    val title = "In the tax year when you stopped owning the property, what was your UK Personal Allowance?"
+  }
 }

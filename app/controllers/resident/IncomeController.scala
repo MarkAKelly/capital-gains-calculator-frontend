@@ -19,8 +19,6 @@ package controllers.resident
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
-import play.api.mvc.Result
-
 import scala.concurrent.Future
 import views.html.calculation.resident.{income => views}
 import forms.resident.income.PreviousTaxableGainsForm._
@@ -34,6 +32,7 @@ trait IncomeController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
 
+  //################################# Previous Taxable Gain Actions ##########################################
   val previousTaxableGains = FeatureLockForRTT.async { implicit request =>
     calcConnector.fetchAndGetFormData[PreviousTaxableGainsModel](KeystoreKeys.ResidentKeys.previousTaxableGains).map {
       case Some(data) => Ok(views.previousTaxableGains(previousTaxableGainsForm.fill(data)))
@@ -50,5 +49,15 @@ trait IncomeController extends FeatureLock {
         Future.successful(Redirect(routes.IncomeController.previousTaxableGains()))
       }
     )
+  }
+
+  //################################# Current Income Actions ##########################################
+  val currentIncome = FeatureLockForRTT.async { implicit request =>
+    Future.successful(Ok(views.currentIncome()))
+  }
+
+  //################################# Personal Allowance Actions ##########################################
+  val personalAllowance = FeatureLockForRTT.async { implicit request =>
+    Future.successful(Ok(views.personalAllowance()))
   }
 }
