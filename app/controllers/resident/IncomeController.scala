@@ -32,8 +32,14 @@ trait IncomeController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
 
+  //################################# Previous Taxable Gain Actions ##########################################
   val previousTaxableGains = FeatureLockForRTT.async {implicit request =>
     Future.successful(Ok(views.html.calculation.resident.previousTaxableGains()))
+  }
+
+  //################################# Current Income Actions ##########################################
+  val currentIncome = FeatureLockForRTT.async { implicit request =>
+    Future.successful(Ok(views.html.calculation.resident.currentIncome()))
   }
 
 }
