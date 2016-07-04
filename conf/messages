@@ -372,6 +372,7 @@ calc.resident.otherProperties.bullet.three = other UK residential properties
 
 ## Allowable Losses Value messages
 calc.resident.allowableLossesValue.title = What''s the total value of your allowable losses?
+calc.resident.allowableLossesValue.question = What''s the total value of your allowable losses?
 
 ## Annual Exempt Amount messages
 calc.resident.annualExemptAmount.title = How much of your Capital Gains Tax allowance have you got left?
