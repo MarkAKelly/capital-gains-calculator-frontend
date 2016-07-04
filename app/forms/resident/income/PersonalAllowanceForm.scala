@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package forms.resident
+package forms.resident.income
+
 import common.Constants
 import common.Transformers._
 import common.Validation._
-import models.resident.PersonalAllowanceModel
+import models.resident.income.PersonalAllowanceModel
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.Messages

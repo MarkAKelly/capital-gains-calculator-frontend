@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package models.resident
+package models.resident.income
 
 import play.api.libs.json.Json
 

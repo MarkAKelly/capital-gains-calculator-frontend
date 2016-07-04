@@ -22,7 +22,7 @@ import controllers.predicates.FeatureLock
 import views.html.calculation.resident.{income => views}
 import scala.concurrent.Future
 import forms.resident.income.PreviousTaxableGainsForm._
-import forms.resident.PersonalAllowanceForm._
+import forms.resident.income.PersonalAllowanceForm._
 import models.resident._
 import models.resident.income._
 import play.api.mvc.Result

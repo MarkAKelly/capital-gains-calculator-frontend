@@ -17,14 +17,9 @@
 package forms.resident
 import assets.MessageLookup._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import forms.resident.PersonalAllowanceForm._
-import assets.{MessageLookup => commonMessages}
-import common.Constants
+import income.PersonalAllowanceForm._
 import controllers.helpers.FakeRequestHelper
-import models.resident.PersonalAllowanceModel
-import play.api.i18n.Messages
-import play.api.mvc.Request
-import uk.gov.hmrc.play.views.helpers.MoneyPounds
+import models.resident.income.PersonalAllowanceModel
 
 class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
   "Creating a form using an empty model" should {

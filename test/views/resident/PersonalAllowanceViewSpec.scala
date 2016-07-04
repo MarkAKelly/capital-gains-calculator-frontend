@@ -23,7 +23,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup
 import assets.MessageLookup.{personalAllowance => messages}
 import assets.{MessageLookup => commonMessages}
-import forms.resident.PersonalAllowanceForm._
+import forms.resident.income.PersonalAllowanceForm._
 
 class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
