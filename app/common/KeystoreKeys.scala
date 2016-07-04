@@ -56,6 +56,7 @@ object KeystoreKeys {
     val allowableLossesValue = "res:allowableLossesValue"
     val otherProperties = "res:otherProperties"
     val annualExemptAmount = "res:annualExemptAmount"
+    val currentIncome = "res:currentIncome"
   }
 
 }
