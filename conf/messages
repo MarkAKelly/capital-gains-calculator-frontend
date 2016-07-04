@@ -409,4 +409,4 @@ calc.resident.currentIncome.title = In the tax year 2015/16 when you stopped own
 calc.resident.personalAllowance.title = In the tax year when you stopped owning the property, what was your UK Personal Allowance?
 calc.resident.personalAllowance.question = In the tax year when you stopped owning the property, what was your UK Personal Allowance?
 calc.resident.personalAllowance.link.one = Personal Allowance
-calc.resident.personalAllowance.helpText = This is the amount of your income you don’t pay tax on. It''s £10,600 unless you’'re claiming other allowances.
+calc.resident.personalAllowance.helpText = This is the amount of your income you don’'t pay tax on. It''s £10,600 unless you’'re claiming other allowances.
