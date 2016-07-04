@@ -210,4 +210,11 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
+  "The URL for the personalAllowance action" should {
+    "be equal to /calculate-you-capital-gains/resident/personal-allowance" in {
+      val path = controllers.resident.routes.IncomeController.personalAllowance.toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/personal-allowance"
+    }
+  }
+
 }
