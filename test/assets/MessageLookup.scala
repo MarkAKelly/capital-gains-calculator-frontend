@@ -184,5 +184,7 @@ object MessageLookup {
   }
 
   //Personal Allowance messages
-
+  object personalAllowance {
+    val title = "In the tax year when you stopped owning the property, what was your UK Personal Allowance?"
+  }
 }

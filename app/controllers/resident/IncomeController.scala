@@ -60,5 +60,8 @@ trait IncomeController extends FeatureLock {
   }
 
   //################################# Personal Allowance Actions ##########################################
+  val personalAllowance = FeatureLockForRTT.async { implicit request =>
+    Future.successful(Ok(views.personalAllowance()))
+  }
 
 }
