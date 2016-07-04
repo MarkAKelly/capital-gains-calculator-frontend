@@ -83,7 +83,7 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
       }
 
 
-      "has help one text that" should {
+      "has help text that" should {
         s"have the text ${messages.help}" in {
           doc.body.getElementsByClass("form-hint").text contains messages.help
         }
@@ -128,29 +128,34 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
         continueButton.hasClass("button") shouldBe true
       }
     }
-  }
 
-  "Personal Allowance view with stored values" should {
-    lazy val form = personalAllowanceForm.bind(Map(("amount", "1000")))
-    lazy val view = views.personalAllowance(form)(fakeRequest)
-    lazy val doc = Jsoup.parse(view.body)
 
-    "have the value of 1000 auto-filled in the input" in {
-      lazy val input = doc.body.getElementsByTag("input")
-      input.`val` shouldBe "1000"
-    }
-  }
-
-  "Personal Allowance View with form with errors" which {
-    "is due to mandatory field error" should {
-      val form = personalAllowanceForm.bind(Map("amount" -> ""))
+    "Personal Allowance view with stored values" should {
+      lazy val form = personalAllowanceForm.bind(Map(("amount", "1000")))
       lazy val view = views.personalAllowance(form)(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
-      s"output an error summary with message '${commonMessages.undefinedMessage}'" in {
-        doc.body.getElementById("amount-error-summary").text should include(commonMessages.undefinedMessage)
+
+      "have the value of 1000 auto-filled in the input" in {
+        lazy val input = doc.body.getElementsByTag("input")
+        input.`val` shouldBe "1000"
       }
-      s"have the input error message '${commonMessages.undefinedMessage}'" in {
-        doc.body.getElementsByClass("error-notification").text should include(commonMessages.undefinedMessage)
+    }
+
+    "Personal Allowance View with form with errors" which {
+
+      "is due to mandatory field error" should {
+
+        val form = personalAllowanceForm.bind(Map("amount" -> ""))
+        lazy val view = views.personalAllowance(form)(fakeRequest)
+        lazy val doc = Jsoup.parse(view.body)
+
+        "display an error summary message for the amount" in {
+          doc.body.select("#amount-error-summary").size shouldBe 1
+        }
+
+        "display an error message for the input" in {
+          doc.body.select(".form-group .error-notification").size shouldBe 1
+        }
       }
     }
   }
