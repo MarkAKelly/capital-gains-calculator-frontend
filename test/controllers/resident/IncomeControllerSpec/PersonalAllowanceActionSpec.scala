@@ -16,42 +16,90 @@
 
 package controllers.resident.IncomeControllerSpec
 
+import common.KeystoreKeys
+import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.IncomeController
+import models.resident.PersonalAllowanceModel
 import org.jsoup.Jsoup
+import org.mockito.Matchers
+import org.scalatest.mock.MockitoSugar
+import org.mockito.Mockito._
 import play.api.test.Helpers._
 import assets.MessageLookup.{personalAllowance => messages}
 import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 
-class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+import scala.concurrent.Future
 
-  "Calling .personalAllowance from the IncomeController with a session" should {
+class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar{
 
-    lazy val result = IncomeController.personalAllowance(fakeRequestWithSession)
-
-    "return a status of 200" in {
-      status(result) shouldBe 200
-    }
-
-    "return some html" in {
-      contentType(result) shouldBe Some("text/html")
-    }
-
-    "display the Personal Allowance view" in {
-      Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+  def setupTarget(getData: Option[PersonalAllowanceModel]): IncomeController = {
+    val mockCalcConnector = mock[CalculatorConnector]
+    when(mockCalcConnector.fetchAndGetFormData[PersonalAllowanceModel](Matchers.eq(KeystoreKeys.ResidentKeys.personalAllowance))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(getData))
+    new IncomeController {
+      override val calcConnector: CalculatorConnector = mockCalcConnector
     }
   }
 
-  "Calling .personalAllowance from the IncomeController with no session" should {
-
+  "Calling .personalAllowance from the IncomeController" when {
+    "there is no keystore data" should {
+      lazy val target = setupTarget(None)
+      lazy val result = target.personalAllowance(fakeRequestWithSession)
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+      "return some html" in {
+        contentType(result) shouldBe Some("text/html")
+      }
+      "display the Perosnal Allowance view" in {
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+      }
+    }
+    "there is some keystore data" should {
+      lazy val target = setupTarget(Some(PersonalAllowanceModel(1000)))
+      lazy val result = target.personalAllowance(fakeRequestWithSession)
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+      "return some html" in {
+        contentType(result) shouldBe Some("text/html")
+      }
+      "display the Personal Allowance view" in {
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+      }
+    }
+  }
+  "request has an invalid session" should {
     lazy val result = IncomeController.personalAllowance(fakeRequest)
-
     "return a status of 303" in {
       status(result) shouldBe 303
     }
-
-    "return you to the session timeout view" in {
-      redirectLocation(result).get shouldBe "/calculate-your-capital-gains/non-resident/session-timeout"
+    "return you to the session timeout page" in {
+      redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/non-resident/session-timeout")
+    }
+  }
+  "Calling .submitPersoanlAllowance from the IncomeController" when {
+    "a valid form is submitted" should {
+      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+      lazy val result = IncomeController.submitPersonalAllowance(request)
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+      "redirect to the summary page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/summary")
+      }
+    }
+    "an invalid form is submitted" should {
+      lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
+      lazy val result = IncomeController.submitPersonalAllowance(request)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+      "return a 400" in {
+        status(result) shouldBe 400
+      }
+      "render the personal allowance page" in {
+        doc.title() shouldEqual messages.title
+      }
     }
   }
 }
