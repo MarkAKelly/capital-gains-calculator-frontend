@@ -57,11 +57,25 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       acquisitionCostsData.get.amount,
       improvementsData.get.amount)
 
+    val chargeableGainAnswers = ChargeableGainAnswers(
+      Some(ReliefsModel(false)),
+        None,
+        Some(OtherPropertiesModel(false)),
+        None,
+        None,
+        Some(LossesBroughtForwardModel(false)),
+        None,
+        None
+    )
+
     when(mockCalculatorConnector.getYourAnswers(Matchers.any()))
         .thenReturn(Future.successful(answersModel))
 
     when(mockCalculatorConnector.calculateRttGrossGain(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(grossGain))
+
+    when(mockCalculatorConnector.getChargeableGainAnswers(Matchers.any()))
+      .thenReturn(Future.successful(chargeableGainAnswers))
 
     new SummaryController {
       override val calculatorConnector: CalculatorConnector = mockCalculatorConnector

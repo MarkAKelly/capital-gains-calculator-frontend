@@ -21,6 +21,7 @@ import common.KeystoreKeys
 import common.KeystoreKeys.ResidentKeys
 import config.{CalculatorSessionCache, WSHttp}
 import constructors.nonresident.CalculateRequestConstructor
+import constructors.{resident => residentConstructors}
 import models.nonresident._
 import models.resident
 import play.api.libs.json.Format
@@ -145,11 +146,16 @@ trait CalculatorConnector {
 
   def calculateRttGrossGain(input: resident.YourAnswersSummaryModel)(implicit hc: HeaderCarrier): Future[BigDecimal] = {
     http.GET[BigDecimal](s"$serviceUrl/capital-gains-calculator/calculate-total-gain" +
-      s"?disposalValue=${input.disposalValue}" +
-      s"&disposalCosts=${input.disposalCosts}" +
-      s"&acquisitionValue=${input.acquisitionValue}" +
-      s"&acquisitionCosts=${input.acquisitionCosts}" +
-      s"&improvements=${input.improvements}"
+      residentConstructors.CalculateRequestConstructor.totalGainRequestString(input)
+    )
+  }
+
+  def calculateRttChargeableGain(totalGainInput: resident.YourAnswersSummaryModel,
+                                 chargeableGainInput: resident.ChargeableGainAnswers,
+                                 maxAEA: BigDecimal)(implicit hc: HeaderCarrier): Future[Option[resident.ChargeableGainResultModel]] = {
+    http.GET[Option[resident.ChargeableGainResultModel]](s"$serviceUrl/capital-gains-calculator/calculate-chargeable-gain" +
+      residentConstructors.CalculateRequestConstructor.totalGainRequestString(totalGainInput) +
+      residentConstructors.CalculateRequestConstructor.chargeableGainRequestString(chargeableGainInput, maxAEA)
     )
   }
 
@@ -176,6 +182,38 @@ trait CalculatorConnector {
       acquisitionCosts,
       improvements
     )
+  }
+
+  def getChargeableGainAnswers (implicit hc: HeaderCarrier): Future[resident.ChargeableGainAnswers] = {
+    val reliefsModel = fetchAndGetFormData[resident.ReliefsModel](ResidentKeys.reliefs)
+    val reliefsValueModel = fetchAndGetFormData[resident.ReliefsValueModel](ResidentKeys.reliefsValue)
+    val otherPropertiesModel = fetchAndGetFormData[resident.OtherPropertiesModel](ResidentKeys.otherProperties)
+    val allowableLossesModel = fetchAndGetFormData[resident.AllowableLossesModel](ResidentKeys.allowableLosses)
+    val allowableLossesValueModel = fetchAndGetFormData[resident.AllowableLossesValueModel](ResidentKeys.allowableLossesValue)
+    val broughtForwardModel = fetchAndGetFormData[resident.LossesBroughtForwardModel](ResidentKeys.lossesBroughtForward)
+    val broughtForwardValueModel = fetchAndGetFormData[resident.LossesBroughtForwardValueModel](ResidentKeys.lossesBroughtForwardValue)
+    val annualExemptAmountModel = fetchAndGetFormData[resident.AnnualExemptAmountModel](ResidentKeys.annualExemptAmount)
+
+    for {
+      reliefs <- reliefsModel
+      reliefsValue <- reliefsValueModel
+      otherProperties <- otherPropertiesModel
+      allowableLosses <- allowableLossesModel
+      allowableLossesValue <- allowableLossesValueModel
+      broughtForward <- broughtForwardModel
+      broughtForwardValue <- broughtForwardValueModel
+      annualExemptAmount <- annualExemptAmountModel
+    } yield {
+      resident.ChargeableGainAnswers(reliefs,
+        reliefsValue,
+        otherProperties,
+        allowableLosses,
+        allowableLossesValue,
+        broughtForward,
+        broughtForwardValue,
+        annualExemptAmount)
+    }
+
   }
 
 }

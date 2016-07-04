@@ -17,14 +17,35 @@
 package views.resident
 
 import assets.MessageLookup.{summary => messages}
+import common.Dates
 import controllers.helpers.FakeRequestHelper
+import models.resident._
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Deductions Summary view" should {
-    lazy val view = views.html.calculation.resident.deductionsSummary()(fakeRequestWithSession)
+    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+      BigDecimal(200000),
+      BigDecimal(10000),
+      BigDecimal(100000),
+      BigDecimal(10000),
+      BigDecimal(30000))
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+      None,
+      Some(OtherPropertiesModel(false)),
+      None,
+      None,
+      Some(LossesBroughtForwardModel(false)),
+      None,
+      None)
+    lazy val results = ChargeableGainResultModel(BigDecimal(50000),
+      BigDecimal(38900),
+      BigDecimal(11100),
+      BigDecimal(11100))
+    
+    lazy val view = views.html.calculation.resident.deductionsSummary(gainAnswers, deductionAnswers, results)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {

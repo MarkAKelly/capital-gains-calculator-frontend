@@ -19,6 +19,7 @@ package controllers.resident
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import models.resident._
+import play.api.mvc.{Request, Result}
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future
@@ -28,10 +29,28 @@ trait SummaryController extends FeatureLock {
   val calculatorConnector: CalculatorConnector
 
   val summary = FeatureLockForRTT.async { implicit request =>
+    def chargeableGain (grossGain: BigDecimal,
+                        yourAnswersSummaryModel: YourAnswersSummaryModel,
+                        chargeableGainAnswers: ChargeableGainAnswers)(implicit hc: HeaderCarrier): Future[Option[ChargeableGainResultModel]] = {
+      if (grossGain > 0) calculatorConnector.calculateRttChargeableGain(yourAnswersSummaryModel, chargeableGainAnswers, BigDecimal(11100))
+      else Future.successful(None)
+    }
+
+    def routeRequest (totalGainAnswers: YourAnswersSummaryModel,
+                      grossGain: BigDecimal,
+                      chargeableGainAnswers: ChargeableGainAnswers,
+                      chargeableGain: Option[ChargeableGainResultModel])(implicit hc: HeaderCarrier): Future[Result] = {
+      if (grossGain > 0) Future.successful(Ok(views.html.calculation.resident.deductionsSummary(totalGainAnswers, chargeableGainAnswers, chargeableGain.get)))
+      else Future.successful(Ok(views.html.calculation.resident.gainSummary(totalGainAnswers, grossGain)))
+    }
+
     for {
       answers <- calculatorConnector.getYourAnswers
       grossGain <- calculatorConnector.calculateRttGrossGain(answers)
-    } yield Ok(views.html.calculation.resident.gainSummary(answers, grossGain))
+      deductionAnswers <- calculatorConnector.getChargeableGainAnswers
+      chargeableGain <- chargeableGain(grossGain, answers, deductionAnswers)
+      routeRequest <- routeRequest(answers, grossGain, deductionAnswers, chargeableGain)
+    } yield routeRequest
   }
 }
 
