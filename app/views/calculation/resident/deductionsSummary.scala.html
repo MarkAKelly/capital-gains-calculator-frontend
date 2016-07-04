@@ -6,11 +6,11 @@
 @import controllers.resident.routes.{DeductionsController => deductionRoutes}
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-@(gainAnswers: YourAnswersSummaryModel, deductionAnswers: ChargeableGainAnswers, result: ChargeableGainResultModel)(implicit request: Request[_])
+@(gainAnswers: YourAnswersSummaryModel, deductionAnswers: ChargeableGainAnswers, result: ChargeableGainResultModel, backUrl: String)(implicit request: Request[_])
 
 @resident_main_template(
 title = Messages("calc.resident.summary.title"),
-backLink = Some(controllers.resident.routes.GainController.improvements().toString),
+backLink = Some(backUrl),
 articleLayout = false
 ) {
 

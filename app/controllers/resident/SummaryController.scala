@@ -16,6 +16,7 @@
 
 package controllers.resident
 
+import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import models.resident._
@@ -29,6 +30,16 @@ trait SummaryController extends FeatureLock {
   val calculatorConnector: CalculatorConnector
 
   val summary = FeatureLockForRTT.async { implicit request =>
+
+    def buildPreviousTaxableGainsBackUrl(chargeableGainAnswers: ChargeableGainAnswers)(implicit hc: HeaderCarrier): Future[String] = {
+      (chargeableGainAnswers.otherPropertiesModel.getOrElse(OtherPropertiesModel(false)).hasOtherProperties
+        , chargeableGainAnswers.broughtForwardModel.getOrElse(LossesBroughtForwardModel(false)).option) match {
+        case (true, _) => Future.successful(routes.DeductionsController.annualExemptAmount().url)
+        case (false, true) => Future.successful(routes.DeductionsController.lossesBroughtForwardValue().url)
+        case (false, false) => Future.successful(routes.DeductionsController.lossesBroughtForward().url)
+      }
+    }
+
     def chargeableGain (grossGain: BigDecimal,
                         yourAnswersSummaryModel: YourAnswersSummaryModel,
                         chargeableGainAnswers: ChargeableGainAnswers)(implicit hc: HeaderCarrier): Future[Option[ChargeableGainResultModel]] = {
@@ -39,8 +50,9 @@ trait SummaryController extends FeatureLock {
     def routeRequest (totalGainAnswers: YourAnswersSummaryModel,
                       grossGain: BigDecimal,
                       chargeableGainAnswers: ChargeableGainAnswers,
-                      chargeableGain: Option[ChargeableGainResultModel])(implicit hc: HeaderCarrier): Future[Result] = {
-      if (grossGain > 0) Future.successful(Ok(views.html.calculation.resident.deductionsSummary(totalGainAnswers, chargeableGainAnswers, chargeableGain.get)))
+                      chargeableGain: Option[ChargeableGainResultModel],
+                      backUrl: String)(implicit hc: HeaderCarrier): Future[Result] = {
+      if (grossGain > 0) Future.successful(Ok(views.html.calculation.resident.deductionsSummary(totalGainAnswers, chargeableGainAnswers, chargeableGain.get, backUrl)))
       else Future.successful(Ok(views.html.calculation.resident.gainSummary(totalGainAnswers, grossGain)))
     }
 
@@ -48,8 +60,9 @@ trait SummaryController extends FeatureLock {
       answers <- calculatorConnector.getYourAnswers
       grossGain <- calculatorConnector.calculateRttGrossGain(answers)
       deductionAnswers <- calculatorConnector.getChargeableGainAnswers
+      backLink <- buildPreviousTaxableGainsBackUrl(deductionAnswers)
       chargeableGain <- chargeableGain(grossGain, answers, deductionAnswers)
-      routeRequest <- routeRequest(answers, grossGain, deductionAnswers, chargeableGain)
+      routeRequest <- routeRequest(answers, grossGain, deductionAnswers, chargeableGain, backLink)
     } yield routeRequest
   }
 }

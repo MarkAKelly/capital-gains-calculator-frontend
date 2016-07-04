@@ -24,6 +24,7 @@ import controllers.resident.routes
 import models.resident._
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import views.html.calculation.{resident => views}
 
 class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
@@ -46,8 +47,9 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       BigDecimal(38900),
       BigDecimal(11100),
       BigDecimal(11100))
+    lazy val backLink = "/calculate-your-capital-gains/resident/losses-brought-forward"
     
-    lazy val view = views.html.calculation.resident.deductionsSummary(gainAnswers, deductionAnswers, results)(fakeRequestWithSession)
+    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -71,7 +73,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       }
 
       s"has a link to '${routes.GainController.improvements().toString()}'" in {
-        backLink.attr("href") shouldBe routes.GainController.improvements().toString
+        backLink.attr("href") shouldBe routes.DeductionsController.lossesBroughtForward().toString
       }
 
     }
@@ -341,8 +343,27 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       BigDecimal(0),
       BigDecimal(71000))
 
-    lazy val view = views.html.calculation.resident.deductionsSummary(gainAnswers, deductionAnswers, results)(fakeRequestWithSession)
+    lazy val backLink = "/calculate-your-capital-gains/resident/annual-exempt-amount"
+    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
+
+    s"have a back button" which {
+
+      lazy val backLink = doc.getElementById("back-link")
+
+      "has the id 'back-link'" in {
+        backLink.attr("id") shouldBe "back-link"
+      }
+
+      s"has the text '${commonMessages.calcBaseBack}'" in {
+        backLink.text shouldBe commonMessages.calcBaseBack
+      }
+
+      s"has a link to '${routes.GainController.improvements().toString()}'" in {
+        backLink.attr("href") shouldBe routes.DeductionsController.annualExemptAmount().toString
+      }
+
+    }
 
     s"have a section for the Calculation details" which {
 
