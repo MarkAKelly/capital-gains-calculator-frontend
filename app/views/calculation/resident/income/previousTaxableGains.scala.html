@@ -1,0 +1,20 @@
+@import views.html.calculation.resident.resident_main_template
+@import models.resident.income.PreviousTaxableGainsModel
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import views.html.helpers._
+
+@(previousTaxableGainsForm: Form[PreviousTaxableGainsModel], backUrl: String)(implicit request: Request[_])
+
+@resident_main_template(Messages("calc.resident.previousTaxableGains.title"), backLink = Some(backUrl)) {
+
+    @errorSummary(previousTaxableGainsForm, "previousTaxableGains")
+
+    <h1 class="heading-large">@Messages("calc.resident.previousTaxableGains.title")</h1>
+
+    @form(action = controllers.resident.routes.IncomeController.submitPreviousTaxableGains) {
+
+        @formInputMoney(previousTaxableGainsForm, "amount", Messages("calc.resident.previousTaxableGains.title"),hideLabel = true)
+
+        <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+    }
+}
