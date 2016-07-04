@@ -137,6 +137,7 @@ object MessageLookup {
   //Allowable Losses Value messages
   object allowableLossesValue {
     val title = "What's the total value of your allowable losses?"
+    val question = "What's the total value of your allowable losses?"
   }
 
   //Losses Brought Forward messages

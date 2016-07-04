@@ -20,23 +20,19 @@ import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import models.resident._
-
+import models.resident.AllowableLossesValueModel
 import forms.resident.LossesBroughtForwardForm._
 import forms.resident.LossesBroughtForwardValueForm._
 import forms.resident.AllowableLossesForm._
 import forms.resident.ReliefsValueForm._
-
+import forms.resident.AllowableLossesValueForm._
 import forms.resident.AnnualExemptAmountForm._
-import play.api.mvc.{Action, Result}
-import views.html.calculation.{resident => views}
-
 import forms.resident.OtherPropertiesForm._
 import forms.resident.ReliefsForm._
-
 import play.api.mvc.{Action, Result}
-
-import uk.gov.hmrc.play.http.HeaderCarrier
 import play.api.data.Form
+import views.html.calculation.{resident => views}
+import uk.gov.hmrc.play.http.HeaderCarrier
 import scala.concurrent.Future
 
 object DeductionsController extends DeductionsController {
@@ -177,8 +173,21 @@ trait DeductionsController extends FeatureLock {
   }
 
   //################# Allowable Losses Value Actions ############################
-  val allowableLossesValue = Action.async { implicit request =>
-    Future.successful(Ok(views.allowableLossesValue()))
+  val allowableLossesValue = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[AllowableLossesValueModel](KeystoreKeys.ResidentKeys.allowableLossesValue).map {
+      case Some(data) => Ok(views.allowableLossesValue(allowableLossesValueForm.fill(data)))
+      case None => Ok(views.allowableLossesValue(allowableLossesValueForm))
+    }
+  }
+
+  val submitAllowableLossesValue = FeatureLockForRTT.async { implicit request =>
+    allowableLossesValueForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.allowableLossesValue(errors))),
+      success => {
+        calcConnector.saveFormData[AllowableLossesValueModel](KeystoreKeys.ResidentKeys.allowableLossesValue, success)
+        Future.successful(Redirect(routes.DeductionsController.lossesBroughtForward()))
+      }
+    )
   }
 
   //################# Brought Forward Losses Actions ############################
