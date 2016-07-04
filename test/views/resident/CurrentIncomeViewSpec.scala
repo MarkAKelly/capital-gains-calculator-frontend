@@ -47,14 +47,6 @@ class CurrentIncomeViewSpec extends UnitSpec with WithFakeApplication with FakeR
       doc.select("h1").text shouldEqual commonMessages.currentIncome.question
     }
 
-    s"have the help text ${messages.helpText}" in {
-      doc.body.getElementsByClass("form-hint").text shouldBe messages.helpText
-    }
-
-    "render a form tag with a submit action" in {
-      doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/current-income"
-    }
-
     "have a form" which {
 
       lazy val form = doc.getElementsByTag("form")
@@ -79,6 +71,10 @@ class CurrentIncomeViewSpec extends UnitSpec with WithFakeApplication with FakeR
         "have the class 'visuallyhidden'" in {
           label.select("span.visuallyhidden").size shouldBe 1
         }
+      }
+
+      s"have the help text ${messages.helpText}" in {
+        doc.body.getElementsByClass("form-hint").text shouldBe messages.helpText
       }
 
       "has a numeric input field" which {

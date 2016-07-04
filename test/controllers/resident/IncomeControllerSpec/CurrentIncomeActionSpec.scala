@@ -17,27 +17,75 @@
 package controllers.resident.IncomeControllerSpec
 
 import assets.MessageLookup.{currentIncome => messages}
+import common.KeystoreKeys
+import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.IncomeController
+import models.resident.CurrentIncomeModel
 import org.jsoup.Jsoup
+import org.mockito.Matchers
+import org.mockito.Mockito._
+import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+import scala.concurrent.Future
+
+class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
+
+  case class FakeGETRequest(storedData: Option[CurrentIncomeModel]) {
+    def setupTarget(): IncomeController = {
+
+      val mockCalcConnector = mock[CalculatorConnector]
+
+      when(mockCalcConnector.fetchAndGetFormData[CurrentIncomeModel](Matchers.eq(KeystoreKeys.ResidentKeys.currentIncome))(Matchers.any(), Matchers.any()))
+        .thenReturn(Future.successful(storedData))
+
+      new IncomeController {
+        override val calcConnector: CalculatorConnector = mockCalcConnector
+      }
+    }
+
+    val target = setupTarget()
+    val result = target.currentIncome(fakeRequestWithSession)
+    val doc = Jsoup.parse(bodyOf(result))
+  }
+
+  case class FakePOSTRequest(input: (String, String)*) {
+    lazy val target = fakeRequestToPOSTWithSession(input: _*)
+    lazy val result = IncomeController.submitCurrentIncome(target)
+    lazy val doc = Jsoup.parse(bodyOf(result))
+  }
 
   "Calling .currentIncome from the IncomeController with a session" should {
-    lazy val result = IncomeController.currentIncome(fakeRequestWithSession)
 
-    "return a status of 200" in {
-      status(result) shouldBe 200
+    "supplied with no pre-existing stored data" should {
+
+      lazy val request = FakeGETRequest(None)
+
+      "return a status of 200" in {
+        status(request.result) shouldBe 200
+      }
+
+      "return some html" in {
+        contentType(request.result) shouldBe Some("text/html")
+      }
+
+      "display the Current Income view" in {
+        Jsoup.parse(bodyOf(request.result)).title shouldBe messages.title
+      }
     }
+    "supplied with pre-existing stored data" should {
 
-    "return some html" in {
-      contentType(result) shouldBe Some("text/html")
-    }
+      lazy val request = FakeGETRequest(Some(CurrentIncomeModel(40000)))
 
-    "display the Current Income view" in {
-      Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+      "return a status of 200" in {
+        status(request.result) shouldBe 200
+      }
+
+      "have the amount 40000 pre-populated into the input field" in {
+        request.doc.getElementById("amount").attr("value") shouldBe "40000"
+      }
     }
   }
 
@@ -54,4 +102,28 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
     }
   }
 
+  "calling .submitCurrentIncome from the IncomeController" when {
+
+    "given a valid form should" should {
+
+      lazy val request = FakePOSTRequest(("amount", "100"))
+
+      "return a status of 303" in {
+        status(request.result) shouldBe 303
+      }
+
+      s"redirect to '${controllers.resident.routes.IncomeController.personalAllowance().toString}'" in {
+        redirectLocation(request.result).get shouldBe controllers.resident.routes.IncomeController.personalAllowance().toString
+      }
+    }
+
+    "given an invalid form" should {
+
+      lazy val request = FakePOSTRequest(("amount", "-100"))
+
+      "return a status of 400" in {
+        status(request.result) shouldBe 400
+      }
+    }
+  }
 }

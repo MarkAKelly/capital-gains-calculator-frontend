@@ -43,7 +43,7 @@ trait IncomeController extends FeatureLock {
   //################################# Current Income Actions ##########################################
 
   val currentIncome = FeatureLockForRTT.async { implicit request =>
-    calcConnector.fetchAndGetFormData[CurrentIncomeModel](KeystoreKeys.ResidentKeys.disposalCosts).map {
+    calcConnector.fetchAndGetFormData[CurrentIncomeModel](KeystoreKeys.ResidentKeys.currentIncome).map {
       case Some(data) => Ok(views.currentIncome(currentIncomeForm.fill(data)))
       case None => Ok(views.currentIncome(currentIncomeForm))
     }
@@ -54,7 +54,7 @@ trait IncomeController extends FeatureLock {
       errors => Future.successful(BadRequest(views.currentIncome(errors))),
       success => {
         calcConnector.saveFormData[CurrentIncomeModel](KeystoreKeys.ResidentKeys.currentIncome, success)
-        Future.successful(Redirect(routes.IncomeController.currentIncome()))
+        Future.successful(Redirect(routes.IncomeController.personalAllowance()))
       }
     )
   }

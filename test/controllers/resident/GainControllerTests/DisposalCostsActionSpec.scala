@@ -31,7 +31,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
-class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar{
+class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
   case class FakeGETRequest (storedData: Option[DisposalCostsModel]) {
     def setupTarget(): GainController = {
