@@ -29,7 +29,6 @@ import play.api.mvc.Result
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future
-import scala.math.BigDecimal
 
 object IncomeController extends IncomeController {
   val calcConnector = CalculatorConnector
@@ -54,7 +53,6 @@ trait IncomeController extends FeatureLock {
   }
 
   def annualExemptAmountEntered(implicit hc: HeaderCarrier): Future[Boolean] = {
-    val bigDecimalZero = BigDecimal(0)
     calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](KeystoreKeys.ResidentKeys.annualExemptAmount).map {
       case Some(data) =>
         if(data.amount.equals(0)) true
