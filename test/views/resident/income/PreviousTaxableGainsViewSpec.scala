@@ -17,6 +17,7 @@
 package views.resident.income
 
 import assets.MessageLookup.{previousTaxableGains => messages}
+import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.income.PreviousTaxableGainsForm.previousTaxableGainsForm
 import org.jsoup.Jsoup
@@ -76,6 +77,10 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
 
       s"has the text ${messages.helpLinkOne}" in {
         link.text() should include(messages.helpLinkOne)
+      }
+
+      s"has a visually hidden external link message" in {
+        link.select("span.visuallyhidden").text() shouldBe commonMessages.calcBaseExternalLink
       }
 
       "links to https://www.gov.uk/capital-gains-tax/work-out-need-to-pay" in {
