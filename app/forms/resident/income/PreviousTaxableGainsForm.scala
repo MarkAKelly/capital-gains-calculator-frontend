@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package forms.resident
+package forms.resident.income
 
 import common.Constants
 import common.Transformers._
 import common.Validation._
+import models.resident.income.PreviousTaxableGainsModel
 import play.api.data.Forms._
 import play.api.data._
-import models.resident.CurrentIncomeModel
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-object CurrentIncomeForm {
+object PreviousTaxableGainsForm {
 
-  val currentIncomeForm = Form(
+  val previousTaxableGainsForm = Form(
     mapping(
       "amount" -> text
         .verifying(Messages("calc.common.error.mandatoryAmount"), mandatoryCheck)
@@ -36,6 +36,6 @@ object CurrentIncomeForm {
         .verifying(Messages("calc.common.error.maxAmountExceeded", MoneyPounds(Constants.maxNumeric, 0).quantity), maxCheck)
         .verifying(Messages("calc.common.error.minimumAmount"), minCheck)
         .verifying(Messages("calc.common.error.invalidAmount"), decimalPlacesCheck)
-    )(CurrentIncomeModel.apply)(CurrentIncomeModel.unapply)
+    )(PreviousTaxableGainsModel.apply)(PreviousTaxableGainsModel.unapply)
   )
 }

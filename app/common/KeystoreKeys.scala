@@ -57,6 +57,9 @@ object KeystoreKeys {
     val otherProperties = "res:otherProperties"
     val annualExemptAmount = "res:annualExemptAmount"
     val currentIncome = "res:currentIncome"
+    val previousTaxableGains = "res:previousTaxableGains"
+    val incomeForPreviousYear = "res:incomeForPreviousYear"
+    val personalAllowance = "res:personalAllowance"
   }
 
 }

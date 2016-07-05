@@ -21,7 +21,7 @@ import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.IncomeController
-import models.resident.CurrentIncomeModel
+import models.resident.income.CurrentIncomeModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._

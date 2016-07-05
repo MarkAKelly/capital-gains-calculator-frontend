@@ -22,7 +22,7 @@ import views.html.calculation.resident.{income => views}
 import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import forms.resident.CurrentIncomeForm._
+import forms.resident.income.CurrentIncomeForm._
 
 class CurrentIncomeViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
