@@ -3,9 +3,9 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
 
-@(currentIncomeForm: Form[CurrentIncomeModel])(implicit request: Request[_])
+@(currentIncomeForm: Form[CurrentIncomeModel], backUrl: String)(implicit request: Request[_])
 
-@resident_main_template(Messages("calc.resident.currentIncome.title"), backLink = Some("")) {
+@resident_main_template(Messages("calc.resident.currentIncome.title"), backLink = Some(backUrl)) {
 
     @errorSummary(currentIncomeForm, "current-income")
 

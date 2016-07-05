@@ -28,7 +28,7 @@ class CurrentIncomeViewSpec extends UnitSpec with WithFakeApplication with FakeR
 
   "Current Income view" should {
 
-    lazy val view = views.currentIncome(currentIncomeForm)(fakeRequest)
+    lazy val view = views.currentIncome(currentIncomeForm, "")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -126,7 +126,7 @@ class CurrentIncomeViewSpec extends UnitSpec with WithFakeApplication with FakeR
     "is due to mandatory field error" should {
 
       val form = currentIncomeForm.bind(Map("amount" -> ""))
-      lazy val view = views.currentIncome(form)(fakeRequest)
+      lazy val view = views.currentIncome(form, "")(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
 
       "display an error summary message for the amount" in {
