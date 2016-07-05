@@ -193,7 +193,7 @@ class LossesBroughtForwardActionSpec extends UnitSpec with WithFakeApplication w
       }
     }
 
-    "a valid form 'No' and no other properties are claimed and chargeable gain is -£1000" should {
+    "a valid form 'No' and no other properties are claimed and has a positive chargeable gain of £1,000" should {
 
       lazy val target = setupTarget(Some(LossesBroughtForwardModel(false)), Some(OtherPropertiesModel(false)), None, gainModel, summaryModel, ChargeableGainResultModel(1000, -1000, 0, 2000))
       lazy val request = fakeRequestToPOSTWithSession(("option", "No"))

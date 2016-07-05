@@ -288,15 +288,27 @@ trait DeductionsController extends FeatureLock {
   }
 
   val submitLossesBroughtForwardValue = FeatureLockForRTT.async { implicit request =>
-    lossesBroughtForwardValueForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.lossesBroughtForwardValue(errors))),
-      success => {
-        calcConnector.saveFormData[LossesBroughtForwardValueModel](KeystoreKeys.ResidentKeys.lossesBroughtForwardValue, success)
-        calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.ResidentKeys.otherProperties).flatMap {
-        case Some(OtherPropertiesModel(true)) => Future.successful(Redirect(routes.DeductionsController.annualExemptAmount()))
-        case _ => Future.successful(Redirect(routes.SummaryController.summary()))}
-      }
-    )
+    def routeRequest: Future[Result] = {
+      lossesBroughtForwardValueForm.bindFromRequest.fold(
+        errors => Future.successful(BadRequest(views.lossesBroughtForwardValue(errors))),
+        success => {
+          calcConnector.saveFormData[LossesBroughtForwardValueModel](KeystoreKeys.ResidentKeys.lossesBroughtForwardValue, success)
+          for {
+            otherPropertiesClaimed <- otherPropertiesCheck
+            positiveChargeableGain <- positiveChargeableGainCheck
+          } yield (otherPropertiesClaimed, positiveChargeableGain)
+
+          match {
+            case (true, _) => Redirect(routes.DeductionsController.annualExemptAmount())
+            case (false, true) => Redirect(routes.IncomeController.currentIncome())
+            case _ => Redirect(routes.SummaryController.summary())
+          }
+        }
+      )
+    }
+    for {
+      route <- routeRequest
+    } yield route
   }
 
   //################# Annual Exempt Amount Input Actions #############################
