@@ -154,8 +154,8 @@ trait GainController extends FeatureLock {
     improvementsForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.improvements(errors))),
       success => {
-        calcConnector.saveFormData(KeystoreKeys.ResidentKeys.improvements, success)
         for {
+          save <- calcConnector.saveFormData(KeystoreKeys.ResidentKeys.improvements, success)
           answers <- calcConnector.getYourAnswers
           grossGain <- calcConnector.calculateRttGrossGain(answers)
           route <- routeRequest(grossGain)
