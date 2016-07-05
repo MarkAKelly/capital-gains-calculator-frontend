@@ -34,122 +34,121 @@ import scala.concurrent.Future
 
 class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  case class FakeGETRequest(storedData: Option[CurrentIncomeModel], otherProperties: Boolean = true,
-                            lossesBroughtForward: Boolean = true, annualExemptAmount: BigDecimal = 0) {
-    def setupTarget(): IncomeController = {
+  def setupTarget(storedData: Option[CurrentIncomeModel], otherProperties: Boolean = true,
+                  lossesBroughtForward: Boolean = true, annualExemptAmount: BigDecimal = 0): IncomeController = {
 
-      val mockCalcConnector = mock[CalculatorConnector]
+    val mockCalcConnector = mock[CalculatorConnector]
 
-      when(mockCalcConnector.fetchAndGetFormData[CurrentIncomeModel](Matchers.eq(KeystoreKeys.ResidentKeys.currentIncome))(Matchers.any(), Matchers.any()))
-        .thenReturn(Future.successful(storedData))
+    when(mockCalcConnector.fetchAndGetFormData[CurrentIncomeModel](Matchers.eq(KeystoreKeys.ResidentKeys.currentIncome))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(storedData))
 
-      when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.eq(KeystoreKeys.ResidentKeys.otherProperties))(Matchers.any(), Matchers.any()))
-        .thenReturn(Future.successful(Some(OtherPropertiesModel(otherProperties))))
+    when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.eq(KeystoreKeys.ResidentKeys.otherProperties))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(OtherPropertiesModel(otherProperties))))
 
-      when(mockCalcConnector.fetchAndGetFormData[LossesBroughtForwardModel](Matchers.eq(KeystoreKeys.ResidentKeys.lossesBroughtForward))(Matchers.any(),
-        Matchers.any()))
-        .thenReturn(Future.successful(Some(LossesBroughtForwardModel(lossesBroughtForward))))
+    when(mockCalcConnector.fetchAndGetFormData[LossesBroughtForwardModel](Matchers.eq(KeystoreKeys.ResidentKeys.lossesBroughtForward))(Matchers.any(),
+      Matchers.any()))
+      .thenReturn(Future.successful(Some(LossesBroughtForwardModel(lossesBroughtForward))))
 
-      when(mockCalcConnector.fetchAndGetFormData[AnnualExemptAmountModel](Matchers.eq(KeystoreKeys.ResidentKeys.annualExemptAmount))(Matchers.any(),
-        Matchers.any()))
-        .thenReturn(Future.successful(Some(AnnualExemptAmountModel(annualExemptAmount))))
+    when(mockCalcConnector.fetchAndGetFormData[AnnualExemptAmountModel](Matchers.eq(KeystoreKeys.ResidentKeys.annualExemptAmount))(Matchers.any(),
+      Matchers.any()))
+      .thenReturn(Future.successful(Some(AnnualExemptAmountModel(annualExemptAmount))))
 
-      new IncomeController {
-        override val calcConnector: CalculatorConnector = mockCalcConnector
-      }
+    new IncomeController {
+      override val calcConnector: CalculatorConnector = mockCalcConnector
     }
-
-    val target = setupTarget()
-    val result = target.currentIncome(fakeRequestWithSession)
-    val doc = Jsoup.parse(bodyOf(result))
-  }
-
-  case class FakePOSTRequest(input: (String, String)*) {
-    lazy val target = fakeRequestToPOSTWithSession(input: _*)
-    lazy val result = IncomeController.submitCurrentIncome(target)
-    lazy val doc = Jsoup.parse(bodyOf(result))
   }
 
   "Calling .currentIncome from the IncomeController with a session" when {
 
     "supplied with no pre-existing stored data" should {
 
-      lazy val request = FakeGETRequest(None)
+      lazy val request = setupTarget(None)
+      lazy val result = request.currentIncome(fakeRequestWithSession)
 
       "return a status of 200" in {
-        status(request.result) shouldBe 200
+        status(result) shouldBe 200
       }
 
       "return some html" in {
-        contentType(request.result) shouldBe Some("text/html")
+        contentType(result) shouldBe Some("text/html")
       }
 
       "display the Current Income view" in {
-        Jsoup.parse(bodyOf(request.result)).title shouldBe messages.title
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
       }
     }
     "supplied with pre-existing stored data" should {
 
-      lazy val request = FakeGETRequest(Some(CurrentIncomeModel(40000)))
+      lazy val request = setupTarget(Some(CurrentIncomeModel(40000)))
+      lazy val result = request.currentIncome(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a status of 200" in {
-        status(request.result) shouldBe 200
+        status(result) shouldBe 200
       }
 
       "have the amount 40000 pre-populated into the input field" in {
-        request.doc.getElementById("amount").attr("value") shouldBe "40000"
+        doc.getElementById("amount").attr("value") shouldBe "40000"
       }
     }
 
     "other properties have been selected and 0 has been entered into the annual exempt amount" should {
 
-      lazy val request = FakeGETRequest(None)
+      lazy val request = setupTarget(None)
+      lazy val result = request.currentIncome(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
-        status(request.result) shouldBe 200
+        status(result) shouldBe 200
       }
 
       "have a back link with the address /calculate-your-capital-gains/resident/previous-taxable-gains" in {
-        request.doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/previous-taxable-gains"
+        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/previous-taxable-gains"
       }
     }
 
     "other properties have been selected and non-zero has been entered into the annual exempt amount" should {
 
-      lazy val request = FakeGETRequest(None, annualExemptAmount = 10)
+      lazy val request = setupTarget(None, annualExemptAmount = 10)
+      lazy val result = request.currentIncome(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
-        status(request.result) shouldBe 200
+        status(result) shouldBe 200
       }
 
       "have a back link with the address /calculate-your-capital-gains/resident/annual-exempt-amount" in {
-        request.doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/annual-exempt-amount"
+        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/annual-exempt-amount"
       }
     }
 
     "other properties has not been selected and neither has brought forward losses" should {
 
-      lazy val request = FakeGETRequest(None, otherProperties = false, lossesBroughtForward = false)
+      lazy val request = setupTarget(None, otherProperties = false, lossesBroughtForward = false)
+      lazy val result = request.currentIncome(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
-        status(request.result) shouldBe 200
+        status(result) shouldBe 200
       }
 
       "have a back link with the address /calculate-your-capital-gains/resident/losses-brought-forward" in {
-        request.doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/losses-brought-forward"
+        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/losses-brought-forward"
       }
     }
 
     "other properties has not been selected and brought forward losses has been selected" should {
 
-      lazy val request = FakeGETRequest(None, otherProperties = false)
+      lazy val request = setupTarget(None, otherProperties = false)
+      lazy val result = request.currentIncome(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
-        status(request.result) shouldBe 200
+        status(result) shouldBe 200
       }
 
       "have a back link with the address /calculate-your-capital-gains/resident/losses-brought-forward-value" in {
-        request.doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/losses-brought-forward-value"
+        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/losses-brought-forward-value"
       }
     }
   }
@@ -171,23 +170,25 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "given a valid form should" should {
 
-      lazy val request = FakePOSTRequest(("amount", "100"))
+      lazy val request = setupTarget(Some(CurrentIncomeModel(40000)))
+      lazy val result = request.submitCurrentIncome(fakeRequestToPOSTWithSession(("amount", "40000")))
 
       "return a status of 303" in {
-        status(request.result) shouldBe 303
+        status(result) shouldBe 303
       }
 
       s"redirect to '${controllers.resident.routes.IncomeController.personalAllowance().toString}'" in {
-        redirectLocation(request.result).get shouldBe controllers.resident.routes.IncomeController.personalAllowance().toString
+        redirectLocation(result).get shouldBe controllers.resident.routes.IncomeController.personalAllowance().toString
       }
     }
 
     "given an invalid form" should {
 
-      lazy val request = FakePOSTRequest(("amount", "-100"))
+      lazy val request = setupTarget(Some(CurrentIncomeModel(-40000)), otherProperties = false)
+      lazy val result = request.submitCurrentIncome(fakeRequestToPOSTWithSession(("amount", "-40000")))
 
       "return a status of 400" in {
-        status(request.result) shouldBe 400
+        status(result) shouldBe 400
       }
     }
   }
