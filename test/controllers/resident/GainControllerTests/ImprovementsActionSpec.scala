@@ -27,6 +27,7 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
@@ -47,6 +48,9 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     when(mockCalcConnector.calculateRttGrossGain(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(totalGain))
+
+    when(mockCalcConnector.saveFormData[ImprovementsModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(mock[CacheMap]))
 
     new GainController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
