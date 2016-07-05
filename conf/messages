@@ -407,6 +407,7 @@ calc.resident.lossesBroughtForwardValue.pageHeading = What''s the total value of
 
 ## Previous Taxable Gains messages
 calc.resident.previousTaxableGains.title = What was your taxable gain?
+calc.resident.previousTaxableGain.link.one = How to work out your taxable gain
 
 ## Current Income messages
 calc.resident.currentIncome.title = In the tax year 2015/16 when you stopped owning the property, what was your income?

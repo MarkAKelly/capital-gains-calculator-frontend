@@ -179,6 +179,7 @@ object MessageLookup {
   object previousTaxableGains {
     val title = "What was your taxable gain?"
     val question = "What was your taxable gain?"
+    val helpLinkOne = "How to work out your taxable gain"
   }
 
   //Current Income messages
