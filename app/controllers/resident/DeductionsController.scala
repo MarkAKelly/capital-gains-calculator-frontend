@@ -239,16 +239,16 @@ trait DeductionsController extends FeatureLock {
     Future(model.option)
   }
 
-  def broughtForwardLossesContinueRoute(model: LossesBroughtForwardModel)(implicit hc: HeaderCarrier): Future[Result] = {
+  def positiveChargeableGainCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
     for {
-      broughtForwardLossesClaimed <- claimingBFLossesCheck(model)
-      otherPropertiesClaimed <- otherPropertiesCheck
-    } yield (broughtForwardLossesClaimed, otherPropertiesClaimed)
+      gainAnswers <- calcConnector.getYourAnswers
+      chargeableGainAnswers <- calcConnector.getChargeableGainAnswers
+      chargeableGain <- calcConnector.calculateRttChargeableGain(gainAnswers, chargeableGainAnswers, 11000).map(_.get.chargeableGain)
+    } yield chargeableGain
 
     match {
-      case (true, _) => Redirect(routes.DeductionsController.lossesBroughtForwardValue())
-      case (false, true) => Redirect(routes.DeductionsController.annualExemptAmount())
-      case _ => Redirect(routes.SummaryController.summary())
+      case result if result.>(0) => true
+      case _ => false
     }
   }
 
@@ -258,7 +258,18 @@ trait DeductionsController extends FeatureLock {
         errors => Future.successful(BadRequest(views.lossesBroughtForward(errors, backUrl))),
         success => {
           calcConnector.saveFormData[LossesBroughtForwardModel](KeystoreKeys.ResidentKeys.lossesBroughtForward, success)
-          broughtForwardLossesContinueRoute(success)
+          for {
+            broughtForwardLossesClaimed <- claimingBFLossesCheck(success)
+            otherPropertiesClaimed <- otherPropertiesCheck
+            positiveChargeableGain <- positiveChargeableGainCheck
+          } yield (broughtForwardLossesClaimed, otherPropertiesClaimed, positiveChargeableGain)
+
+          match {
+            case (true, _, _) => Redirect(routes.DeductionsController.lossesBroughtForwardValue())
+            case (false, true, _) => Redirect(routes.DeductionsController.annualExemptAmount())
+            case (false, false, true) => Redirect(routes.IncomeController.currentIncome())
+            case _ => Redirect(routes.SummaryController.summary())
+          }
         }
       )
     }
@@ -267,8 +278,6 @@ trait DeductionsController extends FeatureLock {
       route <- routeRequest(backUrl)
     } yield route
   }
-
-
 
   //################# Brought Forward Losses Value Actions ##############################
   val lossesBroughtForwardValue = FeatureLockForRTT.async { implicit request =>
