@@ -17,6 +17,7 @@
 package views.resident.income
 
 import assets.MessageLookup.{previousTaxableGains => messages}
+import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.income.PreviousTaxableGainsForm.previousTaxableGainsForm
 import org.jsoup.Jsoup
@@ -64,6 +65,27 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
     "have a hidden label" in {
       val label = doc.select("label > span")
       label.hasClass("visuallyhidden") shouldBe true
+    }
+
+    "have a sidebar" in {
+      lazy val sidebar = doc.select("aside")
+      sidebar.hasClass("sidebar") shouldBe true
+    }
+
+    "have an external link" which {
+      lazy val link = doc.select("a#helpLink1")
+
+      s"has the text ${messages.helpLinkOne}" in {
+        link.text() should include(messages.helpLinkOne)
+      }
+
+      s"has a visually hidden external link message" in {
+        link.select("span.visuallyhidden").text() shouldBe commonMessages.calcBaseExternalLink
+      }
+
+      "links to https://www.gov.uk/capital-gains-tax/work-out-need-to-pay" in {
+        link.attr("href") shouldBe "https://www.gov.uk/capital-gains-tax/work-out-need-to-pay"
+      }
     }
 
     "not display an error summary message for the amount" in {

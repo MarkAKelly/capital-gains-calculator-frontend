@@ -179,11 +179,14 @@ object MessageLookup {
   object previousTaxableGains {
     val title = "What was your taxable gain?"
     val question = "What was your taxable gain?"
+    val helpLinkOne = "How to work out your taxable gain"
   }
 
   //Current Income messages
   object currentIncome {
     val title = "In the tax year 2015/16 when you stopped owning the property, what was your income?"
+    val question = "In the tax year 2015/16 when you stopped owning the property, what was your income?"
+    val helpText = "Include your salary and any other income, but not the money you made from selling the property."
   }
 
   //Personal Allowance messages
