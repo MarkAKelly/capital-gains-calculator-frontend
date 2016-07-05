@@ -25,6 +25,10 @@ import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future
 
+object SummaryController extends SummaryController {
+  val calculatorConnector = CalculatorConnector
+}
+
 trait SummaryController extends FeatureLock {
 
   val calculatorConnector: CalculatorConnector
@@ -67,6 +71,4 @@ trait SummaryController extends FeatureLock {
   }
 }
 
-object SummaryController extends SummaryController {
-  val calculatorConnector = CalculatorConnector
-}
+

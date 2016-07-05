@@ -184,6 +184,8 @@ object MessageLookup {
   //Current Income messages
   object currentIncome {
     val title = "In the tax year 2015/16 when you stopped owning the property, what was your income?"
+    val question = "In the tax year 2015/16 when you stopped owning the property, what was your income?"
+    val helpText = "Include your salary and any other income, but not the money you made from selling the property."
   }
 
   //Personal Allowance messages
