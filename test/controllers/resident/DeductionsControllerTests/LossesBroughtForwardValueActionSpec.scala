@@ -97,7 +97,6 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
 
     val gainModel = mock[YourAnswersSummaryModel]
     val summaryModel = mock[ChargeableGainAnswers]
-    val chargeableGainModel = mock[ChargeableGainResultModel]
 
     def setPostTarget(otherPropertiesModel: Option[OtherPropertiesModel],
                       gainAnswers: YourAnswersSummaryModel,

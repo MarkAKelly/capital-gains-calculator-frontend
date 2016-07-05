@@ -318,15 +318,33 @@ trait DeductionsController extends FeatureLock {
       case None => Ok(views.annualExemptAmount(annualExemptAmountForm))
     }
   }
-  val submitAnnualExemptAmount = FeatureLockForRTT.async { implicit request =>
-    annualExemptAmountForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.annualExemptAmount(errors))),
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.ResidentKeys.annualExemptAmount, success)
-        Future.successful(Redirect(routes.SummaryController.summary()))}
-    )
+
+  def positiveAEACheck(model: AnnualExemptAmountModel)(implicit hc: HeaderCarrier): Future[Boolean] = {
+    Future(model.amount > 0gs)
   }
 
-  //################# Second Summary Actions ###############################
+  val submitAnnualExemptAmount = FeatureLockForRTT.async { implicit request =>
 
+    def routeRequest: Future[Result] = {
+      annualExemptAmountForm.bindFromRequest.fold(
+        errors => Future.successful(BadRequest(views.annualExemptAmount(errors))),
+        success => {
+          calcConnector.saveFormData(KeystoreKeys.ResidentKeys.annualExemptAmount, success)
+          for {
+            positiveAEA <- positiveAEACheck(success)
+            positiveChargeableGain <- positiveChargeableGainCheck
+          } yield (positiveAEA, positiveChargeableGain)
+
+          match {
+            case (false, true) => Redirect(routes.IncomeController.previousTaxableGains())
+            case (_, false) => Redirect(routes.SummaryController.summary())
+            case _ => Redirect(routes.IncomeController.currentIncome())
+          }
+        }
+      )
+    }
+    for {
+      route <- routeRequest
+    } yield route
+  }
 }
