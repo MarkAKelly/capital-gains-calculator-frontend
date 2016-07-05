@@ -72,7 +72,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         backLink.text shouldBe commonMessages.calcBaseBack
       }
 
-      s"has a link to '${routes.GainController.improvements().toString()}'" in {
+      s"has a link to '${routes.DeductionsController.lossesBroughtForward().toString()}'" in {
         backLink.attr("href") shouldBe routes.DeductionsController.lossesBroughtForward().toString
       }
 

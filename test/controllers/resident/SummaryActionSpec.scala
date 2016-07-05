@@ -21,6 +21,7 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.test.Helpers._
 import assets.MessageLookup.{summary => messages}
+import common.Dates
 import common.Dates._
 import common.KeystoreKeys.ResidentKeys
 import connectors.CalculatorConnector
@@ -39,37 +40,16 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
 
   def setupTarget
   (
-    disposalDateData: Option[DisposalDateModel],
-    disposalValueData: Option[DisposalValueModel],
-    disposalCostsData: Option[DisposalCostsModel],
-    acquisitionValueData: Option[AcquisitionValueModel],
-    acquisitionCostsData: Option[AcquisitionCostsModel],
-    improvementsData: Option[ImprovementsModel],
-    grossGain: BigDecimal
+    yourAnswersSummaryModel: YourAnswersSummaryModel,
+    grossGain: BigDecimal,
+    chargeableGainAnswers: ChargeableGainAnswers,
+    chargeableGainResultModel: Option[ChargeableGainResultModel] = None
   ): SummaryController = {
 
     val mockCalculatorConnector = mock[CalculatorConnector]
 
-    val answersModel = YourAnswersSummaryModel(constructDate(disposalDateData.get.day, disposalDateData.get.month, disposalDateData.get.year),
-      disposalValueData.get.amount,
-      disposalCostsData.get.amount,
-      acquisitionValueData.get.amount,
-      acquisitionCostsData.get.amount,
-      improvementsData.get.amount)
-
-    val chargeableGainAnswers = ChargeableGainAnswers(
-      Some(ReliefsModel(false)),
-        None,
-        Some(OtherPropertiesModel(false)),
-        None,
-        None,
-        Some(LossesBroughtForwardModel(false)),
-        None,
-        None
-    )
-
     when(mockCalculatorConnector.getYourAnswers(Matchers.any()))
-        .thenReturn(Future.successful(answersModel))
+        .thenReturn(Future.successful(yourAnswersSummaryModel))
 
     when(mockCalculatorConnector.calculateRttGrossGain(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(grossGain))
@@ -77,37 +57,160 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     when(mockCalculatorConnector.getChargeableGainAnswers(Matchers.any()))
       .thenReturn(Future.successful(chargeableGainAnswers))
 
+    when(mockCalculatorConnector.calculateRttChargeableGain(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+      .thenReturn(chargeableGainResultModel)
+
     new SummaryController {
       override val calculatorConnector: CalculatorConnector = mockCalculatorConnector
     }
   }
 
-  "Calling .summary from the SummaryController" should {
+  "Calling .summary from the SummaryController" when {
 
-    val target = setupTarget(
-      Some(DisposalDateModel(12,1,2016)),
-      Some(DisposalValueModel(3000)),
-      Some(DisposalCostsModel(10)),
-      Some(AcquisitionValueModel(5000)),
-      Some(AcquisitionCostsModel(5)),
-      Some(ImprovementsModel(0)),
-      -6000
-    )
-    lazy val result = target.summary()(fakeRequestWithSession)
-    lazy val doc = Jsoup.parse(bodyOf(result))
+    "a negative total gain is returned" should {
+      val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
+        3000,
+        10,
+        5000,
+        5,
+        0)
+      val chargeableGainAnswers = ChargeableGainAnswers(None, None, None, None, None, None, None, None)
+      val target = setupTarget(
+        yourAnswersSummaryModel,
+        -6000,
+        chargeableGainAnswers
+      )
+      lazy val result = target.summary()(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
 
-    "return a status of 200" in {
-      status(result) shouldBe 200
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return some html" in {
+        contentType(result) shouldBe Some("text/html")
+      }
+
+      s"return a title ${messages.title}" in {
+        doc.title() shouldBe messages.title
+      }
+
+      s"has a link to '${routes.GainController.improvements().toString()}'" in {
+        doc.getElementById("back-link").attr("href") shouldBe routes.GainController.improvements().toString
+      }
+
     }
 
-    "return some html" in {
-      contentType(result) shouldBe Some("text/html")
+    "a negative taxable gain is returned with no other properties disposed of or brought forward losses" should {
+      val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
+        3000,
+        10,
+        5000,
+        5,
+        0)
+      val chargeableGainAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)), None, Some(OtherPropertiesModel(false)),
+        None, None, Some(LossesBroughtForwardModel(false)), None, None)
+      val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 11100)
+      val target = setupTarget(
+        yourAnswersSummaryModel,
+        10000,
+        chargeableGainAnswers,
+        Some(chargeableGainResultModel)
+      )
+      lazy val result = target.summary()(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return some html" in {
+        contentType(result) shouldBe Some("text/html")
+      }
+
+      s"return a title ${messages.title}" in {
+        doc.title() shouldBe messages.title
+      }
+
+      s"has a link to '${routes.DeductionsController.lossesBroughtForward().toString()}'" in {
+        doc.getElementById("back-link").attr("href") shouldBe routes.DeductionsController.lossesBroughtForward().toString
+      }
     }
 
-    s"return a title ${messages.title}" in {
-      doc.title() shouldBe messages.title
+    "a negative taxable gain is returned with no other properties disposed of but with brought forward losses" should {
+      val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
+        3000,
+        10,
+        5000,
+        5,
+        0)
+      val chargeableGainAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)), None, Some(OtherPropertiesModel(false)),
+        None, None, Some(LossesBroughtForwardModel(true)), Some(LossesBroughtForwardValueModel(1000)), None)
+      val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 11100)
+      val target = setupTarget(
+        yourAnswersSummaryModel,
+        10000,
+        chargeableGainAnswers,
+        Some(chargeableGainResultModel)
+      )
+      lazy val result = target.summary()(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return some html" in {
+        contentType(result) shouldBe Some("text/html")
+      }
+
+      s"return a title ${messages.title}" in {
+        doc.title() shouldBe messages.title
+      }
+
+      s"has a link to '${routes.DeductionsController.lossesBroughtForwardValue().toString()}'" in {
+        doc.getElementById("back-link").attr("href") shouldBe routes.DeductionsController.lossesBroughtForwardValue().toString
+      }
+    }
+
+    "a negative taxable gain is returned with other properties disposed of" should {
+      val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
+        3000,
+        10,
+        5000,
+        5,
+        0)
+      val chargeableGainAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)), None, Some(OtherPropertiesModel(true)),
+        Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, Some(AnnualExemptAmountModel(10000)))
+      val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 11100)
+      val target = setupTarget(
+        yourAnswersSummaryModel,
+        10000,
+        chargeableGainAnswers,
+        Some(chargeableGainResultModel)
+      )
+      lazy val result = target.summary()(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return some html" in {
+        contentType(result) shouldBe Some("text/html")
+      }
+
+      s"return a title ${messages.title}" in {
+        doc.title() shouldBe messages.title
+      }
+
+      s"has a link to '${routes.DeductionsController.annualExemptAmount().toString()}'" in {
+        doc.getElementById("back-link").attr("href") shouldBe routes.DeductionsController.annualExemptAmount().toString
+      }
     }
   }
+
+
 
   "Calling .summary from the SummaryController with no session" should {
 
