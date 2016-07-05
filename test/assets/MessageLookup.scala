@@ -105,11 +105,15 @@ object MessageLookup {
     val yourAnswersHeading = "Your answers"
     val totalLoss = "Loss"
     val totalGain = "Total gain"
+    val deductions = "Deductions"
+    val chargeableLoss = "Carried forward loss"
+    val chargeableGain = "Taxable gain"
   }
 
   //Reliefs messages
   object reliefs {
     val title = "Do you want to claim any tax reliefs on your total gain of £10,000?"
+    val questionSummary = "Do you want to claim any tax reliefs on your total gain of £50,000?"
     val question = "Do you want to claim any tax reliefs on your total gain of £100?"
     val help = "For example, lettings relief"
     val helpOne = "Tax reliefs can lower the amount of tax you owe. For example, you might be able to claim:"

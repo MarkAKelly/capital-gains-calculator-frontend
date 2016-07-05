@@ -1,6 +1,10 @@
 @import uk.gov.hmrc.play.views.helpers._
 
-@(rowId: String, question: String, amount: BigDecimal, link: Option[String] = None)
+@(rowId: String, question: String, amount: BigDecimal, link: Option[String] = None, additionalContent: Option[Seq[(String, String)]] = None)
+
+@additionalDetails(additionalText: String, additionalAmount: String) = {
+    <span class="form-hint font-small">@additionalText &pound;@additionalAmount</span>
+}
 
 <div id="@rowId" class="grid-layout grid-layout--stacked form-group font-medium">
     <div id="@{rowId}-question" class="grid-layout__column grid-layout__column--1-2">
@@ -19,5 +23,6 @@
             }
         }
         @if(link.isDefined){<br><a href="@link" class="font-xsmall">@Messages("calc.base.change")</a>}
+        @{if(additionalContent.isDefined){additionalContent.get.map{ case (additionalText, additionalAmount) => additionalDetails(additionalText, additionalAmount)}}}
     </div>
 </div>

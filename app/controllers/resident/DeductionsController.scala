@@ -281,9 +281,11 @@ trait DeductionsController extends FeatureLock {
   val submitLossesBroughtForwardValue = FeatureLockForRTT.async { implicit request =>
     lossesBroughtForwardValueForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.lossesBroughtForwardValue(errors))),
-      success => calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.ResidentKeys.otherProperties).flatMap {
+      success => {
+        calcConnector.saveFormData[LossesBroughtForwardValueModel](KeystoreKeys.ResidentKeys.lossesBroughtForwardValue, success)
+        calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.ResidentKeys.otherProperties).flatMap {
         case Some(OtherPropertiesModel(true)) => Future.successful(Redirect(routes.DeductionsController.annualExemptAmount()))
-        case _ => Future.successful(Redirect(routes.SummaryController.summary()))
+        case _ => Future.successful(Redirect(routes.SummaryController.summary()))}
       }
     )
   }
