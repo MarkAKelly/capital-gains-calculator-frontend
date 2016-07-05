@@ -320,7 +320,7 @@ trait DeductionsController extends FeatureLock {
   }
 
   def positiveAEACheck(model: AnnualExemptAmountModel)(implicit hc: HeaderCarrier): Future[Boolean] = {
-    Future(model.amount > 0gs)
+    Future(model.amount > 0)
   }
 
   val submitAnnualExemptAmount = FeatureLockForRTT.async { implicit request =>
