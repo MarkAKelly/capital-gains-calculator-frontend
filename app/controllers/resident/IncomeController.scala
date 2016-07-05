@@ -20,13 +20,15 @@ import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import views.html.calculation.resident.{income => views}
-import scala.concurrent.Future
 import forms.resident.income.PreviousTaxableGainsForm._
 import forms.resident.income.PersonalAllowanceForm._
+import forms.resident.income.CurrentIncomeForm._
 import models.resident._
 import models.resident.income._
 import play.api.mvc.Result
 import uk.gov.hmrc.play.http.HeaderCarrier
+
+import scala.concurrent.Future
 
 object IncomeController extends IncomeController {
   val calcConnector = CalculatorConnector
@@ -46,6 +48,15 @@ trait IncomeController extends FeatureLock {
   def lossesBroughtForwardResponse(implicit hc: HeaderCarrier): Future[Boolean] = {
     calcConnector.fetchAndGetFormData[LossesBroughtForwardModel](KeystoreKeys.ResidentKeys.lossesBroughtForward).map {
       case Some(LossesBroughtForwardModel(response)) => response
+      case None => false
+    }
+  }
+
+  def annualExemptAmountEntered(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](KeystoreKeys.ResidentKeys.annualExemptAmount).map {
+      case Some(data) =>
+        if(data.amount.equals(0)) true
+        else false
       case None => false
     }
   }
@@ -92,8 +103,45 @@ trait IncomeController extends FeatureLock {
   }
 
   //################################# Current Income Actions ##########################################
+
+  def buildCurrentIncomeBackUrl(implicit hc: HeaderCarrier): Future[String] = {
+    for {
+      hasOtherProperties <- otherPropertiesResponse
+      hasLossesBroughtForward <- lossesBroughtForwardResponse
+      enteredAnnualExemptAmount <- annualExemptAmountEntered
+    } yield (hasOtherProperties, hasLossesBroughtForward, enteredAnnualExemptAmount)
+
+    match {
+      case (true, _, true) => routes.IncomeController.previousTaxableGains().url
+      case (true, _, _) => routes.DeductionsController.annualExemptAmount().url
+      case (false, true, _) => routes.DeductionsController.lossesBroughtForwardValue().url
+      case (false, false, _) => routes.DeductionsController.lossesBroughtForward().url
+    }
+  }
+
   val currentIncome = FeatureLockForRTT.async { implicit request =>
-    Future.successful(Ok(views.currentIncome()))
+
+    def routeRequest(backUrl: String): Future[Result] = {
+      calcConnector.fetchAndGetFormData[CurrentIncomeModel](KeystoreKeys.ResidentKeys.currentIncome).map {
+        case Some(data) => Ok(views.currentIncome(currentIncomeForm.fill(data), backUrl))
+        case None => Ok(views.currentIncome(currentIncomeForm, backUrl))
+      }
+    }
+
+    for {
+      backUrl <- buildCurrentIncomeBackUrl
+      finalResult <- routeRequest(backUrl)
+    } yield finalResult
+  }
+
+  val submitCurrentIncome = FeatureLockForRTT.async { implicit request =>
+    currentIncomeForm.bindFromRequest.fold(
+      errors => buildCurrentIncomeBackUrl.flatMap(url => Future.successful(BadRequest(views.currentIncome(errors, url)))),
+      success => {
+        calcConnector.saveFormData[CurrentIncomeModel](KeystoreKeys.ResidentKeys.currentIncome, success)
+        Future.successful(Redirect(routes.IncomeController.personalAllowance()))
+      }
+    )
   }
 
   //################################# Personal Allowance Actions ##########################################
