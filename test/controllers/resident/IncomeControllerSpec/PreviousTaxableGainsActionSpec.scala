@@ -154,5 +154,20 @@ class PreviousTaxableGainsActionSpec extends UnitSpec with WithFakeApplication w
         doc.title() shouldEqual messages.title
       }
     }
+
+    "a valid form is submitted" should {
+      lazy val target = setupTarget(None)
+      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+      lazy val result = target.submitPreviousTaxableGains(request)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      s"redirect to ${controllers.resident.routes.IncomeController.currentIncome()}" in {
+        redirectLocation(result).get shouldBe controllers.resident.routes.IncomeController.currentIncome().toString
+      }
+    }
   }
 }
