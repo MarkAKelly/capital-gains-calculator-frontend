@@ -51,6 +51,16 @@ trait SummaryController extends FeatureLock {
       else Future.successful(None)
     }
 
+    def totalTaxableGain (chargeableGain: BigDecimal,
+                          yourAnswersSummaryModel: YourAnswersSummaryModel,
+                          chargeableGainAnswers: ChargeableGainAnswers,
+                          incomeAnswersModel: IncomeAnswersModel)(implicit hc: HeaderCarrier): Future[Option[TaxOwedResultModel]] = {
+      if (chargeableGain > 0) {
+        calculatorConnector.calculateRttTotalGainAndTax(yourAnswersSummaryModel, chargeableGainAnswers, BigDecimal(11100), incomeAnswersModel)
+      }
+      else Future.successful(None)
+    }
+
     def routeRequest (totalGainAnswers: YourAnswersSummaryModel,
                       grossGain: BigDecimal,
                       chargeableGainAnswers: ChargeableGainAnswers,

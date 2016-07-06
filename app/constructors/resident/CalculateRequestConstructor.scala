@@ -16,7 +16,7 @@
 
 package constructors.resident
 
-import models.resident.{ChargeableGainAnswers, YourAnswersSummaryModel}
+import models.resident.{ChargeableGainAnswers, IncomeAnswersModel, YourAnswersSummaryModel}
 
 object CalculateRequestConstructor {
 
@@ -41,5 +41,13 @@ object CalculateRequestConstructor {
     s"&annualExemptAmount=${if (answers.otherPropertiesModel.get.hasOtherProperties)
       answers.annualExemptAmountModel.get.amount
     else maxAEA}"
+  }
+
+  def incomeAnswersRequestString (answers: IncomeAnswersModel): String ={
+    s"${if (answers.previousTaxableGainsModel.isDefined)
+      s"&previousTaxableGain=${answers.previousTaxableGainsModel.get.amount}"
+      else ""}" +
+    s"&previousIncome=${answers.currentIncomeModel.get.amount}" +
+    s"&personalAllowance=${answers.personalAllowanceModel.get.amount}"
   }
 }

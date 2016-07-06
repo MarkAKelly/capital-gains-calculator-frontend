@@ -57,7 +57,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     when(mockCalculatorConnector.getChargeableGainAnswers(Matchers.any()))
       .thenReturn(Future.successful(chargeableGainAnswers))
 
-    when(mockCalculatorConnector.calculateRttChargeableGain(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+    when(mockCalculatorConnector.calculateRttChargeableGain(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
       .thenReturn(chargeableGainResultModel)
 
     new SummaryController {
