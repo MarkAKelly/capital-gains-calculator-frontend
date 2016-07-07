@@ -4,6 +4,9 @@
 GET     /disposal-date                    controllers.resident.GainController.disposalDate
 POST    /disposal-date                    controllers.resident.GainController.submitDisposalDate
 
+#Outside Tax Years Routes
+GET     /outside-tax-years                controllers.resident.GainController.outsideTaxYears
+
 #Disposal Value or Market Value Routes
 GET     /disposal-value                   controllers.resident.GainController.disposalValue
 POST    /disposal-value                   controllers.resident.GainController.submitDisposalValue

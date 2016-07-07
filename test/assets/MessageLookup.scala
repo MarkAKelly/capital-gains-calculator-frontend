@@ -50,6 +50,12 @@ object MessageLookup {
     val realDateError = "Enter a real date"
   }
 
+  //Outside Tax Years messages
+  object outsideTaxYears {
+    val title = "The date you've entered isn't supported by this calculator"
+    def content(year: String): String = s"You can continue to use it, but we'll use the tax rates from the $year tax year."
+  }
+
   //Disposal Value messages
   object disposalValue {
     val title = "How much did you sell the property for?"
