@@ -298,6 +298,9 @@ calc.resident.disposalDate.invalidDayError = Enter a day
 calc.resident.disposalDate.invalidMonthError = Enter a month
 calc.resident.disposalDate.invalidYearError = Enter a year
 
+## Outside Tax Years messages
+calc.resident.outsideTaxYears.title = The date you''ve entered isn''t supported by this calculator
+
 ## Disposal Value messages
 calc.resident.disposal.value.title = How much did you sell the property for?
 calc.resident.disposal.value.question = How much did you sell the property for?
