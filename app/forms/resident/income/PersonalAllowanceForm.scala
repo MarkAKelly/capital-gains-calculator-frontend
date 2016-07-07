@@ -35,7 +35,7 @@ object PersonalAllowanceForm {
         .transform[BigDecimal](stringToBigDecimal, _.toString())
         .verifying(Messages("calc.common.error.maxAmountExceeded", MoneyPounds(Constants.maxNumeric, 0).quantity), maxCheck)
         .verifying(Messages("calc.common.error.minimumAmount"), minCheck)
-        .verifying(Messages("calc.common.error.invalidAmountNoDecimal"), decimalPlacesCheck)
+        .verifying(Messages("calc.common.error.invalidAmountNoDecimal"), decimalPlacesCheckNoDecimal)
     )(PersonalAllowanceModel.apply)(PersonalAllowanceModel.unapply)
   )
 
