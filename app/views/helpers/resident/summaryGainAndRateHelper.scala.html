@@ -1,0 +1,23 @@
+@import uk.gov.hmrc.play.views.helpers._
+@import models.resident.TotalGainAndTaxOwedModel
+
+@(rowId: String, question: String, result: TotalGainAndTaxOwedModel)
+
+<div id="@rowId" class="grid-layout grid-layout--stacked form-group font-medium">
+    <div id="@{rowId}-question" class="grid-layout__column grid-layout__column--1-2">
+        @question
+    </div>
+    <div id="@{rowId}-result" class="grid-layout__column grid-layout__column--1-2">
+        @result.firstBand.scale match {
+            case 0 => {
+            <span class="bold-medium">&pound;@MoneyPounds(result.firstBand, 0).quantity</span>
+            }
+            case _ if result.firstBand == result.firstBand.setScale(0, BigDecimal.RoundingMode.FLOOR) => {
+            <span class="bold-medium">&pound;@MoneyPounds(result.firstBand, 0).quantity</span>
+            }
+            case _ => {
+            <span class="bold-medium">&pound;@MoneyPounds(result.firstBand, 2).quantity result.firstBandRate &percnt;</span>
+            }
+        }
+    </div>
+</div>

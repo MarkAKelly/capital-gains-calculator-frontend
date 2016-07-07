@@ -164,8 +164,8 @@ trait CalculatorConnector {
   def calculateRttTotalGainAndTax(totalGainInput: resident.YourAnswersSummaryModel,
                                   chargeableGainInput: resident.ChargeableGainAnswers,
                                   maxAEA: BigDecimal,
-                                  incomeAnswers: IncomeAnswersModel)(implicit hc: HeaderCarrier): Future[Option[resident.TaxOwedResultModel]] = {
-    http.GET[Option[resident.ChargeableGainResultModel]](s"$serviceUrl/capital-gains-calculator/calculate-resident-capital-gains-tax" +
+                                  incomeAnswers: IncomeAnswersModel)(implicit hc: HeaderCarrier): Future[Option[resident.TotalGainAndTaxOwedModel]] = {
+    http.GET[Option[resident.TotalGainAndTaxOwedModel]](s"$serviceUrl/capital-gains-calculator/calculate-resident-capital-gains-tax" +
       residentConstructors.CalculateRequestConstructor.totalGainRequestString(totalGainInput) +
       residentConstructors.CalculateRequestConstructor.chargeableGainRequestString(chargeableGainInput, maxAEA) +
       residentConstructors.CalculateRequestConstructor.incomeAnswersRequestString(incomeAnswers)

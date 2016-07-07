@@ -43,7 +43,9 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     yourAnswersSummaryModel: YourAnswersSummaryModel,
     grossGain: BigDecimal,
     chargeableGainAnswers: ChargeableGainAnswers,
-    chargeableGainResultModel: Option[ChargeableGainResultModel] = None
+    chargeableGainResultModel: Option[ChargeableGainResultModel] = None,
+    incomeAnswers: IncomeAnswersModel,
+    totalGainandTaxOwedModel: Option[TotalGainAndTaxOwedModel] = None
   ): SummaryController = {
 
     val mockCalculatorConnector = mock[CalculatorConnector]
@@ -57,8 +59,14 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     when(mockCalculatorConnector.getChargeableGainAnswers(Matchers.any()))
       .thenReturn(Future.successful(chargeableGainAnswers))
 
-    when(mockCalculatorConnector.calculateRttChargeableGain(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+    when(mockCalculatorConnector.calculateRttChargeableGain(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
       .thenReturn(chargeableGainResultModel)
+
+    when(mockCalculatorConnector.getIncomeAnswers(Matchers.any()))
+      .thenReturn(Future.successful(incomeAnswers))
+
+    when(mockCalculatorConnector.calculateRttTotalGainAndTax(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(totalGainandTaxOwedModel))
 
     new SummaryController {
       override val calculatorConnector: CalculatorConnector = mockCalculatorConnector
@@ -75,10 +83,11 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         5,
         0)
       val chargeableGainAnswers = ChargeableGainAnswers(None, None, None, None, None, None, None, None)
+      val incomeAnswersModel = IncomeAnswersModel(None, None, None)
       val target = setupTarget(
         yourAnswersSummaryModel,
         -6000,
-        chargeableGainAnswers
+        chargeableGainAnswers, None,  incomeAnswersModel
       )
       lazy val result = target.summary()(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
@@ -111,11 +120,13 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       val chargeableGainAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)), None, Some(OtherPropertiesModel(false)),
         None, None, Some(LossesBroughtForwardModel(false)), None, None)
       val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 11100)
+      val incomeAnswersModel = IncomeAnswersModel(None, None, None)
       val target = setupTarget(
         yourAnswersSummaryModel,
         10000,
         chargeableGainAnswers,
-        Some(chargeableGainResultModel)
+        Some(chargeableGainResultModel),
+        incomeAnswersModel
       )
       lazy val result = target.summary()(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
@@ -147,11 +158,13 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       val chargeableGainAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)), None, Some(OtherPropertiesModel(false)),
         None, None, Some(LossesBroughtForwardModel(true)), Some(LossesBroughtForwardValueModel(1000)), None)
       val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 11100)
+      val incomeAnswersModel = IncomeAnswersModel(None, None, None)
       val target = setupTarget(
         yourAnswersSummaryModel,
         10000,
         chargeableGainAnswers,
-        Some(chargeableGainResultModel)
+        Some(chargeableGainResultModel),
+        incomeAnswersModel
       )
       lazy val result = target.summary()(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
@@ -183,11 +196,13 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       val chargeableGainAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)), None, Some(OtherPropertiesModel(true)),
         Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, Some(AnnualExemptAmountModel(10000)))
       val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 11100)
+      val incomeAnswersModel = IncomeAnswersModel(None, None, None)
       val target = setupTarget(
         yourAnswersSummaryModel,
         10000,
         chargeableGainAnswers,
-        Some(chargeableGainResultModel)
+        Some(chargeableGainResultModel),
+        incomeAnswersModel
       )
       lazy val result = target.summary()(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
