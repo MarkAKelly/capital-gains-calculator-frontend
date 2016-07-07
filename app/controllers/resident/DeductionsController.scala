@@ -235,10 +235,6 @@ trait DeductionsController extends FeatureLock {
     } yield finalResult
   }
 
-  def claimingBFLossesCheck(model: LossesBroughtForwardModel)(implicit hc: HeaderCarrier): Future[Boolean] = {
-    Future(model.option)
-  }
-
   def positiveChargeableGainCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
     for {
       gainAnswers <- calcConnector.getYourAnswers
@@ -253,30 +249,34 @@ trait DeductionsController extends FeatureLock {
   }
 
   val submitLossesBroughtForward = FeatureLockForRTT.async { implicit request =>
+
     def routeRequest(backUrl: String): Future[Result] = {
       lossesBroughtForwardForm.bindFromRequest.fold(
         errors => Future.successful(BadRequest(views.lossesBroughtForward(errors, backUrl))),
         success => {
           calcConnector.saveFormData[LossesBroughtForwardModel](KeystoreKeys.ResidentKeys.lossesBroughtForward, success)
-          for {
-            broughtForwardLossesClaimed <- claimingBFLossesCheck(success)
-            otherPropertiesClaimed <- otherPropertiesCheck
-            positiveChargeableGain <- positiveChargeableGainCheck
-          } yield (broughtForwardLossesClaimed, otherPropertiesClaimed, positiveChargeableGain)
 
-          match {
-            case (true, _, _) => Redirect(routes.DeductionsController.lossesBroughtForwardValue())
-            case (false, true, _) => Redirect(routes.DeductionsController.annualExemptAmount())
-            case (false, false, true) => Redirect(routes.IncomeController.currentIncome())
-            case _ => Redirect(routes.SummaryController.summary())
+          if (success.option) Future.successful(Redirect(routes.DeductionsController.lossesBroughtForwardValue))
+          else {
+            otherPropertiesCheck.flatMap { otherProperties =>
+              if (otherProperties) Future.successful(Redirect(routes.DeductionsController.annualExemptAmount()))
+              else {
+                positiveChargeableGainCheck.map { positiveChargeableGain =>
+                  if (positiveChargeableGain) Redirect(routes.IncomeController.currentIncome())
+                  else Redirect(routes.SummaryController.summary())
+                }
+              }
+            }
           }
         }
       )
     }
+
     for {
       backUrl <- lossesBroughtForwardBackUrl
       route <- routeRequest(backUrl)
     } yield route
+
   }
 
   //################# Brought Forward Losses Value Actions ##############################
