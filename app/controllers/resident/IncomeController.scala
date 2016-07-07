@@ -97,7 +97,7 @@ trait IncomeController extends FeatureLock {
       errors => buildPreviousTaxableGainsBackUrl.flatMap(url => Future.successful(BadRequest(views.previousTaxableGains(errors, url)))),
       success => {
         calcConnector.saveFormData(KeystoreKeys.ResidentKeys.previousTaxableGains, success)
-        Future.successful(Redirect(routes.IncomeController.previousTaxableGains()))
+        Future.successful(Redirect(routes.IncomeController.currentIncome()))
       }
     )
   }
