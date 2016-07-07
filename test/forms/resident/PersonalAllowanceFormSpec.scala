@@ -59,8 +59,8 @@ class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication with F
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${errorMessages.invalidAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.invalidAmount
+      s"error with message '${errorMessages.invalidAmountNoDecimal}'" in {
+        form.error("amount").get.message shouldBe errorMessages.invalidAmountNoDecimal
       }
     }
 
@@ -98,8 +98,8 @@ class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication with F
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${errorMessages.invalidAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.invalidAmount
+      s"error with message '${errorMessages.invalidAmountNoDecimal}'" in {
+        form.error("amount").get.message shouldBe errorMessages.invalidAmountNoDecimal
       }
     }
   }
