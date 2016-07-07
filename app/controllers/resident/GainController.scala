@@ -67,7 +67,7 @@ trait GainController extends FeatureLock {
   }
 
   //################ Outside Tax Years Actions ######################
-  val outsideTaxYears = Action.async { implicit request =>
+  val outsideTaxYears = FeatureLockForRTT.async { implicit request =>
     Future.successful(Ok(views.gain.outsideTaxYear()))
   }
 

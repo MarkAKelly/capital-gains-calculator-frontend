@@ -23,7 +23,7 @@ import play.api.test.Helpers._
 import assets.MessageLookup.{outsideTaxYears => messages}
 import org.jsoup.Jsoup
 
-class OutsideTaxYearsSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class OutsideTaxYearsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Calling .outsideTaxYears from the GainCalculationController" when {
 
@@ -42,6 +42,17 @@ class OutsideTaxYearsSpec extends UnitSpec with WithFakeApplication with FakeReq
         Jsoup.parse(bodyOf(result)).title shouldBe messages.title
       }
     }
-  }
 
+    "there is no valid session" should {
+      lazy val result = GainController.outsideTaxYears(fakeRequest)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "return you to the session timeout page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/non-resident/session-timeout")
+      }
+    }
+  }
 }

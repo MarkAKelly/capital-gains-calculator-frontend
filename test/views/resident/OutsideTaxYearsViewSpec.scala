@@ -17,6 +17,7 @@
 package views.resident
 
 import assets.MessageLookup.{outsideTaxYears => messages}
+import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -33,6 +34,42 @@ class OutsideTaxYearsViewSpec extends UnitSpec with WithFakeApplication with Fak
 
     s"return a title of ${messages.title}" in {
       doc.title shouldBe messages.title
+    }
+
+    s"have a heading of ${messages.title}" in {
+      doc.select("h1").text() shouldBe messages.title
+    }
+
+    s"have a message of ${messages.content("2015/16")}" in {
+      doc.select("p.lede").text() shouldBe messages.content("2015/16")
+    }
+
+    "have a back link that" should {
+      lazy val backLink = doc.select("a#back-link")
+
+      "have the correct back link text" in {
+        backLink.text shouldBe commonMessages.calcBaseBack
+      }
+
+      "have the back-link class" in {
+        backLink.hasClass("back-link") shouldBe true
+      }
+
+      "have a link to Disposal Value" in {
+        backLink.attr("href") shouldBe controllers.resident.routes.GainController.disposalDate().toString
+      }
+    }
+
+    "have a continue button that" should {
+      lazy val button = doc.select("a#continue-button")
+
+      "have the correct text 'Continue'" in {
+        button.text() shouldBe commonMessages.calcBaseContinue
+      }
+
+      s"have an href to ${controllers.resident.routes.GainController.disposalValue().toString()}" in {
+        button.attr("href") shouldBe controllers.resident.routes.GainController.disposalValue().toString()
+      }
     }
   }
 }

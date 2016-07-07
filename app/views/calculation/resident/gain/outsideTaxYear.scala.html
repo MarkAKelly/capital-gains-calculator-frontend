@@ -4,6 +4,12 @@
 
 @()(implicit request: Request[_])
 
-@resident_main_template(Messages("calc.resident.outsideTaxYears.title")) {
+@resident_main_template(Messages("calc.resident.outsideTaxYears.title"), backLink = Some(controllers.resident.routes.GainController.disposalDate().toString)) {
+
+    <h1 class="heading-large">@Messages("calc.resident.outsideTaxYears.title")</h1>
+
+    <p class="lede">@Messages("calc.resident.outsideTaxYears.message", "2015/16")</p>
+
+    <a href="@controllers.resident.routes.GainController.disposalValue.toString()" id="continue-button" class="button">@Messages("calc.base.button.continue")</a>
 
 }

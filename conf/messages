@@ -300,6 +300,7 @@ calc.resident.disposalDate.invalidYearError = Enter a year
 
 ## Outside Tax Years messages
 calc.resident.outsideTaxYears.title = The date you''ve entered isn''t supported by this calculator
+calc.resident.outsideTaxYears.message = You can continue to use it, but we''ll use the tax rates from the {0} tax year.
 
 ## Disposal Value messages
 calc.resident.disposal.value.title = How much did you sell the property for?
