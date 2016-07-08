@@ -168,7 +168,7 @@ trait CalculatorConnector {
     http.GET[Option[resident.TotalGainAndTaxOwedModel]](s"$serviceUrl/capital-gains-calculator/calculate-resident-capital-gains-tax" +
       residentConstructors.CalculateRequestConstructor.totalGainRequestString(totalGainInput) +
       residentConstructors.CalculateRequestConstructor.chargeableGainRequestString(chargeableGainInput, maxAEA) +
-      residentConstructors.CalculateRequestConstructor.incomeAnswersRequestString(incomeAnswers)
+      residentConstructors.CalculateRequestConstructor.incomeAnswersRequestString(chargeableGainInput, incomeAnswers)
     )
   }
 
