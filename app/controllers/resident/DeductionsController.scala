@@ -312,8 +312,8 @@ trait DeductionsController extends FeatureLock {
   //################# Annual Exempt Amount Input Actions #############################
   val annualExemptAmount = FeatureLockForRTT.async { implicit request =>
     calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](KeystoreKeys.ResidentKeys.annualExemptAmount).map {
-      case Some(data) => Ok(views.annualExemptAmount(annualExemptAmountForm.fill(data)))
-      case None => Ok(views.annualExemptAmount(annualExemptAmountForm))
+      case Some(data) => Ok(views.annualExemptAmount(annualExemptAmountForm().fill(data)))
+      case None => Ok(views.annualExemptAmount(annualExemptAmountForm()))
     }
   }
 
@@ -323,8 +323,12 @@ trait DeductionsController extends FeatureLock {
 
   val submitAnnualExemptAmount = FeatureLockForRTT.async { implicit request =>
 
-    def routeRequest: Future[Result] = {
-      annualExemptAmountForm.bindFromRequest.fold(
+    def getMaxAEA: Future[Option[BigDecimal]] = {
+      calcConnector.getFullAEA("2016")
+    }
+
+    def routeRequest(maxAEA: BigDecimal): Future[Result] = {
+      annualExemptAmountForm(maxAEA).bindFromRequest.fold(
         errors => Future.successful(BadRequest(views.annualExemptAmount(errors))),
         success => {
           for {
@@ -342,7 +346,8 @@ trait DeductionsController extends FeatureLock {
       )
     }
     for {
-      route <- routeRequest
+      maxAEA <- getMaxAEA
+      route <- routeRequest(maxAEA.get)
     } yield route
   }
 }
