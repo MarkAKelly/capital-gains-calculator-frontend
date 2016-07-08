@@ -55,7 +55,9 @@ trait SummaryController extends FeatureLock {
                          yourAnswersSummaryModel: YourAnswersSummaryModel,
                          chargeableGainAnswers: ChargeableGainAnswers,
                          incomeAnswersModel: IncomeAnswersModel)(implicit hc: HeaderCarrier): Future[Option[TotalGainAndTaxOwedModel]] = {
-      if (chargeableGain.isDefined && chargeableGain.get.chargeableGain > 0) {
+      if (chargeableGain.isDefined && chargeableGain.get.chargeableGain > 0 &&
+        incomeAnswersModel.personalAllowanceModel.isDefined && incomeAnswersModel.currentIncomeModel.isDefined &&
+        incomeAnswersModel.previousTaxableGainsModel.isDefined) {
         calculatorConnector.calculateRttTotalGainAndTax(yourAnswersSummaryModel, chargeableGainAnswers, BigDecimal(11100), incomeAnswersModel)
       }
       else Future.successful(None)
@@ -68,10 +70,12 @@ trait SummaryController extends FeatureLock {
                      incomeAnswers: IncomeAnswersModel,
                      totalGainAndTax: Option[TotalGainAndTaxOwedModel],
                      backUrl: String)(implicit hc: HeaderCarrier): Future[Result] = {
-      if (chargeableGain.isDefined && chargeableGain.get.chargeableGain > 0) Future.successful(
+      if (chargeableGain.isDefined && chargeableGain.get.chargeableGain > 0 &&
+        incomeAnswers.personalAllowanceModel.isDefined && incomeAnswers.currentIncomeModel.isDefined &&
+        incomeAnswers.previousTaxableGainsModel.isDefined) Future.successful(
         Ok(views.html.calculation.resident.summary.finalSummary(totalGainAnswers, chargeableGainAnswers, incomeAnswers,
           totalGainAndTax.get, routes.IncomeController.personalAllowance().url)))
-      else if (grossGain > 0) Future.successful(Ok(views.html.calculation.resident.deductionsSummary(totalGainAnswers, chargeableGainAnswers, chargeableGain.get, backUrl)))
+      else if (grossGain > 0 ) Future.successful(Ok(views.html.calculation.resident.deductionsSummary(totalGainAnswers, chargeableGainAnswers, chargeableGain.get, backUrl)))
       else Future.successful(Ok(views.html.calculation.resident.gainSummary(totalGainAnswers, grossGain)))
     }
 
