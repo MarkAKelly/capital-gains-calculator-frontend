@@ -71,6 +71,14 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
         SummaryConstructor.reliefsUsed(answers) shouldBe "10,000"
       }
     }
+
+    "reliefs are claimed with a provided value with decimal places" should {
+      lazy val answers = ChargeableGainAnswers(Some(ReliefsModel(true)), Some(ReliefsValueModel(BigDecimal(9999.99))), None, None, None, None, None, None)
+
+      "return a value of '10,000' when rounded up" in {
+        SummaryConstructor.reliefsUsed(answers) shouldBe "10,000"
+      }
+    }
   }
 
   "Calling the .broughtForwardLossesUsed function" when {
@@ -97,6 +105,15 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
         Some(LossesBroughtForwardModel(true)), Some(LossesBroughtForwardValueModel(BigDecimal(10000))), None)
 
       "return a value of '10,000'" in {
+        SummaryConstructor.broughtForwardLossesUsed(answers) shouldBe "10,000"
+      }
+    }
+
+    "brought forward losses are claimed with a provided value with decimal places" should {
+      lazy val answers = ChargeableGainAnswers(None, None, None, None, None,
+        Some(LossesBroughtForwardModel(true)), Some(LossesBroughtForwardValueModel(BigDecimal(9999.99))), None)
+
+      "return a value of '10,000' when rounded up" in {
         SummaryConstructor.broughtForwardLossesUsed(answers) shouldBe "10,000"
       }
     }
@@ -146,6 +163,16 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
         None, None, None)
 
       "return a value of 10,000" in {
+        SummaryConstructor.allowableLossesUsed(answers) shouldBe "10,000"
+      }
+    }
+
+    "other properties and allowable losses are claimed with decimal places" should {
+      lazy val answers = ChargeableGainAnswers(None, None,
+        Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(true)), Some(AllowableLossesValueModel(BigDecimal(9999.99))),
+        None, None, None)
+
+      "return a value of 10,000 when rounded up" in {
         SummaryConstructor.allowableLossesUsed(answers) shouldBe "10,000"
       }
     }
