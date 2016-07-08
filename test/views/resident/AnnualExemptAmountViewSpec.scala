@@ -27,7 +27,7 @@ import forms.resident.AnnualExemptAmountForm._
 
 class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
   "The Annual Exempt Amount view" should {
-    lazy val view = views.annualExemptAmount(annualExemptAmountForm)(fakeRequest)
+    lazy val view = views.annualExemptAmount(annualExemptAmountForm())(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
     "have a charset of UTF-8" in {
       doc.charset().toString shouldBe "UTF-8"
@@ -121,7 +121,7 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
   }
 
   "Annual Exempt Amount view with stored values" should {
-    lazy val form = annualExemptAmountForm.bind(Map(("amount", "1000")))
+    lazy val form = annualExemptAmountForm().bind(Map(("amount", "1000")))
     lazy val view = views.annualExemptAmount(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
@@ -133,7 +133,7 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
 
   "Annual Exempt Amount View with form with errors" which {
     "is due to mandatory field error" should {
-      val form = annualExemptAmountForm.bind(Map("amount" -> ""))
+      val form = annualExemptAmountForm().bind(Map("amount" -> ""))
       lazy val view = views.annualExemptAmount(form)(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
       s"output an error summary with message '${commonMessages.errorMessages.mandatoryAmount}'" in {
