@@ -34,6 +34,7 @@ object MessageLookup {
     val minimumAmount = "Enter an amount that's £0 or more"
     val maximumAmount = "Enter an amount that's £1,000,000,000 or less"
     val invalidAmount = "Enter an amount in the correct format e.g. 10000.00"
+    val invalidAmountNoDecimal = "Enter an amount in the correct format e.g. 10000"
   }
 
   //Disposal Date messages

@@ -2,7 +2,7 @@
 @import play.api.data._
 @import views.html.helpers._
 
-@(inputForm: Form[_], fieldName: String, questionText: String, helpText: Option[String] = None, additionalHTMLContent: Option[String] = None, hideLabel: Boolean = false)(implicit lang: play.api.i18n.Lang)
+@(inputForm: Form[_], fieldName: String, questionText: String, helpText: Option[String] = None, additionalHTMLContent: Option[String] = None, hideLabel: Boolean = false, step: String = "0.01")(implicit lang: play.api.i18n.Lang)
 
     <div class="form-group">
 
@@ -16,7 +16,7 @@
                     '_inputHint -> Html(helpText.getOrElse("")),
                     '_type -> "number",
                     '_inputClass -> "input--no-spinner",
-                    '_step -> "0.01"
+                    '_step -> step
                 )
             } else {
                 @moneyInputFormat(
@@ -26,7 +26,7 @@
                     '_inputHint -> Html(helpText.getOrElse("")),
                     '_type -> "number",
                     '_inputClass -> "input--no-spinner",
-                    '_step -> "0.01"
+                    '_step -> step
                 )
             }
         } else {
@@ -38,7 +38,7 @@
                     '_inputHint -> Html(helpText.getOrElse("")),
                     '_type -> "number",
                     '_inputClass -> "input--no-spinner",
-                    '_step -> "0.01"
+                    '_step -> step
                 )
             } else {
                 @moneyInputFormat(
@@ -47,7 +47,7 @@
                     '_inputHint -> Html(helpText.getOrElse("")),
                     '_type -> "number",
                     '_inputClass -> "input--no-spinner",
-                    '_step -> "0.01"
+                    '_step -> step
                 )
             }
         }

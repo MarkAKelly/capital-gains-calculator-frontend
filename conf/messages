@@ -51,6 +51,7 @@ calc.common.error.mandatoryAmount = Enter an amount
 calc.common.error.minimumAmount = Enter an amount that''s £0 or more
 calc.common.error.maximumAmount = Enter an amount that''s £1,000,000,000 or less
 calc.common.error.invalidAmount = Enter an amount in the correct format e.g. 10000.00
+calc.common.error.invalidAmountNoDecimal = Enter an amount in the correct format e.g. 10000
 
 ## Introduction ##
 calc.introduction.title = Introduction

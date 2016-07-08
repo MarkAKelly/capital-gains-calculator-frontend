@@ -59,8 +59,8 @@ class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication with F
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${errorMessages.invalidAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.invalidAmount
+      s"error with message '${errorMessages.invalidAmountNoDecimal}'" in {
+        form.error("amount").get.message shouldBe errorMessages.invalidAmountNoDecimal
       }
     }
 
@@ -92,14 +92,14 @@ class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication with F
 
     "supplied with an amount that has too many decimal placed" should {
 
-      lazy val form = personalAllowanceForm.bind(Map("amount" -> "100.1234"))
+      lazy val form = personalAllowanceForm.bind(Map("amount" -> "100.1"))
 
       "raise form error" in {
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${errorMessages.invalidAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.invalidAmount
+      s"error with message '${errorMessages.invalidAmountNoDecimal}'" in {
+        form.error("amount").get.message shouldBe errorMessages.invalidAmountNoDecimal
       }
     }
   }

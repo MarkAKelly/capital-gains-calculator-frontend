@@ -24,7 +24,7 @@
 
 @form(action = controllers.resident.routes.IncomeController.submitPersonalAllowance) {
 
-@formInputMoney(personalAllowanceForm, "amount", Messages("calc.resident.personalAllowance.question"), Some(Messages("calc.resident.personalAllowance.helpText")), hideLabel = true)
+@formInputMoney(personalAllowanceForm, "amount", Messages("calc.resident.personalAllowance.question"), Some(Messages("calc.resident.personalAllowance.helpText")), hideLabel = true, step = "1")
 
 <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
 
