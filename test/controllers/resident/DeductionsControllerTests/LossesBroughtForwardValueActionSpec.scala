@@ -182,8 +182,9 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
     }
 
     "given an invalid form" should {
+      lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(1000, 1000, 0, 0))
       lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
-      lazy val result = DeductionsController.submitLossesBroughtForwardValue(request)
+      lazy val result = target.submitLossesBroughtForwardValue(request)
 
       "return a status of 400" in {
         status(result) shouldBe 400
