@@ -16,16 +16,17 @@
 
 package controllers.resident.DeductionsControllerTests
 import assets.MessageLookup.{annualExemptAmount => messages}
-import common.KeystoreKeys
+import common.KeystoreKeys.{ResidentKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.DeductionsController
-import models.resident.{ChargeableGainResultModel, ChargeableGainAnswers, YourAnswersSummaryModel, AnnualExemptAmountModel}
+import models.resident.{AnnualExemptAmountModel, ChargeableGainAnswers, ChargeableGainResultModel, YourAnswersSummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
@@ -43,8 +44,11 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[AnnualExemptAmountModel](Matchers.eq(KeystoreKeys.ResidentKeys.annualExemptAmount))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[AnnualExemptAmountModel](Matchers.eq(keystoreKeys.annualExemptAmount))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.saveFormData[AnnualExemptAmountModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(mock[CacheMap]))
 
     when(mockCalcConnector.getYourAnswers(Matchers.any()))
       .thenReturn(Future.successful(gainAnswers))
@@ -95,18 +99,18 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
         Jsoup.parse(bodyOf(result)).title shouldBe messages.title
       }
     }
-  }
 
-  "request has an invalid session" should {
+    "request has an invalid session" should {
 
-    lazy val result = DeductionsController.annualExemptAmount(fakeRequest)
+      lazy val result = DeductionsController.annualExemptAmount(fakeRequest)
 
-    "return a status of 303" in {
-      status(result) shouldBe 303
-    }
+      "return a status of 303" in {
+        status(result) shouldBe 303
+      }
 
-    "return you to the session timeout page" in {
-      redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/non-resident/session-timeout")
+      "return you to the session timeout page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/non-resident/session-timeout")
+      }
     }
   }
 
