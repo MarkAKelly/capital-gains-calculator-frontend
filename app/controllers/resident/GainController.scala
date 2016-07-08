@@ -66,6 +66,11 @@ trait GainController extends FeatureLock {
     )
   }
 
+  //################ Outside Tax Years Actions ######################
+  val outsideTaxYears = FeatureLockForRTT.async { implicit request =>
+    Future.successful(Ok(views.gain.outsideTaxYear()))
+  }
+
   //################ Disposal Value Actions ######################
   val disposalValue = FeatureLockForRTT.async { implicit request =>
     calcConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.ResidentKeys.disposalValue).map {
@@ -154,8 +159,8 @@ trait GainController extends FeatureLock {
     improvementsForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.improvements(errors))),
       success => {
-        calcConnector.saveFormData(KeystoreKeys.ResidentKeys.improvements, success)
         for {
+          save <- calcConnector.saveFormData(KeystoreKeys.ResidentKeys.improvements, success)
           answers <- calcConnector.getYourAnswers
           grossGain <- calcConnector.calculateRttGrossGain(answers)
           route <- routeRequest(grossGain)

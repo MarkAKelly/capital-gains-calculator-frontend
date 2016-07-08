@@ -108,8 +108,8 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
       "is of type number" in {
         input.attr("type") shouldBe "number"
       }
-      "has a step value of '0.01'" in {
-        input.attr("step") shouldBe "0.01"
+      "has a step value of '1'" in {
+        input.attr("step") shouldBe "1"
       }
       s"has placeholder 'eg. 25000.00'" in {
         input.attr("placeholder") shouldBe "eg. 25000.00"

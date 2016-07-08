@@ -243,7 +243,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
       )
     }
 
-    def fetchAEA(isFullAEA: Boolean)(implicit hc: HeaderCarrier): Future[Option[AnnualExemptAmountModel]] = {
+    def fetchAEA(isFullAEA: Boolean)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
       if (isFullAEA) {
         calcConnector.getFullAEA("2017")
       }
@@ -256,7 +256,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
       customerTypeVal <- customerType
       isDisabledTrustee <- trusteeAEA(customerTypeVal)
       maxAEA <- fetchAEA(isDisabledTrustee)
-      finalResult <- routeRequest(maxAEA.get.annualExemptAmount)
+      finalResult <- routeRequest(maxAEA.get)
     } yield finalResult
   }
 

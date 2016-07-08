@@ -16,12 +16,35 @@
 
 package constructors.resident
 
+import models.resident._
 import play.api.i18n.Messages
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object SummaryConstructor {
 
   def gainMessage (result: BigDecimal): String = {
     if (result >= 0) Messages("calc.resident.summary.totalGain")
     else Messages("calc.resident.summary.totalLoss")
+  }
+
+  def reliefsUsed (input: ChargeableGainAnswers): String = {
+    input.reliefsModel match {
+      case Some(ReliefsModel(true)) => MoneyPounds(input.reliefsValueModel.get.amount, 0).quantity
+      case _ => MoneyPounds(0,0).quantity
+    }
+  }
+
+  def allowableLossesUsed (input: ChargeableGainAnswers): String = {
+    (input.otherPropertiesModel, input.allowableLossesModel) match {
+      case (Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(true))) => MoneyPounds(input.allowableLossesValueModel.get.amount, 0).quantity
+      case _ => MoneyPounds(0,0).quantity
+    }
+  }
+
+  def broughtForwardLossesUsed (input: ChargeableGainAnswers): String = {
+    input.broughtForwardModel match {
+      case Some(LossesBroughtForwardModel(true)) => MoneyPounds(input.broughtForwardValueModel.get.amount, 0).quantity
+      case _ => MoneyPounds(0,0).quantity
+    }
   }
 }

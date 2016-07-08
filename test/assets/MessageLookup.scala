@@ -33,7 +33,9 @@ object MessageLookup {
     val mandatoryAmount = "Enter an amount"
     val minimumAmount = "Enter an amount that's £0 or more"
     val maximumAmount = "Enter an amount that's £1,000,000,000 or less"
+    def maximumLimit(limit: String): String = s"Enter an amount that's £$limit or less"
     val invalidAmount = "Enter an amount in the correct format e.g. 10000.00"
+    val invalidAmountNoDecimal = "Enter an amount in the correct format e.g. 10000"
   }
 
   //Disposal Date messages
@@ -48,6 +50,12 @@ object MessageLookup {
     val invalidMonthError = "Enter a month"
     val invalidYearError = "Enter a year"
     val realDateError = "Enter a real date"
+  }
+
+  //Outside Tax Years messages
+  object outsideTaxYears {
+    val title = "The date you've entered isn't supported by this calculator"
+    def content(year: String): String = s"You can continue to use it, but we'll use the tax rates from the $year tax year."
   }
 
   //Disposal Value messages

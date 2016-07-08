@@ -27,7 +27,7 @@ import play.api.mvc.Request
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 class AnnualExemptAmountFormSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
   "Creating a form using an empty model" should {
-    val form = annualExemptAmountForm
+    val form = annualExemptAmountForm()
     "return an empty string for amount" in {
       form.data.isEmpty shouldBe true
     }
@@ -35,54 +35,67 @@ class AnnualExemptAmountFormSpec extends UnitSpec with WithFakeApplication with 
   "Creating a form using a valid model" should {
     "return a form with the data specified in the model" in {
       val model = AnnualExemptAmountModel(1)
-      val form = annualExemptAmountForm.fill(model)
+      val form = annualExemptAmountForm().fill(model)
       form.data("amount") shouldBe "1"
     }
   }
   "Creating a form using an invalid post" when {
     "supplied with no data for amount" should {
-      lazy val form = annualExemptAmountForm.bind(Map("amount" -> ""))
+      lazy val form = annualExemptAmountForm().bind(Map("amount" -> ""))
       "raise form error" in {
         form.hasErrors shouldBe true
       }
-      s"error with message '${commonMessages.undefinedMessage}'" in {
-        form.error("amount").get.message shouldBe commonMessages.undefinedMessage
+      s"error with message '${errorMessages.mandatoryAmount}'" in {
+        form.error("amount").get.message shouldBe errorMessages.mandatoryAmount
       }
     }
     "supplied with a non-numeric value for amount" should {
-      lazy val form = annualExemptAmountForm.bind(Map("amount" -> "a"))
+      lazy val form = annualExemptAmountForm().bind(Map("amount" -> "a"))
       "raise a form error" in {
         form.hasErrors shouldBe true
       }
-      s"error with message '${commonMessages.undefinedMessage}'" in {
-        form.error("amount").get.message shouldBe commonMessages.undefinedMessage
+      s"error with message '${errorMessages.invalidAmount}'" in {
+        form.error("amount").get.message shouldBe errorMessages.invalidAmount
       }
     }
     "supplied with an amount that is too big" should {
-      lazy val form = annualExemptAmountForm.bind(Map(("amount", "9999999999999")))
+      val limit = BigDecimal(11100)
+      lazy val form = annualExemptAmountForm(limit).bind(Map(("amount", "9999999999999")))
       "return a form with errors" in {
         form.hasErrors shouldBe true
       }
-      s"return a form with the error message $undefinedMessage" in {
-        form.error("amount").get.message shouldBe undefinedMessage
+      s"return a form with the error message ${errorMessages.maximumAmount}" in {
+        form.error("amount").get.message shouldBe errorMessages.maximumAmount
       }
     }
     "supplied with a negative amount" should {
-      lazy val form = annualExemptAmountForm.bind(Map("amount" -> "-1000"))
+      val limit = BigDecimal(11100)
+      lazy val form = annualExemptAmountForm(limit).bind(Map("amount" -> "-1000"))
       "raise form error" in {
         form.hasErrors shouldBe true
       }
-      s"error with message '${commonMessages.undefinedMessage}'" in {
-        form.error("amount").get.message shouldBe commonMessages.undefinedMessage
+      s"error with message '${errorMessages.minimumAmount}'" in {
+        form.error("amount").get.message shouldBe errorMessages.minimumAmount
       }
     }
     "supplied with an amount that has too many decimal places" should {
-      lazy val form = annualExemptAmountForm.bind(Map("amount" -> "100.1234"))
+      val limit = BigDecimal(11100)
+      lazy val form = annualExemptAmountForm(limit).bind(Map("amount" -> "100.1234"))
       "raise form error" in {
         form.hasErrors shouldBe true
       }
-      s"error with message '${commonMessages.undefinedMessage}'" in {
-        form.error("amount").get.message shouldBe commonMessages.undefinedMessage
+      s"error with message '${errorMessages.invalidAmount}'" in {
+        form.error("amount").get.message shouldBe errorMessages.invalidAmount
+      }
+    }
+    "supplied with an amount that is larger than the maximum AEA" should {
+      val limit = BigDecimal(11100)
+      lazy val form = annualExemptAmountForm(limit).bind(Map("amount" -> "11100.01"))
+      "raise form error" in {
+        form.hasErrors shouldBe true
+      }
+      s"error with message '${errorMessages.maximumLimit(MoneyPounds(limit, 0).quantity)}'" in {
+        form.error("amount").get.message shouldBe errorMessages.maximumLimit(MoneyPounds(limit, 0).quantity)
       }
     }
   }

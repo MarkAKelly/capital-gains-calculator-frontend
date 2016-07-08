@@ -109,6 +109,8 @@ object Validation {
 
   val decimalPlacesCheck: BigDecimal => Boolean = (input) => input.scale < 3
 
+  val decimalPlacesCheckNoDecimal: BigDecimal => Boolean = (input) => input.scale < 1
+
   val maxCheck: BigDecimal => Boolean = (input) => input <= Constants.maxNumeric
 
   val minCheck: BigDecimal => Boolean = (input) => input >= 0

@@ -59,7 +59,7 @@ class ReliefsValueFormSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.undefinedMessage
+        form.error("amount").get.message shouldBe MessageLookup.errorMessages.mandatoryAmount
       }
     }
 
@@ -76,7 +76,7 @@ class ReliefsValueFormSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.undefinedMessage
+        form.error("amount").get.message shouldBe MessageLookup.errorMessages.mandatoryAmount
       }
     }
 
@@ -93,7 +93,7 @@ class ReliefsValueFormSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.undefinedMessage
+        form.error("amount").get.message shouldBe MessageLookup.errorMessages.invalidAmount
       }
     }
 
@@ -110,7 +110,7 @@ class ReliefsValueFormSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.undefinedMessage
+        form.error("amount").get.message shouldBe MessageLookup.errorMessages.invalidAmount
       }
     }
 
@@ -127,7 +127,7 @@ class ReliefsValueFormSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.undefinedMessage
+        form.error("amount").get.message shouldBe MessageLookup.errorMessages.maximumAmount
       }
     }
 
@@ -144,7 +144,7 @@ class ReliefsValueFormSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.undefinedMessage
+        form.error("amount").get.message shouldBe MessageLookup.errorMessages.minimumAmount
       }
     }
   }

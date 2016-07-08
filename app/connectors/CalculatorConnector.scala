@@ -76,12 +76,12 @@ trait CalculatorConnector {
     }")
   }
 
-  def getFullAEA (input: String)(implicit hc: HeaderCarrier): Future[Option[AnnualExemptAmountModel]] = {
-    http.GET[Option[AnnualExemptAmountModel]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-full-aea?taxYear=$input")
+  def getFullAEA (input: String)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
+    http.GET[Option[BigDecimal]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-full-aea?taxYear=$input")
   }
 
-  def getPartialAEA (input: String)(implicit hc: HeaderCarrier): Future[Option[AnnualExemptAmountModel]] = {
-    http.GET[Option[AnnualExemptAmountModel]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-partial-aea?taxYear=$input")
+  def getPartialAEA (input: String)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
+    http.GET[Option[BigDecimal]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-partial-aea?taxYear=$input")
   }
 
   def getPA (input: String)(implicit hc: HeaderCarrier): Future[Option[PersonalAllowanceModel]] = {

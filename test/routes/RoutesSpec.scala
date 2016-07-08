@@ -35,6 +35,12 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
+  "The URL for the outside tax years Action" should {
+    "be equal to /calculate-your-capital-gains/resident/outside-tax-years" in {
+      val path = controllers.resident.routes.GainController.outsideTaxYears().toString
+    }
+  }
+
   "The URL for the disposal value or market value Action" should {
     "be equal to /calculate-your-capital-gains/resident/disposal-value" in {
       val path = controllers.resident.routes.GainController.disposalValue.toString()
