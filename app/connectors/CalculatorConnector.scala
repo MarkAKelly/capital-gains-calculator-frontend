@@ -24,6 +24,7 @@ import constructors.nonresident.CalculateRequestConstructor
 import constructors.{resident => residentConstructors}
 import models.nonresident._
 import models.resident
+import models.resident.TaxYearModel
 import play.api.libs.json.Format
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -85,6 +86,10 @@ trait CalculatorConnector {
 
   def getPA (input: String)(implicit hc: HeaderCarrier): Future[Option[PersonalAllowanceModel]] = {
     http.GET[Option[PersonalAllowanceModel]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-pa?taxYear=$input")
+  }
+
+  def getTaxYear (input: String)(implicit hc: HeaderCarrier): Future[Option[TaxYearModel]] = {
+    http.GET[Option[TaxYearModel]](s"$serviceUrl/capital-gains-calculator/tax-year?disposalDate=$input")
   }
 
   def clearKeystore()(implicit hc: HeaderCarrier) = {

@@ -57,11 +57,20 @@ trait GainController extends FeatureLock {
   }
 
   val submitDisposalDate = Action.async { implicit request =>
+
+    def routeRequest(taxYearResult: Option[TaxYearModel]): Future[Result] = {
+      if (taxYearResult.isDefined && !taxYearResult.get.isValidYear) Future.successful(Redirect(routes.GainController.outsideTaxYears()))
+      else Future.successful(Redirect(routes.GainController.disposalValue()))
+    }
+
     disposalDateForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.disposalDate(errors))),
       success => {
-        calcConnector.saveFormData(KeystoreKeys.ResidentKeys.disposalDate, success)
-        Future.successful(Redirect(routes.GainController.disposalValue()))
+        for {
+          save <- calcConnector.saveFormData(KeystoreKeys.ResidentKeys.disposalDate, success)
+          taxYearResult <- calcConnector.getTaxYear(s"${success.year}-${success.month}-${success.day}")
+          route <- routeRequest(taxYearResult)
+        } yield route
       }
     )
   }

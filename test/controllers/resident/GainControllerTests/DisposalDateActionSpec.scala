@@ -24,10 +24,11 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{disposalDate => messages}
 import common.KeystoreKeys
 import connectors.CalculatorConnector
-import models.resident.DisposalDateModel
+import models.resident.{DisposalDateModel, TaxYearModel}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
+import uk.gov.hmrc.http.cache.client.CacheMap
 
 import scala.concurrent.Future
 
@@ -50,9 +51,25 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
     val doc = Jsoup.parse(bodyOf(result))
   }
 
-  case class FakePOSTRequest (input: (String, String)*) {
-    lazy val target = fakeRequestToPOSTWithSession(input: _*)
-    lazy val result = GainController.submitDisposalDate(target)
+  case class FakePOSTRequest (dateResponse: TaxYearModel, input: (String, String)*) {
+
+    def setupTarget(): GainController = {
+
+      val mockCalcConnector = mock[CalculatorConnector]
+
+      when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
+        .thenReturn(Future.successful(Some(dateResponse)))
+
+      when(mockCalcConnector.saveFormData[DisposalDateModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+        .thenReturn(Future.successful(mock[CacheMap]))
+
+      new GainController {
+        override val calcConnector: CalculatorConnector = mockCalcConnector
+      }
+    }
+
+    lazy val target = setupTarget()
+    lazy val result = target.submitDisposalDate(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(bodyOf(result))
   }
 
@@ -106,7 +123,8 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     "when there is a valid form" should {
 
-      lazy val request = FakePOSTRequest(("disposalDateDay", "30"), ("disposalDateMonth", "4"), ("disposalDateYear", "2016"))
+      lazy val dateResponse = TaxYearModel("2016/17", true, "2016/17")
+      lazy val request = FakePOSTRequest(dateResponse, ("disposalDateDay", "30"), ("disposalDateMonth", "4"), ("disposalDateYear", "2016"))
 
       "return a status of 303" in {
         status(request.result) shouldBe 303
@@ -119,7 +137,8 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     "when there is an invalid form" should {
 
-      lazy val request = FakePOSTRequest(("disposalDateDay", "32"), ("disposalDateMonth", "4"), ("disposalDateYear", "2016"))
+      lazy val dateResponse = TaxYearModel("2016/17", true, "2016/17")
+      lazy val request = FakePOSTRequest(dateResponse, ("disposalDateDay", "32"), ("disposalDateMonth", "4"), ("disposalDateYear", "2016"))
 
       "return a status of 400 with an invalid POST" in {
         status(request.result) shouldBe 400
@@ -132,7 +151,8 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     "when there is a date that is greater than any specified tax year" should {
 
-      lazy val request = FakePOSTRequest(("disposalDateDay", "30"), ("disposalDateMonth", "4"), ("disposalDateYear", "2019"))
+      lazy val dateResponse = TaxYearModel("2019/20", false, "2016/17")
+      lazy val request = FakePOSTRequest(dateResponse, ("disposalDateDay", "30"), ("disposalDateMonth", "4"), ("disposalDateYear", "2019"))
 
       "return a status of 303" in {
         status(request.result) shouldBe 303
@@ -144,7 +164,8 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
     }
     "when there is a date that is less than any specified tax year" should {
 
-      lazy val request = FakePOSTRequest(("disposalDateDay", "30"), ("disposalDateMonth", "4"), ("disposalDateYear", "2013"))
+      lazy val dateResponse = TaxYearModel("2013/14", false, "2015/16")
+      lazy val request = FakePOSTRequest(dateResponse, ("disposalDateDay", "30"), ("disposalDateMonth", "4"), ("disposalDateYear", "2013"))
 
       "return a status of 303" in {
         status(request.result) shouldBe 303
