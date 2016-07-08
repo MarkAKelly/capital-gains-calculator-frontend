@@ -129,5 +129,30 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
         request.doc.title() shouldBe messages.title
       }
     }
+
+    "when there is a date that is greater than any specified tax year" should {
+
+      lazy val request = FakePOSTRequest(("disposalDateDay", "30"), ("disposalDateMonth", "4"), ("disposalDateYear", "2019"))
+
+      "return a status of 303" in {
+        status(request.result) shouldBe 303
+      }
+
+      "redirect to the outside know years page" in {
+        redirectLocation(request.result) shouldBe Some("/calculate-your-capital-gains/resident/outside-tax-years")
+      }
+    }
+    "when there is a date that is less than any specified tax year" should {
+
+      lazy val request = FakePOSTRequest(("disposalDateDay", "30"), ("disposalDateMonth", "4"), ("disposalDateYear", "2013"))
+
+      "return a status of 303" in {
+        status(request.result) shouldBe 303
+      }
+
+      "redirect to the outside know years page" in {
+        redirectLocation(request.result) shouldBe Some("/calculate-your-capital-gains/resident/outside-tax-years")
+      }
+    }
   }
 }
