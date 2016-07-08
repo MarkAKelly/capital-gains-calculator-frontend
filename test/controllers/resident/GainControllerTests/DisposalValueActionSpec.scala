@@ -28,6 +28,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
+import uk.gov.hmrc.http.cache.client.CacheMap
 
 import scala.concurrent.Future
 
@@ -39,6 +40,9 @@ class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     when(mockCalcConnector.fetchAndGetFormData[DisposalValueModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.saveFormData[DisposalValueModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(mock[CacheMap]))
 
     new GainController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -91,9 +95,9 @@ class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with Fak
   }
 
   "Calling .submitDisposalValue from the GainController" should {
-
+    lazy val target = setupTarget(None)
     lazy val request = fakeRequestToPOSTWithSession(("amount", "100"))
-    lazy val result = GainController.submitDisposalValue(request)
+    lazy val result = target.submitDisposalValue(request)
 
     "re-direct to the disposal Costs page when supplied with a valid form" in {
       status(result) shouldEqual 303
@@ -102,8 +106,9 @@ class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with Fak
   }
 
   "Calling .submitDisposalValue from the GainController" should {
+    lazy val target = setupTarget(None)
     lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
-    lazy val result = GainController.submitDisposalValue(request)
+    lazy val result = target.submitDisposalValue(request)
 
     "render the disposal value page when supplied with an invalid form" in {
       status(result) shouldEqual 400

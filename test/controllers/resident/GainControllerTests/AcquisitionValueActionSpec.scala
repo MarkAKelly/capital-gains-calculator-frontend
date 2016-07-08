@@ -28,10 +28,11 @@ import models.resident.AcquisitionValueModel
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
+import uk.gov.hmrc.http.cache.client.CacheMap
 
 import scala.concurrent.Future
 
-class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar{
+class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
   def setupTarget(getData: Option[AcquisitionValueModel]): GainController = {
 
@@ -39,6 +40,9 @@ class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with 
 
     when(mockCalcConnector.fetchAndGetFormData[AcquisitionValueModel](Matchers.eq(KeystoreKeys.ResidentKeys.acquisitionValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.saveFormData[AcquisitionValueModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(mock[CacheMap]))
 
     new GainController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -85,8 +89,8 @@ class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with 
   }
 
   "Calling .acquisitionValue from the GainCalculationController with no session" should {
-
-    lazy val result = GainController.acquisitionValue(fakeRequest)
+    lazy val target = setupTarget(None)
+    lazy val result = target.acquisitionValue(fakeRequest)
 
     "return a status of 303" in {
       status(result) shouldBe 303
@@ -100,8 +104,9 @@ class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with 
   "Calling .submitAcquisitionValue from the GainCalculationConroller" when {
 
     "a valid form is submitted" should {
+      lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
-      lazy val result = GainController.submitAcquisitionValue(request)
+      lazy val result = target.submitAcquisitionValue(request)
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -113,8 +118,9 @@ class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with 
     }
 
     "an invalid form is submitted" should {
+      lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
-      lazy val result = GainController.submitAcquisitionValue(request)
+      lazy val result = target.submitAcquisitionValue(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {

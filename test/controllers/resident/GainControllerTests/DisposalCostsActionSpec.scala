@@ -16,7 +16,7 @@
 
 package controllers.resident.GainControllerTests
 
-import assets.MessageLookup.{disposalCosts => messages}
+import assets.MessageLookup.{disposalDate, disposalCosts => messages}
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
@@ -27,71 +27,68 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
 class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  case class FakeGETRequest (storedData: Option[DisposalCostsModel]) {
-    def setupTarget(): GainController = {
+  def setupTarget(getData: Option[DisposalCostsModel]): GainController = {
 
-      val mockCalcConnector = mock[CalculatorConnector]
+    val mockCalcConnector = mock[CalculatorConnector]
 
-      when(mockCalcConnector.fetchAndGetFormData[DisposalCostsModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalCosts))(Matchers.any(), Matchers.any()))
-        .thenReturn(Future.successful(storedData))
+    when(mockCalcConnector.fetchAndGetFormData[DisposalCostsModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalCosts))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(getData))
 
-      new GainController {
-        override val calcConnector: CalculatorConnector = mockCalcConnector
-      }
+    when(mockCalcConnector.saveFormData[DisposalCostsModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(mock[CacheMap]))
+
+    new GainController {
+      override val calcConnector: CalculatorConnector = mockCalcConnector
     }
-    val target = setupTarget()
-    val result = target.disposalCosts(fakeRequestWithSession)
-    val doc = Jsoup.parse(bodyOf(result))
-  }
-
-  case class FakePOSTRequest (input: (String, String)*) {
-    lazy val target = fakeRequestToPOSTWithSession(input: _*)
-    lazy val result = GainController.submitDisposalCosts(target)
-    lazy val doc = Jsoup.parse(bodyOf(result))
   }
 
   "Calling .disposalCosts from the GainCalculationController with session" when {
 
     "supplied with no pre-existing stored data" should {
 
-      lazy val request = FakeGETRequest(None)
+      lazy val target = setupTarget(None)
+      lazy val result = target.disposalCosts(fakeRequestWithSession)
 
       "return a status of 200" in {
-        status(request.result) shouldBe 200
+        status(result) shouldBe 200
       }
 
       "return some html" in {
-        contentType(request.result) shouldBe Some("text/html")
+        contentType(result) shouldBe Some("text/html")
       }
 
       "display the Disposal Costs view" in {
-        Jsoup.parse(bodyOf(request.result)).title shouldBe messages.title
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
       }
     }
 
     "supplied with pre-existing stored data" should {
 
-      lazy val request = FakeGETRequest(Some(DisposalCostsModel(100.99)))
+      lazy val target = setupTarget(Some(DisposalCostsModel(100.99)))
+      lazy val result = target.disposalCosts(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a status of 200" in {
-        status(request.result) shouldBe 200
+        status(result) shouldBe 200
       }
 
       "have the amount 100.99 pre-populated into the input field" in {
-        request.doc.getElementById("amount").attr("value") shouldBe "100.99"
+        doc.getElementById("amount").attr("value") shouldBe "100.99"
       }
     }
   }
 
   "Calling .disposalCosts from the GainCalculationController with no session" should {
 
-    lazy val result = GainController.disposalCosts(fakeRequest)
+    lazy val target = setupTarget(None)
+    lazy val result = target.disposalCosts(fakeRequest)
 
     "return a status of 303" in {
       status(result) shouldBe 303
@@ -106,23 +103,27 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "given a valid form should" should {
 
-      lazy val request = FakePOSTRequest(("amount", "100"))
+      lazy val target = setupTarget(Some(DisposalCostsModel(100.99)))
+      lazy val request = fakeRequestToPOSTWithSession(("amount", "100"))
+      lazy val result = target.submitDisposalCosts(request)
 
       "return a status of 303" in {
-        status(request.result) shouldBe 303
+        status(result) shouldBe 303
       }
 
       s"redirect to '${controllers.resident.routes.GainController.acquisitionValue().toString}'" in {
-        redirectLocation(request.result).get shouldBe controllers.resident.routes.GainController.acquisitionValue().toString
+        redirectLocation(result).get shouldBe controllers.resident.routes.GainController.acquisitionValue().toString
       }
     }
 
     "given an invalid form" should {
 
-      lazy val request = FakePOSTRequest(("amount", "-100"))
+      lazy val target = setupTarget(Some(DisposalCostsModel(100.99)))
+      lazy val request = fakeRequestToPOSTWithSession(("amount", "-100"))
+      lazy val result = target.submitDisposalCosts(request)
 
       "return a status of 400" in {
-        status(request.result) shouldBe 400
+        status(result) shouldBe 400
       }
 
     }
