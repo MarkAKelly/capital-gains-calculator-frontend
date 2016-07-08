@@ -51,8 +51,8 @@ class LossesBroughtForwardValueFormSpec extends UnitSpec with WithFakeApplicatio
         form.hasErrors shouldBe true
       }
 
-      s"have an error with message '${commonMessages.undefinedMessage}'" in {
-        form.error("amount").get.message shouldBe commonMessages.undefinedMessage
+      s"have an error with message '${commonMessages.errorMessages.mandatoryAmount}'" in {
+        form.error("amount").get.message shouldBe commonMessages.errorMessages.mandatoryAmount
       }
     }
 
@@ -64,8 +64,8 @@ class LossesBroughtForwardValueFormSpec extends UnitSpec with WithFakeApplicatio
         form.hasErrors shouldBe true
       }
 
-      s"have an error with message '${commonMessages.undefinedMessage}'" in {
-        form.error("amount").get.message shouldBe commonMessages.undefinedMessage
+      s"have an error with message '${commonMessages.errorMessages.invalidAmount}'" in {
+        form.error("amount").get.message shouldBe commonMessages.errorMessages.invalidAmount
       }
     }
 
@@ -77,8 +77,8 @@ class LossesBroughtForwardValueFormSpec extends UnitSpec with WithFakeApplicatio
         form.hasErrors shouldBe true
       }
 
-      s"have an error with message '${commonMessages.undefinedMessage}'" in {
-        form.error("amount").get.message shouldBe commonMessages.undefinedMessage
+      s"have an error with message '${commonMessages.errorMessages.maximumAmount}'" in {
+        form.error("amount").get.message shouldBe commonMessages.errorMessages.maximumAmount
       }
     }
 
@@ -90,8 +90,8 @@ class LossesBroughtForwardValueFormSpec extends UnitSpec with WithFakeApplicatio
         form.hasErrors shouldBe true
       }
 
-      s"have an error with message '${commonMessages.undefinedMessage}'" in {
-        form.error("amount").get.message shouldBe commonMessages.undefinedMessage
+      s"have an error with message '${commonMessages.errorMessages.minimumAmount}'" in {
+        form.error("amount").get.message shouldBe commonMessages.errorMessages.minimumAmount
       }
     }
 
@@ -103,8 +103,8 @@ class LossesBroughtForwardValueFormSpec extends UnitSpec with WithFakeApplicatio
         form.hasErrors shouldBe true
       }
 
-      s"have an error with message '${commonMessages.undefinedMessage}'" in {
-        form.error("amount").get.message shouldBe commonMessages.undefinedMessage
+      s"have an error with message '${commonMessages.errorMessages.invalidAmount}'" in {
+        form.error("amount").get.message shouldBe commonMessages.errorMessages.invalidAmount
       }
     }
   }

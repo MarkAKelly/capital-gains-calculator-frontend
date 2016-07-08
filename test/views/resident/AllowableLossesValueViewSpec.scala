@@ -148,16 +148,16 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
       doc.body.getElementsByAttributeValueContaining("id", "amount-error-summary").isEmpty shouldBe false
     }
 
-    s"contain an error summary message of ${commonMessages.undefinedMessage}" in {
-      doc.body.getElementById("amount-error-summary").text should include(commonMessages.undefinedMessage)
+    s"contain an error summary message of ${commonMessages.errorMessages.mandatoryAmount}" in {
+      doc.body.getElementById("amount-error-summary").text should include(commonMessages.errorMessages.mandatoryAmount)
     }
 
     "output an error notification" in {
       doc.body.getElementsByAttributeValueContaining("class", "error-notification").isEmpty shouldBe false
     }
 
-    s"contain an error notification message of ${commonMessages.undefinedMessage}" in {
-      doc.body.getElementsByClass("error-notification").text should include(commonMessages.undefinedMessage)
+    s"contain an error notification message of ${commonMessages.errorMessages.mandatoryAmount}" in {
+      doc.body.getElementsByClass("error-notification").text should include(commonMessages.errorMessages.mandatoryAmount)
     }
   }
 }

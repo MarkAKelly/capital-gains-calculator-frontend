@@ -136,11 +136,11 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
       val form = annualExemptAmountForm.bind(Map("amount" -> ""))
       lazy val view = views.annualExemptAmount(form)(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
-      s"output an error summary with message '${commonMessages.undefinedMessage}'" in {
-        doc.body.getElementById("amount-error-summary").text should include(commonMessages.undefinedMessage)
+      s"output an error summary with message '${commonMessages.errorMessages.mandatoryAmount}'" in {
+        doc.body.getElementById("amount-error-summary").text should include(commonMessages.errorMessages.mandatoryAmount)
       }
-      s"have the input error message '${commonMessages.undefinedMessage}'" in {
-        doc.body.getElementsByClass("error-notification").text should include (commonMessages.undefinedMessage)
+      s"have the input error message '${commonMessages.errorMessages.invalidAmount}'" in {
+        doc.body.getElementsByClass("error-notification").text should include (commonMessages.errorMessages.mandatoryAmount)
       }
     }
   }
