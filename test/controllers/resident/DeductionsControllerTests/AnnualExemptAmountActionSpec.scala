@@ -40,7 +40,8 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
   def setupTarget(getData: Option[AnnualExemptAmountModel],
                   gainAnswers: YourAnswersSummaryModel,
                   chargeableGainAnswers: ChargeableGainAnswers,
-                  chargeableGain: ChargeableGainResultModel): DeductionsController = {
+                  chargeableGain: ChargeableGainResultModel,
+                  maxAnnualExemptAmount: Option[BigDecimal] = Some(BigDecimal(11100))): DeductionsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
@@ -58,6 +59,9 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
 
     when(mockCalcConnector.calculateRttChargeableGain(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(Some(chargeableGain)))
+
+    when(mockCalcConnector.getFullAEA(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(maxAnnualExemptAmount))
 
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -161,7 +165,8 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
     "an invalid form is submitted" should {
 
       lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
-      lazy val result = DeductionsController.submitAnnualExemptAmount(request)
+      lazy val target = setupTarget(None, gainModel, summaryModel, ChargeableGainResultModel(2000, 1000, 1000, 0))
+      lazy val result = target.submitAnnualExemptAmount(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {
