@@ -154,8 +154,9 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
     }
 
     "an invalid form is submitted" should {
+      lazy val target = setupTarget(None, summaryModel, BigDecimal(1000))
       lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
-      lazy val result = GainController.submitImprovements(request)
+      lazy val result = target.submitImprovements(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {

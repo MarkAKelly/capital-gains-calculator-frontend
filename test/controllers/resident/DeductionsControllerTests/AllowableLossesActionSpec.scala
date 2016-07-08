@@ -27,6 +27,7 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
@@ -39,6 +40,9 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
 
     when(mockCalcConnector.fetchAndGetFormData[AllowableLossesModel](Matchers.eq(KeystoreKeys.ResidentKeys.allowableLosses))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.saveFormData[AllowableLossesModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(mock[CacheMap]))
 
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -101,8 +105,9 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
   "Calling .submitAllowableLosses from the DeductionsController" when {
 
     "a valid form 'Yes' is submitted" should {
+      lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "Yes"))
-      lazy val result = DeductionsController.submitAllowableLosses(request)
+      lazy val result = target.submitAllowableLosses(request)
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -114,8 +119,9 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
     }
 
     "a valid form 'No' is submitted" should {
+      lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "No"))
-      lazy val result = DeductionsController.submitAllowableLosses(request)
+      lazy val result = target.submitAllowableLosses(request)
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -127,8 +133,9 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
     }
 
     "an invalid form is submitted" should {
+      lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("isClaiming", ""))
-      lazy val result = DeductionsController.submitAllowableLosses(request)
+      lazy val result = target.submitAllowableLosses(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {
