@@ -51,11 +51,11 @@ trait SummaryController extends FeatureLock {
       else Future.successful(None)
     }
 
-    def totalTaxableGain(chargeableGain: BigDecimal,
+    def totalTaxableGain(chargeableGain: Option[ChargeableGainResultModel] = None,
                          yourAnswersSummaryModel: YourAnswersSummaryModel,
                          chargeableGainAnswers: ChargeableGainAnswers,
                          incomeAnswersModel: IncomeAnswersModel)(implicit hc: HeaderCarrier): Future[Option[TotalGainAndTaxOwedModel]] = {
-      if (chargeableGain > 0) {
+      if (chargeableGain.isDefined && chargeableGain.get.chargeableGain > 0) {
         calculatorConnector.calculateRttTotalGainAndTax(yourAnswersSummaryModel, chargeableGainAnswers, BigDecimal(11100), incomeAnswersModel)
       }
       else Future.successful(None)
@@ -69,7 +69,8 @@ trait SummaryController extends FeatureLock {
                      totalGainAndTax: Option[TotalGainAndTaxOwedModel],
                      backUrl: String)(implicit hc: HeaderCarrier): Future[Result] = {
       if (chargeableGain.isDefined && chargeableGain.get.chargeableGain > 0) Future.successful(
-        Ok(views.html.calculation.resident.summary.finalSummary(totalGainAnswers, chargeableGainAnswers, incomeAnswers, totalGainAndTax.get, "")))
+        Ok(views.html.calculation.resident.summary.finalSummary(totalGainAnswers, chargeableGainAnswers, incomeAnswers,
+          totalGainAndTax.get, routes.IncomeController.personalAllowance().url)))
       else if (grossGain > 0) Future.successful(Ok(views.html.calculation.resident.deductionsSummary(totalGainAnswers, chargeableGainAnswers, chargeableGain.get, backUrl)))
       else Future.successful(Ok(views.html.calculation.resident.gainSummary(totalGainAnswers, grossGain)))
     }
@@ -81,7 +82,7 @@ trait SummaryController extends FeatureLock {
       backLink <- buildPreviousTaxableGainsBackUrl(deductionAnswers)
       chargeableGain <- chargeableGain(grossGain, answers, deductionAnswers)
       incomeAnswers <- calculatorConnector.getIncomeAnswers
-      totalGain <- totalTaxableGain(chargeableGain.get.chargeableGain, answers, deductionAnswers, incomeAnswers)
+      totalGain <- totalTaxableGain(chargeableGain, answers, deductionAnswers, incomeAnswers)
       routeRequest <- routeRequest(answers, grossGain, deductionAnswers, chargeableGain, incomeAnswers, totalGain, backLink)
     } yield routeRequest
   }

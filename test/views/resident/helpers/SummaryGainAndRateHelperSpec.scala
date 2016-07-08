@@ -16,31 +16,23 @@
 
 package views.resident.helpers
 
-import assets.MessageLookup
-import models.resident.TotalGainAndTaxOwedModel
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.helpers.resident.summaryGainAndRateHelper
 
 class SummaryGainAndRateHelperSpec extends UnitSpec with WithFakeApplication {
 
-val model = TotalGainAndTaxOwedModel(10000,
-  2000,
-  0,
-  0,
-  1000,
-  1000,
-  18,
-  None,
-  None)
-  val row = summaryGainAndRateHelper("testID","testQ", model)
-  val doc = Jsoup.parse(row.body)
+  lazy val rowSingle = summaryGainAndRateHelper("testID","testQ", 1000, 18, None, None)
+  lazy val docSingle = Jsoup.parse(rowSingle.body)
+
+  lazy val rowDouble = summaryGainAndRateHelper("testID","testQ", 1000, 18, Some(2000), Some(28))
+  lazy val docDouble = Jsoup.parse(rowDouble.body)
 
   "The Summary Gain and Rate Row Helper" should {
 
     "have an outer div" which {
 
-      val outerDiv = doc.select("div#testID")
+      val outerDiv = docSingle.select("div#testID")
 
       "has the id 'testID" in {
         outerDiv.attr("id") shouldBe "testID"
@@ -65,7 +57,7 @@ val model = TotalGainAndTaxOwedModel(10000,
 
     "have an inner question div" which {
 
-      val questionDiv = doc.select("div#testID-question")
+      val questionDiv = docSingle.select("div#testID-question")
 
       "has the id 'testID-question" in {
         questionDiv.attr("id") shouldBe "testID-question"
@@ -85,12 +77,12 @@ val model = TotalGainAndTaxOwedModel(10000,
 
     }
 
-    "have an inner amount div" which {
+    "have an inner result div" which {
 
-      val amountDiv = doc.select("div#testID-amount")
+      val amountDiv = docSingle.select("div#testID-result")
 
-      "has the id 'testID-amount" in {
-        amountDiv.attr("id") shouldBe "testID-amount"
+      "has the id 'testID-result" in {
+        amountDiv.attr("id") shouldBe "testID-result"
       }
 
       "has the class 'grid-layout__column'" in {
@@ -101,8 +93,36 @@ val model = TotalGainAndTaxOwedModel(10000,
         amountDiv.hasClass("grid-layout__column--1-2") shouldBe true
       }
 
-      "has a span with the text 'testQ'" in {
-        amountDiv.select("span").text shouldBe "£2,000"
+      "has a span with the text £1,000 at 18%" in {
+        amountDiv.select("#firstBand").text shouldBe "£1,000 at 18%"
+      }
+
+    }
+  }
+  "The Summary Gain and Rate Row Helper with a spilt tax rate" should {
+
+    "have an inner result div" which {
+
+      val amountDiv = docDouble.select("div#testID-result")
+
+      "has the id 'testID-result" in {
+        amountDiv.attr("id") shouldBe "testID-result"
+      }
+
+      "has the class 'grid-layout__column'" in {
+        amountDiv.hasClass("grid-layout__column") shouldBe true
+      }
+
+      "has the class 'grid-layout__column--1-2'" in {
+        amountDiv.hasClass("grid-layout__column--1-2") shouldBe true
+      }
+
+      "has a span with the text £1,000 at 18%" in {
+        amountDiv.select("#firstBand").text shouldBe "£1,000 at 18%"
+      }
+
+      "and a span with the text £2,000 at 28%" in {
+        amountDiv.select("#secondBand").text shouldBe "£2,000 at 28%"
       }
 
     }

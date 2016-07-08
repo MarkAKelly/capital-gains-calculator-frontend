@@ -18,7 +18,7 @@ articleLayout = false
 
 <h1>
     <span class="pre-heading">@Messages("calc.resident.summary.pageHeading")</span>
-    &pound;0.00
+    &pound;@MoneyPounds(result.taxOwed, 2).quantity
 </h1>
 
 <!-- Calculation Details Section -->
@@ -37,7 +37,11 @@ articleLayout = false
     @summaryNumericRowHelper("chargeableGain", if(result.chargeableGain < 0) {
     Messages("calc.resident.summary.chargeableLoss")} else {Messages("calc.resident.summary.chargeableGain")}, result.chargeableGain)
 
-
+    @if(!result.secondRate.isDefined && !result.secondBand.isDefined) {
+        @summaryGainAndRateHelper("gainAndRate", Messages("calc.resident.summary.taxRate"), result.firstBand, result.firstRate, None, None)
+    } else {
+        @summaryGainAndRateHelper("gainAndRate", Messages("calc.resident.summary.taxRate"), result.firstBand, result.firstRate, result.secondBand, result.secondRate)
+    }
 </section>
 
 <!-- Your Answers Section -->
@@ -66,7 +70,7 @@ articleLayout = false
     @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties)
     summaryNumericRowHelper("annualExemptAmount",Messages("calc.resident.annualExemptAmount.title"),deductionAnswers.annualExemptAmountModel.get.amount,Some(deductionRoutes.annualExemptAmount().toString))}
     @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties && deductionAnswers.annualExemptAmountModel.isDefined)
-    summaryNumericRowHelper("taxableGains", Messages("calc.resident.previousTaxableGains.title"), incomeAnswers.previousTaxableGainsModel.get.amount, Some(incomeRoutes.previousTaxableGains().toString))}
+    summaryNumericRowHelper("previousTaxableGains", Messages("calc.resident.previousTaxableGains.title"), incomeAnswers.previousTaxableGainsModel.get.amount, Some(incomeRoutes.previousTaxableGains().toString))}
     @summaryNumericRowHelper("currentIncome",Messages("calc.resident.currentIncome.title"),incomeAnswers.currentIncomeModel.get.amount,Some(incomeRoutes.currentIncome().toString))
     @summaryNumericRowHelper("personalAllowance",Messages("calc.resident.personalAllowance.title"),incomeAnswers.personalAllowanceModel.get.amount,Some(incomeRoutes.personalAllowance().toString))
 

@@ -351,6 +351,7 @@ calc.resident.summary.broughtForwardLoss = Loss brought forward
 calc.resident.summary.deductions = Deductions
 calc.resident.summary.chargeableLoss = Carried forward loss
 calc.resident.summary.chargeableGain = Taxable gain
+calc.resident.summary.taxRate = Tax Rate
 
 ## Reliefs messages
 calc.resident.reliefs.title = Do you want to claim any tax reliefs on your total gain of £{0}?

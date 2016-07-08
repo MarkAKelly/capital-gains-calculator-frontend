@@ -108,6 +108,7 @@ object MessageLookup {
     val deductions = "Deductions"
     val chargeableLoss = "Carried forward loss"
     val chargeableGain = "Taxable gain"
+    val taxRate = "Tax Rate"
   }
 
   //Reliefs messages
