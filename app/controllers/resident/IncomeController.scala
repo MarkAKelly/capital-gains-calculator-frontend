@@ -61,13 +61,30 @@ trait IncomeController extends FeatureLock {
     }
   }
 
+  def allowableLossesCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[AllowableLossesModel](KeystoreKeys.ResidentKeys.allowableLosses).map {
+      case Some(data) => data.isClaiming
+      case None => false
+    }
+  }
+
+  def nonZeroAllowableLossesValueCheck(claimedOtherProperties: Boolean, claimedAllowableLosses: Boolean)(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[AllowableLossesValueModel](KeystoreKeys.ResidentKeys.allowableLossesValue).map {
+      case Some(result) if claimedAllowableLosses && claimedOtherProperties => result.amount != 0
+      case None if claimedOtherProperties=> true
+      case _ => false
+    }
+  }
+
   //################################# Previous Taxable Gain Actions ##########################################
   def buildPreviousTaxableGainsBackUrl(implicit hc: HeaderCarrier): Future[String] = {
 
     for {
       hasOtherProperties <- otherPropertiesResponse
+      hasAllowableLosses <- allowableLossesCheck
+      nonZeroAllowableLosses <- nonZeroAllowableLossesValueCheck(hasOtherProperties, hasAllowableLosses)
       hasLossesBroughtForward <- lossesBroughtForwardResponse
-    } yield (hasOtherProperties, hasLossesBroughtForward)
+    } yield (nonZeroAllowableLosses, hasLossesBroughtForward)
 
     match {
       case (true, _) => routes.DeductionsController.annualExemptAmount().url
