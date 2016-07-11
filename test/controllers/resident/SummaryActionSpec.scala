@@ -193,7 +193,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         5,
         0)
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)), None, Some(OtherPropertiesModel(true)),
-        Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, Some(AnnualExemptAmountModel(10000)))
+        Some(AllowableLossesModel(true)), Some(AllowableLossesValueModel(BigDecimal(1000))), Some(LossesBroughtForwardModel(false)), None, Some(AnnualExemptAmountModel(10000)))
       lazy val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 11100)
       lazy val incomeAnswersModel = IncomeAnswersModel(None, None, None)
       lazy val target = setupTarget(
@@ -218,8 +218,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         doc.title() shouldBe messages.title
       }
 
-      s"has a link to '${routes.DeductionsController.annualExemptAmount().toString()}'" in {
-        doc.getElementById("back-link").attr("href") shouldBe routes.DeductionsController.annualExemptAmount().toString
+      s"has a link to '${routes.DeductionsController.lossesBroughtForward().toString()}'" in {
+        doc.getElementById("back-link").attr("href") shouldBe routes.DeductionsController.lossesBroughtForward().toString
       }
     }
 
@@ -256,8 +256,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         doc.title() shouldBe messages.title
       }
 
-      s"has a link to '${routes.DeductionsController.lossesBroughtForward().toString()}'" in {
-        doc.getElementById("back-link").attr("href") shouldBe routes.DeductionsController.lossesBroughtForward().toString
+      s"has a link to '${routes.DeductionsController.annualExemptAmount().toString()}'" in {
+        doc.getElementById("back-link").attr("href") shouldBe routes.DeductionsController.annualExemptAmount().toString
       }
     }
 

@@ -116,19 +116,19 @@ class PreviousTaxableGainsActionSpec extends UnitSpec with WithFakeApplication w
         val doc = Jsoup.parse(bodyOf(result))
 
         val link = doc.select("#back-link")
-        link.attr("href") shouldBe controllers.resident.routes.DeductionsController.lossesBroughtForwardValue().toString
+        link.attr("href") shouldBe controllers.resident.routes.DeductionsController.annualExemptAmount().toString
       }
     }
 
     "other properties have been specified with a non-zero allowable loss" should {
-      "return a back link to the AEA page" in {
+      "return a back link to the losses brought forward page" in {
         val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = true,
           allowableLossesModel = Some(AllowableLossesModel(true)), allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(1000))))
         val result = target.previousTaxableGains(fakeRequestWithSession)
         val doc = Jsoup.parse(bodyOf(result))
 
         val link = doc.select("#back-link")
-        link.attr("href") shouldBe controllers.resident.routes.DeductionsController.annualExemptAmount().toString
+        link.attr("href") shouldBe controllers.resident.routes.DeductionsController.lossesBroughtForwardValue().toString
       }
     }
 

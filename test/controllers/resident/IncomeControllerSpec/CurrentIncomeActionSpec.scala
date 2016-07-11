@@ -102,7 +102,7 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "other properties have been selected and 0 has been entered into the annual exempt amount" should {
 
-      lazy val target = setupTarget(None, allowableLossesModel = Some(AllowableLossesModel(true)), allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(1000))))
+      lazy val target = setupTarget(None, allowableLossesModel = Some(AllowableLossesModel(true)), allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(0))))
       lazy val result = target.currentIncome(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
@@ -130,10 +130,10 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
       }
     }
 
-    "other properties has been selected but a zero value for allowable losses has been entered" should {
+    "other properties has been selected but a non-zero value for allowable losses has been entered" should {
 
       lazy val target = setupTarget(None, otherProperties = true, lossesBroughtForward = false,
-        allowableLossesModel = Some(AllowableLossesModel(true)), allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(0))))
+        allowableLossesModel = Some(AllowableLossesModel(true)), allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(10000))))
       lazy val result = target.currentIncome(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 

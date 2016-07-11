@@ -146,8 +146,8 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
           status(result) shouldBe 303
         }
 
-        s"redirect to '${controllers.resident.routes.DeductionsController.annualExemptAmount().toString}'" in {
-          redirectLocation(result).get shouldBe controllers.resident.routes.DeductionsController.annualExemptAmount().toString
+        s"redirect to '${controllers.resident.routes.SummaryController.summary().toString}'" in {
+          redirectLocation(result).get shouldBe controllers.resident.routes.SummaryController.summary().toString
         }
       }
 
@@ -161,7 +161,7 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
         }
 
         s"redirect to '${controllers.resident.routes.DeductionsController.annualExemptAmount().toString}'" in {
-          redirectLocation(result).get shouldBe controllers.resident.routes.IncomeController.currentIncome().toString
+          redirectLocation(result).get shouldBe controllers.resident.routes.DeductionsController.annualExemptAmount().toString
         }
       }
 

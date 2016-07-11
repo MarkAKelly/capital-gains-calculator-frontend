@@ -39,7 +39,7 @@ trait SummaryController extends FeatureLock {
                                        claimedAllowableLosses: Boolean,
                                        allowableLossesValueModel: Option[AllowableLossesValueModel])(implicit hc: HeaderCarrier): Boolean = {
       allowableLossesValueModel match {
-        case Some(result) if claimedAllowableLosses && claimedOtherProperties => result.amount != 0
+        case Some(result) if claimedAllowableLosses && claimedOtherProperties => result.amount == 0
         case _ if claimedOtherProperties && !claimedAllowableLosses => true
         case _ => false
       }

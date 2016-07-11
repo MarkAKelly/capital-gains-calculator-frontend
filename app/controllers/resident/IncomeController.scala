@@ -70,7 +70,7 @@ trait IncomeController extends FeatureLock {
 
   def displayAnnualExemptAmountCheck(claimedOtherProperties: Boolean, claimedAllowableLosses: Boolean)(implicit hc: HeaderCarrier): Future[Boolean] = {
     calcConnector.fetchAndGetFormData[AllowableLossesValueModel](KeystoreKeys.ResidentKeys.allowableLossesValue).map {
-      case Some(result) if claimedAllowableLosses && claimedOtherProperties => result.amount != 0
+      case Some(result) if claimedAllowableLosses && claimedOtherProperties => result.amount == 0
       case _ if claimedOtherProperties && !claimedAllowableLosses => true
       case _ => false
     }

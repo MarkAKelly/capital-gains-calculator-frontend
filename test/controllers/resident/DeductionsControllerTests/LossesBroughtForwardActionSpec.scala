@@ -222,8 +222,8 @@ class LossesBroughtForwardActionSpec extends UnitSpec with WithFakeApplication w
         status(result) shouldBe 303
       }
 
-      "redirect to the annual exempt amount page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/annual-exempt-amount")
+      "redirect to the summary" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/summary")
       }
     }
 
@@ -237,8 +237,8 @@ class LossesBroughtForwardActionSpec extends UnitSpec with WithFakeApplication w
         status(result) shouldBe 303
       }
 
-      "redirect to the summary" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/summary")
+      "redirect to the annual exempt amount page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/annual-exempt-amount")
       }
     }
 
