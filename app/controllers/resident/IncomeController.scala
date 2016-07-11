@@ -68,10 +68,10 @@ trait IncomeController extends FeatureLock {
     }
   }
 
-  def nonZeroAllowableLossesValueCheck(claimedOtherProperties: Boolean, claimedAllowableLosses: Boolean)(implicit hc: HeaderCarrier): Future[Boolean] = {
+  def displayAEACheck(claimedOtherProperties: Boolean, claimedAllowableLosses: Boolean)(implicit hc: HeaderCarrier): Future[Boolean] = {
     calcConnector.fetchAndGetFormData[AllowableLossesValueModel](KeystoreKeys.ResidentKeys.allowableLossesValue).map {
       case Some(result) if claimedAllowableLosses && claimedOtherProperties => result.amount != 0
-      case None if claimedOtherProperties=> true
+      case _ if claimedOtherProperties && !claimedAllowableLosses => true
       case _ => false
     }
   }
@@ -82,9 +82,9 @@ trait IncomeController extends FeatureLock {
     for {
       hasOtherProperties <- otherPropertiesResponse
       hasAllowableLosses <- allowableLossesCheck
-      nonZeroAllowableLosses <- nonZeroAllowableLossesValueCheck(hasOtherProperties, hasAllowableLosses)
+      displayAEA <- displayAEACheck(hasOtherProperties, hasAllowableLosses)
       hasLossesBroughtForward <- lossesBroughtForwardResponse
-    } yield (nonZeroAllowableLosses, hasLossesBroughtForward)
+    } yield (displayAEA, hasLossesBroughtForward)
 
     match {
       case (true, _) => routes.DeductionsController.annualExemptAmount().url
@@ -124,9 +124,11 @@ trait IncomeController extends FeatureLock {
   def buildCurrentIncomeBackUrl(implicit hc: HeaderCarrier): Future[String] = {
     for {
       hasOtherProperties <- otherPropertiesResponse
+      hasAllowableLosses <- allowableLossesCheck
+      displayAEA <- displayAEACheck(hasOtherProperties, hasAllowableLosses)
       hasLossesBroughtForward <- lossesBroughtForwardResponse
       enteredAnnualExemptAmount <- annualExemptAmountEntered
-    } yield (hasOtherProperties, hasLossesBroughtForward, enteredAnnualExemptAmount)
+    } yield (displayAEA, hasLossesBroughtForward, enteredAnnualExemptAmount)
 
     match {
       case (true, _, true) => routes.IncomeController.previousTaxableGains().url
