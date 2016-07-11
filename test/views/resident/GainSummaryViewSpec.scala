@@ -227,7 +227,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
     }
   }
 
-  "Summary when supplied with a date within the known tax years" should {
+  "Summary when supplied with a date within the known tax years and a loss" should {
 
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
@@ -269,6 +269,32 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       "has a visually hidden span with the text opens in a new tab" in {
         doc.select("span#opensInANewTab").text shouldEqual commonMessages.calcBaseExternalLink
       }
+    }
+  }
+
+  "Summary when supplied with a date within the known tax years and no gain or loss" should {
+
+    val testModel = YourAnswersSummaryModel(
+      constructDate(12, 9, 2015),
+      10,
+      20,
+      30,
+      40,
+      50
+    )
+    lazy val view = views.html.calculation.resident.gainSummary(testModel, 0)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "display the what to do next section" in {
+      doc.select("#whatToDoNext").hasText shouldEqual true
+    }
+
+    s"display the title ${messages.whatToDoNextTitle}" in {
+      doc.select("h3#whatToDoNextNoLossTitle").text shouldEqual messages.whatToDoNextTitle
+    }
+
+    s"display the text ${messages.whatToDoNextText}" in {
+      doc.select("div#whatToDoNextNoLossText").text shouldEqual messages.whatToDoNextNoLossText
     }
   }
 

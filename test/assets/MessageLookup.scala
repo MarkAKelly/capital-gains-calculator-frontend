@@ -119,6 +119,7 @@ object MessageLookup {
     val taxRate = "Tax Rate"
     val whatToDoNextTitle = "What to do next"
     val whatToDoNextText = "You can tell us about this loss so that you might need to pay less tax in the future."
+    val whatToDoNextNoLossText = "As you have no tax to pay, you don't need to tell HMRC about the property."
   }
 
   //Reliefs messages
