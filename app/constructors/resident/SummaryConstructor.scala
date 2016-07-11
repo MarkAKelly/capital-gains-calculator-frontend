@@ -20,6 +20,8 @@ import models.resident._
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
+import scala.math.BigDecimal.RoundingMode
+
 object SummaryConstructor {
 
   def gainMessage (result: BigDecimal): String = {
@@ -29,21 +31,22 @@ object SummaryConstructor {
 
   def reliefsUsed (input: ChargeableGainAnswers): String = {
     input.reliefsModel match {
-      case Some(ReliefsModel(true)) => MoneyPounds(input.reliefsValueModel.get.amount, 0).quantity
+      case Some(ReliefsModel(true)) => MoneyPounds(input.reliefsValueModel.get.amount.setScale(0, RoundingMode.UP), 0).quantity
       case _ => MoneyPounds(0,0).quantity
     }
   }
 
   def allowableLossesUsed (input: ChargeableGainAnswers): String = {
     (input.otherPropertiesModel, input.allowableLossesModel) match {
-      case (Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(true))) => MoneyPounds(input.allowableLossesValueModel.get.amount, 0).quantity
+      case (Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(true))) =>
+        MoneyPounds(input.allowableLossesValueModel.get.amount.setScale(0, RoundingMode.UP), 0).quantity
       case _ => MoneyPounds(0,0).quantity
     }
   }
 
   def broughtForwardLossesUsed (input: ChargeableGainAnswers): String = {
     input.broughtForwardModel match {
-      case Some(LossesBroughtForwardModel(true)) => MoneyPounds(input.broughtForwardValueModel.get.amount, 0).quantity
+      case Some(LossesBroughtForwardModel(true)) => MoneyPounds(input.broughtForwardValueModel.get.amount.setScale(0, RoundingMode.UP), 0).quantity
       case _ => MoneyPounds(0,0).quantity
     }
   }
