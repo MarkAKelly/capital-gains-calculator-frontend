@@ -139,7 +139,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
 
   val submitPersonalAllowance = ValidateSession.async { implicit request =>
     calcConnector.getPA("2017").flatMap { pa =>
-      personalAllowanceForm(pa.get.personalAllowanceAmt).bindFromRequest.fold(
+      personalAllowanceForm(pa.get).bindFromRequest.fold(
         errors => Future.successful(BadRequest(calculation.nonresident.personalAllowance(errors))),
         success => {
           calcConnector.saveFormData(KeystoreKeys.personalAllowance, success)

@@ -26,6 +26,7 @@ import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
 import play.api.test.Helpers._
 import assets.MessageLookup.{personalAllowance => messages}
+import models.resident.{AnnualExemptAmountModel, ChargeableGainResultModel}
 import models.resident.income.PersonalAllowanceModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
@@ -33,10 +34,16 @@ import scala.concurrent.Future
 
 class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar{
 
-  def setupTarget(getData: Option[PersonalAllowanceModel]): IncomeController = {
+
+  def setupTarget(getData: Option[PersonalAllowanceModel],
+                  maxPersonalAllowance: Option[BigDecimal] = Some(BigDecimal(11100))): IncomeController = {
     val mockCalcConnector = mock[CalculatorConnector]
     when(mockCalcConnector.fetchAndGetFormData[PersonalAllowanceModel](Matchers.eq(KeystoreKeys.ResidentKeys.personalAllowance))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.getPA(Matchers.any())(Matchers.any()))
+          .thenReturn(Future.successful(maxPersonalAllowance))
+
     new IncomeController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
     }
@@ -82,7 +89,8 @@ class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with
   "Calling .submitPersoanlAllowance from the IncomeController" when {
     "a valid form is submitted" should {
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
-      lazy val result = IncomeController.submitPersonalAllowance(request)
+      lazy val target = setupTarget(Some(PersonalAllowanceModel(1000)))
+      lazy val result = target.submitPersonalAllowance(request)
       "return a 303" in {
         status(result) shouldBe 303
       }
@@ -92,7 +100,8 @@ class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with
     }
     "an invalid form is submitted" should {
       lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
-      lazy val result = IncomeController.submitPersonalAllowance(request)
+      lazy val target = setupTarget(None)
+      lazy val result = target.submitPersonalAllowance(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
       "return a 400" in {
         status(result) shouldBe 400

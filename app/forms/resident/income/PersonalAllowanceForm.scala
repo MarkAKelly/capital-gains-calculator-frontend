@@ -27,13 +27,18 @@ import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object PersonalAllowanceForm {
 
-  val personalAllowanceForm = Form(
+  def validateMaxPA (limit: BigDecimal): BigDecimal => Boolean = {
+    input => if(input > limit) false else true
+  }
+
+  def personalAllowanceForm(maxPA: BigDecimal = BigDecimal(0)): Form[PersonalAllowanceModel] = Form(
     mapping(
       "amount" -> text
         .verifying(Messages("calc.common.error.mandatoryAmount"), mandatoryCheck)
         .verifying(Messages("calc.common.error.invalidAmountNoDecimal"), bigDecimalCheck)
         .transform[BigDecimal](stringToBigDecimal, _.toString())
         .verifying(Messages("calc.common.error.maxAmountExceeded", MoneyPounds(Constants.maxNumeric, 0).quantity), maxCheck)
+        .verifying(Messages("calc.common.error.maxAmountExceeded", MoneyPounds(maxPA, 0).quantity), validateMaxPA(maxPA))
         .verifying(Messages("calc.common.error.minimumAmount"), minCheck)
         .verifying(Messages("calc.common.error.invalidAmountNoDecimal"), decimalPlacesCheckNoDecimal)
     )(PersonalAllowanceModel.apply)(PersonalAllowanceModel.unapply)
