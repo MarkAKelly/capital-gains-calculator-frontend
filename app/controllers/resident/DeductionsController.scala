@@ -208,7 +208,7 @@ trait DeductionsController extends FeatureLock {
     }
   }
 
-  def nonZeroAllowableLossesValueCheck(claimedOtherProperties: Boolean, claimedAllowableLosses: Boolean)(implicit hc: HeaderCarrier): Future[Boolean] = {
+  def displayAnnualExemptAmountCheck(claimedOtherProperties: Boolean, claimedAllowableLosses: Boolean)(implicit hc: HeaderCarrier): Future[Boolean] = {
     calcConnector.fetchAndGetFormData[AllowableLossesValueModel](KeystoreKeys.ResidentKeys.allowableLossesValue).map {
       case Some(result) if claimedAllowableLosses && claimedOtherProperties => result.amount != 0
       case _ if claimedOtherProperties && !claimedAllowableLosses => true
@@ -220,8 +220,8 @@ trait DeductionsController extends FeatureLock {
     for {
       disposedOtherProperties <- otherPropertiesCheck
       claimedAllowableLosses <- allowableLossesCheck
-      nonZeroAllowableLosses <- nonZeroAllowableLossesValueCheck(disposedOtherProperties, claimedAllowableLosses)
-    } yield nonZeroAllowableLosses
+      displayAnnualExemptAmount <- displayAnnualExemptAmountCheck(disposedOtherProperties, claimedAllowableLosses)
+    } yield displayAnnualExemptAmount
   }
 
   def lossesBroughtForwardBackUrl(implicit hc: HeaderCarrier): Future[String] = {

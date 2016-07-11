@@ -68,7 +68,7 @@ trait IncomeController extends FeatureLock {
     }
   }
 
-  def displayAEACheck(claimedOtherProperties: Boolean, claimedAllowableLosses: Boolean)(implicit hc: HeaderCarrier): Future[Boolean] = {
+  def displayAnnualExemptAmountCheck(claimedOtherProperties: Boolean, claimedAllowableLosses: Boolean)(implicit hc: HeaderCarrier): Future[Boolean] = {
     calcConnector.fetchAndGetFormData[AllowableLossesValueModel](KeystoreKeys.ResidentKeys.allowableLossesValue).map {
       case Some(result) if claimedAllowableLosses && claimedOtherProperties => result.amount != 0
       case _ if claimedOtherProperties && !claimedAllowableLosses => true
@@ -82,9 +82,9 @@ trait IncomeController extends FeatureLock {
     for {
       hasOtherProperties <- otherPropertiesResponse
       hasAllowableLosses <- allowableLossesCheck
-      displayAEA <- displayAEACheck(hasOtherProperties, hasAllowableLosses)
+      displayAnnualExemptAmount <- displayAnnualExemptAmountCheck(hasOtherProperties, hasAllowableLosses)
       hasLossesBroughtForward <- lossesBroughtForwardResponse
-    } yield (displayAEA, hasLossesBroughtForward)
+    } yield (displayAnnualExemptAmount, hasLossesBroughtForward)
 
     match {
       case (true, _) => routes.DeductionsController.annualExemptAmount().url
@@ -125,10 +125,10 @@ trait IncomeController extends FeatureLock {
     for {
       hasOtherProperties <- otherPropertiesResponse
       hasAllowableLosses <- allowableLossesCheck
-      displayAEA <- displayAEACheck(hasOtherProperties, hasAllowableLosses)
+      displayAnnualExemptAmount <- displayAnnualExemptAmountCheck(hasOtherProperties, hasAllowableLosses)
       hasLossesBroughtForward <- lossesBroughtForwardResponse
       enteredAnnualExemptAmount <- annualExemptAmountEntered
-    } yield (displayAEA, hasLossesBroughtForward, enteredAnnualExemptAmount)
+    } yield (displayAnnualExemptAmount, hasLossesBroughtForward, enteredAnnualExemptAmount)
 
     match {
       case (true, _, true) => routes.IncomeController.previousTaxableGains().url
