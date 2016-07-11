@@ -48,8 +48,10 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       BigDecimal(11100),
       BigDecimal(11100))
     lazy val backLink = "/calculate-your-capital-gains/resident/losses-brought-forward"
+
+    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
     
-    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink)(fakeRequestWithSession)
+    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -87,6 +89,10 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       "includes an amount of tax due of £0.00" in {
         doc.select("h1").text should include ("£0.00")
       }
+    }
+
+    "does not have a notice summary" in {
+      doc.select("div.notice-wrapper").isEmpty() shouldBe true
     }
 
     s"have a section for the Calculation details" which {
@@ -343,8 +349,10 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       BigDecimal(0),
       BigDecimal(71000))
 
+    lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
+
     lazy val backLink = "/calculate-your-capital-gains/resident/annual-exempt-amount"
-    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink)(fakeRequestWithSession)
+    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     s"have a back button" which {
@@ -363,6 +371,25 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         backLink.attr("href") shouldBe routes.DeductionsController.annualExemptAmount().toString
       }
 
+    }
+
+    "has a notice summary that" should {
+
+      "have the class notice-wrapper" in {
+        doc.select("div.notice-wrapper").isEmpty shouldBe false
+      }
+
+      s"have the text ${messages.noticeWarning("2015/16")}" in {
+        doc.select("strong.bold-small").text shouldBe messages.noticeWarning("2015/16")
+      }
+
+      "have a warning icon" in {
+        doc.select("i.icon-important").isEmpty shouldBe false
+      }
+
+      "have a visually hidden warning text" in {
+        doc.select("span.visuallyhidden").text shouldBe messages.warning
+      }
     }
 
     s"have a section for the Calculation details" which {

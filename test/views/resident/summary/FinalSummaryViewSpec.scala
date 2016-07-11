@@ -103,8 +103,8 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
     }
 
-    "not have a notice summary" in {
-      doc.select("div.notice-wrapper").size() shouldBe 0
+    "does not have a notice summary" in {
+      doc.select("div.notice-wrapper").isEmpty() shouldBe true
     }
 
     s"have a section for the Calculation details" which {

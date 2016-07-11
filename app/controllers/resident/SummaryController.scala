@@ -82,8 +82,8 @@ trait SummaryController extends FeatureLock {
         incomeAnswers.personalAllowanceModel.isDefined && incomeAnswers.currentIncomeModel.isDefined) Future.successful(
         Ok(views.html.calculation.resident.summary.finalSummary(totalGainAnswers, chargeableGainAnswers, incomeAnswers,
           totalGainAndTax.get, routes.IncomeController.personalAllowance().url, taxYear.get)))
-      else if (grossGain > 0) Future.successful(Ok(views.html.calculation.resident.deductionsSummary(totalGainAnswers, chargeableGainAnswers, chargeableGain.get, backUrl)))
-      else Future.successful(Ok(views.html.calculation.resident.gainSummary(totalGainAnswers, grossGain)))
+      else if (grossGain > 0) Future.successful(Ok(views.html.calculation.resident.deductionsSummary(totalGainAnswers, chargeableGainAnswers, chargeableGain.get, backUrl, taxYear.get)))
+      else Future.successful(Ok(views.html.calculation.resident.gainSummary(totalGainAnswers, grossGain, taxYear.get)))
     }
 
     for {
