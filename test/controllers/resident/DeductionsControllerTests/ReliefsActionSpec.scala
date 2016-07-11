@@ -28,6 +28,7 @@ import org.mockito.Matchers
 import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
@@ -42,6 +43,9 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
 
     when(mockCalcConnector.fetchAndGetFormData[ReliefsModel](Matchers.eq(KeystoreKeys.ResidentKeys.reliefs))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.saveFormData[ReliefsModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(mock[CacheMap]))
 
     when(mockCalcConnector.getYourAnswers(Matchers.any()))
       .thenReturn(summary)
@@ -104,8 +108,9 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
   "Calling .submitReliefs from the DeductionsController" when {
 
     "a valid form 'Yes' is submitted" should {
+      lazy val target = setupTarget(None, summaryModel, BigDecimal(10000))
       lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "Yes"))
-      lazy val result = DeductionsController.submitReliefs(request)
+      lazy val result = target.submitReliefs(request)
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -117,8 +122,9 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     }
 
     "a valid form 'No' is submitted" should {
+      lazy val target = setupTarget(None, summaryModel, BigDecimal(10000))
       lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "No"))
-      lazy val result = DeductionsController.submitReliefs(request)
+      lazy val result = target.submitReliefs(request)
 
       "return a 303" in {
         status(result) shouldBe 303

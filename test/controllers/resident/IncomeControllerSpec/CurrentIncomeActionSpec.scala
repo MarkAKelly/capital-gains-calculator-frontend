@@ -62,8 +62,8 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "supplied with no pre-existing stored data" should {
 
-      lazy val request = setupTarget(None)
-      lazy val result = request.currentIncome(fakeRequestWithSession)
+      lazy val target = setupTarget(None)
+      lazy val result = target.currentIncome(fakeRequestWithSession)
 
       "return a status of 200" in {
         status(result) shouldBe 200
@@ -79,8 +79,8 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
     }
     "supplied with pre-existing stored data" should {
 
-      lazy val request = setupTarget(Some(CurrentIncomeModel(40000)))
-      lazy val result = request.currentIncome(fakeRequestWithSession)
+      lazy val target = setupTarget(Some(CurrentIncomeModel(40000)))
+      lazy val result = target.currentIncome(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a status of 200" in {
@@ -94,8 +94,8 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "other properties have been selected and 0 has been entered into the annual exempt amount" should {
 
-      lazy val request = setupTarget(None)
-      lazy val result = request.currentIncome(fakeRequestWithSession)
+      lazy val target = setupTarget(None)
+      lazy val result = target.currentIncome(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
@@ -109,8 +109,8 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "other properties have been selected and non-zero has been entered into the annual exempt amount" should {
 
-      lazy val request = setupTarget(None, annualExemptAmount = 10)
-      lazy val result = request.currentIncome(fakeRequestWithSession)
+      lazy val target = setupTarget(None, annualExemptAmount = 10)
+      lazy val result = target.currentIncome(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
@@ -124,8 +124,8 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "other properties has not been selected and neither has brought forward losses" should {
 
-      lazy val request = setupTarget(None, otherProperties = false, lossesBroughtForward = false)
-      lazy val result = request.currentIncome(fakeRequestWithSession)
+      lazy val target = setupTarget(None, otherProperties = false, lossesBroughtForward = false)
+      lazy val result = target.currentIncome(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
@@ -139,8 +139,8 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "other properties has not been selected and brought forward losses has been selected" should {
 
-      lazy val request = setupTarget(None, otherProperties = false)
-      lazy val result = request.currentIncome(fakeRequestWithSession)
+      lazy val target = setupTarget(None, otherProperties = false)
+      lazy val result = target.currentIncome(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
@@ -170,8 +170,8 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "given a valid form should" should {
 
-      lazy val request = setupTarget(Some(CurrentIncomeModel(40000)))
-      lazy val result = request.submitCurrentIncome(fakeRequestToPOSTWithSession(("amount", "40000")))
+      lazy val target = setupTarget(Some(CurrentIncomeModel(40000)))
+      lazy val result = target.submitCurrentIncome(fakeRequestToPOSTWithSession(("amount", "40000")))
 
       "return a status of 303" in {
         status(result) shouldBe 303
@@ -184,8 +184,8 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "given an invalid form" should {
 
-      lazy val request = setupTarget(Some(CurrentIncomeModel(-40000)), otherProperties = false)
-      lazy val result = request.submitCurrentIncome(fakeRequestToPOSTWithSession(("amount", "-40000")))
+      lazy val target = setupTarget(Some(CurrentIncomeModel(-40000)), otherProperties = false)
+      lazy val result = target.submitCurrentIncome(fakeRequestToPOSTWithSession(("amount", "-40000")))
 
       "return a status of 400" in {
         status(result) shouldBe 400

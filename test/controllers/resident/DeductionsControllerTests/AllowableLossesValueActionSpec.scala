@@ -21,12 +21,13 @@ import controllers.resident.DeductionsController
 import org.jsoup.Jsoup
 import play.api.test.Helpers._
 import assets.MessageLookup.{allowableLossesValue => messages}
-import common.KeystoreKeys
+import common.KeystoreKeys.{ResidentKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import models.resident.AllowableLossesValueModel
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
+import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
@@ -37,9 +38,11 @@ class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication w
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[AllowableLossesValueModel]
-      (Matchers.eq(KeystoreKeys.ResidentKeys.allowableLossesValue))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[AllowableLossesValueModel](Matchers.eq(keystoreKeys.allowableLossesValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.saveFormData[AllowableLossesValueModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(mock[CacheMap]))
 
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -107,8 +110,10 @@ class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication w
   "Calling .submitAllowableLossesValue from the DeductionsController" when {
 
     "a valid form is submitted" should {
+
+      lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
-      lazy val result = DeductionsController.submitAllowableLossesValue(request)
+      lazy val result = target.submitAllowableLossesValue(request)
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -120,8 +125,10 @@ class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication w
     }
 
     "an invalid form is submitted" should {
+
+      lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
-      lazy val result = DeductionsController.submitAllowableLossesValue(request)
+      lazy val result = target.submitAllowableLossesValue(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {

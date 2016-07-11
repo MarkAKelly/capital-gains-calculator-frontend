@@ -27,6 +27,7 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
@@ -39,6 +40,9 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     when(mockCalcConnector.fetchAndGetFormData[ReliefsValueModel](Matchers.eq(KeystoreKeys.ResidentKeys.reliefsValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.saveFormData[ReliefsValueModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(mock[CacheMap]))
 
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -86,7 +90,8 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
 
   "request has an invalid session" should {
 
-    lazy val result = DeductionsController.reliefsValue(fakeRequest)
+    lazy val target = setupTarget(None)
+    lazy val result = target.reliefsValue(fakeRequest)
 
     "return a status of 303" in {
       status(result) shouldBe 303
@@ -97,11 +102,12 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
     }
   }
 
-  "Calling .submitReliefsValue from the GainCalculationConroller" when {
+  "Calling .submitReliefsValue from the GainCalculationController" when {
 
     "a valid form is submitted" should {
+      lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
-      lazy val result = DeductionsController.submitReliefsValue(request)
+      lazy val result = target.submitReliefsValue(request)
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -113,8 +119,9 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
     }
 
     "an invalid form is submitted" should {
+      lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
-      lazy val result = DeductionsController.submitReliefsValue(request)
+      lazy val result = target.submitReliefsValue(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {
