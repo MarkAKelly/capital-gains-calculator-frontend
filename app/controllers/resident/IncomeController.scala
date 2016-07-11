@@ -58,13 +58,30 @@ trait IncomeController extends FeatureLock {
     }
   }
 
+  def allowableLossesCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[AllowableLossesModel](KeystoreKeys.ResidentKeys.allowableLosses).map {
+      case Some(data) => data.isClaiming
+      case None => false
+    }
+  }
+
+  def displayAnnualExemptAmountCheck(claimedOtherProperties: Boolean, claimedAllowableLosses: Boolean)(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[AllowableLossesValueModel](KeystoreKeys.ResidentKeys.allowableLossesValue).map {
+      case Some(result) if claimedAllowableLosses && claimedOtherProperties => result.amount == 0
+      case _ if claimedOtherProperties && !claimedAllowableLosses => true
+      case _ => false
+    }
+  }
+
   //################################# Previous Taxable Gain Actions ##########################################
   def buildPreviousTaxableGainsBackUrl(implicit hc: HeaderCarrier): Future[String] = {
 
     for {
       hasOtherProperties <- otherPropertiesResponse
+      hasAllowableLosses <- allowableLossesCheck
+      displayAnnualExemptAmount <- displayAnnualExemptAmountCheck(hasOtherProperties, hasAllowableLosses)
       hasLossesBroughtForward <- lossesBroughtForwardResponse
-    } yield (hasOtherProperties, hasLossesBroughtForward)
+    } yield (displayAnnualExemptAmount, hasLossesBroughtForward)
 
     match {
       case (true, _) => routes.DeductionsController.annualExemptAmount().url
@@ -104,9 +121,11 @@ trait IncomeController extends FeatureLock {
   def buildCurrentIncomeBackUrl(implicit hc: HeaderCarrier): Future[String] = {
     for {
       hasOtherProperties <- otherPropertiesResponse
+      hasAllowableLosses <- allowableLossesCheck
+      displayAnnualExemptAmount <- displayAnnualExemptAmountCheck(hasOtherProperties, hasAllowableLosses)
       hasLossesBroughtForward <- lossesBroughtForwardResponse
       enteredAnnualExemptAmount <- annualExemptAmountEntered
-    } yield (hasOtherProperties, hasLossesBroughtForward, enteredAnnualExemptAmount)
+    } yield (displayAnnualExemptAmount, hasLossesBroughtForward, enteredAnnualExemptAmount)
 
     match {
       case (true, _, true) => routes.IncomeController.previousTaxableGains().url
