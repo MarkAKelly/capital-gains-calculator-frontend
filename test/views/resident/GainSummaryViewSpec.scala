@@ -245,4 +245,22 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
     }
   }
 
+  "Summary when supplied with a date above the known tax years" should {
+
+    val testModel = YourAnswersSummaryModel(
+      constructDate(12,9,2018),
+      10,
+      20,
+      30,
+      40,
+      50
+    )
+    lazy val view = views.html.calculation.resident.gainSummary(testModel,-2000)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "display the what to do next content" in {
+      doc.select("#whatToDoNext").text shouldEqual ""
+    }
+  }
+
 }
