@@ -51,7 +51,7 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
     val doc = Jsoup.parse(bodyOf(result))
   }
 
-  case class FakePOSTRequest (dateResponse: TaxYearModel, input: (String, String)*) {
+  case class FakePOSTRequest (dateResponse: TaxYearModel, inputOne: (String, String), inputTwo: (String, String), inputThree: (String, String)) {
 
     def setupTarget(): GainController = {
 
@@ -68,9 +68,9 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
     }
 
-    lazy val target = setupTarget()
-    lazy val result = target.submitDisposalDate(fakeRequestWithSession)
-    lazy val doc = Jsoup.parse(bodyOf(result))
+    val target = setupTarget()
+    val result = target.submitDisposalDate(fakeRequestToPOSTWithSession(inputOne, inputTwo, inputThree))
+    val doc = Jsoup.parse(bodyOf(result))
   }
 
   "Calling .disposalDate from the GainCalculationController" should {
@@ -124,7 +124,7 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
     "when there is a valid form" should {
 
       lazy val dateResponse = TaxYearModel("2016/17", true, "2016/17")
-      lazy val request = FakePOSTRequest(dateResponse, ("disposalDateDay", "30"), ("disposalDateMonth", "4"), ("disposalDateYear", "2016"))
+      lazy val request = FakePOSTRequest(dateResponse, ("disposalDateDay", "28"), ("disposalDateMonth", "4"), ("disposalDateYear", "2016"))
 
       "return a status of 303" in {
         status(request.result) shouldBe 303
@@ -165,7 +165,7 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
     "when there is a date that is less than any specified tax year" should {
 
       lazy val dateResponse = TaxYearModel("2013/14", false, "2015/16")
-      lazy val request = FakePOSTRequest(dateResponse, ("disposalDateDay", "30"), ("disposalDateMonth", "4"), ("disposalDateYear", "2013"))
+      lazy val request = FakePOSTRequest(dateResponse, ("disposalDateDay", "12"), ("disposalDateMonth", "4"), ("disposalDateYear", "2013"))
 
       "return a status of 303" in {
         status(request.result) shouldBe 303
