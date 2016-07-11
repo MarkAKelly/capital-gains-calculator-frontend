@@ -311,8 +311,8 @@ trait DeductionsController extends FeatureLock {
       success => {
         calcConnector.saveFormData[LossesBroughtForwardValueModel](KeystoreKeys.ResidentKeys.lossesBroughtForwardValue, success)
 
-        otherPropertiesCheck.flatMap { otherProperties =>
-          if (otherProperties) Future.successful(Redirect(routes.DeductionsController.annualExemptAmount()))
+        displayAnnualExemptAmountCheck.flatMap { displayAnnualExemptAmount =>
+          if (displayAnnualExemptAmount) Future.successful(Redirect(routes.DeductionsController.annualExemptAmount()))
           else {
             positiveChargeableGainCheck.map { positiveChargeableGain =>
               if (positiveChargeableGain) Redirect(routes.IncomeController.currentIncome())
