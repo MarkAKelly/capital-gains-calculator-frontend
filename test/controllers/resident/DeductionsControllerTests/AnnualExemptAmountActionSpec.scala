@@ -164,8 +164,8 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
 
     "an invalid form is submitted" should {
 
-      lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
       lazy val target = setupTarget(None, gainModel, summaryModel, ChargeableGainResultModel(2000, 1000, 1000, 0))
+      lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
       lazy val result = target.submitAnnualExemptAmount(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
 

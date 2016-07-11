@@ -27,12 +27,12 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-
 
 import scala.concurrent.Future
 
-class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar{
+class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
   def setupTarget(getData: Option[AcquisitionCostsModel]): GainController = {
 
@@ -40,6 +40,9 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
 
     when(mockCalcConnector.fetchAndGetFormData[AcquisitionCostsModel](Matchers.eq(KeystoreKeys.ResidentKeys.acquisitionCosts))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.saveFormData[AcquisitionCostsModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(mock[CacheMap]))
 
     new GainController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -85,24 +88,25 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
     }
   }
 
-    "request has an invalid session" should {
+  "request has an invalid session" should {
 
-      lazy val result = GainController.acquisitionCosts(fakeRequest)
+    lazy val result = GainController.acquisitionCosts(fakeRequest)
 
-      "return a status of 303" in {
-        status(result) shouldBe 303
-      }
-
-      "return you to the session timeout page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/non-resident/session-timeout")
-      }
+    "return a status of 303" in {
+      status(result) shouldBe 303
     }
+
+    "return you to the session timeout page" in {
+      redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/non-resident/session-timeout")
+    }
+  }
 
   "Calling .submitAcquisitionCosts from the GainCalculationConroller" when {
 
     "a valid form is submitted" should {
+      lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
-      lazy val result = GainController.submitAcquisitionCosts(request)
+      lazy val result = target.submitAcquisitionCosts(request)
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -114,8 +118,9 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
     }
 
     "an invalid form is submitted" should {
+      lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
-      lazy val result = GainController.submitAcquisitionCosts(request)
+      lazy val result = target.submitAcquisitionCosts(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {

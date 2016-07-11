@@ -32,23 +32,21 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 
 import scala.concurrent.Future
 
-class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar{
+class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  case class FakeGETRequest (storedData: Option[DisposalDateModel]) {
-    def setupTarget(getData: Option[DisposalDateModel]): GainController = {
+  def setupTarget(getData: Option[DisposalDateModel]): GainController = {
 
-      val mockCalcConnector = mock[CalculatorConnector]
+    val mockCalcConnector = mock[CalculatorConnector]
 
-      when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalDate))(Matchers.any(), Matchers.any()))
-        .thenReturn(Future.successful(getData))
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalDate))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(getData))
 
-      new GainController {
-        override val calcConnector: CalculatorConnector = mockCalcConnector
-      }
+    when(mockCalcConnector.saveFormData[DisposalDateModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(mock[CacheMap]))
+
+    new GainController {
+      override val calcConnector: CalculatorConnector = mockCalcConnector
     }
-    val target = setupTarget(storedData)
-    val result = target.disposalDate(fakeRequestWithSession)
-    val doc = Jsoup.parse(bodyOf(result))
   }
 
   case class FakePOSTRequest (dateResponse: TaxYearModel, inputOne: (String, String), inputTwo: (String, String), inputThree: (String, String)) {
@@ -77,42 +75,44 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     "when there is no keystore data" should {
 
-      lazy val request = FakeGETRequest(None)
+      lazy val target = setupTarget(None)
+      lazy val result = target.disposalDate(fakeRequestWithSession)
 
       "return a status of 200" in {
-        status(request.result) shouldBe 200
+        status(result) shouldBe 200
       }
 
       "return some html" in {
-        contentType(request.result) shouldBe Some("text/html")
+        contentType(result) shouldBe Some("text/html")
       }
 
       s"return a page with the title ${messages.title}" in {
-        request.doc.title shouldBe messages.title
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
       }
     }
 
     "when there is keystore data" should {
 
-      lazy val request = FakeGETRequest(Some(DisposalDateModel(10, 10, 2016)))
+      lazy val target = setupTarget(Some(DisposalDateModel(10, 10, 2016)))
+      lazy val result = target.disposalDate(fakeRequestWithSession)
 
       "return a status of 200" in {
-        status(request.result) shouldBe 200
+        status(result) shouldBe 200
       }
 
       "return some html" in {
-        contentType(request.result) shouldBe Some("text/html")
+        contentType(result) shouldBe Some("text/html")
       }
 
       s"return a page with the title ${messages.title}" in {
-        request.doc.title shouldBe messages.title
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
       }
     }
   }
 
   "Calling .disposalDate from the GainCalculationController with no session" should {
-
-    lazy val result = GainController.disposalDate(fakeRequest)
+    lazy val target = setupTarget(None)
+    lazy val result = target.disposalDate(fakeRequest)
 
     "return a status of 200" in {
       status(result) shouldBe 200
@@ -145,7 +145,7 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
 
       "return a page with the title ''When did you sign the contract that made someone else the owner?'" in {
-        request.doc.title() shouldBe messages.title
+        Jsoup.parse(bodyOf(request.result)).title shouldBe messages.title
       }
     }
 
