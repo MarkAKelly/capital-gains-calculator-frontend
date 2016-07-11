@@ -118,7 +118,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         0)
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)), None, Some(OtherPropertiesModel(false)),
         None, None, Some(LossesBroughtForwardModel(false)), None, None)
-      lazy val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 11100)
+      lazy val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 0, 11100)
       lazy val incomeAnswersModel = IncomeAnswersModel(None, None, None)
       lazy val target = setupTarget(
         yourAnswersSummaryModel,
@@ -156,7 +156,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         0)
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)), None, Some(OtherPropertiesModel(false)),
         None, None, Some(LossesBroughtForwardModel(true)), Some(LossesBroughtForwardValueModel(1000)), None)
-      lazy val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 11100)
+      lazy val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 0, 11100)
       lazy val incomeAnswersModel = IncomeAnswersModel(None, None, None)
       lazy val target = setupTarget(
         yourAnswersSummaryModel,
@@ -193,8 +193,46 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         5,
         0)
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)), None, Some(OtherPropertiesModel(true)),
-        Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, Some(AnnualExemptAmountModel(10000)))
-      lazy val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 11100)
+        Some(AllowableLossesModel(true)), Some(AllowableLossesValueModel(BigDecimal(1000))), Some(LossesBroughtForwardModel(false)), None, Some(AnnualExemptAmountModel(10000)))
+      lazy val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 0, 11100)
+      lazy val incomeAnswersModel = IncomeAnswersModel(None, None, None)
+      lazy val target = setupTarget(
+        yourAnswersSummaryModel,
+        10000,
+        chargeableGainAnswers,
+        Some(chargeableGainResultModel),
+        incomeAnswersModel
+      )
+      lazy val result = target.summary()(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return some html" in {
+        contentType(result) shouldBe Some("text/html")
+      }
+
+      s"return a title ${messages.title}" in {
+        doc.title() shouldBe messages.title
+      }
+
+      s"has a link to '${routes.DeductionsController.lossesBroughtForward().toString()}'" in {
+        doc.getElementById("back-link").attr("href") shouldBe routes.DeductionsController.lossesBroughtForward().toString
+      }
+    }
+
+    "a negative taxable gain is returned with other properties disposed of but an allowable loss of 0" should {
+      lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
+        3000,
+        10,
+        5000,
+        5,
+        0)
+      lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)), None, Some(OtherPropertiesModel(true)),
+        Some(AllowableLossesModel(true)), Some(AllowableLossesValueModel(BigDecimal(0))), Some(LossesBroughtForwardModel(false)), None, Some(AnnualExemptAmountModel(10000)))
+      lazy val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 0, 11100)
       lazy val incomeAnswersModel = IncomeAnswersModel(None, None, None)
       lazy val target = setupTarget(
         yourAnswersSummaryModel,
@@ -232,7 +270,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         0)
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)), None, Some(OtherPropertiesModel(false)),
         Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None)
-      lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 11100)
+      lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 0, 11100)
       lazy val incomeAnswersModel = IncomeAnswersModel(None, Some(CurrentIncomeModel(20000)), Some(PersonalAllowanceModel(10000)))
       lazy val totalGainAndTaxOwedModel = TotalGainAndTaxOwedModel(20000, 20000, 11100, 11100, 3600, 20000, 18, None, None)
       lazy val target = setupTarget(

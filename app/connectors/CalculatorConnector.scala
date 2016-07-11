@@ -24,6 +24,7 @@ import constructors.nonresident.CalculateRequestConstructor
 import constructors.{resident => residentConstructors}
 import models.nonresident._
 import models.resident
+import models.resident.TaxYearModel
 import models.resident.IncomeAnswersModel
 import play.api.libs.json.Format
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
@@ -76,16 +77,20 @@ trait CalculatorConnector {
     }")
   }
 
-  def getFullAEA (input: String)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
-    http.GET[Option[BigDecimal]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-full-aea?taxYear=$input")
+  def getFullAEA (taxYear: Int)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
+    http.GET[Option[BigDecimal]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-full-aea?taxYear=$taxYear")
   }
 
-  def getPartialAEA (input: String)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
-    http.GET[Option[BigDecimal]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-partial-aea?taxYear=$input")
+  def getPartialAEA (taxYear: Int)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
+    http.GET[Option[BigDecimal]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-partial-aea?taxYear=$taxYear")
   }
 
-  def getPA (input: String)(implicit hc: HeaderCarrier): Future[Option[PersonalAllowanceModel]] = {
-    http.GET[Option[PersonalAllowanceModel]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-pa?taxYear=$input")
+  def getPA (taxYear: Int)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
+    http.GET[Option[BigDecimal]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-pa?taxYear=$taxYear")
+  }
+
+  def getTaxYear (taxYear: String)(implicit hc: HeaderCarrier): Future[Option[TaxYearModel]] = {
+    http.GET[Option[TaxYearModel]](s"$serviceUrl/capital-gains-calculator/tax-year?disposalDate=$taxYear")
   }
 
   def clearKeystore()(implicit hc: HeaderCarrier) = {

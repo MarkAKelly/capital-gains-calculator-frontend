@@ -127,6 +127,10 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Fa
         s"have a fifth bullet point of ${messages.bulletListFive}" in {
           doc.select("div.indent li#bullet-list-five").text() shouldEqual messages.bulletListFive
         }
+
+        s"have final additional guidance of ${messages.bulletEnd}" in {
+          doc.select("div.indent p#bullet-list-end").text() shouldEqual messages.bulletEnd
+        }
       }
 
       "has a numeric input field that" should {

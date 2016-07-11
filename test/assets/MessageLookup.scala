@@ -67,6 +67,7 @@ object MessageLookup {
     val bulletListTwo = "sold it to a relative, business partner or"
     val bulletListTwoLink = "someone else you're connected to"
     val bulletListThree = "sold it for less than it’s worth to help the buyer"
+    val bulletEnd = "You can use a valuation from a surveyor or a property website."
   }
 
   //Disposal Costs messages
@@ -88,6 +89,7 @@ object MessageLookup {
     val bulletListFour = "bought it for less than it’s worth because the seller wanted to help you"
     val bulletListFive = "became the owner before 1 April 1982"
     val bulletLink = "https://www.gov.uk/capital-gains-tax/losses"
+    val bulletEnd = "You can use a valuation from a surveyor or a property website."
   }
 
   //Acquisition Costs messages
@@ -120,6 +122,7 @@ object MessageLookup {
     val whatToDoNextTitle = "What to do next"
     val whatToDoNextText = "You can tell us about this loss so that you might need to pay less tax in the future."
     val whatToDoNextNoLossText = "As you have no tax to pay, you don't need to tell HMRC about the property."
+    val aeaRemaining = "Capital gains tax allowance left"
   }
 
   //Reliefs messages

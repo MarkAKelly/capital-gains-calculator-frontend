@@ -18,14 +18,8 @@ package models.resident
 
 import play.api.libs.json.Json
 
-case class ChargeableGainResultModel (
-                                       gain: BigDecimal,
-                                       chargeableGain: BigDecimal,
-                                       aeaUsed: BigDecimal,
-                                       aeaRemaining: BigDecimal,
-                                       deductions: BigDecimal
-                                     )
+case class TaxYearModel (taxYearSupplied: String, isValidYear: Boolean, calculationTaxYear: String)
 
-object ChargeableGainResultModel {
-  implicit val format = Json.format[ChargeableGainResultModel]
+object TaxYearModel {
+  implicit val formats = Json.format[TaxYearModel]
 }

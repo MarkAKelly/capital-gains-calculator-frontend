@@ -17,6 +17,7 @@
 package controllers.resident.DeductionsControllerTests
 
 import assets.MessageLookup.{lossesBroughtForwardValue => messages}
+import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.DeductionsController
@@ -28,6 +29,7 @@ import org.mockito.Mockito._
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
+import scala.collection.immutable.Range
 import scala.concurrent.Future
 
 class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar{
@@ -101,11 +103,22 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
     def setPostTarget(otherPropertiesModel: Option[OtherPropertiesModel],
                       gainAnswers: YourAnswersSummaryModel,
                       chargeableGainAnswers: ChargeableGainAnswers,
-                      chargeableGain: ChargeableGainResultModel): DeductionsController = {
+                      chargeableGain: ChargeableGainResultModel,
+                      allowableLossesModel: Option[AllowableLossesModel] = None,
+                      allowableLossesValueModel: Option[AllowableLossesValueModel] = None): DeductionsController = {
 
       val mockCalcConnector = mock[CalculatorConnector]
 
-      when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
+      when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.eq(KeystoreKeys.ResidentKeys.otherProperties))(Matchers.any(), Matchers.any()))
+        .thenReturn(otherPropertiesModel)
+
+      when(mockCalcConnector.fetchAndGetFormData[AllowableLossesModel](Matchers.eq(KeystoreKeys.ResidentKeys.allowableLosses))(Matchers.any(), Matchers.any()))
+        .thenReturn(allowableLossesModel)
+
+      when(mockCalcConnector.fetchAndGetFormData[AllowableLossesValueModel](Matchers.eq(KeystoreKeys.ResidentKeys.allowableLossesValue))(Matchers.any(), Matchers.any()))
+        .thenReturn(allowableLossesValueModel)
+
+      when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.eq(KeystoreKeys.ResidentKeys.otherProperties))(Matchers.any(), Matchers.any()))
         .thenReturn(otherPropertiesModel)
 
       when(mockCalcConnector.getYourAnswers(Matchers.any()))
@@ -124,8 +137,36 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
 
     "given a valid form" when {
 
-      "the user has disposed of other properties" should {
-        lazy val target = setPostTarget(Some(OtherPropertiesModel(true)), gainModel, summaryModel, ChargeableGainResultModel(0, 0, 0, 0))
+      "the user has disposed of other properties with non-zero allowable losses" should {
+        lazy val target = setPostTarget(Some(OtherPropertiesModel(true)), gainModel, summaryModel, ChargeableGainResultModel(0, 0, 0, 0, 0), Some(AllowableLossesModel(true)), Some(AllowableLossesValueModel(BigDecimal(1000))))
+        lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+        lazy val result = target.submitLossesBroughtForwardValue(request)
+
+        "return a status of 303" in {
+          status(result) shouldBe 303
+        }
+
+        s"redirect to '${controllers.resident.routes.SummaryController.summary().toString}'" in {
+          redirectLocation(result).get shouldBe controllers.resident.routes.SummaryController.summary().toString
+        }
+      }
+
+      "the user has disposed of other properties with zero allowable losses" should {
+        lazy val target = setPostTarget(Some(OtherPropertiesModel(true)), gainModel, summaryModel, ChargeableGainResultModel(2000, 2000, 2000, 0, 2000), Some(AllowableLossesModel(true)), Some(AllowableLossesValueModel(BigDecimal(0))))
+        lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+        lazy val result = target.submitLossesBroughtForwardValue(request)
+
+        "return a status of 303" in {
+          status(result) shouldBe 303
+        }
+
+        s"redirect to '${controllers.resident.routes.DeductionsController.annualExemptAmount().toString}'" in {
+          redirectLocation(result).get shouldBe controllers.resident.routes.DeductionsController.annualExemptAmount().toString
+        }
+      }
+
+      "the user has disposed of other properties with no allowable losses" should {
+        lazy val target = setPostTarget(Some(OtherPropertiesModel(true)), gainModel, summaryModel, ChargeableGainResultModel(0, 0, 0, 0, 0), Some(AllowableLossesModel(false)), None)
         lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
         lazy val result = target.submitLossesBroughtForwardValue(request)
 
@@ -139,7 +180,7 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
       }
 
       "the user has not disposed of other properties and has zero chargeable gain" should {
-        lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(2000, 0, 0, 2000))
+        lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(2000, 0, 0, 0, 2000))
         lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
         lazy val result = target.submitLossesBroughtForwardValue(request)
 
@@ -153,7 +194,7 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
       }
 
       "the user has not disposed of other properties and has negative chargeable gain" should {
-        lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(2000, -1000, 0, 3000))
+        lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(2000, -1000, 0, 0, 3000))
         lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
         lazy val result = target.submitLossesBroughtForwardValue(request)
 
@@ -167,7 +208,7 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
       }
 
       "the user has not disposed of other properties and has positive chargeable gain of £1,000" should {
-        lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(1000, 1000, 0, 0))
+        lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(1000, 1000, 0, 0, 0))
         lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
         lazy val result = target.submitLossesBroughtForwardValue(request)
 
@@ -182,7 +223,7 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
     }
 
     "given an invalid form" should {
-      lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(1000, 1000, 0, 0))
+      lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(1000, 1000, 0, 0, 0))
       lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
       lazy val result = target.submitLossesBroughtForwardValue(request)
 

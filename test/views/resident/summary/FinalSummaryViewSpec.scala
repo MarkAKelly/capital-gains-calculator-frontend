@@ -186,6 +186,17 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
           doc.select("#firstBand").text should include("18%")
         }
       }
+
+      "has a numeric output row for the AEA remaining" which {
+
+        "should have the question text 'Capital gains tax allowance left" in {
+          doc.select("#aeaRemaining-question").text should include(messages.aeaRemaining)
+        }
+
+        "include a value for Capital gains tax allowance left of £0" in {
+          doc.select("#aeaRemaining-amount").text should include("£0")
+        }
+      }
     }
 
     s"have a section for Your answers" which {
