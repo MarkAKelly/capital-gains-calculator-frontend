@@ -1,6 +1,7 @@
 @import views.html.helpers.resident._
 @import models.SummaryDataItemModel
 @import models.resident._
+@import common.Dates._
 @import constructors.resident.SummaryConstructor._
 @import controllers.resident.routes.{GainController => routes}
 
@@ -39,5 +40,13 @@
         @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),answers.acquisitionCosts,Some(routes.acquisitionCosts().toString))
         @summaryNumericRowHelper("improvements",Messages("calc.resident.improvements.title"),answers.improvements,Some(routes.improvements().toString))
     </section>
+
+    @if(dateInsideAcceptedTaxYears(getDay(answers.disposalDate), getDay(answers.disposalDate), getYear(answers.disposalDate))) {
+
+        <section id="whatToDoNext">
+            Placeholder
+        </section>
+
+    }
 
 }
