@@ -18,6 +18,7 @@ package controllers.resident.IncomeControllerSpec
 
 import assets.MessageLookup.{currentIncome => messages}
 import common.KeystoreKeys
+import common.KeystoreKeys.ResidentKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.IncomeController
@@ -35,7 +36,8 @@ import scala.concurrent.Future
 class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
   def setupTarget(storedData: Option[CurrentIncomeModel], otherProperties: Boolean = true,
-                  lossesBroughtForward: Boolean = true, annualExemptAmount: BigDecimal = 0): IncomeController = {
+                  lossesBroughtForward: Boolean = true, annualExemptAmount: BigDecimal = 0,
+                  allowableLossesModel: Option[AllowableLossesModel] = None, allowableLossesValueModel: Option[AllowableLossesValueModel] = None): IncomeController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
@@ -44,6 +46,12 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.eq(KeystoreKeys.ResidentKeys.otherProperties))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(OtherPropertiesModel(otherProperties))))
+
+    when(mockCalcConnector.fetchAndGetFormData[AllowableLossesModel](Matchers.eq(KeystoreKeys.ResidentKeys.allowableLosses))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(allowableLossesModel))
+
+    when(mockCalcConnector.fetchAndGetFormData[AllowableLossesValueModel](Matchers.eq(KeystoreKeys.ResidentKeys.allowableLossesValue))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(allowableLossesValueModel))
 
     when(mockCalcConnector.fetchAndGetFormData[LossesBroughtForwardModel](Matchers.eq(KeystoreKeys.ResidentKeys.lossesBroughtForward))(Matchers.any(),
       Matchers.any()))
@@ -94,7 +102,7 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "other properties have been selected and 0 has been entered into the annual exempt amount" should {
 
-      lazy val target = setupTarget(None)
+      lazy val target = setupTarget(None, allowableLossesModel = Some(AllowableLossesModel(true)), allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(0))))
       lazy val result = target.currentIncome(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
@@ -109,7 +117,7 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "other properties have been selected and non-zero has been entered into the annual exempt amount" should {
 
-      lazy val target = setupTarget(None, annualExemptAmount = 10)
+      lazy val target = setupTarget(None, annualExemptAmount = 10, allowableLossesModel = Some(AllowableLossesModel(false)), allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(0))))
       lazy val result = target.currentIncome(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
@@ -119,6 +127,22 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
 
       "have a back link with the address /calculate-your-capital-gains/resident/annual-exempt-amount" in {
         doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/annual-exempt-amount"
+      }
+    }
+
+    "other properties has been selected but a non-zero value for allowable losses has been entered" should {
+
+      lazy val target = setupTarget(None, otherProperties = true, lossesBroughtForward = false,
+        allowableLossesModel = Some(AllowableLossesModel(true)), allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(10000))))
+      lazy val result = target.currentIncome(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "return a 200" in {
+        status(result) shouldBe 200
+      }
+
+      "have a back link with the address /calculate-your-capital-gains/resident/losses-brought-forward" in {
+        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/losses-brought-forward"
       }
     }
 

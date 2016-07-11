@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{previousTaxableGains => messages}
 import common.KeystoreKeys.{ResidentKeys => keystore}
 import connectors.CalculatorConnector
-import models.resident.{LossesBroughtForwardModel, OtherPropertiesModel}
+import models.resident.{AllowableLossesModel, AllowableLossesValueModel, LossesBroughtForwardModel, OtherPropertiesModel}
 import models.resident.income.PreviousTaxableGainsModel
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -34,7 +34,8 @@ import scala.concurrent.Future
 
 class PreviousTaxableGainsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  def setupTarget(getData: Option[PreviousTaxableGainsModel], otherProperties: Boolean = true, lossesBroughtForward: Boolean = true): IncomeController = {
+  def setupTarget(getData: Option[PreviousTaxableGainsModel], otherProperties: Boolean = true, lossesBroughtForward: Boolean = true,
+                  allowableLossesModel: Option[AllowableLossesModel] = None, allowableLossesValueModel: Option[AllowableLossesValueModel] = None): IncomeController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
@@ -43,6 +44,12 @@ class PreviousTaxableGainsActionSpec extends UnitSpec with WithFakeApplication w
 
     when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.eq(keystore.otherProperties))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(OtherPropertiesModel(otherProperties))))
+
+    when(mockCalcConnector.fetchAndGetFormData[AllowableLossesModel](Matchers.eq(keystore.allowableLosses))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(allowableLossesModel))
+
+    when(mockCalcConnector.fetchAndGetFormData[AllowableLossesValueModel](Matchers.eq(keystore.allowableLossesValue))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(allowableLossesValueModel))
 
     when(mockCalcConnector.fetchAndGetFormData[PreviousTaxableGainsModel](Matchers.eq(keystore.previousTaxableGains))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -92,7 +99,7 @@ class PreviousTaxableGainsActionSpec extends UnitSpec with WithFakeApplication w
 
     "other properties have been specified" should {
       "return a back link to the AEA page" in {
-        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = true)
+        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = true, allowableLossesModel = Some(AllowableLossesModel(false)), allowableLossesValueModel = None)
         val result = target.previousTaxableGains(fakeRequestWithSession)
         val doc = Jsoup.parse(bodyOf(result))
 
@@ -101,9 +108,33 @@ class PreviousTaxableGainsActionSpec extends UnitSpec with WithFakeApplication w
       }
     }
 
+    "other properties have been specified with an allowable loss of 0" should {
+      "return a back link to the AEA page" in {
+        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = true,
+          allowableLossesModel = Some(AllowableLossesModel(true)), allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(0))))
+        val result = target.previousTaxableGains(fakeRequestWithSession)
+        val doc = Jsoup.parse(bodyOf(result))
+
+        val link = doc.select("#back-link")
+        link.attr("href") shouldBe controllers.resident.routes.DeductionsController.annualExemptAmount().toString
+      }
+    }
+
+    "other properties have been specified with a non-zero allowable loss" should {
+      "return a back link to the losses brought forward page" in {
+        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = true,
+          allowableLossesModel = Some(AllowableLossesModel(true)), allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(1000))))
+        val result = target.previousTaxableGains(fakeRequestWithSession)
+        val doc = Jsoup.parse(bodyOf(result))
+
+        val link = doc.select("#back-link")
+        link.attr("href") shouldBe controllers.resident.routes.DeductionsController.lossesBroughtForwardValue().toString
+      }
+    }
+
     "no other properties AND brought forward losses specified" should {
       "return a back link to the brought forward input page" in {
-        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = false, lossesBroughtForward = true)
+        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = false, lossesBroughtForward = true, allowableLossesModel = None, allowableLossesValueModel = None)
         val result = target.previousTaxableGains(fakeRequestWithSession)
         val doc = Jsoup.parse(bodyOf(result))
 
@@ -114,7 +145,7 @@ class PreviousTaxableGainsActionSpec extends UnitSpec with WithFakeApplication w
 
     "no other properties AND brought forward losses NOT specified" should {
       "return a back link to the brought forward choice page" in {
-        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = false, lossesBroughtForward = false)
+        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = false, lossesBroughtForward = false, allowableLossesModel = None, allowableLossesValueModel = None)
         val result = target.previousTaxableGains(fakeRequestWithSession)
         val doc = Jsoup.parse(bodyOf(result))
 
