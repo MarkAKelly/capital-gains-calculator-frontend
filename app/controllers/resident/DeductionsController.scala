@@ -339,7 +339,7 @@ trait DeductionsController extends FeatureLock {
   val submitAnnualExemptAmount = FeatureLockForRTT.async { implicit request =>
 
     def getMaxAEA: Future[Option[BigDecimal]] = {
-      calcConnector.getFullAEA("2016")
+      calcConnector.getFullAEA(2016)
     }
 
     def routeRequest(maxAEA: BigDecimal): Future[Result] = {

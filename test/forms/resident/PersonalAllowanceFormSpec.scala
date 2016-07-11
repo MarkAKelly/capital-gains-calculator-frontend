@@ -20,10 +20,11 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import income.PersonalAllowanceForm._
 import controllers.helpers.FakeRequestHelper
 import models.resident.income.PersonalAllowanceModel
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
   "Creating a form using an empty model" should {
-    val form = personalAllowanceForm
+    val form = personalAllowanceForm()
     "return an empty string for amount" in {
       form.data.isEmpty shouldBe true
     }
@@ -31,7 +32,7 @@ class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication with F
   "Creating a form using a valid model" should {
     "return a form with the data specified in the model" in {
       val model = PersonalAllowanceModel(1)
-      val form = personalAllowanceForm.fill(model)
+      val form = personalAllowanceForm().fill(model)
       form.data("amount") shouldBe "1"
     }
   }
@@ -40,7 +41,7 @@ class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication with F
 
     "supplied with no data for amount" should {
 
-      lazy val form = personalAllowanceForm.bind(Map("amount" -> ""))
+      lazy val form = personalAllowanceForm().bind(Map("amount" -> ""))
 
       "raise form error" in {
         form.hasErrors shouldBe true
@@ -53,7 +54,7 @@ class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication with F
 
     "supplied with a non-numeric value for amount" should {
 
-      lazy val form = personalAllowanceForm.bind(Map("amount" -> "a"))
+      lazy val form = personalAllowanceForm().bind(Map("amount" -> "a"))
 
       "raise a form error" in {
         form.hasErrors shouldBe true
@@ -64,22 +65,10 @@ class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication with F
       }
     }
 
-    "supplied with an amount that is too big" should {
-
-      lazy val form = personalAllowanceForm.bind(Map("amount" -> "9999999999999"))
-
-      "raise form error" in {
-        form.hasErrors shouldBe true
-      }
-
-      s"error with message '${errorMessages.maximumAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.maximumAmount
-      }
-    }
-
     "supplied with a negative amount" should {
 
-      lazy val form = personalAllowanceForm.bind(Map("amount" -> "-1000"))
+      val limit = BigDecimal(11100)
+      lazy val form = personalAllowanceForm(limit).bind(Map("amount" -> "-1000"))
 
       "raise form error" in {
         form.hasErrors shouldBe true
@@ -92,7 +81,8 @@ class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication with F
 
     "supplied with an amount that has too many decimal placed" should {
 
-      lazy val form = personalAllowanceForm.bind(Map("amount" -> "100.1"))
+      val limit = BigDecimal(11100)
+      lazy val form = personalAllowanceForm(limit).bind(Map("amount" -> "100.1234"))
 
       "raise form error" in {
         form.hasErrors shouldBe true
@@ -102,5 +92,16 @@ class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication with F
         form.error("amount").get.message shouldBe errorMessages.invalidAmountNoDecimal
       }
     }
+
+    "supplied with an amount that is larger than the maximum AEA" should {
+            val limit = BigDecimal(11100)
+            lazy val form = personalAllowanceForm(limit).bind(Map("amount" -> "11100.01"))
+            "raise form error" in {
+              form.hasErrors shouldBe true
+            }
+           s"error with message '${errorMessages.maximumLimit(MoneyPounds(limit, 0).quantity)}'" in {
+                form.error("amount").get.message shouldBe errorMessages.maximumLimit(MoneyPounds(limit, 0).quantity)
+           }
+          }
   }
 }
