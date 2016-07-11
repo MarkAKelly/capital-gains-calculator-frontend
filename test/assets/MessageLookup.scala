@@ -119,6 +119,8 @@ object MessageLookup {
     val chargeableLoss = "Carried forward loss"
     val chargeableGain = "Taxable gain"
     val taxRate = "Tax Rate"
+    def noticeWarning(input: String) = s"These figures are based on the tax rates from the ${input} tax year"
+    val warning = "Warning"
   }
 
   //Reliefs messages

@@ -44,7 +44,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     chargeableGainAnswers: ChargeableGainAnswers,
     chargeableGainResultModel: Option[ChargeableGainResultModel] = None,
     incomeAnswers: IncomeAnswersModel,
-    totalGainAndTaxOwedModel: Option[TotalGainAndTaxOwedModel] = None
+    totalGainAndTaxOwedModel: Option[TotalGainAndTaxOwedModel] = None,
+    taxYearModel: Option[TaxYearModel]
   ): SummaryController = {
 
     lazy val mockCalculatorConnector = mock[CalculatorConnector]
@@ -67,6 +68,9 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     when(mockCalculatorConnector.calculateRttTotalGainAndTax(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(totalGainAndTaxOwedModel))
 
+    when(mockCalculatorConnector.getTaxYear(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(taxYearModel))
+
     new SummaryController {
       override val calculatorConnector: CalculatorConnector = mockCalculatorConnector
     }
@@ -86,7 +90,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       lazy val target = setupTarget(
         yourAnswersSummaryModel,
         -6000,
-        chargeableGainAnswers, None,  incomeAnswersModel
+        chargeableGainAnswers, None, incomeAnswersModel,
+        taxYearModel = Some(TaxYearModel("2015/2016", true, "2015/16"))
       )
       lazy val result = target.summary()(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
@@ -125,7 +130,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         10000,
         chargeableGainAnswers,
         Some(chargeableGainResultModel),
-        incomeAnswersModel
+        incomeAnswersModel,
+        taxYearModel = Some(TaxYearModel("2015/2016", true, "2015/16"))
       )
       lazy val result = target.summary()(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
@@ -163,7 +169,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         10000,
         chargeableGainAnswers,
         Some(chargeableGainResultModel),
-        incomeAnswersModel
+        incomeAnswersModel,
+        taxYearModel = Some(TaxYearModel("2015/2016", true, "2015/16"))
       )
       lazy val result = target.summary()(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
@@ -201,7 +208,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         10000,
         chargeableGainAnswers,
         Some(chargeableGainResultModel),
-        incomeAnswersModel
+        incomeAnswersModel,
+        taxYearModel = Some(TaxYearModel("2015/2016", true, "2015/16"))
       )
       lazy val result = target.summary()(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
@@ -241,7 +249,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         chargeableGainAnswers,
         Some(chargeableGainResultModel),
         incomeAnswersModel,
-        Some(totalGainAndTaxOwedModel)
+        Some(totalGainAndTaxOwedModel),
+        taxYearModel = Some(TaxYearModel("2015/2016", true, "2015/16"))
       )
       lazy val result = target.summary()(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
