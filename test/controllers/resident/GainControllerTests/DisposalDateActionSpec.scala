@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{disposalDate => messages}
 import common.KeystoreKeys
 import connectors.CalculatorConnector
-import models.resident.DisposalDateModel
+import models.resident.{DisposalDateModel, TaxYearModel}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -47,6 +47,28 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
     new GainController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
     }
+  }
+
+  case class FakePOSTRequest (dateResponse: TaxYearModel, inputOne: (String, String), inputTwo: (String, String), inputThree: (String, String)) {
+
+    def setupTarget(): GainController = {
+
+      val mockCalcConnector = mock[CalculatorConnector]
+
+      when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
+        .thenReturn(Future.successful(Some(dateResponse)))
+
+      when(mockCalcConnector.saveFormData[DisposalDateModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+        .thenReturn(Future.successful(mock[CacheMap]))
+
+      new GainController {
+        override val calcConnector: CalculatorConnector = mockCalcConnector
+      }
+    }
+
+    val target = setupTarget()
+    val result = target.submitDisposalDate(fakeRequestToPOSTWithSession(inputOne, inputTwo, inputThree))
+    val doc = Jsoup.parse(bodyOf(result))
   }
 
   "Calling .disposalDate from the GainCalculationController" should {
@@ -101,31 +123,56 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     "when there is a valid form" should {
 
-      lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("disposalDateDay", "30"), ("disposalDateMonth", "4"), ("disposalDateYear", "2016"))
-      lazy val result = target.submitDisposalDate(request)
+      lazy val dateResponse = TaxYearModel("2016/17", true, "2016/17")
+      lazy val request = FakePOSTRequest(dateResponse, ("disposalDateDay", "28"), ("disposalDateMonth", "4"), ("disposalDateYear", "2016"))
 
       "return a status of 303" in {
-        status(result) shouldBe 303
+        status(request.result) shouldBe 303
       }
 
       "redirect to the Disposal Value page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/disposal-value")
+        redirectLocation(request.result) shouldBe Some("/calculate-your-capital-gains/resident/disposal-value")
       }
     }
 
     "when there is an invalid form" should {
 
-      lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("disposalDateDay", "32"), ("disposalDateMonth", "4"), ("disposalDateYear", "2016"))
-      lazy val result = target.submitDisposalDate(request)
+      lazy val dateResponse = TaxYearModel("2016/17", true, "2016/17")
+      lazy val request = FakePOSTRequest(dateResponse, ("disposalDateDay", "32"), ("disposalDateMonth", "4"), ("disposalDateYear", "2016"))
 
       "return a status of 400 with an invalid POST" in {
-        status(result) shouldBe 400
+        status(request.result) shouldBe 400
       }
 
       "return a page with the title ''When did you sign the contract that made someone else the owner?'" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+        Jsoup.parse(bodyOf(request.result)).title shouldBe messages.title
+      }
+    }
+
+    "when there is a date that is greater than any specified tax year" should {
+
+      lazy val dateResponse = TaxYearModel("2019/20", false, "2016/17")
+      lazy val request = FakePOSTRequest(dateResponse, ("disposalDateDay", "30"), ("disposalDateMonth", "4"), ("disposalDateYear", "2019"))
+
+      "return a status of 303" in {
+        status(request.result) shouldBe 303
+      }
+
+      "redirect to the outside know years page" in {
+        redirectLocation(request.result) shouldBe Some("/calculate-your-capital-gains/resident/outside-tax-years")
+      }
+    }
+    "when there is a date that is less than any specified tax year" should {
+
+      lazy val dateResponse = TaxYearModel("2013/14", false, "2015/16")
+      lazy val request = FakePOSTRequest(dateResponse, ("disposalDateDay", "12"), ("disposalDateMonth", "4"), ("disposalDateYear", "2013"))
+
+      "return a status of 303" in {
+        status(request.result) shouldBe 303
+      }
+
+      "redirect to the outside know years page" in {
+        redirectLocation(request.result) shouldBe Some("/calculate-your-capital-gains/resident/outside-tax-years")
       }
     }
   }
