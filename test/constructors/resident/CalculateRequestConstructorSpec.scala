@@ -91,4 +91,56 @@ class CalculateRequestConstructorSpec extends UnitSpec {
     }
   }
 
+  "calling .isUsingAnnualExemptAmount" when {
+
+    "disposed other properties and claimed non-zero allowable losses" should {
+
+      "return a true" in {
+        val result = CalculateRequestConstructor.isUsingAnnualExemptAmount(Some(OtherPropertiesModel(true)),
+          Some(AllowableLossesModel(true)),
+          Some(AllowableLossesValueModel(BigDecimal(1000))))
+        result shouldBe true
+      }
+    }
+
+    "disposed other properties and claimed zero allowable losses" should {
+
+      "return a false" in {
+        val result = CalculateRequestConstructor.isUsingAnnualExemptAmount(Some(OtherPropertiesModel(true)),
+          Some(AllowableLossesModel(true)),
+          Some(AllowableLossesValueModel(BigDecimal(0))))
+        result shouldBe false
+      }
+    }
+
+    "disposed other properties and didn't claim allowable losses" should {
+
+      "return a true" in {
+        val result = CalculateRequestConstructor.isUsingAnnualExemptAmount(Some(OtherPropertiesModel(true)),
+          Some(AllowableLossesModel(false)),
+          Some(AllowableLossesValueModel(BigDecimal(0))))
+        result shouldBe true
+      }
+    }
+
+    "disposed no other properties or allowable losses" should {
+
+      "return a false" in {
+        val result = CalculateRequestConstructor.isUsingAnnualExemptAmount(Some(OtherPropertiesModel(false)),
+          Some(AllowableLossesModel(false)),
+          Some(AllowableLossesValueModel(BigDecimal(100))))
+        result shouldBe false
+      }
+    }
+
+    "disposed no other properties and but claimed allowable losses" should {
+
+      "return a false" in {
+        val result = CalculateRequestConstructor.isUsingAnnualExemptAmount(Some(OtherPropertiesModel(false)),
+          Some(AllowableLossesModel(true)),
+          Some(AllowableLossesValueModel(BigDecimal(100))))
+        result shouldBe false
+      }
+    }
+  }
 }
