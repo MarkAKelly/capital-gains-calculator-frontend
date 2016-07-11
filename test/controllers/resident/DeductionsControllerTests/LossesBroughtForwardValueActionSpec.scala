@@ -125,7 +125,7 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
     "given a valid form" when {
 
       "the user has disposed of other properties" should {
-        lazy val target = setPostTarget(Some(OtherPropertiesModel(true)), gainModel, summaryModel, ChargeableGainResultModel(0, 0, 0, 0))
+        lazy val target = setPostTarget(Some(OtherPropertiesModel(true)), gainModel, summaryModel, ChargeableGainResultModel(0, 0, 0, 0, 0))
         lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
         lazy val result = target.submitLossesBroughtForwardValue(request)
 
@@ -139,7 +139,7 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
       }
 
       "the user has not disposed of other properties and has zero chargeable gain" should {
-        lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(2000, 0, 0, 2000))
+        lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(2000, 0, 0, 0, 2000))
         lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
         lazy val result = target.submitLossesBroughtForwardValue(request)
 
@@ -153,7 +153,7 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
       }
 
       "the user has not disposed of other properties and has negative chargeable gain" should {
-        lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(2000, -1000, 0, 3000))
+        lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(2000, -1000, 0, 0, 3000))
         lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
         lazy val result = target.submitLossesBroughtForwardValue(request)
 
@@ -167,7 +167,7 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
       }
 
       "the user has not disposed of other properties and has positive chargeable gain of £1,000" should {
-        lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(1000, 1000, 0, 0))
+        lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(1000, 1000, 0, 0, 0))
         lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
         lazy val result = target.submitLossesBroughtForwardValue(request)
 
@@ -182,7 +182,7 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
     }
 
     "given an invalid form" should {
-      lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(1000, 1000, 0, 0))
+      lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(1000, 1000, 0, 0, 0))
       lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
       lazy val result = target.submitLossesBroughtForwardValue(request)
 
