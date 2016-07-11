@@ -79,8 +79,8 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
       doc.select("div.indent li#bullet-list-three").text() shouldEqual MessageLookup.disposalValue.bulletListThree
     }
 
-    s"have final additional guidance of ${messages.guidance}" in {
-      doc.select("div.indent p#bullet-list-end").text() shouldEqual messages.guidance
+    s"have final additional guidance of ${messages.bulletEnd}" in {
+      doc.select("div.indent p#bullet-list-end").text() shouldEqual messages.bulletEnd
     }
 
     "render a form tag with a submit action" in {
