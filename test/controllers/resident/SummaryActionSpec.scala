@@ -208,7 +208,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         10000,
         chargeableGainAnswers,
         Some(chargeableGainResultModel),
-        incomeAnswersModel
+        incomeAnswersModel,
+        taxYearModel = Some(TaxYearModel("2015/2016", true, "2015/16"))
       )
       lazy val result = target.summary()(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
