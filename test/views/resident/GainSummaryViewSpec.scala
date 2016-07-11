@@ -219,8 +219,29 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
         s"should have a change link to ${routes.GainController.improvements().url}" in {
           doc.select("#improvements-amount a").attr("href") shouldBe routes.GainController.improvements().url
         }
-
       }
+
+      "does not display the section for what to do next" in {
+        doc.select("#whatToDoNext").text shouldEqual ""
+      }
+    }
+  }
+
+  "Summary when supplied with a date within the known tax years" should {
+
+    val testModel = YourAnswersSummaryModel(
+      constructDate(12,9,2015),
+      10,
+      20,
+      30,
+      40,
+      50
+    )
+    lazy val view = views.html.calculation.resident.gainSummary(testModel,-2000)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "display the what to do next content" in {
+      doc.select("#whatToDoNext").text shouldEqual "Placeholder"
     }
   }
 
