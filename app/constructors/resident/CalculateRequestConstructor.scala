@@ -38,7 +38,7 @@ object CalculateRequestConstructor {
     s"${if (answers.broughtForwardModel.get.option)
       s"&broughtForwardLosses=${answers.broughtForwardValueModel.get.amount}"
     else ""}" +
-    s"&annualExemptAmount=${if (answers.otherPropertiesModel.get.hasOtherProperties)
+    s"&annualExemptAmount=${if (isUsingAnnualExemptAmount(answers.otherPropertiesModel, answers.allowableLossesModel, answers.allowableLossesValueModel))
       answers.annualExemptAmountModel.get.amount
     else maxAEA}"
   }

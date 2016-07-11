@@ -81,12 +81,12 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           Some(ReliefsValueModel(BigDecimal(1000))),
           Some(OtherPropertiesModel(true)),
           Some(AllowableLossesModel(true)),
-          Some(AllowableLossesValueModel(BigDecimal(4000))),
+          Some(AllowableLossesValueModel(BigDecimal(0))),
           Some(LossesBroughtForwardModel(true)),
           Some(LossesBroughtForwardValueModel(BigDecimal(2000))),
           Some(AnnualExemptAmountModel(BigDecimal(3000))))
         val result = CalculateRequestConstructor.chargeableGainRequestString(answers, BigDecimal(11100))
-        result shouldBe "&reliefs=1000&allowableLosses=4000&broughtForwardLosses=2000&annualExemptAmount=3000"
+        result shouldBe "&reliefs=1000&allowableLosses=0&broughtForwardLosses=2000&annualExemptAmount=11100"
       }
     }
   }
