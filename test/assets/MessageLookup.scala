@@ -67,6 +67,7 @@ object MessageLookup {
     val bulletListTwo = "sold it to a relative, business partner or"
     val bulletListTwoLink = "someone else you're connected to"
     val bulletListThree = "sold it for less than it’s worth to help the buyer"
+    val guidance = "You can use a valuation from a surveyor or a property website."
   }
 
   //Disposal Costs messages

@@ -18,6 +18,7 @@ package views.resident
 
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import assets.MessageLookup.{disposalValue => messages}
 import assets.MessageLookup
 import forms.resident.DisposalValueForm._
 import controllers.helpers.FakeRequestHelper
@@ -40,50 +41,54 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
       doc.charset.toString shouldBe "UTF-8"
     }
 
-    s"have the title of the page ${MessageLookup.disposalValue.title}" in {
-      doc.title shouldEqual MessageLookup.disposalValue.title
+    s"have the title of the page ${messages.title}" in {
+      doc.title shouldEqual messages.title
     }
 
     s"have a back link to the Disposal Date Page with text ${MessageLookup.calcBaseBack}" in {
       doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/disposal-date"
     }
 
-    s"have the question of the page ${MessageLookup.disposalValue.question}" in {
-      doc.select("h1").text shouldEqual MessageLookup.disposalValue.question
+    s"have the question of the page ${messages.question}" in {
+      doc.select("h1").text shouldEqual messages.question
     }
 
-    s"have bullet point list title of ${MessageLookup.disposalValue.bulletListTitle}" in {
-      doc.select("div.indent p#bullet-list-title").text() shouldEqual MessageLookup.disposalValue.bulletListTitle
+    s"have bullet point list title of ${messages.bulletListTitle}" in {
+      doc.select("div.indent p#bullet-list-title").text() shouldEqual messages.bulletListTitle
     }
 
-    s"have first bullet point of ${MessageLookup.disposalValue.bulletListOne}" in {
-      doc.select("div.indent li#bullet-list-one").text() shouldEqual MessageLookup.disposalValue.bulletListOne
+    s"have first bullet point of ${messages.bulletListOne}" in {
+      doc.select("div.indent li#bullet-list-one").text() shouldEqual messages.bulletListOne
     }
 
-    s"have second bullet point of ${MessageLookup.disposalValue.bulletListTwo} with link text ${MessageLookup.disposalValue.bulletListTwoLink}" in {
-      doc.select("div.indent li#bullet-list-two").text() shouldEqual MessageLookup.disposalValue.bulletListTwo +
-        " " + MessageLookup.disposalValue.bulletListTwoLink + " " + MessageLookup.calcBaseExternalLink
+    s"have second bullet point of ${messages.bulletListTwo} with link text ${messages.bulletListTwoLink}" in {
+      doc.select("div.indent li#bullet-list-two").text() shouldEqual messages.bulletListTwo +
+        " " + messages.bulletListTwoLink + " " + MessageLookup.calcBaseExternalLink
     }
 
-    s"the second bullet point link ${MessageLookup.disposalValue.bulletListTwoLink} should have a visually hidden content span" in {
+    s"the second bullet point link ${messages.bulletListTwoLink} should have a visually hidden content span" in {
       doc.select("#bullet-list-two span.visuallyhidden").text() shouldEqual MessageLookup.calcBaseExternalLink
     }
 
-    s"the second bullet point link ${MessageLookup.disposalValue.bulletListTwoLink} should " +
+    s"the second bullet point link ${messages.bulletListTwoLink} should " +
       "have the address Some(https://www.gov.uk/capital-gains-tax/losses)" in {
       doc.select("a#lossesLink").attr("href") shouldEqual "https://www.gov.uk/capital-gains-tax/losses"
     }
 
-    s"have third bullet point of ${MessageLookup.disposalValue.bulletListThree}" in {
+    s"have third bullet point of ${messages.bulletListThree}" in {
       doc.select("div.indent li#bullet-list-three").text() shouldEqual MessageLookup.disposalValue.bulletListThree
+    }
+
+    s"have final additional guidance of ${messages.guidance}" in {
+      doc.select("div.indent p#bullet-list-end").text() shouldEqual messages.guidance
     }
 
     "render a form tag with a submit action" in {
       doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/disposal-value"
     }
 
-    s"have a label for an input with text ${MessageLookup.disposalValue.question}" in {
-      doc.select("label > span.visuallyhidden").text() shouldEqual MessageLookup.disposalValue.question
+    s"have a label for an input with text ${messages.question}" in {
+      doc.select("label > span.visuallyhidden").text() shouldEqual messages.question
     }
 
     s"have an input field with id amount " in {
