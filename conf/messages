@@ -311,7 +311,7 @@ calc.resident.disposal.value.bullet.one = gave it away as a gift
 calc.resident.disposal.value.bullet.two = sold it to a relative, business partner or
 calc.resident.disposal.value.bullet.two.link =someone else you''re connected to
 calc.resident.disposal.value.bullet.three = sold it for less than it’s worth to help the buyer
-
+calc.resident.disposal.value.bullet.end = You can use a valuation from a surveyor or a property website.
 
 
 ## Disposal Costs messages
@@ -329,6 +329,7 @@ calc.resident.acquisitionValue.bullet.three = bought it from a relative, busines
 calc.resident.acquisitionValue.bullet.three.link = someone else you''re connected to
 calc.resident.acquisitionValue.bullet.four = bought it for less than it’s worth because the seller wanted to help you
 calc.resident.acquisitionValue.bullet.five = became the owner before 1 April 1982
+calc.resident.acquisitionValue.bullet.end = You can use a valuation from a surveyor or a property website.
 
 ## Acquisition Costs messages
 calc.resident.acquisitionCosts.title = How much did you pay in costs when you became the property owner?
