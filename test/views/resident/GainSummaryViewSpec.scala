@@ -230,18 +230,45 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
   "Summary when supplied with a date within the known tax years" should {
 
     val testModel = YourAnswersSummaryModel(
-      constructDate(12,9,2015),
+      constructDate(12, 9, 2015),
       10,
       20,
       30,
       40,
       50
     )
-    lazy val view = views.html.calculation.resident.gainSummary(testModel,-2000)(fakeRequest)
+    lazy val view = views.html.calculation.resident.gainSummary(testModel, -2000)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
-    "display the what to do next content" in {
-      doc.select("#whatToDoNext").text shouldEqual "Placeholder"
+    "display the what to do next section" in {
+      doc.select("#whatToDoNext").hasText shouldEqual true
+    }
+
+    s"display the title ${messages.whatToDoNextTitle}" in {
+      doc.select("#whatToDoNextTitle").text shouldEqual messages.whatToDoNextTitle
+    }
+
+    s"display the text ${messages.whatToDoNextText}" in {
+      doc.select("#whatToDoNextText").text shouldEqual messages.whatToDoNextText
+    }
+
+    "have a link" which {
+
+      "should have a href attribute" in {
+        doc.select("#whatToDoNextLink").hasAttr("href") shouldEqual true
+      }
+
+      "should link to the what-you-pay-on-it govuk page" in {
+        doc.select("#whatToDoNextLink").attr("href") shouldEqual "https://www.gov.uk/tax-sell-property/what-you-pay-it-on"
+      }
+
+      "have the externalLink attribute" in {
+        doc.select("#whatToDoNextLink").hasClass("external-link") shouldEqual true
+      }
+
+      "has a visually hidden span with the text opens in a new tab" in {
+        doc.select("span#opensInANewTab").text shouldEqual commonMessages.calcBaseExternalLink
+      }
     }
   }
 

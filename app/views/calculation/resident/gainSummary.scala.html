@@ -43,8 +43,10 @@
 
     @if(dateInsideAcceptedTaxYears(getDay(answers.disposalDate), getDay(answers.disposalDate), getYear(answers.disposalDate))) {
 
-        <section id="whatToDoNext">
-            Placeholder
+        <section id="whatToDoNext" class="summary-underline summary-overline">
+            <h3 id="whatToDoNextTitle" class="bold-medium">@Messages("calc.resident.summary.whatNext")</h3>
+            <p id="whatToDoNextText">@Messages("calc.resident.summary.whatNext.youCan")<span id="whatToDoNextLink">@Messages("calc.resident.summary.whatNext.link")</span>@Messages("calc.resident.summary.whatNext.text")</p>
+            <span id="opensInANewTab" class="visuallyhidden">@Messages("calc.base.externalLink")</span>
         </section>
 
     }
