@@ -65,20 +65,6 @@ class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication with F
       }
     }
 
-    "supplied with an amount that is too big" should {
-
-      val limit = BigDecimal(11100)
-      lazy val form = personalAllowanceForm(limit).bind(Map(("amount", "9999999999999")))
-
-      "raise form error" in {
-        form.hasErrors shouldBe true
-      }
-
-      s"error with message '${errorMessages.maximumAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.maximumAmount
-      }
-    }
-
     "supplied with a negative amount" should {
 
       val limit = BigDecimal(11100)

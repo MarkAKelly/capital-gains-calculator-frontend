@@ -54,10 +54,7 @@ trait IncomeController extends FeatureLock {
 
   def annualExemptAmountEntered(implicit hc: HeaderCarrier): Future[Boolean] = {
     calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](KeystoreKeys.ResidentKeys.annualExemptAmount).map {
-      case Some(data) =>
-        if (data.amount.equals(0)) true
-        else false
-      case None => false
+      case Some(data) => data.amount == 0
     }
   }
 
