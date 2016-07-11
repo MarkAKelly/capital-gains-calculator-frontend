@@ -16,7 +16,7 @@
 
 package constructors.resident
 
-import models.resident.{ChargeableGainAnswers, IncomeAnswersModel, YourAnswersSummaryModel}
+import models.resident._
 
 object CalculateRequestConstructor {
 
@@ -38,7 +38,7 @@ object CalculateRequestConstructor {
     s"${if (answers.broughtForwardModel.get.option)
       s"&broughtForwardLosses=${answers.broughtForwardValueModel.get.amount}"
     else ""}" +
-    s"&annualExemptAmount=${if (answers.otherPropertiesModel.get.hasOtherProperties)
+    s"&annualExemptAmount=${if (isUsingAnnualExemptAmount(answers.otherPropertiesModel, answers.allowableLossesModel, answers.allowableLossesValueModel))
       answers.annualExemptAmountModel.get.amount
     else maxAEA}"
   }
@@ -50,5 +50,15 @@ object CalculateRequestConstructor {
       else ""}" +
     s"&previousIncome=${answers.currentIncomeModel.get.amount}" +
     s"&personalAllowance=${answers.personalAllowanceModel.get.amount}"
+  }
+
+  def isUsingAnnualExemptAmount (otherPropertiesModel: Option[OtherPropertiesModel],
+                                 allowableLossesModel: Option[AllowableLossesModel],
+                                 allowableLossesValueModel: Option[AllowableLossesValueModel]): Boolean = {
+    (otherPropertiesModel.get.hasOtherProperties, allowableLossesModel) match {
+      case (true, Some(AllowableLossesModel(true))) if allowableLossesValueModel.get.amount != 0 => true
+      case (true, Some(AllowableLossesModel(false))) => true
+      case _ => false
+    }
   }
 }

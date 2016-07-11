@@ -35,8 +35,20 @@ trait SummaryController extends FeatureLock {
 
   val summary = FeatureLockForRTT.async { implicit request =>
 
+    def displayAnnualExemptAmountCheck(claimedOtherProperties: Boolean,
+                                       claimedAllowableLosses: Boolean,
+                                       allowableLossesValueModel: Option[AllowableLossesValueModel])(implicit hc: HeaderCarrier): Boolean = {
+      allowableLossesValueModel match {
+        case Some(result) if claimedAllowableLosses && claimedOtherProperties => result.amount == 0
+        case _ if claimedOtherProperties && !claimedAllowableLosses => true
+        case _ => false
+      }
+    }
+
     def buildPreviousTaxableGainsBackUrl(chargeableGainAnswers: ChargeableGainAnswers)(implicit hc: HeaderCarrier): Future[String] = {
-      (chargeableGainAnswers.otherPropertiesModel.getOrElse(OtherPropertiesModel(false)).hasOtherProperties
+      (displayAnnualExemptAmountCheck(chargeableGainAnswers.otherPropertiesModel.getOrElse(OtherPropertiesModel(false)).hasOtherProperties,
+        chargeableGainAnswers.allowableLossesModel.getOrElse(AllowableLossesModel(false)).isClaiming,
+        chargeableGainAnswers.allowableLossesValueModel)
         , chargeableGainAnswers.broughtForwardModel.getOrElse(LossesBroughtForwardModel(false)).option) match {
         case (true, _) => Future.successful(routes.DeductionsController.annualExemptAmount().url)
         case (false, true) => Future.successful(routes.DeductionsController.lossesBroughtForwardValue().url)

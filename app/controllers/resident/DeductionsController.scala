@@ -203,10 +203,25 @@ trait DeductionsController extends FeatureLock {
 
   def allowableLossesCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
     calcConnector.fetchAndGetFormData[AllowableLossesModel](KeystoreKeys.ResidentKeys.allowableLosses).map {
-      case Some(AllowableLossesModel(false)) => false
-      case Some(AllowableLossesModel(true)) => true
+      case Some(data) => data.isClaiming
       case None => false
     }
+  }
+
+  def displayAnnualExemptAmountCheck(claimedOtherProperties: Boolean, claimedAllowableLosses: Boolean)(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[AllowableLossesValueModel](KeystoreKeys.ResidentKeys.allowableLossesValue).map {
+      case Some(result) if claimedAllowableLosses && claimedOtherProperties => result.amount == 0
+      case _ if claimedOtherProperties && !claimedAllowableLosses => true
+      case _ => false
+    }
+  }
+
+  def displayAnnualExemptAmountCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
+    for {
+      disposedOtherProperties <- otherPropertiesCheck
+      claimedAllowableLosses <- allowableLossesCheck
+      displayAnnualExemptAmount <- displayAnnualExemptAmountCheck(disposedOtherProperties, claimedAllowableLosses)
+    } yield displayAnnualExemptAmount
   }
 
   def lossesBroughtForwardBackUrl(implicit hc: HeaderCarrier): Future[String] = {
@@ -258,10 +273,10 @@ trait DeductionsController extends FeatureLock {
         success => {
           calcConnector.saveFormData[LossesBroughtForwardModel](KeystoreKeys.ResidentKeys.lossesBroughtForward, success)
 
-          if (success.option) Future.successful(Redirect(routes.DeductionsController.lossesBroughtForwardValue))
+          if (success.option) Future.successful(Redirect(routes.DeductionsController.lossesBroughtForwardValue()))
           else {
-            otherPropertiesCheck.flatMap { otherProperties =>
-              if (otherProperties) Future.successful(Redirect(routes.DeductionsController.annualExemptAmount()))
+            displayAnnualExemptAmountCheck.flatMap { displayAnnualExemptAmount =>
+              if (displayAnnualExemptAmount) Future.successful(Redirect(routes.DeductionsController.annualExemptAmount()))
               else {
                 positiveChargeableGainCheck.map { positiveChargeableGain =>
                   if (positiveChargeableGain) Redirect(routes.IncomeController.currentIncome())
@@ -296,8 +311,8 @@ trait DeductionsController extends FeatureLock {
       success => {
         calcConnector.saveFormData[LossesBroughtForwardValueModel](KeystoreKeys.ResidentKeys.lossesBroughtForwardValue, success)
 
-        otherPropertiesCheck.flatMap { otherProperties =>
-          if (otherProperties) Future.successful(Redirect(routes.DeductionsController.annualExemptAmount()))
+        displayAnnualExemptAmountCheck.flatMap { displayAnnualExemptAmount =>
+          if (displayAnnualExemptAmount) Future.successful(Redirect(routes.DeductionsController.annualExemptAmount()))
           else {
             positiveChargeableGainCheck.map { positiveChargeableGain =>
               if (positiveChargeableGain) Redirect(routes.IncomeController.currentIncome())
