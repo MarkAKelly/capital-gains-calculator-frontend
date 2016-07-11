@@ -43,13 +43,12 @@ class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with
     when(mockCalcConnector.fetchAndGetFormData[PersonalAllowanceModel](Matchers.eq(keystoreKeys.personalAllowance))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
-<<<<<<< HEAD
     when(mockCalcConnector.getPA(Matchers.any())(Matchers.any()))
           .thenReturn(Future.successful(maxPersonalAllowance))
-=======
+
     when(mockCalcConnector.saveFormData[PersonalAllowanceModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
->>>>>>> master
+
 
     new IncomeController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -131,7 +130,6 @@ class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with
 
       lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
-      lazy val target = setupTarget(None)
       lazy val result = target.submitPersonalAllowance(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
