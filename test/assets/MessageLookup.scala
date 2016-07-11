@@ -119,6 +119,7 @@ object MessageLookup {
     val chargeableLoss = "Carried forward loss"
     val chargeableGain = "Taxable gain"
     val taxRate = "Tax Rate"
+    val aeaRemaining = "Capital gains tax allowance left"
   }
 
   //Reliefs messages

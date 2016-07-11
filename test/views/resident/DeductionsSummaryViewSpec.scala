@@ -46,6 +46,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     lazy val results = ChargeableGainResultModel(BigDecimal(50000),
       BigDecimal(38900),
       BigDecimal(11100),
+      BigDecimal(0),
       BigDecimal(11100))
     lazy val backLink = "/calculate-your-capital-gains/resident/losses-brought-forward"
     
@@ -147,7 +148,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
             doc.select("#deductions-amount").text should include("Loss brought forward £0")
           }
         }
-
       }
 
       "has a numeric output row for the chargeable gain" which {
@@ -161,6 +161,16 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
       }
 
+      "has a numeric output row for the AEA remaining" which {
+
+        "should have the question text 'Capital gains tax allowance left" in {
+          doc.select("#aeaRemaining-question").text should include(messages.aeaRemaining)
+        }
+
+        "include a value for Capital gains tax allowance left of £0" in {
+          doc.select("#aeaRemaining-amount").text should include("£0")
+        }
+      }
     }
 
     s"have a section for Your answers" which {
@@ -341,6 +351,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     lazy val results = ChargeableGainResultModel(BigDecimal(50000),
       BigDecimal(-11000),
       BigDecimal(0),
+      BigDecimal(11000),
       BigDecimal(71000))
 
     lazy val backLink = "/calculate-your-capital-gains/resident/annual-exempt-amount"
