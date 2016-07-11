@@ -55,6 +55,7 @@ trait IncomeController extends FeatureLock {
   def annualExemptAmountEntered(implicit hc: HeaderCarrier): Future[Boolean] = {
     calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](KeystoreKeys.ResidentKeys.annualExemptAmount).map {
       case Some(data) => data.amount == 0
+      case None => false
     }
   }
 
@@ -171,7 +172,7 @@ trait IncomeController extends FeatureLock {
   val submitPersonalAllowance = FeatureLockForRTT.async { implicit request =>
 
     def getMaxPA: Future[Option[BigDecimal]] = {
-      calcConnector.getPA("2016")(hc)
+      calcConnector.getPA(2016)(hc)
     }
 
     def routeRequest(maxPA: BigDecimal): Future[Result] = {

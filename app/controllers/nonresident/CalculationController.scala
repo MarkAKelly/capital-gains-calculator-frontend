@@ -138,7 +138,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   }
 
   val submitPersonalAllowance = ValidateSession.async { implicit request =>
-    calcConnector.getPA("2017").flatMap { pa =>
+    calcConnector.getPA(2017).flatMap { pa =>
       personalAllowanceForm(pa.get).bindFromRequest.fold(
         errors => Future.successful(BadRequest(calculation.nonresident.personalAllowance(errors))),
         success => {
@@ -245,10 +245,10 @@ trait CalculationController extends FrontendController with ValidActiveSession {
 
     def fetchAEA(isFullAEA: Boolean)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
       if (isFullAEA) {
-        calcConnector.getFullAEA("2017")
+        calcConnector.getFullAEA(2017)
       }
       else {
-        calcConnector.getPartialAEA("2017")
+        calcConnector.getPartialAEA(2017)
       }
     }
 
