@@ -34,6 +34,7 @@ articleLayout = false
     )))
     @summaryNumericRowHelper("chargeableGain", if(result.chargeableGain < 0) {
     Messages("calc.resident.summary.chargeableLoss")} else {Messages("calc.resident.summary.chargeableGain")}, result.chargeableGain)
+    @summaryNumericRowHelper("aeaRemaining", Messages("calc.resident.summary.aeaRemaining"), result.aeaRemaining)
 </section>
 
 <!-- Your Answers Section -->

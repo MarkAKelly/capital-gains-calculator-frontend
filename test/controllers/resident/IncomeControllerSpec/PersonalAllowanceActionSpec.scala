@@ -26,6 +26,7 @@ import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
 import play.api.test.Helpers._
 import assets.MessageLookup.{personalAllowance => messages}
+import models.resident.{AnnualExemptAmountModel, ChargeableGainResultModel}
 import models.resident.income.PersonalAllowanceModel
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -34,14 +35,20 @@ import scala.concurrent.Future
 
 class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  def setupTarget(getData: Option[PersonalAllowanceModel]): IncomeController = {
+
+  def setupTarget(getData: Option[PersonalAllowanceModel],
+                  maxPersonalAllowance: Option[BigDecimal] = Some(BigDecimal(11100))): IncomeController = {
     val mockCalcConnector = mock[CalculatorConnector]
 
     when(mockCalcConnector.fetchAndGetFormData[PersonalAllowanceModel](Matchers.eq(keystoreKeys.personalAllowance))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
+    when(mockCalcConnector.getPA(Matchers.any())(Matchers.any()))
+          .thenReturn(Future.successful(maxPersonalAllowance))
+
     when(mockCalcConnector.saveFormData[PersonalAllowanceModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
+
 
     new IncomeController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -105,8 +112,9 @@ class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with
 
     "a valid form is submitted" should {
 
-      lazy val target = setupTarget(None)
+
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+      lazy val target = setupTarget(Some(PersonalAllowanceModel(1000)))
       lazy val result = target.submitPersonalAllowance(request)
 
       "return a 303" in {

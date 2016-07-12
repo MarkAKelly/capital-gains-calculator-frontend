@@ -62,10 +62,10 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
     when(mockCalcConnector.fetchAndGetFormData[AnnualExemptAmountModel](Matchers.eq(KeystoreKeys.annualExemptAmount))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
-    when(mockCalcConnector.getFullAEA(Matchers.anyString())(Matchers.any()))
+    when(mockCalcConnector.getFullAEA(Matchers.anyInt())(Matchers.any()))
       .thenReturn(Some(BigDecimal(11100)))
 
-    when(mockCalcConnector.getPartialAEA(Matchers.anyString())(Matchers.any()))
+    when(mockCalcConnector.getPartialAEA(Matchers.anyInt())(Matchers.any()))
       .thenReturn(Some(BigDecimal(5550)))
 
     lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(AnnualExemptAmountModel(0)))))

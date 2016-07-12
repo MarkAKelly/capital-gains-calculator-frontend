@@ -54,9 +54,7 @@ trait IncomeController extends FeatureLock {
 
   def annualExemptAmountEntered(implicit hc: HeaderCarrier): Future[Boolean] = {
     calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](KeystoreKeys.ResidentKeys.annualExemptAmount).map {
-      case Some(data) =>
-        if(data.amount.equals(0)) true
-        else false
+      case Some(data) => data.amount == 0
       case None => false
     }
   }
@@ -166,18 +164,31 @@ trait IncomeController extends FeatureLock {
   //################################# Personal Allowance Actions ##########################################
   val personalAllowance = FeatureLockForRTT.async { implicit request =>
     calcConnector.fetchAndGetFormData[PersonalAllowanceModel](KeystoreKeys.ResidentKeys.personalAllowance).map {
-      case Some(data) => Ok(views.personalAllowance(personalAllowanceForm.fill(data)))
-      case None => Ok(views.personalAllowance(personalAllowanceForm))
+      case Some(data) => Ok(views.personalAllowance(personalAllowanceForm().fill(data)))
+      case None => Ok(views.personalAllowance(personalAllowanceForm()))
     }
   }
+  
   val submitPersonalAllowance = FeatureLockForRTT.async { implicit request =>
-    personalAllowanceForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.personalAllowance(errors))),
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.ResidentKeys.personalAllowance, success)
-        Future.successful(Redirect(routes.SummaryController.summary()))
-      }
-    )
 
+    def getMaxPA: Future[Option[BigDecimal]] = {
+      calcConnector.getPA(2016)(hc)
+    }
+
+    def routeRequest(maxPA: BigDecimal): Future[Result] = {
+      personalAllowanceForm(maxPA).bindFromRequest.fold(
+        errors => Future.successful(BadRequest(views.personalAllowance(errors))),
+        success => {
+          calcConnector.saveFormData(KeystoreKeys.ResidentKeys.personalAllowance, success)
+          Future.successful(Redirect(routes.SummaryController.summary()))
+        }
+      )
+    }
+
+    for {
+      maxPA <- getMaxPA
+      route <- routeRequest(maxPA.get)
+    } yield route
   }
+
 }

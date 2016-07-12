@@ -29,7 +29,7 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
 
   "Personal Allowance view" should {
 
-    lazy val view = views.personalAllowance(personalAllowanceForm)(fakeRequest)
+    lazy val view = views.personalAllowance(personalAllowanceForm())(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -131,7 +131,7 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
 
 
     "Personal Allowance view with stored values" should {
-      lazy val form = personalAllowanceForm.bind(Map(("amount", "1000")))
+      lazy val form = personalAllowanceForm().bind(Map(("amount", "1000")))
       lazy val view = views.personalAllowance(form)(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
 
@@ -145,7 +145,7 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
 
       "is due to mandatory field error" should {
 
-        val form = personalAllowanceForm.bind(Map("amount" -> ""))
+        val form = personalAllowanceForm().bind(Map("amount" -> ""))
         lazy val view = views.personalAllowance(form)(fakeRequest)
         lazy val doc = Jsoup.parse(view.body)
 
