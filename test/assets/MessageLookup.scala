@@ -165,9 +165,9 @@ object MessageLookup {
     val question = "Are there any previous losses you want to bring forward?"
   }
 
-  //Losses Brought Forward messages
+  //Allowable Losses messages
   object allowableLosses {
-    val title = "Are you claiming any allowable losses from tax years before 2015/16?"
+    val title = "Are you claiming any allowable losses from the 2015/2016 tax year?"
     val helpInfoTitle = "What are allowable losses?"
     val helpInfoSubtitle = "They're losses you've made that:"
     val helpInfoPoint1 = "are covered by Capital Gains Tax"
