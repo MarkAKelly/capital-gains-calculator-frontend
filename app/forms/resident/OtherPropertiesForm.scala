@@ -28,8 +28,8 @@ object OtherPropertiesForm {
   val otherPropertiesForm = Form(
     mapping(
       "hasOtherProperties" -> text
-        .verifying(Messages("calc.base.undefinedMessage"), mandatoryCheck)
-        .verifying(Messages("calc.base.undefinedMessage"), yesNoCheck)
+        .verifying(Messages("calc.resident.otherProperties.errorSelect", "2015/16"), mandatoryCheck)
+        .verifying(Messages("calc.resident.otherProperties.errorSelect", "2015/16"), yesNoCheck)
         .transform[Boolean](stringToBoolean, booleanToString)
     )(OtherPropertiesModel.apply)(OtherPropertiesModel.unapply)
   )
