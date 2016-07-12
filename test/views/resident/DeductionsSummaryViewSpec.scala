@@ -573,20 +573,46 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
           doc.select("#broughtForwardLossesValue-amount a").attr("href") shouldBe routes.DeductionsController.lossesBroughtForwardValue().url
         }
       }
+    }
+  }
 
-      "has an option output row for annual exempt amount" which {
+  "Deductions Summary view with AEA options selected" which {
+    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+      BigDecimal(200000),
+      BigDecimal(10000),
+      BigDecimal(100000),
+      BigDecimal(10000),
+      BigDecimal(30000))
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(true)),
+      Some(ReliefsValueModel(BigDecimal(50000))),
+      Some(OtherPropertiesModel(true)),
+      Some(AllowableLossesModel(false)),
+      Some(AllowableLossesValueModel(10000)),
+      Some(LossesBroughtForwardModel(true)),
+      Some(LossesBroughtForwardValueModel(10000)),
+      Some(AnnualExemptAmountModel(1000)))
+    lazy val results = ChargeableGainResultModel(BigDecimal(50000),
+      BigDecimal(-11000),
+      BigDecimal(0),
+      BigDecimal(11000),
+      BigDecimal(71000))
 
-        s"should have the question text '${commonMessages.annualExemptAmount.title}'" in {
-          doc.select("#annualExemptAmount-question").text shouldBe commonMessages.annualExemptAmount.title
-        }
+    lazy val backLink = "/calculate-your-capital-gains/resident/annual-exempt-amount"
+    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink)(fakeRequestWithSession)
+    lazy val doc = Jsoup.parse(view.body)
 
-        "should have the value '£1,000'" in {
-          doc.select("#annualExemptAmount-amount span").text shouldBe "£1,000"
-        }
+    "has an option output row for AEA value" should {
 
-        s"should have a change link to ${routes.DeductionsController.annualExemptAmount().url}" in {
-          doc.select("#annualExemptAmount-amount a").attr("href") shouldBe routes.DeductionsController.annualExemptAmount().url
-        }
+      s"should have the question text '${commonMessages.annualExemptAmount.title}'" in {
+        doc.select("#annualExemptAmount-question").text shouldBe commonMessages.annualExemptAmount.title
+      }
+
+      "should have the value '£1,000'" in {
+        doc.select("#annualExemptAmount-amount span").text shouldBe "£1,000"
+      }
+
+      s"should have a change link to ${routes.DeductionsController.annualExemptAmount().url}" in {
+        doc.select("#annualExemptAmount-amount a").attr("href") shouldBe routes.DeductionsController.annualExemptAmount().url
       }
 
       s"display the text ${messages.whatToDoNextText}" in {
