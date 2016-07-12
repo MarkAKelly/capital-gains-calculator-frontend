@@ -53,8 +53,8 @@ trait DeductionsController extends FeatureLock {
 
     def routeRequest(totalGain: BigDecimal): Future[Result] = {
       calcConnector.fetchAndGetFormData[ReliefsModel](KeystoreKeys.ResidentKeys.reliefs).map {
-        case Some(data) => Ok(views.reliefs(reliefsForm.fill(data), totalGain))
-        case None => Ok(views.reliefs(reliefsForm, totalGain))
+        case Some(data) => Ok(views.reliefs(reliefsForm(totalGain).fill(data), totalGain))
+        case None => Ok(views.reliefs(reliefsForm(totalGain), totalGain))
       }
     }
 
@@ -66,26 +66,24 @@ trait DeductionsController extends FeatureLock {
   }
 
   val submitReliefs = FeatureLockForRTT.async { implicit request =>
-    def routeRequest(errors: Form[ReliefsModel], totalGain: BigDecimal): Future[Result] = {
-      Future.successful(BadRequest(views.reliefs(errors, totalGain)))
-    }
 
-    reliefsForm.bindFromRequest.fold(
-      errors => {
-        for {
-          answerSummary <- answerSummary(hc)
-          totalGain <- totalGain(answerSummary, hc)
-          route <- routeRequest(errors, totalGain)
-        } yield route
-      },
-      success => {
-        calcConnector.saveFormData[ReliefsModel](KeystoreKeys.ResidentKeys.reliefs, success)
-        success match {
-          case ReliefsModel(true) => Future.successful(Redirect(routes.DeductionsController.reliefsValue()))
-          case _ => Future.successful(Redirect(routes.DeductionsController.otherProperties()))
+    def routeRequest (totalGain: BigDecimal) = {
+      reliefsForm(totalGain).bindFromRequest().fold(
+        errors => Future.successful(BadRequest(views.reliefs(errors, totalGain))),
+        success => {
+          calcConnector.saveFormData[ReliefsModel](KeystoreKeys.ResidentKeys.reliefs, success)
+          success match {
+            case ReliefsModel(true) => Future.successful(Redirect(routes.DeductionsController.reliefsValue()))
+            case _ => Future.successful(Redirect(routes.DeductionsController.otherProperties()))
+          }
         }
-      }
-    )
+      )
+    }
+    for {
+      answerSummary <- answerSummary(hc)
+      totalGain <- totalGain(answerSummary, hc)
+      route <- routeRequest(totalGain)
+    } yield route
   }
 
   //################# Reliefs Value Input Actions ########################
