@@ -112,7 +112,7 @@ class SummaryOptionRowHelperSpec extends UnitSpec with WithFakeApplication {
           link.text shouldBe commonMessages.calcBaseChange
         }
         "has the id testID-change-link" in {
-          link.size shouldEqual 1
+          link.attr("id") shouldBe "testID-change-link"
         }
       }
     }

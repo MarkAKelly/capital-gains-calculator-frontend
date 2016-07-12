@@ -114,7 +114,7 @@ class SummaryDateRowHelperSpec extends UnitSpec with WithFakeApplication {
         }
 
         "has the id testID-change-link" in {
-          link.size shouldEqual 1
+          link.attr("id") shouldBe "testID-change-link"
         }
       }
     }
