@@ -113,6 +113,9 @@ class SummaryDateRowHelperSpec extends UnitSpec with WithFakeApplication {
           link.text shouldBe commonMessages.calcBaseChange
         }
 
+        "has the id testID-change-link" in {
+          link.size shouldEqual 1
+        }
       }
     }
   }

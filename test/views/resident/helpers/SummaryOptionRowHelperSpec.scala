@@ -18,12 +18,12 @@ package views.resident.helpers
 
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import views.html.helpers.resident.summaryNumericRowHelper
+import views.html.helpers.resident.summaryOptionRowHelper
 import assets.{MessageLookup => commonMessages}
 
-class SummaryNumericRowHelperSpec extends UnitSpec with WithFakeApplication {
+class SummaryOptionRowHelperSpec extends UnitSpec with WithFakeApplication {
 
-  val row = summaryNumericRowHelper("testID","testQ",2000)
+  val row = summaryOptionRowHelper("testID","testQ",true)
   val doc = Jsoup.parse(row.body)
 
   "The Summary Numeric Row Helper" should {
@@ -77,10 +77,10 @@ class SummaryNumericRowHelperSpec extends UnitSpec with WithFakeApplication {
 
     "have an inner amount div" which {
 
-      val amountDiv = doc.select("div#testID-amount")
+      val amountDiv = doc.select("div#testID-option")
 
-      "has the id 'testID-amount" in {
-        amountDiv.attr("id") shouldBe "testID-amount"
+      "has the id 'testID-option" in {
+        amountDiv.attr("id") shouldBe "testID-option"
       }
 
       "has the class 'grid-layout__column'" in {
@@ -92,14 +92,14 @@ class SummaryNumericRowHelperSpec extends UnitSpec with WithFakeApplication {
       }
 
       "has a span with the text 'testQ'" in {
-        amountDiv.select("span").text shouldBe "£2,000"
+        amountDiv.select("span").text shouldBe "Yes"
       }
 
     }
 
     s"if given data that includes a change link " should {
 
-      lazy val rowWithChangeLink = summaryNumericRowHelper("testID","testQ",2000,Some("link"))
+      lazy val rowWithChangeLink = summaryOptionRowHelper("testID","testQ",true,Some("link"))
       lazy val link = Jsoup.parse(rowWithChangeLink.body).select("a")
 
       "include a change link" which {
