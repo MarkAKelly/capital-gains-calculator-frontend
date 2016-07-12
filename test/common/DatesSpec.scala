@@ -58,7 +58,7 @@ class DatesSpec extends UnitSpec {
 
   "Calling getMonth" should {
     "return an integer value of the month" in {
-      Dates.getMonth(new Date(2014, 11, 12)) shouldEqual 11
+      Dates.getMonth(new Date(2014, 11, 12)) shouldEqual 12
     }
   }
   "Calling getYear" should {

@@ -19,10 +19,12 @@ package views.resident
 import assets.MessageLookup.{summary => messages}
 import assets.{MessageLookup => commonMessages}
 import common.Dates
+import common.Dates._
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.routes
 import models.resident._
 import org.jsoup.Jsoup
+
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.{resident => views}
 
@@ -586,6 +588,55 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
           doc.select("#annualExemptAmount-amount a").attr("href") shouldBe routes.DeductionsController.annualExemptAmount().url
         }
       }
+
+      s"display the text ${messages.whatToDoNextText}" in {
+        doc.select("div#whatToDoNextNoLossText").text shouldEqual messages.whatToDoNextNoLossText
+      }
+    }
+  }
+
+
+  "Summary when supplied with a date within the known tax years and no gain or loss" should {
+
+    val testModel = YourAnswersSummaryModel(
+      constructDate(12, 9, 2015),
+      10,
+      20,
+      30,
+      40,
+      50
+    )
+    lazy val view = views.gainSummary(testModel, 0)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "display the what to do next section" in {
+      doc.select("#whatToDoNext").hasText shouldEqual true
+    }
+
+    s"display the title ${messages.whatToDoNextTitle}" in {
+      doc.select("h3#whatToDoNextNoLossTitle").text shouldEqual messages.whatToDoNextTitle
+    }
+
+    s"display the text ${messages.whatToDoNextText}" in {
+      doc.select("div#whatToDoNextNoLossText").text shouldEqual messages.whatToDoNextNoLossText
+    }
+  }
+
+  "Summary when supplied with a date above the known tax years" should {
+
+    val testModel = YourAnswersSummaryModel(
+      constructDate(12,9,2018),
+      10,
+      20,
+      30,
+      40,
+      50
+    )
+    lazy val view = views.gainSummary(testModel, 0)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "does not display the section for what to do next" in {
+      doc.select("#whatToDoNext").isEmpty shouldBe true
     }
   }
 }

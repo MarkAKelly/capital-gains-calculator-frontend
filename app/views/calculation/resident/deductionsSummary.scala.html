@@ -1,6 +1,7 @@
 @import views.html.helpers.resident._
 @import models.SummaryDataItemModel
 @import models.resident._
+@import common.Dates._
 @import constructors.resident.SummaryConstructor._
 @import controllers.resident.routes.{GainController => gainRoutes}
 @import controllers.resident.routes.{DeductionsController => deductionRoutes}
@@ -63,5 +64,14 @@ articleLayout = false
     @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties)
         summaryNumericRowHelper("annualExemptAmount",Messages("calc.resident.annualExemptAmount.title"),deductionAnswers.annualExemptAmountModel.get.amount,Some(deductionRoutes.annualExemptAmount().toString))}
 </section>
+
+
+
+    @if(dateInsideAcceptedTaxYears(getDay(gainAnswers.disposalDate), getMonth(gainAnswers.disposalDate), getYear(gainAnswers.disposalDate))) {
+            <section id="whatToDoNext" class="summary-underline summary-overline">
+                <h3 id="whatToDoNextNoLossTitle" class="bold-medium">@Messages("calc.resident.summary.whatNext")</h3>
+                <div id="whatToDoNextNoLossText" class="font-medium what-to-do-next-text">@Messages("calc.resident.summary.whatNext.noLossOrGain")</div>
+            </section>
+    }
 
 }
