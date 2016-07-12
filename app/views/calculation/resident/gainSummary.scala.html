@@ -41,7 +41,7 @@
         @summaryNumericRowHelper("improvements",Messages("calc.resident.improvements.title"),answers.improvements,Some(routes.improvements().toString))
     </section>
 
-    @if(dateInsideAcceptedTaxYears(getDay(answers.disposalDate), getDay(answers.disposalDate), getYear(answers.disposalDate))) {
+    @if(dateInsideAcceptedTaxYears(getDay(answers.disposalDate), getMonth(answers.disposalDate), getYear(answers.disposalDate))) {
 
         @if(gain < 0) {
             <section id="whatToDoNext" class="summary-underline summary-overline">
