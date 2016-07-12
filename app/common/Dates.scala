@@ -55,13 +55,36 @@ object Dates {
         val cal = Calendar.getInstance()
         cal.setTime(date)
         cal.add(Calendar.MONTH, months * -1)
-        new SimpleDateFormat("d MMMMM yyyy").format(cal.getTime)
+        new SimpleDateFormat("d MMMM yyyy").format(cal.getTime)
       case _ => ""
     }
   }
 
+  def getDay(date: Date): Int = {
+    val cal = Calendar.getInstance()
+    cal.setTime(date)
+    cal.get(Calendar.DAY_OF_MONTH)
+  }
+
+  def getMonth(date: Date): Int = {
+    val cal = Calendar.getInstance()
+    cal.setTime(date)
+    cal.get(Calendar.MONTH)
+  }
+
+  def getYear(date: Date): Int = {
+    val cal = Calendar.getInstance()
+    cal.setTime(date)
+    cal.get(Calendar.YEAR)
+  }
+
   def dateInsideTaxYear (day: Int, month: Int, year: Int): Boolean = {
     constructDate(day, month, year).after(taxYearStartDate) && constructDate(day, month, year).before(taxYearEndDate)
+  }
+
+  def dateInsideAcceptedTaxYears (day: Int, month: Int, year: Int): Boolean ={
+    val date = constructDate(day, month, year)
+    date.after(taxStartDate) && date.before(taxYearEndDate)
   }
 }
 

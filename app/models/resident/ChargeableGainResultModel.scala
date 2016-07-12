@@ -22,6 +22,7 @@ case class ChargeableGainResultModel (
                                        gain: BigDecimal,
                                        chargeableGain: BigDecimal,
                                        aeaUsed: BigDecimal,
+                                       aeaRemaining: BigDecimal,
                                        deductions: BigDecimal
                                      )
 

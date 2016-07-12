@@ -107,6 +107,16 @@
     border-bottom: 2px solid #BFC1C3;
 }
 
+.resident .summary-overline {
+    padding-top: 1.8em;
+    border-top: 2px solid #BFC1C3;
+}
+
+.what-to-do-next-text {
+    padding-top: 0.8em;
+    padding-bottom: 1.5em;
+}
+
 .resident section {
     margin: 0em 0em;
     padding-bottom: 1em;
