@@ -17,10 +17,9 @@
 package forms.resident
 
 import assets.MessageLookup
-import models.resident._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import forms.resident.LossesBroughtForwardForm._
-import assets.MessageLookup._
+import assets.MessageLookup.{lossesBroughtForward => messages}
 
 class LossesBroughtForwardFormSpec extends UnitSpec with WithFakeApplication {
 
@@ -82,26 +81,25 @@ class LossesBroughtForwardFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       "associate the correct error message to the error" in {
-        form.error("option").get.message shouldBe MessageLookup.undefinedMessage
-      }
-    }
-
-    "supplied with invalid data for option" should {
-
-      lazy val form = lossesBroughtForwardForm.bind(Map("option" -> "asdas"))
-
-      "raise form error" in {
-        form.hasErrors shouldBe true
+        form.error("option").get.message shouldBe messages.errorSelect("2015/16")
       }
 
-      "raise 1 form error" in {
-        form.errors.length shouldBe 1
-      }
+      "supplied with invalid data for option" should {
 
-      "associate the correct error message to the error" in {
-        form.error("option").get.message shouldBe MessageLookup.undefinedMessage
+        lazy val form = lossesBroughtForwardForm.bind(Map("option" -> "asdas"))
+
+        "raise form error" in {
+          form.hasErrors shouldBe true
+        }
+
+        "raise 1 form error" in {
+          form.errors.length shouldBe 1
+        }
+
+        "associate the correct error message to the error" in {
+          form.error("option").get.message shouldBe messages.errorSelect("2015/16")
+        }
       }
     }
   }
-
 }

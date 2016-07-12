@@ -22,15 +22,16 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.Messages
 import common.Validation._
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 
 object ReliefsForm {
 
-  val reliefsForm = Form(
+  def reliefsForm(totalGain: BigDecimal): Form[ReliefsModel] = Form(
     mapping(
       "isClaiming" -> text
-        .verifying(Messages("calc.base.undefinedMessage"), _.nonEmpty)
-        .verifying(Messages("calc.base.undefinedMessage"), yesNoCheck)
+        .verifying(Messages("calc.resident.reliefs.errorSelect", MoneyPounds(totalGain, 0).quantity), _.nonEmpty)
+        .verifying(Messages("calc.resident.reliefs.errorSelect", MoneyPounds(totalGain, 0).quantity), yesNoCheck)
         .transform[Boolean](stringToBoolean, booleanToString)
     )(ReliefsModel.apply)(ReliefsModel.unapply)
   )

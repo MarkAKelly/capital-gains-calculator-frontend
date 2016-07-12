@@ -20,6 +20,7 @@ import models.resident.OtherPropertiesModel
 import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 import forms.resident.OtherPropertiesForm._
 import assets.MessageLookup._
+import assets.MessageLookup.{otherProperties => messages}
 
 class OtherPropertiesFormSpec extends UnitSpec with WithFakeApplication {
 
@@ -47,8 +48,8 @@ class OtherPropertiesFormSpec extends UnitSpec with WithFakeApplication {
         form.hasErrors shouldBe true
       }
 
-      s"return a form with the error message $undefinedMessage" in {
-        form.error("hasOtherProperties").get.message shouldBe undefinedMessage
+      s"return a form with the error message ${messages.errorSelect("2015/16")}" in {
+        form.error("hasOtherProperties").get.message shouldBe messages.errorSelect("2015/16")
       }
     }
 
@@ -59,8 +60,8 @@ class OtherPropertiesFormSpec extends UnitSpec with WithFakeApplication {
         form.hasErrors shouldBe true
       }
 
-      s"return a form with the error message $undefinedMessage" in {
-        form.error("hasOtherProperties").get.message shouldBe undefinedMessage
+      s"return a form with the error message ${messages.errorSelect("2015/16")}" in {
+        form.error("hasOtherProperties").get.message shouldBe messages.errorSelect("2015/16")
       }
     }
   }
