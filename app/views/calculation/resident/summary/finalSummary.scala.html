@@ -3,6 +3,7 @@
 @import models.SummaryDataItemModel
 @import models.resident._
 @import constructors.resident.SummaryConstructor._
+@import constructors.resident.CalculateRequestConstructor._
 @import controllers.resident.routes.{GainController => gainRoutes}
 @import controllers.resident.routes.{DeductionsController => deductionRoutes}
 @import controllers.resident.routes.{IncomeController => incomeRoutes}
@@ -29,10 +30,10 @@ articleLayout = false
     <!-- Data Rows -->
     @summaryNumericRowHelper("gain",gainMessage(result.gain),result.gain)
     @summaryNumericRowHelper("deductions", Messages("calc.resident.summary.deductions"), result.deductions, None, Some(Seq(
-    (Messages("calc.resident.summary.reliefs"), MoneyPounds(deductionAnswers.reliefsValueModel.getOrElse(ReliefsValueModel(BigDecimal(0))).amount, 0).quantity),
-    (Messages("calc.resident.summary.allowableLosses"), MoneyPounds(deductionAnswers.allowableLossesValueModel.getOrElse(AllowableLossesValueModel(BigDecimal(0))).amount, 0).quantity),
+    (Messages("calc.resident.summary.reliefs"), reliefsUsed(deductionAnswers)),
+    (Messages("calc.resident.summary.allowableLosses"), allowableLossesUsed(deductionAnswers)),
     (Messages("calc.resident.summary.aeaUsed"), MoneyPounds(result.aeaUsed, 0).quantity),
-    (Messages("calc.resident.summary.broughtForwardLoss"), MoneyPounds(deductionAnswers.broughtForwardValueModel.getOrElse(LossesBroughtForwardValueModel(BigDecimal(0))).amount, 0).quantity)
+    (Messages("calc.resident.summary.broughtForwardLoss"), broughtForwardLossesUsed(deductionAnswers))
     )))
     @summaryNumericRowHelper("chargeableGain", if(result.chargeableGain < 0) {
     Messages("calc.resident.summary.chargeableLoss")} else {Messages("calc.resident.summary.chargeableGain")}, result.chargeableGain)
@@ -68,7 +69,7 @@ articleLayout = false
     @summaryOptionRowHelper("broughtForwardLosses",Messages("calc.resident.lossesBroughtForward.title"),deductionAnswers.broughtForwardModel.get.option, Some(deductionRoutes.lossesBroughtForward().toString))
     @{if (deductionAnswers.broughtForwardModel.get.option)
     summaryNumericRowHelper("broughtForwardLossesValue",Messages("calc.resident.lossesBroughtForwardValue.title"),deductionAnswers.broughtForwardValueModel.get.amount,Some(deductionRoutes.lossesBroughtForwardValue().toString))}
-    @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties)
+    @{if (isUsingAnnualExemptAmount(deductionAnswers.otherPropertiesModel, deductionAnswers.allowableLossesModel, deductionAnswers.allowableLossesValueModel))
     summaryNumericRowHelper("annualExemptAmount",Messages("calc.resident.annualExemptAmount.title"),deductionAnswers.annualExemptAmountModel.get.amount,Some(deductionRoutes.annualExemptAmount().toString))}
     @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties && deductionAnswers.annualExemptAmountModel.isDefined && deductionAnswers.annualExemptAmountModel.get.amount == 0)
     summaryNumericRowHelper("previousTaxableGains", Messages("calc.resident.previousTaxableGains.title"), incomeAnswers.previousTaxableGainsModel.get.amount, Some(incomeRoutes.previousTaxableGains().toString))}

@@ -311,8 +311,8 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
     lazy val view = views.html.calculation.resident.gainSummary(testModel,-2000)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
-    "display the what to do next content" in {
-      doc.select("#whatToDoNext").text shouldEqual ""
+    "does not display the what to do next content" in {
+      doc.select("#whatToDoNext").isEmpty shouldBe true
     }
   }
 

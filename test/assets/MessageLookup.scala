@@ -135,6 +135,7 @@ object MessageLookup {
     val helpLinkOne = "Private Residence Relief"
     val helpLinkTwo = "Lettings Relief"
     val helpTwo = "Tax reliefs are different from your Capital Gains Tax Allowance and Personal Allowance."
+    def errorSelect(value: String) = s"Tell us if you want to claim any tax reliefs on your total gain of £$value"
   }
 
   //Reliefs Value messages
@@ -151,6 +152,8 @@ object MessageLookup {
     val helpOne = "shares"
     val helpTwo = "antiques"
     val helpThree = "other UK residential properties"
+    def errorSelect(input: String) = s"Tell us if you sold or gave away anything else that's covered by Capital Gains Tax in the $input tax year"
+
   }
 
   //Allowable Losses Value messages
@@ -163,6 +166,7 @@ object MessageLookup {
   object lossesBroughtForward {
     val title = "Are there any previous losses you want to bring forward?"
     val question = "Are there any previous losses you want to bring forward?"
+    def errorSelect(input: String) = s"Tell us if you're claiming any allowable losses from tax years before $input"
   }
 
   //Allowable Losses messages
@@ -173,6 +177,7 @@ object MessageLookup {
     val helpInfoPoint1 = "are covered by Capital Gains Tax"
     val helpInfoPoint2 = "you've declared within 4 years of making the loss"
     val helpInfoPoint3 = "you haven't already used in an allowable losses claim"
+    def errorSelect(input: String) = s"Tell us if you're claiming any allowable losses from the $input tax year"
   }
 
   //Losses Brought Forward Value messages

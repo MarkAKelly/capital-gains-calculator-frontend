@@ -373,6 +373,8 @@ calc.resident.reliefs.additionalContent.one = Tax reliefs can lower the amount o
 calc.resident.reliefs.link.one = Private Residence Relief
 calc.resident.reliefs.link.two = Lettings Relief
 calc.resident.reliefs.additionalContent.two = Tax reliefs are different from your Capital Gains Tax Allowance and Personal Allowance.
+calc.resident.reliefs.errorSelect = Tell us if you want to claim any tax reliefs on your total gain of £{0}
+
 
 ## Reliefs Value messages
 calc.resident.reliefsValue.title = How much tax relief are you claiming?
@@ -388,6 +390,7 @@ calc.resident.otherProperties.bullet.title = This includes things like:
 calc.resident.otherProperties.bullet.one = shares
 calc.resident.otherProperties.bullet.two = antiques
 calc.resident.otherProperties.bullet.three = other UK residential properties
+calc.resident.otherProperties.errorSelect = Tell us if you sold or gave away anything else that''s covered by Capital Gains Tax in the {0} tax year
 
 ## Allowable Losses Value messages
 calc.resident.allowableLossesValue.title = What''s the total value of your allowable losses?
@@ -403,6 +406,7 @@ calc.resident.annualExemptAmount.helpText.two = It''s £11,100 a year.
 ##Losses Brought Forward messages
 calc.resident.lossesBroughtForward.title = Are there any previous losses you want to bring forward?
 calc.resident.lossesBroughtForward.question = Are there any previous losses you want to bring forward?
+calc.resident.lossesBroughtForward.errorSelect = Tell us if you''re claiming any allowable losses from tax years before {0}
 
 
 ## Allowable Losses messages
@@ -412,7 +416,7 @@ calc.resident.allowableLosses.helpInfo.subtitle = They''re losses you''ve made t
 calc.resident.allowableLosses.helpInfo.point1 = are covered by Capital Gains Tax
 calc.resident.allowableLosses.helpInfo.point2 = you''ve declared within 4 years of making the loss
 calc.resident.allowableLosses.helpInfo.point3 = you haven''t already used in an allowable losses claim
-
+calc.resident.allowableLosses.errorSelect = Tell us if you''re claiming any allowable losses from the {0} tax year
 
 ##Losses Brought Forward Value messages
 calc.resident.lossesBroughtForwardValue.title = What''s the total value of the loss to bring forward?

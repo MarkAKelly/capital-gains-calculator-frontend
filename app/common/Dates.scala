@@ -69,7 +69,7 @@ object Dates {
   def getMonth(date: Date): Int = {
     val cal = Calendar.getInstance()
     cal.setTime(date)
-    cal.get(Calendar.MONTH)
+    cal.get(Calendar.MONTH) + 1
   }
 
   def getYear(date: Date): Int = {

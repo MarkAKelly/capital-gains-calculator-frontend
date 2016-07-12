@@ -17,6 +17,7 @@
 package forms.resident
 
 import assets.{MessageLookup => commonMessages}
+import commonMessages.{allowableLosses => messages}
 import forms.resident.AllowableLossesForm._
 import models.resident.AllowableLossesModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -53,8 +54,8 @@ class AllowableLossesFormSpec extends UnitSpec with WithFakeApplication {
         form.errors.size shouldBe 1
       }
 
-      s"return an error with message ${commonMessages.undefinedMessage}" in {
-        form.error("isClaiming").get.message shouldBe commonMessages.undefinedMessage
+      s"return an error with message ${messages.errorSelect("2015/16")}" in {
+        form.error("isClaiming").get.message shouldBe messages.errorSelect("2015/16")
       }
     }
 
@@ -69,8 +70,8 @@ class AllowableLossesFormSpec extends UnitSpec with WithFakeApplication {
         form.errors.size shouldBe 1
       }
 
-      s"return an error with message ${commonMessages.undefinedMessage}" in {
-        form.error("isClaiming").get.message shouldBe commonMessages.undefinedMessage
+      s"return an error with message ${messages.errorSelect("2015/16")}" in {
+        form.error("isClaiming").get.message shouldBe messages.errorSelect("2015/16")
       }
     }
   }
