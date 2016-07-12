@@ -29,10 +29,10 @@ articleLayout = false
     <!-- Data Rows -->
     @summaryNumericRowHelper("gain",gainMessage(result.gain),result.gain)
     @summaryNumericRowHelper("deductions", Messages("calc.resident.summary.deductions"), result.deductions, None, Some(Seq(
-    (Messages("calc.resident.summary.reliefs"), MoneyPounds(deductionAnswers.reliefsValueModel.getOrElse(ReliefsValueModel(BigDecimal(0))).amount, 0).quantity),
-    (Messages("calc.resident.summary.allowableLosses"), MoneyPounds(deductionAnswers.allowableLossesValueModel.getOrElse(AllowableLossesValueModel(BigDecimal(0))).amount, 0).quantity),
+    (Messages("calc.resident.summary.reliefs"), reliefsUsed(deductionAnswers)),
+    (Messages("calc.resident.summary.allowableLosses"), allowableLossesUsed(deductionAnswers)),
     (Messages("calc.resident.summary.aeaUsed"), MoneyPounds(result.aeaUsed, 0).quantity),
-    (Messages("calc.resident.summary.broughtForwardLoss"), MoneyPounds(deductionAnswers.broughtForwardValueModel.getOrElse(LossesBroughtForwardValueModel(BigDecimal(0))).amount, 0).quantity)
+    (Messages("calc.resident.summary.broughtForwardLoss"), broughtForwardLossesUsed(deductionAnswers))
     )))
     @summaryNumericRowHelper("chargeableGain", if(result.chargeableGain < 0) {
     Messages("calc.resident.summary.chargeableLoss")} else {Messages("calc.resident.summary.chargeableGain")}, result.chargeableGain)
