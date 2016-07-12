@@ -636,7 +636,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     lazy val doc = Jsoup.parse(view.body)
 
     "does not display the section for what to do next" in {
-      doc.select("#whatToDoNext").text shouldEqual ""
+      doc.select("#whatToDoNext").isEmpty shouldBe true
     }
   }
 }

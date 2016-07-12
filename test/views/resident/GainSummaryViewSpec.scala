@@ -312,7 +312,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
     lazy val doc = Jsoup.parse(view.body)
 
     "does not display the what to do next content" in {
-      doc.select("#whatToDoNext").text shouldEqual ""
+      doc.select("#whatToDoNext").isEmpty shouldBe true
     }
   }
 
