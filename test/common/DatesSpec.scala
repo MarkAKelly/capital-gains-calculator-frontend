@@ -18,6 +18,7 @@ package common
 
 import java.text.SimpleDateFormat
 import uk.gov.hmrc.play.test.UnitSpec
+import java.util.Date
 
 class DatesSpec extends UnitSpec {
 
@@ -46,6 +47,23 @@ class DatesSpec extends UnitSpec {
 
     "return a false if date entered is before the 5th April 2015" in {
       Dates.dateAfterStart(4, 4, 2015) shouldBe false
+    }
+  }
+
+  "Calling getDay" should {
+    "return an integer value of the day" in {
+      Dates.getDay(new Date(2014, 12, 12)) shouldEqual 12
+    }
+  }
+
+  "Calling getMonth" should {
+    "return an integer value of the month" in {
+      Dates.getMonth(new Date(2014, 11, 12)) shouldEqual 11
+    }
+  }
+  "Calling getYear" should {
+    "return an integer value of the year" in {
+      Dates.getYear(new Date(2014, 11, 12))-1900 shouldEqual 2014
     }
   }
 }
