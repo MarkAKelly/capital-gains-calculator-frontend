@@ -8,7 +8,7 @@
 @import controllers.resident.routes.{DeductionsController => deductionRoutes}
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-@(gainAnswers: YourAnswersSummaryModel, deductionAnswers: ChargeableGainAnswers, result: ChargeableGainResultModel, backUrl: String)(implicit request: Request[_])
+@(gainAnswers: YourAnswersSummaryModel, deductionAnswers: ChargeableGainAnswers, result: ChargeableGainResultModel, backUrl: String, taxYear: TaxYearModel)(implicit request: Request[_])
 
 @resident_main_template(
 title = Messages("calc.resident.summary.title"),
@@ -16,10 +16,25 @@ backLink = Some(backUrl),
 articleLayout = false
 ) {
 
-<h1>
+<h1 class="heading-xlarge">
     <span class="pre-heading">@Messages("calc.resident.summary.pageHeading")</span>
     &pound;0.00
 </h1>
+
+@{if (!taxYear.isValidYear) {
+    <div class="notice-wrapper">
+        <div class="notice">
+            <i class="icon icon-important">
+                <span class="visuallyhidden">{Messages("calc.resident.summary.warning")}</span>
+            </i>
+            <strong class="bold-small">
+                {Messages("calc.resident.summary.dateWarning", taxYear.calculationTaxYear)}
+            </strong>
+        </div>
+    </div>
+    }
+}
+
 
 <!-- Calculation Details Section -->
 <section id="calcDetails">
