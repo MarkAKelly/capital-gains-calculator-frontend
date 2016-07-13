@@ -110,7 +110,11 @@ class SummaryDateRowHelperSpec extends UnitSpec with WithFakeApplication {
         }
 
         "has the text 'change'" in {
-          link.text shouldBe commonMessages.calcBaseChange
+          link.text shouldBe commonMessages.calcBaseChange + " testQ"
+        }
+
+        "has the question visually hidden as part of the link" in {
+          link.select("span.visuallyhidden").text shouldBe "testQ"
         }
 
         "has the id testID-change-link" in {

@@ -201,11 +201,19 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "should have the date '10 October 2016'" in {
-          doc.select("#disposalDate-date span").text shouldBe "10 October 2016"
+          doc.select("#disposalDate-date span.bold-medium").text shouldBe "10 October 2016"
         }
 
         s"should have a change link to ${routes.GainController.disposalDate().url}" in {
           doc.select("#disposalDate-date a").attr("href") shouldBe routes.GainController.disposalDate().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#disposalDate-date a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.disposalDate.question}"
+        }
+
+        "has the question component of the link is visuallyhidden" in {
+          doc.select("#disposalDate-date a span.visuallyhidden").text shouldBe commonMessages.disposalDate.question
         }
       }
 
