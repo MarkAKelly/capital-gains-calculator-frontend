@@ -347,6 +347,7 @@ calc.resident.improvements.hint = Improvements are permanent changes that raise 
 calc.resident.summary.title = Summary
 calc.resident.summary.pageHeading = Tax owed
 calc.resident.summary.calcDetailsHeading = Calculation details
+calc.resident.summary.calcDetailsHeadingDate = Calculation details for {0} tax year
 calc.resident.summary.yourAnswersHeading = Your answers
 calc.resident.summary.totalGain = Total gain
 calc.resident.summary.totalLoss = Loss
