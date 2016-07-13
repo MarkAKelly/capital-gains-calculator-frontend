@@ -25,7 +25,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
   "totalGainRequestString" should {
 
     "return a valid url variable string" in {
-      val answers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+      val answers = YourAnswersSummaryModel(Dates.constructDate(10, 2, 2016),
         BigDecimal(1000),
         BigDecimal(0),
         BigDecimal(500),
@@ -36,7 +36,8 @@ class CalculateRequestConstructorSpec extends UnitSpec {
         s"&disposalCosts=0" +
         s"&acquisitionValue=500" +
         s"&acquisitionCosts=100" +
-        s"&improvements=10"
+        s"&improvements=10" +
+        s"&disposalDate=2016-02-10"
     }
   }
 

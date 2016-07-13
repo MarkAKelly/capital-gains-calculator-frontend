@@ -16,16 +16,21 @@
 
 package constructors.resident
 
+import java.text.SimpleDateFormat
+
 import models.resident._
 
 object CalculateRequestConstructor {
+
+  val format = new SimpleDateFormat("yyyy-MM-dd")
 
   def totalGainRequestString (answers: YourAnswersSummaryModel): String = {
       s"?disposalValue=${answers.disposalValue}" +
       s"&disposalCosts=${answers.disposalCosts}" +
       s"&acquisitionValue=${answers.acquisitionValue}" +
       s"&acquisitionCosts=${answers.acquisitionCosts}" +
-      s"&improvements=${answers.improvements}"
+      s"&improvements=${answers.improvements}" +
+      s"&disposalDate=${format.format(answers.disposalDate)}"
   }
 
   def chargeableGainRequestString (answers: ChargeableGainAnswers, maxAEA: BigDecimal): String = {
