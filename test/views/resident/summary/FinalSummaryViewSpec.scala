@@ -24,6 +24,7 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.{summary => views}
 import assets.{MessageLookup => commonMessages}
+import common.Dates._
 import controllers.resident.routes
 import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, PreviousTaxableGainsModel}
 
@@ -658,6 +659,120 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       "Should have the tax rate 28% for the first band" in {
         doc.select("#secondBand").text should include("28%")
       }
+    }
+  }
+
+  "Summary when supplied with a date within the known tax years and tax owed" should {
+
+    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+      BigDecimal(200000),
+      BigDecimal(0),
+      BigDecimal(0),
+      BigDecimal(0),
+      BigDecimal(0))
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+      None,
+      Some(OtherPropertiesModel(true)),
+      Some(AllowableLossesModel(false)),
+      None,
+      Some(LossesBroughtForwardModel(false)),
+      None,
+      Some(AnnualExemptAmountModel(0)))
+
+    lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(0)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
+
+    lazy val results = TotalGainAndTaxOwedModel(
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      18,
+      Some(0),
+      Some(28)
+    )
+
+    lazy val backLink = "/calculate-your-capital-gains/resident/personal-allowance"
+
+    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "display the what to do next section" in {
+      doc.select("#whatToDoNext").hasText shouldEqual true
+    }
+
+    s"display the title ${messages.whatToDoNextTitle}" in {
+      doc.select("#whatToDoNextTitle").text shouldEqual messages.whatToDoNextTitle
+    }
+
+    s"display the text ${messages.whatToDoNextTextTwo}" in {
+      doc.select("#whatToDoNextText").text shouldEqual s"${messages.whatToDoNextTextTwo}${commonMessages.calcBaseExternalLink}"
+    }
+
+    "have a link" which {
+
+      "should have a href attribute" in {
+        doc.select("#whatToDoNextLink").hasAttr("href") shouldEqual true
+      }
+
+      "should link to the what-you-pay-on-it govuk page" in {
+        doc.select("#whatToDoNextLink").attr("href") shouldEqual "https://www.gov.uk/tax-sell-property/what-you-pay-it-on"
+      }
+
+      "have the externalLink attribute" in {
+        doc.select("#whatToDoNextLink").hasClass("external-link") shouldEqual true
+      }
+
+      "has a visually hidden span with the text opens in a new tab" in {
+        doc.select("span#opensInANewTab").text shouldEqual commonMessages.calcBaseExternalLink
+      }
+    }
+  }
+
+
+  "Summary when supplied with a date above the known tax years" should {
+
+    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
+      BigDecimal(200000),
+      BigDecimal(10000),
+      BigDecimal(100000),
+      BigDecimal(10000),
+      BigDecimal(30000))
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+      None,
+      Some(OtherPropertiesModel(true)),
+      Some(AllowableLossesModel(false)),
+      None,
+      Some(LossesBroughtForwardModel(false)),
+      None,
+      Some(AnnualExemptAmountModel(0)))
+
+    lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
+
+    lazy val results = TotalGainAndTaxOwedModel(
+      50000,
+      20000,
+      0,
+      30000,
+      3600,
+      30000,
+      18,
+      Some(10000),
+      Some(28)
+    )
+
+    lazy val backLink = "/calculate-your-capital-gains/resident/personal-allowance"
+
+    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "does not display the what to do next content" in {
+      doc.select("#whatToDoNext").isEmpty shouldBe true
     }
   }
 }

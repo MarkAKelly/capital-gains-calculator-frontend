@@ -123,6 +123,10 @@ object MessageLookup {
     val warning = "Warning"
     val whatToDoNextTitle = "What to do next"
     val whatToDoNextText = "You can tell us about this loss so that you might need to pay less tax in the future."
+    val whatNextYouCan = "You can "
+    val whatNextLink = "tell us about this loss "
+    val whatNextText = "so that you might need to pay less tax in the future."
+    val whatToDoNextTextTwo = "You need to tell HMRC about the property."
     val whatToDoNextNoLossText = "As you have no tax to pay, you don't need to tell HMRC about the property."
     val aeaRemaining = "Capital gains tax allowance left"
   }

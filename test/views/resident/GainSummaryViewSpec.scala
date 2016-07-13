@@ -266,7 +266,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
     }
 
     s"display the text ${messages.whatToDoNextText}" in {
-      doc.select("#whatToDoNextText").text shouldEqual messages.whatToDoNextText
+      doc.select("#whatToDoNextText").text shouldEqual s"${messages.whatNextYouCan}${messages.whatNextLink}${commonMessages.calcBaseExternalLink} ${messages.whatNextText}"
     }
 
     "have a link" which {

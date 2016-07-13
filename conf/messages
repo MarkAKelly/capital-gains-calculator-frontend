@@ -366,6 +366,9 @@ calc.resident.summary.whatNext.youCan = You can
 calc.resident.summary.whatNext.link = tell us about this loss
 calc.resident.summary.whatNext.text = so that you might need to pay less tax in the future.
 calc.resident.summary.whatNext.noLossOrGain = As you have no tax to pay, you don''t need to tell HMRC about the property.
+calc.resident.summary.whatNext.youNeedTo = You need to
+calc.resident.summary.whatNext.linkTwo = tell HMRC about the property.
+
 
 ## Reliefs messages
 calc.resident.reliefs.title = Do you want to claim any tax reliefs on your total gain of £{0}?
