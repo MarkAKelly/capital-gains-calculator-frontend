@@ -59,7 +59,7 @@ class OutsideTaxYearsViewSpec extends UnitSpec with WithFakeApplication with Fak
           backLink.hasClass("back-link") shouldBe true
         }
 
-        "have a link to Disposal Value" in {
+        "have a link to Disposal Date" in {
           backLink.attr("href") shouldBe controllers.resident.routes.GainController.disposalDate().toString
         }
       }
