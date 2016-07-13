@@ -9,6 +9,8 @@
             @{if (answer) "Yes"
             else "No"}
         </span>
-        @if(link.isDefined){<br><a id="@{rowId}-change-link" href="@link" class="font-xsmall">@Messages("calc.base.change")</a>}
+        @if(link.isDefined){<br><a id="@{rowId}-change-link" href="@link" class="font-xsmall">@Messages("calc.base.change")
+        <span class="visuallyhidden">@question</span>
+    </a>}
     </div>
 </div>
