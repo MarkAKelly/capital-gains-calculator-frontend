@@ -309,11 +309,19 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "should have the value 'No'" in {
-          doc.select("#reliefs-option span").text shouldBe "No"
+          doc.select("#reliefs-option span.bold-medium").text shouldBe "No"
         }
 
         s"should have a change link to ${routes.DeductionsController.reliefs().url}" in {
           doc.select("#reliefs-option a").attr("href") shouldBe routes.DeductionsController.reliefs().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#reliefs-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.reliefs.question("50,000")}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#reliefs-option a span.visuallyhidden").text shouldBe commonMessages.reliefs.question("50,000")
         }
       }
 
@@ -324,11 +332,19 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "should have the value 'No'" in {
-          doc.select("#otherProperties-option span").text shouldBe "No"
+          doc.select("#otherProperties-option span.bold-medium").text shouldBe "No"
         }
 
         s"should have a change link to ${routes.DeductionsController.otherProperties().url}" in {
           doc.select("#otherProperties-option a").attr("href") shouldBe routes.DeductionsController.otherProperties().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#otherProperties-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.otherProperties.title}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#otherProperties-option a span.visuallyhidden").text shouldBe commonMessages.otherProperties.title
         }
       }
 
@@ -339,11 +355,19 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "should have the value 'No'" in {
-          doc.select("#broughtForwardLosses-option span").text shouldBe "No"
+          doc.select("#broughtForwardLosses-option span.bold-medium").text shouldBe "No"
         }
 
         s"should have a change link to ${routes.DeductionsController.lossesBroughtForward().url}" in {
           doc.select("#broughtForwardLosses-option a").attr("href") shouldBe routes.DeductionsController.lossesBroughtForward().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#broughtForwardLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.lossesBroughtForward.question}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#broughtForwardLosses-option a span.visuallyhidden").text shouldBe commonMessages.lossesBroughtForward.question
         }
       }
     }
@@ -511,11 +535,19 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "should have the value 'Yes'" in {
-          doc.select("#reliefs-option span").text shouldBe "Yes"
+          doc.select("#reliefs-option span.bold-medium").text shouldBe "Yes"
         }
 
         s"should have a change link to ${routes.DeductionsController.reliefs().url}" in {
           doc.select("#reliefs-option a").attr("href") shouldBe routes.DeductionsController.reliefs().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#reliefs-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.reliefs.question("50,000")}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#reliefs-option a span.visuallyhidden").text shouldBe commonMessages.reliefs.question("50,000")
         }
       }
 
@@ -541,11 +573,19 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "should have the value 'Yes'" in {
-          doc.select("#otherProperties-option span").text shouldBe "Yes"
+          doc.select("#otherProperties-option span.bold-medium").text shouldBe "Yes"
         }
 
         s"should have a change link to ${routes.DeductionsController.otherProperties().url}" in {
           doc.select("#otherProperties-option a").attr("href") shouldBe routes.DeductionsController.otherProperties().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#otherProperties-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.otherProperties.title}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#otherProperties-option a span.visuallyhidden").text shouldBe commonMessages.otherProperties.title
         }
       }
 
@@ -556,11 +596,19 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "should have the value 'Yes'" in {
-          doc.select("#allowableLosses-option span").text shouldBe "Yes"
+          doc.select("#allowableLosses-option span.bold-medium").text shouldBe "Yes"
         }
 
         s"should have a change link to ${routes.DeductionsController.allowableLosses().url}" in {
           doc.select("#allowableLosses-option a").attr("href") shouldBe routes.DeductionsController.allowableLosses().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#allowableLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.allowableLosses.title}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#allowableLosses-option a span.visuallyhidden").text shouldBe commonMessages.allowableLosses.title
         }
       }
 
@@ -586,15 +634,23 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "should have the value 'Yes'" in {
-          doc.select("#broughtForwardLosses-option span").text shouldBe "Yes"
+          doc.select("#broughtForwardLosses-option span.bold-medium").text shouldBe "Yes"
         }
 
         s"should have a change link to ${routes.DeductionsController.lossesBroughtForward().url}" in {
           doc.select("#broughtForwardLosses-option a").attr("href") shouldBe routes.DeductionsController.lossesBroughtForward().url
         }
+
+        "has the question as part of the link" in {
+          doc.select("#broughtForwardLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.lossesBroughtForward.question}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#broughtForwardLosses-option a span.visuallyhidden").text shouldBe commonMessages.lossesBroughtForward.question
+        }
       }
 
-      "has an option output row for brought forward losses value" which {
+      "has a numeric output row for brought forward losses value" which {
 
         s"should have the question text '${commonMessages.lossesBroughtForwardValue.title}'" in {
           doc.select("#broughtForwardLossesValue-question").text shouldBe commonMessages.lossesBroughtForwardValue.title
@@ -637,7 +693,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
-    "has an option output row for AEA value" should {
+    "has a numeric output row for AEA value" should {
 
       s"should have the question text '${commonMessages.annualExemptAmount.title}'" in {
         doc.select("#annualExemptAmount-question").text shouldBe commonMessages.annualExemptAmount.title

@@ -105,16 +105,16 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
       doc.body.getElementById("isClaiming-yes").parent.className should include("selected")
     }
 
-    s"have a title ${messages.question}" in {
-      doc.title() shouldBe messages.question
+    s"have a title ${messages.question()}" in {
+      doc.title() shouldBe messages.question()
     }
 
-    s"have the question of the page ${messages.question}" in {
-      doc.select("h1").text() shouldEqual messages.question
+    s"have the question of the page ${messages.question()}" in {
+      doc.select("h1").text() shouldEqual messages.question()
     }
 
-    s"have a legend for an input with text ${messages.question}" in {
-      doc.select("legend.visuallyhidden").text() shouldEqual messages.question
+    s"have a legend for an input with text ${messages.question()}" in {
+      doc.select("legend.visuallyhidden").text() shouldEqual messages.question()
     }
   }
 

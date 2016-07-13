@@ -333,11 +333,19 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         }
 
         "should have the value 'No'" in {
-          doc.select("#reliefs-option span").text shouldBe "No"
+          doc.select("#reliefs-option span.bold-medium").text shouldBe "No"
         }
 
         s"should have a change link to ${routes.DeductionsController.reliefs().url}" in {
           doc.select("#reliefs-option a").attr("href") shouldBe routes.DeductionsController.reliefs().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#reliefs-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.reliefs.question("50,000")}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#reliefs-option a span.visuallyhidden").text shouldBe commonMessages.reliefs.question("50,000")
         }
       }
 
@@ -348,11 +356,19 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         }
 
         "should have the value 'No'" in {
-          doc.select("#otherProperties-option span").text shouldBe "No"
+          doc.select("#otherProperties-option span.bold-medium").text shouldBe "No"
         }
 
         s"should have a change link to ${routes.DeductionsController.otherProperties().url}" in {
           doc.select("#otherProperties-option a").attr("href") shouldBe routes.DeductionsController.otherProperties().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#otherProperties-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.otherProperties.title}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#otherProperties-option a span.visuallyhidden").text shouldBe commonMessages.otherProperties.title
         }
       }
 
@@ -363,14 +379,22 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         }
 
         "should have the value 'No'" in {
-          doc.select("#broughtForwardLosses-option span").text shouldBe "No"
+          doc.select("#broughtForwardLosses-option span.bold-medium").text shouldBe "No"
         }
 
         s"should have a change link to ${routes.DeductionsController.lossesBroughtForward().url}" in {
           doc.select("#broughtForwardLosses-option a").attr("href") shouldBe routes.DeductionsController.lossesBroughtForward().url
         }
+
+        "has the question as part of the link" in {
+          doc.select("#broughtForwardLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.lossesBroughtForward.question}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#broughtForwardLosses-option a span.visuallyhidden").text shouldBe commonMessages.lossesBroughtForward.question
+        }
       }
-      "has an option output row for current income" which {
+      "has a numeric output row for current income" which {
 
         s"should have the question text '${commonMessages.currentIncome.title}'" in {
           doc.select("#currentIncome-question").text shouldBe commonMessages.currentIncome.title
@@ -384,7 +408,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
           doc.select("#currentIncome-amount a").attr("href") shouldBe routes.IncomeController.currentIncome().url
         }
       }
-      "has an option output row for personal allowance" which {
+      "has a numeric output row for personal allowance" which {
 
         s"should have the question text '${commonMessages.personalAllowance.title}'" in {
           doc.select("#personalAllowance-question").text shouldBe commonMessages.personalAllowance.title
