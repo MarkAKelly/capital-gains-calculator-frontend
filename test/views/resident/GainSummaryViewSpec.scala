@@ -164,7 +164,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
         }
 
         "should have the value '£10'" in {
-          doc.select("#disposalValue-amount span").text shouldBe "£10"
+          doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£10"
         }
 
         s"should have a change link to ${routes.GainController.disposalValue().url}" in {
@@ -180,7 +180,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
         }
 
         "should have the value '£20'" in {
-          doc.select("#disposalCosts-amount span").text shouldBe "£20"
+          doc.select("#disposalCosts-amount span.bold-medium").text shouldBe "£20"
         }
 
         s"should have a change link to ${routes.GainController.disposalCosts().url}" in {
@@ -196,7 +196,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
         }
 
         "should have the value '£30'" in {
-          doc.select("#acquisitionValue-amount span").text shouldBe "£30"
+          doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£30"
         }
 
         s"should have a change link to ${routes.GainController.acquisitionValue().url}" in {
@@ -212,7 +212,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
         }
 
         "should have the value '£40'" in {
-          doc.select("#acquisitionCosts-amount span").text shouldBe "£40"
+          doc.select("#acquisitionCosts-amount span.bold-medium").text shouldBe "£40"
         }
 
         s"should have a change link to ${routes.GainController.acquisitionCosts().url}" in {
@@ -228,7 +228,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
         }
 
         "should have the value '£50'" in {
-          doc.select("#improvements-amount span").text shouldBe "£50"
+          doc.select("#improvements-amount span.bold-medium").text shouldBe "£50"
         }
 
         s"should have a change link to ${routes.GainController.improvements().url}" in {
@@ -266,7 +266,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
     }
 
     s"display the text ${messages.whatToDoNextText}" in {
-      doc.select("#whatToDoNextText").text shouldEqual messages.whatToDoNextText
+      doc.select("#whatToDoNextText").text shouldEqual s"${messages.whatNextYouCan}${messages.whatNextLink}${commonMessages.calcBaseExternalLink} ${messages.whatNextText}"
     }
 
     "have a link" which {

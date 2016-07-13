@@ -123,6 +123,10 @@ object MessageLookup {
     val warning = "Warning"
     val whatToDoNextTitle = "What to do next"
     val whatToDoNextText = "You can tell us about this loss so that you might need to pay less tax in the future."
+    val whatNextYouCan = "You can "
+    val whatNextLink = "tell us about this loss "
+    val whatNextText = "so that you might need to pay less tax in the future."
+    val whatToDoNextTextTwo = "You need to tell HMRC about the property."
     val whatToDoNextNoLossText = "As you have no tax to pay, you don't need to tell HMRC about the property."
     val aeaRemaining = "Capital gains tax allowance left"
   }
@@ -131,7 +135,7 @@ object MessageLookup {
   object reliefs {
     val title = "Do you want to claim any tax reliefs on your total gain of £10,000?"
     val questionSummary = "Do you want to claim any tax reliefs on your total gain of £50,000?"
-    val question = "Do you want to claim any tax reliefs on your total gain of £100?"
+    def question(input: String = "100") = s"Do you want to claim any tax reliefs on your total gain of £$input?"
     val help = "For example, lettings relief"
     val helpOne = "Tax reliefs can lower the amount of tax you owe. For example, you might be able to claim:"
     val helpLinkOne = "Private Residence Relief"

@@ -22,7 +22,10 @@
                 <span class="bold-medium">&pound;@MoneyPounds(amount, 2).quantity</span>
             }
         }
-        @if(link.isDefined){<br><a id="@{rowId}-change-link" href="@link" class="font-xsmall">@Messages("calc.base.change")</a>}
+        @if(link.isDefined){<br><a id="@{rowId}-change-link" href="@link" class="font-xsmall">
+            @Messages("calc.base.change")
+            <span class="visuallyhidden">@question</span>
+        </a>}
         @{if(additionalContent.isDefined){additionalContent.get.map{ case (additionalText, additionalAmount) => additionalDetails(additionalText, additionalAmount)}}}
     </div>
 </div>

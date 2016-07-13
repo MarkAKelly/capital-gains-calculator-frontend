@@ -24,6 +24,7 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.{summary => views}
 import assets.{MessageLookup => commonMessages}
+import common.Dates._
 import controllers.resident.routes
 import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, PreviousTaxableGainsModel}
 
@@ -254,7 +255,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         }
 
         "should have the value '£200,000'" in {
-          doc.select("#disposalValue-amount span").text shouldBe "£200,000"
+          doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£200,000"
         }
 
         s"should have a change link to ${routes.GainController.disposalValue().url}" in {
@@ -270,7 +271,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         }
 
         "should have the value '£10,000'" in {
-          doc.select("#disposalCosts-amount span").text shouldBe "£10,000"
+          doc.select("#disposalCosts-amount span.bold-medium").text shouldBe "£10,000"
         }
 
         s"should have a change link to ${routes.GainController.disposalCosts().url}" in {
@@ -286,7 +287,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         }
 
         "should have the value '£100,000'" in {
-          doc.select("#acquisitionValue-amount span").text shouldBe "£100,000"
+          doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£100,000"
         }
 
         s"should have a change link to ${routes.GainController.acquisitionValue().url}" in {
@@ -302,7 +303,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         }
 
         "should have the value '£10,000'" in {
-          doc.select("#acquisitionCosts-amount span").text shouldBe "£10,000"
+          doc.select("#acquisitionCosts-amount span.bold-medium").text shouldBe "£10,000"
         }
 
         s"should have a change link to ${routes.GainController.acquisitionCosts().url}" in {
@@ -318,7 +319,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         }
 
         "should have the value '£30,000'" in {
-          doc.select("#improvements-amount span").text shouldBe "£30,000"
+          doc.select("#improvements-amount span.bold-medium").text shouldBe "£30,000"
         }
 
         s"should have a change link to ${routes.GainController.improvements().url}" in {
@@ -333,11 +334,19 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         }
 
         "should have the value 'No'" in {
-          doc.select("#reliefs-option span").text shouldBe "No"
+          doc.select("#reliefs-option span.bold-medium").text shouldBe "No"
         }
 
         s"should have a change link to ${routes.DeductionsController.reliefs().url}" in {
           doc.select("#reliefs-option a").attr("href") shouldBe routes.DeductionsController.reliefs().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#reliefs-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.reliefs.question("50,000")}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#reliefs-option a span.visuallyhidden").text shouldBe commonMessages.reliefs.question("50,000")
         }
       }
 
@@ -348,11 +357,19 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         }
 
         "should have the value 'No'" in {
-          doc.select("#otherProperties-option span").text shouldBe "No"
+          doc.select("#otherProperties-option span.bold-medium").text shouldBe "No"
         }
 
         s"should have a change link to ${routes.DeductionsController.otherProperties().url}" in {
           doc.select("#otherProperties-option a").attr("href") shouldBe routes.DeductionsController.otherProperties().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#otherProperties-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.otherProperties.title}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#otherProperties-option a span.visuallyhidden").text shouldBe commonMessages.otherProperties.title
         }
       }
 
@@ -363,35 +380,43 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         }
 
         "should have the value 'No'" in {
-          doc.select("#broughtForwardLosses-option span").text shouldBe "No"
+          doc.select("#broughtForwardLosses-option span.bold-medium").text shouldBe "No"
         }
 
         s"should have a change link to ${routes.DeductionsController.lossesBroughtForward().url}" in {
           doc.select("#broughtForwardLosses-option a").attr("href") shouldBe routes.DeductionsController.lossesBroughtForward().url
         }
+
+        "has the question as part of the link" in {
+          doc.select("#broughtForwardLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.lossesBroughtForward.question}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#broughtForwardLosses-option a span.visuallyhidden").text shouldBe commonMessages.lossesBroughtForward.question
+        }
       }
-      "has an option output row for current income" which {
+      "has a numeric output row for current income" which {
 
         s"should have the question text '${commonMessages.currentIncome.title}'" in {
           doc.select("#currentIncome-question").text shouldBe commonMessages.currentIncome.title
         }
 
         "should have the value '£0'" in {
-          doc.select("#currentIncome-amount span").text shouldBe "£0"
+          doc.select("#currentIncome-amount span.bold-medium").text shouldBe "£0"
         }
 
         s"should have a change link to ${routes.IncomeController.currentIncome().url}" in {
           doc.select("#currentIncome-amount a").attr("href") shouldBe routes.IncomeController.currentIncome().url
         }
       }
-      "has an option output row for personal allowance" which {
+      "has a numeric output row for personal allowance" which {
 
         s"should have the question text '${commonMessages.personalAllowance.title}'" in {
           doc.select("#personalAllowance-question").text shouldBe commonMessages.personalAllowance.title
         }
 
         "should have the value '£0'" in {
-          doc.select("#personalAllowance-amount span").text shouldBe "£0"
+          doc.select("#personalAllowance-amount span.bold-medium").text shouldBe "£0"
         }
 
         s"should have a change link to ${routes.IncomeController.personalAllowance().url}" in {
@@ -515,7 +540,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
 
       "should have the value '£1,000'" in {
-        doc.select("#previousTaxableGains-amount span").text shouldBe "£1,000"
+        doc.select("#previousTaxableGains-amount span.bold-medium").text shouldBe "£1,000"
       }
 
       s"should have a change link to ${routes.IncomeController.previousTaxableGains().url}" in {
@@ -530,7 +555,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
 
       "should have the value '£0'" in {
-        doc.select("#currentIncome-amount span").text shouldBe "£0"
+        doc.select("#currentIncome-amount span.bold-medium").text shouldBe "£0"
       }
 
       s"should have a change link to ${routes.IncomeController.currentIncome().url}" in {
@@ -544,7 +569,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
 
       "should have the value '£0'" in {
-        doc.select("#personalAllowance-amount span").text shouldBe "£0"
+        doc.select("#personalAllowance-amount span.bold-medium").text shouldBe "£0"
       }
 
       s"should have a change link to ${routes.IncomeController.personalAllowance().url}" in {
@@ -634,6 +659,120 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       "Should have the tax rate 28% for the first band" in {
         doc.select("#secondBand").text should include("28%")
       }
+    }
+  }
+
+  "Summary when supplied with a date within the known tax years and tax owed" should {
+
+    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+      BigDecimal(200000),
+      BigDecimal(0),
+      BigDecimal(0),
+      BigDecimal(0),
+      BigDecimal(0))
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+      None,
+      Some(OtherPropertiesModel(true)),
+      Some(AllowableLossesModel(false)),
+      None,
+      Some(LossesBroughtForwardModel(false)),
+      None,
+      Some(AnnualExemptAmountModel(0)))
+
+    lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(0)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
+
+    lazy val results = TotalGainAndTaxOwedModel(
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      18,
+      Some(0),
+      Some(28)
+    )
+
+    lazy val backLink = "/calculate-your-capital-gains/resident/personal-allowance"
+
+    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "display the what to do next section" in {
+      doc.select("#whatToDoNext").hasText shouldEqual true
+    }
+
+    s"display the title ${messages.whatToDoNextTitle}" in {
+      doc.select("#whatToDoNextTitle").text shouldEqual messages.whatToDoNextTitle
+    }
+
+    s"display the text ${messages.whatToDoNextTextTwo}" in {
+      doc.select("#whatToDoNextText").text shouldEqual s"${messages.whatToDoNextTextTwo}${commonMessages.calcBaseExternalLink}"
+    }
+
+    "have a link" which {
+
+      "should have a href attribute" in {
+        doc.select("#whatToDoNextLink").hasAttr("href") shouldEqual true
+      }
+
+      "should link to the what-you-pay-on-it govuk page" in {
+        doc.select("#whatToDoNextLink").attr("href") shouldEqual "https://www.gov.uk/tax-sell-property/what-you-pay-it-on"
+      }
+
+      "have the externalLink attribute" in {
+        doc.select("#whatToDoNextLink").hasClass("external-link") shouldEqual true
+      }
+
+      "has a visually hidden span with the text opens in a new tab" in {
+        doc.select("span#opensInANewTab").text shouldEqual commonMessages.calcBaseExternalLink
+      }
+    }
+  }
+
+
+  "Summary when supplied with a date above the known tax years" should {
+
+    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
+      BigDecimal(200000),
+      BigDecimal(10000),
+      BigDecimal(100000),
+      BigDecimal(10000),
+      BigDecimal(30000))
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+      None,
+      Some(OtherPropertiesModel(true)),
+      Some(AllowableLossesModel(false)),
+      None,
+      Some(LossesBroughtForwardModel(false)),
+      None,
+      Some(AnnualExemptAmountModel(0)))
+
+    lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
+
+    lazy val results = TotalGainAndTaxOwedModel(
+      50000,
+      20000,
+      0,
+      30000,
+      3600,
+      30000,
+      18,
+      Some(10000),
+      Some(28)
+    )
+
+    lazy val backLink = "/calculate-your-capital-gains/resident/personal-allowance"
+
+    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "does not display the what to do next content" in {
+      doc.select("#whatToDoNext").isEmpty shouldBe true
     }
   }
 }

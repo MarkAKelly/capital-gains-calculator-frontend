@@ -26,7 +26,7 @@ class SummaryNumericRowHelperSpec extends UnitSpec with WithFakeApplication {
   val row = summaryNumericRowHelper("testID","testQ",2000)
   val doc = Jsoup.parse(row.body)
 
-  "The Summary Numeric Row Helper" should {
+  "The Summary Numeric Row Helper with no link" should {
 
     "have an outer div" which {
 
@@ -97,6 +97,10 @@ class SummaryNumericRowHelperSpec extends UnitSpec with WithFakeApplication {
 
     }
 
+    "have no link" in {
+      doc.select("#testID-change-link").size shouldBe 0
+    }
+
     s"if given data that includes a change link " should {
 
       lazy val rowWithChangeLink = summaryNumericRowHelper("testID","testQ",2000,Some("link"))
@@ -109,10 +113,19 @@ class SummaryNumericRowHelperSpec extends UnitSpec with WithFakeApplication {
         }
 
         "has the text 'change'" in {
-          link.text shouldBe commonMessages.calcBaseChange
+          link.text shouldBe commonMessages.calcBaseChange + " testQ"
         }
         "has the id testID-change-link" in {
           link.attr("id") shouldBe "testID-change-link"
+        }
+        "has a span" which {
+          "contains the queston text" in {
+            link.select("span").text shouldEqual "testQ"
+          }
+
+          "has the class visually hidden" in {
+            link.select("span").hasClass("visuallyhidden") shouldEqual true
+          }
         }
       }
     }

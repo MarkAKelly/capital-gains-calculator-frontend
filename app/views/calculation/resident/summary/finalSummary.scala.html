@@ -2,6 +2,7 @@
 @import views.html.calculation.resident._
 @import models.SummaryDataItemModel
 @import models.resident._
+@import common.Dates._
 @import constructors.resident.SummaryConstructor._
 @import constructors.resident.CalculateRequestConstructor._
 @import controllers.resident.routes.{GainController => gainRoutes}
@@ -92,4 +93,19 @@ articleLayout = false
 
 </section>
 
+    @if(dateInsideAcceptedTaxYears(getDay(gainAnswers.disposalDate), getMonth(gainAnswers.disposalDate), getYear(gainAnswers.disposalDate))) {
+
+            <section id="whatToDoNext" class="summary-underline summary-overline">
+                <h3 id="whatToDoNextTitle" class="bold-medium">@Messages("calc.resident.summary.whatNext")</h3>
+                <div id="whatToDoNextText" class="font-medium what-to-do-next-text">@Messages("calc.resident.summary.whatNext.youNeedTo") <a id="whatToDoNextLink"
+                                                                                                                              class="external-link"
+                                                                                                                              rel="external"
+                                                                                                                              href="https://www.gov.uk/tax-sell-property/what-you-pay-it-on"
+                                                                                                                              target="_blank"
+                                                                                                                              data-journey-click="help:govUK:CapitalGainsWhatToDoNext">@Messages("calc.resident.summary.whatNext.linkTwo")<span id="opensInANewTab" class="visuallyhidden">@Messages("calc.base.externalLink")</span></a>
+                </div>
+
+            </section>
+
+    }
 }
