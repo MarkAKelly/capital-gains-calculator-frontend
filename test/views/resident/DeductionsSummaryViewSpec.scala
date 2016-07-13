@@ -207,11 +207,19 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "should have the date '10 October 2016'" in {
-          doc.select("#disposalDate-date span").text shouldBe "10 October 2016"
+          doc.select("#disposalDate-date span.bold-medium").text shouldBe "10 October 2016"
         }
 
         s"should have a change link to ${routes.GainController.disposalDate().url}" in {
           doc.select("#disposalDate-date a").attr("href") shouldBe routes.GainController.disposalDate().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#disposalDate-date a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.disposalDate.question}"
+        }
+
+        "has the question component of the link is visuallyhidden" in {
+          doc.select("#disposalDate-date a span.visuallyhidden").text shouldBe commonMessages.disposalDate.question
         }
       }
 
@@ -401,7 +409,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       }
 
       "have a visually hidden warning text" in {
-        doc.select("span.visuallyhidden").text shouldBe messages.warning
+        doc.select("div.notice-wrapper span.visuallyhidden").text shouldBe messages.warning
       }
     }
 
@@ -623,9 +631,10 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       BigDecimal(0),
       BigDecimal(11000),
       BigDecimal(71000))
+    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
     lazy val backLink = "/calculate-your-capital-gains/resident/annual-exempt-amount"
-    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink)(fakeRequestWithSession)
+    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "has an option output row for AEA value" should {
@@ -659,7 +668,9 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       40,
       50
     )
-    lazy val view = views.gainSummary(testModel, 0)(fakeRequest)
+    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+
+    lazy val view = views.gainSummary(testModel, 0, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display the what to do next section" in {
@@ -685,7 +696,10 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       40,
       50
     )
-    lazy val view = views.gainSummary(testModel, 0)(fakeRequest)
+
+    lazy val taxYearModel = TaxYearModel("2017/18", false, "2015/16")
+
+    lazy val view = views.gainSummary(testModel, 0, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "does not display the section for what to do next" in {
