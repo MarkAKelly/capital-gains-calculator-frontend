@@ -60,9 +60,11 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       None
     )
 
+    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+
     lazy val backLink = "/calculate-your-capital-gains/resident/personal-allowance"
 
-    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink)(fakeRequestWithSession)
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -100,6 +102,10 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       "includes an amount of tax due of £3,600.00" in {
         doc.select("h1").text should include ("£3,600.00")
       }
+    }
+
+    "does not have a notice summary" in {
+      doc.select("div.notice-wrapper").isEmpty() shouldBe true
     }
 
     s"have a section for the Calculation details" which {
@@ -226,11 +232,19 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         }
 
         "should have the date '10 October 2016'" in {
-          doc.select("#disposalDate-date span").text shouldBe "10 October 2016"
+          doc.select("#disposalDate-date span.bold-medium").text shouldBe "10 October 2016"
         }
 
         s"should have a change link to ${routes.GainController.disposalDate().url}" in {
           doc.select("#disposalDate-date a").attr("href") shouldBe routes.GainController.disposalDate().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#disposalDate-date a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.disposalDate.question}"
+        }
+
+        "has the question component of the link is visuallyhidden" in {
+          doc.select("#disposalDate-date a span.visuallyhidden").text shouldBe commonMessages.disposalDate.question
         }
       }
 
@@ -418,9 +432,11 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       None
     )
 
+    lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
+
     lazy val backLink = "/calculate-your-capital-gains/resident/personal-allowance"
 
-    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink)(fakeRequestWithSession)
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -457,6 +473,25 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
       "includes an amount of tax due of £3,600.00" in {
         doc.select("h1").text should include ("£3,600.00")
+      }
+    }
+
+    "has a notice summary that" should {
+
+      "have the class notice-wrapper" in {
+        doc.select("div.notice-wrapper").isEmpty shouldBe false
+      }
+
+      s"have the text ${messages.noticeWarning("2015/16")}" in {
+        doc.select("strong.bold-small").text shouldBe messages.noticeWarning("2015/16")
+      }
+
+      "have a warning icon" in {
+        doc.select("i.icon-important").isEmpty shouldBe false
+      }
+
+      "have a visually hidden warning text" in {
+        doc.select("div.notice-wrapper span.visuallyhidden").text shouldBe messages.warning
       }
     }
 
@@ -549,9 +584,11 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       Some(28)
     )
 
+    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+
     lazy val backLink = "/calculate-your-capital-gains/resident/personal-allowance"
 
-    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink)(fakeRequestWithSession)
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -634,7 +671,9 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     lazy val backLink = "/calculate-your-capital-gains/resident/personal-allowance"
 
-    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink)(fakeRequestWithSession)
+    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "display the what to do next section" in {
@@ -646,7 +685,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     }
 
     s"display the text ${messages.whatToDoNextTextTwo}" in {
-      doc.select("#whatToDoNextText").text shouldEqual messages.whatToDoNextTextTwo
+      doc.select("#whatToDoNextText").text shouldEqual s"${messages.whatToDoNextTextTwo}${commonMessages.calcBaseExternalLink}"
     }
 
     "have a link" which {
@@ -703,7 +742,9 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     lazy val backLink = "/calculate-your-capital-gains/resident/personal-allowance"
 
-    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink)(fakeRequestWithSession)
+    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "does not display the what to do next content" in {

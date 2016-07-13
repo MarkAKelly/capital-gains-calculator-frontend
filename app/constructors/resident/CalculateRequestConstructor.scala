@@ -38,8 +38,8 @@ object CalculateRequestConstructor {
     s"${if (answers.broughtForwardModel.get.option)
       s"&broughtForwardLosses=${answers.broughtForwardValueModel.get.amount}"
     else ""}" +
-    s"&annualExemptAmount=${if (isUsingAnnualExemptAmount(answers.otherPropertiesModel, answers.allowableLossesModel, answers.allowableLossesValueModel))
-      answers.annualExemptAmountModel.get.amount
+    s"&annualExemptAmount=${if (isUsingAnnualExemptAmount(answers.otherPropertiesModel, answers.allowableLossesModel, answers.allowableLossesValueModel)) {
+      answers.annualExemptAmountModel.get.amount}
     else maxAEA}"
   }
 
@@ -56,7 +56,7 @@ object CalculateRequestConstructor {
                                  allowableLossesModel: Option[AllowableLossesModel],
                                  allowableLossesValueModel: Option[AllowableLossesValueModel]): Boolean = {
     (otherPropertiesModel.get.hasOtherProperties, allowableLossesModel) match {
-      case (true, Some(AllowableLossesModel(true))) if allowableLossesValueModel.get.amount != 0 => true
+      case (true, Some(AllowableLossesModel(true))) if allowableLossesValueModel.get.amount == 0 => true
       case (true, Some(AllowableLossesModel(false))) => true
       case _ => false
     }

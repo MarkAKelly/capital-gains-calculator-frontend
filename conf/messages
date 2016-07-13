@@ -359,6 +359,8 @@ calc.resident.summary.deductions = Deductions
 calc.resident.summary.chargeableLoss = Carried forward loss
 calc.resident.summary.chargeableGain = Taxable gain
 calc.resident.summary.taxRate = Tax Rate
+calc.resident.summary.dateWarning = These figures are based on the tax rates from the {0} tax year
+calc.resident.summary.warning = Warning
 calc.resident.summary.whatNext = What to do next
 calc.resident.summary.whatNext.youCan = You can
 calc.resident.summary.whatNext.link = tell us about this loss
@@ -413,7 +415,7 @@ calc.resident.lossesBroughtForward.errorSelect = Tell us if you''re claiming any
 
 
 ## Allowable Losses messages
-calc.resident.allowableLosses.title = Are you claiming any allowable losses from tax years before 2015/16?
+calc.resident.allowableLosses.title = Are you claiming any allowable losses from the 2015/2016 tax year?
 calc.resident.allowableLosses.helpInfo.title = What are allowable losses?
 calc.resident.allowableLosses.helpInfo.subtitle = They''re losses you''ve made that:
 calc.resident.allowableLosses.helpInfo.point1 = are covered by Capital Gains Tax

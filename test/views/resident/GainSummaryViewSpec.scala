@@ -20,7 +20,7 @@ import assets.{MessageLookup => commonMessages}
 import assets.MessageLookup.{summary => messages}
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.routes
-import models.resident.YourAnswersSummaryModel
+import models.resident.{TaxYearModel, YourAnswersSummaryModel}
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import common.Dates._
@@ -30,14 +30,17 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
   "Summary view" should {
 
     val testModel = YourAnswersSummaryModel(
-      constructDate(12,9,1990),
+      constructDate(12, 9, 1990),
       10,
       20,
       30,
       40,
       50
     )
-    lazy val view = views.html.calculation.resident.gainSummary(testModel,-2000)(fakeRequest)
+
+    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+
+    lazy val view = views.html.calculation.resident.gainSummary(testModel, -2000, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -73,8 +76,12 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       }
 
       "includes an amount of tax due of £0.00" in {
-        doc.select("h1").text should include ("£0.00")
+        doc.select("h1").text should include("£0.00")
       }
+    }
+
+    "does not have a notice summary" in {
+      doc.select("div.notice-wrapper").isEmpty() shouldBe true
     }
 
     s"have a section for the Calculation details" which {
@@ -133,12 +140,20 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
           doc.select("#disposalDate-question").text shouldBe commonMessages.disposalDate.question
         }
 
-        "should have the value '£2,000'" in {
-          doc.select("#disposalDate-date span").text shouldBe "12 September 1990"
+        "should have the value '12 September 1990'" in {
+          doc.select("#disposalDate-date span.bold-medium").text shouldBe "12 September 1990"
         }
 
         s"should have a change link to ${routes.GainController.disposalDate().url}" in {
           doc.select("#disposalDate-date a").attr("href") shouldBe routes.GainController.disposalDate().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#disposalDate-date a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.disposalDate.question}"
+        }
+
+        "has the question component of the link is visuallyhidden" in {
+          doc.select("#disposalDate-date a span.visuallyhidden").text shouldBe commonMessages.disposalDate.question
         }
       }
 
@@ -229,6 +244,8 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
 
   "Summary when supplied with a date within the known tax years and a loss" should {
 
+    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
       10,
@@ -237,7 +254,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       40,
       50
     )
-    lazy val view = views.html.calculation.resident.gainSummary(testModel, -2000)(fakeRequest)
+    lazy val view = views.html.calculation.resident.gainSummary(testModel, -2000, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display the what to do next section" in {
@@ -249,7 +266,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
     }
 
     s"display the text ${messages.whatToDoNextText}" in {
-      doc.select("#whatToDoNextText").text shouldEqual messages.whatToDoNextText
+      doc.select("#whatToDoNextText").text shouldEqual s"${messages.whatNextYouCan}${messages.whatNextLink}${commonMessages.calcBaseExternalLink} ${messages.whatNextText}"
     }
 
     "have a link" which {
@@ -274,6 +291,8 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
 
   "Summary when supplied with a date within the known tax years and no gain or loss" should {
 
+    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
       10,
@@ -282,7 +301,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       40,
       50
     )
-    lazy val view = views.html.calculation.resident.gainSummary(testModel, 0)(fakeRequest)
+    lazy val view = views.html.calculation.resident.gainSummary(testModel, 0, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display the what to do next section" in {
@@ -300,6 +319,8 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
 
   "Summary when supplied with a date above the known tax years" should {
 
+    lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
+
     val testModel = YourAnswersSummaryModel(
       constructDate(12,9,2018),
       10,
@@ -308,7 +329,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       40,
       50
     )
-    lazy val view = views.html.calculation.resident.gainSummary(testModel,-2000)(fakeRequest)
+    lazy val view = views.html.calculation.resident.gainSummary(testModel,-2000, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "does not display the what to do next content" in {
@@ -316,4 +337,36 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
     }
   }
 
+  "Summary view with an out of tax year date" should {
+
+    val testModel = YourAnswersSummaryModel(
+      constructDate(12, 9, 2013),
+      10,
+      20,
+      30,
+      40,
+      50
+    )
+
+    lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
+
+    lazy val view = views.html.calculation.resident.gainSummary(testModel, -2000, taxYearModel)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "have the class notice-wrapper" in {
+      doc.select("div.notice-wrapper").isEmpty shouldBe false
+    }
+
+    s"have the text ${messages.noticeWarning("2015/16")}" in {
+      doc.select("strong.bold-small").text shouldBe messages.noticeWarning("2015/16")
+    }
+
+    "have a warning icon" in {
+      doc.select("i.icon-important").isEmpty shouldBe false
+    }
+
+    "have a visually hidden warning text" in {
+      doc.select("div.notice-wrapper span.visuallyhidden").text shouldBe messages.warning
+    }
+  }
 }
