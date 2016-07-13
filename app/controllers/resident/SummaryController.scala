@@ -16,6 +16,9 @@
 
 package controllers.resident
 
+import java.text.SimpleDateFormat
+import java.util.Date
+
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
@@ -74,30 +77,37 @@ trait SummaryController extends FeatureLock {
       else Future.successful(None)
     }
 
+    def getTaxYear(disposalDate: Date): Future[Option[TaxYearModel]] = {
+      val formats = new SimpleDateFormat("yyyy-MM-dd")
+      calculatorConnector.getTaxYear(formats.format(disposalDate))
+    }
+
     def routeRequest(totalGainAnswers: YourAnswersSummaryModel,
                      grossGain: BigDecimal,
                      chargeableGainAnswers: ChargeableGainAnswers,
                      chargeableGain: Option[ChargeableGainResultModel],
                      incomeAnswers: IncomeAnswersModel,
                      totalGainAndTax: Option[TotalGainAndTaxOwedModel],
-                     backUrl: String)(implicit hc: HeaderCarrier): Future[Result] = {
+                     backUrl: String,
+                     taxYear: Option[TaxYearModel])(implicit hc: HeaderCarrier): Future[Result] = {
       if (chargeableGain.isDefined && chargeableGain.get.chargeableGain > 0 &&
         incomeAnswers.personalAllowanceModel.isDefined && incomeAnswers.currentIncomeModel.isDefined) Future.successful(
         Ok(views.html.calculation.resident.summary.finalSummary(totalGainAnswers, chargeableGainAnswers, incomeAnswers,
-          totalGainAndTax.get, routes.IncomeController.personalAllowance().url)))
-      else if (grossGain > 0) Future.successful(Ok(views.html.calculation.resident.deductionsSummary(totalGainAnswers, chargeableGainAnswers, chargeableGain.get, backUrl)))
-      else Future.successful(Ok(views.html.calculation.resident.gainSummary(totalGainAnswers, grossGain)))
+          totalGainAndTax.get, routes.IncomeController.personalAllowance().url, taxYear.get)))
+      else if (grossGain > 0) Future.successful(Ok(views.html.calculation.resident.deductionsSummary(totalGainAnswers, chargeableGainAnswers, chargeableGain.get, backUrl, taxYear.get)))
+      else Future.successful(Ok(views.html.calculation.resident.gainSummary(totalGainAnswers, grossGain, taxYear.get)))
     }
 
     for {
       answers <- calculatorConnector.getYourAnswers
+      taxYear <- getTaxYear(answers.disposalDate)
       grossGain <- calculatorConnector.calculateRttGrossGain(answers)
       deductionAnswers <- calculatorConnector.getChargeableGainAnswers
       backLink <- buildPreviousTaxableGainsBackUrl(deductionAnswers)
       chargeableGain <- chargeableGain(grossGain, answers, deductionAnswers)
       incomeAnswers <- calculatorConnector.getIncomeAnswers
       totalGain <- totalTaxableGain(chargeableGain, answers, deductionAnswers, incomeAnswers)
-      routeRequest <- routeRequest(answers, grossGain, deductionAnswers, chargeableGain, incomeAnswers, totalGain, backLink)
+      routeRequest <- routeRequest(answers, grossGain, deductionAnswers, chargeableGain, incomeAnswers, totalGain, backLink, taxYear)
     } yield routeRequest
   }
 }

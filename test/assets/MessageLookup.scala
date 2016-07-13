@@ -119,6 +119,8 @@ object MessageLookup {
     val chargeableLoss = "Carried forward loss"
     val chargeableGain = "Taxable gain"
     val taxRate = "Tax Rate"
+    def noticeWarning(input: String) = s"These figures are based on the tax rates from the ${input} tax year"
+    val warning = "Warning"
     val whatToDoNextTitle = "What to do next"
     val whatToDoNextText = "You can tell us about this loss so that you might need to pay less tax in the future."
     val whatToDoNextNoLossText = "As you have no tax to pay, you don't need to tell HMRC about the property."
