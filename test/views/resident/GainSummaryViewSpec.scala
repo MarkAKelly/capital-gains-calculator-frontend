@@ -366,7 +366,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
     }
 
     "have a visually hidden warning text" in {
-      doc.select("span.visuallyhidden").text shouldBe messages.warning
+      doc.select("div.notice-wrapper span.visuallyhidden").text shouldBe messages.warning
     }
   }
 }
