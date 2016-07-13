@@ -113,7 +113,7 @@ class SummaryNumericRowHelperSpec extends UnitSpec with WithFakeApplication {
         }
 
         "has the text 'change'" in {
-          link.text shouldBe commonMessages.calcBaseChange
+          link.text shouldBe commonMessages.calcBaseChange + " testQ"
         }
         "has the id testID-change-link" in {
           link.attr("id") shouldBe "testID-change-link"

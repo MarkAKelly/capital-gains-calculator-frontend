@@ -254,7 +254,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         }
 
         "should have the value '£200,000'" in {
-          doc.select("#disposalValue-amount span").text shouldBe "£200,000"
+          doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£200,000"
         }
 
         s"should have a change link to ${routes.GainController.disposalValue().url}" in {
@@ -270,7 +270,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         }
 
         "should have the value '£10,000'" in {
-          doc.select("#disposalCosts-amount span").text shouldBe "£10,000"
+          doc.select("#disposalCosts-amount span.bold-medium").text shouldBe "£10,000"
         }
 
         s"should have a change link to ${routes.GainController.disposalCosts().url}" in {
@@ -286,7 +286,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         }
 
         "should have the value '£100,000'" in {
-          doc.select("#acquisitionValue-amount span").text shouldBe "£100,000"
+          doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£100,000"
         }
 
         s"should have a change link to ${routes.GainController.acquisitionValue().url}" in {
@@ -302,7 +302,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         }
 
         "should have the value '£10,000'" in {
-          doc.select("#acquisitionCosts-amount span").text shouldBe "£10,000"
+          doc.select("#acquisitionCosts-amount span.bold-medium").text shouldBe "£10,000"
         }
 
         s"should have a change link to ${routes.GainController.acquisitionCosts().url}" in {
@@ -318,7 +318,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         }
 
         "should have the value '£30,000'" in {
-          doc.select("#improvements-amount span").text shouldBe "£30,000"
+          doc.select("#improvements-amount span.bold-medium").text shouldBe "£30,000"
         }
 
         s"should have a change link to ${routes.GainController.improvements().url}" in {
@@ -377,7 +377,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         }
 
         "should have the value '£0'" in {
-          doc.select("#currentIncome-amount span").text shouldBe "£0"
+          doc.select("#currentIncome-amount span.bold-medium").text shouldBe "£0"
         }
 
         s"should have a change link to ${routes.IncomeController.currentIncome().url}" in {
@@ -391,7 +391,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         }
 
         "should have the value '£0'" in {
-          doc.select("#personalAllowance-amount span").text shouldBe "£0"
+          doc.select("#personalAllowance-amount span.bold-medium").text shouldBe "£0"
         }
 
         s"should have a change link to ${routes.IncomeController.personalAllowance().url}" in {
@@ -515,7 +515,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
 
       "should have the value '£1,000'" in {
-        doc.select("#previousTaxableGains-amount span").text shouldBe "£1,000"
+        doc.select("#previousTaxableGains-amount span.bold-medium").text shouldBe "£1,000"
       }
 
       s"should have a change link to ${routes.IncomeController.previousTaxableGains().url}" in {
@@ -530,7 +530,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
 
       "should have the value '£0'" in {
-        doc.select("#currentIncome-amount span").text shouldBe "£0"
+        doc.select("#currentIncome-amount span.bold-medium").text shouldBe "£0"
       }
 
       s"should have a change link to ${routes.IncomeController.currentIncome().url}" in {
@@ -544,7 +544,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
 
       "should have the value '£0'" in {
-        doc.select("#personalAllowance-amount span").text shouldBe "£0"
+        doc.select("#personalAllowance-amount span.bold-medium").text shouldBe "£0"
       }
 
       s"should have a change link to ${routes.IncomeController.personalAllowance().url}" in {

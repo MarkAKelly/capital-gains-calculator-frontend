@@ -135,7 +135,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "should have the value '£11,100'" in {
-          doc.select("#deductions-amount").text should include("£11,100")
+          doc.select("#deductions-amount span.bold-medium").text should include("£11,100")
         }
 
         "has a breakdown that" should {
@@ -165,7 +165,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "should have the value '£38,900'" in {
-          doc.select("#chargeableGain-amount").text should include("£38,900")
+          doc.select("#chargeableGain-amount span.bold-medium").text should include("£38,900")
         }
       }
 
@@ -176,7 +176,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "include a value for Capital gains tax allowance left of £0" in {
-          doc.select("#aeaRemaining-amount").text should include("£0")
+          doc.select("#aeaRemaining-amount span.bold-medium").text should include("£0")
         }
       }
     }
@@ -230,7 +230,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "should have the value '£200,000'" in {
-          doc.select("#disposalValue-amount span").text shouldBe "£200,000"
+          doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£200,000"
         }
 
         s"should have a change link to ${routes.GainController.disposalValue().url}" in {
@@ -246,7 +246,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "should have the value '£10,000'" in {
-          doc.select("#disposalCosts-amount span").text shouldBe "£10,000"
+          doc.select("#disposalCosts-amount span.bold-medium").text shouldBe "£10,000"
         }
 
         s"should have a change link to ${routes.GainController.disposalCosts().url}" in {
@@ -262,7 +262,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "should have the value '£100,000'" in {
-          doc.select("#acquisitionValue-amount span").text shouldBe "£100,000"
+          doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£100,000"
         }
 
         s"should have a change link to ${routes.GainController.acquisitionValue().url}" in {
@@ -278,7 +278,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "should have the value '£10,000'" in {
-          doc.select("#acquisitionCosts-amount span").text shouldBe "£10,000"
+          doc.select("#acquisitionCosts-amount span.bold-medium").text shouldBe "£10,000"
         }
 
         s"should have a change link to ${routes.GainController.acquisitionCosts().url}" in {
@@ -294,7 +294,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "should have the value '£30,000'" in {
-          doc.select("#improvements-amount span").text shouldBe "£30,000"
+          doc.select("#improvements-amount span.bold-medium").text shouldBe "£30,000"
         }
 
         s"should have a change link to ${routes.GainController.improvements().url}" in {
@@ -450,7 +450,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "should have the value '£71,000'" in {
-          doc.select("#deductions-amount").text should include("£71,000")
+          doc.select("#deductions-amount span.bold-medium").text should include("£71,000")
         }
 
         "has a breakdown that" should {
@@ -526,7 +526,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "should have the value '£50,000'" in {
-          doc.select("#reliefsValue-amount span").text shouldBe "£50,000"
+          doc.select("#reliefsValue-amount span.bold-medium").text shouldBe "£50,000"
         }
 
         s"should have a change link to ${routes.DeductionsController.reliefsValue().url}" in {
@@ -571,7 +571,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "should have the value '£10,000'" in {
-          doc.select("#allowableLossesValue-amount span").text shouldBe "£10,000"
+          doc.select("#allowableLossesValue-amount span.bold-medium").text shouldBe "£10,000"
         }
 
         s"should have a change link to ${routes.DeductionsController.allowableLossesValue().url}" in {
@@ -601,7 +601,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "should have the value '£10,000'" in {
-          doc.select("#broughtForwardLossesValue-amount span").text shouldBe "£10,000"
+          doc.select("#broughtForwardLossesValue-amount span.bold-medium").text shouldBe "£10,000"
         }
 
         s"should have a change link to ${routes.DeductionsController.lossesBroughtForwardValue().url}" in {
@@ -644,7 +644,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       }
 
       "should have the value '£1,000'" in {
-        doc.select("#annualExemptAmount-amount span").text shouldBe "£1,000"
+        doc.select("#annualExemptAmount-amount span.bold-medium").text shouldBe "£1,000"
       }
 
       s"should have a change link to ${routes.DeductionsController.annualExemptAmount().url}" in {
