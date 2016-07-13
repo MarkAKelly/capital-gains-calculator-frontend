@@ -21,14 +21,35 @@ import controllers.resident.GainController
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.test.Helpers._
 import assets.MessageLookup.{outsideTaxYears => messages}
+import connectors.CalculatorConnector
+import models.resident.{DisposalDateModel, TaxYearModel}
 import org.jsoup.Jsoup
+import org.scalatest.mock.MockitoSugar
+import org.mockito.Matchers
+import org.mockito.Mockito._
 
-class OutsideTaxYearsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class OutsideTaxYearsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar{
+
+  def setupTarget(disposalDateModel: Option[DisposalDateModel], taxYearModel: Option[TaxYearModel]): GainController = {
+
+    val mockCalcConnector = mock[CalculatorConnector]
+
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(disposalDateModel)
+
+    when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
+      .thenReturn(taxYearModel)
+
+    new GainController {
+      val calcConnector = mockCalcConnector
+    }
+  }
 
   "Calling .outsideTaxYears from the GainCalculationController" when {
 
     "there is a valid session" should {
-      lazy val result = GainController.outsideTaxYears(fakeRequestWithSession)
+      lazy val target = setupTarget(Some(DisposalDateModel(10, 10, 2014)), Some(TaxYearModel("2014/15", false, "2015/16")))
+      lazy val result = target.outsideTaxYears(fakeRequestWithSession)
 
       "return a 200" in {
         status(result) shouldBe 200

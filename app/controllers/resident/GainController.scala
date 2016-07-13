@@ -77,7 +77,10 @@ trait GainController extends FeatureLock {
 
   //################ Outside Tax Years Actions ######################
   val outsideTaxYears = FeatureLockForRTT.async { implicit request =>
-    Future.successful(Ok(views.gain.outsideTaxYear()))
+    for {
+      disposalDate <- calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.ResidentKeys.disposalDate)
+      taxYear <- calcConnector.getTaxYear(s"${disposalDate.get.year}-${disposalDate.get.month}-${disposalDate.get.day}")
+    } yield {Ok(views.gain.outsideTaxYear(taxYear.get))}
   }
 
   //################ Disposal Value Actions ######################
