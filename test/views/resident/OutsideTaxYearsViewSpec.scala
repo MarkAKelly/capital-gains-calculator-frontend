@@ -19,56 +19,111 @@ package views.resident
 import assets.MessageLookup.{outsideTaxYears => messages}
 import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
+import models.resident.TaxYearModel
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class OutsideTaxYearsViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Outside tax years views" should {
-    lazy val view = views.html.calculation.resident.gain.outsideTaxYear()(fakeRequestWithSession)
-    lazy val doc = Jsoup.parse(view.body)
+  "Outside tax years views" when {
 
-    "have charset UTF-8" in {
-      doc.charset().toString shouldBe "UTF-8"
-    }
+    "using a disposal date before 2015/16" should {
+      lazy val taxYear = TaxYearModel("2014/15", false, "2015/16")
+      lazy val view = views.html.calculation.resident.gain.outsideTaxYear(taxYear)(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(view.body)
 
-    s"return a title of ${messages.title}" in {
-      doc.title shouldBe messages.title
-    }
-
-    s"have a heading of ${messages.title}" in {
-      doc.select("h1").text() shouldBe messages.title
-    }
-
-    s"have a message of ${messages.content("2015/16")}" in {
-      doc.select("p.lede").text() shouldBe messages.content("2015/16")
-    }
-
-    "have a back link that" should {
-      lazy val backLink = doc.select("a#back-link")
-
-      "have the correct back link text" in {
-        backLink.text shouldBe commonMessages.calcBaseBack
+      "have charset UTF-8" in {
+        doc.charset().toString shouldBe "UTF-8"
       }
 
-      "have the back-link class" in {
-        backLink.hasClass("back-link") shouldBe true
+      s"return a title of ${messages.title}" in {
+        doc.title shouldBe messages.title
       }
 
-      "have a link to Disposal Value" in {
-        backLink.attr("href") shouldBe controllers.resident.routes.GainController.disposalDate().toString
+      s"have a heading of ${messages.title}" in {
+        doc.select("h1").text() shouldBe messages.title
+      }
+
+      s"have a message of ${messages.content("2015/16")}" in {
+        doc.select("p.lede").text() shouldBe messages.content("2015/16")
+      }
+
+      "have a back link that" should {
+        lazy val backLink = doc.select("a#back-link")
+
+        "have the correct back link text" in {
+          backLink.text shouldBe commonMessages.calcBaseBack
+        }
+
+        "have the back-link class" in {
+          backLink.hasClass("back-link") shouldBe true
+        }
+
+        "have a link to Disposal Value" in {
+          backLink.attr("href") shouldBe controllers.resident.routes.GainController.disposalDate().toString
+        }
+      }
+
+      "have a continue button that" should {
+        lazy val button = doc.select("a#continue-button")
+
+        "have the correct text 'Continue'" in {
+          button.text() shouldBe commonMessages.calcBaseContinue
+        }
+
+        s"have an href to ${controllers.resident.routes.GainController.disposalValue().toString()}" in {
+          button.attr("href") shouldBe controllers.resident.routes.GainController.disposalValue().toString()
+        }
       }
     }
 
-    "have a continue button that" should {
-      lazy val button = doc.select("a#continue-button")
+    "using a disposal date after 2016/17" should {
+      lazy val taxYear = TaxYearModel("2017/18", false, "2016/17")
+      lazy val view = views.html.calculation.resident.gain.outsideTaxYear(taxYear)(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(view.body)
 
-      "have the correct text 'Continue'" in {
-        button.text() shouldBe commonMessages.calcBaseContinue
+      "have charset UTF-8" in {
+        doc.charset().toString shouldBe "UTF-8"
       }
 
-      s"have an href to ${controllers.resident.routes.GainController.disposalValue().toString()}" in {
-        button.attr("href") shouldBe controllers.resident.routes.GainController.disposalValue().toString()
+      s"return a title of ${messages.title}" in {
+        doc.title shouldBe messages.title
+      }
+
+      s"have a heading of ${messages.title}" in {
+        doc.select("h1").text() shouldBe messages.title
+      }
+
+      s"have a message of ${messages.content("2016/17")}" in {
+        doc.select("p.lede").text() shouldBe messages.content("2016/17")
+      }
+
+      "have a back link that" should {
+        lazy val backLink = doc.select("a#back-link")
+
+        "have the correct back link text" in {
+          backLink.text shouldBe commonMessages.calcBaseBack
+        }
+
+        "have the back-link class" in {
+          backLink.hasClass("back-link") shouldBe true
+        }
+
+        "have a link to Disposal Value" in {
+          backLink.attr("href") shouldBe controllers.resident.routes.GainController.disposalDate().toString
+        }
+      }
+
+      "have a continue button that" should {
+        lazy val button = doc.select("a#continue-button")
+
+        "have the correct text 'Continue'" in {
+          button.text() shouldBe commonMessages.calcBaseContinue
+        }
+
+        s"have an href to ${controllers.resident.routes.GainController.disposalValue().toString()}" in {
+          button.attr("href") shouldBe controllers.resident.routes.GainController.disposalValue().toString()
+        }
       }
     }
   }
