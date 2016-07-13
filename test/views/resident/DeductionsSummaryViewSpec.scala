@@ -598,15 +598,28 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
   "Summary when supplied with a date within the known tax years and no gain or loss" should {
 
-    val testModel = YourAnswersSummaryModel(
-      constructDate(12, 9, 2015),
-      10,
-      20,
-      30,
-      40,
-      50
-    )
-    lazy val view = views.gainSummary(testModel, 0)(fakeRequest)
+    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+      BigDecimal(200000),
+      BigDecimal(0),
+      BigDecimal(100000),
+      BigDecimal(0),
+      BigDecimal(0))
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(true)),
+      Some(ReliefsValueModel(BigDecimal(100000))),
+      Some(OtherPropertiesModel(true)),
+      Some(AllowableLossesModel(true)),
+      Some(AllowableLossesValueModel(0)),
+      Some(LossesBroughtForwardModel(true)),
+      Some(LossesBroughtForwardValueModel(0)),
+      Some(AnnualExemptAmountModel(0)))
+    lazy val results = ChargeableGainResultModel(BigDecimal(0),
+      BigDecimal(0),
+      BigDecimal(0),
+      BigDecimal(0),
+      BigDecimal(50000))
+
+    lazy val backLink = "/calculate-your-capital-gains/resident/annual-exempt-amount"
+    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display the what to do next section" in {
@@ -624,15 +637,28 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
   "Summary when supplied with a date above the known tax years" should {
 
-    val testModel = YourAnswersSummaryModel(
-      constructDate(12,9,2018),
-      10,
-      20,
-      30,
-      40,
-      50
-    )
-    lazy val view = views.gainSummary(testModel, 0)(fakeRequest)
+    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
+      BigDecimal(200000),
+      BigDecimal(10000),
+      BigDecimal(100000),
+      BigDecimal(10000),
+      BigDecimal(30000))
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(true)),
+      Some(ReliefsValueModel(BigDecimal(50000))),
+      Some(OtherPropertiesModel(true)),
+      Some(AllowableLossesModel(true)),
+      Some(AllowableLossesValueModel(10000)),
+      Some(LossesBroughtForwardModel(true)),
+      Some(LossesBroughtForwardValueModel(10000)),
+      Some(AnnualExemptAmountModel(1000)))
+    lazy val results = ChargeableGainResultModel(BigDecimal(50000),
+      BigDecimal(-11000),
+      BigDecimal(0),
+      BigDecimal(11000),
+      BigDecimal(71000))
+
+    lazy val backLink = "/calculate-your-capital-gains/resident/annual-exempt-amount"
+    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "does not display the section for what to do next" in {
