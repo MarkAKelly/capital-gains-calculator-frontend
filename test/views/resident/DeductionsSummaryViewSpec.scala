@@ -591,8 +591,8 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
       "has an option output row for allowable losses" which {
 
-        s"should have the question text '${commonMessages.allowableLosses.title}'" in {
-          doc.select("#allowableLosses-question").text shouldBe commonMessages.allowableLosses.title
+        s"should have the question text '${commonMessages.allowableLosses.title("2013/14")}'" in {
+          doc.select("#allowableLosses-question").text shouldBe commonMessages.allowableLosses.title("2013/14")
         }
 
         "should have the value 'Yes'" in {
@@ -604,11 +604,11 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "has the question as part of the link" in {
-          doc.select("#allowableLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.allowableLosses.title}"
+          doc.select("#allowableLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.allowableLosses.title("2013/14")}"
         }
 
         "has the question component of the link as visuallyhidden" in {
-          doc.select("#allowableLosses-option a span.visuallyhidden").text shouldBe commonMessages.allowableLosses.title
+          doc.select("#allowableLosses-option a span.visuallyhidden").text shouldBe commonMessages.allowableLosses.title("2013/14")
         }
       }
 
@@ -668,6 +668,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
   }
 
   "Deductions Summary view with AEA options selected" which {
+
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       BigDecimal(200000),
       BigDecimal(10000),
