@@ -96,7 +96,7 @@ object MessageLookup {
   object acquisitionCosts {
     val title = "How much did you pay in costs when you became the property owner?"
     val pageHeading = "How much did you pay in costs when you became the property owner?"
-    val helpText = "Costs include agent fees, legal fees and surveys"
+    val helpText = "Costs include stamp duty, agent fees, legal fees and surveys"
   }
 
   //Improvements messages
