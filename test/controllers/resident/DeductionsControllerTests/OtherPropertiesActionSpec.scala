@@ -21,19 +21,22 @@ import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.DeductionsController
-import models.resident.{ReliefsModel, OtherPropertiesModel}
+import models.resident.{DisposalDateModel, OtherPropertiesModel, ReliefsModel, TaxYearModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+
 import scala.concurrent.Future
 
 class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
   def setupTarget(getData: Option[OtherPropertiesModel],
-                  reliefsData: Option[ReliefsModel] ): DeductionsController = {
+                  reliefsData: Option[ReliefsModel],
+                  disposalDate: Option[DisposalDateModel],
+                  taxYear: Option[TaxYearModel]): DeductionsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
@@ -43,6 +46,12 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
     when(mockCalcConnector.fetchAndGetFormData[ReliefsModel](Matchers.eq(KeystoreKeys.ResidentKeys.reliefs))(Matchers.any(), Matchers.any()))
     .thenReturn(Future.successful(reliefsData))
 
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalDate))(Matchers.any(), Matchers.any()))
+      .thenReturn(disposalDate)
+
+    when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
+      .thenReturn(taxYear)
+
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
     }
@@ -51,7 +60,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
   "Calling .otherProperties from the DeductionsController" when {
     "request has a valid session and no keystore value" should {
 
-      lazy val target = setupTarget(None, None)
+      lazy val target = setupTarget(None, None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val result = target.otherProperties(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -62,14 +71,14 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
         contentType(result) shouldBe Some("text/html")
       }
 
-      s"have a title of ${messages.title}" in {
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+      s"have a title of ${messages.title("2015/16")}" in {
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title("2015/16")
       }
     }
 
     "request has no session" should {
 
-      lazy val target = setupTarget(None, None)
+      lazy val target = setupTarget(None, None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val result = target.otherProperties(fakeRequest)
 
       "return a status of 303" in {
@@ -79,7 +88,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
 
     "reliefs model is populated with 'Yes'" should {
 
-      lazy val target = setupTarget(None, Some(ReliefsModel(true)))
+      lazy val target = setupTarget(None, Some(ReliefsModel(true)), Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val result = target.otherProperties(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
@@ -94,7 +103,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
 
     "reliefs model is populated with 'No'" should {
 
-      lazy val target = setupTarget(None, Some(ReliefsModel(false)))
+      lazy val target = setupTarget(None, Some(ReliefsModel(false)), Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val result = target.otherProperties(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
@@ -111,7 +120,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
   "Calling .submitOtherProperties from the DeductionsController" when {
     "a valid form 'Yes' is submitted" should {
 
-      lazy val target = setupTarget(None, Some(ReliefsModel(true)))
+      lazy val target = setupTarget(None, Some(ReliefsModel(true)), Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val request = fakeRequestToPOSTWithSession(("hasOtherProperties", "Yes"))
       lazy val result = target.submitOtherProperties(request)
 
@@ -126,7 +135,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
 
     "a valid form 'No' is submitted" should {
 
-      lazy val target = setupTarget(None, Some(ReliefsModel(true)))
+      lazy val target = setupTarget(None, Some(ReliefsModel(true)), Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val request = fakeRequestToPOSTWithSession(("hasOtherProperties", "No"))
       lazy val result = target.submitOtherProperties(request)
 
@@ -141,7 +150,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
 
     "an invalid form is submitted" should {
 
-      lazy val target = setupTarget(None, Some(ReliefsModel(true)))
+      lazy val target = setupTarget(None, Some(ReliefsModel(true)), Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val request = fakeRequestToPOSTWithSession(("hasOtherProperties", ""))
       lazy val result = target.submitOtherProperties(request)
 
@@ -150,7 +159,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
       }
 
       "render the other properties page" in {
-        Jsoup.parse(bodyOf(result)).title() shouldEqual messages.title
+        Jsoup.parse(bodyOf(result)).title() shouldEqual messages.title("2015/16")
       }
     }
   }
