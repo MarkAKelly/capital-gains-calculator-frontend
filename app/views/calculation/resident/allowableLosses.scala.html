@@ -2,7 +2,7 @@
 @import views.html.helpers._
 @import models.resident.AllowableLossesModel
 
-@(allowableLossesForm: Form[AllowableLossesModel])(implicit request: Request[_])
+@(allowableLossesForm: Form[AllowableLossesModel], taxYear: TaxYearModel)(implicit request: Request[_])
 
 @resident_main_template(title = Messages("calc.resident.allowableLosses.title"), backLink = Some(controllers.resident.routes.DeductionsController.otherProperties.toString())) {
 
