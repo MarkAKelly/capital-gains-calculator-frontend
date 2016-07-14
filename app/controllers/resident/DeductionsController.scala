@@ -43,6 +43,14 @@ trait DeductionsController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
 
+  def getDisposalDate(implicit hc: HeaderCarrier): Future[Option[DisposalDateModel]] = {
+    calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.ResidentKeys.disposalDate)
+  }
+
+  def formatDisposalDate(disposalDateModel: DisposalDateModel): Future[String] = {
+    Future.successful(s"${disposalDateModel.year}-${disposalDateModel.month}-${disposalDateModel.day}")
+  }
+
   //################# Reliefs Actions ########################
 
   def totalGain(answerSummary: YourAnswersSummaryModel, hc: HeaderCarrier): Future[BigDecimal] = calcConnector.calculateRttGrossGain(answerSummary)(hc)
@@ -115,24 +123,27 @@ trait DeductionsController extends FeatureLock {
 
   val otherProperties = FeatureLockForRTT.async { implicit request =>
 
-    def routeRequest(backUrl: String): Future[Result] = {
+    def routeRequest(backUrl: String, taxYear: TaxYearModel): Future[Result] = {
       calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.ResidentKeys.otherProperties).map {
-        case Some(data) => Ok(views.otherProperties(otherPropertiesForm.fill(data), backUrl))
-        case None => Ok(views.otherProperties(otherPropertiesForm, backUrl))
+        case Some(data) => Ok(views.otherProperties(otherPropertiesForm.fill(data), backUrl, taxYear))
+        case None => Ok(views.otherProperties(otherPropertiesForm, backUrl, taxYear))
       }
     }
 
     for {
       backUrl <- otherPropertiesBackUrl
-      finalResult <- routeRequest(backUrl)
+      disposalDate <- getDisposalDate
+      disposalDateString <- formatDisposalDate(disposalDate.get)
+      taxYear <- calcConnector.getTaxYear(disposalDateString)
+      finalResult <- routeRequest(backUrl, taxYear.get)
     } yield finalResult
   }
 
   val submitOtherProperties = FeatureLockForRTT.async { implicit request =>
 
-    def routeRequest(backUrl: String): Future[Result] = {
+    def routeRequest(backUrl: String, taxYearModel: TaxYearModel): Future[Result] = {
       otherPropertiesForm.bindFromRequest.fold(
-        errors => Future.successful(BadRequest(views.otherProperties(errors, backUrl))),
+        errors => Future.successful(BadRequest(views.otherProperties(errors, backUrl, taxYearModel))),
         success => {
           calcConnector.saveFormData[OtherPropertiesModel](KeystoreKeys.ResidentKeys.otherProperties, success)
           if (success.hasOtherProperties) {
@@ -145,7 +156,10 @@ trait DeductionsController extends FeatureLock {
     }
     for {
       backUrl <- otherPropertiesBackUrl
-      route <- routeRequest(backUrl)
+      disposalDate <- getDisposalDate
+      disposalDateString <- formatDisposalDate(disposalDate.get)
+      taxYear <- calcConnector.getTaxYear(disposalDateString)
+      route <- routeRequest(backUrl, taxYear.get)
     } yield route
   }
 

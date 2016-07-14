@@ -390,8 +390,8 @@ calc.resident.reliefsValue.question = How much tax relief are you claiming?
 calc.resident.lossesBroughtForward.title = Are there any previous losses you want to bring forward?
 
 ## Other Properties messages
-calc.resident.otherProperties.title = In the 2015/2016 tax year, did you sell or give away anything else that''s covered by Capital Gains Tax?
-calc.resident.otherProperties.pageHeading = In the 2015/2016 tax year, did you sell or give away anything else that''s covered by Capital Gains Tax?
+calc.resident.otherProperties.title = In the {0} tax year, did you sell or give away anything else that''s covered by Capital Gains Tax?
+calc.resident.otherProperties.pageHeading = In the {0} tax year, did you sell or give away anything else that''s covered by Capital Gains Tax?
 calc.resident.otherProperties.bullet.title = This includes things like:
 calc.resident.otherProperties.bullet.one = shares
 calc.resident.otherProperties.bullet.two = antiques
