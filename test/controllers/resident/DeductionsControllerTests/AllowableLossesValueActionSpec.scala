@@ -16,6 +16,7 @@
 
 package controllers.resident.DeductionsControllerTests
 
+import common.KeystoreKeys
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.DeductionsController
 import org.jsoup.Jsoup
@@ -23,7 +24,7 @@ import play.api.test.Helpers._
 import assets.MessageLookup.{allowableLossesValue => messages}
 import common.KeystoreKeys.{ResidentKeys => keystoreKeys}
 import connectors.CalculatorConnector
-import models.resident.AllowableLossesValueModel
+import models.resident.{TaxYearModel, AllowableLossesValueModel, DisposalDateModel}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -34,7 +35,9 @@ import scala.concurrent.Future
 
 class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  def setupTarget(getData: Option[AllowableLossesValueModel]): DeductionsController = {
+  def setupTarget(getData: Option[AllowableLossesValueModel],
+                  disposalDate: Option[DisposalDateModel],
+                  taxYear: Option[TaxYearModel]): DeductionsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
@@ -43,6 +46,12 @@ class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication w
 
     when(mockCalcConnector.saveFormData[AllowableLossesValueModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
+
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalDate))(Matchers.any(), Matchers.any()))
+      .thenReturn(disposalDate)
+
+    when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
+      .thenReturn(taxYear)
 
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -53,7 +62,7 @@ class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication w
 
     "there is no keystore data" should {
 
-      lazy val target = setupTarget(None)
+      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val result = target.allowableLossesValue(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
@@ -65,14 +74,14 @@ class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication w
         contentType(result) shouldBe Some("text/html")
       }
 
-      s"have a title of ${messages.title}" in {
-        doc.title() shouldBe messages.title
+      s"have a title of ${messages.title("2015/16")}" in {
+        doc.title() shouldBe messages.title("2015/16")
       }
     }
 
     "there is some keystore data" should {
 
-      lazy val target = setupTarget(Some(AllowableLossesValueModel(1000)))
+      lazy val target = setupTarget(Some(AllowableLossesValueModel(1000)), Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val result = target.allowableLossesValue(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
@@ -85,7 +94,7 @@ class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication w
       }
 
       "display the Allowable Losses Value view" in {
-        doc.title shouldBe messages.title
+        doc.title shouldBe messages.title("2015/16")
       }
 
       "have 1000 pre-populated in the amount input field" in {
@@ -111,7 +120,7 @@ class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication w
 
     "a valid form is submitted" should {
 
-      lazy val target = setupTarget(None)
+      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
       lazy val result = target.submitAllowableLossesValue(request)
 
@@ -126,7 +135,7 @@ class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication w
 
     "an invalid form is submitted" should {
 
-      lazy val target = setupTarget(None)
+      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
       lazy val result = target.submitAllowableLossesValue(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
@@ -136,7 +145,7 @@ class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication w
       }
 
       "render the Allowable Losses Value page" in {
-        doc.title() shouldEqual messages.title
+        doc.title() shouldEqual messages.title("2015/16")
       }
     }
   }

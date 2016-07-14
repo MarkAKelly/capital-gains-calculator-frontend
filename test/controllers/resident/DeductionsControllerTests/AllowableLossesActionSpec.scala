@@ -21,7 +21,7 @@ import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.DeductionsController
-import models.resident.AllowableLossesModel
+import models.resident._
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -34,7 +34,9 @@ import scala.concurrent.Future
 
 class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  def setupTarget(getData: Option[AllowableLossesModel]): DeductionsController = {
+  def setupTarget(getData: Option[AllowableLossesModel],
+                  disposalDate: Option[DisposalDateModel],
+                  taxYear: Option[TaxYearModel]): DeductionsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
@@ -43,6 +45,12 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
 
     when(mockCalcConnector.saveFormData[AllowableLossesModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
+
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalDate))(Matchers.any(), Matchers.any()))
+      .thenReturn(disposalDate)
+
+    when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
+      .thenReturn(taxYear)
 
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -53,7 +61,7 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
 
     "request has a valid session and no keystore value" should {
 
-      lazy val target = setupTarget(None)
+      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val result = target.allowableLosses(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -64,32 +72,32 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
         contentType(result) shouldBe Some("text/html")
       }
 
-      s"return a title of ${messages.title}" in {
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+      s"return a title of ${messages.title("2015/16")}" in {
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title("2015/16")
       }
     }
 
     "request has a valid session and some keystore value" should {
 
-      lazy val target = setupTarget(Some(AllowableLossesModel(true)))
+      lazy val target = setupTarget(Some(AllowableLossesModel(true)), Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val result = target.allowableLosses(fakeRequestWithSession)
 
       "return a status of 200" in {
         status(result) shouldBe 200
       }
 
-      s"return some html with title of ${messages.title}" in {
+      "return some html" in {
         contentType(result) shouldBe Some("text/html")
       }
 
-      s"return a title of ${messages.title}" in {
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+      s"return a title of ${messages.title("2015/16")}" in {
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title("2015/16")
       }
     }
 
     "request has an invalid session" should {
 
-      lazy val target = setupTarget(None)
+      lazy val target = setupTarget(None, None, None)
       lazy val result = target.allowableLosses(fakeRequest)
 
       "return a status of 303" in {
@@ -105,7 +113,7 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
   "Calling .submitAllowableLosses from the DeductionsController" when {
 
     "a valid form 'Yes' is submitted" should {
-      lazy val target = setupTarget(None)
+      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "Yes"))
       lazy val result = target.submitAllowableLosses(request)
 
@@ -119,7 +127,7 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
     }
 
     "a valid form 'No' is submitted" should {
-      lazy val target = setupTarget(None)
+      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "No"))
       lazy val result = target.submitAllowableLosses(request)
 
@@ -133,7 +141,7 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
     }
 
     "an invalid form is submitted" should {
-      lazy val target = setupTarget(None)
+      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val request = fakeRequestToPOSTWithSession(("isClaiming", ""))
       lazy val result = target.submitAllowableLosses(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
@@ -143,7 +151,7 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
       }
 
       "render the allowable losses" in {
-        doc.title() shouldEqual messages.title
+        doc.title() shouldEqual messages.title("2015/16")
       }
     }
   }

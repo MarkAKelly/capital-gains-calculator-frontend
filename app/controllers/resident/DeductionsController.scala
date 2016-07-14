@@ -165,43 +165,79 @@ trait DeductionsController extends FeatureLock {
 
   //################# Allowable Losses Actions #########################
   val allowableLosses = FeatureLockForRTT.async { implicit request =>
-    calcConnector.fetchAndGetFormData[AllowableLossesModel](KeystoreKeys.ResidentKeys.allowableLosses).map {
-      case Some(data) => Ok(views.allowableLosses(allowableLossesForm.fill(data)))
-      case None => Ok(views.allowableLosses(allowableLossesForm))
+
+    def routeRequest(taxYear: TaxYearModel): Future[Result] = {
+      calcConnector.fetchAndGetFormData[AllowableLossesModel](KeystoreKeys.ResidentKeys.allowableLosses).map {
+        case Some(data) => Ok(views.allowableLosses(allowableLossesForm.fill(data), taxYear))
+        case None => Ok(views.allowableLosses(allowableLossesForm, taxYear))
+      }
     }
+    for {
+      disposalDate <- getDisposalDate
+      disposalDateString <- formatDisposalDate(disposalDate.get)
+      taxYear <- calcConnector.getTaxYear(disposalDateString)
+      finalResult <- routeRequest(taxYear.get)
+    } yield finalResult
   }
 
   val submitAllowableLosses = FeatureLockForRTT.async { implicit request =>
-    allowableLossesForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.allowableLosses(errors))),
-      success => {
-        calcConnector.saveFormData[AllowableLossesModel](KeystoreKeys.ResidentKeys.allowableLosses, success)
-        if (success.isClaiming) {
-          Future.successful(Redirect(routes.DeductionsController.allowableLossesValue()))
+
+    def routeRequest(taxYear: TaxYearModel): Future[Result] = {
+      allowableLossesForm.bindFromRequest.fold(
+        errors => Future.successful(BadRequest(views.allowableLosses(errors, taxYear))),
+        success => {
+          calcConnector.saveFormData[AllowableLossesModel](KeystoreKeys.ResidentKeys.allowableLosses, success)
+          if (success.isClaiming) {
+            Future.successful(Redirect(routes.DeductionsController.allowableLossesValue()))
+          }
+          else {
+            Future.successful(Redirect(routes.DeductionsController.lossesBroughtForward()))
+          }
         }
-        else {
-          Future.successful(Redirect(routes.DeductionsController.lossesBroughtForward()))
-        }
-      }
-    )
+      )
+    }
+    for {
+      disposalDate <- getDisposalDate
+      disposalDateString <- formatDisposalDate(disposalDate.get)
+      taxYear <- calcConnector.getTaxYear(disposalDateString)
+      finalResult <- routeRequest(taxYear.get)
+    } yield finalResult
   }
 
   //################# Allowable Losses Value Actions ############################
   val allowableLossesValue = FeatureLockForRTT.async { implicit request =>
-    calcConnector.fetchAndGetFormData[AllowableLossesValueModel](KeystoreKeys.ResidentKeys.allowableLossesValue).map {
-      case Some(data) => Ok(views.allowableLossesValue(allowableLossesValueForm.fill(data)))
-      case None => Ok(views.allowableLossesValue(allowableLossesValueForm))
+
+    def routeRequest(taxYear: TaxYearModel): Future[Result] = {
+      calcConnector.fetchAndGetFormData[AllowableLossesValueModel](KeystoreKeys.ResidentKeys.allowableLossesValue).map {
+        case Some(data) => Ok(views.allowableLossesValue(allowableLossesValueForm.fill(data), taxYear))
+        case None => Ok(views.allowableLossesValue(allowableLossesValueForm, taxYear))
+      }
     }
+    for {
+      disposalDate <- getDisposalDate
+      disposalDateString <- formatDisposalDate(disposalDate.get)
+      taxYear <- calcConnector.getTaxYear(disposalDateString)
+      finalResult <- routeRequest(taxYear.get)
+    } yield finalResult
   }
 
   val submitAllowableLossesValue = FeatureLockForRTT.async { implicit request =>
-    allowableLossesValueForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.allowableLossesValue(errors))),
-      success => {
-        calcConnector.saveFormData[AllowableLossesValueModel](KeystoreKeys.ResidentKeys.allowableLossesValue, success)
-        Future.successful(Redirect(routes.DeductionsController.lossesBroughtForward()))
-      }
-    )
+
+    def routeRequest(taxYearModel: TaxYearModel): Future [Result] = {
+      allowableLossesValueForm.bindFromRequest.fold(
+        errors => Future.successful(BadRequest(views.allowableLossesValue(errors, taxYearModel))),
+        success => {
+          calcConnector.saveFormData[AllowableLossesValueModel](KeystoreKeys.ResidentKeys.allowableLossesValue, success)
+          Future.successful(Redirect(routes.DeductionsController.lossesBroughtForward()))
+        }
+      )
+    }
+    for {
+      disposalDate <- getDisposalDate
+      disposalDateString <- formatDisposalDate(disposalDate.get)
+      taxYear <- calcConnector.getTaxYear(disposalDateString)
+      route <- routeRequest(taxYear.get)
+    } yield route
   }
 
   //################# Brought Forward Losses Actions ############################

@@ -399,8 +399,8 @@ calc.resident.otherProperties.bullet.three = other UK residential properties
 calc.resident.otherProperties.errorSelect = Tell us if you sold or gave away anything else that''s covered by Capital Gains Tax in the {0} tax year
 
 ## Allowable Losses Value messages
-calc.resident.allowableLossesValue.title = What''s the total value of your allowable losses?
-calc.resident.allowableLossesValue.question = What''s the total value of your allowable losses?
+calc.resident.allowableLossesValue.title = What''s the total value of your allowable losses from the {0} tax year?
+calc.resident.allowableLossesValue.question = What''s the total value of your allowable losses from the {0} tax year?
 
 ## Annual Exempt Amount messages
 calc.resident.annualExemptAmount.title = How much of your Capital Gains Tax allowance have you got left?
@@ -416,7 +416,8 @@ calc.resident.lossesBroughtForward.errorSelect = Tell us if you''re claiming any
 
 
 ## Allowable Losses messages
-calc.resident.allowableLosses.title = Are you claiming any allowable losses from the 2015/2016 tax year?
+calc.resident.allowableLosses.title = Are you claiming any allowable losses from the {0} tax year?
+calc.resident.allowableLosses.question = Are you claiming any allowable losses from the {0} tax year?
 calc.resident.allowableLosses.helpInfo.title = What are allowable losses?
 calc.resident.allowableLosses.helpInfo.subtitle = They''re losses you''ve made that:
 calc.resident.allowableLosses.helpInfo.point1 = are covered by Capital Gains Tax

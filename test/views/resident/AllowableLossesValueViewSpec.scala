@@ -18,6 +18,7 @@ package views.resident
 
 import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
+import models.resident.TaxYearModel
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{allowableLossesValue => messages}
@@ -27,15 +28,16 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
 
   "Allowable Losses Value view with no form errors" should {
 
-    lazy val view = views.html.calculation.resident.allowableLossesValue(allowableLossesValueForm)(fakeRequest)
+    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+    lazy val view = views.html.calculation.resident.allowableLossesValue(allowableLossesValueForm, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
       doc.charset().toString shouldBe "UTF-8"
     }
 
-    s"have a title of ${messages.title}" in {
-      doc.title() shouldBe messages.title
+    s"have a title of ${messages.title("2015/16")}" in {
+      doc.title() shouldBe messages.title("2015/16")
     }
 
     "have a back button" which {
@@ -59,8 +61,8 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
 
       lazy val h1Tag = doc.select("H1")
 
-      s"have the page heading '${messages.question}'" in {
-        h1Tag.text shouldBe messages.question
+      s"have the page heading '${messages.question("2015/16")}'" in {
+        h1Tag.text shouldBe messages.question("2015/16")
       }
 
       "have the heading-large class" in {
@@ -84,8 +86,8 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
 
         lazy val label = doc.body.getElementsByTag("label")
 
-        s"have the question ${messages.question}" in {
-          label.text should include(messages.question)
+        s"have the question ${messages.question("2015/16")}" in {
+          label.text should include(messages.question("2015/16"))
         }
 
         "have the class 'visuallyhidden'" in {
@@ -141,7 +143,7 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
 
   "Allowable Losses Value View with form with errors" should {
     val form = allowableLossesValueForm.bind(Map("amount" -> ""))
-    lazy val view = views.html.calculation.resident.allowableLossesValue(form)(fakeRequestWithSession)
+    lazy val view = views.html.calculation.resident.allowableLossesValue(form, TaxYearModel("2015/16", true, "2015/16"))(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "output an error summary" in {

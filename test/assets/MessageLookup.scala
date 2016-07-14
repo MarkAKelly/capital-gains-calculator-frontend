@@ -165,8 +165,8 @@ object MessageLookup {
 
   //Allowable Losses Value messages
   object allowableLossesValue {
-    val title = "What's the total value of your allowable losses?"
-    val question = "What's the total value of your allowable losses?"
+    def title(input: String) = s"What's the total value of your allowable losses from the $input tax year?"
+    def question(input: String) = s"What's the total value of your allowable losses from the $input tax year?"
   }
 
   //Losses Brought Forward messages
@@ -178,7 +178,7 @@ object MessageLookup {
 
   //Allowable Losses messages
   object allowableLosses {
-    val title = "Are you claiming any allowable losses from the 2015/2016 tax year?"
+    def title(input: String) = s"Are you claiming any allowable losses from the $input tax year?"
     val helpInfoTitle = "What are allowable losses?"
     val helpInfoSubtitle = "They're losses you've made that:"
     val helpInfoPoint1 = "are covered by Capital Gains Tax"
