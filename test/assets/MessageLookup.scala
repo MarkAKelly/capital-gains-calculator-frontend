@@ -189,8 +189,8 @@ object MessageLookup {
 
   //Losses Brought Forward Value messages
   object lossesBroughtForwardValue {
-    val title = "What's the total value of the loss to bring forward?"
-    val question = "What's the total value of the loss to bring forward?"
+    def title(input: String) = s"What's the total value of your allowable losses from tax years before $input?"
+    def question(input: String) = s"What's the total value of your allowable losses from tax years before $input?"
   }
 
   //Annual Exempt Amount messages

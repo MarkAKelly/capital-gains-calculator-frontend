@@ -23,115 +23,157 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.{resident => views}
 import forms.resident.LossesBroughtForwardValueForm._
+import models.resident.TaxYearModel
 
 class LossesBroughtForwardValueViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Losses Brought Forward Value view" should {
+  "Losses Brought Forward Value view" when {
 
-    lazy val view = views.lossesBroughtForwardValue(lossesBroughtForwardValueForm)(fakeRequest)
-    lazy val doc = Jsoup.parse(view.body)
+    "provided with a date in the 2015/16 tax year" should {
 
-    "have a charset of UTF-8" in {
-      doc.charset().toString shouldBe "UTF-8"
+      lazy val taxYear = TaxYearModel("2015/16", true, "2015/16")
+      lazy val view = views.lossesBroughtForwardValue(lossesBroughtForwardValueForm, taxYear)(fakeRequest)
+      lazy val doc = Jsoup.parse(view.body)
+
+      "have a charset of UTF-8" in {
+        doc.charset().toString shouldBe "UTF-8"
+      }
+
+      s"have a title ${messages.title("2015/16")}" in {
+        doc.title() shouldBe messages.title("2015/16")
+      }
+
+      "have a back button that" should {
+
+        lazy val backLink = doc.select("a#back-link")
+
+        "have the correct back link text" in {
+          backLink.text shouldBe commonMessages.calcBaseBack
+        }
+
+        "have the back-link class" in {
+          backLink.hasClass("back-link") shouldBe true
+        }
+
+        "have a link to Disposal Value" in {
+          backLink.attr("href") shouldBe controllers.resident.routes.DeductionsController.lossesBroughtForward().toString
+        }
+      }
+
+      "have a H1 tag that" should {
+
+        lazy val h1Tag = doc.select("H1")
+
+        s"have the page heading '${messages.question("2015/16")}'" in {
+          h1Tag.text shouldBe messages.question("2015/16")
+        }
+
+        "have the heading-large class" in {
+          h1Tag.hasClass("heading-large") shouldBe true
+        }
+      }
+
+      "have a form" which {
+        lazy val form = doc.getElementsByTag("form")
+
+        s"has the action '${controllers.resident.routes.DeductionsController.submitLossesBroughtForwardValue().toString}'" in {
+          form.attr("action") shouldBe controllers.resident.routes.DeductionsController.submitLossesBroughtForwardValue().toString
+        }
+
+        "has the method of POST" in {
+          form.attr("method") shouldBe "POST"
+        }
+
+        "has a label that" should {
+
+          lazy val label = doc.body.getElementsByTag("label")
+
+          s"have the question ${messages.question("2015/16")}" in {
+            label.text should include(messages.question("2015/16"))
+          }
+
+          "have the class 'visuallyhidden'" in {
+            label.select("span.visuallyhidden").size shouldBe 1
+          }
+        }
+
+        "has a numeric input field" which {
+
+          lazy val input = doc.body.getElementsByTag("input")
+
+          "has the id 'amount'" in {
+            input.attr("id") shouldBe "amount"
+          }
+
+          "has the name 'amount'" in {
+            input.attr("name") shouldBe "amount"
+          }
+
+          "is of type number" in {
+            input.attr("type") shouldBe "number"
+          }
+
+          "has a step value of '0.01'" in {
+            input.attr("step") shouldBe "0.01"
+          }
+
+          s"has placeholder 'eg. 25000.00'" in {
+            input.attr("placeholder") shouldBe "eg. 25000.00"
+          }
+        }
+
+        "have a continue button that" should {
+
+          lazy val continueButton = doc.select("button#continue-button")
+
+          s"have the button text '${commonMessages.calcBaseContinue}'" in {
+            continueButton.text shouldBe commonMessages.calcBaseContinue
+          }
+
+          "be of type submit" in {
+            continueButton.attr("type") shouldBe "submit"
+          }
+
+          "have the class 'button'" in {
+            continueButton.hasClass("button") shouldBe true
+          }
+        }
+      }
     }
 
-    s"have a title ${messages.title}" in {
-      doc.title() shouldBe messages.title
-    }
+    "provided with a date in the 2014/15 tax year" should {
 
-    "have a back button that" should {
+      lazy val taxYear = TaxYearModel("2014/15", false, "2015/16")
+      lazy val view = views.lossesBroughtForwardValue(lossesBroughtForwardValueForm, taxYear)(fakeRequest)
+      lazy val doc = Jsoup.parse(view.body)
 
-      lazy val backLink = doc.select("a#back-link")
-
-      "have the correct back link text" in {
-        backLink.text shouldBe commonMessages.calcBaseBack
+      s"have a title ${messages.title("2014/15")}" in {
+        doc.title() shouldBe messages.title("2014/15")
       }
 
-      "have the back-link class" in {
-        backLink.hasClass("back-link") shouldBe true
+      "have a H1 tag that" should {
+
+        lazy val h1Tag = doc.select("H1")
+
+        s"have the page heading '${messages.question("2014/15")}'" in {
+          h1Tag.text shouldBe messages.question("2014/15")
+        }
+
+        "have the heading-large class" in {
+          h1Tag.hasClass("heading-large") shouldBe true
+        }
       }
 
-      "have a link to Disposal Value" in {
-        backLink.attr("href") shouldBe controllers.resident.routes.DeductionsController.lossesBroughtForward().toString
-      }
-    }
-
-    "have a H1 tag that" should {
-
-      lazy val h1Tag = doc.select("H1")
-
-      s"have the page heading '${messages.question}'" in {
-        h1Tag.text shouldBe messages.question
-      }
-
-      "have the heading-large class" in {
-        h1Tag.hasClass("heading-large") shouldBe true
-      }
-    }
-
-    "have a form" which {
-      lazy val form = doc.getElementsByTag("form")
-
-      s"has the action '${controllers.resident.routes.DeductionsController.submitLossesBroughtForwardValue().toString}'" in {
-        form.attr("action") shouldBe controllers.resident.routes.DeductionsController.submitLossesBroughtForwardValue().toString
-      }
-
-      "has the method of POST" in {
-        form.attr("method") shouldBe "POST"
-      }
-
-      "has a label that" should {
+      "have a label that" should {
 
         lazy val label = doc.body.getElementsByTag("label")
 
-        s"have the question ${messages.question}" in {
-          label.text should include(messages.question)
+        s"have the question ${messages.question("2014/15")}" in {
+          label.text should include(messages.question("2014/15"))
         }
 
         "have the class 'visuallyhidden'" in {
           label.select("span.visuallyhidden").size shouldBe 1
-        }
-      }
-
-      "has a numeric input field" which {
-
-        lazy val input = doc.body.getElementsByTag("input")
-
-        "has the id 'amount'" in {
-          input.attr("id") shouldBe "amount"
-        }
-
-        "has the name 'amount'" in {
-          input.attr("name") shouldBe "amount"
-        }
-
-        "is of type number" in {
-          input.attr("type") shouldBe "number"
-        }
-
-        "has a step value of '0.01'" in {
-          input.attr("step") shouldBe "0.01"
-        }
-
-        s"has placeholder 'eg. 25000.00'" in {
-          input.attr("placeholder") shouldBe "eg. 25000.00"
-        }
-      }
-
-      "have a continue button that" should {
-
-        lazy val continueButton = doc.select("button#continue-button")
-
-        s"have the button text '${commonMessages.calcBaseContinue}'" in {
-          continueButton.text shouldBe commonMessages.calcBaseContinue
-        }
-
-        "be of type submit" in {
-          continueButton.attr("type") shouldBe "submit"
-        }
-
-        "have the class 'button'" in {
-          continueButton.hasClass("button") shouldBe true
         }
       }
     }
@@ -139,7 +181,8 @@ class LossesBroughtForwardValueViewSpec extends UnitSpec with WithFakeApplicatio
 
   "Losses Brought Forward Value view with stored values" should {
     lazy val form = lossesBroughtForwardValueForm.bind(Map(("amount", "1000")))
-    lazy val view = views.lossesBroughtForwardValue(form)(fakeRequest)
+    lazy val taxYear = TaxYearModel("2015/16", true, "2015/16")
+    lazy val view = views.lossesBroughtForwardValue(form, taxYear)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have the value of 1000 auto-filled in the input" in {
@@ -150,7 +193,8 @@ class LossesBroughtForwardValueViewSpec extends UnitSpec with WithFakeApplicatio
 
   "Losses Brought Forward Value view with errors" should {
     lazy val form = lossesBroughtForwardValueForm.bind(Map(("amount", "")))
-    lazy val view = views.lossesBroughtForwardValue(form)(fakeRequest)
+    lazy val taxYear = TaxYearModel("2015/16", true, "2015/16")
+    lazy val view = views.lossesBroughtForwardValue(form, taxYear)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {
