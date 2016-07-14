@@ -211,8 +211,10 @@ object MessageLookup {
 
   //Current Income messages
   object currentIncome {
-    val title = "In the tax year 2015/16 when you stopped owning the property, what was your income?"
-    val question = "In the tax year 2015/16 when you stopped owning the property, what was your income?"
+    def title(input: String) = s"In the $input tax year, what was your income?"
+    def question(input: String) = s"In the $input tax year, what was your income?"
+    val currentYearTitle = "How much do you expect your income to be in this tax year?"
+    val currentYearQuestion = "How much do you expect your income to be in this tax year?"
     val helpText = "Include your salary and any other income, but not the money you made from selling the property."
   }
 

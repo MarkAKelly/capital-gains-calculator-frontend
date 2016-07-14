@@ -397,8 +397,8 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
       "has a numeric output row for current income" which {
 
-        s"should have the question text '${commonMessages.currentIncome.title}'" in {
-          doc.select("#currentIncome-question").text shouldBe commonMessages.currentIncome.title
+        s"should have the question text '${commonMessages.currentIncome.title("2015/16")}'" in {
+          doc.select("#currentIncome-question").text shouldBe commonMessages.currentIncome.title("2015/16")
         }
 
         "should have the value '£0'" in {
@@ -550,8 +550,8 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     "has an option output row for current income" which {
 
-      s"should have the question text '${commonMessages.currentIncome.title}'" in {
-        doc.select("#currentIncome-question").text shouldBe commonMessages.currentIncome.title
+      s"should have the question text '${commonMessages.currentIncome.title("2013/14")}'" in {
+        doc.select("#currentIncome-question").text shouldBe commonMessages.currentIncome.title("2013/14")
       }
 
       "should have the value '£0'" in {
@@ -664,7 +664,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
   "Summary when supplied with a date within the known tax years and tax owed" should {
 
-    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2015),
       BigDecimal(200000),
       BigDecimal(0),
       BigDecimal(0),
@@ -773,6 +773,52 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     "does not display the what to do next content" in {
       doc.select("#whatToDoNext").isEmpty shouldBe true
+    }
+  }
+
+  "Summary when supplied with a date in 2016/17" should {
+
+    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+      BigDecimal(200000),
+      BigDecimal(10000),
+      BigDecimal(100000),
+      BigDecimal(10000),
+      BigDecimal(30000))
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+      None,
+      Some(OtherPropertiesModel(true)),
+      Some(AllowableLossesModel(false)),
+      None,
+      Some(LossesBroughtForwardModel(false)),
+      None,
+      Some(AnnualExemptAmountModel(0)))
+
+    lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
+
+    lazy val results = TotalGainAndTaxOwedModel(
+      50000,
+      20000,
+      0,
+      30000,
+      3600,
+      30000,
+      18,
+      Some(10000),
+      Some(28)
+    )
+
+    lazy val backLink = "/calculate-your-capital-gains/resident/personal-allowance"
+
+    lazy val taxYearModel = TaxYearModel("2016/17", true, "2016/17")
+
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "has an option output row for current income" which {
+
+      s"should have the question text '${commonMessages.currentIncome.currentYearTitle}'" in {
+        doc.select("#currentIncome-question").text shouldBe commonMessages.currentIncome.currentYearTitle
+      }
     }
   }
 }

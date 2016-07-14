@@ -35,9 +35,14 @@ import scala.concurrent.Future
 
 class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  def setupTarget(storedData: Option[CurrentIncomeModel], otherProperties: Boolean = true,
-                  lossesBroughtForward: Boolean = true, annualExemptAmount: BigDecimal = 0,
-                  allowableLossesModel: Option[AllowableLossesModel] = None, allowableLossesValueModel: Option[AllowableLossesValueModel] = None): IncomeController = {
+  def setupTarget(storedData: Option[CurrentIncomeModel],
+                  otherProperties: Boolean = true,
+                  lossesBroughtForward: Boolean = true,
+                  annualExemptAmount: BigDecimal = 0,
+                  allowableLossesModel: Option[AllowableLossesModel] = None,
+                  allowableLossesValueModel: Option[AllowableLossesValueModel] = None,
+                  disposalDate: Option[DisposalDateModel],
+                  taxYear: Option[TaxYearModel]): IncomeController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
@@ -61,6 +66,12 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
       Matchers.any()))
       .thenReturn(Future.successful(Some(AnnualExemptAmountModel(annualExemptAmount))))
 
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalDate))(Matchers.any(), Matchers.any()))
+      .thenReturn(disposalDate)
+
+    when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
+      .thenReturn(taxYear)
+
     new IncomeController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
     }
@@ -68,9 +79,9 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
 
   "Calling .currentIncome from the IncomeController with a session" when {
 
-    "supplied with no pre-existing stored data" should {
+    "supplied with no pre-existing stored data for 2015/16" should {
 
-      lazy val target = setupTarget(None)
+      lazy val target = setupTarget(None, disposalDate = Some(DisposalDateModel(10, 10, 2015)), taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val result = target.currentIncome(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -81,13 +92,32 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
         contentType(result) shouldBe Some("text/html")
       }
 
-      "display the Current Income view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+      "display the Current Income view for 2015/16" in {
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.title("2015/16")
+      }
+
+      "supplied with no pre-existing stored data for 2016/17" should {
+
+        lazy val target = setupTarget(None, disposalDate = Some(DisposalDateModel(10, 10, 2016)), taxYear = Some(TaxYearModel("2016/17", true, "2016/17")))
+        lazy val result = target.currentIncome(fakeRequestWithSession)
+
+        "return a status of 200" in {
+          status(result) shouldBe 200
+        }
+
+        "return some html" in {
+          contentType(result) shouldBe Some("text/html")
+        }
+
+        "display the Current Income for 2016/17 view" in {
+          Jsoup.parse(bodyOf(result)).title shouldBe messages.currentYearTitle
+        }
       }
     }
+
     "supplied with pre-existing stored data" should {
 
-      lazy val target = setupTarget(Some(CurrentIncomeModel(40000)))
+      lazy val target = setupTarget(Some(CurrentIncomeModel(40000)), disposalDate = Some(DisposalDateModel(10, 10, 2015)), taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val result = target.currentIncome(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
@@ -102,7 +132,8 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "other properties have been selected and 0 has been entered into the annual exempt amount" should {
 
-      lazy val target = setupTarget(None, allowableLossesModel = Some(AllowableLossesModel(true)), allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(0))))
+      lazy val target = setupTarget(None, allowableLossesModel = Some(AllowableLossesModel(true)), allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(0))),
+                                    disposalDate = Some(DisposalDateModel(10, 10, 2015)), taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val result = target.currentIncome(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
@@ -117,7 +148,9 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "other properties have been selected and non-zero has been entered into the annual exempt amount" should {
 
-      lazy val target = setupTarget(None, annualExemptAmount = 10, allowableLossesModel = Some(AllowableLossesModel(false)), allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(0))))
+      lazy val target = setupTarget(None, annualExemptAmount = 10, allowableLossesModel = Some(AllowableLossesModel(false)),
+                                    allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(0))),
+                                    disposalDate = Some(DisposalDateModel(10, 10, 2015)), taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val result = target.currentIncome(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
@@ -132,8 +165,9 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "other properties has been selected but a non-zero value for allowable losses has been entered" should {
 
-      lazy val target = setupTarget(None, otherProperties = true, lossesBroughtForward = false,
-        allowableLossesModel = Some(AllowableLossesModel(true)), allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(10000))))
+      lazy val target = setupTarget(None, otherProperties = true, lossesBroughtForward = false, allowableLossesModel = Some(AllowableLossesModel(true)),
+                                    allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(10000))),
+                                    disposalDate = Some(DisposalDateModel(10, 10, 2015)), taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val result = target.currentIncome(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
@@ -148,7 +182,8 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "other properties has not been selected and neither has brought forward losses" should {
 
-      lazy val target = setupTarget(None, otherProperties = false, lossesBroughtForward = false)
+      lazy val target = setupTarget(None, otherProperties = false, lossesBroughtForward = false, disposalDate = Some(DisposalDateModel(10, 10, 2015)),
+                                    taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val result = target.currentIncome(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
@@ -163,7 +198,8 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "other properties has not been selected and brought forward losses has been selected" should {
 
-      lazy val target = setupTarget(None, otherProperties = false)
+      lazy val target = setupTarget(None, otherProperties = false, disposalDate = Some(DisposalDateModel(10, 10, 2015)),
+                                    taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val result = target.currentIncome(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
@@ -194,7 +230,8 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "given a valid form should" should {
 
-      lazy val target = setupTarget(Some(CurrentIncomeModel(40000)))
+      lazy val target = setupTarget(Some(CurrentIncomeModel(40000)), disposalDate = Some(DisposalDateModel(10, 10, 2015)),
+                                    taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val result = target.submitCurrentIncome(fakeRequestToPOSTWithSession(("amount", "40000")))
 
       "return a status of 303" in {
@@ -208,7 +245,8 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "given an invalid form" should {
 
-      lazy val target = setupTarget(Some(CurrentIncomeModel(-40000)), otherProperties = false)
+      lazy val target = setupTarget(Some(CurrentIncomeModel(-40000)), otherProperties = false,
+                                    disposalDate = Some(DisposalDateModel(10, 10, 2015)), taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val result = target.submitCurrentIncome(fakeRequestToPOSTWithSession(("amount", "-40000")))
 
       "return a status of 400" in {
