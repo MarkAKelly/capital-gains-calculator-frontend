@@ -15,8 +15,9 @@
  */
 
 package forms.resident
+
 import common.Constants
-import common.Transformers.stringToBigDecimal
+import common.Transformers._
 import common.Validation._
 import models.resident.AnnualExemptAmountModel
 import play.api.data.Forms._
@@ -35,7 +36,7 @@ object AnnualExemptAmountForm {
       "amount" -> text
         .verifying(Messages("calc.common.error.mandatoryAmount"), mandatoryCheck)
         .verifying(Messages("calc.common.error.invalidAmount"), bigDecimalCheck)
-        .transform[BigDecimal](stringToBigDecimal, _.toString)
+        .transform[BigDecimal](stringToBigDecimal, bigDecimalToString)
         .verifying(Messages("calc.common.error.maxAmountExceeded", MoneyPounds(Constants.maxNumeric, 0).quantity), maxCheck)
         .verifying(Messages("calc.common.error.maxAmountExceeded", MoneyPounds(maxAEA, 0).quantity), validateMaxAEA(maxAEA))
         .verifying(Messages("calc.common.error.minimumAmount"), minCheck)
