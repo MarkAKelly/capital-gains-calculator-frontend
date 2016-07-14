@@ -334,7 +334,7 @@ calc.resident.acquisitionValue.bullet.end = You can use a valuation from a surve
 ## Acquisition Costs messages
 calc.resident.acquisitionCosts.title = How much did you pay in costs when you became the property owner?
 calc.resident.acquisitionCosts.question = How much did you pay in costs when you became the property owner?
-calc.resident.acquisitionCosts.helpText = Costs include agent fees, legal fees and surveys
+calc.resident.acquisitionCosts.helpText = Costs include stamp duty, agent fees, legal fees and surveys
 
 ## Improvements messages
 calc.resident.improvements.title = How much have you spent on improvements since you became the property owner?
