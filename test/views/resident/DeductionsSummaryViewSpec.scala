@@ -614,8 +614,8 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
       "has a numeric output row for allowable losses value" which {
 
-        s"should have the question text '${commonMessages.allowableLossesValue.title}'" in {
-          doc.select("#allowableLossesValue-question").text shouldBe commonMessages.allowableLossesValue.title
+        s"should have the question text '${commonMessages.allowableLossesValue.title("2013/14")}'" in {
+          doc.select("#allowableLossesValue-question").text shouldBe commonMessages.allowableLossesValue.title("2013/14")
         }
 
         "should have the value '£10,000'" in {

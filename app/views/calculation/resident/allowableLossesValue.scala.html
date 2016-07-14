@@ -1,21 +1,21 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
-@import models.resident.AllowableLossesValueModel
+@import models.resident._
 @import views.html.helpers._
 
-@(allowableLossesValueForm: Form[AllowableLossesValueModel])(implicit request: Request[_])
+@(allowableLossesValueForm: Form[AllowableLossesValueModel], taxYear: TaxYearModel)(implicit request: Request[_])
 
 @resident_main_template(
-    title = Messages("calc.resident.allowableLossesValue.title"),
+    title = Messages("calc.resident.allowableLossesValue.title", taxYear.taxYearSupplied),
     backLink = Some(controllers.resident.routes.DeductionsController.allowableLosses().toString)
 ){
 
     @errorSummary(allowableLossesValueForm, "amount")
 
-    <h1 class="heading-large">@Messages("calc.resident.allowableLossesValue.question")</h1>
+    <h1 class="heading-large">@Messages("calc.resident.allowableLossesValue.question", taxYear.taxYearSupplied)</h1>
 
     @form(action = controllers.resident.routes.DeductionsController.submitAllowableLossesValue){
 
-        @formInputMoney(allowableLossesValueForm, "amount", Messages("calc.resident.allowableLossesValue.question"), hideLabel = true)
+        @formInputMoney(allowableLossesValueForm, "amount", Messages("calc.resident.allowableLossesValue.question", taxYear.taxYearSupplied), hideLabel = true)
 
         <button id="continue-button" class="button" type="submit">@Messages("calc.base.continue")</button>
 
