@@ -153,8 +153,8 @@ object MessageLookup {
 
   //Other Properties messages
   object otherProperties {
-    val title = "In the 2015/2016 tax year, did you sell or give away anything else that's covered by Capital Gains Tax?"
-    val pageHeading = "In the 2015/2016 tax year, did you sell or give away anything else that's covered by Capital Gains Tax?"
+    def title(input: String) = s"In the $input tax year, did you sell or give away anything else that's covered by Capital Gains Tax?"
+    def pageHeading(input: String) = s"In the $input tax year, did you sell or give away anything else that's covered by Capital Gains Tax?"
     val help = "This includes things like:"
     val helpOne = "shares"
     val helpTwo = "antiques"
