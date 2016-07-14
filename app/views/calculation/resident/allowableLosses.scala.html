@@ -1,14 +1,14 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
-@import models.resident.AllowableLossesModel
+@import models.resident._
 
 @(allowableLossesForm: Form[AllowableLossesModel], taxYear: TaxYearModel)(implicit request: Request[_])
 
-@resident_main_template(title = Messages("calc.resident.allowableLosses.title"), backLink = Some(controllers.resident.routes.DeductionsController.otherProperties.toString())) {
+@resident_main_template(title = Messages("calc.resident.allowableLosses.title", taxYear.taxYearSupplied), backLink = Some(controllers.resident.routes.DeductionsController.otherProperties.toString())) {
 
     @errorSummary(allowableLossesForm, "isClaiming")
 
-    <h1 class="heading-large">@Messages("calc.resident.allowableLosses.title")</h1>
+    <h1 class="heading-large">@Messages("calc.resident.allowableLosses.title", taxYear.taxYearSupplied)</h1>
 
     @form(action = controllers.resident.routes.DeductionsController.submitAllowableLosses) {
         @formInputRadioGroup(
@@ -16,7 +16,7 @@
             Seq(
                 "Yes" -> Messages("calc.base.yes"),
                 "No" -> Messages("calc.base.no")),
-            '_legend -> Messages("calc.resident.reliefs.question"),
+            '_legend -> Messages("calc.resident.allowableLosses.question", taxYear.taxYearSupplied),
             '_legendID -> "isClaiming",
             '_legendClass -> "visuallyhidden",
             '_labelAfter -> true,
