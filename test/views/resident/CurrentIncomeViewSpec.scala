@@ -18,6 +18,7 @@ package views.resident
 
 import assets.{MessageLookup => commonMessages}
 import assets.MessageLookup.{currentIncome => messages}
+import models.resident.TaxYearModel
 import views.html.calculation.resident.{income => views}
 import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
@@ -28,23 +29,24 @@ class CurrentIncomeViewSpec extends UnitSpec with WithFakeApplication with FakeR
 
   "Current Income view" should {
 
-    lazy val view = views.currentIncome(currentIncomeForm, "")(fakeRequest)
+    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+    lazy val view = views.currentIncome(currentIncomeForm, "", taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
       doc.charset().toString shouldBe "UTF-8"
     }
 
-    s"have a title ${messages.title}" in {
-      doc.title() shouldBe messages.title
+    s"have a title ${messages.title("2015/16")}" in {
+      doc.title() shouldBe messages.title("2015/16")
     }
 
     s"have a back link with text ${commonMessages.calcBaseBack}" in {
       doc.select("#back-link").text() shouldEqual "Back"
     }
 
-    s"have the question of the page ${commonMessages.currentIncome.question}" in {
-      doc.select("h1").text shouldEqual commonMessages.currentIncome.question
+    s"have the question of the page ${messages.question("2015/16")}" in {
+      doc.select("h1").text shouldEqual messages.question("2015/16")
     }
 
     "have a form" which {
@@ -64,8 +66,8 @@ class CurrentIncomeViewSpec extends UnitSpec with WithFakeApplication with FakeR
 
         lazy val label = doc.body.getElementsByTag("label")
 
-        s"have the question ${messages.question}" in {
-          label.text should include(messages.question)
+        s"have the question ${messages.question("2015/16")}" in {
+          label.text should include(messages.question("2015/16"))
         }
 
         "have the class 'visuallyhidden'" in {
@@ -126,7 +128,8 @@ class CurrentIncomeViewSpec extends UnitSpec with WithFakeApplication with FakeR
     "is due to mandatory field error" should {
 
       val form = currentIncomeForm.bind(Map("amount" -> ""))
-      lazy val view = views.currentIncome(form, "")(fakeRequest)
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val view = views.currentIncome(form, "", taxYearModel)(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
 
       "display an error summary message for the amount" in {
