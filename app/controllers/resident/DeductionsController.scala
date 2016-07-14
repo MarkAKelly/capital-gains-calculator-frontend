@@ -195,7 +195,6 @@ trait DeductionsController extends FeatureLock {
         case None => Ok(views.allowableLossesValue(allowableLossesValueForm, taxYear))
       }
     }
-
     for {
       disposalDate <- getDisposalDate
       disposalDateString <- formatDisposalDate(disposalDate.get)
@@ -215,7 +214,6 @@ trait DeductionsController extends FeatureLock {
         }
       )
     }
-
     for {
       disposalDate <- getDisposalDate
       disposalDateString <- formatDisposalDate(disposalDate.get)
