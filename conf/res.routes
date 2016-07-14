@@ -1,5 +1,7 @@
 #Routes file for the resident routes.
 
+GET     /pdf                              controllers.resident.PdfController.pdfTest
+
 #Disposal Date Routes
 GET     /disposal-date                    controllers.resident.GainController.disposalDate
 POST    /disposal-date                    controllers.resident.GainController.submitDisposalDate
