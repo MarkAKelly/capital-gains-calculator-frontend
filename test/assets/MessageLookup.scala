@@ -171,8 +171,8 @@ object MessageLookup {
 
   //Losses Brought Forward messages
   object lossesBroughtForward {
-    val title = "Are there any previous losses you want to bring forward?"
-    val question = "Are there any previous losses you want to bring forward?"
+    def title(input: String) = s"Are you claiming any allowable losses from tax years before $input?"
+    def question(input: String) = s"Are you claiming any allowable losses from tax years before $input?"
     def errorSelect(input: String) = s"Tell us if you're claiming any allowable losses from tax years before $input"
   }
 

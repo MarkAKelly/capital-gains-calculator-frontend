@@ -19,6 +19,7 @@ package views.resident
 import assets.MessageLookup
 import assets.MessageLookup.{lossesBroughtForward => messages}
 import controllers.helpers.FakeRequestHelper
+import models.resident.TaxYearModel
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.{resident => views}
@@ -28,31 +29,31 @@ class LossesBroughtForwardViewSpec extends UnitSpec with WithFakeApplication wit
 
   "Reliefs view" should {
 
-    lazy val view = views.lossesBroughtForward(lossesBroughtForwardForm, "")(fakeRequest)
+    lazy val view = views.lossesBroughtForward(lossesBroughtForwardForm, "", TaxYearModel("2015/16", true, "2015/16"))(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
       doc.charset().toString shouldBe "UTF-8"
     }
 
-    s"have a title ${messages.title}" in {
-      doc.title() shouldBe messages.title
+    s"have a title ${messages.title("2015/16")}" in {
+      doc.title() shouldBe messages.title("2015/16")
     }
 
     s"have a back link with text ${MessageLookup.calcBaseBack}" in {
       doc.select("#back-link").text shouldEqual MessageLookup.calcBaseBack
     }
 
-    s"have the question of the page ${messages.question}" in {
-      doc.select("h1").text() shouldEqual messages.question
+    s"have the question of the page ${messages.question("2015/16")}" in {
+      doc.select("h1").text() shouldEqual messages.question("2015/16")
     }
 
     s"render a form tag with a POST action" in {
       doc.select("form").attr("method") shouldEqual "POST"
     }
 
-    s"have a visually hidden legend for an input with text ${messages.question}" in {
-      doc.select("legend.visuallyhidden").text() shouldEqual messages.question
+    s"have a visually hidden legend for an input with text ${messages.question("2015/16")}" in {
+      doc.select("legend.visuallyhidden").text() shouldEqual messages.question("2015/16")
     }
 
     s"have an input field with id option-yes " in {
@@ -70,7 +71,7 @@ class LossesBroughtForwardViewSpec extends UnitSpec with WithFakeApplication wit
 
   "Losses Brought Forward view with pre-selected value of yes" should {
     lazy val form = lossesBroughtForwardForm.bind(Map(("option", "Yes")))
-    lazy val view = views.lossesBroughtForward(form, "")(fakeRequest)
+    lazy val view = views.lossesBroughtForward(form, "", TaxYearModel("2015/16", true, "2015/16"))(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have the option 'Yes' auto selected" in {
@@ -80,7 +81,7 @@ class LossesBroughtForwardViewSpec extends UnitSpec with WithFakeApplication wit
 
   "Losses Brought Forward view with pre-selected value of no" should {
     lazy val form = lossesBroughtForwardForm.bind(Map(("option", "No")))
-    lazy val view = views.lossesBroughtForward(form, "")(fakeRequest)
+    lazy val view = views.lossesBroughtForward(form, "", TaxYearModel("2015/16", true, "2015/16"))(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have the option 'No' auto selected" in {
@@ -90,7 +91,7 @@ class LossesBroughtForwardViewSpec extends UnitSpec with WithFakeApplication wit
 
   "Losses Brought Forward view with errors" should {
     lazy val form = lossesBroughtForwardForm.bind(Map(("option", "")))
-    lazy val view = views.lossesBroughtForward(form, "")(fakeRequest)
+    lazy val view = views.lossesBroughtForward(form, "", TaxYearModel("2015/16", true, "2015/16"))(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {
