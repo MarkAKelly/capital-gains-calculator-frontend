@@ -108,8 +108,8 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
       s"has a h2 tag" which {
 
-        s"should have the title '${messages.calcDetailsHeading}'" in {
-          doc.select("section#calcDetails h2").text shouldBe messages.calcDetailsHeading
+        s"should have the title '${messages.calcDetailsHeadingDate("2015/16")}'" in {
+          doc.select("section#calcDetails h2").text shouldBe messages.calcDetailsHeadingDate("2015/16")
         }
 
         "has the class 'heading-large'" in {
@@ -447,8 +447,8 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
       s"has a h2 tag" which {
 
-        s"should have the title '${messages.calcDetailsHeading}'" in {
-          doc.select("section#calcDetails h2").text shouldBe messages.calcDetailsHeading
+        s"should have the title '${messages.calcDetailsHeadingDate("2013/14")}'" in {
+          doc.select("section#calcDetails h2").text shouldBe messages.calcDetailsHeadingDate("2013/14")
         }
 
         "has the class 'heading-large'" in {
