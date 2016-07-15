@@ -446,4 +446,4 @@ calc.resident.personalAllowance.currentYearTitle = How much is your UK Personal 
 calc.resident.personalAllowance.question = In the {0} tax year, what was your UK Personal Allowance?
 calc.resident.personalAllowance.currentYearQuestion = How much is your UK Personal Allowance?
 calc.resident.personalAllowance.link.one = Personal Allowance
-calc.resident.personalAllowance.helpText = This is the amount of your income you don’'t pay tax on. It''s £10,600 unless you’'re claiming other allowances.
+calc.resident.personalAllowance.helpText = This is the amount of your income you don''t pay tax on. It''s £{0} unless you''re claiming other allowances.

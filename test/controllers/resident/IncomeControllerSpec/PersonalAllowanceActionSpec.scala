@@ -47,8 +47,11 @@ class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with
     when(mockCalcConnector.fetchAndGetFormData[PersonalAllowanceModel](Matchers.eq(keystoreKeys.personalAllowance))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
-    when(mockCalcConnector.getPA(Matchers.any())(Matchers.any()))
+    when(mockCalcConnector.getPA(Matchers.any(), Matchers.eq(true))(Matchers.any()))
           .thenReturn(Future.successful(maxPersonalAllowance))
+
+    when(mockCalcConnector.getPA(Matchers.any(), Matchers.eq(false))(Matchers.any()))
+      .thenReturn(Future.successful(maxPersonalAllowance))
 
     when(mockCalcConnector.saveFormData[PersonalAllowanceModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))

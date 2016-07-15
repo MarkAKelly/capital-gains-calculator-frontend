@@ -3,8 +3,9 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
 @import views.html.calculation.resident.resident_main_template
+@import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-@(personalAllowanceForm: Form[PersonalAllowanceModel], taxYear: TaxYearModel)(implicit request: Request[_])
+@(personalAllowanceForm: Form[PersonalAllowanceModel], taxYear: TaxYearModel, standardPA: BigDecimal)(implicit request: Request[_])
 
 @import views.html.helpers._
 
@@ -32,7 +33,7 @@
 @formInputMoney(personalAllowanceForm, "amount", if(taxYear.taxYearSupplied == "2016/17")
     {Messages("calc.resident.personalAllowance.currentYearQuestion")}
     else {Messages("calc.resident.personalAllowance.question", taxYear.taxYearSupplied)},
-    Some(Messages("calc.resident.personalAllowance.helpText")), hideLabel = true, step = "1")
+    Some(Messages("calc.resident.personalAllowance.helpText", MoneyPounds(standardPA, 0).quantity)), hideLabel = true, step = "1")
 
 <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
 
