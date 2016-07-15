@@ -16,9 +16,193 @@
 
 package views.resident.pdf
 
+import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{summary => messages}
+import common.Dates._
 import controllers.helpers.FakeRequestHelper
+import controllers.resident.routes
+import models.resident.{TaxYearModel, YourAnswersSummaryModel}
+import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class GainSummaryPdfViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper{
 
+  "Summary view" should {
+
+    val testModel = YourAnswersSummaryModel(
+      constructDate(12, 9, 1990),
+      10,
+      20,
+      30,
+      40,
+      50
+    )
+
+    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+
+    lazy val view = views.html.calculation.resident.gainSummary(testModel, -2000, taxYearModel)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "does not have a notice summary" in {
+      doc.select("div.notice-wrapper").isEmpty shouldBe true
+    }
+
+    s"have a section for the Calculation details" which {
+
+      "has the class 'summary-section' to underline the heading" in {
+
+        doc.select("section#calcDetails h2").hasClass("summary-underline") shouldBe true
+
+      }
+
+      s"has a h2 tag" which {
+
+        s"should have the title '${messages.calcDetailsHeadingDate("2015/16")}'" in {
+          doc.select("section#calcDetails h2").text shouldBe messages.calcDetailsHeadingDate("2015/16")
+        }
+
+        "has the class 'heading-large'" in {
+          doc.select("section#calcDetails h2").hasClass("heading-large") shouldBe true
+        }
+      }
+
+      "has a numeric output row for the gain" which {
+
+        "should have the question text 'Loss'" in {
+          doc.select("#gain-question").text shouldBe messages.totalLoss
+        }
+
+        "should have the value '£2,000'" in {
+          doc.select("#gain-amount").text shouldBe "£2,000"
+        }
+      }
+    }
+
+    s"have a section for Your answers" which {
+
+      "has the class 'summary-section' to underline the heading" in {
+
+        doc.select("section#yourAnswers h2").hasClass("summary-underline") shouldBe true
+
+      }
+
+      s"has a h2 tag" which {
+
+        s"should have the title '${messages.yourAnswersHeading}'" in {
+          doc.select("section#yourAnswers h2").text shouldBe messages.yourAnswersHeading
+        }
+
+        "has the class 'heading-large'" in {
+          doc.select("section#yourAnswers h2").hasClass("heading-large") shouldBe true
+        }
+      }
+
+      "has a date output row for the Disposal Date" which {
+
+        s"should have the question text '${commonMessages.disposalDate.question}'" in {
+          doc.select("#disposalDate-question").text shouldBe commonMessages.disposalDate.question
+        }
+
+        "should have the value '12 September 1990'" in {
+          doc.select("#disposalDate-date span.bold-medium").text shouldBe "12 September 1990"
+        }
+      }
+
+      "has a numeric output row for the Disposal Value" which {
+
+        s"should have the question text '${commonMessages.disposalValue.question}'" in {
+          doc.select("#disposalValue-question").text shouldBe commonMessages.disposalValue.question
+        }
+
+        "should have the value '£10'" in {
+          doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£10"
+        }
+      }
+
+      "has a numeric output row for the Disposal Costs" which {
+
+        s"should have the question text '${commonMessages.disposalCosts.title}'" in {
+          doc.select("#disposalCosts-question").text shouldBe commonMessages.disposalCosts.title
+        }
+
+        "should have the value '£20'" in {
+          doc.select("#disposalCosts-amount span.bold-medium").text shouldBe "£20"
+        }
+      }
+
+      "has a numeric output row for the Acquisition Value" which {
+
+        s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
+          doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
+        }
+
+        "should have the value '£30'" in {
+          doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£30"
+        }
+      }
+
+      "has a numeric output row for the Acquisition Costs" which {
+
+        s"should have the question text '${commonMessages.acquisitionCosts.title}'" in {
+          doc.select("#acquisitionCosts-question").text shouldBe commonMessages.acquisitionCosts.title
+        }
+
+        "should have the value '£40'" in {
+          doc.select("#acquisitionCosts-amount span.bold-medium").text shouldBe "£40"
+        }
+      }
+
+      "has a numeric output row for the Improvements" which {
+
+        s"should have the question text '${commonMessages.improvementsView.title}'" in {
+          doc.select("#improvements-question").text shouldBe commonMessages.improvementsView.title
+        }
+
+        "should have the value '£50'" in {
+          doc.select("#improvements-amount span.bold-medium").text shouldBe "£50"
+        }
+      }
+
+      "does not display the section for what to do next" in {
+        doc.select("#whatToDoNext").text shouldEqual ""
+      }
+    }
+  }
+
+  "Summary when supplied with a date outside the known tax years and no gain or loss" should {
+
+    lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
+
+    val testModel = YourAnswersSummaryModel(
+      constructDate(12, 9, 2015),
+      10,
+      20,
+      30,
+      40,
+      50
+    )
+    lazy val view = views.html.calculation.resident.gainSummary(testModel, 0, taxYearModel)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "should have the question text 'Total gain'" in {
+      doc.select("#gain-question").text shouldBe messages.totalGain
+    }
+
+    "have the class notice-wrapper" in {
+      doc.select("div.notice-wrapper").isEmpty shouldBe false
+    }
+
+    s"have the text ${messages.noticeWarning("2016/17")}" in {
+      doc.select("strong.bold-small").text shouldBe messages.noticeWarning("2016/17")
+    }
+
+    "have a warning icon" in {
+      doc.select("i.icon-important").isEmpty shouldBe false
+    }
+
+    "have a visually hidden warning text" in {
+      doc.select("div.notice-wrapper span.visuallyhidden").text shouldBe messages.warning
+    }
+
+  }
 }
