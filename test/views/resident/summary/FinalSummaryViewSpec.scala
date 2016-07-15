@@ -411,8 +411,8 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
       "has a numeric output row for personal allowance" which {
 
-        s"should have the question text '${commonMessages.personalAllowance.title}'" in {
-          doc.select("#personalAllowance-question").text shouldBe commonMessages.personalAllowance.title
+        s"should have the question text '${commonMessages.personalAllowance.title("2015/16")}'" in {
+          doc.select("#personalAllowance-question").text shouldBe commonMessages.personalAllowance.title("2015/16")
         }
 
         "should have the value '£0'" in {
@@ -575,8 +575,8 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     }
     "has an option output row for personal allowance" which {
 
-      s"should have the question text '${commonMessages.personalAllowance.title}'" in {
-        doc.select("#personalAllowance-question").text shouldBe commonMessages.personalAllowance.title
+      s"should have the question text '${commonMessages.personalAllowance.title("2013/14")}'" in {
+        doc.select("#personalAllowance-question").text shouldBe commonMessages.personalAllowance.title("2013/14")
       }
 
       "should have the value '£0'" in {

@@ -1,9 +1,11 @@
 @import models.resident.income.PersonalAllowanceModel
+@import models.resident._
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
 @import views.html.calculation.resident.resident_main_template
+@import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-@(personalAllowanceForm: Form[PersonalAllowanceModel])(implicit request: Request[_])
+@(personalAllowanceForm: Form[PersonalAllowanceModel], taxYear: TaxYearModel, standardPA: BigDecimal)(implicit request: Request[_])
 
 @import views.html.helpers._
 
@@ -16,15 +18,22 @@
 </a>
 }
 
-@resident_main_template(title = Messages("calc.resident.personalAllowance.title"), backLink = Some(controllers.resident.routes.IncomeController.currentIncome().toString), sidebarLinks = Some(sidebar)) {
+@resident_main_template(title = {if(taxYear.taxYearSupplied == "2016/17") {Messages("calc.resident.personalAllowance.currentYearTitle")}
+    else {Messages("calc.resident.personalAllowance.title", taxYear.taxYearSupplied)}},
+    backLink = Some(controllers.resident.routes.IncomeController.currentIncome().toString), sidebarLinks = Some(sidebar)) {
 
 @errorSummary(personalAllowanceForm, "amount")
 
-<h1 class="heading-large">@Messages("calc.resident.personalAllowance.title")</h1>
+<h1 class="heading-large">@{if(taxYear.taxYearSupplied == "2016/17")
+    {Messages("calc.resident.personalAllowance.currentYearTitle")}
+    else {Messages("calc.resident.personalAllowance.title", taxYear.taxYearSupplied)}}</h1>
 
 @form(action = controllers.resident.routes.IncomeController.submitPersonalAllowance) {
 
-@formInputMoney(personalAllowanceForm, "amount", Messages("calc.resident.personalAllowance.question"), Some(Messages("calc.resident.personalAllowance.helpText")), hideLabel = true, step = "1")
+@formInputMoney(personalAllowanceForm, "amount", if(taxYear.taxYearSupplied == "2016/17")
+    {Messages("calc.resident.personalAllowance.currentYearQuestion")}
+    else {Messages("calc.resident.personalAllowance.question", taxYear.taxYearSupplied)},
+    Some(Messages("calc.resident.personalAllowance.helpText", MoneyPounds(standardPA, 0).quantity)), hideLabel = true, step = "1")
 
 <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
 
