@@ -75,6 +75,7 @@ GET     /personal-allowance               controllers.resident.IncomeController.
 POST    /personal-allowance               controllers.resident.IncomeController.submitPersonalAllowance
 
 #Gain Summary PDF Routes
+GET     /pdf                              controllers.resident.PdfController.gainSummaryPdf
 
 #Deductions Summary PDF Routes
 

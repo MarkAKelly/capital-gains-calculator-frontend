@@ -7,6 +7,18 @@
 
 @(answers: YourAnswersSummaryModel, gain: BigDecimal, taxYear: TaxYearModel)(implicit request: Request[_])
 
+<head>
+    
+</head>
+
+<div>
+    <section>
+        HeaderLoc
+    </section>
+    <aside>
+        LogoLoc
+    </aside>
+</div>
 
 @{if (!taxYear.isValidYear) {
         <div class="notice-wrapper">
@@ -37,10 +49,11 @@
     @summarySectionHeaderHelper(Messages("calc.resident.summary.yourAnswersHeading"))
 
     <!-- Data Rows-->
-    @summaryDateRowHelper("disposalDate",Messages("calc.resident.disposalDate.question"),answers.disposalDate,None))
-    @summaryNumericRowHelper("disposalValue",Messages("calc.resident.disposal.value.title"),answers.disposalValue,None))
+    @summaryDateRowHelper("disposalDate",Messages("calc.resident.disposalDate.question"),answers.disposalDate,None)
+    @summaryNumericRowHelper("disposalValue",Messages("calc.resident.disposal.value.title"),answers.disposalValue,None)
     @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.disposalCosts.title"),answers.disposalCosts,None)
     @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),answers.acquisitionValue,None)
     @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),answers.acquisitionCosts,None)
     @summaryNumericRowHelper("improvements",Messages("calc.resident.improvements.title"),answers.improvements,None)
 </section>
+
