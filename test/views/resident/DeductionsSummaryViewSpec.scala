@@ -652,8 +652,8 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
       "has a numeric output row for brought forward losses value" which {
 
-        s"should have the question text '${commonMessages.lossesBroughtForwardValue.title}'" in {
-          doc.select("#broughtForwardLossesValue-question").text shouldBe commonMessages.lossesBroughtForwardValue.title
+        s"should have the question text '${commonMessages.lossesBroughtForwardValue.title("2013/14")}'" in {
+          doc.select("#broughtForwardLossesValue-question").text shouldBe commonMessages.lossesBroughtForwardValue.title("2013/14")
         }
 
         "should have the value '£10,000'" in {

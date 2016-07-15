@@ -1,18 +1,18 @@
-@import models.resident.LossesBroughtForwardValueModel
+@import models.resident._
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
 
-@(lossesBroughtForwardValueForm: Form[LossesBroughtForwardValueModel])(implicit request: Request[_])
+@(lossesBroughtForwardValueForm: Form[LossesBroughtForwardValueModel], taxYear: TaxYearModel)(implicit request: Request[_])
 
-@resident_main_template(title = Messages("calc.resident.lossesBroughtForwardValue.title"), backLink = Some(controllers.resident.routes.DeductionsController.lossesBroughtForward.toString)) {
+@resident_main_template(title = Messages("calc.resident.lossesBroughtForwardValue.title", taxYear.taxYearSupplied), backLink = Some(controllers.resident.routes.DeductionsController.lossesBroughtForward.toString)) {
 
     @errorSummary(lossesBroughtForwardValueForm, "losses-brought-forward-value")
 
-    <h1 class="heading-large">@Messages("calc.resident.lossesBroughtForwardValue.pageHeading")</h1>
+    <h1 class="heading-large">@Messages("calc.resident.lossesBroughtForwardValue.pageHeading", taxYear.taxYearSupplied)</h1>
 
     @form(action = controllers.resident.routes.DeductionsController.submitLossesBroughtForwardValue()) {
 
-        @formInputMoney(lossesBroughtForwardValueForm, "amount", Messages("calc.resident.lossesBroughtForwardValue.pageHeading"), None, hideLabel = true)
+        @formInputMoney(lossesBroughtForwardValueForm, "amount", Messages("calc.resident.lossesBroughtForwardValue.pageHeading", taxYear.taxYearSupplied), None, hideLabel = true)
 
         <button id="continue-button" class="button" type="submit">@Messages("calc.base.continue")</button>
 

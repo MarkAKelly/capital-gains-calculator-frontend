@@ -36,12 +36,20 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
 
   "Calling .lossesBroughtForwardValue from the resident DeductionsController" when {
 
-    def setGetTarget(getData: Option[LossesBroughtForwardValueModel]): DeductionsController = {
+    def setGetTarget(getData: Option[LossesBroughtForwardValueModel],
+                     disposalDateModel: DisposalDateModel,
+                     taxYearModel: TaxYearModel): DeductionsController = {
 
       val mockCalcConnector = mock[CalculatorConnector]
 
-      when(mockCalcConnector.fetchAndGetFormData[LossesBroughtForwardValueModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
+      when(mockCalcConnector.fetchAndGetFormData[LossesBroughtForwardValueModel](Matchers.eq(KeystoreKeys.ResidentKeys.lossesBroughtForwardValue))(Matchers.any(), Matchers.any()))
         .thenReturn(getData)
+
+      when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalDate))(Matchers.any(), Matchers.any()))
+        .thenReturn(Some(disposalDateModel))
+
+      when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
+        .thenReturn(Future.successful(Some(taxYearModel)))
 
       new DeductionsController {
         override val calcConnector = mockCalcConnector
@@ -49,7 +57,9 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
     }
 
     "request has a valid session with no keystore data" should {
-      lazy val target = setGetTarget(None)
+      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val target = setGetTarget(None, disposalDateModel, taxYearModel)
       lazy val result = target.lossesBroughtForwardValue(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -60,13 +70,15 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
         contentType(result) shouldBe Some("text/html")
       }
 
-      s"return a title of ${messages.title}" in {
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+      s"return a title of ${messages.title("2015/16")}" in {
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title("2015/16")
       }
     }
 
     "request has a valid session with some keystore data" should {
-      lazy val target = setGetTarget(Some(LossesBroughtForwardValueModel(BigDecimal(1000))))
+      lazy val disposalDateModel = DisposalDateModel(10, 10, 2014)
+      lazy val taxYearModel = TaxYearModel("2014/15", false, "2015/16")
+      lazy val target = setGetTarget(Some(LossesBroughtForwardValueModel(BigDecimal(1000))), disposalDateModel, taxYearModel)
       lazy val result = target.lossesBroughtForwardValue(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -77,8 +89,8 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
         contentType(result) shouldBe Some("text/html")
       }
 
-      s"return a title of ${messages.title}" in {
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+      s"return a title of ${messages.title("2015/15")}" in {
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title("2014/15")
       }
     }
 
@@ -105,7 +117,9 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
                       chargeableGainAnswers: ChargeableGainAnswers,
                       chargeableGain: ChargeableGainResultModel,
                       allowableLossesModel: Option[AllowableLossesModel] = None,
-                      allowableLossesValueModel: Option[AllowableLossesValueModel] = None): DeductionsController = {
+                      allowableLossesValueModel: Option[AllowableLossesValueModel] = None,
+                      disposalDateModel: DisposalDateModel,
+                      taxYearModel: TaxYearModel): DeductionsController = {
 
       val mockCalcConnector = mock[CalculatorConnector]
 
@@ -130,6 +144,12 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
       when(mockCalcConnector.calculateRttChargeableGain(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
         .thenReturn(Future.successful(Some(chargeableGain)))
 
+      when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalDate))(Matchers.any(), Matchers.any()))
+        .thenReturn(Some(disposalDateModel))
+
+      when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
+        .thenReturn(Future.successful(Some(taxYearModel)))
+
       new DeductionsController {
         override val calcConnector = mockCalcConnector
       }
@@ -138,7 +158,9 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
     "given a valid form" when {
 
       "the user has disposed of other properties with non-zero allowable losses" should {
-        lazy val target = setPostTarget(Some(OtherPropertiesModel(true)), gainModel, summaryModel, ChargeableGainResultModel(0, 0, 0, 0, 0), Some(AllowableLossesModel(true)), Some(AllowableLossesValueModel(BigDecimal(1000))))
+        lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+        lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+        lazy val target = setPostTarget(Some(OtherPropertiesModel(true)), gainModel, summaryModel, ChargeableGainResultModel(0, 0, 0, 0, 0), Some(AllowableLossesModel(true)), Some(AllowableLossesValueModel(BigDecimal(1000))), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
         lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
         lazy val result = target.submitLossesBroughtForwardValue(request)
 
@@ -152,7 +174,9 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
       }
 
       "the user has disposed of other properties with zero allowable losses" should {
-        lazy val target = setPostTarget(Some(OtherPropertiesModel(true)), gainModel, summaryModel, ChargeableGainResultModel(2000, 2000, 2000, 0, 2000), Some(AllowableLossesModel(true)), Some(AllowableLossesValueModel(BigDecimal(0))))
+        lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+        lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+        lazy val target = setPostTarget(Some(OtherPropertiesModel(true)), gainModel, summaryModel, ChargeableGainResultModel(2000, 2000, 2000, 0, 2000), Some(AllowableLossesModel(true)), Some(AllowableLossesValueModel(BigDecimal(0))), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
         lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
         lazy val result = target.submitLossesBroughtForwardValue(request)
 
@@ -166,7 +190,9 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
       }
 
       "the user has disposed of other properties with no allowable losses" should {
-        lazy val target = setPostTarget(Some(OtherPropertiesModel(true)), gainModel, summaryModel, ChargeableGainResultModel(0, 0, 0, 0, 0), Some(AllowableLossesModel(false)), None)
+        lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+        lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+        lazy val target = setPostTarget(Some(OtherPropertiesModel(true)), gainModel, summaryModel, ChargeableGainResultModel(0, 0, 0, 0, 0), Some(AllowableLossesModel(false)), None, disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
         lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
         lazy val result = target.submitLossesBroughtForwardValue(request)
 
@@ -180,7 +206,9 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
       }
 
       "the user has not disposed of other properties and has zero chargeable gain" should {
-        lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(2000, 0, 0, 0, 2000))
+        lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+        lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+        lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(2000, 0, 0, 0, 2000), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
         lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
         lazy val result = target.submitLossesBroughtForwardValue(request)
 
@@ -194,7 +222,9 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
       }
 
       "the user has not disposed of other properties and has negative chargeable gain" should {
-        lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(2000, -1000, 0, 0, 3000))
+        lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+        lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+        lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(2000, -1000, 0, 0, 3000), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
         lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
         lazy val result = target.submitLossesBroughtForwardValue(request)
 
@@ -208,7 +238,9 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
       }
 
       "the user has not disposed of other properties and has positive chargeable gain of £1,000" should {
-        lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(1000, 1000, 0, 0, 0))
+        lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+        lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+        lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(1000, 1000, 0, 0, 0), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
         lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
         lazy val result = target.submitLossesBroughtForwardValue(request)
 
@@ -223,7 +255,9 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
     }
 
     "given an invalid form" should {
-      lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(1000, 1000, 0, 0, 0))
+      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val target = setPostTarget(Some(OtherPropertiesModel(false)), gainModel, summaryModel, ChargeableGainResultModel(1000, 1000, 0, 0, 0), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
       lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
       lazy val result = target.submitLossesBroughtForwardValue(request)
 
@@ -231,8 +265,8 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
         status(result) shouldBe 400
       }
 
-      s"return a title of ${messages.title}" in {
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+      s"return a title of ${messages.title("2015/16")}" in {
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title("2015/16")
       }
     }
   }
