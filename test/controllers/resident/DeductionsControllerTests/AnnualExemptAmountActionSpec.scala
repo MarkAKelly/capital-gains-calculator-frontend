@@ -16,11 +16,12 @@
 
 package controllers.resident.DeductionsControllerTests
 import assets.MessageLookup.{annualExemptAmount => messages}
+import common.KeystoreKeys
 import common.KeystoreKeys.{ResidentKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.DeductionsController
-import models.resident.{AnnualExemptAmountModel, ChargeableGainAnswers, ChargeableGainResultModel, YourAnswersSummaryModel}
+import models.resident._
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.scalatest.mock.MockitoSugar
@@ -41,7 +42,9 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
                   gainAnswers: YourAnswersSummaryModel,
                   chargeableGainAnswers: ChargeableGainAnswers,
                   chargeableGain: ChargeableGainResultModel,
-                  maxAnnualExemptAmount: Option[BigDecimal] = Some(BigDecimal(11100))): DeductionsController = {
+                  maxAnnualExemptAmount: Option[BigDecimal] = Some(BigDecimal(11100)),
+                  disposalDateModel: DisposalDateModel,
+                  taxYearModel: TaxYearModel): DeductionsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
@@ -63,6 +66,12 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
     when(mockCalcConnector.getFullAEA(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(maxAnnualExemptAmount))
 
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalDate))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(disposalDateModel)))
+
+    when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(taxYearModel)))
+
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
     }
@@ -72,7 +81,9 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
 
     "there is no keystore data" should {
 
-      lazy val target = setupTarget(None, gainModel, summaryModel, chargeableGainModel)
+      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val target = setupTarget(None, gainModel, summaryModel, chargeableGainModel, disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
       lazy val result = target.annualExemptAmount(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -88,7 +99,9 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
 
     "there is some keystore data" should {
 
-      lazy val target = setupTarget(Some(AnnualExemptAmountModel(1000)), gainModel, summaryModel, chargeableGainModel)
+      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val target = setupTarget(Some(AnnualExemptAmountModel(1000)), gainModel, summaryModel, chargeableGainModel, disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
       lazy val result = target.annualExemptAmount(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -121,7 +134,9 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
   "Calling .submitAnnualExemptAmount from the DeductionsController" when {
 
     "a valid form is submitted with AEA of 1000 and zero taxable gain" should {
-      lazy val target = setupTarget(Some(AnnualExemptAmountModel(1000)), gainModel, summaryModel, ChargeableGainResultModel(2000, 0, 1000, 0, 1000))
+      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val target = setupTarget(Some(AnnualExemptAmountModel(1000)), gainModel, summaryModel, ChargeableGainResultModel(2000, 0, 1000, 0, 1000), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
       lazy val result = target.submitAnnualExemptAmount(request)
 
@@ -135,7 +150,9 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
     }
 
     "a valid form is submitted with AEA of 0 and positive taxable gain" should {
-      lazy val target = setupTarget(Some(AnnualExemptAmountModel(0)), gainModel, summaryModel, ChargeableGainResultModel(1000, 1000, 0, 0, 0))
+      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val target = setupTarget(Some(AnnualExemptAmountModel(0)), gainModel, summaryModel, ChargeableGainResultModel(1000, 1000, 0, 0, 0), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
       lazy val request = fakeRequestToPOSTWithSession(("amount", "0"))
       lazy val result = target.submitAnnualExemptAmount(request)
 
@@ -149,7 +166,9 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
     }
 
     "a valid form is submitted with AEA of 1000 and positive taxable gain" should {
-      lazy val target = setupTarget(Some(AnnualExemptAmountModel(1000)), gainModel, summaryModel, ChargeableGainResultModel(2000, 1000, 1000, 0, 0))
+      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val target = setupTarget(Some(AnnualExemptAmountModel(1000)), gainModel, summaryModel, ChargeableGainResultModel(2000, 1000, 1000, 0, 0), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
       lazy val result = target.submitAnnualExemptAmount(request)
 
@@ -163,8 +182,9 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
     }
 
     "an invalid form is submitted" should {
-
-      lazy val target = setupTarget(None, gainModel, summaryModel, ChargeableGainResultModel(2000, 1000, 1000, 0, 0))
+      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val target = setupTarget(None, gainModel, summaryModel, ChargeableGainResultModel(2000, 1000, 1000, 0, 0), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
       lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
       lazy val result = target.submitAnnualExemptAmount(request)
       lazy val doc = Jsoup.parse(bodyOf(result))

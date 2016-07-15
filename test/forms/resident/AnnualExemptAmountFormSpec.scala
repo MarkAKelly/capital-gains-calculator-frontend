@@ -98,5 +98,17 @@ class AnnualExemptAmountFormSpec extends UnitSpec with WithFakeApplication with 
         form.error("amount").get.message shouldBe errorMessages.maximumLimit(MoneyPounds(limit, 0).quantity)
       }
     }
+
+    "supplied with an amount that is lower than a different maximum AEA" should {
+      val limit = BigDecimal(12000)
+      lazy val form = annualExemptAmountForm(limit).bind(Map("amount" -> "11100.01"))
+      "raise form error" in {
+        form.hasErrors shouldBe false
+      }
+
+      "return the value 11100.01 from the form" in {
+        form.data("amount") shouldBe "11100.01"
+      }
+    }
   }
 }

@@ -407,8 +407,16 @@ trait DeductionsController extends FeatureLock {
 
   val submitAnnualExemptAmount = FeatureLockForRTT.async { implicit request =>
 
-    def getMaxAEA: Future[Option[BigDecimal]] = {
-      calcConnector.getFullAEA(2016)
+    def taxYearStringToInteger (taxYear: String): Future[Int] = {
+      Future.successful((taxYear.take(2) + taxYear.takeRight(2)).toInt)
+    }
+
+    def formatDisposalDate(disposalDateModel: DisposalDateModel): Future[String] = {
+      Future.successful(s"${disposalDateModel.year}-${disposalDateModel.month}-${disposalDateModel.day}")
+    }
+
+    def getMaxAEA(taxYear: Int): Future[Option[BigDecimal]] = {
+      calcConnector.getFullAEA(taxYear)
     }
 
     def routeRequest(maxAEA: BigDecimal): Future[Result] = {
@@ -430,7 +438,11 @@ trait DeductionsController extends FeatureLock {
       )
     }
     for {
-      maxAEA <- getMaxAEA
+      disposalDate <- calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.ResidentKeys.disposalDate)
+      disposalDateString <- formatDisposalDate(disposalDate.get)
+      taxYear <- calcConnector.getTaxYear(disposalDateString)
+      year <- taxYearStringToInteger(taxYear.get.calculationTaxYear)
+      maxAEA <- getMaxAEA(year)
       route <- routeRequest(maxAEA.get)
     } yield route
   }
