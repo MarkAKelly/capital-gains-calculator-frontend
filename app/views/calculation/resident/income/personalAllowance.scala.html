@@ -18,20 +18,20 @@
 }
 
 @resident_main_template(title = {if(taxYear.taxYearSupplied == "2016/17") {Messages("calc.resident.personalAllowance.currentYearTitle")}
-    else {Messages("calc.resident.personalAllowance.title")}},
+    else {Messages("calc.resident.personalAllowance.title", taxYear.taxYearSupplied)}},
     backLink = Some(controllers.resident.routes.IncomeController.currentIncome().toString), sidebarLinks = Some(sidebar)) {
 
 @errorSummary(personalAllowanceForm, "amount")
 
 <h1 class="heading-large">@{if(taxYear.taxYearSupplied == "2016/17")
     {Messages("calc.resident.personalAllowance.currentYearTitle")}
-    else {Messages("calc.resident.personalAllowance.title")}}</h1>
+    else {Messages("calc.resident.personalAllowance.title", taxYear.taxYearSupplied)}}</h1>
 
 @form(action = controllers.resident.routes.IncomeController.submitPersonalAllowance) {
 
 @formInputMoney(personalAllowanceForm, "amount", if(taxYear.taxYearSupplied == "2016/17")
     {Messages("calc.resident.personalAllowance.currentYearQuestion")}
-    else {Messages("calc.resident.personalAllowance.question")},
+    else {Messages("calc.resident.personalAllowance.question", taxYear.taxYearSupplied)},
     Some(Messages("calc.resident.personalAllowance.helpText")), hideLabel = true, step = "1")
 
 <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>

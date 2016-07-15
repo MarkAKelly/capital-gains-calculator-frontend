@@ -40,8 +40,8 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
         doc.charset().toString shouldBe "UTF-8"
       }
 
-      s"have a title ${messages.title}" in {
-        doc.title() shouldBe messages.title
+      s"have a title ${messages.title("2015/16")}" in {
+        doc.title() shouldBe messages.title("2015/16")
       }
 
       "have a back button that" should {
@@ -62,8 +62,8 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
       "have a H1 tag that" should {
         lazy val h1Tag = doc.select("H1")
 
-        s"have the page heading '${messages.title}'" in {
-          h1Tag.text shouldBe messages.title
+        s"have the page heading '${messages.title("2015/16")}'" in {
+          h1Tag.text shouldBe messages.title("2015/16")
         }
 
         "have the heading-large class" in {
@@ -82,8 +82,8 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
           form.attr("method") shouldBe "POST"
         }
 
-        s"have a legend for an input with text ${messages.question}" in {
-          doc.body.getElementsByClass("heading-large").text() shouldEqual messages.question
+        s"have a legend for an input with text ${messages.question("2015/16")}" in {
+          doc.body.getElementsByClass("heading-large").text() shouldEqual messages.question("2015/16")
         }
 
 
