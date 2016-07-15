@@ -375,8 +375,8 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
       "has an option output row for brought forward losses" which {
 
-        s"should have the question text '${commonMessages.lossesBroughtForward.title}'" in {
-          doc.select("#broughtForwardLosses-question").text shouldBe commonMessages.lossesBroughtForward.title
+        s"should have the question text '${commonMessages.lossesBroughtForward.title("2015/16")}'" in {
+          doc.select("#broughtForwardLosses-question").text shouldBe commonMessages.lossesBroughtForward.title("2015/16")
         }
 
         "should have the value 'No'" in {
@@ -388,11 +388,11 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         }
 
         "has the question as part of the link" in {
-          doc.select("#broughtForwardLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.lossesBroughtForward.question}"
+          doc.select("#broughtForwardLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.lossesBroughtForward.question("2015/16")}"
         }
 
         "has the question component of the link as visuallyhidden" in {
-          doc.select("#broughtForwardLosses-option a span.visuallyhidden").text shouldBe commonMessages.lossesBroughtForward.question
+          doc.select("#broughtForwardLosses-option a span.visuallyhidden").text shouldBe commonMessages.lossesBroughtForward.question("2015/16")
         }
       }
       "has a numeric output row for current income" which {

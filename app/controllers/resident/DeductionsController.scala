@@ -288,16 +288,21 @@ trait DeductionsController extends FeatureLock {
 
   val lossesBroughtForward = FeatureLockForRTT.async { implicit request =>
 
-    def routeRequest(backUrl: String): Future[Result] = {
+    def routeRequest(backLinkUrl: String, taxYear: TaxYearModel): Future[Result] = {
       calcConnector.fetchAndGetFormData[LossesBroughtForwardModel](KeystoreKeys.ResidentKeys.lossesBroughtForward).map {
-        case Some(data) => Ok(views.lossesBroughtForward(lossesBroughtForwardForm.fill(data), backUrl))
-        case _ => Ok(views.lossesBroughtForward(lossesBroughtForwardForm, backUrl))
+        case Some(data) => Ok(views.lossesBroughtForward(lossesBroughtForwardForm.fill(data), backLinkUrl, taxYear))
+        case _ => Ok(views.lossesBroughtForward(lossesBroughtForwardForm, backLinkUrl, taxYear))
       }
     }
+
     for {
-      backUrl <- lossesBroughtForwardBackUrl
-      finalResult <- routeRequest(backUrl)
+      backLinkUrl <- lossesBroughtForwardBackUrl
+      disposalDate <- getDisposalDate
+      disposalDateString <- formatDisposalDate(disposalDate.get)
+      taxYear <- calcConnector.getTaxYear(disposalDateString)
+      finalResult <- routeRequest(backLinkUrl, taxYear.get)
     } yield finalResult
+
   }
 
   def positiveChargeableGainCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
@@ -315,9 +320,9 @@ trait DeductionsController extends FeatureLock {
 
   val submitLossesBroughtForward = FeatureLockForRTT.async { implicit request =>
 
-    def routeRequest(backUrl: String): Future[Result] = {
+    def routeRequest(backUrl: String, taxYearModel: TaxYearModel): Future[Result] = {
       lossesBroughtForwardForm.bindFromRequest.fold(
-        errors => Future.successful(BadRequest(views.lossesBroughtForward(errors, backUrl))),
+        errors => Future.successful(BadRequest(views.lossesBroughtForward(errors, backUrl, taxYearModel))),
         success => {
           calcConnector.saveFormData[LossesBroughtForwardModel](KeystoreKeys.ResidentKeys.lossesBroughtForward, success)
 
@@ -339,7 +344,10 @@ trait DeductionsController extends FeatureLock {
 
     for {
       backUrl <- lossesBroughtForwardBackUrl
-      route <- routeRequest(backUrl)
+      disposalDate <- getDisposalDate
+      disposalDateString <- formatDisposalDate(disposalDate.get)
+      taxYear <- calcConnector.getTaxYear(disposalDateString)
+      route <- routeRequest(backUrl, taxYear.get)
     } yield route
 
   }

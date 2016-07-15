@@ -410,8 +410,8 @@ calc.resident.annualExemptAmount.helpText.one = This is the amount you can make 
 calc.resident.annualExemptAmount.helpText.two = It''s £11,100 a year.
 
 ##Losses Brought Forward messages
-calc.resident.lossesBroughtForward.title = Are there any previous losses you want to bring forward?
-calc.resident.lossesBroughtForward.question = Are there any previous losses you want to bring forward?
+calc.resident.lossesBroughtForward.title = Are you claiming any allowable losses from tax years before {0}?
+calc.resident.lossesBroughtForward.question = Are you claiming any allowable losses from tax years before {0}?
 calc.resident.lossesBroughtForward.errorSelect = Tell us if you''re claiming any allowable losses from tax years before {0}
 
 
