@@ -28,6 +28,8 @@ object Dates {
   val taxStartDatePlus18Months = sf.parse("05/10/2016")
   val taxYearStartDate = sf.parse("05/04/2016")
   val taxYearEndDate = sf.parse("06/04/2017")
+  val taxYearEnd = "04-05"
+  val taxYearStart = "04-06"
 
   def constructDate (day: Int, month: Int, year: Int): Date = {
     sf.parse(s"$day/$month/$year")
@@ -85,6 +87,10 @@ object Dates {
   def dateInsideAcceptedTaxYears (day: Int, month: Int, year: Int): Boolean ={
     val date = constructDate(day, month, year)
     date.after(taxStartDate) && date.before(taxYearEndDate)
+  }
+
+  def taxYearStringToInteger (taxYear: String): Int = {
+    (taxYear.take(2) + taxYear.takeRight(2)).toInt
   }
 }
 

@@ -66,4 +66,14 @@ class DatesSpec extends UnitSpec {
       Dates.getYear(new Date(2014, 11, 12))-1900 shouldEqual 2014
     }
   }
+
+  "Calling taxYearStringToInteger" should {
+    "return 2016 from 2015/16 tax year" in {
+      Dates.taxYearStringToInteger("2015/16") shouldBe 2016
+    }
+
+    "return 2017 from 2016/17 tax year" in {
+      Dates.taxYearStringToInteger("2016/17") shouldBe 2017
+    }
+  }
 }
