@@ -230,4 +230,10 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
+  //#####Gain summary routes tests#####\\
+
+  //#####Deductions summary routes tests#####\\
+
+  //#####Final summary routes tests#####\\
+
 }
