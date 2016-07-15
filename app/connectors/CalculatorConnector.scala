@@ -85,8 +85,12 @@ trait CalculatorConnector {
     http.GET[Option[BigDecimal]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-partial-aea?taxYear=$taxYear")
   }
 
-  def getPA (taxYear: Int)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
-    http.GET[Option[BigDecimal]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-pa?taxYear=$taxYear")
+  def getPA (taxYear: Int, isEligibleBlindPersonsAllowance: Boolean = false)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
+    http.GET[Option[BigDecimal]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-pa?taxYear=$taxYear" +
+      s"${if(isEligibleBlindPersonsAllowance) s"&isEligibleBlindPersonsAllowance=true"
+      else ""
+      }"
+    )
   }
 
   def getTaxYear (taxYear: String)(implicit hc: HeaderCarrier): Future[Option[TaxYearModel]] = {

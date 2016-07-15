@@ -26,8 +26,10 @@ import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
 import play.api.test.Helpers._
 import assets.MessageLookup.{personalAllowance => messages}
-import models.resident.{AnnualExemptAmountModel, ChargeableGainResultModel}
+import common.KeystoreKeys
+import models.resident.{AnnualExemptAmountModel, ChargeableGainResultModel, DisposalDateModel, TaxYearModel}
 import models.resident.income.PersonalAllowanceModel
+import org.openqa.selenium.Keys
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
@@ -37,17 +39,28 @@ class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with
 
 
   def setupTarget(getData: Option[PersonalAllowanceModel],
-                  maxPersonalAllowance: Option[BigDecimal] = Some(BigDecimal(11100))): IncomeController = {
+                  maxPersonalAllowance: Option[BigDecimal] = Some(BigDecimal(11100)),
+                  disposalDateModel: DisposalDateModel,
+                  taxYearModel: TaxYearModel): IncomeController = {
     val mockCalcConnector = mock[CalculatorConnector]
 
     when(mockCalcConnector.fetchAndGetFormData[PersonalAllowanceModel](Matchers.eq(keystoreKeys.personalAllowance))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
-    when(mockCalcConnector.getPA(Matchers.any())(Matchers.any()))
+    when(mockCalcConnector.getPA(Matchers.any(), Matchers.eq(true))(Matchers.any()))
           .thenReturn(Future.successful(maxPersonalAllowance))
+
+    when(mockCalcConnector.getPA(Matchers.any(), Matchers.eq(false))(Matchers.any()))
+      .thenReturn(Future.successful(maxPersonalAllowance))
 
     when(mockCalcConnector.saveFormData[PersonalAllowanceModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
+
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalDate))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(disposalDateModel)))
+
+    when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(taxYearModel)))
 
 
     new IncomeController {
@@ -59,25 +72,9 @@ class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with
 
     "there is no keystore data" should {
 
-      lazy val target = setupTarget(None)
-      lazy val result = target.personalAllowance(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      "return some html" in {
-        contentType(result) shouldBe Some("text/html")
-      }
-
-      "display the Perosnal Allowance view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
-      }
-    }
-
-    "there is some keystore data" should {
-
-      lazy val target = setupTarget(Some(PersonalAllowanceModel(1000)))
+      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val target = setupTarget(None, disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
       lazy val result = target.personalAllowance(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -89,14 +86,36 @@ class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with
       }
 
       "display the Personal Allowance view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.title("2015/16")
+      }
+    }
+
+    "there is some keystore data" should {
+
+      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+      lazy val taxYearModel = TaxYearModel("2016/17", true, "2016/17")
+      lazy val target = setupTarget(Some(PersonalAllowanceModel(1000)), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
+      lazy val result = target.personalAllowance(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return some html" in {
+        contentType(result) shouldBe Some("text/html")
+      }
+
+      "display the Personal Allowance view" in {
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.inYearTitle
       }
     }
   }
 
   "request has an invalid session" should {
 
-    lazy val target = setupTarget(None)
+    lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+    lazy val taxYearModel = TaxYearModel("2017/18", false, "2016/17")
+    lazy val target = setupTarget(None, disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
     lazy val result = target.personalAllowance(fakeRequest)
 
     "return a status of 303" in {
@@ -112,9 +131,10 @@ class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with
 
     "a valid form is submitted" should {
 
-
+      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
-      lazy val target = setupTarget(Some(PersonalAllowanceModel(1000)))
+      lazy val target = setupTarget(Some(PersonalAllowanceModel(1000)), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
       lazy val result = target.submitPersonalAllowance(request)
 
       "return a 303" in {
@@ -128,7 +148,9 @@ class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with
 
     "an invalid form is submitted" should {
 
-      lazy val target = setupTarget(None)
+      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val target = setupTarget(None, disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
       lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
       lazy val result = target.submitPersonalAllowance(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
@@ -138,7 +160,7 @@ class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with
       }
 
       "render the personal allowance page" in {
-        doc.title() shouldEqual messages.title
+        doc.title() shouldEqual messages.title("2015/16")
       }
     }
   }
