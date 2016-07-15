@@ -118,8 +118,8 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
       s"has a h2 tag" which {
 
-        s"should have the title '${messages.calcDetailsHeading}'" in {
-          doc.select("section#calcDetails h2").text shouldBe messages.calcDetailsHeading
+        s"should have the title '${messages.calcDetailsHeadingDate("2015/16")}'" in {
+          doc.select("section#calcDetails h2").text shouldBe messages.calcDetailsHeadingDate("2015/16")
         }
 
         "has the class 'heading-large'" in {
@@ -516,6 +516,17 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
       "have a visually hidden warning text" in {
         doc.select("div.notice-wrapper span.visuallyhidden").text shouldBe messages.warning
+      }
+    }
+
+    s"has a h2 tag" which {
+
+      s"should have the title '${messages.calcDetailsHeadingDate("2013/14")}'" in {
+        doc.select("section#calcDetails h2").text shouldBe messages.calcDetailsHeadingDate("2013/14")
+      }
+
+      "has the class 'heading-large'" in {
+        doc.select("section#calcDetails h2").hasClass("heading-large") shouldBe true
       }
     }
 

@@ -40,7 +40,7 @@ articleLayout = false
 <!-- Calculation Details Section -->
 <section id="calcDetails">
     <!-- Header -->
-    @summarySectionHeaderHelper(Messages("calc.resident.summary.calcDetailsHeading"))
+    @summarySectionHeaderHelper(Messages("calc.resident.summary.calcDetailsHeadingDate", taxYear.taxYearSupplied))
 
     <!-- Data Rows -->
     @summaryNumericRowHelper("gain",gainMessage(result.gain),result.gain)
