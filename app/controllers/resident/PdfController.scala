@@ -19,6 +19,10 @@ package controllers.resident
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import it.innove.play.pdf.PdfGenerator
+import play.api.mvc.{Action, RequestHeader, Result}
+import play.mvc.BodyParser.AnyContent
+
+import scala.concurrent.Future
 
 object PdfController extends PdfController {
   val calcConnector = CalculatorConnector
@@ -28,7 +32,14 @@ trait PdfController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
 
+  private def host(implicit request: RequestHeader): String = {
+    s"http://${request.host}/"
+  }
+
   //#####Gain summary actions#####\\
+  val gainSummaryReport = FeatureLockForRTT.async { implicit request =>
+    Future.successful(PdfGenerator.ok(views.html.pdf.resident.gainSummaryPdf(), host).toScala)
+  }
 
   //#####Deductions summary actions#####\\
 
