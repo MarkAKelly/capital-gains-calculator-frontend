@@ -39,6 +39,7 @@ object DisposalDateForm {
         .verifying(Messages("calc.resident.disposalDate.invalidYearError"), mandatoryCheck)
         .verifying(Messages("calc.resident.disposalDate.invalidYearError"), integerCheck)
         .transform[Int](stringToInteger, _.toString)
+        .verifying(Messages("calc.resident.disposalDate.nonFourDigitYearError"), fourDigitYearCheck)
     )(DisposalDateModel.apply)(DisposalDateModel.unapply)
       .verifying(Messages("calc.common.date.error.invalidDate"), fields => isValidDate(fields.day, fields.month, fields.year))
   )

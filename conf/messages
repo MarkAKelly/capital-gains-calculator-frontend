@@ -298,6 +298,7 @@ calc.resident.disposalDate.question = When did you sign the contract that made s
 calc.resident.disposalDate.invalidDayError = Enter a day
 calc.resident.disposalDate.invalidMonthError = Enter a month
 calc.resident.disposalDate.invalidYearError = Enter a year
+calc.resident.disposalDate.nonFourDigitYearError = Enter a date in the correct format e.g. 9 12 2015
 
 ## Outside Tax Years messages
 calc.resident.outsideTaxYears.title = The date you''ve entered isn''t supported by this calculator
