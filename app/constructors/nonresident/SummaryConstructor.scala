@@ -397,10 +397,7 @@ object SummaryConstructor {
             ),
             SummaryDataItemModel(
               Messages("calc.acquisitionCosts.question"),
-              "&pound;" + (summary.acquisitionCostsModel.acquisitionCostsAmt match {
-                case Some(data) => MoneyPounds(data).quantity
-                case None => "0.00"
-              }),
+              "&pound;" + MoneyPounds(summary.acquisitionCostsModel.acquisitionCostsAmt).quantity,
               Some(routes.CalculationController.acquisitionCosts().toString())
             )
           )
@@ -417,10 +414,7 @@ object SummaryConstructor {
             ),
             SummaryDataItemModel(
               Messages("calc.acquisitionCosts.question"),
-              "&pound;" + (summary.acquisitionCostsModel.acquisitionCostsAmt match {
-                case Some(data) => MoneyPounds(data).quantity
-                case None => "0.00"
-              }),
+              "&pound;" + MoneyPounds(summary.acquisitionCostsModel.acquisitionCostsAmt).quantity,
               Some(routes.CalculationController.acquisitionCosts().toString())
             )
           )
@@ -488,10 +482,7 @@ object SummaryConstructor {
         ),
         SummaryDataItemModel(
           Messages("calc.disposalCosts.question"),
-          "&pound;" + (summary.disposalCostsModel.disposalCosts match {
-            case Some(data) => MoneyPounds(data).quantity
-            case None => "0.00"
-          }),
+          "&pound;" + MoneyPounds(summary.disposalCostsModel.disposalCosts).quantity,
           Some(routes.CalculationController.disposalCosts().toString())
         )
       )
