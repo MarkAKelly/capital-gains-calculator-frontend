@@ -234,6 +234,11 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
 
   //#####Deductions summary routes tests#####\\
 
-  //#####Final summary routes tests#####\\
+  "The URL for the finalSummaryReport action" should {
+    "be equal to /calculate-your-capital-gains/resident/final-report" in {
+      val path = controllers.resident.routes.ReportController.finalSummaryReport.toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/final-report"
+    }
+  }
 
 }
