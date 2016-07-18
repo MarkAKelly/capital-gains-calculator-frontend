@@ -94,8 +94,8 @@ class DisposalDateFormSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
     }
 
-    "a year which is less than four digits" should {
-      lazy val map = Map(("disposalDateDay", "12"), ("disposalDateMonth", "9"), ("disposalDateYear", "90"))
+    "a year which is less than 1900" should {
+      lazy val map = Map(("disposalDateDay", "1"), ("disposalDateMonth", "1"), ("disposalDateYear", "1899"))
       lazy val form = disposalDateForm.bind(map)
 
       "return a form with errors" in {
@@ -107,8 +107,8 @@ class DisposalDateFormSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
     }
 
-    "a year which is greater than four digits" should {
-      lazy val map = Map(("disposalDateDay", "12"), ("disposalDateMonth", "9"), ("disposalDateYear", "12345"))
+    "a year which is greater than 9999" should {
+      lazy val map = Map(("disposalDateDay", "1"), ("disposalDateMonth", "1"), ("disposalDateYear", "10000"))
       lazy val form = disposalDateForm.bind(map)
 
       "return a form with errors" in {
