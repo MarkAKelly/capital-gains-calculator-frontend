@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package controllers.resident.PdfControllerTests
+package views.resident.report
 
 import controllers.helpers.FakeRequestHelper
-import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class GainSummaryPdfActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar{
+class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper{
 
 }
