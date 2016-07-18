@@ -16,6 +16,7 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup
 import common.Constants
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
@@ -48,7 +49,7 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
     when(mockCalcConnector.fetchAndGetFormData[AcquisitionCostsModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
-    lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(AcquisitionCostsModel(None)))))
+    lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(AcquisitionCostsModel(0)))))
     when(mockCalcConnector.saveFormData[AcquisitionCostsModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
@@ -120,7 +121,7 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
     }
 
     "supplied with a pre-existing stored model" should {
-      val testAcquisitionCostsModel = new AcquisitionCostsModel(Some(1000))
+      val testAcquisitionCostsModel = new AcquisitionCostsModel(1000)
       val target = setupTarget(Some(testAcquisitionCostsModel), None)
       lazy val result = target.acquisitionCosts(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
@@ -145,11 +146,16 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
 
     def executeTargetWithMockData
     (
-      acquisitionCosts: Option[BigDecimal] = None
+      acquisitionCosts: String = ""
     ): Future[Result] = {
       lazy val fakeRequest = buildRequest(
-        ("acquisitionCosts", acquisitionCosts.getOrElse("").toString))
-      val mockData = new AcquisitionCostsModel(acquisitionCosts)
+        ("acquisitionCosts", acquisitionCosts))
+
+      val numeric = "(0-9*)".r
+      val mockData = acquisitionCosts match {
+        case numeric(money) => new AcquisitionCostsModel(BigDecimal(money))
+        case _ => new AcquisitionCostsModel(0)
+      }
       val target = setupTarget(None, Some(mockData))
       target.submitAcquisitionCosts(fakeRequest)
     }
@@ -157,7 +163,7 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
     "submitting a valid form" should {
 
       "with value 1000" should {
-        lazy val result = executeTargetWithMockData(Some(1000))
+        lazy val result = executeTargetWithMockData("1000")
 
         "return a 303" in {
           status(result) shouldBe 303
@@ -169,23 +175,24 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
       }
 
       "with no value" should {
-        lazy val result = executeTargetWithMockData(None)
+        lazy val result = executeTargetWithMockData("")
+        lazy val document = Jsoup.parse(bodyOf(result))
 
-        "return a 303" in {
-          status(result) shouldBe 303
+        "return a 400" in {
+          status(result) shouldBe 400
         }
 
-        s"redirect to ${routes.CalculationController.disposalCosts()}" in {
-          redirectLocation(result) shouldBe Some(s"${routes.CalculationController.disposalCosts()}")
+        "fail with message 'Enter a number without commas, for example 10000.00'" in {
+          document.getElementsByClass("error-notification").text should include (MessageLookup.errorMessages.numericPlayErrorOverride)
         }
       }
     }
 
     "submitting an invalid form" should {
-      val testModel = new AcquisitionCostsModel(Some(0))
+      val testModel = new AcquisitionCostsModel(0)
 
       "with value -1" should {
-        lazy val result = executeTargetWithMockData(Some(-1))
+        lazy val result = executeTargetWithMockData("-1")
         lazy val document = Jsoup.parse(bodyOf(result))
 
         "return a 400" in {
@@ -206,7 +213,7 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
       }
 
       "with value 1.111" should {
-        lazy val result = executeTargetWithMockData(Some(1.111))
+        lazy val result = executeTargetWithMockData("1.111")
         lazy val document = Jsoup.parse(bodyOf(result))
 
         "return a 400" in {
@@ -227,7 +234,7 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
       }
 
       "submitting a value which exceeds the maximum numeric" should {
-        lazy val result = executeTargetWithMockData(Some(Constants.maxNumeric + 0.01))
+        lazy val result = executeTargetWithMockData((Constants.maxNumeric + 0.01).toString)
         lazy val document = Jsoup.parse(bodyOf(result))
 
         "return a 400" in {

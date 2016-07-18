@@ -16,6 +16,7 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup
 import common.{Constants, KeystoreKeys}
 import connectors.CalculatorConnector
 import play.api.libs.json.Json
@@ -60,7 +61,7 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
     when(mockCalcConnector.fetchAndGetFormData[RebasedValueModel](Matchers.eq(KeystoreKeys.rebasedValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(rebasedData))
 
-    lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(DisposalCostsModel(None)))))
+    lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(DisposalCostsModel(0)))))
     when(mockCalcConnector.saveFormData[DisposalCostsModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
@@ -130,7 +131,7 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
     "supplied with a pre-existing stored model" should {
 
-      val target = setupTarget(Some(DisposalCostsModel(Some(1000))), None, None, None)
+      val target = setupTarget(Some(DisposalCostsModel(1000)), None, None, None)
       lazy val result = target.disposalCosts(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -168,8 +169,8 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
       val numeric = "(0-9*)".r
       val mockData = amount match {
-        case numeric(money) => new DisposalCostsModel(Some(BigDecimal(money)))
-        case _ => new DisposalCostsModel(None)
+        case numeric(money) => new DisposalCostsModel(BigDecimal(money))
+        case _ => new DisposalCostsModel(0)
       }
 
       val target = setupTarget(None, Some(mockData), Some(acquisitionDate), rebasedData)
@@ -226,12 +227,17 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
       }
     }
 
-    "submitting an valid form with no value" should {
+    "submitting an invalid form with no value" should {
 
       lazy val result = executeTargetWithMockData("", AcquisitionDateModel("No", None, None, None))
+      lazy val document = Jsoup.parse(bodyOf(result))
 
-      "return a 303" in {
-        status(result) shouldBe 303
+      "return a 400" in {
+        status(result) shouldBe 400
+      }
+
+      "display the error message 'Enter a number without commas, for example 10000.00'" in {
+        document.select("div label span.error-notification").text shouldEqual MessageLookup.errorMessages.numericPlayErrorOverride
       }
     }
 

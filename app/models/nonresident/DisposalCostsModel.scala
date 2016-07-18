@@ -18,7 +18,7 @@ package models.nonresident
 
 import play.api.libs.json.Json
 
-case class DisposalCostsModel (disposalCosts: Option[BigDecimal])
+case class DisposalCostsModel (disposalCosts: BigDecimal)
 
 object DisposalCostsModel {
   implicit val format = Json.format[DisposalCostsModel]
