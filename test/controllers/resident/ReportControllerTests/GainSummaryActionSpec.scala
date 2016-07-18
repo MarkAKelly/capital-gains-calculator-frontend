@@ -20,12 +20,13 @@ import common.Dates
 import assets.MessageLookup.{summary => messages}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.{PdfController, routes}
+import controllers.resident.ReportController
 import models.resident.{TaxYearModel, _}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
+import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.test.Helpers._
 
@@ -42,7 +43,7 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
     incomeAnswers: IncomeAnswersModel,
     totalGainAndTaxOwedModel: Option[TotalGainAndTaxOwedModel] = None,
     taxYearModel: Option[TaxYearModel]
-  ): PdfController = {
+  ): ReportController = {
 
     lazy val mockCalculatorConnector = mock[CalculatorConnector]
 
@@ -67,8 +68,9 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
     when(mockCalculatorConnector.getTaxYear(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(taxYearModel))
 
-    new PdfController {
+    new ReportController{
       override val calcConnector: CalculatorConnector = mockCalculatorConnector
+      override def host(implicit request: RequestHeader): String  = "http://localhost:9977/"
     }
   }
 
@@ -88,6 +90,41 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
         -6000,
         chargeableGainAnswers, None, incomeAnswersModel,
         taxYearModel = Some(TaxYearModel("2015/2016", true, "2015/16"))
+      )
+      lazy val result = target.gainSummaryReport(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return a pdf" in {
+        contentType(result) shouldBe Some("application/pdf")
+      }
+
+      "should return the pdf as an attachment" in {
+        header("Content-Disposition", result).get should include("attachment")
+      }
+
+      "should have a filename of 'Summary'" in {
+        header("Content-Disposition", result).get should include(s"""filename="${messages.title}"""")
+      }
+    }
+
+    "a zero total gain is returned with an invalid tax year" should {
+      lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
+        3000,
+        10,
+        5000,
+        5,
+        0)
+      lazy val chargeableGainAnswers = ChargeableGainAnswers(None, None, None, None, None, None, None, None)
+      lazy val incomeAnswersModel = IncomeAnswersModel(None, None, None)
+      lazy val target = setupTarget(
+        yourAnswersSummaryModel,
+        -6000,
+        chargeableGainAnswers, None, incomeAnswersModel,
+        taxYearModel = Some(TaxYearModel("2013/2014", false, "2015/16"))
       )
       lazy val result = target.gainSummaryReport(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))

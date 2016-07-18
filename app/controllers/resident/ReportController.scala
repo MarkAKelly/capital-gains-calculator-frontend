@@ -16,14 +16,20 @@
 
 package controllers.resident
 
+import java.text.SimpleDateFormat
+import java.util.Date
+
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import it.innove.play.pdf.PdfGenerator
+import models.resident.TaxYearModel
 import play.api.i18n.Messages
 import play.api.mvc.{Action, RequestHeader, Result}
 import play.mvc.BodyParser.AnyContent
+
 import scala.concurrent.Future
 import play.api.mvc.{Action, RequestHeader}
+import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future
 
@@ -35,15 +41,24 @@ trait ReportController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
 
-  private def host(implicit request: RequestHeader): String = {
+  def host(implicit request: RequestHeader): String = {
     s"http://${request.host}/"
   }
 
   //#####Gain summary actions#####\\
+  def getTaxYear(disposalDate: Date)(implicit hc: HeaderCarrier): Future[Option[TaxYearModel]] = {
+    val formats = new SimpleDateFormat("yyyy-MM-dd")
+    calcConnector.getTaxYear(formats.format(disposalDate))
+  }
+
   val gainSummaryReport = FeatureLockForRTT.async { implicit request =>
     val fileName = Messages("calc.resident.summary.title")
-    Future.successful(PdfGenerator.ok(views.html.pdf.resident.gainSummaryPdf(), host).toScala
-      .withHeaders("Content-Disposition" -> s"""attachment; filename="$fileName""""))
+    for {
+      answers <- calcConnector.getYourAnswers
+      taxYear <- getTaxYear(answers.disposalDate)
+      grossGain <- calcConnector.calculateRttGrossGain(answers)
+    } yield {PdfGenerator.ok(views.html.calculation.resident.report.gainSummaryReport(answers, grossGain, taxYear.get), host).toScala
+      .withHeaders("Content-Disposition" -> s"""attachment; filename="$fileName"""")}
   }
 
   //#####Deductions summary actions#####\\
