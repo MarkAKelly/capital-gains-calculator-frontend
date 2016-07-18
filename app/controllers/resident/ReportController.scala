@@ -19,14 +19,19 @@ package controllers.resident
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import it.innove.play.pdf.PdfGenerator
+import play.api.mvc.RequestHeader
 
-object PdfController extends PdfController {
+object ReportController extends ReportController {
   val calcConnector = CalculatorConnector
 }
 
-trait PdfController extends FeatureLock {
+trait ReportController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
+
+  private def host(implicit request: RequestHeader): String = {
+    s"http://${request.host}/"
+  }
 
   //#####Gain summary actions#####\\
 

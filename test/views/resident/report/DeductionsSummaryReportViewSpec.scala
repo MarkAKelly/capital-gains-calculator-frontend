@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package views.resident.pdf
+package views.resident.report
 
 import controllers.helpers.FakeRequestHelper
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class FinalSummaryPdfViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper{
+class DeductionsSummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper{
 
 }
