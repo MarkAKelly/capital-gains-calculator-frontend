@@ -50,7 +50,7 @@ object MessageLookup {
     val invalidMonthError = "Enter a month"
     val invalidYearError = "Enter a year"
     val realDateError = "Enter a real date"
-    val nonFourDigitYear = "Enter a date in the correct format e.g. 9 12 2015"
+    val invalidYearRange = "Enter a date in the correct format e.g. 9 12 2015"
   }
 
   //Outside Tax Years messages

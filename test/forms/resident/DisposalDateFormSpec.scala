@@ -102,8 +102,8 @@ class DisposalDateFormSpec extends UnitSpec with WithFakeApplication with FakeRe
         form.hasErrors shouldBe true
       }
 
-      s"have an error message for the date of ${messages.nonFourDigitYear}" in {
-        form.errors.apply(0).message shouldBe messages.nonFourDigitYear
+      s"have an error message for the date of ${messages.invalidYearRange}" in {
+        form.errors.apply(0).message shouldBe messages.invalidYearRange
       }
     }
 
@@ -115,8 +115,8 @@ class DisposalDateFormSpec extends UnitSpec with WithFakeApplication with FakeRe
         form.hasErrors shouldBe true
       }
 
-      s"have an error message for the date of ${messages.nonFourDigitYear}" in {
-        form.errors.apply(0).message shouldBe messages.nonFourDigitYear
+      s"have an error message for the date of ${messages.invalidYearRange}" in {
+        form.errors.apply(0).message shouldBe messages.invalidYearRange
       }
     }
   }
