@@ -20,6 +20,10 @@ import controllers.helpers.FakeRequestHelper
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
+<<<<<<< HEAD:test/controllers/resident/ReportControllerTests/GainSummaryActionSpec.scala
 class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar{
+=======
+class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
+>>>>>>> master:test/controllers/resident/ReportControllerTests/GainSummaryActionSpec.scala
 
 }

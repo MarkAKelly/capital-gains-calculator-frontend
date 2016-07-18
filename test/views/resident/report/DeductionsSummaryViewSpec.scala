@@ -19,6 +19,6 @@ package views.resident.report
 import controllers.helpers.FakeRequestHelper
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class GainSummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper{
+class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper{
 
 }

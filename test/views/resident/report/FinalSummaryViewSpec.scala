@@ -27,7 +27,7 @@ import models.resident._
 import org.jsoup.Jsoup
 import views.html.calculation.resident.report.finalSummaryReport
 
-class FinalSummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Final Summary view" should {
 

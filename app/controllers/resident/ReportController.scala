@@ -19,7 +19,9 @@ package controllers.resident
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import it.innove.play.pdf.PdfGenerator
-import play.api.mvc.RequestHeader
+import play.api.mvc.{Action, RequestHeader}
+
+import scala.concurrent.Future
 
 object ReportController extends ReportController {
   val calcConnector = CalculatorConnector
