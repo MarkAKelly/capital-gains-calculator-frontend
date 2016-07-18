@@ -48,7 +48,7 @@ object CalculateRequestConstructor {
     }&disposalValue=${
       input.disposalValueModel.disposalValue
     }&disposalCosts=${
-      input.disposalCostsModel.disposalCosts.getOrElse(0)
+      input.disposalCostsModel.disposalCosts
     }&allowableLossesAmt=${
       input.allowableLossesModel.isClaimingAllowableLosses match {
         case "Yes" => input.allowableLossesModel.allowableLossesAmt.get
@@ -150,6 +150,6 @@ object CalculateRequestConstructor {
   def acquisition (input: SummaryModel) = s"&acquisitionValueAmt=${
     input.acquisitionValueModel.acquisitionValueAmt
   }&acquisitionCostsAmt=${
-    input.acquisitionCostsModel.acquisitionCostsAmt.getOrElse(0)
+    input.acquisitionCostsModel.acquisitionCostsAmt
   }"
 }

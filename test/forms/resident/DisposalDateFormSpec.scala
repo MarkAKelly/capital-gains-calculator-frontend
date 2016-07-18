@@ -93,5 +93,31 @@ class DisposalDateFormSpec extends UnitSpec with WithFakeApplication with FakeRe
         form.errors.apply(0).message shouldBe messages.realDateError
       }
     }
+
+    "a year which is less than 1900" should {
+      lazy val map = Map(("disposalDateDay", "1"), ("disposalDateMonth", "1"), ("disposalDateYear", "1899"))
+      lazy val form = disposalDateForm.bind(map)
+
+      "return a form with errors" in {
+        form.hasErrors shouldBe true
+      }
+
+      s"have an error message for the date of ${messages.invalidYearRange}" in {
+        form.errors.apply(0).message shouldBe messages.invalidYearRange
+      }
+    }
+
+    "a year which is greater than 9999" should {
+      lazy val map = Map(("disposalDateDay", "1"), ("disposalDateMonth", "1"), ("disposalDateYear", "10000"))
+      lazy val form = disposalDateForm.bind(map)
+
+      "return a form with errors" in {
+        form.hasErrors shouldBe true
+      }
+
+      s"have an error message for the date of ${messages.invalidYearRange}" in {
+        form.errors.apply(0).message shouldBe messages.invalidYearRange
+      }
+    }
   }
 }

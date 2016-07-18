@@ -27,10 +27,10 @@ import uk.gov.hmrc.play.views.helpers.MoneyPounds
 object DisposalCostsForm {
   val disposalCostsForm = Form(
     mapping(
-      "disposalCosts" -> optional(bigDecimal)
-        .verifying(Messages("calc.disposalCosts.errorNegativeNumber"), disposalCosts => isPositive(disposalCosts.getOrElse(0)))
-        .verifying(Messages("calc.disposalCosts.errorDecimalPlaces"), disposalCosts => isMaxTwoDecimalPlaces(disposalCosts.getOrElse(0)))
-        .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"), disposalCosts => isLessThanEqualMaxNumeric(disposalCosts.getOrElse(0)))
+      "disposalCosts" -> bigDecimal
+        .verifying(Messages("calc.disposalCosts.errorNegativeNumber"), disposalCosts => isPositive(disposalCosts))
+        .verifying(Messages("calc.disposalCosts.errorDecimalPlaces"), disposalCosts => isMaxTwoDecimalPlaces(disposalCosts))
+        .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"), disposalCosts => isLessThanEqualMaxNumeric(disposalCosts))
     )(DisposalCostsModel.apply)(DisposalCostsModel.unapply)
   )
 }
