@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.resident.PdfControllerTests
+package controllers.resident.ReportControllerTests
 
 import common.Dates
 import assets.MessageLookup.{summary => messages}
@@ -31,7 +31,7 @@ import play.api.test.Helpers._
 
 import scala.concurrent.Future
 
-class GainSummaryPdfActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar{
+class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
   def setupTarget
   (

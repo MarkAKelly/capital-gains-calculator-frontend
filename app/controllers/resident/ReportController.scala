@@ -22,14 +22,16 @@ import it.innove.play.pdf.PdfGenerator
 import play.api.i18n.Messages
 import play.api.mvc.{Action, RequestHeader, Result}
 import play.mvc.BodyParser.AnyContent
+import scala.concurrent.Future
+import play.api.mvc.{Action, RequestHeader}
 
 import scala.concurrent.Future
 
-object PdfController extends PdfController {
+object ReportController extends ReportController {
   val calcConnector = CalculatorConnector
 }
 
-trait PdfController extends FeatureLock {
+trait ReportController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
 
