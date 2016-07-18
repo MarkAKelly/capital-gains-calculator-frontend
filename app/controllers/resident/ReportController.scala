@@ -64,7 +64,7 @@ trait ReportController extends FeatureLock {
         incomeAnswers,
         totalGain.get,
         taxYear.get),
-        host).toScala.withHeaders("Content-Disposition" -> s"""attachment; filename="$fileName"""")
+        host).toScala.withHeaders("Content-Disposition" -> s"""attachment; filename="$fileName.pdf"""")
     }
   }
 }

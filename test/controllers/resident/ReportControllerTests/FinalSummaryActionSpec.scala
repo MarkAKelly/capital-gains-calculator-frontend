@@ -76,7 +76,7 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
 
   "Calling .finalSummaryReport from the ReportController" when {
 
-    "a positive taxable gain is returned with no other" should {
+    "a positive taxable gain is returned" should {
       lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
         30000,
         0,
@@ -113,7 +113,48 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
 
       "return the pdf with a filename of 'Summary'" in {
-        header("Content-Disposition", result).get should include(s"""filename="${messages.title}"""")
+        header("Content-Disposition", result).get should include(s"""filename="${messages.title}.pdf"""")
+      }
+    }
+
+    "a positive taxable gain is returned with an invalid tax year and two tax rates" should {
+      lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
+        30000,
+        0,
+        10000,
+        0,
+        0)
+      lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)), None, Some(OtherPropertiesModel(false)),
+        Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None)
+      lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 0, 11100)
+      lazy val incomeAnswersModel = IncomeAnswersModel(None, Some(CurrentIncomeModel(20000)), Some(PersonalAllowanceModel(10000)))
+      lazy val totalGainAndTaxOwedModel = TotalGainAndTaxOwedModel(20000, 20000, 11100, 11100, 3600, 20000, 18, Some(5000), Some(28))
+      lazy val target = setupTarget(
+        yourAnswersSummaryModel,
+        10000,
+        chargeableGainAnswers,
+        Some(chargeableGainResultModel),
+        incomeAnswersModel,
+        Some(totalGainAndTaxOwedModel),
+        taxYearModel = Some(TaxYearModel("2013/2014", false, "2015/16"))
+      )
+      lazy val result = target.finalSummaryReport(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return a pdf" in {
+        contentType(result) shouldBe Some("application/pdf")
+      }
+
+      "return a pdf as an attachment" in {
+        header("Content-Disposition", result).get should include("attachment")
+      }
+
+      "return the pdf with a filename of 'Summary'" in {
+        header("Content-Disposition", result).get should include(s"""filename="${messages.title}.pdf"""")
       }
     }
   }
