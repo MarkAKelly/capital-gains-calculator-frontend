@@ -497,17 +497,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
           doc.select("#reliefs-option span.bold-medium").text shouldBe "Yes"
         }
 
-        s"should have a change link to ${routes.DeductionsController.reliefs().url}" in {
-          doc.select("#reliefs-option a").attr("href") shouldBe routes.DeductionsController.reliefs().url
-        }
 
-        "has the question as part of the link" in {
-          doc.select("#reliefs-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.reliefs.question("50,000")}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#reliefs-option a span.visuallyhidden").text shouldBe commonMessages.reliefs.question("50,000")
-        }
       }
 
       "has a numeric output row for tax relief value" which {
@@ -520,9 +510,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
           doc.select("#reliefsValue-amount span.bold-medium").text shouldBe "£50,000"
         }
 
-        s"should have a change link to ${routes.DeductionsController.reliefsValue().url}" in {
-          doc.select("#reliefsValue-amount a").attr("href") shouldBe routes.DeductionsController.reliefsValue().url
-        }
+
       }
 
       "has an option output row for other properties" which {
@@ -535,17 +523,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
           doc.select("#otherProperties-option span.bold-medium").text shouldBe "Yes"
         }
 
-        s"should have a change link to ${routes.DeductionsController.otherProperties().url}" in {
-          doc.select("#otherProperties-option a").attr("href") shouldBe routes.DeductionsController.otherProperties().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#otherProperties-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.otherProperties.title("2013/14")}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#otherProperties-option a span.visuallyhidden").text shouldBe commonMessages.otherProperties.title("2013/14")
-        }
       }
 
       "has an option output row for allowable losses" which {
@@ -558,17 +535,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
           doc.select("#allowableLosses-option span.bold-medium").text shouldBe "Yes"
         }
 
-        s"should have a change link to ${routes.DeductionsController.allowableLosses().url}" in {
-          doc.select("#allowableLosses-option a").attr("href") shouldBe routes.DeductionsController.allowableLosses().url
-        }
 
-        "has the question as part of the link" in {
-          doc.select("#allowableLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.allowableLosses.title("2013/14")}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#allowableLosses-option a span.visuallyhidden").text shouldBe commonMessages.allowableLosses.title("2013/14")
-        }
       }
 
       "has a numeric output row for allowable losses value" which {
@@ -581,9 +548,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
           doc.select("#allowableLossesValue-amount span.bold-medium").text shouldBe "£10,000"
         }
 
-        s"should have a change link to ${routes.DeductionsController.allowableLossesValue().url}" in {
-          doc.select("#allowableLossesValue-amount a").attr("href") shouldBe routes.DeductionsController.allowableLossesValue().url
-        }
+
       }
 
       "has an option output row for brought forward losses" which {
@@ -596,17 +561,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
           doc.select("#broughtForwardLosses-option span.bold-medium").text shouldBe "Yes"
         }
 
-        s"should have a change link to ${routes.DeductionsController.lossesBroughtForward().url}" in {
-          doc.select("#broughtForwardLosses-option a").attr("href") shouldBe routes.DeductionsController.lossesBroughtForward().url
-        }
 
-        "has the question as part of the link" in {
-          doc.select("#broughtForwardLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.lossesBroughtForward.question("2013/14")}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#broughtForwardLosses-option a span.visuallyhidden").text shouldBe commonMessages.lossesBroughtForward.question("2013/14")
-        }
       }
 
       "has a numeric output row for brought forward losses value" which {
@@ -619,9 +574,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
           doc.select("#broughtForwardLossesValue-amount span.bold-medium").text shouldBe "£10,000"
         }
 
-        s"should have a change link to ${routes.DeductionsController.lossesBroughtForwardValue().url}" in {
-          doc.select("#broughtForwardLossesValue-amount a").attr("href") shouldBe routes.DeductionsController.lossesBroughtForwardValue().url
-        }
+        
       }
     }
   }
