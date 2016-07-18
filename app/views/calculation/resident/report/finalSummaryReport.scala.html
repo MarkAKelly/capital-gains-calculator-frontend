@@ -74,30 +74,30 @@
     @summarySectionHeaderHelper(Messages("calc.resident.summary.yourAnswersHeading"))
 
     <!-- Data Rows-->
-    @summaryDateRowHelper("disposalDate",Messages("calc.resident.disposalDate.question"),gainAnswers.disposalDate,Some(gainRoutes.disposalDate().toString))
-    @summaryNumericRowHelper("disposalValue",Messages("calc.resident.disposal.value.title"),gainAnswers.disposalValue,Some(gainRoutes.disposalValue().toString))
-    @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.disposalCosts.title"),gainAnswers.disposalCosts,Some(gainRoutes.disposalCosts().toString))
-    @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),gainAnswers.acquisitionValue,Some(gainRoutes.acquisitionValue().toString))
-    @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),gainAnswers.acquisitionCosts,Some(gainRoutes.acquisitionCosts().toString))
-    @summaryNumericRowHelper("improvements",Messages("calc.resident.improvements.title"),gainAnswers.improvements,Some(gainRoutes.improvements().toString))
-    @summaryOptionRowHelper("reliefs",Messages("calc.resident.reliefs.title", MoneyPounds(result.gain, 0).quantity),deductionAnswers.reliefsModel.get.isClaiming, Some(deductionRoutes.reliefs().toString))
+    @summaryDateRowHelper("disposalDate",Messages("calc.resident.disposalDate.question"),gainAnswers.disposalDate,None)
+    @summaryNumericRowHelper("disposalValue",Messages("calc.resident.disposal.value.title"),gainAnswers.disposalValue,None)
+    @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.disposalCosts.title"),gainAnswers.disposalCosts,None)
+    @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),gainAnswers.acquisitionValue,None)
+    @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),gainAnswers.acquisitionCosts,None)
+    @summaryNumericRowHelper("improvements",Messages("calc.resident.improvements.title"),gainAnswers.improvements,None)
+    @summaryOptionRowHelper("reliefs",Messages("calc.resident.reliefs.title", MoneyPounds(result.gain, 0).quantity),deductionAnswers.reliefsModel.get.isClaiming, None)
     @{if (deductionAnswers.reliefsModel.get.isClaiming)
-    summaryNumericRowHelper("reliefsValue",Messages("calc.resident.reliefsValue.title"),deductionAnswers.reliefsValueModel.get.amount,Some(deductionRoutes.reliefsValue().toString))}
-    @summaryOptionRowHelper("otherProperties",Messages("calc.resident.otherProperties.title", taxYear.taxYearSupplied),deductionAnswers.otherPropertiesModel.get.hasOtherProperties,Some(deductionRoutes.otherProperties().toString))
+    summaryNumericRowHelper("reliefsValue",Messages("calc.resident.reliefsValue.title"),deductionAnswers.reliefsValueModel.get.amount,None)}
+    @summaryOptionRowHelper("otherProperties",Messages("calc.resident.otherProperties.title", taxYear.taxYearSupplied),deductionAnswers.otherPropertiesModel.get.hasOtherProperties,None)
     @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties)
-    summaryOptionRowHelper("allowableLosses",Messages("calc.resident.allowableLosses.title", taxYear.taxYearSupplied),deductionAnswers.allowableLossesModel.get.isClaiming,Some(deductionRoutes.allowableLosses().toString))}
+    summaryOptionRowHelper("allowableLosses",Messages("calc.resident.allowableLosses.title", taxYear.taxYearSupplied),deductionAnswers.allowableLossesModel.get.isClaiming,None)}
     @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties && deductionAnswers.allowableLossesModel.get.isClaiming)
-    summaryNumericRowHelper("allowableLossesValue",Messages("calc.resident.allowableLossesValue.title", taxYear.taxYearSupplied),deductionAnswers.allowableLossesValueModel.get.amount,Some(deductionRoutes.allowableLossesValue().toString))}
-    @summaryOptionRowHelper("broughtForwardLosses",Messages("calc.resident.lossesBroughtForward.title", taxYear.taxYearSupplied),deductionAnswers.broughtForwardModel.get.option, Some(deductionRoutes.lossesBroughtForward().toString))
+    summaryNumericRowHelper("allowableLossesValue",Messages("calc.resident.allowableLossesValue.title", taxYear.taxYearSupplied),deductionAnswers.allowableLossesValueModel.get.amount,None)}
+    @summaryOptionRowHelper("broughtForwardLosses",Messages("calc.resident.lossesBroughtForward.title", taxYear.taxYearSupplied),deductionAnswers.broughtForwardModel.get.option, None)
     @{if (deductionAnswers.broughtForwardModel.get.option)
-    summaryNumericRowHelper("broughtForwardLossesValue",Messages("calc.resident.lossesBroughtForwardValue.title", taxYear.taxYearSupplied),deductionAnswers.broughtForwardValueModel.get.amount,Some(deductionRoutes.lossesBroughtForwardValue().toString))}
+    summaryNumericRowHelper("broughtForwardLossesValue",Messages("calc.resident.lossesBroughtForwardValue.title", taxYear.taxYearSupplied),deductionAnswers.broughtForwardValueModel.get.amount,None)}
     @{if (isUsingAnnualExemptAmount(deductionAnswers.otherPropertiesModel, deductionAnswers.allowableLossesModel, deductionAnswers.allowableLossesValueModel))
-    summaryNumericRowHelper("annualExemptAmount",Messages("calc.resident.annualExemptAmount.title"),deductionAnswers.annualExemptAmountModel.get.amount,Some(deductionRoutes.annualExemptAmount().toString))}
+    summaryNumericRowHelper("annualExemptAmount",Messages("calc.resident.annualExemptAmount.title"),deductionAnswers.annualExemptAmountModel.get.amount,None)}
     @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties && deductionAnswers.annualExemptAmountModel.isDefined && deductionAnswers.annualExemptAmountModel.get.amount == 0)
-    summaryNumericRowHelper("previousTaxableGains", Messages("calc.resident.previousTaxableGains.title"), incomeAnswers.previousTaxableGainsModel.get.amount, Some(incomeRoutes.previousTaxableGains().toString))}
-    @summaryNumericRowHelper("currentIncome",if(taxYear.taxYearSupplied == "2016/17"){Messages("calc.resident.currentIncome.questionCurrentYear")}else{Messages("calc.resident.currentIncome.question", taxYear.taxYearSupplied)},incomeAnswers.currentIncomeModel.get.amount,Some(incomeRoutes.currentIncome().toString))
+    summaryNumericRowHelper("previousTaxableGains", Messages("calc.resident.previousTaxableGains.title"), incomeAnswers.previousTaxableGainsModel.get.amount, None)}
+    @summaryNumericRowHelper("currentIncome",if(taxYear.taxYearSupplied == "2016/17"){Messages("calc.resident.currentIncome.questionCurrentYear")}else{Messages("calc.resident.currentIncome.question", taxYear.taxYearSupplied)},incomeAnswers.currentIncomeModel.get.amount,None)
     @summaryNumericRowHelper("personalAllowance",
     {if(taxYear.taxYearSupplied == "2016/17") {Messages("calc.resident.personalAllowance.currentYearTitle")}
     else {Messages("calc.resident.personalAllowance.title", taxYear.taxYearSupplied)}},
-    incomeAnswers.personalAllowanceModel.get.amount,Some(incomeRoutes.personalAllowance().toString))
+    incomeAnswers.personalAllowanceModel.get.amount,None)
 </section>
