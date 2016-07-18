@@ -58,7 +58,7 @@ trait ReportController extends FeatureLock {
       taxYear <- getTaxYear(answers.disposalDate)
       grossGain <- calcConnector.calculateRttGrossGain(answers)
     } yield {PdfGenerator.ok(views.html.calculation.resident.report.gainSummaryReport(answers, grossGain, taxYear.get), host).toScala
-      .withHeaders("Content-Disposition" -> s"""attachment; filename="$fileName"""")}
+      .withHeaders("Content-Disposition" -> s"""attachment; filename="$fileName.pdf"""")}
   }
 
   //#####Deductions summary actions#####\\

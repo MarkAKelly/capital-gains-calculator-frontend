@@ -38,10 +38,6 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
   (
     yourAnswersSummaryModel: YourAnswersSummaryModel,
     grossGain: BigDecimal,
-    chargeableGainAnswers: ChargeableGainAnswers,
-    chargeableGainResultModel: Option[ChargeableGainResultModel] = None,
-    incomeAnswers: IncomeAnswersModel,
-    totalGainAndTaxOwedModel: Option[TotalGainAndTaxOwedModel] = None,
     taxYearModel: Option[TaxYearModel]
   ): ReportController = {
 
@@ -53,18 +49,6 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
     when(mockCalculatorConnector.calculateRttGrossGain(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(grossGain))
 
-    when(mockCalculatorConnector.getChargeableGainAnswers(Matchers.any()))
-      .thenReturn(Future.successful(chargeableGainAnswers))
-
-    when(mockCalculatorConnector.calculateRttChargeableGain(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
-      .thenReturn(chargeableGainResultModel)
-
-    when(mockCalculatorConnector.getIncomeAnswers(Matchers.any()))
-      .thenReturn(Future.successful(incomeAnswers))
-
-    when(mockCalculatorConnector.calculateRttTotalGainAndTax(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(totalGainAndTaxOwedModel))
-
     when(mockCalculatorConnector.getTaxYear(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(taxYearModel))
 
@@ -74,7 +58,7 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
     }
   }
 
-  "Calling .summary from the SummaryController" when {
+  "Calling .gainSummaryReport from the ReportController" when {
 
     "a negative total gain is returned" should {
       lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
@@ -83,12 +67,9 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
         5000,
         5,
         0)
-      lazy val chargeableGainAnswers = ChargeableGainAnswers(None, None, None, None, None, None, None, None)
-      lazy val incomeAnswersModel = IncomeAnswersModel(None, None, None)
       lazy val target = setupTarget(
         yourAnswersSummaryModel,
         -6000,
-        chargeableGainAnswers, None, incomeAnswersModel,
         taxYearModel = Some(TaxYearModel("2015/2016", true, "2015/16"))
       )
       lazy val result = target.gainSummaryReport(fakeRequestWithSession)
@@ -106,8 +87,8 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
         header("Content-Disposition", result).get should include("attachment")
       }
 
-      "should have a filename of 'Summary'" in {
-        header("Content-Disposition", result).get should include(s"""filename="${messages.title}"""")
+      "should have a filename of 'Summary.pdf'" in {
+        header("Content-Disposition", result).get should include(s"""filename="${messages.title}.pdf"""")
       }
     }
 
@@ -118,12 +99,9 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
         5000,
         5,
         0)
-      lazy val chargeableGainAnswers = ChargeableGainAnswers(None, None, None, None, None, None, None, None)
-      lazy val incomeAnswersModel = IncomeAnswersModel(None, None, None)
       lazy val target = setupTarget(
         yourAnswersSummaryModel,
         -6000,
-        chargeableGainAnswers, None, incomeAnswersModel,
         taxYearModel = Some(TaxYearModel("2013/2014", false, "2015/16"))
       )
       lazy val result = target.gainSummaryReport(fakeRequestWithSession)
@@ -142,7 +120,7 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
       }
 
       "should have a filename of 'Summary'" in {
-        header("Content-Disposition", result).get should include(s"""filename="${messages.title}"""")
+        header("Content-Disposition", result).get should include(s"""filename="${messages.title}.pdf"""")
       }
     }
   }
