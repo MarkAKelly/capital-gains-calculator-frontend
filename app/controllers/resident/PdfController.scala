@@ -38,19 +38,6 @@ trait PdfController extends FeatureLock {
   }
 
   //#####Gain summary actions#####\\
-  val gainSummaryPdf = Action.async {implicit request =>
-    lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
-
-    val testModel = YourAnswersSummaryModel(
-      constructDate(12,9,2018),
-      10,
-      20,
-      30,
-      40,
-      50
-    )
-    Future.successful(PdfGenerator.ok(views.html.pdf.resident.gainSummaryPdf(testModel, -2000, taxYearModel), host).toScala)
-  }
 
   //#####Deductions summary actions#####\\
 

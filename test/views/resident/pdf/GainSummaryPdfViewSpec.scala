@@ -42,6 +42,25 @@ class GainSummaryPdfViewSpec extends UnitSpec with WithFakeApplication with Fake
     lazy val view = views.html.calculation.resident.gainSummary(testModel, -2000, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
+    s"have a title ${messages.title}" in {
+      doc.title() shouldBe messages.title
+    }
+
+    s"have a page heading" which {
+
+      s"includes a secondary heading with text '${messages.pageHeading}'" in {
+        doc.select("h1 span.pre-heading").text shouldBe messages.pageHeading
+      }
+
+      "includes an amount of tax due of £0.00" in {
+        doc.select("h1").text should include("£0.00")
+      }
+    }
+
+    "have the hmrc logo with the hmrc name" in {
+      doc.select("div.logo span").text shouldBe "HM Revenue & Customs"
+    }
+
     "does not have a notice summary" in {
       doc.select("div.notice-wrapper").isEmpty shouldBe true
     }

@@ -7,25 +7,35 @@
 
 @(answers: YourAnswersSummaryModel, gain: BigDecimal, taxYear: TaxYearModel)(implicit request: Request[_])
 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-    
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="/template/assets/stylesheets/govuk-template.css" media="screen" rel="stylesheet" type="text/css">
+    <link href="/template/assets/stylesheets/govuk-template-print.css" media="print" rel="stylesheet" type="text/css">
+    <link href="/template/assets/stylesheets/fonts.css" media="all" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="http://localhost:9032/assets/2.203.0/stylesheets/application.min.css">
+    <link rel="stylesheet" type="text/css" href="/calculate-your-capital-gains/non-resident/assets/stylesheets/cgt.css">
+    <title>@Messages("calc.resident.summary.title")</title>
 </head>
 
-<div>
-    <section>
-        HeaderLoc
-    </section>
-    <aside>
-        LogoLoc
-    </aside>
+
+
+<div class="header-container">
+    <h1 class="heading-xlarge">
+        <span class="pre-heading">@Messages("calc.resident.summary.pageHeading")</span>
+        &pound;0.00
+    </h1>
+    <div class="logo">
+        <span class="organisation-logo organisation-logo-medium">HM Revenue &amp; Customs</span>
+    </div>
 </div>
 
 @{if (!taxYear.isValidYear) {
         <div class="notice-wrapper">
             <div class="notice">
-                <i class="icon icon-important">
-                    <span class="visuallyhidden">{Messages("calc.resident.summary.warning")}</span>
-                </i>
                 <strong class="bold-small">
                     {Messages("calc.resident.summary.dateWarning", taxYear.calculationTaxYear)}
                 </strong>
@@ -56,4 +66,3 @@
     @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),answers.acquisitionCosts,None)
     @summaryNumericRowHelper("improvements",Messages("calc.resident.improvements.title"),answers.improvements,None)
 </section>
-
