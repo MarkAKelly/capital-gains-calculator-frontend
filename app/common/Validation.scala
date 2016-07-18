@@ -111,6 +111,8 @@ object Validation {
 
   val decimalPlacesCheckNoDecimal: BigDecimal => Boolean = (input) => input.scale < 1
 
+  val validYearRangeCheck: Int => Boolean = (input) => input >= 1900 && input <= 9999
+
   val maxCheck: BigDecimal => Boolean = (input) => input <= Constants.maxNumeric
 
   val minCheck: BigDecimal => Boolean = (input) => input >= 0
