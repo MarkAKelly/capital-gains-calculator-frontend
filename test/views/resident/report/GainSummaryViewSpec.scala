@@ -24,7 +24,7 @@ import models.resident.{TaxYearModel, YourAnswersSummaryModel}
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class GainSummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper{
+class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper{
 
   "Summary view" should {
 
