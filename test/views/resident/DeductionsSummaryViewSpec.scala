@@ -53,7 +53,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     lazy val backLink = "/calculate-your-capital-gains/resident/losses-brought-forward"
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
-    
+
     lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
