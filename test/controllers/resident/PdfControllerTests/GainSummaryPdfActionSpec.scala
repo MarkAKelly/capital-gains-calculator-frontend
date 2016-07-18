@@ -27,6 +27,7 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import play.api.test.Helpers._
 
 import scala.concurrent.Future
 
@@ -95,9 +96,17 @@ class GainSummaryPdfActionSpec extends UnitSpec with WithFakeApplication with Fa
         status(result) shouldBe 200
       }
 
-//      "return some pdf" in {
-//        contentType(result) shouldBe Some("text/pdf")
-//      }
+      "return a pdf" in {
+        contentType(result) shouldBe Some("application/pdf")
+      }
+
+      "should return the pdf as an attachment" in {
+        header("Content-Disposition", result).get should include("attachment")
+      }
+
+      "should have a filename of 'Summary'" in {
+        header("Content-Disposition", result).get should include(s"""filename="${messages.title}"""")
+      }
     }
   }
 }

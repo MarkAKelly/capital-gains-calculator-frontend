@@ -19,6 +19,7 @@ package controllers.resident
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import it.innove.play.pdf.PdfGenerator
+import play.api.i18n.Messages
 import play.api.mvc.{Action, RequestHeader, Result}
 import play.mvc.BodyParser.AnyContent
 
@@ -38,7 +39,9 @@ trait PdfController extends FeatureLock {
 
   //#####Gain summary actions#####\\
   val gainSummaryReport = FeatureLockForRTT.async { implicit request =>
-    Future.successful(PdfGenerator.ok(views.html.pdf.resident.gainSummaryPdf(), host).toScala)
+    val fileName = Messages("calc.resident.summary.title")
+    Future.successful(PdfGenerator.ok(views.html.pdf.resident.gainSummaryPdf(), host).toScala
+      .withHeaders("Content-Disposition" -> s"""attachment; filename="$fileName""""))
   }
 
   //#####Deductions summary actions#####\\
