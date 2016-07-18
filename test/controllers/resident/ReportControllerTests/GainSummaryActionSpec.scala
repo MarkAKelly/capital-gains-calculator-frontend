@@ -73,7 +73,6 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
         taxYearModel = Some(TaxYearModel("2015/2016", true, "2015/16"))
       )
       lazy val result = target.gainSummaryReport(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a status of 200" in {
         status(result) shouldBe 200
@@ -105,7 +104,6 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
         taxYearModel = Some(TaxYearModel("2013/2014", false, "2015/16"))
       )
       lazy val result = target.gainSummaryReport(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a status of 200" in {
         status(result) shouldBe 200
