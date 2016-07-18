@@ -39,7 +39,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
-    lazy val view = views.html.calculation.resident.gainSummary(testModel, -2000, taxYearModel)(fakeRequest)
+    lazy val view = views.html.calculation.resident.report.gainSummaryReport(testModel, -2000, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     s"have a title ${messages.title}" in {
@@ -199,7 +199,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       40,
       50
     )
-    lazy val view = views.html.calculation.resident.gainSummary(testModel, 0, taxYearModel)(fakeRequest)
+    lazy val view = views.html.calculation.resident.report.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "should have the question text 'Total gain'" in {
@@ -213,14 +213,5 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
     s"have the text ${messages.noticeWarning("2016/17")}" in {
       doc.select("strong.bold-small").text shouldBe messages.noticeWarning("2016/17")
     }
-
-    "have a warning icon" in {
-      doc.select("i.icon-important").isEmpty shouldBe false
-    }
-
-    "have a visually hidden warning text" in {
-      doc.select("div.notice-wrapper span.visuallyhidden").text shouldBe messages.warning
-    }
-
   }
 }
