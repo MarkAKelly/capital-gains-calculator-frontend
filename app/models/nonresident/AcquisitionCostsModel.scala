@@ -18,7 +18,7 @@ package models.nonresident
 
 import play.api.libs.json._
 
-case class AcquisitionCostsModel (acquisitionCostsAmt: Option[BigDecimal])
+case class AcquisitionCostsModel (acquisitionCostsAmt: BigDecimal)
 
 object AcquisitionCostsModel {
   implicit val format = Json.format[AcquisitionCostsModel]

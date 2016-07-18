@@ -36,6 +36,7 @@ object MessageLookup {
     def maximumLimit(limit: String): String = s"Enter an amount that's £$limit or less"
     val invalidAmount = "Enter an amount in the correct format e.g. 10000.00"
     val invalidAmountNoDecimal = "Enter an amount in the correct format e.g. 10000"
+    val numericPlayErrorOverride = "Enter a number without commas, for example 10000.00"
   }
 
   //Disposal Date messages
