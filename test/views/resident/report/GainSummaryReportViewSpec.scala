@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.resident.pdf
+package views.resident.report
 
 import assets.{MessageLookup => commonMessages}
 import assets.MessageLookup.{summary => messages}
@@ -24,7 +24,7 @@ import models.resident.{TaxYearModel, YourAnswersSummaryModel}
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class GainSummaryPdfViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper{
+class GainSummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper{
 
   "Summary view" should {
 
