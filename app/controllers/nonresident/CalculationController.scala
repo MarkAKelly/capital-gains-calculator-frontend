@@ -53,6 +53,7 @@ import models.nonresident._
 
 trait CalculationController extends FrontendController with ValidActiveSession {
 
+  override val sessionTimeoutUrl = controllers.nonresident.routes.CalculationController.restart().url
   val calcConnector: CalculatorConnector
   val calcElectionConstructor: CalculationElectionConstructor
 
