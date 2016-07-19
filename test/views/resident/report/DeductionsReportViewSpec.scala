@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.resident
+package views.resident.report
 
 import assets.MessageLookup.{summary => messages}
 import assets.{MessageLookup => commonMessages}
@@ -26,11 +26,11 @@ import models.resident._
 import org.jsoup.Jsoup
 
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import views.html.calculation.{resident => views}
+import views.html.calculation.resident.{report => views}
 
-class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Deductions Summary view" should {
+  "Deductions Report view" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       BigDecimal(200000),
       BigDecimal(10000),
@@ -50,11 +50,10 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       BigDecimal(11100),
       BigDecimal(0),
       BigDecimal(11100))
-    lazy val backLink = "/calculate-your-capital-gains/resident/losses-brought-forward"
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
-    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
+    lazy val view = views.deductionsSummaryReport(gainAnswers, deductionAnswers, results, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -65,23 +64,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       doc.title() shouldBe messages.title
     }
 
-    s"have a back button" which {
-
-      lazy val backLink = doc.getElementById("back-link")
-
-      "has the id 'back-link'" in {
-        backLink.attr("id") shouldBe "back-link"
-      }
-
-      s"has the text '${commonMessages.calcBaseBack}'" in {
-        backLink.text shouldBe commonMessages.calcBaseBack
-      }
-
-      s"has a link to '${routes.DeductionsController.lossesBroughtForward().toString()}'" in {
-        backLink.attr("href") shouldBe routes.DeductionsController.lossesBroughtForward().toString
-      }
-
-    }
 
     s"have a page heading" which {
 
@@ -90,7 +72,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       }
 
       "includes an amount of tax due of £0.00" in {
-        doc.select("h1").text should include ("£0.00")
+        doc.select("h1").text should include("£0.00")
       }
     }
 
@@ -209,18 +191,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         "should have the date '10 October 2016'" in {
           doc.select("#disposalDate-date span.bold-medium").text shouldBe "10 October 2016"
         }
-
-        s"should have a change link to ${routes.GainController.disposalDate().url}" in {
-          doc.select("#disposalDate-date a").attr("href") shouldBe routes.GainController.disposalDate().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#disposalDate-date a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.disposalDate.question}"
-        }
-
-        "has the question component of the link is visuallyhidden" in {
-          doc.select("#disposalDate-date a span.visuallyhidden").text shouldBe commonMessages.disposalDate.question
-        }
       }
 
       "has a numeric output row for the Disposal Value" which {
@@ -232,11 +202,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         "should have the value '£200,000'" in {
           doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£200,000"
         }
-
-        s"should have a change link to ${routes.GainController.disposalValue().url}" in {
-          doc.select("#disposalValue-amount a").attr("href") shouldBe routes.GainController.disposalValue().url
-        }
-
       }
 
       "has a numeric output row for the Disposal Costs" which {
@@ -248,11 +213,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         "should have the value '£10,000'" in {
           doc.select("#disposalCosts-amount span.bold-medium").text shouldBe "£10,000"
         }
-
-        s"should have a change link to ${routes.GainController.disposalCosts().url}" in {
-          doc.select("#disposalCosts-amount a").attr("href") shouldBe routes.GainController.disposalCosts().url
-        }
-
       }
 
       "has a numeric output row for the Acquisition Value" which {
@@ -264,11 +224,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         "should have the value '£100,000'" in {
           doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£100,000"
         }
-
-        s"should have a change link to ${routes.GainController.acquisitionValue().url}" in {
-          doc.select("#acquisitionValue-amount a").attr("href") shouldBe routes.GainController.acquisitionValue().url
-        }
-
       }
 
       "has a numeric output row for the Acquisition Costs" which {
@@ -280,11 +235,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         "should have the value '£10,000'" in {
           doc.select("#acquisitionCosts-amount span.bold-medium").text shouldBe "£10,000"
         }
-
-        s"should have a change link to ${routes.GainController.acquisitionCosts().url}" in {
-          doc.select("#acquisitionCosts-amount a").attr("href") shouldBe routes.GainController.acquisitionCosts().url
-        }
-
       }
 
       "has a numeric output row for the Improvements" which {
@@ -295,10 +245,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
         "should have the value '£30,000'" in {
           doc.select("#improvements-amount span.bold-medium").text shouldBe "£30,000"
-        }
-
-        s"should have a change link to ${routes.GainController.improvements().url}" in {
-          doc.select("#improvements-amount a").attr("href") shouldBe routes.GainController.improvements().url
         }
       }
 
@@ -311,18 +257,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         "should have the value 'No'" in {
           doc.select("#reliefs-option span.bold-medium").text shouldBe "No"
         }
-
-        s"should have a change link to ${routes.DeductionsController.reliefs().url}" in {
-          doc.select("#reliefs-option a").attr("href") shouldBe routes.DeductionsController.reliefs().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#reliefs-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.reliefs.question("50,000")}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#reliefs-option a span.visuallyhidden").text shouldBe commonMessages.reliefs.question("50,000")
-        }
       }
 
       "has an option output row for other properties" which {
@@ -333,18 +267,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
         "should have the value 'No'" in {
           doc.select("#otherProperties-option span.bold-medium").text shouldBe "No"
-        }
-
-        s"should have a change link to ${routes.DeductionsController.otherProperties().url}" in {
-          doc.select("#otherProperties-option a").attr("href") shouldBe routes.DeductionsController.otherProperties().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#otherProperties-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.otherProperties.title("2015/16")}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#otherProperties-option a span.visuallyhidden").text shouldBe commonMessages.otherProperties.title("2015/16")
         }
       }
 
@@ -357,23 +279,11 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         "should have the value 'No'" in {
           doc.select("#broughtForwardLosses-option span.bold-medium").text shouldBe "No"
         }
-
-        s"should have a change link to ${routes.DeductionsController.lossesBroughtForward().url}" in {
-          doc.select("#broughtForwardLosses-option a").attr("href") shouldBe routes.DeductionsController.lossesBroughtForward().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#broughtForwardLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.lossesBroughtForward.question("2015/16")}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#broughtForwardLosses-option a span.visuallyhidden").text shouldBe commonMessages.lossesBroughtForward.question("2015/16")
-        }
       }
     }
   }
 
-  "Deductions Summary view with all options selected" should {
+  "Deductions Report view with all options selected" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       BigDecimal(200000),
       BigDecimal(10000),
@@ -396,27 +306,9 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
     lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
 
-    lazy val backLink = "/calculate-your-capital-gains/resident/annual-exempt-amount"
-    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
+    lazy val view = views.deductionsSummaryReport(gainAnswers, deductionAnswers, results, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
-    s"have a back button" which {
-
-      lazy val backLink = doc.getElementById("back-link")
-
-      "has the id 'back-link'" in {
-        backLink.attr("id") shouldBe "back-link"
-      }
-
-      s"has the text '${commonMessages.calcBaseBack}'" in {
-        backLink.text shouldBe commonMessages.calcBaseBack
-      }
-
-      s"has a link to '${routes.GainController.improvements().toString()}'" in {
-        backLink.attr("href") shouldBe routes.DeductionsController.annualExemptAmount().toString
-      }
-
-    }
 
     "has a notice summary that" should {
 
@@ -428,13 +320,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         doc.select("strong.bold-small").text shouldBe messages.noticeWarning("2015/16")
       }
 
-      "have a warning icon" in {
-        doc.select("i.icon-important").isEmpty shouldBe false
-      }
-
-      "have a visually hidden warning text" in {
-        doc.select("div.notice-wrapper span.visuallyhidden").text shouldBe messages.warning
-      }
     }
 
     s"have a section for the Calculation details" which {
@@ -512,9 +397,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     s"have a section for Your answers" which {
 
       "has the class 'summary-section' to underline the heading" in {
-
         doc.select("section#yourAnswers h2").hasClass("summary-underline") shouldBe true
-
       }
 
       s"has a h2 tag" which {
@@ -537,18 +420,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         "should have the value 'Yes'" in {
           doc.select("#reliefs-option span.bold-medium").text shouldBe "Yes"
         }
-
-        s"should have a change link to ${routes.DeductionsController.reliefs().url}" in {
-          doc.select("#reliefs-option a").attr("href") shouldBe routes.DeductionsController.reliefs().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#reliefs-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.reliefs.question("50,000")}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#reliefs-option a span.visuallyhidden").text shouldBe commonMessages.reliefs.question("50,000")
-        }
       }
 
       "has a numeric output row for tax relief value" which {
@@ -559,10 +430,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
         "should have the value '£50,000'" in {
           doc.select("#reliefsValue-amount span.bold-medium").text shouldBe "£50,000"
-        }
-
-        s"should have a change link to ${routes.DeductionsController.reliefsValue().url}" in {
-          doc.select("#reliefsValue-amount a").attr("href") shouldBe routes.DeductionsController.reliefsValue().url
         }
       }
 
@@ -575,18 +442,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         "should have the value 'Yes'" in {
           doc.select("#otherProperties-option span.bold-medium").text shouldBe "Yes"
         }
-
-        s"should have a change link to ${routes.DeductionsController.otherProperties().url}" in {
-          doc.select("#otherProperties-option a").attr("href") shouldBe routes.DeductionsController.otherProperties().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#otherProperties-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.otherProperties.title("2013/14")}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#otherProperties-option a span.visuallyhidden").text shouldBe commonMessages.otherProperties.title("2013/14")
-        }
       }
 
       "has an option output row for allowable losses" which {
@@ -597,18 +452,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
         "should have the value 'Yes'" in {
           doc.select("#allowableLosses-option span.bold-medium").text shouldBe "Yes"
-        }
-
-        s"should have a change link to ${routes.DeductionsController.allowableLosses().url}" in {
-          doc.select("#allowableLosses-option a").attr("href") shouldBe routes.DeductionsController.allowableLosses().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#allowableLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.allowableLosses.title("2013/14")}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#allowableLosses-option a span.visuallyhidden").text shouldBe commonMessages.allowableLosses.title("2013/14")
         }
       }
 
@@ -621,10 +464,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         "should have the value '£10,000'" in {
           doc.select("#allowableLossesValue-amount span.bold-medium").text shouldBe "£10,000"
         }
-
-        s"should have a change link to ${routes.DeductionsController.allowableLossesValue().url}" in {
-          doc.select("#allowableLossesValue-amount a").attr("href") shouldBe routes.DeductionsController.allowableLossesValue().url
-        }
       }
 
       "has an option output row for brought forward losses" which {
@@ -635,18 +474,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
         "should have the value 'Yes'" in {
           doc.select("#broughtForwardLosses-option span.bold-medium").text shouldBe "Yes"
-        }
-
-        s"should have a change link to ${routes.DeductionsController.lossesBroughtForward().url}" in {
-          doc.select("#broughtForwardLosses-option a").attr("href") shouldBe routes.DeductionsController.lossesBroughtForward().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#broughtForwardLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.lossesBroughtForward.question("2013/14")}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#broughtForwardLosses-option a span.visuallyhidden").text shouldBe commonMessages.lossesBroughtForward.question("2013/14")
         }
       }
 
@@ -659,15 +486,11 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         "should have the value '£10,000'" in {
           doc.select("#broughtForwardLossesValue-amount span.bold-medium").text shouldBe "£10,000"
         }
-
-        s"should have a change link to ${routes.DeductionsController.lossesBroughtForwardValue().url}" in {
-          doc.select("#broughtForwardLossesValue-amount a").attr("href") shouldBe routes.DeductionsController.lossesBroughtForwardValue().url
-        }
       }
     }
   }
 
-  "Deductions Summary view with AEA options selected" which {
+  "Deductions Report view with AEA options selected" which {
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       BigDecimal(200000),
@@ -690,8 +513,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       BigDecimal(71000))
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
-    lazy val backLink = "/calculate-your-capital-gains/resident/annual-exempt-amount"
-    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
+    lazy val view = views.deductionsSummaryReport(gainAnswers, deductionAnswers, results, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "has a numeric output row for AEA value" should {
@@ -703,63 +525,11 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       "should have the value '£1,000'" in {
         doc.select("#annualExemptAmount-amount span.bold-medium").text shouldBe "£1,000"
       }
-
-      s"should have a change link to ${routes.DeductionsController.annualExemptAmount().url}" in {
-        doc.select("#annualExemptAmount-amount a").attr("href") shouldBe routes.DeductionsController.annualExemptAmount().url
-      }
-
-      s"display the text ${messages.whatToDoNextText}" in {
-        doc.select("div#whatToDoNextNoLossText").text shouldEqual messages.whatToDoNextNoLossText
-      }
     }
   }
 
 
-  "Summary when supplied with a date within the known tax years and no gain or loss" should {
-
-
-    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
-      BigDecimal(0),
-      BigDecimal(100000),
-      BigDecimal(0),
-      BigDecimal(0))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(true)),
-      Some(ReliefsValueModel(BigDecimal(100000))),
-      Some(OtherPropertiesModel(true)),
-      Some(AllowableLossesModel(true)),
-      Some(AllowableLossesValueModel(0)),
-      Some(LossesBroughtForwardModel(true)),
-      Some(LossesBroughtForwardValueModel(0)),
-      Some(AnnualExemptAmountModel(0)))
-    lazy val results = ChargeableGainResultModel(BigDecimal(0),
-      BigDecimal(0),
-      BigDecimal(0),
-      BigDecimal(0),
-      BigDecimal(50000))
-
-    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
-
-    lazy val backLink = "/calculate-your-capital-gains/resident/annual-exempt-amount"
-    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel)(fakeRequest)
-
-
-    lazy val doc = Jsoup.parse(view.body)
-
-    "display the what to do next section" in {
-      doc.select("#whatToDoNext").hasText shouldEqual true
-    }
-
-    s"display the title ${messages.whatToDoNextTitle}" in {
-      doc.select("h3#whatToDoNextNoLossTitle").text shouldEqual messages.whatToDoNextTitle
-    }
-
-    s"display the text ${messages.whatToDoNextText}" in {
-      doc.select("div#whatToDoNextNoLossText").text shouldEqual messages.whatToDoNextNoLossText
-    }
-  }
-
-  "Summary when supplied with a date above the known tax years" should {
+  "Report when supplied with a date above the known tax years" should {
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       BigDecimal(200000),
@@ -783,8 +553,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
     lazy val taxYearModel = TaxYearModel("2017/18", false, "2015/16")
 
-    lazy val backLink = "/calculate-your-capital-gains/resident/annual-exempt-amount"
-    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel)(fakeRequest)
+    lazy val view = views.deductionsSummaryReport(gainAnswers, deductionAnswers, results, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "does not display the section for what to do next" in {
