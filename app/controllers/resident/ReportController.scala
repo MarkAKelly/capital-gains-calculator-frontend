@@ -40,11 +40,21 @@ trait ReportController extends FeatureLock {
     s"http://${request.host}/"
   }
 
-  //#####Gain summary actions#####\\
   def getTaxYear(disposalDate: Date)(implicit hc: HeaderCarrier): Future[Option[TaxYearModel]] = {
     val formats = new SimpleDateFormat("yyyy-MM-dd")
     calcConnector.getTaxYear(formats.format(disposalDate))
   }
+
+  val gainSummaryReport = FeatureLockForRTT.async { implicit request =>
+    val fileName = Messages("calc.resident.summary.title")
+    for {
+      answers <- calcConnector.getYourAnswers
+      taxYear <- getTaxYear(answers.disposalDate)
+      grossGain <- calcConnector.calculateRttGrossGain(answers)
+    } yield {PdfGenerator.ok(views.html.calculation.resident.report.gainSummaryReport(answers, grossGain, taxYear.get), host).toScala
+      .withHeaders("Content-Disposition" -> s"""attachment; filename="$fileName.pdf"""")}
+  }
+
 
   //#####Deductions summary actions#####\\
 
