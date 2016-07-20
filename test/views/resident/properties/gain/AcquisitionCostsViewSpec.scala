@@ -14,47 +14,45 @@
  * limitations under the License.
  */
 
-package views.resident
+package views.resident.properties.gain
 
-import assets.MessageLookup.{allowableLossesValue => messages}
+import assets.MessageLookup.{acquisitionCosts => messages}
 import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
-import forms.resident.AllowableLossesValueForm._
-import models.resident.TaxYearModel
+import forms.resident.AcquisitionCostsForm._
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import views.html.calculation.{resident => views}
+import views.html.calculation.resident.properties.{gain => views}
 
-class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Allowable Losses Value view with no form errors" should {
+  "Acquisition Costs view" should {
 
-    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
-    lazy val view = views.allowableLossesValue(allowableLossesValueForm, taxYearModel)(fakeRequest)
+    lazy val view = views.acquisitionCosts(acquisitionCostsForm)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
       doc.charset().toString shouldBe "UTF-8"
     }
 
-    s"have a title of ${messages.title("2015/16")}" in {
-      doc.title() shouldBe messages.title("2015/16")
+    s"have a title of ${messages.title}" in {
+      doc.title() shouldBe messages.title
     }
 
-    "have a back button" which {
+    "have a back button that" should {
 
       lazy val backLink = doc.select("a#back-link")
 
-      "has the correct back link text" in {
+      "have the correct back link text" in {
         backLink.text shouldBe commonMessages.calcBaseBack
       }
 
-      "has the back-link class" in {
+      "have the back-link class" in {
         backLink.hasClass("back-link") shouldBe true
       }
 
-      "has a link to Allowable Losses" in {
-        backLink.attr("href") shouldBe controllers.resident.routes.DeductionsController.allowableLosses().toString
+      "have a link to Acquisition Value" in {
+        backLink.attr("href") shouldBe controllers.resident.routes.GainController.acquisitionValue().toString
       }
     }
 
@@ -62,8 +60,8 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
 
       lazy val h1Tag = doc.select("H1")
 
-      s"have the page heading '${messages.question("2015/16")}'" in {
-        h1Tag.text shouldBe messages.question("2015/16")
+      s"have the page heading '${messages.pageHeading}'" in {
+        h1Tag.text shouldBe messages.pageHeading
       }
 
       "have the heading-large class" in {
@@ -75,8 +73,8 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
 
       lazy val form = doc.getElementsByTag("form")
 
-      s"has the action '${controllers.resident.routes.DeductionsController.submitAllowableLossesValue().toString}'" in {
-        form.attr("action") shouldBe controllers.resident.routes.DeductionsController.submitAllowableLossesValue().toString
+      s"has the action '${controllers.resident.routes.GainController.submitAcquisitionCosts().toString}'" in {
+        form.attr("action") shouldBe controllers.resident.routes.GainController.submitAcquisitionCosts().toString
       }
 
       "has the method of POST" in {
@@ -87,12 +85,19 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
 
         lazy val label = doc.body.getElementsByTag("label")
 
-        s"have the question ${messages.question("2015/16")}" in {
-          label.text should include(messages.question("2015/16"))
+        s"have the question ${messages.pageHeading}" in {
+          label.text should include(messages.pageHeading)
         }
 
         "have the class 'visuallyhidden'" in {
           label.select("span.visuallyhidden").size shouldBe 1
+        }
+      }
+
+      "has help text that" should {
+
+        s"have the text ${messages.helpText}" in {
+          doc.body.getElementsByClass("form-hint").text shouldBe messages.helpText
         }
       }
 
@@ -142,25 +147,21 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
     }
   }
 
-  "Allowable Losses Value View with form with errors" should {
-    val form = allowableLossesValueForm.bind(Map("amount" -> ""))
-    lazy val view = views.allowableLossesValue(form, TaxYearModel("2015/16", true, "2015/16"))(fakeRequestWithSession)
-    lazy val doc = Jsoup.parse(view.body)
+  "Acquisition Costs View with form with errors" which {
 
-    "output an error summary" in {
-      doc.body.getElementsByAttributeValueContaining("id", "amount-error-summary").isEmpty shouldBe false
-    }
+    "is due to mandatory field error" should {
 
-    s"contain an error summary message of ${commonMessages.errorMessages.mandatoryAmount}" in {
-      doc.body.getElementById("amount-error-summary").text should include(commonMessages.errorMessages.mandatoryAmount)
-    }
+      val form = acquisitionCostsForm.bind(Map("amount" -> ""))
+      lazy val view = views.acquisitionCosts(form)(fakeRequest)
+      lazy val doc = Jsoup.parse(view.body)
 
-    "output an error notification" in {
-      doc.body.getElementsByAttributeValueContaining("class", "error-notification").isEmpty shouldBe false
-    }
+      "display an error summary message for the amount" in {
+        doc.body.select("#amount-error-summary").size shouldBe 1
+      }
 
-    s"contain an error notification message of ${commonMessages.errorMessages.mandatoryAmount}" in {
-      doc.body.getElementsByClass("error-notification").text should include(commonMessages.errorMessages.mandatoryAmount)
+      "display an error message for the input" in {
+        doc.body.select(".form-group .error-notification").size shouldBe 1
+      }
     }
   }
 }

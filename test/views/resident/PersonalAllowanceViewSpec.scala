@@ -16,15 +16,14 @@
 
 package views.resident
 
-import controllers.helpers.FakeRequestHelper
-import views.html.calculation.resident.{income => views}
-import org.jsoup.Jsoup
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup
 import assets.MessageLookup.{personalAllowance => messages}
 import assets.{MessageLookup => commonMessages}
+import controllers.helpers.FakeRequestHelper
 import forms.resident.income.PersonalAllowanceForm._
 import models.resident.TaxYearModel
+import org.jsoup.Jsoup
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import views.html.calculation.{resident => views}
 
 class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
@@ -96,7 +95,7 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
 
       }
 
-      s"the Personal Allowance Help link ${MessageLookup.personalAllowance.helpLinkOne} should " +
+      s"the Personal Allowance Help link ${messages.helpLinkOne} should " +
         "have the address Some(https://www.gov.uk/income-tax-rates/current-rates-and-allowances)" in {
         doc.select("a#personalAllowanceLink").attr("href") shouldEqual "https://www.gov.uk/income-tax-rates/current-rates-and-allowances"
       }
