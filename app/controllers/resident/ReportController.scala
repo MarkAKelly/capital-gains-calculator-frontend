@@ -18,7 +18,6 @@ package controllers.resident
 
 import java.text.SimpleDateFormat
 import java.util.Date
-
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import it.innove.play.pdf.PdfGenerator
@@ -41,24 +40,22 @@ trait ReportController extends FeatureLock {
     s"http://${request.host}/"
   }
 
-  //#####Gain summary actions#####\\
   def getTaxYear(disposalDate: Date)(implicit hc: HeaderCarrier): Future[Option[TaxYearModel]] = {
     val formats = new SimpleDateFormat("yyyy-MM-dd")
     calcConnector.getTaxYear(formats.format(disposalDate))
   }
 
   val gainSummaryReport = FeatureLockForRTT.async { implicit request =>
-    val fileName = Messages("calc.resident.summary.title")
     for {
       answers <- calcConnector.getYourAnswers
       taxYear <- getTaxYear(answers.disposalDate)
       grossGain <- calcConnector.calculateRttGrossGain(answers)
     } yield {PdfGenerator.ok(views.html.calculation.resident.report.gainSummaryReport(answers, grossGain, taxYear.get), host).toScala
-      .withHeaders("Content-Disposition" -> s"""attachment; filename="$fileName.pdf"""")}
+      .withHeaders("Content-Disposition" -> s"""attachment; filename="${Messages("calc.resident.summary.title")}.pdf"""")}
   }
 
-  //#####Deductions summary actions#####\\
 
+  //#####Deductions summary actions#####\\
   val deductionsReport = FeatureLockForRTT.async { implicit request =>
     for {
       answers <- calcConnector.getYourAnswers
@@ -71,4 +68,23 @@ trait ReportController extends FeatureLock {
   }
 
   //#####Final summary actions#####\\
+
+  val finalSummaryReport = FeatureLockForRTT.async { implicit request =>
+    for {
+      answers <- calcConnector.getYourAnswers
+      taxYear <- getTaxYear(answers.disposalDate)
+      grossGain <- calcConnector.calculateRttGrossGain(answers)
+      deductionAnswers <- calcConnector.getChargeableGainAnswers
+      chargeableGain <- calcConnector.calculateRttChargeableGain(answers, deductionAnswers, BigDecimal(11100))
+      incomeAnswers <- calcConnector.getIncomeAnswers
+      totalGain <- calcConnector.calculateRttTotalGainAndTax(answers, deductionAnswers, BigDecimal(11100), incomeAnswers)
+    } yield {
+      PdfGenerator.ok(views.html.calculation.resident.report.finalSummaryReport(answers,
+        deductionAnswers,
+        incomeAnswers,
+        totalGain.get,
+        taxYear.get),
+        host).toScala.withHeaders("Content-Disposition" -> s"""attachment; filename="${Messages("calc.resident.summary.title")}.pdf"""")
+    }
+  }
 }
