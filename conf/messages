@@ -370,6 +370,7 @@ calc.resident.summary.whatNext.text = so that you might need to pay less tax in 
 calc.resident.summary.whatNext.noLossOrGain = As you have no tax to pay, you don''t need to tell HMRC about the property.
 calc.resident.summary.whatNext.youNeedTo = You need to
 calc.resident.summary.whatNext.linkTwo = tell HMRC about the property.
+calc.resident.summary.saveAsPdf = Save as PDF
 
 
 ## Reliefs messages
