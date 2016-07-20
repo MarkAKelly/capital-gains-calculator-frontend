@@ -25,7 +25,7 @@ import models.resident.TaxYearModel
 import play.api.i18n.Messages
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.http.HeaderCarrier
-
+import views.html.calculation.resident.properties.{report => views}
 import scala.concurrent.Future
 
 object ReportController extends ReportController {
@@ -50,7 +50,7 @@ trait ReportController extends FeatureLock {
       answers <- calcConnector.getYourAnswers
       taxYear <- getTaxYear(answers.disposalDate)
       grossGain <- calcConnector.calculateRttGrossGain(answers)
-    } yield {PdfGenerator.ok(views.html.calculation.resident.report.gainSummaryReport(answers, grossGain, taxYear.get), host).toScala
+    } yield {PdfGenerator.ok(views.gainSummaryReport(answers, grossGain, taxYear.get), host).toScala
       .withHeaders("Content-Disposition" -> s"""attachment; filename="${Messages("calc.resident.summary.title")}.pdf"""")}
   }
 
@@ -67,7 +67,7 @@ trait ReportController extends FeatureLock {
       incomeAnswers <- calcConnector.getIncomeAnswers
       totalGain <- calcConnector.calculateRttTotalGainAndTax(answers, deductionAnswers, BigDecimal(11100), incomeAnswers)
     } yield {
-      PdfGenerator.ok(views.html.calculation.resident.report.finalSummaryReport(answers,
+      PdfGenerator.ok(views.finalSummaryReport(answers,
         deductionAnswers,
         incomeAnswers,
         totalGain.get,

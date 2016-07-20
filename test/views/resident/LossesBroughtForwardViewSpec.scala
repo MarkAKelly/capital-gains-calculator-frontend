@@ -19,11 +19,11 @@ package views.resident
 import assets.MessageLookup
 import assets.MessageLookup.{lossesBroughtForward => messages}
 import controllers.helpers.FakeRequestHelper
+import forms.resident.LossesBroughtForwardForm._
 import models.resident.TaxYearModel
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.{resident => views}
-import forms.resident.LossesBroughtForwardForm._
 
 class LossesBroughtForwardViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 

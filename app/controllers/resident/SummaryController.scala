@@ -25,6 +25,7 @@ import controllers.predicates.FeatureLock
 import models.resident._
 import play.api.mvc.{Request, Result}
 import uk.gov.hmrc.play.http.HeaderCarrier
+import views.html.calculation.resident.properties.{summary => views}
 
 import scala.concurrent.Future
 
@@ -92,10 +93,10 @@ trait SummaryController extends FeatureLock {
                      taxYear: Option[TaxYearModel])(implicit hc: HeaderCarrier): Future[Result] = {
       if (chargeableGain.isDefined && chargeableGain.get.chargeableGain > 0 &&
         incomeAnswers.personalAllowanceModel.isDefined && incomeAnswers.currentIncomeModel.isDefined) Future.successful(
-        Ok(views.html.calculation.resident.summary.finalSummary(totalGainAnswers, chargeableGainAnswers, incomeAnswers,
+        Ok(views.finalSummary(totalGainAnswers, chargeableGainAnswers, incomeAnswers,
           totalGainAndTax.get, routes.IncomeController.personalAllowance().url, taxYear.get)))
-      else if (grossGain > 0) Future.successful(Ok(views.html.calculation.resident.deductionsSummary(totalGainAnswers, chargeableGainAnswers, chargeableGain.get, backUrl, taxYear.get)))
-      else Future.successful(Ok(views.html.calculation.resident.gainSummary(totalGainAnswers, grossGain, taxYear.get)))
+      else if (grossGain > 0) Future.successful(Ok(views.deductionsSummary(totalGainAnswers, chargeableGainAnswers, chargeableGain.get, backUrl, taxYear.get)))
+      else Future.successful(Ok(views.gainSummary(totalGainAnswers, grossGain, taxYear.get)))
     }
 
     for {
