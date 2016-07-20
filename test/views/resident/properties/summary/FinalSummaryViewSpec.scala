@@ -24,7 +24,6 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{summary => views}
 import assets.{MessageLookup => commonMessages}
-import common.Dates._
 import controllers.resident.routes
 import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, PreviousTaxableGainsModel}
 
@@ -423,6 +422,25 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
           doc.select("#personalAllowance-amount a").attr("href") shouldBe routes.IncomeController.personalAllowance().url
         }
       }
+
+      "display the save as PDF Button" which {
+
+        "should render only one button" in {
+          doc.select("a.save-pdf-button").size() shouldEqual 1
+        }
+
+        "with the class save-pdf-button" in {
+          doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
+        }
+
+        s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
+          doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/final-report"
+        }
+
+        s"have the text ${messages.saveAsPdf}" in {
+          doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
+        }
+      }
     }
   }
 
@@ -587,6 +605,25 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         doc.select("#personalAllowance-amount a").attr("href") shouldBe routes.IncomeController.personalAllowance().url
       }
     }
+
+    "display the save as PDF Button" which {
+
+      "should render only one button" in {
+        doc.select("a.save-pdf-button").size() shouldEqual 1
+      }
+
+      "with the class save-pdf-button" in {
+        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
+      }
+
+      s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/final-report"
+      }
+
+      s"have the text ${messages.saveAsPdf}" in {
+        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
+      }
+    }
   }
 
   "Final Summary view with a calculation that returns tax on both side of the rate boundary" should {
@@ -671,6 +708,25 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         doc.select("#secondBand").text should include("28%")
       }
     }
+
+    "display the save as PDF Button" which {
+
+      "should render only one button" in {
+        doc.select("a.save-pdf-button").size() shouldEqual 1
+      }
+
+      "with the class save-pdf-button" in {
+        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
+      }
+
+      s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/final-report"
+      }
+
+      s"have the text ${messages.saveAsPdf}" in {
+        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
+      }
+    }
   }
 
   "Summary when supplied with a date within the known tax years and tax owed" should {
@@ -741,6 +797,25 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         doc.select("span#opensInANewTab").text shouldEqual commonMessages.calcBaseExternalLink
       }
     }
+
+    "display the save as PDF Button" which {
+
+      "should render only one button" in {
+        doc.select("a.save-pdf-button").size() shouldEqual 1
+      }
+
+      "with the class save-pdf-button" in {
+        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
+      }
+
+      s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/final-report"
+      }
+
+      s"have the text ${messages.saveAsPdf}" in {
+        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
+      }
+    }
   }
 
 
@@ -784,6 +859,25 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     "does not display the what to do next content" in {
       doc.select("#whatToDoNext").isEmpty shouldBe true
+    }
+
+    "display the save as PDF Button" which {
+
+      "should render only one button" in {
+        doc.select("a.save-pdf-button").size() shouldEqual 1
+      }
+
+      "with the class save-pdf-button" in {
+        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
+      }
+
+      s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/final-report"
+      }
+
+      s"have the text ${messages.saveAsPdf}" in {
+        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
+      }
     }
   }
 
@@ -829,6 +923,25 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
       s"should have the question text '${commonMessages.currentIncome.currentYearTitle}'" in {
         doc.select("#currentIncome-question").text shouldBe commonMessages.currentIncome.currentYearTitle
+      }
+    }
+
+    "display the save as PDF Button" which {
+
+      "should render only one button" in {
+        doc.select("a.save-pdf-button").size() shouldEqual 1
+      }
+
+      "with the class save-pdf-button" in {
+        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
+      }
+
+      s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/final-report"
+      }
+
+      s"have the text ${messages.saveAsPdf}" in {
+        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
       }
     }
   }
