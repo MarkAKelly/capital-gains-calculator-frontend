@@ -276,4 +276,30 @@ trait CalculatorConnector {
       acquisitionCosts
     )
   }
+
+  def getShareDeductionAnswers(implicit hc: HeaderCarrier): Future[resident.shares.ShareDeductionGainAnswersModel] = {
+    val otherPropertiesModel = fetchAndGetFormData[resident.OtherPropertiesModel](ResidentShareKeys.otherProperties)
+    val allowableLossesModel = fetchAndGetFormData[resident.AllowableLossesModel](ResidentShareKeys.allowableLosses)
+    val allowableLossesValueModel = fetchAndGetFormData[resident.AllowableLossesValueModel](ResidentShareKeys.allowableLossesValue)
+    val broughtForwardModel = fetchAndGetFormData[resident.LossesBroughtForwardModel](ResidentShareKeys.lossesBroughtForward)
+    val broughtForwardValueModel = fetchAndGetFormData[resident.LossesBroughtForwardValueModel](ResidentShareKeys.lossesBroughtForwardValue)
+    val annualExemptAmountModel = fetchAndGetFormData[resident.AnnualExemptAmountModel](ResidentShareKeys.annualExemptAmount)
+
+    for {
+      otherProperties <- otherPropertiesModel
+      allowableLosses <- allowableLossesModel
+      allowableLossesValue <- allowableLossesValueModel
+      broughtForward <- broughtForwardModel
+      broughtForwardValue <- broughtForwardValueModel
+      annualExemptAmount <- annualExemptAmountModel
+    } yield {
+      resident.shares.ShareDeductionGainAnswersModel(
+        otherProperties,
+        allowableLosses,
+        allowableLossesValue,
+        broughtForward,
+        broughtForwardValue,
+        annualExemptAmount)
+    }
+  }
 }

@@ -23,7 +23,7 @@ import common.nonresident.CustomerTypeKeys
 import models.nonresident._
 import models.resident
 import models.resident.ChargeableGainAnswers
-import models.resident.shares.ShareGainAnswersModel
+import models.resident.shares.{ShareDeductionGainAnswersModel, ShareGainAnswersModel}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -155,6 +155,21 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
 
     when(mockSessionCache.fetchAndGetEntry[resident.DisposalValueModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.disposalValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(mock[resident.DisposalValueModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.OtherPropertiesModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.otherProperties))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.OtherPropertiesModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.AllowableLossesModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.allowableLosses))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.AllowableLossesModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.AllowableLossesValueModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.allowableLossesValue))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.AllowableLossesValueModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.LossesBroughtForwardModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.lossesBroughtForward))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.LossesBroughtForwardModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.LossesBroughtForwardValueModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.lossesBroughtForwardValue))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.LossesBroughtForwardValueModel])))
   }
 
   val sumModelFlat = SummaryModel(
@@ -338,11 +353,21 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
 
   "Calling getShareGainAnswers" should {
 
-    "return a valid ChargeableGainAnswersModel" in {
+    "return a valid ShareGainAnswersModel" in {
       val hc = mock[HeaderCarrier]
       mockResidentSharesFetchAndGetFormData()
       lazy val result = TargetCalculatorConnector.getShareGainAnswers(hc)
       await(result).isInstanceOf[ShareGainAnswersModel] shouldBe true
+    }
+  }
+
+  "Calling getShareDeductionAnswers" should {
+
+    "return a valid DeductionGainAnswersModel" in {
+      val hc = mock[HeaderCarrier]
+      mockResidentSharesFetchAndGetFormData()
+      lazy val result = TargetCalculatorConnector.getShareDeductionAnswers(hc)
+      await(result).isInstanceOf[ShareDeductionGainAnswersModel] shouldBe true
     }
   }
 }

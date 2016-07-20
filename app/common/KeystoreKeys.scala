@@ -68,6 +68,12 @@ object KeystoreKeys {
     val disposalCosts = "res:share:disposalCosts"
     val acquisitionValue = "res:share:acquisitionValue"
     val acquisitionCosts = "res:share:acquisitionCosts"
+    val otherProperties = "res:share:otherProperties"
+    val allowableLosses = "res:share:allowableLosses"
+    val allowableLossesValue = "res:share:allowableLossesValue"
+    val lossesBroughtForward = "res:share:lossesBroughtForward"
+    val lossesBroughtForwardValue = "res:share:lossesBroughtForwardValue"
+    val annualExemptAmount = "res:share:annualExemptAmount"
   }
 
 }
