@@ -18,7 +18,7 @@ package connectors
 
 import common.Dates._
 import common.KeystoreKeys
-import common.KeystoreKeys.ResidentKeys
+import common.KeystoreKeys.{ResidentKeys, ResidentShareKeys}
 import config.{CalculatorSessionCache, WSHttp}
 import constructors.nonresident.CalculateRequestConstructor
 import constructors.{resident => residentConstructors}
@@ -154,6 +154,7 @@ trait CalculatorConnector {
       calculationElectionModel, otherReliefsFlatModel, otherReliefsTAModel, otherReliefsRebasedModel, privateResidenceReliefModel)
   }
 
+  //Rtt property calculation methods
   def calculateRttPropertyGrossGain(input: resident.YourAnswersSummaryModel)(implicit hc: HeaderCarrier): Future[BigDecimal] = {
     http.GET[BigDecimal](s"$serviceUrl/capital-gains-calculator/calculate-total-gain" +
       residentConstructors.CalculateRequestConstructor.totalGainRequestString(input)
@@ -253,4 +254,26 @@ trait CalculatorConnector {
     }
   }
 
+  //Rtt share calculation methods
+  def getShareGainAnswers(implicit hc: HeaderCarrier): Future[resident.shares.ShareGainAnswersModel] = {
+    val acquisitionValue = fetchAndGetFormData[resident.AcquisitionValueModel](ResidentShareKeys.acquisitionValue).map(_.get.amount)
+    val disposalDate = fetchAndGetFormData[resident.DisposalDateModel](ResidentShareKeys.disposalDate).map(formData =>
+      constructDate(formData.get.day, formData.get.month, formData.get.year))
+    val disposalValue = fetchAndGetFormData[resident.DisposalValueModel](ResidentShareKeys.disposalValue).map(_.get.amount)
+    val acquisitionCosts = fetchAndGetFormData[resident.AcquisitionCostsModel](ResidentShareKeys.acquisitionCosts).map(_.get.amount)
+    val disposalCosts = fetchAndGetFormData[resident.DisposalCostsModel](ResidentShareKeys.disposalCosts).map(_.get.amount)
+    for {
+      acquisitionValue <- acquisitionValue
+      disposalDate <- disposalDate
+      disposalValue <- disposalValue
+      acquisitionCosts <- acquisitionCosts
+      disposalCosts <- disposalCosts
+    } yield resident.shares.ShareGainAnswersModel(
+      disposalDate,
+      disposalValue,
+      disposalCosts,
+      acquisitionValue,
+      acquisitionCosts
+    )
+  }
 }

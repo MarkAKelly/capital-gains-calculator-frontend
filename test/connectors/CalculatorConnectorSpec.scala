@@ -23,6 +23,7 @@ import common.nonresident.CustomerTypeKeys
 import models.nonresident._
 import models.resident
 import models.resident.ChargeableGainAnswers
+import models.resident.shares.ShareGainAnswersModel
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -309,12 +310,22 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     }
   }
 
-  "Calling getChargeableGainAnswers" should {
+  "Calling getPropertyDeductionAnswers" should {
 
     "return a valid ChargeableGainAnswersModel" in {
       val hc = mock[HeaderCarrier]
       lazy val result = TargetCalculatorConnector.getPropertyDeductionAnswers(hc)
       await(result).isInstanceOf[ChargeableGainAnswers] shouldBe true
+    }
+  }
+
+  "Calling getShareGainAnswers" should {
+
+    "return a valid ChargeableGainAnswersModel" in {
+      val hc = mock[HeaderCarrier]
+      mockResidentFetchAndGetFormData()
+      lazy val result = TargetCalculatorConnector.getShareGainAnswers(hc)
+      await(result).isInstanceOf[ShareGainAnswersModel] shouldBe true
     }
   }
 }
