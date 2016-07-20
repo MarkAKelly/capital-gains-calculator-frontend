@@ -154,15 +154,15 @@ trait CalculatorConnector {
       calculationElectionModel, otherReliefsFlatModel, otherReliefsTAModel, otherReliefsRebasedModel, privateResidenceReliefModel)
   }
 
-  def calculateRttGrossGain(input: resident.YourAnswersSummaryModel)(implicit hc: HeaderCarrier): Future[BigDecimal] = {
+  def calculateRttPropertyGrossGain(input: resident.YourAnswersSummaryModel)(implicit hc: HeaderCarrier): Future[BigDecimal] = {
     http.GET[BigDecimal](s"$serviceUrl/capital-gains-calculator/calculate-total-gain" +
       residentConstructors.CalculateRequestConstructor.totalGainRequestString(input)
     )
   }
 
-  def calculateRttChargeableGain(totalGainInput: resident.YourAnswersSummaryModel,
-                                 chargeableGainInput: resident.ChargeableGainAnswers,
-                                 maxAEA: BigDecimal)(implicit hc: HeaderCarrier): Future[Option[resident.ChargeableGainResultModel]] = {
+  def calculateRttPropertyChargeableGain(totalGainInput: resident.YourAnswersSummaryModel,
+                                         chargeableGainInput: resident.ChargeableGainAnswers,
+                                         maxAEA: BigDecimal)(implicit hc: HeaderCarrier): Future[Option[resident.ChargeableGainResultModel]] = {
     http.GET[Option[resident.ChargeableGainResultModel]](s"$serviceUrl/capital-gains-calculator/calculate-chargeable-gain" +
       residentConstructors.CalculateRequestConstructor.totalGainRequestString(totalGainInput) +
       residentConstructors.CalculateRequestConstructor.chargeableGainRequestString(chargeableGainInput, maxAEA)
@@ -170,10 +170,10 @@ trait CalculatorConnector {
     )
   }
 
-  def calculateRttTotalGainAndTax(totalGainInput: resident.YourAnswersSummaryModel,
-                                  chargeableGainInput: resident.ChargeableGainAnswers,
-                                  maxAEA: BigDecimal,
-                                  incomeAnswers: IncomeAnswersModel)(implicit hc: HeaderCarrier): Future[Option[resident.TotalGainAndTaxOwedModel]] = {
+  def calculateRttPropertyTotalGainAndTax(totalGainInput: resident.YourAnswersSummaryModel,
+                                          chargeableGainInput: resident.ChargeableGainAnswers,
+                                          maxAEA: BigDecimal,
+                                          incomeAnswers: IncomeAnswersModel)(implicit hc: HeaderCarrier): Future[Option[resident.TotalGainAndTaxOwedModel]] = {
     http.GET[Option[resident.TotalGainAndTaxOwedModel]](s"$serviceUrl/capital-gains-calculator/calculate-resident-capital-gains-tax" +
       residentConstructors.CalculateRequestConstructor.totalGainRequestString(totalGainInput) +
       residentConstructors.CalculateRequestConstructor.chargeableGainRequestString(chargeableGainInput, maxAEA) +
@@ -181,7 +181,7 @@ trait CalculatorConnector {
     )
   }
 
-  def getYourAnswers(implicit hc: HeaderCarrier): Future[resident.YourAnswersSummaryModel] = {
+  def getPropertyGainAnswers(implicit hc: HeaderCarrier): Future[resident.YourAnswersSummaryModel] = {
     val acquisitionValue = fetchAndGetFormData[resident.AcquisitionValueModel](ResidentKeys.acquisitionValue).map(_.get.amount)
     val disposalDate = fetchAndGetFormData[resident.DisposalDateModel](ResidentKeys.disposalDate).map(formData =>
       constructDate(formData.get.day, formData.get.month, formData.get.year))
@@ -207,7 +207,7 @@ trait CalculatorConnector {
     )
   }
 
-  def getChargeableGainAnswers (implicit hc: HeaderCarrier): Future[resident.ChargeableGainAnswers] = {
+  def getPropertyDeductionAnswers(implicit hc: HeaderCarrier): Future[resident.ChargeableGainAnswers] = {
     val reliefsModel = fetchAndGetFormData[resident.ReliefsModel](ResidentKeys.reliefs)
     val reliefsValueModel = fetchAndGetFormData[resident.ReliefsValueModel](ResidentKeys.reliefsValue)
     val otherPropertiesModel = fetchAndGetFormData[resident.OtherPropertiesModel](ResidentKeys.otherProperties)
@@ -239,7 +239,7 @@ trait CalculatorConnector {
 
   }
 
-  def getIncomeAnswers (implicit hc: HeaderCarrier): Future[resident.IncomeAnswersModel] = {
+  def getPropertyIncomeAnswers(implicit hc: HeaderCarrier): Future[resident.IncomeAnswersModel] = {
     val previousTaxableGainsModel = fetchAndGetFormData[resident.income.PreviousTaxableGainsModel](ResidentKeys.previousTaxableGains)
     val currentIncomeModel = fetchAndGetFormData[resident.income.CurrentIncomeModel](ResidentKeys.currentIncome)
     val personalAllowanceModel = fetchAndGetFormData[resident.income.PersonalAllowanceModel](ResidentKeys.personalAllowance)

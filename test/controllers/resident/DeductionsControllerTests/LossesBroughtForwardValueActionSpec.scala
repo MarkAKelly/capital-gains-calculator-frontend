@@ -135,13 +135,13 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
       when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.eq(KeystoreKeys.ResidentKeys.otherProperties))(Matchers.any(), Matchers.any()))
         .thenReturn(otherPropertiesModel)
 
-      when(mockCalcConnector.getYourAnswers(Matchers.any()))
+      when(mockCalcConnector.getPropertyGainAnswers(Matchers.any()))
         .thenReturn(Future.successful(gainAnswers))
 
-      when(mockCalcConnector.getChargeableGainAnswers(Matchers.any()))
+      when(mockCalcConnector.getPropertyDeductionAnswers(Matchers.any()))
         .thenReturn(Future.successful(chargeableGainAnswers))
 
-      when(mockCalcConnector.calculateRttChargeableGain(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+      when(mockCalcConnector.calculateRttPropertyChargeableGain(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
         .thenReturn(Future.successful(Some(chargeableGain)))
 
       when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalDate))(Matchers.any(), Matchers.any()))

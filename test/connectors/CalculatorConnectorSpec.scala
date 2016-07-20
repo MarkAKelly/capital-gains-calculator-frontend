@@ -313,7 +313,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
 
     "return a valid ChargeableGainAnswersModel" in {
       val hc = mock[HeaderCarrier]
-      lazy val result = TargetCalculatorConnector.getChargeableGainAnswers(hc)
+      lazy val result = TargetCalculatorConnector.getPropertyDeductionAnswers(hc)
       await(result).isInstanceOf[ChargeableGainAnswers] shouldBe true
     }
   }

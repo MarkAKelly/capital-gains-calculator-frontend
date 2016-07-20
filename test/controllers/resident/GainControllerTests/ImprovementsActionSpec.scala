@@ -43,10 +43,10 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
     when(mockCalcConnector.fetchAndGetFormData[ImprovementsModel](Matchers.eq(KeystoreKeys.ResidentKeys.improvements))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
-    when(mockCalcConnector.getYourAnswers(Matchers.any()))
+    when(mockCalcConnector.getPropertyGainAnswers(Matchers.any()))
       .thenReturn(Future.successful(gainAnswers))
 
-    when(mockCalcConnector.calculateRttGrossGain(Matchers.any())(Matchers.any()))
+    when(mockCalcConnector.calculateRttPropertyGrossGain(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(totalGain))
 
     when(mockCalcConnector.saveFormData[ImprovementsModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
