@@ -5,13 +5,13 @@
 
 @(disposalCostsForm: Form[DisposalCostsModel])(implicit request: Request[_])
 
-@resident_main_template(Messages("calc.resident.disposalCosts.title"), backLink = Some(controllers.resident.routes.GainController.disposalValue().toString)) {
+@resident_main_template(Messages("calc.resident.disposalCosts.title"), backLink = Some(controllers.resident.properties.routes.GainController.disposalValue().toString)) {
 
     @errorSummary(disposalCostsForm, "disposal-costs")
 
     <h1 class="heading-large">@Messages("calc.resident.disposalCosts.pageHeading")</h1>
 
-    @form(action = controllers.resident.routes.GainController.submitDisposalCosts){
+    @form(action = controllers.resident.properties.routes.GainController.submitDisposalCosts){
 
         @formInputMoney(disposalCostsForm, "amount", Messages("calc.resident.disposalCosts.pageHeading"), Some(Messages("calc.resident.disposalCosts.helpText")), hideLabel = true)
 

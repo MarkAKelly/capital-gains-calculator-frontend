@@ -16,7 +16,9 @@
 
 package views.resident.shares.gain
 
-import assets.MessageLookup.{disposalDate => messages, _}
+import assets.MessageLookup.{sharesDisposalDate => messages}
+import assets.MessageLookup.{disposalDate => commonMessages}
+import assets.MessageLookup._
 import controllers.helpers.FakeRequestHelper
 import forms.resident.DisposalDateForm._
 import models.resident.DisposalDateModel
@@ -35,28 +37,28 @@ class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       doc.charset().toString shouldBe "UTF-8"
     }
 
-    "have the title 'When did you sign the contract that made someone else the owner?'" in {
+    "have the title 'When did you sell or give away the shares?'" in {
       doc.title() shouldBe messages.title
     }
 
-    "have the heading question 'When did you sign the contract that made someone else the owner?'" in {
-      doc.body.getElementsByTag("h1").text should include(messages.question)
+    "have the heading question 'When did you sell or give away the shares?'" in {
+      doc.body.getElementsByTag("h1").text should include(messages.title)
     }
 
     "have the helptext 'For example, 4 9 2016'" in {
-      doc.body.getElementsByClass("form-hint").text should include(messages.helpText)
+      doc.body.getElementsByClass("form-hint").text should include(commonMessages.helpText)
     }
 
     "have an input box for day" in {
-      doc.body.getElementById("disposalDateDay").parent.text shouldBe messages.day
+      doc.body.getElementById("disposalDateDay").parent.text shouldBe commonMessages.day
     }
 
     "have an input box for month" in {
-      doc.body.getElementById("disposalDateMonth").parent.text shouldBe messages.month
+      doc.body.getElementById("disposalDateMonth").parent.text shouldBe commonMessages.month
     }
 
     "have an input box for year" in {
-      doc.body.getElementById("disposalDateYear").parent.text shouldBe messages.year
+      doc.body.getElementById("disposalDateYear").parent.text shouldBe commonMessages.year
     }
 
     "have a button with the text 'Continue'" in {
@@ -94,11 +96,11 @@ class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     lazy val doc = Jsoup.parse(view.body)
 
     "have the error summary message 'Enter a real date'" in {
-      doc.body.getElementById("disposalDateDay-error-summary").text shouldBe messages.realDateError
+      doc.body.getElementById("disposalDateDay-error-summary").text shouldBe commonMessages.realDateError
     }
 
     "have the input error message 'Enter a real date'" in {
-      doc.body.getElementsByClass("error-notification").text shouldBe messages.realDateError
+      doc.body.getElementsByClass("error-notification").text shouldBe commonMessages.realDateError
     }
   }
 
@@ -112,12 +114,12 @@ class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     lazy val view = views.disposalDate(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
-    s"have the error summary message '${messages.invalidDayError}'" in {
-      doc.body.getElementById("disposalDateDay-error-summary").text should include(messages.invalidDayError)
+    s"have the error summary message '${commonMessages.invalidDayError}'" in {
+      doc.body.getElementById("disposalDateDay-error-summary").text should include(commonMessages.invalidDayError)
     }
 
     "have the input error message 'Enter a real date'" in {
-      doc.body.getElementsByClass("error-notification").text shouldBe messages.realDateError
+      doc.body.getElementsByClass("error-notification").text shouldBe commonMessages.realDateError
     }
   }
 
@@ -131,20 +133,20 @@ class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     lazy val view = views.disposalDate(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
-    s"have the error summary message '${messages.invalidDayError}'" in {
-      doc.body.getElementById("disposalDateDay-error-summary").text should include(messages.invalidDayError)
+    s"have the error summary message '${commonMessages.invalidDayError}'" in {
+      doc.body.getElementById("disposalDateDay-error-summary").text should include(commonMessages.invalidDayError)
     }
 
-    s"have the error summary message '${messages.invalidMonthError}'" in {
-      doc.body.getElementById("disposalDateMonth-error-summary").text should include(messages.invalidMonthError)
+    s"have the error summary message '${commonMessages.invalidMonthError}'" in {
+      doc.body.getElementById("disposalDateMonth-error-summary").text should include(commonMessages.invalidMonthError)
     }
 
-    s"have the error summary message '${messages.invalidYearError}'" in {
-      doc.body.getElementById("disposalDateYear-error-summary").text should include(messages.invalidYearError)
+    s"have the error summary message '${commonMessages.invalidYearError}'" in {
+      doc.body.getElementById("disposalDateYear-error-summary").text should include(commonMessages.invalidYearError)
     }
 
     "have the input error message 'Enter a real date'" in {
-      doc.body.getElementsByClass("error-notification").text shouldBe messages.realDateError
+      doc.body.getElementsByClass("error-notification").text shouldBe commonMessages.realDateError
     }
   }
 }

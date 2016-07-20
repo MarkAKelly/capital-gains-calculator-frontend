@@ -94,8 +94,8 @@ class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with Fak
 
         lazy val form = doc.getElementsByTag("form")
 
-        s"has the action '${controllers.resident.routes.DeductionsController.submitOtherProperties().toString}'" in {
-          form.attr("action") shouldBe controllers.resident.routes.DeductionsController.submitOtherProperties().toString()
+        s"has the action '${controllers.resident.properties.routes.DeductionsController.submitOtherProperties().toString}'" in {
+          form.attr("action") shouldBe controllers.resident.properties.routes.DeductionsController.submitOtherProperties().toString()
         }
 
         "has the method of POST" in {
