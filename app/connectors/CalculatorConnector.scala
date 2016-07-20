@@ -21,6 +21,7 @@ import common.KeystoreKeys
 import common.KeystoreKeys.{ResidentKeys, ResidentShareKeys}
 import config.{CalculatorSessionCache, WSHttp}
 import constructors.nonresident.CalculateRequestConstructor
+import constructors.resident.properties
 import constructors.{resident => residentConstructors}
 import models.nonresident._
 import models.resident
@@ -157,7 +158,7 @@ trait CalculatorConnector {
   //Rtt property calculation methods
   def calculateRttPropertyGrossGain(input: resident.YourAnswersSummaryModel)(implicit hc: HeaderCarrier): Future[BigDecimal] = {
     http.GET[BigDecimal](s"$serviceUrl/capital-gains-calculator/calculate-total-gain" +
-      residentConstructors.CalculateRequestConstructor.totalGainRequestString(input)
+      properties.CalculateRequestConstructor.totalGainRequestString(input)
     )
   }
 
@@ -165,8 +166,8 @@ trait CalculatorConnector {
                                          chargeableGainInput: resident.ChargeableGainAnswers,
                                          maxAEA: BigDecimal)(implicit hc: HeaderCarrier): Future[Option[resident.ChargeableGainResultModel]] = {
     http.GET[Option[resident.ChargeableGainResultModel]](s"$serviceUrl/capital-gains-calculator/calculate-chargeable-gain" +
-      residentConstructors.CalculateRequestConstructor.totalGainRequestString(totalGainInput) +
-      residentConstructors.CalculateRequestConstructor.chargeableGainRequestString(chargeableGainInput, maxAEA)
+      properties.CalculateRequestConstructor.totalGainRequestString(totalGainInput) +
+      properties.CalculateRequestConstructor.chargeableGainRequestString(chargeableGainInput, maxAEA)
 
     )
   }
@@ -176,9 +177,9 @@ trait CalculatorConnector {
                                           maxAEA: BigDecimal,
                                           incomeAnswers: IncomeAnswersModel)(implicit hc: HeaderCarrier): Future[Option[resident.TotalGainAndTaxOwedModel]] = {
     http.GET[Option[resident.TotalGainAndTaxOwedModel]](s"$serviceUrl/capital-gains-calculator/calculate-resident-capital-gains-tax" +
-      residentConstructors.CalculateRequestConstructor.totalGainRequestString(totalGainInput) +
-      residentConstructors.CalculateRequestConstructor.chargeableGainRequestString(chargeableGainInput, maxAEA) +
-      residentConstructors.CalculateRequestConstructor.incomeAnswersRequestString(chargeableGainInput, incomeAnswers)
+      properties.CalculateRequestConstructor.totalGainRequestString(totalGainInput) +
+      properties.CalculateRequestConstructor.chargeableGainRequestString(chargeableGainInput, maxAEA) +
+      properties.CalculateRequestConstructor.incomeAnswersRequestString(chargeableGainInput, incomeAnswers)
     )
   }
 

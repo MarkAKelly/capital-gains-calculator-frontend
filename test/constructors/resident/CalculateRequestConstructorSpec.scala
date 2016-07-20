@@ -17,6 +17,7 @@
 package constructors.resident
 
 import common.Dates
+import constructors.resident.properties.CalculateRequestConstructor
 import models.resident._
 import uk.gov.hmrc.play.test.UnitSpec
 
