@@ -25,7 +25,8 @@ import play.api.mvc.{Action, Result}
 import uk.gov.hmrc.play.http.SessionKeys
 
 import scala.concurrent.Future
-import views.html.calculation.{resident => views}
+import views.html.calculation.{resident => commonViews}
+import views.html.calculation.resident.properties.{gain => views}
 import forms.resident.DisposalValueForm._
 import forms.resident.DisposalDateForm._
 import forms.resident.DisposalCostsForm._
@@ -80,7 +81,7 @@ trait GainController extends FeatureLock {
     for {
       disposalDate <- calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.ResidentKeys.disposalDate)
       taxYear <- calcConnector.getTaxYear(s"${disposalDate.get.year}-${disposalDate.get.month}-${disposalDate.get.day}")
-    } yield {Ok(views.gain.outsideTaxYear(taxYear.get))}
+    } yield {Ok(commonViews.outsideTaxYear(taxYear.get))}
   }
 
   //################ Disposal Value Actions ######################

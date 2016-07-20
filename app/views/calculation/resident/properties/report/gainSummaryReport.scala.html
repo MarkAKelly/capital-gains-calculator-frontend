@@ -1,0 +1,65 @@
+@import views.html.helpers.resident._
+@import models.SummaryDataItemModel
+@import models.resident._
+@import common.Dates._
+@import constructors.resident.SummaryConstructor._
+@import controllers.resident.properties.routes.{GainController => routes}
+
+@(answers: YourAnswersSummaryModel, gain: BigDecimal, taxYear: TaxYearModel)(implicit request: Request[_])
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="/calculate-your-capital-gains/assets/stylesheets/cgt.css">
+    <title>@Messages("calc.resident.summary.title")</title>
+</head>
+
+
+<div class="pdf">
+    <div class="header-container">
+        <h1 class="heading-xlarge">
+            <span class="pre-heading">@Messages("calc.resident.summary.pageHeading")</span>
+            &pound;0.00
+        </h1>
+        <div class="logo">
+            <span class="organisation-logo organisation-logo-medium">HM Revenue &amp; Customs</span>
+        </div>
+    </div>
+
+    @{if (!taxYear.isValidYear) {
+    <div class="notice-wrapper">
+        <div class="notice">
+            <strong class="bold-small">
+                {Messages("calc.resident.summary.dateWarning", taxYear.calculationTaxYear)}
+            </strong>
+        </div>
+    </div>
+    }
+    }
+
+    <!-- Calculation Details Section -->
+    <section id="calcDetails">
+        <!-- Header -->
+        @summarySectionHeaderHelper(Messages("calc.resident.summary.calcDetailsHeadingDate", taxYear.taxYearSupplied))
+
+        <!-- Data Rows -->
+        @summaryNumericRowHelper("gain",gainMessage(gain),gain)
+    </section>
+
+    <!-- Your Answers Section -->
+    <section id="yourAnswers">
+        <!-- Header -->
+        @summarySectionHeaderHelper(Messages("calc.resident.summary.yourAnswersHeading"))
+
+        <!-- Data Rows-->
+        @summaryDateRowHelper("disposalDate",Messages("calc.resident.disposalDate.question"),answers.disposalDate,None)
+        @summaryNumericRowHelper("disposalValue",Messages("calc.resident.disposal.value.title"),answers.disposalValue,None)
+        @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.disposalCosts.title"),answers.disposalCosts,None)
+        @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),answers.acquisitionValue,None)
+        @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),answers.acquisitionCosts,None)
+        @summaryNumericRowHelper("improvements",Messages("calc.resident.improvements.title"),answers.improvements,None)
+    </section>
+</div>

@@ -16,20 +16,21 @@
 
 package views.resident
 
+import assets.MessageLookup.{allowableLossesValue => messages}
 import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
+import forms.resident.AllowableLossesValueForm._
 import models.resident.TaxYearModel
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.{allowableLossesValue => messages}
-import forms.resident.AllowableLossesValueForm._
+import views.html.calculation.{resident => views}
 
 class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Allowable Losses Value view with no form errors" should {
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
-    lazy val view = views.html.calculation.resident.allowableLossesValue(allowableLossesValueForm, taxYearModel)(fakeRequest)
+    lazy val view = views.allowableLossesValue(allowableLossesValueForm, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -143,7 +144,7 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
 
   "Allowable Losses Value View with form with errors" should {
     val form = allowableLossesValueForm.bind(Map("amount" -> ""))
-    lazy val view = views.html.calculation.resident.allowableLossesValue(form, TaxYearModel("2015/16", true, "2015/16"))(fakeRequestWithSession)
+    lazy val view = views.allowableLossesValue(form, TaxYearModel("2015/16", true, "2015/16"))(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "output an error summary" in {
