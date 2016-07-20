@@ -228,3 +228,7 @@
 .pdf .notice strong {
     padding-left: 0
 }
+
+.save-pdf-button {
+    margin-top: 3.0em;
+}

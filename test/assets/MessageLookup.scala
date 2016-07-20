@@ -132,6 +132,7 @@ object MessageLookup {
     val whatToDoNextTextTwo = "You need to tell HMRC about the property."
     val whatToDoNextNoLossText = "As you have no tax to pay, you don't need to tell HMRC about the property."
     val aeaRemaining = "Capital gains tax allowance left"
+    val saveAsPdf = "Save as PDF"
   }
 
   //Reliefs messages
