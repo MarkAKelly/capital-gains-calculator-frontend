@@ -1,7 +1,8 @@
 # Add all the application routes to the app.routes file
 ->         /calculate-your-capital-gains/                        app.Routes
 ->         /calculate-your-capital-gains/non-resident/           nr.Routes
-->         /calculate-your-capital-gains/resident/               res.Routes
+->         /calculate-your-capital-gains/resident/properties     properties.Routes
+->         /calculate-your-capital-gains/resident/shares         shares.Routes
 ->         /                                                     health.Routes
 ->     	   /template                                             template.Routes
 

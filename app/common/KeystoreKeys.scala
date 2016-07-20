@@ -62,4 +62,8 @@ object KeystoreKeys {
     val personalAllowance = "res:personalAllowance"
   }
 
+  object ResidentSharesKeys {
+    val disposalDate = "res:shares:disposalDate"
+  }
+
 }
