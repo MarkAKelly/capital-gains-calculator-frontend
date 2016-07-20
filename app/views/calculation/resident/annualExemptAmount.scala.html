@@ -16,13 +16,13 @@
 </a>
 }
 
-@resident_main_template(title = Messages("calc.resident.annualExemptAmount.title"), backLink = Some(controllers.resident.routes.DeductionsController.lossesBroughtForward().toString), sidebarLinks = Some(sidebar)) {
+@resident_main_template(title = Messages("calc.resident.annualExemptAmount.title"), backLink = Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForward().toString), sidebarLinks = Some(sidebar)) {
 
     @errorSummary(annualExemptAmountForm, "amount")
 
     <h1 class="heading-large">@Messages("calc.resident.annualExemptAmount.title")</h1>
 
-    @form(action = controllers.resident.routes.DeductionsController.submitAnnualExemptAmount) {
+    @form(action = controllers.resident.properties.routes.DeductionsController.submitAnnualExemptAmount) {
 
     @formInputMoney(annualExemptAmountForm, "amount", "", Some(Messages("calc.resident.annualExemptAmount.helpText.one") + "<br>" + Messages("calc.resident.annualExemptAmount.helpText.two")))
 

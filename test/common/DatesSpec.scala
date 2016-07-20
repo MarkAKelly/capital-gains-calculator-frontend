@@ -52,18 +52,18 @@ class DatesSpec extends UnitSpec {
 
   "Calling getDay" should {
     "return an integer value of the day" in {
-      Dates.getDay(new Date(2014, 12, 12)) shouldEqual 12
+      Dates.getDay(sf.parse("12/12/2014")) shouldEqual 12
     }
   }
 
   "Calling getMonth" should {
     "return an integer value of the month" in {
-      Dates.getMonth(new Date(2014, 11, 12)) shouldEqual 12
+      Dates.getMonth(sf.parse("11/12/2014")) shouldEqual 12
     }
   }
   "Calling getYear" should {
     "return an integer value of the year" in {
-      Dates.getYear(new Date(2014, 11, 12))-1900 shouldEqual 2014
+      Dates.getYear(sf.parse("12/12/2014")) shouldEqual 2014
     }
   }
 

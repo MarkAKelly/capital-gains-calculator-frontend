@@ -5,9 +5,9 @@
 @import common.Dates._
 @import constructors.resident.SummaryConstructor._
 @import constructors.resident.CalculateRequestConstructor._
-@import controllers.resident.routes.{GainController => gainRoutes}
-@import controllers.resident.routes.{DeductionsController => deductionRoutes}
-@import controllers.resident.routes.{IncomeController => incomeRoutes}
+@import controllers.resident.properties.routes.{GainController => gainRoutes}
+@import controllers.resident.properties.routes.{DeductionsController => deductionRoutes}
+@import controllers.resident.properties.routes.{IncomeController => incomeRoutes}
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 @(gainAnswers: YourAnswersSummaryModel, deductionAnswers: ChargeableGainAnswers, incomeAnswers: IncomeAnswersModel, result: TotalGainAndTaxOwedModel, backUrl: String, taxYear: TaxYearModel)(implicit request: Request[_])
@@ -111,5 +111,5 @@ articleLayout = false
             </section>
 
     }
-    <a type="submit" class="button save-pdf-button" href="@controllers.resident.routes.ReportController.finalSummaryReport.toString">@Messages("calc.resident.summary.saveAsPdf")</a>
+    <a type="submit" class="button save-pdf-button" href="@controllers.resident.properties.routes.ReportController.finalSummaryReport.toString">@Messages("calc.resident.summary.saveAsPdf")</a>
 }
