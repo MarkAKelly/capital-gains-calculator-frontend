@@ -19,10 +19,8 @@ package controllers.resident.ReportControllerTests
 import common.Dates
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.{ReportController, SummaryController}
-import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel}
-import models.resident.{TaxYearModel, _}
-import org.jsoup.Jsoup
+import controllers.resident.ReportController
+import models.resident._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -66,7 +64,7 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
     }
   }
 
-  "Calling .finalSummaryReport from the ReportController" when {
+  "Calling .deductionReport from the ReportController" when {
 
     "a 0 gain is returned" should {
       lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
