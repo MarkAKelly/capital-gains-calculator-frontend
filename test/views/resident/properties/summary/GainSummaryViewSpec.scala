@@ -19,6 +19,7 @@ package views.resident.properties.summary
 import assets.MessageLookup.{summary => messages}
 import assets.{MessageLookup => commonMessages}
 import common.Dates._
+import com.sun.xml.internal.bind.v2.TODO
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.routes
 import models.resident.{TaxYearModel, YourAnswersSummaryModel}
@@ -240,6 +241,25 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       "does not display the section for what to do next" in {
         doc.select("#whatToDoNext").text shouldEqual ""
       }
+
+      "display the save as PDF Button" which {
+
+        "should render only one button" in {
+          doc.select("a.save-pdf-button").size() shouldEqual 1
+        }
+
+        "with the class save-pdf-button" in {
+          doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
+        }
+
+        s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
+          doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/gain-report"
+        }
+
+        s"have the text ${messages.saveAsPdf}" in {
+          doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
+        }
+      }
     }
   }
 
@@ -288,6 +308,21 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
         doc.select("span#opensInANewTab").text shouldEqual commonMessages.calcBaseExternalLink
       }
     }
+
+    "display the save as PDF Button" which {
+
+      "should render only one button" in {
+        doc.select("a.save-pdf-button").size() shouldEqual 1
+      }
+
+      "with the class save-pdf-button" in {
+        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
+      }
+
+      s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/gain-report"
+      }
+    }
   }
 
   "Summary when supplied with a date within the known tax years and no gain or loss" should {
@@ -315,6 +350,25 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
 
     s"display the text ${messages.whatToDoNextText}" in {
       doc.select("div#whatToDoNextNoLossText").text shouldEqual messages.whatToDoNextNoLossText
+    }
+
+    "display the save as PDF Button" which {
+
+      "should render only one button" in {
+        doc.select("a.save-pdf-button").size() shouldEqual 1
+      }
+
+      "with the class save-pdf-button" in {
+        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
+      }
+
+      s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/gain-report"
+      }
+
+      s"have the text ${messages.saveAsPdf}" in {
+        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
+      }
     }
   }
 
@@ -374,6 +428,25 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
 
       s"should have the title '${messages.calcDetailsHeadingDate("2013/14")}'" in {
         doc.select("section#calcDetails h2").text shouldBe messages.calcDetailsHeadingDate("2013/14")
+      }
+    }
+
+    "display the save as PDF Button" which {
+
+      "should render only one button" in {
+        doc.select("a.save-pdf-button").size() shouldEqual 1
+      }
+
+      "with the class save-pdf-button" in {
+        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
+      }
+
+      s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/gain-report"
+      }
+
+      s"have the text ${messages.saveAsPdf}" in {
+        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
       }
     }
   }
