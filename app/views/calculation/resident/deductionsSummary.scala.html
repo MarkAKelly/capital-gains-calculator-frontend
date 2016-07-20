@@ -4,8 +4,8 @@
 @import common.Dates._
 @import constructors.resident.SummaryConstructor._
 @import constructors.resident.CalculateRequestConstructor._
-@import controllers.resident.routes.{GainController => gainRoutes}
-@import controllers.resident.routes.{DeductionsController => deductionRoutes}
+@import controllers.resident.properties.routes.{GainController => gainRoutes}
+@import controllers.resident.properties.routes.{DeductionsController => deductionRoutes}
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 @(gainAnswers: YourAnswersSummaryModel, deductionAnswers: ChargeableGainAnswers, result: ChargeableGainResultModel, backUrl: String, taxYear: TaxYearModel)(implicit request: Request[_])

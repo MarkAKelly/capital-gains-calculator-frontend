@@ -21,7 +21,7 @@ import assets.{MessageLookup => commonMessages}
 import common.Dates
 import common.Dates._
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.routes
+import controllers.resident.properties.routes
 import models.resident._
 import org.jsoup.Jsoup
 

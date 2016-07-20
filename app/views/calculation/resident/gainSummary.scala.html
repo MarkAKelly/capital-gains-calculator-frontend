@@ -3,13 +3,13 @@
 @import models.resident._
 @import common.Dates._
 @import constructors.resident.SummaryConstructor._
-@import controllers.resident.routes.{GainController => routes}
+@import controllers.resident.properties.routes.{GainController => routes}
 
 @(answers: YourAnswersSummaryModel, gain: BigDecimal, taxYear: TaxYearModel)(implicit request: Request[_])
 
 @resident_main_template(
     title = Messages("calc.resident.summary.title"),
-    backLink = Some(controllers.resident.routes.GainController.improvements().toString),
+    backLink = Some(controllers.resident.properties.routes.GainController.improvements().toString),
     articleLayout = false
 ) {
 

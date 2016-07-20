@@ -6,14 +6,14 @@
 
 @resident_main_template(
     title = Messages("calc.resident.allowableLossesValue.title", taxYear.taxYearSupplied),
-    backLink = Some(controllers.resident.routes.DeductionsController.allowableLosses().toString)
+    backLink = Some(controllers.resident.properties.routes.DeductionsController.allowableLosses().toString)
 ){
 
     @errorSummary(allowableLossesValueForm, "amount")
 
     <h1 class="heading-large">@Messages("calc.resident.allowableLossesValue.question", taxYear.taxYearSupplied)</h1>
 
-    @form(action = controllers.resident.routes.DeductionsController.submitAllowableLossesValue){
+    @form(action = controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue){
 
         @formInputMoney(allowableLossesValueForm, "amount", Messages("calc.resident.allowableLossesValue.question", taxYear.taxYearSupplied), hideLabel = true)
 

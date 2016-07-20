@@ -17,7 +17,7 @@
         } else {@Messages("calc.resident.currentIncome.question", taxYear.taxYearSupplied)}
     </h1>
 
-    @form(action = controllers.resident.routes.IncomeController.submitCurrentIncome){
+    @form(action = controllers.resident.properties.routes.IncomeController.submitCurrentIncome){
 
         @formInputMoney(currentIncomeForm, "amount",
                         if(taxYear.taxYearSupplied == "2016/17") {Messages("calc.resident.currentIncome.questionCurrentYear")

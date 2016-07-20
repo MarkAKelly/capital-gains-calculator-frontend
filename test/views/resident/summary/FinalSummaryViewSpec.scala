@@ -25,7 +25,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.{summary => views}
 import assets.{MessageLookup => commonMessages}
 import common.Dates._
-import controllers.resident.routes
+import controllers.resident.properties.routes
 import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, PreviousTaxableGainsModel}
 
 class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {

@@ -5,13 +5,13 @@
 
 @(reliefsForm: Form[ReliefsModel], totalGain: BigDecimal)(implicit request: Request[_])
 
-@resident_main_template(title = Messages("calc.resident.reliefs.title", MoneyPounds(totalGain, 0).quantity), backLink = Some(controllers.resident.routes.GainController.improvements.toString())) {
+@resident_main_template(title = Messages("calc.resident.reliefs.title", MoneyPounds(totalGain, 0).quantity), backLink = Some(controllers.resident.properties.routes.GainController.improvements.toString())) {
 
     @errorSummary(reliefsForm, "reliefs")
 
     <h1>@Messages("calc.resident.reliefs.question", MoneyPounds(totalGain, 0).quantity)</h1>
 
-    @form(action = controllers.resident.routes.DeductionsController.submitReliefs) {
+    @form(action = controllers.resident.properties.routes.DeductionsController.submitReliefs) {
 
         <div class="form-group">
             @formInputRadioGroup(

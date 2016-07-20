@@ -1,83 +1,83 @@
 #Routes file for the resident routes.
 
 #Disposal Date Routes
-GET     /disposal-date                    controllers.resident.GainController.disposalDate
-POST    /disposal-date                    controllers.resident.GainController.submitDisposalDate
+GET     /disposal-date                    controllers.resident.properties.GainController.disposalDate
+POST    /disposal-date                    controllers.resident.properties.GainController.submitDisposalDate
 
 #Outside Tax Years Routes
-GET     /outside-tax-years                controllers.resident.GainController.outsideTaxYears
+GET     /outside-tax-years                controllers.resident.properties.GainController.outsideTaxYears
 
 #Disposal Value or Market Value Routes
-GET     /disposal-value                   controllers.resident.GainController.disposalValue
-POST    /disposal-value                   controllers.resident.GainController.submitDisposalValue
+GET     /disposal-value                   controllers.resident.properties.GainController.disposalValue
+POST    /disposal-value                   controllers.resident.properties.GainController.submitDisposalValue
 
 #Disposal Costs Routes
-GET     /disposal-costs                   controllers.resident.GainController.disposalCosts
-POST    /disposal-costs                   controllers.resident.GainController.submitDisposalCosts
+GET     /disposal-costs                   controllers.resident.properties.GainController.disposalCosts
+POST    /disposal-costs                   controllers.resident.properties.GainController.submitDisposalCosts
 
 #Acquisition Value or Market Value Routes
-GET     /acquisition-value                controllers.resident.GainController.acquisitionValue
-POST    /acquisition-value                controllers.resident.GainController.submitAcquisitionValue
+GET     /acquisition-value                controllers.resident.properties.GainController.acquisitionValue
+POST    /acquisition-value                controllers.resident.properties.GainController.submitAcquisitionValue
 
 #Acquisition Costs Routes
-GET     /acquisition-costs                controllers.resident.GainController.acquisitionCosts
-POST    /acquisition-costs                controllers.resident.GainController.submitAcquisitionCosts
+GET     /acquisition-costs                controllers.resident.properties.GainController.acquisitionCosts
+POST    /acquisition-costs                controllers.resident.properties.GainController.submitAcquisitionCosts
 
 #Improvements Routes
-GET     /improvements                     controllers.resident.GainController.improvements
-POST    /improvements                     controllers.resident.GainController.submitImprovements
+GET     /improvements                     controllers.resident.properties.GainController.improvements
+POST    /improvements                     controllers.resident.properties.GainController.submitImprovements
 
 #Summary Routes
-GET     /summary                          controllers.resident.SummaryController.summary
+GET     /summary                          controllers.resident.properties.SummaryController.summary
 
 #Reliefs Routes
-GET     /reliefs                          controllers.resident.DeductionsController.reliefs
-POST    /reliefs                          controllers.resident.DeductionsController.submitReliefs
+GET     /reliefs                          controllers.resident.properties.DeductionsController.reliefs
+POST    /reliefs                          controllers.resident.properties.DeductionsController.submitReliefs
 
 #Reliefs Value Routes
-GET     /reliefs-value                    controllers.resident.DeductionsController.reliefsValue
-POST    /reliefs-value                    controllers.resident.DeductionsController.submitReliefsValue
+GET     /reliefs-value                    controllers.resident.properties.DeductionsController.reliefsValue
+POST    /reliefs-value                    controllers.resident.properties.DeductionsController.submitReliefsValue
 
 #Other Properties Routes
-GET     /other-properties                 controllers.resident.DeductionsController.otherProperties
-POST    /other-properties                 controllers.resident.DeductionsController.submitOtherProperties
+GET     /other-properties                 controllers.resident.properties.DeductionsController.otherProperties
+POST    /other-properties                 controllers.resident.properties.DeductionsController.submitOtherProperties
 
 #Allowable Losses Routes
-GET     /allowable-losses                 controllers.resident.DeductionsController.allowableLosses
-POST    /allowable-losses                 controllers.resident.DeductionsController.submitAllowableLosses
+GET     /allowable-losses                 controllers.resident.properties.DeductionsController.allowableLosses
+POST    /allowable-losses                 controllers.resident.properties.DeductionsController.submitAllowableLosses
 
 #Allowable Losses Value Routes
-GET     /allowable-losses-value           controllers.resident.DeductionsController.allowableLossesValue
-POST    /allowable-losses-value           controllers.resident.DeductionsController.submitAllowableLossesValue
+GET     /allowable-losses-value           controllers.resident.properties.DeductionsController.allowableLossesValue
+POST    /allowable-losses-value           controllers.resident.properties.DeductionsController.submitAllowableLossesValue
 
 #Losses Brought Forward Routes
-GET     /losses-brought-forward           controllers.resident.DeductionsController.lossesBroughtForward
-POST    /losses-brought-forward           controllers.resident.DeductionsController.submitLossesBroughtForward
+GET     /losses-brought-forward           controllers.resident.properties.DeductionsController.lossesBroughtForward
+POST    /losses-brought-forward           controllers.resident.properties.DeductionsController.submitLossesBroughtForward
 
 #Annual Exempt Amount Routes
-GET     /annual-exempt-amount             controllers.resident.DeductionsController.annualExemptAmount
-POST    /annual-exempt-amount             controllers.resident.DeductionsController.submitAnnualExemptAmount
+GET     /annual-exempt-amount             controllers.resident.properties.DeductionsController.annualExemptAmount
+POST    /annual-exempt-amount             controllers.resident.properties.DeductionsController.submitAnnualExemptAmount
 
 #Losses Brought Forward Value Routes
-GET     /losses-brought-forward-value     controllers.resident.DeductionsController.lossesBroughtForwardValue
-POST    /losses-brought-forward-value     controllers.resident.DeductionsController.submitLossesBroughtForwardValue
+GET     /losses-brought-forward-value     controllers.resident.properties.DeductionsController.lossesBroughtForwardValue
+POST    /losses-brought-forward-value     controllers.resident.properties.DeductionsController.submitLossesBroughtForwardValue
 
 #Previous Taxable Gains Routes
-GET     /previous-taxable-gains           controllers.resident.IncomeController.previousTaxableGains
-POST    /previous-taxable-gains           controllers.resident.IncomeController.submitPreviousTaxableGains
+GET     /previous-taxable-gains           controllers.resident.properties.IncomeController.previousTaxableGains
+POST    /previous-taxable-gains           controllers.resident.properties.IncomeController.submitPreviousTaxableGains
 
 #Current Income Routes
-GET     /current-income                   controllers.resident.IncomeController.currentIncome
-POST     /current-income                   controllers.resident.IncomeController.submitCurrentIncome
+GET     /current-income                   controllers.resident.properties.IncomeController.currentIncome
+POST    /current-income                  controllers.resident.properties.IncomeController.submitCurrentIncome
 
 #Personal Allowance Routes
-GET     /personal-allowance               controllers.resident.IncomeController.personalAllowance
-POST    /personal-allowance               controllers.resident.IncomeController.submitPersonalAllowance
+GET     /personal-allowance               controllers.resident.properties.IncomeController.personalAllowance
+POST    /personal-allowance               controllers.resident.properties.IncomeController.submitPersonalAllowance
 
 #Gain Summary PDF Routes
-GET     /gain-report                      controllers.resident.ReportController.gainSummaryReport
+GET     /gain-report                      controllers.resident.properties.ReportController.gainSummaryReport
 
 #Deductions Summary PDF Routes
 
 #Final Summary PDF Routes
-GET     /final-report                     controllers.resident.ReportController.finalSummaryReport
+GET     /final-report                     controllers.resident.properties.ReportController.finalSummaryReport

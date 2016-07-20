@@ -19,7 +19,7 @@ package views.resident
 import assets.{MessageLookup => commonMessages}
 import assets.MessageLookup.{summary => messages}
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.routes
+import controllers.resident.properties.routes
 import models.resident.{TaxYearModel, YourAnswersSummaryModel}
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}

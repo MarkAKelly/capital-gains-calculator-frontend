@@ -53,8 +53,8 @@ class CurrentIncomeViewSpec extends UnitSpec with WithFakeApplication with FakeR
 
       lazy val form = doc.getElementsByTag("form")
 
-      s"has the action '${controllers.resident.routes.IncomeController.submitCurrentIncome().toString}'" in {
-        form.attr("action") shouldBe controllers.resident.routes.IncomeController.submitCurrentIncome().toString
+      s"has the action '${controllers.resident.properties.routes.IncomeController.submitCurrentIncome().toString}'" in {
+        form.attr("action") shouldBe controllers.resident.properties.routes.IncomeController.submitCurrentIncome().toString
       }
 
       "has the method of POST" in {

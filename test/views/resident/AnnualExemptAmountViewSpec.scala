@@ -44,7 +44,7 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
         backLink.hasClass("back-link") shouldBe true
       }
       "have a link to Brought Forward Losses" in {
-        backLink.attr("href") shouldBe controllers.resident.routes.DeductionsController.lossesBroughtForward().toString
+        backLink.attr("href") shouldBe controllers.resident.properties.routes.DeductionsController.lossesBroughtForward().toString
       }
     }
     "have a H1 tag that" should {
@@ -58,8 +58,8 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
     }
     "have a form" which {
       lazy val form = doc.getElementsByTag("form")
-      s"has the action '${controllers.resident.routes.DeductionsController.submitAnnualExemptAmount().toString}'" in {
-        form.attr("action") shouldBe controllers.resident.routes.DeductionsController.submitAnnualExemptAmount().toString
+      s"has the action '${controllers.resident.properties.routes.DeductionsController.submitAnnualExemptAmount().toString}'" in {
+        form.attr("action") shouldBe controllers.resident.properties.routes.DeductionsController.submitAnnualExemptAmount().toString
       }
       "has the method of POST" in {
         form.attr("method") shouldBe "POST"
