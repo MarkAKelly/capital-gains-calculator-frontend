@@ -24,11 +24,7 @@ import controllers.predicates.FeatureLock
 import it.innove.play.pdf.PdfGenerator
 import models.resident.TaxYearModel
 import play.api.i18n.Messages
-import play.api.mvc.{Action, RequestHeader, Result}
-import play.mvc.BodyParser.AnyContent
-
-import scala.concurrent.Future
-import play.api.mvc.{Action, RequestHeader}
+import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future
@@ -62,6 +58,17 @@ trait ReportController extends FeatureLock {
   }
 
   //#####Deductions summary actions#####\\
+
+  val deductionsReport = FeatureLockForRTT.async { implicit request =>
+    for {
+      answers <- calcConnector.getYourAnswers
+      taxYear <- getTaxYear(answers.disposalDate)
+      deductionAnswers <- calcConnector.getChargeableGainAnswers
+      grossGain <- calcConnector.calculateRttGrossGain(answers)
+      chargeableGain <- calcConnector.calculateRttChargeableGain(answers, deductionAnswers, grossGain)
+    } yield {PdfGenerator.ok(views.html.calculation.resident.report.deductionsSummaryReport(answers, deductionAnswers, chargeableGain.get, taxYear.get), host).toScala
+      .withHeaders("Content-Disposition" -> s"""attachment; filename="${Messages("calc.resident.summary.title")}.pdf"""")}
+  }
 
   //#####Final summary actions#####\\
 }
