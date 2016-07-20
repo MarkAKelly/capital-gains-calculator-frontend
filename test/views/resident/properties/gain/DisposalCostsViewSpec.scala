@@ -52,7 +52,7 @@ class DisposalCostsViewSpec extends UnitSpec with WithFakeApplication with FakeR
       }
 
       "have a link to Disposal Value" in {
-        backLink.attr("href") shouldBe controllers.resident.routes.GainController.disposalValue().toString
+        backLink.attr("href") shouldBe controllers.resident.properties.routes.GainController.disposalValue().toString
       }
     }
 
@@ -73,8 +73,8 @@ class DisposalCostsViewSpec extends UnitSpec with WithFakeApplication with FakeR
 
       lazy val form = doc.getElementsByTag("form")
 
-      s"has the action '${controllers.resident.routes.GainController.submitDisposalCosts().toString}'" in {
-        form.attr("action") shouldBe controllers.resident.routes.GainController.submitDisposalCosts().toString
+      s"has the action '${controllers.resident.properties.routes.GainController.submitDisposalCosts().toString}'" in {
+        form.attr("action") shouldBe controllers.resident.properties.routes.GainController.submitDisposalCosts().toString
       }
 
       "has the method of POST" in {

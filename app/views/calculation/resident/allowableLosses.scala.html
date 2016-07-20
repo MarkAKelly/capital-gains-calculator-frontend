@@ -5,13 +5,13 @@
 
 @(allowableLossesForm: Form[AllowableLossesModel], taxYear: TaxYearModel)(implicit request: Request[_])
 
-@resident_main_template(title = Messages("calc.resident.allowableLosses.title", taxYear.taxYearSupplied), backLink = Some(controllers.resident.routes.DeductionsController.otherProperties.toString())) {
+@resident_main_template(title = Messages("calc.resident.allowableLosses.title", taxYear.taxYearSupplied), backLink = Some(controllers.resident.properties.routes.DeductionsController.otherProperties.toString())) {
 
     @errorSummary(allowableLossesForm, "isClaiming")
 
     <h1 class="heading-large">@Messages("calc.resident.allowableLosses.title", taxYear.taxYearSupplied)</h1>
 
-    @form(action = controllers.resident.routes.DeductionsController.submitAllowableLosses) {
+    @form(action = controllers.resident.properties.routes.DeductionsController.submitAllowableLosses) {
         @formInputRadioGroup(
             field = allowableLossesForm("isClaiming"),
             Seq(

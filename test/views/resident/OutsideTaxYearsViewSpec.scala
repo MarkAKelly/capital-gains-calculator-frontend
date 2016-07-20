@@ -61,7 +61,7 @@ class OutsideTaxYearsViewSpec extends UnitSpec with WithFakeApplication with Fak
         }
 
         "have a link to Disposal Date" in {
-          backLink.attr("href") shouldBe controllers.resident.routes.GainController.disposalDate().toString
+          backLink.attr("href") shouldBe controllers.resident.properties.routes.GainController.disposalDate().toString
         }
       }
 
@@ -72,8 +72,8 @@ class OutsideTaxYearsViewSpec extends UnitSpec with WithFakeApplication with Fak
           button.text() shouldBe commonMessages.calcBaseContinue
         }
 
-        s"have an href to ${controllers.resident.routes.GainController.disposalValue().toString()}" in {
-          button.attr("href") shouldBe controllers.resident.routes.GainController.disposalValue().toString()
+        s"have an href to ${controllers.resident.properties.routes.GainController.disposalValue().toString()}" in {
+          button.attr("href") shouldBe controllers.resident.properties.routes.GainController.disposalValue().toString()
         }
       }
     }
@@ -111,7 +111,7 @@ class OutsideTaxYearsViewSpec extends UnitSpec with WithFakeApplication with Fak
         }
 
         "have a link to Disposal Date" in {
-          backLink.attr("href") shouldBe controllers.resident.routes.GainController.disposalDate().toString
+          backLink.attr("href") shouldBe controllers.resident.properties.routes.GainController.disposalDate().toString
         }
       }
 
@@ -122,8 +122,8 @@ class OutsideTaxYearsViewSpec extends UnitSpec with WithFakeApplication with Fak
           button.text() shouldBe commonMessages.calcBaseContinue
         }
 
-        s"have an href to ${controllers.resident.routes.GainController.disposalValue().toString()}" in {
-          button.attr("href") shouldBe controllers.resident.routes.GainController.disposalValue().toString()
+        s"have an href to ${controllers.resident.properties.routes.GainController.disposalValue().toString()}" in {
+          button.attr("href") shouldBe controllers.resident.properties.routes.GainController.disposalValue().toString()
         }
       }
     }

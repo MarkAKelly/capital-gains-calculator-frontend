@@ -54,7 +54,7 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "have a link to Current Income" in {
-          backLink.attr("href") shouldBe controllers.resident.routes.IncomeController.currentIncome().toString
+          backLink.attr("href") shouldBe controllers.resident.properties.routes.IncomeController.currentIncome().toString
         }
       }
 
@@ -73,8 +73,8 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
       "have a form" which {
         lazy val form = doc.getElementsByTag("form")
 
-        s"has the action '${controllers.resident.routes.IncomeController.submitPersonalAllowance().toString}'" in {
-          form.attr("action") shouldBe controllers.resident.routes.IncomeController.submitPersonalAllowance().toString
+        s"has the action '${controllers.resident.properties.routes.IncomeController.submitPersonalAllowance().toString}'" in {
+          form.attr("action") shouldBe controllers.resident.properties.routes.IncomeController.submitPersonalAllowance().toString
         }
 
         "has the method of POST" in {
