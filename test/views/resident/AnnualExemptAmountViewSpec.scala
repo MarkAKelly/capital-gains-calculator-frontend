@@ -15,15 +15,14 @@
  */
 
 package views.resident
-import assets.MessageLookup
+
 import assets.MessageLookup.{annualExemptAmount => messages}
 import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
+import forms.resident.AnnualExemptAmountForm._
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.{resident => views}
-import forms.resident.AnnualExemptAmountForm._
-
 
 class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
   "The Annual Exempt Amount view" should {
@@ -82,7 +81,7 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
         }
       }
 
-      s"the Annual Exempt Amount Help link ${MessageLookup.annualExemptAmount.helpLinkOne} should " +
+      s"the Annual Exempt Amount Help link ${messages.helpLinkOne} should " +
         "have the address Some(https://www.gov.uk/capital-gains-tax/losses)" in {
         doc.select("a#annualExemptAmountLink").attr("href") shouldEqual "https://www.gov.uk/capital-gains-tax/allowances"
       }

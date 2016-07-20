@@ -19,7 +19,8 @@ package controllers.resident
 import common.{Dates, KeystoreKeys}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
-import views.html.calculation.resident.{income => views}
+import views.html.calculation.{resident => commonViews}
+import views.html.calculation.resident.properties.{income => views}
 import forms.resident.income.PreviousTaxableGainsForm._
 import forms.resident.income.PersonalAllowanceForm._
 import forms.resident.income.CurrentIncomeForm._
@@ -103,8 +104,8 @@ trait IncomeController extends FeatureLock {
 
     def routeRequest(backUrl: String): Future[Result] = {
       calcConnector.fetchAndGetFormData[PreviousTaxableGainsModel](KeystoreKeys.ResidentPropertyKeys.previousTaxableGains).map {
-        case Some(data) => Ok(views.previousTaxableGains(previousTaxableGainsForm.fill(data), backUrl))
-        case None => Ok(views.previousTaxableGains(previousTaxableGainsForm, backUrl))
+        case Some(data) => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm.fill(data), backUrl))
+        case None => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm, backUrl))
       }
     }
 
@@ -117,7 +118,7 @@ trait IncomeController extends FeatureLock {
   val submitPreviousTaxableGains = FeatureLockForRTT.async { implicit request =>
 
     previousTaxableGainsForm.bindFromRequest.fold(
-      errors => buildPreviousTaxableGainsBackUrl.flatMap(url => Future.successful(BadRequest(views.previousTaxableGains(errors, url)))),
+      errors => buildPreviousTaxableGainsBackUrl.flatMap(url => Future.successful(BadRequest(commonViews.previousTaxableGains(errors, url)))),
       success => {
         calcConnector.saveFormData(KeystoreKeys.ResidentPropertyKeys.previousTaxableGains, success)
         Future.successful(Redirect(routes.IncomeController.currentIncome()))
@@ -193,8 +194,8 @@ trait IncomeController extends FeatureLock {
   val personalAllowance = FeatureLockForRTT.async { implicit request =>
     def routeRequest(taxYearModel: TaxYearModel, standardPA: BigDecimal): Future[Result] = {
       calcConnector.fetchAndGetFormData[PersonalAllowanceModel](KeystoreKeys.ResidentPropertyKeys.personalAllowance).map {
-        case Some(data) => Ok(views.personalAllowance(personalAllowanceForm().fill(data), taxYearModel, standardPA))
-        case None => Ok(views.personalAllowance(personalAllowanceForm(), taxYearModel, standardPA))
+        case Some(data) => Ok(commonViews.personalAllowance(personalAllowanceForm().fill(data), taxYearModel, standardPA))
+        case None => Ok(commonViews.personalAllowance(personalAllowanceForm(), taxYearModel, standardPA))
       }
     }
     for {
@@ -215,7 +216,7 @@ trait IncomeController extends FeatureLock {
 
     def routeRequest(maxPA: BigDecimal, standardPA: BigDecimal, taxYearModel: TaxYearModel): Future[Result] = {
       personalAllowanceForm(maxPA).bindFromRequest.fold(
-        errors => Future.successful(BadRequest(views.personalAllowance(errors, taxYearModel, standardPA))),
+        errors => Future.successful(BadRequest(commonViews.personalAllowance(errors, taxYearModel, standardPA))),
         success => {
           calcConnector.saveFormData(KeystoreKeys.ResidentPropertyKeys.personalAllowance, success)
           Future.successful(Redirect(routes.SummaryController.summary()))
