@@ -74,6 +74,9 @@ object KeystoreKeys {
     val lossesBroughtForward = "res:share:lossesBroughtForward"
     val lossesBroughtForwardValue = "res:share:lossesBroughtForwardValue"
     val annualExemptAmount = "res:share:annualExemptAmount"
+    val currentIncome = "res:share:currentIncome"
+    val previousTaxableGains = "res:share:previousTaxableGains"
+    val personalAllowance = "res:share:personalAllowance"
   }
 
 }

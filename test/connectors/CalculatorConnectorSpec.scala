@@ -23,7 +23,7 @@ import common.nonresident.CustomerTypeKeys
 import models.nonresident._
 import models.resident
 import models.resident.ChargeableGainAnswers
-import models.resident.shares.{ShareDeductionGainAnswersModel, ShareGainAnswersModel}
+import models.resident.shares.{ShareDeductionGainAnswersModel, ShareGainAnswersModel, ShareIncomeAnswersModel}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -170,6 +170,15 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
 
     when(mockSessionCache.fetchAndGetEntry[resident.LossesBroughtForwardValueModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.lossesBroughtForwardValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(mock[resident.LossesBroughtForwardValueModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.income.CurrentIncomeModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.currentIncome))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.income.CurrentIncomeModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.income.PersonalAllowanceModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.personalAllowance))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.income.PersonalAllowanceModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.income.PreviousTaxableGainsModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.previousTaxableGains))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.income.PreviousTaxableGainsModel])))
   }
 
   val sumModelFlat = SummaryModel(
@@ -368,6 +377,16 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
       mockResidentSharesFetchAndGetFormData()
       lazy val result = TargetCalculatorConnector.getShareDeductionAnswers(hc)
       await(result).isInstanceOf[ShareDeductionGainAnswersModel] shouldBe true
+    }
+  }
+
+  "Calling getShareIncomeAnswers" should {
+
+    "return a valid DeductionGainAnswersModel" in {
+      val hc = mock[HeaderCarrier]
+      mockResidentSharesFetchAndGetFormData()
+      lazy val result = TargetCalculatorConnector.getShareIncomeAnswers(hc)
+      await(result).isInstanceOf[ShareIncomeAnswersModel] shouldBe true
     }
   }
 }
