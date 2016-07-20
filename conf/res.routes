@@ -80,3 +80,4 @@ GET     /gain-report                      controllers.resident.ReportController.
 #Deductions Summary PDF Routes
 
 #Final Summary PDF Routes
+GET     /final-report                     controllers.resident.ReportController.finalSummaryReport
