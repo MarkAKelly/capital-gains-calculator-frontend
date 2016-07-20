@@ -140,6 +140,23 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
       .thenReturn(Future.successful(Some(mock[resident.AnnualExemptAmountModel])))
   }
 
+  def mockResidentSharesFetchAndGetFormData(): Unit = {
+    when(mockSessionCache.fetchAndGetEntry[resident.AcquisitionCostsModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.acquisitionCosts))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.AcquisitionCostsModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.AcquisitionValueModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.acquisitionValue))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.AcquisitionValueModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.disposalDate))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.DisposalDateModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.DisposalCostsModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.disposalCosts))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.DisposalCostsModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.DisposalValueModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.disposalValue))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.DisposalValueModel])))
+  }
+
   val sumModelFlat = SummaryModel(
     CustomerTypeModel(CustomerTypeKeys.individual),
     None,
@@ -323,7 +340,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
 
     "return a valid ChargeableGainAnswersModel" in {
       val hc = mock[HeaderCarrier]
-      mockResidentFetchAndGetFormData()
+      mockResidentSharesFetchAndGetFormData()
       lazy val result = TargetCalculatorConnector.getShareGainAnswers(hc)
       await(result).isInstanceOf[ShareGainAnswersModel] shouldBe true
     }
