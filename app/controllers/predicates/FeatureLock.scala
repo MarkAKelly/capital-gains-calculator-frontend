@@ -17,42 +17,40 @@
 package controllers.predicates
 
 import config.ApplicationConfig
-import controllers.routes
 import play.api.mvc.{Action, Result, AnyContent, Request}
 
 import scala.concurrent.Future
 
 trait FeatureLock extends ValidActiveSession {
 
+  val featureEnabled: Boolean = false
   private type PlayRequest = Request[AnyContent] => Result
   private type AsyncPlayRequest = Request[AnyContent] => Future[Result]
 
-  class FeatureLockFor(condition: Boolean) {
-
-    def async(action: AsyncPlayRequest): Action[AnyContent] = {
-      ValidateSession.async { implicit request =>
-        if (condition) {
-          action(request)
-        }
-        else {
-          Future.successful(NotFound)
-        }
+  def async(action: AsyncPlayRequest): Action[AnyContent] = {
+    ValidateSession.async { implicit request =>
+      if (featureEnabled) {
+        action(request)
       }
-    }
-
-    def asyncNoTimeout(action: AsyncPlayRequest): Action[AnyContent] = {
-      Action.async { implicit request =>
-        if (condition) {
-          action(request)
-        }
-        else {
-          Future.successful(NotFound)
-        }
+      else {
+        Future.successful(NotFound)
       }
     }
   }
 
-  object FeatureLockForRTT extends FeatureLockFor(RTTCondition)
+  def asyncNoTimeout(action: AsyncPlayRequest): Action[AnyContent] = {
+    Action.async { implicit request =>
+      if (featureEnabled) {
+        action(request)
+      }
+      else {
+        Future.successful(NotFound)
+      }
+    }
+  }
 
-  lazy val RTTCondition = ApplicationConfig.featureRTTEnabled
+  object FeatureLockForRTT extends FeatureLock {
+    override val featureEnabled = ApplicationConfig.featureRTTEnabled
+    override val sessionTimeoutUrl = controllers.resident.routes.GainController.disposalDate().url
+  }
 }

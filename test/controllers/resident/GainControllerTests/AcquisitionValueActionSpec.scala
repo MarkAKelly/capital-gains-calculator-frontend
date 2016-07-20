@@ -97,7 +97,7 @@ class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with 
     }
 
     "return you to the session timeout view" in {
-      redirectLocation(result).get shouldBe "/calculate-your-capital-gains/non-resident/session-timeout"
+      redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
     }
   }
 

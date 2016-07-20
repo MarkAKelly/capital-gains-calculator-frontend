@@ -27,8 +27,12 @@ import scala.concurrent.Future
 
 class PredicateControllerSpec extends UnitSpec with WithFakeApplication with FrontendController with FeatureLock {
 
-  object FeatureLockForTrue extends FeatureLockFor(true)
-  object FeatureLockForFalse extends FeatureLockFor(false)
+  object FeatureLockForTrue extends FeatureLock {
+    override val featureEnabled = true
+  }
+  object FeatureLockForFalse extends FeatureLock {
+    override val featureEnabled = false
+  }
 
   val featureLockTestTrue = FeatureLockForTrue.async { implicit request =>
     Future.successful(Ok("Hello"))

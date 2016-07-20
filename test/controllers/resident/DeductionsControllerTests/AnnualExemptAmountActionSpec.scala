@@ -126,7 +126,7 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
       }
 
       "return you to the session timeout page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/non-resident/session-timeout")
+        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
       }
     }
   }
