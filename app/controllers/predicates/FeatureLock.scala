@@ -50,8 +50,7 @@ trait FeatureLock extends ValidActiveSession {
   }
 
   object FeatureLockForRTT extends FeatureLock {
-    lazy val RTTEnabled = ApplicationConfig.featureRTTEnabled
-    override val featureEnabled = RTTEnabled
+    override val featureEnabled = ApplicationConfig.featureRTTEnabled
     override val sessionTimeoutUrl = controllers.resident.routes.GainController.disposalDate().url
   }
 }
