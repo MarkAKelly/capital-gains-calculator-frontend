@@ -40,7 +40,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[ImprovementsModel](Matchers.eq(KeystoreKeys.ResidentKeys.improvements))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[ImprovementsModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.improvements))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
     when(mockCalcConnector.getYourAnswers(Matchers.any()))

@@ -38,7 +38,7 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[DisposalCostsModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalCosts))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[DisposalCostsModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.disposalCosts))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
     when(mockCalcConnector.saveFormData[DisposalCostsModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))

@@ -38,7 +38,7 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[ReliefsValueModel](Matchers.eq(KeystoreKeys.ResidentKeys.reliefsValue))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[ReliefsValueModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.reliefsValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
     when(mockCalcConnector.saveFormData[ReliefsValueModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))

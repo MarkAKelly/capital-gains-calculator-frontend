@@ -49,7 +49,7 @@ trait GainController extends FeatureLock {
       Future.successful(Ok(views.disposalDate(disposalDateForm)).withSession(request.session + (SessionKeys.sessionId -> s"session-$sessionId")))
     }
     else {
-      calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.ResidentKeys.disposalDate).map {
+      calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.ResidentPropertyKeys.disposalDate).map {
         case Some(data) => Ok(views.disposalDate(disposalDateForm.fill(data)))
         case None => Ok(views.disposalDate(disposalDateForm))
       }
@@ -67,7 +67,7 @@ trait GainController extends FeatureLock {
       errors => Future.successful(BadRequest(views.disposalDate(errors))),
       success => {
         for {
-          save <- calcConnector.saveFormData(KeystoreKeys.ResidentKeys.disposalDate, success)
+          save <- calcConnector.saveFormData(KeystoreKeys.ResidentPropertyKeys.disposalDate, success)
           taxYearResult <- calcConnector.getTaxYear(s"${success.year}-${success.month}-${success.day}")
           route <- routeRequest(taxYearResult)
         } yield route
@@ -78,14 +78,14 @@ trait GainController extends FeatureLock {
   //################ Outside Tax Years Actions ######################
   val outsideTaxYears = FeatureLockForRTT.async { implicit request =>
     for {
-      disposalDate <- calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.ResidentKeys.disposalDate)
+      disposalDate <- calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.ResidentPropertyKeys.disposalDate)
       taxYear <- calcConnector.getTaxYear(s"${disposalDate.get.year}-${disposalDate.get.month}-${disposalDate.get.day}")
     } yield {Ok(views.gain.outsideTaxYear(taxYear.get))}
   }
 
   //################ Disposal Value Actions ######################
   val disposalValue = FeatureLockForRTT.async { implicit request =>
-    calcConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.ResidentKeys.disposalValue).map {
+    calcConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.ResidentPropertyKeys.disposalValue).map {
       case Some(data) => Ok(views.disposalValue(disposalValueForm.fill(data)))
       case None => Ok(views.disposalValue(disposalValueForm))
     }
@@ -95,7 +95,7 @@ trait GainController extends FeatureLock {
     disposalValueForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.disposalValue(errors))),
       success => {
-        calcConnector.saveFormData[DisposalValueModel](KeystoreKeys.ResidentKeys.disposalValue, success)
+        calcConnector.saveFormData[DisposalValueModel](KeystoreKeys.ResidentPropertyKeys.disposalValue, success)
         Future.successful(Redirect(routes.GainController.disposalCosts()))
       }
     )
@@ -103,7 +103,7 @@ trait GainController extends FeatureLock {
 
   //################# Disposal Costs Actions ########################
   val disposalCosts = FeatureLockForRTT.async { implicit request =>
-    calcConnector.fetchAndGetFormData[DisposalCostsModel](KeystoreKeys.ResidentKeys.disposalCosts).map {
+    calcConnector.fetchAndGetFormData[DisposalCostsModel](KeystoreKeys.ResidentPropertyKeys.disposalCosts).map {
       case Some(data) => Ok(views.disposalCosts(disposalCostsForm.fill(data)))
       case None => Ok(views.disposalCosts(disposalCostsForm))
     }
@@ -113,14 +113,14 @@ trait GainController extends FeatureLock {
     disposalCostsForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.disposalCosts(errors))),
       success => {
-        calcConnector.saveFormData(KeystoreKeys.ResidentKeys.disposalCosts, success)
+        calcConnector.saveFormData(KeystoreKeys.ResidentPropertyKeys.disposalCosts, success)
         Future.successful(Redirect(routes.GainController.acquisitionValue()))}
     )
   }
 
   //################# Acquisition Value Actions ########################
   val acquisitionValue = FeatureLockForRTT.async { implicit request =>
-    calcConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.ResidentKeys.acquisitionValue).map {
+    calcConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.ResidentPropertyKeys.acquisitionValue).map {
       case Some(data) => Ok(views.acquisitionValue(acquisitionValueForm.fill(data)))
       case None => Ok(views.acquisitionValue(acquisitionValueForm))
     }
@@ -130,7 +130,7 @@ trait GainController extends FeatureLock {
     acquisitionValueForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.acquisitionValue(errors))),
       success => {
-        calcConnector.saveFormData(KeystoreKeys.ResidentKeys.acquisitionValue, success)
+        calcConnector.saveFormData(KeystoreKeys.ResidentPropertyKeys.acquisitionValue, success)
         Future.successful(Redirect(routes.GainController.acquisitionCosts()))
       }
     )
@@ -138,7 +138,7 @@ trait GainController extends FeatureLock {
 
   //################# Acquisition Costs Actions ########################
   val acquisitionCosts = FeatureLockForRTT.async { implicit request =>
-    calcConnector.fetchAndGetFormData[AcquisitionCostsModel](KeystoreKeys.ResidentKeys.acquisitionCosts).map {
+    calcConnector.fetchAndGetFormData[AcquisitionCostsModel](KeystoreKeys.ResidentPropertyKeys.acquisitionCosts).map {
       case Some(data) => Ok(views.acquisitionCosts(acquisitionCostsForm.fill(data)))
       case None => Ok(views.acquisitionCosts(acquisitionCostsForm))
     }
@@ -148,14 +148,14 @@ trait GainController extends FeatureLock {
     acquisitionCostsForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.acquisitionCosts(errors))),
       success => {
-        calcConnector.saveFormData(KeystoreKeys.ResidentKeys.acquisitionCosts, success)
+        calcConnector.saveFormData(KeystoreKeys.ResidentPropertyKeys.acquisitionCosts, success)
         Future.successful(Redirect(routes.GainController.improvements()))}
     )
   }
 
   //################# Improvements Actions ########################
   val improvements = FeatureLockForRTT.async { implicit request =>
-    calcConnector.fetchAndGetFormData[ImprovementsModel](KeystoreKeys.ResidentKeys.improvements).map {
+    calcConnector.fetchAndGetFormData[ImprovementsModel](KeystoreKeys.ResidentPropertyKeys.improvements).map {
       case Some(data) => Ok(views.improvements(improvementsForm.fill(data)))
       case None => Ok(views.improvements(improvementsForm))
     }
@@ -172,7 +172,7 @@ trait GainController extends FeatureLock {
       errors => Future.successful(BadRequest(views.improvements(errors))),
       success => {
         for {
-          save <- calcConnector.saveFormData(KeystoreKeys.ResidentKeys.improvements, success)
+          save <- calcConnector.saveFormData(KeystoreKeys.ResidentPropertyKeys.improvements, success)
           answers <- calcConnector.getYourAnswers
           grossGain <- calcConnector.calculateRttGrossGain(answers)
           route <- routeRequest(grossGain)

@@ -39,35 +39,35 @@ trait IncomeController extends FeatureLock {
   val calcConnector: CalculatorConnector
 
   def otherPropertiesResponse(implicit hc: HeaderCarrier): Future[Boolean] = {
-    calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.ResidentKeys.otherProperties).map {
+    calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.ResidentPropertyKeys.otherProperties).map {
       case Some(OtherPropertiesModel(response)) => response
       case None => false
     }
   }
 
   def lossesBroughtForwardResponse(implicit hc: HeaderCarrier): Future[Boolean] = {
-    calcConnector.fetchAndGetFormData[LossesBroughtForwardModel](KeystoreKeys.ResidentKeys.lossesBroughtForward).map {
+    calcConnector.fetchAndGetFormData[LossesBroughtForwardModel](KeystoreKeys.ResidentPropertyKeys.lossesBroughtForward).map {
       case Some(LossesBroughtForwardModel(response)) => response
       case None => false
     }
   }
 
   def annualExemptAmountEntered(implicit hc: HeaderCarrier): Future[Boolean] = {
-    calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](KeystoreKeys.ResidentKeys.annualExemptAmount).map {
+    calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](KeystoreKeys.ResidentPropertyKeys.annualExemptAmount).map {
       case Some(data) => data.amount == 0
       case None => false
     }
   }
 
   def allowableLossesCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
-    calcConnector.fetchAndGetFormData[AllowableLossesModel](KeystoreKeys.ResidentKeys.allowableLosses).map {
+    calcConnector.fetchAndGetFormData[AllowableLossesModel](KeystoreKeys.ResidentPropertyKeys.allowableLosses).map {
       case Some(data) => data.isClaiming
       case None => false
     }
   }
 
   def displayAnnualExemptAmountCheck(claimedOtherProperties: Boolean, claimedAllowableLosses: Boolean)(implicit hc: HeaderCarrier): Future[Boolean] = {
-    calcConnector.fetchAndGetFormData[AllowableLossesValueModel](KeystoreKeys.ResidentKeys.allowableLossesValue).map {
+    calcConnector.fetchAndGetFormData[AllowableLossesValueModel](KeystoreKeys.ResidentPropertyKeys.allowableLossesValue).map {
       case Some(result) if claimedAllowableLosses && claimedOtherProperties => result.amount == 0
       case _ if claimedOtherProperties && !claimedAllowableLosses => true
       case _ => false
@@ -75,7 +75,7 @@ trait IncomeController extends FeatureLock {
   }
 
   def getDisposalDate(implicit hc: HeaderCarrier): Future[Option[DisposalDateModel]] = {
-    calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.ResidentKeys.disposalDate)
+    calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.ResidentPropertyKeys.disposalDate)
   }
 
   def formatDisposalDate(disposalDateModel: DisposalDateModel): Future[String] = {
@@ -102,7 +102,7 @@ trait IncomeController extends FeatureLock {
   val previousTaxableGains = FeatureLockForRTT.async { implicit request =>
 
     def routeRequest(backUrl: String): Future[Result] = {
-      calcConnector.fetchAndGetFormData[PreviousTaxableGainsModel](KeystoreKeys.ResidentKeys.previousTaxableGains).map {
+      calcConnector.fetchAndGetFormData[PreviousTaxableGainsModel](KeystoreKeys.ResidentPropertyKeys.previousTaxableGains).map {
         case Some(data) => Ok(views.previousTaxableGains(previousTaxableGainsForm.fill(data), backUrl))
         case None => Ok(views.previousTaxableGains(previousTaxableGainsForm, backUrl))
       }
@@ -119,7 +119,7 @@ trait IncomeController extends FeatureLock {
     previousTaxableGainsForm.bindFromRequest.fold(
       errors => buildPreviousTaxableGainsBackUrl.flatMap(url => Future.successful(BadRequest(views.previousTaxableGains(errors, url)))),
       success => {
-        calcConnector.saveFormData(KeystoreKeys.ResidentKeys.previousTaxableGains, success)
+        calcConnector.saveFormData(KeystoreKeys.ResidentPropertyKeys.previousTaxableGains, success)
         Future.successful(Redirect(routes.IncomeController.currentIncome()))
       }
     )
@@ -147,7 +147,7 @@ trait IncomeController extends FeatureLock {
   val currentIncome = FeatureLockForRTT.async { implicit request =>
 
     def routeRequest(backUrl: String, taxYear: TaxYearModel): Future[Result] = {
-      calcConnector.fetchAndGetFormData[CurrentIncomeModel](KeystoreKeys.ResidentKeys.currentIncome).map {
+      calcConnector.fetchAndGetFormData[CurrentIncomeModel](KeystoreKeys.ResidentPropertyKeys.currentIncome).map {
         case Some(data) => Ok(views.currentIncome(currentIncomeForm.fill(data), backUrl, taxYear))
         case None => Ok(views.currentIncome(currentIncomeForm, backUrl, taxYear))
       }
@@ -168,7 +168,7 @@ trait IncomeController extends FeatureLock {
       currentIncomeForm.bindFromRequest.fold(
         errors => buildCurrentIncomeBackUrl.flatMap(url => Future.successful(BadRequest(views.currentIncome(errors, url, taxYearModel)))),
         success => {
-          calcConnector.saveFormData[CurrentIncomeModel](KeystoreKeys.ResidentKeys.currentIncome, success)
+          calcConnector.saveFormData[CurrentIncomeModel](KeystoreKeys.ResidentPropertyKeys.currentIncome, success)
           Future.successful(Redirect(routes.IncomeController.personalAllowance()))
         }
       )
@@ -192,7 +192,7 @@ trait IncomeController extends FeatureLock {
 
   val personalAllowance = FeatureLockForRTT.async { implicit request =>
     def routeRequest(taxYearModel: TaxYearModel, standardPA: BigDecimal): Future[Result] = {
-      calcConnector.fetchAndGetFormData[PersonalAllowanceModel](KeystoreKeys.ResidentKeys.personalAllowance).map {
+      calcConnector.fetchAndGetFormData[PersonalAllowanceModel](KeystoreKeys.ResidentPropertyKeys.personalAllowance).map {
         case Some(data) => Ok(views.personalAllowance(personalAllowanceForm().fill(data), taxYearModel, standardPA))
         case None => Ok(views.personalAllowance(personalAllowanceForm(), taxYearModel, standardPA))
       }
@@ -217,7 +217,7 @@ trait IncomeController extends FeatureLock {
       personalAllowanceForm(maxPA).bindFromRequest.fold(
         errors => Future.successful(BadRequest(views.personalAllowance(errors, taxYearModel, standardPA))),
         success => {
-          calcConnector.saveFormData(KeystoreKeys.ResidentKeys.personalAllowance, success)
+          calcConnector.saveFormData(KeystoreKeys.ResidentPropertyKeys.personalAllowance, success)
           Future.successful(Redirect(routes.SummaryController.summary()))
         }
       )
