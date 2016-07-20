@@ -254,6 +254,10 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
         s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
           doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/gain-report"
         }
+
+        s"have the text ${messages.saveAsPdf}" in {
+          doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
+        }
       }
     }
   }
@@ -360,6 +364,10 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
         doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/gain-report"
       }
+
+      s"have the text ${messages.saveAsPdf}" in {
+        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
+      }
     }
   }
 
@@ -434,6 +442,10 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
 
       s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
         doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/gain-report"
+      }
+
+      s"have the text ${messages.saveAsPdf}" in {
+        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
       }
     }
   }
