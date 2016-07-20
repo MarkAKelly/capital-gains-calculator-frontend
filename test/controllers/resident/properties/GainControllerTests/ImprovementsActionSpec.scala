@@ -121,7 +121,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
 
       "redirect to the summary page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/summary")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/summary")
       }
     }
 
@@ -135,7 +135,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
 
       "redirect to the summary page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/summary")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/summary")
       }
     }
 
@@ -149,7 +149,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
 
       "redirect to the reliefs page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/reliefs")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/reliefs")
       }
     }
 

@@ -131,7 +131,7 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
 
       "redirect to the Disposal Value page" in {
-        redirectLocation(request.result) shouldBe Some("/calculate-your-capital-gains/resident/disposal-value")
+        redirectLocation(request.result) shouldBe Some("/calculate-your-capital-gains/resident/properties/disposal-value")
       }
     }
 
@@ -159,7 +159,7 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
 
       "redirect to the outside know years page" in {
-        redirectLocation(request.result) shouldBe Some("/calculate-your-capital-gains/resident/outside-tax-years")
+        redirectLocation(request.result) shouldBe Some("/calculate-your-capital-gains/resident/properties/outside-tax-years")
       }
     }
     "when there is a date that is less than any specified tax year" should {
@@ -172,7 +172,7 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
 
       "redirect to the outside know years page" in {
-        redirectLocation(request.result) shouldBe Some("/calculate-your-capital-gains/resident/outside-tax-years")
+        redirectLocation(request.result) shouldBe Some("/calculate-your-capital-gains/resident/properties/outside-tax-years")
       }
     }
   }

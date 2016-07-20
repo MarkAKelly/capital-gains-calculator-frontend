@@ -146,7 +146,7 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
       }
 
       "redirect to the summary page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/summary")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/summary")
       }
     }
 
@@ -162,7 +162,7 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
       }
 
       "redirect to the previous taxable gains page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/previous-taxable-gains")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/previous-taxable-gains")
       }
     }
 
@@ -178,7 +178,7 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
       }
 
       "redirect to the summary page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/current-income")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/current-income")
       }
     }
 

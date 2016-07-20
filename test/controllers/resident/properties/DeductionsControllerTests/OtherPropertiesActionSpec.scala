@@ -97,7 +97,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
       }
 
       "have a back link to reliefs value page" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/reliefs-value"
+        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/reliefs-value"
       }
     }
 
@@ -112,7 +112,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
       }
 
       "have a back link to reliefs page" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/reliefs"
+        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/reliefs"
       }
     }
   }
@@ -129,7 +129,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
       }
 
       "redirect to the allowable losses page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/allowable-losses")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/allowable-losses")
       }
     }
 
@@ -144,7 +144,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
       }
 
       "redirect to the allowable losses page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/losses-brought-forward")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/losses-brought-forward")
       }
     }
 

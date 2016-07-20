@@ -117,7 +117,7 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       }
 
       "redirect to the reliefs entry page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/reliefs-value")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/reliefs-value")
       }
     }
 
@@ -131,7 +131,7 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       }
 
       "redirect to the other properties page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/other-properties")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/other-properties")
       }
     }
 

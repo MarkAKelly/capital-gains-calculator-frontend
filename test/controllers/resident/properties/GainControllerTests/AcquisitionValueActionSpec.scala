@@ -113,7 +113,7 @@ class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "redirect to the acquisition costs page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/acquisition-costs")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/acquisition-costs")
       }
     }
 

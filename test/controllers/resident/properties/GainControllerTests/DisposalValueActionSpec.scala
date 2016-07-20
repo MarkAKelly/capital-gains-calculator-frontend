@@ -101,7 +101,7 @@ class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "re-direct to the disposal Costs page when supplied with a valid form" in {
       status(result) shouldEqual 303
-      redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/disposal-costs")
+      redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/disposal-costs")
     }
   }
 

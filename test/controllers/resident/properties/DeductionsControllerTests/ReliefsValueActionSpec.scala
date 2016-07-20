@@ -114,7 +114,7 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
 
       "redirect to the improvements page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/other-properties")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/other-properties")
       }
     }
 

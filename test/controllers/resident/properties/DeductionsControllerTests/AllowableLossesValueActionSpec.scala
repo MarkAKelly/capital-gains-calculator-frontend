@@ -129,7 +129,7 @@ class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication w
       }
 
       "redirect to the brought forward losses page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/losses-brought-forward")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/losses-brought-forward")
       }
     }
 

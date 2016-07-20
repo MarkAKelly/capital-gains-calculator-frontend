@@ -141,8 +141,8 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
         status(result) shouldBe 200
       }
 
-      "have a back link with the address /calculate-your-capital-gains/resident/previous-taxable-gains" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/previous-taxable-gains"
+      "have a back link with the address /calculate-your-capital-gains/resident/properties/previous-taxable-gains" in {
+        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/previous-taxable-gains"
       }
     }
 
@@ -158,8 +158,8 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
         status(result) shouldBe 200
       }
 
-      "have a back link with the address /calculate-your-capital-gains/resident/annual-exempt-amount" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/annual-exempt-amount"
+      "have a back link with the address /calculate-your-capital-gains/resident/properties/annual-exempt-amount" in {
+        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/annual-exempt-amount"
       }
     }
 
@@ -175,8 +175,8 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
         status(result) shouldBe 200
       }
 
-      "have a back link with the address /calculate-your-capital-gains/resident/losses-brought-forward" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/losses-brought-forward"
+      "have a back link with the address /calculate-your-capital-gains/resident/properties/losses-brought-forward" in {
+        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/losses-brought-forward"
       }
     }
 
@@ -191,8 +191,8 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
         status(result) shouldBe 200
       }
 
-      "have a back link with the address /calculate-your-capital-gains/resident/losses-brought-forward" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/losses-brought-forward"
+      "have a back link with the address /calculate-your-capital-gains/resident/properties/losses-brought-forward" in {
+        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/losses-brought-forward"
       }
     }
 
@@ -207,8 +207,8 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
         status(result) shouldBe 200
       }
 
-      "have a back link with the address /calculate-your-capital-gains/resident/losses-brought-forward-value" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/losses-brought-forward-value"
+      "have a back link with the address /calculate-your-capital-gains/resident/properties/losses-brought-forward-value" in {
+        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/losses-brought-forward-value"
       }
     }
   }

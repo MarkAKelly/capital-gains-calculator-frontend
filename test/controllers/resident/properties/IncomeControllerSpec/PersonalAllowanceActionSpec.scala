@@ -142,7 +142,7 @@ class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with
       }
 
       "redirect to the summary page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/summary")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/summary")
       }
     }
 

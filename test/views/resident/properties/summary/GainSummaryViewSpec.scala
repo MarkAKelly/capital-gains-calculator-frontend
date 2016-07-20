@@ -253,7 +253,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
         }
 
         s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
-          doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/gain-report"
+          doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/gain-report"
         }
 
         s"have the text ${messages.saveAsPdf}" in {
@@ -320,7 +320,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       }
 
       s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
-        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/gain-report"
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/gain-report"
       }
     }
   }
@@ -363,7 +363,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       }
 
       s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
-        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/gain-report"
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/gain-report"
       }
 
       s"have the text ${messages.saveAsPdf}" in {
@@ -442,7 +442,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       }
 
       s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
-        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/gain-report"
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/gain-report"
       }
 
       s"have the text ${messages.saveAsPdf}" in {
