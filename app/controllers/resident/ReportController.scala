@@ -46,20 +46,18 @@ trait ReportController extends FeatureLock {
   }
 
   val gainSummaryReport = FeatureLockForRTT.async { implicit request =>
-    val fileName = Messages("calc.resident.summary.title")
     for {
       answers <- calcConnector.getYourAnswers
       taxYear <- getTaxYear(answers.disposalDate)
       grossGain <- calcConnector.calculateRttGrossGain(answers)
     } yield {PdfGenerator.ok(views.html.calculation.resident.report.gainSummaryReport(answers, grossGain, taxYear.get), host).toScala
-      .withHeaders("Content-Disposition" -> s"""attachment; filename="$fileName.pdf"""")}
+      .withHeaders("Content-Disposition" -> s"""attachment; filename="${Messages("calc.resident.summary.title")}.pdf"""")}
   }
 
 
   //#####Deductions summary actions#####\\
 
   val finalSummaryReport = FeatureLockForRTT.async { implicit request =>
-    val fileName = Messages("calc.resident.summary.title")
     for {
       answers <- calcConnector.getYourAnswers
       taxYear <- getTaxYear(answers.disposalDate)
@@ -74,7 +72,7 @@ trait ReportController extends FeatureLock {
         incomeAnswers,
         totalGain.get,
         taxYear.get),
-        host).toScala.withHeaders("Content-Disposition" -> s"""attachment; filename="$fileName.pdf"""")
+        host).toScala.withHeaders("Content-Disposition" -> s"""attachment; filename="${Messages("calc.resident.summary.title")}.pdf"""")
     }
   }
 }
