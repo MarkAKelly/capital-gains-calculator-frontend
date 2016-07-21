@@ -380,8 +380,8 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
           doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
         }
 
-        s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
-          doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/deductions-report"
+        s"with an href to ${controllers.resident.properties.routes.ReportController.deductionsReport().toString}" in {
+          doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/deductions-report"
         }
 
         s"have the text ${messages.saveAsPdf}" in {
@@ -693,8 +693,8 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
           doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
         }
 
-        s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
-          doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/deductions-report"
+        s"with an href to ${controllers.resident.properties.routes.ReportController.deductionsReport().toString}" in {
+          doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/deductions-report"
         }
 
         s"have the text ${messages.saveAsPdf}" in {
@@ -760,8 +760,8 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
       }
 
-      s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
-        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/deductions-report"
+      s"with an href to ${controllers.resident.properties.routes.ReportController.deductionsReport().toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/deductions-report"
       }
 
       s"have the text ${messages.saveAsPdf}" in {
@@ -824,8 +824,8 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
       }
 
-      s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
-        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/deductions-report"
+      s"with an href to ${controllers.resident.properties.routes.ReportController.deductionsReport().toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/deductions-report"
       }
 
       s"have the text ${messages.saveAsPdf}" in {
@@ -876,8 +876,8 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
       }
 
-      s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
-        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/deductions-report"
+      s"with an href to ${controllers.resident.properties.routes.ReportController.deductionsReport().toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/deductions-report"
       }
 
       s"have the text ${messages.saveAsPdf}" in {
