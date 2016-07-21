@@ -22,7 +22,7 @@ import org.jsoup.Jsoup
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{disposalDate => messages}
-import common.KeystoreKeys
+import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import models.resident.{DisposalDateModel, TaxYearModel}
 import org.mockito.Matchers
@@ -38,7 +38,7 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalDate))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(keystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
     when(mockCalcConnector.saveFormData[DisposalDateModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))

@@ -22,7 +22,7 @@ import org.jsoup.Jsoup
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{acquisitionValue => messages}
-import common.KeystoreKeys
+import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import models.resident.AcquisitionValueModel
 import org.mockito.Matchers
@@ -38,7 +38,7 @@ class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with 
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[AcquisitionValueModel](Matchers.eq(KeystoreKeys.ResidentKeys.acquisitionValue))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[AcquisitionValueModel](Matchers.eq(keystoreKeys.acquisitionValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
     when(mockCalcConnector.saveFormData[AcquisitionValueModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))

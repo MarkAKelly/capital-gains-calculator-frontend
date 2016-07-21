@@ -18,7 +18,7 @@ package connectors
 
 import common.Dates._
 import common.KeystoreKeys
-import common.KeystoreKeys.{ResidentKeys, ResidentShareKeys}
+import common.KeystoreKeys.{ResidentPropertyKeys, ResidentShareKeys}
 import config.{CalculatorSessionCache, WSHttp}
 import constructors.nonresident.CalculateRequestConstructor
 import constructors.resident.properties
@@ -184,14 +184,15 @@ trait CalculatorConnector {
     )
   }
 
+
   def getPropertyGainAnswers(implicit hc: HeaderCarrier): Future[resident.YourAnswersSummaryModel] = {
-    val acquisitionValue = fetchAndGetFormData[resident.AcquisitionValueModel](ResidentKeys.acquisitionValue).map(_.get.amount)
-    val disposalDate = fetchAndGetFormData[resident.DisposalDateModel](ResidentKeys.disposalDate).map(formData =>
+    val acquisitionValue = fetchAndGetFormData[resident.AcquisitionValueModel](ResidentPropertyKeys.acquisitionValue).map(_.get.amount)
+    val disposalDate = fetchAndGetFormData[resident.DisposalDateModel](ResidentPropertyKeys.disposalDate).map(formData =>
       constructDate(formData.get.day, formData.get.month, formData.get.year))
-    val disposalValue = fetchAndGetFormData[resident.DisposalValueModel](ResidentKeys.disposalValue).map(_.get.amount)
-    val acquisitionCosts = fetchAndGetFormData[resident.AcquisitionCostsModel](ResidentKeys.acquisitionCosts).map(_.get.amount)
-    val disposalCosts = fetchAndGetFormData[resident.DisposalCostsModel](ResidentKeys.disposalCosts).map(_.get.amount)
-    val improvements = fetchAndGetFormData[resident.ImprovementsModel](ResidentKeys.improvements).map(_.get.amount)
+    val disposalValue = fetchAndGetFormData[resident.DisposalValueModel](ResidentPropertyKeys.disposalValue).map(_.get.amount)
+    val acquisitionCosts = fetchAndGetFormData[resident.AcquisitionCostsModel](ResidentPropertyKeys.acquisitionCosts).map(_.get.amount)
+    val disposalCosts = fetchAndGetFormData[resident.DisposalCostsModel](ResidentPropertyKeys.disposalCosts).map(_.get.amount)
+    val improvements = fetchAndGetFormData[resident.ImprovementsModel](ResidentPropertyKeys.improvements).map(_.get.amount)
 
     for {
       acquisitionValue <- acquisitionValue
@@ -210,15 +211,15 @@ trait CalculatorConnector {
     )
   }
 
-  def getPropertyDeductionAnswers(implicit hc: HeaderCarrier): Future[resident.ChargeableGainAnswers] = {
-    val reliefsModel = fetchAndGetFormData[resident.ReliefsModel](ResidentKeys.reliefs)
-    val reliefsValueModel = fetchAndGetFormData[resident.ReliefsValueModel](ResidentKeys.reliefsValue)
-    val otherPropertiesModel = fetchAndGetFormData[resident.OtherPropertiesModel](ResidentKeys.otherProperties)
-    val allowableLossesModel = fetchAndGetFormData[resident.AllowableLossesModel](ResidentKeys.allowableLosses)
-    val allowableLossesValueModel = fetchAndGetFormData[resident.AllowableLossesValueModel](ResidentKeys.allowableLossesValue)
-    val broughtForwardModel = fetchAndGetFormData[resident.LossesBroughtForwardModel](ResidentKeys.lossesBroughtForward)
-    val broughtForwardValueModel = fetchAndGetFormData[resident.LossesBroughtForwardValueModel](ResidentKeys.lossesBroughtForwardValue)
-    val annualExemptAmountModel = fetchAndGetFormData[resident.AnnualExemptAmountModel](ResidentKeys.annualExemptAmount)
+  def getPropertyDeductionAnswers (implicit hc: HeaderCarrier): Future[resident.ChargeableGainAnswers] = {
+    val reliefsModel = fetchAndGetFormData[resident.ReliefsModel](ResidentPropertyKeys.reliefs)
+    val reliefsValueModel = fetchAndGetFormData[resident.ReliefsValueModel](ResidentPropertyKeys.reliefsValue)
+    val otherPropertiesModel = fetchAndGetFormData[resident.OtherPropertiesModel](ResidentPropertyKeys.otherProperties)
+    val allowableLossesModel = fetchAndGetFormData[resident.AllowableLossesModel](ResidentPropertyKeys.allowableLosses)
+    val allowableLossesValueModel = fetchAndGetFormData[resident.AllowableLossesValueModel](ResidentPropertyKeys.allowableLossesValue)
+    val broughtForwardModel = fetchAndGetFormData[resident.LossesBroughtForwardModel](ResidentPropertyKeys.lossesBroughtForward)
+    val broughtForwardValueModel = fetchAndGetFormData[resident.LossesBroughtForwardValueModel](ResidentPropertyKeys.lossesBroughtForwardValue)
+    val annualExemptAmountModel = fetchAndGetFormData[resident.AnnualExemptAmountModel](ResidentPropertyKeys.annualExemptAmount)
 
     for {
       reliefs <- reliefsModel
@@ -242,10 +243,10 @@ trait CalculatorConnector {
 
   }
 
-  def getPropertyIncomeAnswers(implicit hc: HeaderCarrier): Future[resident.IncomeAnswersModel] = {
-    val previousTaxableGainsModel = fetchAndGetFormData[resident.income.PreviousTaxableGainsModel](ResidentKeys.previousTaxableGains)
-    val currentIncomeModel = fetchAndGetFormData[resident.income.CurrentIncomeModel](ResidentKeys.currentIncome)
-    val personalAllowanceModel = fetchAndGetFormData[resident.income.PersonalAllowanceModel](ResidentKeys.personalAllowance)
+  def getPropertyIncomeAnswers (implicit hc: HeaderCarrier): Future[resident.IncomeAnswersModel] = {
+    val previousTaxableGainsModel = fetchAndGetFormData[resident.income.PreviousTaxableGainsModel](ResidentPropertyKeys.previousTaxableGains)
+    val currentIncomeModel = fetchAndGetFormData[resident.income.CurrentIncomeModel](ResidentPropertyKeys.currentIncome)
+    val personalAllowanceModel = fetchAndGetFormData[resident.income.PersonalAllowanceModel](ResidentPropertyKeys.personalAllowance)
 
     for {
       previousGains <- previousTaxableGainsModel
