@@ -1,16 +1,17 @@
 @import views.html.helpers.resident._
 @import models.SummaryDataItemModel
 @import models.resident._
+@import models.resident.properties._
 @import common.Dates._
 @import constructors.resident.SummaryConstructor._
-@import controllers.resident.routes.{GainController => routes}
+@import controllers.resident.properties.routes.{GainController => routes}
 @import views.html.calculation.resident._
 
 @(answers: YourAnswersSummaryModel, gain: BigDecimal, taxYear: TaxYearModel)(implicit request: Request[_])
 
 @resident_main_template(
     title = Messages("calc.resident.summary.title"),
-    backLink = Some(controllers.resident.routes.GainController.improvements().toString),
+    backLink = Some(controllers.resident.properties.routes.GainController.improvements().toString),
     articleLayout = false
 ) {
 
@@ -77,5 +78,5 @@
             </section>
         }
     }
-    <a type="submit" class="button save-pdf-button" href="@controllers.resident.routes.ReportController.gainSummaryReport.toString">@Messages("calc.resident.summary.saveAsPdf")</a>
+    <a type="submit" class="button save-pdf-button" href="@controllers.resident.properties.routes.ReportController.gainSummaryReport.toString">@Messages("calc.resident.summary.saveAsPdf")</a>
 }

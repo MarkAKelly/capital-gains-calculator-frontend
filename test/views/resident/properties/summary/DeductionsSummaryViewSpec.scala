@@ -20,8 +20,9 @@ import assets.MessageLookup.{summary => messages}
 import assets.{MessageLookup => commonMessages}
 import common.Dates
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.routes
+import controllers.resident.properties.routes
 import models.resident._
+import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, ReliefsValueModel, YourAnswersSummaryModel}
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{summary => views}
@@ -48,7 +49,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       BigDecimal(11100),
       BigDecimal(0),
       BigDecimal(11100))
-    lazy val backLink = "/calculate-your-capital-gains/resident/losses-brought-forward"
+    lazy val backLink = "/calculate-your-capital-gains/resident/properties/losses-brought-forward"
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
@@ -413,7 +414,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
     lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
 
-    lazy val backLink = "/calculate-your-capital-gains/resident/annual-exempt-amount"
+    lazy val backLink = "/calculate-your-capital-gains/resident/properties/annual-exempt-amount"
     lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
@@ -726,7 +727,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       BigDecimal(71000))
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
-    lazy val backLink = "/calculate-your-capital-gains/resident/annual-exempt-amount"
+    lazy val backLink = "/calculate-your-capital-gains/resident/properties/annual-exempt-amount"
     lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
@@ -795,7 +796,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
-    lazy val backLink = "/calculate-your-capital-gains/resident/annual-exempt-amount"
+    lazy val backLink = "/calculate-your-capital-gains/resident/properties/annual-exempt-amount"
     lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel)(fakeRequest)
 
 
@@ -857,7 +858,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
     lazy val taxYearModel = TaxYearModel("2017/18", false, "2015/16")
 
-    lazy val backLink = "/calculate-your-capital-gains/resident/annual-exempt-amount"
+    lazy val backLink = "/calculate-your-capital-gains/resident/properties/annual-exempt-amount"
     lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 

@@ -54,7 +54,7 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
       }
 
       "has a link to Allowable Losses" in {
-        backLink.attr("href") shouldBe controllers.resident.routes.DeductionsController.allowableLosses().toString
+        backLink.attr("href") shouldBe controllers.resident.properties.routes.DeductionsController.allowableLosses().toString
       }
     }
 
@@ -75,8 +75,8 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
 
       lazy val form = doc.getElementsByTag("form")
 
-      s"has the action '${controllers.resident.routes.DeductionsController.submitAllowableLossesValue().toString}'" in {
-        form.attr("action") shouldBe controllers.resident.routes.DeductionsController.submitAllowableLossesValue().toString
+      s"has the action '${controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue().toString}'" in {
+        form.attr("action") shouldBe controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue().toString
       }
 
       "has the method of POST" in {

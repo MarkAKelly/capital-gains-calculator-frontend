@@ -19,7 +19,7 @@ package views.resident.properties.deductions
 import assets.MessageLookup
 import assets.MessageLookup.{reliefs => messages}
 import controllers.helpers.FakeRequestHelper
-import forms.resident.ReliefsForm._
+import forms.resident.properties.ReliefsForm._
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{deductions => views}
@@ -40,7 +40,7 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
     }
 
     s"have a back link to the Disposal Date Page with text ${MessageLookup.calcBaseBack}" in {
-      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/improvements"
+      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/improvements"
     }
 
     s"have the question of the page ${messages.title}" in {
@@ -48,7 +48,7 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
     }
 
     "render a form tag with a submit action" in {
-      doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/reliefs"
+      doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/reliefs"
     }
 
     s"have a legend for an input with text ${messages.title}" in {

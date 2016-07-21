@@ -52,7 +52,7 @@ class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with Fa
       }
 
       "have a link to Acquisition Value" in {
-        backLink.attr("href") shouldBe controllers.resident.routes.GainController.acquisitionValue().toString
+        backLink.attr("href") shouldBe controllers.resident.properties.routes.GainController.acquisitionValue().toString
       }
     }
 
@@ -73,8 +73,8 @@ class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with Fa
 
       lazy val form = doc.getElementsByTag("form")
 
-      s"has the action '${controllers.resident.routes.GainController.submitAcquisitionCosts().toString}'" in {
-        form.attr("action") shouldBe controllers.resident.routes.GainController.submitAcquisitionCosts().toString
+      s"has the action '${controllers.resident.properties.routes.GainController.submitAcquisitionCosts().toString}'" in {
+        form.attr("action") shouldBe controllers.resident.properties.routes.GainController.submitAcquisitionCosts().toString
       }
 
       "has the method of POST" in {
