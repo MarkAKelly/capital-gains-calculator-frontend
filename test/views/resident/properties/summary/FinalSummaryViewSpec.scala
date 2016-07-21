@@ -24,7 +24,8 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{summary => views}
 import assets.{MessageLookup => commonMessages}
-import controllers.resident.routes
+import common.Dates._
+import controllers.resident.properties.routes
 import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, PreviousTaxableGainsModel}
 
 class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
@@ -61,7 +62,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
-    lazy val backLink = "/calculate-your-capital-gains/resident/personal-allowance"
+    lazy val backLink = "/calculate-your-capital-gains/resident/properties/personal-allowance"
 
     lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
@@ -433,8 +434,8 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
           doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
         }
 
-        s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
-          doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/final-report"
+        s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
+          doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/final-report"
         }
 
         s"have the text ${messages.saveAsPdf}" in {
@@ -476,7 +477,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
 
-    lazy val backLink = "/calculate-your-capital-gains/resident/personal-allowance"
+    lazy val backLink = "/calculate-your-capital-gains/resident/properties/personal-allowance"
 
     lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
@@ -616,8 +617,8 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
       }
 
-      s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
-        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/final-report"
+      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/final-report"
       }
 
       s"have the text ${messages.saveAsPdf}" in {
@@ -658,7 +659,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
-    lazy val backLink = "/calculate-your-capital-gains/resident/personal-allowance"
+    lazy val backLink = "/calculate-your-capital-gains/resident/properties/personal-allowance"
 
     lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
@@ -719,8 +720,8 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
       }
 
-      s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
-        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/final-report"
+      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/final-report"
       }
 
       s"have the text ${messages.saveAsPdf}" in {
@@ -760,7 +761,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       Some(28)
     )
 
-    lazy val backLink = "/calculate-your-capital-gains/resident/personal-allowance"
+    lazy val backLink = "/calculate-your-capital-gains/resident/properties/personal-allowance"
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
@@ -808,8 +809,8 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
       }
 
-      s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
-        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/final-report"
+      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/final-report"
       }
 
       s"have the text ${messages.saveAsPdf}" in {
@@ -850,7 +851,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       Some(28)
     )
 
-    lazy val backLink = "/calculate-your-capital-gains/resident/personal-allowance"
+    lazy val backLink = "/calculate-your-capital-gains/resident/properties/personal-allowance"
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
@@ -871,8 +872,8 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
       }
 
-      s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
-        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/final-report"
+      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/final-report"
       }
 
       s"have the text ${messages.saveAsPdf}" in {
@@ -912,7 +913,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       Some(28)
     )
 
-    lazy val backLink = "/calculate-your-capital-gains/resident/personal-allowance"
+    lazy val backLink = "/calculate-your-capital-gains/resident/properties/personal-allowance"
 
     lazy val taxYearModel = TaxYearModel("2016/17", true, "2016/17")
 
@@ -936,8 +937,8 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
       }
 
-      s"with an href to ${controllers.resident.routes.ReportController.gainSummaryReport.toString}" in {
-        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/final-report"
+      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/final-report"
       }
 
       s"have the text ${messages.saveAsPdf}" in {

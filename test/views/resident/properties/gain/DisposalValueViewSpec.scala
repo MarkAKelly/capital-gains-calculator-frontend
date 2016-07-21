@@ -47,7 +47,7 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
     }
 
     s"have a back link to the Disposal Date Page with text ${MessageLookup.calcBaseBack}" in {
-      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/disposal-date"
+      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/disposal-date"
     }
 
     s"have the question of the page ${messages.question}" in {
@@ -85,7 +85,7 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
     }
 
     "render a form tag with a submit action" in {
-      doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/disposal-value"
+      doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/disposal-value"
     }
 
     s"have a label for an input with text ${messages.question}" in {
