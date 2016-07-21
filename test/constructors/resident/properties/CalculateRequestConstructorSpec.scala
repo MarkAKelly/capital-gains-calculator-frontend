@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package constructors.resident
+package constructors.resident.properties
 
 import common.Dates
-import constructors.resident.properties.CalculateRequestConstructor
 import models.resident._
 import uk.gov.hmrc.play.test.UnitSpec
 
