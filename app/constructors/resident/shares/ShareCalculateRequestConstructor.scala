@@ -19,7 +19,7 @@ package constructors.resident.shares
 import java.text.SimpleDateFormat
 
 import models.resident.{AllowableLossesModel, AllowableLossesValueModel, OtherPropertiesModel}
-import models.resident.shares.{ShareDeductionGainAnswersModel, ShareGainAnswersModel}
+import models.resident.shares.{ShareDeductionGainAnswersModel, ShareGainAnswersModel, ShareIncomeAnswersModel}
 
 object ShareCalculateRequestConstructor {
 
@@ -54,5 +54,14 @@ object ShareCalculateRequestConstructor {
       case (true, Some(AllowableLossesModel(false))) => true
       case _ => false
     }
+  }
+
+  def incomeAnswersRequestString (deductionsAnswers: ShareDeductionGainAnswersModel, answers: ShareIncomeAnswersModel): String = {
+    s"${if (deductionsAnswers.otherPropertiesModel.get.hasOtherProperties && !deductionsAnswers.allowableLossesModel.get.isClaiming &&
+      deductionsAnswers.annualExemptAmountModel.get.amount == 0)
+      s"&previousTaxableGain=${answers.previousTaxableGainsModel.get.amount}"
+    else ""}" +
+      s"&previousIncome=${answers.currentIncomeModel.get.amount}" +
+      s"&personalAllowance=${answers.personalAllowanceModel.get.amount}"
   }
 }
