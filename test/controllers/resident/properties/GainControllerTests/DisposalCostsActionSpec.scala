@@ -17,7 +17,7 @@
 package controllers.resident.properties.GainControllerTests
 
 import assets.MessageLookup.{disposalDate, disposalCosts => messages}
-import common.KeystoreKeys
+import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.GainController
@@ -38,7 +38,7 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[DisposalCostsModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalCosts))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[DisposalCostsModel](Matchers.eq(keystoreKeys.disposalCosts))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
     when(mockCalcConnector.saveFormData[DisposalCostsModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))

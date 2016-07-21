@@ -16,7 +16,7 @@
 
 package controllers.resident.properties.IncomeControllerSpec
 
-import common.KeystoreKeys.{ResidentKeys => keystoreKeys}
+import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.IncomeController
@@ -26,10 +26,8 @@ import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
 import play.api.test.Helpers._
 import assets.MessageLookup.{personalAllowance => messages}
-import common.KeystoreKeys
-import models.resident.{AnnualExemptAmountModel, ChargeableGainResultModel, DisposalDateModel, TaxYearModel}
+import models.resident.{DisposalDateModel, TaxYearModel}
 import models.resident.income.PersonalAllowanceModel
-import org.openqa.selenium.Keys
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
@@ -56,7 +54,7 @@ class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with
     when(mockCalcConnector.saveFormData[PersonalAllowanceModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
 
-    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalDate))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(keystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(disposalDateModel)))
 
     when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
