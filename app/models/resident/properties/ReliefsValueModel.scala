@@ -14,21 +14,12 @@
  * limitations under the License.
  */
 
-package models.resident
+package models.resident.properties
 
-import java.util.Date
 import play.api.libs.json.Json
 
-case class YourAnswersSummaryModel
-(
-  disposalDate: Date,
-  disposalValue: BigDecimal,
-  disposalCosts: BigDecimal,
-  acquisitionValue: BigDecimal,
-  acquisitionCosts: BigDecimal,
-  improvements: BigDecimal
-)
+case class ReliefsValueModel(amount: BigDecimal)
 
-object YourAnswersSummaryModel {
-  implicit val format = Json.format[YourAnswersSummaryModel]
+object ReliefsValueModel {
+  implicit val format = Json.format[ReliefsValueModel]
 }

@@ -20,7 +20,8 @@ import assets.{MessageLookup => commonMessages}
 import assets.MessageLookup.{summary => messages}
 import common.Dates._
 import controllers.helpers.FakeRequestHelper
-import models.resident.{TaxYearModel, YourAnswersSummaryModel}
+import models.resident.TaxYearModel
+import models.resident.properties.YourAnswersSummaryModel
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{report => views}

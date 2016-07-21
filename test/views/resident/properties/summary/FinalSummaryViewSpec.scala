@@ -27,6 +27,7 @@ import assets.{MessageLookup => commonMessages}
 import common.Dates._
 import controllers.resident.properties.routes
 import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, PreviousTaxableGainsModel}
+import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, YourAnswersSummaryModel}
 
 class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 

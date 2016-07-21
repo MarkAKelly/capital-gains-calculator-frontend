@@ -18,8 +18,8 @@ package forms.resident
 
 import assets.MessageLookup.errorMessages
 import controllers.helpers.FakeRequestHelper
-import forms.resident.ImprovementsForm._
-import models.resident.ImprovementsModel
+import forms.resident.properties.ImprovementsForm._
+import models.resident.properties.ImprovementsModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class ImprovementsFormSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {

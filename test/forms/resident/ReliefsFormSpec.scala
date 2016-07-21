@@ -16,11 +16,11 @@
 
 package forms.resident
 
-import models.resident.ReliefsModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import forms.resident.ReliefsForm._
 import assets.{MessageLookup => commonMessages}
 import commonMessages.{reliefs => messages}
+import forms.resident.properties.ReliefsForm._
+import models.resident.properties.ReliefsModel
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 class ReliefsFormSpec extends UnitSpec with WithFakeApplication {
