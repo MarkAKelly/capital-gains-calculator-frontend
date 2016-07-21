@@ -17,7 +17,7 @@
 package controllers.resident.properties.GainControllerTests
 
 import assets.MessageLookup.{improvementsView => messages}
-import common.KeystoreKeys
+import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.GainController
@@ -40,7 +40,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[ImprovementsModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.improvements))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[ImprovementsModel](Matchers.eq(keystoreKeys.improvements))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
     when(mockCalcConnector.getYourAnswers(Matchers.any()))

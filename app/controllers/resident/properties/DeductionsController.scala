@@ -16,7 +16,7 @@
 
 package controllers.resident.properties
 
-import common.KeystoreKeys
+import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import models.resident._
@@ -45,7 +45,7 @@ trait DeductionsController extends FeatureLock {
   val calcConnector: CalculatorConnector
 
   def getDisposalDate(implicit hc: HeaderCarrier): Future[Option[DisposalDateModel]] = {
-    calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.ResidentPropertyKeys.disposalDate)
+    calcConnector.fetchAndGetFormData[DisposalDateModel](keystoreKeys.disposalDate)
   }
 
   def formatDisposalDate(disposalDateModel: DisposalDateModel): Future[String] = {
@@ -61,7 +61,7 @@ trait DeductionsController extends FeatureLock {
   val reliefs = FeatureLockForRTT.async { implicit request =>
 
     def routeRequest(totalGain: BigDecimal): Future[Result] = {
-      calcConnector.fetchAndGetFormData[ReliefsModel](KeystoreKeys.ResidentPropertyKeys.reliefs).map {
+      calcConnector.fetchAndGetFormData[ReliefsModel](keystoreKeys.reliefs).map {
         case Some(data) => Ok(views.reliefs(reliefsForm(totalGain).fill(data), totalGain))
         case None => Ok(views.reliefs(reliefsForm(totalGain), totalGain))
       }
@@ -80,7 +80,7 @@ trait DeductionsController extends FeatureLock {
       reliefsForm(totalGain).bindFromRequest().fold(
         errors => Future.successful(BadRequest(views.reliefs(errors, totalGain))),
         success => {
-          calcConnector.saveFormData[ReliefsModel](KeystoreKeys.ResidentPropertyKeys.reliefs, success)
+          calcConnector.saveFormData[ReliefsModel](keystoreKeys.reliefs, success)
           success match {
             case ReliefsModel(true) => Future.successful(Redirect(routes.DeductionsController.reliefsValue()))
             case _ => Future.successful(Redirect(routes.DeductionsController.otherProperties()))
@@ -98,7 +98,7 @@ trait DeductionsController extends FeatureLock {
   //################# Reliefs Value Input Actions ########################
 
   val reliefsValue = FeatureLockForRTT.async { implicit request =>
-    calcConnector.fetchAndGetFormData[ReliefsValueModel](KeystoreKeys.ResidentPropertyKeys.reliefsValue).map {
+    calcConnector.fetchAndGetFormData[ReliefsValueModel](keystoreKeys.reliefsValue).map {
       case Some(data) => Ok(views.reliefsValue(reliefsValueForm.fill(data)))
       case None => Ok(views.reliefsValue(reliefsValueForm))
     }
@@ -108,7 +108,7 @@ trait DeductionsController extends FeatureLock {
     reliefsValueForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.reliefsValue(errors))),
       success => {
-        calcConnector.saveFormData[ReliefsValueModel](KeystoreKeys.ResidentPropertyKeys.reliefsValue, success)
+        calcConnector.saveFormData[ReliefsValueModel](keystoreKeys.reliefsValue, success)
         Future.successful(Redirect(routes.DeductionsController.otherProperties()))
       }
     )
@@ -116,7 +116,7 @@ trait DeductionsController extends FeatureLock {
 
   //################# Other Properties Actions #########################
   def otherPropertiesBackUrl(implicit hc: HeaderCarrier): Future[String] = {
-    calcConnector.fetchAndGetFormData[ReliefsModel](KeystoreKeys.ResidentPropertyKeys.reliefs).flatMap {
+    calcConnector.fetchAndGetFormData[ReliefsModel](keystoreKeys.reliefs).flatMap {
       case Some(ReliefsModel(true)) => Future.successful(routes.DeductionsController.reliefsValue().url)
       case _ => Future.successful(routes.DeductionsController.reliefs().url)
     }
@@ -125,7 +125,7 @@ trait DeductionsController extends FeatureLock {
   val otherProperties = FeatureLockForRTT.async { implicit request =>
 
     def routeRequest(backUrl: String, taxYear: TaxYearModel): Future[Result] = {
-      calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.ResidentPropertyKeys.otherProperties).map {
+      calcConnector.fetchAndGetFormData[OtherPropertiesModel](keystoreKeys.otherProperties).map {
         case Some(data) => Ok(views.otherProperties(otherPropertiesForm.fill(data), backUrl, taxYear))
         case None => Ok(views.otherProperties(otherPropertiesForm, backUrl, taxYear))
       }
@@ -146,7 +146,7 @@ trait DeductionsController extends FeatureLock {
       otherPropertiesForm.bindFromRequest.fold(
         errors => Future.successful(BadRequest(views.otherProperties(errors, backUrl, taxYearModel))),
         success => {
-          calcConnector.saveFormData[OtherPropertiesModel](KeystoreKeys.ResidentPropertyKeys.otherProperties, success)
+          calcConnector.saveFormData[OtherPropertiesModel](keystoreKeys.otherProperties, success)
           if (success.hasOtherProperties) {
             Future.successful(Redirect(routes.DeductionsController.allowableLosses()))
           } else {
@@ -168,7 +168,7 @@ trait DeductionsController extends FeatureLock {
   val allowableLosses = FeatureLockForRTT.async { implicit request =>
 
     def routeRequest(taxYear: TaxYearModel): Future[Result] = {
-      calcConnector.fetchAndGetFormData[AllowableLossesModel](KeystoreKeys.ResidentPropertyKeys.allowableLosses).map {
+      calcConnector.fetchAndGetFormData[AllowableLossesModel](keystoreKeys.allowableLosses).map {
         case Some(data) => Ok(commonViews.allowableLosses(allowableLossesForm.fill(data), taxYear))
         case None => Ok(commonViews.allowableLosses(allowableLossesForm, taxYear))
       }
@@ -187,7 +187,7 @@ trait DeductionsController extends FeatureLock {
       allowableLossesForm.bindFromRequest.fold(
         errors => Future.successful(BadRequest(commonViews.allowableLosses(errors, taxYear))),
         success => {
-          calcConnector.saveFormData[AllowableLossesModel](KeystoreKeys.ResidentPropertyKeys.allowableLosses, success)
+          calcConnector.saveFormData[AllowableLossesModel](keystoreKeys.allowableLosses, success)
           if (success.isClaiming) {
             Future.successful(Redirect(routes.DeductionsController.allowableLossesValue()))
           }
@@ -209,7 +209,7 @@ trait DeductionsController extends FeatureLock {
   val allowableLossesValue = FeatureLockForRTT.async { implicit request =>
 
     def routeRequest(taxYear: TaxYearModel): Future[Result] = {
-      calcConnector.fetchAndGetFormData[AllowableLossesValueModel](KeystoreKeys.ResidentPropertyKeys.allowableLossesValue).map {
+      calcConnector.fetchAndGetFormData[AllowableLossesValueModel](keystoreKeys.allowableLossesValue).map {
         case Some(data) => Ok(commonViews.allowableLossesValue(allowableLossesValueForm.fill(data), taxYear))
         case None => Ok(commonViews.allowableLossesValue(allowableLossesValueForm, taxYear))
       }
@@ -228,7 +228,7 @@ trait DeductionsController extends FeatureLock {
       allowableLossesValueForm.bindFromRequest.fold(
         errors => Future.successful(BadRequest(commonViews.allowableLossesValue(errors, taxYearModel))),
         success => {
-          calcConnector.saveFormData[AllowableLossesValueModel](KeystoreKeys.ResidentPropertyKeys.allowableLossesValue, success)
+          calcConnector.saveFormData[AllowableLossesValueModel](keystoreKeys.allowableLossesValue, success)
           Future.successful(Redirect(routes.DeductionsController.lossesBroughtForward()))
         }
       )
@@ -244,21 +244,21 @@ trait DeductionsController extends FeatureLock {
   //################# Brought Forward Losses Actions ############################
 
   def otherPropertiesCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
-    calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.ResidentPropertyKeys.otherProperties).map {
+    calcConnector.fetchAndGetFormData[OtherPropertiesModel](keystoreKeys.otherProperties).map {
       case Some(data) => data.hasOtherProperties
       case None => false
     }
   }
 
   def allowableLossesCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
-    calcConnector.fetchAndGetFormData[AllowableLossesModel](KeystoreKeys.ResidentPropertyKeys.allowableLosses).map {
+    calcConnector.fetchAndGetFormData[AllowableLossesModel](keystoreKeys.allowableLosses).map {
       case Some(data) => data.isClaiming
       case None => false
     }
   }
 
   def displayAnnualExemptAmountCheck(claimedOtherProperties: Boolean, claimedAllowableLosses: Boolean)(implicit hc: HeaderCarrier): Future[Boolean] = {
-    calcConnector.fetchAndGetFormData[AllowableLossesValueModel](KeystoreKeys.ResidentPropertyKeys.allowableLossesValue).map {
+    calcConnector.fetchAndGetFormData[AllowableLossesValueModel](keystoreKeys.allowableLossesValue).map {
       case Some(result) if claimedAllowableLosses && claimedOtherProperties => result.amount == 0
       case _ if claimedOtherProperties && !claimedAllowableLosses => true
       case _ => false
@@ -290,7 +290,7 @@ trait DeductionsController extends FeatureLock {
   val lossesBroughtForward = FeatureLockForRTT.async { implicit request =>
 
     def routeRequest(backLinkUrl: String, taxYear: TaxYearModel): Future[Result] = {
-      calcConnector.fetchAndGetFormData[LossesBroughtForwardModel](KeystoreKeys.ResidentPropertyKeys.lossesBroughtForward).map {
+      calcConnector.fetchAndGetFormData[LossesBroughtForwardModel](keystoreKeys.lossesBroughtForward).map {
         case Some(data) => Ok(commonViews.lossesBroughtForward(lossesBroughtForwardForm.fill(data), backLinkUrl, taxYear))
         case _ => Ok(commonViews.lossesBroughtForward(lossesBroughtForwardForm, backLinkUrl, taxYear))
       }
@@ -325,7 +325,7 @@ trait DeductionsController extends FeatureLock {
       lossesBroughtForwardForm.bindFromRequest.fold(
         errors => Future.successful(BadRequest(commonViews.lossesBroughtForward(errors, backUrl, taxYearModel))),
         success => {
-          calcConnector.saveFormData[LossesBroughtForwardModel](KeystoreKeys.ResidentPropertyKeys.lossesBroughtForward, success)
+          calcConnector.saveFormData[LossesBroughtForwardModel](keystoreKeys.lossesBroughtForward, success)
 
           if (success.option) Future.successful(Redirect(routes.DeductionsController.lossesBroughtForwardValue()))
           else {
@@ -357,7 +357,7 @@ trait DeductionsController extends FeatureLock {
   val lossesBroughtForwardValue = FeatureLockForRTT.async { implicit request =>
 
     def routeRequest(taxYear: TaxYearModel): Future[Result] = {
-      calcConnector.fetchAndGetFormData[LossesBroughtForwardValueModel](KeystoreKeys.ResidentPropertyKeys.lossesBroughtForwardValue).map {
+      calcConnector.fetchAndGetFormData[LossesBroughtForwardValueModel](keystoreKeys.lossesBroughtForwardValue).map {
         case Some(data) => Ok(commonViews.lossesBroughtForwardValue(lossesBroughtForwardValueForm.fill(data), taxYear))
         case None => Ok(commonViews.lossesBroughtForwardValue(lossesBroughtForwardValueForm, taxYear))
       }
@@ -379,7 +379,7 @@ trait DeductionsController extends FeatureLock {
         taxYear <- calcConnector.getTaxYear(disposalDateString)
       } yield {BadRequest(commonViews.lossesBroughtForwardValue(errors, taxYear.get))}},
       success => {
-        calcConnector.saveFormData[LossesBroughtForwardValueModel](KeystoreKeys.ResidentPropertyKeys.lossesBroughtForwardValue, success)
+        calcConnector.saveFormData[LossesBroughtForwardValueModel](keystoreKeys.lossesBroughtForwardValue, success)
 
         displayAnnualExemptAmountCheck.flatMap { displayAnnualExemptAmount =>
           if (displayAnnualExemptAmount) Future.successful(Redirect(routes.DeductionsController.annualExemptAmount()))
@@ -396,7 +396,7 @@ trait DeductionsController extends FeatureLock {
 
   //################# Annual Exempt Amount Input Actions #############################
   val annualExemptAmount = FeatureLockForRTT.async { implicit request =>
-    calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](KeystoreKeys.ResidentPropertyKeys.annualExemptAmount).map {
+    calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](keystoreKeys.annualExemptAmount).map {
       case Some(data) => Ok(commonViews.annualExemptAmount(annualExemptAmountForm().fill(data)))
       case None => Ok(commonViews.annualExemptAmount(annualExemptAmountForm()))
     }
@@ -425,7 +425,7 @@ trait DeductionsController extends FeatureLock {
         errors => Future.successful(BadRequest(commonViews.annualExemptAmount(errors))),
         success => {
           for {
-            save <- calcConnector.saveFormData(KeystoreKeys.ResidentPropertyKeys.annualExemptAmount, success)
+            save <- calcConnector.saveFormData(keystoreKeys.annualExemptAmount, success)
             positiveAEA <- positiveAEACheck(success)
             positiveChargeableGain <- positiveChargeableGainCheck
           } yield (positiveAEA, positiveChargeableGain)
@@ -439,7 +439,7 @@ trait DeductionsController extends FeatureLock {
       )
     }
     for {
-      disposalDate <- calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.ResidentPropertyKeys.disposalDate)
+      disposalDate <- calcConnector.fetchAndGetFormData[DisposalDateModel](keystoreKeys.disposalDate)
       disposalDateString <- formatDisposalDate(disposalDate.get)
       taxYear <- calcConnector.getTaxYear(disposalDateString)
       year <- taxYearStringToInteger(taxYear.get.calculationTaxYear)

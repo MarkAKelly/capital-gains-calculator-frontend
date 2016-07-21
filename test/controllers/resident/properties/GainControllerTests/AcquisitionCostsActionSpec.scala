@@ -17,7 +17,7 @@
 package controllers.resident.properties.GainControllerTests
 
 import assets.MessageLookup.{acquisitionCosts => messages}
-import common.KeystoreKeys
+import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.GainController
@@ -38,7 +38,7 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[AcquisitionCostsModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.acquisitionCosts))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[AcquisitionCostsModel](Matchers.eq(keystoreKeys.acquisitionCosts))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
     when(mockCalcConnector.saveFormData[AcquisitionCostsModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
