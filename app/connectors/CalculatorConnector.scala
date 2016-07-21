@@ -22,6 +22,7 @@ import common.KeystoreKeys.{ResidentKeys, ResidentShareKeys}
 import config.{CalculatorSessionCache, WSHttp}
 import constructors.nonresident.CalculateRequestConstructor
 import constructors.resident.properties
+import constructors.resident.shares
 import constructors.{resident => residentConstructors}
 import models.nonresident._
 import models.resident
@@ -316,5 +317,32 @@ trait CalculatorConnector {
     } yield {
       resident.shares.ShareIncomeAnswersModel(previousGains, currentIncome, personalAllowance)
     }
+  }
+
+  def calculateRttShareGrossGain(input: resident.shares.ShareGainAnswersModel)(implicit hc: HeaderCarrier): Future[BigDecimal] = {
+    http.GET[BigDecimal](s"$serviceUrl/capital-gains-calculator/shares/calculate-total-gain" +
+      shares.ShareCalculateRequestConstructor.totalGainRequestString(input)
+    )
+  }
+
+  def calculateRttShareChargeableGain(totalGainInput: resident.shares.ShareGainAnswersModel,
+                                         chargeableGainInput: resident.shares.ShareDeductionGainAnswersModel,
+                                         maxAEA: BigDecimal)(implicit hc: HeaderCarrier): Future[Option[resident.ChargeableGainResultModel]] = {
+    http.GET[Option[resident.ChargeableGainResultModel]](s"$serviceUrl/capital-gains-calculator/shares/calculate-chargeable-gain" +
+      shares.ShareCalculateRequestConstructor.totalGainRequestString(totalGainInput) +
+      shares.ShareCalculateRequestConstructor.chargeableGainRequestString(chargeableGainInput, maxAEA)
+
+    )
+  }
+
+  def calculateRttShareTotalGainAndTax(totalGainInput: resident.shares.ShareGainAnswersModel,
+                                          chargeableGainInput: resident.shares.ShareDeductionGainAnswersModel,
+                                          maxAEA: BigDecimal,
+                                          incomeAnswers: resident.shares.ShareIncomeAnswersModel)(implicit hc: HeaderCarrier): Future[Option[resident.TotalGainAndTaxOwedModel]] = {
+    http.GET[Option[resident.TotalGainAndTaxOwedModel]](s"$serviceUrl/capital-gains-calculator/shares/calculate-resident-capital-gains-tax" +
+      shares.ShareCalculateRequestConstructor.totalGainRequestString(totalGainInput) +
+      shares.ShareCalculateRequestConstructor.chargeableGainRequestString(chargeableGainInput, maxAEA) +
+      shares.ShareCalculateRequestConstructor.incomeAnswersRequestString(chargeableGainInput, incomeAnswers)
+    )
   }
 }
