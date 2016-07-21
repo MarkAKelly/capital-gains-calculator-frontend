@@ -22,7 +22,7 @@ import org.jsoup.Jsoup
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{previousTaxableGains => messages}
-import common.KeystoreKeys.{ResidentKeys => keystore}
+import common.KeystoreKeys.{ResidentPropertyKeys => keystore}
 import connectors.CalculatorConnector
 import models.resident.{AllowableLossesModel, AllowableLossesValueModel, LossesBroughtForwardModel, OtherPropertiesModel}
 import models.resident.income.PreviousTaxableGainsModel

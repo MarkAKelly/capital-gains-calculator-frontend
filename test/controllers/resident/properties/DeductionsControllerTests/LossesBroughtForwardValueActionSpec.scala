@@ -17,7 +17,7 @@
 package controllers.resident.properties.DeductionsControllerTests
 
 import assets.MessageLookup.{lossesBroughtForwardValue => messages}
-import common.KeystoreKeys
+import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.DeductionsController
@@ -42,10 +42,10 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
 
       val mockCalcConnector = mock[CalculatorConnector]
 
-      when(mockCalcConnector.fetchAndGetFormData[LossesBroughtForwardValueModel](Matchers.eq(KeystoreKeys.ResidentKeys.lossesBroughtForwardValue))(Matchers.any(), Matchers.any()))
+      when(mockCalcConnector.fetchAndGetFormData[LossesBroughtForwardValueModel](Matchers.eq(keystoreKeys.lossesBroughtForwardValue))(Matchers.any(), Matchers.any()))
         .thenReturn(getData)
 
-      when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalDate))(Matchers.any(), Matchers.any()))
+      when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(keystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
         .thenReturn(Some(disposalDateModel))
 
       when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
@@ -123,16 +123,16 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
 
       val mockCalcConnector = mock[CalculatorConnector]
 
-      when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.eq(KeystoreKeys.ResidentKeys.otherProperties))(Matchers.any(), Matchers.any()))
+      when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.eq(keystoreKeys.otherProperties))(Matchers.any(), Matchers.any()))
         .thenReturn(otherPropertiesModel)
 
-      when(mockCalcConnector.fetchAndGetFormData[AllowableLossesModel](Matchers.eq(KeystoreKeys.ResidentKeys.allowableLosses))(Matchers.any(), Matchers.any()))
+      when(mockCalcConnector.fetchAndGetFormData[AllowableLossesModel](Matchers.eq(keystoreKeys.allowableLosses))(Matchers.any(), Matchers.any()))
         .thenReturn(allowableLossesModel)
 
-      when(mockCalcConnector.fetchAndGetFormData[AllowableLossesValueModel](Matchers.eq(KeystoreKeys.ResidentKeys.allowableLossesValue))(Matchers.any(), Matchers.any()))
+      when(mockCalcConnector.fetchAndGetFormData[AllowableLossesValueModel](Matchers.eq(keystoreKeys.allowableLossesValue))(Matchers.any(), Matchers.any()))
         .thenReturn(allowableLossesValueModel)
 
-      when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.eq(KeystoreKeys.ResidentKeys.otherProperties))(Matchers.any(), Matchers.any()))
+      when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.eq(keystoreKeys.otherProperties))(Matchers.any(), Matchers.any()))
         .thenReturn(otherPropertiesModel)
 
       when(mockCalcConnector.getYourAnswers(Matchers.any()))
@@ -144,7 +144,7 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
       when(mockCalcConnector.calculateRttChargeableGain(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
         .thenReturn(Future.successful(Some(chargeableGain)))
 
-      when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalDate))(Matchers.any(), Matchers.any()))
+      when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(keystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
         .thenReturn(Some(disposalDateModel))
 
       when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))

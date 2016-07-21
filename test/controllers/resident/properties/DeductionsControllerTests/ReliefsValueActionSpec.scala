@@ -17,7 +17,7 @@
 package controllers.resident.properties.DeductionsControllerTests
 
 import assets.MessageLookup.{reliefsValue => messages}
-import common.KeystoreKeys
+import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.DeductionsController
@@ -38,7 +38,7 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[ReliefsValueModel](Matchers.eq(KeystoreKeys.ResidentKeys.reliefsValue))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[ReliefsValueModel](Matchers.eq(keystoreKeys.reliefsValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
     when(mockCalcConnector.saveFormData[ReliefsValueModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
