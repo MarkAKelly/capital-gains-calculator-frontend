@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package forms.resident
+package forms.resident.properties
 
 import common.Constants
 import common.Transformers._
 import common.Validation._
-import models.resident.ReliefsValueModel
+import models.resident.properties.ImprovementsModel
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-object ReliefsValueForm {
+object ImprovementsForm {
 
-  val reliefsValueForm = Form(
+  val improvementsForm = Form(
     mapping(
       "amount" -> text
         .verifying(Messages("calc.common.error.mandatoryAmount"), mandatoryCheck)
@@ -36,6 +36,6 @@ object ReliefsValueForm {
         .verifying(Messages("calc.common.error.maxAmountExceeded", MoneyPounds(Constants.maxNumeric, 0).quantity), maxCheck)
         .verifying(Messages("calc.common.error.minimumAmount"), minCheck)
         .verifying(Messages("calc.common.error.invalidAmount"), decimalPlacesCheck)
-    )(ReliefsValueModel.apply)(ReliefsValueModel.unapply)
+    )(ImprovementsModel.apply)(ImprovementsModel.unapply)
   )
 }

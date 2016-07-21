@@ -24,16 +24,18 @@ import models.resident.AllowableLossesValueModel
 import forms.resident.LossesBroughtForwardForm._
 import forms.resident.LossesBroughtForwardValueForm._
 import forms.resident.AllowableLossesForm._
-import forms.resident.ReliefsValueForm._
 import forms.resident.AllowableLossesValueForm._
 import forms.resident.AnnualExemptAmountForm._
 import forms.resident.OtherPropertiesForm._
-import forms.resident.ReliefsForm._
+import forms.resident.properties.ReliefsForm._
+import forms.resident.properties.ReliefsValueForm._
+import models.resident.properties.{ReliefsModel, ReliefsValueModel, YourAnswersSummaryModel}
 import play.api.mvc.{Action, Result}
 import play.api.data.Form
 import views.html.calculation.{resident => commonViews}
 import views.html.calculation.resident.properties.{deductions => views}
 import uk.gov.hmrc.play.http.HeaderCarrier
+
 import scala.concurrent.Future
 
 object DeductionsController extends DeductionsController {

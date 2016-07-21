@@ -21,7 +21,7 @@ import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.DeductionsController
-import models.resident.ReliefsValueModel
+import models.resident.properties.ReliefsValueModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._

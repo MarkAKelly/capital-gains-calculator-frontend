@@ -18,7 +18,7 @@ package views.resident.properties.gain
 
 import assets.MessageLookup.{improvementsView => messages}
 import controllers.helpers.FakeRequestHelper
-import forms.resident.ImprovementsForm.improvementsForm
+import forms.resident.properties.ImprovementsForm._
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{gain => views}

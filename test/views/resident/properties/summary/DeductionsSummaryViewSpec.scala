@@ -22,6 +22,7 @@ import common.Dates
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.routes
 import models.resident._
+import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, ReliefsValueModel, YourAnswersSummaryModel}
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{summary => views}

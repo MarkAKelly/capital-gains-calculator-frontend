@@ -22,7 +22,7 @@ import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.DeductionsController
-import models.resident.{ReliefsModel, YourAnswersSummaryModel}
+import models.resident.properties.{ReliefsModel, YourAnswersSummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.scalatest.mock.MockitoSugar

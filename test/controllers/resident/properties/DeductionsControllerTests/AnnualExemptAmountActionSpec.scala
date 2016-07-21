@@ -23,6 +23,7 @@ import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.DeductionsController
 import models.resident._
+import models.resident.properties.{ChargeableGainAnswers, YourAnswersSummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.scalatest.mock.MockitoSugar

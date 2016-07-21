@@ -21,7 +21,8 @@ import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.DeductionsController
-import models.resident.{DisposalDateModel, OtherPropertiesModel, ReliefsModel, TaxYearModel}
+import models.resident.properties.ReliefsModel
+import models.resident.{DisposalDateModel, OtherPropertiesModel, TaxYearModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
