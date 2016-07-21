@@ -1,10 +1,14 @@
 #Routes file for the resident share routes.
 
 #Disposal Date Routes
+GET     /disposal-date                    controllers.resident.shares.GainController.disposalDate
+POST    /disposal-date                    controllers.resident.shares.GainController.submitDisposalDate
 
 #Outside Tax Years Routes
+GET     /outside-tax-years                controllers.resident.shares.GainController.outsideTaxYears
 
 #Disposal Value or Market Value Routes
+GET     /disposal-value                   controllers.resident.shares.GainController.disposalValue
 
 #Disposal Costs Routes
 
@@ -17,14 +21,14 @@
 #Other Properties Routes
 
 #Allowable Losses Routes
-GET     /allowable-losses                 controllers.resident.shares.ShareDeductionsController.allowableLosses
-POST    /allowable-losses                 controllers.resident.shares.ShareDeductionsController.submitAllowableLosses
+GET     /allowable-losses                 controllers.resident.shares.DeductionsController.allowableLosses
+POST    /allowable-losses                 controllers.resident.shares.DeductionsController.submitAllowableLosses
 
 #Allowable Losses Value Routes
-GET     /allowable-losses-value           controllers.resident.shares.ShareDeductionsController.allowableLossesValue
+GET     /allowable-losses-value           controllers.resident.shares.DeductionsController.allowableLossesValue
 
 #Losses Brought Forward Routes
-GET     /losses-brought-forward           controllers.resident.shares.ShareDeductionsController.lossesBroughtForward
+GET     /losses-brought-forward           controllers.resident.shares.DeductionsController.lossesBroughtForward
 
 #Annual Exempt Amount Routes
 

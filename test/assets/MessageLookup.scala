@@ -230,4 +230,10 @@ object MessageLookup {
     def help(input: String) = s"This is the amount of your income you don't pay tax on. It's £$input unless you're claiming other allowances."
     val helpLinkOne = "Personal Allowance"
   }
+
+
+  //############ Shares messages ##############//
+  object sharesDisposalDate {
+    val title = "When did you sell or give away the shares?"
+  }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.resident.properties.DeductionsControllerTests
+package controllers.resident.shares.DeductionsControllerSpec
 
 import assets.MessageLookup.{allowableLosses => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
@@ -32,7 +32,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
-class ShareAllowableLossesActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
+class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
   def setupTarget(getData: Option[AllowableLossesModel],
                   disposalDate: Option[DisposalDateModel],
