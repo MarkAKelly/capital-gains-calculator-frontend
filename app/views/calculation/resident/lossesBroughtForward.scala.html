@@ -11,7 +11,7 @@
 
     <h1 class="heading-large">@Messages("calc.resident.lossesBroughtForward.question", taxYear.taxYearSupplied)</h1>
 
-    @form(action = controllers.resident.routes.DeductionsController.submitLossesBroughtForward) {
+    @form(action = controllers.resident.properties.routes.DeductionsController.submitLossesBroughtForward) {
 
         @formInputRadioGroup(
             field = lossesBroughtForwardForm("option"),

@@ -56,7 +56,7 @@ class LossesBroughtForwardValueViewSpec extends UnitSpec with WithFakeApplicatio
         }
 
         "have a link to Disposal Value" in {
-          backLink.attr("href") shouldBe controllers.resident.routes.DeductionsController.lossesBroughtForward().toString
+          backLink.attr("href") shouldBe controllers.resident.properties.routes.DeductionsController.lossesBroughtForward().toString
         }
       }
 
@@ -76,8 +76,8 @@ class LossesBroughtForwardValueViewSpec extends UnitSpec with WithFakeApplicatio
       "have a form" which {
         lazy val form = doc.getElementsByTag("form")
 
-        s"has the action '${controllers.resident.routes.DeductionsController.submitLossesBroughtForwardValue().toString}'" in {
-          form.attr("action") shouldBe controllers.resident.routes.DeductionsController.submitLossesBroughtForwardValue().toString
+        s"has the action '${controllers.resident.properties.routes.DeductionsController.submitLossesBroughtForwardValue().toString}'" in {
+          form.attr("action") shouldBe controllers.resident.properties.routes.DeductionsController.submitLossesBroughtForwardValue().toString
         }
 
         "has the method of POST" in {

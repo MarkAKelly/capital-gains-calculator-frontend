@@ -41,7 +41,7 @@ class ReliefsValueViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     }
 
     s"have a back link to the Reliefs Page with text ${MessageLookup.calcBaseBack}" in {
-      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/reliefs"
+      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/reliefs"
     }
 
     s"have the text ${messages.question} as the h1 tag" in {
@@ -49,7 +49,7 @@ class ReliefsValueViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     }
 
     "render a form element" in {
-      doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/reliefs-value"
+      doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/reliefs-value"
     }
 
     s"have a hidden legend with the text ${messages.question}" in {
