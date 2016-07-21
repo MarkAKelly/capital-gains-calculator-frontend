@@ -18,11 +18,12 @@ package views.resident.properties.report
 
 import common.Dates
 import controllers.helpers.FakeRequestHelper
-import models.resident.income.{PersonalAllowanceModel, CurrentIncomeModel, PreviousTaxableGainsModel}
+import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, PreviousTaxableGainsModel}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.{MessageLookup => commonMessages}
 import assets.MessageLookup.{summary => messages}
 import models.resident._
+import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, YourAnswersSummaryModel}
 import org.jsoup.Jsoup
 import views.html.calculation.resident.properties.{report => views}
 

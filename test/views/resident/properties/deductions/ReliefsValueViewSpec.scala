@@ -19,7 +19,7 @@ package views.resident.properties.deductions
 import assets.MessageLookup
 import assets.MessageLookup.{reliefsValue => messages}
 import controllers.helpers.FakeRequestHelper
-import forms.resident.ReliefsValueForm._
+import forms.resident.properties.ReliefsValueForm._
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{deductions => views}

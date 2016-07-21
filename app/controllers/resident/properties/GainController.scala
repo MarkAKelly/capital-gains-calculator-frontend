@@ -31,9 +31,10 @@ import forms.resident.DisposalValueForm._
 import forms.resident.DisposalDateForm._
 import forms.resident.DisposalCostsForm._
 import forms.resident.AcquisitionValueForm._
-import forms.resident.ImprovementsForm._
 import forms.resident.AcquisitionCostsForm._
+import forms.resident.properties.ImprovementsForm._
 import models.resident._
+import models.resident.properties.ImprovementsModel
 
 object GainController extends GainController {
   val calcConnector = CalculatorConnector

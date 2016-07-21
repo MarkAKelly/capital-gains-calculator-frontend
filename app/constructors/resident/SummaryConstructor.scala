@@ -17,6 +17,7 @@
 package constructors.resident
 
 import models.resident._
+import models.resident.properties._
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 

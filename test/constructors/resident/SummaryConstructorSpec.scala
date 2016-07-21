@@ -19,6 +19,7 @@ package constructors.resident
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{summary => messages}
 import models.resident._
+import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, ReliefsValueModel}
 
 class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
 

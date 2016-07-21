@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package models.resident
+package models.resident.properties
+
+import models.resident.{AnnualExemptAmountModel, LossesBroughtForwardValueModel, _}
 
 case class ChargeableGainAnswers (reliefsModel: Option[ReliefsModel],
                                   reliefsValueModel: Option[ReliefsValueModel],

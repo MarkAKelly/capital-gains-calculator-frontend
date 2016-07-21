@@ -19,6 +19,7 @@ package constructors.resident.properties
 import java.text.SimpleDateFormat
 
 import models.resident._
+import models.resident.properties.{ChargeableGainAnswers, YourAnswersSummaryModel}
 
 object CalculateRequestConstructor {
 

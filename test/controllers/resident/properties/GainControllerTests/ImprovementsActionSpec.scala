@@ -21,7 +21,7 @@ import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.GainController
-import models.resident.{ImprovementsModel, YourAnswersSummaryModel}
+import models.resident.properties.{ImprovementsModel, YourAnswersSummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._

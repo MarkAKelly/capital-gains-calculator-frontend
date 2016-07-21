@@ -18,6 +18,7 @@ package constructors.resident.properties
 
 import common.Dates
 import models.resident._
+import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, ReliefsValueModel, YourAnswersSummaryModel}
 import uk.gov.hmrc.play.test.UnitSpec
 
 class CalculateRequestConstructorSpec extends UnitSpec {

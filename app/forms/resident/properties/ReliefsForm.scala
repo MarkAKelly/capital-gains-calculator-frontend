@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package forms.resident
+package forms.resident.properties
 
 import common.Transformers._
-import models.resident.ReliefsModel
+import common.Validation._
+import models.resident.properties.ReliefsModel
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.Messages
-import common.Validation._
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 
