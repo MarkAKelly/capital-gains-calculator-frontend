@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package routes
+package routes.properties
 
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.scalatest._
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
 
@@ -38,6 +38,7 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
   "The URL for the outside tax years Action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/outside-tax-years" in {
       val path = controllers.resident.properties.routes.GainController.outsideTaxYears().toString
+      path shouldEqual "/calculate-your-capital-gains/resident/properties/outside-tax-years"
     }
   }
 
