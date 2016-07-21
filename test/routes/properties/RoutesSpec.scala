@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package routes
+package routes.properties
 
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.scalatest._
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
 
