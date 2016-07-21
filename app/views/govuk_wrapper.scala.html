@@ -8,7 +8,9 @@
   contentHeader: Option[Html] = None,
   mainContent: Html = HtmlFormat.empty,
   serviceInfoContent: Html = HtmlFormat.empty,
-  scriptElem: Option[Html] = None)(implicit request: Request[_])
+  scriptElem: Option[Html] = None,
+  homeLink: String
+)(implicit request: Request[_])
 
 @import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
@@ -32,7 +34,7 @@
 }
 
 @headerNavLinks = {
-  <li><a id="homeNavHref" href="@controllers.nonresident.routes.CalculationController.customerType"
+  <li><a id="homeNavHref" href="@homeLink"
          data-journey-click="primary-navigation:Click:Home">Home</a></li>
 }
 

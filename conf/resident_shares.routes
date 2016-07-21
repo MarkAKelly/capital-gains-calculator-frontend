@@ -1,0 +1,10 @@
+#Routes file for the resident properties routes.
+
+#Disposal Date Routes
+GET     /disposal-date                    controllers.resident.shares.GainController.disposalDate
+
+#Outside Tax Years Routes
+GET     /outside-tax-years                controllers.resident.shares.GainController.outsideTaxYears
+
+#Disposal Value Routes
+GET     /disposal-value                    controllers.resident.shares.GainController.disposalValue

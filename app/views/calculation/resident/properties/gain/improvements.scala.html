@@ -1,7 +1,7 @@
 @import models.resident.ImprovementsModel
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
-@import views.html.calculation.resident._
+@import views.html.calculation.resident.properties._
 
 @(improvementsForm : Form[ImprovementsModel])(implicit request: Request[_])
 
@@ -11,7 +11,7 @@
     </div>
 }
 
-@resident_main_template(title = Messages("calc.resident.improvements.title"), backLink = Some(controllers.resident.properties.routes.GainController.acquisitionCosts().toString)) {
+@resident_properties_main_template(title = Messages("calc.resident.improvements.title"), backLink = Some(controllers.resident.properties.routes.GainController.acquisitionCosts().toString)) {
 
     @errorSummary(improvementsForm, "improvements")
 

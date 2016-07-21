@@ -3,14 +3,18 @@
 @import views.html.calculation.resident._
 @import models.resident._
 
-@(taxYear: TaxYearModel)(implicit request: Request[_])
+@(taxYear: TaxYearModel, navHomeLink: String, continueUrl: String)(implicit request: Request[_])
 
-@resident_main_template(Messages("calc.resident.outsideTaxYears.title"), backLink = Some(controllers.resident.properties.routes.GainController.disposalDate().toString)) {
+@resident_main_template(
+    Messages("calc.resident.outsideTaxYears.title"),
+    backLink = Some(controllers.resident.properties.routes.GainController.disposalDate().toString),
+    homeLink = navHomeLink
+) {
 
     <h1 class="heading-large">@Messages("calc.resident.outsideTaxYears.title")</h1>
 
     <p class="lede">@Messages("calc.resident.outsideTaxYears.message", taxYear.calculationTaxYear)</p>
 
-    <a href="@controllers.resident.properties.routes.GainController.disposalValue.toString()" id="continue-button" class="button">@Messages("calc.base.button.continue")</a>
+    <a href="@continueUrl" id="continue-button" class="button">@Messages("calc.base.button.continue")</a>
 
 }

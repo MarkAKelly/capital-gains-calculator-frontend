@@ -16,7 +16,12 @@
 </a>
 }
 
-@resident_main_template(title = Messages("calc.resident.annualExemptAmount.title"), backLink = Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForward().toString), sidebarLinks = Some(sidebar)) {
+@resident_main_template(
+    title = Messages("calc.resident.annualExemptAmount.title"),
+    backLink = Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForward().toString),
+    sidebarLinks = Some(sidebar),
+    homeLink = "TODO - needs parameter"
+) {
 
     @errorSummary(annualExemptAmountForm, "amount")
 
