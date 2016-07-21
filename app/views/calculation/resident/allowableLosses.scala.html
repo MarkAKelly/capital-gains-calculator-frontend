@@ -2,8 +2,9 @@
 @import views.html.helpers._
 @import models.resident._
 @import views.html.calculation.resident._
+@import play.api.mvc.Call
 
-@(allowableLossesForm: Form[AllowableLossesModel], taxYear: TaxYearModel)(implicit request: Request[_])
+@(allowableLossesForm: Form[AllowableLossesModel], taxYear: TaxYearModel, postAction: Call)(implicit request: Request[_])
 
 @resident_main_template(title = Messages("calc.resident.allowableLosses.title", taxYear.taxYearSupplied), backLink = Some(controllers.resident.properties.routes.DeductionsController.otherProperties.toString())) {
 
@@ -11,7 +12,7 @@
 
     <h1 class="heading-large">@Messages("calc.resident.allowableLosses.title", taxYear.taxYearSupplied)</h1>
 
-    @form(action = controllers.resident.properties.routes.DeductionsController.submitAllowableLosses) {
+    @form(action = postAction) {
         @formInputRadioGroup(
             field = allowableLossesForm("isClaiming"),
             Seq(
