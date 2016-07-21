@@ -22,7 +22,7 @@ import controllers.resident.properties.DeductionsController
 import org.jsoup.Jsoup
 import play.api.test.Helpers._
 import assets.MessageLookup.{allowableLossesValue => messages}
-import common.KeystoreKeys.{ResidentKeys => keystoreKeys}
+import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import models.resident.{TaxYearModel, AllowableLossesValueModel, DisposalDateModel}
 import org.mockito.Matchers
@@ -47,7 +47,7 @@ class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication w
     when(mockCalcConnector.saveFormData[AllowableLossesValueModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
 
-    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentKeys.disposalDate))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.disposalDate))(Matchers.any(), Matchers.any()))
       .thenReturn(disposalDate)
 
     when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
