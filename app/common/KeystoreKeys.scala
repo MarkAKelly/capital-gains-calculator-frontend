@@ -62,8 +62,20 @@ object KeystoreKeys {
     val personalAllowance = "res:property:personalAllowance"
   }
 
-  object ResidentSharesKeys {
-    val disposalDate = "res:shares:disposalDate"
-    val disposalValue = "res:shares:disposalValue"
+  object ResidentShareKeys {
+    val disposalDate = "res:share:disposalDate"
+    val disposalValue = "res:share:disposalValue"
+    val disposalCosts = "res:share:disposalCosts"
+    val acquisitionValue = "res:share:acquisitionValue"
+    val acquisitionCosts = "res:share:acquisitionCosts"
+    val otherProperties = "res:share:otherProperties"
+    val allowableLosses = "res:share:allowableLosses"
+    val allowableLossesValue = "res:share:allowableLossesValue"
+    val lossesBroughtForward = "res:share:lossesBroughtForward"
+    val lossesBroughtForwardValue = "res:share:lossesBroughtForwardValue"
+    val annualExemptAmount = "res:share:annualExemptAmount"
+    val currentIncome = "res:share:currentIncome"
+    val previousTaxableGains = "res:share:previousTaxableGains"
+    val personalAllowance = "res:share:personalAllowance"
   }
 }

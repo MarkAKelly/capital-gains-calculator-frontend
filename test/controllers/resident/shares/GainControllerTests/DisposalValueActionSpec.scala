@@ -17,7 +17,7 @@
 package controllers.resident.shares.GainControllerTests
 
 import assets.MessageLookup.{sharesDisposalValue => messages}
-import common.KeystoreKeys.{ResidentSharesKeys => keystoreKeys}
+import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.shares.GainController

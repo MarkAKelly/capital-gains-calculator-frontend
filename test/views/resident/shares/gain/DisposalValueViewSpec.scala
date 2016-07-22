@@ -54,8 +54,8 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
       doc.select("h1").text shouldEqual messages.title
     }
 
-    s"have the helptext ${messages.helpText}" in {
-      doc.body.getElementsByClass("form-hint").text shouldBe messages.helpText
+    s"have the extra text ${messages.helpText}" in {
+      doc.select(".panel.panel-border-wide>p").text shouldBe messages.helpText
     }
 
     "render a form tag with a submit action" in {

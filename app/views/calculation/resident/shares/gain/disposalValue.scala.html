@@ -5,6 +5,12 @@
 
 @(disposalValueForm : Form[DisposalValueModel])(implicit request: Request[_])
 
+@note = {
+    <div class="panel panel-border-wide">
+        <p>@Messages("calc.resident.shares.disposalValue.helpText")</p>
+    </div>
+}
+
 @resident_shares_main_template(title = Messages("calc.resident.shares.disposalValue.question"), backLink = Some(controllers.resident.shares.routes.GainController.disposalDate().toString)) {
 
     @errorSummary(disposalValueForm, "amount")
@@ -13,7 +19,7 @@
 
     @form(action = controllers.resident.shares.routes.GainController.submitDisposalValue) {
 
-        @formInputMoney(disposalValueForm, "amount", Messages("calc.resident.shares.disposalValue.question"), Some(Messages("calc.resident.shares.disposalValue.helpText")), hideLabel = true)
+        @formInputMoney(disposalValueForm, "amount", Messages("calc.resident.shares.disposalValue.question"), additionalHTMLContent = Some(note.toString()), hideLabel = true)
 
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
     }

@@ -18,14 +18,15 @@ package connectors
 
 import common.Dates._
 import common.KeystoreKeys
-import common.KeystoreKeys.ResidentPropertyKeys
+import common.KeystoreKeys.{ResidentPropertyKeys, ResidentShareKeys}
 import config.{CalculatorSessionCache, WSHttp}
 import constructors.nonresident.CalculateRequestConstructor
+import constructors.resident.{shares, properties => propertyConstructor}
 import constructors.{resident => residentConstructors}
 import models.nonresident._
 import models.resident
-import models.resident.{IncomeAnswersModel, TaxYearModel, properties}
 import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, ReliefsValueModel, YourAnswersSummaryModel}
+import models.resident.{IncomeAnswersModel, TaxYearModel, properties}
 import play.api.libs.json.Format
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -58,42 +59,46 @@ trait CalculatorConnector {
 
   def calculateFlat(input: SummaryModel)(implicit hc: HeaderCarrier): Future[Option[CalculationResultModel]] = {
     http.GET[Option[CalculationResultModel]](s"$serviceUrl/capital-gains-calculator/calculate-flat?${
-      CalculateRequestConstructor.baseCalcUrl(input)}${
+      CalculateRequestConstructor.baseCalcUrl(input)
+    }${
       CalculateRequestConstructor.flatCalcUrlExtra(input)
     }")
   }
 
   def calculateTA(input: SummaryModel)(implicit hc: HeaderCarrier): Future[Option[CalculationResultModel]] = {
     http.GET[Option[CalculationResultModel]](s"$serviceUrl/capital-gains-calculator/calculate-time-apportioned?${
-      CalculateRequestConstructor.baseCalcUrl(input)}${
+      CalculateRequestConstructor.baseCalcUrl(input)
+    }${
       CalculateRequestConstructor.taCalcUrlExtra(input)
     }")
   }
 
   def calculateRebased(input: SummaryModel)(implicit hc: HeaderCarrier): Future[Option[CalculationResultModel]] = {
     http.GET[Option[CalculationResultModel]](s"$serviceUrl/capital-gains-calculator/calculate-rebased?${
-      CalculateRequestConstructor.baseCalcUrl(input)}${
+      CalculateRequestConstructor.baseCalcUrl(input)
+    }${
       CalculateRequestConstructor.rebasedCalcUrlExtra(input)
     }")
   }
 
-  def getFullAEA (taxYear: Int)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
+  def getFullAEA(taxYear: Int)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
     http.GET[Option[BigDecimal]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-full-aea?taxYear=$taxYear")
   }
 
-  def getPartialAEA (taxYear: Int)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
+  def getPartialAEA(taxYear: Int)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
     http.GET[Option[BigDecimal]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-partial-aea?taxYear=$taxYear")
   }
 
-  def getPA (taxYear: Int, isEligibleBlindPersonsAllowance: Boolean = false)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
+  def getPA(taxYear: Int, isEligibleBlindPersonsAllowance: Boolean = false)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
     http.GET[Option[BigDecimal]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-pa?taxYear=$taxYear" +
-      s"${if(isEligibleBlindPersonsAllowance) s"&isEligibleBlindPersonsAllowance=true"
-      else ""
+      s"${
+        if (isEligibleBlindPersonsAllowance) s"&isEligibleBlindPersonsAllowance=true"
+        else ""
       }"
     )
   }
 
-  def getTaxYear (taxYear: String)(implicit hc: HeaderCarrier): Future[Option[TaxYearModel]] = {
+  def getTaxYear(taxYear: String)(implicit hc: HeaderCarrier): Future[Option[TaxYearModel]] = {
     http.GET[Option[TaxYearModel]](s"$serviceUrl/capital-gains-calculator/tax-year?disposalDate=$taxYear")
   }
 
@@ -154,34 +159,35 @@ trait CalculatorConnector {
       calculationElectionModel, otherReliefsFlatModel, otherReliefsTAModel, otherReliefsRebasedModel, privateResidenceReliefModel)
   }
 
-  def calculateRttGrossGain(input: YourAnswersSummaryModel)(implicit hc: HeaderCarrier): Future[BigDecimal] = {
+  //Rtt property calculation methods
+  def calculateRttPropertyGrossGain(input: YourAnswersSummaryModel)(implicit hc: HeaderCarrier): Future[BigDecimal] = {
     http.GET[BigDecimal](s"$serviceUrl/capital-gains-calculator/calculate-total-gain" +
-      residentConstructors.CalculateRequestConstructor.totalGainRequestString(input)
+      propertyConstructor.CalculateRequestConstructor.totalGainRequestString(input)
     )
   }
 
-  def calculateRttChargeableGain(totalGainInput: YourAnswersSummaryModel,
-                                 chargeableGainInput: ChargeableGainAnswers,
-                                 maxAEA: BigDecimal)(implicit hc: HeaderCarrier): Future[Option[resident.ChargeableGainResultModel]] = {
+  def calculateRttPropertyChargeableGain(totalGainInput: YourAnswersSummaryModel,
+                                         chargeableGainInput: ChargeableGainAnswers,
+                                         maxAEA: BigDecimal)(implicit hc: HeaderCarrier): Future[Option[resident.ChargeableGainResultModel]] = {
     http.GET[Option[resident.ChargeableGainResultModel]](s"$serviceUrl/capital-gains-calculator/calculate-chargeable-gain" +
-      residentConstructors.CalculateRequestConstructor.totalGainRequestString(totalGainInput) +
-      residentConstructors.CalculateRequestConstructor.chargeableGainRequestString(chargeableGainInput, maxAEA)
+      propertyConstructor.CalculateRequestConstructor.totalGainRequestString(totalGainInput) +
+      propertyConstructor.CalculateRequestConstructor.chargeableGainRequestString(chargeableGainInput, maxAEA)
 
     )
   }
 
-  def calculateRttTotalGainAndTax(totalGainInput: YourAnswersSummaryModel,
-                                  chargeableGainInput: ChargeableGainAnswers,
-                                  maxAEA: BigDecimal,
-                                  incomeAnswers: IncomeAnswersModel)(implicit hc: HeaderCarrier): Future[Option[resident.TotalGainAndTaxOwedModel]] = {
+  def calculateRttPropertyTotalGainAndTax(totalGainInput: YourAnswersSummaryModel,
+                                          chargeableGainInput: ChargeableGainAnswers,
+                                          maxAEA: BigDecimal,
+                                          incomeAnswers: IncomeAnswersModel)(implicit hc: HeaderCarrier): Future[Option[resident.TotalGainAndTaxOwedModel]] = {
     http.GET[Option[resident.TotalGainAndTaxOwedModel]](s"$serviceUrl/capital-gains-calculator/calculate-resident-capital-gains-tax" +
-      residentConstructors.CalculateRequestConstructor.totalGainRequestString(totalGainInput) +
-      residentConstructors.CalculateRequestConstructor.chargeableGainRequestString(chargeableGainInput, maxAEA) +
-      residentConstructors.CalculateRequestConstructor.incomeAnswersRequestString(chargeableGainInput, incomeAnswers)
+      propertyConstructor.CalculateRequestConstructor.totalGainRequestString(totalGainInput) +
+      propertyConstructor.CalculateRequestConstructor.chargeableGainRequestString(chargeableGainInput, maxAEA) +
+      propertyConstructor.CalculateRequestConstructor.incomeAnswersRequestString(chargeableGainInput, incomeAnswers)
     )
   }
 
-  def getYourAnswers(implicit hc: HeaderCarrier): Future[YourAnswersSummaryModel] = {
+  def getPropertyGainAnswers(implicit hc: HeaderCarrier): Future[YourAnswersSummaryModel] = {
     val acquisitionValue = fetchAndGetFormData[resident.AcquisitionValueModel](ResidentPropertyKeys.acquisitionValue).map(_.get.amount)
     val disposalDate = fetchAndGetFormData[resident.DisposalDateModel](ResidentPropertyKeys.disposalDate).map(formData =>
       constructDate(formData.get.day, formData.get.month, formData.get.year))
@@ -207,7 +213,7 @@ trait CalculatorConnector {
     )
   }
 
-  def getChargeableGainAnswers (implicit hc: HeaderCarrier): Future[ChargeableGainAnswers] = {
+  def getPropertyDeductionAnswers(implicit hc: HeaderCarrier): Future[ChargeableGainAnswers] = {
     val reliefsModel = fetchAndGetFormData[ReliefsModel](ResidentPropertyKeys.reliefs)
     val reliefsValueModel = fetchAndGetFormData[ReliefsValueModel](ResidentPropertyKeys.reliefsValue)
     val otherPropertiesModel = fetchAndGetFormData[resident.OtherPropertiesModel](ResidentPropertyKeys.otherProperties)
@@ -239,7 +245,7 @@ trait CalculatorConnector {
 
   }
 
-  def getIncomeAnswers (implicit hc: HeaderCarrier): Future[resident.IncomeAnswersModel] = {
+  def getPropertyIncomeAnswers(implicit hc: HeaderCarrier): Future[resident.IncomeAnswersModel] = {
     val previousTaxableGainsModel = fetchAndGetFormData[resident.income.PreviousTaxableGainsModel](ResidentPropertyKeys.previousTaxableGains)
     val currentIncomeModel = fetchAndGetFormData[resident.income.CurrentIncomeModel](ResidentPropertyKeys.currentIncome)
     val personalAllowanceModel = fetchAndGetFormData[resident.income.PersonalAllowanceModel](ResidentPropertyKeys.personalAllowance)
@@ -253,4 +259,93 @@ trait CalculatorConnector {
     }
   }
 
+  //Rtt share calculation methods
+  def getShareGainAnswers(implicit hc: HeaderCarrier): Future[resident.shares.GainAnswersModel] = {
+    val acquisitionValue = fetchAndGetFormData[resident.AcquisitionValueModel](ResidentShareKeys.acquisitionValue).map(_.get.amount)
+    val disposalDate = fetchAndGetFormData[resident.DisposalDateModel](ResidentShareKeys.disposalDate).map(formData =>
+      constructDate(formData.get.day, formData.get.month, formData.get.year))
+    val disposalValue = fetchAndGetFormData[resident.DisposalValueModel](ResidentShareKeys.disposalValue).map(_.get.amount)
+    val acquisitionCosts = fetchAndGetFormData[resident.AcquisitionCostsModel](ResidentShareKeys.acquisitionCosts).map(_.get.amount)
+    val disposalCosts = fetchAndGetFormData[resident.DisposalCostsModel](ResidentShareKeys.disposalCosts).map(_.get.amount)
+    for {
+      acquisitionValue <- acquisitionValue
+      disposalDate <- disposalDate
+      disposalValue <- disposalValue
+      acquisitionCosts <- acquisitionCosts
+      disposalCosts <- disposalCosts
+    } yield resident.shares.GainAnswersModel(
+      disposalDate,
+      disposalValue,
+      disposalCosts,
+      acquisitionValue,
+      acquisitionCosts
+    )
+  }
+
+  def getShareDeductionAnswers(implicit hc: HeaderCarrier): Future[resident.shares.DeductionGainAnswersModel] = {
+    val otherPropertiesModel = fetchAndGetFormData[resident.OtherPropertiesModel](ResidentShareKeys.otherProperties)
+    val allowableLossesModel = fetchAndGetFormData[resident.AllowableLossesModel](ResidentShareKeys.allowableLosses)
+    val allowableLossesValueModel = fetchAndGetFormData[resident.AllowableLossesValueModel](ResidentShareKeys.allowableLossesValue)
+    val broughtForwardModel = fetchAndGetFormData[resident.LossesBroughtForwardModel](ResidentShareKeys.lossesBroughtForward)
+    val broughtForwardValueModel = fetchAndGetFormData[resident.LossesBroughtForwardValueModel](ResidentShareKeys.lossesBroughtForwardValue)
+    val annualExemptAmountModel = fetchAndGetFormData[resident.AnnualExemptAmountModel](ResidentShareKeys.annualExemptAmount)
+
+    for {
+      otherProperties <- otherPropertiesModel
+      allowableLosses <- allowableLossesModel
+      allowableLossesValue <- allowableLossesValueModel
+      broughtForward <- broughtForwardModel
+      broughtForwardValue <- broughtForwardValueModel
+      annualExemptAmount <- annualExemptAmountModel
+    } yield {
+      resident.shares.DeductionGainAnswersModel(
+        otherProperties,
+        allowableLosses,
+        allowableLossesValue,
+        broughtForward,
+        broughtForwardValue,
+        annualExemptAmount)
+    }
+  }
+
+  def getShareIncomeAnswers(implicit hc: HeaderCarrier): Future[resident.IncomeAnswersModel] = {
+    val previousTaxableGainsModel = fetchAndGetFormData[resident.income.PreviousTaxableGainsModel](ResidentShareKeys.previousTaxableGains)
+    val currentIncomeModel = fetchAndGetFormData[resident.income.CurrentIncomeModel](ResidentShareKeys.currentIncome)
+    val personalAllowanceModel = fetchAndGetFormData[resident.income.PersonalAllowanceModel](ResidentShareKeys.personalAllowance)
+
+    for {
+      previousGains <- previousTaxableGainsModel
+      currentIncome <- currentIncomeModel
+      personalAllowance <- personalAllowanceModel
+    } yield {
+      resident.IncomeAnswersModel(previousGains, currentIncome, personalAllowance)
+    }
+  }
+
+  def calculateRttShareGrossGain(input: resident.shares.GainAnswersModel)(implicit hc: HeaderCarrier): Future[BigDecimal] = {
+    http.GET[BigDecimal](s"$serviceUrl/capital-gains-calculator/shares/calculate-total-gain" +
+      shares.CalculateRequestConstructor.totalGainRequestString(input)
+    )
+  }
+
+  def calculateRttShareChargeableGain(totalGainInput: resident.shares.GainAnswersModel,
+                                      chargeableGainInput: resident.shares.DeductionGainAnswersModel,
+                                      maxAEA: BigDecimal)(implicit hc: HeaderCarrier): Future[Option[resident.ChargeableGainResultModel]] = {
+    http.GET[Option[resident.ChargeableGainResultModel]](s"$serviceUrl/capital-gains-calculator/shares/calculate-chargeable-gain" +
+      shares.CalculateRequestConstructor.totalGainRequestString(totalGainInput) +
+      shares.CalculateRequestConstructor.chargeableGainRequestString(chargeableGainInput, maxAEA)
+
+    )
+  }
+
+  def calculateRttShareTotalGainAndTax(totalGainInput: resident.shares.GainAnswersModel,
+                                       chargeableGainInput: resident.shares.DeductionGainAnswersModel,
+                                       maxAEA: BigDecimal,
+                                       incomeAnswers: resident.IncomeAnswersModel)(implicit hc: HeaderCarrier): Future[Option[resident.TotalGainAndTaxOwedModel]] = {
+    http.GET[Option[resident.TotalGainAndTaxOwedModel]](s"$serviceUrl/capital-gains-calculator/shares/calculate-resident-capital-gains-tax" +
+      shares.CalculateRequestConstructor.totalGainRequestString(totalGainInput) +
+      shares.CalculateRequestConstructor.chargeableGainRequestString(chargeableGainInput, maxAEA) +
+      shares.CalculateRequestConstructor.incomeAnswersRequestString(chargeableGainInput, incomeAnswers)
+    )
+  }
 }

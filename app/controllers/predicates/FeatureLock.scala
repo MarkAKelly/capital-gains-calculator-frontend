@@ -17,7 +17,8 @@
 package controllers.predicates
 
 import config.ApplicationConfig
-import play.api.mvc.{Action, Result, AnyContent, Request}
+import config.FrontendGlobal.notFoundTemplate
+import play.api.mvc.{Action, AnyContent, Request, Result}
 
 import scala.concurrent.Future
 
@@ -33,7 +34,7 @@ trait FeatureLock extends ValidActiveSession {
         action(request)
       }
       else {
-        Future.successful(NotFound)
+        Future.successful(NotFound(notFoundTemplate))
       }
     }
   }
@@ -44,7 +45,7 @@ trait FeatureLock extends ValidActiveSession {
         action(request)
       }
       else {
-        Future.successful(NotFound)
+        Future.successful(NotFound(notFoundTemplate))
       }
     }
   }

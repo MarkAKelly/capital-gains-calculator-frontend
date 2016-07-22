@@ -45,16 +45,16 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
 
     lazy val mockCalculatorConnector = mock[CalculatorConnector]
 
-    when(mockCalculatorConnector.getYourAnswers(Matchers.any()))
+    when(mockCalculatorConnector.getPropertyGainAnswers(Matchers.any()))
       .thenReturn(Future.successful(yourAnswersSummaryModel))
 
-    when(mockCalculatorConnector.calculateRttGrossGain(Matchers.any())(Matchers.any()))
+    when(mockCalculatorConnector.calculateRttPropertyGrossGain(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(grossGain))
 
-    when(mockCalculatorConnector.getChargeableGainAnswers(Matchers.any()))
+    when(mockCalculatorConnector.getPropertyDeductionAnswers(Matchers.any()))
       .thenReturn(Future.successful(chargeableGainAnswers))
 
-    when(mockCalculatorConnector.calculateRttChargeableGain(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+    when(mockCalculatorConnector.calculateRttPropertyChargeableGain(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
       .thenReturn(chargeableGainResultModel)
 
     when(mockCalculatorConnector.getTaxYear(Matchers.any())(Matchers.any()))

@@ -47,10 +47,10 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     when(mockCalcConnector.saveFormData[ReliefsModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
 
-    when(mockCalcConnector.getYourAnswers(Matchers.any()))
+    when(mockCalcConnector.getPropertyGainAnswers(Matchers.any()))
       .thenReturn(summary)
 
-    when(mockCalcConnector.calculateRttGrossGain(Matchers.any())(Matchers.any()))
+    when(mockCalcConnector.calculateRttPropertyGrossGain(Matchers.any())(Matchers.any()))
       .thenReturn(totalGain)
 
     new DeductionsController {

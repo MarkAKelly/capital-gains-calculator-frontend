@@ -44,10 +44,10 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
 
     lazy val mockCalculatorConnector = mock[CalculatorConnector]
 
-    when(mockCalculatorConnector.getYourAnswers(Matchers.any()))
+    when(mockCalculatorConnector.getPropertyGainAnswers(Matchers.any()))
       .thenReturn(Future.successful(yourAnswersSummaryModel))
 
-    when(mockCalculatorConnector.calculateRttGrossGain(Matchers.any())(Matchers.any()))
+    when(mockCalculatorConnector.calculateRttPropertyGrossGain(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(grossGain))
 
     when(mockCalculatorConnector.getTaxYear(Matchers.any())(Matchers.any()))
