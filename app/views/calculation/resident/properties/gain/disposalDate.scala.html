@@ -1,11 +1,11 @@
 @import models.resident.DisposalDateModel
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
-@import views.html.calculation.resident._
+@import views.html.calculation.resident.properties._
 
 @(disposalDateForm: Form[DisposalDateModel])(implicit request: Request[_])
 
-@resident_main_template(Messages("calc.resident.disposalDate.question")){
+@resident_properties_main_template(Messages("calc.resident.disposalDate.question")){
 
     @errorSummary(disposalDateForm, "disposal-date", "disposalDateDay")
 

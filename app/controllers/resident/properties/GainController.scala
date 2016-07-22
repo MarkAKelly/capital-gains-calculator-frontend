@@ -82,7 +82,13 @@ trait GainController extends FeatureLock {
     for {
       disposalDate <- calcConnector.fetchAndGetFormData[DisposalDateModel](keystoreKeys.disposalDate)
       taxYear <- calcConnector.getTaxYear(s"${disposalDate.get.year}-${disposalDate.get.month}-${disposalDate.get.day}")
-    } yield {Ok(commonViews.outsideTaxYear(taxYear.get))}
+    } yield {
+      Ok(commonViews.outsideTaxYear(
+        taxYear = taxYear.get,
+        navHomeLink = routes.GainController.disposalDate().url,
+        continueUrl = routes.GainController.disposalValue().url
+      ))
+    }
   }
 
   //################ Disposal Value Actions ######################

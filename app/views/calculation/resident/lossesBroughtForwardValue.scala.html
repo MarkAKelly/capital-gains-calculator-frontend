@@ -5,7 +5,12 @@
 
 @(lossesBroughtForwardValueForm: Form[LossesBroughtForwardValueModel], taxYear: TaxYearModel)(implicit request: Request[_])
 
-@resident_main_template(title = Messages("calc.resident.lossesBroughtForwardValue.title", taxYear.taxYearSupplied), backLink = Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForward.toString)) {
+@resident_main_template(
+    title = Messages("calc.resident.lossesBroughtForwardValue.title",
+    taxYear.taxYearSupplied),
+    backLink = Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForward.toString),
+    homeLink = "TODO - needs parameter"
+) {
 
     @errorSummary(lossesBroughtForwardValueForm, "losses-brought-forward-value")
 

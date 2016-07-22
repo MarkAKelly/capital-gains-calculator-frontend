@@ -20,7 +20,10 @@
 
 @resident_main_template(title = {if(taxYear.taxYearSupplied == "2016/17") {Messages("calc.resident.personalAllowance.currentYearTitle")}
     else {Messages("calc.resident.personalAllowance.title", taxYear.taxYearSupplied)}},
-    backLink = Some(controllers.resident.properties.routes.IncomeController.currentIncome().toString), sidebarLinks = Some(sidebar)) {
+    backLink = Some(controllers.resident.properties.routes.IncomeController.currentIncome().toString),
+    sidebarLinks = Some(sidebar),
+    homeLink = "TODO - needs parameter"
+) {
 
 @errorSummary(personalAllowanceForm, "amount")
 

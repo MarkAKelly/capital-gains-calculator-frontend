@@ -2,7 +2,7 @@
 ->         /calculate-your-capital-gains/                        app.Routes
 ->         /calculate-your-capital-gains/non-resident/           nr.Routes
 ->         /calculate-your-capital-gains/resident/properties/    resident_properties.Routes
-->         /calculate-your-capital-gains/resident/shares         shares.Routes
+->         /calculate-your-capital-gains/resident/shares/        resident_shares.Routes
 ->         /                                                     health.Routes
 ->     	   /template                                             template.Routes
 

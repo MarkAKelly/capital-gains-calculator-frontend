@@ -1,7 +1,7 @@
 @import models.resident.DisposalValueModel
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
-@import views.html.calculation.resident._
+@import views.html.calculation.resident.properties._
 
 @(disposalValueForm : Form[DisposalValueModel])(implicit request: Request[_])
 
@@ -23,7 +23,7 @@
     <p id="bullet-list-end">@Messages("calc.resident.disposal.value.bullet.end")</p>
 }
 
-@resident_main_template(title = Messages("calc.resident.disposal.value.title"), backLink = Some(controllers.resident.properties.routes.GainController.disposalDate().toString)) {
+@resident_properties_main_template(title = Messages("calc.resident.disposal.value.title"), backLink = Some(controllers.resident.properties.routes.GainController.disposalDate().toString)) {
 
     @errorSummary(disposalValueForm, "amount")
 
