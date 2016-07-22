@@ -25,6 +25,7 @@ import common.Dates
 import connectors.CalculatorConnector
 import models.resident._
 import models.resident.income._
+import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, YourAnswersSummaryModel}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar

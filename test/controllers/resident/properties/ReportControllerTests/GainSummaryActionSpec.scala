@@ -21,6 +21,7 @@ import assets.MessageLookup.{summary => messages}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.ReportController
+import models.resident.properties.YourAnswersSummaryModel
 import models.resident.{TaxYearModel, _}
 import org.jsoup.Jsoup
 import org.mockito.Matchers

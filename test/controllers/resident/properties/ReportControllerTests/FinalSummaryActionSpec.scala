@@ -30,6 +30,8 @@ import play.api.mvc.RequestHeader
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{summary => messages}
+import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, YourAnswersSummaryModel}
+
 import scala.concurrent.Future
 
 class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {

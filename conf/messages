@@ -449,3 +449,11 @@ calc.resident.personalAllowance.question = In the {0} tax year, what was your UK
 calc.resident.personalAllowance.currentYearQuestion = How much is your UK Personal Allowance?
 calc.resident.personalAllowance.link.one = Personal Allowance
 calc.resident.personalAllowance.helpText = This is the amount of your income you don''t pay tax on. It''s £{0} unless you''re claiming other allowances.
+
+
+###############################################################################################
+## Resident Shares messages ##
+###############################################################################################
+
+## Disposal Date messages
+calc.resident.shares.disposalDate.question = When did you sell or give away the shares?

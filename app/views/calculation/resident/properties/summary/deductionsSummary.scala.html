@@ -1,6 +1,7 @@
 @import views.html.helpers.resident._
 @import models.SummaryDataItemModel
 @import models.resident._
+@import models.resident.properties._
 @import common.Dates._
 @import constructors.resident.SummaryConstructor._
 @import constructors.resident.CalculateRequestConstructor._
@@ -90,5 +91,7 @@ articleLayout = false
                 <div id="whatToDoNextNoLossText" class="font-medium what-to-do-next-text">@Messages("calc.resident.summary.whatNext.noLossOrGain")</div>
             </section>
     }
+
+    <a type="submit" class="button save-pdf-button" href="@controllers.resident.properties.routes.ReportController.deductionsReport.toString">@Messages("calc.resident.summary.saveAsPdf")</a>
 
 }

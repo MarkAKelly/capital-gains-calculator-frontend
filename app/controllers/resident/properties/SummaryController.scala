@@ -23,6 +23,7 @@ import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import models.resident._
+import models.resident.properties.{ChargeableGainAnswers, YourAnswersSummaryModel}
 import play.api.mvc.{Request, Result}
 import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation.resident.properties.{summary => views}

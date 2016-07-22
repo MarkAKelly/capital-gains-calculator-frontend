@@ -22,6 +22,7 @@ import common.Dates
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.routes
 import models.resident._
+import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, ReliefsValueModel, YourAnswersSummaryModel}
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{summary => views}
@@ -368,6 +369,25 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
           doc.select("#broughtForwardLosses-option a span.visuallyhidden").text shouldBe commonMessages.lossesBroughtForward.question("2015/16")
         }
       }
+
+      "display the save as PDF Button" which {
+
+        "should render only one button" in {
+          doc.select("a.save-pdf-button").size() shouldEqual 1
+        }
+
+        "with the class save-pdf-button" in {
+          doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
+        }
+
+        s"with an href to ${controllers.resident.properties.routes.ReportController.deductionsReport().toString}" in {
+          doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/deductions-report"
+        }
+
+        s"have the text ${messages.saveAsPdf}" in {
+          doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
+        }
+      }
     }
   }
 
@@ -662,6 +682,25 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
           doc.select("#broughtForwardLossesValue-amount a").attr("href") shouldBe routes.DeductionsController.lossesBroughtForwardValue().url
         }
       }
+
+      "display the save as PDF Button" which {
+
+        "should render only one button" in {
+          doc.select("a.save-pdf-button").size() shouldEqual 1
+        }
+
+        "with the class save-pdf-button" in {
+          doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
+        }
+
+        s"with an href to ${controllers.resident.properties.routes.ReportController.deductionsReport().toString}" in {
+          doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/deductions-report"
+        }
+
+        s"have the text ${messages.saveAsPdf}" in {
+          doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
+        }
+      }
     }
   }
 
@@ -710,6 +749,25 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         doc.select("div#whatToDoNextNoLossText").text shouldEqual messages.whatToDoNextNoLossText
       }
     }
+
+    "display the save as PDF Button" which {
+
+      "should render only one button" in {
+        doc.select("a.save-pdf-button").size() shouldEqual 1
+      }
+
+      "with the class save-pdf-button" in {
+        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
+      }
+
+      s"with an href to ${controllers.resident.properties.routes.ReportController.deductionsReport().toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/deductions-report"
+      }
+
+      s"have the text ${messages.saveAsPdf}" in {
+        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
+      }
+    }
   }
 
 
@@ -755,6 +813,25 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     s"display the text ${messages.whatToDoNextText}" in {
       doc.select("div#whatToDoNextNoLossText").text shouldEqual messages.whatToDoNextNoLossText
     }
+
+    "display the save as PDF Button" which {
+
+      "should render only one button" in {
+        doc.select("a.save-pdf-button").size() shouldEqual 1
+      }
+
+      "with the class save-pdf-button" in {
+        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
+      }
+
+      s"with an href to ${controllers.resident.properties.routes.ReportController.deductionsReport().toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/deductions-report"
+      }
+
+      s"have the text ${messages.saveAsPdf}" in {
+        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
+      }
+    }
   }
 
   "Summary when supplied with a date above the known tax years" should {
@@ -787,6 +864,25 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
     "does not display the section for what to do next" in {
       doc.select("#whatToDoNext").isEmpty shouldBe true
+    }
+
+    "display the save as PDF Button" which {
+
+      "should render only one button" in {
+        doc.select("a.save-pdf-button").size() shouldEqual 1
+      }
+
+      "with the class save-pdf-button" in {
+        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
+      }
+
+      s"with an href to ${controllers.resident.properties.routes.ReportController.deductionsReport().toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/deductions-report"
+      }
+
+      s"have the text ${messages.saveAsPdf}" in {
+        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
+      }
     }
   }
 }

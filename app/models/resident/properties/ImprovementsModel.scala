@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package models.resident
+package models.resident.properties
 
 import play.api.libs.json.Json
 
-case class ReliefsValueModel(amount: BigDecimal)
+case class ImprovementsModel(amount: BigDecimal)
 
-object ReliefsValueModel {
-  implicit val format = Json.format[ReliefsValueModel]
+object ImprovementsModel {
+  implicit val format = Json.format[ImprovementsModel]
 }
