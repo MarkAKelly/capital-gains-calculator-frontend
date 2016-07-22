@@ -1,4 +1,4 @@
-#Routes file for the resident properties routes.
+#Routes file for the resident shares routes.
 
 #Disposal Date Routes
 GET     /disposal-date                    controllers.resident.shares.GainController.disposalDate
