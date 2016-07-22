@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.resident.properties.ReportControllerTests
+package controllers.resident.properties.ReportControllerSpec
 
 import common.Dates
 import connectors.CalculatorConnector

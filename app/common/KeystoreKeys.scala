@@ -64,5 +64,6 @@ object KeystoreKeys {
 
   object ResidentSharesKeys {
     val disposalDate = "res:shares:disposalDate"
+    val disposalValue = "res:shares:disposalValue"
   }
 }
