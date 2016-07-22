@@ -62,6 +62,10 @@ class OutsideTaxYearsActionSpec extends UnitSpec with WithFakeApplication with F
       s"return a title of ${messages.title}" in {
         Jsoup.parse(bodyOf(result)).title shouldBe messages.title
       }
+
+      s"have a back link to '${controllers.resident.shares.routes.GainController.disposalDate().url}'" in {
+        Jsoup.parse(bodyOf(result)).getElementById("back-link").attr("href") shouldBe controllers.resident.shares.routes.GainController.disposalDate().url
+      }
     }
 
     "there is no valid session" should {
