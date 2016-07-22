@@ -8,4 +8,4 @@ POST    /disposal-date                    controllers.resident.shares.GainContro
 GET     /outside-tax-years                controllers.resident.shares.GainController.outsideTaxYears
 
 #Disposal Value or Market Value Routes
-GET     /disposal-value                   controllers.resident.shares.GainController.disposalValue
+GET     /disposal-value                    controllers.resident.shares.GainController.disposalValue

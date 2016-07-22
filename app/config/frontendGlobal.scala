@@ -47,8 +47,19 @@ object FrontendGlobal
     super.onLoadConfig(config, path, classloader, mode)
   }
 
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: Request[_]): Html =
-    views.html.error_template(pageTitle, heading, message)
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: Request[_]): Html = {
+    val url = """^(.*[\/])""".r findFirstIn rh.path
+    val homeNavLink = url match {
+      case Some(path) if path == "/calculate-your-capital-gains/resident/properties/" =>
+        controllers.resident.properties.routes.GainController.disposalDate().url
+      case Some(path) if path == "/calculate-your-capital-gains/resident/shares/" =>
+        controllers.resident.shares.routes.GainController.disposalDate().url
+      case Some(path) if path == "/calculate-your-capital-gains/non-resident/" =>
+        controllers.nonresident.routes.CalculationController.customerType().url
+      case _ => "/calculate-your-capital-gains/"
+    }
+    views.html.error_template(pageTitle, heading, message, homeNavLink)
+  }
 
   override def microserviceMetricsConfig(implicit app: Application): Option[Configuration] = app.configuration.getConfig(s"microservice.metrics")
 }

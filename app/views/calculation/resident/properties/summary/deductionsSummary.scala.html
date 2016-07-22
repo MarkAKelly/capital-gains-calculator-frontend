@@ -8,11 +8,11 @@
 @import controllers.resident.properties.routes.{GainController => gainRoutes}
 @import controllers.resident.properties.routes.{DeductionsController => deductionRoutes}
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
-@import views.html.calculation.resident._
+@import views.html.calculation.resident.properties._
 
 @(gainAnswers: YourAnswersSummaryModel, deductionAnswers: ChargeableGainAnswers, result: ChargeableGainResultModel, backUrl: String, taxYear: TaxYearModel)(implicit request: Request[_])
 
-@resident_main_template(
+@resident_properties_main_template(
 title = Messages("calc.resident.summary.title"),
 backLink = Some(backUrl),
 articleLayout = false
@@ -91,5 +91,7 @@ articleLayout = false
                 <div id="whatToDoNextNoLossText" class="font-medium what-to-do-next-text">@Messages("calc.resident.summary.whatNext.noLossOrGain")</div>
             </section>
     }
+
+    <a type="submit" class="button save-pdf-button" href="@controllers.resident.properties.routes.ReportController.deductionsReport.toString">@Messages("calc.resident.summary.saveAsPdf")</a>
 
 }

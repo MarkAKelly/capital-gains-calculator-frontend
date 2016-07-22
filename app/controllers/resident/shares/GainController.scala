@@ -23,7 +23,6 @@ import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import play.api.mvc.{Action, Result}
 import uk.gov.hmrc.play.http.SessionKeys
-
 import scala.concurrent.Future
 import views.html.calculation.{resident => commonViews}
 import views.html.calculation.resident.shares.{gain => views}
@@ -39,7 +38,7 @@ trait GainController extends FeatureLock {
   val calcConnector: CalculatorConnector
 
   //################# Disposal Date Actions ####################
-  val disposalDate = FeatureLockForRTT.asyncNoTimeout { implicit request =>
+  val disposalDate = FeatureLockForRTTShares.asyncNoTimeout { implicit request =>
     if (request.session.get(SessionKeys.sessionId).isEmpty) {
       val sessionId = UUID.randomUUID.toString
       Future.successful(Ok(views.disposalDate(disposalDateForm)).withSession(request.session + (SessionKeys.sessionId -> s"session-$sessionId")))
@@ -72,8 +71,20 @@ trait GainController extends FeatureLock {
   }
 
   //################ Outside Tax Years Actions ######################
-  val outsideTaxYears = TODO
+  val outsideTaxYears = FeatureLockForRTTShares.async { implicit request =>
+    for {
+      disposalDate <- calcConnector.fetchAndGetFormData[DisposalDateModel](keystoreKeys.disposalDate)
+      taxYear <- calcConnector.getTaxYear(s"${disposalDate.get.year}-${disposalDate.get.month}-${disposalDate.get.day}")
+    } yield {
+      Ok(commonViews.outsideTaxYear(
+        taxYear = taxYear.get,
+        navHomeLink = routes.GainController.disposalDate().url,
+        continueUrl = routes.GainController.disposalValue().url
+      ))
+    }
+  }
 
   //################ Disposal Value Actions ######################
   val disposalValue = TODO
+
 }

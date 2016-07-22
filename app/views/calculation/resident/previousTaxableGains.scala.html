@@ -12,7 +12,11 @@
     </a>
 }
 
-@resident_main_template(Messages("calc.resident.previousTaxableGains.title"), backLink = Some(backUrl), sidebarLinks = Some(sidebar)) {
+@resident_main_template(
+    Messages("calc.resident.previousTaxableGains.title"),
+    backLink = Some(backUrl), sidebarLinks = Some(sidebar),
+    homeLink = "TODO - needs parameter"
+) {
 
     @errorSummary(previousTaxableGainsForm, "previousTaxableGains")
 

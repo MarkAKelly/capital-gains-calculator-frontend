@@ -5,7 +5,7 @@
 
 @(disposalDateForm: Form[DisposalDateModel])(implicit request: Request[_])
 
-@resident_main_template(Messages("calc.resident.shares.disposalDate.question")){
+@resident_shares_main_template(Messages("calc.resident.shares.disposalDate.question")){
 
     @errorSummary(disposalDateForm, "disposal-date", "disposalDateDay")
 
