@@ -17,7 +17,7 @@
 package controllers.resident.shares.DeductionsControllerSpec
 
 import assets.MessageLookup.{allowableLosses => messages}
-import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
+import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.shares.DeductionsController
