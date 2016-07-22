@@ -65,6 +65,7 @@ class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication w
       lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val result = target.allowableLossesValue(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
+      lazy val form = doc.getElementsByTag("form")
 
       "return a status of 200" in {
         status(result) shouldBe 200
@@ -77,11 +78,28 @@ class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication w
       s"have a title of ${messages.title("2015/16")}" in {
         doc.title() shouldBe messages.title("2015/16")
       }
+
+      "have a back link to the properties allowable losses page" in {
+        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/allowable-losses"
+      }
+
+      "have a home link to the properties disposal date" in {
+        doc.select("#homeNavHref").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/disposal-date"
+      }
+
+      s"has the action '${controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue().toString}'" in {
+        form.attr("action") shouldBe controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue().toString
+      }
+
+      "has the method of POST" in {
+        form.attr("method") shouldBe "POST"
+      }
     }
 
     "there is some keystore data" should {
 
-      lazy val target = setupTarget(Some(AllowableLossesValueModel(1000)), Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+      lazy val target = setupTarget(Some(AllowableLossesValueModel(1000)), Some(DisposalDateModel(10, 10, 2015)),
+        Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val result = target.allowableLossesValue(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 

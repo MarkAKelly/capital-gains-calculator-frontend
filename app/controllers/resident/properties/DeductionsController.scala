@@ -218,10 +218,12 @@ trait DeductionsController extends FeatureLock {
 
     def routeRequest(taxYear: TaxYearModel): Future[Result] = {
       calcConnector.fetchAndGetFormData[AllowableLossesValueModel](keystoreKeys.allowableLossesValue).map {
-        case Some(data) => Ok(commonViews.allowableLossesValue(allowableLossesValueForm.fill(data), taxYear, "",
+        case Some(data) => Ok(commonViews.allowableLossesValue(allowableLossesValueForm.fill(data), taxYear,
+          controllers.resident.properties.routes.GainController.disposalDate().toString,
           controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue(),
           Some(controllers.resident.properties.routes.DeductionsController.allowableLosses().toString)))
-        case None => Ok(commonViews.allowableLossesValue(allowableLossesValueForm, taxYear, "",
+        case None => Ok(commonViews.allowableLossesValue(allowableLossesValueForm, taxYear,
+          controllers.resident.properties.routes.GainController.disposalDate().toString,
           controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue(),
           Some(controllers.resident.properties.routes.DeductionsController.allowableLosses().toString)))
       }
@@ -238,7 +240,8 @@ trait DeductionsController extends FeatureLock {
 
     def routeRequest(taxYearModel: TaxYearModel): Future[Result] = {
       allowableLossesValueForm.bindFromRequest.fold(
-        errors => Future.successful(BadRequest(commonViews.allowableLossesValue(errors, taxYearModel, "",
+        errors => Future.successful(BadRequest(commonViews.allowableLossesValue(errors, taxYearModel,
+          controllers.resident.properties.routes.GainController.disposalDate().toString,
           controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue(),
           Some(controllers.resident.properties.routes.DeductionsController.allowableLosses().toString)))),
         success => {
