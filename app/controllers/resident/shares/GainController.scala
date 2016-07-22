@@ -37,7 +37,7 @@ trait GainController extends FeatureLock {
   val calcConnector: CalculatorConnector
 
   //################# Disposal Date Actions ####################
-  val disposalDate = FeatureLockForRTT.asyncNoTimeout { implicit request =>
+  val disposalDate = FeatureLockForRTTShares.asyncNoTimeout { implicit request =>
     if (request.session.get(SessionKeys.sessionId).isEmpty) {
       val sessionId = UUID.randomUUID.toString
       Future.successful(Ok(views.disposalDate(disposalDateForm)).withSession(request.session + (SessionKeys.sessionId -> s"session-$sessionId")))
