@@ -8,4 +8,20 @@ POST    /disposal-date                    controllers.resident.shares.GainContro
 GET     /outside-tax-years                controllers.resident.shares.GainController.outsideTaxYears
 
 #Disposal Value or Market Value Routes
-GET     /disposal-value                    controllers.resident.shares.GainController.disposalValue
+GET     /disposal-value                   controllers.resident.shares.GainController.disposalValue
+
+#Losses Brought Forward Value Routes
+GET     /losses-brought-forward           controllers.resident.shares.DeductionsController.lossesBroughtForward
+
+#Losses Brought Forward Value Routes
+GET     /losses-brought-forward-value     controllers.resident.shares.DeductionsController.lossesBroughtForwardValue
+POST    /losses-brought-forward-value     controllers.resident.shares.DeductionsController.submitLossesBroughtForwardValue
+
+#Annual Exempt Amount Routes
+GET     /annual-exempt-amount             controllers.resident.shares.DeductionsController.annualExemptAmount
+
+#Current Income Routes
+GET     /current-income                   controllers.resident.shares.IncomeController.currentIncome
+
+#Summary Routes
+GET     /summary                          controllers.resident.shares.SummaryController.summary

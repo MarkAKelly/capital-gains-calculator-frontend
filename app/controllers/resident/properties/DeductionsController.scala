@@ -358,17 +358,29 @@ trait DeductionsController extends FeatureLock {
   //################# Brought Forward Losses Value Actions ##############################
   val lossesBroughtForwardValue = FeatureLockForRTT.async { implicit request =>
 
-    def routeRequest(taxYear: TaxYearModel): Future[Result] = {
+    def retrieveKeystoreData(): Future[Form[LossesBroughtForwardValueModel]] = {
       calcConnector.fetchAndGetFormData[LossesBroughtForwardValueModel](keystoreKeys.lossesBroughtForwardValue).map {
-        case Some(data) => Ok(commonViews.lossesBroughtForwardValue(lossesBroughtForwardValueForm.fill(data), taxYear))
-        case None => Ok(commonViews.lossesBroughtForwardValue(lossesBroughtForwardValueForm, taxYear))
+        case Some(data) => lossesBroughtForwardValueForm.fill(data)
+        case _ => lossesBroughtForwardValueForm
       }
     }
+
+    def routeRequest(taxYear: TaxYearModel, formData: Form[LossesBroughtForwardValueModel]): Future[Result] = {
+      Future.successful(Ok(commonViews.lossesBroughtForwardValue(
+        formData,
+        taxYear,
+        navBackLink = routes.DeductionsController.lossesBroughtForward().url,
+        navHomeLink = routes.GainController.disposalDate().url,
+        postAction = routes.DeductionsController.submitLossesBroughtForwardValue()
+      )))
+    }
+
     for {
       disposalDate <- getDisposalDate
       disposalDateString <- formatDisposalDate(disposalDate.get)
       taxYear <- calcConnector.getTaxYear(disposalDateString)
-      route <- routeRequest(taxYear.get)
+      formData <- retrieveKeystoreData()
+      route <- routeRequest(taxYear.get, formData)
     } yield route
   }
 
@@ -376,10 +388,18 @@ trait DeductionsController extends FeatureLock {
 
     lossesBroughtForwardValueForm.bindFromRequest.fold(
       errors => { for {
-        disposalDate <- getDisposalDate
-        disposalDateString <- formatDisposalDate(disposalDate.get)
-        taxYear <- calcConnector.getTaxYear(disposalDateString)
-      } yield {BadRequest(commonViews.lossesBroughtForwardValue(errors, taxYear.get))}},
+          disposalDate <- getDisposalDate
+          disposalDateString <- formatDisposalDate(disposalDate.get)
+          taxYear <- calcConnector.getTaxYear(disposalDateString)
+        } yield {
+          BadRequest(commonViews.lossesBroughtForwardValue(
+            errors,
+            taxYear.get,
+            navBackLink = routes.DeductionsController.lossesBroughtForward().url,
+            navHomeLink = routes.GainController.disposalDate().url,
+            postAction = routes.DeductionsController.submitLossesBroughtForwardValue()))
+        }
+      },
       success => {
         calcConnector.saveFormData[LossesBroughtForwardValueModel](keystoreKeys.lossesBroughtForwardValue, success)
 

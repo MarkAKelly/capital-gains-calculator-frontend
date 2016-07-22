@@ -22,6 +22,7 @@ import controllers.resident.shares.routes._
 
 class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
 
+  /* Outside Tax Years routes */
   "The URL for the resident/shares outside tax years Action" should {
     "be equal to /calculate-your-capital-gains/resident/shares/outside-tax-years" in {
       val path = GainController.outsideTaxYears().url
@@ -29,17 +30,35 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
+
+  /* Disposal Date routes */
   "The URL for the resident/shares disposal date Action" should {
     "be equal to /calculate-your-capital-gains/resident/shares/disposal-date" in {
-      val path = controllers.resident.shares.routes.GainController.disposalDate.toString()
+      val path = GainController.disposalDate.toString()
       path shouldEqual "/calculate-your-capital-gains/resident/shares/disposal-date"
     }
   }
 
   "The URL for the resident/shares submit disposal date Action" should {
     "be equal to /calculate-your-capital-gains/resident/shares/disposal-date" in {
-      val path = controllers.resident.shares.routes.GainController.submitDisposalDate.toString()
+      val path = GainController.submitDisposalDate.toString()
       path shouldEqual "/calculate-your-capital-gains/resident/shares/disposal-date"
+    }
+  }
+
+
+  /* Losses Brought Forward Value routes */
+  "The URL for the resident/shares lossesBroughtForward Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/losses-brought-forward" in {
+      val path = DeductionsController.lossesBroughtForwardValue.toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/losses-brought-forward-value"
+    }
+  }
+
+  "The URL for the resident/shares submit disposal date Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/losses-brought-forward" in {
+      val path = DeductionsController.submitLossesBroughtForwardValue.toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/losses-brought-forward-value"
     }
   }
 }
