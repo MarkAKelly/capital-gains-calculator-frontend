@@ -64,11 +64,12 @@ trait DeductionsController extends FeatureLock {
   val allowableLosses = FeatureLockForRTT.async { implicit request =>
 
     val postAction = controllers.resident.shares.routes.DeductionsController.submitAllowableLosses()
+    val backLink = Some(controllers.resident.shares.routes.DeductionsController.otherDisposals.toString())
 
     def routeRequest(taxYear: TaxYearModel): Future[Result] = {
       calcConnector.fetchAndGetFormData[AllowableLossesModel](keystoreKeys.allowableLosses).map {
-        case Some(data) => Ok(commonViews.allowableLosses(allowableLossesForm.fill(data), taxYear, postAction))
-        case None => Ok(commonViews.allowableLosses(allowableLossesForm, taxYear, postAction))
+        case Some(data) => Ok(commonViews.allowableLosses(allowableLossesForm.fill(data), taxYear, postAction, backLink))
+        case None => Ok(commonViews.allowableLosses(allowableLossesForm, taxYear, postAction, backLink))
       }
     }
     for {
@@ -82,10 +83,11 @@ trait DeductionsController extends FeatureLock {
   val submitAllowableLosses = FeatureLockForRTT.async { implicit request =>
 
     val postAction = controllers.resident.shares.routes.DeductionsController.submitAllowableLosses()
+    val backLink = Some(controllers.resident.properties.routes.DeductionsController.otherProperties.toString())
 
     def routeRequest(taxYear: TaxYearModel): Future[Result] = {
       allowableLossesForm.bindFromRequest.fold(
-        errors => Future.successful(BadRequest(commonViews.allowableLosses(errors, taxYear, postAction))),
+        errors => Future.successful(BadRequest(commonViews.allowableLosses(errors, taxYear, postAction, backLink))),
         success => {
           calcConnector.saveFormData[AllowableLossesModel](keystoreKeys.allowableLosses, success)
           if (success.isClaiming) {

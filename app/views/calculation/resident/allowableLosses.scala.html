@@ -4,12 +4,12 @@
 @import views.html.calculation.resident._
 @import play.api.mvc.Call
 
-@(allowableLossesForm: Form[AllowableLossesModel], taxYear: TaxYearModel, postAction: Call)(implicit request: Request[_])
+@(allowableLossesForm: Form[AllowableLossesModel], taxYear: TaxYearModel, postAction: Call, backLink: Option[String])(implicit request: Request[_])
 
 @resident_main_template(
     title = Messages("calc.resident.allowableLosses.title",
     taxYear.taxYearSupplied),
-    backLink = Some(controllers.resident.properties.routes.DeductionsController.otherProperties.toString()),
+    backLink = backLink,
     homeLink = "TODO - needs parameter"
 ) {
 

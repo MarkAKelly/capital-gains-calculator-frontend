@@ -18,7 +18,8 @@ GET     /disposal-value                   controllers.resident.shares.GainContro
 
 #Summary Routes
 
-#Other Properties Routes
+#Other Disposals Routes
+GET     /other-disposals                  controllers.resident.shares.DeductionsController.otherDisposals
 
 #Allowable Losses Routes
 GET     /allowable-losses                 controllers.resident.shares.DeductionsController.allowableLosses
