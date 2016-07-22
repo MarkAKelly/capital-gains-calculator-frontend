@@ -218,8 +218,12 @@ trait DeductionsController extends FeatureLock {
 
     def routeRequest(taxYear: TaxYearModel): Future[Result] = {
       calcConnector.fetchAndGetFormData[AllowableLossesValueModel](keystoreKeys.allowableLossesValue).map {
-        case Some(data) => Ok(commonViews.allowableLossesValue(allowableLossesValueForm.fill(data), taxYear))
-        case None => Ok(commonViews.allowableLossesValue(allowableLossesValueForm, taxYear))
+        case Some(data) => Ok(commonViews.allowableLossesValue(allowableLossesValueForm.fill(data), taxYear, "",
+          controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue(),
+          Some(controllers.resident.properties.routes.DeductionsController.allowableLosses().toString)))
+        case None => Ok(commonViews.allowableLossesValue(allowableLossesValueForm, taxYear, "",
+          controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue(),
+          Some(controllers.resident.properties.routes.DeductionsController.allowableLosses().toString)))
       }
     }
     for {
@@ -232,9 +236,11 @@ trait DeductionsController extends FeatureLock {
 
   val submitAllowableLossesValue = FeatureLockForRTT.async { implicit request =>
 
-    def routeRequest(taxYearModel: TaxYearModel): Future [Result] = {
+    def routeRequest(taxYearModel: TaxYearModel): Future[Result] = {
       allowableLossesValueForm.bindFromRequest.fold(
-        errors => Future.successful(BadRequest(commonViews.allowableLossesValue(errors, taxYearModel))),
+        errors => Future.successful(BadRequest(commonViews.allowableLossesValue(errors, taxYearModel, "",
+          controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue(),
+          Some(controllers.resident.properties.routes.DeductionsController.allowableLosses().toString)))),
         success => {
           calcConnector.saveFormData[AllowableLossesValueModel](keystoreKeys.allowableLossesValue, success)
           Future.successful(Redirect(routes.DeductionsController.lossesBroughtForward()))

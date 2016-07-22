@@ -30,7 +30,9 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
   "Allowable Losses Value view with no form errors" should {
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
-    lazy val view = views.allowableLossesValue(allowableLossesValueForm, taxYearModel)(fakeRequest)
+    lazy val view = views.allowableLossesValue(allowableLossesValueForm, taxYearModel, "/calculate-your-capital-gains/resident/properties/disposal-date",
+      controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue(),
+      Some(controllers.resident.properties.routes.DeductionsController.allowableLosses().toString))(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -39,6 +41,10 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
 
     s"have a title of ${messages.title("2015/16")}" in {
       doc.title() shouldBe messages.title("2015/16")
+    }
+
+    s"have the home link too ${controllers.resident.properties.routes.GainController.disposalDate().toString()}" in {
+      doc.select("#homeNavHref").attr("href") shouldEqual controllers.resident.properties.routes.GainController.disposalDate().toString()
     }
 
     "have a back button" which {
@@ -144,7 +150,10 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
 
   "Allowable Losses Value View with form with errors" should {
     val form = allowableLossesValueForm.bind(Map("amount" -> ""))
-    lazy val view = views.allowableLossesValue(form, TaxYearModel("2015/16", true, "2015/16"))(fakeRequestWithSession)
+    lazy val view = views.allowableLossesValue(form, TaxYearModel("2015/16", true, "2015/16"),
+      "/calculate-your-capital-gains/resident/properties/disposal-date",
+      controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue(),
+      Some(controllers.resident.properties.routes.DeductionsController.allowableLosses().toString))(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "output an error summary" in {
