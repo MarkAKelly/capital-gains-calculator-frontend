@@ -17,7 +17,8 @@
 package controllers.resident.shares
 
 import java.util.UUID
-import common.KeystoreKeys.{ResidentSharesKeys => keystoreKeys}
+
+import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import play.api.mvc.{Action, Result}

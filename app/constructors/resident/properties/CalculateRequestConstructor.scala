@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package constructors.resident
+package constructors.resident.properties
 
 import java.text.SimpleDateFormat
 

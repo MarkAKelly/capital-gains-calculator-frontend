@@ -181,8 +181,8 @@ trait GainController extends FeatureLock {
       success => {
         for {
           save <- calcConnector.saveFormData(keystoreKeys.improvements, success)
-          answers <- calcConnector.getYourAnswers
-          grossGain <- calcConnector.calculateRttGrossGain(answers)
+          answers <- calcConnector.getPropertyGainAnswers
+          grossGain <- calcConnector.calculateRttPropertyGrossGain(answers)
           route <- routeRequest(grossGain)
         } yield route
       }

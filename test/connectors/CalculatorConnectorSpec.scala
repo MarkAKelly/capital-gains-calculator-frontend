@@ -22,6 +22,8 @@ import common.KeystoreKeys
 import common.nonresident.CustomerTypeKeys
 import models.nonresident._
 import models.resident
+import models.resident.IncomeAnswersModel
+import models.resident.shares.{DeductionGainAnswersModel, GainAnswersModel}
 import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, ReliefsValueModel}
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -137,6 +139,47 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
 
     when(mockSessionCache.fetchAndGetEntry[resident.AnnualExemptAmountModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.annualExemptAmount))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(mock[resident.AnnualExemptAmountModel])))
+  }
+
+  def mockResidentSharesFetchAndGetFormData(): Unit = {
+    when(mockSessionCache.fetchAndGetEntry[resident.AcquisitionCostsModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.acquisitionCosts))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.AcquisitionCostsModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.AcquisitionValueModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.acquisitionValue))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.AcquisitionValueModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.disposalDate))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.DisposalDateModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.DisposalCostsModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.disposalCosts))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.DisposalCostsModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.DisposalValueModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.disposalValue))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.DisposalValueModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.OtherPropertiesModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.otherProperties))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.OtherPropertiesModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.AllowableLossesModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.allowableLosses))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.AllowableLossesModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.AllowableLossesValueModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.allowableLossesValue))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.AllowableLossesValueModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.LossesBroughtForwardModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.lossesBroughtForward))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.LossesBroughtForwardModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.LossesBroughtForwardValueModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.lossesBroughtForwardValue))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.LossesBroughtForwardValueModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.income.CurrentIncomeModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.currentIncome))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.income.CurrentIncomeModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.income.PersonalAllowanceModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.personalAllowance))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.income.PersonalAllowanceModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.income.PreviousTaxableGainsModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.previousTaxableGains))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.income.PreviousTaxableGainsModel])))
   }
 
   val sumModelFlat = SummaryModel(
@@ -309,12 +352,42 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     }
   }
 
-  "Calling getChargeableGainAnswers" should {
+  "Calling getPropertyDeductionAnswers" should {
 
     "return a valid ChargeableGainAnswersModel" in {
       val hc = mock[HeaderCarrier]
-      lazy val result = TargetCalculatorConnector.getChargeableGainAnswers(hc)
+      lazy val result = TargetCalculatorConnector.getPropertyDeductionAnswers(hc)
       await(result).isInstanceOf[ChargeableGainAnswers] shouldBe true
+    }
+  }
+
+  "Calling getShareGainAnswers" should {
+
+    "return a valid ShareGainAnswersModel" in {
+      val hc = mock[HeaderCarrier]
+      mockResidentSharesFetchAndGetFormData()
+      lazy val result = TargetCalculatorConnector.getShareGainAnswers(hc)
+      await(result).isInstanceOf[GainAnswersModel] shouldBe true
+    }
+  }
+
+  "Calling getShareDeductionAnswers" should {
+
+    "return a valid DeductionGainAnswersModel" in {
+      val hc = mock[HeaderCarrier]
+      mockResidentSharesFetchAndGetFormData()
+      lazy val result = TargetCalculatorConnector.getShareDeductionAnswers(hc)
+      await(result).isInstanceOf[DeductionGainAnswersModel] shouldBe true
+    }
+  }
+
+  "Calling getShareIncomeAnswers" should {
+
+    "return a valid DeductionGainAnswersModel" in {
+      val hc = mock[HeaderCarrier]
+      mockResidentSharesFetchAndGetFormData()
+      lazy val result = TargetCalculatorConnector.getShareIncomeAnswers(hc)
+      await(result).isInstanceOf[IncomeAnswersModel] shouldBe true
     }
   }
 }

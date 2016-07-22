@@ -64,7 +64,7 @@ trait SummaryController extends FeatureLock {
     def chargeableGain(grossGain: BigDecimal,
                        yourAnswersSummaryModel: YourAnswersSummaryModel,
                        chargeableGainAnswers: ChargeableGainAnswers)(implicit hc: HeaderCarrier): Future[Option[ChargeableGainResultModel]] = {
-      if (grossGain > 0) calculatorConnector.calculateRttChargeableGain(yourAnswersSummaryModel, chargeableGainAnswers, BigDecimal(11100))
+      if (grossGain > 0) calculatorConnector.calculateRttPropertyChargeableGain(yourAnswersSummaryModel, chargeableGainAnswers, BigDecimal(11100))
       else Future.successful(None)
     }
 
@@ -74,7 +74,7 @@ trait SummaryController extends FeatureLock {
                          incomeAnswersModel: IncomeAnswersModel)(implicit hc: HeaderCarrier): Future[Option[TotalGainAndTaxOwedModel]] = {
       if (chargeableGain.isDefined && chargeableGain.get.chargeableGain > 0 &&
         incomeAnswersModel.personalAllowanceModel.isDefined && incomeAnswersModel.currentIncomeModel.isDefined) {
-        calculatorConnector.calculateRttTotalGainAndTax(yourAnswersSummaryModel, chargeableGainAnswers, BigDecimal(11100), incomeAnswersModel)
+        calculatorConnector.calculateRttPropertyTotalGainAndTax(yourAnswersSummaryModel, chargeableGainAnswers, BigDecimal(11100), incomeAnswersModel)
       }
       else Future.successful(None)
     }
@@ -101,13 +101,13 @@ trait SummaryController extends FeatureLock {
     }
 
     for {
-      answers <- calculatorConnector.getYourAnswers
+      answers <- calculatorConnector.getPropertyGainAnswers
       taxYear <- getTaxYear(answers.disposalDate)
-      grossGain <- calculatorConnector.calculateRttGrossGain(answers)
-      deductionAnswers <- calculatorConnector.getChargeableGainAnswers
+      grossGain <- calculatorConnector.calculateRttPropertyGrossGain(answers)
+      deductionAnswers <- calculatorConnector.getPropertyDeductionAnswers
       backLink <- buildPreviousTaxableGainsBackUrl(deductionAnswers)
       chargeableGain <- chargeableGain(grossGain, answers, deductionAnswers)
-      incomeAnswers <- calculatorConnector.getIncomeAnswers
+      incomeAnswers <- calculatorConnector.getPropertyIncomeAnswers
       totalGain <- totalTaxableGain(chargeableGain, answers, deductionAnswers, incomeAnswers)
       routeRequest <- routeRequest(answers, grossGain, deductionAnswers, chargeableGain, incomeAnswers, totalGain, backLink, taxYear)
     } yield routeRequest
