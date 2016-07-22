@@ -6,8 +6,7 @@
   mainClass: Option[String] = None,
   scriptElem: Option[Html] = None,
   articleLayout: Boolean = true,
-  backLink: Option[String] = None,
-  homeLink: String
+  backLink: Option[String] = None
 )(mainContent: Html)(implicit request : Request[_])
 
 @import uk.gov.hmrc.play.views.html.layouts
@@ -52,6 +51,6 @@
                mainContent = contentLayout,
                serviceInfoContent = serviceInfoContent,
                scriptElem = scriptElem,
-               homeLink = homeLink
+               homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
 )
 

@@ -1,11 +1,11 @@
 @import views.html.helpers.resident._
-@import views.html.calculation.resident._
+@import views.html.calculation.resident.properties._
 @import models.SummaryDataItemModel
 @import models.resident._
 @import models.resident.properties._
 @import common.Dates._
 @import constructors.resident.SummaryConstructor._
-@import constructors.resident.CalculateRequestConstructor._
+@import constructors.resident.properties.CalculateRequestConstructor._
 @import controllers.resident.properties.routes.{GainController => gainRoutes}
 @import controllers.resident.properties.routes.{DeductionsController => deductionRoutes}
 @import controllers.resident.properties.routes.{IncomeController => incomeRoutes}
@@ -13,7 +13,7 @@
 
 @(gainAnswers: YourAnswersSummaryModel, deductionAnswers: ChargeableGainAnswers, incomeAnswers: IncomeAnswersModel, result: TotalGainAndTaxOwedModel, backUrl: String, taxYear: TaxYearModel)(implicit request: Request[_])
 
-@resident_main_template(
+@resident_properties_main_template(
 title = Messages("calc.resident.summary.title"),
 backLink = Some(backUrl),
 articleLayout = false

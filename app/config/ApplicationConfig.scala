@@ -28,6 +28,7 @@ trait AppConfig {
   val reportAProblemPartialUrl: String
   val reportAProblemNonJSUrl: String
   val featureRTTEnabled: Boolean
+  val featureRTTSharesEnabled: Boolean
 }
 
 object ApplicationConfig extends AppConfig with ServicesConfig {
@@ -38,7 +39,8 @@ object ApplicationConfig extends AppConfig with ServicesConfig {
   private val contactFrontendService = baseUrl("contact-frontend")
   private val contactHost = configuration.getString(s"$env.microservice.services.contact-frontend.host").getOrElse("")
 
-  override lazy val featureRTTEnabled = getFeature(s"$env.features.RTT")
+  override lazy val featureRTTEnabled = getFeature(s"$env.features.RTT.properties")
+  override lazy val featureRTTSharesEnabled = getFeature(s"$env.features.RTT.shares")
 
   override lazy val assetsPrefix = loadConfig(s"assets.url") + loadConfig(s"assets.version")
   override lazy val analyticsToken = loadConfig(s"google-analytics.token")

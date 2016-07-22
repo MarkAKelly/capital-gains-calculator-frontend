@@ -7,7 +7,8 @@
 
 @resident_main_template(
     title = Messages("calc.resident.allowableLossesValue.title", taxYear.taxYearSupplied),
-    backLink = Some(controllers.resident.properties.routes.DeductionsController.allowableLosses().toString)
+    backLink = Some(controllers.resident.properties.routes.DeductionsController.allowableLosses().toString),
+    homeLink = "TODO - needs parameter"
 ){
 
     @errorSummary(allowableLossesValueForm, "amount")

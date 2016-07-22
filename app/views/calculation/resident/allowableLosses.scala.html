@@ -6,7 +6,12 @@
 
 @(allowableLossesForm: Form[AllowableLossesModel], taxYear: TaxYearModel, postAction: Call)(implicit request: Request[_])
 
-@resident_main_template(title = Messages("calc.resident.allowableLosses.title", taxYear.taxYearSupplied), backLink = Some(controllers.resident.properties.routes.DeductionsController.otherProperties.toString())) {
+@resident_main_template(
+    title = Messages("calc.resident.allowableLosses.title",
+    taxYear.taxYearSupplied),
+    backLink = Some(controllers.resident.properties.routes.DeductionsController.otherProperties.toString()),
+    homeLink = "TODO - needs parameter"
+) {
 
     @errorSummary(allowableLossesForm, "isClaiming")
 

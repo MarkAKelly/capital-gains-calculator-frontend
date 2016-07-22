@@ -56,9 +56,9 @@ trait DeductionsController extends FeatureLock {
 
   //################# Reliefs Actions ########################
 
-  def totalGain(answerSummary: YourAnswersSummaryModel, hc: HeaderCarrier): Future[BigDecimal] = calcConnector.calculateRttGrossGain(answerSummary)(hc)
+  def totalGain(answerSummary: YourAnswersSummaryModel, hc: HeaderCarrier): Future[BigDecimal] = calcConnector.calculateRttPropertyGrossGain(answerSummary)(hc)
 
-  def answerSummary(hc: HeaderCarrier): Future[YourAnswersSummaryModel] = calcConnector.getYourAnswers(hc)
+  def answerSummary(hc: HeaderCarrier): Future[YourAnswersSummaryModel] = calcConnector.getPropertyGainAnswers(hc)
 
   val reliefs = FeatureLockForRTT.async { implicit request =>
 
@@ -314,9 +314,9 @@ trait DeductionsController extends FeatureLock {
 
   def positiveChargeableGainCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
     for {
-      gainAnswers <- calcConnector.getYourAnswers
-      chargeableGainAnswers <- calcConnector.getChargeableGainAnswers
-      chargeableGain <- calcConnector.calculateRttChargeableGain(gainAnswers, chargeableGainAnswers, 11000).map(_.get.chargeableGain)
+      gainAnswers <- calcConnector.getPropertyGainAnswers
+      chargeableGainAnswers <- calcConnector.getPropertyDeductionAnswers
+      chargeableGain <- calcConnector.calculateRttPropertyChargeableGain(gainAnswers, chargeableGainAnswers, 11000).map(_.get.chargeableGain)
     } yield chargeableGain
 
     match {

@@ -1,7 +1,7 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import models.resident._
 @import views.html.helpers._
-@import views.html.calculation.resident._
+@import views.html.calculation.resident.properties._
 
 @(otherPropertiesForm: Form[OtherPropertiesModel], backUrl: String, taxYear: TaxYearModel)(implicit request: Request[_])
 
@@ -14,7 +14,7 @@
     </ul>
 }
 
-@resident_main_template(Messages("calc.resident.otherProperties.title", taxYear.taxYearSupplied), backLink = Some(backUrl)) {
+@resident_properties_main_template(Messages("calc.resident.otherProperties.title", taxYear.taxYearSupplied), backLink = Some(backUrl)) {
 
     @errorSummary(otherPropertiesForm, "hasOtherProperties")
 

@@ -47,9 +47,9 @@ trait ReportController extends FeatureLock {
 
   val gainSummaryReport = FeatureLockForRTT.async { implicit request =>
     for {
-      answers <- calcConnector.getYourAnswers
+      answers <- calcConnector.getPropertyGainAnswers
       taxYear <- getTaxYear(answers.disposalDate)
-      grossGain <- calcConnector.calculateRttGrossGain(answers)
+      grossGain <- calcConnector.calculateRttPropertyGrossGain(answers)
     } yield {PdfGenerator.ok(views.gainSummaryReport(answers, grossGain, taxYear.get), host).toScala
       .withHeaders("Content-Disposition" -> s"""attachment; filename="${Messages("calc.resident.summary.title")}.pdf"""")}
   }
@@ -58,11 +58,11 @@ trait ReportController extends FeatureLock {
   //#####Deductions summary actions#####\\
   val deductionsReport = FeatureLockForRTT.async { implicit request =>
     for {
-      answers <- calcConnector.getYourAnswers
+      answers <- calcConnector.getPropertyGainAnswers
       taxYear <- getTaxYear(answers.disposalDate)
-      deductionAnswers <- calcConnector.getChargeableGainAnswers
-      grossGain <- calcConnector.calculateRttGrossGain(answers)
-      chargeableGain <- calcConnector.calculateRttChargeableGain(answers, deductionAnswers, grossGain)
+      deductionAnswers <- calcConnector.getPropertyDeductionAnswers
+      grossGain <- calcConnector.calculateRttPropertyGrossGain(answers)
+      chargeableGain <- calcConnector.calculateRttPropertyChargeableGain(answers, deductionAnswers, grossGain)
     } yield {PdfGenerator.ok(views.deductionsSummaryReport(answers, deductionAnswers, chargeableGain.get, taxYear.get), host).toScala
       .withHeaders("Content-Disposition" -> s"""attachment; filename="${Messages("calc.resident.summary.title")}.pdf"""")}
   }
@@ -71,13 +71,13 @@ trait ReportController extends FeatureLock {
 
   val finalSummaryReport = FeatureLockForRTT.async { implicit request =>
     for {
-      answers <- calcConnector.getYourAnswers
+      answers <- calcConnector.getPropertyGainAnswers
       taxYear <- getTaxYear(answers.disposalDate)
-      grossGain <- calcConnector.calculateRttGrossGain(answers)
-      deductionAnswers <- calcConnector.getChargeableGainAnswers
-      chargeableGain <- calcConnector.calculateRttChargeableGain(answers, deductionAnswers, BigDecimal(11100))
-      incomeAnswers <- calcConnector.getIncomeAnswers
-      totalGain <- calcConnector.calculateRttTotalGainAndTax(answers, deductionAnswers, BigDecimal(11100), incomeAnswers)
+      grossGain <- calcConnector.calculateRttPropertyGrossGain(answers)
+      deductionAnswers <- calcConnector.getPropertyDeductionAnswers
+      chargeableGain <- calcConnector.calculateRttPropertyChargeableGain(answers, deductionAnswers, BigDecimal(11100))
+      incomeAnswers <- calcConnector.getPropertyIncomeAnswers
+      totalGain <- calcConnector.calculateRttPropertyTotalGainAndTax(answers, deductionAnswers, BigDecimal(11100), incomeAnswers)
     } yield {
       PdfGenerator.ok(views.finalSummaryReport(answers,
         deductionAnswers,
