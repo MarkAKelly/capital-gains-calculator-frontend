@@ -18,8 +18,8 @@ package constructors.resident.shares
 
 import java.text.SimpleDateFormat
 
-import models.resident.{AllowableLossesModel, AllowableLossesValueModel, OtherPropertiesModel}
-import models.resident.shares.{DeductionGainAnswersModel, GainAnswersModel, IncomeAnswersModel}
+import models.resident.{AllowableLossesModel, AllowableLossesValueModel, IncomeAnswersModel, OtherPropertiesModel}
+import models.resident.shares.{DeductionGainAnswersModel, GainAnswersModel}
 
 object CalculateRequestConstructor {
 

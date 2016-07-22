@@ -308,7 +308,7 @@ trait CalculatorConnector {
     }
   }
 
-  def getShareIncomeAnswers(implicit hc: HeaderCarrier): Future[resident.shares.IncomeAnswersModel] = {
+  def getShareIncomeAnswers(implicit hc: HeaderCarrier): Future[resident.IncomeAnswersModel] = {
     val previousTaxableGainsModel = fetchAndGetFormData[resident.income.PreviousTaxableGainsModel](ResidentShareKeys.previousTaxableGains)
     val currentIncomeModel = fetchAndGetFormData[resident.income.CurrentIncomeModel](ResidentShareKeys.currentIncome)
     val personalAllowanceModel = fetchAndGetFormData[resident.income.PersonalAllowanceModel](ResidentShareKeys.personalAllowance)
@@ -318,7 +318,7 @@ trait CalculatorConnector {
       currentIncome <- currentIncomeModel
       personalAllowance <- personalAllowanceModel
     } yield {
-      resident.shares.IncomeAnswersModel(previousGains, currentIncome, personalAllowance)
+      resident.IncomeAnswersModel(previousGains, currentIncome, personalAllowance)
     }
   }
 
@@ -341,7 +341,7 @@ trait CalculatorConnector {
   def calculateRttShareTotalGainAndTax(totalGainInput: resident.shares.GainAnswersModel,
                                        chargeableGainInput: resident.shares.DeductionGainAnswersModel,
                                        maxAEA: BigDecimal,
-                                       incomeAnswers: resident.shares.IncomeAnswersModel)(implicit hc: HeaderCarrier): Future[Option[resident.TotalGainAndTaxOwedModel]] = {
+                                       incomeAnswers: resident.IncomeAnswersModel)(implicit hc: HeaderCarrier): Future[Option[resident.TotalGainAndTaxOwedModel]] = {
     http.GET[Option[resident.TotalGainAndTaxOwedModel]](s"$serviceUrl/capital-gains-calculator/shares/calculate-resident-capital-gains-tax" +
       shares.CalculateRequestConstructor.totalGainRequestString(totalGainInput) +
       shares.CalculateRequestConstructor.chargeableGainRequestString(chargeableGainInput, maxAEA) +

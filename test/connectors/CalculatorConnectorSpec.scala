@@ -22,7 +22,8 @@ import common.KeystoreKeys
 import common.nonresident.CustomerTypeKeys
 import models.nonresident._
 import models.resident
-import models.resident.shares.{DeductionGainAnswersModel, GainAnswersModel, IncomeAnswersModel}
+import models.resident.IncomeAnswersModel
+import models.resident.shares.{DeductionGainAnswersModel, GainAnswersModel}
 import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, ReliefsValueModel}
 import org.mockito.Matchers
 import org.mockito.Mockito._

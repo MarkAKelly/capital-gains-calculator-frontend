@@ -19,7 +19,7 @@ package constructors.resident.shares
 import common.Dates
 import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, PreviousTaxableGainsModel}
 import models.resident.{AllowableLossesValueModel, AnnualExemptAmountModel, _}
-import models.resident.shares.{DeductionGainAnswersModel, GainAnswersModel, IncomeAnswersModel}
+import models.resident.shares.{DeductionGainAnswersModel, GainAnswersModel}
 import uk.gov.hmrc.play.test.UnitSpec
 
 class CalculateRequestConstructorSpec extends UnitSpec {
