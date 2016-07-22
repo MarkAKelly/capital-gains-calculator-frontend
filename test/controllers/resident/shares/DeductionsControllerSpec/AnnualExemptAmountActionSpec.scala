@@ -31,7 +31,6 @@ import org.mockito.Mockito._
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-
 import scala.concurrent.Future
 
 class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
@@ -63,13 +62,13 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
     when(mockCalcConnector.getShareDeductionAnswers(Matchers.any()))
       .thenReturn(Future.successful(chargeableGainAnswers))
 
-    when(mockCalcConnector.calculateRttPropertyChargeableGain(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+    when(mockCalcConnector.calculateRttShareChargeableGain(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(Some(chargeableGain)))
 
     when(mockCalcConnector.getFullAEA(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(maxAnnualExemptAmount))
 
-    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.disposalDate))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.disposalDate))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(disposalDateModel)))
 
     when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
@@ -77,6 +76,9 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
 
     when(mockCalcConnector.fetchAndGetFormData[LossesBroughtForwardModel](Matchers.eq(keystoreKeys.lossesBroughtForward))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(lossesBroughtForwardModel)))
+
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(keystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(DisposalDateModel(10, 10, 2015))))
 
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -139,75 +141,75 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
     }
   }
 
-//  "Calling .submitAnnualExemptAmount from the DeductionsController" when {
-//
-//    "a valid form is submitted with AEA of 1000 and zero taxable gain" should {
-//      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
-//      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
-//      lazy val lossesBroughtForwardModel = LossesBroughtForwardModel(false)
-//      lazy val target = setupTarget(Some(AnnualExemptAmountModel(1000)), gainModel, summaryModel, ChargeableGainResultModel(2000, 0, 1000, 0, 1000), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel, lossesBroughtForwardModel = lossesBroughtForwardModel)
-//      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
-//      lazy val result = target.submitAnnualExemptAmount(request)
-//
-//      "return a 303" in {
-//        status(result) shouldBe 303
-//      }
-//
-//      "redirect to the summary page" in {
-//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/summary")
-//      }
-//    }
-//
-//    "a valid form is submitted with AEA of 0 and positive taxable gain" should {
-//      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
-//      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
-//      lazy val lossesBroughtForwardModel = LossesBroughtForwardModel(false)
-//      lazy val target = setupTarget(Some(AnnualExemptAmountModel(0)), gainModel, summaryModel, ChargeableGainResultModel(1000, 1000, 0, 0, 0), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel, lossesBroughtForwardModel = lossesBroughtForwardModel)
-//      lazy val request = fakeRequestToPOSTWithSession(("amount", "0"))
-//      lazy val result = target.submitAnnualExemptAmount(request)
-//
-//      "return a 303" in {
-//        status(result) shouldBe 303
-//      }
-//
-//      "redirect to the previous taxable gains page" in {
-//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/previous-taxable-gains")
-//      }
-//    }
-//
-//    "a valid form is submitted with AEA of 1000 and positive taxable gain" should {
-//      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
-//      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
-//      lazy val lossesBroughtForwardModel = LossesBroughtForwardModel(false)
-//      lazy val target = setupTarget(Some(AnnualExemptAmountModel(1000)), gainModel, summaryModel, ChargeableGainResultModel(2000, 1000, 1000, 0, 0), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel, lossesBroughtForwardModel = lossesBroughtForwardModel)
-//      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
-//      lazy val result = target.submitAnnualExemptAmount(request)
-//
-//      "return a 303" in {
-//        status(result) shouldBe 303
-//      }
-//
-//      "redirect to the summary page" in {
-//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/current-income")
-//      }
-//    }
-//
-//    "an invalid form is submitted" should {
-//      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
-//      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
-//      lazy val lossesBroughtForwardModel = LossesBroughtForwardModel(false)
-//      lazy val target = setupTarget(None, gainModel, summaryModel, ChargeableGainResultModel(2000, 1000, 1000, 0, 0), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel, lossesBroughtForwardModel = lossesBroughtForwardModel)
-//      lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
-//      lazy val result = target.submitAnnualExemptAmount(request)
-//      lazy val doc = Jsoup.parse(bodyOf(result))
-//
-//      "return a 400" in {
-//        status(result) shouldBe 400
-//      }
-//
-//      "render the annual exempt amount page" in {
-//        doc.title() shouldEqual messages.title
-//      }
-//    }
-//  }
+  "Calling .submitAnnualExemptAmount from the DeductionsController" when {
+
+    "a valid form is submitted with AEA of 1000 and zero taxable gain" should {
+      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val lossesBroughtForwardModel = LossesBroughtForwardModel(false)
+      lazy val target = setupTarget(Some(AnnualExemptAmountModel(1000)), gainModel, summaryModel, ChargeableGainResultModel(0, 0, 1000, 0, 1000), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel, lossesBroughtForwardModel = lossesBroughtForwardModel)
+      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+      lazy val result = target.submitAnnualExemptAmount(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the summary page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/summary")
+      }
+    }
+
+    "a valid form is submitted with AEA of 0 and positive taxable gain" should {
+      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val lossesBroughtForwardModel = LossesBroughtForwardModel(false)
+      lazy val target = setupTarget(Some(AnnualExemptAmountModel(0)), gainModel, summaryModel, ChargeableGainResultModel(1000, 1000, 0, 0, 0), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel, lossesBroughtForwardModel = lossesBroughtForwardModel)
+      lazy val request = fakeRequestToPOSTWithSession(("amount", "0"))
+      lazy val result = target.submitAnnualExemptAmount(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the previous taxable gains page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/previous-taxable-gains")
+      }
+    }
+
+    "a valid form is submitted with AEA of 1000 and positive taxable gain" should {
+      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val lossesBroughtForwardModel = LossesBroughtForwardModel(false)
+      lazy val target = setupTarget(Some(AnnualExemptAmountModel(1000)), gainModel, summaryModel, ChargeableGainResultModel(2000, 1000, 1000, 0, 0), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel, lossesBroughtForwardModel = lossesBroughtForwardModel)
+      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+      lazy val result = target.submitAnnualExemptAmount(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the summary page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/current-income")
+      }
+    }
+
+    "an invalid form is submitted" should {
+      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val lossesBroughtForwardModel = LossesBroughtForwardModel(false)
+      lazy val target = setupTarget(None, gainModel, summaryModel, ChargeableGainResultModel(2000, 1000, 1000, 0, 0), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel, lossesBroughtForwardModel = lossesBroughtForwardModel)
+      lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
+      lazy val result = target.submitAnnualExemptAmount(request)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "return a 400" in {
+        status(result) shouldBe 400
+      }
+
+      "render the annual exempt amount page" in {
+        doc.title() shouldEqual messages.title
+      }
+    }
+  }
 }

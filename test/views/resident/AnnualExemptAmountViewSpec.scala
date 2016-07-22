@@ -123,7 +123,7 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
 
   "Annual Exempt Amount view with stored values" should {
     lazy val postAction = controllers.resident.properties.routes.DeductionsController.submitAnnualExemptAmount
-    lazy val backLink = Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForwardValue().toString)
+    lazy val backLink = Some(controllers.resident.shares.routes.DeductionsController.lossesBroughtForwardValue().toString)
     lazy val form = annualExemptAmountForm().bind(Map(("amount", "1000")))
     lazy val view = views.annualExemptAmount(form, backLink, postAction)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
@@ -142,7 +142,7 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
         backLink.hasClass("back-link") shouldBe true
       }
       "have a link to Brought Forward Losses Value" in {
-        backLink.attr("href") shouldBe controllers.resident.properties.routes.DeductionsController.lossesBroughtForwardValue().toString
+        backLink.attr("href") shouldBe controllers.resident.shares.routes.DeductionsController.lossesBroughtForwardValue().toString
       }
     }
   }
