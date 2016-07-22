@@ -121,5 +121,29 @@ trait DeductionsController extends FeatureLock {
 
   //################# Annual Exempt Amount Input Actions #############################
 
-  val annualExemptAmount = TODO
+  val annualExemptAmount = FeatureLockForRTT.async { implicit request =>
+
+    val postAction = controllers.resident.shares.routes.DeductionsController.submitAnnualExemptAmount
+
+    def routeRequest(backLink: Option[String]) = {
+      calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](keystoreKeys.annualExemptAmount).map {
+        case Some(data) => Ok(commonViews.annualExemptAmount(annualExemptAmountForm().fill(data), backLink, postAction))
+        case None => Ok(commonViews.annualExemptAmount(annualExemptAmountForm(), backLink, postAction))
+      }
+    }
+
+    val backLink = calcConnector.fetchAndGetFormData[LossesBroughtForwardModel](keystoreKeys.lossesBroughtForward).map {
+      case Some(LossesBroughtForwardModel(true)) =>
+        Some(controllers.resident.shares.routes.DeductionsController.lossesBroughtForwardValue().toString)
+      case _ =>
+        Some(controllers.resident.shares.routes.DeductionsController.lossesBroughtForward().toString)
+    }
+
+    for {
+      backLink <- backLink
+      result <- routeRequest(backLink)
+    } yield result
+  }
+
+  val submitAnnualExemptAmount = TODO
 }
