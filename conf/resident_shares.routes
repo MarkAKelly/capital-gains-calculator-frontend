@@ -9,7 +9,6 @@ GET     /outside-tax-years                controllers.resident.shares.GainContro
 
 #Disposal Value or Market Value Routes
 GET     /disposal-value                   controllers.resident.shares.GainController.disposalValue
-<<<<<<< HEAD
 POST    /disposal-value                   controllers.resident.shares.GainController.submitDisposalValue
 
 #Disposal Costs Routes
@@ -49,4 +48,3 @@ GET     /losses-brought-forward           controllers.resident.shares.Deductions
 #Deductions Summary PDF Routes
 
 #Final Summary PDF Routes
->>>>>>> master
