@@ -16,8 +16,11 @@
 
 package models.resident.shares
 
-import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, PreviousTaxableGainsModel}
+import models.resident._
 
-case class ShareIncomeAnswersModel(previousTaxableGainsModel: Option[PreviousTaxableGainsModel],
-                              currentIncomeModel: Option[CurrentIncomeModel],
-                              personalAllowanceModel: Option[PersonalAllowanceModel])
+case class DeductionGainAnswersModel(otherPropertiesModel: Option[OtherPropertiesModel],
+                                     allowableLossesModel: Option[AllowableLossesModel],
+                                     allowableLossesValueModel: Option[AllowableLossesValueModel],
+                                     broughtForwardModel: Option[LossesBroughtForwardModel],
+                                     broughtForwardValueModel: Option[LossesBroughtForwardValueModel],
+                                     annualExemptAmountModel: Option[AnnualExemptAmountModel])

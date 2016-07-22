@@ -16,14 +16,8 @@
 
 package models.resident.shares
 
-import java.util.Date
+import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, PreviousTaxableGainsModel}
 
-import models.resident._
-
-case class ShareGainAnswersModel (  disposalDate: Date,
-                                    disposalValue: BigDecimal,
-                                    disposalCosts: BigDecimal,
-                                    acquisitionValue: BigDecimal,
-                                    acquisitionCosts: BigDecimal)
-
-
+case class IncomeAnswersModel(previousTaxableGainsModel: Option[PreviousTaxableGainsModel],
+                              currentIncomeModel: Option[CurrentIncomeModel],
+                              personalAllowanceModel: Option[PersonalAllowanceModel])

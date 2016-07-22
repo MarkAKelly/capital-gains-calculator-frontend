@@ -19,14 +19,14 @@ package constructors.resident.shares
 import java.text.SimpleDateFormat
 
 import models.resident.{AllowableLossesModel, AllowableLossesValueModel, OtherPropertiesModel}
-import models.resident.shares.{ShareDeductionGainAnswersModel, ShareGainAnswersModel, ShareIncomeAnswersModel}
+import models.resident.shares.{DeductionGainAnswersModel, GainAnswersModel, IncomeAnswersModel}
 
-object ShareCalculateRequestConstructor {
+object CalculateRequestConstructor {
 
   val format = new SimpleDateFormat("yyyy-MM-dd")
 
 
-  def totalGainRequestString (answers: ShareGainAnswersModel): String = {
+  def totalGainRequestString (answers: GainAnswersModel): String = {
     s"?disposalValue=${answers.disposalValue}" +
       s"&disposalCosts=${answers.disposalCosts}" +
       s"&acquisitionValue=${answers.acquisitionValue}" +
@@ -34,7 +34,7 @@ object ShareCalculateRequestConstructor {
       s"&disposalDate=${format.format(answers.disposalDate)}"
   }
 
-  def chargeableGainRequestString (answers: ShareDeductionGainAnswersModel, maxAEA: BigDecimal): String = {
+  def chargeableGainRequestString (answers: DeductionGainAnswersModel, maxAEA: BigDecimal): String = {
       s"${if (answers.otherPropertiesModel.get.hasOtherProperties && answers.allowableLossesModel.get.isClaiming)
         s"&allowableLosses=${answers.allowableLossesValueModel.get.amount}"
       else ""}" +
@@ -56,7 +56,7 @@ object ShareCalculateRequestConstructor {
     }
   }
 
-  def incomeAnswersRequestString (deductionsAnswers: ShareDeductionGainAnswersModel, answers: ShareIncomeAnswersModel): String = {
+  def incomeAnswersRequestString (deductionsAnswers: DeductionGainAnswersModel, answers: IncomeAnswersModel): String = {
     s"${if (deductionsAnswers.otherPropertiesModel.get.hasOtherProperties && !deductionsAnswers.allowableLossesModel.get.isClaiming &&
       deductionsAnswers.annualExemptAmountModel.get.amount == 0)
       s"&previousTaxableGain=${answers.previousTaxableGainsModel.get.amount}"

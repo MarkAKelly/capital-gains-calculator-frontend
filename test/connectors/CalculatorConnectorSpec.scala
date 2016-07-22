@@ -22,7 +22,7 @@ import common.KeystoreKeys
 import common.nonresident.CustomerTypeKeys
 import models.nonresident._
 import models.resident
-import models.resident.shares.{ShareDeductionGainAnswersModel, ShareGainAnswersModel, ShareIncomeAnswersModel}
+import models.resident.shares.{DeductionGainAnswersModel, GainAnswersModel, IncomeAnswersModel}
 import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, ReliefsValueModel}
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -366,7 +366,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
       val hc = mock[HeaderCarrier]
       mockResidentSharesFetchAndGetFormData()
       lazy val result = TargetCalculatorConnector.getShareGainAnswers(hc)
-      await(result).isInstanceOf[ShareGainAnswersModel] shouldBe true
+      await(result).isInstanceOf[GainAnswersModel] shouldBe true
     }
   }
 
@@ -376,7 +376,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
       val hc = mock[HeaderCarrier]
       mockResidentSharesFetchAndGetFormData()
       lazy val result = TargetCalculatorConnector.getShareDeductionAnswers(hc)
-      await(result).isInstanceOf[ShareDeductionGainAnswersModel] shouldBe true
+      await(result).isInstanceOf[DeductionGainAnswersModel] shouldBe true
     }
   }
 
@@ -386,7 +386,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
       val hc = mock[HeaderCarrier]
       mockResidentSharesFetchAndGetFormData()
       lazy val result = TargetCalculatorConnector.getShareIncomeAnswers(hc)
-      await(result).isInstanceOf[ShareIncomeAnswersModel] shouldBe true
+      await(result).isInstanceOf[IncomeAnswersModel] shouldBe true
     }
   }
 }

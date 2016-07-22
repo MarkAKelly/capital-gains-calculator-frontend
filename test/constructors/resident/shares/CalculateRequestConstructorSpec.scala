@@ -19,20 +19,20 @@ package constructors.resident.shares
 import common.Dates
 import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, PreviousTaxableGainsModel}
 import models.resident.{AllowableLossesValueModel, AnnualExemptAmountModel, _}
-import models.resident.shares.{ShareDeductionGainAnswersModel, ShareGainAnswersModel, ShareIncomeAnswersModel}
+import models.resident.shares.{DeductionGainAnswersModel, GainAnswersModel, IncomeAnswersModel}
 import uk.gov.hmrc.play.test.UnitSpec
 
-class ShareCalculateRequestConstructorSpec extends UnitSpec {
+class CalculateRequestConstructorSpec extends UnitSpec {
 
   "totalGainRequestString" should {
 
     "return a valid url variable string" in {
-      val answers = ShareGainAnswersModel(Dates.constructDate(10, 2, 2016),
+      val answers = GainAnswersModel(Dates.constructDate(10, 2, 2016),
         BigDecimal(1000),
         BigDecimal(0),
         BigDecimal(500),
         BigDecimal(100))
-      val result = ShareCalculateRequestConstructor.totalGainRequestString(answers)
+      val result = CalculateRequestConstructor.totalGainRequestString(answers)
       result shouldBe s"?disposalValue=1000" +
         s"&disposalCosts=0" +
         s"&acquisitionValue=500" +
@@ -46,13 +46,13 @@ class ShareCalculateRequestConstructorSpec extends UnitSpec {
     "supplied with no optional values" should {
 
       "return a valid url variable string" in {
-        val answers = ShareDeductionGainAnswersModel(Some(OtherPropertiesModel(false)),
+        val answers = DeductionGainAnswersModel(Some(OtherPropertiesModel(false)),
           None,
           None,
           Some(LossesBroughtForwardModel(false)),
           None,
           None)
-        val result = ShareCalculateRequestConstructor.chargeableGainRequestString(answers, BigDecimal(11100))
+        val result = CalculateRequestConstructor.chargeableGainRequestString(answers, BigDecimal(11100))
         result shouldBe "&annualExemptAmount=11100"
       }
     }
@@ -60,13 +60,13 @@ class ShareCalculateRequestConstructorSpec extends UnitSpec {
     "supplied with all optional values except allowable losses" should {
 
       "return a valid url variable string" in {
-        val answers = ShareDeductionGainAnswersModel(Some(OtherPropertiesModel(true)),
+        val answers = DeductionGainAnswersModel(Some(OtherPropertiesModel(true)),
           Some(AllowableLossesModel(false)),
           None,
           Some(LossesBroughtForwardModel(true)),
           Some(LossesBroughtForwardValueModel(BigDecimal(2000))),
           Some(AnnualExemptAmountModel(BigDecimal(3000))))
-        val result = ShareCalculateRequestConstructor.chargeableGainRequestString(answers, BigDecimal(11100))
+        val result = CalculateRequestConstructor.chargeableGainRequestString(answers, BigDecimal(11100))
         result shouldBe "&broughtForwardLosses=2000&annualExemptAmount=3000"
       }
     }
@@ -74,13 +74,13 @@ class ShareCalculateRequestConstructorSpec extends UnitSpec {
     "supplied with all optional values including allowable losses" should {
 
       "return a valid url variable string" in {
-        val answers = ShareDeductionGainAnswersModel(Some(OtherPropertiesModel(true)),
+        val answers = DeductionGainAnswersModel(Some(OtherPropertiesModel(true)),
           Some(AllowableLossesModel(true)),
           Some(AllowableLossesValueModel(BigDecimal(1000))),
           Some(LossesBroughtForwardModel(true)),
           Some(LossesBroughtForwardValueModel(BigDecimal(2000))),
           Some(AnnualExemptAmountModel(BigDecimal(3000))))
-        val result = ShareCalculateRequestConstructor.chargeableGainRequestString(answers, BigDecimal(11100))
+        val result = CalculateRequestConstructor.chargeableGainRequestString(answers, BigDecimal(11100))
         result shouldBe "&allowableLosses=1000&broughtForwardLosses=2000&annualExemptAmount=11100"
       }
     }
@@ -91,7 +91,7 @@ class ShareCalculateRequestConstructorSpec extends UnitSpec {
     "disposed other properties and claimed non-zero allowable losses" should {
 
       "return a true" in {
-        val result = ShareCalculateRequestConstructor.isUsingAnnualExemptAmount(Some(OtherPropertiesModel(true)),
+        val result = CalculateRequestConstructor.isUsingAnnualExemptAmount(Some(OtherPropertiesModel(true)),
           Some(AllowableLossesModel(true)),
           Some(AllowableLossesValueModel(BigDecimal(1000))))
         result shouldBe false
@@ -101,7 +101,7 @@ class ShareCalculateRequestConstructorSpec extends UnitSpec {
     "disposed other properties and claimed zero allowable losses" should {
 
       "return a false" in {
-        val result = ShareCalculateRequestConstructor.isUsingAnnualExemptAmount(Some(OtherPropertiesModel(true)),
+        val result = CalculateRequestConstructor.isUsingAnnualExemptAmount(Some(OtherPropertiesModel(true)),
           Some(AllowableLossesModel(true)),
           Some(AllowableLossesValueModel(BigDecimal(0))))
         result shouldBe true
@@ -111,7 +111,7 @@ class ShareCalculateRequestConstructorSpec extends UnitSpec {
     "disposed other properties and didn't claim allowable losses" should {
 
       "return a true" in {
-        val result = ShareCalculateRequestConstructor.isUsingAnnualExemptAmount(Some(OtherPropertiesModel(true)),
+        val result = CalculateRequestConstructor.isUsingAnnualExemptAmount(Some(OtherPropertiesModel(true)),
           Some(AllowableLossesModel(false)),
           Some(AllowableLossesValueModel(BigDecimal(0))))
         result shouldBe true
@@ -121,7 +121,7 @@ class ShareCalculateRequestConstructorSpec extends UnitSpec {
     "disposed no other properties or allowable losses" should {
 
       "return a false" in {
-        val result = ShareCalculateRequestConstructor.isUsingAnnualExemptAmount(Some(OtherPropertiesModel(false)),
+        val result = CalculateRequestConstructor.isUsingAnnualExemptAmount(Some(OtherPropertiesModel(false)),
           Some(AllowableLossesModel(false)),
           Some(AllowableLossesValueModel(BigDecimal(100))))
         result shouldBe false
@@ -131,7 +131,7 @@ class ShareCalculateRequestConstructorSpec extends UnitSpec {
     "disposed no other properties and but claimed allowable losses" should {
 
       "return a false" in {
-        val result = ShareCalculateRequestConstructor.isUsingAnnualExemptAmount(Some(OtherPropertiesModel(false)),
+        val result = CalculateRequestConstructor.isUsingAnnualExemptAmount(Some(OtherPropertiesModel(false)),
           Some(AllowableLossesModel(true)),
           Some(AllowableLossesValueModel(BigDecimal(100))))
         result shouldBe false
@@ -142,44 +142,44 @@ class ShareCalculateRequestConstructorSpec extends UnitSpec {
   "calling incomeAnswersRequestString" when {
 
     "user has no previous disposals" should {
-      val deductionGainAnswersModel = ShareDeductionGainAnswersModel(Some(OtherPropertiesModel(false)), None, None, None, None, None)
-      val incomeGainAnswersModel = ShareIncomeAnswersModel(None, Some(CurrentIncomeModel(1000)), Some(PersonalAllowanceModel(10600)))
+      val deductionGainAnswersModel = DeductionGainAnswersModel(Some(OtherPropertiesModel(false)), None, None, None, None, None)
+      val incomeGainAnswersModel = IncomeAnswersModel(None, Some(CurrentIncomeModel(1000)), Some(PersonalAllowanceModel(10600)))
 
       "return a valid request string" in {
-        val result = ShareCalculateRequestConstructor.incomeAnswersRequestString(deductionGainAnswersModel, incomeGainAnswersModel)
+        val result = CalculateRequestConstructor.incomeAnswersRequestString(deductionGainAnswersModel, incomeGainAnswersModel)
         result shouldBe "&previousIncome=1000&personalAllowance=10600"
       }
     }
 
     "user has previous disposals but AEA left" should {
-      val deductionGainAnswersModel = ShareDeductionGainAnswersModel(Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(false)),
+      val deductionGainAnswersModel = DeductionGainAnswersModel(Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(false)),
         None, None, None, Some(AnnualExemptAmountModel(1000)))
-      val incomeGainAnswersModel = ShareIncomeAnswersModel(None, Some(CurrentIncomeModel(1000)), Some(PersonalAllowanceModel(10600)))
+      val incomeGainAnswersModel = IncomeAnswersModel(None, Some(CurrentIncomeModel(1000)), Some(PersonalAllowanceModel(10600)))
 
       "return a valid request string" in {
-        val result = ShareCalculateRequestConstructor.incomeAnswersRequestString(deductionGainAnswersModel, incomeGainAnswersModel)
+        val result = CalculateRequestConstructor.incomeAnswersRequestString(deductionGainAnswersModel, incomeGainAnswersModel)
         result shouldBe "&previousIncome=1000&personalAllowance=10600"
       }
     }
 
     "user has previous disposals but allowable losses" should {
-      val deductionGainAnswersModel = ShareDeductionGainAnswersModel(Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(true)),
+      val deductionGainAnswersModel = DeductionGainAnswersModel(Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(true)),
         None, None, None, None)
-      val incomeGainAnswersModel = ShareIncomeAnswersModel(None, Some(CurrentIncomeModel(1000)), Some(PersonalAllowanceModel(10600)))
+      val incomeGainAnswersModel = IncomeAnswersModel(None, Some(CurrentIncomeModel(1000)), Some(PersonalAllowanceModel(10600)))
 
       "return a valid request string" in {
-        val result = ShareCalculateRequestConstructor.incomeAnswersRequestString(deductionGainAnswersModel, incomeGainAnswersModel)
+        val result = CalculateRequestConstructor.incomeAnswersRequestString(deductionGainAnswersModel, incomeGainAnswersModel)
         result shouldBe "&previousIncome=1000&personalAllowance=10600"
       }
     }
 
     "user has previous taxable gains" should {
-      val deductionGainAnswersModel = ShareDeductionGainAnswersModel(Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(false)),
+      val deductionGainAnswersModel = DeductionGainAnswersModel(Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(false)),
         None, None, None, Some(AnnualExemptAmountModel(0)))
-      val incomeGainAnswersModel = ShareIncomeAnswersModel(Some(PreviousTaxableGainsModel(2000)), Some(CurrentIncomeModel(1000)), Some(PersonalAllowanceModel(10600)))
+      val incomeGainAnswersModel = IncomeAnswersModel(Some(PreviousTaxableGainsModel(2000)), Some(CurrentIncomeModel(1000)), Some(PersonalAllowanceModel(10600)))
 
       "return a valid request string" in {
-        val result = ShareCalculateRequestConstructor.incomeAnswersRequestString(deductionGainAnswersModel, incomeGainAnswersModel)
+        val result = CalculateRequestConstructor.incomeAnswersRequestString(deductionGainAnswersModel, incomeGainAnswersModel)
         result shouldBe "&previousTaxableGain=2000&previousIncome=1000&personalAllowance=10600"
       }
     }

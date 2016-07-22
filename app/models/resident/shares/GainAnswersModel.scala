@@ -16,11 +16,14 @@
 
 package models.resident.shares
 
+import java.util.Date
+
 import models.resident._
 
-case class ShareDeductionGainAnswersModel(otherPropertiesModel: Option[OtherPropertiesModel],
-                                          allowableLossesModel: Option[AllowableLossesModel],
-                                          allowableLossesValueModel: Option[AllowableLossesValueModel],
-                                          broughtForwardModel: Option[LossesBroughtForwardModel],
-                                          broughtForwardValueModel: Option[LossesBroughtForwardValueModel],
-                                          annualExemptAmountModel: Option[AnnualExemptAmountModel])
+case class GainAnswersModel(disposalDate: Date,
+                            disposalValue: BigDecimal,
+                            disposalCosts: BigDecimal,
+                            acquisitionValue: BigDecimal,
+                            acquisitionCosts: BigDecimal)
+
+
