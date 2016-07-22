@@ -251,5 +251,4 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
       path shouldEqual "/calculate-your-capital-gains/resident/properties/final-report"
     }
   }
-
 }
