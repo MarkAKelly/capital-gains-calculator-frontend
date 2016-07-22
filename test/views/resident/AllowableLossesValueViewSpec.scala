@@ -30,9 +30,9 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
   "Allowable Losses Value view with no form errors" should {
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
-    lazy val view = views.allowableLossesValue(allowableLossesValueForm, taxYearModel, "/calculate-your-capital-gains/resident/properties/disposal-date",
+    lazy val view = views.allowableLossesValue(allowableLossesValueForm, taxYearModel, "home",
       controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue(),
-      Some(controllers.resident.properties.routes.DeductionsController.allowableLosses().toString))(fakeRequest)
+      Some("back"))(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -44,7 +44,7 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
     }
 
     s"have the home link too ${controllers.resident.properties.routes.GainController.disposalDate().toString()}" in {
-      doc.select("#homeNavHref").attr("href") shouldEqual controllers.resident.properties.routes.GainController.disposalDate().toString()
+      doc.select("#homeNavHref").attr("href") shouldEqual "home"
     }
 
     "have a back button" which {
@@ -59,8 +59,8 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
         backLink.hasClass("back-link") shouldBe true
       }
 
-      "has a link to Allowable Losses" in {
-        backLink.attr("href") shouldBe controllers.resident.properties.routes.DeductionsController.allowableLosses().toString
+      "has a back link to 'back'" in {
+        backLink.attr("href") shouldBe "back"
       }
     }
 
@@ -81,7 +81,7 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
 
       lazy val form = doc.getElementsByTag("form")
 
-      s"has the action '${controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue().toString}'" in {
+      s"has the action url '${controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue().toString}'" in {
         form.attr("action") shouldBe controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue().toString
       }
 
@@ -151,9 +151,9 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
   "Allowable Losses Value View with form with errors" should {
     val form = allowableLossesValueForm.bind(Map("amount" -> ""))
     lazy val view = views.allowableLossesValue(form, TaxYearModel("2015/16", true, "2015/16"),
-      "/calculate-your-capital-gains/resident/properties/disposal-date",
+      "home",
       controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue(),
-      Some(controllers.resident.properties.routes.DeductionsController.allowableLosses().toString))(fakeRequestWithSession)
+      Some("back"))(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "output an error summary" in {
