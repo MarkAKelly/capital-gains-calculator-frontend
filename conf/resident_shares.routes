@@ -32,6 +32,7 @@ GET     /allowable-losses-value           controllers.resident.shares.Deductions
 GET     /losses-brought-forward           controllers.resident.shares.DeductionsController.lossesBroughtForward
 
 #Annual Exempt Amount Routes
+GET     /annual-exempt-amount             controllers.resident.shares.DeductionsController.annualExemptAmount
 
 #Losses Brought Forward Value Routes
 GET     /losses-brought-forward-value     controllers.resident.shares.DeductionsController.lossesBroughtForwardValue

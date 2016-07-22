@@ -27,7 +27,7 @@
 
     <h1 class="heading-large">@Messages("calc.resident.annualExemptAmount.title")</h1>
 
-    @form(action = controllers.resident.properties.routes.DeductionsController.submitAnnualExemptAmount) {
+    @form(action = postAction) {
 
     @formInputMoney(annualExemptAmountForm, "amount", "", Some(Messages("calc.resident.annualExemptAmount.helpText.one") + "<br>" + Messages("calc.resident.annualExemptAmount.helpText.two")))
 
