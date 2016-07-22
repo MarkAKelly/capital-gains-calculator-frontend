@@ -405,10 +405,12 @@ trait DeductionsController extends FeatureLock {
   //################# Annual Exempt Amount Input Actions #############################
   val annualExemptAmount = FeatureLockForRTT.async { implicit request =>
 
+    val postAction = controllers.resident.properties.routes.DeductionsController.submitAnnualExemptAmount
+
     def routeRequest(backLink: Option[String]) = {
       calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](keystoreKeys.annualExemptAmount).map {
-        case Some(data) => Ok(commonViews.annualExemptAmount(annualExemptAmountForm().fill(data), backLink))
-        case None => Ok(commonViews.annualExemptAmount(annualExemptAmountForm(), backLink))
+        case Some(data) => Ok(commonViews.annualExemptAmount(annualExemptAmountForm().fill(data), backLink, postAction))
+        case None => Ok(commonViews.annualExemptAmount(annualExemptAmountForm(), backLink, postAction))
       }
     }
 
@@ -431,6 +433,8 @@ trait DeductionsController extends FeatureLock {
 
   val submitAnnualExemptAmount = FeatureLockForRTT.async { implicit request =>
 
+    val postAction = controllers.resident.properties.routes.DeductionsController.submitAnnualExemptAmount
+
     val backLink = calcConnector.fetchAndGetFormData[LossesBroughtForwardModel](keystoreKeys.lossesBroughtForward).map {
       case Some(LossesBroughtForwardModel(true)) =>
         Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForwardValue().toString)
@@ -452,7 +456,7 @@ trait DeductionsController extends FeatureLock {
 
     def routeRequest(maxAEA: BigDecimal, backLink: Option[String]): Future[Result] = {
       annualExemptAmountForm(maxAEA).bindFromRequest.fold(
-        errors => Future.successful(BadRequest(commonViews.annualExemptAmount(errors, backLink))),
+        errors => Future.successful(BadRequest(commonViews.annualExemptAmount(errors, backLink, postAction))),
         success => {
           for {
             save <- calcConnector.saveFormData(keystoreKeys.annualExemptAmount, success)

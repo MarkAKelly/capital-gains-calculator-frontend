@@ -26,8 +26,9 @@ import views.html.calculation.{resident => views}
 
 class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
   "The Annual Exempt Amount view" should {
+    lazy val postAction = controllers.resident.properties.routes.DeductionsController.submitAnnualExemptAmount
     lazy val backLink = Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForward().toString)
-    lazy val view = views.annualExemptAmount(annualExemptAmountForm(), backLink)(fakeRequest)
+    lazy val view = views.annualExemptAmount(annualExemptAmountForm(), backLink, postAction)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
     "have a charset of UTF-8" in {
       doc.charset().toString shouldBe "UTF-8"
@@ -121,9 +122,10 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
   }
 
   "Annual Exempt Amount view with stored values" should {
+    lazy val postAction = controllers.resident.properties.routes.DeductionsController.submitAnnualExemptAmount
     lazy val backLink = Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForwardValue().toString)
     lazy val form = annualExemptAmountForm().bind(Map(("amount", "1000")))
-    lazy val view = views.annualExemptAmount(form, backLink)(fakeRequest)
+    lazy val view = views.annualExemptAmount(form, backLink, postAction)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have the value of 1000 auto-filled in the input" in {
@@ -147,9 +149,10 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
 
   "Annual Exempt Amount View with form with errors" which {
     "is due to mandatory field error" should {
+      lazy val postAction = controllers.resident.properties.routes.DeductionsController.submitAnnualExemptAmount
       lazy val backLink = Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForwardValue().toString)
       val form = annualExemptAmountForm().bind(Map("amount" -> ""))
-      lazy val view = views.annualExemptAmount(form, backLink)(fakeRequest)
+      lazy val view = views.annualExemptAmount(form, backLink, postAction)(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
       s"output an error summary with message '${commonMessages.errorMessages.mandatoryAmount}'" in {
         doc.body.getElementById("amount-error-summary").text should include(commonMessages.errorMessages.mandatoryAmount)
