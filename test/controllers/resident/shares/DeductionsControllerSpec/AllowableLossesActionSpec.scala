@@ -20,7 +20,7 @@ import assets.MessageLookup.{allowableLosses => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.shares.ShareDeductionsController
+import controllers.resident.shares.DeductionsController
 import models.resident._
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -36,7 +36,7 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
 
   def setupTarget(getData: Option[AllowableLossesModel],
                   disposalDate: Option[DisposalDateModel],
-                  taxYear: Option[TaxYearModel]): ShareDeductionsController = {
+                  taxYear: Option[TaxYearModel]): DeductionsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
@@ -52,7 +52,7 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
     when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
       .thenReturn(taxYear)
 
-    new ShareDeductionsController {
+    new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
     }
   }

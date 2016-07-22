@@ -39,11 +39,11 @@ import scala.concurrent.Future
 
 import scala.concurrent.Future
 
-object ShareDeductionsController extends ShareDeductionsController {
+object DeductionsController extends DeductionsController {
   val calcConnector = CalculatorConnector
 }
 
-trait ShareDeductionsController extends FeatureLock {
+trait DeductionsController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
 
@@ -63,7 +63,7 @@ trait ShareDeductionsController extends FeatureLock {
 
   val allowableLosses = FeatureLockForRTT.async { implicit request =>
 
-    val postAction = controllers.resident.shares.routes.ShareDeductionsController.submitAllowableLosses()
+    val postAction = controllers.resident.shares.routes.DeductionsController.submitAllowableLosses()
 
     def routeRequest(taxYear: TaxYearModel): Future[Result] = {
       calcConnector.fetchAndGetFormData[AllowableLossesModel](keystoreKeys.allowableLosses).map {
@@ -81,7 +81,7 @@ trait ShareDeductionsController extends FeatureLock {
 
   val submitAllowableLosses = FeatureLockForRTT.async { implicit request =>
 
-    val postAction = controllers.resident.shares.routes.ShareDeductionsController.submitAllowableLosses()
+    val postAction = controllers.resident.shares.routes.DeductionsController.submitAllowableLosses()
 
     def routeRequest(taxYear: TaxYearModel): Future[Result] = {
       allowableLossesForm.bindFromRequest.fold(
@@ -89,10 +89,10 @@ trait ShareDeductionsController extends FeatureLock {
         success => {
           calcConnector.saveFormData[AllowableLossesModel](keystoreKeys.allowableLosses, success)
           if (success.isClaiming) {
-            Future.successful(Redirect(routes.ShareDeductionsController.allowableLossesValue()))
+            Future.successful(Redirect(routes.DeductionsController.allowableLossesValue()))
           }
           else {
-            Future.successful(Redirect(routes.ShareDeductionsController.lossesBroughtForward()))
+            Future.successful(Redirect(routes.DeductionsController.lossesBroughtForward()))
           }
         }
       )
