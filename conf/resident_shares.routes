@@ -34,6 +34,7 @@ GET     /losses-brought-forward           controllers.resident.shares.Deductions
 #Annual Exempt Amount Routes
 
 #Losses Brought Forward Value Routes
+GET     /losses-brought-forward-value     controllers.resident.shares.DeductionsController.lossesBroughtForwardValue
 
 #Previous Taxable Gains Routes
 

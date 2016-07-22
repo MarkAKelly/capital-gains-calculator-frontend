@@ -26,7 +26,8 @@ import views.html.calculation.{resident => views}
 
 class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
   "The Annual Exempt Amount view" should {
-    lazy val view = views.annualExemptAmount(annualExemptAmountForm())(fakeRequest)
+    lazy val backLink = Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForward().toString)
+    lazy val view = views.annualExemptAmount(annualExemptAmountForm(), backLink)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
     "have a charset of UTF-8" in {
       doc.charset().toString shouldBe "UTF-8"
@@ -120,20 +121,35 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
   }
 
   "Annual Exempt Amount view with stored values" should {
+    lazy val backLink = Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForwardValue().toString)
     lazy val form = annualExemptAmountForm().bind(Map(("amount", "1000")))
-    lazy val view = views.annualExemptAmount(form)(fakeRequest)
+    lazy val view = views.annualExemptAmount(form, backLink)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have the value of 1000 auto-filled in the input" in {
       lazy val input = doc.body.getElementsByTag("input")
       input.`val` shouldBe "1000"
     }
+
+    "have a back button that" should {
+      lazy val backLink = doc.select("a#back-link")
+      "have the correct back link text" in {
+        backLink.text shouldBe commonMessages.calcBaseBack
+      }
+      "have the back-link class" in {
+        backLink.hasClass("back-link") shouldBe true
+      }
+      "have a link to Brought Forward Losses Value" in {
+        backLink.attr("href") shouldBe controllers.resident.properties.routes.DeductionsController.lossesBroughtForwardValue().toString
+      }
+    }
   }
 
   "Annual Exempt Amount View with form with errors" which {
     "is due to mandatory field error" should {
+      lazy val backLink = Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForwardValue().toString)
       val form = annualExemptAmountForm().bind(Map("amount" -> ""))
-      lazy val view = views.annualExemptAmount(form)(fakeRequest)
+      lazy val view = views.annualExemptAmount(form, backLink)(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
       s"output an error summary with message '${commonMessages.errorMessages.mandatoryAmount}'" in {
         doc.body.getElementById("amount-error-summary").text should include(commonMessages.errorMessages.mandatoryAmount)

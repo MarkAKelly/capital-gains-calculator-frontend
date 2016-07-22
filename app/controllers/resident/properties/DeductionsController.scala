@@ -404,10 +404,25 @@ trait DeductionsController extends FeatureLock {
 
   //################# Annual Exempt Amount Input Actions #############################
   val annualExemptAmount = FeatureLockForRTT.async { implicit request =>
-    calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](keystoreKeys.annualExemptAmount).map {
-      case Some(data) => Ok(commonViews.annualExemptAmount(annualExemptAmountForm().fill(data)))
-      case None => Ok(commonViews.annualExemptAmount(annualExemptAmountForm()))
+
+    def routeRequest(backLink: Option[String]) = {
+      calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](keystoreKeys.annualExemptAmount).map {
+        case Some(data) => Ok(commonViews.annualExemptAmount(annualExemptAmountForm().fill(data), backLink))
+        case None => Ok(commonViews.annualExemptAmount(annualExemptAmountForm(), backLink))
+      }
     }
+
+    val backLink = calcConnector.fetchAndGetFormData[LossesBroughtForwardModel](keystoreKeys.lossesBroughtForward).map {
+      case Some(LossesBroughtForwardModel(true)) =>
+        Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForwardValue().toString)
+      case _ =>
+        Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForward().toString)
+    }
+
+    for {
+      backLink <- backLink
+      result <- routeRequest(backLink)
+    } yield result
   }
 
   def positiveAEACheck(model: AnnualExemptAmountModel)(implicit hc: HeaderCarrier): Future[Boolean] = {
@@ -415,6 +430,13 @@ trait DeductionsController extends FeatureLock {
   }
 
   val submitAnnualExemptAmount = FeatureLockForRTT.async { implicit request =>
+
+    val backLink = calcConnector.fetchAndGetFormData[LossesBroughtForwardModel](keystoreKeys.lossesBroughtForward).map {
+      case Some(LossesBroughtForwardModel(true)) =>
+        Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForwardValue().toString)
+      case _ =>
+        Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForward().toString)
+    }
 
     def taxYearStringToInteger (taxYear: String): Future[Int] = {
       Future.successful((taxYear.take(2) + taxYear.takeRight(2)).toInt)
@@ -428,9 +450,9 @@ trait DeductionsController extends FeatureLock {
       calcConnector.getFullAEA(taxYear)
     }
 
-    def routeRequest(maxAEA: BigDecimal): Future[Result] = {
+    def routeRequest(maxAEA: BigDecimal, backLink: Option[String]): Future[Result] = {
       annualExemptAmountForm(maxAEA).bindFromRequest.fold(
-        errors => Future.successful(BadRequest(commonViews.annualExemptAmount(errors))),
+        errors => Future.successful(BadRequest(commonViews.annualExemptAmount(errors, backLink))),
         success => {
           for {
             save <- calcConnector.saveFormData(keystoreKeys.annualExemptAmount, success)
@@ -452,7 +474,8 @@ trait DeductionsController extends FeatureLock {
       taxYear <- calcConnector.getTaxYear(disposalDateString)
       year <- taxYearStringToInteger(taxYear.get.calculationTaxYear)
       maxAEA <- getMaxAEA(year)
-      route <- routeRequest(maxAEA.get)
+      backLink <- backLink
+      route <- routeRequest(maxAEA.get, backLink)
     } yield route
   }
 }
