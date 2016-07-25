@@ -18,7 +18,6 @@ package controllers.resident.shares
 
 import java.text.SimpleDateFormat
 import java.util.Date
-
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
@@ -39,6 +38,5 @@ trait SummaryController extends FeatureLock {
   val calculatorConnector: CalculatorConnector
 
   val summary = TODO
-
 
 }

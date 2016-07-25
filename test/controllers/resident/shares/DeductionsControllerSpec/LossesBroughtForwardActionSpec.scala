@@ -62,7 +62,7 @@ class LossesBroughtForwardActionSpec extends UnitSpec with WithFakeApplication w
                   chargeableGainAnswers: DeductionGainAnswersModel,
                   chargeableGain: ChargeableGainResultModel,
                   allowableLossesValueModel: Option[AllowableLossesValueModel], disposalDate: Option[DisposalDateModel],
-                  taxYear: Option[TaxYearModel]): DeductionsController = {
+                  taxYear: Option[TaxYearModel], maxAnnualExemptAmount: Option[BigDecimal] = Some(BigDecimal(11100))): DeductionsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
@@ -94,6 +94,9 @@ class LossesBroughtForwardActionSpec extends UnitSpec with WithFakeApplication w
     when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
       .thenReturn(taxYear)
 
+    when(mockCalcConnector.getFullAEA(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(maxAnnualExemptAmount))
+
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
     }
@@ -122,7 +125,7 @@ class LossesBroughtForwardActionSpec extends UnitSpec with WithFakeApplication w
 
     "request has no session" should {
 
-      lazy val target = setupTarget(None, None, None, gainModel, summaryModel, chargeableGainModel, None, None, None)
+      lazy val target = setupTarget(None, None, None, gainModel, summaryModel, chargeableGainModel, None, None, None, None)
       lazy val result = target.lossesBroughtForward(fakeRequest)
 
       "return a status of 303" in {

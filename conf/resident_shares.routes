@@ -35,11 +35,14 @@ POST    /losses-brought-forward           controllers.resident.shares.Deductions
 
 #Annual Exempt Amount Routes
 GET     /annual-exempt-amount             controllers.resident.shares.DeductionsController.annualExemptAmount
+POST    /annual-exempt-amount             controllers.resident.shares.DeductionsController.submitAnnualExemptAmount
+
 
 #Losses Brought Forward Value Routes
 GET     /losses-brought-forward-value     controllers.resident.shares.DeductionsController.lossesBroughtForwardValue
 
 #Previous Taxable Gains Routes
+GET     /previous-taxable-gains           controllers.resident.shares.IncomeController.previousTaxableGains
 
 #Current Income Routes
 GET     /current-income                   controllers.resident.shares.IncomeController.currentIncome

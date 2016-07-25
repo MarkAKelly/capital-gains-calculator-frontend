@@ -16,7 +16,7 @@
 
 package controllers.resident.shares
 
-import common.KeystoreKeys.{ResidentPropertyKeys, ResidentShareKeys => keystoreKeys}
+import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import models.resident._
@@ -37,7 +37,6 @@ import views.html.calculation.resident.properties.{deductions => views}
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future
-import scala.concurrent.Future
 
 object DeductionsController extends DeductionsController {
   val calcConnector = CalculatorConnector
@@ -55,13 +54,41 @@ trait DeductionsController extends FeatureLock {
     Future.successful(s"${disposalDateModel.year}-${disposalDateModel.month}-${disposalDateModel.day}")
   }
 
+  def positiveAEACheck(model: AnnualExemptAmountModel)(implicit hc: HeaderCarrier): Future[Boolean] = {
+    Future(model.amount > 0)
+  }
+
+  def taxYearStringToInteger (taxYear: String): Future[Int] = {
+    Future.successful((taxYear.take(2) + taxYear.takeRight(2)).toInt)
+  }
+
+  def positiveChargeableGainCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
+    for {
+      gainAnswers <- calcConnector.getShareGainAnswers
+      chargeableGainAnswers <- calcConnector.getShareDeductionAnswers
+      disposalDate <- getDisposalDate
+      disposalDateString <- formatDisposalDate(disposalDate.get)
+      taxYear <- calcConnector.getTaxYear(disposalDateString)
+      year <- taxYearStringToInteger(taxYear.get.calculationTaxYear)
+      maxAEA <- calcConnector.getFullAEA(year)
+      chargeableGain <- calcConnector.calculateRttShareChargeableGain(gainAnswers, chargeableGainAnswers, maxAEA.get).map(_.get.chargeableGain)
+    } yield chargeableGain
+
+    match {
+      case result if result.>(0) => true
+      case _ => false
+    }
+  }
+
+  private val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
+
   //################# Other Disposal Actions #########################
 
   val otherDisposals = TODO
 
   //################# Allowable Losses Actions #########################
 
-  val allowableLosses = FeatureLockForRTT.async { implicit request =>
+  val allowableLosses = FeatureLockForRTTShares.async { implicit request =>
 
     val postAction = controllers.resident.shares.routes.DeductionsController.submitAllowableLosses()
     val backLink = Some(controllers.resident.shares.routes.DeductionsController.otherDisposals.toString())
@@ -80,7 +107,7 @@ trait DeductionsController extends FeatureLock {
     } yield finalResult
   }
 
-  val submitAllowableLosses = FeatureLockForRTT.async { implicit request =>
+  val submitAllowableLosses = FeatureLockForRTTShares.async { implicit request =>
 
     val postAction = controllers.resident.shares.routes.DeductionsController.submitAllowableLosses()
     val backLink = Some(controllers.resident.properties.routes.DeductionsController.otherProperties.toString())
@@ -176,18 +203,18 @@ trait DeductionsController extends FeatureLock {
 
   }
 
-  def positiveChargeableGainCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
-    for {
-      gainAnswers <- calcConnector.getShareGainAnswers
-      chargeableGainAnswers <- calcConnector.getShareDeductionAnswers
-      chargeableGain <- calcConnector.calculateRttShareChargeableGain(gainAnswers, chargeableGainAnswers, 11000).map(_.get.chargeableGain)
-    } yield chargeableGain
-
-    match {
-      case result if result.>(0) => true
-      case _ => false
-    }
-  }
+//  def positiveChargeableGainCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
+//    for {
+//      gainAnswers <- calcConnector.getShareGainAnswers
+//      chargeableGainAnswers <- calcConnector.getShareDeductionAnswers
+//      chargeableGain <- calcConnector.calculateRttShareChargeableGain(gainAnswers, chargeableGainAnswers, 11000).map(_.get.chargeableGain)
+//    } yield chargeableGain
+//
+//    match {
+//      case result if result.>(0) => true
+//      case _ => false
+//    }
+//  }
 
   val submitLossesBroughtForward = FeatureLockForRTT.async { implicit request =>
 
@@ -229,5 +256,70 @@ trait DeductionsController extends FeatureLock {
 
   //################# Annual Exempt Amount Input Actions #############################
 
-  val annualExemptAmount = TODO
+  private def annualExemptAmountBackLink(implicit hc: HeaderCarrier): Future[Option[String]] = calcConnector
+    .fetchAndGetFormData[LossesBroughtForwardModel](keystoreKeys.lossesBroughtForward).map {
+    case Some(LossesBroughtForwardModel(true)) =>
+      Some(controllers.resident.shares.routes.DeductionsController.lossesBroughtForwardValue().toString)
+    case _ =>
+      Some(controllers.resident.shares.routes.DeductionsController.lossesBroughtForward().toString)
+  }
+  private val annualExemptAmountPostAction = controllers.resident.shares.routes.DeductionsController.submitAnnualExemptAmount()
+
+  val annualExemptAmount = FeatureLockForRTTShares.async { implicit request =>
+
+    def routeRequest(backLink: Option[String]) = {
+      calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](keystoreKeys.annualExemptAmount).map {
+        case Some(data) => Ok(commonViews.annualExemptAmount(annualExemptAmountForm().fill(data), backLink, annualExemptAmountPostAction, homeLink))
+        case None => Ok(commonViews.annualExemptAmount(annualExemptAmountForm(), backLink, annualExemptAmountPostAction, homeLink))
+      }
+    }
+
+    for {
+      backLink <- annualExemptAmountBackLink(hc)
+      result <- routeRequest(backLink)
+    } yield result
+  }
+
+  val submitAnnualExemptAmount = FeatureLockForRTTShares.async { implicit request =>
+
+    def taxYearStringToInteger (taxYear: String): Future[Int] = {
+      Future.successful((taxYear.take(2) + taxYear.takeRight(2)).toInt)
+    }
+
+    def formatDisposalDate(disposalDateModel: DisposalDateModel): Future[String] = {
+      Future.successful(s"${disposalDateModel.year}-${disposalDateModel.month}-${disposalDateModel.day}")
+    }
+
+    def getMaxAEA(taxYear: Int): Future[Option[BigDecimal]] = {
+      calcConnector.getFullAEA(taxYear)
+    }
+
+    def routeRequest(maxAEA: BigDecimal, backLink: Option[String]): Future[Result] = {
+      annualExemptAmountForm(maxAEA).bindFromRequest.fold(
+        errors => Future.successful(BadRequest(commonViews.annualExemptAmount(errors, backLink, annualExemptAmountPostAction, homeLink))),
+        success => {
+          for {
+            save <- calcConnector.saveFormData(keystoreKeys.annualExemptAmount, success)
+            positiveAEA <- positiveAEACheck(success)
+            positiveChargeableGain <- positiveChargeableGainCheck
+          } yield (positiveAEA, positiveChargeableGain)
+
+          match {
+            case (false, true) => Redirect(routes.IncomeController.previousTaxableGains())
+            case (_, false) => Redirect(routes.SummaryController.summary())
+            case _ => Redirect(routes.IncomeController.currentIncome())
+          }
+        }
+      )
+    }
+    for {
+      disposalDate <- calcConnector.fetchAndGetFormData[DisposalDateModel](keystoreKeys.disposalDate)
+      disposalDateString <- formatDisposalDate(disposalDate.get)
+      taxYear <- calcConnector.getTaxYear(disposalDateString)
+      year <- taxYearStringToInteger(taxYear.get.calculationTaxYear)
+      maxAEA <- getMaxAEA(year)
+      backLink <- annualExemptAmountBackLink(hc)
+      route <- routeRequest(maxAEA.get, backLink)
+    } yield route
+  }
 }

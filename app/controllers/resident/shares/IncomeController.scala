@@ -17,11 +17,15 @@
 package controllers.resident.shares
 
 import common.Dates
-import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
-import connectors.CalculatorConnector
-import controllers.predicates.FeatureLock
+import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import views.html.calculation.{resident => commonViews}
 import views.html.calculation.resident.properties.{income => views}
+import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
+import connectors.CalculatorConnector
+import controllers.predicates.FeatureLock
+
+//import views.html.calculation.resident.shares.{income => views}
+
 import forms.resident.income.PreviousTaxableGainsForm._
 import forms.resident.income.PersonalAllowanceForm._
 import forms.resident.income.CurrentIncomeForm._
@@ -84,13 +88,23 @@ trait IncomeController extends FeatureLock {
     Future.successful(s"${disposalDateModel.year}-${disposalDateModel.month}-${disposalDateModel.day}")
   }
 
-  //################################# Previous Taxable Gain Actions ##########################################
+   //################################# Previous Taxable Gain Actions ##########################################
+
   val previousTaxableGains = TODO
+
+  val submitPreviousTaxableGains = TODO
+
 
   //################################# Current Income Actions ##########################################
 
   val currentIncome = TODO
 
-  //################################# Personal Allowance Actions ##########################################
+  val submitCurrentIncome = TODO
+
+ //################################# Personal Allowance Actions ##########################################
+
   val personalAllowance = TODO
+
+  val submitPersonalAllowance = TODO
 }
+
