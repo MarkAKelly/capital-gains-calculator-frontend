@@ -29,7 +29,8 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
   "Previous taxable gains view" should {
 
     lazy val postAction = controllers.resident.properties.routes.IncomeController.previousTaxableGains()
-    lazy val view = views.previousTaxableGains(previousTaxableGainsForm, "#", postAction)(fakeRequest)
+    lazy val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
+    lazy val view = views.previousTaxableGains(previousTaxableGainsForm, "#", postAction, homeLink)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -50,6 +51,16 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
 
       "have the heading-large class" in {
         heading.hasClass("heading-large") shouldBe true
+      }
+    }
+
+    "have a home link that" should {
+      lazy val homeLink = doc.select("a#homeNavHref")
+      "has the text 'Home'" in {
+        homeLink.text() shouldBe "Home"
+      }
+      "has a link to the resident properties disposal date page" in {
+        homeLink.attr("href") shouldBe controllers.resident.properties.routes.GainController.disposalDate().url
       }
     }
 
@@ -106,8 +117,19 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
 
     val form = previousTaxableGainsForm.bind(Map("amount" -> "100"))
     lazy val postAction = controllers.resident.properties.routes.IncomeController.previousTaxableGains()
-    lazy val view = views.previousTaxableGains(form, "#", postAction)(fakeRequest)
+    lazy val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
+    lazy val view = views.previousTaxableGains(form, "#", postAction, homeLink)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
+
+    "have a home link that" should {
+      lazy val homeLink = doc.select("a#homeNavHref")
+      "has the text 'Home'" in {
+        homeLink.text() shouldBe "Home"
+      }
+      "has a link to the resident shares disposal date page" in {
+        homeLink.attr("href") shouldBe controllers.resident.shares.routes.GainController.disposalDate().url
+      }
+    }
 
     "display the value of the form" in {
       doc.body.select("#amount").attr("value") shouldEqual "100"
@@ -126,7 +148,8 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
 
     val form = previousTaxableGainsForm.bind(Map("amount" -> ""))
     lazy val postAction = controllers.resident.properties.routes.IncomeController.previousTaxableGains()
-    lazy val view = views.previousTaxableGains(form, "#", postAction)(fakeRequest)
+    lazy val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
+    lazy val view = views.previousTaxableGains(form, "#", postAction, homeLink)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {
