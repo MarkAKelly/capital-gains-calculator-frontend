@@ -16,7 +16,7 @@
 
 package controllers.resident.shares
 
-import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
+import common.KeystoreKeys.{ResidentPropertyKeys, ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import models.resident._
@@ -35,8 +35,8 @@ import play.api.data.Form
 import views.html.calculation.{resident => commonViews}
 import views.html.calculation.resident.properties.{deductions => views}
 import uk.gov.hmrc.play.http.HeaderCarrier
-import scala.concurrent.Future
 
+import scala.concurrent.Future
 import scala.concurrent.Future
 
 object DeductionsController extends DeductionsController {
@@ -113,7 +113,115 @@ trait DeductionsController extends FeatureLock {
 
   //################# Brought Forward Losses Actions ############################
 
-  val lossesBroughtForward = TODO
+  def otherPropertiesCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[OtherPropertiesModel](keystoreKeys.otherProperties).map {
+      case Some(data) => data.hasOtherProperties
+      case None => false
+    }
+  }
+
+  def allowableLossesCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[AllowableLossesModel](keystoreKeys.allowableLosses).map {
+      case Some(data) => data.isClaiming
+      case None => false
+    }
+  }
+
+  def displayAnnualExemptAmountCheck(claimedOtherProperties: Boolean, claimedAllowableLosses: Boolean)(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[AllowableLossesValueModel](keystoreKeys.allowableLossesValue).map {
+      case Some(result) if claimedAllowableLosses && claimedOtherProperties => result.amount == 0
+      case _ if claimedOtherProperties && !claimedAllowableLosses => true
+      case _ => false
+    }
+  }
+
+  def displayAnnualExemptAmountCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
+    for {
+      disposedOtherProperties <- otherPropertiesCheck
+      claimedAllowableLosses <- allowableLossesCheck
+      displayAnnualExemptAmount <- displayAnnualExemptAmountCheck(disposedOtherProperties, claimedAllowableLosses)
+    } yield displayAnnualExemptAmount
+  }
+
+  def lossesBroughtForwardBackUrl(implicit hc: HeaderCarrier): Future[String] = {
+
+    for {
+      otherPropertiesClaimed <- otherPropertiesCheck
+      allowableLossesClaimed <- allowableLossesCheck
+    } yield (otherPropertiesClaimed, allowableLossesClaimed)
+
+    match {
+        case (false, _) => routes.DeductionsController.otherDisposals().url
+      case (true, false) => routes.DeductionsController.allowableLosses().url
+      case (true, true) => routes.DeductionsController.allowableLossesValue().url
+    }
+  }
+
+  val lossesBroughtForward = FeatureLockForRTT.async { implicit request =>
+
+    def routeRequest(backLinkUrl: String, taxYear: TaxYearModel): Future[Result] = {
+      calcConnector.fetchAndGetFormData[LossesBroughtForwardModel](keystoreKeys.lossesBroughtForward).map {
+        case Some(data) => Ok(commonViews.lossesBroughtForward(lossesBroughtForwardForm.fill(data), backLinkUrl, taxYear))
+        case _ => Ok(commonViews.lossesBroughtForward(lossesBroughtForwardForm, backLinkUrl, taxYear))
+      }
+    }
+
+    for {
+      backLinkUrl <- lossesBroughtForwardBackUrl
+      disposalDate <- getDisposalDate
+      disposalDateString <- formatDisposalDate(disposalDate.get)
+      taxYear <- calcConnector.getTaxYear(disposalDateString)
+      finalResult <- routeRequest(backLinkUrl, taxYear.get)
+    } yield finalResult
+
+  }
+
+  def positiveChargeableGainCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
+    for {
+      gainAnswers <- calcConnector.getShareGainAnswers
+      chargeableGainAnswers <- calcConnector.getShareDeductionAnswers
+      chargeableGain <- calcConnector.calculateRttShareChargeableGain(gainAnswers, chargeableGainAnswers, 11000).map(_.get.chargeableGain)
+    } yield chargeableGain
+
+    match {
+      case result if result.>(0) => true
+      case _ => false
+    }
+  }
+
+  val submitLossesBroughtForward = FeatureLockForRTT.async { implicit request =>
+
+    def routeRequest(backUrl: String, taxYearModel: TaxYearModel): Future[Result] = {
+      lossesBroughtForwardForm.bindFromRequest.fold(
+        errors => Future.successful(BadRequest(commonViews.lossesBroughtForward(errors, backUrl, taxYearModel))),
+        success => {
+          calcConnector.saveFormData[LossesBroughtForwardModel](keystoreKeys.lossesBroughtForward, success)
+
+          if (success.option) Future.successful(Redirect(routes.DeductionsController.lossesBroughtForwardValue()))
+          else {
+            displayAnnualExemptAmountCheck.flatMap { displayAnnualExemptAmount =>
+              if (displayAnnualExemptAmount) Future.successful(Redirect(routes.DeductionsController.annualExemptAmount()))
+              else {
+                positiveChargeableGainCheck.map { positiveChargeableGain =>
+                  if (positiveChargeableGain) Redirect(routes.IncomeController.currentIncome())
+                  else Redirect(routes.SummaryController.summary())
+                }
+              }
+            }
+          }
+        }
+      )
+    }
+
+    for {
+      backUrl <- lossesBroughtForwardBackUrl
+      disposalDate <- getDisposalDate
+      disposalDateString <- formatDisposalDate(disposalDate.get)
+      taxYear <- calcConnector.getTaxYear(disposalDateString)
+      route <- routeRequest(backUrl, taxYear.get)
+    } yield route
+
+  }
 
   //################# Brought Forward Losses Value Actions ##############################
 

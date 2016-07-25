@@ -2,6 +2,7 @@
 @import views.html.helpers._
 @import models.resident._
 @import views.html.calculation.resident._
+@import play.api.mvc.Call
 
 @(lossesBroughtForwardForm : Form[LossesBroughtForwardModel], backLinkUrl : String, taxYear: TaxYearModel)(implicit request: Request[_])
 
@@ -16,7 +17,7 @@
 
     <h1 class="heading-large">@Messages("calc.resident.lossesBroughtForward.question", taxYear.taxYearSupplied)</h1>
 
-    @form(action = controllers.resident.properties.routes.DeductionsController.submitLossesBroughtForward) {
+    @form(action = controllers.resident.shares.routes.DeductionsController.submitLossesBroughtForward) {
 
         @formInputRadioGroup(
             field = lossesBroughtForwardForm("option"),
