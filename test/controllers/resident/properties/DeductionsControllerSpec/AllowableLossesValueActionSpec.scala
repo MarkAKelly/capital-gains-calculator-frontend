@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.resident.properties.DeductionsControllerTests
+package controllers.resident.properties.DeductionsControllerSpec
 
 import common.KeystoreKeys
 import controllers.helpers.FakeRequestHelper

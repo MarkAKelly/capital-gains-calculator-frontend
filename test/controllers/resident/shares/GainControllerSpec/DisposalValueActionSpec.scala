@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package controllers.resident.properties.GainControllerTests
+package controllers.resident.shares.GainControllerSpec
 
-import assets.MessageLookup
-import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
+import assets.MessageLookup.{sharesDisposalValue => messages}
+import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
-import controllers.resident.properties.GainController
 import controllers.helpers.FakeRequestHelper
+import controllers.resident.shares.GainController
 import models.resident.DisposalValueModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
-import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
+import org.scalatest.mock.MockitoSugar
+import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
@@ -78,9 +78,9 @@ class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with Fak
       status(result) shouldBe 200
     }
 
-    s"return some html with title of ${MessageLookup.disposalValue.question}" in {
+    s"return some html with title of ${messages.title}" in {
       contentType(result) shouldBe Some("text/html")
-      Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.disposalValue.question
+      Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual messages.title
     }
   }
 
@@ -101,7 +101,7 @@ class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "re-direct to the disposal Costs page when supplied with a valid form" in {
       status(result) shouldEqual 303
-      redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/disposal-costs")
+      redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/disposal-costs")
     }
   }
 
@@ -112,7 +112,7 @@ class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "render the disposal value page when supplied with an invalid form" in {
       status(result) shouldEqual 400
-      Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.disposalValue.title
+      Jsoup.parse(bodyOf(result)).title() shouldEqual messages.title
     }
   }
 }

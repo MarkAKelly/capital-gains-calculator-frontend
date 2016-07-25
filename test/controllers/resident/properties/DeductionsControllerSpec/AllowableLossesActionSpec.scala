@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.resident.properties.DeductionsControllerTests
+package controllers.resident.properties.DeductionsControllerSpec
 
 import assets.MessageLookup.{allowableLosses => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}

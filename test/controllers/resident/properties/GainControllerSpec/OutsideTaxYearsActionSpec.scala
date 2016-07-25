@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.resident.properties.GainControllerTests
+package controllers.resident.properties.GainControllerSpec
 
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.GainController
@@ -61,6 +61,10 @@ class OutsideTaxYearsActionSpec extends UnitSpec with WithFakeApplication with F
 
       s"return a title of ${messages.title}" in {
         Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+      }
+
+      s"have a back link to '${controllers.resident.properties.routes.GainController.disposalDate().url}'" in {
+        Jsoup.parse(bodyOf(result)).getElementById("back-link").attr("href") shouldBe controllers.resident.properties.routes.GainController.disposalDate().url
       }
     }
 

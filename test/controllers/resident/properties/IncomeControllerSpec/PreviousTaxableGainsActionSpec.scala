@@ -35,7 +35,8 @@ import scala.concurrent.Future
 class PreviousTaxableGainsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
   def setupTarget(getData: Option[PreviousTaxableGainsModel], otherProperties: Boolean = true, lossesBroughtForward: Boolean = true,
-                  allowableLossesModel: Option[AllowableLossesModel] = None, allowableLossesValueModel: Option[AllowableLossesValueModel] = None): IncomeController = {
+                  allowableLossesModel: Option[AllowableLossesModel] = None,
+                  allowableLossesValueModel: Option[AllowableLossesValueModel] = None): IncomeController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
@@ -99,7 +100,8 @@ class PreviousTaxableGainsActionSpec extends UnitSpec with WithFakeApplication w
 
     "other properties have been specified" should {
       "return a back link to the AEA page" in {
-        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = true, allowableLossesModel = Some(AllowableLossesModel(false)), allowableLossesValueModel = None)
+        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = true,
+          allowableLossesModel = Some(AllowableLossesModel(false)), allowableLossesValueModel = None)
         val result = target.previousTaxableGains(fakeRequestWithSession)
         val doc = Jsoup.parse(bodyOf(result))
 
@@ -134,7 +136,8 @@ class PreviousTaxableGainsActionSpec extends UnitSpec with WithFakeApplication w
 
     "no other properties AND brought forward losses specified" should {
       "return a back link to the brought forward input page" in {
-        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = false, lossesBroughtForward = true, allowableLossesModel = None, allowableLossesValueModel = None)
+        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = false,
+          lossesBroughtForward = true, allowableLossesModel = None, allowableLossesValueModel = None)
         val result = target.previousTaxableGains(fakeRequestWithSession)
         val doc = Jsoup.parse(bodyOf(result))
 
@@ -145,7 +148,8 @@ class PreviousTaxableGainsActionSpec extends UnitSpec with WithFakeApplication w
 
     "no other properties AND brought forward losses NOT specified" should {
       "return a back link to the brought forward choice page" in {
-        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = false, lossesBroughtForward = false, allowableLossesModel = None, allowableLossesValueModel = None)
+        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = false,
+          lossesBroughtForward = false, allowableLossesModel = None, allowableLossesValueModel = None)
         val result = target.previousTaxableGains(fakeRequestWithSession)
         val doc = Jsoup.parse(bodyOf(result))
 
