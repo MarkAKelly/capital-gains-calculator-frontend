@@ -48,9 +48,13 @@ trait IncomeController extends FeatureLock {
 
     val previousTaxableGains = TODO
 
+    val submitPreviousTaxableGains = TODO
+
   //################################# Current Income Actions ##########################################
 
     val currentIncome = TODO
+
+    val submitCurrentIncome = TODO
 
   //################################# Personal Allowance Actions ##########################################
   def getStandardPA(year: Int, hc: HeaderCarrier): Future[Option[BigDecimal]] = {
@@ -104,5 +108,4 @@ trait IncomeController extends FeatureLock {
       route <- routeRequest(maxPA.get, standardPA.get, taxYear.get)
     } yield route
   }
-
 }

@@ -54,6 +54,8 @@ trait DeductionsController extends FeatureLock {
     Future.successful(s"${disposalDateModel.year}-${disposalDateModel.month}-${disposalDateModel.day}")
   }
 
+  private val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
+
   //################# Reliefs Actions ########################
 
   def totalGain(answerSummary: YourAnswersSummaryModel, hc: HeaderCarrier): Future[BigDecimal] = calcConnector.calculateRttPropertyGrossGain(answerSummary)(hc)
@@ -403,11 +405,29 @@ trait DeductionsController extends FeatureLock {
   }
 
   //################# Annual Exempt Amount Input Actions #############################
+
+  private def annualExemptAmountBackLink(implicit hc: HeaderCarrier): Future[Option[String]] = calcConnector
+    .fetchAndGetFormData[LossesBroughtForwardModel](keystoreKeys.lossesBroughtForward).map {
+    case Some(LossesBroughtForwardModel(true)) =>
+      Some(controllers.resident.shares.routes.DeductionsController.lossesBroughtForwardValue().toString)
+    case _ =>
+      Some(controllers.resident.shares.routes.DeductionsController.lossesBroughtForward().toString)
+  }
+  private val annualExemptAmountPostAction = controllers.resident.shares.routes.DeductionsController.submitAnnualExemptAmount()
+
   val annualExemptAmount = FeatureLockForRTT.async { implicit request =>
-    calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](keystoreKeys.annualExemptAmount).map {
-      case Some(data) => Ok(commonViews.annualExemptAmount(annualExemptAmountForm().fill(data)))
-      case None => Ok(commonViews.annualExemptAmount(annualExemptAmountForm()))
+
+    def routeRequest(backLink: Option[String]) = {
+      calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](keystoreKeys.annualExemptAmount).map {
+        case Some(data) => Ok(commonViews.annualExemptAmount(annualExemptAmountForm().fill(data), backLink, annualExemptAmountPostAction, homeLink))
+        case None => Ok(commonViews.annualExemptAmount(annualExemptAmountForm(), backLink, annualExemptAmountPostAction, homeLink))
+      }
     }
+
+    for {
+      backLink <- annualExemptAmountBackLink(hc)
+      result <- routeRequest(backLink)
+    } yield result
   }
 
   def positiveAEACheck(model: AnnualExemptAmountModel)(implicit hc: HeaderCarrier): Future[Boolean] = {
@@ -428,9 +448,9 @@ trait DeductionsController extends FeatureLock {
       calcConnector.getFullAEA(taxYear)
     }
 
-    def routeRequest(maxAEA: BigDecimal): Future[Result] = {
+    def routeRequest(maxAEA: BigDecimal, backLink: Option[String]): Future[Result] = {
       annualExemptAmountForm(maxAEA).bindFromRequest.fold(
-        errors => Future.successful(BadRequest(commonViews.annualExemptAmount(errors))),
+        errors => Future.successful(BadRequest(commonViews.annualExemptAmount(errors, backLink, annualExemptAmountPostAction, homeLink))),
         success => {
           for {
             save <- calcConnector.saveFormData(keystoreKeys.annualExemptAmount, success)
@@ -452,7 +472,8 @@ trait DeductionsController extends FeatureLock {
       taxYear <- calcConnector.getTaxYear(disposalDateString)
       year <- taxYearStringToInteger(taxYear.get.calculationTaxYear)
       maxAEA <- getMaxAEA(year)
-      route <- routeRequest(maxAEA.get)
+      backLink <- annualExemptAmountBackLink(hc)
+      route <- routeRequest(maxAEA.get, backLink)
     } yield route
   }
 }
