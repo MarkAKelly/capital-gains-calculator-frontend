@@ -29,17 +29,21 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
   case class FakePOST(value: String) {
     lazy val request = fakeRequestToPOSTWithSession(("amount", value))
     lazy val form = disposalValueForm.bind(Map(("amount", value)))
-    lazy val view = views.disposalValue(form)(request)
+    lazy val view = views.disposalValue(form, "home-link")(request)
     lazy val doc = Jsoup.parse(view.body)
   }
 
   "Disposal Value View" should {
 
-    lazy val view = views.disposalValue(disposalValueForm)(fakeRequest)
+    lazy val view = views.disposalValue(disposalValueForm, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have charset UTF-8" in {
       doc.charset.toString shouldBe "UTF-8"
+    }
+
+    "have a home link to 'home-link'" in {
+      doc.getElementById("homeNavHref").attr("href") shouldEqual "home-link"
     }
 
     s"have the title of the page ${messages.title}" in {
@@ -78,7 +82,7 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
   "Disposal Value View with form without errors" should {
 
     val form = disposalValueForm.bind(Map("amount" -> "100"))
-    lazy val view = views.disposalValue(form)(fakeRequest)
+    lazy val view = views.disposalValue(form, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display the value of the form" in {
@@ -97,7 +101,7 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
   "Disposal Value View with form with errors" should {
 
     val form = disposalValueForm.bind(Map("amount" -> ""))
-    lazy val view = views.disposalValue(form)(fakeRequest)
+    lazy val view = views.disposalValue(form, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {

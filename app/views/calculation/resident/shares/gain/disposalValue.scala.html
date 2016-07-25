@@ -1,9 +1,9 @@
 @import models.resident.DisposalValueModel
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
-@import views.html.calculation.resident.shares._
+@import views.html.calculation.resident._
 
-@(disposalValueForm : Form[DisposalValueModel])(implicit request: Request[_])
+@(disposalValueForm : Form[DisposalValueModel], navHomeLink: String)(implicit request: Request[_])
 
 @note = {
     <div class="panel panel-border-wide">
@@ -11,16 +11,20 @@
     </div>
 }
 
-@resident_shares_main_template(title = Messages("calc.resident.shares.disposalValue.question"), backLink = Some(controllers.resident.shares.routes.GainController.disposalDate().toString)) {
+@resident_main_template(
+    Messages("calc.resident.shares.disposalValue.question"),
+    backLink = Some(controllers.resident.shares.routes.GainController.disposalDate().toString),
+    homeLink = navHomeLink
+) {
 
     @errorSummary(disposalValueForm, "amount")
 
-    <h1 class="heading-large">@Messages("calc.resident.shares.disposalValue.question")</h1>
+        <h1 class="heading-large">@Messages("calc.resident.shares.disposalValue.question")</h1>
 
-    @form(action = controllers.resident.shares.routes.GainController.submitDisposalValue) {
+        @form(action = controllers.resident.shares.routes.GainController.submitDisposalValue) {
 
-        @formInputMoney(disposalValueForm, "amount", Messages("calc.resident.shares.disposalValue.question"), additionalHTMLContent = Some(note.toString()), hideLabel = true)
+            @formInputMoney(disposalValueForm, "amount", Messages("calc.resident.shares.disposalValue.question"), additionalHTMLContent = Some(note.toString()), hideLabel = true)
 
-        <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
-    }
+            <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+        }
 }
