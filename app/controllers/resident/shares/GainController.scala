@@ -79,6 +79,7 @@ trait GainController extends FeatureLock {
     } yield {
       Ok(commonViews.outsideTaxYear(
         taxYear = taxYear.get,
+        navBackLink = routes.GainController.disposalDate().url,
         navHomeLink = routes.GainController.disposalDate().url,
         continueUrl = routes.GainController.disposalValue().url
       ))
