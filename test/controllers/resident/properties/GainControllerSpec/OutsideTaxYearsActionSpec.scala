@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.resident.properties.GainControllerTests
+package controllers.resident.properties.GainControllerSpec
 
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.GainController

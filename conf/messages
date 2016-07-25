@@ -458,7 +458,9 @@ calc.resident.personalAllowance.helpText = This is the amount of your income you
 ## Disposal Date messages
 calc.resident.shares.disposalDate.question = When did you sell or give away the shares?
 
-
+## Disposal Value messages
+calc.resident.shares.disposalValue.question = How much did you sell the shares for?
+calc.resident.shares.disposalValue.helpText = Put the market value of the shares instead if you sold them for less than they were worth to help the buyer
 
 ## Disposal Costs messages
 calc.resident.shares.disposalCosts.question = How much did you pay in costs when you sold the shares?

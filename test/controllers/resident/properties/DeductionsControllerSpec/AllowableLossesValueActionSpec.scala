@@ -14,39 +14,40 @@
  * limitations under the License.
  */
 
-package controllers.resident.properties.DeductionsControllerTests
+package controllers.resident.properties.DeductionsControllerSpec
 
-import assets.MessageLookup.{allowableLosses => messages}
-import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
-import connectors.CalculatorConnector
+import common.KeystoreKeys
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.DeductionsController
-import models.resident._
 import org.jsoup.Jsoup
+import play.api.test.Helpers._
+import assets.MessageLookup.{allowableLossesValue => messages}
+import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
+import connectors.CalculatorConnector
+import models.resident.{TaxYearModel, AllowableLossesValueModel, DisposalDateModel}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
-import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
-class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
+class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  def setupTarget(getData: Option[AllowableLossesModel],
+  def setupTarget(getData: Option[AllowableLossesValueModel],
                   disposalDate: Option[DisposalDateModel],
                   taxYear: Option[TaxYearModel]): DeductionsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[AllowableLossesModel](Matchers.eq(keystoreKeys.allowableLosses))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[AllowableLossesValueModel](Matchers.eq(keystoreKeys.allowableLossesValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
-    when(mockCalcConnector.saveFormData[AllowableLossesModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.saveFormData[AllowableLossesValueModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
 
-    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(keystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.disposalDate))(Matchers.any(), Matchers.any()))
       .thenReturn(disposalDate)
 
     when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
@@ -57,12 +58,13 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
     }
   }
 
-  "Calling .allowableLosses from the resident DeductionsController" when {
+  "Calling .allowableLossesValue from the DeductionsController" when {
 
-    "request has a valid session and no keystore value" should {
+    "there is no keystore data" should {
 
       lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val result = target.allowableLosses(fakeRequestWithSession)
+      lazy val result = target.allowableLossesValue(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a status of 200" in {
         status(result) shouldBe 200
@@ -72,15 +74,16 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
         contentType(result) shouldBe Some("text/html")
       }
 
-      s"return a title of ${messages.title("2015/16")}" in {
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title("2015/16")
+      s"have a title of ${messages.title("2015/16")}" in {
+        doc.title() shouldBe messages.title("2015/16")
       }
     }
 
-    "request has a valid session and some keystore value" should {
+    "there is some keystore data" should {
 
-      lazy val target = setupTarget(Some(AllowableLossesModel(true)), Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val result = target.allowableLosses(fakeRequestWithSession)
+      lazy val target = setupTarget(Some(AllowableLossesValueModel(1000)), Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+      lazy val result = target.allowableLossesValue(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a status of 200" in {
         status(result) shouldBe 200
@@ -90,15 +93,18 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
         contentType(result) shouldBe Some("text/html")
       }
 
-      s"return a title of ${messages.title("2015/16")}" in {
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title("2015/16")
+      "display the Allowable Losses Value view" in {
+        doc.title shouldBe messages.title("2015/16")
+      }
+
+      "have 1000 pre-populated in the amount input field" in {
+        doc.select("input#amount").attr("value") shouldBe "1000"
       }
     }
 
     "request has an invalid session" should {
 
-      lazy val target = setupTarget(None, None, None)
-      lazy val result = target.allowableLosses(fakeRequest)
+      lazy val result = DeductionsController.allowableLossesValue(fakeRequest)
 
       "return a status of 303" in {
         status(result) shouldBe 303
@@ -110,50 +116,37 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
     }
   }
 
-  "Calling .submitAllowableLosses from the DeductionsController" when {
+  "Calling .submitAllowableLossesValue from the DeductionsController" when {
 
-    "a valid form 'Yes' is submitted" should {
+    "a valid form is submitted" should {
+
       lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "Yes"))
-      lazy val result = target.submitAllowableLosses(request)
+      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+      lazy val result = target.submitAllowableLossesValue(request)
 
       "return a 303" in {
         status(result) shouldBe 303
       }
 
-      "redirect to the allowable losses value page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/allowable-losses-value")
-      }
-    }
-
-    "a valid form 'No' is submitted" should {
-      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "No"))
-      lazy val result = target.submitAllowableLosses(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the losses brought forward page" in {
+      "redirect to the brought forward losses page" in {
         redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/losses-brought-forward")
       }
     }
 
     "an invalid form is submitted" should {
+
       lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", ""))
-      lazy val result = target.submitAllowableLosses(request)
+      lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
+      lazy val result = target.submitAllowableLossesValue(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {
         status(result) shouldBe 400
       }
 
-      "render the allowable losses" in {
+      "render the Allowable Losses Value page" in {
         doc.title() shouldEqual messages.title("2015/16")
       }
     }
   }
 }
-
