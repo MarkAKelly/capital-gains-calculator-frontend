@@ -28,7 +28,7 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
   "The Annual Exempt Amount view" should {
     lazy val postAction = controllers.resident.properties.routes.DeductionsController.submitAnnualExemptAmount
     lazy val backLink = Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForward().toString)
-    lazy val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
+    lazy val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
     lazy val view = views.annualExemptAmount(annualExemptAmountForm(), backLink, postAction, homeLink)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
     "have a charset of UTF-8" in {
@@ -37,6 +37,17 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
     s"have a title ${messages.title}" in {
       doc.title() shouldBe messages.title
     }
+
+    "have a home link that" should {
+      lazy val homeLink = doc.select("a#homeNavHref")
+      "has the text 'Home'" in {
+        homeLink.text() shouldBe "Home"
+      }
+      "has a link to the resident properties disposal date page" in {
+        homeLink.attr("href") shouldBe controllers.resident.properties.routes.GainController.disposalDate().url
+      }
+    }
+
     "have a back button that" should {
       lazy val backLink = doc.select("a#back-link")
       "have the correct back link text" in {
@@ -129,6 +140,16 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
     lazy val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
     lazy val view = views.annualExemptAmount(form, backLink, postAction, homeLink)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
+
+    "have a home link that" should {
+      lazy val homeLink = doc.select("a#homeNavHref")
+      "has the text 'Home'" in {
+        homeLink.text() shouldBe "Home"
+      }
+      "has a link to the resident shares disposal date page" in {
+        homeLink.attr("href") shouldBe controllers.resident.shares.routes.GainController.disposalDate().url
+      }
+    }
 
     "have the value of 1000 auto-filled in the input" in {
       lazy val input = doc.body.getElementsByTag("input")
