@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package controllers.resident.properties.DeductionsControllerSpec
+package controllers.resident.shares.DeductionsControllerSpec
 
 import assets.MessageLookup.{annualExemptAmount => messages}
 import common.KeystoreKeys
-import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
+import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.properties.DeductionsController
+import controllers.resident.shares.DeductionsController
 import models.resident._
-import models.resident.properties.{ChargeableGainAnswers, YourAnswersSummaryModel}
+import models.resident.shares.{DeductionGainAnswersModel, GainAnswersModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.scalatest.mock.MockitoSugar
@@ -31,18 +31,17 @@ import org.mockito.Mockito._
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-
 import scala.concurrent.Future
 
 class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  val gainModel = mock[YourAnswersSummaryModel]
-  val summaryModel = mock[ChargeableGainAnswers]
+  val gainModel = mock[GainAnswersModel]
+  val summaryModel = mock[DeductionGainAnswersModel]
   val chargeableGainModel = mock[ChargeableGainResultModel]
 
   def setupTarget(getData: Option[AnnualExemptAmountModel],
-                  gainAnswers: YourAnswersSummaryModel,
-                  chargeableGainAnswers: ChargeableGainAnswers,
+                  gainAnswers: GainAnswersModel,
+                  chargeableGainAnswers: DeductionGainAnswersModel,
                   chargeableGain: ChargeableGainResultModel,
                   maxAnnualExemptAmount: Option[BigDecimal] = Some(BigDecimal(11100)),
                   disposalDateModel: DisposalDateModel,
@@ -57,19 +56,19 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
     when(mockCalcConnector.saveFormData[AnnualExemptAmountModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
 
-    when(mockCalcConnector.getPropertyGainAnswers(Matchers.any()))
+    when(mockCalcConnector.getShareGainAnswers(Matchers.any()))
       .thenReturn(Future.successful(gainAnswers))
 
-    when(mockCalcConnector.getPropertyDeductionAnswers(Matchers.any()))
+    when(mockCalcConnector.getShareDeductionAnswers(Matchers.any()))
       .thenReturn(Future.successful(chargeableGainAnswers))
 
-    when(mockCalcConnector.calculateRttPropertyChargeableGain(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+    when(mockCalcConnector.calculateRttShareChargeableGain(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(Some(chargeableGain)))
 
     when(mockCalcConnector.getFullAEA(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(maxAnnualExemptAmount))
 
-    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.disposalDate))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.disposalDate))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(disposalDateModel)))
 
     when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
@@ -77,6 +76,9 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
 
     when(mockCalcConnector.fetchAndGetFormData[LossesBroughtForwardModel](Matchers.eq(keystoreKeys.lossesBroughtForward))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(lossesBroughtForwardModel)))
+
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(keystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(DisposalDateModel(10, 10, 2015))))
 
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -145,7 +147,7 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
       lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
       lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
       lazy val lossesBroughtForwardModel = LossesBroughtForwardModel(false)
-      lazy val target = setupTarget(Some(AnnualExemptAmountModel(1000)), gainModel, summaryModel, ChargeableGainResultModel(2000, 0, 1000, 0, 1000), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel, lossesBroughtForwardModel = lossesBroughtForwardModel)
+      lazy val target = setupTarget(Some(AnnualExemptAmountModel(1000)), gainModel, summaryModel, ChargeableGainResultModel(0, 0, 1000, 0, 1000), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel, lossesBroughtForwardModel = lossesBroughtForwardModel)
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
       lazy val result = target.submitAnnualExemptAmount(request)
 
@@ -154,7 +156,7 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
       }
 
       "redirect to the summary page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/summary")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/summary")
       }
     }
 
@@ -171,7 +173,7 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
       }
 
       "redirect to the previous taxable gains page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/previous-taxable-gains")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/previous-taxable-gains")
       }
     }
 
@@ -188,7 +190,7 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
       }
 
       "redirect to the summary page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/current-income")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/current-income")
       }
     }
 

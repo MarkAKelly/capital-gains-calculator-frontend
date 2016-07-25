@@ -19,6 +19,7 @@ GET     /disposal-costs                   controllers.resident.shares.GainContro
 #Acquisition Costs Routes
 
 #Summary Routes
+GET     /summary                          controllers.resident.shares.SummaryController.summary
 
 #Other Disposals Routes
 GET     /other-disposals                  controllers.resident.shares.DeductionsController.otherDisposals
@@ -34,12 +35,17 @@ GET     /allowable-losses-value           controllers.resident.shares.Deductions
 GET     /losses-brought-forward           controllers.resident.shares.DeductionsController.lossesBroughtForward
 
 #Annual Exempt Amount Routes
+GET     /annual-exempt-amount             controllers.resident.shares.DeductionsController.annualExemptAmount
+POST    /annual-exempt-amount             controllers.resident.shares.DeductionsController.submitAnnualExemptAmount
 
 #Losses Brought Forward Value Routes
+GET     /losses-brought-forward-value     controllers.resident.shares.DeductionsController.lossesBroughtForwardValue
 
 #Previous Taxable Gains Routes
+GET     /previous-taxable-gains           controllers.resident.shares.IncomeController.previousTaxableGains
 
 #Current Income Routes
+GET     /current-income                   controllers.resident.shares.IncomeController.currentIncome
 
 #Personal Allowance Routes
 
