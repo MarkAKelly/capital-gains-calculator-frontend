@@ -236,4 +236,9 @@ object MessageLookup {
   object sharesDisposalDate {
     val title = "When did you sell or give away the shares?"
   }
+
+  object sharesDisposalValue {
+    val title = "How much did you sell the shares for?"
+    val helpText = "Put the market value of the shares instead if you sold them for less than they were worth to help the buyer"
+  }
 }

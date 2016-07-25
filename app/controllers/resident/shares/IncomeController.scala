@@ -21,15 +21,13 @@ import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import views.html.calculation.{resident => commonViews}
-//import views.html.calculation.resident.shares.{income => views}
-import forms.resident.income.PreviousTaxableGainsForm._
 import forms.resident.income.PersonalAllowanceForm._
-import forms.resident.income.CurrentIncomeForm._
 import models.resident._
 import models.resident.income._
 import play.api.mvc.Result
 import uk.gov.hmrc.play.http.HeaderCarrier
-
+import play.api.data.Form
+import forms.resident.income.PreviousTaxableGainsForm._
 import scala.concurrent.Future
 
 object IncomeController extends IncomeController {
@@ -67,6 +65,14 @@ trait IncomeController extends FeatureLock {
       case _ if claimedOtherProperties && !claimedAllowableLosses => true
       case _ => false
     }
+  }
+
+  def getDisposalDate(implicit hc: HeaderCarrier): Future[Option[DisposalDateModel]] = {
+    calcConnector.fetchAndGetFormData[DisposalDateModel](keystoreKeys.disposalDate)
+  }
+
+  def formatDisposalDate(disposalDateModel: DisposalDateModel): Future[String] = {
+    Future.successful(s"${disposalDateModel.year}-${disposalDateModel.month}-${disposalDateModel.day}")
   }
 
   private val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
@@ -107,7 +113,6 @@ trait IncomeController extends FeatureLock {
   }
 
   val submitPreviousTaxableGains = FeatureLockForRTTShares.async { implicit request =>
-
     previousTaxableGainsForm.bindFromRequest.fold(
       errors => buildPreviousTaxableGainsBackUrl.flatMap(url =>
         Future.successful(BadRequest(commonViews.previousTaxableGains(errors, url, previousTaxableGainsPostAction, homeLink)))),
@@ -117,15 +122,73 @@ trait IncomeController extends FeatureLock {
       }
     )
   }
+
   //################################# Current Income Actions ##########################################
 
-  val currentIncome = TODO
+    val currentIncome = TODO
 
-  val submitCurrentIncome = TODO
+    val submitCurrentIncome = TODO
 
   //################################# Personal Allowance Actions ##########################################
+  def getStandardPA(year: Int, hc: HeaderCarrier): Future[Option[BigDecimal]] = {
+    calcConnector.getPA(year)(hc)
+  }
 
-  val personalAllowance = TODO
+  def taxYearValue(taxYear: String): Future[Int] = {
+    Future.successful(Dates.taxYearStringToInteger(taxYear))
+  }
 
-  val submitPersonalAllowance = TODO
+  private val backLinkPersonalAllowance = Some(controllers.resident.shares.routes.IncomeController.currentIncome().toString)
+  private val postActionPersonalAllowance = controllers.resident.shares.routes.IncomeController.submitPersonalAllowance()
+
+  val personalAllowance = FeatureLockForRTTShares.async { implicit request =>
+
+    def fetchStoredPersonalAllowance(): Future[Form[PersonalAllowanceModel]] = {
+      calcConnector.fetchAndGetFormData[PersonalAllowanceModel](keystoreKeys.personalAllowance).map {
+        case Some(data) => personalAllowanceForm().fill(data)
+        case _ => personalAllowanceForm()
+      }
+    }
+
+    def routeRequest(taxYearModel: TaxYearModel, standardPA: BigDecimal, formData: Form[PersonalAllowanceModel]): Future[Result] = {
+      Future.successful(Ok(commonViews.personalAllowance(formData, taxYearModel, standardPA, homeLink, postActionPersonalAllowance, backLinkPersonalAllowance)))
+    }
+    for {
+      disposalDate <- getDisposalDate
+      disposalDateString <- formatDisposalDate(disposalDate.get)
+      taxYear <- calcConnector.getTaxYear(disposalDateString)
+      year <- taxYearValue(taxYear.get.calculationTaxYear)
+      standardPA <- getStandardPA(year, hc)
+      formData <- fetchStoredPersonalAllowance()
+      route <- routeRequest(taxYear.get, standardPA.get, formData)
+    } yield route
+  }
+
+  val submitPersonalAllowance = FeatureLockForRTTShares.async { implicit request =>
+
+    def getMaxPA(year: Int): Future[Option[BigDecimal]] = {
+      calcConnector.getPA(year, true)(hc)
+    }
+
+    def routeRequest(maxPA: BigDecimal, standardPA: BigDecimal, taxYearModel: TaxYearModel): Future[Result] = {
+      personalAllowanceForm(maxPA).bindFromRequest.fold(
+        errors => Future.successful(BadRequest(commonViews.personalAllowance(errors, taxYearModel, standardPA, homeLink,
+          postActionPersonalAllowance, backLinkPersonalAllowance))),
+        success => {
+          calcConnector.saveFormData(keystoreKeys.personalAllowance, success)
+          Future.successful(Redirect(routes.SummaryController.summary()))
+        }
+      )
+    }
+
+    for {
+      disposalDate <- getDisposalDate
+      disposalDateString <- formatDisposalDate(disposalDate.get)
+      taxYear <- calcConnector.getTaxYear(disposalDateString)
+      year <- taxYearValue(taxYear.get.calculationTaxYear)
+      standardPA <- getStandardPA(year, hc)
+      maxPA <- getMaxPA(year)
+      route <- routeRequest(maxPA.get, standardPA.get, taxYear.get)
+    } yield route
+  }
 }

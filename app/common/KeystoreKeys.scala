@@ -78,5 +78,4 @@ object KeystoreKeys {
     val previousTaxableGains = "res:share:previousTaxableGains"
     val personalAllowance = "res:share:personalAllowance"
   }
-  
 }

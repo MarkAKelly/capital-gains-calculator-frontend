@@ -5,40 +5,39 @@
 @import views.html.calculation.resident._
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-@(personalAllowanceForm: Form[PersonalAllowanceModel], taxYear: TaxYearModel, standardPA: BigDecimal)(implicit request: Request[_])
+@(personalAllowanceForm: Form[PersonalAllowanceModel], taxYear: TaxYearModel, standardPA: BigDecimal, homeLink: String, postAction: Call, backLink: Option[String])(implicit request: Request[_])
 
 @import views.html.helpers._
 
 @sidebar = {
 
-<a id="personalAllowanceLink" class="external-link" rel="external" href="https://www.gov.uk/income-tax-rates/current-rates-and-allowances"
-   target="_blank" data-journey-click="help:govUK:currentRatesAndAllowances">
-    @Messages("calc.resident.personalAllowance.link.one")
-    <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
-</a>
+    <a id="personalAllowanceLink" class="external-link" rel="external" href="https://www.gov.uk/income-tax-rates/current-rates-and-allowances"
+       target="_blank" data-journey-click="help:govUK:currentRatesAndAllowances">
+        @Messages("calc.resident.personalAllowance.link.one")
+        <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
+    </a>
 }
 
 @resident_main_template(title = {if(taxYear.taxYearSupplied == "2016/17") {Messages("calc.resident.personalAllowance.currentYearTitle")}
     else {Messages("calc.resident.personalAllowance.title", taxYear.taxYearSupplied)}},
-    backLink = Some(controllers.resident.properties.routes.IncomeController.currentIncome().toString),
+    backLink = backLink,
     sidebarLinks = Some(sidebar),
-    homeLink = "TODO - needs parameter"
-) {
+    homeLink = homeLink) {
 
-@errorSummary(personalAllowanceForm, "amount")
+    @errorSummary(personalAllowanceForm, "amount")
 
-<h1 class="heading-large">@{if(taxYear.taxYearSupplied == "2016/17")
-    {Messages("calc.resident.personalAllowance.currentYearTitle")}
-    else {Messages("calc.resident.personalAllowance.title", taxYear.taxYearSupplied)}}</h1>
+    <h1 class="heading-large">@{if(taxYear.taxYearSupplied == "2016/17")
+        {Messages("calc.resident.personalAllowance.currentYearTitle")}
+        else {Messages("calc.resident.personalAllowance.title", taxYear.taxYearSupplied)}}</h1>
 
-@form(action = controllers.resident.properties.routes.IncomeController.submitPersonalAllowance) {
+    @form(action = postAction) {
 
-@formInputMoney(personalAllowanceForm, "amount", if(taxYear.taxYearSupplied == "2016/17")
-    {Messages("calc.resident.personalAllowance.currentYearQuestion")}
-    else {Messages("calc.resident.personalAllowance.question", taxYear.taxYearSupplied)},
-    Some(Messages("calc.resident.personalAllowance.helpText", MoneyPounds(standardPA, 0).quantity)), hideLabel = true, step = "1")
+        @formInputMoney(personalAllowanceForm, "amount", if(taxYear.taxYearSupplied == "2016/17")
+            {Messages("calc.resident.personalAllowance.currentYearQuestion")}
+            else {Messages("calc.resident.personalAllowance.question", taxYear.taxYearSupplied)},
+            Some(Messages("calc.resident.personalAllowance.helpText", MoneyPounds(standardPA, 0).quantity)), hideLabel = true, step = "1")
 
-<button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+        <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
 
-}
+    }
 }
