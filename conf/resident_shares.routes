@@ -40,6 +40,8 @@ GET     /losses-brought-forward           controllers.resident.shares.Deductions
 #Current Income Routes
 
 #Personal Allowance Routes
+GET     /personal-allowance               controllers.resident.shares.IncomeController.personalAllowance
+POST    /personal-allowance               controllers.resident.shares.IncomeController.submitPersonalAllowance
 
 #Gain Summary PDF Routes
 
