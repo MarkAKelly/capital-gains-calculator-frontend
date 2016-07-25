@@ -49,7 +49,8 @@ GET     /current-income                   controllers.resident.shares.IncomeCont
 POST    /current-income                   controllers.resident.shares.IncomeController.submitCurrentIncome
 
 #Personal Allowance Routes
-GET     /personal-allowance                  controllers.resident.shares.IncomeController.personalAllowance
+GET     /personal-allowance               controllers.resident.shares.IncomeController.personalAllowance
+POST    /personal-allowance               controllers.resident.shares.IncomeController.submitPersonalAllowance
 
 #Gain Summary PDF Routes
 

@@ -30,11 +30,15 @@ class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
   "Disposal Date view" should {
 
-    lazy val view = views.disposalDate(disposalDateForm)(fakeRequest)
+    lazy val view = views.disposalDate(disposalDateForm, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have charset UTF-8" in {
       doc.charset().toString shouldBe "UTF-8"
+    }
+
+    "have a home link to 'home-link'" in {
+      doc.getElementById("homeNavHref").attr("href") shouldEqual "home-link"
     }
 
     "have the title 'When did you sell or give away the shares?'" in {
@@ -69,7 +73,7 @@ class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRe
   "Disposal Date view with a pre-filled form" should {
 
     lazy val form = disposalDateForm.fill(DisposalDateModel(10, 6, 2016))
-    lazy val view = views.disposalDate(form)(fakeRequest)
+    lazy val view = views.disposalDate(form, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a value auto-filled in the day input" in {
@@ -92,7 +96,7 @@ class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       ("disposalDateMonth", "10"),
       ("disposalDateYear", "2016")
     ))
-    lazy val view = views.disposalDate(form)(fakeRequest)
+    lazy val view = views.disposalDate(form, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have the error summary message 'Enter a real date'" in {
@@ -111,7 +115,7 @@ class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       ("disposalDateMonth", "10"),
       ("disposalDateYear", "2016")
     ))
-    lazy val view = views.disposalDate(form)(fakeRequest)
+    lazy val view = views.disposalDate(form, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     s"have the error summary message '${commonMessages.invalidDayError}'" in {
@@ -130,7 +134,7 @@ class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       ("disposalDateMonth", "b"),
       ("disposalDateYear", "c")
     ))
-    lazy val view = views.disposalDate(form)(fakeRequest)
+    lazy val view = views.disposalDate(form, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     s"have the error summary message '${commonMessages.invalidDayError}'" in {
