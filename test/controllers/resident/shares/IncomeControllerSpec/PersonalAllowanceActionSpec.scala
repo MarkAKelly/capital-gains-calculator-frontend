@@ -16,10 +16,10 @@
 
 package controllers.resident.shares.IncomeControllerSpec
 
-import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
+import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.properties.IncomeController
+import controllers.resident.shares.IncomeController
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.scalatest.mock.MockitoSugar
@@ -140,7 +140,7 @@ class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with
       }
 
       "redirect to the summary page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/summary")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/summary")
       }
     }
 

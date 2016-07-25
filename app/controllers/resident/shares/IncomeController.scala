@@ -69,6 +69,7 @@ trait IncomeController extends FeatureLock {
   }
 
   private val backLinkPersonalAllowance = Some(controllers.resident.shares.routes.IncomeController.currentIncome().toString)
+  private val postActionPersonalAllowance = controllers.resident.shares.routes.IncomeController.submitPersonalAllowance()
 
   val personalAllowance = FeatureLockForRTTShares.async { implicit request =>
 
@@ -80,7 +81,7 @@ trait IncomeController extends FeatureLock {
     }
 
     def routeRequest(taxYearModel: TaxYearModel, standardPA: BigDecimal, formData: Form[PersonalAllowanceModel]): Future[Result] = {
-      Future.successful(Ok(commonViews.personalAllowance(formData, taxYearModel, standardPA, homeLink, backLinkPersonalAllowance)))
+      Future.successful(Ok(commonViews.personalAllowance(formData, taxYearModel, standardPA, homeLink, postActionPersonalAllowance, backLinkPersonalAllowance)))
     }
     for {
       disposalDate <- getDisposalDate
@@ -101,7 +102,8 @@ trait IncomeController extends FeatureLock {
 
     def routeRequest(maxPA: BigDecimal, standardPA: BigDecimal, taxYearModel: TaxYearModel): Future[Result] = {
       personalAllowanceForm(maxPA).bindFromRequest.fold(
-        errors => Future.successful(BadRequest(commonViews.personalAllowance(errors, taxYearModel, standardPA, homeLink, backLinkPersonalAllowance))),
+        errors => Future.successful(BadRequest(commonViews.personalAllowance(errors, taxYearModel, standardPA, homeLink,
+          postActionPersonalAllowance, backLinkPersonalAllowance))),
         success => {
           calcConnector.saveFormData(keystoreKeys.personalAllowance, success)
           Future.successful(Redirect(routes.SummaryController.summary()))

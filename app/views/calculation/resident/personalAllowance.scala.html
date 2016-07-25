@@ -5,7 +5,7 @@
 @import views.html.calculation.resident._
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-@(personalAllowanceForm: Form[PersonalAllowanceModel], taxYear: TaxYearModel, standardPA: BigDecimal, homeLink: String, backLink: Option[String])(implicit request: Request[_])
+@(personalAllowanceForm: Form[PersonalAllowanceModel], taxYear: TaxYearModel, standardPA: BigDecimal, homeLink: String, postAction: Call, backLink: Option[String])(implicit request: Request[_])
 
 @import views.html.helpers._
 
@@ -30,7 +30,7 @@
         {Messages("calc.resident.personalAllowance.currentYearTitle")}
         else {Messages("calc.resident.personalAllowance.title", taxYear.taxYearSupplied)}}</h1>
 
-    @form(action = controllers.resident.properties.routes.IncomeController.submitPersonalAllowance) {
+    @form(action = postAction) {
 
         @formInputMoney(personalAllowanceForm, "amount", if(taxYear.taxYearSupplied == "2016/17")
             {Messages("calc.resident.personalAllowance.currentYearQuestion")}
