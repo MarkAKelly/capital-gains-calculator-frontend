@@ -27,6 +27,7 @@ import scala.concurrent.Future
 import views.html.calculation.{resident => commonViews}
 import views.html.calculation.resident.shares.{gain => views}
 import forms.resident.DisposalDateForm._
+import forms.resident.DisposalValueForm._
 import models.resident._
 
 object GainController extends GainController {
@@ -37,16 +38,18 @@ trait GainController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
 
+  private val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
+
   //################# Disposal Date Actions ####################
   val disposalDate = FeatureLockForRTTShares.asyncNoTimeout { implicit request =>
     if (request.session.get(SessionKeys.sessionId).isEmpty) {
       val sessionId = UUID.randomUUID.toString
-      Future.successful(Ok(views.disposalDate(disposalDateForm)).withSession(request.session + (SessionKeys.sessionId -> s"session-$sessionId")))
+      Future.successful(Ok(views.disposalDate(disposalDateForm, homeLink)).withSession(request.session + (SessionKeys.sessionId -> s"session-$sessionId")))
     }
     else {
       calcConnector.fetchAndGetFormData[DisposalDateModel](keystoreKeys.disposalDate).map {
-        case Some(data) => Ok(views.disposalDate(disposalDateForm.fill(data)))
-        case None => Ok(views.disposalDate(disposalDateForm))
+        case Some(data) => Ok(views.disposalDate(disposalDateForm.fill(data), homeLink))
+        case None => Ok(views.disposalDate(disposalDateForm, homeLink))
       }
     }
   }
@@ -59,7 +62,7 @@ trait GainController extends FeatureLock {
     }
 
     disposalDateForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.disposalDate(errors))),
+      errors => Future.successful(BadRequest(views.disposalDate(errors, homeLink))),
       success => {
         for {
           save <- calcConnector.saveFormData(keystoreKeys.disposalDate, success)
@@ -79,13 +82,31 @@ trait GainController extends FeatureLock {
       Ok(commonViews.outsideTaxYear(
         taxYear = taxYear.get,
         navBackLink = routes.GainController.disposalDate().url,
-        navHomeLink = routes.GainController.disposalDate().url,
+        navHomeLink = homeLink,
         continueUrl = routes.GainController.disposalValue().url
       ))
     }
   }
 
   //################ Disposal Value Actions ######################
-  val disposalValue = TODO
+  val disposalValue = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[DisposalValueModel](keystoreKeys.disposalValue).map {
+      case Some(data) => Ok(views.disposalValue(disposalValueForm.fill(data), homeLink))
+      case None => Ok(views.disposalValue(disposalValueForm, homeLink))
+    }
+  }
+
+  val submitDisposalValue = FeatureLockForRTT.async { implicit request =>
+    disposalValueForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.disposalValue(errors, homeLink))),
+      success => {
+        calcConnector.saveFormData[DisposalValueModel](keystoreKeys.disposalValue, success)
+        Future.successful(Redirect(routes.GainController.disposalCosts()))
+      }
+    )
+  }
+
+  //################# Disposal Costs Actions ########################
+  val disposalCosts = TODO
 
 }

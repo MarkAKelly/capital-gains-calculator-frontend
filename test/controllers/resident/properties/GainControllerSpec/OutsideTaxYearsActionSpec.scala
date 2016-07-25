@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package controllers.resident.shares.GainControllerTests
+package controllers.resident.properties.GainControllerSpec
 
+import controllers.helpers.FakeRequestHelper
+import controllers.resident.properties.GainController
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import play.api.test.Helpers._
 import assets.MessageLookup.{outsideTaxYears => messages}
 import connectors.CalculatorConnector
-import controllers.helpers.FakeRequestHelper
-import controllers.resident.shares.GainController
 import models.resident.{DisposalDateModel, TaxYearModel}
 import org.jsoup.Jsoup
+import org.scalatest.mock.MockitoSugar
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
-import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class OutsideTaxYearsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar{
 
@@ -45,7 +45,7 @@ class OutsideTaxYearsActionSpec extends UnitSpec with WithFakeApplication with F
     }
   }
 
-  "Calling .outsideTaxYears from the reesident/shares GainCalculationController" when {
+  "Calling .outsideTaxYears from the GainCalculationController" when {
 
     "there is a valid session" should {
       lazy val target = setupTarget(Some(DisposalDateModel(10, 10, 2014)), Some(TaxYearModel("2014/15", false, "2015/16")))
@@ -63,8 +63,8 @@ class OutsideTaxYearsActionSpec extends UnitSpec with WithFakeApplication with F
         Jsoup.parse(bodyOf(result)).title shouldBe messages.title
       }
 
-      s"have a back link to '${controllers.resident.shares.routes.GainController.disposalDate().url}'" in {
-        Jsoup.parse(bodyOf(result)).getElementById("back-link").attr("href") shouldBe controllers.resident.shares.routes.GainController.disposalDate().url
+      s"have a back link to '${controllers.resident.properties.routes.GainController.disposalDate().url}'" in {
+        Jsoup.parse(bodyOf(result)).getElementById("back-link").attr("href") shouldBe controllers.resident.properties.routes.GainController.disposalDate().url
       }
     }
 
