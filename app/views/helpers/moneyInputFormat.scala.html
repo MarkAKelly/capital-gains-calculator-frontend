@@ -56,11 +56,10 @@
             <div class="indent">@elements.args.get('_additionalContent)</div>
         }
 
-        @if(elements.args.contains('_inputHint) ){
+        @if(elements.args.getOrElse('_inputHint, "").toString() != ""){
             <span class="form-hint"
                 @if(elements.args.contains('_hintId)) {
-                    id="@elements.args.get('_hintId)"
-            }>
+                    id="@elements.args.get('_hintId)"}>
                 @elements.args.get('_inputHint)
             </span>
         }
