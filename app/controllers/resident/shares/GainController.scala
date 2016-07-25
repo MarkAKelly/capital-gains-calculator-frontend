@@ -88,4 +88,13 @@ trait GainController extends FeatureLock {
   //################ Disposal Value Actions ######################
   val disposalValue = TODO
 
+  //################ Disposal Costs Actions ######################
+  val disposalCosts = TODO
+
+  //################ Acquisition Value Actions ######################
+  val acquisitionValue = TODO
+
+  //################ Acquisition Costs Actions ######################
+  val acquisitionCosts = TODO
+
 }

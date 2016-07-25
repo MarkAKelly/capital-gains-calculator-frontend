@@ -11,10 +11,13 @@ GET     /outside-tax-years                controllers.resident.shares.GainContro
 GET     /disposal-value                   controllers.resident.shares.GainController.disposalValue
 
 #Disposal Costs Routes
+GET     /disposal-costs                   controllers.resident.shares.GainController.disposalCosts
 
 #Acquisition Value or Market Value Routes
+GET     /acquisition-value                controllers.resident.shares.GainController.acquisitionValue
 
 #Acquisition Costs Routes
+GET     /acquisition-costs                controllers.resident.shares.GainController.acquisitionCosts
 
 #Summary Routes
 GET     /summary                          controllers.resident.shares.SummaryController.summary
