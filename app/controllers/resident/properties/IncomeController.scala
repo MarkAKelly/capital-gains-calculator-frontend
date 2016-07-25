@@ -85,6 +85,8 @@ trait IncomeController extends FeatureLock {
   }
 
   //################################# Previous Taxable Gain Actions ##########################################
+  private val previousTaxableGainsPostAction = controllers.resident.properties.routes.IncomeController.previousTaxableGains()
+
   def buildPreviousTaxableGainsBackUrl(implicit hc: HeaderCarrier): Future[String] = {
 
     for {
@@ -105,8 +107,8 @@ trait IncomeController extends FeatureLock {
 
     def routeRequest(backUrl: String): Future[Result] = {
       calcConnector.fetchAndGetFormData[PreviousTaxableGainsModel](keystoreKeys.previousTaxableGains).map {
-        case Some(data) => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm.fill(data), backUrl))
-        case None => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm, backUrl))
+        case Some(data) => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm.fill(data), backUrl, previousTaxableGainsPostAction))
+        case None => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm, backUrl, previousTaxableGainsPostAction))
       }
     }
 
@@ -119,7 +121,7 @@ trait IncomeController extends FeatureLock {
   val submitPreviousTaxableGains = FeatureLockForRTT.async { implicit request =>
 
     previousTaxableGainsForm.bindFromRequest.fold(
-      errors => buildPreviousTaxableGainsBackUrl.flatMap(url => Future.successful(BadRequest(commonViews.previousTaxableGains(errors, url)))),
+      errors => buildPreviousTaxableGainsBackUrl.flatMap(url => Future.successful(BadRequest(commonViews.previousTaxableGains(errors, url, previousTaxableGainsPostAction)))),
       success => {
         calcConnector.saveFormData(keystoreKeys.previousTaxableGains, success)
         Future.successful(Redirect(routes.IncomeController.currentIncome()))

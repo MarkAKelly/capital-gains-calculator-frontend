@@ -28,7 +28,8 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
 
   "Previous taxable gains view" should {
 
-    lazy val view = views.previousTaxableGains(previousTaxableGainsForm, "#")(fakeRequest)
+    lazy val postAction = controllers.resident.properties.routes.IncomeController.previousTaxableGains()
+    lazy val view = views.previousTaxableGains(previousTaxableGainsForm, "#", postAction)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -95,12 +96,17 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
     "not display an error message for the input" in {
       doc.body.select(".form-group .error-notification").size shouldBe 0
     }
+
+    "have a form with an action for properties" in {
+      doc.body.select("form").attr("action") shouldBe controllers.resident.properties.routes.IncomeController.previousTaxableGains().url
+    }
   }
 
   "Previous taxable gains view with form without errors" should {
 
     val form = previousTaxableGainsForm.bind(Map("amount" -> "100"))
-    lazy val view = views.previousTaxableGains(form, "#")(fakeRequest)
+    lazy val postAction = controllers.resident.properties.routes.IncomeController.previousTaxableGains()
+    lazy val view = views.previousTaxableGains(form, "#", postAction)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display the value of the form" in {
@@ -119,7 +125,8 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
   "Previous taxable gains view with form with errors" should {
 
     val form = previousTaxableGainsForm.bind(Map("amount" -> ""))
-    lazy val view = views.previousTaxableGains(form, "#")(fakeRequest)
+    lazy val postAction = controllers.resident.properties.routes.IncomeController.previousTaxableGains()
+    lazy val view = views.previousTaxableGains(form, "#", postAction)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {
