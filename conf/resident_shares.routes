@@ -48,6 +48,8 @@ GET     /previous-taxable-gains           controllers.resident.shares.IncomeCont
 GET     /current-income                   controllers.resident.shares.IncomeController.currentIncome
 
 #Personal Allowance Routes
+GET     /personal-allowance               controllers.resident.shares.IncomeController.personalAllowance
+POST    /personal-allowance               controllers.resident.shares.IncomeController.submitPersonalAllowance
 
 #Gain Summary PDF Routes
 
