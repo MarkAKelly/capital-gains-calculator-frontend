@@ -87,7 +87,7 @@ trait IncomeController extends FeatureLock {
   private val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
 
   //################################# Previous Taxable Gain Actions ##########################################
-  private val previousTaxableGainsPostAction = controllers.resident.properties.routes.IncomeController.previousTaxableGains()
+  private val previousTaxableGainsPostAction = controllers.resident.properties.routes.IncomeController.submitPreviousTaxableGains()
 
   def buildPreviousTaxableGainsBackUrl(implicit hc: HeaderCarrier): Future[String] = {
 

@@ -38,12 +38,85 @@ object IncomeController extends IncomeController {
 
 trait IncomeController extends FeatureLock {
 
+  val calcConnector: CalculatorConnector
+
+  def otherPropertiesResponse(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[OtherPropertiesModel](keystoreKeys.otherProperties).map {
+      case Some(OtherPropertiesModel(response)) => response
+      case None => false
+    }
+  }
+
+  def lossesBroughtForwardResponse(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[LossesBroughtForwardModel](keystoreKeys.lossesBroughtForward).map {
+      case Some(LossesBroughtForwardModel(response)) => response
+      case None => false
+    }
+  }
+
+  def allowableLossesCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[AllowableLossesModel](keystoreKeys.allowableLosses).map {
+      case Some(data) => data.isClaiming
+      case None => false
+    }
+  }
+
+  def displayAnnualExemptAmountCheck(claimedOtherProperties: Boolean, claimedAllowableLosses: Boolean)(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[AllowableLossesValueModel](keystoreKeys.allowableLossesValue).map {
+      case Some(result) if claimedAllowableLosses && claimedOtherProperties => result.amount == 0
+      case _ if claimedOtherProperties && !claimedAllowableLosses => true
+      case _ => false
+    }
+  }
+
+  private val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
+
   //################################# Previous Taxable Gain Actions ##########################################
 
-  val previousTaxableGains = TODO
+  private val previousTaxableGainsPostAction = controllers.resident.shares.routes.IncomeController.submitPreviousTaxableGains
 
-  val submitPreviousTaxableGains = TODO
+  def buildPreviousTaxableGainsBackUrl(implicit hc: HeaderCarrier): Future[String] = {
 
+    for {
+      hasOtherProperties <- otherPropertiesResponse
+      hasAllowableLosses <- allowableLossesCheck
+      displayAnnualExemptAmount <- displayAnnualExemptAmountCheck(hasOtherProperties, hasAllowableLosses)
+      hasLossesBroughtForward <- lossesBroughtForwardResponse
+    } yield (displayAnnualExemptAmount, hasLossesBroughtForward)
+
+    match {
+      case (true, _) => routes.DeductionsController.annualExemptAmount().url
+      case (false, true) => routes.DeductionsController.lossesBroughtForwardValue().url
+      case (false, false) => routes.DeductionsController.lossesBroughtForward().url
+    }
+  }
+
+  val previousTaxableGains = FeatureLockForRTTShares.async { implicit request =>
+
+    def routeRequest(backUrl: String): Future[Result] = {
+      calcConnector.fetchAndGetFormData[PreviousTaxableGainsModel](keystoreKeys.previousTaxableGains).map {
+        case Some(data) => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm.fill(data), backUrl, previousTaxableGainsPostAction, homeLink))
+        case None => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm, backUrl, previousTaxableGainsPostAction, homeLink))
+      }
+    }
+
+    for {
+      backUrl <- buildPreviousTaxableGainsBackUrl
+      finalResult <- routeRequest(backUrl)
+    } yield finalResult
+  }
+
+  val submitPreviousTaxableGains = FeatureLockForRTTShares.async { implicit request =>
+
+    previousTaxableGainsForm.bindFromRequest.fold(
+      errors => buildPreviousTaxableGainsBackUrl.flatMap(url =>
+        Future.successful(BadRequest(commonViews.previousTaxableGains(errors, url, previousTaxableGainsPostAction, homeLink)))),
+      success => {
+        calcConnector.saveFormData(keystoreKeys.previousTaxableGains, success)
+        Future.successful(Redirect(routes.IncomeController.currentIncome()))
+      }
+    )
+  }
   //################################# Current Income Actions ##########################################
 
   val currentIncome = TODO

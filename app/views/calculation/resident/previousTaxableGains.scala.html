@@ -22,7 +22,7 @@
 
     <h1 class="heading-large">@Messages("calc.resident.previousTaxableGains.title")</h1>
 
-    @form(action = controllers.resident.properties.routes.IncomeController.submitPreviousTaxableGains) {
+    @form(action = postAction) {
 
         @formInputMoney(previousTaxableGainsForm, "amount", Messages("calc.resident.previousTaxableGains.title"),hideLabel = true)
 

@@ -116,7 +116,7 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
   "Previous taxable gains view with form without errors" should {
 
     val form = previousTaxableGainsForm.bind(Map("amount" -> "100"))
-    lazy val postAction = controllers.resident.properties.routes.IncomeController.previousTaxableGains()
+    lazy val postAction = controllers.resident.shares.routes.IncomeController.previousTaxableGains()
     lazy val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
     lazy val view = views.previousTaxableGains(form, "#", postAction, homeLink)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
@@ -141,6 +141,10 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
 
     "display no error message for the input" in {
       doc.body.select(".form-group .error-notification").size shouldBe 0
+    }
+
+    "have a form with an action for shares" in {
+      doc.body.select("form").attr("action") shouldBe controllers.resident.shares.routes.IncomeController.previousTaxableGains().url
     }
   }
 

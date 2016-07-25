@@ -70,4 +70,18 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
       path shouldEqual "/calculate-your-capital-gains/resident/shares/annual-exempt-amount"
     }
   }
+
+  "The URL for the previousTaxableGains action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/previous-taxable-gains" in {
+      val path = controllers.resident.shares.routes.IncomeController.previousTaxableGains().toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/previous-taxable-gains"
+    }
+  }
+
+  "The URL for the submitPreviousTaxableGains action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/previous-taxable-gains" in {
+      val path = controllers.resident.shares.routes.IncomeController.submitPreviousTaxableGains().toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/previous-taxable-gains"
+    }
+  }
 }
