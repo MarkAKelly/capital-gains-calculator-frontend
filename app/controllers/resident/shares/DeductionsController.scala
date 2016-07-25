@@ -81,6 +81,8 @@ trait DeductionsController extends FeatureLock {
     }
   }
 
+  private val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
+
   //################# Other Disposal Actions #########################
 
   val otherDisposals = TODO
@@ -147,40 +149,31 @@ trait DeductionsController extends FeatureLock {
 
   //################# Annual Exempt Amount Input Actions #############################
 
-  val annualExemptAmount = FeatureLockForRTTShares.async { implicit request =>
+  private def annualExemptAmountBackLink(implicit hc: HeaderCarrier): Future[Option[String]] = calcConnector
+    .fetchAndGetFormData[LossesBroughtForwardModel](keystoreKeys.lossesBroughtForward).map {
+    case Some(LossesBroughtForwardModel(true)) =>
+      Some(controllers.resident.shares.routes.DeductionsController.lossesBroughtForwardValue().toString)
+    case _ =>
+      Some(controllers.resident.shares.routes.DeductionsController.lossesBroughtForward().toString)
+  }
+  private val annualExemptAmountPostAction = controllers.resident.shares.routes.DeductionsController.submitAnnualExemptAmount()
 
-    val postAction = controllers.resident.shares.routes.DeductionsController.submitAnnualExemptAmount
+  val annualExemptAmount = FeatureLockForRTTShares.async { implicit request =>
 
     def routeRequest(backLink: Option[String]) = {
       calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](keystoreKeys.annualExemptAmount).map {
-        case Some(data) => Ok(commonViews.annualExemptAmount(annualExemptAmountForm().fill(data), backLink, postAction))
-        case None => Ok(commonViews.annualExemptAmount(annualExemptAmountForm(), backLink, postAction))
+        case Some(data) => Ok(commonViews.annualExemptAmount(annualExemptAmountForm().fill(data), backLink, annualExemptAmountPostAction, homeLink))
+        case None => Ok(commonViews.annualExemptAmount(annualExemptAmountForm(), backLink, annualExemptAmountPostAction, homeLink))
       }
     }
 
-    val backLink = calcConnector.fetchAndGetFormData[LossesBroughtForwardModel](keystoreKeys.lossesBroughtForward).map {
-      case Some(LossesBroughtForwardModel(true)) =>
-        Some(controllers.resident.shares.routes.DeductionsController.lossesBroughtForwardValue().toString)
-      case _ =>
-        Some(controllers.resident.shares.routes.DeductionsController.lossesBroughtForward().toString)
-    }
-
     for {
-      backLink <- backLink
+      backLink <- annualExemptAmountBackLink(hc)
       result <- routeRequest(backLink)
     } yield result
   }
 
   val submitAnnualExemptAmount = FeatureLockForRTTShares.async { implicit request =>
-
-    val postAction = controllers.resident.properties.routes.DeductionsController.submitAnnualExemptAmount
-
-    val backLink = calcConnector.fetchAndGetFormData[LossesBroughtForwardModel](keystoreKeys.lossesBroughtForward).map {
-      case Some(LossesBroughtForwardModel(true)) =>
-        Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForwardValue().toString)
-      case _ =>
-        Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForward().toString)
-    }
 
     def taxYearStringToInteger (taxYear: String): Future[Int] = {
       Future.successful((taxYear.take(2) + taxYear.takeRight(2)).toInt)
@@ -196,7 +189,7 @@ trait DeductionsController extends FeatureLock {
 
     def routeRequest(maxAEA: BigDecimal, backLink: Option[String]): Future[Result] = {
       annualExemptAmountForm(maxAEA).bindFromRequest.fold(
-        errors => Future.successful(BadRequest(commonViews.annualExemptAmount(errors, backLink, postAction))),
+        errors => Future.successful(BadRequest(commonViews.annualExemptAmount(errors, backLink, annualExemptAmountPostAction, homeLink))),
         success => {
           for {
             save <- calcConnector.saveFormData(keystoreKeys.annualExemptAmount, success)
@@ -218,7 +211,7 @@ trait DeductionsController extends FeatureLock {
       taxYear <- calcConnector.getTaxYear(disposalDateString)
       year <- taxYearStringToInteger(taxYear.get.calculationTaxYear)
       maxAEA <- getMaxAEA(year)
-      backLink <- backLink
+      backLink <- annualExemptAmountBackLink(hc)
       route <- routeRequest(maxAEA.get, backLink)
     } yield route
   }
