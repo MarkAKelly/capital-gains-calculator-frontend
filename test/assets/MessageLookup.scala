@@ -219,6 +219,7 @@ object MessageLookup {
     val currentYearTitle = "How much do you expect your income to be in this tax year?"
     val currentYearQuestion = "How much do you expect your income to be in this tax year?"
     val helpText = "Include your salary and any other income, but not the money you made from selling the property."
+    val helpTextShares = "Include your salary and any other income, but not the money you made from selling the shares."
   }
 
   //Personal Allowance messages

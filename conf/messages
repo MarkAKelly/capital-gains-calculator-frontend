@@ -457,3 +457,6 @@ calc.resident.personalAllowance.helpText = This is the amount of your income you
 
 ## Disposal Date messages
 calc.resident.shares.disposalDate.question = When did you sell or give away the shares?
+
+## Current Income messages
+calc.resident.shares.currentIncome.helpText = Include your salary and any other income, but not the money you made from selling the shares.
