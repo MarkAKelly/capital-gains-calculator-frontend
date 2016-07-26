@@ -20,9 +20,13 @@ import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import common.Dates
 import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
+import views.html.calculation.{resident => commonViews}
+import views.html.calculation.resident.properties.{income => views}
+import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
-import views.html.calculation.{resident => commonViews}
+//import views.html.calculation.resident.shares.{income => views}
+import forms.resident.income.PreviousTaxableGainsForm._
 import forms.resident.income.PersonalAllowanceForm._
 import models.resident._
 import models.resident.income._
@@ -49,15 +53,54 @@ trait IncomeController extends FeatureLock {
     Future.successful(s"${disposalDateModel.year}-${disposalDateModel.month}-${disposalDateModel.day}")
   }
 
+  def otherPropertiesResponse(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[OtherPropertiesModel](keystoreKeys.otherProperties).map {
+      case Some(OtherPropertiesModel(response)) => response
+      case None => false
+    }
+  }
+
+  def lossesBroughtForwardResponse(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[LossesBroughtForwardModel](keystoreKeys.lossesBroughtForward).map {
+      case Some(LossesBroughtForwardModel(response)) => response
+      case None => false
+    }
+  }
+
+  def annualExemptAmountEntered(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](keystoreKeys.annualExemptAmount).map {
+      case Some(data) => data.amount == 0
+      case None => false
+    }
+  }
+
+  def allowableLossesCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[AllowableLossesModel](keystoreKeys.allowableLosses).map {
+      case Some(data) => data.isClaiming
+      case None => false
+    }
+  }
+
+  def displayAnnualExemptAmountCheck(claimedOtherProperties: Boolean, claimedAllowableLosses: Boolean)(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[AllowableLossesValueModel](keystoreKeys.allowableLossesValue).map {
+      case Some(result) if claimedAllowableLosses && claimedOtherProperties => result.amount == 0
+      case _ if claimedOtherProperties && !claimedAllowableLosses => true
+      case _ => false
+    }
+  }
+
+
   //################################# Previous Taxable Gain Actions ##########################################
   val previousTaxableGains = TODO
 
   val submitPreviousTaxableGains = TODO
 
+
   //################################# Current Income Actions ##########################################
   val currentIncome = TODO
 
   val submitCurrentIncome = TODO
+
 
   //################################# Personal Allowance Actions ##########################################
   def getStandardPA(year: Int, hc: HeaderCarrier): Future[Option[BigDecimal]] = {
@@ -100,6 +143,7 @@ trait IncomeController extends FeatureLock {
       calcConnector.getPA(year, true)(hc)
     }
 
+
     def routeRequest(maxPA: BigDecimal, standardPA: BigDecimal, taxYearModel: TaxYearModel): Future[Result] = {
       personalAllowanceForm(maxPA).bindFromRequest.fold(
         errors => Future.successful(BadRequest(commonViews.personalAllowance(errors, taxYearModel, standardPA, homeLink,
@@ -122,3 +166,4 @@ trait IncomeController extends FeatureLock {
     } yield route
   }
 }
+
