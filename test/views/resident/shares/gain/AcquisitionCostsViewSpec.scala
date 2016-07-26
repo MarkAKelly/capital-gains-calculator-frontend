@@ -51,7 +51,7 @@ class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with Fa
         backLink.hasClass("back-link") shouldBe true
       }
 
-      "have a link to Acquisition Value" in {
+      "have a link with href 'back-link'" in {
         backLink.attr("href") shouldBe "back-link"
       }
     }
