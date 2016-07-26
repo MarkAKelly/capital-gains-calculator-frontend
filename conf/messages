@@ -480,3 +480,7 @@ calc.resident.shares.acquisitionValue.bulletListOne = inherited them
 calc.resident.shares.acquisitionValue.bulletListTwo = got them from your employer
 calc.resident.shares.acquisitionValue.bulletListThree = owned them before 1 April 1982
 
+## Other Disposals messages
+calc.resident.shares.otherDisposals.bullet.one = UK residential properties
+calc.resident.shares.otherDisposals.bullet.three = other shares
+
