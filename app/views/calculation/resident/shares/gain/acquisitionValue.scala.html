@@ -1,0 +1,34 @@
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import models.resident.AcquisitionValueModel
+@import views.html.helpers._
+@import views.html.calculation.resident._
+
+@(acquisitionValueForm: Form[AcquisitionValueModel], navHomeLink: String)(implicit request: Request[_])
+
+@bulletContent = {
+    <p id="bullet-list-title">@Messages("calc.resident.shares.acquisitionValue.bulletListTitle") </p>
+    <ul class="list-bullet">
+        <li id="bullet-list-one">@Messages("calc.resident.shares.acquisitionValue.bulletListOne")</li>
+        <li id="bullet-list-two">@Messages("calc.resident.shares.acquisitionValue.bulletListTwo")</li>
+        <li id="bullet-list-three">@Messages("calc.resident.shares.acquisitionValue.bulletListThree")</li>
+    </ul>
+}
+
+@resident_main_template(
+    Messages("calc.resident.shares.acquisitionValue.question"),
+    backLink = Some(controllers.resident.shares.routes.GainController.disposalCosts().toString),
+    homeLink = navHomeLink
+) {
+
+    @errorSummary(acquisitionValueForm, "amount")
+
+    <h1 class="heading-large">@Messages("calc.resident.shares.acquisitionValue.question")</h1>
+
+    @form(action = controllers.resident.shares.routes.GainController.submitAcquisitionValue) {
+
+        @formInputMoney(acquisitionValueForm, "amount", Messages("calc.resident.shares.acquisitionValue.question"), additionalHTMLContent = Some(bulletContent.toString()), hideLabel = true)
+
+        <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+    }
+
+}
