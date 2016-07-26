@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.resident.shares.GainControllerTests
+package controllers.resident.shares.GainControllerSpec
 
 import assets.MessageLookup.{outsideTaxYears => messages}
 import connectors.CalculatorConnector
@@ -45,7 +45,7 @@ class OutsideTaxYearsActionSpec extends UnitSpec with WithFakeApplication with F
     }
   }
 
-  "Calling .outsideTaxYears from the reesident/shares GainCalculationController" when {
+  "Calling .outsideTaxYears from the resident/shares GainCalculationController" when {
 
     "there is a valid session" should {
       lazy val target = setupTarget(Some(DisposalDateModel(10, 10, 2014)), Some(TaxYearModel("2014/15", false, "2015/16")))
@@ -61,6 +61,10 @@ class OutsideTaxYearsActionSpec extends UnitSpec with WithFakeApplication with F
 
       s"return a title of ${messages.title}" in {
         Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+      }
+
+      s"have a back link to '${controllers.resident.shares.routes.GainController.disposalDate().url}'" in {
+        Jsoup.parse(bodyOf(result)).getElementById("back-link").attr("href") shouldBe controllers.resident.shares.routes.GainController.disposalDate().url
       }
     }
 

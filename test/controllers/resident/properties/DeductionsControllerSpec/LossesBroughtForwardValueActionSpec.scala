@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 
-package controllers.resident.shares.DeductionsControllerTests
+package controllers.resident.properties.DeductionsControllerSpec
 
 import assets.MessageLookup.{lossesBroughtForwardValue => messages}
-import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
+import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.shares.DeductionsController
+import controllers.resident.properties.DeductionsController
 import models.resident._
-import models.resident.shares._
+import models.resident.properties.{ChargeableGainAnswers, YourAnswersSummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
-import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
+import org.mockito.Mockito._
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
+import scala.collection.immutable.Range
 import scala.concurrent.Future
 
 class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar{
@@ -74,8 +75,8 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
         Jsoup.parse(bodyOf(result)).title shouldEqual messages.title("2015/16")
       }
 
-      s"have a back link to '${controllers.resident.shares.routes.DeductionsController.lossesBroughtForward().url}'" in {
-        Jsoup.parse(bodyOf(result)).getElementById("back-link").attr("href") shouldEqual controllers.resident.shares.routes.DeductionsController.lossesBroughtForward().url
+      s"have a back link to '${controllers.resident.properties.routes.DeductionsController.lossesBroughtForward().url}'" in {
+        Jsoup.parse(bodyOf(result)).getElementById("back-link").attr("href") shouldEqual controllers.resident.properties.routes.DeductionsController.lossesBroughtForward().url
       }
     }
 
@@ -113,12 +114,12 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
 
   "Calling .submitLossesBroughtForwardValue from the resident DeductionsController" when {
 
-    val gainModel = mock[GainAnswersModel]
-    val summaryModel = mock[DeductionGainAnswersModel]
+    val gainModel = mock[YourAnswersSummaryModel]
+    val summaryModel = mock[ChargeableGainAnswers]
 
     def setPostTarget(otherPropertiesModel: Option[OtherPropertiesModel],
-                      gainAnswers: GainAnswersModel,
-                      chargeableGainAnswers: DeductionGainAnswersModel,
+                      gainAnswers: YourAnswersSummaryModel,
+                      chargeableGainAnswers: ChargeableGainAnswers,
                       chargeableGain: ChargeableGainResultModel,
                       allowableLossesModel: Option[AllowableLossesModel] = None,
                       allowableLossesValueModel: Option[AllowableLossesValueModel] = None,
@@ -139,13 +140,13 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
       when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.eq(keystoreKeys.otherProperties))(Matchers.any(), Matchers.any()))
         .thenReturn(otherPropertiesModel)
 
-      when(mockCalcConnector.getShareGainAnswers(Matchers.any()))
+      when(mockCalcConnector.getPropertyGainAnswers(Matchers.any()))
         .thenReturn(Future.successful(gainAnswers))
 
-      when(mockCalcConnector.getShareDeductionAnswers(Matchers.any()))
+      when(mockCalcConnector.getPropertyDeductionAnswers(Matchers.any()))
         .thenReturn(Future.successful(chargeableGainAnswers))
 
-      when(mockCalcConnector.calculateRttShareChargeableGain(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+      when(mockCalcConnector.calculateRttPropertyChargeableGain(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
         .thenReturn(Future.successful(Some(chargeableGain)))
 
       when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(keystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
@@ -172,8 +173,8 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
           status(result) shouldBe 303
         }
 
-        s"redirect to '${controllers.resident.shares.routes.SummaryController.summary().toString}'" in {
-          redirectLocation(result).get shouldBe controllers.resident.shares.routes.SummaryController.summary().toString
+        s"redirect to '${controllers.resident.properties.routes.SummaryController.summary().toString}'" in {
+          redirectLocation(result).get shouldBe controllers.resident.properties.routes.SummaryController.summary().toString
         }
       }
 
@@ -188,8 +189,8 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
           status(result) shouldBe 303
         }
 
-        s"redirect to '${controllers.resident.shares.routes.DeductionsController.annualExemptAmount().toString}'" in {
-          redirectLocation(result).get shouldBe controllers.resident.shares.routes.DeductionsController.annualExemptAmount().toString
+        s"redirect to '${controllers.resident.properties.routes.DeductionsController.annualExemptAmount().toString}'" in {
+          redirectLocation(result).get shouldBe controllers.resident.properties.routes.DeductionsController.annualExemptAmount().toString
         }
       }
 
@@ -204,8 +205,8 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
           status(result) shouldBe 303
         }
 
-        s"redirect to '${controllers.resident.shares.routes.DeductionsController.annualExemptAmount().toString}'" in {
-          redirectLocation(result).get shouldBe controllers.resident.shares.routes.DeductionsController.annualExemptAmount().toString
+        s"redirect to '${controllers.resident.properties.routes.DeductionsController.annualExemptAmount().toString}'" in {
+          redirectLocation(result).get shouldBe controllers.resident.properties.routes.DeductionsController.annualExemptAmount().toString
         }
       }
 
@@ -220,8 +221,8 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
           status(result) shouldBe 303
         }
 
-        s"redirect to '${controllers.resident.shares.routes.SummaryController.summary().toString}'" in {
-          redirectLocation(result).get shouldBe controllers.resident.shares.routes.SummaryController.summary().toString
+        s"redirect to '${controllers.resident.properties.routes.SummaryController.summary().toString}'" in {
+          redirectLocation(result).get shouldBe controllers.resident.properties.routes.SummaryController.summary().toString
         }
       }
 
@@ -236,8 +237,8 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
           status(result) shouldBe 303
         }
 
-        s"redirect to '${controllers.resident.shares.routes.SummaryController.summary().toString}'" in {
-          redirectLocation(result).get shouldBe controllers.resident.shares.routes.SummaryController.summary().toString
+        s"redirect to '${controllers.resident.properties.routes.SummaryController.summary().toString}'" in {
+          redirectLocation(result).get shouldBe controllers.resident.properties.routes.SummaryController.summary().toString
         }
       }
 
@@ -252,8 +253,8 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
           status(result) shouldBe 303
         }
 
-        s"redirect to '${controllers.resident.shares.routes.SummaryController.summary().toString}'" in {
-          redirectLocation(result).get shouldBe controllers.resident.shares.routes.IncomeController.currentIncome().toString
+        s"redirect to '${controllers.resident.properties.routes.SummaryController.summary().toString}'" in {
+          redirectLocation(result).get shouldBe controllers.resident.properties.routes.IncomeController.currentIncome().toString
         }
       }
     }

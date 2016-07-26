@@ -18,6 +18,17 @@ package controllers.resident.shares
 
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
+import java.text.SimpleDateFormat
+import java.util.Date
+import common.KeystoreKeys
+import connectors.CalculatorConnector
+import controllers.predicates.FeatureLock
+import models.resident._
+import models.resident.properties.{ChargeableGainAnswers, YourAnswersSummaryModel}
+import play.api.mvc.{Request, Result}
+import uk.gov.hmrc.play.http.HeaderCarrier
+import views.html.calculation.resident.properties.{summary => views}
+import scala.concurrent.Future
 
 object SummaryController extends SummaryController {
   val calculatorConnector = CalculatorConnector
