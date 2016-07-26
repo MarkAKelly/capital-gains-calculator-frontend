@@ -461,3 +461,7 @@ calc.resident.shares.disposalDate.question = When did you sell or give away the 
 ## Disposal Value messages
 calc.resident.shares.disposalValue.question = How much did you sell the shares for?
 calc.resident.shares.disposalValue.helpText = Put the market value of the shares instead if you sold them for less than they were worth to help the buyer
+
+## Acquisition Costs messages
+calc.resident.shares.acquisitionCosts.title = How much did you pay in costs when you bought the shares?
+calc.resident.shares.acquisitionCosts.help = Costs include stockbroker fees and Stamp Duty tax

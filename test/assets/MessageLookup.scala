@@ -241,4 +241,9 @@ object MessageLookup {
     val title = "How much did you sell the shares for?"
     val helpText = "Put the market value of the shares instead if you sold them for less than they were worth to help the buyer"
   }
+
+  object sharesAcquisitionCosts {
+    val title = "How much did you pay in costs when you bought the shares?"
+    val helpText = "Costs include stockbroker fees and Stamp Duty tax"
+  }
 }
