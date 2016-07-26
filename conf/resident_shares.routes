@@ -32,6 +32,7 @@ POST    /allowable-losses                 controllers.resident.shares.Deductions
 
 #Allowable Losses Value Routes
 GET     /allowable-losses-value           controllers.resident.shares.DeductionsController.allowableLossesValue
+POST    /allowable-losses-value           controllers.resident.shares.DeductionsController.submitAllowableLossesValue
 
 #Losses Brought Forward Routes
 GET     /losses-brought-forward           controllers.resident.shares.DeductionsController.lossesBroughtForward

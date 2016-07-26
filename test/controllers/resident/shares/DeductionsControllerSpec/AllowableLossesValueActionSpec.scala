@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package controllers.resident.properties.DeductionsControllerSpec
+package controllers.resident.shares.DeductionsControllerSpec
 
 import common.KeystoreKeys
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.properties.DeductionsController
+import controllers.resident.shares.DeductionsController
 import org.jsoup.Jsoup
 import play.api.test.Helpers._
 import assets.MessageLookup.{allowableLossesValue => messages}
-import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
+import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import models.resident.{TaxYearModel, AllowableLossesValueModel, DisposalDateModel}
 import org.mockito.Matchers
@@ -47,7 +47,7 @@ class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication w
     when(mockCalcConnector.saveFormData[AllowableLossesValueModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
 
-    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.disposalDate))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(keystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
       .thenReturn(disposalDate)
 
     when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
@@ -80,15 +80,15 @@ class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication w
       }
 
       "have a back link to the properties allowable losses page" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/allowable-losses"
+        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/allowable-losses"
       }
 
       "have a home link to the properties disposal date" in {
-        doc.select("#homeNavHref").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/disposal-date"
+        doc.select("#homeNavHref").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/disposal-date"
       }
 
-      s"has the action '${controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue().toString}'" in {
-        form.attr("action") shouldBe controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue().toString
+      s"has the action '${controllers.resident.shares.routes.DeductionsController.submitAllowableLossesValue().toString}'" in {
+        form.attr("action") shouldBe controllers.resident.shares.routes.DeductionsController.submitAllowableLossesValue().toString
       }
 
       "has the method of POST" in {
@@ -147,7 +147,7 @@ class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication w
       }
 
       "redirect to the brought forward losses page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/losses-brought-forward")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/losses-brought-forward")
       }
     }
 
