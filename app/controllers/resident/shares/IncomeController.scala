@@ -16,6 +16,8 @@
 
 package controllers.resident.shares
 
+import connectors.CalculatorConnector
+import controllers.predicates.FeatureLock
 import common.Dates
 import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
@@ -27,7 +29,6 @@ import models.resident.income._
 import play.api.mvc.Result
 import uk.gov.hmrc.play.http.HeaderCarrier
 import play.api.data.Form
-
 import scala.concurrent.Future
 
 object IncomeController extends IncomeController {
@@ -36,9 +37,9 @@ object IncomeController extends IncomeController {
 
 trait IncomeController extends FeatureLock {
 
-  val homeLink = controllers.resident.shares.routes.GainController.disposalDate().toString
-
   val calcConnector: CalculatorConnector
+
+  val homeLink = controllers.resident.shares.routes.GainController.disposalDate().toString
 
   def getDisposalDate(implicit hc: HeaderCarrier): Future[Option[DisposalDateModel]] = {
     calcConnector.fetchAndGetFormData[DisposalDateModel](keystoreKeys.disposalDate)
@@ -47,17 +48,16 @@ trait IncomeController extends FeatureLock {
   def formatDisposalDate(disposalDateModel: DisposalDateModel): Future[String] = {
     Future.successful(s"${disposalDateModel.year}-${disposalDateModel.month}-${disposalDateModel.day}")
   }
+
   //################################# Previous Taxable Gain Actions ##########################################
+  val previousTaxableGains = TODO
 
-    val previousTaxableGains = TODO
-
-    val submitPreviousTaxableGains = TODO
+  val submitPreviousTaxableGains = TODO
 
   //################################# Current Income Actions ##########################################
+  val currentIncome = TODO
 
-    val currentIncome = TODO
-
-    val submitCurrentIncome = TODO
+  val submitCurrentIncome = TODO
 
   //################################# Personal Allowance Actions ##########################################
   def getStandardPA(year: Int, hc: HeaderCarrier): Future[Option[BigDecimal]] = {

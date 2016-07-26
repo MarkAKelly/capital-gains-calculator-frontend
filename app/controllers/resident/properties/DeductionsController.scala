@@ -216,27 +216,43 @@ trait DeductionsController extends FeatureLock {
   }
 
   //################# Allowable Losses Value Actions ############################
+
+  private val allowableLossesValueHomeLink = controllers.resident.properties.routes.GainController.disposalDate().toString
+  private val allowableLossesValuePostAction = controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue()
+  private val allowableLossesValueBackLink = Some(controllers.resident.properties.routes.DeductionsController.allowableLosses().toString)
+
   val allowableLossesValue = FeatureLockForRTT.async { implicit request =>
 
-    def routeRequest(taxYear: TaxYearModel): Future[Result] = {
+    def fetchStoredAllowableLosses(): Future[Form[AllowableLossesValueModel]] = {
       calcConnector.fetchAndGetFormData[AllowableLossesValueModel](keystoreKeys.allowableLossesValue).map {
-        case Some(data) => Ok(commonViews.allowableLossesValue(allowableLossesValueForm.fill(data), taxYear))
-        case None => Ok(commonViews.allowableLossesValue(allowableLossesValueForm, taxYear))
+        case Some(data) => allowableLossesValueForm.fill(data)
+        case _ => allowableLossesValueForm
       }
+    }
+
+    def routeRequest(taxYear: TaxYearModel, formData: Form[AllowableLossesValueModel]): Future[Result] = {
+        Future.successful(Ok(commonViews.allowableLossesValue(formData, taxYear,
+          allowableLossesValueHomeLink,
+          allowableLossesValuePostAction,
+          allowableLossesValueBackLink)))
     }
     for {
       disposalDate <- getDisposalDate
       disposalDateString <- formatDisposalDate(disposalDate.get)
       taxYear <- calcConnector.getTaxYear(disposalDateString)
-      finalResult <- routeRequest(taxYear.get)
+      formData <- fetchStoredAllowableLosses()
+      finalResult <- routeRequest(taxYear.get, formData)
     } yield finalResult
   }
 
   val submitAllowableLossesValue = FeatureLockForRTT.async { implicit request =>
 
-    def routeRequest(taxYearModel: TaxYearModel): Future [Result] = {
+    def routeRequest(taxYearModel: TaxYearModel): Future[Result] = {
       allowableLossesValueForm.bindFromRequest.fold(
-        errors => Future.successful(BadRequest(commonViews.allowableLossesValue(errors, taxYearModel))),
+        errors => Future.successful(BadRequest(commonViews.allowableLossesValue(errors, taxYearModel,
+          allowableLossesValueHomeLink,
+          allowableLossesValuePostAction,
+          allowableLossesValueBackLink))),
         success => {
           calcConnector.saveFormData[AllowableLossesValueModel](keystoreKeys.allowableLossesValue, success)
           Future.successful(Redirect(routes.DeductionsController.lossesBroughtForward()))
@@ -364,19 +380,34 @@ trait DeductionsController extends FeatureLock {
   }
 
   //################# Brought Forward Losses Value Actions ##############################
+  private val lossesBroughtForwardValueBackLink   = routes.DeductionsController.lossesBroughtForward().url
+  private val lossesBroughtForwardValuePostAction = routes.DeductionsController.submitLossesBroughtForwardValue()
+
   val lossesBroughtForwardValue = FeatureLockForRTT.async { implicit request =>
 
-    def routeRequest(taxYear: TaxYearModel): Future[Result] = {
+    def retrieveKeystoreData(): Future[Form[LossesBroughtForwardValueModel]] = {
       calcConnector.fetchAndGetFormData[LossesBroughtForwardValueModel](keystoreKeys.lossesBroughtForwardValue).map {
-        case Some(data) => Ok(commonViews.lossesBroughtForwardValue(lossesBroughtForwardValueForm.fill(data), taxYear))
-        case None => Ok(commonViews.lossesBroughtForwardValue(lossesBroughtForwardValueForm, taxYear))
+        case Some(data) => lossesBroughtForwardValueForm.fill(data)
+        case _ => lossesBroughtForwardValueForm
       }
     }
+
+    def routeRequest(taxYear: TaxYearModel, formData: Form[LossesBroughtForwardValueModel]): Future[Result] = {
+      Future.successful(Ok(commonViews.lossesBroughtForwardValue(
+        formData,
+        taxYear,
+        navBackLink = lossesBroughtForwardValueBackLink,
+        navHomeLink = homeLink,
+        postAction = lossesBroughtForwardValuePostAction
+      )))
+    }
+
     for {
       disposalDate <- getDisposalDate
       disposalDateString <- formatDisposalDate(disposalDate.get)
       taxYear <- calcConnector.getTaxYear(disposalDateString)
-      route <- routeRequest(taxYear.get)
+      formData <- retrieveKeystoreData()
+      route <- routeRequest(taxYear.get, formData)
     } yield route
   }
 
@@ -384,10 +415,18 @@ trait DeductionsController extends FeatureLock {
 
     lossesBroughtForwardValueForm.bindFromRequest.fold(
       errors => { for {
-        disposalDate <- getDisposalDate
-        disposalDateString <- formatDisposalDate(disposalDate.get)
-        taxYear <- calcConnector.getTaxYear(disposalDateString)
-      } yield {BadRequest(commonViews.lossesBroughtForwardValue(errors, taxYear.get))}},
+          disposalDate <- getDisposalDate
+          disposalDateString <- formatDisposalDate(disposalDate.get)
+          taxYear <- calcConnector.getTaxYear(disposalDateString)
+        } yield {
+          BadRequest(commonViews.lossesBroughtForwardValue(
+            errors,
+            taxYear.get,
+            navBackLink = lossesBroughtForwardValueBackLink,
+            navHomeLink = homeLink,
+            postAction = lossesBroughtForwardValuePostAction))
+        }
+      },
       success => {
         calcConnector.saveFormData[LossesBroughtForwardValueModel](keystoreKeys.lossesBroughtForwardValue, success)
 

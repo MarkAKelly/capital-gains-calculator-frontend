@@ -3,20 +3,20 @@
 @import views.html.helpers._
 @import views.html.calculation.resident._
 
-@(lossesBroughtForwardValueForm: Form[LossesBroughtForwardValueModel], taxYear: TaxYearModel)(implicit request: Request[_])
+@(lossesBroughtForwardValueForm: Form[LossesBroughtForwardValueModel], taxYear: TaxYearModel, navBackLink: String, navHomeLink: String, postAction: Call)(implicit request: Request[_])
 
 @resident_main_template(
     title = Messages("calc.resident.lossesBroughtForwardValue.title",
     taxYear.taxYearSupplied),
-    backLink = Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForward.toString),
-    homeLink = "TODO - needs parameter"
+    backLink = Some(navBackLink),
+    homeLink = navHomeLink
 ) {
 
     @errorSummary(lossesBroughtForwardValueForm, "losses-brought-forward-value")
 
     <h1 class="heading-large">@Messages("calc.resident.lossesBroughtForwardValue.pageHeading", taxYear.taxYearSupplied)</h1>
 
-    @form(action = controllers.resident.properties.routes.DeductionsController.submitLossesBroughtForwardValue()) {
+    @form(action = postAction) {
 
         @formInputMoney(lossesBroughtForwardValueForm, "amount", Messages("calc.resident.lossesBroughtForwardValue.pageHeading", taxYear.taxYearSupplied), None, hideLabel = true)
 

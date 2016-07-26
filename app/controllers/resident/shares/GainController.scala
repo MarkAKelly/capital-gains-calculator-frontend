@@ -27,8 +27,10 @@ import scala.concurrent.Future
 import views.html.calculation.{resident => commonViews}
 import views.html.calculation.resident.shares.{gain => views}
 import forms.resident.DisposalDateForm._
+import forms.resident.DisposalCostsForm._
 import forms.resident.DisposalValueForm._
 import forms.resident.AcquisitionCostsForm._
+import forms.resident.AcquisitionValueForm._
 import models.resident._
 
 object GainController extends GainController {
@@ -108,8 +110,39 @@ trait GainController extends FeatureLock {
   }
 
   //################# Disposal Costs Actions ########################
-  val disposalCosts = TODO
+  val disposalCosts = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[DisposalCostsModel](keystoreKeys.disposalCosts).map {
+      case Some(data) => Ok(views.disposalCosts(disposalCostsForm.fill(data), homeLink))
+      case None => Ok(views.disposalCosts(disposalCostsForm, homeLink))
+    }
+  }
 
+  val submitDisposalCosts = FeatureLockForRTT.async { implicit request =>
+    disposalCostsForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.disposalCosts(errors, homeLink))),
+      success => {
+        calcConnector.saveFormData(keystoreKeys.disposalCosts, success)
+        Future.successful(Redirect(routes.GainController.acquisitionValue()))}
+    )
+  }
+
+  //################# Acquisition Value Actions ########################
+  val acquisitionValue = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[AcquisitionValueModel](keystoreKeys.acquisitionValue).map {
+      case Some(data) => Ok(views.acquisitionValue(acquisitionValueForm.fill(data), homeLink))
+      case None => Ok(views.acquisitionValue(acquisitionValueForm, homeLink))
+    }
+  }
+
+  val submitAcquisitionValue = FeatureLockForRTT.async { implicit request =>
+    acquisitionValueForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.acquisitionValue(errors, homeLink))),
+      success => {
+        calcConnector.saveFormData(keystoreKeys.acquisitionValue, success)
+        Future.successful(Redirect(routes.GainController.acquisitionCosts()))
+      }
+    )
+  }
 
   //################# Acquisition Costs Actions ########################
 
@@ -142,3 +175,4 @@ trait GainController extends FeatureLock {
     )
   }
 }
+
