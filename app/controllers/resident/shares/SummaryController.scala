@@ -16,18 +16,15 @@
 
 package controllers.resident.shares
 
-import connectors.CalculatorConnector
-import controllers.predicates.FeatureLock
 import java.text.SimpleDateFormat
 import java.util.Date
-import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import models.resident._
-import models.resident.properties.{ChargeableGainAnswers, YourAnswersSummaryModel}
-import play.api.mvc.{Request, Result}
+import models.resident.shares.GainAnswersModel
+import play.api.mvc.Result
 import uk.gov.hmrc.play.http.HeaderCarrier
-import views.html.calculation.resident.properties.{summary => views}
+import views.html.calculation.resident.shares.{summary => views}
 import scala.concurrent.Future
 
 object SummaryController extends SummaryController {
@@ -38,6 +35,25 @@ trait SummaryController extends FeatureLock {
 
   val calculatorConnector: CalculatorConnector
 
-  val summary = TODO
+  private val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
 
+  val summary = FeatureLockForRTTShares.async { implicit request =>
+
+    def getTaxYear(disposalDate: Date): Future[Option[TaxYearModel]] = {
+      val formats = new SimpleDateFormat("yyyy-MM-dd")
+      calculatorConnector.getTaxYear(formats.format(disposalDate))
+    }
+
+    def routeRequest(totalGainAnswers: GainAnswersModel,
+                     grossGain: BigDecimal,
+                     taxYear: Option[TaxYearModel])(implicit hc: HeaderCarrier): Future[Result] = {
+      Future.successful(Ok(views.gainSummary(totalGainAnswers, grossGain, taxYear.get, homeLink)))
+    }
+    for {
+      answers <- calculatorConnector.getShareGainAnswers
+      taxYear <- getTaxYear(answers.disposalDate)
+      grossGain <- calculatorConnector.calculateRttShareGrossGain(answers)
+      routeRequest <- routeRequest(answers, grossGain, taxYear)
+    } yield routeRequest
+  }
 }
