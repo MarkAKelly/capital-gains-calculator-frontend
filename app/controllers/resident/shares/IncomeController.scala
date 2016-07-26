@@ -41,6 +41,8 @@ trait IncomeController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
 
+  private val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
+
   def otherPropertiesResponse(implicit hc: HeaderCarrier): Future[Boolean] = {
     calcConnector.fetchAndGetFormData[OtherPropertiesModel](keystoreKeys.otherProperties).map {
       case Some(OtherPropertiesModel(response)) => response
@@ -84,8 +86,6 @@ trait IncomeController extends FeatureLock {
   def formatDisposalDate(disposalDateModel: DisposalDateModel): Future[String] = {
     Future.successful(s"${disposalDateModel.year}-${disposalDateModel.month}-${disposalDateModel.day}")
   }
-
-  private val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
 
   //################################# Previous Taxable Gain Actions ##########################################
 
