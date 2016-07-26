@@ -22,6 +22,7 @@ import controllers.resident.shares.routes._
 
 class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
 
+  /* Outside Tax Years routes */
   "The URL for the resident/shares outside tax years Action" should {
     "be equal to /calculate-your-capital-gains/resident/shares/outside-tax-years" in {
       val path = GainController.outsideTaxYears().url
@@ -29,72 +30,108 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
+
+  /* Disposal Date routes */
   "The URL for the resident/shares disposal date Action" should {
     "be equal to /calculate-your-capital-gains/resident/shares/disposal-date" in {
-      val path = controllers.resident.shares.routes.GainController.disposalDate().toString()
+      val path = GainController.disposalDate().url
       path shouldEqual "/calculate-your-capital-gains/resident/shares/disposal-date"
     }
   }
 
   "The URL for the resident/shares submit disposal date Action" should {
     "be equal to /calculate-your-capital-gains/resident/shares/disposal-date" in {
-      val path = controllers.resident.shares.routes.GainController.submitDisposalDate().toString()
+      val path = GainController.submitDisposalDate().url
       path shouldEqual "/calculate-your-capital-gains/resident/shares/disposal-date"
     }
   }
 
+  /* Losses Brought Forward Value routes */
+  "The URL for the resident/shares lossesBroughtForward Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/losses-brought-forward" in {
+      val path = DeductionsController.lossesBroughtForwardValue().url
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/losses-brought-forward-value"
+    }
+  }
+
+  "The URL for the resident/shares submit disposal date Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/losses-brought-forward" in {
+      val path = DeductionsController.submitLossesBroughtForwardValue().url
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/losses-brought-forward-value"
+    }
+  }
+
+  /* Disposal Value routes */
   "The URL for the resident/shares disposal value Action" should {
     "be equal to /calculate-your-capital-gains/resident/shares/disposal-value" in {
-      val path = controllers.resident.shares.routes.GainController.disposalValue.toString()
+      val path = GainController.disposalValue.toString()
       path shouldEqual "/calculate-your-capital-gains/resident/shares/disposal-value"
     }
   }
 
   "The URL for the resident/shares submit disposal value Action" should {
     "be equal to /calculate-your-capital-gains/resident/shares/disposal-value" in {
-      val path = controllers.resident.shares.routes.GainController.submitDisposalValue.toString()
+      val path = GainController.submitDisposalValue.toString()
       path shouldEqual "/calculate-your-capital-gains/resident/shares/disposal-value"
     }
   }
 
+  /* Disposal Cots routes */
   "The URL for the resident/shares disposal costs Action" should {
     "be equal to /calculate-your-capital-gains/resident/shares/disposal-costs" in {
-      val path = controllers.resident.shares.routes.GainController.disposalCosts().toString()
+      val path = GainController.disposalCosts().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/shares/disposal-costs"
     }
   }
 
   "The URL for the resident/shares submit disposal costs Action" should {
     "be equal to /calculate-your-capital-gains/resident/shares/disposal-costs" in {
-      val path = controllers.resident.shares.routes.GainController.submitDisposalCosts().toString()
+      val path = GainController.submitDisposalCosts().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/shares/disposal-costs"
     }
   }
 
+  /* Allowable Losses routes */
   "The URL for the resident shares allowableLosses action" should {
     "be equal to /calculate-your-capital-gains/resident/shares/allowable-losses" in {
-      val path = controllers.resident.shares.routes.DeductionsController.allowableLosses().toString()
+      val path = DeductionsController.allowableLosses().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/shares/allowable-losses"
     }
   }
 
   "The URL for the resident shares submitAllowableLosses action" should {
     "be equal to /calculate-your-capital-gains/resident/shares/allowable-losses" in {
-      val path = controllers.resident.shares.routes.DeductionsController.submitAllowableLosses().toString()
+      val path = DeductionsController.submitAllowableLosses().url
       path shouldEqual "/calculate-your-capital-gains/resident/shares/allowable-losses"
     }
   }
 
+  /* Allowable Losses Value routes */
+  "The URL for the resident shares allowableLossesValue action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/allowable-losses-value" in {
+      val path = DeductionsController.allowableLossesValue().toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/allowable-losses-value"
+    }
+  }
+
+  "The URL for the resident shares submitAllowableLossesValue action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/allowable-losses-value" in {
+      val path = DeductionsController.submitAllowableLossesValue().toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/allowable-losses-value"
+    }
+  }
+
+  /* Annual Exempt Amount routes */
   "The URL for the resident shares annualExemptAmount action" should {
     "be equal to /calculate-your-capital-gains/resident/shares/annual-exempt-amount" in {
-      val path = controllers.resident.shares.routes.DeductionsController.annualExemptAmount().toString()
+      val path = DeductionsController.annualExemptAmount().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/shares/annual-exempt-amount"
     }
   }
 
   "The URL for the resident shares submitAnnualExemptAmount action" should {
     "be equal to /calculate-your-capital-gains/resident/shares/annual-exempt-amount" in {
-      val path = controllers.resident.shares.routes.DeductionsController.submitAnnualExemptAmount().toString()
+      val path = DeductionsController.submitAnnualExemptAmount().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/shares/annual-exempt-amount"
     }
   }
@@ -113,16 +150,17 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
+  /* Personal Allowance routes */
   "The URL for the resident shares personalAllowance action" should {
     "be equal to /calculate-your-capital-gains/resident/shares/personal-allowance" in {
-      val path = controllers.resident.shares.routes.IncomeController.personalAllowance().toString()
+      val path = IncomeController.personalAllowance().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/shares/personal-allowance"
     }
   }
 
   "The URL for the resident shares submitPersonalAllowance action" should {
     "be equal to /calculate-your-capital-gains/resident/shares/personal-allowance" in {
-      val path = controllers.resident.shares.routes.IncomeController.submitPersonalAllowance().toString()
+      val path = IncomeController.submitPersonalAllowance().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/shares/personal-allowance"
     }
   }

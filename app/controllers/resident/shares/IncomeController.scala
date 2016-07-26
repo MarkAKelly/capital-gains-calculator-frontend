@@ -16,6 +16,8 @@
 
 package controllers.resident.shares
 
+import connectors.CalculatorConnector
+import controllers.predicates.FeatureLock
 import common.Dates
 import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
@@ -30,7 +32,6 @@ import models.resident.income._
 import play.api.mvc.Result
 import uk.gov.hmrc.play.http.HeaderCarrier
 import play.api.data.Form
-
 import scala.concurrent.Future
 
 object IncomeController extends IncomeController {
@@ -88,13 +89,11 @@ trait IncomeController extends FeatureLock {
   }
 
   //################################# Previous Taxable Gain Actions ##########################################
+  val previousTaxableGains = TODO
 
-    val previousTaxableGains = TODO
-
-    val submitPreviousTaxableGains = TODO
+  val submitPreviousTaxableGains = TODO
 
   //################################# Current Income Actions ##########################################
-
   def buildCurrentIncomeBackUrl(implicit hc: HeaderCarrier): Future[String] = {
     for {
       hasOtherProperties <- otherPropertiesResponse
