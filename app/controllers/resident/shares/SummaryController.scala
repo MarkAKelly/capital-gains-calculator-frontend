@@ -16,6 +16,8 @@
 
 package controllers.resident.shares
 
+import connectors.CalculatorConnector
+import controllers.predicates.FeatureLock
 import java.text.SimpleDateFormat
 import java.util.Date
 import common.KeystoreKeys
@@ -26,7 +28,6 @@ import models.resident.properties.{ChargeableGainAnswers, YourAnswersSummaryMode
 import play.api.mvc.{Request, Result}
 import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation.resident.properties.{summary => views}
-
 import scala.concurrent.Future
 
 object SummaryController extends SummaryController {

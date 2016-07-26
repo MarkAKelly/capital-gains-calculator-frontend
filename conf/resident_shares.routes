@@ -18,11 +18,6 @@ POST    /disposal-costs                   controllers.resident.shares.GainContro
 #Acquisition Value or Market Value Routes
 GET     /acquisition-value                controllers.resident.shares.GainController.acquisitionValue
 
-#Acquisition Costs Routes
-
-#Summary Routes
-GET     /summary                          controllers.resident.shares.SummaryController.summary
-
 #Other Disposals Routes
 GET     /other-disposals                  controllers.resident.shares.DeductionsController.otherDisposals
 
@@ -37,12 +32,13 @@ POST    /allowable-losses-value           controllers.resident.shares.Deductions
 #Losses Brought Forward Routes
 GET     /losses-brought-forward           controllers.resident.shares.DeductionsController.lossesBroughtForward
 
+#Losses Brought Forward Value Routes
+GET     /losses-brought-forward-value     controllers.resident.shares.DeductionsController.lossesBroughtForwardValue
+POST    /losses-brought-forward-value     controllers.resident.shares.DeductionsController.submitLossesBroughtForwardValue
+
 #Annual Exempt Amount Routes
 GET     /annual-exempt-amount             controllers.resident.shares.DeductionsController.annualExemptAmount
 POST    /annual-exempt-amount             controllers.resident.shares.DeductionsController.submitAnnualExemptAmount
-
-#Losses Brought Forward Value Routes
-GET     /losses-brought-forward-value     controllers.resident.shares.DeductionsController.lossesBroughtForwardValue
 
 #Previous Taxable Gains Routes
 GET     /previous-taxable-gains           controllers.resident.shares.IncomeController.previousTaxableGains
@@ -53,6 +49,9 @@ GET     /current-income                   controllers.resident.shares.IncomeCont
 #Personal Allowance Routes
 GET     /personal-allowance               controllers.resident.shares.IncomeController.personalAllowance
 POST    /personal-allowance               controllers.resident.shares.IncomeController.submitPersonalAllowance
+
+#Summary Routes
+GET     /summary                          controllers.resident.shares.SummaryController.summary
 
 #Gain Summary PDF Routes
 

@@ -21,21 +21,15 @@ import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import models.resident._
 import models.resident.AllowableLossesValueModel
-import forms.resident.LossesBroughtForwardForm._
+import models.resident.shares.GainAnswersModel
 import forms.resident.LossesBroughtForwardValueForm._
 import forms.resident.AllowableLossesForm._
 import forms.resident.AllowableLossesValueForm._
 import forms.resident.AnnualExemptAmountForm._
-import forms.resident.OtherPropertiesForm._
-import forms.resident.properties.ReliefsForm._
-import forms.resident.properties.ReliefsValueForm._
-import models.resident.properties.{ReliefsModel, ReliefsValueModel, YourAnswersSummaryModel}
-import play.api.mvc.{Action, Result}
+import play.api.mvc.{Call, Result}
 import play.api.data.Form
 import views.html.calculation.{resident => commonViews}
-import views.html.calculation.resident.properties.{deductions => views}
 import uk.gov.hmrc.play.http.HeaderCarrier
-import scala.concurrent.Future
 
 import scala.concurrent.Future
 
@@ -46,6 +40,7 @@ object DeductionsController extends DeductionsController {
 trait DeductionsController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
+  private val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
 
   def getDisposalDate(implicit hc: HeaderCarrier): Future[Option[DisposalDateModel]] = {
     calcConnector.fetchAndGetFormData[DisposalDateModel](keystoreKeys.disposalDate)
@@ -55,11 +50,47 @@ trait DeductionsController extends FeatureLock {
     Future.successful(s"${disposalDateModel.year}-${disposalDateModel.month}-${disposalDateModel.day}")
   }
 
+  def totalGain(answerSummary: GainAnswersModel, hc: HeaderCarrier): Future[BigDecimal] = calcConnector.calculateRttShareGrossGain(answerSummary)(hc)
+
+  def answerSummary(hc: HeaderCarrier): Future[GainAnswersModel] = calcConnector.getShareGainAnswers(hc)
+
+
+  //################# Brought Forward Losses Actions ############################
+  def otherPropertiesCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[OtherPropertiesModel](keystoreKeys.otherProperties).map {
+      case Some(data) => data.hasOtherProperties
+      case None => false
+    }
+  }
+
+  def allowableLossesCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[AllowableLossesModel](keystoreKeys.allowableLosses).map {
+      case Some(data) => data.isClaiming
+      case None => false
+    }
+  }
+
+  def displayAnnualExemptAmountCheck(claimedOtherProperties: Boolean, claimedAllowableLosses: Boolean)(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[AllowableLossesValueModel](keystoreKeys.allowableLossesValue).map {
+      case Some(result) if claimedAllowableLosses && claimedOtherProperties => result.amount == 0
+      case _ if claimedOtherProperties && !claimedAllowableLosses => true
+      case _ => false
+    }
+  }
+
+  def displayAnnualExemptAmountCheck(implicit hc: HeaderCarrier): Future[Boolean] = {
+    for {
+      disposedOtherProperties <- otherPropertiesCheck
+      claimedAllowableLosses <- allowableLossesCheck
+      displayAnnualExemptAmount <- displayAnnualExemptAmountCheck(disposedOtherProperties, claimedAllowableLosses)
+    } yield displayAnnualExemptAmount
+  }
+
   def positiveAEACheck(model: AnnualExemptAmountModel)(implicit hc: HeaderCarrier): Future[Boolean] = {
     Future(model.amount > 0)
   }
 
-  def taxYearStringToInteger (taxYear: String): Future[Int] = {
+  def taxYearStringToInteger(taxYear: String): Future[Int] = {
     Future.successful((taxYear.take(2) + taxYear.takeRight(2)).toInt)
   }
 
@@ -81,14 +112,75 @@ trait DeductionsController extends FeatureLock {
     }
   }
 
-  private val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
+  //################# Brought Forward Losses Actions ##############################
+  val lossesBroughtForward = TODO
+
+  //################# Brought Forward Losses Value Actions ##############################
+  private val lossesBroughtForwardValueBackLink: String = routes.DeductionsController.lossesBroughtForward().url
+  private val lossesBroughtForwardValuePostAction: Call = routes.DeductionsController.submitLossesBroughtForwardValue()
+
+  val lossesBroughtForwardValue = FeatureLockForRTTShares.async { implicit request =>
+
+    def retrieveKeystoreData(): Future[Form[LossesBroughtForwardValueModel]] = {
+      calcConnector.fetchAndGetFormData[LossesBroughtForwardValueModel](keystoreKeys.lossesBroughtForwardValue).map {
+        case Some(data) => lossesBroughtForwardValueForm.fill(data)
+        case _ => lossesBroughtForwardValueForm
+      }
+    }
+
+    def routeRequest(taxYear: TaxYearModel, formData: Form[LossesBroughtForwardValueModel]): Future[Result] = {
+      Future.successful(Ok(commonViews.lossesBroughtForwardValue(
+        formData,
+        taxYear,
+        navBackLink = lossesBroughtForwardValueBackLink,
+        navHomeLink = homeLink,
+        postAction = lossesBroughtForwardValuePostAction
+      )))
+    }
+    for {
+      disposalDate <- getDisposalDate
+      disposalDateString <- formatDisposalDate(disposalDate.get)
+      taxYear <- calcConnector.getTaxYear(disposalDateString)
+      formData <- retrieveKeystoreData()
+      route <- routeRequest(taxYear.get, formData)
+    } yield route
+  }
+
+  val submitLossesBroughtForwardValue = FeatureLockForRTTShares.async { implicit request =>
+    lossesBroughtForwardValueForm.bindFromRequest.fold(
+      errors => {
+        for {
+          disposalDate <- getDisposalDate
+          disposalDateString <- formatDisposalDate(disposalDate.get)
+          taxYear <- calcConnector.getTaxYear(disposalDateString)
+        } yield {
+          BadRequest(commonViews.lossesBroughtForwardValue(
+            errors,
+            taxYear.get,
+            navBackLink = lossesBroughtForwardValueBackLink,
+            navHomeLink = homeLink,
+            postAction = lossesBroughtForwardValuePostAction))
+        }
+      },
+      success => {
+        calcConnector.saveFormData[LossesBroughtForwardValueModel](keystoreKeys.lossesBroughtForwardValue, success)
+        displayAnnualExemptAmountCheck.flatMap { displayAnnualExemptAmount =>
+          if (displayAnnualExemptAmount) Future.successful(Redirect(routes.DeductionsController.annualExemptAmount()))
+          else {
+            positiveChargeableGainCheck.map { positiveChargeableGain =>
+              if (positiveChargeableGain) Redirect(routes.IncomeController.currentIncome())
+              else Redirect(routes.SummaryController.summary())
+            }
+          }
+        }
+      }
+    )
+  }
 
   //################# Other Disposal Actions #########################
-
   val otherDisposals = TODO
 
   //################# Allowable Losses Actions #########################
-
   val allowableLosses = FeatureLockForRTTShares.async { implicit request =>
 
     val postAction = controllers.resident.shares.routes.DeductionsController.submitAllowableLosses()
@@ -136,7 +228,6 @@ trait DeductionsController extends FeatureLock {
   }
 
   //################# Allowable Losses Value Actions ############################
-
   private val allowableLossesValueHomeLink = controllers.resident.shares.routes.GainController.disposalDate().toString
   private val allowableLossesValuePostAction = controllers.resident.shares.routes.DeductionsController.submitAllowableLossesValue()
   private val allowableLossesValueBackLink = Some(controllers.resident.shares.routes.DeductionsController.allowableLosses().toString)
@@ -188,16 +279,7 @@ trait DeductionsController extends FeatureLock {
     } yield route
   }
 
-  //################# Brought Forward Losses Actions ############################
-
-  val lossesBroughtForward = TODO
-
-  //################# Brought Forward Losses Value Actions ##############################
-
-  val lossesBroughtForwardValue = TODO
-
   //################# Annual Exempt Amount Input Actions #############################
-
   private def annualExemptAmountBackLink(implicit hc: HeaderCarrier): Future[Option[String]] = calcConnector
     .fetchAndGetFormData[LossesBroughtForwardModel](keystoreKeys.lossesBroughtForward).map {
     case Some(LossesBroughtForwardModel(true)) =>
@@ -205,10 +287,10 @@ trait DeductionsController extends FeatureLock {
     case _ =>
       Some(controllers.resident.shares.routes.DeductionsController.lossesBroughtForward().toString)
   }
+
   private val annualExemptAmountPostAction = controllers.resident.shares.routes.DeductionsController.submitAnnualExemptAmount()
 
   val annualExemptAmount = FeatureLockForRTTShares.async { implicit request =>
-
     def routeRequest(backLink: Option[String]) = {
       calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](keystoreKeys.annualExemptAmount).map {
         case Some(data) => Ok(commonViews.annualExemptAmount(annualExemptAmountForm().fill(data), backLink, annualExemptAmountPostAction, homeLink))
