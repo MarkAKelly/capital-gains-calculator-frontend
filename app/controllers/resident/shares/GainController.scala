@@ -21,7 +21,7 @@ import java.util.UUID
 import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
-import play.api.mvc.{Action, Result}
+import play.api.mvc.Result
 import uk.gov.hmrc.play.http.SessionKeys
 import scala.concurrent.Future
 import views.html.calculation.{resident => commonViews}
@@ -29,6 +29,7 @@ import views.html.calculation.resident.shares.{gain => views}
 import forms.resident.DisposalDateForm._
 import forms.resident.DisposalCostsForm._
 import forms.resident.DisposalValueForm._
+import forms.resident.AcquisitionCostsForm._
 import forms.resident.AcquisitionValueForm._
 import models.resident._
 
@@ -56,7 +57,7 @@ trait GainController extends FeatureLock {
     }
   }
 
-  val submitDisposalDate = Action.async { implicit request =>
+  val submitDisposalDate = FeatureLockForRTTShares.async { implicit request =>
 
     def routeRequest(taxYearResult: Option[TaxYearModel]): Future[Result] = {
       if (taxYearResult.isDefined && !taxYearResult.get.isValidYear) Future.successful(Redirect(routes.GainController.outsideTaxYears()))
@@ -91,14 +92,14 @@ trait GainController extends FeatureLock {
   }
 
   //################ Disposal Value Actions ######################
-  val disposalValue = FeatureLockForRTT.async { implicit request =>
+  val disposalValue = FeatureLockForRTTShares.async { implicit request =>
     calcConnector.fetchAndGetFormData[DisposalValueModel](keystoreKeys.disposalValue).map {
       case Some(data) => Ok(views.disposalValue(disposalValueForm.fill(data), homeLink))
       case None => Ok(views.disposalValue(disposalValueForm, homeLink))
     }
   }
 
-  val submitDisposalValue = FeatureLockForRTT.async { implicit request =>
+  val submitDisposalValue = FeatureLockForRTTShares.async { implicit request =>
     disposalValueForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.disposalValue(errors, homeLink))),
       success => {
@@ -144,5 +145,34 @@ trait GainController extends FeatureLock {
   }
 
   //################# Acquisition Costs Actions ########################
-  val acquisitionCosts = TODO
+
+  private val acquisitionCostsBackLink = Some(controllers.resident.properties.routes.GainController.acquisitionValue().toString)
+
+  val acquisitionCosts = FeatureLockForRTTShares.async { implicit request =>
+    calcConnector.fetchAndGetFormData[AcquisitionCostsModel](keystoreKeys.acquisitionCosts).map {
+      case Some(data) => Ok(views.acquisitionCosts(acquisitionCostsForm.fill(data), acquisitionCostsBackLink, homeLink))
+      case None => Ok(views.acquisitionCosts(acquisitionCostsForm, acquisitionCostsBackLink, homeLink))
+    }
+  }
+
+  val submitAcquisitionCosts = FeatureLockForRTTShares.async { implicit request =>
+
+    def routeRequest(totalGain: BigDecimal): Future[Result] = {
+      if (totalGain > 0) Future.successful(Redirect(routes.DeductionsController.otherDisposals()))
+      else Future.successful(Redirect(routes.SummaryController.summary()))
+    }
+
+    acquisitionCostsForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.acquisitionCosts(errors, acquisitionCostsBackLink, homeLink))),
+      success => {
+        for {
+          save <- calcConnector.saveFormData(keystoreKeys.acquisitionCosts, success)
+          answers <- calcConnector.getShareGainAnswers
+          grossGain <- calcConnector.calculateRttShareGrossGain(answers)
+          route <- routeRequest(grossGain)
+        } yield route
+      }
+    )
+  }
 }
+

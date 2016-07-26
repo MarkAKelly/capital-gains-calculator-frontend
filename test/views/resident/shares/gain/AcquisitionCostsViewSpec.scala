@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package views.resident.properties.gain
+package views.resident.shares.gain
 
-import assets.MessageLookup.{acquisitionCosts => messages}
+import assets.MessageLookup.{sharesAcquisitionCosts => messages}
 import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.AcquisitionCostsForm._
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import views.html.calculation.resident.properties.{gain => views}
+import views.html.calculation.resident.shares.{gain => views}
 
 class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Acquisition Costs view" should {
+  "Acquisition Costs shares view" should {
 
-    lazy val view = views.acquisitionCosts(acquisitionCostsForm)(fakeRequest)
+    lazy val view = views.acquisitionCosts(acquisitionCostsForm, Some("back-link"), "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -51,21 +51,21 @@ class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with Fa
         backLink.hasClass("back-link") shouldBe true
       }
 
-      "have a link to Acquisition Value" in {
-        backLink.attr("href") shouldBe controllers.resident.properties.routes.GainController.acquisitionValue().toString
+      "have a link with href 'back-link'" in {
+        backLink.attr("href") shouldBe "back-link"
       }
     }
 
     "have a home link to 'home-link'" in {
-      doc.getElementById("homeNavHref").attr("href") shouldEqual controllers.resident.properties.routes.GainController.disposalDate().toString()
+      doc.getElementById("homeNavHref").attr("href") shouldEqual "home-link"
     }
 
     "have a H1 tag that" should {
 
       lazy val h1Tag = doc.select("H1")
 
-      s"have the page heading '${messages.pageHeading}'" in {
-        h1Tag.text shouldBe messages.pageHeading
+      s"have the page heading '${messages.title}'" in {
+        h1Tag.text shouldBe messages.title
       }
 
       "have the heading-large class" in {
@@ -77,8 +77,8 @@ class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with Fa
 
       lazy val form = doc.getElementsByTag("form")
 
-      s"has the action '${controllers.resident.properties.routes.GainController.submitAcquisitionCosts().toString}'" in {
-        form.attr("action") shouldBe controllers.resident.properties.routes.GainController.submitAcquisitionCosts().toString
+      s"has the action '${controllers.resident.shares.routes.GainController.submitAcquisitionCosts().toString}'" in {
+        form.attr("action") shouldBe controllers.resident.shares.routes.GainController.submitAcquisitionCosts().toString
       }
 
       "has the method of POST" in {
@@ -89,8 +89,8 @@ class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with Fa
 
         lazy val label = doc.body.getElementsByTag("label")
 
-        s"have the question ${messages.pageHeading}" in {
-          label.text should include(messages.pageHeading)
+        s"have the question ${messages.title}" in {
+          label.text should include(messages.title)
         }
 
         "have the class 'visuallyhidden'" in {
@@ -151,12 +151,12 @@ class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with Fa
     }
   }
 
-  "Acquisition Costs View with form with errors" which {
+  "Acquisition Costs shares view with form with errors" which {
 
     "is due to mandatory field error" should {
 
       val form = acquisitionCostsForm.bind(Map("amount" -> ""))
-      lazy val view = views.acquisitionCosts(form)(fakeRequest)
+      lazy val view = views.acquisitionCosts(form,  Some("back-link"), "home-link")(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
 
       "display an error summary message for the amount" in {

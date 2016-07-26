@@ -243,6 +243,12 @@ object MessageLookup {
     val helpText = "Put the market value of the shares instead if you sold them for less than they were worth to help the buyer"
   }
 
+
+  object sharesAcquisitionCosts {
+    val title = "How much did you pay in costs when you bought the shares?"
+    val helpText = "Costs include stockbroker fees and Stamp Duty tax"
+  }
+
   object sharesDisposalCosts {
     val title = "How much did you pay in costs when you sold the shares?"
     val helpText = "For example, stockbroker fees"
@@ -254,5 +260,6 @@ object MessageLookup {
     val bulletListOne = "inherited them"
     val bulletListTwo = "got them from your employer"
     val bulletListThree = "owned them before 1 April 1982"
+
   }
 }
