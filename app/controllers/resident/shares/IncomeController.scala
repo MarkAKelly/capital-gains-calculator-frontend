@@ -16,18 +16,15 @@
 
 package controllers.resident.shares
 
-import connectors.CalculatorConnector
-import controllers.predicates.FeatureLock
 import common.Dates
-import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import views.html.calculation.{resident => commonViews}
 import views.html.calculation.resident.properties.{income => views}
 import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
-//import views.html.calculation.resident.shares.{income => views}
 import forms.resident.income.PreviousTaxableGainsForm._
 import forms.resident.income.PersonalAllowanceForm._
+import forms.resident.income.CurrentIncomeForm._
 import models.resident._
 import models.resident.income._
 import play.api.mvc.Result
@@ -70,6 +67,13 @@ trait IncomeController extends FeatureLock {
       case Some(result) if claimedAllowableLosses && claimedOtherProperties => result.amount == 0
       case _ if claimedOtherProperties && !claimedAllowableLosses => true
       case _ => false
+    }
+  }
+
+  def annualExemptAmountEntered(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](keystoreKeys.annualExemptAmount).map {
+      case Some(data) => data.amount == 0
+      case None => false
     }
   }
 
@@ -131,9 +135,59 @@ trait IncomeController extends FeatureLock {
 
 
   //################################# Current Income Actions ##########################################
-  val currentIncome = TODO
+  def buildCurrentIncomeBackUrl(implicit hc: HeaderCarrier): Future[String] = {
+    for {
+      hasOtherProperties <- otherPropertiesResponse
+      hasAllowableLosses <- allowableLossesCheck
+      displayAnnualExemptAmount <- displayAnnualExemptAmountCheck(hasOtherProperties, hasAllowableLosses)
+      hasLossesBroughtForward <- lossesBroughtForwardResponse
+      enteredAnnualExemptAmount <- annualExemptAmountEntered
+    } yield (displayAnnualExemptAmount, hasLossesBroughtForward, enteredAnnualExemptAmount)
 
-  val submitCurrentIncome = TODO
+    match {
+      case (true, _, true) => routes.IncomeController.previousTaxableGains().url
+      case (true, _, _) => routes.DeductionsController.annualExemptAmount().url
+      case (false, true, _) => routes.DeductionsController.lossesBroughtForwardValue().url
+      case (false, false, _) => routes.DeductionsController.lossesBroughtForward().url
+    }
+  }
+
+  val currentIncome = FeatureLockForRTT.async { implicit request =>
+
+    def routeRequest(backUrl: String, taxYear: TaxYearModel): Future[Result] = {
+      calcConnector.fetchAndGetFormData[CurrentIncomeModel](keystoreKeys.currentIncome).map {
+        case Some(data) => Ok(views.currentIncome(currentIncomeForm.fill(data), backUrl, taxYear))
+        case None => Ok(views.currentIncome(currentIncomeForm, backUrl, taxYear))
+      }
+    }
+
+    for {
+      backUrl <- buildCurrentIncomeBackUrl
+      disposalDate <- getDisposalDate
+      disposalDateString <- formatDisposalDate(disposalDate.get)
+      taxYear <- calcConnector.getTaxYear(disposalDateString)
+      finalResult <- routeRequest(backUrl, taxYear.get)
+    } yield finalResult
+  }
+
+  val submitCurrentIncome = FeatureLockForRTT.async { implicit request =>
+
+    def routeRequest(taxYearModel: TaxYearModel): Future[Result] = {
+      currentIncomeForm.bindFromRequest.fold(
+        errors => buildCurrentIncomeBackUrl.flatMap(url => Future.successful(BadRequest(views.currentIncome(errors, url, taxYearModel)))),
+        success => {
+          calcConnector.saveFormData[CurrentIncomeModel](keystoreKeys.currentIncome, success)
+          Future.successful(Redirect(routes.IncomeController.personalAllowance()))
+        }
+      )
+    }
+    for {
+      disposalDate <- getDisposalDate
+      disposalDateString <- formatDisposalDate(disposalDate.get)
+      taxYear <- calcConnector.getTaxYear(disposalDateString)
+      route <- routeRequest(taxYear.get)
+    } yield route
+  }
 
 
   //################################# Personal Allowance Actions ##########################################
