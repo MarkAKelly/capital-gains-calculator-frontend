@@ -17,6 +17,10 @@ POST    /disposal-costs                   controllers.resident.shares.GainContro
 
 #Acquisition Value or Market Value Routes
 GET     /acquisition-value                controllers.resident.shares.GainController.acquisitionValue
+POST    /acquisition-value                controllers.resident.shares.GainController.submitAcquisitionValue
+
+#Acquisition Costs Routes
+GET     /acquisition-costs                controllers.resident.shares.GainController.acquisitionCosts
 
 #Other Disposals Routes
 GET     /other-disposals                  controllers.resident.shares.DeductionsController.otherDisposals
@@ -31,6 +35,7 @@ POST    /allowable-losses-value           controllers.resident.shares.Deductions
 
 #Losses Brought Forward Routes
 GET     /losses-brought-forward           controllers.resident.shares.DeductionsController.lossesBroughtForward
+POST    /losses-brought-forward           controllers.resident.shares.DeductionsController.submitLossesBroughtForward
 
 #Losses Brought Forward Value Routes
 GET     /losses-brought-forward-value     controllers.resident.shares.DeductionsController.lossesBroughtForwardValue

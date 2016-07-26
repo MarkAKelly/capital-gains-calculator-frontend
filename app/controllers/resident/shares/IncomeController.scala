@@ -16,14 +16,12 @@
 
 package controllers.resident.shares
 
-import connectors.CalculatorConnector
-import controllers.predicates.FeatureLock
 import common.Dates
+import views.html.calculation.{resident => commonViews}
+import views.html.calculation.resident.properties.{income => views}
 import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
-import views.html.calculation.{resident => commonViews}
-import views.html.calculation.resident.shares.{income => views}
 import forms.resident.income.PreviousTaxableGainsForm._
 import forms.resident.income.PersonalAllowanceForm._
 import forms.resident.income.CurrentIncomeForm._
@@ -93,6 +91,7 @@ trait IncomeController extends FeatureLock {
 
   val submitPreviousTaxableGains = TODO
 
+
   //################################# Current Income Actions ##########################################
   def buildCurrentIncomeBackUrl(implicit hc: HeaderCarrier): Future[String] = {
     for {
@@ -148,6 +147,7 @@ trait IncomeController extends FeatureLock {
     } yield route
   }
 
+
   //################################# Personal Allowance Actions ##########################################
   def getStandardPA(year: Int, hc: HeaderCarrier): Future[Option[BigDecimal]] = {
     calcConnector.getPA(year)(hc)
@@ -189,6 +189,7 @@ trait IncomeController extends FeatureLock {
       calcConnector.getPA(year, true)(hc)
     }
 
+
     def routeRequest(maxPA: BigDecimal, standardPA: BigDecimal, taxYearModel: TaxYearModel): Future[Result] = {
       personalAllowanceForm(maxPA).bindFromRequest.fold(
         errors => Future.successful(BadRequest(commonViews.personalAllowance(errors, taxYearModel, standardPA, homeLink,
@@ -211,3 +212,4 @@ trait IncomeController extends FeatureLock {
     } yield route
   }
 }
+
