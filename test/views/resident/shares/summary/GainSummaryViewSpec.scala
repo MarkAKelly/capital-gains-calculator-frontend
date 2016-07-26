@@ -132,8 +132,8 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
 
       "has a date output row for the Disposal Date" which {
 
-        s"should have the question text '${commonMessages.disposalDate.question}'" in {
-          doc.select("#disposalDate-question").text shouldBe commonMessages.disposalDate.question
+        s"should have the question text '${commonMessages.sharesDisposalDate.question}'" in {
+          doc.select("#disposalDate-question").text shouldBe commonMessages.sharesDisposalDate.question
         }
 
         "should have the value '12 September 1990'" in {
@@ -145,18 +145,18 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
         }
 
         "has the question as part of the link" in {
-          doc.select("#disposalDate-date a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.disposalDate.question}"
+          doc.select("#disposalDate-date a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.sharesDisposalDate.question}"
         }
 
         "has the question component of the link is visuallyhidden" in {
-          doc.select("#disposalDate-date a span.visuallyhidden").text shouldBe commonMessages.disposalDate.question
+          doc.select("#disposalDate-date a span.visuallyhidden").text shouldBe commonMessages.sharesDisposalDate.question
         }
       }
 
       "has a numeric output row for the Disposal Value" which {
 
-        s"should have the question text '${commonMessages.disposalValue.question}'" in {
-          doc.select("#disposalValue-question").text shouldBe commonMessages.disposalValue.question
+        s"should have the question text '${commonMessages.sharesDisposalValue.question}'" in {
+          doc.select("#disposalValue-question").text shouldBe commonMessages.sharesDisposalValue.question
         }
 
         "should have the value '£10'" in {
@@ -171,8 +171,8 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
 
       "has a numeric output row for the Disposal Costs" which {
 
-        s"should have the question text '${commonMessages.disposalCosts.title}'" in {
-          doc.select("#disposalCosts-question").text shouldBe commonMessages.disposalCosts.title
+        s"should have the question text '${commonMessages.sharesDisposalCosts.title}'" in {
+          doc.select("#disposalCosts-question").text shouldBe commonMessages.sharesDisposalCosts.title
         }
 
         "should have the value '£20'" in {
@@ -187,8 +187,8 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
 
       "has a numeric output row for the Acquisition Value" which {
 
-        s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
-          doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
+        s"should have the question text '${commonMessages.sharesAcquisitionValue.title}'" in {
+          doc.select("#acquisitionValue-question").text shouldBe commonMessages.sharesAcquisitionValue.title
         }
 
         "should have the value '£30'" in {
@@ -203,8 +203,8 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
 
       "has a numeric output row for the Acquisition Costs" which {
 
-        s"should have the question text '${commonMessages.acquisitionCosts.title}'" in {
-          doc.select("#acquisitionCosts-question").text shouldBe commonMessages.acquisitionCosts.title
+        s"should have the question text '${commonMessages.sharesAcquisitionCosts.title}'" in {
+          doc.select("#acquisitionCosts-question").text shouldBe commonMessages.sharesAcquisitionCosts.title
         }
 
         "should have the value '£40'" in {
