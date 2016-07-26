@@ -16,6 +16,8 @@
 
 package controllers.resident.shares
 
+import connectors.CalculatorConnector
+import controllers.predicates.FeatureLock
 import common.Dates
 import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
@@ -124,10 +126,9 @@ trait IncomeController extends FeatureLock {
   }
 
   //################################# Current Income Actions ##########################################
+  val currentIncome = TODO
 
-    val currentIncome = TODO
-
-    val submitCurrentIncome = TODO
+  val submitCurrentIncome = TODO
 
   //################################# Personal Allowance Actions ##########################################
   def getStandardPA(year: Int, hc: HeaderCarrier): Future[Option[BigDecimal]] = {

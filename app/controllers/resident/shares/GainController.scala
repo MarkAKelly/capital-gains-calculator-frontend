@@ -27,6 +27,7 @@ import scala.concurrent.Future
 import views.html.calculation.{resident => commonViews}
 import views.html.calculation.resident.shares.{gain => views}
 import forms.resident.DisposalDateForm._
+import forms.resident.DisposalCostsForm._
 import forms.resident.DisposalValueForm._
 import models.resident._
 
@@ -107,6 +108,22 @@ trait GainController extends FeatureLock {
   }
 
   //################# Disposal Costs Actions ########################
-  val disposalCosts = TODO
+  val disposalCosts = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[DisposalCostsModel](keystoreKeys.disposalCosts).map {
+      case Some(data) => Ok(views.disposalCosts(disposalCostsForm.fill(data), homeLink))
+      case None => Ok(views.disposalCosts(disposalCostsForm, homeLink))
+    }
+  }
 
+  val submitDisposalCosts = FeatureLockForRTT.async { implicit request =>
+    disposalCostsForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.disposalCosts(errors, homeLink))),
+      success => {
+        calcConnector.saveFormData(keystoreKeys.disposalCosts, success)
+        Future.successful(Redirect(routes.GainController.acquisitionValue()))}
+    )
+  }
+
+  //################# Acquisition Value Actions ########################
+  val acquisitionValue = TODO
 }
