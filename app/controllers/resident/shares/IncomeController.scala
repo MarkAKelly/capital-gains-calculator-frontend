@@ -30,6 +30,7 @@ import models.resident.income._
 import play.api.mvc.Result
 import uk.gov.hmrc.play.http.HeaderCarrier
 import play.api.data.Form
+import forms.resident.income.PreviousTaxableGainsForm._
 import scala.concurrent.Future
 
 object IncomeController extends IncomeController {
@@ -40,7 +41,7 @@ trait IncomeController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
 
-  private val homeLink = controllers.resident.shares.routes.GainController.disposalDate().toString
+  private val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
 
   def otherPropertiesResponse(implicit hc: HeaderCarrier): Future[Boolean] = {
     calcConnector.fetchAndGetFormData[OtherPropertiesModel](keystoreKeys.otherProperties).map {
@@ -52,13 +53,6 @@ trait IncomeController extends FeatureLock {
   def lossesBroughtForwardResponse(implicit hc: HeaderCarrier): Future[Boolean] = {
     calcConnector.fetchAndGetFormData[LossesBroughtForwardModel](keystoreKeys.lossesBroughtForward).map {
       case Some(LossesBroughtForwardModel(response)) => response
-      case None => false
-    }
-  }
-
-  def annualExemptAmountEntered(implicit hc: HeaderCarrier): Future[Boolean] = {
-    calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](keystoreKeys.annualExemptAmount).map {
-      case Some(data) => data.amount == 0
       case None => false
     }
   }
@@ -78,6 +72,13 @@ trait IncomeController extends FeatureLock {
     }
   }
 
+  def annualExemptAmountEntered(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](keystoreKeys.annualExemptAmount).map {
+      case Some(data) => data.amount == 0
+      case None => false
+    }
+  }
+
   def getDisposalDate(implicit hc: HeaderCarrier): Future[Option[DisposalDateModel]] = {
     calcConnector.fetchAndGetFormData[DisposalDateModel](keystoreKeys.disposalDate)
   }
@@ -87,9 +88,50 @@ trait IncomeController extends FeatureLock {
   }
 
   //################################# Previous Taxable Gain Actions ##########################################
-  val previousTaxableGains = TODO
 
-  val submitPreviousTaxableGains = TODO
+  private val previousTaxableGainsPostAction = controllers.resident.shares.routes.IncomeController.submitPreviousTaxableGains
+
+  def buildPreviousTaxableGainsBackUrl(implicit hc: HeaderCarrier): Future[String] = {
+
+    for {
+      hasOtherProperties <- otherPropertiesResponse
+      hasAllowableLosses <- allowableLossesCheck
+      displayAnnualExemptAmount <- displayAnnualExemptAmountCheck(hasOtherProperties, hasAllowableLosses)
+      hasLossesBroughtForward <- lossesBroughtForwardResponse
+    } yield (displayAnnualExemptAmount, hasLossesBroughtForward)
+
+    match {
+      case (true, _) => routes.DeductionsController.annualExemptAmount().url
+      case (false, true) => routes.DeductionsController.lossesBroughtForwardValue().url
+      case (false, false) => routes.DeductionsController.lossesBroughtForward().url
+    }
+  }
+
+  val previousTaxableGains = FeatureLockForRTTShares.async { implicit request =>
+
+    def routeRequest(backUrl: String): Future[Result] = {
+      calcConnector.fetchAndGetFormData[PreviousTaxableGainsModel](keystoreKeys.previousTaxableGains).map {
+        case Some(data) => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm.fill(data), backUrl, previousTaxableGainsPostAction, homeLink))
+        case None => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm, backUrl, previousTaxableGainsPostAction, homeLink))
+      }
+    }
+
+    for {
+      backUrl <- buildPreviousTaxableGainsBackUrl
+      finalResult <- routeRequest(backUrl)
+    } yield finalResult
+  }
+
+  val submitPreviousTaxableGains = FeatureLockForRTTShares.async { implicit request =>
+    previousTaxableGainsForm.bindFromRequest.fold(
+      errors => buildPreviousTaxableGainsBackUrl.flatMap(url =>
+        Future.successful(BadRequest(commonViews.previousTaxableGains(errors, url, previousTaxableGainsPostAction, homeLink)))),
+      success => {
+        calcConnector.saveFormData(keystoreKeys.previousTaxableGains, success)
+        Future.successful(Redirect(routes.IncomeController.currentIncome()))
+      }
+    )
+  }
 
 
   //################################# Current Income Actions ##########################################

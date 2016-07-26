@@ -39,8 +39,6 @@ object IncomeController extends IncomeController {
 
 trait IncomeController extends FeatureLock {
 
-  val homeLink = controllers.resident.properties.routes.GainController.disposalDate().toString
-
   val calcConnector: CalculatorConnector
 
   def otherPropertiesResponse(implicit hc: HeaderCarrier): Future[Boolean] = {
@@ -87,7 +85,11 @@ trait IncomeController extends FeatureLock {
     Future.successful(s"${disposalDateModel.year}-${disposalDateModel.month}-${disposalDateModel.day}")
   }
 
+  private val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
+
   //################################# Previous Taxable Gain Actions ##########################################
+  private val previousTaxableGainsPostAction = controllers.resident.properties.routes.IncomeController.submitPreviousTaxableGains()
+
   def buildPreviousTaxableGainsBackUrl(implicit hc: HeaderCarrier): Future[String] = {
 
     for {
@@ -108,8 +110,8 @@ trait IncomeController extends FeatureLock {
 
     def routeRequest(backUrl: String): Future[Result] = {
       calcConnector.fetchAndGetFormData[PreviousTaxableGainsModel](keystoreKeys.previousTaxableGains).map {
-        case Some(data) => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm.fill(data), backUrl))
-        case None => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm, backUrl))
+        case Some(data) => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm.fill(data), backUrl, previousTaxableGainsPostAction, homeLink))
+        case None => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm, backUrl, previousTaxableGainsPostAction, homeLink))
       }
     }
 
@@ -122,7 +124,8 @@ trait IncomeController extends FeatureLock {
   val submitPreviousTaxableGains = FeatureLockForRTT.async { implicit request =>
 
     previousTaxableGainsForm.bindFromRequest.fold(
-      errors => buildPreviousTaxableGainsBackUrl.flatMap(url => Future.successful(BadRequest(commonViews.previousTaxableGains(errors, url)))),
+      errors => buildPreviousTaxableGainsBackUrl.flatMap(url =>
+        Future.successful(BadRequest(commonViews.previousTaxableGains(errors, url, previousTaxableGainsPostAction, homeLink)))),
       success => {
         calcConnector.saveFormData(keystoreKeys.previousTaxableGains, success)
         Future.successful(Redirect(routes.IncomeController.currentIncome()))

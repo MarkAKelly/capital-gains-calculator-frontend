@@ -48,6 +48,7 @@ POST    /annual-exempt-amount             controllers.resident.shares.Deductions
 
 #Previous Taxable Gains Routes
 GET     /previous-taxable-gains           controllers.resident.shares.IncomeController.previousTaxableGains
+POST    /previous-taxable-gains           controllers.resident.shares.IncomeController.submitPreviousTaxableGains
 
 #Current Income Routes
 GET     /current-income                   controllers.resident.shares.IncomeController.currentIncome
