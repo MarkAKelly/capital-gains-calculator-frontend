@@ -1,0 +1,14 @@
+@import models.resident._
+@import models.resident.shares._
+@import views.html.calculation.resident._
+
+@(answers: GainAnswersModel, gain: BigDecimal, taxYear: TaxYearModel, navHomeLink: String)(implicit request: Request[_])
+
+@resident_main_template(
+    title = Messages("calc.resident.summary.title"),
+    backLink = Some(controllers.resident.shares.routes.GainController.acquisitionCosts().toString),
+    articleLayout = false,
+    homeLink = navHomeLink
+) {
+
+}
