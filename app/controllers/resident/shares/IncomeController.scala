@@ -18,7 +18,7 @@ package controllers.resident.shares
 
 import common.Dates
 import views.html.calculation.{resident => commonViews}
-import views.html.calculation.resident.properties.{income => views}
+import views.html.calculation.resident.shares.{income => views}
 import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
