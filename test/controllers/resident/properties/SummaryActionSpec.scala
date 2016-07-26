@@ -72,6 +72,9 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     when(mockCalculatorConnector.getTaxYear(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(taxYearModel))
 
+    when(mockCalculatorConnector.getFullAEA(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(BigDecimal(11100))))
+
     new SummaryController {
       override val calculatorConnector: CalculatorConnector = mockCalculatorConnector
     }

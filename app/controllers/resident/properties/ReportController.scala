@@ -45,6 +45,14 @@ trait ReportController extends FeatureLock {
     calcConnector.getTaxYear(formats.format(disposalDate))
   }
 
+  def getMaxAEA(taxYear: Int)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
+    calcConnector.getFullAEA(taxYear)
+  }
+
+  def taxYearStringToInteger (taxYear: String): Future[Int] = {
+    Future.successful((taxYear.take(2) + taxYear.takeRight(2)).toInt)
+  }
+
   val gainSummaryReport = FeatureLockForRTT.async { implicit request =>
     for {
       answers <- calcConnector.getPropertyGainAnswers
@@ -73,11 +81,13 @@ trait ReportController extends FeatureLock {
     for {
       answers <- calcConnector.getPropertyGainAnswers
       taxYear <- getTaxYear(answers.disposalDate)
+      taxYearInt <- taxYearStringToInteger(taxYear.get.calculationTaxYear)
+      maxAEA <- getMaxAEA(taxYearInt)(hc)
       grossGain <- calcConnector.calculateRttPropertyGrossGain(answers)
       deductionAnswers <- calcConnector.getPropertyDeductionAnswers
-      chargeableGain <- calcConnector.calculateRttPropertyChargeableGain(answers, deductionAnswers, BigDecimal(11100))
+      chargeableGain <- calcConnector.calculateRttPropertyChargeableGain(answers, deductionAnswers, maxAEA.get)
       incomeAnswers <- calcConnector.getPropertyIncomeAnswers
-      totalGain <- calcConnector.calculateRttPropertyTotalGainAndTax(answers, deductionAnswers, BigDecimal(11100), incomeAnswers)
+      totalGain <- calcConnector.calculateRttPropertyTotalGainAndTax(answers, deductionAnswers, maxAEA.get, incomeAnswers)
     } yield {
       PdfGenerator.ok(views.finalSummaryReport(answers,
         deductionAnswers,
