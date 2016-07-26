@@ -23,10 +23,6 @@ POST    /acquisition-value                controllers.resident.shares.GainContro
 GET     /acquisition-costs                controllers.resident.shares.GainController.acquisitionCosts
 POST    /acquisition-costs                controllers.resident.shares.GainController.submitAcquisitionCosts
 
-#Summary Routes
-GET     /summary                          controllers.resident.shares.SummaryController.summary
-
-
 #Other Disposals Routes
 GET     /other-disposals                  controllers.resident.shares.DeductionsController.otherDisposals
 
