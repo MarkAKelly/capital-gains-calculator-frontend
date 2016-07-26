@@ -45,14 +45,14 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
 
   "The URL for the resident/shares disposal value Action" should {
     "be equal to /calculate-your-capital-gains/resident/shares/disposal-value" in {
-      val path = controllers.resident.shares.routes.GainController.disposalValue.toString()
+      val path = controllers.resident.shares.routes.GainController.disposalValue().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/shares/disposal-value"
     }
   }
 
   "The URL for the resident/shares submit disposal value Action" should {
     "be equal to /calculate-your-capital-gains/resident/shares/disposal-value" in {
-      val path = controllers.resident.shares.routes.GainController.submitDisposalValue.toString()
+      val path = controllers.resident.shares.routes.GainController.submitDisposalValue().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/shares/disposal-value"
     }
   }
@@ -68,6 +68,20 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     "be equal to /calculate-your-capital-gains/resident/shares/disposal-costs" in {
       val path = controllers.resident.shares.routes.GainController.submitDisposalCosts().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/shares/disposal-costs"
+    }
+  }
+
+  "The URL for the resident/shares acquisition value Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/acquisition-value" in {
+      val path = controllers.resident.shares.routes.GainController.acquisitionValue().toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/acquisition-value"
+    }
+  }
+
+  "The URL for the resident/shares submit acquisition value Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/acquisition-value" in {
+      val path = controllers.resident.shares.routes.GainController.submitAcquisitionValue().toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/acquisition-value"
     }
   }
 

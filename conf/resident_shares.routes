@@ -17,8 +17,10 @@ POST    /disposal-costs                   controllers.resident.shares.GainContro
 
 #Acquisition Value or Market Value Routes
 GET     /acquisition-value                controllers.resident.shares.GainController.acquisitionValue
+POST    /acquisition-value                controllers.resident.shares.GainController.submitAcquisitionValue
 
 #Acquisition Costs Routes
+GET     /acquisition-costs                controllers.resident.shares.GainController.acquisitionCosts
 
 #Summary Routes
 GET     /summary                          controllers.resident.shares.SummaryController.summary
