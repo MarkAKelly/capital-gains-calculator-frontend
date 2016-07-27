@@ -35,7 +35,7 @@ trait SummaryController extends FeatureLock {
 
   val calculatorConnector: CalculatorConnector
 
-//  private val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
+  private val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
 
   val summary = FeatureLockForRTTShares.async { implicit request =>
 
@@ -47,7 +47,7 @@ trait SummaryController extends FeatureLock {
     def routeRequest(totalGainAnswers: GainAnswersModel,
                      grossGain: BigDecimal,
                      taxYear: Option[TaxYearModel])(implicit hc: HeaderCarrier): Future[Result] = {
-      Future.successful(Ok(views.gainSummary(totalGainAnswers, grossGain, taxYear.get)))
+      Future.successful(Ok(views.gainSummary(totalGainAnswers, grossGain, taxYear.get, homeLink)))
     }
     for {
       answers <- calculatorConnector.getShareGainAnswers

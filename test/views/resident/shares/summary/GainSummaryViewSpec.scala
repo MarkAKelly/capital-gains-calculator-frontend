@@ -41,7 +41,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
-    lazy val view = views.gainSummary(testModel, -2000, taxYearModel)(fakeRequest)
+    lazy val view = views.gainSummary(testModel, -2000, taxYearModel, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -63,6 +63,10 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       s"has the text '${commonMessages.calcBaseBack}'" in {
         backLink.text shouldBe commonMessages.calcBaseBack
       }
+    }
+
+    "have a home link to 'home-link'" in {
+      doc.getElementById("homeNavHref").attr("href") shouldEqual "home-link"
     }
 
     s"have a page heading" which {
@@ -234,7 +238,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       30,
       40
     )
-    lazy val view = views.gainSummary(testModel, -2000, taxYearModel)(fakeRequest)
+    lazy val view = views.gainSummary(testModel, -2000, taxYearModel, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display the what to do next section" in {
@@ -280,7 +284,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       30,
       40
     )
-    lazy val view = views.gainSummary(testModel, 0, taxYearModel)(fakeRequest)
+    lazy val view = views.gainSummary(testModel, 0, taxYearModel, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display the what to do next section" in {
@@ -307,7 +311,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       30,
       40
     )
-    lazy val view = views.gainSummary(testModel,-2000, taxYearModel)(fakeRequest)
+    lazy val view = views.gainSummary(testModel,-2000, taxYearModel, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "does not display the what to do next content" in {
@@ -327,7 +331,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
 
     lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
 
-    lazy val view = views.gainSummary(testModel, -2000, taxYearModel)(fakeRequest)
+    lazy val view = views.gainSummary(testModel, -2000, taxYearModel, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have the class notice-wrapper" in {
