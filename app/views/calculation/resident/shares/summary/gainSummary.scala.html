@@ -14,7 +14,7 @@
     backLink = Some(controllers.resident.shares.routes.GainController.acquisitionCosts().toString),
     articleLayout = false,
     homeLink = controllers.resident.shares.routes.GainController.disposalDate().toString
-) {
+    ) {
 
     <h1 class="heading-xlarge">
         <span class="pre-heading">@Messages("calc.resident.summary.pageHeading")</span>
@@ -50,11 +50,11 @@
         @summarySectionHeaderHelper(Messages("calc.resident.summary.yourAnswersHeading"))
 
         <!-- Data Rows-->
-        @summaryDateRowHelper("disposalDate",Messages("calc.resident.disposalDate.question"),answers.disposalDate,Some(routes.disposalDate().toString))
-        @summaryNumericRowHelper("disposalValue",Messages("calc.resident.disposal.value.title"),answers.disposalValue,Some(routes.disposalValue().toString))
-        @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.disposalCosts.title"),answers.disposalCosts,Some(routes.disposalCosts().toString))
-        @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),answers.acquisitionValue,Some(routes.acquisitionValue().toString))
-        @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),answers.acquisitionCosts,Some(routes.acquisitionCosts().toString))
+        @summaryDateRowHelper("disposalDate",Messages("calc.resident.shares.disposalDate.question"),answers.disposalDate,Some(routes.disposalDate().toString))
+        @summaryNumericRowHelper("disposalValue",Messages("calc.resident.shares.disposalValue.question"),answers.disposalValue,Some(routes.disposalValue().toString))
+        @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.shares.disposalCosts.question"),answers.disposalCosts,Some(routes.disposalCosts().toString))
+        @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.shares.acquisitionValue.question"),answers.acquisitionValue,Some(routes.acquisitionValue().toString))
+        @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.shares.acquisitionCosts.title"),answers.acquisitionCosts,Some(routes.acquisitionCosts().toString))
     </section>
 
     @if(dateInsideAcceptedTaxYears(getDay(answers.disposalDate), getMonth(answers.disposalDate), getYear(answers.disposalDate))) {

@@ -24,6 +24,8 @@ import models.resident.TaxYearModel
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.{resident => views}
+import controllers.resident.shares.routes
+import controllers.resident.shares.DeductionsController
 
 class LossesBroughtForwardValueViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
@@ -32,7 +34,7 @@ class LossesBroughtForwardValueViewSpec extends UnitSpec with WithFakeApplicatio
     "provided with a date in the 2015/16 tax year" should {
 
       lazy val taxYear = TaxYearModel("2015/16", true, "2015/16")
-      lazy val view = views.lossesBroughtForwardValue(lossesBroughtForwardValueForm, taxYear)(fakeRequest)
+      lazy val view = views.lossesBroughtForwardValue(lossesBroughtForwardValueForm, taxYear, "back-link", "home-link", routes.DeductionsController.submitLossesBroughtForwardValue())(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
 
       "have a charset of UTF-8" in {
@@ -41,6 +43,10 @@ class LossesBroughtForwardValueViewSpec extends UnitSpec with WithFakeApplicatio
 
       s"have a title ${messages.title("2015/16")}" in {
         doc.title() shouldBe messages.title("2015/16")
+      }
+
+      "have a home link to 'home-link'" in {
+        doc.getElementById("homeNavHref").attr("href") shouldEqual "home-link"
       }
 
       "have a back button that" should {
@@ -55,8 +61,8 @@ class LossesBroughtForwardValueViewSpec extends UnitSpec with WithFakeApplicatio
           backLink.hasClass("back-link") shouldBe true
         }
 
-        "have a link to Disposal Value" in {
-          backLink.attr("href") shouldBe controllers.resident.properties.routes.DeductionsController.lossesBroughtForward().toString
+        "have a link to 'back-link'" in {
+          backLink.attr("href") shouldBe "back-link"
         }
       }
 
@@ -76,8 +82,8 @@ class LossesBroughtForwardValueViewSpec extends UnitSpec with WithFakeApplicatio
       "have a form" which {
         lazy val form = doc.getElementsByTag("form")
 
-        s"has the action '${controllers.resident.properties.routes.DeductionsController.submitLossesBroughtForwardValue().toString}'" in {
-          form.attr("action") shouldBe controllers.resident.properties.routes.DeductionsController.submitLossesBroughtForwardValue().toString
+        s"has the action '${routes.DeductionsController.submitLossesBroughtForwardValue().url}'" in {
+          form.attr("action") shouldBe routes.DeductionsController.submitLossesBroughtForwardValue().url
         }
 
         "has the method of POST" in {
@@ -144,7 +150,7 @@ class LossesBroughtForwardValueViewSpec extends UnitSpec with WithFakeApplicatio
     "provided with a date in the 2014/15 tax year" should {
 
       lazy val taxYear = TaxYearModel("2014/15", false, "2015/16")
-      lazy val view = views.lossesBroughtForwardValue(lossesBroughtForwardValueForm, taxYear)(fakeRequest)
+      lazy val view = views.lossesBroughtForwardValue(lossesBroughtForwardValueForm, taxYear, "back-link", "home-link", routes.DeductionsController.submitLossesBroughtForwardValue())(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
 
       s"have a title ${messages.title("2014/15")}" in {
@@ -182,7 +188,7 @@ class LossesBroughtForwardValueViewSpec extends UnitSpec with WithFakeApplicatio
   "Losses Brought Forward Value view with stored values" should {
     lazy val form = lossesBroughtForwardValueForm.bind(Map(("amount", "1000")))
     lazy val taxYear = TaxYearModel("2015/16", true, "2015/16")
-    lazy val view = views.lossesBroughtForwardValue(form, taxYear)(fakeRequest)
+    lazy val view = views.lossesBroughtForwardValue(form, taxYear, "back-link", "home-link", routes.DeductionsController.submitLossesBroughtForwardValue())(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have the value of 1000 auto-filled in the input" in {
@@ -194,7 +200,7 @@ class LossesBroughtForwardValueViewSpec extends UnitSpec with WithFakeApplicatio
   "Losses Brought Forward Value view with errors" should {
     lazy val form = lossesBroughtForwardValueForm.bind(Map(("amount", "")))
     lazy val taxYear = TaxYearModel("2015/16", true, "2015/16")
-    lazy val view = views.lossesBroughtForwardValue(form, taxYear)(fakeRequest)
+    lazy val view = views.lossesBroughtForwardValue(form, taxYear, "back-link", "home-link", routes.DeductionsController.submitLossesBroughtForwardValue())(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {

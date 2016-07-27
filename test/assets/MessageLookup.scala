@@ -219,6 +219,7 @@ object MessageLookup {
     val currentYearTitle = "How much do you expect your income to be in this tax year?"
     val currentYearQuestion = "How much do you expect your income to be in this tax year?"
     val helpText = "Include your salary and any other income, but not the money you made from selling the property."
+    val helpTextShares = "Include your salary and any other income, but not the money you made from selling the shares."
   }
 
   //Personal Allowance messages
@@ -235,5 +236,30 @@ object MessageLookup {
   //############ Shares messages ##############//
   object sharesDisposalDate {
     val title = "When did you sell or give away the shares?"
+  }
+
+  object sharesDisposalValue {
+    val title = "How much did you sell the shares for?"
+    val helpText = "Put the market value of the shares instead if you sold them for less than they were worth to help the buyer"
+  }
+
+
+  object sharesAcquisitionCosts {
+    val title = "How much did you pay in costs when you bought the shares?"
+    val helpText = "Costs include stockbroker fees and Stamp Duty tax"
+  }
+
+  object sharesDisposalCosts {
+    val title = "How much did you pay in costs when you sold the shares?"
+    val helpText = "For example, stockbroker fees"
+  }
+
+  object sharesAcquisitionValue {
+    val title = "How much did you pay for the shares?"
+    val bulletListTitle = "Put the market value of the shares instead if you:"
+    val bulletListOne = "inherited them"
+    val bulletListTwo = "got them from your employer"
+    val bulletListThree = "owned them before 1 April 1982"
+
   }
 }

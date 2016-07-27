@@ -9,18 +9,19 @@ GET     /outside-tax-years                controllers.resident.shares.GainContro
 
 #Disposal Value or Market Value Routes
 GET     /disposal-value                   controllers.resident.shares.GainController.disposalValue
+POST    /disposal-value                   controllers.resident.shares.GainController.submitDisposalValue
 
 #Disposal Costs Routes
 GET     /disposal-costs                   controllers.resident.shares.GainController.disposalCosts
+POST    /disposal-costs                   controllers.resident.shares.GainController.submitDisposalCosts
 
 #Acquisition Value or Market Value Routes
 GET     /acquisition-value                controllers.resident.shares.GainController.acquisitionValue
+POST    /acquisition-value                controllers.resident.shares.GainController.submitAcquisitionValue
 
 #Acquisition Costs Routes
 GET     /acquisition-costs                controllers.resident.shares.GainController.acquisitionCosts
-
-#Summary Routes
-GET     /summary                          controllers.resident.shares.SummaryController.summary
+POST    /acquisition-costs                controllers.resident.shares.GainController.submitAcquisitionCosts
 
 #Other Disposals Routes
 GET     /other-disposals                  controllers.resident.shares.DeductionsController.otherDisposals
@@ -31,24 +32,34 @@ POST    /allowable-losses                 controllers.resident.shares.Deductions
 
 #Allowable Losses Value Routes
 GET     /allowable-losses-value           controllers.resident.shares.DeductionsController.allowableLossesValue
+POST    /allowable-losses-value           controllers.resident.shares.DeductionsController.submitAllowableLossesValue
 
 #Losses Brought Forward Routes
 GET     /losses-brought-forward           controllers.resident.shares.DeductionsController.lossesBroughtForward
+POST    /losses-brought-forward           controllers.resident.shares.DeductionsController.submitLossesBroughtForward
+
+#Losses Brought Forward Value Routes
+GET     /losses-brought-forward-value     controllers.resident.shares.DeductionsController.lossesBroughtForwardValue
+POST    /losses-brought-forward-value     controllers.resident.shares.DeductionsController.submitLossesBroughtForwardValue
 
 #Annual Exempt Amount Routes
 GET     /annual-exempt-amount             controllers.resident.shares.DeductionsController.annualExemptAmount
 POST    /annual-exempt-amount             controllers.resident.shares.DeductionsController.submitAnnualExemptAmount
 
-#Losses Brought Forward Value Routes
-GET     /losses-brought-forward-value     controllers.resident.shares.DeductionsController.lossesBroughtForwardValue
-
 #Previous Taxable Gains Routes
 GET     /previous-taxable-gains           controllers.resident.shares.IncomeController.previousTaxableGains
+POST    /previous-taxable-gains           controllers.resident.shares.IncomeController.submitPreviousTaxableGains
 
 #Current Income Routes
 GET     /current-income                   controllers.resident.shares.IncomeController.currentIncome
+POST    /current-income                   controllers.resident.shares.IncomeController.submitCurrentIncome
 
 #Personal Allowance Routes
+GET     /personal-allowance               controllers.resident.shares.IncomeController.personalAllowance
+POST    /personal-allowance               controllers.resident.shares.IncomeController.submitPersonalAllowance
+
+#Summary Routes
+GET     /summary                          controllers.resident.shares.SummaryController.summary
 
 #Gain Summary PDF Routes
 

@@ -3,9 +3,12 @@
 @import views.html.helpers._
 @import views.html.calculation.resident._
 
-@(disposalDateForm: Form[DisposalDateModel])(implicit request: Request[_])
+@(disposalDateForm: Form[DisposalDateModel], navHomeLink: String)(implicit request: Request[_])
 
-@resident_shares_main_template(Messages("calc.resident.shares.disposalDate.question")){
+@resident_main_template(
+    Messages("calc.resident.shares.disposalDate.question"),
+    homeLink = navHomeLink
+) {
 
     @errorSummary(disposalDateForm, "disposal-date", "disposalDateDay")
 
@@ -13,12 +16,12 @@
 
     @form(action = controllers.resident.shares.routes.GainController.submitDisposalDate){
 
-    @formInlineDateInput(disposalDateForm,
-                        "disposalDate",
-                        Messages("calc.resident.shares.disposalDate.question"),
-                        '_visually_hidden -> true)
+        @formInlineDateInput(disposalDateForm,
+                            "disposalDate",
+                            Messages("calc.resident.shares.disposalDate.question"),
+                            '_visually_hidden -> true)
 
-    <button id="continue-button" class="button">@Messages("calc.base.button.continue")</button>
+        <button id="continue-button" class="button">@Messages("calc.base.button.continue")</button>
 
     }
 

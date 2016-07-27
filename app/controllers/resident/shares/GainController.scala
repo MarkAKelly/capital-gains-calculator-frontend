@@ -21,12 +21,16 @@ import java.util.UUID
 import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
-import play.api.mvc.{Action, Result}
+import play.api.mvc.Result
 import uk.gov.hmrc.play.http.SessionKeys
 import scala.concurrent.Future
 import views.html.calculation.{resident => commonViews}
 import views.html.calculation.resident.shares.{gain => views}
 import forms.resident.DisposalDateForm._
+import forms.resident.DisposalCostsForm._
+import forms.resident.DisposalValueForm._
+import forms.resident.AcquisitionCostsForm._
+import forms.resident.AcquisitionValueForm._
 import models.resident._
 
 object GainController extends GainController {
@@ -37,21 +41,23 @@ trait GainController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
 
+  private val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
+
   //################# Disposal Date Actions ####################
   val disposalDate = FeatureLockForRTTShares.asyncNoTimeout { implicit request =>
     if (request.session.get(SessionKeys.sessionId).isEmpty) {
       val sessionId = UUID.randomUUID.toString
-      Future.successful(Ok(views.disposalDate(disposalDateForm)).withSession(request.session + (SessionKeys.sessionId -> s"session-$sessionId")))
+      Future.successful(Ok(views.disposalDate(disposalDateForm, homeLink)).withSession(request.session + (SessionKeys.sessionId -> s"session-$sessionId")))
     }
     else {
       calcConnector.fetchAndGetFormData[DisposalDateModel](keystoreKeys.disposalDate).map {
-        case Some(data) => Ok(views.disposalDate(disposalDateForm.fill(data)))
-        case None => Ok(views.disposalDate(disposalDateForm))
+        case Some(data) => Ok(views.disposalDate(disposalDateForm.fill(data), homeLink))
+        case None => Ok(views.disposalDate(disposalDateForm, homeLink))
       }
     }
   }
 
-  val submitDisposalDate = Action.async { implicit request =>
+  val submitDisposalDate = FeatureLockForRTTShares.async { implicit request =>
 
     def routeRequest(taxYearResult: Option[TaxYearModel]): Future[Result] = {
       if (taxYearResult.isDefined && !taxYearResult.get.isValidYear) Future.successful(Redirect(routes.GainController.outsideTaxYears()))
@@ -59,7 +65,7 @@ trait GainController extends FeatureLock {
     }
 
     disposalDateForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.disposalDate(errors))),
+      errors => Future.successful(BadRequest(views.disposalDate(errors, homeLink))),
       success => {
         for {
           save <- calcConnector.saveFormData(keystoreKeys.disposalDate, success)
@@ -79,22 +85,93 @@ trait GainController extends FeatureLock {
       Ok(commonViews.outsideTaxYear(
         taxYear = taxYear.get,
         navBackLink = routes.GainController.disposalDate().url,
-        navHomeLink = routes.GainController.disposalDate().url,
+        navHomeLink = homeLink,
         continueUrl = routes.GainController.disposalValue().url
       ))
     }
   }
 
   //################ Disposal Value Actions ######################
-  val disposalValue = TODO
+  val disposalValue = FeatureLockForRTTShares.async { implicit request =>
+    calcConnector.fetchAndGetFormData[DisposalValueModel](keystoreKeys.disposalValue).map {
+      case Some(data) => Ok(views.disposalValue(disposalValueForm.fill(data), homeLink))
+      case None => Ok(views.disposalValue(disposalValueForm, homeLink))
+    }
+  }
 
-  //################ Disposal Costs Actions ######################
-  val disposalCosts = TODO
+  val submitDisposalValue = FeatureLockForRTTShares.async { implicit request =>
+    disposalValueForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.disposalValue(errors, homeLink))),
+      success => {
+        calcConnector.saveFormData[DisposalValueModel](keystoreKeys.disposalValue, success)
+        Future.successful(Redirect(routes.GainController.disposalCosts()))
+      }
+    )
+  }
 
-  //################ Acquisition Value Actions ######################
-  val acquisitionValue = TODO
+  //################# Disposal Costs Actions ########################
+  val disposalCosts = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[DisposalCostsModel](keystoreKeys.disposalCosts).map {
+      case Some(data) => Ok(views.disposalCosts(disposalCostsForm.fill(data), homeLink))
+      case None => Ok(views.disposalCosts(disposalCostsForm, homeLink))
+    }
+  }
 
-  //################ Acquisition Costs Actions ######################
-  val acquisitionCosts = TODO
+  val submitDisposalCosts = FeatureLockForRTT.async { implicit request =>
+    disposalCostsForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.disposalCosts(errors, homeLink))),
+      success => {
+        calcConnector.saveFormData(keystoreKeys.disposalCosts, success)
+        Future.successful(Redirect(routes.GainController.acquisitionValue()))}
+    )
+  }
 
+  //################# Acquisition Value Actions ########################
+  val acquisitionValue = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[AcquisitionValueModel](keystoreKeys.acquisitionValue).map {
+      case Some(data) => Ok(views.acquisitionValue(acquisitionValueForm.fill(data), homeLink))
+      case None => Ok(views.acquisitionValue(acquisitionValueForm, homeLink))
+    }
+  }
+
+  val submitAcquisitionValue = FeatureLockForRTT.async { implicit request =>
+    acquisitionValueForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.acquisitionValue(errors, homeLink))),
+      success => {
+        calcConnector.saveFormData(keystoreKeys.acquisitionValue, success)
+        Future.successful(Redirect(routes.GainController.acquisitionCosts()))
+      }
+    )
+  }
+
+  //################# Acquisition Costs Actions ########################
+
+  private val acquisitionCostsBackLink = Some(controllers.resident.properties.routes.GainController.acquisitionValue().toString)
+
+  val acquisitionCosts = FeatureLockForRTTShares.async { implicit request =>
+    calcConnector.fetchAndGetFormData[AcquisitionCostsModel](keystoreKeys.acquisitionCosts).map {
+      case Some(data) => Ok(views.acquisitionCosts(acquisitionCostsForm.fill(data), acquisitionCostsBackLink, homeLink))
+      case None => Ok(views.acquisitionCosts(acquisitionCostsForm, acquisitionCostsBackLink, homeLink))
+    }
+  }
+
+  val submitAcquisitionCosts = FeatureLockForRTTShares.async { implicit request =>
+
+    def routeRequest(totalGain: BigDecimal): Future[Result] = {
+      if (totalGain > 0) Future.successful(Redirect(routes.DeductionsController.otherDisposals()))
+      else Future.successful(Redirect(routes.SummaryController.summary()))
+    }
+
+    acquisitionCostsForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.acquisitionCosts(errors, acquisitionCostsBackLink, homeLink))),
+      success => {
+        for {
+          save <- calcConnector.saveFormData(keystoreKeys.acquisitionCosts, success)
+          answers <- calcConnector.getShareGainAnswers
+          grossGain <- calcConnector.calculateRttShareGrossGain(answers)
+          route <- routeRequest(grossGain)
+        } yield route
+      }
+    )
+  }
 }

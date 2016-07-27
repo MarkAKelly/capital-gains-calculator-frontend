@@ -29,6 +29,7 @@ import models.resident._
 import models.resident.income._
 import play.api.mvc.Result
 import uk.gov.hmrc.play.http.HeaderCarrier
+import play.api.data.Form
 
 import scala.concurrent.Future
 
@@ -84,7 +85,11 @@ trait IncomeController extends FeatureLock {
     Future.successful(s"${disposalDateModel.year}-${disposalDateModel.month}-${disposalDateModel.day}")
   }
 
+  private val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
+
   //################################# Previous Taxable Gain Actions ##########################################
+  private val previousTaxableGainsPostAction = controllers.resident.properties.routes.IncomeController.submitPreviousTaxableGains()
+
   def buildPreviousTaxableGainsBackUrl(implicit hc: HeaderCarrier): Future[String] = {
 
     for {
@@ -105,8 +110,8 @@ trait IncomeController extends FeatureLock {
 
     def routeRequest(backUrl: String): Future[Result] = {
       calcConnector.fetchAndGetFormData[PreviousTaxableGainsModel](keystoreKeys.previousTaxableGains).map {
-        case Some(data) => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm.fill(data), backUrl))
-        case None => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm, backUrl))
+        case Some(data) => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm.fill(data), backUrl, previousTaxableGainsPostAction, homeLink))
+        case None => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm, backUrl, previousTaxableGainsPostAction, homeLink))
       }
     }
 
@@ -119,7 +124,8 @@ trait IncomeController extends FeatureLock {
   val submitPreviousTaxableGains = FeatureLockForRTT.async { implicit request =>
 
     previousTaxableGainsForm.bindFromRequest.fold(
-      errors => buildPreviousTaxableGainsBackUrl.flatMap(url => Future.successful(BadRequest(commonViews.previousTaxableGains(errors, url)))),
+      errors => buildPreviousTaxableGainsBackUrl.flatMap(url =>
+        Future.successful(BadRequest(commonViews.previousTaxableGains(errors, url, previousTaxableGainsPostAction, homeLink)))),
       success => {
         calcConnector.saveFormData(keystoreKeys.previousTaxableGains, success)
         Future.successful(Redirect(routes.IncomeController.currentIncome()))
@@ -192,12 +198,20 @@ trait IncomeController extends FeatureLock {
     Future.successful(Dates.taxYearStringToInteger(taxYear))
   }
 
+  private val backLinkPersonalAllowance = Some(controllers.resident.properties.routes.IncomeController.currentIncome().toString)
+  private val postActionPersonalAllowance = controllers.resident.properties.routes.IncomeController.submitPersonalAllowance()
+
   val personalAllowance = FeatureLockForRTT.async { implicit request =>
-    def routeRequest(taxYearModel: TaxYearModel, standardPA: BigDecimal): Future[Result] = {
+
+    def fetchKeystorePersonalAllowance(): Future[Form[PersonalAllowanceModel]] = {
       calcConnector.fetchAndGetFormData[PersonalAllowanceModel](keystoreKeys.personalAllowance).map {
-        case Some(data) => Ok(commonViews.personalAllowance(personalAllowanceForm().fill(data), taxYearModel, standardPA))
-        case None => Ok(commonViews.personalAllowance(personalAllowanceForm(), taxYearModel, standardPA))
+        case Some(data) => personalAllowanceForm().fill(data)
+        case _ => personalAllowanceForm()
       }
+    }
+
+    def routeRequest(taxYearModel: TaxYearModel, standardPA: BigDecimal, formData: Form[PersonalAllowanceModel]): Future[Result] = {
+      Future.successful(Ok(commonViews.personalAllowance(formData, taxYearModel, standardPA, homeLink, postActionPersonalAllowance, backLinkPersonalAllowance)))
     }
     for {
       disposalDate <- getDisposalDate
@@ -205,7 +219,8 @@ trait IncomeController extends FeatureLock {
       taxYear <- calcConnector.getTaxYear(disposalDateString)
       year <- taxYearValue(taxYear.get.calculationTaxYear)
       standardPA <- getStandardPA(year, hc)
-      route <- routeRequest(taxYear.get, standardPA.get)
+      formData <- fetchKeystorePersonalAllowance()
+      route <- routeRequest(taxYear.get, standardPA.get, formData)
     } yield route
   }
 
@@ -217,7 +232,8 @@ trait IncomeController extends FeatureLock {
 
     def routeRequest(maxPA: BigDecimal, standardPA: BigDecimal, taxYearModel: TaxYearModel): Future[Result] = {
       personalAllowanceForm(maxPA).bindFromRequest.fold(
-        errors => Future.successful(BadRequest(commonViews.personalAllowance(errors, taxYearModel, standardPA))),
+        errors => Future.successful(BadRequest(commonViews.personalAllowance(errors, taxYearModel, standardPA, homeLink,
+          postActionPersonalAllowance, backLinkPersonalAllowance))),
         success => {
           calcConnector.saveFormData(keystoreKeys.personalAllowance, success)
           Future.successful(Redirect(routes.SummaryController.summary()))

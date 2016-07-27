@@ -56,6 +56,10 @@ class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with Fa
       }
     }
 
+    "have a home link to 'home-link'" in {
+      doc.getElementById("homeNavHref").attr("href") shouldEqual controllers.resident.properties.routes.GainController.disposalDate().toString()
+    }
+
     "have a H1 tag that" should {
 
       lazy val h1Tag = doc.select("H1")
