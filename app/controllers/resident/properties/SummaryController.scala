@@ -50,7 +50,7 @@ trait SummaryController extends FeatureLock {
       }
     }
 
-    def buildPreviousTaxableGainsBackUrl(chargeableGainAnswers: ChargeableGainAnswers)(implicit hc: HeaderCarrier): Future[String] = {
+    def buildDeductionsSummaryBackUrl(chargeableGainAnswers: ChargeableGainAnswers)(implicit hc: HeaderCarrier): Future[String] = {
       (displayAnnualExemptAmountCheck(chargeableGainAnswers.otherPropertiesModel.getOrElse(OtherPropertiesModel(false)).hasOtherProperties,
         chargeableGainAnswers.allowableLossesModel.getOrElse(AllowableLossesModel(false)).isClaiming,
         chargeableGainAnswers.allowableLossesValueModel)
@@ -117,7 +117,7 @@ trait SummaryController extends FeatureLock {
       maxAEA <- getMaxAEA(taxYearInt)
       grossGain <- calculatorConnector.calculateRttPropertyGrossGain(answers)
       deductionAnswers <- calculatorConnector.getPropertyDeductionAnswers
-      backLink <- buildPreviousTaxableGainsBackUrl(deductionAnswers)
+      backLink <- buildDeductionsSummaryBackUrl(deductionAnswers)
       chargeableGain <- chargeableGain(grossGain, answers, deductionAnswers, maxAEA.get)
       incomeAnswers <- calculatorConnector.getPropertyIncomeAnswers
       totalGain <- totalTaxableGain(chargeableGain, answers, deductionAnswers, incomeAnswers, maxAEA.get)

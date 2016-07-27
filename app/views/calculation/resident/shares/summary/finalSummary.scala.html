@@ -1,0 +1,15 @@
+@import models.resident._
+@import models.resident.shares._
+@import views.html.calculation.resident._
+
+@(totalGainAnswers: GainAnswersModel, deductionGainAnswers: DeductionGainAnswersModel,
+    incomeAnswers: IncomeAnswersModel, totalGainAndTax: TotalGainAndTaxOwedModel,
+    backUrl: String, taxYear: TaxYearModel, navHomeLink: String)(implicit request: Request[_])
+
+@resident_main_template(
+    title = Messages("calc.resident.summary.title"),
+    backLink = Some(backUrl),
+    articleLayout = false,
+    homeLink = navHomeLink
+    ) {
+}
