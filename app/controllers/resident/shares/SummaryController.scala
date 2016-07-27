@@ -18,6 +18,7 @@ package controllers.resident.shares
 
 import java.text.SimpleDateFormat
 import java.util.Date
+
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import models.resident._
@@ -25,6 +26,7 @@ import models.resident.shares.{DeductionGainAnswersModel, GainAnswersModel}
 import play.api.mvc.Result
 import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation.resident.shares.{summary => views}
+
 import scala.concurrent.Future
 
 object SummaryController extends SummaryController {
@@ -39,6 +41,14 @@ trait SummaryController extends FeatureLock {
 
   val summary = FeatureLockForRTTShares.async { implicit request =>
 
+    def getMaxAEA(taxYear: Int)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
+      calculatorConnector.getFullAEA(taxYear)
+    }
+
+    def taxYearStringToInteger(taxYear: String): Future[Int] = {
+      Future.successful((taxYear.take(2) + taxYear.takeRight(2)).toInt)
+    }
+
     def displayAnnualExemptAmountCheck(claimedOtherProperties: Boolean,
                                        claimedAllowableLosses: Boolean,
                                        allowableLossesValueModel: Option[AllowableLossesValueModel])(implicit hc: HeaderCarrier): Boolean = {
@@ -50,9 +60,10 @@ trait SummaryController extends FeatureLock {
     }
 
     def getChargeableGain(grossGain: BigDecimal,
-                       totalGainAnswers: GainAnswersModel,
-                       deductionGainAnswers: DeductionGainAnswersModel)(implicit hc: HeaderCarrier): Future[Option[ChargeableGainResultModel]] = {
-      if (grossGain > 0) calculatorConnector.calculateRttShareChargeableGain(totalGainAnswers, deductionGainAnswers, BigDecimal(11100))
+                          totalGainAnswers: GainAnswersModel,
+                          deductionGainAnswers: DeductionGainAnswersModel,
+                          maxAEA: BigDecimal)(implicit hc: HeaderCarrier): Future[Option[ChargeableGainResultModel]] = {
+      if (grossGain > 0) calculatorConnector.calculateRttShareChargeableGain(totalGainAnswers, deductionGainAnswers, maxAEA)
       else Future.successful(None)
     }
 
@@ -84,10 +95,12 @@ trait SummaryController extends FeatureLock {
     for {
       answers <- calculatorConnector.getShareGainAnswers
       taxYear <- getTaxYear(answers.disposalDate)
+      taxYearInt <- taxYearStringToInteger(taxYear.get.calculationTaxYear)
+      maxAEA <- getMaxAEA(taxYearInt)(hc)
       grossGain <- calculatorConnector.calculateRttShareGrossGain(answers)
       chargeableGainAnswers <- calculatorConnector.getShareDeductionAnswers
       backLink <- buildDeductionsSummaryBackUrl(chargeableGainAnswers)
-      chargeableGain <- getChargeableGain(grossGain, answers, chargeableGainAnswers)
+      chargeableGain <- getChargeableGain(grossGain, answers, chargeableGainAnswers, maxAEA.get)
       routeRequest <- routeRequest(answers, grossGain, chargeableGainAnswers, chargeableGain, backLink, taxYear)
     } yield routeRequest
   }
