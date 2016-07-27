@@ -80,11 +80,12 @@ trait SummaryController extends FeatureLock {
     }
 
     def getTotalTaxableGain(chargeableGain: Option[ChargeableGainResultModel] = None,
-                         totalGainAnswers: GainAnswersModel, deductionGainAnswers: DeductionGainAnswersModel,
-                         incomeAnswersModel: IncomeAnswersModel)(implicit hc: HeaderCarrier): Future[Option[TotalGainAndTaxOwedModel]] = {
+                            totalGainAnswers: GainAnswersModel, deductionGainAnswers: DeductionGainAnswersModel,
+                            incomeAnswersModel: IncomeAnswersModel,
+                            maxAEA: BigDecimal)(implicit hc: HeaderCarrier): Future[Option[TotalGainAndTaxOwedModel]] = {
       if (chargeableGain.isDefined && chargeableGain.get.chargeableGain > 0 &&
         incomeAnswersModel.personalAllowanceModel.isDefined && incomeAnswersModel.currentIncomeModel.isDefined) {
-        calculatorConnector.calculateRttShareTotalGainAndTax(totalGainAnswers, deductionGainAnswers, BigDecimal(11100), incomeAnswersModel)
+        calculatorConnector.calculateRttShareTotalGainAndTax(totalGainAnswers, deductionGainAnswers, maxAEA, incomeAnswersModel)
       }
       else Future.successful(None)
     }
@@ -122,7 +123,7 @@ trait SummaryController extends FeatureLock {
       backLink <- buildDeductionsSummaryBackUrl(deductionAnswers)
       chargeableGain <- getChargeableGain(grossGain, answers, deductionAnswers, maxAEA.get)
       incomeAnswers <- calculatorConnector.getShareIncomeAnswers
-      totalGain <- getTotalTaxableGain(chargeableGain, answers, deductionAnswers, incomeAnswers)
+      totalGain <- getTotalTaxableGain(chargeableGain, answers, deductionAnswers, incomeAnswers, maxAEA.get)
       routeRequest <- routeRequest(answers, grossGain, deductionAnswers, chargeableGain, incomeAnswers, totalGain, backLink, taxYear)
     } yield routeRequest
   }
