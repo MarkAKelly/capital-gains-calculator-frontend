@@ -479,3 +479,7 @@ calc.resident.shares.acquisitionCosts.help = Costs include stockbroker fees and 
 
 ## Current Income messages
 calc.resident.shares.currentIncome.helpText = Include your salary and any other income, but not the money you made from selling the shares.
+
+## Other Disposals messages
+calc.resident.shares.otherDisposals.bullet.one = UK residential properties
+calc.resident.shares.otherDisposals.bullet.three = other shares
