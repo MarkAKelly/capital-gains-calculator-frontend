@@ -32,14 +32,14 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
   "Summary view" should {
 
     val testModel = GainAnswersModel(
-      constructDate(12, 9, 1990),
+      constructDate(12, 12, 2019),
       10,
       20,
       30,
       40
     )
 
-    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+    lazy val taxYearModel = TaxYearModel("2019/20", false, "2016/17")
 
     lazy val view = views.gainSummary(testModel, -2000, taxYearModel, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
@@ -63,6 +63,10 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       s"has the text '${commonMessages.calcBaseBack}'" in {
         backLink.text shouldBe commonMessages.calcBaseBack
       }
+
+      s"has the url ${controllers.resident.shares.routes.GainController.acquisitionCosts().toString}" in {
+        backLink.attr("href") shouldEqual controllers.resident.shares.routes.GainController.acquisitionCosts().toString
+      }
     }
 
     "have a home link to 'home-link'" in {
@@ -80,8 +84,8 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       }
     }
 
-    "does not have a notice summary" in {
-      doc.select("div.notice-wrapper").isEmpty shouldBe true
+    "have a notice summary" in {
+      doc.select("div.notice-wrapper").isEmpty shouldBe false
     }
 
     s"have a section for the Calculation details" which {
@@ -95,7 +99,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       s"has a h2 tag" which {
 
         s"should have the title '${messages.calcDetailsHeadingDate("2015/16")}'" in {
-          doc.select("section#calcDetails h2").text shouldBe messages.calcDetailsHeadingDate("2015/16")
+          doc.select("section#calcDetails h2").text shouldBe messages.calcDetailsHeadingDate("2019/20")
         }
 
         "has the class 'heading-large'" in {
@@ -140,8 +144,8 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
           doc.select("#disposalDate-question").text shouldBe commonMessages.sharesDisposalDate.title
         }
 
-        "should have the value '12 September 1990'" in {
-          doc.select("#disposalDate-date span.bold-medium").text shouldBe "12 September 1990"
+        "should have the value '12 December 2019'" in {
+          doc.select("#disposalDate-date span.bold-medium").text shouldBe "12 December 2019"
         }
 
         s"should have a change link to ${routes.GainController.disposalDate().url}" in {
@@ -260,7 +264,7 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       }
 
       "should link to the what-you-pay-on-it govuk page" in {
-        doc.select("#whatToDoNextLink").attr("href") shouldEqual "https://www.gov.uk/tax-sell-property/what-you-pay-it-on"
+        doc.select("#whatToDoNextLink").attr("href") shouldEqual "https://www.gov.uk/capital-gains-tax/losses"
       }
 
       "have the externalLink attribute" in {
