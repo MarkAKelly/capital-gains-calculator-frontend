@@ -228,6 +228,25 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       "does not display the section for what to do next" in {
         doc.select("#whatToDoNext").text shouldEqual ""
       }
+
+      "display the save as PDF Button" which {
+
+        "should render only one button" in {
+          doc.select("a.save-pdf-button").size() shouldEqual 1
+        }
+
+        "with the class save-pdf-button" in {
+          doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
+        }
+
+        s"with an href to ${controllers.resident.shares.routes.ReportController.gainSummaryReport.toString}" in {
+          doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/gain-report"
+        }
+
+        s"have the text ${messages.saveAsPdf}" in {
+          doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
+        }
+      }
     }
   }
 
@@ -273,6 +292,25 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
 
       "has a visually hidden span with the text opens in a new tab" in {
         doc.select("span#opensInANewTab").text shouldEqual commonMessages.calcBaseExternalLink
+      }
+    }
+
+    "display the save as PDF Button" which {
+
+      "should render only one button" in {
+        doc.select("a.save-pdf-button").size() shouldEqual 1
+      }
+
+      "with the class save-pdf-button" in {
+        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
+      }
+
+      s"with an href to ${controllers.resident.shares.routes.ReportController.gainSummaryReport.toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/gain-report"
+      }
+
+      s"have the text ${messages.saveAsPdf}" in {
+        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
       }
     }
   }
