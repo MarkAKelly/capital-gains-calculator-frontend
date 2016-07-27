@@ -44,7 +44,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     chargeableGainAnswers: DeductionGainAnswersModel,
     chargeableGainResultModel: Option[ChargeableGainResultModel] = None,
     taxYearModel: Option[TaxYearModel]
-    ): SummaryController = {
+  ): SummaryController = {
 
     lazy val mockCalculatorConnector = mock[CalculatorConnector]
 
@@ -62,6 +62,9 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
 
     when(mockCalculatorConnector.getTaxYear(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(taxYearModel))
+
+    when(mockCalculatorConnector.getFullAEA(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(BigDecimal(11100))))
 
     new SummaryController {
       override val calculatorConnector: CalculatorConnector = mockCalculatorConnector
@@ -250,7 +253,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     }
 
     "return you to the session timeout view" in {
-      redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+      redirectLocation(result).get should include("/calculate-your-capital-gains/session-timeout")
     }
   }
 }
