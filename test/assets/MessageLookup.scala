@@ -163,7 +163,6 @@ object MessageLookup {
     val helpTwo = "antiques"
     val helpThree = "other UK residential properties"
     def errorSelect(input: String) = s"Tell us if you sold or gave away anything else that's covered by Capital Gains Tax in the $input tax year"
-
   }
 
   //Allowable Losses Value messages
@@ -243,7 +242,6 @@ object MessageLookup {
     val helpText = "Put the market value of the shares instead if you sold them for less than they were worth to help the buyer"
   }
 
-
   object sharesAcquisitionCosts {
     val title = "How much did you pay in costs when you bought the shares?"
     val helpText = "Costs include stockbroker fees and Stamp Duty tax"
@@ -260,6 +258,10 @@ object MessageLookup {
     val bulletListOne = "inherited them"
     val bulletListTwo = "got them from your employer"
     val bulletListThree = "owned them before 1 April 1982"
+  }
 
+  object sharesOtherDisposals {
+    val helpOne = "UK residential properties"
+    val helpThree = "other shares"
   }
 }

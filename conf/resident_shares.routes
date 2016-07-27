@@ -25,6 +25,7 @@ POST    /acquisition-costs                controllers.resident.shares.GainContro
 
 #Other Disposals Routes
 GET     /other-disposals                  controllers.resident.shares.DeductionsController.otherDisposals
+POST    /other-disposals                  controllers.resident.shares.DeductionsController.submitOtherDisposals
 
 #Allowable Losses Routes
 GET     /allowable-losses                 controllers.resident.shares.DeductionsController.allowableLosses

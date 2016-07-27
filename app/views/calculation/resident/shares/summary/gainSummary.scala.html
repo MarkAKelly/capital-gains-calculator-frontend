@@ -1,5 +1,10 @@
+@import views.html.helpers.resident._
+@import models.SummaryDataItemModel
 @import models.resident._
 @import models.resident.shares._
+@import common.Dates._
+@import constructors.resident.SummaryConstructor._
+@import controllers.resident.shares.routes.{GainController => routes}
 @import views.html.calculation.resident._
 
 @(answers: GainAnswersModel, gain: BigDecimal, taxYear: TaxYearModel, navHomeLink: String)(implicit request: Request[_])
@@ -9,6 +14,68 @@
     backLink = Some(controllers.resident.shares.routes.GainController.acquisitionCosts().toString),
     articleLayout = false,
     homeLink = navHomeLink
-) {
+    ) {
 
+    <h1 class="heading-xlarge">
+        <span class="pre-heading">@Messages("calc.resident.summary.pageHeading")</span>
+        &pound;0.00
+    </h1>
+
+    @{if (!taxYear.isValidYear) {
+        <div class="notice-wrapper">
+            <div class="notice">
+                <i class="icon icon-important">
+                    <span class="visuallyhidden">{Messages("calc.resident.summary.warning")}</span>
+                </i>
+                <strong class="bold-small">
+                    {Messages("calc.resident.summary.dateWarning", taxYear.calculationTaxYear)}
+                </strong>
+            </div>
+        </div>
+        }
+    }
+
+    <!-- Calculation Details Section -->
+    <section id="calcDetails">
+        <!-- Header -->
+        @summarySectionHeaderHelper(Messages("calc.resident.summary.calcDetailsHeadingDate", taxYear.taxYearSupplied))
+
+        <!-- Data Rows -->
+        @summaryNumericRowHelper("gain",gainMessage(gain),gain)
+    </section>
+
+    <!-- Your Answers Section -->
+    <section id="yourAnswers">
+        <!-- Header -->
+        @summarySectionHeaderHelper(Messages("calc.resident.summary.yourAnswersHeading"))
+
+        <!-- Data Rows-->
+        @summaryDateRowHelper("disposalDate",Messages("calc.resident.shares.disposalDate.question"),answers.disposalDate,Some(routes.disposalDate().toString))
+        @summaryNumericRowHelper("disposalValue",Messages("calc.resident.shares.disposalValue.question"),answers.disposalValue,Some(routes.disposalValue().toString))
+        @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.shares.disposalCosts.question"),answers.disposalCosts,Some(routes.disposalCosts().toString))
+        @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.shares.acquisitionValue.question"),answers.acquisitionValue,Some(routes.acquisitionValue().toString))
+        @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.shares.acquisitionCosts.title"),answers.acquisitionCosts,Some(routes.acquisitionCosts().toString))
+    </section>
+
+    @if(dateInsideAcceptedTaxYears(getDay(answers.disposalDate), getMonth(answers.disposalDate), getYear(answers.disposalDate))) {
+
+        @if(gain < 0) {
+            <section id="whatToDoNext" class="summary-underline summary-overline">
+                <h3 id="whatToDoNextTitle" class="bold-medium">@Messages("calc.resident.summary.whatNext")</h3>
+                <div id="whatToDoNextText" class="font-medium what-to-do-next-text">@Messages("calc.resident.summary.whatNext.youCan") <a id="whatToDoNextLink"
+                                                                                               class="external-link"
+                                                                                               rel="external"
+                                                                                               href="https://www.gov.uk/capital-gains-tax/losses"
+                                                                                               target="_blank"
+                                                                                               data-journey-click="help:govUK:CapitalGainsWhatToDoNext">@Messages("calc.resident.summary.whatNext.link")  <span id="opensInANewTab" class="visuallyhidden">@Messages("calc.base.externalLink")</span></a>
+                    @Messages("calc.resident.summary.whatNext.text")</div>
+
+            </section>
+        } else {
+            <section id="whatToDoNext" class="summary-underline summary-overline">
+                <h3 id="whatToDoNextNoLossTitle" class="bold-medium">@Messages("calc.resident.summary.whatNext")</h3>
+                <div id="whatToDoNextNoLossText" class="font-medium what-to-do-next-text">@Messages("calc.resident.summary.whatNext.noLossOrGain")</div>
+            </section>
+        }
+    }
 }

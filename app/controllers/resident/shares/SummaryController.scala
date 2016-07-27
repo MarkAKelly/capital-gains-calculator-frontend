@@ -21,7 +21,7 @@ import java.util.Date
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import models.resident._
-import models.resident.shares.GainAnswersModel
+import models.resident.shares.{DeductionGainAnswersModel, GainAnswersModel}
 import play.api.mvc.Result
 import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation.resident.shares.{summary => views}
@@ -39,6 +39,34 @@ trait SummaryController extends FeatureLock {
 
   val summary = FeatureLockForRTTShares.async { implicit request =>
 
+    def displayAnnualExemptAmountCheck(claimedOtherProperties: Boolean,
+                                       claimedAllowableLosses: Boolean,
+                                       allowableLossesValueModel: Option[AllowableLossesValueModel])(implicit hc: HeaderCarrier): Boolean = {
+      allowableLossesValueModel match {
+        case Some(result) if claimedAllowableLosses && claimedOtherProperties => result.amount == 0
+        case _ if claimedOtherProperties && !claimedAllowableLosses => true
+        case _ => false
+      }
+    }
+
+    def getChargeableGain(grossGain: BigDecimal,
+                       totalGainAnswers: GainAnswersModel,
+                       deductionGainAnswers: DeductionGainAnswersModel)(implicit hc: HeaderCarrier): Future[Option[ChargeableGainResultModel]] = {
+      if (grossGain > 0) calculatorConnector.calculateRttShareChargeableGain(totalGainAnswers, deductionGainAnswers, BigDecimal(11100))
+      else Future.successful(None)
+    }
+
+    def buildDeductionsSummaryBackUrl(deductionGainAnswers: DeductionGainAnswersModel)(implicit hc: HeaderCarrier): Future[String] = {
+      (displayAnnualExemptAmountCheck(deductionGainAnswers.otherPropertiesModel.getOrElse(OtherPropertiesModel(false)).hasOtherProperties,
+        deductionGainAnswers.allowableLossesModel.getOrElse(AllowableLossesModel(false)).isClaiming,
+        deductionGainAnswers.allowableLossesValueModel)
+        , deductionGainAnswers.broughtForwardModel.getOrElse(LossesBroughtForwardModel(false)).option) match {
+        case (true, _) => Future.successful(routes.DeductionsController.annualExemptAmount().url)
+        case (false, true) => Future.successful(routes.DeductionsController.lossesBroughtForwardValue().url)
+        case (false, false) => Future.successful(routes.DeductionsController.lossesBroughtForward().url)
+      }
+    }
+
     def getTaxYear(disposalDate: Date): Future[Option[TaxYearModel]] = {
       val formats = new SimpleDateFormat("yyyy-MM-dd")
       calculatorConnector.getTaxYear(formats.format(disposalDate))
@@ -46,14 +74,21 @@ trait SummaryController extends FeatureLock {
 
     def routeRequest(totalGainAnswers: GainAnswersModel,
                      grossGain: BigDecimal,
+                     deductionGainAnswers: DeductionGainAnswersModel,
+                     chargeableGain: Option[ChargeableGainResultModel],
+                     backUrl: String,
                      taxYear: Option[TaxYearModel])(implicit hc: HeaderCarrier): Future[Result] = {
-      Future.successful(Ok(views.gainSummary(totalGainAnswers, grossGain, taxYear.get, homeLink)))
+      if (grossGain > 0) Future.successful(Ok(views.deductionsSummary(totalGainAnswers, deductionGainAnswers, chargeableGain.get, backUrl, taxYear.get, homeLink)))
+      else Future.successful(Ok(views.gainSummary(totalGainAnswers, grossGain, taxYear.get, homeLink)))
     }
     for {
       answers <- calculatorConnector.getShareGainAnswers
       taxYear <- getTaxYear(answers.disposalDate)
       grossGain <- calculatorConnector.calculateRttShareGrossGain(answers)
-      routeRequest <- routeRequest(answers, grossGain, taxYear)
+      chargeableGainAnswers <- calculatorConnector.getShareDeductionAnswers
+      backLink <- buildDeductionsSummaryBackUrl(chargeableGainAnswers)
+      chargeableGain <- getChargeableGain(grossGain, answers, chargeableGainAnswers)
+      routeRequest <- routeRequest(answers, grossGain, chargeableGainAnswers, chargeableGain, backLink, taxYear)
     } yield routeRequest
   }
 }

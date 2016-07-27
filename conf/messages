@@ -462,13 +462,6 @@ calc.resident.shares.disposalDate.question = When did you sell or give away the 
 calc.resident.shares.disposalValue.question = How much did you sell the shares for?
 calc.resident.shares.disposalValue.helpText = Put the market value of the shares instead if you sold them for less than they were worth to help the buyer
 
-## Acquisition Costs messages
-calc.resident.shares.acquisitionCosts.title = How much did you pay in costs when you bought the shares?
-calc.resident.shares.acquisitionCosts.help = Costs include stockbroker fees and Stamp Duty tax
-
-## Current Income messages
-calc.resident.shares.currentIncome.helpText = Include your salary and any other income, but not the money you made from selling the shares.
-
 ## Disposal Costs messages
 calc.resident.shares.disposalCosts.question = How much did you pay in costs when you sold the shares?
 calc.resident.shares.disposalCosts.helpText = For example, stockbroker fees
@@ -480,3 +473,13 @@ calc.resident.shares.acquisitionValue.bulletListOne = inherited them
 calc.resident.shares.acquisitionValue.bulletListTwo = got them from your employer
 calc.resident.shares.acquisitionValue.bulletListThree = owned them before 1 April 1982
 
+## Acquisition Costs messages
+calc.resident.shares.acquisitionCosts.title = How much did you pay in costs when you bought the shares?
+calc.resident.shares.acquisitionCosts.help = Costs include stockbroker fees and Stamp Duty tax
+
+## Current Income messages
+calc.resident.shares.currentIncome.helpText = Include your salary and any other income, but not the money you made from selling the shares.
+
+## Other Disposals messages
+calc.resident.shares.otherDisposals.bullet.one = UK residential properties
+calc.resident.shares.otherDisposals.bullet.three = other shares
