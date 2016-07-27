@@ -39,12 +39,12 @@ trait SummaryController extends FeatureLock {
 
   val summary = FeatureLockForRTTShares.async { implicit request =>
 
-    def displayAnnualExemptAmountCheck(claimedOtherProperties: Boolean,
+    def displayAnnualExemptAmountCheck(claimedOtherDisposals: Boolean,
                                        claimedAllowableLosses: Boolean,
                                        allowableLossesValueModel: Option[AllowableLossesValueModel])(implicit hc: HeaderCarrier): Boolean = {
       allowableLossesValueModel match {
-        case Some(result) if claimedAllowableLosses && claimedOtherProperties => result.amount == 0
-        case _ if claimedOtherProperties && !claimedAllowableLosses => true
+        case Some(result) if claimedAllowableLosses && claimedOtherDisposals => result.amount == 0
+        case _ if claimedOtherDisposals && !claimedAllowableLosses => true
         case _ => false
       }
     }
@@ -67,6 +67,16 @@ trait SummaryController extends FeatureLock {
       }
     }
 
+    def getTotalTaxableGain(chargeableGain: Option[ChargeableGainResultModel] = None,
+                         totalGainAnswers: GainAnswersModel, deductionGainAnswers: DeductionGainAnswersModel,
+                         incomeAnswersModel: IncomeAnswersModel)(implicit hc: HeaderCarrier): Future[Option[TotalGainAndTaxOwedModel]] = {
+      if (chargeableGain.isDefined && chargeableGain.get.chargeableGain > 0 &&
+        incomeAnswersModel.personalAllowanceModel.isDefined && incomeAnswersModel.currentIncomeModel.isDefined) {
+        calculatorConnector.calculateRttShareTotalGainAndTax(totalGainAnswers, deductionGainAnswers, BigDecimal(11100), incomeAnswersModel)
+      }
+      else Future.successful(None)
+    }
+
     def getTaxYear(disposalDate: Date): Future[Option[TaxYearModel]] = {
       val formats = new SimpleDateFormat("yyyy-MM-dd")
       calculatorConnector.getTaxYear(formats.format(disposalDate))
@@ -76,19 +86,30 @@ trait SummaryController extends FeatureLock {
                      grossGain: BigDecimal,
                      deductionGainAnswers: DeductionGainAnswersModel,
                      chargeableGain: Option[ChargeableGainResultModel],
+                     incomeAnswers: IncomeAnswersModel,
+                     totalGainAndTax: Option[TotalGainAndTaxOwedModel],
                      backUrl: String,
                      taxYear: Option[TaxYearModel])(implicit hc: HeaderCarrier): Future[Result] = {
-      if (grossGain > 0) Future.successful(Ok(views.deductionsSummary(totalGainAnswers, deductionGainAnswers, chargeableGain.get, backUrl, taxYear.get, homeLink)))
+
+      if (chargeableGain.isDefined && chargeableGain.get.chargeableGain > 0 &&
+        incomeAnswers.personalAllowanceModel.isDefined && incomeAnswers.currentIncomeModel.isDefined) Future.successful(
+        Ok(views.finalSummary(totalGainAnswers, deductionGainAnswers, incomeAnswers,
+          totalGainAndTax.get, routes.IncomeController.personalAllowance().url, taxYear.get, homeLink)))
+
+      if (grossGain > 0) Future.successful(Ok(views.deductionsSummary(totalGainAnswers, deductionGainAnswers,
+        chargeableGain.get, backUrl, taxYear.get, homeLink)))
       else Future.successful(Ok(views.gainSummary(totalGainAnswers, grossGain, taxYear.get, homeLink)))
     }
     for {
       answers <- calculatorConnector.getShareGainAnswers
       taxYear <- getTaxYear(answers.disposalDate)
       grossGain <- calculatorConnector.calculateRttShareGrossGain(answers)
-      chargeableGainAnswers <- calculatorConnector.getShareDeductionAnswers
-      backLink <- buildDeductionsSummaryBackUrl(chargeableGainAnswers)
-      chargeableGain <- getChargeableGain(grossGain, answers, chargeableGainAnswers)
-      routeRequest <- routeRequest(answers, grossGain, chargeableGainAnswers, chargeableGain, backLink, taxYear)
+      deductionAnswers <- calculatorConnector.getShareDeductionAnswers
+      backLink <- buildDeductionsSummaryBackUrl(deductionAnswers)
+      chargeableGain <- getChargeableGain(grossGain, answers, deductionAnswers)
+      incomeAnswers <- calculatorConnector.getShareIncomeAnswers
+      totalGain <- getTotalTaxableGain(chargeableGain, answers, deductionAnswers, incomeAnswers)
+      routeRequest <- routeRequest(answers, grossGain, deductionAnswers, chargeableGain, incomeAnswers, totalGain, backLink, taxYear)
     } yield routeRequest
   }
 }
