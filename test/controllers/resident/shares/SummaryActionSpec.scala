@@ -21,7 +21,7 @@ import common.Dates
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import models.resident._
-import models.resident.shares.GainAnswersModel
+import models.resident.shares._
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -41,6 +41,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
   (
     gainAnswersModel: GainAnswersModel,
     grossGain: BigDecimal,
+    chargeableGainAnswers: DeductionGainAnswersModel,
+    chargeableGainResultModel: Option[ChargeableGainResultModel] = None,
     taxYearModel: Option[TaxYearModel]
     ): SummaryController = {
 
@@ -52,6 +54,12 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     when(mockCalculatorConnector.calculateRttShareGrossGain(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(grossGain))
 
+    when(mockCalculatorConnector.getShareDeductionAnswers(Matchers.any()))
+      .thenReturn(Future.successful(chargeableGainAnswers))
+
+    when(mockCalculatorConnector.calculateRttShareChargeableGain(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+      .thenReturn(chargeableGainResultModel)
+
     when(mockCalculatorConnector.getTaxYear(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(taxYearModel))
 
@@ -60,17 +68,20 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     }
   }
 
-  "Calling .summary from the SummaryController" when {
+  "Calling .summary from the SummaryController for Shares" when {
 
     "a negative gross gain is returned" should {
-      lazy val yourAnswersSummaryModel = GainAnswersModel(Dates.constructDate(12, 1, 2016),
+      lazy val gainAnswers = GainAnswersModel(Dates.constructDate(12, 1, 2016),
         3000,
         10,
         5000,
         5)
+      lazy val chargeableGainAnswers = DeductionGainAnswersModel(None, None, None, None, None, None)
       lazy val target = setupTarget(
-        yourAnswersSummaryModel,
+        gainAnswers,
         -6000,
+        chargeableGainAnswers,
+        None,
         taxYearModel = Some(TaxYearModel("2015/2016", true, "2015/16"))
       )
       lazy val result = target.summary()(fakeRequestWithSession)
@@ -86,6 +97,146 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
 
       s"return a title ${messages.title}" in {
         doc.title() shouldBe messages.title
+      }
+    }
+
+    "a zero taxable gain is returned with no other properties disposed of or brought forward losses" should {
+      lazy val gainAnswers = GainAnswersModel(Dates.constructDate(12, 1, 2016),
+        13000,
+        500,
+        5000,
+        500)
+      lazy val chargeableGainAnswers = DeductionGainAnswersModel(Some(OtherPropertiesModel(false)), None, None, Some(LossesBroughtForwardModel(false)), None, None)
+      lazy val chargeableGainResultModel = ChargeableGainResultModel(7000, 0, 11100, 0, 0)
+      lazy val target = setupTarget(
+        gainAnswers,
+        7000,
+        chargeableGainAnswers,
+        Some(chargeableGainResultModel),
+        taxYearModel = Some(TaxYearModel("2015/2016", true, "2015/16"))
+      )
+      lazy val result = target.summary()(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return some html" in {
+        contentType(result) shouldBe Some("text/html")
+      }
+
+      s"return a title ${messages.title}" in {
+        doc.title() shouldBe messages.title
+      }
+
+      s"has a back link to '${routes.DeductionsController.lossesBroughtForward().toString()}'" in {
+        doc.getElementById("back-link").attr("href") shouldBe routes.DeductionsController.lossesBroughtForward().toString
+      }
+    }
+
+    "a negative taxable gain is returned with no other properties disposed of but with brought forward losses" should {
+      lazy val gainAnswers = GainAnswersModel(Dates.constructDate(12, 1, 2016),
+        13000,
+        500,
+        5000,
+        500)
+      lazy val chargeableGainAnswers = DeductionGainAnswersModel(Some(OtherPropertiesModel(false)), None, None, Some(LossesBroughtForwardModel(true)), Some(LossesBroughtForwardValueModel(1000)), None)
+      lazy val chargeableGainResultModel = ChargeableGainResultModel(7000, -1000, 11100, 5100, 1000)
+      lazy val target = setupTarget(
+        gainAnswers,
+        7000,
+        chargeableGainAnswers,
+        Some(chargeableGainResultModel),
+        taxYearModel = Some(TaxYearModel("2015/2016", true, "2015/16"))
+      )
+      lazy val result = target.summary()(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return some html" in {
+        contentType(result) shouldBe Some("text/html")
+      }
+
+      s"return a title ${messages.title}" in {
+        doc.title() shouldBe messages.title
+      }
+
+      s"has a link to '${routes.DeductionsController.lossesBroughtForwardValue().toString()}'" in {
+        doc.getElementById("back-link").attr("href") shouldBe routes.DeductionsController.lossesBroughtForwardValue().toString
+      }
+    }
+
+    "a negative taxable gain is returned with other properties disposed of" should {
+      lazy val gainAnswers = GainAnswersModel(Dates.constructDate(12, 1, 2016),
+        15000,
+        1000,
+        3000,
+        2000)
+      lazy val chargeableGainAnswers = DeductionGainAnswersModel(Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(true)), Some(AllowableLossesValueModel(BigDecimal(1000))), Some(LossesBroughtForwardModel(false)), None, Some(AnnualExemptAmountModel(10000)))
+      lazy val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 0, 11100)
+      lazy val target = setupTarget(
+        gainAnswers,
+        10000,
+        chargeableGainAnswers,
+        Some(chargeableGainResultModel),
+        taxYearModel = Some(TaxYearModel("2015/2016", true, "2015/16"))
+      )
+      lazy val result = target.summary()(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return some html" in {
+        contentType(result) shouldBe Some("text/html")
+      }
+
+      s"return a title ${messages.title}" in {
+        doc.title() shouldBe messages.title
+      }
+
+      s"has a link to '${routes.DeductionsController.lossesBroughtForward().toString()}'" in {
+        doc.getElementById("back-link").attr("href") shouldBe routes.DeductionsController.lossesBroughtForward().toString
+      }
+    }
+
+    "a negative taxable gain is returned with other properties disposed of but an allowable loss of 0" should {
+      lazy val gainAnswers = GainAnswersModel(Dates.constructDate(12, 1, 2016),
+        15000,
+        1000,
+        3000,
+        2000)
+      lazy val chargeableGainAnswers = DeductionGainAnswersModel(Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(true)), Some(AllowableLossesValueModel(BigDecimal(0))), Some(LossesBroughtForwardModel(false)), None, Some(AnnualExemptAmountModel(10000)))
+      lazy val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 0, 11100)
+      lazy val target = setupTarget(
+        gainAnswers,
+        10000,
+        chargeableGainAnswers,
+        Some(chargeableGainResultModel),
+        taxYearModel = Some(TaxYearModel("2015/2016", true, "2015/16"))
+      )
+      lazy val result = target.summary()(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return some html" in {
+        contentType(result) shouldBe Some("text/html")
+      }
+
+      s"return a title ${messages.title}" in {
+        doc.title() shouldBe messages.title
+      }
+
+      s"has a link to '${routes.DeductionsController.annualExemptAmount().toString()}'" in {
+        doc.getElementById("back-link").attr("href") shouldBe routes.DeductionsController.annualExemptAmount().toString
       }
     }
   }
