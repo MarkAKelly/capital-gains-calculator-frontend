@@ -63,18 +63,20 @@ trait SummaryController extends FeatureLock {
 
     def chargeableGain(grossGain: BigDecimal,
                        yourAnswersSummaryModel: YourAnswersSummaryModel,
-                       chargeableGainAnswers: ChargeableGainAnswers)(implicit hc: HeaderCarrier): Future[Option[ChargeableGainResultModel]] = {
-      if (grossGain > 0) calculatorConnector.calculateRttPropertyChargeableGain(yourAnswersSummaryModel, chargeableGainAnswers, BigDecimal(11100))
+                       chargeableGainAnswers: ChargeableGainAnswers,
+                       maxAEA: BigDecimal)(implicit hc: HeaderCarrier): Future[Option[ChargeableGainResultModel]] = {
+      if (grossGain > 0) calculatorConnector.calculateRttPropertyChargeableGain(yourAnswersSummaryModel, chargeableGainAnswers, maxAEA)
       else Future.successful(None)
     }
 
     def totalTaxableGain(chargeableGain: Option[ChargeableGainResultModel] = None,
                          yourAnswersSummaryModel: YourAnswersSummaryModel,
                          chargeableGainAnswers: ChargeableGainAnswers,
-                         incomeAnswersModel: IncomeAnswersModel)(implicit hc: HeaderCarrier): Future[Option[TotalGainAndTaxOwedModel]] = {
+                         incomeAnswersModel: IncomeAnswersModel,
+                         maxAEA: BigDecimal)(implicit hc: HeaderCarrier): Future[Option[TotalGainAndTaxOwedModel]] = {
       if (chargeableGain.isDefined && chargeableGain.get.chargeableGain > 0 &&
         incomeAnswersModel.personalAllowanceModel.isDefined && incomeAnswersModel.currentIncomeModel.isDefined) {
-        calculatorConnector.calculateRttPropertyTotalGainAndTax(yourAnswersSummaryModel, chargeableGainAnswers, BigDecimal(11100), incomeAnswersModel)
+        calculatorConnector.calculateRttPropertyTotalGainAndTax(yourAnswersSummaryModel, chargeableGainAnswers, maxAEA, incomeAnswersModel)
       }
       else Future.successful(None)
     }
@@ -100,15 +102,25 @@ trait SummaryController extends FeatureLock {
       else Future.successful(Ok(views.gainSummary(totalGainAnswers, grossGain, taxYear.get)))
     }
 
+    def getMaxAEA(taxYear: Int): Future[Option[BigDecimal]] = {
+      calculatorConnector.getFullAEA(taxYear)
+    }
+
+    def taxYearStringToInteger (taxYear: String): Future[Int] = {
+      Future.successful((taxYear.take(2) + taxYear.takeRight(2)).toInt)
+    }
+
     for {
       answers <- calculatorConnector.getPropertyGainAnswers
       taxYear <- getTaxYear(answers.disposalDate)
+      taxYearInt <- taxYearStringToInteger(taxYear.get.calculationTaxYear)
+      maxAEA <- getMaxAEA(taxYearInt)
       grossGain <- calculatorConnector.calculateRttPropertyGrossGain(answers)
       deductionAnswers <- calculatorConnector.getPropertyDeductionAnswers
       backLink <- buildDeductionsSummaryBackUrl(deductionAnswers)
-      chargeableGain <- chargeableGain(grossGain, answers, deductionAnswers)
+      chargeableGain <- chargeableGain(grossGain, answers, deductionAnswers, maxAEA.get)
       incomeAnswers <- calculatorConnector.getPropertyIncomeAnswers
-      totalGain <- totalTaxableGain(chargeableGain, answers, deductionAnswers, incomeAnswers)
+      totalGain <- totalTaxableGain(chargeableGain, answers, deductionAnswers, incomeAnswers, maxAEA.get)
       routeRequest <- routeRequest(answers, grossGain, deductionAnswers, chargeableGain, incomeAnswers, totalGain, backLink, taxYear)
     } yield routeRequest
   }

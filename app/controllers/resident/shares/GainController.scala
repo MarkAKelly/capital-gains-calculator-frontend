@@ -175,4 +175,3 @@ trait GainController extends FeatureLock {
     )
   }
 }
-
