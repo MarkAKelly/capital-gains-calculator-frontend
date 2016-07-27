@@ -14,30 +14,28 @@
  * limitations under the License.
  */
 
-package views.resident.properties.summary
+package views.resident.shares.summary
 
 import assets.MessageLookup.{summary => messages}
 import assets.{MessageLookup => commonMessages}
 import common.Dates
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.properties.routes
+import controllers.resident.shares.routes
 import models.resident._
-import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, ReliefsValueModel, YourAnswersSummaryModel}
+import models.resident.shares.{DeductionGainAnswersModel, GainAnswersModel}
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import views.html.calculation.resident.properties.{summary => views}
+import views.html.calculation.resident.shares.{summary => views}
 
 class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Properties Deductions Summary view" should {
-    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+  "Shares Deductions Summary view" should {
+    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2016),
       BigDecimal(200000),
       BigDecimal(10000),
       BigDecimal(100000),
-      BigDecimal(10000),
-      BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
-      None,
+      BigDecimal(10000))
+    lazy val deductionAnswers = DeductionGainAnswersModel(
       Some(OtherPropertiesModel(false)),
       None,
       None,
@@ -49,7 +47,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       BigDecimal(11100),
       BigDecimal(0),
       BigDecimal(11100))
-    lazy val backLink = "/calculate-your-capital-gains/resident/properties/losses-brought-forward"
+    lazy val backLink = "/calculate-your-capital-gains/resident/shares/losses-brought-forward"
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
@@ -138,10 +136,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
 
         "has a breakdown that" should {
-
-          "include a value for Reliefs of £0" in {
-            doc.select("#deductions-amount").text should include("Reliefs £0")
-          }
 
           "include a value for Allowable Losses of £0" in {
             doc.select("#deductions-amount").text should include("Allowable losses £0")
@@ -286,44 +280,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
       }
 
-      "has a numeric output row for the Improvements" which {
-
-        s"should have the question text '${commonMessages.improvementsView.title}'" in {
-          doc.select("#improvements-question").text shouldBe commonMessages.improvementsView.title
-        }
-
-        "should have the value '£30,000'" in {
-          doc.select("#improvements-amount span.bold-medium").text shouldBe "£30,000"
-        }
-
-        s"should have a change link to ${routes.GainController.improvements().url}" in {
-          doc.select("#improvements-amount a").attr("href") shouldBe routes.GainController.improvements().url
-        }
-      }
-
-      "has an option output row for tax reliefs" which {
-
-        s"should have the question text '${commonMessages.reliefs.questionSummary}'" in {
-          doc.select("#reliefs-question").text shouldBe commonMessages.reliefs.questionSummary
-        }
-
-        "should have the value 'No'" in {
-          doc.select("#reliefs-option span.bold-medium").text shouldBe "No"
-        }
-
-        s"should have a change link to ${routes.DeductionsController.reliefs().url}" in {
-          doc.select("#reliefs-option a").attr("href") shouldBe routes.DeductionsController.reliefs().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#reliefs-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.reliefs.question("50,000")}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#reliefs-option a span.visuallyhidden").text shouldBe commonMessages.reliefs.question("50,000")
-        }
-      }
-
       "has an option output row for other properties" which {
 
         s"should have the question text '${commonMessages.otherProperties.title("2015/16")}'" in {
@@ -334,8 +290,8 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
           doc.select("#otherProperties-option span.bold-medium").text shouldBe "No"
         }
 
-        s"should have a change link to ${routes.DeductionsController.otherProperties().url}" in {
-          doc.select("#otherProperties-option a").attr("href") shouldBe routes.DeductionsController.otherProperties().url
+        s"should have a change link to ${routes.DeductionsController.otherDisposals().url}" in {
+          doc.select("#otherProperties-option a").attr("href") shouldBe routes.DeductionsController.otherDisposals().url
         }
 
         "has the question as part of the link" in {
@@ -369,37 +325,16 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
           doc.select("#broughtForwardLosses-option a span.visuallyhidden").text shouldBe commonMessages.lossesBroughtForward.question("2015/16")
         }
       }
-
-      "display the save as PDF Button" which {
-
-        "should render only one button" in {
-          doc.select("a.save-pdf-button").size() shouldEqual 1
-        }
-
-        "with the class save-pdf-button" in {
-          doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
-        }
-
-        s"with an href to ${controllers.resident.properties.routes.ReportController.deductionsReport().toString}" in {
-          doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/deductions-report"
-        }
-
-        s"have the text ${messages.saveAsPdf}" in {
-          doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
-        }
-      }
     }
   }
 
-  "Properties Deductions Summary view with all options selected" should {
-    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+  "Shares Deductions Summary view with all options selected" should {
+    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2016),
       BigDecimal(200000),
       BigDecimal(10000),
       BigDecimal(100000),
-      BigDecimal(10000),
-      BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(true)),
-      Some(ReliefsValueModel(BigDecimal(50000))),
+      BigDecimal(10000))
+    lazy val deductionAnswers = DeductionGainAnswersModel(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
       Some(AllowableLossesValueModel(10000)),
@@ -414,7 +349,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
     lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
 
-    lazy val backLink = "/calculate-your-capital-gains/resident/properties/annual-exempt-amount"
+    lazy val backLink = "/calculate-your-capital-gains/resident/shares/annual-exempt-amount"
     lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
@@ -430,7 +365,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         backLink.text shouldBe commonMessages.calcBaseBack
       }
 
-      s"has a link to '${routes.GainController.improvements().toString()}'" in {
+      s"has a link to '${routes.DeductionsController.annualExemptAmount().toString()}'" in {
         backLink.attr("href") shouldBe routes.DeductionsController.annualExemptAmount().toString
       }
 
@@ -497,10 +432,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
         "has a breakdown that" should {
 
-          "include a value for Reliefs of £50,000" in {
-            doc.select("#deductions-amount").text should include("Reliefs £50,000")
-          }
-
           "include a value for Allowable Losses of £10,000" in {
             doc.select("#deductions-amount").text should include("Allowable losses £10,000")
           }
@@ -546,44 +477,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
       }
 
-      "has an option output row for tax reliefs" which {
-
-        s"should have the question text '${commonMessages.reliefs.questionSummary}'" in {
-          doc.select("#reliefs-question").text shouldBe commonMessages.reliefs.questionSummary
-        }
-
-        "should have the value 'Yes'" in {
-          doc.select("#reliefs-option span.bold-medium").text shouldBe "Yes"
-        }
-
-        s"should have a change link to ${routes.DeductionsController.reliefs().url}" in {
-          doc.select("#reliefs-option a").attr("href") shouldBe routes.DeductionsController.reliefs().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#reliefs-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.reliefs.question("50,000")}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#reliefs-option a span.visuallyhidden").text shouldBe commonMessages.reliefs.question("50,000")
-        }
-      }
-
-      "has a numeric output row for tax relief value" which {
-
-        s"should have the question text '${commonMessages.reliefsValue.title}'" in {
-          doc.select("#reliefsValue-question").text shouldBe commonMessages.reliefsValue.title
-        }
-
-        "should have the value '£50,000'" in {
-          doc.select("#reliefsValue-amount span.bold-medium").text shouldBe "£50,000"
-        }
-
-        s"should have a change link to ${routes.DeductionsController.reliefsValue().url}" in {
-          doc.select("#reliefsValue-amount a").attr("href") shouldBe routes.DeductionsController.reliefsValue().url
-        }
-      }
-
       "has an option output row for other properties" which {
 
         s"should have the question text '${commonMessages.otherProperties.title("2013/14")}'" in {
@@ -594,8 +487,8 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
           doc.select("#otherProperties-option span.bold-medium").text shouldBe "Yes"
         }
 
-        s"should have a change link to ${routes.DeductionsController.otherProperties().url}" in {
-          doc.select("#otherProperties-option a").attr("href") shouldBe routes.DeductionsController.otherProperties().url
+        s"should have a change link to ${routes.DeductionsController.otherDisposals().url}" in {
+          doc.select("#otherProperties-option a").attr("href") shouldBe routes.DeductionsController.otherDisposals().url
         }
 
         "has the question as part of the link" in {
@@ -682,38 +575,17 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
           doc.select("#broughtForwardLossesValue-amount a").attr("href") shouldBe routes.DeductionsController.lossesBroughtForwardValue().url
         }
       }
-
-      "display the save as PDF Button" which {
-
-        "should render only one button" in {
-          doc.select("a.save-pdf-button").size() shouldEqual 1
-        }
-
-        "with the class save-pdf-button" in {
-          doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
-        }
-
-        s"with an href to ${controllers.resident.properties.routes.ReportController.deductionsReport().toString}" in {
-          doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/deductions-report"
-        }
-
-        s"have the text ${messages.saveAsPdf}" in {
-          doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
-        }
-      }
     }
   }
 
-  "Properties Deductions Summary view with AEA options selected" which {
+  "Shares Deductions Summary view with AEA options selected" which {
 
-    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2016),
       BigDecimal(200000),
       BigDecimal(10000),
       BigDecimal(100000),
-      BigDecimal(10000),
-      BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(true)),
-      Some(ReliefsValueModel(BigDecimal(50000))),
+      BigDecimal(10000))
+    lazy val deductionAnswers = DeductionGainAnswersModel(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
       Some(AllowableLossesValueModel(10000)),
@@ -727,7 +599,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       BigDecimal(71000))
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
-    lazy val backLink = "/calculate-your-capital-gains/resident/properties/annual-exempt-amount"
+    lazy val backLink = "/calculate-your-capital-gains/resident/shares/annual-exempt-amount"
     lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
@@ -749,39 +621,18 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         doc.select("div#whatToDoNextNoLossText").text shouldEqual messages.whatToDoNextNoLossText
       }
     }
-
-    "display the save as PDF Button" which {
-
-      "should render only one button" in {
-        doc.select("a.save-pdf-button").size() shouldEqual 1
-      }
-
-      "with the class save-pdf-button" in {
-        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
-      }
-
-      s"with an href to ${controllers.resident.properties.routes.ReportController.deductionsReport().toString}" in {
-        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/deductions-report"
-      }
-
-      s"have the text ${messages.saveAsPdf}" in {
-        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
-      }
-    }
   }
 
 
-  "Properties Deductions Summary when supplied with a date within the known tax years and no gain or loss" should {
+  "Shares Deductions Summary when supplied with a date within the known tax years and no gain or loss" should {
 
 
-    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2016),
       BigDecimal(200000),
       BigDecimal(0),
       BigDecimal(100000),
-      BigDecimal(0),
       BigDecimal(0))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(true)),
-      Some(ReliefsValueModel(BigDecimal(100000))),
+    lazy val deductionAnswers = DeductionGainAnswersModel(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
       Some(AllowableLossesValueModel(0)),
@@ -796,7 +647,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
-    lazy val backLink = "/calculate-your-capital-gains/resident/properties/annual-exempt-amount"
+    lazy val backLink = "/calculate-your-capital-gains/resident/shares/annual-exempt-amount"
     lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel)(fakeRequest)
 
 
@@ -813,37 +664,16 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     s"display the text ${messages.whatToDoNextText}" in {
       doc.select("div#whatToDoNextNoLossText").text shouldEqual messages.whatToDoNextNoLossText
     }
-
-    "display the save as PDF Button" which {
-
-      "should render only one button" in {
-        doc.select("a.save-pdf-button").size() shouldEqual 1
-      }
-
-      "with the class save-pdf-button" in {
-        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
-      }
-
-      s"with an href to ${controllers.resident.properties.routes.ReportController.deductionsReport().toString}" in {
-        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/deductions-report"
-      }
-
-      s"have the text ${messages.saveAsPdf}" in {
-        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
-      }
-    }
   }
 
-  "Properties Deductions Summary when supplied with a date above the known tax years" should {
+  "Shares Deductions Summary when supplied with a date above the known tax years" should {
 
-    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
+    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2018),
       BigDecimal(200000),
       BigDecimal(10000),
       BigDecimal(100000),
-      BigDecimal(10000),
-      BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(true)),
-      Some(ReliefsValueModel(BigDecimal(50000))),
+      BigDecimal(10000))
+    lazy val deductionAnswers = DeductionGainAnswersModel(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
       Some(AllowableLossesValueModel(10000)),
@@ -858,31 +688,12 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
     lazy val taxYearModel = TaxYearModel("2017/18", false, "2015/16")
 
-    lazy val backLink = "/calculate-your-capital-gains/resident/properties/annual-exempt-amount"
+    lazy val backLink = "/calculate-your-capital-gains/resident/shares/annual-exempt-amount"
     lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "does not display the section for what to do next" in {
       doc.select("#whatToDoNext").isEmpty shouldBe true
-    }
-
-    "display the save as PDF Button" which {
-
-      "should render only one button" in {
-        doc.select("a.save-pdf-button").size() shouldEqual 1
-      }
-
-      "with the class save-pdf-button" in {
-        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
-      }
-
-      s"with an href to ${controllers.resident.properties.routes.ReportController.deductionsReport().toString}" in {
-        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/deductions-report"
-      }
-
-      s"have the text ${messages.saveAsPdf}" in {
-        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
-      }
     }
   }
 }
