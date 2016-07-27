@@ -146,7 +146,7 @@ trait GainController extends FeatureLock {
 
   //################# Acquisition Costs Actions ########################
 
-  private val acquisitionCostsBackLink = Some(controllers.resident.properties.routes.GainController.acquisitionValue().toString)
+  private val acquisitionCostsBackLink = Some(controllers.resident.shares.routes.GainController.acquisitionValue().toString)
 
   val acquisitionCosts = FeatureLockForRTTShares.async { implicit request =>
     calcConnector.fetchAndGetFormData[AcquisitionCostsModel](keystoreKeys.acquisitionCosts).map {
