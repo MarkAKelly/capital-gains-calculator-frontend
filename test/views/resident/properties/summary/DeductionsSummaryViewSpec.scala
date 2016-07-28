@@ -746,7 +746,19 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       }
 
       s"display the text ${messages.whatToDoNextText}" in {
-        doc.select("div#whatToDoNextNoLossText").text shouldEqual messages.whatToDoNextNoLossText
+        doc.select("div#whatToDoNextNoLossText").text shouldBe s"${messages.whatToDoNextNoLossText} ${messages.whatToDoNextNoLossLinkProperties} ${commonMessages.calcBaseExternalLink}."
+      }
+
+      s"have the link text ${messages.whatToDoNextNoLossLinkProperties}${commonMessages.calcBaseExternalLink}" in {
+        doc.select("div#whatToDoNextNoLossText a").text shouldBe s"${messages.whatToDoNextNoLossLinkProperties}"
+      }
+
+      s"have a link to https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax" in {
+        doc.select("div#whatToDoNextNoLossText a").attr("href") shouldBe "https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax"
+      }
+
+      s"have the visually hidden text ${commonMessages.calcBaseExternalLink}" in {
+        doc.select("div#whatToDoNextNoLossText span.visuallyhidden").text shouldBe s"${commonMessages.calcBaseExternalLink}"
       }
     }
 
@@ -811,7 +823,19 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     }
 
     s"display the text ${messages.whatToDoNextText}" in {
-      doc.select("div#whatToDoNextNoLossText").text shouldEqual messages.whatToDoNextNoLossText
+      doc.select("div#whatToDoNextNoLossText").text shouldBe s"${messages.whatToDoNextNoLossText} ${messages.whatToDoNextNoLossLinkProperties} ${commonMessages.calcBaseExternalLink}."
+    }
+
+    s"have the link text ${messages.whatToDoNextNoLossLinkProperties}${commonMessages.calcBaseExternalLink}" in {
+      doc.select("div#whatToDoNextNoLossText a").text shouldBe s"${messages.whatToDoNextNoLossLinkProperties}"
+    }
+
+    s"have a link to https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax" in {
+      doc.select("div#whatToDoNextNoLossText a").attr("href") shouldBe "https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax"
+    }
+
+    s"have the visually hidden text ${commonMessages.calcBaseExternalLink}" in {
+      doc.select("div#whatToDoNextNoLossText span.visuallyhidden").text shouldBe s"${commonMessages.calcBaseExternalLink}"
     }
 
     "display the save as PDF Button" which {

@@ -357,6 +357,10 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       doc.select("div#whatToDoNextNoLossText a").text shouldBe s"${messages.whatToDoNextNoLossLinkProperties}"
     }
 
+    s"have a link to https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax" in {
+      doc.select("div#whatToDoNextNoLossText a").attr("href") shouldBe "https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax"
+    }
+
     s"have the visually hidden text ${commonMessages.calcBaseExternalLink}" in {
       doc.select("div#whatToDoNextNoLossText span.visuallyhidden").text shouldBe s"${commonMessages.calcBaseExternalLink}"
     }
