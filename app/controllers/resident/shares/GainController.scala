@@ -32,6 +32,7 @@ import forms.resident.DisposalValueForm._
 import forms.resident.AcquisitionCostsForm._
 import forms.resident.AcquisitionValueForm._
 import models.resident._
+import common.Dates._
 
 object GainController extends GainController {
   val calcConnector = CalculatorConnector
@@ -84,6 +85,7 @@ trait GainController extends FeatureLock {
     } yield {
       Ok(commonViews.outsideTaxYear(
         taxYear = taxYear.get,
+        isAfterApril15 = dateAfterStart(constructDate(disposalDate.get.day, disposalDate.get.month, disposalDate.get.year)),
         navBackLink = routes.GainController.disposalDate().url,
         navHomeLink = homeLink,
         continueUrl = routes.GainController.disposalValue().url
