@@ -125,14 +125,6 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
         "should have the value '12 September 1990'" in {
           doc.select("#disposalDate-date span.bold-medium").text shouldBe "12 September 1990"
         }
-
-        "has the question as part of the link" in {
-          doc.select("#disposalDate-date a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.sharesDisposalDate.title}"
-        }
-
-        "has the question component of the link is visuallyhidden" in {
-          doc.select("#disposalDate-date a span.visuallyhidden").text shouldBe commonMessages.sharesDisposalDate.title
-        }
       }
 
       "has a numeric output row for the Disposal Value" which {
@@ -179,7 +171,6 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
         "should have the value '£40'" in {
           doc.select("#acquisitionCosts-amount span.bold-medium").text shouldBe "£40"
         }
-
       }
     }
   }
