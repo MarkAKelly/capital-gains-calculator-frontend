@@ -146,6 +146,7 @@ object MessageLookup {
     val helpLinkTwo = "Lettings Relief"
     val helpTwo = "Tax reliefs are different from your Capital Gains Tax Allowance and Personal Allowance."
     def errorSelect(value: String) = s"Tell us if you want to claim any tax reliefs on your total gain of £$value"
+    val helpButton = "What are Capital Gains Tax reliefs?"
   }
 
   //Reliefs Value messages
