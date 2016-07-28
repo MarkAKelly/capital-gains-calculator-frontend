@@ -303,6 +303,8 @@ calc.resident.disposalDate.invalidYearRangeError = Enter a date in the correct f
 ## Outside Tax Years messages
 calc.resident.outsideTaxYears.title = The date you''ve entered isn''t supported by this calculator
 calc.resident.outsideTaxYears.message = You can continue to use it, but we''ll use the tax rates from the {0} tax year.
+calc.resident.outsideTaxYears.message.tooEarly = You can use this calculator if you''ve sold a property since 5 April 2015.
+calc.resident.outsideTaxYears.changeDate = Change your date
 
 ## Disposal Value messages
 calc.resident.disposal.value.title = How much did you sell the property for?
