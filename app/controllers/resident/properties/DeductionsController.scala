@@ -54,7 +54,7 @@ trait DeductionsController extends FeatureLock {
     Future.successful(s"${disposalDateModel.year}-${disposalDateModel.month}-${disposalDateModel.day}")
   }
 
-  private val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
+  private val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
 
   //################# Reliefs Actions ########################
 
@@ -103,14 +103,14 @@ trait DeductionsController extends FeatureLock {
 
   val reliefsValue = FeatureLockForRTT.async { implicit request =>
     calcConnector.fetchAndGetFormData[ReliefsValueModel](keystoreKeys.reliefsValue).map {
-      case Some(data) => Ok(views.reliefsValue(reliefsValueForm.fill(data)))
-      case None => Ok(views.reliefsValue(reliefsValueForm))
+      case Some(data) => Ok(views.reliefsValue(reliefsValueForm.fill(data), homeLink))
+      case None => Ok(views.reliefsValue(reliefsValueForm, homeLink))
     }
   }
 
   val submitReliefsValue = FeatureLockForRTT.async { implicit request =>
     reliefsValueForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.reliefsValue(errors))),
+      errors => Future.successful(BadRequest(views.reliefsValue(errors, homeLink))),
       success => {
         calcConnector.saveFormData[ReliefsValueModel](keystoreKeys.reliefsValue, success)
         Future.successful(Redirect(routes.DeductionsController.otherProperties()))
@@ -450,11 +450,11 @@ trait DeductionsController extends FeatureLock {
   private def annualExemptAmountBackLink(implicit hc: HeaderCarrier): Future[Option[String]] = calcConnector
     .fetchAndGetFormData[LossesBroughtForwardModel](keystoreKeys.lossesBroughtForward).map {
     case Some(LossesBroughtForwardModel(true)) =>
-      Some(controllers.resident.shares.routes.DeductionsController.lossesBroughtForwardValue().toString)
+      Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForwardValue().toString)
     case _ =>
-      Some(controllers.resident.shares.routes.DeductionsController.lossesBroughtForward().toString)
+      Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForward().toString)
   }
-  private val annualExemptAmountPostAction = controllers.resident.shares.routes.DeductionsController.submitAnnualExemptAmount()
+  private val annualExemptAmountPostAction = controllers.resident.properties.routes.DeductionsController.submitAnnualExemptAmount()
 
   val annualExemptAmount = FeatureLockForRTT.async { implicit request =>
 

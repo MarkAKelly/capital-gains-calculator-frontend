@@ -29,7 +29,7 @@ class ReliefsValueViewSpec extends UnitSpec with WithFakeApplication with FakeRe
   "Reliefs Value view" should {
 
     lazy val form = reliefsValueForm.bind(Map("amount" -> "10"))
-    lazy val view = views.reliefsValue(form)(fakeRequest)
+    lazy val view = views.reliefsValue(form, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -71,12 +71,46 @@ class ReliefsValueViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     "have continue button " in {
       doc.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
     }
+
+    "have a Read more link for PRR" should {
+
+      lazy val linkOne = doc.select("a#reliefsValuePrivateResidenceReliefLink")
+
+      s"contain the text ${messages.prrLink}" in {
+        linkOne.text should include(messages.prrLink)
+      }
+
+      "contain a link to 'https://www.gov.uk/tax-sell-home/absence-from-home'" in {
+        linkOne.attr("href") shouldEqual "https://www.gov.uk/tax-sell-home/absence-from-home"
+      }
+
+      s"contain a visually-hidden legend with text ${messages.prrLink}" in {
+        linkOne.select("span.visuallyhidden").text shouldEqual messages.prrLink
+      }
+    }
+
+    "have a Read more link for Lettings Relief" should {
+
+      lazy val linkOne = doc.select("a#reliefsValueLettingsReliefLink")
+
+      s"contain the text ${messages.lettingsReliefLink}" in {
+        linkOne.text should include(messages.lettingsReliefLink)
+      }
+
+      "contain a link to 'https://www.gov.uk/tax-sell-home/let-out-part-of-home'" in {
+        linkOne.attr("href") shouldEqual "https://www.gov.uk/tax-sell-home/let-out-part-of-home"
+      }
+
+      s"contain a visually-hidden legend with text ${messages.lettingsReliefLink}" in {
+        linkOne.select("span.visuallyhidden").text shouldEqual messages.lettingsReliefLink
+      }
+    }
   }
 
-  "Improvements View with form without errors" should {
+  "Reliefs Value View with form without errors" should {
 
     val form = reliefsValueForm.bind(Map("amount" -> "100"))
-    lazy val view = views.reliefsValue(form)(fakeRequest)
+    lazy val view = views.reliefsValue(form, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display the value of the form" in {
@@ -95,7 +129,7 @@ class ReliefsValueViewSpec extends UnitSpec with WithFakeApplication with FakeRe
   "Reliefs Value View with form with errors" should {
 
     val form = reliefsValueForm.bind(Map("amount" -> ""))
-    lazy val view = views.reliefsValue(form)(fakeRequest)
+    lazy val view = views.reliefsValue(form, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {
