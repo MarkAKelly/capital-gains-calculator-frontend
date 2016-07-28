@@ -282,26 +282,26 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
       }
 
-      "has an option output row for other properties" which {
+      "has an option output row for other disposals" which {
 
         s"should have the question text '${commonMessages.otherProperties.title("2015/16")}'" in {
-          doc.select("#otherProperties-question").text shouldBe commonMessages.otherProperties.title("2015/16")
+          doc.select("#otherDisposals-question").text shouldBe commonMessages.otherProperties.title("2015/16")
         }
 
         "should have the value 'No'" in {
-          doc.select("#otherProperties-option span.bold-medium").text shouldBe "No"
+          doc.select("#otherDisposals-option span.bold-medium").text shouldBe "No"
         }
 
         s"should have a change link to ${routes.DeductionsController.otherDisposals().url}" in {
-          doc.select("#otherProperties-option a").attr("href") shouldBe routes.DeductionsController.otherDisposals().url
+          doc.select("#otherDisposals-option a").attr("href") shouldBe routes.DeductionsController.otherDisposals().url
         }
 
         "has the question as part of the link" in {
-          doc.select("#otherProperties-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.otherProperties.title("2015/16")}"
+          doc.select("#otherDisposals-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.otherProperties.title("2015/16")}"
         }
 
         "has the question component of the link as visuallyhidden" in {
-          doc.select("#otherProperties-option a span.visuallyhidden").text shouldBe commonMessages.otherProperties.title("2015/16")
+          doc.select("#otherDisposals-option a span.visuallyhidden").text shouldBe commonMessages.otherProperties.title("2015/16")
         }
       }
 
@@ -479,26 +479,26 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
       }
 
-      "has an option output row for other properties" which {
+      "has an option output row for other disposals" which {
 
         s"should have the question text '${commonMessages.otherProperties.title("2013/14")}'" in {
-          doc.select("#otherProperties-question").text shouldBe commonMessages.otherProperties.title("2013/14")
+          doc.select("#otherDisposals-question").text shouldBe commonMessages.otherProperties.title("2013/14")
         }
 
         "should have the value 'Yes'" in {
-          doc.select("#otherProperties-option span.bold-medium").text shouldBe "Yes"
+          doc.select("#otherDisposals-option span.bold-medium").text shouldBe "Yes"
         }
 
         s"should have a change link to ${routes.DeductionsController.otherDisposals().url}" in {
-          doc.select("#otherProperties-option a").attr("href") shouldBe routes.DeductionsController.otherDisposals().url
+          doc.select("#otherDisposals-option a").attr("href") shouldBe routes.DeductionsController.otherDisposals().url
         }
 
         "has the question as part of the link" in {
-          doc.select("#otherProperties-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.otherProperties.title("2013/14")}"
+          doc.select("#otherDisposals-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.otherProperties.title("2013/14")}"
         }
 
         "has the question component of the link as visuallyhidden" in {
-          doc.select("#otherProperties-option a span.visuallyhidden").text shouldBe commonMessages.otherProperties.title("2013/14")
+          doc.select("#otherDisposals-option a span.visuallyhidden").text shouldBe commonMessages.otherProperties.title("2013/14")
         }
       }
 
