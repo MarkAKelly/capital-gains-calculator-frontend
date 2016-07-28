@@ -143,10 +143,8 @@ object MessageLookup {
     val questionSummary = "Do you want to claim any tax reliefs on your total gain of £50,000?"
     def question(input: String = "100") = s"Do you want to claim any tax reliefs on your total gain of £$input?"
     val help = "For example, lettings relief"
-    val helpOne = "Tax reliefs can lower the amount of tax you owe. For example, you might be able to claim:"
+    val helpOne = "Capital Gains Tax reliefs can lower the amount of tax you owe. For example, you might be able to claim"
     val helpLinkOne = "Private Residence Relief"
-    val helpLinkTwo = "Lettings Relief"
-    val helpTwo = "Tax reliefs are different from your Capital Gains Tax Allowance and Personal Allowance."
     def errorSelect(value: String) = s"Tell us if you want to claim any tax reliefs on your total gain of £$value"
     val helpButton = "What are Capital Gains Tax reliefs?"
   }

@@ -66,8 +66,8 @@ trait DeductionsController extends FeatureLock {
 
     def routeRequest(totalGain: BigDecimal): Future[Result] = {
       calcConnector.fetchAndGetFormData[ReliefsModel](keystoreKeys.reliefs).map {
-        case Some(data) => Ok(views.reliefs(reliefsForm(totalGain).fill(data), totalGain))
-        case None => Ok(views.reliefs(reliefsForm(totalGain), totalGain))
+        case Some(data) => Ok(views.reliefs(reliefsForm(totalGain).fill(data), totalGain, homeLink))
+        case None => Ok(views.reliefs(reliefsForm(totalGain), totalGain, homeLink))
       }
     }
 
@@ -82,7 +82,7 @@ trait DeductionsController extends FeatureLock {
 
     def routeRequest (totalGain: BigDecimal) = {
       reliefsForm(totalGain).bindFromRequest().fold(
-        errors => Future.successful(BadRequest(views.reliefs(errors, totalGain))),
+        errors => Future.successful(BadRequest(views.reliefs(errors, totalGain, homeLink))),
         success => {
           calcConnector.saveFormData[ReliefsModel](keystoreKeys.reliefs, success)
           success match {
