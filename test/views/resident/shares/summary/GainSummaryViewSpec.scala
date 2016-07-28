@@ -300,7 +300,15 @@ class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeReq
     }
 
     s"display the text ${messages.whatToDoNextText}" in {
-      doc.select("div#whatToDoNextNoLossText").text shouldEqual messages.whatToDoNextNoLossText
+      doc.select("div#whatToDoNextNoLossText").text shouldBe s"${messages.whatToDoNextNoLossText} ${messages.whatToDoNextNoLossLinkShares} ${commonMessages.calcBaseExternalLink}."
+    }
+
+    s"have the link text ${messages.whatToDoNextNoLossLinkShares}${commonMessages.calcBaseExternalLink}" in {
+      doc.select("div#whatToDoNextNoLossText a").text shouldBe s"${messages.whatToDoNextNoLossLinkShares}"
+    }
+
+    s"have the visually hidden text ${commonMessages.calcBaseExternalLink}" in {
+      doc.select("div#whatToDoNextNoLossText span.visuallyhidden").text shouldBe s"${commonMessages.calcBaseExternalLink}"
     }
   }
 
