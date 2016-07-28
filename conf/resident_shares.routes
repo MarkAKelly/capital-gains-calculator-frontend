@@ -66,5 +66,6 @@ GET     /summary                          controllers.resident.shares.SummaryCon
 GET     /gain-report                      controllers.resident.shares.ReportController.gainSummaryReport
 
 #Deductions Summary PDF Routes
+GET     /deductions-report                controllers.resident.shares.ReportController.deductionsReport
 
 #Final Summary PDF Routes

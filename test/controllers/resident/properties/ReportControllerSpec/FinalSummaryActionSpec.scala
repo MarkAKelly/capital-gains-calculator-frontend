@@ -70,6 +70,9 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
     when(mockCalculatorConnector.getTaxYear(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(taxYearModel))
 
+    when(mockCalculatorConnector.getFullAEA(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(BigDecimal(11100))))
+
     new ReportController {
       override val calcConnector: CalculatorConnector = mockCalculatorConnector
       override def host(implicit request: RequestHeader): String = "http://localhost:9977/"
