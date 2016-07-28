@@ -251,6 +251,10 @@ class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with Fa
         }
       }
     }
+
+    "does not display the section for what to do next" in {
+      doc.select("#whatToDoNext").isEmpty shouldBe true
+    }
   }
 
   "Deductions Report view with all options selected" should {
@@ -430,6 +434,10 @@ class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with Fa
         }
       }
     }
+
+    "does not display the section for what to do next" in {
+      doc.select("#whatToDoNext").isEmpty shouldBe true
+    }
   }
 
   "Deductions Report view with AEA options selected" which {
@@ -466,33 +474,6 @@ class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with Fa
         doc.select("#annualExemptAmount-amount span.bold-medium").text shouldBe "£1,000"
       }
     }
-  }
-
-
-  "Report when supplied with a date above the known tax years" should {
-
-    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2018),
-      BigDecimal(200000),
-      BigDecimal(10000),
-      BigDecimal(100000),
-      BigDecimal(10000))
-    lazy val deductionAnswers = DeductionGainAnswersModel(
-      Some(OtherPropertiesModel(true)),
-      Some(AllowableLossesModel(true)),
-      Some(AllowableLossesValueModel(10000)),
-      Some(LossesBroughtForwardModel(true)),
-      Some(LossesBroughtForwardValueModel(10000)),
-      Some(AnnualExemptAmountModel(1000)))
-    lazy val results = ChargeableGainResultModel(BigDecimal(50000),
-      BigDecimal(-11000),
-      BigDecimal(0),
-      BigDecimal(11000),
-      BigDecimal(71000))
-
-    lazy val taxYearModel = TaxYearModel("2017/18", false, "2015/16")
-
-    lazy val view = views.deductionsSummaryReport(gainAnswers, deductionAnswers, results, taxYearModel)(fakeRequest)
-    lazy val doc = Jsoup.parse(view.body)
 
     "does not display the section for what to do next" in {
       doc.select("#whatToDoNext").isEmpty shouldBe true
