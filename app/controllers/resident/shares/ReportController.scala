@@ -61,5 +61,24 @@ trait ReportController extends FeatureLock {
 
   //#####Final summary actions#####\\
 
-  val finalSummaryReport = TODO
+  val finalSummaryReport = FeatureLockForRTT.async { implicit request =>
+    for {
+      answers <- calcConnector.getShareGainAnswers
+      taxYear <- getTaxYear(answers.disposalDate)
+      taxYearInt <- taxYearStringToInteger(taxYear.get.calculationTaxYear)
+      maxAEA <- getMaxAEA(taxYearInt)(hc)
+      grossGain <- calcConnector.calculateRttShareGrossGain(answers)
+      deductionAnswers <- calcConnector.getShareDeductionAnswers
+      chargeableGain <- calcConnector.calculateRttShareChargeableGain(answers, deductionAnswers, maxAEA.get)
+      incomeAnswers <- calcConnector.getShareIncomeAnswers
+      totalGain <- calcConnector.calculateRttShareTotalGainAndTax(answers, deductionAnswers, maxAEA.get, incomeAnswers)
+    } yield {
+      PdfGenerator.ok(views.finalSummaryReport(answers,
+        deductionAnswers,
+        incomeAnswers,
+        totalGain.get,
+        taxYear.get),
+        host).toScala.withHeaders("Content-Disposition" -> s"""attachment; filename="${Messages("calc.resident.summary.title")}.pdf"""")
+    }
+  }
 }
