@@ -56,7 +56,7 @@ trait ReportController extends FeatureLock {
   val gainSummaryReport = TODO
 
   //#####Deductions summary actions#####\\
-  val deductionsReport = FeatureLockForRTT.async { implicit request =>
+  val deductionsReport = FeatureLockForRTTShares.async { implicit request =>
     for {
       answers <- calcConnector.getShareGainAnswers
       taxYear <- getTaxYear(answers.disposalDate)
