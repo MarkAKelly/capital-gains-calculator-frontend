@@ -1,10 +1,26 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
+@import views.html.helpers.resident._
 @import models.resident.properties.ReliefsModel
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 @import views.html.calculation.resident.properties._
 
 @(reliefsForm: Form[ReliefsModel], totalGain: BigDecimal)(implicit request: Request[_])
+
+@hiddenHelpTextContent = {
+    <p>@Messages("calc.resident.reliefs.additionalContent.one")</p>
+    <ul class="list-bullet">
+        <li>
+            <a target="_blank" href="https://www.gov.uk/tax-sell-home/absence-from-home">@Messages("calc.resident.reliefs.link.one")
+                <span class="visuallyhidden">@Messages("calc.base.externalLink")</span></a>
+        </li>
+        <li>
+            <a target="_blank" href="https://www.gov.uk/tax-sell-home/let-out-part-of-home">@Messages("calc.resident.reliefs.link.two")
+                <span class="visuallyhidden">@Messages("calc.base.externalLink")</span></a>
+        </li>
+    </ul>
+    <p>@Messages("calc.resident.reliefs.additionalContent.two")</p>
+}
 
 @resident_properties_main_template(title = Messages("calc.resident.reliefs.title", MoneyPounds(totalGain, 0).quantity), backLink = Some(controllers.resident.properties.routes.GainController.improvements.toString())) {
 
@@ -26,7 +42,8 @@
                 '_helpText -> Messages("calc.resident.reliefs.helpText"),
                 '_labelAfter -> true,
                 '_labelClass -> "block-label",
-                '_groupClass -> "inline"
+                '_groupClass -> "inline",
+                '_fieldsetAttributes -> "aria-details = help"
             )
         </div>
 
@@ -35,16 +52,5 @@
 
     }
 
-    <p>@Messages("calc.resident.reliefs.additionalContent.one")</p>
-    <ul class="list-bullet">
-        <li>
-            <a target="_blank" href="https://www.gov.uk/tax-sell-home/absence-from-home">@Messages("calc.resident.reliefs.link.one")
-                <span class="visuallyhidden">@Messages("calc.base.externalLink")</span></a>
-        </li>
-        <li>
-            <a target="_blank" href="https://www.gov.uk/tax-sell-home/let-out-part-of-home">@Messages("calc.resident.reliefs.link.two")
-                <span class="visuallyhidden">@Messages("calc.base.externalLink")</span></a>
-        </li>
-    </ul>
-    <p>@Messages("calc.resident.reliefs.additionalContent.two")</p>
+    @expandableHelpTextHelper(Messages("calc.resident.reliefs.helpButton"), hiddenHelpTextContent)
 }
