@@ -61,7 +61,7 @@ trait ReportController extends FeatureLock {
 
   //#####Final summary actions#####\\
 
-  val finalSummaryReport = FeatureLockForRTT.async { implicit request =>
+  val finalSummaryReport = FeatureLockForRTTShares.async { implicit request =>
     for {
       answers <- calcConnector.getShareGainAnswers
       taxYear <- getTaxYear(answers.disposalDate)
