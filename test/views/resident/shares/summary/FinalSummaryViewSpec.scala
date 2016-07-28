@@ -302,16 +302,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         s"should have a change link to ${routes.GainController.acquisitionCosts().url}" in {
           doc.select("#acquisitionCosts-amount a").attr("href") shouldBe routes.GainController.acquisitionCosts().url
         }
-
       }
-//
-//      "does not display a numeric output row for the Improvements" which {
-//        doc.select("#improvements-question").isEmpty shouldBe true
-//      }
-//
-//      "does not display an option for tax reliefs" which {
-//        doc.select("#reliefs-question").isEmpty shouldBe true
-//      }
 
       "has an option output row for other disposals" which {
 
