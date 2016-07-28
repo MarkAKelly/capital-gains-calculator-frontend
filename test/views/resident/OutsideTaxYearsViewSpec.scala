@@ -30,7 +30,7 @@ class OutsideTaxYearsViewSpec extends UnitSpec with WithFakeApplication with Fak
 
     "using a disposal date before 2015/16" should {
       lazy val taxYear = TaxYearModel("2014/15", false, "2015/16")
-      lazy val view = views.outsideTaxYear(taxYear, "back-link", "home-link", "continue-link")(fakeRequestWithSession)
+      lazy val view = views.outsideTaxYear(taxYear, false, "back-link", "home-link", "continue-link")(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(view.body)
 
       "have charset UTF-8" in {
@@ -49,15 +49,15 @@ class OutsideTaxYearsViewSpec extends UnitSpec with WithFakeApplication with Fak
         doc.select("h1").text() shouldBe messages.title
       }
 
-      s"have a message of ${messages.content("2015/16")}" in {
-        doc.select("p.lede").text() shouldBe messages.content("2015/16")
+      s"have a message of ${messages.tooEarly}" in {
+        doc.select("p.lede").text() shouldBe messages.tooEarly
       }
 
-      "have a back link that" should {
-        lazy val backLink = doc.select("a#back-link")
+      "have a 'Change your date' link that" should {
+        lazy val backLink = doc.select("a#change-date-link")
 
-        "have the correct back link text" in {
-          backLink.text shouldBe commonMessages.calcBaseBack
+        "have the correct text" in {
+          backLink.text shouldBe messages.changeDate
         }
 
         "have the back-link class" in {
@@ -68,23 +68,11 @@ class OutsideTaxYearsViewSpec extends UnitSpec with WithFakeApplication with Fak
           backLink.attr("href") shouldBe "back-link"
         }
       }
-
-      "have a continue button that" should {
-        lazy val button = doc.select("a#continue-button")
-
-        "have the correct text 'Continue'" in {
-          button.text() shouldBe commonMessages.calcBaseContinue
-        }
-
-        s"have an href to 'continue-link'" in {
-          button.attr("href") shouldBe "continue-link"
-        }
-      }
     }
 
     "using a disposal date after 2016/17" should {
       lazy val taxYear = TaxYearModel("2017/18", false, "2016/17")
-      lazy val view = views.outsideTaxYear(taxYear, "back-link", "home-link", "continue-link")(fakeRequestWithSession)
+      lazy val view = views.outsideTaxYear(taxYear, true, "back-link", "home-link", "continue-link")(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(view.body)
 
       "have charset UTF-8" in {

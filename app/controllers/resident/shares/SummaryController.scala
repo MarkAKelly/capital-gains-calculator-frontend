@@ -109,7 +109,7 @@ trait SummaryController extends FeatureLock {
         Ok(views.finalSummary(totalGainAnswers, deductionGainAnswers, incomeAnswers,
           totalGainAndTax.get, routes.IncomeController.personalAllowance().url, taxYear.get, homeLink)))
 
-      if (grossGain > 0) Future.successful(Ok(views.deductionsSummary(totalGainAnswers, deductionGainAnswers,
+      else if (grossGain > 0) Future.successful(Ok(views.deductionsSummary(totalGainAnswers, deductionGainAnswers,
         chargeableGain.get, backUrl, taxYear.get, homeLink)))
       else Future.successful(Ok(views.gainSummary(totalGainAnswers, grossGain, taxYear.get, homeLink)))
     }

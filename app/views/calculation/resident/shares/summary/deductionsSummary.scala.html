@@ -67,7 +67,7 @@ homeLink = navHomeLink
     @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.shares.disposalCosts.question"),gainAnswers.disposalCosts,Some(gainRoutes.disposalCosts().toString))
     @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.shares.acquisitionValue.question"),gainAnswers.acquisitionValue,Some(gainRoutes.acquisitionValue().toString))
     @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.shares.acquisitionCosts.title"),gainAnswers.acquisitionCosts,Some(gainRoutes.acquisitionCosts().toString))
-    @summaryOptionRowHelper("otherProperties",Messages("calc.resident.otherProperties.title", taxYear.taxYearSupplied),deductionAnswers.otherPropertiesModel.get.hasOtherProperties,Some(deductionRoutes.otherDisposals().toString))
+    @summaryOptionRowHelper("otherDisposals",Messages("calc.resident.otherProperties.title", taxYear.taxYearSupplied),deductionAnswers.otherPropertiesModel.get.hasOtherProperties,Some(deductionRoutes.otherDisposals().toString))
     @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties)
         summaryOptionRowHelper("allowableLosses",Messages("calc.resident.allowableLosses.title", taxYear.taxYearSupplied),deductionAnswers.allowableLossesModel.get.isClaiming,Some(deductionRoutes.allowableLosses().toString))}
     @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties && deductionAnswers.allowableLossesModel.get.isClaiming)

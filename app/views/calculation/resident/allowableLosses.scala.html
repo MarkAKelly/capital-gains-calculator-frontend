@@ -1,10 +1,22 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
+@import views.html.helpers.resident._
 @import models.resident._
 @import views.html.calculation.resident._
 @import play.api.mvc.Call
 
 @(allowableLossesForm: Form[AllowableLossesModel], taxYear: TaxYearModel, postAction: Call, backLink: Option[String])(implicit request: Request[_])
+
+@hiddenHelpTextContent = {
+    <div id="helpInfo">
+        <p>@Messages("calc.resident.allowableLosses.helpInfo.subtitle")</p>
+        <ul class="list-bullet">
+            <li>@Messages("calc.resident.allowableLosses.helpInfo.point1")</li>
+            <li>@Messages("calc.resident.allowableLosses.helpInfo.point2")</li>
+            <li>@Messages("calc.resident.allowableLosses.helpInfo.point3")</li>
+        </ul>
+    </div>
+}
 
 @resident_main_template(
     title = Messages("calc.resident.allowableLosses.title",
@@ -28,20 +40,13 @@
             '_legendClass -> "visuallyhidden",
             '_labelAfter -> true,
             '_labelClass -> "block-label",
-            '_groupClass -> "inline form-group radio-list"
+            '_groupClass -> "inline form-group radio-list",
+            '_fieldsetAttributes -> "aria-details = help"
         )
 
         <input type="hidden" name="isClaiming" value="" />
         <button class="button yes-no-button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
     }
 
-    <div id="helpInfo">
-        <p>@Messages("calc.resident.allowableLosses.helpInfo.title")</p>
-        <p>@Messages("calc.resident.allowableLosses.helpInfo.subtitle")</p>
-        <ul class="list-bullet">
-            <li>@Messages("calc.resident.allowableLosses.helpInfo.point1")</li>
-            <li>@Messages("calc.resident.allowableLosses.helpInfo.point2")</li>
-            <li>@Messages("calc.resident.allowableLosses.helpInfo.point3")</li>
-        </ul>
-    </div>
+    @expandableHelpTextHelper(Messages("calc.resident.allowableLosses.helpInfo.title"), hiddenHelpTextContent)
 }
