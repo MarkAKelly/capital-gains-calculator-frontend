@@ -328,6 +328,25 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
       }
     }
+
+    "display the save as PDF Button" which {
+
+      "should render only one button" in {
+        doc.select("a.save-pdf-button").size() shouldEqual 1
+      }
+
+      "with the class save-pdf-button" in {
+        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
+      }
+
+      s"with an href to ${controllers.resident.shares.routes.ReportController.deductionsReport().toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/deductions-report"
+      }
+
+      s"have the text ${messages.saveAsPdf}" in {
+        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
+      }
+    }
   }
 
   "Shares Deductions Summary view with all options selected" should {
@@ -576,6 +595,25 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         s"should have a change link to ${routes.DeductionsController.lossesBroughtForwardValue().url}" in {
           doc.select("#broughtForwardLossesValue-amount a").attr("href") shouldBe routes.DeductionsController.lossesBroughtForwardValue().url
         }
+      }
+    }
+
+    "display the save as PDF Button" which {
+
+      "should render only one button" in {
+        doc.select("a.save-pdf-button").size() shouldEqual 1
+      }
+
+      "with the class save-pdf-button" in {
+        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
+      }
+
+      s"with an href to ${controllers.resident.shares.routes.ReportController.deductionsReport().toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/deductions-report"
+      }
+
+      s"have the text ${messages.saveAsPdf}" in {
+        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
       }
     }
   }
