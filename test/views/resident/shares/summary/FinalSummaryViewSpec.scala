@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.resident.properties.summary
+package views.resident.shares.summary
 
 import assets.MessageLookup.{summary => messages}
 import common.Dates
@@ -22,24 +22,22 @@ import controllers.helpers.FakeRequestHelper
 import models.resident._
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import views.html.calculation.resident.properties.{summary => views}
+import views.html.calculation.resident.shares.{summary => views}
 import assets.{MessageLookup => commonMessages}
-import common.Dates._
-import controllers.resident.properties.routes
+import controllers.resident.shares.routes
 import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, PreviousTaxableGainsModel}
-import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, YourAnswersSummaryModel}
+import models.resident.shares.{GainAnswersModel, DeductionGainAnswersModel}
+import models.resident.IncomeAnswersModel
 
 class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Final Summary view" should {
-    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+  "Final Summary shares view" should {
+    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2016),
       BigDecimal(200000),
       BigDecimal(10000),
       BigDecimal(100000),
-      BigDecimal(10000),
-      BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
-      None,
+      BigDecimal(10000))
+    lazy val deductionAnswers = DeductionGainAnswersModel(
       Some(OtherPropertiesModel(false)),
       None,
       None,
@@ -58,9 +56,10 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       None,
       None
     )
-    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
-    lazy val backLink = "/calculate-your-capital-gains/resident/properties/personal-allowance"
-    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
+    lazy val taxYearModel = TaxYearModel("2015/16", isValidYear = true, "2015/16")
+    lazy val backLink = "/calculate-your-capital-gains/resident/shares/personal-allowance"
+    lazy val homeLink = "home-link"
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -86,7 +85,10 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       s"has a link to '${routes.IncomeController.personalAllowance().toString()}'" in {
         backLink.attr("href") shouldBe routes.IncomeController.personalAllowance().toString
       }
+    }
 
+    "has a home link too 'home-link'" in {
+      doc.select("#homeNavHref").attr("href") shouldEqual "home-link"
     }
 
     s"have a page heading" which {
@@ -101,7 +103,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     }
 
     "does not have a notice summary" in {
-      doc.select("div.notice-wrapper").isEmpty() shouldBe true
+      doc.select("div.notice-wrapper").isEmpty shouldBe true
     }
 
     s"have a section for the Calculation details" which {
@@ -146,10 +148,6 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
         "has a breakdown that" should {
 
-          "include a value for Reliefs of £0" in {
-            doc.select("#deductions-amount").text should include("Reliefs £0")
-          }
-
           "include a value for Allowable Losses of £0" in {
             doc.select("#deductions-amount").text should include("Allowable losses £0")
           }
@@ -162,7 +160,6 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
             doc.select("#deductions-amount").text should include("Loss brought forward £0")
           }
         }
-
       }
 
       "has a numeric output row for the chargeable gain" which {
@@ -307,65 +304,35 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         }
 
       }
+//
+//      "does not display a numeric output row for the Improvements" which {
+//        doc.select("#improvements-question").isEmpty shouldBe true
+//      }
+//
+//      "does not display an option for tax reliefs" which {
+//        doc.select("#reliefs-question").isEmpty shouldBe true
+//      }
 
-      "has a numeric output row for the Improvements" which {
-
-        s"should have the question text '${commonMessages.improvementsView.title}'" in {
-          doc.select("#improvements-question").text shouldBe commonMessages.improvementsView.title
-        }
-
-        "should have the value '£30,000'" in {
-          doc.select("#improvements-amount span.bold-medium").text shouldBe "£30,000"
-        }
-
-        s"should have a change link to ${routes.GainController.improvements().url}" in {
-          doc.select("#improvements-amount a").attr("href") shouldBe routes.GainController.improvements().url
-        }
-      }
-
-      "has an option output row for tax reliefs" which {
-
-        s"should have the question text '${commonMessages.reliefs.questionSummary}'" in {
-          doc.select("#reliefs-question").text shouldBe commonMessages.reliefs.questionSummary
-        }
-
-        "should have the value 'No'" in {
-          doc.select("#reliefs-option span.bold-medium").text shouldBe "No"
-        }
-
-        s"should have a change link to ${routes.DeductionsController.reliefs().url}" in {
-          doc.select("#reliefs-option a").attr("href") shouldBe routes.DeductionsController.reliefs().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#reliefs-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.reliefs.question("50,000")}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#reliefs-option a span.visuallyhidden").text shouldBe commonMessages.reliefs.question("50,000")
-        }
-      }
-
-      "has an option output row for other properties" which {
+      "has an option output row for other disposals" which {
 
         s"should have the question text '${commonMessages.otherProperties.title("2015/16")}'" in {
-          doc.select("#otherProperties-question").text shouldBe commonMessages.otherProperties.title("2015/16")
+          doc.select("#otherDisposals-question").text shouldBe commonMessages.otherProperties.title("2015/16")
         }
 
         "should have the value 'No'" in {
-          doc.select("#otherProperties-option span.bold-medium").text shouldBe "No"
+          doc.select("#otherDisposals-option span.bold-medium").text shouldBe "No"
         }
 
-        s"should have a change link to ${routes.DeductionsController.otherProperties().url}" in {
-          doc.select("#otherProperties-option a").attr("href") shouldBe routes.DeductionsController.otherProperties().url
+        s"should have a change link to ${routes.DeductionsController.otherDisposals().url}" in {
+          doc.select("#otherDisposals-option a").attr("href") shouldBe routes.DeductionsController.otherDisposals().url
         }
 
         "has the question as part of the link" in {
-          doc.select("#otherProperties-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.otherProperties.title("2015/16")}"
+          doc.select("#otherDisposals-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.otherProperties.title("2015/16")}"
         }
 
         "has the question component of the link as visuallyhidden" in {
-          doc.select("#otherProperties-option a span.visuallyhidden").text shouldBe commonMessages.otherProperties.title("2015/16")
+          doc.select("#otherDisposals-option a span.visuallyhidden").text shouldBe commonMessages.otherProperties.title("2015/16")
         }
       }
 
@@ -419,46 +386,24 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
           doc.select("#personalAllowance-amount a").attr("href") shouldBe routes.IncomeController.personalAllowance().url
         }
       }
-
-      "display the save as PDF Button" which {
-
-        "should render only one button" in {
-          doc.select("a.save-pdf-button").size() shouldEqual 1
-        }
-
-        "with the class save-pdf-button" in {
-          doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
-        }
-
-        s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
-          doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/final-report"
-        }
-
-        s"have the text ${messages.saveAsPdf}" in {
-          doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
-        }
-      }
     }
   }
 
-  "Final Summary view with a calculation has some previous taxable gains" should {
-    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+  "Final Summary shares view with a calculation that has some previous taxable gains" should {
+
+    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2016),
       BigDecimal(200000),
       BigDecimal(10000),
       BigDecimal(100000),
-      BigDecimal(10000),
-      BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
-      None,
+      BigDecimal(10000))
+    lazy val deductionAnswers = DeductionGainAnswersModel(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
       None,
       Some(LossesBroughtForwardModel(false)),
       None,
       Some(AnnualExemptAmountModel(0)))
-
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
-
     lazy val results = TotalGainAndTaxOwedModel(
       50000,
       20000,
@@ -470,12 +415,10 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       None,
       None
     )
-
-    lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
-
-    lazy val backLink = "/calculate-your-capital-gains/resident/properties/personal-allowance"
-
-    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
+    lazy val taxYearModel = TaxYearModel("2013/14", isValidYear = false, "2015/16")
+    lazy val backLink = "/calculate-your-capital-gains/resident/shares/personal-allowance"
+    lazy val homeLink = "home-link"
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -602,45 +545,23 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         doc.select("#personalAllowance-amount a").attr("href") shouldBe routes.IncomeController.personalAllowance().url
       }
     }
-
-    "display the save as PDF Button" which {
-
-      "should render only one button" in {
-        doc.select("a.save-pdf-button").size() shouldEqual 1
-      }
-
-      "with the class save-pdf-button" in {
-        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
-      }
-
-      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
-        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/final-report"
-      }
-
-      s"have the text ${messages.saveAsPdf}" in {
-        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
-      }
-    }
   }
 
-  "Final Summary view with a calculation that returns tax on both side of the rate boundary" should {
-    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+  "Final Summary shares view with a calculation that returns tax on both side of the rate boundary" should {
+
+    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2016),
       BigDecimal(200000),
       BigDecimal(10000),
       BigDecimal(100000),
-      BigDecimal(10000),
-      BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
-      None,
+      BigDecimal(10000))
+    lazy val deductionAnswers = DeductionGainAnswersModel(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
       None,
       Some(LossesBroughtForwardModel(false)),
       None,
-      Some(AnnualExemptAmountModel(0)))
-
+      Some(AnnualExemptAmountModel(11000)))
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
-
     lazy val results = TotalGainAndTaxOwedModel(
       50000,
       20000,
@@ -652,12 +573,10 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       Some(10000),
       Some(28)
     )
-
-    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
-
-    lazy val backLink = "/calculate-your-capital-gains/resident/properties/personal-allowance"
-
-    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
+    lazy val taxYearModel = TaxYearModel("2015/16", isValidYear = true, "2015/16")
+    lazy val backLink = "/calculate-your-capital-gains/resident/shares/personal-allowance"
+    lazy val homeLink = "home-link"
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -705,46 +624,26 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         doc.select("#secondBand").text should include("28%")
       }
     }
-
-    "display the save as PDF Button" which {
-
-      "should render only one button" in {
-        doc.select("a.save-pdf-button").size() shouldEqual 1
-      }
-
-      "with the class save-pdf-button" in {
-        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
-      }
-
-      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
-        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/final-report"
-      }
-
-      s"have the text ${messages.saveAsPdf}" in {
-        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
-      }
-    }
   }
 
-  "Summary when supplied with a date within the known tax years and tax owed" should {
+  "Final Summary shares when supplied with a date within the known tax years and tax owed" should {
 
-    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2015),
+    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2015),
       BigDecimal(200000),
       BigDecimal(0),
       BigDecimal(0),
-      BigDecimal(0),
-      BigDecimal(0))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
-      None,
+      BigDecimal(0)
+    )
+
+    lazy val deductionAnswers = DeductionGainAnswersModel(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
       None,
       Some(LossesBroughtForwardModel(false)),
       None,
-      Some(AnnualExemptAmountModel(0)))
-
+      Some(AnnualExemptAmountModel(11000))
+    )
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(0)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
-
     lazy val results = TotalGainAndTaxOwedModel(
       0,
       0,
@@ -757,11 +656,10 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       Some(28)
     )
 
-    lazy val backLink = "/calculate-your-capital-gains/resident/properties/personal-allowance"
-
-    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
-
-    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
+    lazy val taxYearModel = TaxYearModel("2015/16", isValidYear = true, "2015/16")
+    lazy val backLink = "/calculate-your-capital-gains/resident/shares/personal-allowance"
+    lazy val homeLink = "home-link"
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "display the what to do next section" in {
@@ -794,44 +692,26 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         doc.select("span#opensInANewTab").text shouldEqual commonMessages.calcBaseExternalLink
       }
     }
-
-    "display the save as PDF Button" which {
-
-      "should render only one button" in {
-        doc.select("a.save-pdf-button").size() shouldEqual 1
-      }
-
-      "with the class save-pdf-button" in {
-        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
-      }
-
-      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
-        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/final-report"
-      }
-
-      s"have the text ${messages.saveAsPdf}" in {
-        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
-      }
-    }
   }
 
 
-  "Summary when supplied with a date above the known tax years" should {
+  "Final Summary shares when supplied with a date above the known tax years" should {
 
-    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
+    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2018),
       BigDecimal(200000),
-      BigDecimal(10000),
-      BigDecimal(100000),
-      BigDecimal(10000),
-      BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
-      None,
+      BigDecimal(0),
+      BigDecimal(0),
+      BigDecimal(0)
+    )
+
+    lazy val deductionAnswers = DeductionGainAnswersModel(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
       None,
       Some(LossesBroughtForwardModel(false)),
       None,
-      Some(AnnualExemptAmountModel(0)))
+      Some(AnnualExemptAmountModel(11000))
+    )
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -847,53 +727,34 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       Some(28)
     )
 
-    lazy val backLink = "/calculate-your-capital-gains/resident/properties/personal-allowance"
-
-    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
-
-    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
+    lazy val taxYearModel = TaxYearModel("2016/17", isValidYear = false, "2018/19")
+    lazy val backLink = "/calculate-your-capital-gains/resident/shares/personal-allowance"
+    lazy val homeLink = "home-link"
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "does not display the what to do next content" in {
       doc.select("#whatToDoNext").isEmpty shouldBe true
     }
-
-    "display the save as PDF Button" which {
-
-      "should render only one button" in {
-        doc.select("a.save-pdf-button").size() shouldEqual 1
-      }
-
-      "with the class save-pdf-button" in {
-        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
-      }
-
-      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
-        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/final-report"
-      }
-
-      s"have the text ${messages.saveAsPdf}" in {
-        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
-      }
-    }
   }
 
-  "Summary when supplied with a date in 2016/17" should {
+  "Final Summary shares when supplied with a date in 2016/17" should {
 
-    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2016),
       BigDecimal(200000),
-      BigDecimal(10000),
-      BigDecimal(100000),
-      BigDecimal(10000),
-      BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
-      None,
+      BigDecimal(0),
+      BigDecimal(0),
+      BigDecimal(0)
+    )
+
+    lazy val deductionAnswers = DeductionGainAnswersModel(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
       None,
       Some(LossesBroughtForwardModel(false)),
       None,
-      Some(AnnualExemptAmountModel(0)))
+      Some(AnnualExemptAmountModel(11000))
+    )
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -909,36 +770,16 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       Some(28)
     )
 
-    lazy val backLink = "/calculate-your-capital-gains/resident/properties/personal-allowance"
-
-    lazy val taxYearModel = TaxYearModel("2016/17", true, "2016/17")
-
-    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
+    lazy val taxYearModel = TaxYearModel("2016/17", isValidYear = true, "2016/17")
+    lazy val backLink = "/calculate-your-capital-gains/resident/shares/personal-allowance"
+    lazy val homeLink = "home-link"
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "has an option output row for current income" which {
 
       s"should have the question text '${commonMessages.currentIncome.currentYearTitle}'" in {
         doc.select("#currentIncome-question").text shouldBe commonMessages.currentIncome.currentYearTitle
-      }
-    }
-
-    "display the save as PDF Button" which {
-
-      "should render only one button" in {
-        doc.select("a.save-pdf-button").size() shouldEqual 1
-      }
-
-      "with the class save-pdf-button" in {
-        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
-      }
-
-      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
-        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/final-report"
-      }
-
-      s"have the text ${messages.saveAsPdf}" in {
-        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
       }
     }
   }
