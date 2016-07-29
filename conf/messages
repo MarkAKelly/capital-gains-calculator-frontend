@@ -369,9 +369,12 @@ calc.resident.summary.whatNext = What to do next
 calc.resident.summary.whatNext.youCan = You can
 calc.resident.summary.whatNext.link = tell us about this loss
 calc.resident.summary.whatNext.text = so that you might need to pay less tax in the future.
-calc.resident.summary.whatNext.noLossOrGain = As you have no tax to pay, you don''t need to tell HMRC about the property.
+calc.resident.summary.whatNext.noLossOrGain = Find out whether you need to
+calc.resident.summary.whatNext.noLossOrGainLinkProperties = tell HMRC about the property
+calc.resident.summary.whatNext.noLossOrGainLinkShares = tell HMRC about the shares
 calc.resident.summary.whatNext.youNeedTo = You need to
 calc.resident.summary.whatNext.linkTwo = tell HMRC about the property.
+calc.resident.summary.whatNext.sharesLinkTwo =  tell HMRC about the shares.
 calc.resident.summary.saveAsPdf = Save as PDF
 
 

@@ -84,7 +84,13 @@ homeLink = navHomeLink
     @if(dateInsideAcceptedTaxYears(getDay(gainAnswers.disposalDate), getMonth(gainAnswers.disposalDate), getYear(gainAnswers.disposalDate))) {
             <section id="whatToDoNext" class="summary-underline summary-overline">
                 <h3 id="whatToDoNextNoLossTitle" class="bold-medium">@Messages("calc.resident.summary.whatNext")</h3>
-                <div id="whatToDoNextNoLossText" class="font-medium what-to-do-next-text">@Messages("calc.resident.summary.whatNext.noLossOrGain")</div>
+                <div id="whatToDoNextNoLossText" class="font-medium what-to-do-next-text">
+                    @Messages("calc.resident.summary.whatNext.noLossOrGain")
+                    <a href="https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax" target="_blank" rel="external">
+                        @Messages("calc.resident.summary.whatNext.noLossOrGainLinkShares")
+                    </a>
+                    <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>.
+                </div>
             </section>
     }
 
