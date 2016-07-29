@@ -155,6 +155,8 @@ object MessageLookup {
   object reliefsValue {
     val title = "How much tax relief are you claiming?"
     val question = "How much tax relief are you claiming?"
+    val prrLink = "Private Residence Relief"
+    val lettingsReliefLink = "Lettings Relief"
   }
 
   //Other Properties messages

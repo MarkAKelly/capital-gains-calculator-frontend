@@ -1,11 +1,32 @@
 @import models.resident.properties.ReliefsValueModel
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
-@import views.html.calculation.resident.properties._
+@import views.html.calculation.resident._
 
-@(reliefsValueForm : Form[ReliefsValueModel])(implicit request: Request[_])
+@(reliefsValueForm : Form[ReliefsValueModel], navHomeLink: String)(implicit request: Request[_])
 
-@resident_properties_main_template(title = Messages("calc.resident.reliefsValue.title"), backLink = Some(controllers.resident.properties.routes.DeductionsController.reliefs().toString)) {
+@sidebar = {
+    <div>
+        <a id="reliefsValuePrivateResidenceReliefLink" class="external-link" rel="external" href="https://www.gov.uk/tax-sell-home/absence-from-home"
+           target="_blank" data-journey-click="help:govUK:absenceFromHome">
+            @Messages("calc.resident.reliefsValue.externalLinkOne")
+            <span class="visuallyhidden">@Messages("calc.resident.reliefsValue.externalLinkOne")</span>
+        </a>
+    </div>
+    <div>
+        <a id="reliefsValueLettingsReliefLink" class="external-link" rel="external" href="https://www.gov.uk/tax-sell-home/let-out-part-of-home"
+           target="_blank" data-journey-click="help:govUK:letOutPartOfHome">
+            @Messages("calc.resident.reliefsValue.externalLinkTwo")
+            <span class="visuallyhidden">@Messages("calc.resident.reliefsValue.externalLinkTwo")</span>
+        </a>
+    </div>
+}
+
+@resident_main_template(
+    title = Messages("calc.resident.reliefsValue.title"),
+    backLink = Some(controllers.resident.properties.routes.DeductionsController.reliefs().toString),
+    sidebarLinks = Some(sidebar),
+    homeLink = navHomeLink) {
 
     @errorSummary(reliefsValueForm, "reliefs-value")
 
