@@ -45,6 +45,14 @@ trait ReportController extends FeatureLock {
     calcConnector.getTaxYear(formats.format(disposalDate))
   }
 
+  def getMaxAEA(taxYear: Int)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
+    calcConnector.getFullAEA(taxYear)
+  }
+
+  def taxYearStringToInteger (taxYear: String): Future[Int] = {
+    Future.successful((taxYear.take(2) + taxYear.takeRight(2)).toInt)
+  }
+
   val gainSummaryReport = FeatureLockForRTTShares.async { implicit request =>
     for {
       answers <- calcConnector.getShareGainAnswers
@@ -54,9 +62,38 @@ trait ReportController extends FeatureLock {
       .withHeaders("Content-Disposition" -> s"""attachment; filename="${Messages("calc.resident.summary.title")}.pdf"""")}
   }
 
-
   //#####Deductions summary actions#####\\
+  val deductionsReport = FeatureLockForRTTShares.async { implicit request =>
+    for {
+      answers <- calcConnector.getShareGainAnswers
+      taxYear <- getTaxYear(answers.disposalDate)
+      deductionAnswers <- calcConnector.getShareDeductionAnswers
+      grossGain <- calcConnector.calculateRttShareGrossGain(answers)
+      chargeableGain <- calcConnector.calculateRttShareChargeableGain(answers, deductionAnswers, grossGain)
+    } yield {PdfGenerator.ok(views.deductionsSummaryReport(answers, deductionAnswers, chargeableGain.get, taxYear.get), host).toScala
+      .withHeaders("Content-Disposition" -> s"""attachment; filename="${Messages("calc.resident.summary.title")}.pdf"""")}
+  }
 
   //#####Final summary actions#####\\
 
+  val finalSummaryReport = FeatureLockForRTTShares.async { implicit request =>
+    for {
+      answers <- calcConnector.getShareGainAnswers
+      taxYear <- getTaxYear(answers.disposalDate)
+      taxYearInt <- taxYearStringToInteger(taxYear.get.calculationTaxYear)
+      maxAEA <- getMaxAEA(taxYearInt)(hc)
+      grossGain <- calcConnector.calculateRttShareGrossGain(answers)
+      deductionAnswers <- calcConnector.getShareDeductionAnswers
+      chargeableGain <- calcConnector.calculateRttShareChargeableGain(answers, deductionAnswers, maxAEA.get)
+      incomeAnswers <- calcConnector.getShareIncomeAnswers
+      totalGain <- calcConnector.calculateRttShareTotalGainAndTax(answers, deductionAnswers, maxAEA.get, incomeAnswers)
+    } yield {
+      PdfGenerator.ok(views.finalSummaryReport(answers,
+        deductionAnswers,
+        incomeAnswers,
+        totalGain.get,
+        taxYear.get),
+        host).toScala.withHeaders("Content-Disposition" -> s"""attachment; filename="${Messages("calc.resident.summary.title")}.pdf"""")
+    }
+  }
 }

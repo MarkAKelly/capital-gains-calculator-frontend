@@ -57,6 +57,8 @@ object MessageLookup {
   //Outside Tax Years messages
   object outsideTaxYears {
     val title = "The date you've entered isn't supported by this calculator"
+    val tooEarly = "You can use this calculator if you've sold a property since 5 April 2015."
+    val changeDate = "Change your date"
     def content(year: String): String = s"You can continue to use it, but we'll use the tax rates from the $year tax year."
   }
 
@@ -146,12 +148,15 @@ object MessageLookup {
     val helpLinkTwo = "Lettings Relief"
     val helpTwo = "Tax reliefs are different from your Capital Gains Tax Allowance and Personal Allowance."
     def errorSelect(value: String) = s"Tell us if you want to claim any tax reliefs on your total gain of £$value"
+    val helpButton = "What are Capital Gains Tax reliefs?"
   }
 
   //Reliefs Value messages
   object reliefsValue {
     val title = "How much tax relief are you claiming?"
     val question = "How much tax relief are you claiming?"
+    val prrLink = "Private Residence Relief"
+    val lettingsReliefLink = "Lettings Relief"
   }
 
   //Other Properties messages
@@ -175,6 +180,11 @@ object MessageLookup {
   object lossesBroughtForward {
     def title(input: String) = s"Are you claiming any allowable losses from tax years before $input?"
     def question(input: String) = s"Are you claiming any allowable losses from tax years before $input?"
+    val helpInfoTitle = "What are allowable losses?"
+    val helpInfoSubtitle = "They're losses you've made that:"
+    val helpInfoPoint1 = "are covered by Capital Gains Tax"
+    val helpInfoPoint2 = "you've declared within 4 years of making the loss"
+    val helpInfoPoint3 = "you haven't already used to reduce the amount of Capital Gains Tax you had to pay"
     def errorSelect(input: String) = s"Tell us if you're claiming any allowable losses from tax years before $input"
   }
 
@@ -185,7 +195,7 @@ object MessageLookup {
     val helpInfoSubtitle = "They're losses you've made that:"
     val helpInfoPoint1 = "are covered by Capital Gains Tax"
     val helpInfoPoint2 = "you've declared within 4 years of making the loss"
-    val helpInfoPoint3 = "you haven't already used in an allowable losses claim"
+    val helpInfoPoint3 = "you haven't already used to reduce the amount of Capital Gains Tax you had to pay"
     def errorSelect(input: String) = s"Tell us if you're claiming any allowable losses from the $input tax year"
   }
 

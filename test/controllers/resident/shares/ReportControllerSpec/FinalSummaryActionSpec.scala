@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-package controllers.resident.properties.ReportControllerSpec
+package controllers.resident.shares.ReportControllerSpec
 
+import assets.MessageLookup.{summary => messages}
 import common.Dates
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.properties.{ReportController, SummaryController}
+import controllers.resident.shares.ReportController
 import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel}
+import models.resident.shares.{DeductionGainAnswersModel, GainAnswersModel}
 import models.resident.{TaxYearModel, _}
-import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import play.api.mvc.RequestHeader
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.{summary => messages}
-import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, YourAnswersSummaryModel}
 
 import scala.concurrent.Future
 
@@ -38,9 +37,9 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
 
   def setupTarget
   (
-    yourAnswersSummaryModel: YourAnswersSummaryModel,
+    yourAnswersSummaryModel: GainAnswersModel,
     grossGain: BigDecimal,
-    chargeableGainAnswers: ChargeableGainAnswers,
+    chargeableGainAnswers: DeductionGainAnswersModel,
     chargeableGainResultModel: Option[ChargeableGainResultModel] = None,
     incomeAnswers: IncomeAnswersModel,
     totalGainAndTaxOwedModel: Option[TotalGainAndTaxOwedModel] = None,
@@ -49,22 +48,22 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     lazy val mockCalculatorConnector = mock[CalculatorConnector]
 
-    when(mockCalculatorConnector.getPropertyGainAnswers(Matchers.any()))
+    when(mockCalculatorConnector.getShareGainAnswers(Matchers.any()))
       .thenReturn(Future.successful(yourAnswersSummaryModel))
 
-    when(mockCalculatorConnector.calculateRttPropertyGrossGain(Matchers.any())(Matchers.any()))
+    when(mockCalculatorConnector.calculateRttShareGrossGain(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(grossGain))
 
-    when(mockCalculatorConnector.getPropertyDeductionAnswers(Matchers.any()))
+    when(mockCalculatorConnector.getShareDeductionAnswers(Matchers.any()))
       .thenReturn(Future.successful(chargeableGainAnswers))
 
-    when(mockCalculatorConnector.calculateRttPropertyChargeableGain(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+    when(mockCalculatorConnector.calculateRttShareChargeableGain(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
       .thenReturn(chargeableGainResultModel)
 
-    when(mockCalculatorConnector.getPropertyIncomeAnswers(Matchers.any()))
+    when(mockCalculatorConnector.getShareIncomeAnswers(Matchers.any()))
       .thenReturn(Future.successful(incomeAnswers))
 
-    when(mockCalculatorConnector.calculateRttPropertyTotalGainAndTax(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+    when(mockCalculatorConnector.calculateRttShareTotalGainAndTax(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(totalGainAndTaxOwedModel))
 
     when(mockCalculatorConnector.getTaxYear(Matchers.any())(Matchers.any()))
@@ -82,13 +81,12 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
   "Calling .finalSummaryReport from the ReportController" when {
 
     "a positive taxable gain is returned" should {
-      lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
+      lazy val yourAnswersSummaryModel = GainAnswersModel(Dates.constructDate(12, 1, 2016),
         30000,
         0,
         10000,
-        0,
         0)
-      lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)), None, Some(OtherPropertiesModel(false)),
+      lazy val chargeableGainAnswers = DeductionGainAnswersModel(Some(OtherPropertiesModel(false)),
         Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None)
       lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 0, 11100)
       lazy val incomeAnswersModel = IncomeAnswersModel(None, Some(CurrentIncomeModel(20000)), Some(PersonalAllowanceModel(10000)))
@@ -122,13 +120,12 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
     }
 
     "a positive taxable gain is returned with an invalid tax year and two tax rates" should {
-      lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
+      lazy val yourAnswersSummaryModel = GainAnswersModel(Dates.constructDate(12, 1, 2016),
         30000,
         0,
         10000,
-        0,
         0)
-      lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)), None, Some(OtherPropertiesModel(false)),
+      lazy val chargeableGainAnswers = DeductionGainAnswersModel(Some(OtherPropertiesModel(false)),
         Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None)
       lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 0, 11100)
       lazy val incomeAnswersModel = IncomeAnswersModel(None, Some(CurrentIncomeModel(20000)), Some(PersonalAllowanceModel(10000)))

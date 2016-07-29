@@ -2,16 +2,16 @@
 @import views.html.calculation.resident._
 @import models.SummaryDataItemModel
 @import models.resident._
-@import models.resident.properties._
+@import models.resident.shares._
 @import common.Dates._
-@import constructors.resident.properties.SummaryConstructor._
-@import constructors.resident.properties.CalculateRequestConstructor._
-@import controllers.resident.properties.routes.{GainController => gainRoutes}
-@import controllers.resident.properties.routes.{DeductionsController => deductionRoutes}
-@import controllers.resident.properties.routes.{IncomeController => incomeRoutes}
+@import constructors.resident.shares.SummaryConstructor._
+@import constructors.resident.shares.CalculateRequestConstructor._
+@import controllers.resident.shares.routes.{GainController => gainRoutes}
+@import controllers.resident.shares.routes.{DeductionsController => deductionRoutes}
+@import controllers.resident.shares.routes.{IncomeController => incomeRoutes}
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-@(gainAnswers: YourAnswersSummaryModel, deductionAnswers: ChargeableGainAnswers, incomeAnswers: IncomeAnswersModel, result: TotalGainAndTaxOwedModel, taxYear: TaxYearModel)(implicit request: Request[_])
+@(gainAnswers: GainAnswersModel, deductionAnswers: DeductionGainAnswersModel, incomeAnswers: IncomeAnswersModel, result: TotalGainAndTaxOwedModel, taxYear: TaxYearModel)(implicit request: Request[_])
 
 <!DOCTYPE html>
 <html>
@@ -54,7 +54,6 @@
         @summaryNumericRowHelper("gain",gainMessage(result.gain),result.gain)
         @summaryNumericRowHelper("deductions", Messages("calc.resident.summary.deductions"), result.deductions, None,
         Some(Seq(
-        (Messages("calc.resident.summary.reliefs"), reliefsUsed(deductionAnswers)),
         (Messages("calc.resident.summary.allowableLosses"), allowableLossesUsed(deductionAnswers)),
         (Messages("calc.resident.summary.aeaUsed"), MoneyPounds(result.aeaUsed, 0).quantity),
         (Messages("calc.resident.summary.broughtForwardLoss"), broughtForwardLossesUsed(deductionAnswers))
@@ -80,17 +79,12 @@
         @summarySectionHeaderHelper(Messages("calc.resident.summary.yourAnswersHeading"))
 
         <!-- Data Rows-->
-        @summaryDateRowHelper("disposalDate",Messages("calc.resident.disposalDate.question"),gainAnswers.disposalDate,None)
-        @summaryNumericRowHelper("disposalValue",Messages("calc.resident.disposal.value.title"),gainAnswers.disposalValue,None)
-        @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.disposalCosts.title"),gainAnswers.disposalCosts,None)
-        @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),gainAnswers.acquisitionValue,None)
-        @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),gainAnswers.acquisitionCosts,None)
-        @summaryNumericRowHelper("improvements",Messages("calc.resident.improvements.title"),gainAnswers.improvements,None)
-        @summaryOptionRowHelper("reliefs",Messages("calc.resident.reliefs.title", MoneyPounds(result.gain,
-        0).quantity),deductionAnswers.reliefsModel.get.isClaiming, None)
-        @{if (deductionAnswers.reliefsModel.get.isClaiming)
-        summaryNumericRowHelper("reliefsValue",Messages("calc.resident.reliefsValue.title"),deductionAnswers.reliefsValueModel.get.amount,None)}
-        @summaryOptionRowHelper("otherProperties",Messages("calc.resident.otherProperties.title",
+        @summaryDateRowHelper("disposalDate",Messages("calc.resident.shares.disposalDate.question"),gainAnswers.disposalDate,None)
+        @summaryNumericRowHelper("disposalValue",Messages("calc.resident.shares.disposalValue.question"),gainAnswers.disposalValue,None)
+        @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.shares.disposalCosts.question"),gainAnswers.disposalCosts,None)
+        @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.shares.acquisitionValue.question"),gainAnswers.acquisitionValue,None)
+        @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.shares.acquisitionCosts.title"),gainAnswers.acquisitionCosts,None)
+        @summaryOptionRowHelper("otherDisposals",Messages("calc.resident.otherProperties.title",
         taxYear.taxYearSupplied),deductionAnswers.otherPropertiesModel.get.hasOtherProperties,None)
         @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties)
         summaryOptionRowHelper("allowableLosses",Messages("calc.resident.allowableLosses.title",

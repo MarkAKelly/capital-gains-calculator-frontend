@@ -59,6 +59,10 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
       doc.select("span.form-hint").text() shouldEqual messages.help
     }
 
+    "have a fieldset with aria-details attribute" in {
+      doc.select("fieldset").attr("aria-details") shouldBe "help"
+    }
+
     s"have an input field with id isClaiming-yes " in {
       doc.body.getElementById("isClaiming-yes").tagName() shouldEqual "input"
     }
@@ -69,6 +73,11 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
 
     "have a continue button " in {
       doc.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
+    }
+
+    s"have a drop down button with the text ${messages.helpButton}" in {
+      doc.body.getElementsByTag("summary").attr("role") shouldBe "button"
+      doc.body.getElementsByTag("summary").text shouldEqual messages.helpButton
     }
 
     s"have an additional line help line ${messages.helpOne}" in {
