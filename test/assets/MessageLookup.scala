@@ -233,10 +233,10 @@ object MessageLookup {
 
   //Personal Allowance messages
   object personalAllowance {
-    def title(input: String) = s"In the $input tax year, what was your UK Personal Allowance?"
-    val inYearTitle = "How much is your UK Personal Allowance?"
-    def question(input: String) = s"In the $input tax year, what was your UK Personal Allowance?"
-    val inYearQuestion = "How much is your UK Personal Allowance?"
+    def title(input: String) = s"In the $input tax year, what was your Personal Allowance?"
+    val inYearTitle = "How much is your Personal Allowance?"
+    def question(input: String) = s"In the $input tax year, what was your Personal Allowance?"
+    val inYearQuestion = "How much is your Personal Allowance?"
     def help(input: String) = s"This is the amount of your income you don't pay tax on. It's £$input unless you're claiming other allowances."
     val helpLinkOne = "Personal Allowance"
   }
