@@ -53,7 +53,7 @@ homeLink = navHomeLink
     )))
     @summaryNumericRowHelper("chargeableGain", if(result.chargeableGain < 0) {
     Messages("calc.resident.summary.chargeableLoss")} else {Messages("calc.resident.summary.chargeableGain")}, result.chargeableGain)
-    @summaryNumericRowHelper("aeaRemaining", Messages("calc.resident.summary.aeaRemaining"), result.aeaRemaining)
+    @summaryNumericRowHelper("aeaRemaining", Messages("calc.resident.summary.aeaRemaining"), result.aeaRemaining, None, Some(Seq()))
 </section>
 
 <!-- Your Answers Section -->
