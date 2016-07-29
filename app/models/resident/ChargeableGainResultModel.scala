@@ -23,7 +23,9 @@ case class ChargeableGainResultModel (
                                        chargeableGain: BigDecimal,
                                        aeaUsed: BigDecimal,
                                        aeaRemaining: BigDecimal,
-                                       deductions: BigDecimal
+                                       deductions: BigDecimal,
+                                       allowableLossesRemaining: BigDecimal,
+                                       broughtForwardLossesRemaining: BigDecimal
                                      )
 
 object ChargeableGainResultModel {
