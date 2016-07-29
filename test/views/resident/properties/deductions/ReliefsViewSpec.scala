@@ -28,7 +28,7 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
 
   "Reliefs view with a gain of £10000" should {
 
-    lazy val view = views.reliefs(reliefsForm(BigDecimal(10000)), BigDecimal(10000))(fakeRequest)
+    lazy val view = views.reliefs(reliefsForm(BigDecimal(10000)), BigDecimal(10000), "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -84,30 +84,18 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
       doc.body.getElementsByTag("p").text() should include(messages.helpOne)
     }
 
-    s"have bullet list help line ${messages.helpLinkOne}" in {
-      doc.body.select("ul.list-bullet li a").first.text() should include(messages.helpLinkOne)
+    s"have help link text ${messages.helpLinkOne}" in {
+      doc.body.select("a").text() should include(messages.helpLinkOne)
     }
 
-    "have a bullet list link to https://www.gov.uk/tax-sell-home/absence-from-home" in {
-      doc.body.select("ul.list-bullet li a").first.attr("href") shouldBe "https://www.gov.uk/tax-sell-home/absence-from-home"
-    }
-
-    s"have bullet list help line ${messages.helpLinkTwo}" in {
-      doc.body.select("ul.list-bullet li a").last.text() should include(messages.helpLinkTwo)
-    }
-
-    "have a bullet list link to https://www.gov.uk/tax-sell-home/let-out-part-of-home" in {
-      doc.body.select("ul.list-bullet li a").last.attr("href") shouldBe "https://www.gov.uk/tax-sell-home/let-out-part-of-home"
-    }
-
-    s"have an additional line help line ${messages.helpTwo}" in {
-      doc.body.getElementsByTag("p").text() should include(messages.helpTwo)
+    "have a help link to https://www.gov.uk/tax-sell-home/absence-from-home" in {
+      doc.body.getElementById("reliefsLink").attr("href") shouldBe "https://www.gov.uk/tax-sell-home/absence-from-home"
     }
   }
 
   "Reliefs view with pre-selected values and a gain of £100" should {
     lazy val form = reliefsForm(BigDecimal(100)).bind(Map(("isClaiming", "Yes")))
-    lazy val view = views.reliefs(form, BigDecimal(100))(fakeRequest)
+    lazy val view = views.reliefs(form, BigDecimal(100), "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have the option 'Yes' auto selected" in {
@@ -129,7 +117,7 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
 
   "Reliefs view with errors" should {
     lazy val form = reliefsForm(BigDecimal(10000)).bind(Map(("isClaiming", "")))
-    lazy val view = views.reliefs(form, BigDecimal(10000))(fakeRequest)
+    lazy val view = views.reliefs(form, BigDecimal(10000), "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {
