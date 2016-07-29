@@ -172,37 +172,37 @@ object MessageLookup {
 
   //Allowable Losses Value messages
   object allowableLossesValue {
-    def title(input: String) = s"What's the total value of your allowable losses from the $input tax year?"
-    def question(input: String) = s"What's the total value of your allowable losses from the $input tax year?"
+    def title(input: String) = s"What's the total value of your Capital Gains Tax losses from the $input tax year?"
+    def question(input: String) = s"What's the total value of your Capital Gains Tax losses from the $input tax year?"
   }
 
   //Losses Brought Forward messages
   object lossesBroughtForward {
-    def title(input: String) = s"Are you claiming any allowable losses from tax years before $input?"
-    def question(input: String) = s"Are you claiming any allowable losses from tax years before $input?"
-    val helpInfoTitle = "What are allowable losses?"
+    def title(input: String) = s"Are you claiming any Capital Gains Tax losses from tax years before $input?"
+    def question(input: String) = s"Are you claiming any Capital Gains Tax losses from tax years before $input?"
+    val helpInfoTitle = "What are Capital Gains Tax losses?"
     val helpInfoSubtitle = "They're losses you've made that:"
     val helpInfoPoint1 = "are covered by Capital Gains Tax"
     val helpInfoPoint2 = "you've declared within 4 years of making the loss"
     val helpInfoPoint3 = "you haven't already used to reduce the amount of Capital Gains Tax you had to pay"
-    def errorSelect(input: String) = s"Tell us if you're claiming any allowable losses from tax years before $input"
+    def errorSelect(input: String) = s"Tell us if you're claiming any Capital Gains Tax losses from tax years before $input"
   }
 
   //Allowable Losses messages
   object allowableLosses {
-    def title(input: String) = s"Are you claiming any allowable losses from the $input tax year?"
-    val helpInfoTitle = "What are allowable losses?"
+    def title(input: String) = s"Are you claiming any Capital Gains Tax losses from the $input tax year?"
+    val helpInfoTitle = "What are Capital Gains Tax losses?"
     val helpInfoSubtitle = "They're losses you've made that:"
     val helpInfoPoint1 = "are covered by Capital Gains Tax"
     val helpInfoPoint2 = "you've declared within 4 years of making the loss"
     val helpInfoPoint3 = "you haven't already used to reduce the amount of Capital Gains Tax you had to pay"
-    def errorSelect(input: String) = s"Tell us if you're claiming any allowable losses from the $input tax year"
+    def errorSelect(input: String) = s"Tell us if you're claiming any Capital Gains Tax losses from the $input tax year"
   }
 
   //Losses Brought Forward Value messages
   object lossesBroughtForwardValue {
-    def title(input: String) = s"What's the total value of your allowable losses from tax years before $input?"
-    def question(input: String) = s"What's the total value of your allowable losses from tax years before $input?"
+    def title(input: String) = s"What's the total value of your Capital Gains Tax losses from tax years before $input?"
+    def question(input: String) = s"What's the total value of your Capital Gains Tax losses from tax years before $input?"
   }
 
   //Annual Exempt Amount messages
