@@ -48,7 +48,9 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       BigDecimal(38900),
       BigDecimal(11100),
       BigDecimal(0),
-      BigDecimal(11100))
+      BigDecimal(11100),
+      BigDecimal(0),
+      BigDecimal(0))
     lazy val backLink = "/calculate-your-capital-gains/resident/shares/losses-brought-forward"
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
@@ -153,15 +155,12 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
       }
 
-      "has a numeric output row for the chargeable gain" which {
+      "has no numeric output row for allowable losses remaining" in {
+        doc.select("#allowableLossRemaining").isEmpty shouldBe true
+      }
 
-        "should have the question text 'Taxable Gain'" in {
-          doc.select("#chargeableGain-question").text shouldBe messages.chargeableGain
-        }
-
-        "should have the value '£38,900'" in {
-          doc.select("#chargeableGain-amount span.bold-medium").text should include("£38,900")
-        }
+      "has no numeric output row for brought forward losses remaining" in {
+        doc.select("#broughtForwardLossRemaining").isEmpty shouldBe true
       }
 
       "has a numeric output row for the AEA remaining" which {
@@ -370,7 +369,9 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       BigDecimal(-11000),
       BigDecimal(0),
       BigDecimal(11000),
-      BigDecimal(71000))
+      BigDecimal(71000),
+      BigDecimal(1000),
+      BigDecimal(2000))
 
     lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
 
@@ -471,14 +472,41 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
       }
 
-      "has a numeric output row for the chargeable gain" which {
+      "has a numeric output row for allowable losses remaining" which {
 
-        "should have the question text 'Taxable Gain'" in {
-          doc.select("#chargeableGain-question").text shouldBe messages.chargeableLoss
+        "should have the question text for an in year loss" in {
+          doc.select("#allowableLossRemaining-question").text() shouldBe messages.remainingAllowableLoss("2013/14")
         }
 
-        "should have the value '£11,000'" in {
-          doc.select("#chargeableGain-amount").text should include("£11,000")
+        "should have the value £1000" in {
+          doc.select("#allowableLossRemaining-amount").text() should include("£1,000")
+        }
+
+        "should have the correct help text" in {
+          doc.select("#allowableLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${commonMessages.calcBaseExternalLink} ${messages.remainingAllowableLossHelp}")
+        }
+
+        "should have a link in the help text to https://www.gov.uk/capital-gains-tax/losses" in {
+          doc.select("#allowableLossRemaining-amount div span a").attr("href") shouldBe "https://www.gov.uk/capital-gains-tax/losses"
+        }
+      }
+
+      "has a numeric output row for brought forward losses remaining" which {
+
+        "should have the question text for an out of year loss" in {
+          doc.select("#broughtForwardLossRemaining-question").text() shouldBe messages.remainingBroughtForwardLoss("2013/14")
+        }
+
+        "should have the value £2000" in {
+          doc.select("#broughtForwardLossRemaining-amount").text() should include("£2,000")
+        }
+
+        "should have the correct help text" in {
+          doc.select("#broughtForwardLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${commonMessages.calcBaseExternalLink} ${messages.remainingBroughtForwardLossHelp}")
+        }
+
+        "should have a link in the help text to https://www.gov.uk/capital-gains-tax/losses" in {
+          doc.select("#broughtForwardLossRemaining-amount div span a").attr("href") shouldBe "https://www.gov.uk/capital-gains-tax/losses"
         }
       }
 
@@ -655,12 +683,33 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       BigDecimal(-11000),
       BigDecimal(0),
       BigDecimal(11000),
-      BigDecimal(71000))
+      BigDecimal(71000),
+      BigDecimal(1000),
+      BigDecimal(0))
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
     lazy val backLink = "/calculate-your-capital-gains/resident/shares/annual-exempt-amount"
     lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
+
+    "has a numeric output row for allowable losses remaining" which {
+
+      "should have the question text for an in year loss" in {
+        doc.select("#allowableLossRemaining-question").text() shouldBe messages.remainingAllowableLoss("2015/16")
+      }
+
+      "should have the value £1000" in {
+        doc.select("#allowableLossRemaining-amount").text() should include("£1,000")
+      }
+
+      "should have the correct help text" in {
+        doc.select("#allowableLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${commonMessages.calcBaseExternalLink} ${messages.remainingAllowableLossHelp}")
+      }
+    }
+
+    "has no numeric output row for brought forward losses remaining" in {
+      doc.select("#broughtForwardLossRemaining").isEmpty shouldBe true
+    }
 
     "has a numeric output row for AEA value" should {
 
@@ -714,7 +763,9 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       BigDecimal(0),
       BigDecimal(0),
       BigDecimal(0),
-      BigDecimal(50000))
+      BigDecimal(50000),
+      BigDecimal(0),
+      BigDecimal(2000))
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
@@ -723,6 +774,25 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
 
     lazy val doc = Jsoup.parse(view.body)
+
+    "has a numeric output row for allowable losses remaining" in {
+        doc.select("#allowableLossRemaining").isEmpty() shouldBe true
+    }
+
+    "has a numeric output row for brought forward losses remaining" which {
+
+      "should have the question text for an out of year loss" in {
+        doc.select("#broughtForwardLossRemaining-question").text() shouldBe messages.remainingBroughtForwardLoss("2015/16")
+      }
+
+      "should have the value £2000" in {
+        doc.select("#broughtForwardLossRemaining-amount").text() should include("£2,000")
+      }
+
+      "should have the correct help text" in {
+        doc.select("#broughtForwardLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${commonMessages.calcBaseExternalLink} ${messages.remainingBroughtForwardLossHelp}")
+      }
+    }
 
     "display the what to do next section" in {
       doc.select("#whatToDoNext").hasText shouldEqual true
@@ -767,7 +837,9 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       BigDecimal(-11000),
       BigDecimal(0),
       BigDecimal(11000),
-      BigDecimal(71000))
+      BigDecimal(71000),
+      BigDecimal(0),
+      BigDecimal(0))
 
     lazy val taxYearModel = TaxYearModel("2017/18", false, "2015/16")
 
