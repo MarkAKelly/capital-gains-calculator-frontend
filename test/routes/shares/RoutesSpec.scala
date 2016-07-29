@@ -227,7 +227,6 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
-
   /* Gain Summary PDF routes */
   "The URL for the gainSummaryReport action" should {
     "be equal to /calculate-your-capital-gains/resident/shares/gain-report" in {

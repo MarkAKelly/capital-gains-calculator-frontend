@@ -53,6 +53,7 @@ trait ReportController extends FeatureLock {
     Future.successful((taxYear.take(2) + taxYear.takeRight(2)).toInt)
   }
 
+  //###### Gain Summary Report ########\\
   val gainSummaryReport = FeatureLockForRTTShares.async { implicit request =>
     for {
       answers <- calcConnector.getShareGainAnswers
