@@ -159,15 +159,12 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
       }
 
-      "has a numeric output row for the chargeable gain" which {
+      "has no numeric output row for allowable losses remaining" in {
+        doc.select("#allowableLossRemaining").isEmpty shouldBe true
+      }
 
-        "should have the question text 'Taxable Gain'" in {
-          doc.select("#chargeableGain-question").text shouldBe messages.chargeableGain
-        }
-
-        "should have the value '£38,900'" in {
-          doc.select("#chargeableGain-amount span.bold-medium").text should include("£38,900")
-        }
+      "has no numeric output row for brought forward losses remaining" in {
+        doc.select("#broughtForwardLossRemaining").isEmpty shouldBe true
       }
 
       "has a numeric output row for the AEA remaining" which {
@@ -519,14 +516,33 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
       }
 
-      "has a numeric output row for the chargeable gain" which {
+      "has a numeric output row for allowable losses remaining" which {
 
-        "should have the question text 'Taxable Gain'" in {
-          doc.select("#chargeableGain-question").text shouldBe messages.chargeableLoss
+        "should have the question text for an in year loss" in {
+          doc.select("#allowableLossRemaining-question").text() shouldBe messages.remainingAllowableLoss("2013/14")
         }
 
-        "should have the value '£11,000'" in {
-          doc.select("#chargeableGain-amount").text should include("£11,000")
+        "should have the value £1000" in {
+          doc.select("#allowableLossRemaining-amount").text() should include("£1,000")
+        }
+
+        "should have the correct help text" in {
+          doc.select("#allowableLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${commonMessages.calcBaseExternalLink} ${messages.remainingAllowableLossHelp}")
+        }
+      }
+
+      "has a numeric output row for brought forward losses remaining" which {
+
+        "should have the question text for an out of year loss" in {
+          doc.select("#broughtForwardLossRemaining-question").text() shouldBe messages.remainingBroughtForwardLoss("2013/14")
+        }
+
+        "should have the value £2000" in {
+          doc.select("#broughtForwardLossRemaining-amount").text() should include("£2,000")
+        }
+
+        "should have the correct help text" in {
+          doc.select("#broughtForwardLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${commonMessages.calcBaseExternalLink} ${messages.remainingBroughtForwardLossHelp}")
         }
       }
     }
@@ -737,6 +753,25 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
+    "has a numeric output row for allowable losses remaining" which {
+
+      "should have the question text for an in year loss" in {
+        doc.select("#allowableLossRemaining-question").text() shouldBe messages.remainingAllowableLoss("2015/16")
+      }
+
+      "should have the value £1000" in {
+        doc.select("#allowableLossRemaining-amount").text() should include("£1,000")
+      }
+
+      "should have the correct help text" in {
+        doc.select("#allowableLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${commonMessages.calcBaseExternalLink} ${messages.remainingAllowableLossHelp}")
+      }
+    }
+
+    "has no numeric output row for brought forward losses remaining" in {
+      doc.select("#broughtForwardLossRemaining").isEmpty shouldBe true
+    }
+
     "has a numeric output row for AEA value" should {
 
       s"should have the question text '${commonMessages.annualExemptAmount.title}'" in {
@@ -821,6 +856,25 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
 
     lazy val doc = Jsoup.parse(view.body)
+
+    "has a numeric output row for allowable losses remaining" in {
+      doc.select("#allowableLossRemaining").isEmpty() shouldBe true
+    }
+
+    "has a numeric output row for brought forward losses remaining" which {
+
+      "should have the question text for an out of year loss" in {
+        doc.select("#broughtForwardLossRemaining-question").text() shouldBe messages.remainingBroughtForwardLoss("2015/16")
+      }
+
+      "should have the value £2000" in {
+        doc.select("#broughtForwardLossRemaining-amount").text() should include("£2,000")
+      }
+
+      "should have the correct help text" in {
+        doc.select("#broughtForwardLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${commonMessages.calcBaseExternalLink} ${messages.remainingBroughtForwardLossHelp}")
+      }
+    }
 
     "display the what to do next section" in {
       doc.select("#whatToDoNext").hasText shouldEqual true

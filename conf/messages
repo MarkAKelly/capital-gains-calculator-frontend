@@ -376,7 +376,12 @@ calc.resident.summary.whatNext.youNeedTo = You need to
 calc.resident.summary.whatNext.linkTwo = tell HMRC about the property.
 calc.resident.summary.whatNext.sharesLinkTwo =  tell HMRC about the shares.
 calc.resident.summary.saveAsPdf = Save as PDF
-
+calc.resident.summary.remainingAllowableLoss = Remaining loss from {0} tax year
+calc.resident.summary.remainingBroughtForwardLoss = Loss from tax years before {0}
+calc.resident.summary.remainingLossHelp = You can
+calc.resident.summary.remainingLossLink = use this loss
+calc.resident.summary.remainingAllowableLossHelp = to reduce your Capital Gains Tax if you sell something in the same tax year
+calc.resident.summary.remainingBroughtForwardLossHelp = to reduce your Capital Gains Tax in the future
 
 ## Reliefs messages
 calc.resident.reliefs.title = Do you want to claim Capital Gains Tax reliefs on your total gain of £{0}?

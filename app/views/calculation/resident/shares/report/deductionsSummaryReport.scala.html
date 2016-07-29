@@ -12,6 +12,28 @@
 
 @(gainAnswers: GainAnswersModel, deductionAnswers: DeductionGainAnswersModel, result: ChargeableGainResultModel, taxYear: TaxYearModel)(implicit request: Request[_])
 
+@allowableLossesHelpText() = {
+<span>
+        @Messages("calc.resident.summary.remainingLossHelp")
+        <a href="https://www.gov.uk/capital-gains-tax/losses">
+            @Messages("calc.resident.summary.remainingLossLink")
+            <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
+        </a>
+        @Messages("calc.resident.summary.remainingAllowableLossHelp")
+    </span>
+}
+
+@broughtForwardLossesHelpText() = {
+<span>
+        @Messages("calc.resident.summary.remainingLossHelp")
+        <a href="https://www.gov.uk/capital-gains-tax/losses">
+            @Messages("calc.resident.summary.remainingLossLink")
+            <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
+        </a>
+        @Messages("calc.resident.summary.remainingBroughtForwardLossHelp")
+    </span>
+}
+
 <!DOCTYPE html>
 <html>
 
@@ -58,9 +80,23 @@
         (Messages("calc.resident.summary.aeaUsed"), MoneyPounds(result.aeaUsed, 0).quantity),
         (Messages("calc.resident.summary.broughtForwardLoss"), broughtForwardLossesUsed(deductionAnswers))
         )))
-        @summaryNumericRowHelper("chargeableGain", if(result.chargeableGain < 0) {
-        Messages("calc.resident.summary.chargeableLoss")} else {Messages("calc.resident.summary.chargeableGain")},
-        result.chargeableGain)
+        @if(result.chargeableGain == 0){
+        @summaryNumericRowHelper("chargeableGain", Messages("calc.resident.summary.chargeableGain"), result.chargeableGain)
+        }
+        @if(result.allowableLossesRemaining > 0) {
+        @{summaryNumericHelpTextHelper("allowableLossRemaining", Messages("calc.resident.summary.remainingAllowableLoss", taxYear.taxYearSupplied),
+        result.allowableLossesRemaining,
+        None,
+        Some(allowableLossesHelpText()))
+        }
+        }
+        @if(result.broughtForwardLossesRemaining > 0) {
+        @{summaryNumericHelpTextHelper("broughtForwardLossRemaining", Messages("calc.resident.summary.remainingBroughtForwardLoss", taxYear.taxYearSupplied),
+        result.broughtForwardLossesRemaining,
+        None,
+        Some(broughtForwardLossesHelpText()))
+        }
+        }
         @summaryNumericRowHelper("aeaRemaining", Messages("calc.resident.summary.aeaRemaining"), result.aeaRemaining)
 
     </section>
