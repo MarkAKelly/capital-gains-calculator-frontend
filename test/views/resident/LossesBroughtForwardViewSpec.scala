@@ -46,8 +46,11 @@ class LossesBroughtForwardViewSpec extends UnitSpec with WithFakeApplication wit
       doc.select("fieldset").attr("aria-details") shouldBe "help"
     }
 
-    s"have a drop down button with the text ${messages.helpInfoTitle}" in {
+    s"have a drop down button" in {
       doc.body.getElementsByTag("summary").attr("role") shouldBe "button"
+    }
+
+    s"the drop down button has the text ${messages.helpInfoTitle}" in {
       doc.body.getElementsByTag("summary").text shouldEqual messages.helpInfoTitle
     }
 
