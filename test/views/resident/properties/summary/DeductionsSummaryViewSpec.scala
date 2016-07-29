@@ -48,7 +48,9 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       BigDecimal(38900),
       BigDecimal(11100),
       BigDecimal(0),
-      BigDecimal(11100))
+      BigDecimal(11100),
+      BigDecimal(0),
+      BigDecimal(0))
     lazy val backLink = "/calculate-your-capital-gains/resident/properties/losses-brought-forward"
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
@@ -410,7 +412,9 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       BigDecimal(-11000),
       BigDecimal(0),
       BigDecimal(11000),
-      BigDecimal(71000))
+      BigDecimal(71000),
+      BigDecimal(1000),
+      BigDecimal(2000))
 
     lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
 
@@ -724,7 +728,9 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       BigDecimal(-11000),
       BigDecimal(0),
       BigDecimal(11000),
-      BigDecimal(71000))
+      BigDecimal(71000),
+      BigDecimal(1000),
+      BigDecimal(0))
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
     lazy val backLink = "/calculate-your-capital-gains/resident/properties/annual-exempt-amount"
@@ -804,7 +810,9 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       BigDecimal(0),
       BigDecimal(0),
       BigDecimal(0),
-      BigDecimal(50000))
+      BigDecimal(50000),
+      BigDecimal(0),
+      BigDecimal(2000))
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
@@ -878,7 +886,9 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       BigDecimal(-11000),
       BigDecimal(0),
       BigDecimal(11000),
-      BigDecimal(71000))
+      BigDecimal(71000),
+      BigDecimal(0),
+      BigDecimal(0))
 
     lazy val taxYearModel = TaxYearModel("2017/18", false, "2015/16")
 
