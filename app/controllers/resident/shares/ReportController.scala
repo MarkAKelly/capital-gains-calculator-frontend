@@ -55,9 +55,17 @@ trait ReportController extends FeatureLock {
 
   val gainSummaryReport = TODO
 
-
   //#####Deductions summary actions#####\\
-  val deductionsReport = TODO
+  val deductionsReport = FeatureLockForRTTShares.async { implicit request =>
+    for {
+      answers <- calcConnector.getShareGainAnswers
+      taxYear <- getTaxYear(answers.disposalDate)
+      deductionAnswers <- calcConnector.getShareDeductionAnswers
+      grossGain <- calcConnector.calculateRttShareGrossGain(answers)
+      chargeableGain <- calcConnector.calculateRttShareChargeableGain(answers, deductionAnswers, grossGain)
+    } yield {PdfGenerator.ok(views.deductionsSummaryReport(answers, deductionAnswers, chargeableGain.get, taxYear.get), host).toScala
+      .withHeaders("Content-Disposition" -> s"""attachment; filename="${Messages("calc.resident.summary.title")}.pdf"""")}
+  }
 
   //#####Final summary actions#####\\
 

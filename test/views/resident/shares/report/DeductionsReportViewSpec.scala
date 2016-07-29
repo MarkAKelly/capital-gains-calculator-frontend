@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-package views.resident.shares.summary
+package views.resident.shares.report
 
 import assets.MessageLookup.{summary => messages}
 import assets.{MessageLookup => commonMessages}
 import common.Dates
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.shares.routes
 import models.resident._
 import models.resident.shares.{DeductionGainAnswersModel, GainAnswersModel}
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import views.html.calculation.resident.shares.{summary => views}
+import views.html.calculation.resident.shares.{report => views}
 
-class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  lazy val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
-
-  "Shares Deductions Summary view" should {
+  "Deductions Report view" should {
     lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2016),
       BigDecimal(200000),
       BigDecimal(10000),
@@ -49,11 +46,10 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       BigDecimal(11100),
       BigDecimal(0),
       BigDecimal(11100))
-    lazy val backLink = "/calculate-your-capital-gains/resident/shares/losses-brought-forward"
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
-    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
+    lazy val view = views.deductionsSummaryReport(gainAnswers, deductionAnswers, results, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -64,23 +60,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       doc.title() shouldBe messages.title
     }
 
-    s"have a back button" which {
-
-      lazy val backLink = doc.getElementById("back-link")
-
-      "has the id 'back-link'" in {
-        backLink.attr("id") shouldBe "back-link"
-      }
-
-      s"has the text '${commonMessages.calcBaseBack}'" in {
-        backLink.text shouldBe commonMessages.calcBaseBack
-      }
-
-      s"has a link to '${routes.DeductionsController.lossesBroughtForward().toString()}'" in {
-        backLink.attr("href") shouldBe routes.DeductionsController.lossesBroughtForward().toString
-      }
-
-    }
 
     s"have a page heading" which {
 
@@ -89,7 +68,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       }
 
       "includes an amount of tax due of £0.00" in {
-        doc.select("h1").text should include ("£0.00")
+        doc.select("h1").text should include("£0.00")
       }
     }
 
@@ -204,18 +183,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         "should have the value '10 October 2016'" in {
           doc.select("#disposalDate-date span.bold-medium").text shouldBe "10 October 2016"
         }
-
-        s"should have a change link to ${routes.GainController.disposalDate().url}" in {
-          doc.select("#disposalDate-date a").attr("href") shouldBe routes.GainController.disposalDate().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#disposalDate-date a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.sharesDisposalDate.title}"
-        }
-
-        "has the question component of the link is visuallyhidden" in {
-          doc.select("#disposalDate-date a span.visuallyhidden").text shouldBe commonMessages.sharesDisposalDate.title
-        }
       }
 
       "has a numeric output row for the Disposal Value" which {
@@ -227,11 +194,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         "should have the value '£200,000'" in {
           doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£200,000"
         }
-
-        s"should have a change link to ${routes.GainController.disposalValue().url}" in {
-          doc.select("#disposalValue-amount a").attr("href") shouldBe routes.GainController.disposalValue().url
-        }
-
       }
 
       "has a numeric output row for the Disposal Costs" which {
@@ -243,11 +205,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         "should have the value '£10,000'" in {
           doc.select("#disposalCosts-amount span.bold-medium").text shouldBe "£10,000"
         }
-
-        s"should have a change link to ${routes.GainController.disposalCosts().url}" in {
-          doc.select("#disposalCosts-amount a").attr("href") shouldBe routes.GainController.disposalCosts().url
-        }
-
       }
 
       "has a numeric output row for the Acquisition Value" which {
@@ -259,11 +216,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         "should have the value '£100,000'" in {
           doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£100,000"
         }
-
-        s"should have a change link to ${routes.GainController.acquisitionValue().url}" in {
-          doc.select("#acquisitionValue-amount a").attr("href") shouldBe routes.GainController.acquisitionValue().url
-        }
-
       }
 
       "has a numeric output row for the Acquisition Costs" which {
@@ -275,33 +227,16 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         "should have the value '£10,000'" in {
           doc.select("#acquisitionCosts-amount span.bold-medium").text shouldBe "£10,000"
         }
-
-        s"should have a change link to ${routes.GainController.acquisitionCosts().url}" in {
-          doc.select("#acquisitionCosts-amount a").attr("href") shouldBe routes.GainController.acquisitionCosts().url
-        }
-
       }
 
       "has an option output row for other disposals" which {
 
         s"should have the question text '${commonMessages.otherProperties.title("2015/16")}'" in {
-          doc.select("#otherDisposals-question").text shouldBe commonMessages.otherProperties.title("2015/16")
+          doc.select("#otherProperties-question").text shouldBe commonMessages.otherProperties.title("2015/16")
         }
 
         "should have the value 'No'" in {
-          doc.select("#otherDisposals-option span.bold-medium").text shouldBe "No"
-        }
-
-        s"should have a change link to ${routes.DeductionsController.otherDisposals().url}" in {
-          doc.select("#otherDisposals-option a").attr("href") shouldBe routes.DeductionsController.otherDisposals().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#otherDisposals-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.otherProperties.title("2015/16")}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#otherDisposals-option a span.visuallyhidden").text shouldBe commonMessages.otherProperties.title("2015/16")
+          doc.select("#otherProperties-option span.bold-medium").text shouldBe "No"
         }
       }
 
@@ -314,42 +249,15 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         "should have the value 'No'" in {
           doc.select("#broughtForwardLosses-option span.bold-medium").text shouldBe "No"
         }
-
-        s"should have a change link to ${routes.DeductionsController.lossesBroughtForward().url}" in {
-          doc.select("#broughtForwardLosses-option a").attr("href") shouldBe routes.DeductionsController.lossesBroughtForward().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#broughtForwardLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.lossesBroughtForward.question("2015/16")}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#broughtForwardLosses-option a span.visuallyhidden").text shouldBe commonMessages.lossesBroughtForward.question("2015/16")
-        }
       }
     }
 
-    "display the save as PDF Button" which {
-
-      "should render only one button" in {
-        doc.select("a.save-pdf-button").size() shouldEqual 1
-      }
-
-      "with the class save-pdf-button" in {
-        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
-      }
-
-      s"with an href to ${controllers.resident.shares.routes.ReportController.deductionsReport().toString}" in {
-        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/deductions-report"
-      }
-
-      s"have the text ${messages.saveAsPdf}" in {
-        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
-      }
+    "does not display the section for what to do next" in {
+      doc.select("#whatToDoNext").isEmpty shouldBe true
     }
   }
 
-  "Shares Deductions Summary view with all options selected" should {
+  "Deductions Report view with all options selected" should {
     lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2016),
       BigDecimal(200000),
       BigDecimal(10000),
@@ -370,27 +278,9 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
     lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
 
-    lazy val backLink = "/calculate-your-capital-gains/resident/shares/annual-exempt-amount"
-    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
+    lazy val view = views.deductionsSummaryReport(gainAnswers, deductionAnswers, results, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
-    s"have a back button" which {
-
-      lazy val backLink = doc.getElementById("back-link")
-
-      "has the id 'back-link'" in {
-        backLink.attr("id") shouldBe "back-link"
-      }
-
-      s"has the text '${commonMessages.calcBaseBack}'" in {
-        backLink.text shouldBe commonMessages.calcBaseBack
-      }
-
-      s"has a link to '${routes.DeductionsController.annualExemptAmount().toString()}'" in {
-        backLink.attr("href") shouldBe routes.DeductionsController.annualExemptAmount().toString
-      }
-
-    }
 
     "has a notice summary that" should {
 
@@ -402,13 +292,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         doc.select("strong.bold-small").text shouldBe messages.noticeWarning("2015/16")
       }
 
-      "have a warning icon" in {
-        doc.select("i.icon-important").isEmpty shouldBe false
-      }
-
-      "have a visually hidden warning text" in {
-        doc.select("div.notice-wrapper span.visuallyhidden").text shouldBe messages.warning
-      }
     }
 
     s"have a section for the Calculation details" which {
@@ -482,9 +365,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     s"have a section for Your answers" which {
 
       "has the class 'summary-section' to underline the heading" in {
-
         doc.select("section#yourAnswers h2").hasClass("summary-underline") shouldBe true
-
       }
 
       s"has a h2 tag" which {
@@ -498,26 +379,14 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         }
       }
 
-      "has an option output row for other disposals" which {
+      "has an option output row for other properties" which {
 
         s"should have the question text '${commonMessages.otherProperties.title("2013/14")}'" in {
-          doc.select("#otherDisposals-question").text shouldBe commonMessages.otherProperties.title("2013/14")
+          doc.select("#otherProperties-question").text shouldBe commonMessages.otherProperties.title("2013/14")
         }
 
         "should have the value 'Yes'" in {
-          doc.select("#otherDisposals-option span.bold-medium").text shouldBe "Yes"
-        }
-
-        s"should have a change link to ${routes.DeductionsController.otherDisposals().url}" in {
-          doc.select("#otherDisposals-option a").attr("href") shouldBe routes.DeductionsController.otherDisposals().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#otherDisposals-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.otherProperties.title("2013/14")}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#otherDisposals-option a span.visuallyhidden").text shouldBe commonMessages.otherProperties.title("2013/14")
+          doc.select("#otherProperties-option span.bold-medium").text shouldBe "Yes"
         }
       }
 
@@ -530,18 +399,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         "should have the value 'Yes'" in {
           doc.select("#allowableLosses-option span.bold-medium").text shouldBe "Yes"
         }
-
-        s"should have a change link to ${routes.DeductionsController.allowableLosses().url}" in {
-          doc.select("#allowableLosses-option a").attr("href") shouldBe routes.DeductionsController.allowableLosses().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#allowableLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.allowableLosses.title("2013/14")}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#allowableLosses-option a span.visuallyhidden").text shouldBe commonMessages.allowableLosses.title("2013/14")
-        }
       }
 
       "has a numeric output row for allowable losses value" which {
@@ -552,10 +409,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
         "should have the value '£10,000'" in {
           doc.select("#allowableLossesValue-amount span.bold-medium").text shouldBe "£10,000"
-        }
-
-        s"should have a change link to ${routes.DeductionsController.allowableLossesValue().url}" in {
-          doc.select("#allowableLossesValue-amount a").attr("href") shouldBe routes.DeductionsController.allowableLossesValue().url
         }
       }
 
@@ -568,18 +421,6 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         "should have the value 'Yes'" in {
           doc.select("#broughtForwardLosses-option span.bold-medium").text shouldBe "Yes"
         }
-
-        s"should have a change link to ${routes.DeductionsController.lossesBroughtForward().url}" in {
-          doc.select("#broughtForwardLosses-option a").attr("href") shouldBe routes.DeductionsController.lossesBroughtForward().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#broughtForwardLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.lossesBroughtForward.question("2013/14")}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#broughtForwardLosses-option a span.visuallyhidden").text shouldBe commonMessages.lossesBroughtForward.question("2013/14")
-        }
       }
 
       "has a numeric output row for brought forward losses value" which {
@@ -591,34 +432,15 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         "should have the value '£10,000'" in {
           doc.select("#broughtForwardLossesValue-amount span.bold-medium").text shouldBe "£10,000"
         }
-
-        s"should have a change link to ${routes.DeductionsController.lossesBroughtForwardValue().url}" in {
-          doc.select("#broughtForwardLossesValue-amount a").attr("href") shouldBe routes.DeductionsController.lossesBroughtForwardValue().url
-        }
       }
     }
 
-    "display the save as PDF Button" which {
-
-      "should render only one button" in {
-        doc.select("a.save-pdf-button").size() shouldEqual 1
-      }
-
-      "with the class save-pdf-button" in {
-        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
-      }
-
-      s"with an href to ${controllers.resident.shares.routes.ReportController.deductionsReport().toString}" in {
-        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/deductions-report"
-      }
-
-      s"have the text ${messages.saveAsPdf}" in {
-        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
-      }
+    "does not display the section for what to do next" in {
+      doc.select("#whatToDoNext").isEmpty shouldBe true
     }
   }
 
-  "Shares Deductions Summary view with AEA options selected" which {
+  "Deductions Report view with AEA options selected" which {
 
     lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2016),
       BigDecimal(200000),
@@ -639,8 +461,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       BigDecimal(71000))
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
-    lazy val backLink = "/calculate-your-capital-gains/resident/shares/annual-exempt-amount"
-    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
+    lazy val view = views.deductionsSummaryReport(gainAnswers, deductionAnswers, results, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "has a numeric output row for AEA value" should {
@@ -652,85 +473,7 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       "should have the value '£1,000'" in {
         doc.select("#annualExemptAmount-amount span.bold-medium").text shouldBe "£1,000"
       }
-
-      s"should have a change link to ${routes.DeductionsController.annualExemptAmount().url}" in {
-        doc.select("#annualExemptAmount-amount a").attr("href") shouldBe routes.DeductionsController.annualExemptAmount().url
-      }
-
-      s"display the text ${messages.whatToDoNextText}" in {
-        doc.select("div#whatToDoNextNoLossText").text shouldEqual messages.whatToDoNextNoLossText
-      }
     }
-  }
-
-
-  "Shares Deductions Summary when supplied with a date within the known tax years and no gain or loss" should {
-
-
-    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
-      BigDecimal(0),
-      BigDecimal(100000),
-      BigDecimal(0))
-    lazy val deductionAnswers = DeductionGainAnswersModel(
-      Some(OtherPropertiesModel(true)),
-      Some(AllowableLossesModel(true)),
-      Some(AllowableLossesValueModel(0)),
-      Some(LossesBroughtForwardModel(true)),
-      Some(LossesBroughtForwardValueModel(0)),
-      Some(AnnualExemptAmountModel(0)))
-    lazy val results = ChargeableGainResultModel(BigDecimal(0),
-      BigDecimal(0),
-      BigDecimal(0),
-      BigDecimal(0),
-      BigDecimal(50000))
-
-    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
-
-    lazy val backLink = "/calculate-your-capital-gains/resident/shares/annual-exempt-amount"
-    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel, homeLink)(fakeRequest)
-
-
-    lazy val doc = Jsoup.parse(view.body)
-
-    "display the what to do next section" in {
-      doc.select("#whatToDoNext").hasText shouldEqual true
-    }
-
-    s"display the title ${messages.whatToDoNextTitle}" in {
-      doc.select("h3#whatToDoNextNoLossTitle").text shouldEqual messages.whatToDoNextTitle
-    }
-
-    s"display the text ${messages.whatToDoNextText}" in {
-      doc.select("div#whatToDoNextNoLossText").text shouldEqual messages.whatToDoNextNoLossText
-    }
-  }
-
-  "Shares Deductions Summary when supplied with a date above the known tax years" should {
-
-    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2018),
-      BigDecimal(200000),
-      BigDecimal(10000),
-      BigDecimal(100000),
-      BigDecimal(10000))
-    lazy val deductionAnswers = DeductionGainAnswersModel(
-      Some(OtherPropertiesModel(true)),
-      Some(AllowableLossesModel(true)),
-      Some(AllowableLossesValueModel(10000)),
-      Some(LossesBroughtForwardModel(true)),
-      Some(LossesBroughtForwardValueModel(10000)),
-      Some(AnnualExemptAmountModel(1000)))
-    lazy val results = ChargeableGainResultModel(BigDecimal(50000),
-      BigDecimal(-11000),
-      BigDecimal(0),
-      BigDecimal(11000),
-      BigDecimal(71000))
-
-    lazy val taxYearModel = TaxYearModel("2017/18", false, "2015/16")
-
-    lazy val backLink = "/calculate-your-capital-gains/resident/shares/annual-exempt-amount"
-    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel, homeLink)(fakeRequest)
-    lazy val doc = Jsoup.parse(view.body)
 
     "does not display the section for what to do next" in {
       doc.select("#whatToDoNext").isEmpty shouldBe true

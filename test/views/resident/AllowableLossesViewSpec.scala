@@ -55,18 +55,22 @@ class AllowableLossesViewSpec extends UnitSpec with WithFakeApplication with Fak
       }
     }
 
+    "have a fieldset with aria-details attribute" in {
+      doc.select("fieldset").attr("aria-details") shouldBe "help"
+    }
+
+    s"have a drop down button with the text ${messages.helpInfoTitle}" in {
+      doc.body.getElementsByTag("summary").attr("role") shouldBe "button"
+      doc.body.getElementsByTag("summary").text shouldEqual messages.helpInfoTitle
+    }
+
     "have a hidden legend" in {
       val legend = doc.select("legend")
       legend.hasClass("visuallyhidden") shouldBe true
     }
 
-    "have the correct help info title" in {
-      val element = doc.select("#helpInfo > p:eq(0)")
-      element.text shouldBe messages.helpInfoTitle
-    }
-
     "have the correct help info subtitle" in {
-      val element = doc.select("#helpInfo > p:eq(1)")
+      val element = doc.select("#helpInfo > p")
       element.text shouldBe messages.helpInfoSubtitle
     }
 

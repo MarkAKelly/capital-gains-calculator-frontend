@@ -454,7 +454,7 @@ trait DeductionsController extends FeatureLock {
     case _ =>
       Some(controllers.resident.shares.routes.DeductionsController.lossesBroughtForward().toString)
   }
-  private val annualExemptAmountPostAction = controllers.resident.shares.routes.DeductionsController.submitAnnualExemptAmount()
+  private val annualExemptAmountPostAction = controllers.resident.properties.routes.DeductionsController.submitAnnualExemptAmount()
 
   val annualExemptAmount = FeatureLockForRTT.async { implicit request =>
 

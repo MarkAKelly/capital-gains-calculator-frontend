@@ -48,7 +48,7 @@ class OutsideTaxYearsActionSpec extends UnitSpec with WithFakeApplication with F
   "Calling .outsideTaxYears from the resident/shares GainCalculationController" when {
 
     "there is a valid session" should {
-      lazy val target = setupTarget(Some(DisposalDateModel(10, 10, 2014)), Some(TaxYearModel("2014/15", false, "2015/16")))
+      lazy val target = setupTarget(Some(DisposalDateModel(10, 10, 2018)), Some(TaxYearModel("2018/19", false, "2016/17")))
       lazy val result = target.outsideTaxYears(fakeRequestWithSession)
 
       "return a 200" in {
