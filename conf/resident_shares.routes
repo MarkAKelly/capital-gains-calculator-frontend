@@ -63,6 +63,7 @@ POST    /personal-allowance               controllers.resident.shares.IncomeCont
 GET     /summary                          controllers.resident.shares.SummaryController.summary
 
 #Gain Summary PDF Routes
+GET     /gain-report                      controllers.resident.shares.ReportController.gainSummaryReport
 
 #Deductions Summary PDF Routes
 GET     /deductions-report                controllers.resident.shares.ReportController.deductionsReport

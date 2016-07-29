@@ -16,6 +16,7 @@
 
 package routes.shares
 
+import controllers.resident.shares.ReportController
 import org.scalatest._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import controllers.resident.shares.routes._
@@ -226,6 +227,14 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
+  /* Gain Summary PDF routes */
+  "The URL for the gainSummaryReport action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/gain-report" in {
+      val path = controllers.resident.shares.routes.ReportController.gainSummaryReport().toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/gain-report"
+    }
+  }
+
   /* Final Summary Report routes */
   "The URL for the finalSummaryReport action" should {
     "be equal to /calculate-your-capital-gains/resident/shares/final-report" in {
@@ -233,8 +242,6 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
       path shouldEqual "/calculate-your-capital-gains/resident/shares/final-report"
     }
   }
-  
-  /* Gain Summary PDF routes */
 
   /* Deductions Summary PDF routes */
   "The URL for the deductionsReport action" should {
