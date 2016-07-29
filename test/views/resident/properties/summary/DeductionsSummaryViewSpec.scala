@@ -529,6 +529,10 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
         "should have the correct help text" in {
           doc.select("#allowableLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${commonMessages.calcBaseExternalLink} ${messages.remainingAllowableLossHelp}")
         }
+
+        "should have a link in the help text to https://www.gov.uk/capital-gains-tax/losses" in {
+          doc.select("#allowableLossRemaining-amount div span a").attr("href") shouldBe "https://www.gov.uk/capital-gains-tax/losses"
+        }
       }
 
       "has a numeric output row for brought forward losses remaining" which {
@@ -543,6 +547,10 @@ class DeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
         "should have the correct help text" in {
           doc.select("#broughtForwardLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${commonMessages.calcBaseExternalLink} ${messages.remainingBroughtForwardLossHelp}")
+        }
+
+        "should have a link in the help text to https://www.gov.uk/capital-gains-tax/losses" in {
+          doc.select("#broughtForwardLossRemaining-amount div span a").attr("href") shouldBe "https://www.gov.uk/capital-gains-tax/losses"
         }
       }
     }

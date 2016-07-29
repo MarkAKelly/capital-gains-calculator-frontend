@@ -139,7 +139,7 @@ object MessageLookup {
     val aeaRemaining = "Capital gains tax allowance left"
     val saveAsPdf = "Save as PDF"
     def remainingAllowableLoss(taxYear: String) = s"Remaining loss from $taxYear tax year"
-    def remainingBroughtForwardLoss(taxYear: String) = s"Loss from tax years before $taxYear"
+    def remainingBroughtForwardLoss(taxYear: String) = s"Remaining loss from tax years before $taxYear"
     val remainingLossHelp = "You can"
     val remainingLossLink = "use this loss"
     val remainingAllowableLossHelp = "to reduce your Capital Gains Tax if you sell something in the same tax year"

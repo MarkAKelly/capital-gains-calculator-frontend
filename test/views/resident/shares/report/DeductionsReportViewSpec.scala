@@ -362,7 +362,7 @@ class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with Fa
         }
 
         "should have the correct help text" in {
-          doc.select("#allowableLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${commonMessages.calcBaseExternalLink} ${messages.remainingAllowableLossHelp}")
+          doc.select("#allowableLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${messages.remainingAllowableLossHelp}")
         }
       }
 
@@ -377,7 +377,7 @@ class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with Fa
         }
 
         "should have the correct help text" in {
-          doc.select("#broughtForwardLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${commonMessages.calcBaseExternalLink} ${messages.remainingBroughtForwardLossHelp}")
+          doc.select("#broughtForwardLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${messages.remainingBroughtForwardLossHelp}")
         }
       }
     }
@@ -497,7 +497,7 @@ class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with Fa
       }
 
       "should have the correct help text" in {
-        doc.select("#allowableLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${commonMessages.calcBaseExternalLink} ${messages.remainingAllowableLossHelp}")
+        doc.select("#allowableLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${messages.remainingAllowableLossHelp}")
       }
     }
 

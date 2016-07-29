@@ -13,23 +13,21 @@
 @(gainAnswers: GainAnswersModel, deductionAnswers: DeductionGainAnswersModel, result: ChargeableGainResultModel, taxYear: TaxYearModel)(implicit request: Request[_])
 
 @allowableLossesHelpText() = {
-<span>
+    <span>
         @Messages("calc.resident.summary.remainingLossHelp")
-        <a href="https://www.gov.uk/capital-gains-tax/losses">
+        <span>
             @Messages("calc.resident.summary.remainingLossLink")
-            <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
-        </a>
+        </span>
         @Messages("calc.resident.summary.remainingAllowableLossHelp")
     </span>
 }
 
 @broughtForwardLossesHelpText() = {
-<span>
+    <span>
         @Messages("calc.resident.summary.remainingLossHelp")
-        <a href="https://www.gov.uk/capital-gains-tax/losses">
+        <span>
             @Messages("calc.resident.summary.remainingLossLink")
-            <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
-        </a>
+        </span>
         @Messages("calc.resident.summary.remainingBroughtForwardLossHelp")
     </span>
 }
