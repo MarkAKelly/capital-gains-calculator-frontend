@@ -700,7 +700,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     }
 
     s"display the text ${messages.whatToDoNextTextTwo}" in {
-      doc.select("#whatToDoNextText").text shouldEqual s"${messages.whatToDoNextTextTwo}${commonMessages.calcBaseExternalLink}"
+      doc.select("#whatToDoNextText").text shouldEqual s"${messages.whatToDoNextTextTwoShares}${commonMessages.calcBaseExternalLink}"
     }
 
     "have a link" which {
@@ -709,8 +709,8 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         doc.select("#whatToDoNextLink").hasAttr("href") shouldEqual true
       }
 
-      "should link to the what-you-pay-on-it govuk page" in {
-        doc.select("#whatToDoNextLink").attr("href") shouldEqual "https://www.gov.uk/tax-sell-property/what-you-pay-it-on"
+      "should link to the work-out-need-to-pay govuk page" in {
+        doc.select("#whatToDoNextLink").attr("href") shouldEqual "https://www.gov.uk/capital-gains-tax/work-out-need-to-pay"
       }
 
       "have the externalLink attribute" in {

@@ -374,6 +374,7 @@ calc.resident.summary.whatNext.noLossOrGainLinkProperties = tell HMRC about the 
 calc.resident.summary.whatNext.noLossOrGainLinkShares = tell HMRC about the shares
 calc.resident.summary.whatNext.youNeedTo = You need to
 calc.resident.summary.whatNext.linkTwo = tell HMRC about the property.
+calc.resident.summary.whatNext.sharesLinkTwo =  tell HMRC about the shares.
 calc.resident.summary.saveAsPdf = Save as PDF
 
 
