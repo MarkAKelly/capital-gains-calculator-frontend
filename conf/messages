@@ -419,6 +419,11 @@ calc.resident.annualExemptAmount.helpText.two = It''s £11,100 a year.
 ##Losses Brought Forward messages
 calc.resident.lossesBroughtForward.title = Are you claiming any allowable losses from tax years before {0}?
 calc.resident.lossesBroughtForward.question = Are you claiming any allowable losses from tax years before {0}?
+calc.resident.lossesBroughtForward.helpInfo.title = What are allowable losses?
+calc.resident.lossesBroughtForward.helpInfo.subtitle = They''re losses you''ve made that:
+calc.resident.lossesBroughtForward.helpInfo.point1 = are covered by Capital Gains Tax
+calc.resident.lossesBroughtForward.helpInfo.point2 = you''ve declared within 4 years of making the loss
+calc.resident.lossesBroughtForward.helpInfo.point3 = you haven''t already used to reduce the amount of Capital Gains Tax you had to pay
 calc.resident.lossesBroughtForward.errorSelect = Tell us if you''re claiming any allowable losses from tax years before {0}
 
 
@@ -429,7 +434,7 @@ calc.resident.allowableLosses.helpInfo.title = What are allowable losses?
 calc.resident.allowableLosses.helpInfo.subtitle = They''re losses you''ve made that:
 calc.resident.allowableLosses.helpInfo.point1 = are covered by Capital Gains Tax
 calc.resident.allowableLosses.helpInfo.point2 = you''ve declared within 4 years of making the loss
-calc.resident.allowableLosses.helpInfo.point3 = you haven''t already used in an allowable losses claim
+calc.resident.allowableLosses.helpInfo.point3 = you haven''t already used to reduce the amount of Capital Gains Tax you had to pay
 calc.resident.allowableLosses.errorSelect = Tell us if you''re claiming any allowable losses from the {0} tax year
 
 ##Losses Brought Forward Value messages
