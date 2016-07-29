@@ -378,6 +378,25 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         }
       }
     }
+
+    "display the save as PDF Button" which {
+
+      "should render only one button" in {
+        doc.select("a.save-pdf-button").size() shouldEqual 1
+      }
+
+      "with the class save-pdf-button" in {
+        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
+      }
+
+      s"with an href to ${controllers.resident.shares.routes.ReportController.finalSummaryReport().toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/final-report"
+      }
+
+      s"have the text ${messages.saveAsPdf}" in {
+        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
+      }
+    }
   }
 
   "Final Summary shares view with a calculation that has some previous taxable gains" should {
@@ -534,6 +553,25 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
       s"should have a change link to ${routes.IncomeController.personalAllowance().url}" in {
         doc.select("#personalAllowance-amount a").attr("href") shouldBe routes.IncomeController.personalAllowance().url
+      }
+    }
+
+    "display the save as PDF Button" which {
+
+      "should render only one button" in {
+        doc.select("a.save-pdf-button").size() shouldEqual 1
+      }
+
+      "with the class save-pdf-button" in {
+        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
+      }
+
+      s"with an href to ${controllers.resident.shares.routes.ReportController.finalSummaryReport().toString}" in {
+        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/final-report"
+      }
+
+      s"have the text ${messages.saveAsPdf}" in {
+        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
       }
     }
   }
