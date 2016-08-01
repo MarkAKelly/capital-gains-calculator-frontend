@@ -16,7 +16,7 @@
 
 package views.resident.properties.report
 
-import assets.MessageLookup.{summary => messages}
+import assets.MessageLookup.{summaryPage => messages}
 import assets.{MessageLookup => commonMessages}
 import common.Dates
 import common.Dates._
@@ -129,15 +129,15 @@ class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with Fa
           }
 
           "include a value for Allowable Losses of £0" in {
-            doc.select("#deductions-amount").text should include("Allowable losses £0")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLosses("2015/16")} £0")
           }
 
           "include a value for Capital gains tax allowance used of £11,100" in {
-            doc.select("#deductions-amount").text should include("Capital gains tax allowance used £11,100")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsCapitalGainsTax} £11,100")
           }
 
           "include a value for Loss brought forward of £0" in {
-            doc.select("#deductions-amount").text should include("Loss brought forward £0")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYear("2015/16")} £0")
           }
         }
       }
@@ -365,20 +365,20 @@ class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with Fa
 
         "has a breakdown that" should {
 
-          "include a value for Reliefs of £50,000" in {
+          "include a value for Reliefs of £0" in {
             doc.select("#deductions-amount").text should include("Reliefs £50,000")
           }
 
-          "include a value for Allowable Losses of £10,000" in {
-            doc.select("#deductions-amount").text should include("Allowable losses £10,000")
+          "include a value for Allowable Losses of £0" in {
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLosses("2015/16")} £10,000")
           }
 
-          "include a value for Capital gains tax allowance used of £0" in {
-            doc.select("#deductions-amount").text should include("Capital gains tax allowance used £0")
+          "include a value for Capital gains tax allowance used of £11,100" in {
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsCapitalGainsTax} £0")
           }
 
-          "include a value for Loss brought forward of £10,000" in {
-            doc.select("#deductions-amount").text should include("Loss brought forward £10,000")
+          "include a value for Loss brought forward of £0" in {
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYear("2015/16")} £10,000")
           }
         }
       }

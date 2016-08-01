@@ -355,10 +355,12 @@ calc.resident.summary.yourAnswersHeading = Your answers
 calc.resident.summary.totalGain = Total gain
 calc.resident.summary.totalLoss = Loss
 calc.resident.summary.reliefs = Reliefs
-calc.resident.summary.allowableLosses = Allowable losses
-calc.resident.summary.aeaUsed = Capital gains tax allowance used
+
+calc.resident.summary.deductionsDetails.allowableLosses = Allowable losses
+calc.resident.summary.deductionsDetails.aeaUsed = Capital gains tax allowance used
+calc.resident.summary.deductionsDetails.broughtForwardLoss = Loss brought forward
 calc.resident.summary.aeaRemaining = Capital gains tax allowance left
-calc.resident.summary.broughtForwardLoss = Loss brought forward
+
 calc.resident.summary.deductions = Deductions
 calc.resident.summary.chargeableLoss = Carried forward loss
 calc.resident.summary.chargeableGain = Taxable gain

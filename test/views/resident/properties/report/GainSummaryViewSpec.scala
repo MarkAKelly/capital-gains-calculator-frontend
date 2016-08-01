@@ -17,7 +17,7 @@
 package views.resident.properties.report
 
 import assets.{MessageLookup => commonMessages}
-import assets.MessageLookup.{summary => messages}
+import assets.MessageLookup.{summaryPage => messages}
 import common.Dates._
 import controllers.helpers.FakeRequestHelper
 import models.resident.TaxYearModel

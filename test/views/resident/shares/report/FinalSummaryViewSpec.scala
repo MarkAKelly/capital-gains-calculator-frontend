@@ -16,7 +16,7 @@
 
 package views.resident.shares.report
 
-import assets.MessageLookup.{summary => messages}
+import assets.MessageLookup.{summaryPage => messages}
 import assets.{MessageLookup => commonMessages}
 import common.Dates
 import controllers.helpers.FakeRequestHelper
@@ -128,15 +128,15 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         "has a breakdown that" should {
 
           "include a value for Allowable Losses of £0" in {
-            doc.select("#deductions-amount").text should include("Allowable losses £0")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLosses("2015/16")} £0")
           }
 
           "include a value for Capital gains tax allowance used of £0" in {
-            doc.select("#deductions-amount").text should include("Capital gains tax allowance used £0")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsCapitalGainsTax} £0")
           }
 
           "include a value for Loss brought forward of £0" in {
-            doc.select("#deductions-amount").text should include("Loss brought forward £0")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYear("2015/16")} £0")
           }
         }
       }

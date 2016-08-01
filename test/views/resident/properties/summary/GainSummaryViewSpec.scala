@@ -16,7 +16,7 @@
 
 package views.resident.properties.summary
 
-import assets.MessageLookup.{summary => messages}
+import assets.MessageLookup.{summaryPage => messages}
 import assets.{MessageLookup => commonMessages}
 import common.Dates._
 import com.sun.xml.internal.bind.v2.TODO

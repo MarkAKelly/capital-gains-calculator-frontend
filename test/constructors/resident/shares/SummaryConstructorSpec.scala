@@ -16,7 +16,7 @@
 
 package constructors.resident.shares
 
-import assets.MessageLookup.{summary => messages}
+import assets.MessageLookup.{summaryPage => messages}
 import models.resident._
 import models.resident.shares.DeductionGainAnswersModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
