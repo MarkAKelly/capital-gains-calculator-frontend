@@ -14,32 +14,30 @@
  * limitations under the License.
  */
 
-package views.resident.properties.report
+package views.resident.shares.report
 
+import assets.MessageLookup.{summaryPage => messages}
+import assets.{MessageLookup => commonMessages}
 import common.Dates
 import controllers.helpers.FakeRequestHelper
-import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, PreviousTaxableGainsModel}
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.{MessageLookup => commonMessages}
-import assets.MessageLookup.{summaryPage => messages}
 import models.resident._
-import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, YourAnswersSummaryModel}
+import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, PreviousTaxableGainsModel}
+import models.resident.shares.{GainAnswersModel, DeductionGainAnswersModel}
 import org.jsoup.Jsoup
-import views.html.calculation.resident.properties.{report => views}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import views.html.calculation.resident.shares.{report => views}
 
-class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Final Summary view" should {
 
-    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2015),
+    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2015),
       BigDecimal(200000),
       BigDecimal(10000),
       BigDecimal(100000),
-      BigDecimal(10000),
-      BigDecimal(30000))
+      BigDecimal(10000))
 
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
-      None,
+    lazy val deductionAnswers = DeductionGainAnswersModel(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
       None,
@@ -129,16 +127,12 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
         "has a breakdown that" should {
 
-          "include a value for Reliefs of £0" in {
-            doc.select("#deductions-amount").text should include("Reliefs £0")
-          }
-
           "include a value for Allowable Losses of £0" in {
             doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLosses("2015/16")} £0")
           }
 
-          "include a value for Capital gains tax allowance used of £11,100" in {
-            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsCapitalGainsTax} £11,100")
+          "include a value for Capital gains tax allowance used of £0" in {
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsCapitalGainsTax} £0")
           }
 
           "include a value for Loss brought forward of £0" in {
@@ -214,8 +208,8 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
       "has a date output row for the Disposal Date" which {
 
-        s"should have the question text '${commonMessages.disposalDate.question}'" in {
-          doc.select("#disposalDate-question").text shouldBe commonMessages.disposalDate.question
+        s"should have the question text '${commonMessages.disposalDate.title}'" in {
+          doc.select("#disposalDate-question").text shouldBe commonMessages.sharesDisposalDate.title
         }
 
         "should have the date '10 October 2015'" in {
@@ -226,7 +220,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       "has a numeric output row for the Disposal Value" which {
 
         s"should have the question text '${commonMessages.disposalValue.question}'" in {
-          doc.select("#disposalValue-question").text shouldBe commonMessages.disposalValue.question
+          doc.select("#disposalValue-question").text shouldBe commonMessages.sharesDisposalValue.title
         }
 
         "should have the value '£200,000'" in {
@@ -237,7 +231,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       "has a numeric output row for the Disposal Costs" which {
 
         s"should have the question text '${commonMessages.disposalCosts.title}'" in {
-          doc.select("#disposalCosts-question").text shouldBe commonMessages.disposalCosts.title
+          doc.select("#disposalCosts-question").text shouldBe commonMessages.sharesDisposalCosts.title
         }
 
         "should have the value '£10,000'" in {
@@ -248,7 +242,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       "has a numeric output row for the Acquisition Value" which {
 
         s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
-          doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
+          doc.select("#acquisitionValue-question").text shouldBe commonMessages.sharesAcquisitionValue.title
         }
 
         "should have the value '£100,000'" in {
@@ -259,7 +253,7 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       "has a numeric output row for the Acquisition Costs" which {
 
         s"should have the question text '${commonMessages.acquisitionCosts.title}'" in {
-          doc.select("#acquisitionCosts-question").text shouldBe commonMessages.acquisitionCosts.title
+          doc.select("#acquisitionCosts-question").text shouldBe commonMessages.sharesAcquisitionCosts.title
         }
 
         "should have the value '£10,000'" in {
@@ -267,36 +261,14 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         }
       }
 
-      "has a numeric output row for the Improvements" which {
-
-        s"should have the question text '${commonMessages.improvementsView.title}'" in {
-          doc.select("#improvements-question").text shouldBe commonMessages.improvementsView.title
-        }
-
-        "should have the value '£30,000'" in {
-          doc.select("#improvements-amount span.bold-medium").text shouldBe "£30,000"
-        }
-      }
-
-      "has an option output row for tax reliefs" which {
-
-        s"should have the question text '${commonMessages.reliefs.questionSummary}'" in {
-          doc.select("#reliefs-question").text shouldBe commonMessages.reliefs.questionSummary
-        }
-
-        "should have the value 'No'" in {
-          doc.select("#reliefs-option span.bold-medium").text shouldBe "No"
-        }
-      }
-
-      "has an option output row for other properties" which {
+      "has an option output row for other disposals" which {
 
         s"should have the question text '${commonMessages.otherProperties.title("2015/16")}'" in {
-          doc.select("#otherProperties-question").text shouldBe commonMessages.otherProperties.title("2015/16")
+          doc.select("#otherDisposals-question").text shouldBe commonMessages.otherProperties.title("2015/16")
         }
 
         "should have the value 'Yes'" in {
-          doc.select("#otherProperties-option span.bold-medium").text shouldBe "Yes"
+          doc.select("#otherDisposals-option span.bold-medium").text shouldBe "Yes"
         }
       }
 
@@ -350,15 +322,13 @@ class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
 
-    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
+    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2018),
       BigDecimal(200000),
       BigDecimal(10000),
       BigDecimal(100000),
-      BigDecimal(10000),
-      BigDecimal(30000))
+      BigDecimal(10000))
 
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
-      None,
+    lazy val deductionAnswers = DeductionGainAnswersModel(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
       None,

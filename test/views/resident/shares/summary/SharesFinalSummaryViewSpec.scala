@@ -29,7 +29,7 @@ import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, Previ
 import models.resident.shares.{GainAnswersModel, DeductionGainAnswersModel}
 import models.resident.IncomeAnswersModel
 
-class FinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Final Summary shares view" should {
     lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2016),

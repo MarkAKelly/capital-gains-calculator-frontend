@@ -28,7 +28,7 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{report => views}
 
-class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Deductions Report view" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
@@ -365,20 +365,20 @@ class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with Fa
 
         "has a breakdown that" should {
 
-          "include a value for Reliefs of £0" in {
+          "include a value for Reliefs of £50,000" in {
             doc.select("#deductions-amount").text should include("Reliefs £50,000")
           }
 
           "include a value for Allowable Losses of £0" in {
-            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLosses("2015/16")} £10,000")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLosses("2013/14")} £10,000")
           }
 
-          "include a value for Capital gains tax allowance used of £11,100" in {
+          "include a value for Capital gains tax allowance used of £0" in {
             doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsCapitalGainsTax} £0")
           }
 
           "include a value for Loss brought forward of £0" in {
-            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYear("2015/16")} £10,000")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYear("2013/14")} £10,000")
           }
         }
       }

@@ -356,9 +356,9 @@ calc.resident.summary.totalGain = Total gain
 calc.resident.summary.totalLoss = Loss
 calc.resident.summary.reliefs = Reliefs
 
-calc.resident.summary.deductionsDetails.allowableLosses = Allowable losses
-calc.resident.summary.deductionsDetails.aeaUsed = Capital gains tax allowance used
-calc.resident.summary.deductionsDetails.broughtForwardLoss = Loss brought forward
+calc.resident.summary.deductionsDetails.allowableLosses = Loss from {0} tax year
+calc.resident.summary.deductionsDetails.aeaUsed = Capital Gains Tax allowance used
+calc.resident.summary.deductionsDetails.broughtForwardLoss = Loss from tax years before {0}
 calc.resident.summary.aeaRemaining = Capital gains tax allowance left
 
 calc.resident.summary.deductions = Deductions

@@ -26,7 +26,7 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.shares.{report => views}
 
-class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper{
+class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper{
 
   "Summary view" should {
 

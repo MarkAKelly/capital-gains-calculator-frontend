@@ -16,7 +16,7 @@
 
 package controllers.resident.shares.ReportControllerSpec
 
-import assets.MessageLookup.{summary => messages}
+import assets.MessageLookup.{summaryPage => messages}
 import common.Dates
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper

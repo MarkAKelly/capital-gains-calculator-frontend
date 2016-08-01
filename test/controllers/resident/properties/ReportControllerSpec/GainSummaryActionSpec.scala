@@ -17,7 +17,7 @@
 package controllers.resident.properties.ReportControllerSpec
 
 import common.Dates
-import assets.MessageLookup.{summary => messages}
+import assets.MessageLookup.{summaryPage => messages}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.ReportController
