@@ -369,7 +369,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
             doc.select("#deductions-amount").text should include("Reliefs £50,000")
           }
 
-          "include a value for Allowable Losses of £0" in {
+          "include a value for Allowable Losses of £10,000" in {
             doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLosses("2013/14")} £10,000")
           }
 
@@ -377,7 +377,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
             doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsCapitalGainsTax} £0")
           }
 
-          "include a value for Loss brought forward of £0" in {
+          "include a value for Loss brought forward of £10,000" in {
             doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYear("2013/14")} £10,000")
           }
         }
