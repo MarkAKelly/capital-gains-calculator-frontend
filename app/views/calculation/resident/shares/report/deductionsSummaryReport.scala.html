@@ -32,6 +32,10 @@
     </span>
 }
 
+@annualExemptAmountHelpText() = {
+    <span>@Messages("calc.resident.summary.annualExemptAmountHelp")</span>
+}
+
 <!DOCTYPE html>
 <html>
 
@@ -79,23 +83,26 @@
         (Messages("calc.resident.summary.broughtForwardLoss"), broughtForwardLossesUsed(deductionAnswers))
         )))
         @if(result.chargeableGain == 0){
-        @summaryNumericRowHelper("chargeableGain", Messages("calc.resident.summary.chargeableGain"), result.chargeableGain)
+            @summaryNumericRowHelper("chargeableGain", Messages("calc.resident.summary.chargeableGain"), result.chargeableGain)
         }
         @if(result.allowableLossesRemaining > 0) {
-        @{summaryNumericHelpTextHelper("allowableLossRemaining", Messages("calc.resident.summary.remainingAllowableLoss", taxYear.taxYearSupplied),
-        result.allowableLossesRemaining,
-        None,
-        Some(allowableLossesHelpText()))
-        }
+            @{summaryNumericHelpTextHelper("allowableLossRemaining", Messages("calc.resident.summary.remainingAllowableLoss", taxYear.taxYearSupplied),
+                result.allowableLossesRemaining,
+                None,
+                Some(allowableLossesHelpText()))
+            }
         }
         @if(result.broughtForwardLossesRemaining > 0) {
-        @{summaryNumericHelpTextHelper("broughtForwardLossRemaining", Messages("calc.resident.summary.remainingBroughtForwardLoss", taxYear.taxYearSupplied),
-        result.broughtForwardLossesRemaining,
-        None,
-        Some(broughtForwardLossesHelpText()))
+            @{summaryNumericHelpTextHelper("broughtForwardLossRemaining", Messages("calc.resident.summary.remainingBroughtForwardLoss", taxYear.taxYearSupplied),
+                result.broughtForwardLossesRemaining,
+                None,
+                Some(broughtForwardLossesHelpText()))
+            }
         }
-        }
-        @summaryNumericRowHelper("aeaRemaining", Messages("calc.resident.summary.aeaRemaining"), result.aeaRemaining)
+        @summaryNumericHelpTextHelper("aeaRemaining", Messages("calc.resident.summary.aeaRemaining"), result.aeaRemaining, None,
+            if(result.aeaRemaining > 0) {Some(annualExemptAmountHelpText())}
+            else {None}
+        )
 
     </section>
 
