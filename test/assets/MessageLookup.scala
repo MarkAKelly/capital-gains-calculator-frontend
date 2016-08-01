@@ -117,6 +117,7 @@ object MessageLookup {
     val pageHeading = "Tax owed"
     val calcDetailsHeading = "Calculation details"
     def calcDetailsHeadingDate(input: String): String = s"Calculation details for $input tax year"
+    val aeaHelp = "You can use this to reduce your tax if you sell something else that's covered by Capital Gains Tax in the same tax year."
     val yourAnswersHeading = "Your answers"
     val totalLoss = "Loss"
     val totalGain = "Total gain"

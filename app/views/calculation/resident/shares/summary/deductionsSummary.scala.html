@@ -34,6 +34,10 @@
     </span>
 }
 
+@annualExemptAmountHelpText() = {
+    <span>@Messages("calc.resident.summary.annualExemptAmountHelp")</span>
+}
+
 @resident_main_template(
 title = Messages("calc.resident.summary.title"),
 backLink = Some(backUrl),
@@ -90,7 +94,10 @@ homeLink = navHomeLink
             Some(broughtForwardLossesHelpText()))
         }
     }
-    @summaryNumericRowHelper("aeaRemaining", Messages("calc.resident.summary.aeaRemaining"), result.aeaRemaining)
+    @summaryNumericHelpTextHelper("aeaRemaining", Messages("calc.resident.summary.aeaRemaining"), result.aeaRemaining, None,
+        if(result.aeaRemaining > 0) {Some(annualExemptAmountHelpText())}
+        else {None}
+    )
 </section>
 
 <!-- Your Answers Section -->

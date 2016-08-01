@@ -384,6 +384,7 @@ calc.resident.summary.remainingLossHelp = You can
 calc.resident.summary.remainingLossLink = use this loss
 calc.resident.summary.remainingAllowableLossHelp = to reduce your Capital Gains Tax if you sell something in the same tax year
 calc.resident.summary.remainingBroughtForwardLossHelp = to reduce your Capital Gains Tax in the future
+calc.resident.summary.annualExemptAmountHelp = You can use this to reduce your tax if you sell something else that''s covered by Capital Gains Tax in the same tax year.
 
 ## Reliefs messages
 calc.resident.reliefs.title = Do you want to claim Capital Gains Tax reliefs on your total gain of £{0}?

@@ -176,6 +176,10 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         "include a value for Capital gains tax allowance left of £0" in {
           doc.select("#aeaRemaining-amount span.bold-medium").text should include("£0")
         }
+
+        "not include the additional help text for AEA" in {
+          doc.select("#aeaRemaining-amount div span").isEmpty shouldBe true
+        }
       }
     }
 
@@ -552,6 +556,21 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         "should have a link in the help text to https://www.gov.uk/capital-gains-tax/losses" in {
           doc.select("#broughtForwardLossRemaining-amount div span a").attr("href") shouldBe "https://www.gov.uk/capital-gains-tax/losses"
         }
+      }
+    }
+
+    "has a numeric output row for the AEA remaining" which {
+
+      "should have the question text 'Capital gains tax allowance left" in {
+        doc.select("#aeaRemaining-question").text should include(messages.aeaRemaining)
+      }
+
+      "include a value for Capital gains tax allowance left of £11,000" in {
+        doc.select("#aeaRemaining-amount span.bold-medium").text should include("£11,000")
+      }
+
+      "include the additional help text for AEA" in {
+        doc.select("#aeaRemaining-amount div span").text shouldBe messages.aeaHelp
       }
     }
 
