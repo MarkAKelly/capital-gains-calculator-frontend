@@ -20,7 +20,7 @@ import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.test.Helpers._
-import assets.MessageLookup.{summary => messages}
+import assets.MessageLookup.{summaryPage => messages}
 import common.Dates
 import connectors.CalculatorConnector
 import models.resident._

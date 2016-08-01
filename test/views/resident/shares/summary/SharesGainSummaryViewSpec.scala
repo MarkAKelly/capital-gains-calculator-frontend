@@ -16,7 +16,7 @@
 
 package views.resident.shares.summary
 
-import assets.MessageLookup.{summary => messages}
+import assets.MessageLookup.{summaryPage => messages}
 import assets.{MessageLookup => commonMessages}
 import common.Dates._
 import controllers.helpers.FakeRequestHelper
@@ -27,7 +27,7 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.shares.{summary => views}
 
-class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Summary view" should {
 

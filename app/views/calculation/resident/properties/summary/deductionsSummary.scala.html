@@ -73,9 +73,9 @@ articleLayout = false
     @summaryNumericRowHelper("gain",gainMessage(result.gain),result.gain)
     @summaryNumericRowHelper("deductions", Messages("calc.resident.summary.deductions"), result.deductions, None, Some(Seq(
         (Messages("calc.resident.summary.reliefs"), reliefsUsed(deductionAnswers)),
-        (Messages("calc.resident.summary.allowableLosses"), allowableLossesUsed(deductionAnswers)),
-        (Messages("calc.resident.summary.aeaUsed"), MoneyPounds(result.aeaUsed, 0).quantity),
-        (Messages("calc.resident.summary.broughtForwardLoss"), broughtForwardLossesUsed(deductionAnswers))
+        (Messages("calc.resident.summary.deductionsDetails.allowableLosses", taxYear.taxYearSupplied), allowableLossesUsed(deductionAnswers)),
+        (Messages("calc.resident.summary.deductionsDetails.aeaUsed"), MoneyPounds(result.aeaUsed, 0).quantity),
+        (Messages("calc.resident.summary.deductionsDetails.broughtForwardLoss", taxYear.taxYearSupplied), broughtForwardLossesUsed(deductionAnswers))
     )))
     @if(result.chargeableGain == 0){
         @summaryNumericRowHelper("chargeableGain", Messages("calc.resident.summary.chargeableGain"), result.chargeableGain)

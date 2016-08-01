@@ -17,7 +17,7 @@
 package views.resident.properties.report
 
 import assets.{MessageLookup => commonMessages}
-import assets.MessageLookup.{summary => messages}
+import assets.MessageLookup.{summaryPage => messages}
 import common.Dates._
 import controllers.helpers.FakeRequestHelper
 import models.resident.TaxYearModel
@@ -26,7 +26,7 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{report => views}
 
-class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper{
+class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper{
 
   "Summary view" should {
 

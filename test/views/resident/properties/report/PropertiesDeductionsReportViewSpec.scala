@@ -14,27 +14,31 @@
  * limitations under the License.
  */
 
-package views.resident.shares.report
+package views.resident.properties.report
 
-import assets.MessageLookup.{summary => messages}
+import assets.MessageLookup.{summaryPage => messages}
 import assets.{MessageLookup => commonMessages}
 import common.Dates
+import common.Dates._
 import controllers.helpers.FakeRequestHelper
+import controllers.resident.properties.routes
 import models.resident._
-import models.resident.shares.{DeductionGainAnswersModel, GainAnswersModel}
+import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, ReliefsValueModel, YourAnswersSummaryModel}
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import views.html.calculation.resident.shares.{report => views}
+import views.html.calculation.resident.properties.{report => views}
 
-class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Deductions Report view" should {
-    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2016),
+    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       BigDecimal(200000),
       BigDecimal(10000),
       BigDecimal(100000),
-      BigDecimal(10000))
-    lazy val deductionAnswers = DeductionGainAnswersModel(
+      BigDecimal(10000),
+      BigDecimal(30000))
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+      None,
       Some(OtherPropertiesModel(false)),
       None,
       None,
@@ -120,16 +124,20 @@ class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with Fa
 
         "has a breakdown that" should {
 
+          "include a value for Reliefs of £0" in {
+            doc.select("#deductions-amount").text should include("Reliefs £0")
+          }
+
           "include a value for Allowable Losses of £0" in {
-            doc.select("#deductions-amount").text should include("Allowable losses £0")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLosses("2015/16")} £0")
           }
 
           "include a value for Capital gains tax allowance used of £11,100" in {
-            doc.select("#deductions-amount").text should include("Capital gains tax allowance used £11,100")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsCapitalGainsTax} £11,100")
           }
 
           "include a value for Loss brought forward of £0" in {
-            doc.select("#deductions-amount").text should include("Loss brought forward £0")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYear("2015/16")} £0")
           }
         }
       }
@@ -179,19 +187,19 @@ class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with Fa
 
       "has a date output row for the Disposal Date" which {
 
-        s"should have the question text '${commonMessages.sharesDisposalDate.title}'" in {
-          doc.select("#disposalDate-question").text shouldBe commonMessages.sharesDisposalDate.title
+        s"should have the question text '${commonMessages.disposalDate.question}'" in {
+          doc.select("#disposalDate-question").text shouldBe commonMessages.disposalDate.question
         }
 
-        "should have the value '10 October 2016'" in {
+        "should have the date '10 October 2016'" in {
           doc.select("#disposalDate-date span.bold-medium").text shouldBe "10 October 2016"
         }
       }
 
       "has a numeric output row for the Disposal Value" which {
 
-        s"should have the question text '${commonMessages.sharesDisposalValue.title}'" in {
-          doc.select("#disposalValue-question").text shouldBe commonMessages.sharesDisposalValue.title
+        s"should have the question text '${commonMessages.disposalValue.question}'" in {
+          doc.select("#disposalValue-question").text shouldBe commonMessages.disposalValue.question
         }
 
         "should have the value '£200,000'" in {
@@ -201,8 +209,8 @@ class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with Fa
 
       "has a numeric output row for the Disposal Costs" which {
 
-        s"should have the question text '${commonMessages.sharesDisposalCosts.title}'" in {
-          doc.select("#disposalCosts-question").text shouldBe commonMessages.sharesDisposalCosts.title
+        s"should have the question text '${commonMessages.disposalCosts.title}'" in {
+          doc.select("#disposalCosts-question").text shouldBe commonMessages.disposalCosts.title
         }
 
         "should have the value '£10,000'" in {
@@ -212,8 +220,8 @@ class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with Fa
 
       "has a numeric output row for the Acquisition Value" which {
 
-        s"should have the question text '${commonMessages.sharesAcquisitionValue.title}'" in {
-          doc.select("#acquisitionValue-question").text shouldBe commonMessages.sharesAcquisitionValue.title
+        s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
+          doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
         }
 
         "should have the value '£100,000'" in {
@@ -223,8 +231,8 @@ class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with Fa
 
       "has a numeric output row for the Acquisition Costs" which {
 
-        s"should have the question text '${commonMessages.sharesAcquisitionCosts.title}'" in {
-          doc.select("#acquisitionCosts-question").text shouldBe commonMessages.sharesAcquisitionCosts.title
+        s"should have the question text '${commonMessages.acquisitionCosts.title}'" in {
+          doc.select("#acquisitionCosts-question").text shouldBe commonMessages.acquisitionCosts.title
         }
 
         "should have the value '£10,000'" in {
@@ -232,7 +240,29 @@ class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with Fa
         }
       }
 
-      "has an option output row for other disposals" which {
+      "has a numeric output row for the Improvements" which {
+
+        s"should have the question text '${commonMessages.improvementsView.title}'" in {
+          doc.select("#improvements-question").text shouldBe commonMessages.improvementsView.title
+        }
+
+        "should have the value '£30,000'" in {
+          doc.select("#improvements-amount span.bold-medium").text shouldBe "£30,000"
+        }
+      }
+
+      "has an option output row for tax reliefs" which {
+
+        s"should have the question text '${commonMessages.reliefs.questionSummary}'" in {
+          doc.select("#reliefs-question").text shouldBe commonMessages.reliefs.questionSummary
+        }
+
+        "should have the value 'No'" in {
+          doc.select("#reliefs-option span.bold-medium").text shouldBe "No"
+        }
+      }
+
+      "has an option output row for other properties" which {
 
         s"should have the question text '${commonMessages.otherProperties.title("2015/16")}'" in {
           doc.select("#otherProperties-question").text shouldBe commonMessages.otherProperties.title("2015/16")
@@ -254,19 +284,17 @@ class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with Fa
         }
       }
     }
-
-    "does not display the section for what to do next" in {
-      doc.select("#whatToDoNext").isEmpty shouldBe true
-    }
   }
 
   "Deductions Report view with all options selected" should {
-    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2016),
+    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       BigDecimal(200000),
       BigDecimal(10000),
       BigDecimal(100000),
-      BigDecimal(10000))
-    lazy val deductionAnswers = DeductionGainAnswersModel(
+      BigDecimal(10000),
+      BigDecimal(30000))
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(true)),
+      Some(ReliefsValueModel(BigDecimal(50000))),
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
       Some(AllowableLossesValueModel(10000)),
@@ -341,16 +369,20 @@ class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with Fa
 
         "has a breakdown that" should {
 
+          "include a value for Reliefs of £50,000" in {
+            doc.select("#deductions-amount").text should include("Reliefs £50,000")
+          }
+
           "include a value for Allowable Losses of £10,000" in {
-            doc.select("#deductions-amount").text should include("Allowable losses £10,000")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLosses("2013/14")} £10,000")
           }
 
           "include a value for Capital gains tax allowance used of £0" in {
-            doc.select("#deductions-amount").text should include("Capital gains tax allowance used £0")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsCapitalGainsTax} £0")
           }
 
           "include a value for Loss brought forward of £10,000" in {
-            doc.select("#deductions-amount").text should include("Loss brought forward £10,000")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYear("2013/14")} £10,000")
           }
         }
       }
@@ -384,6 +416,21 @@ class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with Fa
           doc.select("#broughtForwardLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${messages.remainingBroughtForwardLossHelp}")
         }
       }
+
+      "has a numeric output row for the AEA remaining" which {
+
+        "should have the question text 'Capital gains tax allowance left" in {
+          doc.select("#aeaRemaining-question").text should include(messages.aeaRemaining)
+        }
+
+        "include a value for Capital gains tax allowance left of £11,000" in {
+          doc.select("#aeaRemaining-amount span.bold-medium").text should include("£11,000")
+        }
+
+        "include the additional help text for AEA" in {
+          doc.select("#aeaRemaining-amount div span").text shouldBe messages.aeaHelp
+        }
+      }
     }
 
     s"have a section for Your answers" which {
@@ -400,6 +447,28 @@ class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with Fa
 
         "has the class 'heading-large'" in {
           doc.select("section#yourAnswers h2").hasClass("heading-large") shouldBe true
+        }
+      }
+
+      "has an option output row for tax reliefs" which {
+
+        s"should have the question text '${commonMessages.reliefs.questionSummary}'" in {
+          doc.select("#reliefs-question").text shouldBe commonMessages.reliefs.questionSummary
+        }
+
+        "should have the value 'Yes'" in {
+          doc.select("#reliefs-option span.bold-medium").text shouldBe "Yes"
+        }
+      }
+
+      "has a numeric output row for tax relief value" which {
+
+        s"should have the question text '${commonMessages.reliefsValue.title}'" in {
+          doc.select("#reliefsValue-question").text shouldBe commonMessages.reliefsValue.title
+        }
+
+        "should have the value '£50,000'" in {
+          doc.select("#reliefsValue-amount span.bold-medium").text shouldBe "£50,000"
         }
       }
 
@@ -458,20 +527,18 @@ class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with Fa
         }
       }
     }
-
-    "does not display the section for what to do next" in {
-      doc.select("#whatToDoNext").isEmpty shouldBe true
-    }
   }
 
   "Deductions Report view with AEA options selected" which {
 
-    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2016),
+    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       BigDecimal(200000),
       BigDecimal(10000),
       BigDecimal(100000),
-      BigDecimal(10000))
-    lazy val deductionAnswers = DeductionGainAnswersModel(
+      BigDecimal(10000),
+      BigDecimal(30000))
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(true)),
+      Some(ReliefsValueModel(BigDecimal(50000))),
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
       Some(AllowableLossesValueModel(10000)),
@@ -489,21 +556,6 @@ class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with Fa
 
     lazy val view = views.deductionsSummaryReport(gainAnswers, deductionAnswers, results, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
-
-    "has a numeric output row for the AEA remaining" which {
-
-      "should have the question text 'Capital gains tax allowance left" in {
-        doc.select("#aeaRemaining-question").text should include(messages.aeaRemaining)
-      }
-
-      "include a value for Capital gains tax allowance left of £11,000" in {
-        doc.select("#aeaRemaining-amount span.bold-medium").text should include("£11,000")
-      }
-
-      "include the additional help text for AEA" in {
-        doc.select("#aeaRemaining-amount div span").text shouldBe messages.aeaHelp
-      }
-    }
 
     "has a numeric output row for allowable losses remaining" which {
 
@@ -532,6 +584,56 @@ class DeductionsReportViewSpec extends UnitSpec with WithFakeApplication with Fa
 
       "should have the value '£1,000'" in {
         doc.select("#annualExemptAmount-amount span.bold-medium").text shouldBe "£1,000"
+      }
+    }
+  }
+
+
+  "Report when supplied with a date above the known tax years" should {
+
+    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
+      BigDecimal(200000),
+      BigDecimal(10000),
+      BigDecimal(100000),
+      BigDecimal(10000),
+      BigDecimal(30000))
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(true)),
+      Some(ReliefsValueModel(BigDecimal(50000))),
+      Some(OtherPropertiesModel(true)),
+      Some(AllowableLossesModel(true)),
+      Some(AllowableLossesValueModel(10000)),
+      Some(LossesBroughtForwardModel(true)),
+      Some(LossesBroughtForwardValueModel(10000)),
+      Some(AnnualExemptAmountModel(1000)))
+    lazy val results = ChargeableGainResultModel(BigDecimal(50000),
+      BigDecimal(-11000),
+      BigDecimal(0),
+      BigDecimal(11000),
+      BigDecimal(71000),
+      BigDecimal(0),
+      BigDecimal(2000))
+
+    lazy val taxYearModel = TaxYearModel("2017/18", false, "2015/16")
+
+    lazy val view = views.deductionsSummaryReport(gainAnswers, deductionAnswers, results, taxYearModel)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "has a numeric output row for allowable losses remaining" in {
+      doc.select("#allowableLossRemaining").isEmpty() shouldBe true
+    }
+
+    "has a numeric output row for brought forward losses remaining" which {
+
+      "should have the question text for an out of year loss" in {
+        doc.select("#broughtForwardLossRemaining-question").text() shouldBe messages.remainingBroughtForwardLoss("2017/18")
+      }
+
+      "should have the value £2000" in {
+        doc.select("#broughtForwardLossRemaining-amount").text() should include("£2,000")
+      }
+
+      "should have the correct help text" in {
+        doc.select("#broughtForwardLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${messages.remainingBroughtForwardLossHelp}")
       }
     }
 

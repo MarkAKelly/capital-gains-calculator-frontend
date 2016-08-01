@@ -16,7 +16,7 @@
 
 package constructors.resident.properties
 
-import assets.MessageLookup.{summary => messages}
+import assets.MessageLookup.{summaryPage => messages}
 import models.resident._
 import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, ReliefsValueModel}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}

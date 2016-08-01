@@ -50,9 +50,9 @@ homeLink = navHomeLink
     <!-- Data Rows -->
     @summaryNumericRowHelper("gain", gainMessage(result.gain), result.gain)
     @summaryNumericRowHelper("deductions", Messages("calc.resident.summary.deductions"), result.deductions, None, Some(Seq(
-    (Messages("calc.resident.summary.allowableLosses"), allowableLossesUsed(deductionAnswers)),
-    (Messages("calc.resident.summary.aeaUsed"), MoneyPounds(result.aeaUsed, 0).quantity),
-    (Messages("calc.resident.summary.broughtForwardLoss"), broughtForwardLossesUsed(deductionAnswers))
+    (Messages("calc.resident.summary.deductionsDetails.allowableLosses", taxYear.taxYearSupplied), allowableLossesUsed(deductionAnswers)),
+    (Messages("calc.resident.summary.deductionsDetails.aeaUsed"), MoneyPounds(result.aeaUsed, 0).quantity),
+    (Messages("calc.resident.summary.deductionsDetails.broughtForwardLoss", taxYear.taxYearSupplied), broughtForwardLossesUsed(deductionAnswers))
     )))
     @summaryNumericRowHelper("chargeableGain", if(result.chargeableGain < 0) {
     Messages("calc.resident.summary.chargeableLoss")} else {Messages("calc.resident.summary.chargeableGain")}, result.chargeableGain)

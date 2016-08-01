@@ -16,7 +16,7 @@
 
 package views.resident.properties.summary
 
-import assets.MessageLookup.{summary => messages}
+import assets.MessageLookup.{summaryPage => messages}
 import assets.{MessageLookup => commonMessages}
 import common.Dates._
 import com.sun.xml.internal.bind.v2.TODO
@@ -28,7 +28,7 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{summary => views}
 
-class GainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Summary view" should {
 
