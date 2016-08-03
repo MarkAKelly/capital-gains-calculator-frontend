@@ -57,6 +57,10 @@ class PrivateResidenceReliefFormSpec extends UnitSpec with WithFakeApplication {
         form.hasErrors shouldBe true
       }
 
+      "raise 1 form error" in {
+        form.errors.length shouldBe 1
+      }
+
       s"return a form with the error message ${messages.errorSelect}" in {
         form.error("prrClaiming").get.message shouldBe messages.errorSelect
       }
@@ -67,6 +71,10 @@ class PrivateResidenceReliefFormSpec extends UnitSpec with WithFakeApplication {
 
       "return a form with errors" in {
         form.hasErrors shouldBe true
+      }
+
+      "raise 1 form error" in {
+        form.errors.length shouldBe 1
       }
 
       s"return a form with the error message ${messages.errorSelect}" in {
