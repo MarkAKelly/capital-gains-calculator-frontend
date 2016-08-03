@@ -14,12 +14,22 @@
  * limitations under the License.
  */
 
-package models.resident.properties
+package forms.resident.properties
 
-import play.api.libs.json.Json
+import common.Validation._
+import models.resident.properties.PrivateResidenceReliefModel
+import play.api.data.Forms._
+import play.api.data.Form
+import play.api.i18n.Messages
 
-case class ClaimingPRRModel (claimingPRR: String)
+object PrivateResidenceReliefForm {
 
-object ClaimingPRRModel {
-  implicit val format = Json.format[ClaimingPRRModel]
+  val privateResidenceReliefForm = Form(
+    mapping(
+      "prrClaiming" -> text
+        .verifying(Messages("calc.resident.privateResidenceRelief.dummyError"), mandatoryCheck)
+        .verifying(Messages("calc.resident.privateResidenceRelief.dummyError"), fullPartNoneCheck)
+    )(PrivateResidenceReliefModel.apply)(PrivateResidenceReliefModel.unapply)
+  )
 }
+
