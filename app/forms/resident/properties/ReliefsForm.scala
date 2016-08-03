@@ -27,11 +27,11 @@ import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object ReliefsForm {
 
-  def reliefsForm(totalGain: BigDecimal): Form[ReliefsModel] = Form(
+  def reliefsForm(): Form[ReliefsModel] = Form(
     mapping(
       "isClaiming" -> text
-        .verifying(Messages("calc.resident.reliefs.errorSelect", MoneyPounds(totalGain, 0).quantity), _.nonEmpty)
-        .verifying(Messages("calc.resident.reliefs.errorSelect", MoneyPounds(totalGain, 0).quantity), yesNoCheck)
+        .verifying(Messages("calc.resident.reliefs.errorSelect"), _.nonEmpty)
+        .verifying(Messages("calc.resident.reliefs.errorSelect"), yesNoCheck)
         .transform[Boolean](stringToBoolean, booleanToString)
     )(ReliefsModel.apply)(ReliefsModel.unapply)
   )

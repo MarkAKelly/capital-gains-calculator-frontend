@@ -35,9 +35,8 @@ import scala.concurrent.Future
 
 class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  val summaryModel = YourAnswersSummaryModel(constructDate(10, 10, 2016), 100000, 10000, 50000, 1000, 2500)
 
-  def setupTarget(getData: Option[ReliefsModel], summary: YourAnswersSummaryModel, totalGain: BigDecimal): DeductionsController = {
+  def setupTarget(getData: Option[ReliefsModel]): DeductionsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
@@ -46,12 +45,6 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
 
     when(mockCalcConnector.saveFormData[ReliefsModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
-
-    when(mockCalcConnector.getPropertyGainAnswers(Matchers.any()))
-      .thenReturn(summary)
-
-    when(mockCalcConnector.calculateRttPropertyGrossGain(Matchers.any())(Matchers.any()))
-      .thenReturn(totalGain)
 
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -62,7 +55,7 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
 
     "request has a valid session and no keystore value" should {
 
-      lazy val target = setupTarget(None, summaryModel, BigDecimal(10000))
+      lazy val target = setupTarget(None)
       lazy val result = target.reliefs(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -77,7 +70,7 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
 
     "request has a valid session and some keystore value" should {
 
-      lazy val target = setupTarget(Some(ReliefsModel(true)), summaryModel, BigDecimal(10000))
+      lazy val target = setupTarget(Some(ReliefsModel(true)))
       lazy val result = target.reliefs(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -92,7 +85,7 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
 
     "request has an invalid session" should {
 
-      lazy val target = setupTarget(None, summaryModel, BigDecimal(10000))
+      lazy val target = setupTarget(None)
       lazy val result = target.reliefs(fakeRequest)
 
       "return a status of 303" in {
@@ -108,7 +101,7 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
   "Calling .submitReliefs from the DeductionsController" when {
 
     "a valid form 'Yes' is submitted" should {
-      lazy val target = setupTarget(None, summaryModel, BigDecimal(10000))
+      lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "Yes"))
       lazy val result = target.submitReliefs(request)
 
@@ -122,7 +115,7 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     }
 
     "a valid form 'No' is submitted" should {
-      lazy val target = setupTarget(None, summaryModel, BigDecimal(10000))
+      lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "No"))
       lazy val result = target.submitReliefs(request)
 
@@ -136,7 +129,7 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     }
 
     "an invalid form is submitted" should {
-      lazy val target = setupTarget(None, summaryModel, BigDecimal(10000))
+      lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("isClaiming", ""))
       lazy val result = target.submitReliefs(request)
       lazy val doc = Jsoup.parse(bodyOf(result))

@@ -159,7 +159,7 @@ object MessageLookup {
     val help = "For example, lettings relief"
     val helpOne = "Capital Gains Tax reliefs can lower the amount of tax you owe. For example, you might be able to claim"
     val helpLinkOne = "Private Residence Relief"
-    def errorSelect(value: String) = s"Tell us if you want to claim any other tax reliefs"
+    val errorSelect = s"Tell us if you want to claim any other tax reliefs"
     val helpButton = "What are Capital Gains Tax reliefs?"
   }
 
