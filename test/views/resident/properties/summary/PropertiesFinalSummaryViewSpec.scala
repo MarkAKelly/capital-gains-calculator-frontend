@@ -652,7 +652,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       18,
       Some(10000),
       Some(28),
-      Some(BigDecimal(0))
+      Some(BigDecimal(1000))
     )
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
@@ -684,6 +684,13 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
 
       s"has a link to '${routes.IncomeController.personalAllowance().toString()}'" in {
         backLink.attr("href") shouldBe routes.IncomeController.personalAllowance().toString
+      }
+    }
+
+    "has a breakdown that" should {
+
+      "include a value for Reliefs of £1,000" in {
+        doc.select("#deductions-amount").text should include("Reliefs £1,000")
       }
     }
 
@@ -757,7 +764,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       18,
       Some(0),
       Some(28),
-      None
+      Some(BigDecimal(0))
     )
 
     lazy val backLink = "/calculate-your-capital-gains/resident/properties/personal-allowance"
