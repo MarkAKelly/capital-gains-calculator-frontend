@@ -1,10 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import models.resident.properties._
+@import views.html.helpers._
+@import views.html.calculation.resident._
 
-</body>
-</html>
+@(navHomeLink: String, navBackLink: Option[String])(implicit request: Request[_])
+
+@resident_main_template(title = Messages("calc.resident.properties.privateResidenceRelief.title"),
+    backLink = navBackLink,
+    homeLink = navHomeLink
+){
+}

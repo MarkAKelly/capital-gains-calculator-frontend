@@ -16,13 +16,63 @@
 
 package views.resident.properties.deductions
 
-import assets.MessageLookup.{privateResidenceRelief => messages, _}
+import assets.MessageLookup.{privateResidenceRelief => messages}
+import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
-import forms.resident.PrivateResidenceRelief._
+import forms.resident.properties.PrivateResidenceReliefForm._
 import models.resident.TaxYearModel
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{deductions => views}
 
 class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+
+  "Allowable Losses Value view with no form errors" should {
+
+    lazy val view = views.privateResidenceRelief("home",
+      Some("back"))(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "have a charset of UTF-8" in {
+      doc.charset().toString shouldBe "UTF-8"
+    }
+
+    s"have a title of ${messages.title}" in {
+      doc.title() shouldBe messages.title
+    }
+
+    s"have the home link too 'home'" in {
+      doc.select("#homeNavHref").attr("href") shouldEqual "home"
+    }
+
+    "have a back button" which {
+
+      lazy val backLink = doc.select("a#back-link")
+
+      "has the correct back link text" in {
+        backLink.text shouldBe commonMessages.calcBaseBack
+      }
+
+      "has the back-link class" in {
+        backLink.hasClass("back-link") shouldBe true
+      }
+
+      "has a back link to 'back'" in {
+        backLink.attr("href") shouldBe "back"
+      }
+    }
+
+    "have a H1 tag that" should {
+
+      lazy val h1Tag = doc.select("h1")
+
+      s"have the page heading '${messages.title}'" in {
+        h1Tag.text shouldBe messages.title
+      }
+
+      "have the heading-large class" in {
+        h1Tag.hasClass("heading-large") shouldBe true
+      }
+    }
+  }
 }

@@ -254,7 +254,8 @@ object MessageLookup {
   }
 
   //############ Private Residence Relief messages #################//
-  object privateResidenceReilef {
+  object privateResidenceRelief {
+    val title = "Do you want to claim Private Residence Relief?"
     val errorSelect = "Tell us if you want to claim Private Residence Relief"
   }
 
