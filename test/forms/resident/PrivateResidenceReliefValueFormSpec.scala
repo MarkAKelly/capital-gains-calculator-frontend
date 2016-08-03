@@ -48,6 +48,10 @@ class PrivateResidenceReliefValueFormSpec extends UnitSpec with WithFakeApplicat
       s"return a form with the error message '${errorMessages.mandatoryAmount}'" in {
         form.error("amount").get.message shouldBe errorMessages.mandatoryAmount
       }
+
+      "raise 1 form error" in {
+        form.errors.length shouldBe 1
+      }
     }
 
     "supplied with a non-numeric value for amount" should {
