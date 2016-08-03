@@ -74,5 +74,46 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
         h1Tag.hasClass("heading-large") shouldBe true
       }
     }
+
+    "have a set of radio inputs" which {
+
+      "are surrounded in a div with class form-group" in {
+        doc.select("div#radio-input").hasClass("form-group") shouldEqual true
+      }
+
+      "for the option 'Yes claiming full prr'" should {
+
+        lazy val fullRadioOption = doc.select(".block-label[for=prrClaiming-Full]")
+
+        "have a label with class 'block-label'" in {
+          fullRadioOption.hasClass("block-label") shouldEqual true
+        }
+
+        "have the property 'for'" in {
+          fullRadioOption.hasAttr("for") shouldEqual true
+        }
+
+        "the for attribute has the value prrClaiming-Full" in {
+          fullRadioOption.attr("for").value shouldEqual "prrClaiming-Full"
+        }
+
+        "have an input under the label that" should {
+
+          lazy val optionLabel = fullRadioOption.select("label")
+
+          "have the id 'prrClaiming-Full'" in {
+            optionLabel.attr("id") shouldEqual "prrClaiming-Full"
+          }
+
+          "have the value 'Full'" in {
+            optionLabel.attr("value") shouldEqual "Full"
+          }
+
+          "be of type radio" in {
+            optionLabel.attr("type") shouldEqual "radio"
+          }
+        }
+      }
+    }
   }
 }
