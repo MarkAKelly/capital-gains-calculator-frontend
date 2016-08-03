@@ -29,7 +29,7 @@ import forms.resident.AnnualExemptAmountForm._
 import forms.resident.OtherPropertiesForm._
 import forms.resident.properties.ReliefsForm._
 import forms.resident.properties.ReliefsValueForm._
-import models.resident.properties.{ReliefsModel, ReliefsValueModel, YourAnswersSummaryModel}
+import models.resident.properties.{PrivateResidenceReliefModel, ReliefsModel, ReliefsValueModel, YourAnswersSummaryModel}
 import play.api.mvc.{Action, Result}
 import play.api.data.Form
 import views.html.calculation.{resident => commonViews}
@@ -54,26 +54,45 @@ trait DeductionsController extends FeatureLock {
     Future.successful(s"${disposalDateModel.year}-${disposalDateModel.month}-${disposalDateModel.day}")
   }
 
-  private val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
-
-  //################# Reliefs Actions ########################
-
   def totalGain(answerSummary: YourAnswersSummaryModel, hc: HeaderCarrier): Future[BigDecimal] = calcConnector.calculateRttPropertyGrossGain(answerSummary)(hc)
 
   def answerSummary(hc: HeaderCarrier): Future[YourAnswersSummaryModel] = calcConnector.getPropertyGainAnswers(hc)
 
+  def isClaimingPRR(prr: Option[PrivateResidenceReliefModel]): Future[Boolean] = {
+    prr match {
+      case Some(PrivateResidenceReliefModel("Part")) => Future.successful(true)
+      case _ => Future.successful(false)
+    }
+  }
+
+  private val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
+
+  //################# Reliefs Actions ########################
+
   val reliefs = FeatureLockForRTT.async { implicit request =>
 
-    calcConnector.fetchAndGetFormData[ReliefsModel](keystoreKeys.reliefs).map {
-      case Some(data) => Ok(views.reliefs(reliefsForm().fill(data), homeLink, false))
-      case None => Ok(views.reliefs(reliefsForm(), homeLink, false))
+    def routeRequest(isClaimingPRR: Boolean) = {
+      calcConnector.fetchAndGetFormData[ReliefsModel](keystoreKeys.reliefs).map {
+        case Some(data) => Ok(views.reliefs(reliefsForm().fill(data), homeLink, isClaimingPRR))
+        case None => Ok(views.reliefs(reliefsForm(), homeLink, isClaimingPRR))
+      }
     }
+
+    for {
+      prr <- calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief)
+      isClaimingPRR <- isClaimingPRR(prr)
+      route <- routeRequest(isClaimingPRR)
+    } yield route
   }
 
   val submitReliefs = FeatureLockForRTT.async { implicit request =>
 
     reliefsForm().bindFromRequest().fold(
-      errors => Future.successful(BadRequest(views.reliefs(errors, homeLink, false))),
+      errors => for {
+        prr <- calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief)
+        isClaimingPRR <- isClaimingPRR(prr)
+        route <- Future.successful(BadRequest(views.reliefs(errors, homeLink, isClaimingPRR)))
+      } yield route,
       success => {
         calcConnector.saveFormData[ReliefsModel](keystoreKeys.reliefs, success)
         success match {
