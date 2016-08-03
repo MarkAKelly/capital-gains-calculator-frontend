@@ -379,11 +379,25 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       18,
       Some(10000),
       Some(28),
-      Some(BigDecimal(0))
+      Some(BigDecimal(30000))
     )
 
     lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
+
+    "has a numeric output row for the deductions" which {
+
+      "should have the question text 'Deductions'" in {
+        doc.select("#deductions-question").text shouldBe messages.deductions
+      }
+
+      "has a breakdown that" should {
+
+        "include a value for Reliefs of £30,000" in {
+          doc.select("#deductions-amount").text should include("Reliefs £30,000")
+        }
+      }
+    }
 
     "have the class notice-wrapper" in {
       doc.select("div.notice-wrapper").isEmpty shouldBe false
