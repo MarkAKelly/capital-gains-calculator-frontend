@@ -56,6 +56,9 @@ trait DeductionsController extends FeatureLock {
 
   private val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
 
+  //########## Private Residence Relief Actions ##############
+  val privateResidenceRelief = TODO
+
   //################# Reliefs Actions ########################
 
   def totalGain(answerSummary: YourAnswersSummaryModel, hc: HeaderCarrier): Future[BigDecimal] = calcConnector.calculateRttPropertyGrossGain(answerSummary)(hc)

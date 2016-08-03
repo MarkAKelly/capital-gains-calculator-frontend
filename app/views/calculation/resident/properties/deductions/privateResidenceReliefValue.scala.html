@@ -1,0 +1,30 @@
+@import models.resident.properties.PrivateResidenceReliefValueModel
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import views.html.helpers._
+@import views.html.calculation.resident._
+
+@(privateResidenceReliefValueForm : Form[PrivateResidenceReliefValueModel], navHomeLink: String)(implicit request: Request[_])
+
+@sidebar = {
+    <a id="privateResidenceReliefLink" class="external-link" rel="external" href="https://www.gov.uk/tax-sell-home/absence-from-home"
+       target="_blank" data-journey-click="help:govUK:absenceFromHome">
+        @Messages("calc.resident.prrValue.externalLink")
+        <span class="visuallyhidden">@Messages("calc.resident.prrValue.externalLink")</span>
+    </a>
+}
+
+@resident_main_template(
+    title = Messages("calc.resident.prrValue.title"),
+    backLink = Some(controllers.resident.properties.routes.DeductionsController.privateResidenceRelief().toString),
+    sidebarLinks = Some(sidebar),
+    homeLink = navHomeLink) {
+
+    @errorSummary(privateResidenceReliefValueForm, "private-residence-relief-value")
+
+    <h1>@Messages("calc.resident.prrValue.title")</h1>
+
+    @formInputMoney(privateResidenceReliefValueForm, "amount", Messages("calc.resident.prrValue.title"), hideLabel = true)
+
+    <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+
+}
