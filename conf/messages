@@ -474,7 +474,7 @@ calc.resident.personalAllowance.helpText = This is the amount of your income you
 ###############################################################################################
 ## Private Residence Relief messages ##
 ###############################################################################################
-calc.resident.privateResidenceRelief.dummyError = Placeholder
+calc.resident.privateResidenceRelief.noSelectError = Tell us if you want to claim Private Residence Relief
 
 ###############################################################################################
 ## Resident Shares messages ##

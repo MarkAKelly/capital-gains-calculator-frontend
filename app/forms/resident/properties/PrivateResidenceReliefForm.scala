@@ -27,8 +27,8 @@ object PrivateResidenceReliefForm {
   val privateResidenceReliefForm = Form(
     mapping(
       "prrClaiming" -> text
-        .verifying(Messages("calc.resident.privateResidenceRelief.dummyError"), mandatoryCheck)
-        .verifying(Messages("calc.resident.privateResidenceRelief.dummyError"), fullPartNoneCheck)
+        .verifying(Messages("calc.resident.privateResidenceRelief.noSelectError"), mandatoryCheck)
+        .verifying(Messages("calc.resident.privateResidenceRelief.noSelectError"), fullPartNoneCheck)
     )(PrivateResidenceReliefModel.apply)(PrivateResidenceReliefModel.unapply)
   )
 }
