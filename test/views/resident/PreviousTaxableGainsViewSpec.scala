@@ -75,7 +75,7 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
     }
 
     "have a hidden label" in {
-      val label = doc.select("label > span")
+      val label = doc.select("label > div > span")
       label.hasClass("visuallyhidden") shouldBe true
     }
 
