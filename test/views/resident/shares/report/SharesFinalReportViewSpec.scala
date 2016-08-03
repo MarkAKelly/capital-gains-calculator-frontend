@@ -56,7 +56,8 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
       30000,
       18,
       Some(10000),
-      Some(28)
+      Some(28),
+      None
     )
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
@@ -347,7 +348,8 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
       30000,
       18,
       Some(10000),
-      Some(28)
+      Some(28),
+      None
     )
 
     lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel)(fakeRequestWithSession)

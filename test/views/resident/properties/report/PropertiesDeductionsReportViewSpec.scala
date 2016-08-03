@@ -51,7 +51,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(0),
       BigDecimal(11100),
       BigDecimal(0),
-      BigDecimal(0))
+      BigDecimal(0),
+      Some(BigDecimal(0)))
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
@@ -307,7 +308,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(11000),
       BigDecimal(71000),
       BigDecimal(1000),
-      BigDecimal(2000))
+      BigDecimal(2000),
+      Some(BigDecimal(50000)))
 
     lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
 
@@ -551,7 +553,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(11000),
       BigDecimal(71000),
       BigDecimal(1000),
-      BigDecimal(0))
+      BigDecimal(0),
+      Some(BigDecimal(50000)))
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
     lazy val view = views.deductionsSummaryReport(gainAnswers, deductionAnswers, results, taxYearModel)(fakeRequestWithSession)
@@ -611,7 +614,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(11000),
       BigDecimal(71000),
       BigDecimal(0),
-      BigDecimal(2000))
+      BigDecimal(2000),
+      Some(BigDecimal(50000)))
 
     lazy val taxYearModel = TaxYearModel("2017/18", false, "2015/16")
 
