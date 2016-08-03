@@ -123,4 +123,12 @@ object Validation {
     case "" => true
     case _ => false
   }
+
+  val fullPartNoneCheck: String => Boolean = {
+    case "Full" => true
+    case "Part" => true
+    case "None" => true
+    case "" => true
+    case _ => false
+  }
 }

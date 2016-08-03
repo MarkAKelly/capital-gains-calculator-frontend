@@ -253,6 +253,11 @@ object MessageLookup {
     val helpLinkOne = "Personal Allowance"
   }
 
+  //############ Private Residence Relief messages #################//
+  object privateResidenceReilef {
+    val errorSelect = "Tell us if you want to claim Private Residence Relief"
+  }
+
 
   //############ Shares messages ##############//
   object sharesDisposalDate {
