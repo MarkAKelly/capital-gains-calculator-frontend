@@ -471,6 +471,10 @@ calc.resident.personalAllowance.currentYearQuestion = How much is your Personal 
 calc.resident.personalAllowance.link.one = Personal Allowance
 calc.resident.personalAllowance.helpText = This is the amount of your income you don''t pay tax on. It''s £{0} unless you''re claiming other allowances.
 
+###############################################################################################
+## Private Residence Relief messages ##
+###############################################################################################
+calc.resident.privateResidenceRelief.noSelectError = Tell us if you want to claim Private Residence Relief
 
 ###############################################################################################
 ## Resident Shares messages ##
