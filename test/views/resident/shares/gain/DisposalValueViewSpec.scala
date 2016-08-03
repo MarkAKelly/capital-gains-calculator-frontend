@@ -67,7 +67,7 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
     }
 
     s"have a label for an input with text ${messages.title}" in {
-      doc.select("label > span.visuallyhidden").text() shouldEqual messages.title
+      doc.select("label > div > span.visuallyhidden").text() shouldEqual messages.title
     }
 
     s"have an input field with id amount " in {

@@ -62,7 +62,7 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     }
 
     "have a hidden label" in {
-      val label = doc.select("label > span")
+      val label = doc.select("label > div > span")
       label.hasClass("visuallyhidden") shouldBe true
     }
 
