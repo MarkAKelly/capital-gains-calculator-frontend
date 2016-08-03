@@ -153,13 +153,13 @@ object MessageLookup {
 
   //Reliefs messages
   object reliefs {
-    val title = "Do you want to claim Capital Gains Tax reliefs on your total gain of £10,000?"
-    val questionSummary = "Do you want to claim Capital Gains Tax reliefs on your total gain of £50,000?"
-    def question(input: String = "100") = s"Do you want to claim Capital Gains Tax reliefs on your total gain of £$input?"
+    val title = "Do you want to claim any other tax reliefs?"
+    val questionSummary = "Do you want to claim any other tax reliefs?"
+    val question = s"Do you want to claim any other tax reliefs?"
     val help = "For example, lettings relief"
     val helpOne = "Capital Gains Tax reliefs can lower the amount of tax you owe. For example, you might be able to claim"
     val helpLinkOne = "Private Residence Relief"
-    def errorSelect(value: String) = s"Tell us if you want to claim any tax reliefs on your total gain of £$value"
+    def errorSelect(value: String) = s"Tell us if you want to claim any other tax reliefs"
     val helpButton = "What are Capital Gains Tax reliefs?"
   }
 

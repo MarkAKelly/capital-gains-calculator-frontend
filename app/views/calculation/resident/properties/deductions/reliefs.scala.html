@@ -15,14 +15,13 @@
 }
 
 @resident_main_template(
-    title = Messages("calc.resident.reliefs.title",
-    MoneyPounds(totalGain, 0).quantity),
+    title = Messages("calc.resident.reliefs.title"),
     backLink = Some(controllers.resident.properties.routes.GainController.improvements.toString()),
     homeLink = navHomeLink) {
 
     @errorSummary(reliefsForm, "reliefs")
 
-    <h1>@Messages("calc.resident.reliefs.question", MoneyPounds(totalGain, 0).quantity)</h1>
+    <h1>@Messages("calc.resident.reliefs.question")</h1>
 
     @form(action = controllers.resident.properties.routes.DeductionsController.submitReliefs) {
 
