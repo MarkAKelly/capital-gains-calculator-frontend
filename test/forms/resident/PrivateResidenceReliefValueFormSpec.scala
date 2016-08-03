@@ -64,6 +64,10 @@ class PrivateResidenceReliefValueFormSpec extends UnitSpec with WithFakeApplicat
       s"return a form with the error message '${errorMessages.invalidAmount}'" in {
         form.error("amount").get.message shouldBe errorMessages.invalidAmount
       }
+
+      "raise 1 form error" in {
+        form.errors.length shouldBe 1
+      }
     }
 
     "supplied with an amount that is too big" should {
@@ -75,6 +79,10 @@ class PrivateResidenceReliefValueFormSpec extends UnitSpec with WithFakeApplicat
 
       s"return a form with the error message '${errorMessages.maximumAmount}'" in {
         form.error("amount").get.message shouldBe errorMessages.maximumAmount
+      }
+
+      "raise 1 form error" in {
+        form.errors.length shouldBe 1
       }
     }
 
@@ -88,6 +96,10 @@ class PrivateResidenceReliefValueFormSpec extends UnitSpec with WithFakeApplicat
       s"return a form with the error message '${errorMessages.minimumAmount}'" in {
         form.error("amount").get.message shouldBe errorMessages.minimumAmount
       }
+
+      "raise 1 form error" in {
+        form.errors.length shouldBe 1
+      }
     }
 
     "supplied with an amount that has too many decimal places" should {
@@ -99,6 +111,10 @@ class PrivateResidenceReliefValueFormSpec extends UnitSpec with WithFakeApplicat
 
       s"return a form with the error message '${errorMessages.invalidAmount}'" in {
         form.error("amount").get.message shouldBe errorMessages.invalidAmount
+      }
+
+      "raise 1 form error" in {
+        form.errors.length shouldBe 1
       }
     }
   }
