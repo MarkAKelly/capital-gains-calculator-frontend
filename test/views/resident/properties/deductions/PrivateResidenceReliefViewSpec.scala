@@ -29,7 +29,10 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
 
   "Allowable Losses Value view with no form errors" should {
 
-    lazy val view = views.privateResidenceRelief("home",
+    lazy val form = privateResidenceReliefForm
+    lazy val view = views.privateResidenceRelief(
+      form,
+      "home",
       Some("back"))(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
@@ -83,7 +86,7 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
 
       "for the option 'Yes claiming full prr'" should {
 
-        lazy val fullRadioOption = doc.select(".block-label[for=prrClaiming-Full]")
+        lazy val fullRadioOption = doc.select(".block-label[for=prrClaiming-full]")
 
         "have a label with class 'block-label'" in {
           fullRadioOption.hasClass("block-label") shouldEqual true
@@ -94,12 +97,12 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
         }
 
         "the for attribute has the value prrClaiming-Full" in {
-          fullRadioOption.attr("for").value shouldEqual "prrClaiming-Full"
+          fullRadioOption.attr("for") shouldEqual "prrClaiming-full"
         }
 
         "have an input under the label that" should {
 
-          lazy val optionLabel = fullRadioOption.select("label")
+          lazy val optionLabel = doc.select("label.block-label#prrClaiming-full")
 
           "have the id 'prrClaiming-Full'" in {
             optionLabel.attr("id") shouldEqual "prrClaiming-Full"
@@ -111,6 +114,10 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
 
           "be of type radio" in {
             optionLabel.attr("type") shouldEqual "radio"
+          }
+
+          "have the text 'Yes, full relief'" in {
+            optionLabel.text shouldEqual "Yes, full relief"
           }
         }
       }

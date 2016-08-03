@@ -1,9 +1,10 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
+@import models.resident.properties.PrivateResidenceReliefModel
 @import models.resident.properties._
 @import views.html.helpers._
 @import views.html.calculation.resident._
 
-@(navHomeLink: String, navBackLink: Option[String])(implicit request: Request[_])
+@(privateResidenceReliefForm: Form[PrivateResidenceReliefModel], navHomeLink: String, navBackLink: Option[String])(implicit request: Request[_])
 
 @resident_main_template(title = Messages("calc.resident.properties.privateResidenceRelief.title"),
     backLink = navBackLink,
@@ -11,5 +12,14 @@
 ){
 
     <h1 class="heading-large">@Messages("calc.resident.properties.privateResidenceRelief.title")</h1>
+
+    <div id="radio-input" class="form-group">
+        @formInputRadioGroup(
+        field = privateResidenceReliefForm("prrClaiming"),
+        Seq(
+        "Full" ->Messages("calc.resident.properties.privateResidenceRelief.fullLabel")),
+        '_labelClass -> "block-label"
+        )
+    </div>
 
 }
