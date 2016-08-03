@@ -26,9 +26,9 @@ import views.html.calculation.resident.properties.{deductions => views}
 
 class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Reliefs view with a gain of £10000" should {
+  "Reliefs view" should {
 
-    lazy val view = views.reliefs(reliefsForm(), "home-link")(fakeRequest)
+    lazy val view = views.reliefs(reliefsForm(), "home-link", false)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -55,12 +55,8 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
       doc.select("legend.visuallyhidden").text() shouldEqual messages.title
     }
 
-    s"have help text with the message ${messages.help}" in {
-      doc.select("span.form-hint").text() shouldEqual messages.help
-    }
-
-    "have a fieldset with aria-details attribute" in {
-      doc.select("fieldset").attr("aria-details") shouldBe "help"
+    "have no help text" in {
+      doc.select("span.form-hint").isEmpty shouldEqual true
     }
 
     s"have an input field with id isClaiming-yes " in {
@@ -76,9 +72,9 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
     }
   }
 
-  "Reliefs view with pre-selected values and a gain of £100" should {
+  "Reliefs view with pre-selected values and a having claimed PRR" should {
     lazy val form = reliefsForm().bind(Map(("isClaiming", "Yes")))
-    lazy val view = views.reliefs(form, "home-link")(fakeRequest)
+    lazy val view = views.reliefs(form, "home-link", true)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have the option 'Yes' auto selected" in {
@@ -96,11 +92,15 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
     s"have a legend for an input with text ${messages.question}" in {
       doc.select("legend.visuallyhidden").text() shouldEqual messages.question
     }
+
+    s"have help text with the message ${messages.help}" in {
+      doc.select("span.form-hint").text() shouldEqual messages.help
+    }
   }
 
   "Reliefs view with errors" should {
     lazy val form = reliefsForm().bind(Map(("isClaiming", "")))
-    lazy val view = views.reliefs(form, "home-link")(fakeRequest)
+    lazy val view = views.reliefs(form, "home-link", false)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {

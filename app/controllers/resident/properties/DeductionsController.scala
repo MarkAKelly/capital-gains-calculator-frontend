@@ -65,15 +65,15 @@ trait DeductionsController extends FeatureLock {
   val reliefs = FeatureLockForRTT.async { implicit request =>
 
     calcConnector.fetchAndGetFormData[ReliefsModel](keystoreKeys.reliefs).map {
-      case Some(data) => Ok(views.reliefs(reliefsForm().fill(data), homeLink))
-      case None => Ok(views.reliefs(reliefsForm(), homeLink))
+      case Some(data) => Ok(views.reliefs(reliefsForm().fill(data), homeLink, false))
+      case None => Ok(views.reliefs(reliefsForm(), homeLink, false))
     }
   }
 
   val submitReliefs = FeatureLockForRTT.async { implicit request =>
 
     reliefsForm().bindFromRequest().fold(
-      errors => Future.successful(BadRequest(views.reliefs(errors, homeLink))),
+      errors => Future.successful(BadRequest(views.reliefs(errors, homeLink, false))),
       success => {
         calcConnector.saveFormData[ReliefsModel](keystoreKeys.reliefs, success)
         success match {
