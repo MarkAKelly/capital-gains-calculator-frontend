@@ -118,15 +118,22 @@ trait DeductionsController extends FeatureLock {
   }
 
   val submitReliefsValue = FeatureLockForRTT.async { implicit request =>
-    reliefsValueForm.bindFromRequest.fold(
-      errors => for {
+
+    def errorAction(form: Form[ReliefsValueModel]) = {
+      for {
         answerSummary <- answerSummary(hc)
         totalGain <- totalGain(answerSummary, hc)
-      } yield BadRequest(views.reliefsValue(errors, homeLink, totalGain)),
-      success => {
-        calcConnector.saveFormData[ReliefsValueModel](keystoreKeys.reliefsValue, success)
-        Future.successful(Redirect(routes.DeductionsController.otherProperties()))
-      }
+      } yield BadRequest(views.reliefsValue(form, homeLink, totalGain))
+    }
+
+    def successAction(model: ReliefsValueModel) = {
+      calcConnector.saveFormData[ReliefsValueModel](keystoreKeys.reliefsValue, model)
+      Future.successful(Redirect(routes.DeductionsController.otherProperties()))
+    }
+    
+    reliefsValueForm.bindFromRequest.fold(
+      errors => errorAction(errors),
+      success => successAction(success)
     )
   }
 
