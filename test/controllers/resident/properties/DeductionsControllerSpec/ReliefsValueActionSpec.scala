@@ -21,7 +21,7 @@ import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.DeductionsController
-import models.resident.properties.ReliefsValueModel
+import models.resident.properties.{ReliefsValueModel, YourAnswersSummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -34,7 +34,7 @@ import scala.concurrent.Future
 
 class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  def setupTarget(getData: Option[ReliefsValueModel]): DeductionsController = {
+  def setupTarget(getData: Option[ReliefsValueModel], totalGain: BigDecimal): DeductionsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
@@ -43,6 +43,12 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     when(mockCalcConnector.saveFormData[ReliefsValueModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
+
+    when(mockCalcConnector.getPropertyGainAnswers(Matchers.any()))
+      .thenReturn(Future.successful(mock[YourAnswersSummaryModel]))
+
+    when(mockCalcConnector.calculateRttPropertyGrossGain(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(totalGain))
 
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -53,7 +59,7 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     "there is no keystore data" should {
 
-      lazy val target = setupTarget(None)
+      lazy val target = setupTarget(None, 10000)
       lazy val result = target.reliefsValue(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -71,7 +77,7 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     "there is some keystore data" should {
 
-      lazy val target = setupTarget(Some(ReliefsValueModel(1000)))
+      lazy val target = setupTarget(Some(ReliefsValueModel(1000)), 2500)
       lazy val result = target.reliefsValue(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -90,7 +96,7 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
 
   "request has an invalid session" should {
 
-    lazy val target = setupTarget(None)
+    lazy val target = setupTarget(None, 1500)
     lazy val result = target.reliefsValue(fakeRequest)
 
     "return a status of 303" in {
@@ -105,7 +111,7 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
   "Calling .submitReliefsValue from the GainCalculationController" when {
 
     "a valid form is submitted" should {
-      lazy val target = setupTarget(None)
+      lazy val target = setupTarget(None, 1)
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
       lazy val result = target.submitReliefsValue(request)
 
@@ -119,7 +125,7 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
     }
 
     "an invalid form is submitted" should {
-      lazy val target = setupTarget(None)
+      lazy val target = setupTarget(None, 1000000)
       lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
       lazy val result = target.submitReliefsValue(request)
       lazy val doc = Jsoup.parse(bodyOf(result))

@@ -102,15 +102,27 @@ trait DeductionsController extends FeatureLock {
   //################# Reliefs Value Input Actions ########################
 
   val reliefsValue = FeatureLockForRTT.async { implicit request =>
-    calcConnector.fetchAndGetFormData[ReliefsValueModel](keystoreKeys.reliefsValue).map {
-      case Some(data) => Ok(views.reliefsValue(reliefsValueForm.fill(data), homeLink))
-      case None => Ok(views.reliefsValue(reliefsValueForm, homeLink))
+
+    def routeRequest(totalGain: BigDecimal) = {
+      calcConnector.fetchAndGetFormData[ReliefsValueModel](keystoreKeys.reliefsValue).map {
+        case Some(data) => Ok(views.reliefsValue(reliefsValueForm.fill(data), homeLink, totalGain))
+        case None => Ok(views.reliefsValue(reliefsValueForm, homeLink, totalGain))
+      }
     }
+
+    for {
+      answerSummary <- answerSummary(hc)
+      totalGain <- totalGain(answerSummary, hc)
+      route <- routeRequest(totalGain)
+    } yield route
   }
 
   val submitReliefsValue = FeatureLockForRTT.async { implicit request =>
     reliefsValueForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.reliefsValue(errors, homeLink))),
+      errors => for {
+        answerSummary <- answerSummary(hc)
+        totalGain <- totalGain(answerSummary, hc)
+      } yield BadRequest(views.reliefsValue(errors, homeLink, totalGain)),
       success => {
         calcConnector.saveFormData[ReliefsValueModel](keystoreKeys.reliefsValue, success)
         Future.successful(Redirect(routes.DeductionsController.otherProperties()))

@@ -29,7 +29,7 @@ class ReliefsValueViewSpec extends UnitSpec with WithFakeApplication with FakeRe
   "Reliefs Value view" should {
 
     lazy val form = reliefsValueForm.bind(Map("amount" -> "10"))
-    lazy val view = views.reliefsValue(form, "home-link")(fakeRequest)
+    lazy val view = views.reliefsValue(form, "home-link", 1000)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -110,7 +110,7 @@ class ReliefsValueViewSpec extends UnitSpec with WithFakeApplication with FakeRe
   "Reliefs Value View with form without errors" should {
 
     val form = reliefsValueForm.bind(Map("amount" -> "100"))
-    lazy val view = views.reliefsValue(form, "home-link")(fakeRequest)
+    lazy val view = views.reliefsValue(form, "home-link", 2000)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display the value of the form" in {
@@ -129,7 +129,7 @@ class ReliefsValueViewSpec extends UnitSpec with WithFakeApplication with FakeRe
   "Reliefs Value View with form with errors" should {
 
     val form = reliefsValueForm.bind(Map("amount" -> ""))
-    lazy val view = views.reliefsValue(form, "home-link")(fakeRequest)
+    lazy val view = views.reliefsValue(form, "home-link", 3000)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {

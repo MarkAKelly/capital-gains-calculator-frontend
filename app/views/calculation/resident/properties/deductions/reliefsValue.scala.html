@@ -3,7 +3,7 @@
 @import views.html.helpers._
 @import views.html.calculation.resident._
 
-@(reliefsValueForm : Form[ReliefsValueModel], navHomeLink: String)(implicit request: Request[_])
+@(reliefsValueForm : Form[ReliefsValueModel], navHomeLink: String, totalGain: BigDecimal)(implicit request: Request[_])
 
 @sidebar = {
     <div>
