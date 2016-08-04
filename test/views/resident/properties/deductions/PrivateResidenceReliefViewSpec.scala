@@ -96,6 +96,26 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
           legend.select("a").attr("href") shouldEqual "https://www.gov.uk/tax-relief-selling-home"
         }
 
+        "has the attribute rel" in {
+          legend.select("a").hasAttr("rel") shouldEqual true
+        }
+
+        "with a rel value of 'external'" in {
+          legend.select("a").attr("rel") shouldEqual "external"
+        }
+
+        "has the attribute 'target'" in {
+          legend.select("a").hasAttr("target") shouldEqual true
+        }
+
+        "with a target value of '_blank'" in {
+          legend.select("a").attr("target") shouldEqual "_blank"
+        }
+
+        s"have the text ${messages.legendLink}" in {
+          legend.select("a").text should include(s"${messages.legendLink}")
+        }
+
       }
 
       s"contain the text ${messages.legendSecondSection}" in {
