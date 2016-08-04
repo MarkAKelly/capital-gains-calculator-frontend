@@ -18,6 +18,7 @@ package views.resident.properties.deductions
 
 import assets.MessageLookup.{privateResidenceRelief => messages}
 import assets.{MessageLookup => commonMessages}
+import common.resident.PrivateResidenceReliefKeys
 import controllers.helpers.FakeRequestHelper
 import forms.resident.properties.PrivateResidenceReliefForm._
 import models.resident.TaxYearModel
@@ -168,7 +169,7 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
           }
 
           "have the value 'Full'" in {
-            optionLabel.attr("value") shouldEqual "Full"
+            optionLabel.attr("value") shouldEqual PrivateResidenceReliefKeys.full
           }
 
           "be of type radio" in {
@@ -206,7 +207,7 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
           }
 
           "have the value 'Part'" in {
-            optionLabel.attr("value") shouldEqual "Part"
+            optionLabel.attr("value") shouldEqual PrivateResidenceReliefKeys.part
           }
 
           "be of type radio" in {
@@ -244,7 +245,7 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
           }
 
           "have the value 'None'" in {
-            optionLabel.attr("value") shouldEqual "None"
+            optionLabel.attr("value") shouldEqual PrivateResidenceReliefKeys.none
           }
 
           "be of type radio" in {

@@ -3,6 +3,7 @@
 @import models.resident.properties._
 @import views.html.helpers._
 @import views.html.calculation.resident._
+@import common.resident._
 
 @(privateResidenceReliefForm: Form[PrivateResidenceReliefModel], navHomeLink: String, navBackLink: Option[String])(implicit request: Request[_])
 
@@ -26,9 +27,9 @@
         @formInputRadioGroup(
             field = privateResidenceReliefForm("prrClaiming"),
             Seq(
-                "Full" -> Messages("calc.resident.properties.privateResidenceRelief.fullLabel"),
-                "Part" -> Messages("calc.resident.properties.privateResidenceRelief.partLabel"),
-                "None" -> Messages("calc.resident.properties.privateResidenceRelief.noneLabel")),
+                PrivateResidenceReliefKeys.full -> Messages("calc.resident.properties.privateResidenceRelief.fullLabel"),
+                PrivateResidenceReliefKeys.part -> Messages("calc.resident.properties.privateResidenceRelief.partLabel"),
+                PrivateResidenceReliefKeys.none -> Messages("calc.resident.properties.privateResidenceRelief.noneLabel")),
             '_legend -> radioLabel,
             '_labelClass -> "block-label"
         )
