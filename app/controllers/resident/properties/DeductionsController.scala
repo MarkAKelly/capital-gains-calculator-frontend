@@ -100,20 +100,26 @@ trait DeductionsController extends FeatureLock {
 
   val submitReliefs = FeatureLockForRTT.async { implicit request =>
 
-    reliefsForm().bindFromRequest().fold(
-      errors => for {
+    def errorAction(form: Form[ReliefsModel]) = {
+      for {
         prr <- calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief)
         isClaimingPartPRR <- isClaimingPartPRR(prr)
         backLink <- reliefsBackLink(isClaimingPartPRR)
-        route <- Future.successful(BadRequest(views.reliefs(errors, homeLink, isClaimingPartPRR, backLink)))
-      } yield route,
-      success => {
-        calcConnector.saveFormData[ReliefsModel](keystoreKeys.reliefs, success)
-        success match {
-          case ReliefsModel(true) => Future.successful(Redirect(routes.DeductionsController.reliefsValue()))
-          case _ => Future.successful(Redirect(routes.DeductionsController.otherProperties()))
-        }
+        route <- Future.successful(BadRequest(views.reliefs(form, homeLink, isClaimingPartPRR, backLink)))
+      } yield route
+    }
+
+    def successAction(model: ReliefsModel) = {
+      calcConnector.saveFormData[ReliefsModel](keystoreKeys.reliefs, model)
+      model match {
+        case ReliefsModel(true) => Future.successful(Redirect(routes.DeductionsController.reliefsValue()))
+        case _ => Future.successful(Redirect(routes.DeductionsController.otherProperties()))
       }
+    }
+
+    reliefsForm().bindFromRequest().fold(
+      errors => errorAction(errors),
+      success => successAction(success)
     )
   }
 
