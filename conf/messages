@@ -386,6 +386,10 @@ calc.resident.summary.remainingAllowableLossHelp = to reduce your Capital Gains 
 calc.resident.summary.remainingBroughtForwardLossHelp = to reduce your Capital Gains Tax in the future
 calc.resident.summary.annualExemptAmountHelp = You can use this to reduce your tax if you sell something else that''s covered by Capital Gains Tax in the same tax year.
 
+## Private Residence Relief Value messages
+calc.resident.prrValue.title = How much Private Residence Relief are you claiming on your total gain of £{0}?
+calc.resident.prrValue.externalLink = Private Residence Relief
+
 ## Reliefs messages
 calc.resident.reliefs.title = Do you want to claim Capital Gains Tax reliefs on your total gain of £{0}?
 calc.resident.reliefs.question = Do you want to claim Capital Gains Tax reliefs on your total gain of £{0}?

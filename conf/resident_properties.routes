@@ -30,6 +30,9 @@ POST    /improvements                     controllers.resident.properties.GainCo
 #Summary Routes
 GET     /summary                          controllers.resident.properties.SummaryController.summary
 
+#Private Residence Relief Routes
+GET     /private-residence-relief         controllers.resident.properties.DeductionsController.privateResidenceRelief
+
 #Reliefs Routes
 GET     /reliefs                          controllers.resident.properties.DeductionsController.reliefs
 POST    /reliefs                          controllers.resident.properties.DeductionsController.submitReliefs

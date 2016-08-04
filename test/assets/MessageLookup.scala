@@ -151,6 +151,12 @@ object MessageLookup {
     def deductionsDetailsLossBeforeYear(taxYear: String): String = s"Loss from tax years before $taxYear"
   }
 
+  //Private Residence Relief Value messages
+  object privateResidenceReliefValue {
+    def title(gain: BigDecimal) = s"How much Private Residence Relief are you claiming on your total gain of £$gain?"
+    val prrLink = "Private Residence Relief"
+  }
+
   //Reliefs messages
   object reliefs {
     val title = "Do you want to claim Capital Gains Tax reliefs on your total gain of £10,000?"
