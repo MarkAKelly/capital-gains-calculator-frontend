@@ -253,5 +253,34 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
         }
       }
     }
+
+    "have a continue button" which {
+
+      lazy val button = doc.select("button")
+
+      "has class 'button'" in {
+        button.hasClass("button") shouldEqual true
+      }
+
+      "has attribute 'type'" in {
+        button.hasAttr("type") shouldEqual true
+      }
+
+      "has type value of 'submit'" in {
+        button.attr("type") shouldEqual "submit"
+      }
+
+      "has attribute id" in {
+        button.hasAttr("id") shouldEqual true
+      }
+
+      "has id equal to continue-button" in {
+        button.attr("id") shouldEqual "continue-button"
+      }
+
+      s"has the text ${commonMessages.calcBaseContinue}" in {
+        button.text shouldEqual s"${commonMessages.calcBaseContinue}"
+      }
+    }
   }
 }
