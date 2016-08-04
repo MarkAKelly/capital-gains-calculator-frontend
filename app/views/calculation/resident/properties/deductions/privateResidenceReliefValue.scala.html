@@ -1,9 +1,10 @@
 @import models.resident.properties.PrivateResidenceReliefValueModel
 @import uk.gov.hmrc.play.views.html.helpers.form
+@import uk.gov.hmrc.play.views.helpers.MoneyPounds
 @import views.html.helpers._
 @import views.html.calculation.resident._
 
-@(privateResidenceReliefValueForm : Form[PrivateResidenceReliefValueModel], navHomeLink: String)(implicit request: Request[_])
+@(privateResidenceReliefValueForm: Form[PrivateResidenceReliefValueModel], totalGain: BigDecimal, navHomeLink: String)(implicit request: Request[_])
 
 @sidebar = {
     <a id="privateResidenceReliefLink" class="external-link" rel="external" href="https://www.gov.uk/tax-sell-home/absence-from-home"
@@ -14,16 +15,17 @@
 }
 
 @resident_main_template(
-    title = Messages("calc.resident.prrValue.title"),
+    title = Messages("calc.resident.prrValue.title",
+    MoneyPounds(totalGain, 0).quantity),
     backLink = Some(controllers.resident.properties.routes.DeductionsController.privateResidenceRelief().toString),
     sidebarLinks = Some(sidebar),
     homeLink = navHomeLink) {
 
     @errorSummary(privateResidenceReliefValueForm, "private-residence-relief-value")
 
-    <h1>@Messages("calc.resident.prrValue.title")</h1>
+    <h1>@Messages("calc.resident.prrValue.title", MoneyPounds(totalGain, 0).quantity)</h1>
 
-    @formInputMoney(privateResidenceReliefValueForm, "amount", Messages("calc.resident.prrValue.title"), hideLabel = true)
+    @formInputMoney(privateResidenceReliefValueForm, "amount", Messages("calc.resident.prrValue.title", MoneyPounds(totalGain, 0).quantity), hideLabel = true)
 
     <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
 

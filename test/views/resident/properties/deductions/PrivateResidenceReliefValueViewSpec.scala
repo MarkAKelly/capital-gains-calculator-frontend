@@ -29,23 +29,23 @@ class PrivateResidenceReliefValueViewSpec extends UnitSpec with WithFakeApplicat
   "Private Residence Relief Value view" should {
 
     lazy val form = privateResidenceReliefValueForm.bind(Map("amount" -> "10"))
-    lazy val view = views.privateResidenceReliefValue(form, "home-link")(fakeRequest)
+    lazy val view = views.privateResidenceReliefValue(form, BigDecimal(400), "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
       doc.charset.toString shouldBe "UTF-8"
     }
 
-    s"have a title ${messages.title}" in {
-      doc.title shouldBe messages.title
+    s"have a title ${messages.title(400)}" in {
+      doc.title shouldBe messages.title(400)
     }
 
-    s"have the text ${messages.title} as the h1 tag" in {
-      doc.select("h1").text shouldEqual messages.title
+    s"have the text ${messages.title(400)} as the h1 tag" in {
+      doc.select("h1").text shouldEqual messages.title(400)
     }
 
-    s"have a hidden legend with the text ${messages.title}" in {
-      doc.select("label span.visuallyhidden").text shouldEqual messages.title
+    s"have a hidden legend with the text ${messages.title(400)}" in {
+      doc.select("label span.visuallyhidden").text shouldEqual messages.title(400)
     }
 
     "render an input field for the reliefs amount" in {
@@ -80,13 +80,12 @@ class PrivateResidenceReliefValueViewSpec extends UnitSpec with WithFakeApplicat
         linkOne.select("span.visuallyhidden").text shouldEqual messages.prrLink
       }
     }
-
   }
 
   "Private Residence Relief Value View with form without errors" should {
 
     val form = privateResidenceReliefValueForm.bind(Map("amount" -> "100"))
-    lazy val view = views.privateResidenceReliefValue(form, "home-link")(fakeRequest)
+    lazy val view = views.privateResidenceReliefValue(form, BigDecimal(400), "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display the value of the form" in {
@@ -105,7 +104,7 @@ class PrivateResidenceReliefValueViewSpec extends UnitSpec with WithFakeApplicat
   "Private Residence Relief Value View with form with errors" should {
 
     val form = privateResidenceReliefValueForm.bind(Map("amount" -> ""))
-    lazy val view = views.privateResidenceReliefValue(form, "home-link")(fakeRequest)
+    lazy val view = views.privateResidenceReliefValue(form, BigDecimal(400), "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {
