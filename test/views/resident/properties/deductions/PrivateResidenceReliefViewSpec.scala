@@ -78,6 +78,15 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
       }
     }
 
+    "have a legend for the radio inputs" which {
+
+      lazy val legend = doc.select("legend")
+
+      s"contain the text ${messages.legendFirstSection}" in {
+        legend.text should include(s"${messages.legendFirstSection}")
+      }
+    }
+
     "have a set of radio inputs" which {
 
       "are surrounded in a div with class form-group" in {

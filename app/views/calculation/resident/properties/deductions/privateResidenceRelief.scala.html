@@ -6,6 +6,10 @@
 
 @(privateResidenceReliefForm: Form[PrivateResidenceReliefModel], navHomeLink: String, navBackLink: Option[String])(implicit request: Request[_])
 
+@radioLabel = {
+    <p>Messages("") <a href="https://www.gov.uk/tax-relief-selling-home" rel="external" target="_blank">Private Residence Relief</a> if you've lived at the property.</p>
+}
+
 @resident_main_template(title = Messages("calc.resident.properties.privateResidenceRelief.title"),
     backLink = navBackLink,
     homeLink = navHomeLink
@@ -15,12 +19,12 @@
 
     <div id="radio-input" class="form-group">
         @formInputRadioGroup(
-        field = privateResidenceReliefForm("prrClaiming"),
-        Seq(
-        "Full" -> Messages("calc.resident.properties.privateResidenceRelief.fullLabel"),
-        "Part" -> Messages("calc.resident.properties.privateResidenceRelief.partLabel"),
-        "None" -> Messages("calc.resident.properties.privateResidenceRelief.noneLabel")),
-        '_labelClass -> "block-label"
+            field = privateResidenceReliefForm("prrClaiming"),
+            Seq(
+                "Full" -> Messages("calc.resident.properties.privateResidenceRelief.fullLabel"),
+                "Part" -> Messages("calc.resident.properties.privateResidenceRelief.partLabel"),
+                "None" -> Messages("calc.resident.properties.privateResidenceRelief.noneLabel")),
+            '_labelClass -> "block-label"
         )
     </div>
 
