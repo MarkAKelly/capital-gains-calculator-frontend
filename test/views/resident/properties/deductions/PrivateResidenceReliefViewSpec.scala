@@ -115,7 +115,17 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
         s"have the text ${messages.legendLink}" in {
           legend.select("a").text should include(s"${messages.legendLink}")
         }
+      }
 
+      "contain a visually hidden span for the link" which {
+
+        "has the class visuallyhidden" in {
+          legend.select("a span").hasClass("visuallyhidden") shouldEqual true
+        }
+
+        s"the text ${commonMessages.calcBaseExternalLink}" in {
+          legend.select("a span").text shouldEqual s"${commonMessages.calcBaseExternalLink}"
+        }
       }
 
       s"contain the text ${messages.legendSecondSection}" in {
