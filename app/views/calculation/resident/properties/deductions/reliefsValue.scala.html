@@ -2,6 +2,7 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
 @import views.html.calculation.resident._
+@import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 @(reliefsValueForm : Form[ReliefsValueModel], navHomeLink: String, totalGain: BigDecimal)(implicit request: Request[_])
 
@@ -23,18 +24,18 @@
 }
 
 @resident_main_template(
-    title = Messages("calc.resident.reliefsValue.title"),
+    title = Messages("calc.resident.reliefsValue.title", MoneyPounds(totalGain, 0).quantity),
     backLink = Some(controllers.resident.properties.routes.DeductionsController.reliefs().toString),
     sidebarLinks = Some(sidebar),
     homeLink = navHomeLink) {
 
     @errorSummary(reliefsValueForm, "reliefs-value")
 
-    <h1>@Messages("calc.resident.reliefsValue.question")</h1>
+    <h1>@Messages("calc.resident.reliefsValue.question", MoneyPounds(totalGain, 0).quantity)</h1>
 
     @form(action = controllers.resident.properties.routes.DeductionsController.submitReliefsValue) {
 
-        @formInputMoney(reliefsValueForm, "amount", Messages("calc.resident.reliefsValue.question"), hideLabel = true)
+        @formInputMoney(reliefsValueForm, "amount", Messages("calc.resident.reliefsValue.question", MoneyPounds(totalGain, 0).quantity), hideLabel = true)
 
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
     }

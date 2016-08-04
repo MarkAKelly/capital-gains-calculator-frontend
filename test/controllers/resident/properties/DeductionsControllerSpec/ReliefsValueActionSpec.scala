@@ -71,7 +71,7 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
 
       "display the reliefs value view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.title("10,000")
       }
     }
 
@@ -89,7 +89,7 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
 
       "display the Reliefs Value view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.title("2,500")
       }
     }
   }
@@ -135,7 +135,7 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
 
       "render the Reliefs Value page" in {
-        doc.title() shouldEqual messages.title
+        doc.title() shouldEqual messages.title("1,000,000")
       }
     }
   }

@@ -36,24 +36,24 @@ class ReliefsValueViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       doc.charset.toString shouldBe "UTF-8"
     }
 
-    s"have a title ${messages.title}" in {
-      doc.title shouldBe messages.title
+    s"have a title ${messages.title("1,000")}" in {
+      doc.title shouldBe messages.title("1,000")
     }
 
     s"have a back link to the Reliefs Page with text ${MessageLookup.calcBaseBack}" in {
       doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/reliefs"
     }
 
-    s"have the text ${messages.question} as the h1 tag" in {
-      doc.select("h1").text shouldEqual messages.question
+    s"have the text ${messages.question("1,000")} as the h1 tag" in {
+      doc.select("h1").text shouldEqual messages.question("1,000")
     }
 
     "render a form element" in {
       doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/reliefs-value"
     }
 
-    s"have a hidden legend with the text ${messages.question}" in {
-      doc.select("label span.visuallyhidden").text shouldEqual messages.question
+    s"have a hidden legend with the text ${messages.question("1,000")}" in {
+      doc.select("label span.visuallyhidden").text shouldEqual messages.question("1,000")
     }
 
     "render an input field for the reliefs amount" in {
@@ -113,6 +113,18 @@ class ReliefsValueViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     lazy val view = views.reliefsValue(form, "home-link", 2000)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
+    s"have a title ${messages.title("2,000")}" in {
+      doc.title shouldBe messages.title("2,000")
+    }
+
+    s"have the text ${messages.question("2,000")} as the h1 tag" in {
+      doc.select("h1").text shouldEqual messages.question("2,000")
+    }
+
+    s"have a hidden legend with the text ${messages.question("2,000")}" in {
+      doc.select("label span.visuallyhidden").text shouldEqual messages.question("2,000")
+    }
+
     "display the value of the form" in {
       doc.body.select("#amount").attr("value") shouldEqual "100"
     }
@@ -131,6 +143,18 @@ class ReliefsValueViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     val form = reliefsValueForm.bind(Map("amount" -> ""))
     lazy val view = views.reliefsValue(form, "home-link", 3000)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
+
+    s"have a title ${messages.title("3,000")}" in {
+      doc.title shouldBe messages.title("3,000")
+    }
+
+    s"have the text ${messages.question("3,000")} as the h1 tag" in {
+      doc.select("h1").text shouldEqual messages.question("3,000")
+    }
+
+    s"have a hidden legend with the text ${messages.question("3,000")}" in {
+      doc.select("label span.visuallyhidden").text shouldEqual messages.question("3,000")
+    }
 
     "display an error summary message for the amount" in {
       doc.body.select("#amount-error-summary").size shouldBe 1
