@@ -69,8 +69,8 @@ trait DeductionsController extends FeatureLock {
 
     def routeRequest(totalGain: BigDecimal): Future[Result] = {
       calcConnector.fetchAndGetFormData[PrivateResidenceReliefValueModel](keystoreKeys.prrValue).map {
-        case Some(data) => Ok(views.privateResidenceReliefValue(privateResidenceReliefValueForm(totalGain).fill(data), totalGain, homeLink))
-        case None => Ok(views.privateResidenceReliefValue(privateResidenceReliefValueForm(totalGain), totalGain, homeLink))
+        case Some(data) => Ok(views.privateResidenceReliefValue(privateResidenceReliefValueForm.fill(data), totalGain, homeLink))
+        case None => Ok(views.privateResidenceReliefValue(privateResidenceReliefValueForm, totalGain, homeLink))
       }
     }
 

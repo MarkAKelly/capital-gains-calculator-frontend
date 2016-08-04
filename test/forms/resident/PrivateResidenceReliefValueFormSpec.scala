@@ -26,12 +26,12 @@ class PrivateResidenceReliefValueFormSpec extends UnitSpec with WithFakeApplicat
   "Creating the form for Private Residence Relief Value from a valid input" should {
     "return a populated form using .fill" in {
       val model = PrivateResidenceReliefValueModel(1000)
-      val form = privateResidenceReliefValueForm(BigDecimal(0)).fill(model)
+      val form = privateResidenceReliefValueForm.fill(model)
       form.value.get shouldBe PrivateResidenceReliefValueModel(1000)
     }
 
     "return a valid model if supplied with valid inputs" in {
-      val form = privateResidenceReliefValueForm(BigDecimal(0)).bind(Map(("amount", "1000")))
+      val form = privateResidenceReliefValueForm.bind(Map(("amount", "1000")))
       form.value shouldBe Some(PrivateResidenceReliefValueModel(1000))
     }
   }
@@ -39,7 +39,7 @@ class PrivateResidenceReliefValueFormSpec extends UnitSpec with WithFakeApplicat
   "Creating the form for Private Residence Relief Value from an invalid input" when {
 
     "supplied with no data for amount" should {
-      lazy val form = privateResidenceReliefValueForm(BigDecimal(0)).bind(Map(("amount", "")))
+      lazy val form = privateResidenceReliefValueForm.bind(Map(("amount", "")))
 
       "return a form with errors" in {
         form.hasErrors shouldBe true
@@ -55,7 +55,7 @@ class PrivateResidenceReliefValueFormSpec extends UnitSpec with WithFakeApplicat
     }
 
     "supplied with a non-numeric value for amount" should {
-      lazy val form = privateResidenceReliefValueForm(BigDecimal(0)).bind(Map(("amount", "a")))
+      lazy val form = privateResidenceReliefValueForm.bind(Map(("amount", "a")))
 
       "return a form with errors" in {
         form.hasErrors shouldBe true
@@ -71,7 +71,7 @@ class PrivateResidenceReliefValueFormSpec extends UnitSpec with WithFakeApplicat
     }
 
     "supplied with an amount that is too big" should {
-      lazy val form = privateResidenceReliefValueForm(BigDecimal(0)).bind(Map(("amount", "9999999999999")))
+      lazy val form = privateResidenceReliefValueForm.bind(Map(("amount", "9999999999999")))
 
       "return a form with errors" in {
         form.hasErrors shouldBe true
@@ -87,7 +87,7 @@ class PrivateResidenceReliefValueFormSpec extends UnitSpec with WithFakeApplicat
     }
 
     "supplied with a negative amount" should {
-      lazy val form = privateResidenceReliefValueForm(BigDecimal(0)).bind(Map(("amount", "-1000")))
+      lazy val form = privateResidenceReliefValueForm.bind(Map(("amount", "-1000")))
 
       "return a form with errors" in {
         form.hasErrors shouldBe true
@@ -103,7 +103,7 @@ class PrivateResidenceReliefValueFormSpec extends UnitSpec with WithFakeApplicat
     }
 
     "supplied with an amount that has too many decimal places" should {
-      lazy val form = privateResidenceReliefValueForm(BigDecimal(0)).bind(Map(("amount", "0.001")))
+      lazy val form = privateResidenceReliefValueForm.bind(Map(("amount", "0.001")))
 
       "return a form with errors" in {
         form.hasErrors shouldBe true

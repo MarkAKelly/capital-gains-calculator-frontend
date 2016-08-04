@@ -27,7 +27,7 @@ import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object PrivateResidenceReliefValueForm {
 
-  def privateResidenceReliefValueForm(totalGain: BigDecimal): Form[PrivateResidenceReliefValueModel] = Form(
+  def privateResidenceReliefValueForm = Form(
     mapping(
       "amount" -> text
         .verifying(Messages("calc.common.error.mandatoryAmount"), mandatoryCheck)

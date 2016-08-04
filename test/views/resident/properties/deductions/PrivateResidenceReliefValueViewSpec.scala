@@ -28,7 +28,7 @@ class PrivateResidenceReliefValueViewSpec extends UnitSpec with WithFakeApplicat
 
   "Private Residence Relief Value view" should {
 
-    lazy val form = privateResidenceReliefValueForm(BigDecimal(400)).bind(Map("amount" -> "10"))
+    lazy val form = privateResidenceReliefValueForm.bind(Map("amount" -> "10"))
     lazy val view = views.privateResidenceReliefValue(form, BigDecimal(400), "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
@@ -84,7 +84,7 @@ class PrivateResidenceReliefValueViewSpec extends UnitSpec with WithFakeApplicat
 
   "Private Residence Relief Value View with form without errors" should {
 
-    val form = privateResidenceReliefValueForm(BigDecimal(400)).bind(Map("amount" -> "100"))
+    val form = privateResidenceReliefValueForm.bind(Map("amount" -> "100"))
     lazy val view = views.privateResidenceReliefValue(form, BigDecimal(400), "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
@@ -103,7 +103,7 @@ class PrivateResidenceReliefValueViewSpec extends UnitSpec with WithFakeApplicat
 
   "Private Residence Relief Value View with form with errors" should {
 
-    val form = privateResidenceReliefValueForm(BigDecimal(400)).bind(Map("amount" -> ""))
+    val form = privateResidenceReliefValueForm.bind(Map("amount" -> ""))
     lazy val view = views.privateResidenceReliefValue(form, BigDecimal(400), "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
