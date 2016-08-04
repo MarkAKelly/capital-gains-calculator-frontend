@@ -479,6 +479,15 @@ calc.resident.personalAllowance.helpText = This is the amount of your income you
 ## Private Residence Relief messages ##
 ###############################################################################################
 calc.resident.privateResidenceRelief.noSelectError = Tell us if you want to claim Private Residence Relief
+calc.resident.properties.privateResidenceRelief.title = Do you want to claim Private Residence Relief?
+
+calc.resident.properties.privateResidenceRelief.legendFirstText = You may be able to claim full or part
+calc.resident.properties.privateResidenceRelief.legendLinkText = Private Residence Relief
+calc.resident.properties.privateResidenceRelief.legendSecondText = if you''ve lived at the property.
+
+calc.resident.properties.privateResidenceRelief.fullLabel = Yes, full relief
+calc.resident.properties.privateResidenceRelief.partLabel = Yes, part relief
+calc.resident.properties.privateResidenceRelief.noneLabel = No
 
 ###############################################################################################
 ## Resident Shares messages ##
