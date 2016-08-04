@@ -100,12 +100,16 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
           fullRadioOption.attr("for") shouldEqual "prrClaiming-full"
         }
 
+        "have the text 'Yes, full relief'" in {
+          fullRadioOption.text shouldEqual "Yes, full relief"
+        }
+
         "have an input under the label that" should {
 
-          lazy val optionLabel = doc.select("label.block-label#prrClaiming-full")
+          lazy val optionLabel = doc.select("#prrClaiming-full")
 
           "have the id 'prrClaiming-Full'" in {
-            optionLabel.attr("id") shouldEqual "prrClaiming-Full"
+            optionLabel.attr("id") shouldEqual "prrClaiming-full"
           }
 
           "have the value 'Full'" in {
@@ -115,9 +119,43 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
           "be of type radio" in {
             optionLabel.attr("type") shouldEqual "radio"
           }
+        }
+      }
 
-          "have the text 'Yes, full relief'" in {
-            optionLabel.text shouldEqual "Yes, full relief"
+      "for the option 'Yes claiming part prr'" should {
+
+        lazy val fullRadioOption = doc.select(".block-label[for=prrClaiming-part]")
+
+        "have a label with class 'block-label'" in {
+          fullRadioOption.hasClass("block-label") shouldEqual true
+        }
+
+        "have the property 'for'" in {
+          fullRadioOption.hasAttr("for") shouldEqual true
+        }
+
+        "the for attribute has the value prrClaiming-part" in {
+          fullRadioOption.attr("for") shouldEqual "prrClaiming-part"
+        }
+
+        "have the text 'Yes, part relief'" in {
+          fullRadioOption.text shouldEqual "Yes, part relief"
+        }
+
+        "have an input under the label that" should {
+
+          lazy val optionLabel = doc.select("#prrClaiming-part")
+
+          "have the id 'prrClaiming-Full'" in {
+            optionLabel.attr("id") shouldEqual "prrClaiming-part"
+          }
+
+          "have the value 'Part'" in {
+            optionLabel.attr("value") shouldEqual "Part"
+          }
+
+          "be of type radio" in {
+            optionLabel.attr("type") shouldEqual "radio"
           }
         }
       }
