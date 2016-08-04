@@ -19,7 +19,7 @@ package forms.resident
 import models.resident.properties.PrivateResidenceReliefModel
 import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 import forms.resident.properties.PrivateResidenceReliefForm._
-import assets.MessageLookup.{privateResidenceReilef => messages}
+import assets.MessageLookup.{privateResidenceRelief => messages}
 
 class PrivateResidenceReliefFormSpec extends UnitSpec with WithFakeApplication {
 
