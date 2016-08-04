@@ -54,6 +54,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       30000,
       18,
       None,
+      None,
       None
     )
     lazy val taxYearModel = TaxYearModel("2015/16", isValidYear = true, "2015/16")
@@ -423,6 +424,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       30000,
       18,
       None,
+      None,
       None
     )
     lazy val taxYearModel = TaxYearModel("2013/14", isValidYear = false, "2015/16")
@@ -600,7 +602,8 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       30000,
       18,
       Some(10000),
-      Some(28)
+      Some(28),
+      None
     )
     lazy val taxYearModel = TaxYearModel("2015/16", isValidYear = true, "2015/16")
     lazy val backLink = "/calculate-your-capital-gains/resident/shares/personal-allowance"
@@ -682,7 +685,8 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       0,
       18,
       Some(0),
-      Some(28)
+      Some(28),
+      None
     )
 
     lazy val taxYearModel = TaxYearModel("2015/16", isValidYear = true, "2015/16")
@@ -753,7 +757,8 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       30000,
       18,
       Some(10000),
-      Some(28)
+      Some(28),
+      None
     )
 
     lazy val taxYearModel = TaxYearModel("2016/17", isValidYear = false, "2018/19")
@@ -796,7 +801,8 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       30000,
       18,
       Some(10000),
-      Some(28)
+      Some(28),
+      None
     )
 
     lazy val taxYearModel = TaxYearModel("2016/17", isValidYear = true, "2016/17")
