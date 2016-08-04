@@ -260,10 +260,13 @@ object MessageLookup {
   }
 
   //############ Private Residence Relief messages #################//
-  object privateResidenceReilef {
+  object privateResidenceRelief {
+    val title = "Do you want to claim Private Residence Relief?"
+    val legendFirstSection = "You may be able to claim full or part"
+    val legendLink = "Private Residence Relief"
+    val legendSecondSection = "if you've lived at the property"
     val errorSelect = "Tell us if you want to claim Private Residence Relief"
   }
-
 
   //############ Shares messages ##############//
   object sharesDisposalDate {
