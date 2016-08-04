@@ -49,6 +49,7 @@ object KeystoreKeys {
     val acquisitionCosts = "res:property:acquisitionCosts"
     val improvements = "res:property:improvements"
     val allowableLosses = "res:property:allowableLosses"
+    val prrValue = "res:property:prrValue"
     val reliefs = "res:property:reliefs"
     val reliefsValue = "res:property:reliefsValue"
     val lossesBroughtForward = "res:property:lossesBroughtForward"

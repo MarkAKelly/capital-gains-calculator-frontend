@@ -87,7 +87,8 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
         BigDecimal(11000),
         BigDecimal(71000),
         BigDecimal(0),
-        BigDecimal(0))
+        BigDecimal(0),
+        None)
 
       lazy val taxYearModel = TaxYearModel("2017/18", false, "2015/16")
       lazy val target = setupTarget(
@@ -124,7 +125,7 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
         0)
       lazy val chargeableGainAnswers = DeductionGainAnswersModel(Some(OtherPropertiesModel(false)),
         Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None)
-      lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 0, 11100, BigDecimal(0), BigDecimal(0))
+      lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 0, 11100, BigDecimal(0), BigDecimal(0), None)
       lazy val target = setupTarget(
         yourAnswersSummaryModel,
         -10000,

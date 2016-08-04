@@ -29,31 +29,31 @@ class ReliefsValueViewSpec extends UnitSpec with WithFakeApplication with FakeRe
   "Reliefs Value view" should {
 
     lazy val form = reliefsValueForm.bind(Map("amount" -> "10"))
-    lazy val view = views.reliefsValue(form, "home-link")(fakeRequest)
+    lazy val view = views.reliefsValue(form, "home-link", 1000)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
       doc.charset.toString shouldBe "UTF-8"
     }
 
-    s"have a title ${messages.title}" in {
-      doc.title shouldBe messages.title
+    s"have a title ${messages.title("1,000")}" in {
+      doc.title shouldBe messages.title("1,000")
     }
 
     s"have a back link to the Reliefs Page with text ${MessageLookup.calcBaseBack}" in {
       doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/reliefs"
     }
 
-    s"have the text ${messages.question} as the h1 tag" in {
-      doc.select("h1").text shouldEqual messages.question
+    s"have the text ${messages.question("1,000")} as the h1 tag" in {
+      doc.select("h1").text shouldEqual messages.question("1,000")
     }
 
     "render a form element" in {
       doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/reliefs-value"
     }
 
-    s"have a hidden legend with the text ${messages.question}" in {
-      doc.select("label span.visuallyhidden").text shouldEqual messages.question
+    s"have a hidden legend with the text ${messages.question("1,000")}" in {
+      doc.select("label span.visuallyhidden").text shouldEqual messages.question("1,000")
     }
 
     "render an input field for the reliefs amount" in {
@@ -71,47 +71,25 @@ class ReliefsValueViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     "have continue button " in {
       doc.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
     }
-
-    "have a Read more link for PRR" should {
-
-      lazy val linkOne = doc.select("a#reliefsValuePrivateResidenceReliefLink")
-
-      s"contain the text ${messages.prrLink}" in {
-        linkOne.text should include(messages.prrLink)
-      }
-
-      "contain a link to 'https://www.gov.uk/tax-sell-home/absence-from-home'" in {
-        linkOne.attr("href") shouldEqual "https://www.gov.uk/tax-sell-home/absence-from-home"
-      }
-
-      s"contain a visually-hidden legend with text ${messages.prrLink}" in {
-        linkOne.select("span.visuallyhidden").text shouldEqual messages.prrLink
-      }
-    }
-
-    "have a Read more link for Lettings Relief" should {
-
-      lazy val linkOne = doc.select("a#reliefsValueLettingsReliefLink")
-
-      s"contain the text ${messages.lettingsReliefLink}" in {
-        linkOne.text should include(messages.lettingsReliefLink)
-      }
-
-      "contain a link to 'https://www.gov.uk/tax-sell-home/let-out-part-of-home'" in {
-        linkOne.attr("href") shouldEqual "https://www.gov.uk/tax-sell-home/let-out-part-of-home"
-      }
-
-      s"contain a visually-hidden legend with text ${messages.lettingsReliefLink}" in {
-        linkOne.select("span.visuallyhidden").text shouldEqual messages.lettingsReliefLink
-      }
-    }
   }
 
   "Reliefs Value View with form without errors" should {
 
     val form = reliefsValueForm.bind(Map("amount" -> "100"))
-    lazy val view = views.reliefsValue(form, "home-link")(fakeRequest)
+    lazy val view = views.reliefsValue(form, "home-link", 2000)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
+
+    s"have a title ${messages.title("2,000")}" in {
+      doc.title shouldBe messages.title("2,000")
+    }
+
+    s"have the text ${messages.question("2,000")} as the h1 tag" in {
+      doc.select("h1").text shouldEqual messages.question("2,000")
+    }
+
+    s"have a hidden legend with the text ${messages.question("2,000")}" in {
+      doc.select("label span.visuallyhidden").text shouldEqual messages.question("2,000")
+    }
 
     "display the value of the form" in {
       doc.body.select("#amount").attr("value") shouldEqual "100"
@@ -129,8 +107,20 @@ class ReliefsValueViewSpec extends UnitSpec with WithFakeApplication with FakeRe
   "Reliefs Value View with form with errors" should {
 
     val form = reliefsValueForm.bind(Map("amount" -> ""))
-    lazy val view = views.reliefsValue(form, "home-link")(fakeRequest)
+    lazy val view = views.reliefsValue(form, "home-link", 3000)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
+
+    s"have a title ${messages.title("3,000")}" in {
+      doc.title shouldBe messages.title("3,000")
+    }
+
+    s"have the text ${messages.question("3,000")} as the h1 tag" in {
+      doc.select("h1").text shouldEqual messages.question("3,000")
+    }
+
+    s"have a hidden legend with the text ${messages.question("3,000")}" in {
+      doc.select("label span.visuallyhidden").text shouldEqual messages.question("3,000")
+    }
 
     "display an error summary message for the amount" in {
       doc.body.select("#amount-error-summary").size shouldBe 1

@@ -403,8 +403,8 @@ calc.resident.reliefs.helpButton = What are Capital Gains Tax reliefs?
 
 
 ## Reliefs Value messages
-calc.resident.reliefsValue.title = How much Capital Gains Tax relief are you claiming?
-calc.resident.reliefsValue.question = How much Capital Gains Tax relief are you claiming?
+calc.resident.reliefsValue.title = How much tax relief are you claiming on your total gain of £{0}?
+calc.resident.reliefsValue.question = How much tax relief are you claiming on your total gain of £{0}?
 calc.resident.reliefsValue.externalLinkOne = Private Residence Relief
 calc.resident.reliefsValue.externalLinkTwo = Lettings Relief
 
