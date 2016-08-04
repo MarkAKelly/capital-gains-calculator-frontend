@@ -67,6 +67,12 @@ trait DeductionsController extends FeatureLock {
 
   private val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
 
+  //########## Private Residence Relief Actions ##############
+  val privateResidenceRelief = TODO
+
+  //########## Private Residence Relief Value Actions ##############
+  val privateResidenceReliefValue = TODO
+
   //################# Reliefs Actions ########################
 
   val reliefs = FeatureLockForRTT.async { implicit request =>

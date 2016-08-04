@@ -39,8 +39,8 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
       doc.title() shouldBe messages.title
     }
 
-    s"have a back link to the Disposal Date Page with text ${MessageLookup.calcBaseBack}" in {
-      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/improvements"
+    s"have a back link to the PRR page with text ${MessageLookup.calcBaseBack}" in {
+      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/private-residence-relief"
     }
 
     s"have the question of the page ${messages.title}" in {
@@ -85,6 +85,10 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
       doc.title() shouldBe messages.question
     }
 
+    s"have a back link to the PRR value page with text ${MessageLookup.calcBaseBack}" in {
+      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/private-residence-relief-value"
+    }
+
     s"have the question of the page ${messages.question}" in {
       doc.select("h1").text() shouldEqual messages.question
     }
@@ -102,6 +106,10 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
     lazy val form = reliefsForm().bind(Map(("isClaiming", "")))
     lazy val view = views.reliefs(form, "home-link", false)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
+
+    s"have a back link to the PRR page with text ${MessageLookup.calcBaseBack}" in {
+      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/private-residence-relief"
+    }
 
     "display an error summary message for the amount" in {
       doc.body.select("#isClaiming-error-summary").size shouldBe 1

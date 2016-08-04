@@ -9,7 +9,8 @@
 
 @resident_main_template(
     title = Messages("calc.resident.reliefs.title"),
-    backLink = Some(controllers.resident.properties.routes.GainController.improvements.toString()),
+    backLink = if(hasClaimedPRR) {Some(controllers.resident.properties.routes.DeductionsController.privateResidenceReliefValue.toString())}
+    else{Some(controllers.resident.properties.routes.DeductionsController.privateResidenceRelief.toString())},
     homeLink = navHomeLink) {
 
     @errorSummary(reliefsForm, "reliefs")
