@@ -17,7 +17,7 @@
 package controllers.resident.properties.DeductionsControllerSpec
 
 import assets.MessageLookup.{reliefs => messages}
-import common.Dates._
+import common.resident.{PrivateResidenceReliefKeys => prrKeys}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
@@ -58,7 +58,7 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
 
     "request has a valid session and no keystore value" should {
 
-      lazy val target = setupTarget(None, Some(PrivateResidenceReliefModel("Full")))
+      lazy val target = setupTarget(None, Some(PrivateResidenceReliefModel(prrKeys.full)))
       lazy val result = target.reliefs(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -73,7 +73,7 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
 
     "request has a valid session and some keystore value" should {
 
-      lazy val target = setupTarget(Some(ReliefsModel(true)), Some(PrivateResidenceReliefModel("Part")))
+      lazy val target = setupTarget(Some(ReliefsModel(true)), Some(PrivateResidenceReliefModel(prrKeys.part)))
       lazy val result = target.reliefs(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -88,7 +88,7 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
 
     "request has an invalid session" should {
 
-      lazy val target = setupTarget(None, Some(PrivateResidenceReliefModel("None")))
+      lazy val target = setupTarget(None, Some(PrivateResidenceReliefModel(prrKeys.none)))
       lazy val result = target.reliefs(fakeRequest)
 
       "return a status of 303" in {
@@ -104,7 +104,7 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
   "Calling .submitReliefs from the DeductionsController" when {
 
     "a valid form 'Yes' is submitted" should {
-      lazy val target = setupTarget(None, Some(PrivateResidenceReliefModel("Full")))
+      lazy val target = setupTarget(None, Some(PrivateResidenceReliefModel(prrKeys.full)))
       lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "Yes"))
       lazy val result = target.submitReliefs(request)
 
@@ -118,7 +118,7 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     }
 
     "a valid form 'No' is submitted" should {
-      lazy val target = setupTarget(None, Some(PrivateResidenceReliefModel("Part")))
+      lazy val target = setupTarget(None, Some(PrivateResidenceReliefModel(prrKeys.part)))
       lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "No"))
       lazy val result = target.submitReliefs(request)
 
@@ -132,7 +132,7 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     }
 
     "an invalid form is submitted" should {
-      lazy val target = setupTarget(None, Some(PrivateResidenceReliefModel("None")))
+      lazy val target = setupTarget(None, Some(PrivateResidenceReliefModel(prrKeys.none)))
       lazy val request = fakeRequestToPOSTWithSession(("isClaiming", ""))
       lazy val result = target.submitReliefs(request)
       lazy val doc = Jsoup.parse(bodyOf(result))

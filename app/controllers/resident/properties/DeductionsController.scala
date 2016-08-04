@@ -17,6 +17,7 @@
 package controllers.resident.properties
 
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
+import common.resident.{PrivateResidenceReliefKeys => prrKeys}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import models.resident._
@@ -58,9 +59,9 @@ trait DeductionsController extends FeatureLock {
 
   def answerSummary(hc: HeaderCarrier): Future[YourAnswersSummaryModel] = calcConnector.getPropertyGainAnswers(hc)
 
-  def isClaimingPRR(prr: Option[PrivateResidenceReliefModel]): Future[Boolean] = {
+  def isClaimingPartPRR(prr: Option[PrivateResidenceReliefModel]): Future[Boolean] = {
     prr match {
-      case Some(PrivateResidenceReliefModel("Part")) => Future.successful(true)
+      case Some(PrivateResidenceReliefModel(prrKeys.part)) => Future.successful(true)
       case _ => Future.successful(false)
     }
   }
@@ -77,17 +78,17 @@ trait DeductionsController extends FeatureLock {
 
   val reliefs = FeatureLockForRTT.async { implicit request =>
 
-    def routeRequest(isClaimingPRR: Boolean) = {
+    def routeRequest(isClaimingPartPRR: Boolean) = {
       calcConnector.fetchAndGetFormData[ReliefsModel](keystoreKeys.reliefs).map {
-        case Some(data) => Ok(views.reliefs(reliefsForm().fill(data), homeLink, isClaimingPRR))
-        case None => Ok(views.reliefs(reliefsForm(), homeLink, isClaimingPRR))
+        case Some(data) => Ok(views.reliefs(reliefsForm().fill(data), homeLink, isClaimingPartPRR))
+        case None => Ok(views.reliefs(reliefsForm(), homeLink, isClaimingPartPRR))
       }
     }
 
     for {
       prr <- calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief)
-      isClaimingPRR <- isClaimingPRR(prr)
-      route <- routeRequest(isClaimingPRR)
+      isClaimingPartPRR <- isClaimingPartPRR(prr)
+      route <- routeRequest(isClaimingPartPRR)
     } yield route
   }
 
@@ -96,8 +97,8 @@ trait DeductionsController extends FeatureLock {
     reliefsForm().bindFromRequest().fold(
       errors => for {
         prr <- calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief)
-        isClaimingPRR <- isClaimingPRR(prr)
-        route <- Future.successful(BadRequest(views.reliefs(errors, homeLink, isClaimingPRR)))
+        isClaimingPartPRR <- isClaimingPartPRR(prr)
+        route <- Future.successful(BadRequest(views.reliefs(errors, homeLink, isClaimingPartPRR)))
       } yield route,
       success => {
         calcConnector.saveFormData[ReliefsModel](keystoreKeys.reliefs, success)
