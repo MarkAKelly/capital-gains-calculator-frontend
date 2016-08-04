@@ -85,6 +85,10 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
       s"contain the text ${messages.legendFirstSection}" in {
         legend.text should include(s"${messages.legendFirstSection}")
       }
+
+      s"contain the text ${messages.legendSecondSection}" in {
+        legend.text should include(s"${messages.legendSecondSection}")
+      }
     }
 
     "have a set of radio inputs" which {

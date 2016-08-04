@@ -479,7 +479,7 @@ calc.resident.properties.privateResidenceRelief.title = Do you want to claim Pri
 
 calc.resident.properties.privateResidenceRelief.legendFirstText = You may be able to claim full or part
 calc.resident.properties.privateResidenceRelief.legendLinkText = Private Residence Relief
-calc.resident.properties.privateResidenceRelief.legendSecondText = if you''ve lived at the property
+calc.resident.properties.privateResidenceRelief.legendSecondText = if you''ve lived at the property.
 
 calc.resident.properties.privateResidenceRelief.fullLabel = Yes, full relief
 calc.resident.properties.privateResidenceRelief.partLabel = Yes, part relief
