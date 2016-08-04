@@ -154,6 +154,7 @@ object MessageLookup {
   //Private Residence Relief Value messages
   object privateResidenceReliefValue {
     def title(gain: BigDecimal) = s"How much Private Residence Relief are you claiming on your total gain of £$gain?"
+    val question = "How much Private Residence Relief are you claiming on your total gain of £10,000?"
     val prrLink = "Private Residence Relief"
   }
 

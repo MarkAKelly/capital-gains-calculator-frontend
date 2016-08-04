@@ -27,7 +27,7 @@ import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object PrivateResidenceReliefValueForm {
 
-  val privateResidenceReliefValueForm = Form(
+  def privateResidenceReliefValueForm = Form(
     mapping(
       "amount" -> text
         .verifying(Messages("calc.common.error.mandatoryAmount"), mandatoryCheck)

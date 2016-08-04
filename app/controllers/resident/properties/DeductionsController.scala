@@ -29,7 +29,8 @@ import forms.resident.AnnualExemptAmountForm._
 import forms.resident.OtherPropertiesForm._
 import forms.resident.properties.ReliefsForm._
 import forms.resident.properties.ReliefsValueForm._
-import models.resident.properties.{ReliefsModel, ReliefsValueModel, YourAnswersSummaryModel}
+import forms.resident.properties.PrivateResidenceReliefValueForm._
+import models.resident.properties.{PrivateResidenceReliefValueModel, ReliefsModel, ReliefsValueModel, YourAnswersSummaryModel}
 import play.api.mvc.{Action, Result}
 import play.api.data.Form
 import views.html.calculation.{resident => commonViews}
@@ -56,15 +57,31 @@ trait DeductionsController extends FeatureLock {
 
   private val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
 
-  //########## Private Residence Relief Actions ##############
-  val privateResidenceRelief = TODO
-
-  //################# Reliefs Actions ########################
-
   def totalGain(answerSummary: YourAnswersSummaryModel, hc: HeaderCarrier): Future[BigDecimal] = calcConnector.calculateRttPropertyGrossGain(answerSummary)(hc)
 
   def answerSummary(hc: HeaderCarrier): Future[YourAnswersSummaryModel] = calcConnector.getPropertyGainAnswers(hc)
 
+  //########## Private Residence Relief Actions ##############
+  val privateResidenceRelief = TODO
+
+  //########## Private Residence Relief Actions ##############
+  val privateResidenceReliefValue = FeatureLockForRTT.async { implicit request =>
+
+    def routeRequest(totalGain: BigDecimal): Future[Result] = {
+      calcConnector.fetchAndGetFormData[PrivateResidenceReliefValueModel](keystoreKeys.prrValue).map {
+        case Some(data) => Ok(views.privateResidenceReliefValue(privateResidenceReliefValueForm.fill(data), totalGain, homeLink))
+        case None => Ok(views.privateResidenceReliefValue(privateResidenceReliefValueForm, totalGain, homeLink))
+      }
+    }
+
+    for {
+      answerSummary <- answerSummary(hc)
+      totalGain <- totalGain(answerSummary, hc)
+      route <- routeRequest(totalGain)
+    } yield route
+  }
+
+  //################# Reliefs Actions ########################
   val reliefs = FeatureLockForRTT.async { implicit request =>
 
     def routeRequest(totalGain: BigDecimal): Future[Result] = {
