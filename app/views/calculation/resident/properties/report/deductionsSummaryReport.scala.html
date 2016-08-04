@@ -129,7 +129,7 @@
         @summaryOptionRowHelper("reliefs", Messages("calc.resident.reliefs.title", MoneyPounds(result.gain,
         0).quantity), deductionAnswers.reliefsModel.get.isClaiming, None)
         @{if (deductionAnswers.reliefsModel.get.isClaiming)
-        summaryNumericRowHelper("reliefsValue", Messages("calc.resident.reliefsValue.title"),
+        summaryNumericRowHelper("reliefsValue", Messages("calc.resident.reliefsValue.title", MoneyPounds(result.gain, 0).quantity),
         deductionAnswers.reliefsValueModel.get.amount, None)}
         @summaryOptionRowHelper("otherProperties", Messages("calc.resident.otherProperties.title",
         taxYear.taxYearSupplied), deductionAnswers.otherPropertiesModel.get.hasOtherProperties, None)

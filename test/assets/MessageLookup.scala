@@ -172,8 +172,8 @@ object MessageLookup {
 
   //Reliefs Value messages
   object reliefsValue {
-    val title = "How much Capital Gains Tax relief are you claiming?"
-    val question = "How much Capital Gains Tax relief are you claiming?"
+    def title(input: String) = s"How much tax relief are you claiming on your total gain of £$input?"
+    def question(input: String) = s"How much tax relief are you claiming on your total gain of £$input?"
     val prrLink = "Private Residence Relief"
     val lettingsReliefLink = "Lettings Relief"
   }

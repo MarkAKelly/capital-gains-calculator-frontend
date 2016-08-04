@@ -465,8 +465,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
       "has a numeric output row for tax relief value" which {
 
-        s"should have the question text '${commonMessages.reliefsValue.title}'" in {
-          doc.select("#reliefsValue-question").text shouldBe commonMessages.reliefsValue.title
+        s"should have the question text '${commonMessages.reliefsValue.title("50,000")}'" in {
+          doc.select("#reliefsValue-question").text shouldBe commonMessages.reliefsValue.title("50,000")
         }
 
         "should have the value '£50,000'" in {
