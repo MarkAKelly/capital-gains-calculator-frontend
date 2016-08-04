@@ -86,6 +86,18 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
         legend.text should include(s"${messages.legendFirstSection}")
       }
 
+      "contain a link within the legend" which {
+
+        "has an href" in {
+          legend.select("a").hasAttr("href") shouldEqual true
+        }
+
+        "who's href links to 'https://www.gov.uk/tax-relief-selling-home'" in {
+          legend.select("a").attr("href") shouldEqual "https://www.gov.uk/tax-relief-selling-home"
+        }
+
+      }
+
       s"contain the text ${messages.legendSecondSection}" in {
         legend.text should include(s"${messages.legendSecondSection}")
       }
