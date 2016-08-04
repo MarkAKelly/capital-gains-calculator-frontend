@@ -6,27 +6,9 @@
 
 @(reliefsValueForm : Form[ReliefsValueModel], navHomeLink: String, totalGain: BigDecimal)(implicit request: Request[_])
 
-@sidebar = {
-    <div>
-        <a id="reliefsValuePrivateResidenceReliefLink" class="external-link" rel="external" href="https://www.gov.uk/tax-sell-home/absence-from-home"
-           target="_blank" data-journey-click="help:govUK:absenceFromHome">
-            @Messages("calc.resident.reliefsValue.externalLinkOne")
-            <span class="visuallyhidden">@Messages("calc.resident.reliefsValue.externalLinkOne")</span>
-        </a>
-    </div>
-    <div>
-        <a id="reliefsValueLettingsReliefLink" class="external-link" rel="external" href="https://www.gov.uk/tax-sell-home/let-out-part-of-home"
-           target="_blank" data-journey-click="help:govUK:letOutPartOfHome">
-            @Messages("calc.resident.reliefsValue.externalLinkTwo")
-            <span class="visuallyhidden">@Messages("calc.resident.reliefsValue.externalLinkTwo")</span>
-        </a>
-    </div>
-}
-
 @resident_main_template(
     title = Messages("calc.resident.reliefsValue.title", MoneyPounds(totalGain, 0).quantity),
     backLink = Some(controllers.resident.properties.routes.DeductionsController.reliefs().toString),
-    sidebarLinks = Some(sidebar),
     homeLink = navHomeLink) {
 
     @errorSummary(reliefsValueForm, "reliefs-value")
