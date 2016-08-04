@@ -29,7 +29,8 @@ import forms.resident.AnnualExemptAmountForm._
 import forms.resident.OtherPropertiesForm._
 import forms.resident.properties.ReliefsForm._
 import forms.resident.properties.ReliefsValueForm._
-import models.resident.properties.{ReliefsModel, ReliefsValueModel, YourAnswersSummaryModel}
+import forms.resident.properties.PrivateResidenceReliefForm._
+import models.resident.properties.{PrivateResidenceReliefModel, ReliefsModel, ReliefsValueModel, YourAnswersSummaryModel}
 import play.api.mvc.{Action, Result}
 import play.api.data.Form
 import views.html.calculation.{resident => commonViews}
@@ -57,7 +58,13 @@ trait DeductionsController extends FeatureLock {
   private val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
 
   //########## Private Residence Relief Actions ##############
-  val privateResidenceRelief = TODO
+  val privateResidenceRelief = FeatureLockForRTT.async { implicit request =>
+    val backLink = Some(routes.GainController.improvements().url)
+    calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief).map {
+      case Some(data) => Ok(views.privateResidenceRelief(privateResidenceReliefForm.fill(data), homeLink, backLink))
+      case None => Ok(views.privateResidenceRelief(privateResidenceReliefForm, homeLink, backLink))
+    }
+  }
 
   //################# Reliefs Actions ########################
 
