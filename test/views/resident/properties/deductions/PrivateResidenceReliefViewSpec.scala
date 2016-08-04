@@ -146,12 +146,50 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
 
           lazy val optionLabel = doc.select("#prrClaiming-part")
 
-          "have the id 'prrClaiming-Full'" in {
+          "have the id 'prrClaiming-part'" in {
             optionLabel.attr("id") shouldEqual "prrClaiming-part"
           }
 
           "have the value 'Part'" in {
             optionLabel.attr("value") shouldEqual "Part"
+          }
+
+          "be of type radio" in {
+            optionLabel.attr("type") shouldEqual "radio"
+          }
+        }
+      }
+
+      "for the option 'No not claiming prr'" should {
+
+        lazy val fullRadioOption = doc.select(".block-label[for=prrClaiming-none]")
+
+        "have a label with class 'block-label'" in {
+          fullRadioOption.hasClass("block-label") shouldEqual true
+        }
+
+        "have the property 'for'" in {
+          fullRadioOption.hasAttr("for") shouldEqual true
+        }
+
+        "the for attribute has the value prrClaiming-none" in {
+          fullRadioOption.attr("for") shouldEqual "prrClaiming-none"
+        }
+
+        "have the text 'No'" in {
+          fullRadioOption.text shouldEqual "No"
+        }
+
+        "have an input under the label that" should {
+
+          lazy val optionLabel = doc.select("#prrClaiming-none")
+
+          "have the id 'prrClaiming-none'" in {
+            optionLabel.attr("id") shouldEqual "prrClaiming-none"
+          }
+
+          "have the value 'None'" in {
+            optionLabel.attr("value") shouldEqual "None"
           }
 
           "be of type radio" in {
