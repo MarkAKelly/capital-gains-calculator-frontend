@@ -80,6 +80,23 @@ trait DeductionsController extends FeatureLock {
       route <- routeRequest(totalGain)
     } yield route
   }
+  val submitPrivateResidenceReliefValue = FeatureLockForRTT.async { implicit request =>
+
+    def routeRequest (totalGain: BigDecimal) = {
+      privateResidenceReliefValueForm.bindFromRequest().fold(
+        errors => Future.successful(BadRequest(views.privateResidenceReliefValue(errors, totalGain, homeLink))),
+        success => {
+          calcConnector.saveFormData[PrivateResidenceReliefValueModel](keystoreKeys.prrValue, success)
+          Future.successful(Redirect(routes.DeductionsController.reliefs()))
+        }
+      )
+    }
+    for {
+      answerSummary <- answerSummary(hc)
+      totalGain <- totalGain(answerSummary, hc)
+      route <- routeRequest(totalGain)
+    } yield route
+  }
 
   //################# Reliefs Actions ########################
   val reliefs = FeatureLockForRTT.async { implicit request =>
