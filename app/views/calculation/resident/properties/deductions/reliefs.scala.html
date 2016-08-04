@@ -5,12 +5,11 @@
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 @import views.html.calculation.resident._
 
-@(reliefsForm: Form[ReliefsModel], navHomeLink: String, hasClaimedPRR: Boolean)(implicit request: Request[_])
+@(reliefsForm: Form[ReliefsModel], navHomeLink: String, hasClaimedPRR: Boolean, backLink: Option[String])(implicit request: Request[_])
 
 @resident_main_template(
     title = Messages("calc.resident.reliefs.title"),
-    backLink = if(hasClaimedPRR) {Some(controllers.resident.properties.routes.DeductionsController.privateResidenceReliefValue.toString())}
-    else{Some(controllers.resident.properties.routes.DeductionsController.privateResidenceRelief.toString())},
+    backLink = backLink,
     homeLink = navHomeLink) {
 
     @errorSummary(reliefsForm, "reliefs")

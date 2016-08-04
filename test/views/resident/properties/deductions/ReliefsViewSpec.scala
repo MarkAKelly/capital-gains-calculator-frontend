@@ -28,7 +28,7 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
 
   "Reliefs view" should {
 
-    lazy val view = views.reliefs(reliefsForm(), "home-link", false)(fakeRequest)
+    lazy val view = views.reliefs(reliefsForm(), "home-link", false, Some(controllers.resident.properties.routes.DeductionsController.privateResidenceRelief.toString()))(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -74,7 +74,7 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
 
   "Reliefs view with pre-selected values and a having claimed PRR" should {
     lazy val form = reliefsForm().bind(Map(("isClaiming", "Yes")))
-    lazy val view = views.reliefs(form, "home-link", true)(fakeRequest)
+    lazy val view = views.reliefs(form, "home-link", true, Some(controllers.resident.properties.routes.DeductionsController.privateResidenceReliefValue.toString()))(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have the option 'Yes' auto selected" in {
@@ -104,7 +104,7 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
 
   "Reliefs view with errors" should {
     lazy val form = reliefsForm().bind(Map(("isClaiming", "")))
-    lazy val view = views.reliefs(form, "home-link", false)(fakeRequest)
+    lazy val view = views.reliefs(form, "home-link", false, Some(controllers.resident.properties.routes.DeductionsController.privateResidenceRelief.toString()))(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     s"have a back link to the PRR page with text ${MessageLookup.calcBaseBack}" in {

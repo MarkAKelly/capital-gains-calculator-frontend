@@ -76,19 +76,25 @@ trait DeductionsController extends FeatureLock {
 
   //################# Reliefs Actions ########################
 
+  def reliefsBackLink(isClaimingPartPRR: Boolean): Future[Option[String]] = {
+    if (isClaimingPartPRR) Future.successful(Some(controllers.resident.properties.routes.DeductionsController.privateResidenceReliefValue.toString()))
+    else Future.successful(Some(controllers.resident.properties.routes.DeductionsController.privateResidenceRelief.toString()))
+  }
+
   val reliefs = FeatureLockForRTT.async { implicit request =>
 
-    def routeRequest(isClaimingPartPRR: Boolean) = {
+    def routeRequest(isClaimingPartPRR: Boolean, backLink: Option[String]) = {
       calcConnector.fetchAndGetFormData[ReliefsModel](keystoreKeys.reliefs).map {
-        case Some(data) => Ok(views.reliefs(reliefsForm().fill(data), homeLink, isClaimingPartPRR))
-        case None => Ok(views.reliefs(reliefsForm(), homeLink, isClaimingPartPRR))
+        case Some(data) => Ok(views.reliefs(reliefsForm().fill(data), homeLink, isClaimingPartPRR, backLink))
+        case None => Ok(views.reliefs(reliefsForm(), homeLink, isClaimingPartPRR, backLink))
       }
     }
 
     for {
       prr <- calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief)
       isClaimingPartPRR <- isClaimingPartPRR(prr)
-      route <- routeRequest(isClaimingPartPRR)
+      backLink <- reliefsBackLink(isClaimingPartPRR)
+      route <- routeRequest(isClaimingPartPRR, backLink)
     } yield route
   }
 
@@ -98,7 +104,8 @@ trait DeductionsController extends FeatureLock {
       errors => for {
         prr <- calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief)
         isClaimingPartPRR <- isClaimingPartPRR(prr)
-        route <- Future.successful(BadRequest(views.reliefs(errors, homeLink, isClaimingPartPRR)))
+        backLink <- reliefsBackLink(isClaimingPartPRR)
+        route <- Future.successful(BadRequest(views.reliefs(errors, homeLink, isClaimingPartPRR, backLink)))
       } yield route,
       success => {
         calcConnector.saveFormData[ReliefsModel](keystoreKeys.reliefs, success)
