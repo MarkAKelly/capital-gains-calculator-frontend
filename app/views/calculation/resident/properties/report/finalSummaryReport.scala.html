@@ -54,7 +54,7 @@
         @summaryNumericRowHelper("gain",gainMessage(result.gain),result.gain)
         @summaryNumericRowHelper("deductions", Messages("calc.resident.summary.deductions"), result.deductions, None,
         Some(Seq(
-        (Messages("calc.resident.summary.reliefs"), reliefsUsed(deductionAnswers)),
+        (Messages("calc.resident.summary.reliefs"), MoneyPounds(result.reliefsUsed.get, 0).quantity),
         (Messages("calc.resident.summary.deductionsDetails.allowableLosses", taxYear.taxYearSupplied), allowableLossesUsed(deductionAnswers)),
         (Messages("calc.resident.summary.deductionsDetails.aeaUsed"), MoneyPounds(result.aeaUsed, 0).quantity),
         (Messages("calc.resident.summary.deductionsDetails.broughtForwardLoss", taxYear.taxYearSupplied), broughtForwardLossesUsed(deductionAnswers))
@@ -88,7 +88,7 @@
         @summaryNumericRowHelper("improvements",Messages("calc.resident.improvements.title"),gainAnswers.improvements,None)
         @summaryOptionRowHelper("reliefs",Messages("calc.resident.reliefs.title"),deductionAnswers.reliefsModel.get.isClaiming, None)
         @{if (deductionAnswers.reliefsModel.get.isClaiming)
-        summaryNumericRowHelper("reliefsValue",Messages("calc.resident.reliefsValue.title"),deductionAnswers.reliefsValueModel.get.amount,None)}
+        summaryNumericRowHelper("reliefsValue",Messages("calc.resident.reliefsValue.title", MoneyPounds(result.gain, 0).quantity),deductionAnswers.reliefsValueModel.get.amount,None)}
         @summaryOptionRowHelper("otherProperties",Messages("calc.resident.otherProperties.title",
         taxYear.taxYearSupplied),deductionAnswers.otherPropertiesModel.get.hasOtherProperties,None)
         @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties)

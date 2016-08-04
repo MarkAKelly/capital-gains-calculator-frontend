@@ -50,7 +50,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       BigDecimal(0),
       BigDecimal(11100),
       BigDecimal(0),
-      BigDecimal(0))
+      BigDecimal(0),
+      Some(BigDecimal(0)))
     lazy val backLink = "/calculate-your-capital-gains/resident/properties/losses-brought-forward"
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
@@ -415,7 +416,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       BigDecimal(11000),
       BigDecimal(71000),
       BigDecimal(1000),
-      BigDecimal(2000))
+      BigDecimal(2000),
+      Some(BigDecimal(50000)))
 
     lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
 
@@ -618,8 +620,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
 
       "has a numeric output row for tax relief value" which {
 
-        s"should have the question text '${commonMessages.reliefsValue.title}'" in {
-          doc.select("#reliefsValue-question").text shouldBe commonMessages.reliefsValue.title
+        s"should have the question text '${commonMessages.reliefsValue.title("50,000")}'" in {
+          doc.select("#reliefsValue-question").text shouldBe commonMessages.reliefsValue.title("50,000")
         }
 
         "should have the value '£50,000'" in {
@@ -773,12 +775,27 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       BigDecimal(11000),
       BigDecimal(71000),
       BigDecimal(1000),
-      BigDecimal(0))
+      BigDecimal(0),
+      Some(BigDecimal(30000)))
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
     lazy val backLink = "/calculate-your-capital-gains/resident/properties/annual-exempt-amount"
     lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
+
+    "has a numeric output row for the deductions" which {
+
+      "should have the question text 'Deductions'" in {
+        doc.select("#deductions-question").text shouldBe messages.deductions
+      }
+
+      "has a breakdown that" should {
+
+        "include a value for Reliefs of £30,000" in {
+          doc.select("#deductions-amount").text should include("Reliefs £30,000")
+        }
+      }
+    }
 
     "has a numeric output row for allowable losses remaining" which {
 
@@ -874,7 +891,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       BigDecimal(0),
       BigDecimal(50000),
       BigDecimal(0),
-      BigDecimal(2000))
+      BigDecimal(2000),
+      Some(BigDecimal(100000)))
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
@@ -969,7 +987,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       BigDecimal(11000),
       BigDecimal(71000),
       BigDecimal(0),
-      BigDecimal(0))
+      BigDecimal(0),
+      Some(BigDecimal(50000)))
 
     lazy val taxYearModel = TaxYearModel("2017/18", false, "2015/16")
 
