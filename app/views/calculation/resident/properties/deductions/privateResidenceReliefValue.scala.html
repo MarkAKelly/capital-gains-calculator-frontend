@@ -25,8 +25,12 @@
 
     <h1>@Messages("calc.resident.prrValue.title", MoneyPounds(totalGain, 0).quantity)</h1>
 
-    @formInputMoney(privateResidenceReliefValueForm, "amount", Messages("calc.resident.prrValue.title", MoneyPounds(totalGain, 0).quantity), hideLabel = true)
+    @form(action = controllers.resident.properties.routes.DeductionsController.submitPrivateResidenceReliefValue) {
 
-    <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+        @formInputMoney(privateResidenceReliefValueForm, "amount", Messages("calc.resident.prrValue.title", MoneyPounds(totalGain, 0).quantity), hideLabel = true)
+
+        <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+
+    }
 
 }

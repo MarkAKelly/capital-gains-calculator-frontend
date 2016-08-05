@@ -52,6 +52,17 @@ class PrivateResidenceReliefValueViewSpec extends UnitSpec with WithFakeApplicat
       doc.select("input").attr("id") shouldBe "amount"
     }
 
+    "render a form element" should {
+
+      "with method POST" in {
+        doc.select("form").attr("method") shouldBe "POST"
+      }
+
+      "with action '/calculate-your-capital-gains/resident/properties/private-residence-relief-value'" in {
+        doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/private-residence-relief-value"
+      }
+    }
+
     "not display an error summary message for the amount" in {
       doc.body.select("#amount-error-summary").size shouldBe 0
     }

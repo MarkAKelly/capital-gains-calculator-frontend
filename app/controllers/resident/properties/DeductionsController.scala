@@ -29,8 +29,9 @@ import forms.resident.AnnualExemptAmountForm._
 import forms.resident.OtherPropertiesForm._
 import forms.resident.properties.ReliefsForm._
 import forms.resident.properties.ReliefsValueForm._
+import forms.resident.properties.PrivateResidenceReliefForm._
 import forms.resident.properties.PrivateResidenceReliefValueForm._
-import models.resident.properties.{PrivateResidenceReliefValueModel, ReliefsModel, ReliefsValueModel, YourAnswersSummaryModel}
+import models.resident.properties._
 import play.api.mvc.{Action, Result}
 import play.api.data.Form
 import views.html.calculation.{resident => commonViews}
@@ -62,7 +63,13 @@ trait DeductionsController extends FeatureLock {
   def answerSummary(hc: HeaderCarrier): Future[YourAnswersSummaryModel] = calcConnector.getPropertyGainAnswers(hc)
 
   //########## Private Residence Relief Actions ##############
-  val privateResidenceRelief = TODO
+  val privateResidenceRelief = FeatureLockForRTT.async { implicit request =>
+    val backLink = Some(routes.GainController.improvements().url)
+    calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief).map {
+      case Some(data) => Ok(views.privateResidenceRelief(privateResidenceReliefForm.fill(data), homeLink, backLink))
+      case None => Ok(views.privateResidenceRelief(privateResidenceReliefForm, homeLink, backLink))
+    }
+  }
 
   //########## Private Residence Relief Actions ##############
   val privateResidenceReliefValue = FeatureLockForRTT.async { implicit request =>
@@ -79,6 +86,26 @@ trait DeductionsController extends FeatureLock {
       totalGain <- totalGain(answerSummary, hc)
       route <- routeRequest(totalGain)
     } yield route
+  }
+
+  val submitPrivateResidenceReliefValue = FeatureLockForRTT.async { implicit request =>
+
+    def errorAction(form: Form[PrivateResidenceReliefValueModel]) = {
+      for {
+        answerSummary <- answerSummary(hc)
+        totalGain <- totalGain(answerSummary, hc)
+      } yield BadRequest(views.privateResidenceReliefValue(form, totalGain, homeLink))
+    }
+
+    def successAction(model: PrivateResidenceReliefValueModel) = {
+      calcConnector.saveFormData[PrivateResidenceReliefValueModel](keystoreKeys.prrValue, model)
+      Future.successful(Redirect(routes.DeductionsController.reliefs()))
+    }
+
+    privateResidenceReliefValueForm.bindFromRequest.fold(
+      errors => errorAction(errors),
+      success => successAction(success)
+    )
   }
 
   //################# Reliefs Actions ########################
