@@ -33,7 +33,7 @@ GET     /summary                          controllers.resident.properties.Summar
 #Private Residence Relief Routes
 GET     /private-residence-relief         controllers.resident.properties.DeductionsController.privateResidenceRelief
 
-#Private Residence Relief Routes
+#Private Residence Relief Value Routes
 GET     /private-residence-relief-value   controllers.resident.properties.DeductionsController.privateResidenceReliefValue
 POST    /private-residence-relief-value   controllers.resident.properties.DeductionsController.submitPrivateResidenceReliefValue
 

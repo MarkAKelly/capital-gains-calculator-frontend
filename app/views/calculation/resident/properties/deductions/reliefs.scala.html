@@ -5,48 +5,54 @@
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 @import views.html.calculation.resident._
 
-@(reliefsForm: Form[ReliefsModel], totalGain: BigDecimal, navHomeLink: String)(implicit request: Request[_])
-
-@hiddenHelpTextContent = {
-    <p>@Messages("calc.resident.reliefs.additionalContent.one")
-        <a id="reliefsLink" target="_blank" href="https://www.gov.uk/tax-sell-home/absence-from-home">@Messages("calc.resident.reliefs.link.one")
-        <span class="visuallyhidden">@Messages("calc.base.externalLink")</span></a>
-    </p>
-}
+@(reliefsForm: Form[ReliefsModel], navHomeLink: String, hasClaimedPRR: Boolean, backLink: Option[String])(implicit request: Request[_])
 
 @resident_main_template(
-    title = Messages("calc.resident.reliefs.title",
-    MoneyPounds(totalGain, 0).quantity),
-    backLink = Some(controllers.resident.properties.routes.GainController.improvements.toString()),
+    title = Messages("calc.resident.reliefs.title"),
+    backLink = backLink,
     homeLink = navHomeLink) {
 
     @errorSummary(reliefsForm, "reliefs")
 
-    <h1>@Messages("calc.resident.reliefs.question", MoneyPounds(totalGain, 0).quantity)</h1>
+    <h1>@Messages("calc.resident.reliefs.question")</h1>
 
     @form(action = controllers.resident.properties.routes.DeductionsController.submitReliefs) {
 
-        <div class="form-group">
-            @formInputRadioGroup(
-                field = reliefsForm("isClaiming"),
-                Seq(
-                "Yes"->Messages("calc.base.yes"),
-                "No"->Messages("calc.base.no")),
-                '_legend -> Messages("calc.resident.reliefs.question", MoneyPounds(totalGain, 0).quantity),
-                '_legendID -> "isClaiming",
-                '_legendClass -> "visuallyhidden",
-                '_helpText -> Messages("calc.resident.reliefs.helpText"),
-                '_labelAfter -> true,
-                '_labelClass -> "block-label",
-                '_groupClass -> "inline",
-                '_fieldsetAttributes -> "aria-details = help"
-            )
-        </div>
+        @if(hasClaimedPRR) {
+            <div class="form-group">
+                @formInputRadioGroup(
+                    field = reliefsForm("isClaiming"),
+                    Seq(
+                    "Yes"->Messages("calc.base.yes"),
+                    "No"->Messages("calc.base.no")),
+                    '_legend -> Messages("calc.resident.reliefs.question"),
+                    '_legendID -> "isClaiming",
+                    '_legendClass -> "visuallyhidden",
+                    '_helpText -> Messages("calc.resident.reliefs.helpText"),
+                    '_labelAfter -> true,
+                    '_labelClass -> "block-label",
+                    '_groupClass -> "inline"
+                )
+            </div>
+        } else {
+            <div class="form-group">
+                @formInputRadioGroup(
+                    field = reliefsForm("isClaiming"),
+                    Seq(
+                    "Yes"->Messages("calc.base.yes"),
+                    "No"->Messages("calc.base.no")),
+                    '_legend -> Messages("calc.resident.reliefs.question"),
+                    '_legendID -> "isClaiming",
+                    '_legendClass -> "visuallyhidden",
+                    '_labelAfter -> true,
+                    '_labelClass -> "block-label",
+                    '_groupClass -> "inline"
+                )
+            </div>
+        }
 
         <input type="hidden" name="isClaiming" value="" />
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
 
     }
-
-    @expandableHelpTextHelper(Messages("calc.resident.reliefs.helpButton"), hiddenHelpTextContent)
 }

@@ -26,9 +26,9 @@ import views.html.calculation.resident.properties.{deductions => views}
 
 class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Reliefs view with a gain of £10000" should {
+  "Reliefs view" should {
 
-    lazy val view = views.reliefs(reliefsForm(BigDecimal(10000)), BigDecimal(10000), "home-link")(fakeRequest)
+    lazy val view = views.reliefs(reliefsForm(), "home-link", false, Some(controllers.resident.properties.routes.DeductionsController.privateResidenceRelief.toString()))(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -39,8 +39,8 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
       doc.title() shouldBe messages.title
     }
 
-    s"have a back link to the Disposal Date Page with text ${MessageLookup.calcBaseBack}" in {
-      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/improvements"
+    s"have a back link to the PRR page with text ${MessageLookup.calcBaseBack}" in {
+      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/private-residence-relief"
     }
 
     s"have the question of the page ${messages.title}" in {
@@ -55,12 +55,8 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
       doc.select("legend.visuallyhidden").text() shouldEqual messages.title
     }
 
-    s"have help text with the message ${messages.help}" in {
-      doc.select("span.form-hint").text() shouldEqual messages.help
-    }
-
-    "have a fieldset with aria-details attribute" in {
-      doc.select("fieldset").attr("aria-details") shouldBe "help"
+    "have no help text" in {
+      doc.select("span.form-hint").isEmpty shouldEqual true
     }
 
     s"have an input field with id isClaiming-yes " in {
@@ -74,51 +70,46 @@ class ReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
     "have a continue button " in {
       doc.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
     }
-
-    s"have a drop down button with the text ${messages.helpButton}" in {
-      doc.body.getElementsByTag("summary").attr("role") shouldBe "button"
-      doc.body.getElementsByTag("summary").text shouldEqual messages.helpButton
-    }
-
-    s"have an additional line help line ${messages.helpOne}" in {
-      doc.body.getElementsByTag("p").text() should include(messages.helpOne)
-    }
-
-    s"have help link text ${messages.helpLinkOne}" in {
-      doc.body.select("a").text() should include(messages.helpLinkOne)
-    }
-
-    "have a help link to https://www.gov.uk/tax-sell-home/absence-from-home" in {
-      doc.body.getElementById("reliefsLink").attr("href") shouldBe "https://www.gov.uk/tax-sell-home/absence-from-home"
-    }
   }
 
-  "Reliefs view with pre-selected values and a gain of £100" should {
-    lazy val form = reliefsForm(BigDecimal(100)).bind(Map(("isClaiming", "Yes")))
-    lazy val view = views.reliefs(form, BigDecimal(100), "home-link")(fakeRequest)
+  "Reliefs view with pre-selected values and a having claimed PRR" should {
+    lazy val form = reliefsForm().bind(Map(("isClaiming", "Yes")))
+    lazy val view = views.reliefs(form, "home-link", true, Some(controllers.resident.properties.routes.DeductionsController.privateResidenceReliefValue.toString()))(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have the option 'Yes' auto selected" in {
       doc.body.getElementById("isClaiming-yes").parent.className should include("selected")
     }
 
-    s"have a title ${messages.question()}" in {
-      doc.title() shouldBe messages.question()
+    s"have a title ${messages.question}" in {
+      doc.title() shouldBe messages.question
     }
 
-    s"have the question of the page ${messages.question()}" in {
-      doc.select("h1").text() shouldEqual messages.question()
+    s"have a back link to the PRR value page with text ${MessageLookup.calcBaseBack}" in {
+      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/private-residence-relief-value"
     }
 
-    s"have a legend for an input with text ${messages.question()}" in {
-      doc.select("legend.visuallyhidden").text() shouldEqual messages.question()
+    s"have the question of the page ${messages.question}" in {
+      doc.select("h1").text() shouldEqual messages.question
+    }
+
+    s"have a legend for an input with text ${messages.question}" in {
+      doc.select("legend.visuallyhidden").text() shouldEqual messages.question
+    }
+
+    s"have help text with the message ${messages.help}" in {
+      doc.select("span.form-hint").text() shouldEqual messages.help
     }
   }
 
   "Reliefs view with errors" should {
-    lazy val form = reliefsForm(BigDecimal(10000)).bind(Map(("isClaiming", "")))
-    lazy val view = views.reliefs(form, BigDecimal(10000), "home-link")(fakeRequest)
+    lazy val form = reliefsForm().bind(Map(("isClaiming", "")))
+    lazy val view = views.reliefs(form, "home-link", false, Some(controllers.resident.properties.routes.DeductionsController.privateResidenceRelief.toString()))(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
+
+    s"have a back link to the PRR page with text ${MessageLookup.calcBaseBack}" in {
+      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/private-residence-relief"
+    }
 
     "display an error summary message for the amount" in {
       doc.body.select("#isClaiming-error-summary").size shouldBe 1

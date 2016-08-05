@@ -338,11 +338,11 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
         }
 
         "has the question as part of the link" in {
-          doc.select("#reliefs-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.reliefs.question("50,000")}"
+          doc.select("#reliefs-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.reliefs.question}"
         }
 
         "has the question component of the link as visuallyhidden" in {
-          doc.select("#reliefs-option a span.visuallyhidden").text shouldBe commonMessages.reliefs.question("50,000")
+          doc.select("#reliefs-option a span.visuallyhidden").text shouldBe commonMessages.reliefs.question
         }
       }
 

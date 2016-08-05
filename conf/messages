@@ -391,14 +391,14 @@ calc.resident.prrValue.title = How much Private Residence Relief are you claimin
 calc.resident.prrValue.externalLink = Private Residence Relief
 
 ## Reliefs messages
-calc.resident.reliefs.title = Do you want to claim Capital Gains Tax reliefs on your total gain of £{0}?
-calc.resident.reliefs.question = Do you want to claim Capital Gains Tax reliefs on your total gain of £{0}?
+calc.resident.reliefs.title = Do you want to claim any other tax reliefs?
+calc.resident.reliefs.question = Do you want to claim any other tax reliefs?
 calc.resident.reliefs.helpText = For example, lettings relief
 calc.resident.reliefs.additionalContent.one = Capital Gains Tax reliefs can lower the amount of tax you owe. For example, you might be able to claim
 calc.resident.reliefs.link.one = Private Residence Relief
 calc.resident.reliefs.link.two = Lettings Relief
 calc.resident.reliefs.additionalContent.two = Tax reliefs are different from your Capital Gains Tax Allowance and Personal Allowance.
-calc.resident.reliefs.errorSelect = Tell us if you want to claim any tax reliefs on your total gain of £{0}
+calc.resident.reliefs.errorSelect = Tell us if you want to claim any other tax reliefs
 calc.resident.reliefs.helpButton = What are Capital Gains Tax reliefs?
 
 

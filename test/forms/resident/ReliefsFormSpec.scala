@@ -29,7 +29,7 @@ class ReliefsFormSpec extends UnitSpec with WithFakeApplication {
 
     "return a form with the data specified in the model" in {
       lazy val model = ReliefsModel(true)
-      lazy val form = reliefsForm(BigDecimal(0)).fill(model)
+      lazy val form = reliefsForm().fill(model)
       form.value shouldBe Some(ReliefsModel(true))
     }
   }
@@ -37,7 +37,7 @@ class ReliefsFormSpec extends UnitSpec with WithFakeApplication {
   "Creating a form using a valid map" should {
 
     "return a form with the data specified in the model" in {
-      lazy val form = reliefsForm(BigDecimal(0)).bind(Map(("isClaiming", "Yes")))
+      lazy val form = reliefsForm().bind(Map(("isClaiming", "Yes")))
       form.value shouldBe Some(ReliefsModel(true))
     }
   }
@@ -45,26 +45,26 @@ class ReliefsFormSpec extends UnitSpec with WithFakeApplication {
   "Creating a form using an invalid map" when {
 
     "supplied with no data" should {
-      lazy val form = reliefsForm(BigDecimal(10000)).bind(Map(("isClaiming", "")))
+      lazy val form = reliefsForm().bind(Map(("isClaiming", "")))
 
       "return a form with errors" in {
         form.hasErrors shouldBe true
       }
 
-      s"return an error with message ${messages.errorSelect(MoneyPounds(10000, 0).quantity)}" in {
-        form.error("isClaiming").get.message shouldBe messages.errorSelect(MoneyPounds(10000, 0).quantity)
+      s"return an error with message ${messages.errorSelect}" in {
+        form.error("isClaiming").get.message shouldBe messages.errorSelect
       }
     }
 
     "supplied with invalid data" should {
-      lazy val form = reliefsForm(BigDecimal(10000)).bind(Map(("isClaiming", "a")))
+      lazy val form = reliefsForm().bind(Map(("isClaiming", "a")))
 
       "return a form with errors" in {
         form.hasErrors shouldBe true
       }
 
-      s"return an error with message ${messages.errorSelect(MoneyPounds(10000, 0).quantity)}" in {
-        form.error("isClaiming").get.message shouldBe messages.errorSelect(MoneyPounds(10000, 0).quantity)
+      s"return an error with message ${messages.errorSelect}" in {
+        form.error("isClaiming").get.message shouldBe messages.errorSelect
       }
     }
   }

@@ -112,7 +112,7 @@ articleLayout = false
     @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),gainAnswers.acquisitionValue,Some(gainRoutes.acquisitionValue().toString))
     @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),gainAnswers.acquisitionCosts,Some(gainRoutes.acquisitionCosts().toString))
     @summaryNumericRowHelper("improvements",Messages("calc.resident.improvements.title"),gainAnswers.improvements,Some(gainRoutes.improvements().toString))
-    @summaryOptionRowHelper("reliefs",Messages("calc.resident.reliefs.title", MoneyPounds(result.gain, 0).quantity),deductionAnswers.reliefsModel.get.isClaiming, Some(deductionRoutes.reliefs().toString))
+    @summaryOptionRowHelper("reliefs",Messages("calc.resident.reliefs.title"),deductionAnswers.reliefsModel.get.isClaiming, Some(deductionRoutes.reliefs().toString))
     @{if (deductionAnswers.reliefsModel.get.isClaiming)
         summaryNumericRowHelper("reliefsValue",Messages("calc.resident.reliefsValue.title", MoneyPounds(result.gain, 0).quantity),deductionAnswers.reliefsValueModel.get.amount,Some(deductionRoutes.reliefsValue().toString))}
     @summaryOptionRowHelper("otherProperties",Messages("calc.resident.otherProperties.title", taxYear.taxYearSupplied),deductionAnswers.otherPropertiesModel.get.hasOtherProperties,Some(deductionRoutes.otherProperties().toString))

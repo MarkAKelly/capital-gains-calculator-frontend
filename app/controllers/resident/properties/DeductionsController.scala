@@ -17,6 +17,7 @@
 package controllers.resident.properties
 
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
+import common.resident.{PrivateResidenceReliefKeys => prrKeys}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import models.resident._
@@ -56,11 +57,18 @@ trait DeductionsController extends FeatureLock {
     Future.successful(s"${disposalDateModel.year}-${disposalDateModel.month}-${disposalDateModel.day}")
   }
 
-  private val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
-
   def totalGain(answerSummary: YourAnswersSummaryModel, hc: HeaderCarrier): Future[BigDecimal] = calcConnector.calculateRttPropertyGrossGain(answerSummary)(hc)
 
   def answerSummary(hc: HeaderCarrier): Future[YourAnswersSummaryModel] = calcConnector.getPropertyGainAnswers(hc)
+
+  def isClaimingPartPRR(prr: Option[PrivateResidenceReliefModel]): Future[Boolean] = {
+    prr match {
+      case Some(PrivateResidenceReliefModel(prrKeys.part)) => Future.successful(true)
+      case _ => Future.successful(false)
+    }
+  }
+
+  private val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
 
   //########## Private Residence Relief Actions ##############
   val privateResidenceRelief = FeatureLockForRTT.async { implicit request =>
@@ -109,41 +117,51 @@ trait DeductionsController extends FeatureLock {
   }
 
   //################# Reliefs Actions ########################
+  def reliefsBackLink(isClaimingPartPRR: Boolean): Future[Option[String]] = {
+    if (isClaimingPartPRR) Future.successful(Some(controllers.resident.properties.routes.DeductionsController.privateResidenceReliefValue.toString()))
+    else Future.successful(Some(controllers.resident.properties.routes.DeductionsController.privateResidenceRelief.toString()))
+  }
+
   val reliefs = FeatureLockForRTT.async { implicit request =>
 
-    def routeRequest(totalGain: BigDecimal): Future[Result] = {
+    def routeRequest(isClaimingPartPRR: Boolean, backLink: Option[String]) = {
       calcConnector.fetchAndGetFormData[ReliefsModel](keystoreKeys.reliefs).map {
-        case Some(data) => Ok(views.reliefs(reliefsForm(totalGain).fill(data), totalGain, homeLink))
-        case None => Ok(views.reliefs(reliefsForm(totalGain), totalGain, homeLink))
+        case Some(data) => Ok(views.reliefs(reliefsForm().fill(data), homeLink, isClaimingPartPRR, backLink))
+        case None => Ok(views.reliefs(reliefsForm(), homeLink, isClaimingPartPRR, backLink))
       }
     }
 
     for {
-      answerSummary <- answerSummary(hc)
-      totalGain <- totalGain(answerSummary, hc)
-      route <- routeRequest(totalGain)
+      prr <- calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief)
+      isClaimingPartPRR <- isClaimingPartPRR(prr)
+      backLink <- reliefsBackLink(isClaimingPartPRR)
+      route <- routeRequest(isClaimingPartPRR, backLink)
     } yield route
   }
 
   val submitReliefs = FeatureLockForRTT.async { implicit request =>
 
-    def routeRequest (totalGain: BigDecimal) = {
-      reliefsForm(totalGain).bindFromRequest().fold(
-        errors => Future.successful(BadRequest(views.reliefs(errors, totalGain, homeLink))),
-        success => {
-          calcConnector.saveFormData[ReliefsModel](keystoreKeys.reliefs, success)
-          success match {
-            case ReliefsModel(true) => Future.successful(Redirect(routes.DeductionsController.reliefsValue()))
-            case _ => Future.successful(Redirect(routes.DeductionsController.otherProperties()))
-          }
-        }
-      )
+    def errorAction(form: Form[ReliefsModel]) = {
+      for {
+        prr <- calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief)
+        isClaimingPartPRR <- isClaimingPartPRR(prr)
+        backLink <- reliefsBackLink(isClaimingPartPRR)
+        route <- Future.successful(BadRequest(views.reliefs(form, homeLink, isClaimingPartPRR, backLink)))
+      } yield route
     }
-    for {
-      answerSummary <- answerSummary(hc)
-      totalGain <- totalGain(answerSummary, hc)
-      route <- routeRequest(totalGain)
-    } yield route
+
+    def successAction(model: ReliefsModel) = {
+      calcConnector.saveFormData[ReliefsModel](keystoreKeys.reliefs, model)
+      model match {
+        case ReliefsModel(true) => Future.successful(Redirect(routes.DeductionsController.reliefsValue()))
+        case _ => Future.successful(Redirect(routes.DeductionsController.otherProperties()))
+      }
+    }
+
+    reliefsForm().bindFromRequest().fold(
+      errors => errorAction(errors),
+      success => successAction(success)
+    )
   }
 
   //################# Reliefs Value Input Actions ########################
