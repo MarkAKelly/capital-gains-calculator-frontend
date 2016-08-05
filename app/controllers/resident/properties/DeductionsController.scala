@@ -18,6 +18,7 @@ package controllers.resident.properties
 
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import common.resident.{PrivateResidenceReliefKeys => prrKeys}
+import config.{AppConfig, ApplicationConfig}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import models.resident._
@@ -43,11 +44,13 @@ import scala.concurrent.Future
 
 object DeductionsController extends DeductionsController {
   val calcConnector = CalculatorConnector
+  val config = ApplicationConfig
 }
 
 trait DeductionsController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
+  val config: AppConfig
 
   def getDisposalDate(implicit hc: HeaderCarrier): Future[Option[DisposalDateModel]] = {
     calcConnector.fetchAndGetFormData[DisposalDateModel](keystoreKeys.disposalDate)
@@ -211,8 +214,8 @@ trait DeductionsController extends FeatureLock {
 
   //################# Other Properties Actions #########################
   def otherPropertiesBackUrl(isClaimingFullPrr: Boolean)(implicit hc: HeaderCarrier): Future[String] = {
-    if (config. && isClaimingFullPrr)
-    calcConnector.fetchAndGetFormData[ReliefsModel](keystoreKeys.reliefs).flatMap {
+    if (config.featureRTTPRREnabled && isClaimingFullPrr) Future.successful(routes.DeductionsController.privateResidenceRelief().url)
+    else calcConnector.fetchAndGetFormData[ReliefsModel](keystoreKeys.reliefs).flatMap {
       case Some(ReliefsModel(true)) => Future.successful(routes.DeductionsController.reliefsValue().url)
       case _ => Future.successful(routes.DeductionsController.reliefs().url)
     }

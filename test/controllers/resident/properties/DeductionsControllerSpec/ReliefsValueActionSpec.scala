@@ -18,6 +18,7 @@ package controllers.resident.properties.DeductionsControllerSpec
 
 import assets.MessageLookup.{reliefsValue => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
+import config.AppConfig
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.DeductionsController
@@ -52,6 +53,7 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
+      val config = mock[AppConfig]
     }
   }
 
