@@ -20,6 +20,7 @@ import java.util.UUID
 
 import common.Dates._
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
+import config.{AppConfig, ApplicationConfig}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import play.api.mvc.{Action, Result}
@@ -39,11 +40,13 @@ import models.resident.properties.ImprovementsModel
 
 object GainController extends GainController {
   val calcConnector = CalculatorConnector
+  val config = ApplicationConfig
 }
 
 trait GainController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
+  val config: AppConfig
 
   //################# Disposal Date Actions ####################
   val disposalDate = FeatureLockForRTT.asyncNoTimeout { implicit request =>
@@ -175,7 +178,8 @@ trait GainController extends FeatureLock {
   val submitImprovements = FeatureLockForRTT.async { implicit request =>
 
     def routeRequest(totalGain: BigDecimal): Future[Result] = {
-      if (totalGain > 0) Future.successful(Redirect(routes.DeductionsController.reliefs()))
+      if (totalGain > 0 && config.featureRTTPRREnabled) Future.successful(Redirect(routes.DeductionsController.privateResidenceRelief()))
+      else if (totalGain > 0) Future.successful(Redirect(routes.DeductionsController.reliefs()))
       else Future.successful(Redirect(routes.SummaryController.summary()))
     }
 

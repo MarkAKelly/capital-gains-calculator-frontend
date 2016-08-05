@@ -73,6 +73,7 @@ class FeedbackControllerSpec extends UnitSpec with MockitoSugar with WithFakeApp
       override val contactFormServiceIdentifier: String = ""
       override val featureRTTEnabled = true
       override val featureRTTSharesEnabled = true
+      override val featureRTTPRREnabled = true
     }
   }
 

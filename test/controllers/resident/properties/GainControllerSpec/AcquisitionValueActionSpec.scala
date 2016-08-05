@@ -23,6 +23,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{acquisitionValue => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
+import config.AppConfig
 import connectors.CalculatorConnector
 import models.resident.AcquisitionValueModel
 import org.mockito.Matchers
@@ -46,6 +47,7 @@ class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with 
 
     new GainController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
+      val config: AppConfig = mock[AppConfig]
     }
   }
 

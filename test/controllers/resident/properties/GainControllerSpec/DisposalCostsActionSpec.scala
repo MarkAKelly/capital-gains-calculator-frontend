@@ -18,6 +18,7 @@ package controllers.resident.properties.GainControllerSpec
 
 import assets.MessageLookup.{disposalDate, disposalCosts => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
+import config.AppConfig
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.GainController
@@ -46,6 +47,7 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     new GainController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
+      val config: AppConfig = mock[AppConfig]
     }
   }
 
