@@ -23,6 +23,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{disposalDate => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
+import config.AppConfig
 import connectors.CalculatorConnector
 import models.resident.{DisposalDateModel, TaxYearModel}
 import org.mockito.Matchers
@@ -46,6 +47,7 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     new GainController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
+      val config: AppConfig = mock[AppConfig]
     }
   }
 
@@ -63,6 +65,7 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
 
       new GainController {
         override val calcConnector: CalculatorConnector = mockCalcConnector
+        val config: AppConfig = mock[AppConfig]
       }
     }
 

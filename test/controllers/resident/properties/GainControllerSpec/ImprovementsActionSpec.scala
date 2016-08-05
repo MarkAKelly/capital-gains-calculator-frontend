@@ -18,6 +18,7 @@ package controllers.resident.properties.GainControllerSpec
 
 import assets.MessageLookup.{improvementsView => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
+import config.AppConfig
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.GainController
@@ -36,9 +37,13 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
 
   val summaryModel = mock[YourAnswersSummaryModel]
 
-  def setupTarget(getData: Option[ImprovementsModel], gainAnswers: YourAnswersSummaryModel, totalGain: BigDecimal): GainController = {
+  def setupTarget(getData: Option[ImprovementsModel],
+                  gainAnswers: YourAnswersSummaryModel,
+                  totalGain: BigDecimal,
+                  prrEnabled: Boolean = true): GainController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
+    val mockConfig = mock[AppConfig]
 
     when(mockCalcConnector.fetchAndGetFormData[ImprovementsModel](Matchers.eq(keystoreKeys.improvements))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -52,8 +57,12 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
     when(mockCalcConnector.saveFormData[ImprovementsModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
 
+    when(mockConfig.featureRTTPRREnabled)
+      .thenReturn(prrEnabled)
+
     new GainController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
+      val config: AppConfig = mockConfig
     }
   }
 
@@ -139,8 +148,8 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
     }
 
-    "a valid form is submitted with a positive gain result" should {
-      lazy val target = setupTarget(None, summaryModel, BigDecimal(1000))
+    "a valid form is submitted with a positive gain result and PRR disabled" should {
+      lazy val target = setupTarget(None, summaryModel, BigDecimal(1000), false)
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
       lazy val result = target.submitImprovements(request)
 
@@ -150,6 +159,20 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
 
       "redirect to the reliefs page" in {
         redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/reliefs")
+      }
+    }
+
+    "a valid form is submitted with a positive gain result and PRR enabled" should {
+      lazy val target = setupTarget(None, summaryModel, BigDecimal(1000))
+      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+      lazy val result = target.submitImprovements(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the PRR page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/private-residence-relief")
       }
     }
 

@@ -59,4 +59,9 @@ trait FeatureLock extends ValidActiveSession {
     override val featureEnabled = ApplicationConfig.featureRTTSharesEnabled
     override val sessionTimeoutUrl = controllers.resident.shares.routes.GainController.disposalDate().url
   }
+
+  object FeatureLockForPRR extends FeatureLock {
+    override val featureEnabled = ApplicationConfig.featureRTTPRREnabled
+    override val sessionTimeoutUrl = controllers.resident.properties.routes.GainController.disposalDate().url
+  }
 }
