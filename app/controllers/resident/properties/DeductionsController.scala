@@ -63,7 +63,7 @@ trait DeductionsController extends FeatureLock {
   def answerSummary(hc: HeaderCarrier): Future[YourAnswersSummaryModel] = calcConnector.getPropertyGainAnswers(hc)
 
   //########## Private Residence Relief Actions ##############
-  val privateResidenceRelief = FeatureLockForRTT.async { implicit request =>
+  val privateResidenceRelief = FeatureLockForPRR.async { implicit request =>
     val backLink = Some(routes.GainController.improvements().url)
     calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief).map {
       case Some(data) => Ok(views.privateResidenceRelief(privateResidenceReliefForm.fill(data), homeLink, backLink))
@@ -72,7 +72,7 @@ trait DeductionsController extends FeatureLock {
   }
 
   //########## Private Residence Relief Actions ##############
-  val privateResidenceReliefValue = FeatureLockForRTT.async { implicit request =>
+  val privateResidenceReliefValue = FeatureLockForPRR.async { implicit request =>
 
     def routeRequest(totalGain: BigDecimal): Future[Result] = {
       calcConnector.fetchAndGetFormData[PrivateResidenceReliefValueModel](keystoreKeys.prrValue).map {
@@ -88,7 +88,7 @@ trait DeductionsController extends FeatureLock {
     } yield route
   }
 
-  val submitPrivateResidenceReliefValue = FeatureLockForRTT.async { implicit request =>
+  val submitPrivateResidenceReliefValue = FeatureLockForPRR.async { implicit request =>
 
     def errorAction(form: Form[PrivateResidenceReliefValueModel]) = {
       for {
