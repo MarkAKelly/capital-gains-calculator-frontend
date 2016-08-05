@@ -110,4 +110,36 @@ class PrivateResidenceReliefValueActionSpec extends UnitSpec with WithFakeApplic
       redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
     }
   }
+
+  "Calling .submitPrivateResidenceReliefValue from the resident DeductionsController" when {
+
+    "a valid form is submitted" should {
+      lazy val target = setupTarget(Some(PrivateResidenceReliefValueModel(1000)), summaryModel, BigDecimal(10000))
+      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+      lazy val result = target.submitPrivateResidenceReliefValue(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the reliefs page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/reliefs")
+      }
+    }
+
+    "an invalid form is submitted" should {
+      lazy val target = setupTarget(None, summaryModel, BigDecimal(10000))
+      lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
+      lazy val result = target.submitPrivateResidenceReliefValue(request)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "return a 400" in {
+        status(result) shouldBe 400
+      }
+
+      "render the Private Residence Relief Value page" in {
+        doc.title() shouldEqual messages.question
+      }
+    }
+  }
 }
