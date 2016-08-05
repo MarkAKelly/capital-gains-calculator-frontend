@@ -37,9 +37,10 @@ import scala.concurrent.Future
 class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
 
-  def setupTarget(getData: Option[ReliefsModel], prrData: Option[PrivateResidenceReliefModel]): DeductionsController = {
+  def setupTarget(getData: Option[ReliefsModel], prrData: Option[PrivateResidenceReliefModel], prrEnabled: Boolean = true): DeductionsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
+    val mockAppConfig = mock[AppConfig]
 
     when(mockCalcConnector.fetchAndGetFormData[ReliefsModel](Matchers.eq(keystoreKeys.reliefs))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -50,9 +51,12 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     when(mockCalcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.eq(keystoreKeys.privateResidenceRelief))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(prrData))
 
+    when(mockAppConfig.featureRTTPRREnabled)
+      .thenReturn(prrEnabled)
+
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      val config = mock[AppConfig]
+      val config = mockAppConfig
     }
   }
 
@@ -60,8 +64,9 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
 
     "request has a valid session and no keystore value" should {
 
-      lazy val target = setupTarget(None, Some(PrivateResidenceReliefModel(prrKeys.full)))
+      lazy val target = setupTarget(None, Some(PrivateResidenceReliefModel(prrKeys.none)))
       lazy val result = target.reliefs(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a status of 200" in {
         status(result) shouldBe 200
@@ -70,6 +75,10 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       s"return some html with title of ${messages.title}" in {
         contentType(result) shouldBe Some("text/html")
         Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+      }
+
+      "have a back link to the prr page" in {
+        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/private-residence-relief"
       }
     }
 
@@ -77,6 +86,7 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
 
       lazy val target = setupTarget(Some(ReliefsModel(true)), Some(PrivateResidenceReliefModel(prrKeys.part)))
       lazy val result = target.reliefs(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a status of 200" in {
         status(result) shouldBe 200
@@ -85,6 +95,30 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       s"return some html with title of ${messages.title}" in {
         contentType(result) shouldBe Some("text/html")
         Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+      }
+
+      "have a back link to prr value page" in {
+        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/private-residence-relief-value"
+      }
+    }
+
+    "request has a valid session and PRR is disabled" should {
+
+      lazy val target = setupTarget(None, None, false)
+      lazy val result = target.reliefs(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      s"return some html with title of ${messages.title}" in {
+        contentType(result) shouldBe Some("text/html")
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+      }
+
+      "have a back link to the improvements page" in {
+        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/improvements"
       }
     }
 

@@ -128,8 +128,9 @@ trait DeductionsController extends FeatureLock {
 
   //################# Reliefs Actions ########################
   def reliefsBackLink(isClaimingPartPRR: Boolean): Future[Option[String]] = {
-    if (isClaimingPartPRR) Future.successful(Some(controllers.resident.properties.routes.DeductionsController.privateResidenceReliefValue.toString()))
-    else Future.successful(Some(controllers.resident.properties.routes.DeductionsController.privateResidenceRelief.toString()))
+    if (!config.featureRTTPRREnabled) Future.successful(Some(controllers.resident.properties.routes.GainController.improvements().url))
+    else if (isClaimingPartPRR) Future.successful(Some(controllers.resident.properties.routes.DeductionsController.privateResidenceReliefValue().url))
+    else Future.successful(Some(controllers.resident.properties.routes.DeductionsController.privateResidenceRelief().url))
   }
 
   val reliefs = FeatureLockForRTT.async { implicit request =>
