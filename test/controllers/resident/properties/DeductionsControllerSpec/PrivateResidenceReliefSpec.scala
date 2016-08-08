@@ -29,6 +29,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.mockito.Mockito._
 import play.api.test.Helpers._
 import assets.MessageLookup.{privateResidenceRelief => messages}
+import uk.gov.hmrc.http.cache.client.CacheMap
 
 import scala.concurrent.Future
 
@@ -40,6 +41,10 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
     when(mockCalcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.eq(keystoreKeys.privateResidenceRelief))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.saveFormData[PrivateResidenceReliefModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(mock[CacheMap]))
+
 
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -88,6 +93,66 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
       "return you to the session timeout page" in {
         redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+      }
+    }
+  }
+
+  "Calling .submitPrivateResidenceRelief from the resident DeductionsController" when {
+
+    "a valid form with 'Full' prr is submitted" should {
+      lazy val target = setupTarget(Some(PrivateResidenceReliefModel("Full")))
+      lazy val request = fakeRequestToPOSTWithSession(("prrClaiming", "Full"))
+      lazy val result = target.submitPrivateResidenceRelief(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the other-properties page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/other-properties")
+      }
+    }
+
+    "a valid form with 'Part' prr is submitted" should {
+      lazy val target = setupTarget(Some(PrivateResidenceReliefModel("Part")))
+      lazy val request = fakeRequestToPOSTWithSession(("prrClaiming", "Part"))
+      lazy val result = target.submitPrivateResidenceRelief(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the private-residence-relief-value page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/private-residence-relief-value")
+      }
+    }
+
+    "a valid form with 'None' prr is submitted" should {
+      lazy val target = setupTarget(Some(PrivateResidenceReliefModel("None")))
+      lazy val request = fakeRequestToPOSTWithSession(("prrClaiming", "None"))
+      lazy val result = target.submitPrivateResidenceRelief(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the other-properties page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/reliefs")
+      }
+    }
+
+    "a invalid form with '' prr is submitted" should {
+      lazy val target = setupTarget(Some(PrivateResidenceReliefModel("")))
+      lazy val request = fakeRequestToPOSTWithSession(("prrClaiming", ""))
+      lazy val result = target.submitPrivateResidenceRelief(request)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "return a 400" in {
+        status(result) shouldBe 400
+      }
+
+      "render the Private Residence Relief page" in {
+        doc.title() shouldEqual messages.title
       }
     }
   }
