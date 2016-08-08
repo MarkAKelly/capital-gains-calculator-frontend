@@ -260,6 +260,30 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         }
       }
 
+      "has an option output row for prr" which {
+
+        s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
+          doc.select("#prr-question").text shouldBe commonMessages.privateResidenceRelief.title
+        }
+
+        s"should have the value '${commonMessages.privateResidenceRelief.no}'" in {
+          doc.select("#prr-option span.bold-medium").text shouldBe commonMessages.privateResidenceRelief.no
+        }
+
+        s"should have a change link to ${routes.DeductionsController.privateResidenceRelief().url}" in {
+          println(doc.body())
+          doc.select("#prr-option a").attr("href") shouldBe routes.DeductionsController.privateResidenceRelief().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#prr-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.privateResidenceRelief.title}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#prr-option a span.visuallyhidden").text shouldBe commonMessages.privateResidenceRelief.title
+        }
+      }
+
       "has an option output row for tax reliefs" which {
 
         s"should have the question text '${commonMessages.reliefs.questionSummary}'" in {
@@ -401,6 +425,30 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
           "include a value for Loss brought forward of £10,000" in {
             doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYear("2013/14")} £10,000")
           }
+        }
+      }
+
+      "has an option output row for prr" which {
+
+        s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
+          doc.select("#prr-question").text shouldBe commonMessages.privateResidenceRelief.title
+        }
+
+        s"should have the value '${commonMessages.privateResidenceRelief.yesPart}'" in {
+          doc.select("#prr-option span.bold-medium").text shouldBe commonMessages.privateResidenceRelief.yesPart
+        }
+
+        s"should have a change link to ${routes.DeductionsController.privateResidenceRelief().url}" in {
+          println(doc.body())
+          doc.select("#prr-option a").attr("href") shouldBe routes.DeductionsController.privateResidenceRelief().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#prr-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.privateResidenceRelief.title}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#prr-option a span.visuallyhidden").text shouldBe commonMessages.privateResidenceRelief.title
         }
       }
 
@@ -554,7 +602,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.full)),
       None,
       Some(ReliefsModel(true)),
       Some(ReliefsValueModel(BigDecimal(50000))),
@@ -594,6 +642,33 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
           doc.select("#deductions-amount").text should include("Reliefs £30,000")
         }
       }
+    }
+
+    "has an option output row for prr" which {
+
+      s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
+        doc.select("#prr-question").text shouldBe commonMessages.privateResidenceRelief.title
+      }
+
+      s"should have the value '${commonMessages.privateResidenceRelief.yesFull}'" in {
+        doc.select("#prr-option span.bold-medium").text shouldBe commonMessages.privateResidenceRelief.yesFull
+      }
+
+      s"should have a change link to ${routes.DeductionsController.privateResidenceRelief().url}" in {
+        doc.select("#prr-option a").attr("href") shouldBe routes.DeductionsController.privateResidenceRelief().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#prr-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.privateResidenceRelief.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#prr-option a span.visuallyhidden").text shouldBe commonMessages.privateResidenceRelief.title
+      }
+    }
+
+    "does not have a reliefs question row" in {
+      doc.select("#reliefs-question").isEmpty shouldBe true
     }
 
     "has a numeric output row for allowable losses remaining" which {
