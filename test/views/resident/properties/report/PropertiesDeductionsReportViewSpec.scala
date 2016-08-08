@@ -269,19 +269,6 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         s"should have the value '${commonMessages.privateResidenceRelief.no}'" in {
           doc.select("#prr-option span.bold-medium").text shouldBe commonMessages.privateResidenceRelief.no
         }
-
-        s"should have a change link to ${routes.DeductionsController.privateResidenceRelief().url}" in {
-          println(doc.body())
-          doc.select("#prr-option a").attr("href") shouldBe routes.DeductionsController.privateResidenceRelief().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#prr-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.privateResidenceRelief.title}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#prr-option a span.visuallyhidden").text shouldBe commonMessages.privateResidenceRelief.title
-        }
       }
 
       "has an option output row for tax reliefs" which {
@@ -436,19 +423,6 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
         s"should have the value '${commonMessages.privateResidenceRelief.yesPart}'" in {
           doc.select("#prr-option span.bold-medium").text shouldBe commonMessages.privateResidenceRelief.yesPart
-        }
-
-        s"should have a change link to ${routes.DeductionsController.privateResidenceRelief().url}" in {
-          println(doc.body())
-          doc.select("#prr-option a").attr("href") shouldBe routes.DeductionsController.privateResidenceRelief().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#prr-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.privateResidenceRelief.title}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#prr-option a span.visuallyhidden").text shouldBe commonMessages.privateResidenceRelief.title
         }
       }
 
@@ -652,18 +626,6 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
       s"should have the value '${commonMessages.privateResidenceRelief.yesFull}'" in {
         doc.select("#prr-option span.bold-medium").text shouldBe commonMessages.privateResidenceRelief.yesFull
-      }
-
-      s"should have a change link to ${routes.DeductionsController.privateResidenceRelief().url}" in {
-        doc.select("#prr-option a").attr("href") shouldBe routes.DeductionsController.privateResidenceRelief().url
-      }
-
-      "has the question as part of the link" in {
-        doc.select("#prr-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.privateResidenceRelief.title}"
-      }
-
-      "has the question component of the link as visuallyhidden" in {
-        doc.select("#prr-option a span.visuallyhidden").text shouldBe commonMessages.privateResidenceRelief.title
       }
     }
 

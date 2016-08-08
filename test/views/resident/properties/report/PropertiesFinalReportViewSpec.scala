@@ -287,6 +287,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         }
       }
 
+      "has an option output row for prr" which {
+
+        s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
+          doc.select("#prr-question").text shouldBe commonMessages.privateResidenceRelief.title
+        }
+
+        s"should have the value '${commonMessages.privateResidenceRelief.no}'" in {
+          doc.select("#prr-option span.bold-medium").text shouldBe commonMessages.privateResidenceRelief.no
+        }
+      }
+
       "has an option output row for tax reliefs" which {
 
         s"should have the question text '${commonMessages.reliefs.questionSummary}'" in {
@@ -366,7 +377,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       BigDecimal(10000),
       BigDecimal(30000))
 
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.part)),
       None,
       Some(ReliefsModel(false)),
       None,
@@ -411,6 +422,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         "include a value for Reliefs of £30,000" in {
           doc.select("#deductions-amount").text should include("Reliefs £30,000")
         }
+      }
+    }
+
+    "has an option output row for prr" which {
+
+      s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
+        doc.select("#prr-question").text shouldBe commonMessages.privateResidenceRelief.title
+      }
+
+      s"should have the value '${commonMessages.privateResidenceRelief.yesPart}'" in {
+        doc.select("#prr-option span.bold-medium").text shouldBe commonMessages.privateResidenceRelief.yesPart
       }
     }
 

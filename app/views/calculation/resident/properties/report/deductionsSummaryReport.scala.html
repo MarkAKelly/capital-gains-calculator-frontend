@@ -134,11 +134,11 @@
                 case "Part" => Messages("calc.resident.properties.privateResidenceRelief.partLabel")
                 case _ => Messages("calc.resident.properties.privateResidenceRelief.noneLabel")
             },
-            Some(deductionRoutes.privateResidenceRelief().toString))
+            None)
         @{if (!deductionAnswers.privateResidenceReliefModel.get.prrClaiming.equals(PrivateResidenceReliefKeys.full))
-            summaryOptionRowHelper("reliefs",Messages("calc.resident.reliefs.title"),deductionAnswers.reliefsModel.get.isClaiming, Some(deductionRoutes.reliefs().toString))}
+            summaryOptionRowHelper("reliefs",Messages("calc.resident.reliefs.title"),deductionAnswers.reliefsModel.get.isClaiming, None)}
         @{if (!deductionAnswers.privateResidenceReliefModel.get.prrClaiming.equals(PrivateResidenceReliefKeys.full) && deductionAnswers.reliefsModel.get.isClaiming)
-            summaryNumericRowHelper("reliefsValue",Messages("calc.resident.reliefsValue.title", MoneyPounds(result.gain, 0).quantity),deductionAnswers.reliefsValueModel.get.amount,Some(deductionRoutes.reliefsValue().toString))}
+            summaryNumericRowHelper("reliefsValue",Messages("calc.resident.reliefsValue.title", MoneyPounds(result.gain, 0).quantity),deductionAnswers.reliefsValueModel.get.amount,None)}
         @summaryOptionRowHelper("otherProperties", Messages("calc.resident.otherProperties.title",
         taxYear.taxYearSupplied), deductionAnswers.otherPropertiesModel.get.hasOtherProperties, None)
         @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties)
