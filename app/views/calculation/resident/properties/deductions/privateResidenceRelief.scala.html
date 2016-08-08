@@ -21,20 +21,23 @@
     homeLink = navHomeLink
 ){
 
+    @errorSummary(privateResidenceReliefForm, "private-residence-relief")
+
     <h1 class="heading-large">@Messages("calc.resident.properties.privateResidenceRelief.title")</h1>
 
-    <div id="radio-input" class="form-group">
-        @formInputRadioGroup(
-            field = privateResidenceReliefForm("prrClaiming"),
-            Seq(
-                PrivateResidenceReliefKeys.full -> Messages("calc.resident.properties.privateResidenceRelief.fullLabel"),
-                PrivateResidenceReliefKeys.part -> Messages("calc.resident.properties.privateResidenceRelief.partLabel"),
-                PrivateResidenceReliefKeys.none -> Messages("calc.resident.properties.privateResidenceRelief.noneLabel")),
-            '_legend -> radioLabel,
-            '_labelClass -> "block-label"
-        )
-    </div>
+    @form(action = controllers.resident.properties.routes.DeductionsController.submitPrivateResidenceRelief) {
+        <div id="radio-input" class="form-group">
+            @formInputRadioGroup(
+                field = privateResidenceReliefForm("prrClaiming"),
+                Seq(
+                    PrivateResidenceReliefKeys.full -> Messages("calc.resident.properties.privateResidenceRelief.fullLabel"),
+                    PrivateResidenceReliefKeys.part -> Messages("calc.resident.properties.privateResidenceRelief.partLabel"),
+                    PrivateResidenceReliefKeys.none -> Messages("calc.resident.properties.privateResidenceRelief.noneLabel")),
+                '_legend -> radioLabel,
+                '_labelClass -> "block-label"
+            )
+        </div>
 
-    <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
-
+        <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+    }
 }

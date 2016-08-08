@@ -19,10 +19,11 @@ package controllers.resident.properties.DeductionsControllerSpec
 import assets.MessageLookup.{privateResidenceReliefValue => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import common.Dates._
+import config.AppConfig
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.DeductionsController
-import models.resident.properties.{YourAnswersSummaryModel, PrivateResidenceReliefValueModel}
+import models.resident.properties.{PrivateResidenceReliefValueModel, YourAnswersSummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -55,6 +56,7 @@ class PrivateResidenceReliefValueActionSpec extends UnitSpec with WithFakeApplic
 
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
+      val config = mock[AppConfig]
     }
   }
 

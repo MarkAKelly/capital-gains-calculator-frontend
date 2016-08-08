@@ -18,6 +18,7 @@ package controllers.resident.properties.DeductionsControllerSpec
 
 import assets.MessageLookup.{lossesBroughtForwardValue => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
+import config.AppConfig
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.DeductionsController
@@ -54,6 +55,7 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
 
       new DeductionsController {
         override val calcConnector = mockCalcConnector
+        val config = mock[AppConfig]
       }
     }
 
@@ -157,6 +159,7 @@ class LossesBroughtForwardValueActionSpec extends UnitSpec with WithFakeApplicat
 
       new DeductionsController {
         override val calcConnector = mockCalcConnector
+        val config = mock[AppConfig]
       }
     }
 
