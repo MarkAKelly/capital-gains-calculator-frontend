@@ -215,7 +215,7 @@ trait CalculatorConnector {
 
   def getPropertyDeductionAnswers(implicit hc: HeaderCarrier): Future[ChargeableGainAnswers] = {
     val privateResidenceReliefModel = fetchAndGetFormData[resident.properties.PrivateResidenceReliefModel](ResidentPropertyKeys.privateResidenceRelief)
-    val privateResidenceReliefValueModel = fetchAndGetFormData[PrivateResidenceReliefValueModel](ResidentPropertyKeys.privateResidenceReliefValue)
+    val privateResidenceReliefValueModel = fetchAndGetFormData[PrivateResidenceReliefValueModel](ResidentPropertyKeys.prrValue)
     val reliefsModel = fetchAndGetFormData[ReliefsModel](ResidentPropertyKeys.reliefs)
     val reliefsValueModel = fetchAndGetFormData[ReliefsValueModel](ResidentPropertyKeys.reliefsValue)
     val otherPropertiesModel = fetchAndGetFormData[resident.OtherPropertiesModel](ResidentPropertyKeys.otherProperties)

@@ -62,8 +62,6 @@ object KeystoreKeys {
     val incomeForPreviousYear = "res:property:incomeForPreviousYear"
     val personalAllowance = "res:property:personalAllowance"
     val privateResidenceRelief = "res:property:privateResidenceRelief"
-    val privateResidenceReliefValue = "res:property:privateResidenceReliefValue"
-
   }
 
   object ResidentShareKeys {
