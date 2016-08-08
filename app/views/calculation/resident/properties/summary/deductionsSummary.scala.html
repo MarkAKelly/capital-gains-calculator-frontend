@@ -9,6 +9,7 @@
 @import controllers.resident.properties.routes.{DeductionsController => deductionRoutes}
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 @import views.html.calculation.resident.properties._
+@import common.resident.PrivateResidenceReliefKeys
 
 @(gainAnswers: YourAnswersSummaryModel, deductionAnswers: ChargeableGainAnswers, result: ChargeableGainResultModel, backUrl: String, taxYear: TaxYearModel)(implicit request: Request[_])
 
@@ -113,8 +114,16 @@ articleLayout = false
     @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),gainAnswers.acquisitionValue,Some(gainRoutes.acquisitionValue().toString))
     @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),gainAnswers.acquisitionCosts,Some(gainRoutes.acquisitionCosts().toString))
     @summaryNumericRowHelper("improvements",Messages("calc.resident.improvements.title"),gainAnswers.improvements,Some(gainRoutes.improvements().toString))
-    @summaryOptionRowHelper("reliefs",Messages("calc.resident.reliefs.title"),deductionAnswers.reliefsModel.get.isClaiming, Some(deductionRoutes.reliefs().toString))
-    @{if (deductionAnswers.reliefsModel.get.isClaiming)
+    @summaryTextRowHelper("prr",Messages("calc.resident.properties.privateResidenceRelief.title"),
+        deductionAnswers.privateResidenceReliefModel.get.prrClaiming match {
+            case "Full" => Messages("calc.resident.properties.privateResidenceRelief.fullLabel")
+            case "Part" => Messages("calc.resident.properties.privateResidenceRelief.partLabel")
+            case _ => Messages("calc.resident.properties.privateResidenceRelief.noneLabel")
+        },
+        Some(deductionRoutes.privateResidenceRelief().toString))
+    @{if (!deductionAnswers.privateResidenceReliefModel.get.prrClaiming.equals(PrivateResidenceReliefKeys.full))
+        summaryOptionRowHelper("reliefs",Messages("calc.resident.reliefs.title"),deductionAnswers.reliefsModel.get.isClaiming, Some(deductionRoutes.reliefs().toString))}
+    @{if (!deductionAnswers.privateResidenceReliefModel.get.prrClaiming.equals(PrivateResidenceReliefKeys.full) && deductionAnswers.reliefsModel.get.isClaiming)
         summaryNumericRowHelper("reliefsValue",Messages("calc.resident.reliefsValue.title", MoneyPounds(result.gain, 0).quantity),deductionAnswers.reliefsValueModel.get.amount,Some(deductionRoutes.reliefsValue().toString))}
     @summaryOptionRowHelper("otherProperties",Messages("calc.resident.otherProperties.title", taxYear.taxYearSupplied),deductionAnswers.otherPropertiesModel.get.hasOtherProperties,Some(deductionRoutes.otherProperties().toString))
     @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties)
