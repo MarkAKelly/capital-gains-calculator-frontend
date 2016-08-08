@@ -426,6 +426,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         }
       }
 
+      "has a numeric output row for prr value" which {
+
+        s"should have the question text '${commonMessages.privateResidenceReliefValue.title("50,000")}'" in {
+          doc.select("#prrValue-question").text shouldBe commonMessages.privateResidenceReliefValue.title("50,000")
+        }
+
+        "should have the value '£1,500'" in {
+          doc.select("#prrValue-amount span.bold-medium").text shouldBe "£1,500"
+        }
+      }
+
       "has a numeric output row for allowable losses remaining" which {
 
         "should have the question text for an in year loss" in {
