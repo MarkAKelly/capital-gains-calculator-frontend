@@ -59,7 +59,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           None,
           None)
         val result = CalculateRequestConstructor.chargeableGainRequestString(answers, BigDecimal(11100))
-        result shouldBe "&annualExemptAmount=11100"
+        result shouldBe "&annualExemptAmount=11100&prr=None"
       }
     }
 
@@ -77,7 +77,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           Some(LossesBroughtForwardValueModel(BigDecimal(2000))),
           Some(AnnualExemptAmountModel(BigDecimal(3000))))
         val result = CalculateRequestConstructor.chargeableGainRequestString(answers, BigDecimal(11100))
-        result shouldBe "&reliefs=1000&broughtForwardLosses=2000&annualExemptAmount=3000"
+        result shouldBe "&reliefs=1000&broughtForwardLosses=2000&annualExemptAmount=3000&prr=Part&prrValue=1500"
       }
     }
 
@@ -95,7 +95,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           Some(LossesBroughtForwardValueModel(BigDecimal(2000))),
           Some(AnnualExemptAmountModel(BigDecimal(3000))))
         val result = CalculateRequestConstructor.chargeableGainRequestString(answers, BigDecimal(11100))
-        result shouldBe "&reliefs=1000&allowableLosses=1000&broughtForwardLosses=2000&annualExemptAmount=11100"
+        result shouldBe "&allowableLosses=1000&broughtForwardLosses=2000&annualExemptAmount=11100&prr=Full"
       }
     }
   }
