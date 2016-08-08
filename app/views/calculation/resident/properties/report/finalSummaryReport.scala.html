@@ -95,6 +95,9 @@
                 case _ => Messages("calc.resident.properties.privateResidenceRelief.noneLabel")
             },
             None)
+        @{if (deductionAnswers.privateResidenceReliefModel.get.prrClaiming.equals(PrivateResidenceReliefKeys.part))
+            summaryNumericRowHelper("prrValue", Messages("calc.resident.prrValue.title", MoneyPounds(result.gain, 0).quantity),
+            deductionAnswers.privateResidenceReliefValueModel.get.amount, None)}
         @{if (!deductionAnswers.privateResidenceReliefModel.get.prrClaiming.equals(PrivateResidenceReliefKeys.full))
             summaryOptionRowHelper("reliefs",Messages("calc.resident.reliefs.title"),deductionAnswers.reliefsModel.get.isClaiming, None)}
         @{if (!deductionAnswers.privateResidenceReliefModel.get.prrClaiming.equals(PrivateResidenceReliefKeys.full) && deductionAnswers.reliefsModel.get.isClaiming)

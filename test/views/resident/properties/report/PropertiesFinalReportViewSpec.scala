@@ -24,7 +24,7 @@ import assets.{MessageLookup => commonMessages}
 import assets.MessageLookup.{summaryPage => messages}
 import common.resident.PrivateResidenceReliefKeys
 import models.resident._
-import models.resident.properties.{ChargeableGainAnswers, PrivateResidenceReliefModel, ReliefsModel, YourAnswersSummaryModel}
+import models.resident.properties._
 import org.jsoup.Jsoup
 import views.html.calculation.resident.properties.{report => views}
 
@@ -378,7 +378,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       BigDecimal(30000))
 
     lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.part)),
-      None,
+      Some(PrivateResidenceReliefValueModel(1500)),
       Some(ReliefsModel(false)),
       None,
       Some(OtherPropertiesModel(true)),
@@ -433,6 +433,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
       s"should have the value '${commonMessages.privateResidenceRelief.yesPart}'" in {
         doc.select("#prr-option span.bold-medium").text shouldBe commonMessages.privateResidenceRelief.yesPart
+      }
+    }
+
+    "has a numeric output row for prr value" which {
+
+      s"should have the question text '${commonMessages.privateResidenceReliefValue.title("50,000")}'" in {
+        doc.select("#prrValue-question").text shouldBe commonMessages.privateResidenceReliefValue.title("50,000")
+      }
+
+      "should have the value '£1,500'" in {
+        doc.select("#prrValue-amount span.bold-medium").text shouldBe "£1,500"
       }
     }
 
