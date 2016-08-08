@@ -57,6 +57,7 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
       18,
       Some(10000),
       Some(28),
+      None,
       None
     )
 
@@ -349,6 +350,7 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
       18,
       Some(10000),
       Some(28),
+      None,
       None
     )
 

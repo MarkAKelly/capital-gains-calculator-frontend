@@ -60,6 +60,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       18,
       None,
       None,
+      Some(BigDecimal(0)),
       Some(BigDecimal(0))
     )
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
@@ -474,6 +475,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       18,
       None,
       None,
+      Some(BigDecimal(0)),
       Some(BigDecimal(0))
     )
 
@@ -659,7 +661,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       18,
       Some(10000),
       Some(28),
-      Some(BigDecimal(1000))
+      Some(BigDecimal(1000)),
+      Some(BigDecimal(2000))
     )
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
@@ -773,6 +776,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       18,
       Some(0),
       Some(28),
+      Some(BigDecimal(0)),
       Some(BigDecimal(0))
     )
 
@@ -866,6 +870,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       18,
       Some(10000),
       Some(28),
+      Some(BigDecimal(0)),
       Some(BigDecimal(0))
     )
 
@@ -931,6 +936,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       18,
       Some(10000),
       Some(28),
+      Some(BigDecimal(0)),
       Some(BigDecimal(0))
     )
 

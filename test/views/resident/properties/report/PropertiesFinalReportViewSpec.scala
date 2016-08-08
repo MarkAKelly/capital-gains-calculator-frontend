@@ -62,6 +62,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       18,
       Some(10000),
       Some(28),
+      Some(BigDecimal(0)),
       Some(BigDecimal(0))
     )
 
@@ -384,7 +385,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       18,
       Some(10000),
       Some(28),
-      Some(BigDecimal(30000))
+      Some(BigDecimal(30000)),
+      Some(BigDecimal(2000))
     )
 
     lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel)(fakeRequestWithSession)
