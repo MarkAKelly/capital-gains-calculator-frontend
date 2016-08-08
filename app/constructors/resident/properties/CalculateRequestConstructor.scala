@@ -35,7 +35,7 @@ object CalculateRequestConstructor {
   }
 
   def chargeableGainRequestString (answers: ChargeableGainAnswers, maxAEA: BigDecimal): String = {
-    s"${if (answers.reliefsModel.get.isClaiming)
+    s"${if (answers.reliefsModel.isDefined && answers.reliefsModel.get.isClaiming)
       s"&reliefs=${answers.reliefsValueModel.get.amount}"
     else ""}" +
     s"${if (answers.otherPropertiesModel.get.hasOtherProperties && answers.allowableLossesModel.get.isClaiming)
