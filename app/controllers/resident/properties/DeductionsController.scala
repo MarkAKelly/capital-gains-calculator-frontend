@@ -81,12 +81,41 @@ trait DeductionsController extends FeatureLock {
   private val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
 
   //########## Private Residence Relief Actions ##############
+
+  val prrBackLink = Some(routes.GainController.improvements().url)
+
   val privateResidenceRelief = FeatureLockForPRR.async { implicit request =>
-    val backLink = Some(routes.GainController.improvements().url)
     calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief).map {
-      case Some(data) => Ok(views.privateResidenceRelief(privateResidenceReliefForm.fill(data), homeLink, backLink))
-      case None => Ok(views.privateResidenceRelief(privateResidenceReliefForm, homeLink, backLink))
+      case Some(data) => Ok(views.privateResidenceRelief(privateResidenceReliefForm.fill(data), homeLink, prrBackLink))
+      case None => Ok(views.privateResidenceRelief(privateResidenceReliefForm, homeLink, prrBackLink))
     }
+  }
+
+  val submitPrivateResidenceRelief = FeatureLockForPRR.async { implicit request =>
+
+    def errorAction(form : Form[PrivateResidenceReliefModel]) = {
+      Future.successful(BadRequest(views.privateResidenceRelief(form, homeLink, prrBackLink)))
+    }
+
+    def successAction(model : PrivateResidenceReliefModel) = {
+      for {
+        save <- calcConnector.saveFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief, model)
+        route <- routeRequest(model)
+      } yield route
+    }
+
+    def routeRequest(data : PrivateResidenceReliefModel): Future[Result] = {
+      data.prrClaiming match {
+        case "Full" => Future.successful(Redirect(routes.DeductionsController.otherProperties()))
+        case "Part" => Future.successful(Redirect(routes.DeductionsController.privateResidenceReliefValue()))
+        case "None" => Future.successful(Redirect(routes.DeductionsController.reliefs()))
+      }
+    }
+
+    privateResidenceReliefForm.bindFromRequest.fold(
+      errors => errorAction(errors),
+      success => successAction(success)
+    )
   }
 
   //########## Private Residence Relief Actions ##############
