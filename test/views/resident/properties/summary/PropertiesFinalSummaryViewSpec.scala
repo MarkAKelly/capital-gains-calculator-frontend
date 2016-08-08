@@ -25,9 +25,10 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{summary => views}
 import assets.{MessageLookup => commonMessages}
 import common.Dates._
+import common.resident.PrivateResidenceReliefKeys
 import controllers.resident.properties.routes
 import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, PreviousTaxableGainsModel}
-import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, YourAnswersSummaryModel}
+import models.resident.properties._
 
 class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
@@ -38,7 +39,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
+      None,
+      Some(ReliefsModel(false)),
       None,
       Some(OtherPropertiesModel(false)),
       None,
@@ -448,7 +451,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.part)),
+      Some(PrivateResidenceReliefValueModel(1500)),
+      Some(ReliefsModel(false)),
       None,
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -631,7 +636,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.full)),
+      None,
+      Some(ReliefsModel(false)),
       None,
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -743,7 +750,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(0),
       BigDecimal(0),
       BigDecimal(0))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
+      None,
+      Some(ReliefsModel(false)),
       None,
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -834,7 +843,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
+      None,
+      Some(ReliefsModel(false)),
       None,
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -897,7 +908,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
+      None,
+      Some(ReliefsModel(false)),
       None,
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),

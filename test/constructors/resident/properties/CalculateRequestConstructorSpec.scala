@@ -17,8 +17,9 @@
 package constructors.resident.properties
 
 import common.Dates
+import common.resident.PrivateResidenceReliefKeys
 import models.resident._
-import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, ReliefsValueModel, YourAnswersSummaryModel}
+import models.resident.properties._
 import uk.gov.hmrc.play.test.UnitSpec
 
 class CalculateRequestConstructorSpec extends UnitSpec {
@@ -47,7 +48,9 @@ class CalculateRequestConstructorSpec extends UnitSpec {
     "supplied with no optional values" should {
 
       "return a valid url variable string" in {
-        val answers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+        val answers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
+          None,
+          Some(ReliefsModel(false)),
           None,
           Some(OtherPropertiesModel(false)),
           None,
@@ -63,7 +66,9 @@ class CalculateRequestConstructorSpec extends UnitSpec {
     "supplied with all optional values except allowable losses" should {
 
       "return a valid url variable string" in {
-        val answers = ChargeableGainAnswers(Some(ReliefsModel(true)),
+        val answers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.part)),
+          Some(PrivateResidenceReliefValueModel(1500)),
+          Some(ReliefsModel(true)),
           Some(ReliefsValueModel(BigDecimal(1000))),
           Some(OtherPropertiesModel(true)),
           Some(AllowableLossesModel(false)),
@@ -79,7 +84,9 @@ class CalculateRequestConstructorSpec extends UnitSpec {
     "supplied with all optional values including allowable losses" should {
 
       "return a valid url variable string" in {
-        val answers = ChargeableGainAnswers(Some(ReliefsModel(true)),
+        val answers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.full)),
+          None,
+          Some(ReliefsModel(true)),
           Some(ReliefsValueModel(BigDecimal(1000))),
           Some(OtherPropertiesModel(true)),
           Some(AllowableLossesModel(true)),

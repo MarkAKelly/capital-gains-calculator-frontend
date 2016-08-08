@@ -25,7 +25,7 @@ import constructors.resident.{shares, properties => propertyConstructor}
 import constructors.{resident => residentConstructors}
 import models.nonresident._
 import models.resident
-import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, ReliefsValueModel, YourAnswersSummaryModel}
+import models.resident.properties.{ImprovementsModel => _, PrivateResidenceReliefModel => _, _}
 import models.resident.{IncomeAnswersModel, TaxYearModel, properties}
 import play.api.libs.json.Format
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
@@ -214,6 +214,8 @@ trait CalculatorConnector {
   }
 
   def getPropertyDeductionAnswers(implicit hc: HeaderCarrier): Future[ChargeableGainAnswers] = {
+    val privateResidenceReliefModel = fetchAndGetFormData[resident.properties.PrivateResidenceReliefModel](ResidentPropertyKeys.privateResidenceRelief)
+    val privateResidenceReliefValueModel = fetchAndGetFormData[PrivateResidenceReliefValueModel](ResidentPropertyKeys.privateResidenceReliefValue)
     val reliefsModel = fetchAndGetFormData[ReliefsModel](ResidentPropertyKeys.reliefs)
     val reliefsValueModel = fetchAndGetFormData[ReliefsValueModel](ResidentPropertyKeys.reliefsValue)
     val otherPropertiesModel = fetchAndGetFormData[resident.OtherPropertiesModel](ResidentPropertyKeys.otherProperties)
@@ -224,6 +226,8 @@ trait CalculatorConnector {
     val annualExemptAmountModel = fetchAndGetFormData[resident.AnnualExemptAmountModel](ResidentPropertyKeys.annualExemptAmount)
 
     for {
+      privateResidenceRelief <- privateResidenceReliefModel
+      privateResidenceReliefValue <- privateResidenceReliefValueModel
       reliefs <- reliefsModel
       reliefsValue <- reliefsValueModel
       otherProperties <- otherPropertiesModel
@@ -233,7 +237,9 @@ trait CalculatorConnector {
       broughtForwardValue <- broughtForwardValueModel
       annualExemptAmount <- annualExemptAmountModel
     } yield {
-      properties.ChargeableGainAnswers(reliefs,
+      properties.ChargeableGainAnswers(privateResidenceRelief,
+        privateResidenceReliefValue,
+        reliefs,
         reliefsValue,
         otherProperties,
         allowableLosses,

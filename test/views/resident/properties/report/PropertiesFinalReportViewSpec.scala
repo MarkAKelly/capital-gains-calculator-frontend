@@ -22,8 +22,9 @@ import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, Previ
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.{MessageLookup => commonMessages}
 import assets.MessageLookup.{summaryPage => messages}
+import common.resident.PrivateResidenceReliefKeys
 import models.resident._
-import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, YourAnswersSummaryModel}
+import models.resident.properties.{ChargeableGainAnswers, PrivateResidenceReliefModel, ReliefsModel, YourAnswersSummaryModel}
 import org.jsoup.Jsoup
 import views.html.calculation.resident.properties.{report => views}
 
@@ -38,7 +39,9 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       BigDecimal(10000),
       BigDecimal(30000))
 
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
+      None,
+      Some(ReliefsModel(false)),
       None,
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -358,7 +361,9 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       BigDecimal(10000),
       BigDecimal(30000))
 
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
+      None,
+      Some(ReliefsModel(false)),
       None,
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
