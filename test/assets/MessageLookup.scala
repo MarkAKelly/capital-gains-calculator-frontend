@@ -267,6 +267,9 @@ object MessageLookup {
     val legendLink = "Private Residence Relief"
     val legendSecondSection = "if you've lived at the property"
     val errorSelect = "Tell us if you want to claim Private Residence Relief"
+    val yesPart = "Yes, part relief"
+    val yesFull = "Yes, full relief"
+    val no = "No"
   }
 
   //############ Shares messages ##############//
