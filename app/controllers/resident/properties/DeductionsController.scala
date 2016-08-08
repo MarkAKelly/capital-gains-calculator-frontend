@@ -18,6 +18,7 @@ package controllers.resident.properties
 
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import common.resident.{PrivateResidenceReliefKeys => prrKeys}
+import config.{AppConfig, ApplicationConfig}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import models.resident._
@@ -43,11 +44,13 @@ import scala.concurrent.Future
 
 object DeductionsController extends DeductionsController {
   val calcConnector = CalculatorConnector
+  val config = ApplicationConfig
 }
 
 trait DeductionsController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
+  val config: AppConfig
 
   def getDisposalDate(implicit hc: HeaderCarrier): Future[Option[DisposalDateModel]] = {
     calcConnector.fetchAndGetFormData[DisposalDateModel](keystoreKeys.disposalDate)
@@ -64,6 +67,13 @@ trait DeductionsController extends FeatureLock {
   def isClaimingPartPRR(prr: Option[PrivateResidenceReliefModel]): Future[Boolean] = {
     prr match {
       case Some(PrivateResidenceReliefModel(prrKeys.part)) => Future.successful(true)
+      case _ => Future.successful(false)
+    }
+  }
+
+  def isClaimingFullPRR(prr: Option[PrivateResidenceReliefModel]): Future[Boolean] = {
+    prr match {
+      case Some(PrivateResidenceReliefModel(prrKeys.full)) => Future.successful(true)
       case _ => Future.successful(false)
     }
   }
@@ -147,8 +157,9 @@ trait DeductionsController extends FeatureLock {
 
   //################# Reliefs Actions ########################
   def reliefsBackLink(isClaimingPartPRR: Boolean): Future[Option[String]] = {
-    if (isClaimingPartPRR) Future.successful(Some(controllers.resident.properties.routes.DeductionsController.privateResidenceReliefValue.toString()))
-    else Future.successful(Some(controllers.resident.properties.routes.DeductionsController.privateResidenceRelief.toString()))
+    if (!config.featureRTTPRREnabled) Future.successful(Some(controllers.resident.properties.routes.GainController.improvements().url))
+    else if (isClaimingPartPRR) Future.successful(Some(controllers.resident.properties.routes.DeductionsController.privateResidenceReliefValue().url))
+    else Future.successful(Some(controllers.resident.properties.routes.DeductionsController.privateResidenceRelief().url))
   }
 
   val reliefs = FeatureLockForRTT.async { implicit request =>
@@ -232,8 +243,9 @@ trait DeductionsController extends FeatureLock {
   }
 
   //################# Other Properties Actions #########################
-  def otherPropertiesBackUrl(implicit hc: HeaderCarrier): Future[String] = {
-    calcConnector.fetchAndGetFormData[ReliefsModel](keystoreKeys.reliefs).flatMap {
+  def otherPropertiesBackUrl(isClaimingFullPrr: Boolean)(implicit hc: HeaderCarrier): Future[String] = {
+    if (config.featureRTTPRREnabled && isClaimingFullPrr) Future.successful(routes.DeductionsController.privateResidenceRelief().url)
+    else calcConnector.fetchAndGetFormData[ReliefsModel](keystoreKeys.reliefs).flatMap {
       case Some(ReliefsModel(true)) => Future.successful(routes.DeductionsController.reliefsValue().url)
       case _ => Future.successful(routes.DeductionsController.reliefs().url)
     }
@@ -249,7 +261,9 @@ trait DeductionsController extends FeatureLock {
     }
 
     for {
-      backUrl <- otherPropertiesBackUrl
+      prr <- calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief)
+      isClaimingFullPrr <- isClaimingFullPRR(prr)
+      backUrl <- otherPropertiesBackUrl(isClaimingFullPrr)
       disposalDate <- getDisposalDate
       disposalDateString <- formatDisposalDate(disposalDate.get)
       taxYear <- calcConnector.getTaxYear(disposalDateString)
@@ -273,7 +287,9 @@ trait DeductionsController extends FeatureLock {
       )
     }
     for {
-      backUrl <- otherPropertiesBackUrl
+      prr <- calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief)
+      isClaimingFullPrr <- isClaimingFullPRR(prr)
+      backUrl <- otherPropertiesBackUrl(isClaimingFullPrr)
       disposalDate <- getDisposalDate
       disposalDateString <- formatDisposalDate(disposalDate.get)
       taxYear <- calcConnector.getTaxYear(disposalDateString)

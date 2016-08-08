@@ -23,8 +23,9 @@ import org.jsoup.Jsoup
 import play.api.test.Helpers._
 import assets.MessageLookup.{allowableLossesValue => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
+import config.AppConfig
 import connectors.CalculatorConnector
-import models.resident.{TaxYearModel, AllowableLossesValueModel, DisposalDateModel}
+import models.resident.{AllowableLossesValueModel, DisposalDateModel, TaxYearModel}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -55,6 +56,7 @@ class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication w
 
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
+      val config = mock[AppConfig]
     }
   }
 

@@ -30,6 +30,7 @@ import org.mockito.Mockito._
 import play.api.test.Helpers._
 import assets.MessageLookup.{privateResidenceRelief => messages}
 import uk.gov.hmrc.http.cache.client.CacheMap
+import config.AppConfig
 
 import scala.concurrent.Future
 
@@ -48,6 +49,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
+      val config = mock[AppConfig]
     }
   }
 
