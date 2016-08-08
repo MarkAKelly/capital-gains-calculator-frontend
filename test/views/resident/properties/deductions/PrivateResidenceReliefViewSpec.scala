@@ -28,7 +28,7 @@ import views.html.calculation.resident.properties.{deductions => views}
 
 class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Allowable Losses Value view with no form errors" should {
+  "Private Residence Relief view with no form errors" should {
 
     lazy val form = privateResidenceReliefForm
     lazy val view = views.privateResidenceRelief(
@@ -281,6 +281,38 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
 
       s"has the text ${commonMessages.calcBaseContinue}" in {
         button.text shouldEqual s"${commonMessages.calcBaseContinue}"
+      }
+    }
+  }
+
+  "Private Residence Relief view with form errors" should {
+
+    lazy val form = privateResidenceReliefForm.bind(Map("prrClaiming" -> ""))
+    lazy val view = views.privateResidenceRelief(
+      form,
+      "home",
+      Some("back"))(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "have a charset of UTF-8" in {
+      doc.charset().toString shouldBe "UTF-8"
+    }
+
+    s"have a title of ${messages.title}" in {
+      doc.title() shouldBe messages.title
+    }
+
+    s"have the home link too 'home'" in {
+      doc.select("#homeNavHref").attr("href") shouldEqual "home"
+    }
+
+    "have an error summary" which {
+      "display an error summary message for the page" in {
+        doc.body.select("#prrClaiming-error-summary").size shouldBe 1
+      }
+
+      "display an error message for the input" in {
+        doc.body.select(".form-group .error-notification").size shouldBe 1
       }
     }
   }
