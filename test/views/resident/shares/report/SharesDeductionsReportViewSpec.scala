@@ -48,6 +48,7 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(11100),
       BigDecimal(0),
       BigDecimal(0),
+      None,
       None)
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
@@ -281,6 +282,7 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(71000),
       BigDecimal(1000),
       BigDecimal(2000),
+      None,
       None)
 
     lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
@@ -487,6 +489,7 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(71000),
       BigDecimal(1000),
       BigDecimal(0),
+      None,
       None)
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
