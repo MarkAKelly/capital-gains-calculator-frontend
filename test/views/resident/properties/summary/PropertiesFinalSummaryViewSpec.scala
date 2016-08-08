@@ -619,6 +619,29 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
     }
 
+    "has a numeric output row for prr value" which {
+
+      s"should have the question text '${commonMessages.privateResidenceReliefValue.title("50,000")}'" in {
+        doc.select("#prrValue-question").text shouldBe commonMessages.privateResidenceReliefValue.title("50,000")
+      }
+
+      "should have the value '£1,500'" in {
+        doc.select("#prrValue-amount span.bold-medium").text shouldBe "£1,500"
+      }
+
+      s"should have a change link to ${routes.DeductionsController.privateResidenceReliefValue().url}" in {
+        doc.select("#prrValue-amount a").attr("href") shouldBe routes.DeductionsController.privateResidenceReliefValue().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#prrValue-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.privateResidenceReliefValue.title("50,000")}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#prrValue-amount a span.visuallyhidden").text shouldBe commonMessages.privateResidenceReliefValue.title("50,000")
+      }
+    }
+
     "has an option output row for previous taxable gains" which {
 
       s"should have the question text '${commonMessages.previousTaxableGains.title}'" in {
