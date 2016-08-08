@@ -151,6 +151,10 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
 
         "has a breakdown that" should {
 
+          "include a value for PRR of £0" in {
+            doc.select("#deductions-amount").text should include("Private Residence Relief used £0")
+          }
+
           "include a value for Reliefs of £0" in {
             doc.select("#deductions-amount").text should include("Reliefs £0")
           }
@@ -701,6 +705,10 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
 
       "include a value for Reliefs of £1,000" in {
         doc.select("#deductions-amount").text should include("Reliefs £1,000")
+      }
+
+      "include a value for PRR of £2,000" in {
+        doc.select("#deductions-amount").text should include("Private Residence Relief used £2,000")
       }
     }
 
