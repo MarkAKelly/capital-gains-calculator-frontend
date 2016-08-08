@@ -146,6 +146,10 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
 
         "has a breakdown that" should {
 
+          "include a value for PRR of £0" in {
+            doc.select("#deductions-amount").text should include("Private Residence Relief used £0")
+          }
+
           "include a value for Reliefs of £0" in {
             doc.select("#deductions-amount").text should include("Reliefs £0")
           }
@@ -511,6 +515,10 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
 
         "has a breakdown that" should {
 
+          "include a value for PRR of £1,000" in {
+            doc.select("#deductions-amount").text should include("Private Residence Relief used £1,000")
+          }
+
           "include a value for Reliefs of £50,000" in {
             doc.select("#deductions-amount").text should include("Reliefs £50,000")
           }
@@ -803,6 +811,10 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
 
         "include a value for Reliefs of £30,000" in {
           doc.select("#deductions-amount").text should include("Reliefs £30,000")
+        }
+
+        "include a value for PRR of £1,500" in {
+          doc.select("#deductions-amount").text should include("Private Residence Relief used £1,500")
         }
       }
     }
