@@ -18,6 +18,7 @@ package controllers.resident.properties.DeductionsControllerSpec
 
 import assets.MessageLookup.{allowableLosses => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
+import config.{AppConfig, ApplicationConfig}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.DeductionsController
@@ -54,6 +55,7 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
 
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
+      val config = mock[AppConfig]
     }
   }
 

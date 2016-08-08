@@ -19,6 +19,7 @@ package controllers.resident.properties.DeductionsControllerSpec
 import assets.MessageLookup.{annualExemptAmount => messages}
 import common.KeystoreKeys
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
+import config.AppConfig
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.DeductionsController
@@ -80,6 +81,7 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
 
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
+      val config = mock[AppConfig]
     }
   }
 
