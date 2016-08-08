@@ -36,16 +36,16 @@ class PrivateResidenceReliefValueViewSpec extends UnitSpec with WithFakeApplicat
       doc.charset.toString shouldBe "UTF-8"
     }
 
-    s"have a title ${messages.title(400)}" in {
-      doc.title shouldBe messages.title(400)
+    s"have a title ${messages.title("400")}" in {
+      doc.title shouldBe messages.title("400")
     }
 
-    s"have the text ${messages.title(400)} as the h1 tag" in {
-      doc.select("h1").text shouldEqual messages.title(400)
+    s"have the text ${messages.title("400")} as the h1 tag" in {
+      doc.select("h1").text shouldEqual messages.title("400")
     }
 
-    s"have a hidden legend with the text ${messages.title(400)}" in {
-      doc.select("label span.visuallyhidden").text shouldEqual messages.title(400)
+    s"have a hidden legend with the text ${messages.title("400")}" in {
+      doc.select("label span.visuallyhidden").text shouldEqual messages.title("400")
     }
 
     "render an input field for the reliefs amount" in {
