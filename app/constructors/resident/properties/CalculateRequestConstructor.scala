@@ -48,7 +48,7 @@ object CalculateRequestConstructor {
     s"&annualExemptAmount=${if (isUsingAnnualExemptAmount(answers.otherPropertiesModel, answers.allowableLossesModel, answers.allowableLossesValueModel)) {
       answers.annualExemptAmountModel.get.amount}
     else maxAEA}" +
-    s"&prr=${answers.privateResidenceReliefModel.get.prrClaiming}" +
+    s"&prrType=${answers.privateResidenceReliefModel.get.prrClaiming}" +
     s"${if (answers.privateResidenceReliefModel.get.prrClaiming.equals(PrivateResidenceReliefKeys.part)) {
       s"&prrValue=${answers.privateResidenceReliefValueModel.get.amount}"
     } else ""}"
