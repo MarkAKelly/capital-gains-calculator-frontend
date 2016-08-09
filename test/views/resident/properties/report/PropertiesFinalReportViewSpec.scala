@@ -22,8 +22,9 @@ import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, Previ
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.{MessageLookup => commonMessages}
 import assets.MessageLookup.{summaryPage => messages}
+import common.resident.PrivateResidenceReliefKeys
 import models.resident._
-import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, YourAnswersSummaryModel}
+import models.resident.properties._
 import org.jsoup.Jsoup
 import views.html.calculation.resident.properties.{report => views}
 
@@ -38,7 +39,9 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       BigDecimal(10000),
       BigDecimal(30000))
 
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
+      None,
+      Some(ReliefsModel(false)),
       None,
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -59,6 +62,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       18,
       Some(10000),
       Some(28),
+      Some(BigDecimal(0)),
       Some(BigDecimal(0))
     )
 
@@ -129,6 +133,10 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         }
 
         "has a breakdown that" should {
+
+          "include a value for PRR of £0" in {
+            doc.select("#deductions-amount").text should include("Private Residence Relief used £0")
+          }
 
           "include a value for Reliefs of £0" in {
             doc.select("#deductions-amount").text should include("Reliefs £0")
@@ -279,6 +287,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         }
       }
 
+      "has an option output row for prr" which {
+
+        s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
+          doc.select("#prr-question").text shouldBe commonMessages.privateResidenceRelief.title
+        }
+
+        s"should have the value '${commonMessages.privateResidenceRelief.no}'" in {
+          doc.select("#prr-option span.bold-medium").text shouldBe commonMessages.privateResidenceRelief.no
+        }
+      }
+
       "has an option output row for tax reliefs" which {
 
         s"should have the question text '${commonMessages.reliefs.questionSummary}'" in {
@@ -358,7 +377,9 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       BigDecimal(10000),
       BigDecimal(30000))
 
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.part)),
+      Some(PrivateResidenceReliefValueModel(1500)),
+      Some(ReliefsModel(false)),
       None,
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -379,7 +400,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       18,
       Some(10000),
       Some(28),
-      Some(BigDecimal(30000))
+      Some(BigDecimal(30000)),
+      Some(BigDecimal(2000))
     )
 
     lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel)(fakeRequestWithSession)
@@ -393,9 +415,35 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
       "has a breakdown that" should {
 
+        "include a value for PRR of £2,000" in {
+          doc.select("#deductions-amount").text should include("Private Residence Relief used £2,000")
+        }
+
         "include a value for Reliefs of £30,000" in {
           doc.select("#deductions-amount").text should include("Reliefs £30,000")
         }
+      }
+    }
+
+    "has an option output row for prr" which {
+
+      s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
+        doc.select("#prr-question").text shouldBe commonMessages.privateResidenceRelief.title
+      }
+
+      s"should have the value '${commonMessages.privateResidenceRelief.yesPart}'" in {
+        doc.select("#prr-option span.bold-medium").text shouldBe commonMessages.privateResidenceRelief.yesPart
+      }
+    }
+
+    "has a numeric output row for prr value" which {
+
+      s"should have the question text '${commonMessages.privateResidenceReliefValue.title("50,000")}'" in {
+        doc.select("#prrValue-question").text shouldBe commonMessages.privateResidenceReliefValue.title("50,000")
+      }
+
+      "should have the value '£1,500'" in {
+        doc.select("#prrValue-amount span.bold-medium").text shouldBe "£1,500"
       }
     }
 

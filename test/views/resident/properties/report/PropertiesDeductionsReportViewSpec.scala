@@ -20,10 +20,11 @@ import assets.MessageLookup.{summaryPage => messages}
 import assets.{MessageLookup => commonMessages}
 import common.Dates
 import common.Dates._
+import common.resident.PrivateResidenceReliefKeys
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.routes
 import models.resident._
-import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, ReliefsValueModel, YourAnswersSummaryModel}
+import models.resident.properties._
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{report => views}
@@ -37,7 +38,9 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
+      None,
+      Some(ReliefsModel(false)),
       None,
       Some(OtherPropertiesModel(false)),
       None,
@@ -52,6 +55,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(11100),
       BigDecimal(0),
       BigDecimal(0),
+      Some(BigDecimal(0)),
       Some(BigDecimal(0)))
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
@@ -124,6 +128,10 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         }
 
         "has a breakdown that" should {
+
+          "include a value for PRR of £0" in {
+            doc.select("#deductions-amount").text should include("Private Residence Relief used £0")
+          }
 
           "include a value for Reliefs of £0" in {
             doc.select("#deductions-amount").text should include("Reliefs £0")
@@ -252,6 +260,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         }
       }
 
+      "has an option output row for prr" which {
+
+        s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
+          doc.select("#prr-question").text shouldBe commonMessages.privateResidenceRelief.title
+        }
+
+        s"should have the value '${commonMessages.privateResidenceRelief.no}'" in {
+          doc.select("#prr-option span.bold-medium").text shouldBe commonMessages.privateResidenceRelief.no
+        }
+      }
+
       "has an option output row for tax reliefs" which {
 
         s"should have the question text '${commonMessages.reliefs.questionSummary}'" in {
@@ -294,7 +313,9 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(true)),
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.part)),
+      Some(PrivateResidenceReliefValueModel(1500)),
+      Some(ReliefsModel(true)),
       Some(ReliefsValueModel(BigDecimal(50000))),
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
@@ -309,7 +330,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(71000),
       BigDecimal(1000),
       BigDecimal(2000),
-      Some(BigDecimal(50000)))
+      Some(BigDecimal(50000)),
+      Some(BigDecimal(1000)))
 
     lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
 
@@ -371,6 +393,10 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
         "has a breakdown that" should {
 
+          "include a value for PRR of £1,000" in {
+            doc.select("#deductions-amount").text should include("Private Residence Relief used £1,000")
+          }
+
           "include a value for Reliefs of £50,000" in {
             doc.select("#deductions-amount").text should include("Reliefs £50,000")
           }
@@ -386,6 +412,28 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
           "include a value for Loss brought forward of £10,000" in {
             doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYear("2013/14")} £10,000")
           }
+        }
+      }
+
+      "has an option output row for prr" which {
+
+        s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
+          doc.select("#prr-question").text shouldBe commonMessages.privateResidenceRelief.title
+        }
+
+        s"should have the value '${commonMessages.privateResidenceRelief.yesPart}'" in {
+          doc.select("#prr-option span.bold-medium").text shouldBe commonMessages.privateResidenceRelief.yesPart
+        }
+      }
+
+      "has a numeric output row for prr value" which {
+
+        s"should have the question text '${commonMessages.privateResidenceReliefValue.title("50,000")}'" in {
+          doc.select("#prrValue-question").text shouldBe commonMessages.privateResidenceReliefValue.title("50,000")
+        }
+
+        "should have the value '£1,500'" in {
+          doc.select("#prrValue-amount span.bold-medium").text shouldBe "£1,500"
         }
       }
 
@@ -539,7 +587,9 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(true)),
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.full)),
+      None,
+      Some(ReliefsModel(true)),
       Some(ReliefsValueModel(BigDecimal(50000))),
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -554,7 +604,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(71000),
       BigDecimal(1000),
       BigDecimal(0),
-      Some(BigDecimal(30000)))
+      Some(BigDecimal(30000)),
+      Some(BigDecimal(1500)))
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
     lazy val view = views.deductionsSummaryReport(gainAnswers, deductionAnswers, results, taxYearModel)(fakeRequestWithSession)
@@ -568,10 +619,29 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
       "has a breakdown that" should {
 
+        "include a value for PRR of £1,500" in {
+          doc.select("#deductions-amount").text should include("Private Residence Relief used £1,500")
+        }
+
         "include a value for Reliefs of £30,000" in {
           doc.select("#deductions-amount").text should include("Reliefs £30,000")
         }
       }
+    }
+
+    "has an option output row for prr" which {
+
+      s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
+        doc.select("#prr-question").text shouldBe commonMessages.privateResidenceRelief.title
+      }
+
+      s"should have the value '${commonMessages.privateResidenceRelief.yesFull}'" in {
+        doc.select("#prr-option span.bold-medium").text shouldBe commonMessages.privateResidenceRelief.yesFull
+      }
+    }
+
+    "does not have a reliefs question row" in {
+      doc.select("#reliefs-question").isEmpty shouldBe true
     }
 
     "has a numeric output row for allowable losses remaining" which {
@@ -614,7 +684,9 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(true)),
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.full)),
+      None,
+      Some(ReliefsModel(true)),
       Some(ReliefsValueModel(BigDecimal(50000))),
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
@@ -629,7 +701,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(71000),
       BigDecimal(0),
       BigDecimal(2000),
-      Some(BigDecimal(50000)))
+      Some(BigDecimal(50000)),
+      Some(BigDecimal(0)))
 
     lazy val taxYearModel = TaxYearModel("2017/18", false, "2015/16")
 

@@ -153,7 +153,7 @@ object MessageLookup {
 
   //Private Residence Relief Value messages
   object privateResidenceReliefValue {
-    def title(gain: BigDecimal) = s"How much Private Residence Relief are you claiming on your total gain of £$gain?"
+    def title(gain: String) = s"How much Private Residence Relief are you claiming on your total gain of £$gain?"
     val question = "How much Private Residence Relief are you claiming on your total gain of £10,000?"
     val prrLink = "Private Residence Relief"
   }
@@ -267,6 +267,9 @@ object MessageLookup {
     val legendLink = "Private Residence Relief"
     val legendSecondSection = "if you've lived at the property"
     val errorSelect = "Tell us if you want to claim Private Residence Relief"
+    val yesPart = "Yes, part relief"
+    val yesFull = "Yes, full relief"
+    val no = "No"
   }
 
   //############ Shares messages ##############//

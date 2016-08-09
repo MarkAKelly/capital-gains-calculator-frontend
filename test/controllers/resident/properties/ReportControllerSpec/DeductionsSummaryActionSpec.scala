@@ -28,7 +28,8 @@ import play.api.mvc.RequestHeader
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{summaryPage => messages}
-import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, ReliefsValueModel, YourAnswersSummaryModel}
+import common.resident.PrivateResidenceReliefKeys
+import models.resident.properties._
 
 import scala.concurrent.Future
 
@@ -78,7 +79,9 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
         BigDecimal(100000),
         BigDecimal(10000),
         BigDecimal(30000))
-      lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(true)),
+      lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
+        None,
+        Some(ReliefsModel(true)),
         Some(ReliefsValueModel(BigDecimal(50000))),
         Some(OtherPropertiesModel(true)),
         Some(AllowableLossesModel(true)),
@@ -93,6 +96,7 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
         BigDecimal(71000),
         BigDecimal(0),
         BigDecimal(0),
+        Some(BigDecimal(0)),
         Some(BigDecimal(0)))
 
       lazy val taxYearModel = TaxYearModel("2017/18", false, "2015/16")
@@ -129,9 +133,11 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
         10000,
         0,
         0)
-      lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)), None, Some(OtherPropertiesModel(false)),
+      lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
+        None,
+        Some(ReliefsModel(false)), None, Some(OtherPropertiesModel(false)),
         Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None)
-      lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 0, 11100, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)))
+      lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 0, 11100, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)))
       lazy val target = setupTarget(
         yourAnswersSummaryModel,
         -10000,

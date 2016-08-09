@@ -55,6 +55,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       18,
       None,
       None,
+      None,
       None
     )
     lazy val taxYearModel = TaxYearModel("2015/16", isValidYear = true, "2015/16")
@@ -425,6 +426,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       18,
       None,
       None,
+      None,
       None
     )
     lazy val taxYearModel = TaxYearModel("2013/14", isValidYear = false, "2015/16")
@@ -603,6 +605,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       18,
       Some(10000),
       Some(28),
+      None,
       None
     )
     lazy val taxYearModel = TaxYearModel("2015/16", isValidYear = true, "2015/16")
@@ -686,6 +689,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       18,
       Some(0),
       Some(28),
+      None,
       None
     )
 
@@ -758,6 +762,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       18,
       Some(10000),
       Some(28),
+      None,
       None
     )
 
@@ -802,6 +807,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       18,
       Some(10000),
       Some(28),
+      None,
       None
     )
 

@@ -25,9 +25,10 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{summary => views}
 import assets.{MessageLookup => commonMessages}
 import common.Dates._
+import common.resident.PrivateResidenceReliefKeys
 import controllers.resident.properties.routes
 import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, PreviousTaxableGainsModel}
-import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, YourAnswersSummaryModel}
+import models.resident.properties._
 
 class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
@@ -38,7 +39,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
+      None,
+      Some(ReliefsModel(false)),
       None,
       Some(OtherPropertiesModel(false)),
       None,
@@ -57,6 +60,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       18,
       None,
       None,
+      Some(BigDecimal(0)),
       Some(BigDecimal(0))
     )
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
@@ -146,6 +150,10 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
         }
 
         "has a breakdown that" should {
+
+          "include a value for PRR of £0" in {
+            doc.select("#deductions-amount").text should include("Private Residence Relief used £0")
+          }
 
           "include a value for Reliefs of £0" in {
             doc.select("#deductions-amount").text should include("Reliefs £0")
@@ -323,6 +331,31 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
         }
       }
 
+      "has an option output row for prr" which {
+
+        s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
+          doc.select("#prr-question").text shouldBe commonMessages.privateResidenceRelief.title
+        }
+
+        s"should have the value '${commonMessages.privateResidenceRelief.no}'" in {
+          doc.select("#prr-option span.bold-medium").text shouldBe commonMessages.privateResidenceRelief.no
+        }
+
+        s"should have a change link to ${routes.DeductionsController.privateResidenceRelief().url}" in {
+          println(doc.body())
+          doc.select("#prr-option a").attr("href") shouldBe routes.DeductionsController.privateResidenceRelief().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#prr-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.privateResidenceRelief.title}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#prr-option a span.visuallyhidden").text shouldBe commonMessages.privateResidenceRelief.title
+        }
+      }
+
+
       "has an option output row for tax reliefs" which {
 
         s"should have the question text '${commonMessages.reliefs.questionSummary}'" in {
@@ -448,7 +481,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.part)),
+      Some(PrivateResidenceReliefValueModel(1500)),
+      Some(ReliefsModel(false)),
       None,
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -469,6 +504,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       18,
       None,
       None,
+      Some(BigDecimal(0)),
       Some(BigDecimal(0))
     )
 
@@ -560,6 +596,52 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
     }
 
+    "has an option output row for prr" which {
+
+      s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
+        doc.select("#prr-question").text shouldBe commonMessages.privateResidenceRelief.title
+      }
+
+      s"should have the value '${commonMessages.privateResidenceRelief.yesPart}'" in {
+        doc.select("#prr-option span.bold-medium").text shouldBe commonMessages.privateResidenceRelief.yesPart
+      }
+
+      s"should have a change link to ${routes.DeductionsController.privateResidenceRelief().url}" in {
+        doc.select("#prr-option a").attr("href") shouldBe routes.DeductionsController.privateResidenceRelief().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#prr-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.privateResidenceRelief.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#prr-option a span.visuallyhidden").text shouldBe commonMessages.privateResidenceRelief.title
+      }
+    }
+
+    "has a numeric output row for prr value" which {
+
+      s"should have the question text '${commonMessages.privateResidenceReliefValue.title("50,000")}'" in {
+        doc.select("#prrValue-question").text shouldBe commonMessages.privateResidenceReliefValue.title("50,000")
+      }
+
+      "should have the value '£1,500'" in {
+        doc.select("#prrValue-amount span.bold-medium").text shouldBe "£1,500"
+      }
+
+      s"should have a change link to ${routes.DeductionsController.privateResidenceReliefValue().url}" in {
+        doc.select("#prrValue-amount a").attr("href") shouldBe routes.DeductionsController.privateResidenceReliefValue().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#prrValue-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.privateResidenceReliefValue.title("50,000")}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#prrValue-amount a span.visuallyhidden").text shouldBe commonMessages.privateResidenceReliefValue.title("50,000")
+      }
+    }
+
     "has an option output row for previous taxable gains" which {
 
       s"should have the question text '${commonMessages.previousTaxableGains.title}'" in {
@@ -631,7 +713,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.full)),
+      None,
+      Some(ReliefsModel(false)),
       None,
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -652,7 +736,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       18,
       Some(10000),
       Some(28),
-      Some(BigDecimal(1000))
+      Some(BigDecimal(1000)),
+      Some(BigDecimal(2000))
     )
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
@@ -692,6 +777,10 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       "include a value for Reliefs of £1,000" in {
         doc.select("#deductions-amount").text should include("Reliefs £1,000")
       }
+
+      "include a value for PRR of £2,000" in {
+        doc.select("#deductions-amount").text should include("Private Residence Relief used £2,000")
+      }
     }
 
     "has a numeric output row and a tax rate" which {
@@ -713,6 +802,33 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       "Should have the tax rate 28% for the first band" in {
         doc.select("#secondBand").text should include("28%")
       }
+    }
+
+    "has an option output row for prr" which {
+
+      s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
+        doc.select("#prr-question").text shouldBe commonMessages.privateResidenceRelief.title
+      }
+
+      s"should have the value '${commonMessages.privateResidenceRelief.yesFull}'" in {
+        doc.select("#prr-option span.bold-medium").text shouldBe commonMessages.privateResidenceRelief.yesFull
+      }
+
+      s"should have a change link to ${routes.DeductionsController.privateResidenceRelief().url}" in {
+        doc.select("#prr-option a").attr("href") shouldBe routes.DeductionsController.privateResidenceRelief().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#prr-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.privateResidenceRelief.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#prr-option a span.visuallyhidden").text shouldBe commonMessages.privateResidenceRelief.title
+      }
+    }
+
+    "does not have a reliefs question row" in {
+      doc.select("#reliefs-question").isEmpty shouldBe true
     }
 
     "display the save as PDF Button" which {
@@ -743,7 +859,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(0),
       BigDecimal(0),
       BigDecimal(0))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
+      None,
+      Some(ReliefsModel(false)),
       None,
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -764,6 +882,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       18,
       Some(0),
       Some(28),
+      Some(BigDecimal(0)),
       Some(BigDecimal(0))
     )
 
@@ -834,7 +953,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
+      None,
+      Some(ReliefsModel(false)),
       None,
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -855,6 +976,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       18,
       Some(10000),
       Some(28),
+      Some(BigDecimal(0)),
       Some(BigDecimal(0))
     )
 
@@ -897,7 +1019,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)),
+    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
+      None,
+      Some(ReliefsModel(false)),
       None,
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -918,6 +1042,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       18,
       Some(10000),
       Some(28),
+      Some(BigDecimal(0)),
       Some(BigDecimal(0))
     )
 

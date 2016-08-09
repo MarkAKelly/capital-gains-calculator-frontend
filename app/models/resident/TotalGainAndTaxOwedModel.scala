@@ -18,17 +18,18 @@ package models.resident
 
 import play.api.libs.json.Json
 
-case class TotalGainAndTaxOwedModel(  gain: BigDecimal,
-                                chargeableGain: BigDecimal,
-                                aeaUsed: BigDecimal,
-                                deductions: BigDecimal,
-                                taxOwed: BigDecimal,
-                                firstBand: BigDecimal,
-                                firstRate: Int,
-                                secondBand: Option[BigDecimal],
-                                secondRate: Option[Int],
-                                reliefsUsed: Option[BigDecimal]
-                             )
+case class TotalGainAndTaxOwedModel(gain: BigDecimal,
+                                    chargeableGain: BigDecimal,
+                                    aeaUsed: BigDecimal,
+                                    deductions: BigDecimal,
+                                    taxOwed: BigDecimal,
+                                    firstBand: BigDecimal,
+                                    firstRate: Int,
+                                    secondBand: Option[BigDecimal],
+                                    secondRate: Option[Int],
+                                    reliefsUsed: Option[BigDecimal],
+                                    prrUsed: Option[BigDecimal]
+                                   )
 
 object TotalGainAndTaxOwedModel {
   implicit val formats = Json.format[TotalGainAndTaxOwedModel]
