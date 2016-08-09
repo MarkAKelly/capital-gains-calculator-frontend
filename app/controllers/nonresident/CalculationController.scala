@@ -1001,7 +1001,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   }
 
   def restart(): Action[AnyContent] = Action.async { implicit request =>
-    calcConnector.clearKeystore()
+    calcConnector.clearKeystore(hc)
     Future.successful(Redirect(routes.CalculationController.customerType()))
   }
 }

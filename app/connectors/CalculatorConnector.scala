@@ -28,9 +28,10 @@ import models.resident
 import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, ReliefsValueModel, YourAnswersSummaryModel}
 import models.resident.{IncomeAnswersModel, TaxYearModel, properties}
 import play.api.libs.json.Format
+import play.mvc.Http.Response
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet}
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -102,7 +103,7 @@ trait CalculatorConnector {
     http.GET[Option[TaxYearModel]](s"$serviceUrl/capital-gains-calculator/tax-year?disposalDate=$taxYear")
   }
 
-  def clearKeystore()(implicit hc: HeaderCarrier) = {
+  def clearKeystore(implicit hc: HeaderCarrier):Future[HttpResponse] = {
     sessionCache.remove()
   }
 
