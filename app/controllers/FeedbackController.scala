@@ -41,7 +41,7 @@ object FeedbackController extends FeedbackController with PartialRetriever {
   override def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")
   override def localSubmitUrl(implicit request: Request[AnyContent]): String = routes.FeedbackController.submit().url
 
-  protected def authConnector: AuthConnector = ???
+  protected def authConnector: AuthConnector = config.FrontendAuthConnector
   protected def loadPartial(url : String)(implicit request : RequestHeader) : HtmlPartial = ???
 
   implicit val cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever = new CachedStaticHtmlPartialRetriever {
