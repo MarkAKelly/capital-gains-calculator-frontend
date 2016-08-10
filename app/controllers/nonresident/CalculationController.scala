@@ -491,25 +491,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
       errors => Future.successful(BadRequest(calculation.nonresident.disposalValue(errors))),
       success => {
         calcConnector.saveFormData(KeystoreKeys.disposalValue, success)
-        Future.successful(Redirect(routes.CalculationController.acquisitionCosts()))
-      }
-    )
-  }
-
-  //################### Acquisition Costs methods #######################
-  val acquisitionCosts = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[AcquisitionCostsModel](KeystoreKeys.acquisitionCosts).map {
-      case Some(data) => Ok(calculation.nonresident.acquisitionCosts(acquisitionCostsForm.fill(data)))
-      case None => Ok(calculation.nonresident.acquisitionCosts(acquisitionCostsForm))
-    }
-  }
-
-  val submitAcquisitionCosts = ValidateSession.async { implicit request =>
-    acquisitionCostsForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(calculation.nonresident.acquisitionCosts(errors))),
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.acquisitionCosts, success)
-        Future.successful(Redirect(routes.CalculationController.disposalCosts()))
+        Future.successful(Redirect(routes.AcquisitionCostsController.acquisitionCosts()))
       }
     )
   }

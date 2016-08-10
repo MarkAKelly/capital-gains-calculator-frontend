@@ -20,7 +20,7 @@ import assets.MessageLookup
 import common.Constants
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{AcquisitionCostsController, CalculationController, routes}
 import models.nonresident.AcquisitionCostsModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -41,7 +41,7 @@ import scala.concurrent.Future
 class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
   implicit val hc = new HeaderCarrier()
-  def setupTarget(getData: Option[AcquisitionCostsModel], postData: Option[AcquisitionCostsModel]): CalculationController = {
+  def setupTarget(getData: Option[AcquisitionCostsModel], postData: Option[AcquisitionCostsModel]): AcquisitionCostsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -53,7 +53,7 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
     when(mockCalcConnector.saveFormData[AcquisitionCostsModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new AcquisitionCostsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
       override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
