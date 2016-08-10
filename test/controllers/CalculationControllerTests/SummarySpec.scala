@@ -403,7 +403,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "the value of allowable losses should be £0 and link to the allowable-losses page" in {
               document.body().getElementById("deductions(1)").text shouldBe "£0.00"
-              document.body().getElementById("deductions(1)").attr("href") shouldEqual routes.CalculationController.allowableLosses().toString()
+              document.body().getElementById("deductions(1)").attr("href") shouldEqual routes.AllowableLossesController.allowableLosses().toString()
             }
 
             "include the question 'How much extra tax relief are you claiming?'" in {

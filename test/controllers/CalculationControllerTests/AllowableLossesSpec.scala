@@ -18,8 +18,7 @@ package controllers.CalculationControllerTests
 
 import common.{Constants, KeystoreKeys}
 import connectors.CalculatorConnector
-import constructors.nonresident.CalculationElectionConstructor
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{AllowableLossesController, routes}
 import models.nonresident.{AcquisitionDateModel, AllowableLossesModel, RebasedValueModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -45,10 +44,9 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
                    getData: Option[AllowableLossesModel],
                    postData: Option[AllowableLossesModel],
                    acquisitionDate: Option[AcquisitionDateModel],
-                   rebasedData: Option[RebasedValueModel] = None): CalculationController = {
+                   rebasedData: Option[RebasedValueModel] = None): AllowableLossesController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
-    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[AllowableLossesModel](Matchers.eq(KeystoreKeys.allowableLosses))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -63,9 +61,8 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
     when(mockCalcConnector.saveFormData[AllowableLossesModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new AllowableLossesController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
   }
 
@@ -152,7 +149,7 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
         }
 
         "have the value 9999.54 auto-filled into the input box" in {
-          document.getElementById("allowableLossesAmt").attr("value") shouldEqual ("9999.54")
+          document.getElementById("allowableLossesAmt").attr("value") shouldEqual "9999.54"
         }
       }
     }

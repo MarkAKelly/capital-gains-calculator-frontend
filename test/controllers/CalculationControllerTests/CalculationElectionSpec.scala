@@ -152,9 +152,9 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
           }
         }
 
-        s"have a 'Back' link to ${routes.CalculationController.allowableLosses}" in {
+        s"have a 'Back' link to ${routes.AllowableLossesController.allowableLosses}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.allowableLosses.toString()
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.AllowableLossesController.allowableLosses.toString()
         }
 
         s"have the paragraph '${Messages("calc.calculationElection.paragraph.one")}'" in {

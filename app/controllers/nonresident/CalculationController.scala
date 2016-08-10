@@ -448,7 +448,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
                 Future.successful(Redirect(routes.CalculationController.privateResidenceRelief()))
               }
               case _ => {
-                Future.successful(Redirect(routes.CalculationController.allowableLosses()))
+                Future.successful(Redirect(routes.AllowableLossesController.allowableLosses()))
               }
             }
           }
@@ -520,7 +520,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
         },
         success => {
           calcConnector.saveFormData(KeystoreKeys.privateResidenceRelief, success)
-          Future.successful(Redirect(routes.CalculationController.allowableLosses()))
+          Future.successful(Redirect(routes.AllowableLossesController.allowableLosses()))
         }
       )
     }
@@ -531,61 +531,6 @@ trait CalculationController extends FrontendController with ValidActiveSession {
       hasRebasedValue <- getRebasedAmount
       finalResult <- action(disposalDate, acquisitionDate, hasRebasedValue)
     } yield finalResult
-  }
-
-  //################### Allowable Losses methods #######################
-  def allowableLossesBackLink(implicit hc: HeaderCarrier): Future[String] = {
-    calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
-      case Some(acquisitionData) if acquisitionData.hasAcquisitionDate == "Yes" =>
-        Future.successful(routes.CalculationController.privateResidenceRelief().url)
-      case _ => calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
-        case Some(rebasedData) if rebasedData.hasRebasedValue == "Yes" =>
-          Future.successful(routes.CalculationController.privateResidenceRelief().url)
-        case _ => Future.successful(routes.CalculationController.disposalCosts().url)
-      }
-    }
-  }
-
-  val allowableLosses = ValidateSession.async { implicit request =>
-    def routeRequest(backUrl: String) = {
-      calcConnector.fetchAndGetFormData[AllowableLossesModel](KeystoreKeys.allowableLosses).map {
-        case Some(data) => Ok(calculation.nonresident.allowableLosses(allowableLossesForm.fill(data), backUrl))
-        case None => Ok(calculation.nonresident.allowableLosses(allowableLossesForm, backUrl))
-      }
-    }
-
-    for {
-      backUrl <- allowableLossesBackLink
-      route <- routeRequest(backUrl)
-    } yield route
-  }
-
-  val submitAllowableLosses = ValidateSession.async { implicit request =>
-    def routeRequest(backUrl: String) = {
-      allowableLossesForm.bindFromRequest.fold(
-        errors => Future.successful(BadRequest(calculation.nonresident.allowableLosses(errors, backUrl))),
-        success => {
-          calcConnector.saveFormData(KeystoreKeys.allowableLosses, success)
-          calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
-            case Some(data) if data.hasAcquisitionDate == "Yes" && !Dates.dateAfterStart(data.day.get, data.month.get, data.year.get) =>
-              Future.successful(Redirect(routes.CalculationController.calculationElection()))
-            case _ =>
-              calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
-                case Some(rebasedData) if rebasedData.hasRebasedValue == "Yes" =>
-                  Future.successful(Redirect(routes.CalculationController.calculationElection()))
-                case _ =>
-                  calcConnector.saveFormData(KeystoreKeys.calculationElection, CalculationElectionModel("flat"))
-                  Future.successful(Redirect(routes.CalculationController.otherReliefs()))
-              }
-          }
-        }
-      )
-    }
-
-    for {
-      backUrl <- allowableLossesBackLink
-      route <- routeRequest(backUrl)
-    } yield route
   }
 
   //################### Calculation Election methods #######################
@@ -714,12 +659,12 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   def otherReliefsBackUrl(implicit hc: HeaderCarrier): Future[String] = {
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
       case (Some(AcquisitionDateModel("Yes", day, month, year))) if Dates.dateAfterStart(day.get, month.get, year.get) =>
-        Future.successful(routes.CalculationController.allowableLosses().url)
+        Future.successful(routes.AllowableLossesController.allowableLosses().url)
       case (Some(AcquisitionDateModel("Yes", day, month, year))) => Future.successful(routes.CalculationController.calculationElection().url)
       case (Some(AcquisitionDateModel("No", _, _, _))) =>
         calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
           case Some(RebasedValueModel("Yes", _)) => Future.successful(routes.CalculationController.calculationElection().url)
-          case Some(RebasedValueModel("No", _)) => Future.successful(routes.CalculationController.allowableLosses().url)
+          case Some(RebasedValueModel("No", _)) => Future.successful(routes.AllowableLossesController.allowableLosses().url)
           case _ => Future.successful(missingDataRoute)
         }
       case _ => Future.successful(missingDataRoute)
