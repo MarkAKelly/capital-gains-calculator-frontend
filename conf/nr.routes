@@ -2,9 +2,9 @@
 ########################################################
 
 #Customer Type
-GET         /                                   controllers.nonresident.CalculationController.customerType
-GET         /customer-type                      controllers.nonresident.CalculationController.customerType
-POST        /customer-type                      controllers.nonresident.CalculationController.submitCustomerType
+GET         /                                   controllers.nonresident.CustomerTypeController.customerType
+GET         /customer-type                      controllers.nonresident.CustomerTypeController.customerType
+POST        /customer-type                      controllers.nonresident.CustomerTypeController.submitCustomerType
 
 #Disabled Trustee
 GET         /disabled-trustee                   controllers.nonresident.CalculationController.disabledTrustee

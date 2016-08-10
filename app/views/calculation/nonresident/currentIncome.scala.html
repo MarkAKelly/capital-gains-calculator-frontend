@@ -27,7 +27,7 @@
 
 @main_template(Messages("calc.currentIncome.question"), sidebarLinks = Some(sidebar)) {
 
-    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.CalculationController.customerType">Back</a>
+    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.CustomerTypeController.customerType">Back</a>
 
     @errorSummary(currentIncomeForm, "current-income")
 

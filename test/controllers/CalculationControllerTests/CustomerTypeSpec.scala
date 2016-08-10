@@ -21,7 +21,6 @@ import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.CalculationElectionConstructor
-import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import play.api.i18n.Messages
@@ -34,7 +33,7 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.CustomerTypeController
 import models.nonresident.CustomerTypeModel
 import play.api.mvc.Result
 
@@ -42,7 +41,7 @@ class CustomerTypeSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget(getData: Option[CustomerTypeModel], postData: Option[CustomerTypeModel]): CalculationController = {
+  def setupTarget(getData: Option[CustomerTypeModel], postData: Option[CustomerTypeModel]): CustomerTypeController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -54,7 +53,7 @@ class CustomerTypeSpec extends UnitSpec with WithFakeApplication with MockitoSug
     when(mockCalcConnector.saveFormData[CustomerTypeModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new CustomerTypeController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
       override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }

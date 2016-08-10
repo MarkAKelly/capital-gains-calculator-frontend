@@ -266,7 +266,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "have an 'individual' owner and link to the customer-type page" in {
               document.body().getElementById("personalDetails(0)").text() shouldBe "Individual"
-              document.body().getElementById("personalDetails(0)").attr("href") shouldEqual routes.CalculationController.customerType().toString()
+              document.body().getElementById("personalDetails(0)").attr("href") shouldEqual routes.CustomerTypeController.customerType().toString()
             }
 
             "include the question 'What’s your total income for this tax year?'" in {

@@ -55,7 +55,7 @@ object FrontendGlobal
       case Some(path) if path == "/calculate-your-capital-gains/resident/shares/" =>
         controllers.resident.shares.routes.GainController.disposalDate().url
       case Some(path) if path == "/calculate-your-capital-gains/non-resident/" =>
-        controllers.nonresident.routes.CalculationController.customerType().url
+        controllers.nonresident.routes.CustomerTypeController.customerType().url
       case _ => "/calculate-your-capital-gains/"
     }
     views.html.error_template(pageTitle, heading, message, homeNavLink)
