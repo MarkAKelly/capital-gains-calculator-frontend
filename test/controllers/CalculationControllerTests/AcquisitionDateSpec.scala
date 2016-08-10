@@ -243,8 +243,8 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.CalculationController.acquisitionValue()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.acquisitionValue()}")
+      s"redirect to ${routes.AcquisitionValueController.acquisitionValue()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.AcquisitionValueController.acquisitionValue()}")
       }
     }
 

@@ -31,8 +31,8 @@ GET         /acquisition-date                   controllers.nonresident.Acquisit
 POST        /acquisition-date                   controllers.nonresident.AcquisitionDateController.submitAcquisitionDate
 
 #Acquisition Value
-GET         /acquisition-value                  controllers.nonresident.CalculationController.acquisitionValue
-POST        /acquisition-value                  controllers.nonresident.CalculationController.submitAcquisitionValue
+GET         /acquisition-value                  controllers.nonresident.AcquisitionValueController.acquisitionValue
+POST        /acquisition-value                  controllers.nonresident.AcquisitionValueController.submitAcquisitionValue
 
 #Rebased Value
 GET         /rebased-value                      controllers.nonresident.CalculationController.rebasedValue

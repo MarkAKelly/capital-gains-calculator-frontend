@@ -233,35 +233,6 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     } yield finalResult
   }
 
-  //################### Acquisition Value methods #######################
-  val acquisitionValue = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.acquisitionValue).map {
-      case Some(data) => Ok(calculation.nonresident.acquisitionValue(acquisitionValueForm.fill(data)))
-      case None => Ok(calculation.nonresident.acquisitionValue(acquisitionValueForm))
-    }
-  }
-
-  val submitAcquisitionValue = ValidateSession.async { implicit request =>
-    acquisitionValueForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(calculation.nonresident.acquisitionValue(errors))),
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.acquisitionValue, success)
-        calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap(connection =>
-          if (!Dates.dateAfterStart(
-            connection.get.day.getOrElse(0),
-            connection.get.month.getOrElse(0),
-            connection.get.year.getOrElse(0))
-          ) {
-            Future.successful(Redirect(routes.CalculationController.rebasedValue()))
-          }
-          else {
-            Future.successful(Redirect(routes.CalculationController.improvements()))
-          }
-        )
-      }
-    )
-  }
-
   //################### Rebased value methods #######################
   val rebasedValue = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap(acquisitionDateModel =>
@@ -316,7 +287,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
 
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
       case Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year))) if Dates.dateAfterStart(day, month, year) =>
-        Future.successful(routes.CalculationController.acquisitionValue().url)
+        Future.successful(routes.AcquisitionValueController.acquisitionValue().url)
       case None => Future.successful(missingDataRoute)
       case _ => checkRebasedValue
     }

@@ -31,7 +31,7 @@
 
     <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
 
-    @form(action = controllers.nonresident.routes.CalculationController.submitAcquisitionValue) {
+    @form(action = controllers.nonresident.routes.AcquisitionValueController.submitAcquisitionValue) {
 
         @formInputMoney(acquisitionValueForm, "acquisitionValue", Messages("calc.acquisitionValue.question"), additionalHTMLContent = Some(bulletContent.toString()))
 

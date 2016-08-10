@@ -115,9 +115,9 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
             document.body.getElementById("hidden").html should include("input")
           }
 
-          s"have a 'Back' link to ${routes.CalculationController.acquisitionValue().url} " in {
+          s"have a 'Back' link to ${routes.AcquisitionValueController.acquisitionValue().url} " in {
             document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-            document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.acquisitionValue().url
+            document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionValueController.acquisitionValue().url
           }
         }
       }
