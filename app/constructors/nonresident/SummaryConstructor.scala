@@ -167,7 +167,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.customerType.question"),
               WordUtils.capitalize(summary.customerTypeModel.customerType),
-              Some(routes.CalculationController.customerType().toString())
+              Some(routes.CustomerTypeController.customerType().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.disabledTrustee.question"),
@@ -189,7 +189,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.customerType.question"),
               WordUtils.capitalize(summary.customerTypeModel.customerType),
-              Some(routes.CalculationController.customerType().toString())
+              Some(routes.CustomerTypeController.customerType().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.disabledTrustee.question"),
@@ -211,7 +211,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.customerType.question"),
                     WordUtils.capitalize(summary.customerTypeModel.customerType),
-                    Some(routes.CalculationController.customerType().toString())
+                    Some(routes.CustomerTypeController.customerType().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.currentIncome.question"),
@@ -239,7 +239,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.customerType.question"),
                     WordUtils.capitalize(summary.customerTypeModel.customerType),
-                    Some(routes.CalculationController.customerType().toString())
+                    Some(routes.CustomerTypeController.customerType().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.currentIncome.question"),
@@ -265,7 +265,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.customerType.question"),
                     WordUtils.capitalize(summary.customerTypeModel.customerType),
-                    Some(routes.CalculationController.customerType().toString())
+                    Some(routes.CustomerTypeController.customerType().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.currentIncome.question"),
@@ -288,7 +288,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.customerType.question"),
                     WordUtils.capitalize(summary.customerTypeModel.customerType),
-                    Some(routes.CalculationController.customerType().toString())
+                    Some(routes.CustomerTypeController.customerType().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.currentIncome.question"),
@@ -308,7 +308,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.customerType.question"),
               "Personal Representative",
-              Some(routes.CalculationController.customerType().toString())
+              Some(routes.CustomerTypeController.customerType().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.otherProperties.question"),
@@ -325,7 +325,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.customerType.question"),
               "Personal Representative",
-              Some(routes.CalculationController.customerType().toString())
+              Some(routes.CustomerTypeController.customerType().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.otherProperties.question"),

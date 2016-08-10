@@ -89,9 +89,9 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
           document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
         }
 
-        s"have a 'Back' link to ${routes.CalculationController.customerType}" in {
+        s"have a 'Back' link to ${routes.CustomerTypeController.customerType}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.customerType.toString()
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.CustomerTypeController.customerType.toString()
         }
 
         "have the question 'In the tax year when you stopped owning the property, what was your total UK income?' as the label of the input" in {
