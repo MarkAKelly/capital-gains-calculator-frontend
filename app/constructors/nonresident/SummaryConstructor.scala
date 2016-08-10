@@ -182,7 +182,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.annualExemptAmount.question"),
               "&pound;" + MoneyPounds(summary.annualExemptAmountModel.get.annualExemptAmount).quantity,
-              Some(routes.CalculationController.annualExemptAmount().toString())
+              Some(routes.AnnualExemptAmountController.annualExemptAmount().toString())
             )
           )
           case "No" => Array(
@@ -231,7 +231,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.annualExemptAmount.question"),
                     "&pound;" + MoneyPounds(summary.annualExemptAmountModel.get.annualExemptAmount).quantity,
-                    Some(routes.CalculationController.annualExemptAmount().toString())
+                    Some(routes.AnnualExemptAmountController.annualExemptAmount().toString())
                   )
                 )
               case _ =>
@@ -254,7 +254,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.annualExemptAmount.question"),
                     "&pound;" + MoneyPounds(summary.annualExemptAmountModel.get.annualExemptAmount).quantity,
-                    Some(routes.CalculationController.annualExemptAmount().toString())
+                    Some(routes.AnnualExemptAmountController.annualExemptAmount().toString())
                   )
                 )
             }
@@ -318,7 +318,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.annualExemptAmount.question"),
               "&pound;" + MoneyPounds(summary.annualExemptAmountModel.get.annualExemptAmount).quantity,
-              Some(routes.CalculationController.annualExemptAmount().toString())
+              Some(routes.AnnualExemptAmountController.annualExemptAmount().toString())
             )
           )
           case "No" => Array(

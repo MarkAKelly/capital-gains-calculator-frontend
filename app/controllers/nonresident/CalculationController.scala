@@ -165,8 +165,8 @@ trait CalculationController extends FrontendController with ValidActiveSession {
         success => {
           calcConnector.saveFormData(KeystoreKeys.otherProperties, success)
           success match {
-            case OtherPropertiesModel("Yes", Some(value)) if value.equals(BigDecimal(0)) => Future.successful(Redirect(routes.CalculationController.annualExemptAmount()))
-            case OtherPropertiesModel("Yes", None) if !showHiddenQuestion => Future.successful(Redirect(routes.CalculationController.annualExemptAmount()))
+            case OtherPropertiesModel("Yes", Some(value)) if value.equals(BigDecimal(0)) => Future.successful(Redirect(routes.AnnualExemptAmountController.annualExemptAmount()))
+            case OtherPropertiesModel("Yes", None) if !showHiddenQuestion => Future.successful(Redirect(routes.AnnualExemptAmountController.annualExemptAmount()))
             case _ => calcConnector.saveFormData(KeystoreKeys.annualExemptAmount, AnnualExemptAmountModel(0))
               Future.successful(Redirect(routes.AcquisitionDateController.acquisitionDate()))
           }
@@ -180,58 +180,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     } yield finalResult
   }
 
-  //################### Annual Exempt Amount methods #######################
-  val annualExemptAmount = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](KeystoreKeys.annualExemptAmount).map {
-      case Some(data) => Ok(calculation.nonresident.annualExemptAmount(annualExemptAmountForm().fill(data)))
-      case None => Ok(calculation.nonresident.annualExemptAmount(annualExemptAmountForm()))
-    }
-  }
 
-  val submitAnnualExemptAmount = ValidateSession.async { implicit request =>
-
-    def customerType(implicit hc: HeaderCarrier): Future[String] = {
-      calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).map {
-        customerTypeModel => customerTypeModel.get.customerType
-      }
-    }
-
-    def trusteeAEA(customerTypeVal: String)(implicit hc: HeaderCarrier): Future[Boolean] = {
-      customerTypeVal match {
-        case CustomerTypeKeys.trustee =>
-          calcConnector.fetchAndGetFormData[DisabledTrusteeModel](KeystoreKeys.disabledTrustee).map {
-            disabledTrusteeModel => if (disabledTrusteeModel.get.isVulnerable == "No") false else true
-          }
-        case _ => Future.successful(true)
-      }
-    }
-
-    def routeRequest(maxAEA: BigDecimal)(implicit hc: HeaderCarrier): Future[Result] = {
-      annualExemptAmountForm(maxAEA).bindFromRequest.fold(
-        errors => Future.successful(BadRequest(calculation.nonresident.annualExemptAmount(errors))),
-        success => {
-          calcConnector.saveFormData(KeystoreKeys.annualExemptAmount, success)
-          Future.successful(Redirect(routes.AcquisitionDateController.acquisitionDate()))
-        }
-      )
-    }
-
-    def fetchAEA(isFullAEA: Boolean)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
-      if (isFullAEA) {
-        calcConnector.getFullAEA(2017)
-      }
-      else {
-        calcConnector.getPartialAEA(2017)
-      }
-    }
-
-    for {
-      customerTypeVal <- customerType
-      isDisabledTrustee <- trusteeAEA(customerTypeVal)
-      maxAEA <- fetchAEA(isDisabledTrustee)
-      finalResult <- routeRequest(maxAEA.get)
-    } yield finalResult
-  }
 
   //################### Acquisition Value methods #######################
   val acquisitionValue = ValidateSession.async { implicit request =>

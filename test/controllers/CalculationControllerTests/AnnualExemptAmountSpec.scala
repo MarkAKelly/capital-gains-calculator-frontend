@@ -35,7 +35,7 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{AnnualExemptAmountController, CalculationController, routes}
 import models.nonresident.{AnnualExemptAmountModel, CustomerTypeModel, DisabledTrusteeModel}
 import play.api.mvc.Result
 
@@ -48,7 +48,7 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
                    postData: Option[AnnualExemptAmountModel],
                    customerType: String = CustomerTypeKeys.individual,
                    disabledTrustee: String = ""
-                 ): CalculationController = {
+                 ): AnnualExemptAmountController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -72,7 +72,7 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
     when(mockCalcConnector.saveFormData[AnnualExemptAmountModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new AnnualExemptAmountController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
       override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }

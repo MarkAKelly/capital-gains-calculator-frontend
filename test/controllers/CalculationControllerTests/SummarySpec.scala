@@ -302,7 +302,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "have a remaining CGT Allowance of £1,500 and link to the allowance page" in {
               document.body().getElementById("personalDetails(4)").text() shouldBe "£1,500.00"
-              document.body().getElementById("personalDetails(4)").attr("href") shouldEqual routes.CalculationController.annualExemptAmount().toString()
+              document.body().getElementById("personalDetails(4)").attr("href") shouldEqual routes.AnnualExemptAmountController.annualExemptAmount().toString()
             }
           }
 

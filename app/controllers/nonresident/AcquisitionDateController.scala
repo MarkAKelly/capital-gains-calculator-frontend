@@ -44,7 +44,7 @@ trait AcquisitionDateController extends FrontendController with ValidActiveSessi
 
   def acquisitionDateBackUrl(implicit hc: HeaderCarrier): Future[String] = {
     calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.otherProperties).map {
-      case Some(OtherPropertiesModel("Yes", Some(value))) if value == BigDecimal(0) => routes.CalculationController.annualExemptAmount().url
+      case Some(OtherPropertiesModel("Yes", Some(value))) if value == BigDecimal(0) => routes.AnnualExemptAmountController.annualExemptAmount().url
       case None => missingDataRoute
       case _ => routes.CalculationController.otherProperties().url
     }
@@ -79,9 +79,6 @@ trait AcquisitionDateController extends FrontendController with ValidActiveSessi
       Future.successful(Redirect(routes.CalculationController.acquisitionValue()))
     }
 
-    acquisitionDateForm.bindFromRequest.fold(
-      errors => errorAction(errors),
-      success => successAction(success)
-    )
+    acquisitionDateForm.bindFromRequest.fold(errorAction, successAction)
   }
 }

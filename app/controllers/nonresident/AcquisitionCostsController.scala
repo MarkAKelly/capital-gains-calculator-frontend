@@ -57,9 +57,6 @@ trait AcquisitionCostsController extends FrontendController with ValidActiveSess
       Future.successful(BadRequest(calculation.nonresident.acquisitionCosts(form)))
     }
 
-    acquisitionCostsForm.bindFromRequest.fold(
-      errors => errorAction(errors),
-      success => successAction(success)
-    )
+    acquisitionCostsForm.bindFromRequest.fold(errorAction, successAction)
   }
 }
