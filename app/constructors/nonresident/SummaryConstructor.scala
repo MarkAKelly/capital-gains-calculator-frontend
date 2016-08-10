@@ -346,7 +346,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.acquisitionDate.questionTwo"),
               Dates.datePageFormat.format(Dates.constructDate(summary.acquisitionDateModel.day.get, summary.acquisitionDateModel.month.get, summary.acquisitionDateModel.year.get)),
-              Some(routes.CalculationController.acquisitionDate().toString())
+              Some(routes.AcquisitionDateController.acquisitionDate().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.rebasedValue.questionTwo"),
@@ -366,7 +366,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.acquisitionDate.question"),
               summary.acquisitionDateModel.hasAcquisitionDate,
-              Some(routes.CalculationController.acquisitionDate().toString())
+              Some(routes.AcquisitionDateController.acquisitionDate().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.rebasedValue.questionTwo"),
@@ -388,7 +388,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.acquisitionDate.questionTwo"),
               Dates.datePageFormat.format(Dates.constructDate(summary.acquisitionDateModel.day.get, summary.acquisitionDateModel.month.get, summary.acquisitionDateModel.year.get)),
-              Some(routes.CalculationController.acquisitionDate().toString())
+              Some(routes.AcquisitionDateController.acquisitionDate().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.acquisitionValue.question"),
@@ -405,7 +405,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.acquisitionDate.question"),
               summary.acquisitionDateModel.hasAcquisitionDate,
-              Some(routes.CalculationController.acquisitionDate().toString())
+              Some(routes.AcquisitionDateController.acquisitionDate().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.acquisitionValue.question"),
