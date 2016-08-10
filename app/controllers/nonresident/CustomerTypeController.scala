@@ -44,7 +44,6 @@ trait CustomerTypeController extends FrontendController with ValidActiveSession 
   val calcConnector: CalculatorConnector
   val calcElectionConstructor: CalculationElectionConstructor
 
-  //################### Customer Type methods #######################
   val customerType = Action.async { implicit request =>
     if (request.session.get(SessionKeys.sessionId).isEmpty) {
       val sessionId = UUID.randomUUID.toString
