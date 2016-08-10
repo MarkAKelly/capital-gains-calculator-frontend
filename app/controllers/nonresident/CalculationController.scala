@@ -196,7 +196,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
             case OtherPropertiesModel("Yes", Some(value)) if value.equals(BigDecimal(0)) => Future.successful(Redirect(routes.CalculationController.annualExemptAmount()))
             case OtherPropertiesModel("Yes", None) if !showHiddenQuestion => Future.successful(Redirect(routes.CalculationController.annualExemptAmount()))
             case _ => calcConnector.saveFormData(KeystoreKeys.annualExemptAmount, AnnualExemptAmountModel(0))
-              Future.successful(Redirect(routes.CalculationController.acquisitionDate()))
+              Future.successful(Redirect(routes.AcquisitionDateController.acquisitionDate()))
           }
         }
       )
@@ -239,7 +239,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
         errors => Future.successful(BadRequest(calculation.nonresident.annualExemptAmount(errors))),
         success => {
           calcConnector.saveFormData(KeystoreKeys.annualExemptAmount, success)
-          Future.successful(Redirect(routes.CalculationController.acquisitionDate()))
+          Future.successful(Redirect(routes.AcquisitionDateController.acquisitionDate()))
         }
       )
     }
@@ -259,48 +259,6 @@ trait CalculationController extends FrontendController with ValidActiveSession {
       maxAEA <- fetchAEA(isDisabledTrustee)
       finalResult <- routeRequest(maxAEA.get)
     } yield finalResult
-  }
-
-  //################### Acquisition Date methods #######################
-  def acquisitionDateBackUrl(implicit hc: HeaderCarrier): Future[String] = {
-    calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.otherProperties).map {
-      case Some(OtherPropertiesModel("Yes", Some(value))) if value == BigDecimal(0) => routes.CalculationController.annualExemptAmount().url
-      case None => missingDataRoute
-      case _ => routes.CalculationController.otherProperties().url
-    }
-  }
-
-
-  val acquisitionDate = ValidateSession.async { implicit request =>
-
-    def routeRequest(backUrl: String): Future[Result] = {
-      calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).map {
-        case Some(data) => Ok(calculation.nonresident.acquisitionDate(acquisitionDateForm.fill(data), backUrl))
-        case None => Ok(calculation.nonresident.acquisitionDate(acquisitionDateForm, backUrl))
-      }
-    }
-
-    for {
-      backUrl <- acquisitionDateBackUrl
-      finalResult <- routeRequest(backUrl)
-    } yield finalResult
-  }
-
-  val submitAcquisitionDate = ValidateSession.async { implicit request =>
-    def routeRequest(backUrl: String): Future[Result] = {
-      acquisitionDateForm.bindFromRequest.fold(
-        errors => Future.successful(BadRequest(calculation.nonresident.acquisitionDate(errors, backUrl))),
-        success => {
-          calcConnector.saveFormData(KeystoreKeys.acquisitionDate, success)
-          Future.successful(Redirect(routes.CalculationController.acquisitionValue()))
-        }
-      )
-    }
-
-    for {
-      backUrl <- acquisitionDateBackUrl
-      route <- routeRequest(backUrl)
-    } yield route
   }
 
   //################### Acquisition Value methods #######################

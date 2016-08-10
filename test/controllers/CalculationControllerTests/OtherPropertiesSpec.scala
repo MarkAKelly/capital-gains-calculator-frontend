@@ -298,7 +298,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
         }
 
         "should redirect to the acquisitionDate page" in {
-          redirectLocation(result) shouldBe Some(s"${routes.CalculationController.acquisitionDate()}")
+          redirectLocation(result) shouldBe Some(s"${routes.AcquisitionDateController.acquisitionDate()}")
         }
       }
 
@@ -325,7 +325,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
         }
 
         "should redirect to the acquisitionDate page" in {
-          redirectLocation(result) shouldBe Some(s"${routes.CalculationController.acquisitionDate()}")
+          redirectLocation(result) shouldBe Some(s"${routes.AcquisitionDateController.acquisitionDate()}")
         }
       }
 
@@ -427,7 +427,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
         }
 
         "should redirect to the acquisitionDate page" in {
-          redirectLocation(result) shouldBe Some(s"${routes.CalculationController.acquisitionDate()}")
+          redirectLocation(result) shouldBe Some(s"${routes.AcquisitionDateController.acquisitionDate()}")
         }
       }
     }
@@ -467,7 +467,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
         }
 
         "should redirect to the acquisitionDate page" in {
-          redirectLocation(result) shouldBe Some(s"${routes.CalculationController.acquisitionDate()}")
+          redirectLocation(result) shouldBe Some(s"${routes.AcquisitionDateController.acquisitionDate()}")
         }
       }
     }

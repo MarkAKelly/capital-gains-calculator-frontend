@@ -35,7 +35,7 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{AcquisitionDateController, routes}
 import models.nonresident.{AcquisitionDateModel, OtherPropertiesModel}
 import play.api.mvc.Result
 
@@ -46,7 +46,7 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
   def setupTarget(getData: Option[AcquisitionDateModel],
                   postData: Option[AcquisitionDateModel],
                   otherPropertiesData: Option[OtherPropertiesModel]
-                 ): CalculationController = {
+                 ): AcquisitionDateController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -61,7 +61,7 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
     when(mockCalcConnector.saveFormData[AcquisitionDateModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
     .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new AcquisitionDateController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
       override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }

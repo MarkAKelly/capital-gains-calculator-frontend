@@ -318,7 +318,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "have an answer to the question for providing an acquisition date of 'No'" in {
               document.body().getElementById("purchaseDetails(0)").text() shouldBe Messages("No")
-              document.body().getElementById("purchaseDetails(0)").attr("href") shouldEqual routes.CalculationController.acquisitionDate().toString()
+              document.body().getElementById("purchaseDetails(0)").attr("href") shouldEqual routes.AcquisitionDateController.acquisitionDate().toString()
 
             }
 
