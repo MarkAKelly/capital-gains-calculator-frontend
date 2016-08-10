@@ -324,7 +324,6 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         }
 
         s"should have a change link to ${routes.DeductionsController.privateResidenceRelief().url}" in {
-          println(doc.body())
           doc.select("#prr-option a").attr("href") shouldBe routes.DeductionsController.privateResidenceRelief().url
         }
 
@@ -645,7 +644,6 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         }
 
         s"should have a change link to ${routes.DeductionsController.privateResidenceRelief().url}" in {
-          println(doc.body())
           doc.select("#prr-option a").attr("href") shouldBe routes.DeductionsController.privateResidenceRelief().url
         }
 
