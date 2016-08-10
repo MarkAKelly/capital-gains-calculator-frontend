@@ -29,7 +29,7 @@ import views.html.helpers._
 
 object SummaryConstructor {
 
-  def calcTypeMessage (calculationType: String) = {
+  def calcTypeMessage(calculationType: String) = {
     calculationType match {
       case "flat" => Messages("calc.summary.calculation.details.flatCalculation")
       case "time" => Messages("calc.summary.calculation.details.timeCalculation")
@@ -37,7 +37,7 @@ object SummaryConstructor {
     }
   }
 
-  def simplePRRResult (simplePRR: Option[BigDecimal], privateResidenceReliefModel: Option[PrivateResidenceReliefModel]) = {
+  def simplePRRResult(simplePRR: Option[BigDecimal], privateResidenceReliefModel: Option[PrivateResidenceReliefModel]) = {
     (simplePRR, privateResidenceReliefModel) match {
       case (Some(data), _) => "&pound;" + MoneyPounds(data).quantity
       case (None, Some(PrivateResidenceReliefModel("Yes", _, _))) => "&pound;0.00"
@@ -49,7 +49,7 @@ object SummaryConstructor {
 
   def calculationDetails(result: CalculationResultModel, summary: SummaryModel) = summaryPageSection("calcDetails", Messages("calc.summary.calculation.details.title"),
     (result.totalGain, result.taxableGain) match {
-      case (totalGain, taxableGain) if isGreaterThanZero(totalGain) && isGreaterThanZero(taxableGain)=> Array(
+      case (totalGain, taxableGain) if isGreaterThanZero(totalGain) && isGreaterThanZero(taxableGain) => Array(
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.calculationElection"),
           calcTypeMessage(summary.calculationElectionModel.calculationType),
@@ -57,7 +57,7 @@ object SummaryConstructor {
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalGain"),
-          "&pound;" + MoneyPounds(result.totalGain.abs,0).quantity,
+          "&pound;" + MoneyPounds(result.totalGain.abs, 0).quantity,
           None
         ),
         SummaryDataItemModel(
@@ -67,15 +67,15 @@ object SummaryConstructor {
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.taxableGain"),
-          "&pound;" + MoneyPounds(result.taxableGain,0).quantity,
+          "&pound;" + MoneyPounds(result.taxableGain, 0).quantity,
           None
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.taxRate"),
           (isGreaterThanZero(result.baseTaxGain), isGreaterThanZero(result.upperTaxGain.getOrElse(0))) match {
-            case (true, true)  =>
-              s"&pound;${MoneyPounds(result.baseTaxGain,0).quantity} at ${result.baseTaxRate}%" +
-                s"<br>&pound;${MoneyPounds(result.upperTaxGain.get,0).quantity} at ${result.upperTaxRate.get}%"
+            case (true, true) =>
+              s"&pound;${MoneyPounds(result.baseTaxGain, 0).quantity} at ${result.baseTaxRate}%" +
+                s"<br>&pound;${MoneyPounds(result.upperTaxGain.get, 0).quantity} at ${result.upperTaxRate.get}%"
             case (false, true) =>
               s"${result.upperTaxRate.get}%"
             case _ =>
@@ -93,7 +93,7 @@ object SummaryConstructor {
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalGain"),
-          "&pound;" + MoneyPounds(result.totalGain.abs,0).quantity,
+          "&pound;" + MoneyPounds(result.totalGain.abs, 0).quantity,
           None
         ),
         SummaryDataItemModel(
@@ -103,7 +103,7 @@ object SummaryConstructor {
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.lossCarriedForward"),
-          "&pound;" + MoneyPounds(result.taxableGain.abs,0).quantity,
+          "&pound;" + MoneyPounds(result.taxableGain.abs, 0).quantity,
           None
         )
       )
@@ -116,7 +116,7 @@ object SummaryConstructor {
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalLoss"),
-          "&pound;" + MoneyPounds(result.totalGain.abs,0).quantity,
+          "&pound;" + MoneyPounds(result.totalGain.abs, 0).quantity,
           None
         )
       )
@@ -129,7 +129,7 @@ object SummaryConstructor {
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalGain"),
-          "&pound;" + MoneyPounds(result.totalGain.abs,0).quantity,
+          "&pound;" + MoneyPounds(result.totalGain.abs, 0).quantity,
           None
         ),
         SummaryDataItemModel(
@@ -139,7 +139,7 @@ object SummaryConstructor {
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.taxableGain"),
-          "&pound;" + MoneyPounds(result.taxableGain,0).quantity,
+          "&pound;" + MoneyPounds(result.taxableGain, 0).quantity,
           None
         )
       )
@@ -152,7 +152,7 @@ object SummaryConstructor {
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalGain"),
-          "&pound;" + MoneyPounds(result.totalGain.abs,0).quantity,
+          "&pound;" + MoneyPounds(result.totalGain.abs, 0).quantity,
           None
         )
       )
@@ -448,8 +448,9 @@ object SummaryConstructor {
             ),
             SummaryDataItemModel(
               Messages("calc.improvements.questionTwo"),
-              "&pound;" + {MoneyPounds(summary.improvementsModel.improvementsAmt.getOrElse(BigDecimal(0))
-                .+(summary.improvementsModel.improvementsAmtAfter.getOrElse(BigDecimal(0)))).quantity
+              "&pound;" + {
+                MoneyPounds(summary.improvementsModel.improvementsAmt.getOrElse(BigDecimal(0))
+                  .+(summary.improvementsModel.improvementsAmtAfter.getOrElse(BigDecimal(0)))).quantity
               },
               Some(routes.CalculationController.improvements().toString())
             )
@@ -506,31 +507,31 @@ object SummaryConstructor {
             }),
             Some(routes.CalculationController.allowableLosses().toString())
           ),
-        summary.otherReliefsModelFlat.isClaimingOtherReliefs match {
-          case Some("No") =>
-          SummaryDataItemModel(
-            Messages("calc.otherReliefs.questionTwo"),
-            summary.otherReliefsModelFlat.isClaimingOtherReliefs match {
-              case Some(data) => summary.otherReliefsModelFlat.isClaimingOtherReliefs.get
-              case None => "No"
-            },
-            Some(routes.CalculationController.otherReliefs().toString())
-          )
-          case Some("Yes") => SummaryDataItemModel(
-            Messages("calc.otherReliefs.question"),
-            "&pound;" + (summary.otherReliefsModelFlat.otherReliefs match {
-              case Some(data) => MoneyPounds(data).quantity
-              case None => "0.00"
-            }),
-            Some(routes.CalculationController.otherReliefs().toString()))
-          case _ => SummaryDataItemModel(
-            Messages("calc.otherReliefs.question"),
-            "&pound;" + (summary.otherReliefsModelFlat.otherReliefs match {
-              case Some(data) => MoneyPounds(data).quantity
-              case None => "0.00"
-            }),
-            Some(routes.CalculationController.otherReliefsFlat().toString()))
-        })
+          summary.otherReliefsModelFlat.isClaimingOtherReliefs match {
+            case Some("No") =>
+              SummaryDataItemModel(
+                Messages("calc.otherReliefs.questionTwo"),
+                summary.otherReliefsModelFlat.isClaimingOtherReliefs match {
+                  case Some(data) => summary.otherReliefsModelFlat.isClaimingOtherReliefs.get
+                  case None => "No"
+                },
+                Some(routes.CalculationController.otherReliefs().toString())
+              )
+            case Some("Yes") => SummaryDataItemModel(
+              Messages("calc.otherReliefs.question"),
+              "&pound;" + (summary.otherReliefsModelFlat.otherReliefs match {
+                case Some(data) => MoneyPounds(data).quantity
+                case None => "0.00"
+              }),
+              Some(routes.CalculationController.otherReliefs().toString()))
+            case _ => SummaryDataItemModel(
+              Messages("calc.otherReliefs.question"),
+              "&pound;" + (summary.otherReliefsModelFlat.otherReliefs match {
+                case Some(data) => MoneyPounds(data).quantity
+                case None => "0.00"
+              }),
+              Some(routes.CalculationController.otherReliefsFlat().toString()))
+          })
         case "time" => Array(
           SummaryDataItemModel(
             Messages("calc.privateResidenceRelief.question"),
@@ -581,12 +582,12 @@ object SummaryConstructor {
     )
   }
 
-  def gainMessage (result: CalculationResultModel) = {
+  def gainMessage(result: CalculationResultModel) = {
     if (result.totalGain >= 0) Messages("calc.otherReliefs.totalGain")
     else Messages("calc.otherReliefs.totalLoss")
   }
 
-  def setPositive (result: CalculationResultModel) = {
+  def setPositive(result: CalculationResultModel) = {
     BigDecimal(Math.abs(result.totalGain.toDouble)).setScale(2).toString()
   }
 }
