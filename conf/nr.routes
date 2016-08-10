@@ -58,8 +58,8 @@ GET         /disposal-value                     controllers.nonresident.Calculat
 POST        /disposal-value                     controllers.nonresident.CalculationController.submitDisposalValue
 
 #Acquisition Costs
-GET         /acquisition-costs                  controllers.nonresident.CalculationController.acquisitionCosts
-POST        /acquisition-costs                  controllers.nonresident.CalculationController.submitAcquisitionCosts
+GET         /acquisition-costs                  controllers.nonresident.AcquisitionCostsController.acquisitionCosts
+POST        /acquisition-costs                  controllers.nonresident.AcquisitionCostsController.submitAcquisitionCosts
 
 #Disposal Costs
 GET         /disposal-costs                     controllers.nonresident.CalculationController.disposalCosts

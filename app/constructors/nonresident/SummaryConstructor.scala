@@ -398,7 +398,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.acquisitionCosts.question"),
               "&pound;" + MoneyPounds(summary.acquisitionCostsModel.acquisitionCostsAmt).quantity,
-              Some(routes.CalculationController.acquisitionCosts().toString())
+              Some(routes.AcquisitionCostsController.acquisitionCosts().toString())
             )
           )
           case "No" => Array(
@@ -415,7 +415,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.acquisitionCosts.question"),
               "&pound;" + MoneyPounds(summary.acquisitionCostsModel.acquisitionCostsAmt).quantity,
-              Some(routes.CalculationController.acquisitionCosts().toString())
+              Some(routes.AcquisitionCostsController.acquisitionCosts().toString())
             )
           )
         }
