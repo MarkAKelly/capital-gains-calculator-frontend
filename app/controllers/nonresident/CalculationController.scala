@@ -76,7 +76,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     disabledTrusteeForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(calculation.nonresident.disabledTrustee(errors))),
       success => {
-        calcConnector.saveFormData(KeystoreKeys.disabledTrustee,success)
+        calcConnector.saveFormData(KeystoreKeys.disabledTrustee, success)
         Future.successful(Redirect(routes.CalculationController.otherProperties()))
       }
     )
@@ -92,14 +92,14 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   }
 
   val submitCurrentIncome = ValidateSession.async { implicit request =>
-   currentIncomeForm.bindFromRequest.fold(
-     errors => Future.successful(BadRequest(calculation.nonresident.currentIncome(errors))),
-     success => {
-       calcConnector.saveFormData(KeystoreKeys.currentIncome, success)
-       if (success.currentIncome > 0) Future.successful(Redirect(routes.CalculationController.personalAllowance()))
-       else Future.successful(Redirect(routes.CalculationController.otherProperties()))
-     }
-   )
+    currentIncomeForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(calculation.nonresident.currentIncome(errors))),
+      success => {
+        calcConnector.saveFormData(KeystoreKeys.currentIncome, success)
+        if (success.currentIncome > 0) Future.successful(Redirect(routes.CalculationController.personalAllowance()))
+        else Future.successful(Redirect(routes.CalculationController.otherProperties()))
+      }
+    )
   }
 
   //################### Personal Allowance methods #######################
@@ -133,11 +133,11 @@ trait CalculationController extends FrontendController with ValidActiveSession {
       case Some(CustomerTypeModel("trustee")) => Future.successful(routes.CalculationController.disabledTrustee().url)
       case Some(_) => Future.successful(routes.CustomerTypeController.customerType().url)
       case _ => Future.successful(missingDataRoute)
-  }
+    }
 
   def showOtherPropertiesAmt(implicit hc: HeaderCarrier): Future[Boolean] = calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).map {
-      case Some(CustomerTypeModel("individual")) => true
-      case _ => false
+    case Some(CustomerTypeModel("individual")) => true
+    case _ => false
   }
 
   val otherProperties = ValidateSession.async { implicit request =>
@@ -188,7 +188,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     }
   }
 
-  val submitAnnualExemptAmount =  ValidateSession.async { implicit request =>
+  val submitAnnualExemptAmount = ValidateSession.async { implicit request =>
 
     def customerType(implicit hc: HeaderCarrier): Future[String] = {
       calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).map {
@@ -288,35 +288,34 @@ trait CalculationController extends FrontendController with ValidActiveSession {
       errors => Future.successful(BadRequest(calculation.nonresident.acquisitionValue(errors))),
       success => {
         calcConnector.saveFormData(KeystoreKeys.acquisitionValue, success)
-        calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap (connection =>
-        if (!Dates.dateAfterStart(
+        calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap(connection =>
+          if (!Dates.dateAfterStart(
             connection.get.day.getOrElse(0),
             connection.get.month.getOrElse(0),
             connection.get.year.getOrElse(0))
-          )
-        {
-          Future.successful(Redirect(routes.CalculationController.rebasedValue()))
-        }
-        else {
-          Future.successful(Redirect(routes.CalculationController.improvements()))
-        }
+          ) {
+            Future.successful(Redirect(routes.CalculationController.rebasedValue()))
+          }
+          else {
+            Future.successful(Redirect(routes.CalculationController.improvements()))
+          }
         )
       }
     )
   }
 
   //################### Rebased value methods #######################
-  val rebasedValue = ValidateSession.async {implicit request =>
+  val rebasedValue = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap(acquisitionDateModel =>
-    calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).map {
-      case Some(data) => Ok(calculation.nonresident.rebasedValue(rebasedValueForm.fill(data), acquisitionDateModel.get.hasAcquisitionDate))
-      case None => Ok(calculation.nonresident.rebasedValue(rebasedValueForm, acquisitionDateModel.get.hasAcquisitionDate))
-    })
+      calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).map {
+        case Some(data) => Ok(calculation.nonresident.rebasedValue(rebasedValueForm.fill(data), acquisitionDateModel.get.hasAcquisitionDate))
+        case None => Ok(calculation.nonresident.rebasedValue(rebasedValueForm, acquisitionDateModel.get.hasAcquisitionDate))
+      })
   }
 
   val submitRebasedValue = ValidateSession.async { implicit request =>
     rebasedValueForm.bindFromRequest.fold(
-      errors =>  calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap(acquisitionDateModel =>
+      errors => calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap(acquisitionDateModel =>
         Future.successful(BadRequest(calculation.nonresident.rebasedValue(errors, acquisitionDateModel.get.hasAcquisitionDate)))),
       success => {
         calcConnector.saveFormData(KeystoreKeys.rebasedValue, success)
@@ -329,14 +328,14 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   }
 
   //################### Rebased costs methods #######################
-  val rebasedCosts = ValidateSession.async {implicit request =>
+  val rebasedCosts = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[RebasedCostsModel](KeystoreKeys.rebasedCosts).map {
       case Some(data) => Ok(calculation.nonresident.rebasedCosts(rebasedCostsForm.fill(data)))
       case None => Ok(calculation.nonresident.rebasedCosts(rebasedCostsForm))
     }
   }
 
-  val submitRebasedCosts = ValidateSession.async {implicit request =>
+  val submitRebasedCosts = ValidateSession.async { implicit request =>
     rebasedCostsForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(calculation.nonresident.rebasedCosts(errors))),
       success => {
@@ -523,17 +522,17 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.disposalDate).map {
       case Some(data) => Some(Dates.constructDate(data.day, data.month, data.year))
       case _ => None
-  }
+    }
 
   def getRebasedAmount(implicit hc: HeaderCarrier): Future[Boolean] =
     calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).map {
       case Some(data) if data.hasRebasedValue == "Yes" => true
       case _ => false
-  }
+    }
 
   def displayBetweenQuestion(disposalDate: Option[Date], acquisitionDate: Option[Date], hasRebasedValue: Boolean): Boolean =
     (disposalDate, acquisitionDate) match {
-      case (Some(dDate), Some(aDate)) if Dates.dateAfterOctober(dDate) && !Dates.dateAfterStart(aDate)  => true
+      case (Some(dDate), Some(aDate)) if Dates.dateAfterOctober(dDate) && !Dates.dateAfterStart(aDate) => true
       case (Some(dDate), aDateOption) if Dates.dateAfterOctober(dDate) && hasRebasedValue => true
       case _ => false
     }
@@ -552,7 +551,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
 
       val showBetweenQuestion = displayBetweenQuestion(disposalDate, acquisitionDate, hasRebasedValue)
       val showBeforeQuestion = displayBeforeQuestion(disposalDate, acquisitionDate, hasRebasedValue)
-      val disposalDateLess18Months = Dates.dateMinusMonths(disposalDate,18)
+      val disposalDateLess18Months = Dates.dateMinusMonths(disposalDate, 18)
 
       calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief).map {
         case Some(data) => Ok(calculation.nonresident.privateResidenceRelief(privateResidenceReliefForm(showBeforeQuestion, showBetweenQuestion).fill(data), showBetweenQuestion, showBeforeQuestion, disposalDateLess18Months))
@@ -574,10 +573,10 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     def action(disposalDate: Option[Date], acquisitionDate: Option[Date], hasRebasedValue: Boolean) = {
       val showBetweenQuestion = displayBetweenQuestion(disposalDate, acquisitionDate, hasRebasedValue)
       val showBeforeQuestion = displayBeforeQuestion(disposalDate, acquisitionDate, hasRebasedValue)
-      val disposalDateLess18Months = Dates.dateMinusMonths(disposalDate,18)
+      val disposalDateLess18Months = Dates.dateMinusMonths(disposalDate, 18)
       privateResidenceReliefForm(showBeforeQuestion, showBetweenQuestion).bindFromRequest.fold(
         errors => {
-          Future.successful(BadRequest(calculation.nonresident.privateResidenceRelief(errors,showBetweenQuestion, showBeforeQuestion, disposalDateLess18Months)))
+          Future.successful(BadRequest(calculation.nonresident.privateResidenceRelief(errors, showBetweenQuestion, showBeforeQuestion, disposalDateLess18Months)))
         },
         success => {
           calcConnector.saveFormData(KeystoreKeys.privateResidenceRelief, success)
@@ -654,13 +653,13 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
       case Some(data) => data.otherReliefs
       case _ => None
-  }
+    }
 
   def getOtherReliefsTA(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] =
     calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA).map {
       case Some(data) => data.otherReliefs
       case _ => None
-  }
+    }
 
   def getOtherReliefsRebased(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] =
     calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map {
@@ -674,21 +673,21 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     (
       construct: SummaryModel,
       content: Seq[(String, String, String, Option[String], String, Option[BigDecimal])]
-    ) =
-    calcConnector.fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection).map {
-      case Some(data) =>
-        Ok(calculation.nonresident.calculationElection(
-          calculationElectionForm.fill(data),
-          construct,
-          content)
-        )
-      case None =>
-        Ok(calculation.nonresident.calculationElection(
-          calculationElectionForm,
-          construct,
-          content)
-        )
-    }
+      ) =
+      calcConnector.fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection).map {
+        case Some(data) =>
+          Ok(calculation.nonresident.calculationElection(
+            calculationElectionForm.fill(data),
+            construct,
+            content)
+          )
+        case None =>
+          Ok(calculation.nonresident.calculationElection(
+            calculationElectionForm,
+            construct,
+            content)
+          )
+      }
 
     def calcTimeCall(summary: SummaryModel): Future[Option[CalculationResultModel]] = {
       summary.acquisitionDateModel.hasAcquisitionDate match {
@@ -743,7 +742,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
 
     calculationElectionForm.bindFromRequest.fold(
       errors => {
-        for{
+        for {
           construct <- calcConnector.createSummary(hc)
           calcFlat <- calcConnector.calculateFlat(construct)
           calcTA <- calcTimeCall(construct)
@@ -751,11 +750,13 @@ trait CalculationController extends FrontendController with ValidActiveSession {
           otherReliefsTA <- getOtherReliefsTA
           otherReliefsRebased <- getOtherReliefsRebased
           calcRebased <- calcRebasedCall(construct)
-        } yield {BadRequest(calculation.nonresident.calculationElection(
-          errors,
-          construct,
-          calcElectionConstructor.generateElection(construct, hc, calcFlat, calcTA, calcRebased, otherReliefsFlat, otherReliefsTA, otherReliefsRebased)
-        ))}
+        } yield {
+          BadRequest(calculation.nonresident.calculationElection(
+            errors,
+            construct,
+            calcElectionConstructor.generateElection(construct, hc, calcFlat, calcTA, calcRebased, otherReliefsFlat, otherReliefsTA, otherReliefsRebased)
+          ))
+        }
       },
       success => {
         calcConnector.saveFormData(KeystoreKeys.calculationElection, success)
@@ -787,7 +788,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
 
   val otherReliefs = ValidateSession.async { implicit request =>
 
-    def action (dataResult: Option[CalculationResultModel], backUrl: String) = {
+    def action(dataResult: Option[CalculationResultModel], backUrl: String) = {
       calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
         case Some(data) if data.otherReliefs.isDefined => Ok(calculation.nonresident.otherReliefs(otherReliefsForm(false).fill(data), dataResult.get))
         case _ => Ok(calculation.nonresident.otherReliefs(otherReliefsForm(true), dataResult.get))
@@ -804,7 +805,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
 
   val submitOtherReliefs = ValidateSession.async { implicit request =>
 
-    def action (dataResult: Option[CalculationResultModel], construct: SummaryModel, backUrl: String) = otherReliefsForm(false).bindFromRequest.fold(
+    def action(dataResult: Option[CalculationResultModel], construct: SummaryModel, backUrl: String) = otherReliefsForm(false).bindFromRequest.fold(
       errors =>
         calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
           case Some(data) if data.otherReliefs.isDefined => BadRequest(calculation.nonresident.otherReliefs(errors, dataResult.get))
@@ -834,8 +835,8 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   //################### Flat Other Reliefs methods #######################
   val otherReliefsFlat: Action[AnyContent] = Action.async { implicit request =>
 
-    def action (dataResult: Option[CalculationResultModel]) = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
-      case Some(data) if data.otherReliefs.isDefined=> Ok(calculation.nonresident.otherReliefsFlat(otherReliefsForm(true).fill(data), dataResult.get, true))
+    def action(dataResult: Option[CalculationResultModel]) = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
+      case Some(data) if data.otherReliefs.isDefined => Ok(calculation.nonresident.otherReliefsFlat(otherReliefsForm(true).fill(data), dataResult.get, true))
       case _ => Ok(calculation.nonresident.otherReliefsFlat(otherReliefsForm(false), dataResult.get, false))
     }
 
@@ -868,8 +869,8 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   //################### Time Apportioned Other Reliefs methods #######################
   val otherReliefsTA = ValidateSession.async { implicit request =>
 
-    def action (dataResult: Option[CalculationResultModel]) = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA).map {
-      case Some(data) if data.otherReliefs.isDefined=> Ok(calculation.nonresident.otherReliefsTA(otherReliefsForm(false).fill(data), dataResult.get, true))
+    def action(dataResult: Option[CalculationResultModel]) = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA).map {
+      case Some(data) if data.otherReliefs.isDefined => Ok(calculation.nonresident.otherReliefsTA(otherReliefsForm(false).fill(data), dataResult.get, true))
       case _ => Ok(calculation.nonresident.otherReliefsTA(otherReliefsForm(true), dataResult.get, false))
     }
 
@@ -902,7 +903,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
 
   //################### Rebased Other Reliefs methods #######################
   val otherReliefsRebased = ValidateSession.async { implicit request =>
-    def action (dataResult: Option[CalculationResultModel]) = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map {
+    def action(dataResult: Option[CalculationResultModel]) = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map {
       case Some(data) if data.otherReliefs.isDefined => Ok(calculation.nonresident.otherReliefsRebased(otherReliefsForm(true).fill(data), dataResult.get, true))
       case _ => Ok(calculation.nonresident.otherReliefsRebased(otherReliefsForm(true), dataResult.get, false))
     }
@@ -949,6 +950,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
       case _ => Future.successful(missingDataRoute)
     }
   }
+
   val summary = ValidateSession.async { implicit request =>
 
     def routeRequest(backUrl: String) = {
@@ -973,7 +975,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   }
 
   def restart(): Action[AnyContent] = Action.async { implicit request =>
-    calcConnector.clearKeystore()
+    calcConnector.clearKeystore(hc)
     Future.successful(Redirect(routes.CustomerTypeController.customerType()))
   }
 }
