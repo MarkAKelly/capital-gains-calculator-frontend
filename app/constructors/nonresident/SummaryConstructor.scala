@@ -216,7 +216,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.currentIncome.question"),
                     "&pound;" + MoneyPounds(summary.currentIncomeModel.get.currentIncome).quantity,
-                    Some(routes.CalculationController.currentIncome().toString())
+                    Some(routes.CurrentIncomeController.currentIncome().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.personalAllowance.question"),
@@ -244,7 +244,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.currentIncome.question"),
                     "&pound;" + MoneyPounds(summary.currentIncomeModel.get.currentIncome).quantity,
-                    Some(routes.CalculationController.currentIncome().toString())
+                    Some(routes.CurrentIncomeController.currentIncome().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.otherProperties.questionTwo"),
@@ -270,7 +270,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.currentIncome.question"),
                     "&pound;" + MoneyPounds(summary.currentIncomeModel.get.currentIncome).quantity,
-                    Some(routes.CalculationController.currentIncome().toString())
+                    Some(routes.CurrentIncomeController.currentIncome().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.personalAllowance.question"),
@@ -293,7 +293,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.currentIncome.question"),
                     "&pound;" + MoneyPounds(summary.currentIncomeModel.get.currentIncome).quantity,
-                    Some(routes.CalculationController.currentIncome().toString())
+                    Some(routes.CurrentIncomeController.currentIncome().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.otherProperties.question"),
