@@ -117,9 +117,9 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with MockitoSug
           document.getElementById("rebasedValueAmt").parent.text should include(Messages("calc.rebasedValue.questionTwo"))
         }
 
-        s"have a 'Back' link to ${routes.CalculationController.acquisitionValue}" in {
+        s"have a 'Back' link to ${routes.AcquisitionValueController.acquisitionValue}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.acquisitionValue.toString()
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionValueController.acquisitionValue.toString()
         }
 
         "Have a continue button" in {

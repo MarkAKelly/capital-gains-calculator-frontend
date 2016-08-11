@@ -393,7 +393,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.acquisitionValue.question"),
               "&pound;" + MoneyPounds(summary.acquisitionValueModel.acquisitionValueAmt).quantity,
-              Some(routes.CalculationController.acquisitionValue().toString())
+              Some(routes.AcquisitionValueController.acquisitionValue().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.acquisitionCosts.question"),
@@ -410,7 +410,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.acquisitionValue.question"),
               "&pound;" + MoneyPounds(summary.acquisitionValueModel.acquisitionValueAmt).quantity,
-              Some(routes.CalculationController.acquisitionValue().toString())
+              Some(routes.AcquisitionValueController.acquisitionValue().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.acquisitionCosts.question"),

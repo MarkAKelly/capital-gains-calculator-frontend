@@ -76,7 +76,7 @@ trait AcquisitionDateController extends FrontendController with ValidActiveSessi
 
     def successAction(model: AcquisitionDateModel) = {
       calcConnector.saveFormData(KeystoreKeys.acquisitionDate, model)
-      Future.successful(Redirect(routes.CalculationController.acquisitionValue()))
+      Future.successful(Redirect(routes.AcquisitionValueController.acquisitionValue()))
     }
 
     acquisitionDateForm.bindFromRequest.fold(
