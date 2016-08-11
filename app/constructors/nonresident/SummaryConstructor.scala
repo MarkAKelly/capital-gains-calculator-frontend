@@ -53,7 +53,7 @@ object SummaryConstructor {
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.calculationElection"),
           calcTypeMessage(summary.calculationElectionModel.calculationType),
-          Some(routes.CalculationController.calculationElection().toString())
+          Some(routes.CalculationElectionController.calculationElection().toString())
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalGain"),
@@ -89,7 +89,7 @@ object SummaryConstructor {
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.calculationElection"),
           calcTypeMessage(summary.calculationElectionModel.calculationType),
-          Some(routes.CalculationController.calculationElection().toString())
+          Some(routes.CalculationElectionController.calculationElection().toString())
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalGain"),
@@ -112,7 +112,7 @@ object SummaryConstructor {
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.calculationElection"),
           calcTypeMessage(summary.calculationElectionModel.calculationType),
-          Some(routes.CalculationController.calculationElection().toString())
+          Some(routes.CalculationElectionController.calculationElection().toString())
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalLoss"),
@@ -125,7 +125,7 @@ object SummaryConstructor {
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.calculationElection"),
           calcTypeMessage(summary.calculationElectionModel.calculationType),
-          Some(routes.CalculationController.calculationElection().toString())
+          Some(routes.CalculationElectionController.calculationElection().toString())
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalGain"),
@@ -148,7 +148,7 @@ object SummaryConstructor {
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.calculationElection"),
           calcTypeMessage(summary.calculationElectionModel.calculationType),
-          Some(routes.CalculationController.calculationElection().toString())
+          Some(routes.CalculationElectionController.calculationElection().toString())
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalGain"),
@@ -172,7 +172,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.disabledTrustee.question"),
               summary.disabledTrusteeModel.get.isVulnerable,
-              Some(routes.CalculationController.disabledTrustee().toString())
+              Some(routes.DisabledTrusteeController.disabledTrustee().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.otherProperties.question"),
@@ -194,7 +194,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.disabledTrustee.question"),
               summary.disabledTrusteeModel.get.isVulnerable,
-              Some(routes.CalculationController.disabledTrustee().toString())
+              Some(routes.DisabledTrusteeController.disabledTrustee().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.otherProperties.question"),
@@ -393,7 +393,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.acquisitionValue.question"),
               "&pound;" + MoneyPounds(summary.acquisitionValueModel.acquisitionValueAmt).quantity,
-              Some(routes.CalculationController.acquisitionValue().toString())
+              Some(routes.AcquisitionValueController.acquisitionValue().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.acquisitionCosts.question"),
@@ -410,7 +410,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.acquisitionValue.question"),
               "&pound;" + MoneyPounds(summary.acquisitionValueModel.acquisitionValueAmt).quantity,
-              Some(routes.CalculationController.acquisitionValue().toString())
+              Some(routes.AcquisitionValueController.acquisitionValue().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.acquisitionCosts.question"),
@@ -484,7 +484,7 @@ object SummaryConstructor {
         SummaryDataItemModel(
           Messages("calc.disposalCosts.question"),
           "&pound;" + MoneyPounds(summary.disposalCostsModel.disposalCosts).quantity,
-          Some(routes.CalculationController.disposalCosts().toString())
+          Some(routes.DisposalCostsController.disposalCosts().toString())
         )
       )
     )

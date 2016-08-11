@@ -50,7 +50,7 @@ trait AcquisitionCostsController extends FrontendController with ValidActiveSess
 
     def successAction(model: AcquisitionCostsModel) = {
       calcConnector.saveFormData(KeystoreKeys.acquisitionCosts, model)
-      Future.successful(Redirect(routes.CalculationController.disposalCosts()))
+      Future.successful(Redirect(routes.DisposalCostsController.disposalCosts()))
     }
 
     def errorAction(form: Form[AcquisitionCostsModel]) = {

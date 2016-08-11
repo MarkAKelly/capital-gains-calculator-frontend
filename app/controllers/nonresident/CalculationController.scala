@@ -61,22 +61,6 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     }
 
   //################### Disabled Trustee methods #######################
-  val disabledTrustee = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[DisabledTrusteeModel](KeystoreKeys.disabledTrustee).map {
-      case Some(data) => Ok(calculation.nonresident.disabledTrustee(disabledTrusteeForm.fill(data)))
-      case None => Ok(calculation.nonresident.disabledTrustee(disabledTrusteeForm))
-    }
-  }
-
-  val submitDisabledTrustee = ValidateSession.async { implicit request =>
-    disabledTrusteeForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(calculation.nonresident.disabledTrustee(errors))),
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.disabledTrustee, success)
-        Future.successful(Redirect(routes.CalculationController.otherProperties()))
-      }
-    )
-  }
 
   //################### Personal Allowance methods #######################
   val personalAllowance = ValidateSession.async { implicit request =>
@@ -106,7 +90,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
           case Some(data) if data.currentIncome == 0 => Future.successful(routes.CurrentIncomeController.currentIncome().url)
           case _ => Future.successful(routes.CalculationController.personalAllowance().url)
         }
-      case Some(CustomerTypeModel("trustee")) => Future.successful(routes.CalculationController.disabledTrustee().url)
+      case Some(CustomerTypeModel("trustee")) => Future.successful(routes.DisabledTrusteeController.disabledTrustee().url)
       case Some(_) => Future.successful(routes.CustomerTypeController.customerType().url)
       case _ => Future.successful(missingDataRoute)
     }
@@ -209,35 +193,6 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     } yield finalResult
   }
 
-  //################### Acquisition Value methods #######################
-  val acquisitionValue = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.acquisitionValue).map {
-      case Some(data) => Ok(calculation.nonresident.acquisitionValue(acquisitionValueForm.fill(data)))
-      case None => Ok(calculation.nonresident.acquisitionValue(acquisitionValueForm))
-    }
-  }
-
-  val submitAcquisitionValue = ValidateSession.async { implicit request =>
-    acquisitionValueForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(calculation.nonresident.acquisitionValue(errors))),
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.acquisitionValue, success)
-        calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap(connection =>
-          if (!Dates.dateAfterStart(
-            connection.get.day.getOrElse(0),
-            connection.get.month.getOrElse(0),
-            connection.get.year.getOrElse(0))
-          ) {
-            Future.successful(Redirect(routes.CalculationController.rebasedValue()))
-          }
-          else {
-            Future.successful(Redirect(routes.CalculationController.improvements()))
-          }
-        )
-      }
-    )
-  }
-
   //################### Rebased value methods #######################
   val rebasedValue = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap(acquisitionDateModel =>
@@ -292,7 +247,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
 
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
       case Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year))) if Dates.dateAfterStart(day, month, year) =>
-        Future.successful(routes.CalculationController.acquisitionValue().url)
+        Future.successful(routes.AcquisitionValueController.acquisitionValue().url)
       case None => Future.successful(missingDataRoute)
       case _ => checkRebasedValue
     }
@@ -362,7 +317,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
         success => {
           calcConnector.saveFormData(KeystoreKeys.disposalDate, success)
           if (!Dates.dateAfterStart(success.day, success.month, success.year)) {
-            Future.successful(Redirect(routes.CalculationController.noCapitalGainsTax()))
+            Future.successful(Redirect(routes.NoCapitalGainsTaxController.noCapitalGainsTax()))
           } else {
             Future.successful(Redirect(routes.CalculationController.disposalValue()))
           }
@@ -377,12 +332,6 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   }
 
   //################### No Capital Gains Tax #######################
-
-  val noCapitalGainsTax = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.disposalDate).map {
-      result => Ok(calculation.nonresident.noCapitalGainsTax(result.get))
-    }
-  }
 
   //################### Disposal Value methods #######################
   val disposalValue = ValidateSession.async { implicit request =>
@@ -403,35 +352,6 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   }
 
   //################### Disposal Costs methods #######################
-  val disposalCosts = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[DisposalCostsModel](KeystoreKeys.disposalCosts).map {
-      case Some(data) => Ok(calculation.nonresident.disposalCosts(disposalCostsForm.fill(data)))
-      case None => Ok(calculation.nonresident.disposalCosts(disposalCostsForm))
-    }
-  }
-
-  val submitDisposalCosts = ValidateSession.async { implicit request =>
-    disposalCostsForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(calculation.nonresident.disposalCosts(errors))),
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.disposalCosts, success)
-        calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
-          case Some(data) if data.hasAcquisitionDate == "Yes" =>
-            Future.successful(Redirect(routes.CalculationController.privateResidenceRelief()))
-          case _ => {
-            calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
-              case Some(rebasedData) if rebasedData.hasRebasedValue == "Yes" => {
-                Future.successful(Redirect(routes.CalculationController.privateResidenceRelief()))
-              }
-              case _ => {
-                Future.successful(Redirect(routes.CalculationController.allowableLosses()))
-              }
-            }
-          }
-        }
-      }
-    )
-  }
 
   //################### Private Residence Relief methods #######################
   def getDisposalDate(implicit hc: HeaderCarrier): Future[Option[Date]] =
@@ -517,7 +437,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
       case _ => calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
         case Some(rebasedData) if rebasedData.hasRebasedValue == "Yes" =>
           Future.successful(routes.CalculationController.privateResidenceRelief().url)
-        case _ => Future.successful(routes.CalculationController.disposalCosts().url)
+        case _ => Future.successful(routes.DisposalCostsController.disposalCosts().url)
       }
     }
   }
@@ -544,11 +464,11 @@ trait CalculationController extends FrontendController with ValidActiveSession {
           calcConnector.saveFormData(KeystoreKeys.allowableLosses, success)
           calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
             case Some(data) if data.hasAcquisitionDate == "Yes" && !Dates.dateAfterStart(data.day.get, data.month.get, data.year.get) =>
-              Future.successful(Redirect(routes.CalculationController.calculationElection()))
+              Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
             case _ =>
               calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
                 case Some(rebasedData) if rebasedData.hasRebasedValue == "Yes" =>
-                  Future.successful(Redirect(routes.CalculationController.calculationElection()))
+                  Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
                 case _ =>
                   calcConnector.saveFormData(KeystoreKeys.calculationElection, CalculationElectionModel("flat"))
                   Future.successful(Redirect(routes.CalculationController.otherReliefs()))
@@ -564,137 +484,15 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     } yield route
   }
 
-  //################### Calculation Election methods #######################
-  def getOtherReliefsFlat(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] =
-    calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
-      case Some(data) => data.otherReliefs
-      case _ => None
-    }
-
-  def getOtherReliefsTA(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] =
-    calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA).map {
-      case Some(data) => data.otherReliefs
-      case _ => None
-    }
-
-  def getOtherReliefsRebased(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] =
-    calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map {
-      case Some(data) => data.otherReliefs
-      case _ => None
-    }
-
-  val calculationElection = ValidateSession.async { implicit request =>
-
-    def action
-    (
-      construct: SummaryModel,
-      content: Seq[(String, String, String, Option[String], String, Option[BigDecimal])]
-      ) =
-      calcConnector.fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection).map {
-        case Some(data) =>
-          Ok(calculation.nonresident.calculationElection(
-            calculationElectionForm.fill(data),
-            construct,
-            content)
-          )
-        case None =>
-          Ok(calculation.nonresident.calculationElection(
-            calculationElectionForm,
-            construct,
-            content)
-          )
-      }
-
-    def calcTimeCall(summary: SummaryModel): Future[Option[CalculationResultModel]] = {
-      summary.acquisitionDateModel.hasAcquisitionDate match {
-        case "Yes" if !Dates.dateAfterStart(summary.acquisitionDateModel.day.get, summary.acquisitionDateModel.month.get, summary.acquisitionDateModel.year.get) =>
-          calcConnector.calculateTA(summary)
-        case _ => Future(None)
-      }
-    }
-
-    def calcRebasedCall(summary: SummaryModel): Future[Option[CalculationResultModel]] = {
-      (summary.rebasedValueModel.getOrElse(RebasedValueModel("No", None)).hasRebasedValue, summary.acquisitionDateModel.hasAcquisitionDate) match {
-        case ("Yes", "Yes") if !Dates.dateAfterStart(summary.acquisitionDateModel.day.get, summary.acquisitionDateModel.month.get, summary.acquisitionDateModel.year.get) =>
-          calcConnector.calculateRebased(summary)
-        case ("Yes", "No") => calcConnector.calculateRebased(summary)
-        case _ => Future(None)
-      }
-    }
-
-    for {
-      construct <- calcConnector.createSummary(hc)
-      calcFlat <- calcConnector.calculateFlat(construct)
-      calcTA <- calcTimeCall(construct)
-      calcRebased <- calcRebasedCall(construct)
-      otherReliefsFlat <- getOtherReliefsFlat
-      otherReliefsTA <- getOtherReliefsTA
-      otherReliefsRebased <- getOtherReliefsRebased
-      finalResult <- action(
-        construct,
-        calcElectionConstructor.generateElection(construct, hc, calcFlat, calcTA, calcRebased, otherReliefsFlat, otherReliefsTA, otherReliefsRebased)
-      )
-    } yield finalResult
-  }
-
-  val submitCalculationElection = ValidateSession.async { implicit request =>
-
-    def calcTimeCall(summary: SummaryModel): Future[Option[CalculationResultModel]] = {
-      summary.acquisitionDateModel.hasAcquisitionDate match {
-        case "Yes" if !Dates.dateAfterStart(summary.acquisitionDateModel.day.get, summary.acquisitionDateModel.month.get, summary.acquisitionDateModel.year.get) =>
-          calcConnector.calculateTA(summary)
-        case _ => Future(None)
-      }
-    }
-
-    def calcRebasedCall(summary: SummaryModel): Future[Option[CalculationResultModel]] = {
-      (summary.rebasedValueModel.getOrElse(RebasedValueModel("No", None)).hasRebasedValue, summary.acquisitionDateModel.hasAcquisitionDate) match {
-        case ("Yes", "Yes") if !Dates.dateAfterStart(summary.acquisitionDateModel.day.get, summary.acquisitionDateModel.month.get, summary.acquisitionDateModel.year.get) =>
-          calcConnector.calculateRebased(summary)
-        case ("Yes", "No") => calcConnector.calculateRebased(summary)
-        case _ => Future(None)
-      }
-    }
-
-    calculationElectionForm.bindFromRequest.fold(
-      errors => {
-        for {
-          construct <- calcConnector.createSummary(hc)
-          calcFlat <- calcConnector.calculateFlat(construct)
-          calcTA <- calcTimeCall(construct)
-          otherReliefsFlat <- getOtherReliefsFlat
-          otherReliefsTA <- getOtherReliefsTA
-          otherReliefsRebased <- getOtherReliefsRebased
-          calcRebased <- calcRebasedCall(construct)
-        } yield {
-          BadRequest(calculation.nonresident.calculationElection(
-            errors,
-            construct,
-            calcElectionConstructor.generateElection(construct, hc, calcFlat, calcTA, calcRebased, otherReliefsFlat, otherReliefsTA, otherReliefsRebased)
-          ))
-        }
-      },
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.calculationElection, success)
-        request.body.asFormUrlEncoded.get("action").headOption match {
-          case Some("flat") => Future.successful(Redirect(routes.CalculationController.otherReliefsFlat()))
-          case Some("time") => Future.successful(Redirect(routes.CalculationController.otherReliefsTA()))
-          case Some("rebased") => Future.successful(Redirect(routes.CalculationController.otherReliefsRebased()))
-          case _ => Future.successful(Redirect(routes.CalculationController.summary()))
-        }
-      }
-    )
-  }
-
   //################### Other Reliefs with no calc selection methods (flat) #######################
   def otherReliefsBackUrl(implicit hc: HeaderCarrier): Future[String] = {
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
       case (Some(AcquisitionDateModel("Yes", day, month, year))) if Dates.dateAfterStart(day.get, month.get, year.get) =>
         Future.successful(routes.CalculationController.allowableLosses().url)
-      case (Some(AcquisitionDateModel("Yes", day, month, year))) => Future.successful(routes.CalculationController.calculationElection().url)
+      case (Some(AcquisitionDateModel("Yes", day, month, year))) => Future.successful(routes.CalculationElectionController.calculationElection().url)
       case (Some(AcquisitionDateModel("No", _, _, _))) =>
         calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
-          case Some(RebasedValueModel("Yes", _)) => Future.successful(routes.CalculationController.calculationElection().url)
+          case Some(RebasedValueModel("Yes", _)) => Future.successful(routes.CalculationElectionController.calculationElection().url)
           case Some(RebasedValueModel("No", _)) => Future.successful(routes.CalculationController.allowableLosses().url)
           case _ => Future.successful(missingDataRoute)
         }
@@ -735,7 +533,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
             Future.successful(Redirect(routes.CalculationController.summary()))
           }
           case ("No", "No") => Future.successful(Redirect(routes.CalculationController.summary()))
-          case _ => Future.successful(Redirect(routes.CalculationController.calculationElection()))
+          case _ => Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
         }
       }
     )
@@ -772,7 +570,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
         },
       success => {
         calcConnector.saveFormData(KeystoreKeys.otherReliefsFlat, success)
-        Future.successful(Redirect(routes.CalculationController.calculationElection()))
+        Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
       }
     )
 
@@ -806,7 +604,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
         },
       success => {
         calcConnector.saveFormData(KeystoreKeys.otherReliefsTA, success)
-        Future.successful(Redirect(routes.CalculationController.calculationElection()))
+        Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
       }
     )
 
@@ -840,7 +638,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
         },
       success => {
         calcConnector.saveFormData(KeystoreKeys.otherReliefsRebased, success)
-        Future.successful(Redirect(routes.CalculationController.calculationElection()))
+        Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
       }
     )
 
@@ -856,10 +654,10 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
       case Some(AcquisitionDateModel("Yes", day, month, year)) if Dates.dateAfterStart(day.get, month.get, year.get) =>
         Future.successful(routes.CalculationController.otherReliefs().url)
-      case Some(AcquisitionDateModel("Yes", _, _, _)) => Future.successful(routes.CalculationController.calculationElection().url)
+      case Some(AcquisitionDateModel("Yes", _, _, _)) => Future.successful(routes.CalculationElectionController.calculationElection().url)
       case Some(AcquisitionDateModel("No", _, _, _)) =>
         calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
-          case Some(RebasedValueModel("Yes", _)) => Future.successful(routes.CalculationController.calculationElection().url)
+          case Some(RebasedValueModel("Yes", _)) => Future.successful(routes.CalculationElectionController.calculationElection().url)
           case Some(RebasedValueModel("No", _)) => Future.successful(routes.CalculationController.otherReliefs().url)
           case _ => Future.successful(missingDataRoute)
         }

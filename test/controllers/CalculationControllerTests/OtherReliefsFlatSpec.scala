@@ -114,9 +114,9 @@ class OtherReliefsFlatSpec extends UnitSpec with WithFakeApplication with Mockit
             document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
           }
 
-          s"have a 'Back' link to ${controllers.nonresident.routes.CalculationController.calculationElection().url}" in {
+          s"have a 'Back' link to ${controllers.nonresident.routes.CalculationElectionController.calculationElection().url}" in {
             document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-            document.body.getElementById("back-link").attr("href") shouldEqual controllers.nonresident.routes.CalculationController.calculationElection().url
+            document.body.getElementById("back-link").attr("href") shouldEqual controllers.nonresident.routes.CalculationElectionController.calculationElection().url
           }
 
           "have the question 'How much extra tax relief are you claiming?' as the legend of the input" in {

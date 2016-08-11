@@ -7,8 +7,8 @@ GET         /customer-type                      controllers.nonresident.Customer
 POST        /customer-type                      controllers.nonresident.CustomerTypeController.submitCustomerType
 
 #Disabled Trustee
-GET         /disabled-trustee                   controllers.nonresident.CalculationController.disabledTrustee
-POST        /disabled-trustee                   controllers.nonresident.CalculationController.submitDisabledTrustee
+GET         /disabled-trustee                   controllers.nonresident.DisabledTrusteeController.disabledTrustee
+POST        /disabled-trustee                   controllers.nonresident.DisabledTrusteeController.submitDisabledTrustee
 
 #Current Income
 GET         /current-income                     controllers.nonresident.CurrentIncomeController.currentIncome
@@ -31,8 +31,8 @@ GET         /acquisition-date                   controllers.nonresident.Acquisit
 POST        /acquisition-date                   controllers.nonresident.AcquisitionDateController.submitAcquisitionDate
 
 #Acquisition Value
-GET         /acquisition-value                  controllers.nonresident.CalculationController.acquisitionValue
-POST        /acquisition-value                  controllers.nonresident.CalculationController.submitAcquisitionValue
+GET         /acquisition-value                  controllers.nonresident.AcquisitionValueController.acquisitionValue
+POST        /acquisition-value                  controllers.nonresident.AcquisitionValueController.submitAcquisitionValue
 
 #Rebased Value
 GET         /rebased-value                      controllers.nonresident.CalculationController.rebasedValue
@@ -51,7 +51,7 @@ GET         /disposal-date                      controllers.nonresident.Calculat
 POST        /disposal-date                      controllers.nonresident.CalculationController.submitDisposalDate
 
 #No Capital Gains Tax
-GET         /no-capital-gains-tax               controllers.nonresident.CalculationController.noCapitalGainsTax
+GET         /no-capital-gains-tax               controllers.nonresident.NoCapitalGainsTaxController.noCapitalGainsTax
 
 #Disposal Value
 GET         /disposal-value                     controllers.nonresident.CalculationController.disposalValue
@@ -62,8 +62,8 @@ GET         /acquisition-costs                  controllers.nonresident.Acquisit
 POST        /acquisition-costs                  controllers.nonresident.AcquisitionCostsController.submitAcquisitionCosts
 
 #Disposal Costs
-GET         /disposal-costs                     controllers.nonresident.CalculationController.disposalCosts
-POST        /disposal-costs                     controllers.nonresident.CalculationController.submitDisposalCosts
+GET         /disposal-costs                     controllers.nonresident.DisposalCostsController.disposalCosts
+POST        /disposal-costs                     controllers.nonresident.DisposalCostsController.submitDisposalCosts
 
 #Private Residence Relief
 GET         /private-residence-relief           controllers.nonresident.CalculationController.privateResidenceRelief
@@ -74,8 +74,8 @@ GET         /allowable-losses                   controllers.nonresident.Calculat
 POST        /allowable-losses                   controllers.nonresident.CalculationController.submitAllowableLosses
 
 #Calculation Election
-GET         /calculation-election               controllers.nonresident.CalculationController.calculationElection
-POST        /calculation-election               controllers.nonresident.CalculationController.submitCalculationElection
+GET         /calculation-election               controllers.nonresident.CalculationElectionController.calculationElection
+POST        /calculation-election               controllers.nonresident.CalculationElectionController.submitCalculationElection
 
 #Other Reliefs
 GET         /other-reliefs                      controllers.nonresident.CalculationController.otherReliefs

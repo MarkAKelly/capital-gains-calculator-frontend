@@ -21,8 +21,6 @@ import common.{Constants, KeystoreKeys}
 import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
-import constructors.nonresident.CalculationElectionConstructor
-import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import play.api.i18n.Messages
@@ -35,7 +33,7 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{DisposalCostsController, routes}
 import models.nonresident.{AcquisitionDateModel, DisposalCostsModel, RebasedValueModel}
 import play.api.mvc.Result
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
@@ -47,10 +45,9 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
   def setupTarget(getData: Option[DisposalCostsModel],
                   postData: Option[DisposalCostsModel],
                   acquisitionDate: Option[AcquisitionDateModel],
-                  rebasedData: Option[RebasedValueModel] = None): CalculationController = {
+                  rebasedData: Option[RebasedValueModel] = None): DisposalCostsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
-    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[DisposalCostsModel](Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -65,9 +62,8 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
     when(mockCalcConnector.saveFormData[DisposalCostsModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new DisposalCostsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
   }
 
@@ -96,9 +92,9 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
           document.getElementsByTag("title").text shouldBe Messages("calc.disposalCosts.question")
         }
 
-        s"have a 'Back' link to ${routes.AcquisitionCostsController.acquisitionCosts}" in {
+        s"have a 'Back' link to ${routes.AcquisitionCostsController.acquisitionCosts()}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionCostsController.acquisitionCosts.toString()
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionCostsController.acquisitionCosts().toString()
         }
 
         "have the heading 'Calculate your tax (non-residents)'" in {
@@ -147,7 +143,7 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
         }
 
         "have the value 1000 auto-filled into the input box" in {
-          document.getElementById("disposalCosts").attr("value") shouldEqual ("1000")
+          document.getElementById("disposalCosts").attr("value") shouldEqual "1000"
         }
       }
     }
