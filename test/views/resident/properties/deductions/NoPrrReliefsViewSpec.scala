@@ -26,7 +26,7 @@ import views.html.calculation.resident.properties.{deductions => views}
 
 class NoPrrReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Reliefs view with a gain of £10000" should {
+  "No Prr Reliefs view with a gain of £10000" should {
 
     lazy val view = views.noPrrReliefs(reliefsForm(BigDecimal(10000)), BigDecimal(10000), "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
@@ -39,7 +39,7 @@ class NoPrrReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       doc.title() shouldBe messages.titleNoPrr
     }
 
-    s"have a back link to the Disposal Date Page with text ${MessageLookup.calcBaseBack}" in {
+    s"have a back link to the Improvements Page with text ${MessageLookup.calcBaseBack}" in {
       doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/improvements"
     }
 
@@ -93,7 +93,7 @@ class NoPrrReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     }
   }
 
-  "Reliefs view with pre-selected values and a gain of £100" should {
+  "No Prr Reliefs view with pre-selected values and a gain of £100" should {
     lazy val form = reliefsForm(BigDecimal(100)).bind(Map(("isClaiming", "Yes")))
     lazy val view = views.noPrrReliefs(form, BigDecimal(100), "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
@@ -115,7 +115,7 @@ class NoPrrReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     }
   }
 
-  "Reliefs view with errors" should {
+  "No Prr Reliefs view with errors" should {
     lazy val form = reliefsForm(BigDecimal(10000)).bind(Map(("isClaiming", "")))
     lazy val view = views.noPrrReliefs(form, BigDecimal(10000), "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
