@@ -18,8 +18,7 @@ package controllers.CalculationControllerTests
 
 import common.KeystoreKeys
 import connectors.CalculatorConnector
-import constructors.nonresident.CalculationElectionConstructor
-import controllers.nonresident.CalculationController
+import controllers.nonresident.NoCapitalGainsTaxController
 import models.nonresident.DisposalDateModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -37,18 +36,15 @@ class NoCapitalGainsTaxSpec extends UnitSpec with WithFakeApplication with Mocki
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget(getData: Option[DisposalDateModel]): CalculationController = {
+  def setupTarget(getData: Option[DisposalDateModel]): NoCapitalGainsTaxController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
-    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
-    new CalculationController {
+    new NoCapitalGainsTaxController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
-
     }
   }
 

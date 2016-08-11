@@ -357,7 +357,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
         success => {
           calcConnector.saveFormData(KeystoreKeys.disposalDate, success)
           if (!Dates.dateAfterStart(success.day, success.month, success.year)) {
-            Future.successful(Redirect(routes.CalculationController.noCapitalGainsTax()))
+            Future.successful(Redirect(routes.NoCapitalGainsTaxController.noCapitalGainsTax()))
           } else {
             Future.successful(Redirect(routes.CalculationController.disposalValue()))
           }
@@ -372,12 +372,6 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   }
 
   //################### No Capital Gains Tax #######################
-
-  val noCapitalGainsTax = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.disposalDate).map {
-      result => Ok(calculation.nonresident.noCapitalGainsTax(result.get))
-    }
-  }
 
   //################### Disposal Value methods #######################
   val disposalValue = ValidateSession.async { implicit request =>
