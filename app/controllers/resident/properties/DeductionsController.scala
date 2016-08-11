@@ -209,9 +209,17 @@ trait DeductionsController extends FeatureLock {
   val reliefsValue = FeatureLockForRTT.async { implicit request =>
 
     def routeRequest(totalGain: BigDecimal) = {
-      calcConnector.fetchAndGetFormData[ReliefsValueModel](keystoreKeys.reliefsValue).map {
-        case Some(data) => Ok(views.reliefsValue(reliefsValueForm.fill(data), homeLink, totalGain))
-        case None => Ok(views.reliefsValue(reliefsValueForm, homeLink, totalGain))
+      if (config.featureRTTPRREnabled) {
+        calcConnector.fetchAndGetFormData[ReliefsValueModel](keystoreKeys.reliefsValue).map {
+          case Some(data) => Ok(views.reliefsValue(reliefsValueForm.fill(data), homeLink, totalGain))
+          case None => Ok(views.reliefsValue(reliefsValueForm, homeLink, totalGain))
+        }
+      }
+      else {
+        calcConnector.fetchAndGetFormData[ReliefsValueModel](keystoreKeys.reliefsValue).map {
+          case Some(data) => Ok(views.noPrrReliefsValue(reliefsValueForm.fill(data), homeLink))
+          case None => Ok(views.noPrrReliefsValue(reliefsValueForm, homeLink))
+        }
       }
     }
 
@@ -225,10 +233,13 @@ trait DeductionsController extends FeatureLock {
   val submitReliefsValue = FeatureLockForRTT.async { implicit request =>
 
     def errorAction(form: Form[ReliefsValueModel]) = {
-      for {
-        answerSummary <- answerSummary(hc)
-        totalGain <- totalGain(answerSummary, hc)
-      } yield BadRequest(views.reliefsValue(form, homeLink, totalGain))
+      if (config.featureRTTPRREnabled) {
+        for {
+          answerSummary <- answerSummary(hc)
+          totalGain <- totalGain(answerSummary, hc)
+        } yield BadRequest(views.reliefsValue(form, homeLink, totalGain))
+      }
+      else Future.successful(BadRequest(views.noPrrReliefsValue(form, homeLink)))
     }
 
     def successAction(model: ReliefsValueModel) = {
