@@ -16,7 +16,8 @@
 @allowableLossesHelpText() = {
     <span>
         @Messages("calc.resident.summary.remainingLossHelp")
-        <a href="https://www.gov.uk/capital-gains-tax/losses" rel="external">
+        <a href="https://www.gov.uk/capital-gains-tax/losses" rel="external"
+           data-journey-click="rtt-properties-help:govUK:summary-cgt-losses">
             @Messages("calc.resident.summary.remainingLossLink")
             <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
         </a>
@@ -27,7 +28,8 @@
 @broughtForwardLossesHelpText() = {
     <span>
         @Messages("calc.resident.summary.remainingLossHelp")
-        <a href="https://www.gov.uk/capital-gains-tax/losses" rel="external">
+        <a href="https://www.gov.uk/capital-gains-tax/losses" rel="external"
+           data-journey-click="rtt-properties-help:govUK:summary-cgt-losses">
             @Messages("calc.resident.summary.remainingLossLink")
             <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
         </a>
@@ -147,7 +149,8 @@ articleLayout = false
                 <h3 id="whatToDoNextNoLossTitle" class="bold-medium">@Messages("calc.resident.summary.whatNext")</h3>
                 <div id="whatToDoNextNoLossText" class="font-medium what-to-do-next-text">
                     @Messages("calc.resident.summary.whatNext.noLossOrGain")
-                    <a href="https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax" target="_blank" rel="external">
+                    <a href="https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax" target="_blank" rel="external"
+                       data-journey-click="rtt-properties-help:govUK:CapitalGainsWhatToDoNext">
                         @Messages("calc.resident.summary.whatNext.noLossOrGainLinkProperties")
                     </a>
                     <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>.
