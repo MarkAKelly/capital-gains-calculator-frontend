@@ -73,7 +73,7 @@ trait CustomerTypeController extends FrontendController with ValidActiveSession 
     def routeRequest(data: CustomerTypeModel): Future[Result] = {
       data.customerType match {
         case CustomerTypeKeys.individual => Future.successful(Redirect(routes.CalculationController.currentIncome()))
-        case CustomerTypeKeys.trustee => Future.successful(Redirect(routes.CalculationController.disabledTrustee()))
+        case CustomerTypeKeys.trustee => Future.successful(Redirect(routes.DisabledTrusteeController.disabledTrustee()))
         case CustomerTypeKeys.personalRep => Future.successful(Redirect(routes.CalculationController.otherProperties()))
       }
     }
