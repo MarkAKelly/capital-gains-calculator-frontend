@@ -16,12 +16,8 @@
 
 package common.resident
 
-object PrivateResidenceReliefKeys extends PrivateResidenceReliefKeys
-
-trait PrivateResidenceReliefKeys {
-
+object PrivateResidenceReliefKeys {
   val full = "Full"
   val part = "Part"
   val none = "None"
-
 }
