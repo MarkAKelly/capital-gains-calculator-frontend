@@ -16,12 +16,8 @@
 
 package common.nonresident
 
-trait CustomerTypeKeys {
-
+object CustomerTypeKeys {
   val individual = "individual"
   val trustee = "trustee"
   val personalRep = "personalRep"
-
 }
-
-object CustomerTypeKeys extends CustomerTypeKeys

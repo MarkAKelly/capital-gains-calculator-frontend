@@ -71,11 +71,11 @@ trait AllowableLossesController extends FrontendController with ValidActiveSessi
           calcConnector.saveFormData(KeystoreKeys.allowableLosses, success)
           calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
             case Some(data) if data.hasAcquisitionDate == "Yes" && !Dates.dateAfterStart(data.day.get, data.month.get, data.year.get) =>
-              Future.successful(Redirect(routes.CalculationController.calculationElection()))
+              Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
             case _ =>
               calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
                 case Some(rebasedData) if rebasedData.hasRebasedValue == "Yes" =>
-                  Future.successful(Redirect(routes.CalculationController.calculationElection()))
+                  Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
                 case _ =>
                   calcConnector.saveFormData(KeystoreKeys.calculationElection, CalculationElectionModel("flat"))
                   Future.successful(Redirect(routes.CalculationController.otherReliefs()))

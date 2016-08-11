@@ -117,9 +117,9 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${routes.CalculationController.calculationElection().url}" in {
+        s"have a 'Back' link to ${routes.CalculationElectionController.calculationElection().url}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.calculationElection().url
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationElectionController.calculationElection().url
         }
       }
 
@@ -133,9 +133,9 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${routes.CalculationController.calculationElection().url}" in {
+        s"have a 'Back' link to ${routes.CalculationElectionController.calculationElection().url}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.calculationElection().url
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationElectionController.calculationElection().url
         }
       }
 
@@ -328,7 +328,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "have an acquisition value of £100,000 and link to the acquisition value page" in {
               document.body().getElementById("purchaseDetails(1)").text() shouldBe "£100,000.00"
-              document.body().getElementById("purchaseDetails(1)").attr("href") shouldEqual routes.CalculationController.acquisitionValue().toString()
+              document.body().getElementById("purchaseDetails(1)").attr("href") shouldEqual routes.AcquisitionValueController.acquisitionValue().toString()
             }
 
             "include the question 'How much did you pay in costs when you became the property owner?'" in {

@@ -251,7 +251,7 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
       }
 
       "redirect to the calculation election view" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.calculationElection()}")
+        redirectLocation(result) shouldBe Some(s"${routes.CalculationElectionController.calculationElection()}")
       }
     }
 
@@ -291,7 +291,7 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
       }
 
       "redirect to the calculation election view" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.calculationElection()}")
+        redirectLocation(result) shouldBe Some(s"${routes.CalculationElectionController.calculationElection()}")
       }
     }
 

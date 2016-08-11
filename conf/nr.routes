@@ -31,8 +31,8 @@ GET         /acquisition-date                   controllers.nonresident.Acquisit
 POST        /acquisition-date                   controllers.nonresident.AcquisitionDateController.submitAcquisitionDate
 
 #Acquisition Value
-GET         /acquisition-value                  controllers.nonresident.CalculationController.acquisitionValue
-POST        /acquisition-value                  controllers.nonresident.CalculationController.submitAcquisitionValue
+GET         /acquisition-value                  controllers.nonresident.AcquisitionValueController.acquisitionValue
+POST        /acquisition-value                  controllers.nonresident.AcquisitionValueController.submitAcquisitionValue
 
 #Rebased Value
 GET         /rebased-value                      controllers.nonresident.CalculationController.rebasedValue
@@ -74,8 +74,8 @@ GET         /allowable-losses                   controllers.nonresident.Allowabl
 POST        /allowable-losses                   controllers.nonresident.AllowableLossesController.submitAllowableLosses
 
 #Calculation Election
-GET         /calculation-election               controllers.nonresident.CalculationController.calculationElection
-POST        /calculation-election               controllers.nonresident.CalculationController.submitCalculationElection
+GET         /calculation-election               controllers.nonresident.CalculationElectionController.calculationElection
+POST        /calculation-election               controllers.nonresident.CalculationElectionController.submitCalculationElection
 
 #Other Reliefs
 GET         /other-reliefs                      controllers.nonresident.CalculationController.otherReliefs
