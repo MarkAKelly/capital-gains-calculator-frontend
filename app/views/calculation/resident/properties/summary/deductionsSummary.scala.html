@@ -17,7 +17,7 @@
     <span>
         @Messages("calc.resident.summary.remainingLossHelp")
         <a href="https://www.gov.uk/capital-gains-tax/losses" rel="external"
-           data-journey-click="rtt-properties-help:govUK:summary-cgt-losses">
+           data-journey-click="rtt-properties-help:govUK:summary-allowableLosses">
             @Messages("calc.resident.summary.remainingLossLink")
             <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
         </a>
@@ -29,7 +29,7 @@
     <span>
         @Messages("calc.resident.summary.remainingLossHelp")
         <a href="https://www.gov.uk/capital-gains-tax/losses" rel="external"
-           data-journey-click="rtt-properties-help:govUK:summary-cgt-losses">
+           data-journey-click="rtt-properties-help:govUK:summary-broughtForwardLosses">
             @Messages("calc.resident.summary.remainingLossLink")
             <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
         </a>
@@ -66,6 +66,55 @@ articleLayout = false
     }
 }
 
+<!-- Google Analytics -->
+<div id="ga-reporting" class="visuallyhidden">
+
+    <!-- Tax Year -->
+    <span data-metrics="rtt-properties-summary:calculationYear:@{taxYear.calculationTaxYear}"></span>
+
+    <!-- No Gain Stats -->
+    <span data-metrics="rtt-properties-summary:result:no-gain"></span>
+
+    <!-- PRR Stats -->
+    <span data-metrics="@{deductionAnswers.privateResidenceReliefModel.get.prrClaiming match {
+        case "Full" => "rtt-properties-summary:prr:full"
+        case "Part" => "rtt-properties-summary:prr:part"
+        case _ => "rtt-properties-summary:prr:none"
+    }}"></span>
+
+    <!-- Other Reliefs Stats -->
+    @if(deductionAnswers.reliefsModel.fold(false)(_.isClaiming)){
+        <span data-metrics="rtt-properties-summary:otherReliefs:yes"></span>
+    } else {
+        <span data-metrics="rtt-properties-summary:otherReliefs:no"></span>
+    }
+
+    <!-- Other Reliefs Value Figure Entered Stats -->
+    @if(deductionAnswers.reliefsValueModel.fold(BigDecimal(0))(_.amount) > BigDecimal(0)){
+        <span data-metrics="rtt-properties-summary:otherReliefsValue:figureEntered"></span>
+    }
+
+    <!-- Other Disposal Stats -->
+    @if(deductionAnswers.otherPropertiesModel.fold(false)(_.hasOtherProperties)){
+        <span data-metrics="rtt-properties-summary:otherDisposals:yes"></span>
+    } else {
+        <span data-metrics="rtt-properties-summary:otherDisposals:no"></span>
+    }
+
+    <!-- Claiming In Year Allowable Losses Stats -->
+    @if(deductionAnswers.allowableLossesModel.fold(false)(_.isClaiming)){
+        <span data-metrics="rtt-properties-summary:inYearAllowableLosses:yes"></span>
+    } else {
+        <span data-metrics="rtt-properties-summary:inYearAllowableLosses:no"></span>
+    }
+
+    <!-- Claiming Brought Forward Losses Stats -->
+    @if(deductionAnswers.broughtForwardModel.fold(false)(_.option)){
+        <span data-metrics="rtt-properties-summary:broughtForwardLosses:yes"></span>
+    } else {
+        <span data-metrics="rtt-properties-summary:broughtForwardLosses:no"></span>
+    }
+</div>
 
 <!-- Calculation Details Section -->
 <section id="calcDetails">
@@ -150,7 +199,7 @@ articleLayout = false
                 <div id="whatToDoNextNoLossText" class="font-medium what-to-do-next-text">
                     @Messages("calc.resident.summary.whatNext.noLossOrGain")
                     <a href="https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax" target="_blank" rel="external"
-                       data-journey-click="rtt-properties-help:govUK:CapitalGainsWhatToDoNext">
+                       data-journey-click="rtt-properties-help:govUK:whaToDoNext">
                         @Messages("calc.resident.summary.whatNext.noLossOrGainLinkProperties")
                     </a>
                     <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>.
@@ -158,6 +207,7 @@ articleLayout = false
             </section>
     }
 
-    <a type="submit" class="button save-pdf-button" href="@controllers.resident.properties.routes.ReportController.deductionsReport.toString">@Messages("calc.resident.summary.saveAsPdf")</a>
+    <a type="submit" class="button save-pdf-button" href="@controllers.resident.properties.routes.ReportController.deductionsReport.toString"
+       data-journey-click="rtt-properties-summary:pdf:save">@Messages("calc.resident.summary.saveAsPdf")</a>
 
 }

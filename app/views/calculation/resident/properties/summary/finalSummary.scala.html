@@ -39,6 +39,56 @@ articleLayout = false
     }
 }
 
+<!-- Google Analytics -->
+<div id="ga-reporting" class="visuallyhidden">
+
+    <!-- Tax Year -->
+    <span data-metrics="rtt-properties-summary:calculationYear:@{taxYear.calculationTaxYear}"></span>
+
+    <!-- Gain Stats -->
+    <span data-metrics="rtt-properties-summary:result:gain"></span>
+
+    <!-- PRR Stats -->
+    <span data-metrics="@{deductionAnswers.privateResidenceReliefModel.get.prrClaiming match {
+        case "Full" => "rtt-properties-summary:prr:full"
+        case "Part" => "rtt-properties-summary:prr:part"
+        case _ => "rtt-properties-summary:prr:none"
+    }}"></span>
+
+    <!-- Other Reliefs Stats -->
+    @if(deductionAnswers.reliefsModel.fold(false)(_.isClaiming)){
+        <span data-metrics="rtt-properties-summary:otherReliefs:yes"></span>
+    } else {
+        <span data-metrics="rtt-properties-summary:otherReliefs:no"></span>
+    }
+
+    <!-- Other Reliefs Value Figure Entered Stats -->
+    @if(deductionAnswers.reliefsValueModel.fold(BigDecimal(0))(_.amount) > BigDecimal(0)){
+        <span data-metrics="rtt-properties-summary:otherReliefsValue:figureEntered"></span>
+    }
+
+    <!-- Other Disposal Stats -->
+    @if(deductionAnswers.otherPropertiesModel.fold(false)(_.hasOtherProperties)){
+        <span data-metrics="rtt-properties-summary:otherDisposals:yes"></span>
+    } else {
+        <span data-metrics="rtt-properties-summary:otherDisposals:no"></span>
+    }
+
+    <!-- Claiming In Year Allowable Losses Stats -->
+    @if(deductionAnswers.allowableLossesModel.fold(false)(_.isClaiming)){
+        <span data-metrics="rtt-properties-summary:inYearAllowableLosses:yes"></span>
+    } else {
+        <span data-metrics="rtt-properties-summary:inYearAllowableLosses:no"></span>
+    }
+
+    <!-- Claiming Brought Forward Losses Stats -->
+    @if(deductionAnswers.broughtForwardModel.fold(false)(_.option)){
+        <span data-metrics="rtt-properties-summary:broughtForwardLosses:yes"></span>
+    } else {
+        <span data-metrics="rtt-properties-summary:broughtForwardLosses:no"></span>
+    }
+</div>
+
 <!-- Calculation Details Section -->
 <section id="calcDetails">
     <!-- Header -->
@@ -119,11 +169,12 @@ articleLayout = false
                                                                                                                               rel="external"
                                                                                                                               href="https://www.gov.uk/tax-sell-property/what-you-pay-it-on"
                                                                                                                               target="_blank"
-                                                                                                                              data-journey-click="rtt-properties-help:govUK:CapitalGainsWhatToDoNext">@Messages("calc.resident.summary.whatNext.linkTwo")<span id="opensInANewTab" class="visuallyhidden">@Messages("calc.base.externalLink")</span></a>
+                                                                                                                              data-journey-click="rtt-properties-help:govUK:whatToDoNext">@Messages("calc.resident.summary.whatNext.linkTwo")<span id="opensInANewTab" class="visuallyhidden">@Messages("calc.base.externalLink")</span></a>
                 </div>
 
             </section>
 
     }
-    <a type="submit" class="button save-pdf-button" href="@controllers.resident.properties.routes.ReportController.finalSummaryReport.toString">@Messages("calc.resident.summary.saveAsPdf")</a>
+    <a type="submit" class="button save-pdf-button" href="@controllers.resident.properties.routes.ReportController.finalSummaryReport.toString"
+       data-journey-click="rtt-properties-summary:pdf:save">@Messages("calc.resident.summary.saveAsPdf")</a>
 }

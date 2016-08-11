@@ -35,6 +35,20 @@
         }
     }
 
+    <!-- Google Analytics -->
+    <div id="ga-reporting" class="visuallyhidden">
+
+        <!-- Tax Year -->
+        <span data-metrics="rtt-shares-summary:calculationYear:@{taxYear.calculationTaxYear}"></span>
+
+        <!-- Loss Stats -->
+        @if(gain < 0){
+            <span data-metrics="rtt-shares-summary:result:loss"></span>
+        } else {
+            <span data-metrics="rtt-shares-summary:result:no-gain"></span>
+        }
+    </div>
+
     <!-- Calculation Details Section -->
     <section id="calcDetails">
         <!-- Header -->
@@ -67,7 +81,7 @@
                                                                                                rel="external"
                                                                                                href="https://www.gov.uk/capital-gains-tax/losses"
                                                                                                target="_blank"
-                                                                                               data-journey-click="rtt-shares-help:govUK:CapitalGainsWhatToDoNext">@Messages("calc.resident.summary.whatNext.link")  <span id="opensInANewTab" class="visuallyhidden">@Messages("calc.base.externalLink")</span></a>
+                                                                                               data-journey-click="rtt-shares-help:govUK:whatToDoNext">@Messages("calc.resident.summary.whatNext.link")  <span id="opensInANewTab" class="visuallyhidden">@Messages("calc.base.externalLink")</span></a>
                     @Messages("calc.resident.summary.whatNext.text")</div>
 
             </section>
@@ -77,7 +91,7 @@
                 <div id="whatToDoNextNoLossText" class="font-medium what-to-do-next-text">
                     @Messages("calc.resident.summary.whatNext.noLossOrGain")
                     <a href="https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax" target="_blank" rel="external"
-                       data-journey-click="rtt-shares-help:govUK:CapitalGainsWhatToDoNext">
+                       data-journey-click="rtt-shares-help:govUK:whatToDoNext">
                         @Messages("calc.resident.summary.whatNext.noLossOrGainLinkShares")
                     </a>
                     <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>.
@@ -85,5 +99,6 @@
             </section>
         }
     }
-    <a type="submit" class="button save-pdf-button" href="@controllers.resident.shares.routes.ReportController.gainSummaryReport.toString">@Messages("calc.resident.summary.saveAsPdf")</a>
+    <a type="submit" class="button save-pdf-button" href="@controllers.resident.shares.routes.ReportController.gainSummaryReport.toString"
+       data-journey-click="rtt-shares-summary:pdf:save">@Messages("calc.resident.summary.saveAsPdf")</a>
 }
