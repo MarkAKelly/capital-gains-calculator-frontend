@@ -28,69 +28,49 @@ object Dates {
   val taxStartDatePlus18Months = sf.parse("05/10/2016")
   val taxYearStartDate = sf.parse("05/04/2016")
   val taxYearEndDate = sf.parse("06/04/2017")
-  val taxYearEnd = "04-05"
-  val taxYearStart = "04-06"
+  val cal = Calendar.getInstance()
 
-  def constructDate (day: Int, month: Int, year: Int): Date = {
-    sf.parse(s"$day/$month/$year")
-  }
+  def constructDate (day: Int, month: Int, year: Int): Date = sf.parse(s"$day/$month/$year")
 
-  def dateAfterStart (day: Int, month: Int, year: Int): Boolean = {
-    constructDate(day, month, year).after(taxStartDate)
-  }
+  def dateAfterStart (day: Int, month: Int, year: Int): Boolean = constructDate(day, month, year).after(taxStartDate)
 
-  def dateAfter18Months (day: Int, month: Int, year: Int): Boolean = {
-    constructDate(day, month, year).after(taxStartDatePlus18Months)
-  }
+  def dateAfterStart (date: Date): Boolean = date.after(taxStartDate)
 
-  def dateAfterStart (date: Date): Boolean = {
-    date.after(taxStartDate)
-  }
+  def dateAfter18Months (day: Int, month: Int, year: Int): Boolean = constructDate(day, month, year).after(taxStartDatePlus18Months)
 
-  def dateAfterOctober (date: Date): Boolean = {
-    date.after(taxStartDatePlus18Months)
-  }
+  def dateAfterOctober (date: Date): Boolean = date.after(taxStartDatePlus18Months)
 
-  def dateMinusMonths(date: Option[Date], months: Int): String = {
-    date match {
-      case Some(date) =>
-        val cal = Calendar.getInstance()
-        cal.setTime(date)
-        cal.add(Calendar.MONTH, months * -1)
-        new SimpleDateFormat("d MMMM yyyy").format(cal.getTime)
-      case _ => ""
+  def dateMinusMonths(date: Option[Date], months: Int): String =
+    date.fold(""){a =>
+      val cal = Calendar.getInstance()
+      cal.setTime(a)
+      cal.add(Calendar.MONTH, months * -1)
+      datePageFormatNoZero.format(cal.getTime)
     }
-  }
 
   def getDay(date: Date): Int = {
-    val cal = Calendar.getInstance()
     cal.setTime(date)
     cal.get(Calendar.DAY_OF_MONTH)
   }
 
   def getMonth(date: Date): Int = {
-    val cal = Calendar.getInstance()
     cal.setTime(date)
     cal.get(Calendar.MONTH) + 1
   }
 
   def getYear(date: Date): Int = {
-    val cal = Calendar.getInstance()
     cal.setTime(date)
     cal.get(Calendar.YEAR)
   }
 
-  def dateInsideTaxYear (day: Int, month: Int, year: Int): Boolean = {
+  def dateInsideTaxYear (day: Int, month: Int, year: Int): Boolean =
     constructDate(day, month, year).after(taxYearStartDate) && constructDate(day, month, year).before(taxYearEndDate)
-  }
 
-  def dateInsideAcceptedTaxYears (day: Int, month: Int, year: Int): Boolean ={
+  def dateInsideAcceptedTaxYears (day: Int, month: Int, year: Int): Boolean = {
     val date = constructDate(day, month, year)
     date.after(taxStartDate) && date.before(taxYearEndDate)
   }
 
-  def taxYearStringToInteger (taxYear: String): Int = {
-    (taxYear.take(2) + taxYear.takeRight(2)).toInt
-  }
+  def taxYearStringToInteger (taxYear: String): Int = (taxYear.take(2) + taxYear.takeRight(2)).toInt
 }
 
