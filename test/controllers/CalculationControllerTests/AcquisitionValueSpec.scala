@@ -175,13 +175,13 @@ class AcquisitionValueSpec extends UnitSpec with WithFakeApplication with Mockit
       target.submitAcquisitionValue(fakeRequest)
     }
 
-    s"return a 303 to ${routes.CalculationController.improvements()}" in {
+    s"return a 303 to ${routes.ImprovementsController.improvements()}" in {
 
       val acquisitionDateModelYesAfterStartDate = new AcquisitionDateModel("Yes", Some(10), Some(10), Some(2017))
       lazy val result = executeTargetWithMockData("1000", Some(acquisitionDateModelYesAfterStartDate))
 
       status(result) shouldBe 303
-      redirectLocation(result) shouldBe Some(s"${routes.CalculationController.improvements()}")
+      redirectLocation(result) shouldBe Some(s"${routes.ImprovementsController.improvements()}")
     }
 
     "submitting a valid form with a date before 5 5 2015" should {

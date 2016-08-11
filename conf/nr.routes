@@ -43,8 +43,8 @@ GET         /rebased-costs                      controllers.nonresident.Calculat
 POST        /rebased-costs                      controllers.nonresident.CalculationController.submitRebasedCosts
 
 #Improvements
-GET         /improvements                       controllers.nonresident.CalculationController.improvements
-POST        /improvements                       controllers.nonresident.CalculationController.submitImprovements
+GET         /improvements                       controllers.nonresident.ImprovementsController.improvements
+POST        /improvements                       controllers.nonresident.ImprovementsController.submitImprovements
 
 #Disposal Date
 GET         /disposal-date                      controllers.nonresident.CalculationController.disposalDate
