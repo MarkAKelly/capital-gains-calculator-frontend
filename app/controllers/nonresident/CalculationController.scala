@@ -398,35 +398,6 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   }
 
   //################### Disposal Costs methods #######################
-  val disposalCosts = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[DisposalCostsModel](KeystoreKeys.disposalCosts).map {
-      case Some(data) => Ok(calculation.nonresident.disposalCosts(disposalCostsForm.fill(data)))
-      case None => Ok(calculation.nonresident.disposalCosts(disposalCostsForm))
-    }
-  }
-
-  val submitDisposalCosts = ValidateSession.async { implicit request =>
-    disposalCostsForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(calculation.nonresident.disposalCosts(errors))),
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.disposalCosts, success)
-        calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
-          case Some(data) if data.hasAcquisitionDate == "Yes" =>
-            Future.successful(Redirect(routes.CalculationController.privateResidenceRelief()))
-          case _ => {
-            calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
-              case Some(rebasedData) if rebasedData.hasRebasedValue == "Yes" => {
-                Future.successful(Redirect(routes.CalculationController.privateResidenceRelief()))
-              }
-              case _ => {
-                Future.successful(Redirect(routes.CalculationController.allowableLosses()))
-              }
-            }
-          }
-        }
-      }
-    )
-  }
 
   //################### Private Residence Relief methods #######################
   def getDisposalDate(implicit hc: HeaderCarrier): Future[Option[Date]] =
@@ -512,7 +483,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
       case _ => calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
         case Some(rebasedData) if rebasedData.hasRebasedValue == "Yes" =>
           Future.successful(routes.CalculationController.privateResidenceRelief().url)
-        case _ => Future.successful(routes.CalculationController.disposalCosts().url)
+        case _ => Future.successful(routes.DisposalCostsController.disposalCosts().url)
       }
     }
   }

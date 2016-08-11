@@ -484,7 +484,7 @@ object SummaryConstructor {
         SummaryDataItemModel(
           Messages("calc.disposalCosts.question"),
           "&pound;" + MoneyPounds(summary.disposalCostsModel.disposalCosts).quantity,
-          Some(routes.CalculationController.disposalCosts().toString())
+          Some(routes.DisposalCostsController.disposalCosts().toString())
         )
       )
     )
