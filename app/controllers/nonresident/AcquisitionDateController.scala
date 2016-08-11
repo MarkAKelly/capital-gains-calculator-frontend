@@ -46,7 +46,7 @@ trait AcquisitionDateController extends FrontendController with ValidActiveSessi
     calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.otherProperties).map {
       case Some(OtherPropertiesModel("Yes", Some(value))) if value == BigDecimal(0) => routes.AnnualExemptAmountController.annualExemptAmount().url
       case None => missingDataRoute
-      case _ => routes.CalculationController.otherProperties().url
+      case _ => routes.OtherPropertiesController.otherProperties().url
     }
   }
 

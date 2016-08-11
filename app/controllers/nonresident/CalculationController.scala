@@ -76,71 +76,13 @@ trait CalculationController extends FrontendController with ValidActiveSession {
         errors => Future.successful(BadRequest(calculation.nonresident.personalAllowance(errors))),
         success => {
           calcConnector.saveFormData(KeystoreKeys.personalAllowance, success)
-          Future.successful(Redirect(routes.CalculationController.otherProperties()))
+          Future.successful(Redirect(routes.OtherPropertiesController.otherProperties()))
         }
       )
     }
   }
 
   //################### Other Properties methods #######################
-  def otherPropertiesBackUrl(implicit hc: HeaderCarrier): Future[String] =
-    calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).flatMap {
-      case Some(CustomerTypeModel("individual")) =>
-        calcConnector.fetchAndGetFormData[CurrentIncomeModel](KeystoreKeys.currentIncome).flatMap {
-          case Some(data) if data.currentIncome == 0 => Future.successful(routes.CurrentIncomeController.currentIncome().url)
-          case _ => Future.successful(routes.CalculationController.personalAllowance().url)
-        }
-      case Some(CustomerTypeModel("trustee")) => Future.successful(routes.DisabledTrusteeController.disabledTrustee().url)
-      case Some(_) => Future.successful(routes.CustomerTypeController.customerType().url)
-      case _ => Future.successful(missingDataRoute)
-    }
-
-  def showOtherPropertiesAmt(implicit hc: HeaderCarrier): Future[Boolean] = calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).map {
-    case Some(CustomerTypeModel("individual")) => true
-    case _ => false
-  }
-
-  val otherProperties = ValidateSession.async { implicit request =>
-
-    def routeRequest(backUrl: String, showHiddenQuestion: Boolean): Future[Result] = {
-      calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.otherProperties).map {
-        case Some(data) => Ok(calculation.nonresident.otherProperties(otherPropertiesForm(showHiddenQuestion).fill(data), backUrl, showHiddenQuestion))
-        case _ => Ok(calculation.nonresident.otherProperties(otherPropertiesForm(showHiddenQuestion), backUrl, showHiddenQuestion))
-      }
-    }
-
-    for {
-      backUrl <- otherPropertiesBackUrl
-      showHiddenQuestion <- showOtherPropertiesAmt
-      finalResult <- routeRequest(backUrl, showHiddenQuestion)
-    } yield finalResult
-  }
-
-  val submitOtherProperties = ValidateSession.async { implicit request =>
-
-    def routeRequest(backUrl: String, showHiddenQuestion: Boolean): Future[Result] = {
-      otherPropertiesForm(showHiddenQuestion).bindFromRequest.fold(
-        errors =>
-          Future.successful(BadRequest(calculation.nonresident.otherProperties(errors, backUrl, showHiddenQuestion))),
-        success => {
-          calcConnector.saveFormData(KeystoreKeys.otherProperties, success)
-          success match {
-            case OtherPropertiesModel("Yes", Some(value)) if value.equals(BigDecimal(0)) => Future.successful(Redirect(routes.AnnualExemptAmountController.annualExemptAmount()))
-            case OtherPropertiesModel("Yes", None) if !showHiddenQuestion => Future.successful(Redirect(routes.AnnualExemptAmountController.annualExemptAmount()))
-            case _ => calcConnector.saveFormData(KeystoreKeys.annualExemptAmount, AnnualExemptAmountModel(0))
-              Future.successful(Redirect(routes.AcquisitionDateController.acquisitionDate()))
-          }
-        }
-      )
-    }
-    for {
-      backUrl <- otherPropertiesBackUrl
-      showHiddenQuestion <- showOtherPropertiesAmt
-      finalResult <- routeRequest(backUrl, showHiddenQuestion)
-    } yield finalResult
-  }
-
-
 
   //################### Rebased value methods #######################
   val rebasedValue = ValidateSession.async { implicit request =>
