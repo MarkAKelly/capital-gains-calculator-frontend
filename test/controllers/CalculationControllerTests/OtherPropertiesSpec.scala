@@ -151,9 +151,9 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
         lazy val result = target.otherProperties(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${routes.CalculationController.currentIncome().url}" in {
+        s"have a 'Back' link to ${routes.CurrentIncomeController.currentIncome().url}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.currentIncome().url
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.CurrentIncomeController.currentIncome().url
         }
       }
 

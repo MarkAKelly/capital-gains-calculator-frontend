@@ -11,8 +11,8 @@ GET         /disabled-trustee                   controllers.nonresident.Disabled
 POST        /disabled-trustee                   controllers.nonresident.DisabledTrusteeController.submitDisabledTrustee
 
 #Current Income
-GET         /current-income                     controllers.nonresident.CalculationController.currentIncome
-POST        /current-income                     controllers.nonresident.CalculationController.submitCurrentIncome
+GET         /current-income                     controllers.nonresident.CurrentIncomeController.currentIncome
+POST        /current-income                     controllers.nonresident.CurrentIncomeController.submitCurrentIncome
 
 #Personal Allowance
 GET         /personal-allowance                 controllers.nonresident.CalculationController.personalAllowance

@@ -27,11 +27,7 @@ import forms.nonresident.RebasedCostsForm._
 import forms.nonresident.RebasedValueForm._
 import forms.nonresident.AllowableLossesForm._
 import forms.nonresident.AnnualExemptAmountForm._
-import forms.nonresident.AcquisitionDateForm._
-import forms.nonresident.AcquisitionCostsForm._
 import forms.nonresident.AcquisitionValueForm._
-import forms.nonresident.CurrentIncomeForm._
-import forms.nonresident.CustomerTypeForm._
 import forms.nonresident.CalculationElectionForm._
 import forms.nonresident.DisposalDateForm._
 import forms.nonresident.DisposalCostsForm._
@@ -66,26 +62,6 @@ trait CalculationController extends FrontendController with ValidActiveSession {
 
   //################### Disabled Trustee methods #######################
 
-  //################### Current Income methods #######################
-
-  val currentIncome = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[CurrentIncomeModel](KeystoreKeys.currentIncome).map {
-      case Some(data) => Ok(calculation.nonresident.currentIncome(currentIncomeForm.fill(data)))
-      case None => Ok(calculation.nonresident.currentIncome(currentIncomeForm))
-    }
-  }
-
-  val submitCurrentIncome = ValidateSession.async { implicit request =>
-    currentIncomeForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(calculation.nonresident.currentIncome(errors))),
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.currentIncome, success)
-        if (success.currentIncome > 0) Future.successful(Redirect(routes.CalculationController.personalAllowance()))
-        else Future.successful(Redirect(routes.CalculationController.otherProperties()))
-      }
-    )
-  }
-
   //################### Personal Allowance methods #######################
   val personalAllowance = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[PersonalAllowanceModel](KeystoreKeys.personalAllowance).map {
@@ -111,7 +87,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).flatMap {
       case Some(CustomerTypeModel("individual")) =>
         calcConnector.fetchAndGetFormData[CurrentIncomeModel](KeystoreKeys.currentIncome).flatMap {
-          case Some(data) if data.currentIncome == 0 => Future.successful(routes.CalculationController.currentIncome().url)
+          case Some(data) if data.currentIncome == 0 => Future.successful(routes.CurrentIncomeController.currentIncome().url)
           case _ => Future.successful(routes.CalculationController.personalAllowance().url)
         }
       case Some(CustomerTypeModel("trustee")) => Future.successful(routes.DisabledTrusteeController.disabledTrustee().url)
