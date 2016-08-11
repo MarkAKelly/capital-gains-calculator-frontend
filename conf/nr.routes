@@ -7,8 +7,8 @@ GET         /customer-type                      controllers.nonresident.Customer
 POST        /customer-type                      controllers.nonresident.CustomerTypeController.submitCustomerType
 
 #Disabled Trustee
-GET         /disabled-trustee                   controllers.nonresident.CalculationController.disabledTrustee
-POST        /disabled-trustee                   controllers.nonresident.CalculationController.submitDisabledTrustee
+GET         /disabled-trustee                   controllers.nonresident.DisabledTrusteeController.disabledTrustee
+POST        /disabled-trustee                   controllers.nonresident.DisabledTrusteeController.submitDisabledTrustee
 
 #Current Income
 GET         /current-income                     controllers.nonresident.CalculationController.currentIncome

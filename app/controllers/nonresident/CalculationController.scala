@@ -65,22 +65,6 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     }
 
   //################### Disabled Trustee methods #######################
-  val disabledTrustee = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[DisabledTrusteeModel](KeystoreKeys.disabledTrustee).map {
-      case Some(data) => Ok(calculation.nonresident.disabledTrustee(disabledTrusteeForm.fill(data)))
-      case None => Ok(calculation.nonresident.disabledTrustee(disabledTrusteeForm))
-    }
-  }
-
-  val submitDisabledTrustee = ValidateSession.async { implicit request =>
-    disabledTrusteeForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(calculation.nonresident.disabledTrustee(errors))),
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.disabledTrustee, success)
-        Future.successful(Redirect(routes.CalculationController.otherProperties()))
-      }
-    )
-  }
 
   //################### Current Income methods #######################
 
@@ -130,7 +114,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
           case Some(data) if data.currentIncome == 0 => Future.successful(routes.CalculationController.currentIncome().url)
           case _ => Future.successful(routes.CalculationController.personalAllowance().url)
         }
-      case Some(CustomerTypeModel("trustee")) => Future.successful(routes.CalculationController.disabledTrustee().url)
+      case Some(CustomerTypeModel("trustee")) => Future.successful(routes.DisabledTrusteeController.disabledTrustee().url)
       case Some(_) => Future.successful(routes.CustomerTypeController.customerType().url)
       case _ => Future.successful(missingDataRoute)
     }
