@@ -19,8 +19,6 @@ package controllers.CalculationControllerTests
 import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
-import constructors.nonresident.CalculationElectionConstructor
-import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import play.api.i18n.Messages
@@ -33,7 +31,7 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{DisabledTrusteeController, routes}
 import models.nonresident.DisabledTrusteeModel
 import play.api.mvc.Result
 
@@ -41,10 +39,9 @@ class DisabledTrusteeSpec extends UnitSpec with WithFakeApplication with Mockito
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget(getData: Option[DisabledTrusteeModel], postData: Option[DisabledTrusteeModel]): CalculationController = {
+  def setupTarget(getData: Option[DisabledTrusteeModel], postData: Option[DisabledTrusteeModel]): DisabledTrusteeController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
-    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[DisabledTrusteeModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -53,9 +50,8 @@ class DisabledTrusteeSpec extends UnitSpec with WithFakeApplication with Mockito
     when(mockCalcConnector.saveFormData[DisabledTrusteeModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new DisabledTrusteeController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
   }
 
@@ -88,9 +84,9 @@ class DisabledTrusteeSpec extends UnitSpec with WithFakeApplication with Mockito
           document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
         }
 
-        s"have a 'Back' link to ${routes.CustomerTypeController.customerType}" in {
+        s"have a 'Back' link to ${routes.CustomerTypeController.customerType()}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CustomerTypeController.customerType.toString()
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.CustomerTypeController.customerType().toString()
         }
 
         "have the question 'When did you sign the contract that made someone else the owner?' as the legend of the input" in {

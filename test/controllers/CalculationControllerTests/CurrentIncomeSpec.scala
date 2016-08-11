@@ -18,8 +18,7 @@ package controllers.CalculationControllerTests
 
 import common.Constants
 import connectors.CalculatorConnector
-import constructors.nonresident.CalculationElectionConstructor
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{CurrentIncomeController, routes}
 import models.nonresident.CurrentIncomeModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -40,10 +39,9 @@ import scala.concurrent.Future
 class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
   implicit val hc = new HeaderCarrier()
-  def setupTarget(getData: Option[CurrentIncomeModel], postData: Option[CurrentIncomeModel]): CalculationController = {
+  def setupTarget(getData: Option[CurrentIncomeModel], postData: Option[CurrentIncomeModel]): CurrentIncomeController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
-    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[CurrentIncomeModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -52,9 +50,8 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
     when(mockCalcConnector.saveFormData[CurrentIncomeModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new CurrentIncomeController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
   }
 
@@ -89,9 +86,9 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
           document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
         }
 
-        s"have a 'Back' link to ${routes.CustomerTypeController.customerType}" in {
+        s"have a 'Back' link to ${routes.CustomerTypeController.customerType()}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CustomerTypeController.customerType.toString()
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.CustomerTypeController.customerType().toString()
         }
 
         "have the question 'In the tax year when you stopped owning the property, what was your total UK income?' as the label of the input" in {
@@ -151,7 +148,6 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
         val target = setupTarget(None, None)
         lazy val result = target.currentIncome(fakeRequest)
-        lazy val document = Jsoup.parse(bodyOf(result))
 
         redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
       }
@@ -241,7 +237,7 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
     "submitting a value which exceeds the maximum numeric" should {
 
-      lazy val result = executeTargetWithMockData(Constants.maxNumeric+0.01.toString())
+      lazy val result = executeTargetWithMockData((Constants.maxNumeric + 0.01).toString)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {

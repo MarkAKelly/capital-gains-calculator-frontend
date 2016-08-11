@@ -97,9 +97,9 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
           charset(result) shouldBe Some("utf-8")
         }
 
-        s"have a 'Back' link to ${routes.CalculationController.disposalCosts}" in {
+        s"have a 'Back' link to ${routes.DisposalCostsController.disposalCosts}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.disposalCosts.toString()
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalCostsController.disposalCosts.toString()
         }
 
         "have the title 'calc.privateResidenceRelief.question'" in {
@@ -391,9 +391,9 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
         lazy val result = target.privateResidenceRelief(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${routes.CalculationController.disposalCosts}" in {
+        s"have a 'Back' link to ${routes.DisposalCostsController.disposalCosts}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.disposalCosts.toString()
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalCostsController.disposalCosts.toString()
         }
 
         "when disposal date is < 6 October 2016, no acquisition date with rebased value" should {
