@@ -282,7 +282,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
         },
         success => {
           calcConnector.saveFormData(KeystoreKeys.improvements, success)
-          Future.successful(Redirect(routes.CalculationController.disposalDate()))
+          Future.successful(Redirect(routes.DisposalDateController.disposalDate()))
         }
       )
     }
@@ -294,42 +294,6 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   }
 
   //################### Disposal Date methods #######################
-  val disposalDate = ValidateSession.async { implicit request =>
-
-    def routeRequest(acquisitionDate: Option[Date]): Future[Result] = {
-      calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.disposalDate).map {
-        case Some(data) => Ok(calculation.nonresident.disposalDate(disposalDateForm(acquisitionDate).fill(data)))
-        case None => Ok(calculation.nonresident.disposalDate(disposalDateForm(acquisitionDate)))
-      }
-    }
-
-    for {
-      acquisitionDate <- getAcquisitionDate
-      route <- routeRequest(acquisitionDate)
-    } yield route
-  }
-
-  val submitDisposalDate = ValidateSession.async { implicit request =>
-
-    def routeRequest(acquisitionDate: Option[Date]): Future[Result] = {
-      disposalDateForm(acquisitionDate).bindFromRequest.fold(
-        errors => Future.successful(BadRequest(calculation.nonresident.disposalDate(errors))),
-        success => {
-          calcConnector.saveFormData(KeystoreKeys.disposalDate, success)
-          if (!Dates.dateAfterStart(success.day, success.month, success.year)) {
-            Future.successful(Redirect(routes.NoCapitalGainsTaxController.noCapitalGainsTax()))
-          } else {
-            Future.successful(Redirect(routes.CalculationController.disposalValue()))
-          }
-        }
-      )
-    }
-
-    for {
-      acquisitionDate <- getAcquisitionDate
-      route <- routeRequest(acquisitionDate)
-    } yield route
-  }
 
   //################### No Capital Gains Tax #######################
 

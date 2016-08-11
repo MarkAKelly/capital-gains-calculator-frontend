@@ -12,7 +12,7 @@
 
     <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
 
-    @form(action = controllers.nonresident.routes.CalculationController.submitDisposalDate) {
+    @form(action = controllers.nonresident.routes.DisposalDateController.submitDisposalDate) {
 
         @formInlineDateInput(disposalDateForm, "disposalDate", Messages("calc.disposalDate.question"))
 

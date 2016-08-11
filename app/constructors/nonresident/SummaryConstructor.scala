@@ -474,7 +474,7 @@ object SummaryConstructor {
         SummaryDataItemModel(
           Messages("calc.disposalDate.question"),
           Dates.datePageFormat.format(Dates.constructDate(summary.disposalDateModel.day, summary.disposalDateModel.month, summary.disposalDateModel.year)),
-          Some(routes.CalculationController.disposalDate().toString())
+          Some(routes.DisposalDateController.disposalDate().toString())
         ),
         SummaryDataItemModel(
           Messages("calc.disposalValue.question"),
