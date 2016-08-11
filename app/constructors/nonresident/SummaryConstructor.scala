@@ -53,7 +53,7 @@ object SummaryConstructor {
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.calculationElection"),
           calcTypeMessage(summary.calculationElectionModel.calculationType),
-          Some(routes.CalculationController.calculationElection().toString())
+          Some(routes.CalculationElectionController.calculationElection().toString())
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalGain"),
@@ -89,7 +89,7 @@ object SummaryConstructor {
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.calculationElection"),
           calcTypeMessage(summary.calculationElectionModel.calculationType),
-          Some(routes.CalculationController.calculationElection().toString())
+          Some(routes.CalculationElectionController.calculationElection().toString())
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalGain"),
@@ -112,7 +112,7 @@ object SummaryConstructor {
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.calculationElection"),
           calcTypeMessage(summary.calculationElectionModel.calculationType),
-          Some(routes.CalculationController.calculationElection().toString())
+          Some(routes.CalculationElectionController.calculationElection().toString())
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalLoss"),
@@ -125,7 +125,7 @@ object SummaryConstructor {
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.calculationElection"),
           calcTypeMessage(summary.calculationElectionModel.calculationType),
-          Some(routes.CalculationController.calculationElection().toString())
+          Some(routes.CalculationElectionController.calculationElection().toString())
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalGain"),
@@ -148,7 +148,7 @@ object SummaryConstructor {
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.calculationElection"),
           calcTypeMessage(summary.calculationElectionModel.calculationType),
-          Some(routes.CalculationController.calculationElection().toString())
+          Some(routes.CalculationElectionController.calculationElection().toString())
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalGain"),
