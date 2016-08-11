@@ -117,9 +117,9 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${routes.CalculationController.calculationElection().url}" in {
+        s"have a 'Back' link to ${routes.CalculationElectionController.calculationElection().url}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.calculationElection().url
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationElectionController.calculationElection().url
         }
       }
 
@@ -133,9 +133,9 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${routes.CalculationController.calculationElection().url}" in {
+        s"have a 'Back' link to ${routes.CalculationElectionController.calculationElection().url}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.calculationElection().url
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationElectionController.calculationElection().url
         }
       }
 

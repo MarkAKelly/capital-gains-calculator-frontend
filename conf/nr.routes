@@ -74,8 +74,8 @@ GET         /allowable-losses                   controllers.nonresident.Calculat
 POST        /allowable-losses                   controllers.nonresident.CalculationController.submitAllowableLosses
 
 #Calculation Election
-GET         /calculation-election               controllers.nonresident.CalculationController.calculationElection
-POST        /calculation-election               controllers.nonresident.CalculationController.submitCalculationElection
+GET         /calculation-election               controllers.nonresident.CalculationElectionController.calculationElection
+POST        /calculation-election               controllers.nonresident.CalculationElectionController.submitCalculationElection
 
 #Other Reliefs
 GET         /other-reliefs                      controllers.nonresident.CalculationController.otherReliefs

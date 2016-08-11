@@ -96,9 +96,9 @@ class OtherReliefsTASpec extends UnitSpec with WithFakeApplication with MockitoS
         document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
       }
 
-      s"have a 'Back' link to ${routes.CalculationController.calculationElection}" in {
+      s"have a 'Back' link to ${routes.CalculationElectionController.calculationElection}" in {
         document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-        document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.calculationElection.toString()
+        document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationElectionController.calculationElection.toString()
       }
 
       "have the question 'How much extra tax relief are you claiming?' as the legend of the input" in {
