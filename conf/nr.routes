@@ -62,8 +62,8 @@ GET         /acquisition-costs                  controllers.nonresident.Acquisit
 POST        /acquisition-costs                  controllers.nonresident.AcquisitionCostsController.submitAcquisitionCosts
 
 #Disposal Costs
-GET         /disposal-costs                     controllers.nonresident.CalculationController.disposalCosts
-POST        /disposal-costs                     controllers.nonresident.CalculationController.submitDisposalCosts
+GET         /disposal-costs                     controllers.nonresident.DisposalCostsController.disposalCosts
+POST        /disposal-costs                     controllers.nonresident.DisposalCostsController.submitDisposalCosts
 
 #Private Residence Relief
 GET         /private-residence-relief           controllers.nonresident.CalculationController.privateResidenceRelief
