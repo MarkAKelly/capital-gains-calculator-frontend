@@ -34,7 +34,7 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{DisposalValueController, routes}
 import models.nonresident.DisposalValueModel
 import play.api.mvc.Result
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
@@ -43,7 +43,7 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget(getData: Option[DisposalValueModel],postData: Option[DisposalValueModel]): CalculationController = {
+  def setupTarget(getData: Option[DisposalValueModel],postData: Option[DisposalValueModel]): DisposalValueController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -55,9 +55,8 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
     when(mockCalcConnector.saveFormData[DisposalValueModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new DisposalValueController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
   }
 

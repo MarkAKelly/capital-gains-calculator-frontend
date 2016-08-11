@@ -378,7 +378,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "the value of the sale should be £150,000 and link to the disposal-value page" in {
               document.body().getElementById("saleDetails(1)").text shouldBe "£150,000.00"
-              document.body().getElementById("saleDetails(1)").attr("href") shouldEqual routes.CalculationController.disposalValue().toString()
+              document.body().getElementById("saleDetails(1)").attr("href") shouldEqual routes.DisposalValueController.disposalValue().toString()
             }
 
             "include the question 'How much did you pay in costs when you stopped being the property owner?'" in {

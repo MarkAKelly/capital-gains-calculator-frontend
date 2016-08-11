@@ -171,8 +171,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.CalculationController.disposalValue()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.disposalValue()}")
+      s"redirect to ${routes.DisposalValueController.disposalValue()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.DisposalValueController.disposalValue()}")
       }
     }
 
@@ -184,8 +184,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.CalculationController.disposalValue()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.disposalValue()}")
+      s"redirect to ${routes.DisposalValueController.disposalValue()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.DisposalValueController.disposalValue()}")
       }
     }
 
