@@ -172,7 +172,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.disabledTrustee.question"),
               summary.disabledTrusteeModel.get.isVulnerable,
-              Some(routes.CalculationController.disabledTrustee().toString())
+              Some(routes.DisabledTrusteeController.disabledTrustee().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.otherProperties.question"),
@@ -194,7 +194,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.disabledTrustee.question"),
               summary.disabledTrusteeModel.get.isVulnerable,
-              Some(routes.CalculationController.disabledTrustee().toString())
+              Some(routes.DisabledTrusteeController.disabledTrustee().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.otherProperties.question"),
@@ -484,7 +484,7 @@ object SummaryConstructor {
         SummaryDataItemModel(
           Messages("calc.disposalCosts.question"),
           "&pound;" + MoneyPounds(summary.disposalCostsModel.disposalCosts).quantity,
-          Some(routes.CalculationController.disposalCosts().toString())
+          Some(routes.DisposalCostsController.disposalCosts().toString())
         )
       )
     )

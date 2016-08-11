@@ -7,8 +7,8 @@ GET         /customer-type                      controllers.nonresident.Customer
 POST        /customer-type                      controllers.nonresident.CustomerTypeController.submitCustomerType
 
 #Disabled Trustee
-GET         /disabled-trustee                   controllers.nonresident.CalculationController.disabledTrustee
-POST        /disabled-trustee                   controllers.nonresident.CalculationController.submitDisabledTrustee
+GET         /disabled-trustee                   controllers.nonresident.DisabledTrusteeController.disabledTrustee
+POST        /disabled-trustee                   controllers.nonresident.DisabledTrusteeController.submitDisabledTrustee
 
 #Current Income
 GET         /current-income                     controllers.nonresident.CalculationController.currentIncome
@@ -51,7 +51,7 @@ GET         /disposal-date                      controllers.nonresident.Calculat
 POST        /disposal-date                      controllers.nonresident.CalculationController.submitDisposalDate
 
 #No Capital Gains Tax
-GET         /no-capital-gains-tax               controllers.nonresident.CalculationController.noCapitalGainsTax
+GET         /no-capital-gains-tax               controllers.nonresident.NoCapitalGainsTaxController.noCapitalGainsTax
 
 #Disposal Value
 GET         /disposal-value                     controllers.nonresident.CalculationController.disposalValue
@@ -62,8 +62,8 @@ GET         /acquisition-costs                  controllers.nonresident.Acquisit
 POST        /acquisition-costs                  controllers.nonresident.AcquisitionCostsController.submitAcquisitionCosts
 
 #Disposal Costs
-GET         /disposal-costs                     controllers.nonresident.CalculationController.disposalCosts
-POST        /disposal-costs                     controllers.nonresident.CalculationController.submitDisposalCosts
+GET         /disposal-costs                     controllers.nonresident.DisposalCostsController.disposalCosts
+POST        /disposal-costs                     controllers.nonresident.DisposalCostsController.submitDisposalCosts
 
 #Private Residence Relief
 GET         /private-residence-relief           controllers.nonresident.CalculationController.privateResidenceRelief

@@ -44,7 +44,7 @@ trait AllowableLossesController extends FrontendController with ValidActiveSessi
       case _ => calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
         case Some(rebasedData) if rebasedData.hasRebasedValue == "Yes" =>
           Future.successful(routes.CalculationController.privateResidenceRelief().url)
-        case _ => Future.successful(routes.CalculationController.disposalCosts().url)
+        case _ => Future.successful(routes.DisposalCostsController.disposalCosts().url)
       }
     }
   }
