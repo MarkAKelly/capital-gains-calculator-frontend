@@ -309,7 +309,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
         }
 
         "should redirect to the annualExemptAmountPage page" in {
-          redirectLocation(result) shouldBe Some(s"${routes.CalculationController.annualExemptAmount()}")
+          redirectLocation(result) shouldBe Some(s"${routes.AnnualExemptAmountController.annualExemptAmount()}")
         }
       }
 
@@ -409,7 +409,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
         }
 
         "should redirect to the annual exempt amount page" in {
-          redirectLocation(result) shouldBe Some(s"${routes.CalculationController.annualExemptAmount()}")
+          redirectLocation(result) shouldBe Some(s"${routes.AnnualExemptAmountController.annualExemptAmount()}")
         }
       }
 
@@ -447,7 +447,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
         }
 
         "should redirect to the annual exempt amount page" in {
-          redirectLocation(result) shouldBe Some(s"${routes.CalculationController.annualExemptAmount()}")
+          redirectLocation(result) shouldBe Some(s"${routes.AnnualExemptAmountController.annualExemptAmount()}")
         }
       }
 

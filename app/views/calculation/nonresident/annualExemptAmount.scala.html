@@ -21,7 +21,7 @@
 
     <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
 
-    @form(action = controllers.nonresident.routes.CalculationController.submitAnnualExemptAmount) {
+    @form(action = controllers.nonresident.routes.AnnualExemptAmountController.submitAnnualExemptAmount) {
 
         @formInputMoney(annualExemptAmountForm, "annualExemptAmount", Messages("calc.annualExemptAmount.question"))
 
