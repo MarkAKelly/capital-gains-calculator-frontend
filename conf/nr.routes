@@ -51,7 +51,7 @@ GET         /disposal-date                      controllers.nonresident.Calculat
 POST        /disposal-date                      controllers.nonresident.CalculationController.submitDisposalDate
 
 #No Capital Gains Tax
-GET         /no-capital-gains-tax               controllers.nonresident.CalculationController.noCapitalGainsTax
+GET         /no-capital-gains-tax               controllers.nonresident.NoCapitalGainsTaxController.noCapitalGainsTax
 
 #Disposal Value
 GET         /disposal-value                     controllers.nonresident.CalculationController.disposalValue
