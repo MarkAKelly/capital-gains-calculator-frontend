@@ -50,7 +50,7 @@ trait RebasedValueController extends FrontendController with ValidActiveSession 
       success => {
         calcConnector.saveFormData(KeystoreKeys.rebasedValue, success)
         success.hasRebasedValue match {
-          case "Yes" => Future.successful(Redirect(routes.CalculationController.rebasedCosts()))
+          case "Yes" => Future.successful(Redirect(routes.RebasedCostsController.rebasedCosts()))
           case "No" => Future.successful(Redirect(routes.ImprovementsController.improvements()))
         }
       }

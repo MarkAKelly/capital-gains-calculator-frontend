@@ -130,9 +130,9 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         lazy val result = target.improvements(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${routes.CalculationController.rebasedCosts().url} " in {
+        s"have a 'Back' link to ${routes.RebasedCostsController.rebasedCosts().url} " in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.rebasedCosts().url
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.RebasedCostsController.rebasedCosts().url
         }
       }
 

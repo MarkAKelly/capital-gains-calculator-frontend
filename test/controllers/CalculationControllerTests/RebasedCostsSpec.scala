@@ -33,7 +33,7 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{RebasedCostsController, routes}
 import models.nonresident.RebasedCostsModel
 import play.api.mvc.Result
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
@@ -42,7 +42,7 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget(getData: Option[RebasedCostsModel], postData: Option[RebasedCostsModel]): CalculationController = {
+  def setupTarget(getData: Option[RebasedCostsModel], postData: Option[RebasedCostsModel]): RebasedCostsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -54,9 +54,8 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
     when(mockCalcConnector.saveFormData[RebasedCostsModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new RebasedCostsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
   }
 

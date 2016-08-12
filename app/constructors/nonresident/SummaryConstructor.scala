@@ -359,7 +359,7 @@ object SummaryConstructor {
                 case "Yes" => MoneyPounds(summary.rebasedCostsModel.get.rebasedCosts.get).quantity
                 case "No" => "0.00"
               }),
-              Some(routes.CalculationController.rebasedCosts().toString())
+              Some(routes.RebasedCostsController.rebasedCosts().toString())
             )
           )
           case "No" => Array(
@@ -379,7 +379,7 @@ object SummaryConstructor {
                 case "Yes" => MoneyPounds(summary.rebasedCostsModel.get.rebasedCosts.get).quantity
                 case "No" => "0.00"
               }),
-              Some(routes.CalculationController.rebasedCosts().toString())
+              Some(routes.RebasedCostsController.rebasedCosts().toString())
             )
           )
         }
@@ -552,7 +552,7 @@ object SummaryConstructor {
               case Some(data) => MoneyPounds(data).quantity
               case None => "0.00"
             }),
-            Some(routes.CalculationController.otherReliefsTA().toString())
+            Some(routes.OtherReliefsTAController.otherReliefsTA().toString())
           )
         )
         case "rebased" => Array(
