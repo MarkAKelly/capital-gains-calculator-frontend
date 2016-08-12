@@ -61,7 +61,7 @@ class NoPrrReliefsValueActionSpec extends UnitSpec with WithFakeApplication with
     }
   }
 
-  "Calling .reliefsValue from the resident DeductionsController" when {
+  "Calling .reliefsValue from the resident DeductionsController with the PRR feature disabled" when {
 
     "there is no keystore data" should {
 
@@ -114,7 +114,7 @@ class NoPrrReliefsValueActionSpec extends UnitSpec with WithFakeApplication with
     }
   }
 
-  "Calling .submitReliefsValue from the GainCalculationController" when {
+  "Calling .submitReliefsValue from the GainCalculationController with the PRR feature disabled" when {
 
     "a valid form is submitted" should {
       lazy val target = setupTarget(None)
@@ -125,7 +125,7 @@ class NoPrrReliefsValueActionSpec extends UnitSpec with WithFakeApplication with
         status(result) shouldBe 303
       }
 
-      "redirect to the improvements page" in {
+      "redirect to the Other Properties page" in {
         redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/other-properties")
       }
     }
