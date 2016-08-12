@@ -70,8 +70,8 @@ GET         /private-residence-relief           controllers.nonresident.PrivateR
 POST        /private-residence-relief           controllers.nonresident.PrivateResidenceReliefController.submitPrivateResidenceRelief
 
 #Allowable Losses
-GET         /allowable-losses                   controllers.nonresident.CalculationController.allowableLosses
-POST        /allowable-losses                   controllers.nonresident.CalculationController.submitAllowableLosses
+GET         /allowable-losses                   controllers.nonresident.AllowableLossesController.allowableLosses
+POST        /allowable-losses                   controllers.nonresident.AllowableLossesController.submitAllowableLosses
 
 #Calculation Election
 GET         /calculation-election               controllers.nonresident.CalculationElectionController.calculationElection
