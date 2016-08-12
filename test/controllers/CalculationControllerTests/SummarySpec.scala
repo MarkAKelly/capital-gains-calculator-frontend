@@ -293,7 +293,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "have a total taxable gain of prior disposals of £9,600 and link to the other-properties page" in {
               document.body().getElementById("personalDetails(3)").text() shouldBe "£9,600.00"
-              document.body().getElementById("personalDetails(3)").attr("href") shouldEqual routes.CalculationController.otherProperties().toString()
+              document.body().getElementById("personalDetails(3)").attr("href") shouldEqual routes.OtherPropertiesController.otherProperties().toString()
             }
 
             "include the question 'How much of your Capital Gains Tax allowance have you got left'" in {
@@ -369,7 +369,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "the date of disposal should be '10 October 2010 and link to the disposal-date page" in {
               document.body().getElementById("saleDetails(0)").text shouldBe "10 October 2010"
-              document.body().getElementById("saleDetails(0)").attr("href") shouldEqual routes.CalculationController.disposalDate().toString()
+              document.body().getElementById("saleDetails(0)").attr("href") shouldEqual routes.DisposalDateController.disposalDate().toString()
             }
 
             "include the question 'How much did you sell or give away the property for?'" in {
@@ -378,7 +378,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "the value of the sale should be £150,000 and link to the disposal-value page" in {
               document.body().getElementById("saleDetails(1)").text shouldBe "£150,000.00"
-              document.body().getElementById("saleDetails(1)").attr("href") shouldEqual routes.CalculationController.disposalValue().toString()
+              document.body().getElementById("saleDetails(1)").attr("href") shouldEqual routes.DisposalValueController.disposalValue().toString()
             }
 
             "include the question 'How much did you pay in costs when you stopped being the property owner?'" in {

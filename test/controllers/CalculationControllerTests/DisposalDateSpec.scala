@@ -34,7 +34,7 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{DisposalDateController, routes}
 import models.nonresident.{AcquisitionDateModel, DisposalDateModel}
 import play.api.mvc.Result
 
@@ -45,7 +45,7 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
   def setupTarget(getData: Option[DisposalDateModel],
                   postData: Option[DisposalDateModel],
                   acquisitionData: Option[AcquisitionDateModel] = None
-                 ): CalculationController = {
+                 ): DisposalDateController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -60,9 +60,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
     when(mockCalcConnector.saveFormData[DisposalDateModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new DisposalDateController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
   }
 
@@ -171,8 +170,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.CalculationController.disposalValue()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.disposalValue()}")
+      s"redirect to ${routes.DisposalValueController.disposalValue()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.DisposalValueController.disposalValue()}")
       }
     }
 
@@ -184,8 +183,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.CalculationController.disposalValue()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.disposalValue()}")
+      s"redirect to ${routes.DisposalValueController.disposalValue()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.DisposalValueController.disposalValue()}")
       }
     }
 

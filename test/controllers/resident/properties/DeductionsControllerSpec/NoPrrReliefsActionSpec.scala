@@ -17,7 +17,7 @@
 package controllers.resident.properties.DeductionsControllerSpec
 
 import assets.MessageLookup.{reliefs => messages}
-import common.resident.{PrivateResidenceReliefKeys => prrKeys}
+import common.Dates._
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import config.AppConfig
 import connectors.CalculatorConnector
@@ -34,10 +34,11 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
-class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
+class NoPrrReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
+  val summaryModel = mock[YourAnswersSummaryModel]
 
-  def setupTarget(getData: Option[ReliefsModel], prrData: Option[PrivateResidenceReliefModel], prrEnabled: Boolean = true): DeductionsController = {
+  def setupTarget(getData: Option[ReliefsModel], summary: YourAnswersSummaryModel, totalGain: BigDecimal): DeductionsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockAppConfig = mock[AppConfig]
@@ -48,11 +49,17 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     when(mockCalcConnector.saveFormData[ReliefsModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
 
+    when(mockCalcConnector.getPropertyGainAnswers(Matchers.any()))
+      .thenReturn(summary)
+
+    when(mockCalcConnector.calculateRttPropertyGrossGain(Matchers.any())(Matchers.any()))
+      .thenReturn(totalGain)
+
     when(mockCalcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.eq(keystoreKeys.privateResidenceRelief))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(prrData))
+      .thenReturn(Future.successful(None))
 
     when(mockAppConfig.featureRTTPRREnabled)
-      .thenReturn(prrEnabled)
+      .thenReturn(false)
 
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -64,41 +71,45 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
 
     "request has a valid session and no keystore value" should {
 
-      lazy val target = setupTarget(None, Some(PrivateResidenceReliefModel(prrKeys.none)))
+      lazy val target = setupTarget(None, summaryModel, BigDecimal(10000))
       lazy val result = target.reliefs(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a status of 200" in {
         status(result) shouldBe 200
       }
 
-      s"return some html with title of ${messages.title}" in {
+      s"return some html with title of ${messages.titleNoPrr}" in {
         contentType(result) shouldBe Some("text/html")
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
-      }
-
-      "have a back link to the prr page" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/private-residence-relief"
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.titleNoPrr
       }
     }
 
     "request has a valid session and some keystore value" should {
 
-      lazy val target = setupTarget(Some(ReliefsModel(true)), Some(PrivateResidenceReliefModel(prrKeys.part)))
+      lazy val target = setupTarget(Some(ReliefsModel(true)), summaryModel, BigDecimal(10000))
       lazy val result = target.reliefs(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a status of 200" in {
         status(result) shouldBe 200
       }
 
-      s"return some html with title of ${messages.title}" in {
+      s"return some html with title of ${messages.titleNoPrr}" in {
         contentType(result) shouldBe Some("text/html")
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.titleNoPrr
+      }
+    }
+
+    "request has an invalid session" should {
+
+      lazy val target = setupTarget(None, summaryModel, BigDecimal(10000))
+      lazy val result = target.reliefs(fakeRequest)
+
+      "return a status of 303" in {
+        status(result) shouldBe 303
       }
 
-      "have a back link to prr value page" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/private-residence-relief-value"
+      "return you to the session timeout page" in {
+        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
       }
     }
   }
@@ -106,7 +117,7 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
   "Calling .submitReliefs from the DeductionsController" when {
 
     "a valid form 'Yes' is submitted" should {
-      lazy val target = setupTarget(None, Some(PrivateResidenceReliefModel(prrKeys.full)))
+      lazy val target = setupTarget(None, summaryModel, BigDecimal(10000))
       lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "Yes"))
       lazy val result = target.submitReliefs(request)
 
@@ -120,7 +131,7 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     }
 
     "a valid form 'No' is submitted" should {
-      lazy val target = setupTarget(None, Some(PrivateResidenceReliefModel(prrKeys.part)))
+      lazy val target = setupTarget(None, summaryModel, BigDecimal(10000))
       lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "No"))
       lazy val result = target.submitReliefs(request)
 
@@ -134,7 +145,7 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     }
 
     "an invalid form is submitted" should {
-      lazy val target = setupTarget(None, Some(PrivateResidenceReliefModel(prrKeys.none)))
+      lazy val target = setupTarget(None, summaryModel, BigDecimal(10000))
       lazy val request = fakeRequestToPOSTWithSession(("isClaiming", ""))
       lazy val result = target.submitReliefs(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
@@ -144,7 +155,7 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       }
 
       "render the reliefs page" in {
-        doc.title() shouldEqual messages.title
+        doc.title() shouldEqual messages.titleNoPrr
       }
     }
   }

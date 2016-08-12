@@ -19,8 +19,8 @@ GET         /personal-allowance                 controllers.nonresident.Calculat
 POST        /personal-allowance                 controllers.nonresident.CalculationController.submitPersonalAllowance
 
 #Other Properties
-GET         /other-properties                   controllers.nonresident.CalculationController.otherProperties
-POST        /other-properties                   controllers.nonresident.CalculationController.submitOtherProperties
+GET         /other-properties                   controllers.nonresident.OtherPropertiesController.otherProperties
+POST        /other-properties                   controllers.nonresident.OtherPropertiesController.submitOtherProperties
 
 #Allowance
 GET         /allowance                          controllers.nonresident.AnnualExemptAmountController.annualExemptAmount
@@ -47,15 +47,15 @@ GET         /improvements                       controllers.nonresident.Improvem
 POST        /improvements                       controllers.nonresident.ImprovementsController.submitImprovements
 
 #Disposal Date
-GET         /disposal-date                      controllers.nonresident.CalculationController.disposalDate
-POST        /disposal-date                      controllers.nonresident.CalculationController.submitDisposalDate
+GET         /disposal-date                      controllers.nonresident.DisposalDateController.disposalDate
+POST        /disposal-date                      controllers.nonresident.DisposalDateController.submitDisposalDate
 
 #No Capital Gains Tax
 GET         /no-capital-gains-tax               controllers.nonresident.NoCapitalGainsTaxController.noCapitalGainsTax
 
 #Disposal Value
-GET         /disposal-value                     controllers.nonresident.CalculationController.disposalValue
-POST        /disposal-value                     controllers.nonresident.CalculationController.submitDisposalValue
+GET         /disposal-value                     controllers.nonresident.DisposalValueController.disposalValue
+POST        /disposal-value                     controllers.nonresident.DisposalValueController.submitDisposalValue
 
 #Acquisition Costs
 GET         /acquisition-costs                  controllers.nonresident.AcquisitionCostsController.acquisitionCosts
