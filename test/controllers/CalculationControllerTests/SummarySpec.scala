@@ -20,7 +20,7 @@ import common.DefaultRoutes._
 import common.{KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{SummaryController, routes}
 import models.nonresident.{AcquisitionDateModel, CalculationResultModel, RebasedValueModel, SummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -41,7 +41,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
                    result: CalculationResultModel,
                    acquisitionDateData: Option[AcquisitionDateModel],
                    rebasedValueData: Option[RebasedValueModel]
-                 ): CalculationController = {
+                 ): SummaryController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -64,9 +64,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
     when(mockCalcConnector.calculateRebased(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(Some(result)))
 
-    new CalculationController {
+    new SummaryController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
   }
 

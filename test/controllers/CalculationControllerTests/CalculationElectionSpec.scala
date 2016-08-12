@@ -406,7 +406,7 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
       }
 
       "redirect to the summary page" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.summary}")
+        redirectLocation(result) shouldBe Some(s"${routes.SummaryController.summary}")
       }
     }
 
