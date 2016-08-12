@@ -48,11 +48,11 @@ trait DisposalCostsController extends FrontendController with ValidActiveSession
         calcConnector.saveFormData(KeystoreKeys.disposalCosts, success)
         calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
           case Some(data) if data.hasAcquisitionDate == "Yes" =>
-            Future.successful(Redirect(routes.CalculationController.privateResidenceRelief()))
+            Future.successful(Redirect(routes.PrivateResidenceReliefController.privateResidenceRelief()))
           case _ =>
             calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
               case Some(rebasedData) if rebasedData.hasRebasedValue == "Yes" =>
-                Future.successful(Redirect(routes.CalculationController.privateResidenceRelief()))
+                Future.successful(Redirect(routes.PrivateResidenceReliefController.privateResidenceRelief()))
               case _ =>
                 Future.successful(Redirect(routes.AllowableLossesController.allowableLosses()))
 

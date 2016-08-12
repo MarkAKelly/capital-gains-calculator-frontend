@@ -40,10 +40,10 @@ trait AllowableLossesController extends FrontendController with ValidActiveSessi
   def allowableLossesBackLink(implicit hc: HeaderCarrier): Future[String] = {
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
       case Some(acquisitionData) if acquisitionData.hasAcquisitionDate == "Yes" =>
-        Future.successful(routes.CalculationController.privateResidenceRelief().url)
+        Future.successful(routes.PrivateResidenceReliefController.privateResidenceRelief().url)
       case _ => calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
         case Some(rebasedData) if rebasedData.hasRebasedValue == "Yes" =>
-          Future.successful(routes.CalculationController.privateResidenceRelief().url)
+          Future.successful(routes.PrivateResidenceReliefController.privateResidenceRelief().url)
         case _ => Future.successful(routes.DisposalCostsController.disposalCosts().url)
       }
     }

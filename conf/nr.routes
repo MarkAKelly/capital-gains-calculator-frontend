@@ -43,8 +43,8 @@ GET         /rebased-costs                      controllers.nonresident.Calculat
 POST        /rebased-costs                      controllers.nonresident.CalculationController.submitRebasedCosts
 
 #Improvements
-GET         /improvements                       controllers.nonresident.CalculationController.improvements
-POST        /improvements                       controllers.nonresident.CalculationController.submitImprovements
+GET         /improvements                       controllers.nonresident.ImprovementsController.improvements
+POST        /improvements                       controllers.nonresident.ImprovementsController.submitImprovements
 
 #Disposal Date
 GET         /disposal-date                      controllers.nonresident.DisposalDateController.disposalDate
@@ -66,8 +66,8 @@ GET         /disposal-costs                     controllers.nonresident.Disposal
 POST        /disposal-costs                     controllers.nonresident.DisposalCostsController.submitDisposalCosts
 
 #Private Residence Relief
-GET         /private-residence-relief           controllers.nonresident.CalculationController.privateResidenceRelief
-POST        /private-residence-relief           controllers.nonresident.CalculationController.submitPrivateResidenceRelief
+GET         /private-residence-relief           controllers.nonresident.PrivateResidenceReliefController.privateResidenceRelief
+POST        /private-residence-relief           controllers.nonresident.PrivateResidenceReliefController.submitPrivateResidenceRelief
 
 #Allowable Losses
 GET         /allowable-losses                   controllers.nonresident.AllowableLossesController.allowableLosses
@@ -81,14 +81,14 @@ POST        /calculation-election               controllers.nonresident.Calculat
 GET         /other-reliefs                      controllers.nonresident.CalculationController.otherReliefs
 POST        /other-reliefs                      controllers.nonresident.CalculationController.submitOtherReliefs
 
-GET         /other-reliefs-flat                 controllers.nonresident.CalculationController.otherReliefsFlat
-POST        /other-reliefs-flat                 controllers.nonresident.CalculationController.submitOtherReliefsFlat
+GET         /other-reliefs-flat                 controllers.nonresident.OtherReliefsFlatController.otherReliefsFlat
+POST        /other-reliefs-flat                 controllers.nonresident.OtherReliefsFlatController.submitOtherReliefsFlat
 
 GET         /other-reliefs-time-apportioned     controllers.nonresident.CalculationController.otherReliefsTA
 POST        /other-reliefs-time-apportioned     controllers.nonresident.CalculationController.submitOtherReliefsTA
 
-GET         /other-reliefs-rebased              controllers.nonresident.CalculationController.otherReliefsRebased
-POST        /other-reliefs-rebased              controllers.nonresident.CalculationController.submitOtherReliefsRebased
+GET         /other-reliefs-rebased              controllers.nonresident.OtherReliefsRebasedController.otherReliefsRebased
+POST        /other-reliefs-rebased              controllers.nonresident.OtherReliefsRebasedController.submitOtherReliefsRebased
 ########################################################
 
 

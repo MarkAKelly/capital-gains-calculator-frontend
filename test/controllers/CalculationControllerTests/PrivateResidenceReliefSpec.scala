@@ -18,9 +18,7 @@ package controllers.CalculationControllerTests
 
 import common.{Constants, KeystoreKeys}
 import connectors.CalculatorConnector
-import constructors.nonresident.CalculationElectionConstructor
-import models._
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{PrivateResidenceReliefController, routes}
 import models.nonresident.{AcquisitionDateModel, DisposalDateModel, PrivateResidenceReliefModel, RebasedValueModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -49,10 +47,9 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
     disposalDateData: Option[DisposalDateModel] = None,
     acquisitionDateData: Option[AcquisitionDateModel] = None,
     rebasedValueData: Option[RebasedValueModel] = None
-  ): CalculationController = {
+  ): PrivateResidenceReliefController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
-    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.eq(KeystoreKeys.privateResidenceRelief))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -70,9 +67,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
     when(mockCalcConnector.saveFormData[PrivateResidenceReliefModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new PrivateResidenceReliefController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
   }
 
@@ -81,7 +77,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
     "when not supplied wth a pre-existing stored model" should {
 
-      lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+      lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief")
+        .withSession(SessionKeys.sessionId -> "12345")
       val target = setupTarget(None, None)
       lazy val result = target.privateResidenceRelief(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
@@ -97,9 +94,9 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
           charset(result) shouldBe Some("utf-8")
         }
 
-        s"have a 'Back' link to ${routes.DisposalCostsController.disposalCosts}" in {
+        s"have a 'Back' link to ${routes.DisposalCostsController.disposalCosts()}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalCostsController.disposalCosts.toString()
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalCostsController.disposalCosts().toString()
         }
 
         "have the title 'calc.privateResidenceRelief.question'" in {
@@ -164,7 +161,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
           }
 
           "have 45 days in the input field for days claimed after" in {
-            document.body.getElementById("daysClaimedAfter").attr("value") shouldEqual ("45")
+            document.body.getElementById("daysClaimedAfter").attr("value") shouldEqual "45"
           }
 
           "Not show the Days Before question" in {
@@ -175,7 +172,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
       "when disposal date is >= 6 October 2016, no acquisition date supplied with rebased value and daysClaimedAfter of 45" should {
 
-        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief")
+          .withSession(SessionKeys.sessionId -> "12345")
         val target = setupTarget(
           Some(PrivateResidenceReliefModel("Yes", None, Some(45))),
           None,
@@ -203,7 +201,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
           }
 
           "have 45 days in the input field for days claimed after" in {
-            document.body.getElementById("daysClaimedAfter").attr("value") shouldEqual ("45")
+            document.body.getElementById("daysClaimedAfter").attr("value") shouldEqual "45"
           }
 
           "Not show the Days Before question" in {
@@ -213,9 +211,10 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "when disposal date is >= 6 October 2016 and no rebased value" should {
-        //This is an impossible scenario, as the Private Residence Relief screen would not be routed to, included for completenetss
+        //This is an impossible scenario, as the Private Residence Relief screen would not be routed to, included for completeness
 
-        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief")
+          .withSession(SessionKeys.sessionId -> "12345")
         val target = setupTarget(
           Some(PrivateResidenceReliefModel("Yes", None, None)),
           None,
@@ -249,7 +248,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       "when disposal date is >= 6 October 2016, acquisition date < 6 April 2015 " +
         "with rebased value, daysClaimed of 23 daysClaimedAfter of 45" should {
 
-        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief")
+          .withSession(SessionKeys.sessionId -> "12345")
         val target = setupTarget(
           Some(PrivateResidenceReliefModel("Yes", Some(23), Some(45))),
           None,
@@ -295,7 +295,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       "when disposal date is >= 6 October 2016, acquisition < 6 April 2015 " +
         "with no rebased value, daysClaimed of 23 daysClaimedAfter of 45" should {
 
-        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief")
+          .withSession(SessionKeys.sessionId -> "12345")
         val target = setupTarget(
           Some(PrivateResidenceReliefModel("Yes", Some(23), Some(45))),
           None,
@@ -341,7 +342,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       "when disposal date is >= 6 October 2016, acquisition date >= 6 April 2015 " +
         "with no rebased value, daysClaimed of 23" should {
 
-        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief")
+          .withSession(SessionKeys.sessionId -> "12345")
         val target = setupTarget(
           Some(PrivateResidenceReliefModel("Yes", Some(23), Some(45))),
           None,
@@ -380,7 +382,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
       "when disposal date is < 6 October 2016, no acquisition date with rebased value" should {
 
-        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+        lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief")
+          .withSession(SessionKeys.sessionId -> "12345")
         val target = setupTarget(
           Some(PrivateResidenceReliefModel("Yes", None, None)),
           None,
@@ -391,14 +394,15 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
         lazy val result = target.privateResidenceRelief(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${routes.DisposalCostsController.disposalCosts}" in {
+        s"have a 'Back' link to ${routes.DisposalCostsController.disposalCosts()}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalCostsController.disposalCosts.toString()
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalCostsController.disposalCosts().toString()
         }
 
         "when disposal date is < 6 October 2016, no acquisition date with rebased value" should {
 
-          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief")
+            .withSession(SessionKeys.sessionId -> "12345")
           val target = setupTarget(
             Some(PrivateResidenceReliefModel("Yes", None, None)),
             None,
@@ -431,7 +435,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
         "when disposal date is < 6 October 2016 with rebased value" should {
 
-          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief")
+            .withSession(SessionKeys.sessionId -> "12345")
           val target = setupTarget(
             Some(PrivateResidenceReliefModel("Yes", None, None)),
             None,
@@ -464,7 +469,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
         "when disposal date is < 6 October 2016, no acquisition date with no rebased value" should {
 
-          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief")
+            .withSession(SessionKeys.sessionId -> "12345")
           val target = setupTarget(
             Some(PrivateResidenceReliefModel("Yes", None, None)),
             None,
@@ -497,7 +503,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
         "when disposal date is < 6 October 2016, acquisition date < 6 April 15 with rebased value" should {
 
-          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief")
+            .withSession(SessionKeys.sessionId -> "12345")
           val target = setupTarget(
             Some(PrivateResidenceReliefModel("Yes", Some(23), None)),
             None,
@@ -536,7 +543,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
         "when disposal date is < 6 October 2016, acquisition date < 6 April 15 with no rebased value" should {
 
-          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief")
+            .withSession(SessionKeys.sessionId -> "12345")
           val target = setupTarget(
             Some(PrivateResidenceReliefModel("Yes", Some(23), None)),
             None,
@@ -575,7 +583,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
         "when disposal date is < 6 October 2016, acquisition date >= 6 April 15 with rebased value" should {
 
-          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief")
+            .withSession(SessionKeys.sessionId -> "12345")
           val target = setupTarget(
             Some(PrivateResidenceReliefModel("Yes", None, None)),
             None,
@@ -608,7 +617,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
         "when disposal date is < 6 October 2016, acquisition date >= 6 April 15 with no rebased value" should {
 
-          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief").withSession(SessionKeys.sessionId -> "12345")
+          lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/private-residence-relief")
+            .withSession(SessionKeys.sessionId -> "12345")
           val target = setupTarget(
             Some(PrivateResidenceReliefModel("Yes", None, None)),
             None,
