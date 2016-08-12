@@ -83,9 +83,9 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
           document.getElementsByTag("title").text shouldEqual Messages("calc.acquisitionCosts.question")
         }
 
-        s"have a 'Back' link to ${routes.CalculationController.disposalValue}" in {
+        s"have a 'Back' link to ${routes.DisposalValueController.disposalValue}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.disposalValue.toString()
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalValueController.disposalValue.toString()
         }
 
         "have the page heading 'Calculate your tax (non-residents)'" in {
@@ -169,8 +169,8 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
           status(result) shouldBe 303
         }
 
-        s"redirect to ${routes.CalculationController.disposalCosts()}" in {
-          redirectLocation(result) shouldBe Some(s"${routes.CalculationController.disposalCosts()}")
+        s"redirect to ${routes.DisposalCostsController.disposalCosts()}" in {
+          redirectLocation(result) shouldBe Some(s"${routes.DisposalCostsController.disposalCosts()}")
         }
       }
 

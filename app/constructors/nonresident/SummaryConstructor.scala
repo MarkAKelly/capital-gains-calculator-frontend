@@ -53,7 +53,7 @@ object SummaryConstructor {
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.calculationElection"),
           calcTypeMessage(summary.calculationElectionModel.calculationType),
-          Some(routes.CalculationController.calculationElection().toString())
+          Some(routes.CalculationElectionController.calculationElection().toString())
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalGain"),
@@ -89,7 +89,7 @@ object SummaryConstructor {
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.calculationElection"),
           calcTypeMessage(summary.calculationElectionModel.calculationType),
-          Some(routes.CalculationController.calculationElection().toString())
+          Some(routes.CalculationElectionController.calculationElection().toString())
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalGain"),
@@ -112,7 +112,7 @@ object SummaryConstructor {
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.calculationElection"),
           calcTypeMessage(summary.calculationElectionModel.calculationType),
-          Some(routes.CalculationController.calculationElection().toString())
+          Some(routes.CalculationElectionController.calculationElection().toString())
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalLoss"),
@@ -125,7 +125,7 @@ object SummaryConstructor {
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.calculationElection"),
           calcTypeMessage(summary.calculationElectionModel.calculationType),
-          Some(routes.CalculationController.calculationElection().toString())
+          Some(routes.CalculationElectionController.calculationElection().toString())
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalGain"),
@@ -148,7 +148,7 @@ object SummaryConstructor {
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.calculationElection"),
           calcTypeMessage(summary.calculationElectionModel.calculationType),
-          Some(routes.CalculationController.calculationElection().toString())
+          Some(routes.CalculationElectionController.calculationElection().toString())
         ),
         SummaryDataItemModel(
           Messages("calc.summary.calculation.details.totalGain"),
@@ -172,17 +172,17 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.disabledTrustee.question"),
               summary.disabledTrusteeModel.get.isVulnerable,
-              Some(routes.CalculationController.disabledTrustee().toString())
+              Some(routes.DisabledTrusteeController.disabledTrustee().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.otherProperties.question"),
               summary.otherPropertiesModel.otherProperties.toString,
-              Some(routes.CalculationController.otherProperties().toString())
+              Some(routes.OtherPropertiesController.otherProperties().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.annualExemptAmount.question"),
               "&pound;" + MoneyPounds(summary.annualExemptAmountModel.get.annualExemptAmount).quantity,
-              Some(routes.CalculationController.annualExemptAmount().toString())
+              Some(routes.AnnualExemptAmountController.annualExemptAmount().toString())
             )
           )
           case "No" => Array(
@@ -194,12 +194,12 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.disabledTrustee.question"),
               summary.disabledTrusteeModel.get.isVulnerable,
-              Some(routes.CalculationController.disabledTrustee().toString())
+              Some(routes.DisabledTrusteeController.disabledTrustee().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.otherProperties.question"),
               summary.otherPropertiesModel.otherProperties.toString,
-              Some(routes.CalculationController.otherProperties().toString())
+              Some(routes.OtherPropertiesController.otherProperties().toString())
             )
           )
         }
@@ -216,7 +216,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.currentIncome.question"),
                     "&pound;" + MoneyPounds(summary.currentIncomeModel.get.currentIncome).quantity,
-                    Some(routes.CalculationController.currentIncome().toString())
+                    Some(routes.CurrentIncomeController.currentIncome().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.personalAllowance.question"),
@@ -226,12 +226,12 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.otherProperties.questionTwo"),
                     "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
-                    Some(routes.CalculationController.otherProperties().toString())
+                    Some(routes.OtherPropertiesController.otherProperties().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.annualExemptAmount.question"),
                     "&pound;" + MoneyPounds(summary.annualExemptAmountModel.get.annualExemptAmount).quantity,
-                    Some(routes.CalculationController.annualExemptAmount().toString())
+                    Some(routes.AnnualExemptAmountController.annualExemptAmount().toString())
                   )
                 )
               case _ =>
@@ -244,17 +244,17 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.currentIncome.question"),
                     "&pound;" + MoneyPounds(summary.currentIncomeModel.get.currentIncome).quantity,
-                    Some(routes.CalculationController.currentIncome().toString())
+                    Some(routes.CurrentIncomeController.currentIncome().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.otherProperties.questionTwo"),
                     "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
-                    Some(routes.CalculationController.otherProperties().toString())
+                    Some(routes.OtherPropertiesController.otherProperties().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.annualExemptAmount.question"),
                     "&pound;" + MoneyPounds(summary.annualExemptAmountModel.get.annualExemptAmount).quantity,
-                    Some(routes.CalculationController.annualExemptAmount().toString())
+                    Some(routes.AnnualExemptAmountController.annualExemptAmount().toString())
                   )
                 )
             }
@@ -270,7 +270,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.currentIncome.question"),
                     "&pound;" + MoneyPounds(summary.currentIncomeModel.get.currentIncome).quantity,
-                    Some(routes.CalculationController.currentIncome().toString())
+                    Some(routes.CurrentIncomeController.currentIncome().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.personalAllowance.question"),
@@ -280,7 +280,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.otherProperties.question"),
                     summary.otherPropertiesModel.otherProperties.toString,
-                    Some(routes.CalculationController.otherProperties().toString())
+                    Some(routes.OtherPropertiesController.otherProperties().toString())
                   )
                 )
               case _ =>
@@ -293,12 +293,12 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.currentIncome.question"),
                     "&pound;" + MoneyPounds(summary.currentIncomeModel.get.currentIncome).quantity,
-                    Some(routes.CalculationController.currentIncome().toString())
+                    Some(routes.CurrentIncomeController.currentIncome().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.otherProperties.question"),
                     summary.otherPropertiesModel.otherProperties.toString,
-                    Some(routes.CalculationController.otherProperties().toString())
+                    Some(routes.OtherPropertiesController.otherProperties().toString())
                   )
                 )
             }
@@ -313,12 +313,12 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.otherProperties.question"),
               summary.otherPropertiesModel.otherProperties.toString,
-              Some(routes.CalculationController.otherProperties().toString())
+              Some(routes.OtherPropertiesController.otherProperties().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.annualExemptAmount.question"),
               "&pound;" + MoneyPounds(summary.annualExemptAmountModel.get.annualExemptAmount).quantity,
-              Some(routes.CalculationController.annualExemptAmount().toString())
+              Some(routes.AnnualExemptAmountController.annualExemptAmount().toString())
             )
           )
           case "No" => Array(
@@ -330,7 +330,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.otherProperties.question"),
               summary.otherPropertiesModel.otherProperties.toString,
-              Some(routes.CalculationController.otherProperties().toString())
+              Some(routes.OtherPropertiesController.otherProperties().toString())
             )
           )
         }
@@ -393,7 +393,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.acquisitionValue.question"),
               "&pound;" + MoneyPounds(summary.acquisitionValueModel.acquisitionValueAmt).quantity,
-              Some(routes.CalculationController.acquisitionValue().toString())
+              Some(routes.AcquisitionValueController.acquisitionValue().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.acquisitionCosts.question"),
@@ -410,7 +410,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.acquisitionValue.question"),
               "&pound;" + MoneyPounds(summary.acquisitionValueModel.acquisitionValueAmt).quantity,
-              Some(routes.CalculationController.acquisitionValue().toString())
+              Some(routes.AcquisitionValueController.acquisitionValue().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.acquisitionCosts.question"),
@@ -432,19 +432,19 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.improvements.question"),
               summary.improvementsModel.isClaimingImprovements,
-              Some(routes.CalculationController.improvements().toString())
+              Some(routes.ImprovementsController.improvements().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.improvements.questionFour"),
               "&pound;" + MoneyPounds(summary.improvementsModel.improvementsAmtAfter.getOrElse(BigDecimal(0))).quantity,
-              Some(routes.CalculationController.improvements().toString())
+              Some(routes.ImprovementsController.improvements().toString())
             )
           )
           case _ => Array(
             SummaryDataItemModel(
               Messages("calc.improvements.question"),
               summary.improvementsModel.isClaimingImprovements,
-              Some(routes.CalculationController.improvements().toString())
+              Some(routes.ImprovementsController.improvements().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.improvements.questionTwo"),
@@ -452,7 +452,7 @@ object SummaryConstructor {
                 MoneyPounds(summary.improvementsModel.improvementsAmt.getOrElse(BigDecimal(0))
                   .+(summary.improvementsModel.improvementsAmtAfter.getOrElse(BigDecimal(0)))).quantity
               },
-              Some(routes.CalculationController.improvements().toString())
+              Some(routes.ImprovementsController.improvements().toString())
             )
           )
         }
@@ -461,7 +461,7 @@ object SummaryConstructor {
           SummaryDataItemModel(
             Messages("calc.improvements.question"),
             summary.improvementsModel.isClaimingImprovements,
-            Some(routes.CalculationController.improvements().toString())
+            Some(routes.ImprovementsController.improvements().toString())
           )
         )
       }
@@ -474,17 +474,17 @@ object SummaryConstructor {
         SummaryDataItemModel(
           Messages("calc.disposalDate.question"),
           Dates.datePageFormat.format(Dates.constructDate(summary.disposalDateModel.day, summary.disposalDateModel.month, summary.disposalDateModel.year)),
-          Some(routes.CalculationController.disposalDate().toString())
+          Some(routes.DisposalDateController.disposalDate().toString())
         ),
         SummaryDataItemModel(
           Messages("calc.disposalValue.question"),
           "&pound;" + MoneyPounds(summary.disposalValueModel.disposalValue).quantity,
-          Some(routes.CalculationController.disposalValue().toString())
+          Some(routes.DisposalValueController.disposalValue().toString())
         ),
         SummaryDataItemModel(
           Messages("calc.disposalCosts.question"),
           "&pound;" + MoneyPounds(summary.disposalCostsModel.disposalCosts).quantity,
-          Some(routes.CalculationController.disposalCosts().toString())
+          Some(routes.DisposalCostsController.disposalCosts().toString())
         )
       )
     )
@@ -497,7 +497,7 @@ object SummaryConstructor {
           SummaryDataItemModel(
             Messages("calc.privateResidenceRelief.question"),
             simplePRRResult(result.simplePRR, summary.privateResidenceReliefModel),
-            Some(routes.CalculationController.privateResidenceRelief().toString())
+            Some(routes.PrivateResidenceReliefController.privateResidenceRelief().toString())
           ),
           SummaryDataItemModel(
             Messages("calc.allowableLosses.question.two"),
@@ -536,7 +536,7 @@ object SummaryConstructor {
           SummaryDataItemModel(
             Messages("calc.privateResidenceRelief.question"),
             simplePRRResult(result.simplePRR, summary.privateResidenceReliefModel),
-            Some(routes.CalculationController.privateResidenceRelief().toString())
+            Some(routes.PrivateResidenceReliefController.privateResidenceRelief().toString())
           ),
           SummaryDataItemModel(
             Messages("calc.allowableLosses.question.two"),
@@ -559,7 +559,7 @@ object SummaryConstructor {
           SummaryDataItemModel(
             Messages("calc.privateResidenceRelief.question"),
             simplePRRResult(result.simplePRR, summary.privateResidenceReliefModel),
-            Some(routes.CalculationController.privateResidenceRelief().toString())
+            Some(routes.PrivateResidenceReliefController.privateResidenceRelief().toString())
           ),
           SummaryDataItemModel(
             Messages("calc.allowableLosses.question.two"),
@@ -575,7 +575,7 @@ object SummaryConstructor {
               case Some(data) => MoneyPounds(data).quantity
               case None => "0.00"
             }),
-            Some(routes.CalculationController.otherReliefsRebased().toString())
+            Some(routes.OtherReliefsRebasedController.otherReliefsRebased().toString())
           )
         )
       }

@@ -117,9 +117,9 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${routes.CalculationController.calculationElection().url}" in {
+        s"have a 'Back' link to ${routes.CalculationElectionController.calculationElection().url}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.calculationElection().url
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationElectionController.calculationElection().url
         }
       }
 
@@ -133,9 +133,9 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${routes.CalculationController.calculationElection().url}" in {
+        s"have a 'Back' link to ${routes.CalculationElectionController.calculationElection().url}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.calculationElection().url
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationElectionController.calculationElection().url
         }
       }
 
@@ -275,7 +275,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "have an total income of £1,000 and link to the current-income screen" in {
               document.body().getElementById("personalDetails(1)").text() shouldBe "£1,000.00"
-              document.body().getElementById("personalDetails(1)").attr("href") shouldEqual routes.CalculationController.currentIncome().toString()
+              document.body().getElementById("personalDetails(1)").attr("href") shouldEqual routes.CurrentIncomeController.currentIncome().toString()
             }
 
             "include the question 'What's your Personal Allowance for this tax year?'" in {
@@ -293,7 +293,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "have a total taxable gain of prior disposals of £9,600 and link to the other-properties page" in {
               document.body().getElementById("personalDetails(3)").text() shouldBe "£9,600.00"
-              document.body().getElementById("personalDetails(3)").attr("href") shouldEqual routes.CalculationController.otherProperties().toString()
+              document.body().getElementById("personalDetails(3)").attr("href") shouldEqual routes.OtherPropertiesController.otherProperties().toString()
             }
 
             "include the question 'How much of your Capital Gains Tax allowance have you got left'" in {
@@ -302,7 +302,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "have a remaining CGT Allowance of £1,500 and link to the allowance page" in {
               document.body().getElementById("personalDetails(4)").text() shouldBe "£1,500.00"
-              document.body().getElementById("personalDetails(4)").attr("href") shouldEqual routes.CalculationController.annualExemptAmount().toString()
+              document.body().getElementById("personalDetails(4)").attr("href") shouldEqual routes.AnnualExemptAmountController.annualExemptAmount().toString()
             }
           }
 
@@ -328,7 +328,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "have an acquisition value of £100,000 and link to the acquisition value page" in {
               document.body().getElementById("purchaseDetails(1)").text() shouldBe "£100,000.00"
-              document.body().getElementById("purchaseDetails(1)").attr("href") shouldEqual routes.CalculationController.acquisitionValue().toString()
+              document.body().getElementById("purchaseDetails(1)").attr("href") shouldEqual routes.AcquisitionValueController.acquisitionValue().toString()
             }
 
             "include the question 'How much did you pay in costs when you became the property owner?'" in {
@@ -353,7 +353,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "the answer to the improvements question should be No and should link to the improvements page" in {
               document.body.getElementById("propertyDetails(0)").text shouldBe "No"
-              document.body().getElementById("propertyDetails(0)").attr("href") shouldEqual routes.CalculationController.improvements().toString()
+              document.body().getElementById("propertyDetails(0)").attr("href") shouldEqual routes.ImprovementsController.improvements().toString()
             }
           }
 
@@ -369,7 +369,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "the date of disposal should be '10 October 2010 and link to the disposal-date page" in {
               document.body().getElementById("saleDetails(0)").text shouldBe "10 October 2010"
-              document.body().getElementById("saleDetails(0)").attr("href") shouldEqual routes.CalculationController.disposalDate().toString()
+              document.body().getElementById("saleDetails(0)").attr("href") shouldEqual routes.DisposalDateController.disposalDate().toString()
             }
 
             "include the question 'How much did you sell or give away the property for?'" in {
@@ -378,7 +378,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "the value of the sale should be £150,000 and link to the disposal-value page" in {
               document.body().getElementById("saleDetails(1)").text shouldBe "£150,000.00"
-              document.body().getElementById("saleDetails(1)").attr("href") shouldEqual routes.CalculationController.disposalValue().toString()
+              document.body().getElementById("saleDetails(1)").attr("href") shouldEqual routes.DisposalValueController.disposalValue().toString()
             }
 
             "include the question 'How much did you pay in costs when you stopped being the property owner?'" in {
@@ -387,7 +387,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "the value of the costs should be £0 and link to the disposal costs page" in {
               document.body().getElementById("saleDetails(2)").text shouldBe "£0.00"
-              document.body().getElementById("saleDetails(2)").attr("href") shouldEqual routes.CalculationController.disposalCosts().toString()
+              document.body().getElementById("saleDetails(2)").attr("href") shouldEqual routes.DisposalCostsController.disposalCosts().toString()
             }
           }
 
@@ -421,7 +421,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "the PRR claimed question's answer should be 'No' and be a link to the PRR page" in {
               document.body().getElementById("deductions(0)").text shouldBe "No"
-              document.body().getElementById("deductions(0)").attr("href") shouldEqual routes.CalculationController.privateResidenceRelief().toString()
+              document.body().getElementById("deductions(0)").attr("href") shouldEqual routes.PrivateResidenceReliefController.privateResidenceRelief().toString()
             }
 
           }
@@ -737,7 +737,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
         "have a value for the other reliefs rebased" in {
           document.body.getElementById("deductions(2)").text() shouldBe "£777.00"
-          document.body().getElementById("deductions(2)").attr("href") shouldEqual routes.CalculationController.otherReliefsRebased().toString()
+          document.body().getElementById("deductions(2)").attr("href") shouldEqual routes.OtherReliefsRebasedController.otherReliefsRebased().toString()
         }
 
       }

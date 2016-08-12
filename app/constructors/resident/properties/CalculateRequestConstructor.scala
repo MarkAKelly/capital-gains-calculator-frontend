@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat
 
 import common.resident.PrivateResidenceReliefKeys
 import models.resident._
-import models.resident.properties.{ChargeableGainAnswers, YourAnswersSummaryModel}
+import models.resident.properties.{ChargeableGainAnswers, PrivateResidenceReliefModel, YourAnswersSummaryModel}
 
 object CalculateRequestConstructor {
 
@@ -36,7 +36,8 @@ object CalculateRequestConstructor {
   }
 
   def chargeableGainRequestString (answers: ChargeableGainAnswers, maxAEA: BigDecimal): String = {
-    s"${if (!answers.privateResidenceReliefModel.get.prrClaiming.equals(PrivateResidenceReliefKeys.full) && answers.reliefsModel.get.isClaiming)
+    s"${if (!answers.privateResidenceReliefModel.getOrElse(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)).prrClaiming
+      .equals(PrivateResidenceReliefKeys.full) && answers.reliefsModel.get.isClaiming)
       s"&reliefs=${answers.reliefsValueModel.get.amount}"
     else ""}" +
     s"${if (answers.otherPropertiesModel.get.hasOtherProperties && answers.allowableLossesModel.get.isClaiming)
@@ -48,7 +49,7 @@ object CalculateRequestConstructor {
     s"&annualExemptAmount=${if (isUsingAnnualExemptAmount(answers.otherPropertiesModel, answers.allowableLossesModel, answers.allowableLossesValueModel)) {
       answers.annualExemptAmountModel.get.amount}
     else maxAEA}" +
-    s"&prrType=${answers.privateResidenceReliefModel.get.prrClaiming}" +
+    s"&prrType=${answers.privateResidenceReliefModel.getOrElse(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)).prrClaiming}" +
     s"${if (answers.privateResidenceReliefModel.get.prrClaiming.equals(PrivateResidenceReliefKeys.part)) {
       s"&prrValue=${answers.privateResidenceReliefValueModel.get.amount}"
     } else ""}"

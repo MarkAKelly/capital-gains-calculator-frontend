@@ -38,6 +38,7 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
   def setupTarget(getData: Option[ReliefsValueModel], totalGain: BigDecimal): DeductionsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
+    val mockAppConfig = mock[AppConfig]
 
     when(mockCalcConnector.fetchAndGetFormData[ReliefsValueModel](Matchers.eq(keystoreKeys.reliefsValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -51,9 +52,12 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
     when(mockCalcConnector.calculateRttPropertyGrossGain(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(totalGain))
 
+    when(mockAppConfig.featureRTTPRREnabled)
+      .thenReturn(true)
+
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      val config = mock[AppConfig]
+      val config = mockAppConfig
     }
   }
 

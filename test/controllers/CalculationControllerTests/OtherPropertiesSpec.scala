@@ -23,7 +23,6 @@ import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.CalculationElectionConstructor
-import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import play.api.i18n.Messages
@@ -36,7 +35,7 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{OtherPropertiesController, routes}
 import models.nonresident.{CurrentIncomeModel, CustomerTypeModel, OtherPropertiesModel}
 import play.api.mvc.Result
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
@@ -48,7 +47,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
   def setupTarget(getData: Option[OtherPropertiesModel],
                   postData: Option[OtherPropertiesModel],
                   customerTypeData: Option[CustomerTypeModel],
-                  currentIncomeData: Option[CurrentIncomeModel] = None): CalculationController = {
+                  currentIncomeData: Option[CurrentIncomeModel] = None): OtherPropertiesController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -66,9 +65,8 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
     when(mockCalcConnector.saveFormData[OtherPropertiesModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new OtherPropertiesController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
   }
 
@@ -152,9 +150,9 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
         lazy val result = target.otherProperties(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${routes.CalculationController.currentIncome().url}" in {
+        s"have a 'Back' link to ${routes.CurrentIncomeController.currentIncome().url}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.currentIncome().url
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.CurrentIncomeController.currentIncome().url
         }
       }
 
@@ -164,9 +162,9 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
         lazy val result = target.otherProperties(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${routes.CalculationController.disabledTrustee().url}" in {
+        s"have a 'Back' link to ${routes.DisabledTrusteeController.disabledTrustee().url}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.disabledTrustee().url
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.DisabledTrusteeController.disabledTrustee().url
         }
       }
 
@@ -187,7 +185,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
         lazy val result = target.otherProperties(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${missingDataRoute} " in {
+        s"have a 'Back' link to $missingDataRoute " in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
           document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
         }
@@ -291,7 +289,6 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
       "submitting a valid form with 'Yes' and a non-zero amount" should {
 
         lazy val result = executeTargetWithMockData("Yes", "2100")
-        lazy val document = Jsoup.parse(bodyOf(result))
 
         "return a 303" in {
           status(result) shouldBe 303
@@ -305,14 +302,13 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
       "submitting a valid form with 'Yes' and a nil amount" should {
 
         lazy val result = executeTargetWithMockData("Yes", "0")
-        lazy val document = Jsoup.parse(bodyOf(result))
 
         "return a 303" in {
           status(result) shouldBe 303
         }
 
         "should redirect to the annualExemptAmountPage page" in {
-          redirectLocation(result) shouldBe Some(s"${routes.CalculationController.annualExemptAmount()}")
+          redirectLocation(result) shouldBe Some(s"${routes.AnnualExemptAmountController.annualExemptAmount()}")
         }
       }
 
@@ -377,7 +373,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
 
       "submitting a value which exceeds the maximum numeric" should {
 
-        lazy val result = executeTargetWithMockData("Yes", Constants.maxNumeric + 0.01.toString())
+        lazy val result = executeTargetWithMockData("Yes", (Constants.maxNumeric + 0.01).toString)
         lazy val document = Jsoup.parse(bodyOf(result))
 
         "return a 400" in {
@@ -406,21 +402,19 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
       "submitting a valid form with 'Yes' selected" should {
 
         lazy val result = executeTargetWithMockData("Yes", "")
-        lazy val document = Jsoup.parse(bodyOf(result))
 
         "return a 303" in {
           status(result) shouldBe 303
         }
 
         "should redirect to the annual exempt amount page" in {
-          redirectLocation(result) shouldBe Some(s"${routes.CalculationController.annualExemptAmount()}")
+          redirectLocation(result) shouldBe Some(s"${routes.AnnualExemptAmountController.annualExemptAmount()}")
         }
       }
 
       "submitting a valid form with 'No' selected" should {
 
         lazy val result = executeTargetWithMockData("No", "")
-        lazy val document = Jsoup.parse(bodyOf(result))
 
         "return a 303" in {
           status(result) shouldBe 303
@@ -446,21 +440,19 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
       "submitting a valid form with 'Yes' selected" should {
 
         lazy val result = executeTargetWithMockData("Yes", "")
-        lazy val document = Jsoup.parse(bodyOf(result))
 
         "return a 303" in {
           status(result) shouldBe 303
         }
 
         "should redirect to the annual exempt amount page" in {
-          redirectLocation(result) shouldBe Some(s"${routes.CalculationController.annualExemptAmount()}")
+          redirectLocation(result) shouldBe Some(s"${routes.AnnualExemptAmountController.annualExemptAmount()}")
         }
       }
 
       "submitting a valid form with 'No' selected" should {
 
         lazy val result = executeTargetWithMockData("No", "")
-        lazy val document = Jsoup.parse(bodyOf(result))
 
         "return a 303" in {
           status(result) shouldBe 303

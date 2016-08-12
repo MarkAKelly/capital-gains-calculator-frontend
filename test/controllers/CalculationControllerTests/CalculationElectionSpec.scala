@@ -34,7 +34,7 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{CalculationController, CalculationElectionController, routes}
 import models.nonresident.{CalculationElectionModel, CalculationResultModel, OtherReliefsModel, SummaryModel}
 import play.api.mvc.Result
 
@@ -49,7 +49,7 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
                   otherReliefsFlat: Option[OtherReliefsModel] = None,
                   otherReliefsTA: Option[OtherReliefsModel] = None,
                   otherReliefsRebased: Option[OtherReliefsModel] = None
-                 ): CalculationController = {
+                 ): CalculationElectionController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -103,7 +103,7 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
     when(mockCalcConnector.saveFormData[CalculationElectionModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new CalculationElectionController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
       override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
@@ -393,7 +393,7 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
       }
 
       "redirect to the Other Reliefs Rebased page" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.otherReliefsRebased()}")
+        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsRebasedController.otherReliefsRebased()}")
       }
     }
 

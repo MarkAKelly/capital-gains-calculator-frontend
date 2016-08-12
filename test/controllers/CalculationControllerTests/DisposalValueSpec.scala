@@ -34,7 +34,7 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{DisposalValueController, routes}
 import models.nonresident.DisposalValueModel
 import play.api.mvc.Result
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
@@ -43,7 +43,7 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget(getData: Option[DisposalValueModel],postData: Option[DisposalValueModel]): CalculationController = {
+  def setupTarget(getData: Option[DisposalValueModel],postData: Option[DisposalValueModel]): DisposalValueController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -55,9 +55,8 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
     when(mockCalcConnector.saveFormData[DisposalValueModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new DisposalValueController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
   }
 
@@ -91,9 +90,9 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
           document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
         }
 
-        s"have a 'Back' link to ${routes.CalculationController.disposalDate}" in {
+        s"have a 'Back' link to ${routes.DisposalDateController.disposalDate}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.disposalDate.toString()
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalDateController.disposalDate.toString()
         }
 
         "have the question 'How much did you sell or give away the property for?' as the legend of the input" in {

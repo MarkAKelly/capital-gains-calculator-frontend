@@ -19,7 +19,7 @@ package controllers.CalculationControllerTests
 import common.{Constants, TestModels}
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{OtherReliefsRebasedController, routes}
 import models.nonresident.{CalculationResultModel, OtherReliefsModel, SummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -46,7 +46,7 @@ class OtherReliefsRebasedSpec extends UnitSpec with WithFakeApplication with Moc
                    postData: Option[OtherReliefsModel],
                    summary: SummaryModel,
                    result: CalculationResultModel
-                 ): CalculationController = {
+                 ): OtherReliefsRebasedController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -64,9 +64,8 @@ class OtherReliefsRebasedSpec extends UnitSpec with WithFakeApplication with Moc
     when(mockCalcConnector.saveFormData[OtherReliefsModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new OtherReliefsRebasedController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
   }
 
@@ -95,9 +94,9 @@ class OtherReliefsRebasedSpec extends UnitSpec with WithFakeApplication with Moc
         document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
       }
 
-      s"have a 'Back' link to ${routes.CalculationController.calculationElection}" in {
+      s"have a 'Back' link to ${routes.CalculationElectionController.calculationElection}" in {
         document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-        document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.calculationElection.toString()
+        document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationElectionController.calculationElection.toString()
       }
 
       "have the question 'How much extra tax relief are you claiming?' as the legend of the input" in {
@@ -184,8 +183,8 @@ class OtherReliefsRebasedSpec extends UnitSpec with WithFakeApplication with Moc
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.CalculationController.calculationElection()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.calculationElection()}")
+      s"redirect to ${routes.CalculationElectionController.calculationElection()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.CalculationElectionController.calculationElection()}")
       }
     }
 

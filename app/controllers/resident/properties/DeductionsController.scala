@@ -33,6 +33,7 @@ import forms.resident.properties.ReliefsForm._
 import forms.resident.properties.ReliefsValueForm._
 import forms.resident.properties.PrivateResidenceReliefForm._
 import forms.resident.properties.PrivateResidenceReliefValueForm._
+import forms.resident.properties.NoPrrReliefsForm
 import models.resident.properties._
 import play.api.mvc.{Action, Result}
 import play.api.data.Form
@@ -165,9 +166,21 @@ trait DeductionsController extends FeatureLock {
   val reliefs = FeatureLockForRTT.async { implicit request =>
 
     def routeRequest(isClaimingPartPRR: Boolean, backLink: Option[String]) = {
-      calcConnector.fetchAndGetFormData[ReliefsModel](keystoreKeys.reliefs).map {
-        case Some(data) => Ok(views.reliefs(reliefsForm().fill(data), homeLink, isClaimingPartPRR, backLink))
-        case None => Ok(views.reliefs(reliefsForm(), homeLink, isClaimingPartPRR, backLink))
+      if (config.featureRTTPRREnabled) {
+        calcConnector.fetchAndGetFormData[ReliefsModel](keystoreKeys.reliefs).map {
+          case Some(data) => Ok(views.reliefs(reliefsForm().fill(data), homeLink, isClaimingPartPRR, backLink))
+          case None => Ok(views.reliefs(reliefsForm(), homeLink, isClaimingPartPRR, backLink))
+        }
+      }
+      else {
+        for {
+          answerSummary <- answerSummary(hc)
+          totalGain <- totalGain(answerSummary, hc)
+          route <- calcConnector.fetchAndGetFormData[ReliefsModel](keystoreKeys.reliefs).map {
+            case Some(data) => Ok(views.noPrrReliefs(NoPrrReliefsForm.reliefsForm(totalGain).fill(data), totalGain, homeLink))
+            case None => Ok(views.noPrrReliefs(NoPrrReliefsForm.reliefsForm(totalGain), totalGain, homeLink))
+          }
+        } yield route
       }
     }
 
@@ -182,12 +195,21 @@ trait DeductionsController extends FeatureLock {
   val submitReliefs = FeatureLockForRTT.async { implicit request =>
 
     def errorAction(form: Form[ReliefsModel]) = {
-      for {
-        prr <- calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief)
-        isClaimingPartPRR <- isClaimingPartPRR(prr)
-        backLink <- reliefsBackLink(isClaimingPartPRR)
-        route <- Future.successful(BadRequest(views.reliefs(form, homeLink, isClaimingPartPRR, backLink)))
-      } yield route
+      if (config.featureRTTPRREnabled) {
+        for {
+          prr <- calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief)
+          isClaimingPartPRR <- isClaimingPartPRR(prr)
+          backLink <- reliefsBackLink(isClaimingPartPRR)
+          route <- Future.successful(BadRequest(views.reliefs(form, homeLink, isClaimingPartPRR, backLink)))
+        } yield route
+      }
+      else {
+        for {
+          answerSummary <- answerSummary(hc)
+          totalGain <- totalGain(answerSummary, hc)
+          route <- Future.successful(BadRequest(views.noPrrReliefs(form, totalGain, homeLink)))
+        } yield route
+      }
     }
 
     def successAction(model: ReliefsModel) = {
@@ -209,9 +231,17 @@ trait DeductionsController extends FeatureLock {
   val reliefsValue = FeatureLockForRTT.async { implicit request =>
 
     def routeRequest(totalGain: BigDecimal) = {
-      calcConnector.fetchAndGetFormData[ReliefsValueModel](keystoreKeys.reliefsValue).map {
-        case Some(data) => Ok(views.reliefsValue(reliefsValueForm.fill(data), homeLink, totalGain))
-        case None => Ok(views.reliefsValue(reliefsValueForm, homeLink, totalGain))
+      if (config.featureRTTPRREnabled) {
+        calcConnector.fetchAndGetFormData[ReliefsValueModel](keystoreKeys.reliefsValue).map {
+          case Some(data) => Ok(views.reliefsValue(reliefsValueForm.fill(data), homeLink, totalGain))
+          case None => Ok(views.reliefsValue(reliefsValueForm, homeLink, totalGain))
+        }
+      }
+      else {
+        calcConnector.fetchAndGetFormData[ReliefsValueModel](keystoreKeys.reliefsValue).map {
+          case Some(data) => Ok(views.noPrrReliefsValue(reliefsValueForm.fill(data), homeLink))
+          case None => Ok(views.noPrrReliefsValue(reliefsValueForm, homeLink))
+        }
       }
     }
 
@@ -225,10 +255,13 @@ trait DeductionsController extends FeatureLock {
   val submitReliefsValue = FeatureLockForRTT.async { implicit request =>
 
     def errorAction(form: Form[ReliefsValueModel]) = {
-      for {
-        answerSummary <- answerSummary(hc)
-        totalGain <- totalGain(answerSummary, hc)
-      } yield BadRequest(views.reliefsValue(form, homeLink, totalGain))
+      if (config.featureRTTPRREnabled) {
+        for {
+          answerSummary <- answerSummary(hc)
+          totalGain <- totalGain(answerSummary, hc)
+        } yield BadRequest(views.reliefsValue(form, homeLink, totalGain))
+      }
+      else Future.successful(BadRequest(views.noPrrReliefsValue(form, homeLink)))
     }
 
     def successAction(model: ReliefsValueModel) = {

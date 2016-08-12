@@ -101,40 +101,6 @@ class ReliefsActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/private-residence-relief-value"
       }
     }
-
-    "request has a valid session and PRR is disabled" should {
-
-      lazy val target = setupTarget(None, None, false)
-      lazy val result = target.reliefs(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      s"return some html with title of ${messages.title}" in {
-        contentType(result) shouldBe Some("text/html")
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
-      }
-
-      "have a back link to the improvements page" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/improvements"
-      }
-    }
-
-    "request has an invalid session" should {
-
-      lazy val target = setupTarget(None, Some(PrivateResidenceReliefModel(prrKeys.none)))
-      lazy val result = target.reliefs(fakeRequest)
-
-      "return a status of 303" in {
-        status(result) shouldBe 303
-      }
-
-      "return you to the session timeout page" in {
-        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
-      }
-    }
   }
 
   "Calling .submitReliefs from the DeductionsController" when {

@@ -88,9 +88,9 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
           charset(result) shouldBe Some("utf-8")
         }
 
-        s"have a 'Back' link to ${routes.CalculationController.privateResidenceRelief()}" in {
+        s"have a 'Back' link to ${routes.PrivateResidenceReliefController.privateResidenceRelief()}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.disposalCosts().toString()
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalCostsController.disposalCosts().toString()
         }
 
         "have the title 'Are you claiming any allowable losses?'" in {
@@ -254,7 +254,7 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
       }
 
       "redirect to the calculation election view" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.calculationElection()}")
+        redirectLocation(result) shouldBe Some(s"${routes.CalculationElectionController.calculationElection()}")
       }
     }
 
@@ -294,7 +294,7 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
       }
 
       "redirect to the calculation election view" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.calculationElection()}")
+        redirectLocation(result) shouldBe Some(s"${routes.CalculationElectionController.calculationElection()}")
       }
     }
 

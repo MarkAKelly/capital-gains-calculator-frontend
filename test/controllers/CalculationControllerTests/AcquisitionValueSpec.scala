@@ -34,7 +34,7 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{AcquisitionValueController, CalculationController, routes}
 import models.nonresident.{AcquisitionDateModel, AcquisitionValueModel}
 import play.api.mvc.Result
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
@@ -46,7 +46,7 @@ class AcquisitionValueSpec extends UnitSpec with WithFakeApplication with Mockit
   def setupTarget(
                    getData: Option[AcquisitionValueModel],
                    postData: Option[AcquisitionValueModel],
-                   acquisitionDateModel: Option[AcquisitionDateModel] = None): CalculationController = {
+                   acquisitionDateModel: Option[AcquisitionDateModel] = None): AcquisitionValueController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -61,7 +61,7 @@ class AcquisitionValueSpec extends UnitSpec with WithFakeApplication with Mockit
     when(mockCalcConnector.saveFormData[AcquisitionValueModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new AcquisitionValueController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
       override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
@@ -175,13 +175,13 @@ class AcquisitionValueSpec extends UnitSpec with WithFakeApplication with Mockit
       target.submitAcquisitionValue(fakeRequest)
     }
 
-    s"return a 303 to ${routes.CalculationController.improvements()}" in {
+    s"return a 303 to ${routes.ImprovementsController.improvements()}" in {
 
       val acquisitionDateModelYesAfterStartDate = new AcquisitionDateModel("Yes", Some(10), Some(10), Some(2017))
       lazy val result = executeTargetWithMockData("1000", Some(acquisitionDateModelYesAfterStartDate))
 
       status(result) shouldBe 303
-      redirectLocation(result) shouldBe Some(s"${routes.CalculationController.improvements()}")
+      redirectLocation(result) shouldBe Some(s"${routes.ImprovementsController.improvements()}")
     }
 
     "submitting a valid form with a date before 5 5 2015" should {
