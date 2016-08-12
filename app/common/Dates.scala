@@ -66,10 +66,8 @@ object Dates {
   def dateInsideTaxYear (day: Int, month: Int, year: Int): Boolean =
     constructDate(day, month, year).after(taxYearStartDate) && constructDate(day, month, year).before(taxYearEndDate)
 
-  def dateInsideAcceptedTaxYears (day: Int, month: Int, year: Int): Boolean = {
-    val date = constructDate(day, month, year)
-    date.after(taxStartDate) && date.before(taxYearEndDate)
-  }
+  def dateInsideAcceptedTaxYears (day: Int, month: Int, year: Int): Boolean =
+    constructDate(day, month, year).after(taxStartDate) && constructDate(day, month, year).before(taxYearEndDate)
 
   def taxYearStringToInteger (taxYear: String): Int = (taxYear.take(2) + taxYear.takeRight(2)).toInt
 }
