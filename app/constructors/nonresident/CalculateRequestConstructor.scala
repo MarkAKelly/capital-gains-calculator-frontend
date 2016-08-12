@@ -23,9 +23,8 @@ object CalculateRequestConstructor {
 
   def baseCalcUrl(input: SummaryModel): String = {
     customerType(input.customerTypeModel.customerType) +
-    s"&priorDisposal=${
-      input.otherPropertiesModel.otherProperties
-    }${
+    priorDisposal(input.otherPropertiesModel.otherProperties) +
+    s"${
       input.otherPropertiesModel match {
         case OtherPropertiesModel("Yes", data) if data.getOrElse(0) == 0 => "&annualExemptAmount=" + input.annualExemptAmountModel.get.annualExemptAmount + "&otherPropertiesAmt=" + input.otherPropertiesModel.otherPropertiesAmt.getOrElse(0)
         case OtherPropertiesModel("Yes", data) if data.get > 0 => "&otherPropertiesAmt=" + input.otherPropertiesModel.otherPropertiesAmt.get
@@ -62,7 +61,9 @@ object CalculateRequestConstructor {
     }"
   }
 
-  def customerType(customerType: String) = s"customerType=$customerType"
+  def customerType(customerType: String): String = s"customerType=$customerType"
+
+  def priorDisposal(otherProperties: String): String = s"&priorDisposal=$otherProperties"
 
   def flatCalcUrlExtra(input: SummaryModel): String = {
     s"${

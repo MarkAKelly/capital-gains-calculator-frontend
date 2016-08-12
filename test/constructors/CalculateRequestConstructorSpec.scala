@@ -204,4 +204,17 @@ class CalculateRequestConstructorSpec extends UnitSpec {
     }
   }
 
+  "Calling priorDisposal" should {
+
+    "return a value of yes" in {
+      val result = CalculateRequestConstructor.priorDisposal("Yes")
+      result shouldBe "&priorDisposal=Yes"
+    }
+
+    "return a value of No" in {
+      val result = CalculateRequestConstructor.priorDisposal("No")
+      result shouldBe "&priorDisposal=No"
+    }
+  }
+
 }
