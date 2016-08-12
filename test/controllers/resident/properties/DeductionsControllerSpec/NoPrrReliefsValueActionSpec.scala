@@ -16,7 +16,7 @@
 
 package controllers.resident.properties.DeductionsControllerSpec
 
-import assets.MessageLookup.{reliefsValue => messages}
+import assets.MessageLookup.{reliefsValueNoPrr => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import config.AppConfig
 import connectors.CalculatorConnector
@@ -33,9 +33,9 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
-class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
+class NoPrrReliefsValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  def setupTarget(getData: Option[ReliefsValueModel], totalGain: BigDecimal): DeductionsController = {
+  def setupTarget(getData: Option[ReliefsValueModel]): DeductionsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockAppConfig = mock[AppConfig]
@@ -50,10 +50,10 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
       .thenReturn(Future.successful(mock[YourAnswersSummaryModel]))
 
     when(mockCalcConnector.calculateRttPropertyGrossGain(Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(totalGain))
+      .thenReturn(Future.successful(BigDecimal(1000)))
 
     when(mockAppConfig.featureRTTPRREnabled)
-      .thenReturn(true)
+      .thenReturn(false)
 
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -61,11 +61,11 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
     }
   }
 
-  "Calling .reliefsValue from the resident DeductionsController" when {
+  "Calling .reliefsValue from the resident DeductionsController with the PRR feature disabled" when {
 
     "there is no keystore data" should {
 
-      lazy val target = setupTarget(None, 10000)
+      lazy val target = setupTarget(None)
       lazy val result = target.reliefsValue(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -77,13 +77,13 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
 
       "display the reliefs value view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.title("10,000")
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
       }
     }
 
     "there is some keystore data" should {
 
-      lazy val target = setupTarget(Some(ReliefsValueModel(1000)), 2500)
+      lazy val target = setupTarget(Some(ReliefsValueModel(1000)))
       lazy val result = target.reliefsValue(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -95,14 +95,14 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
 
       "display the Reliefs Value view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.title("2,500")
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
       }
     }
   }
 
   "request has an invalid session" should {
 
-    lazy val target = setupTarget(None, 1500)
+    lazy val target = setupTarget(None)
     lazy val result = target.reliefsValue(fakeRequest)
 
     "return a status of 303" in {
@@ -114,10 +114,10 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
     }
   }
 
-  "Calling .submitReliefsValue from the GainCalculationController" when {
+  "Calling .submitReliefsValue from the GainCalculationController with the PRR feature disabled" when {
 
     "a valid form is submitted" should {
-      lazy val target = setupTarget(None, 1)
+      lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
       lazy val result = target.submitReliefsValue(request)
 
@@ -125,13 +125,13 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
         status(result) shouldBe 303
       }
 
-      "redirect to the improvements page" in {
+      "redirect to the Other Properties page" in {
         redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/other-properties")
       }
     }
 
     "an invalid form is submitted" should {
-      lazy val target = setupTarget(None, 1000000)
+      lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
       lazy val result = target.submitReliefsValue(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
@@ -141,7 +141,7 @@ class ReliefsValueActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
 
       "render the Reliefs Value page" in {
-        doc.title() shouldEqual messages.title("1,000,000")
+        doc.title() shouldEqual messages.title
       }
     }
   }
