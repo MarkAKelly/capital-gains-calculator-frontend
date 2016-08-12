@@ -305,4 +305,23 @@ class CalculateRequestConstructorSpec extends UnitSpec {
     }
   }
 
+  "Calling personalAllowance" should {
+
+    "return a value of 10000" in {
+      val personalAllowanceModel = PersonalAllowanceModel(10000)
+      val result = CalculateRequestConstructor.personalAllowanceAmount("individual", Some(personalAllowanceModel))
+      result shouldBe "&personalAllowanceAmt=10000"
+    }
+
+    "return a value of 2000" in {
+      val personalAllowanceModel = PersonalAllowanceModel(2000)
+      val result = CalculateRequestConstructor.personalAllowanceAmount("individual", Some(personalAllowanceModel))
+      result shouldBe "&personalAllowanceAmt=2000"
+    }
+
+    "return an empty string" in {
+      val result = CalculateRequestConstructor.personalAllowanceAmount("trustee", None)
+      result shouldBe ""
+    }
+  }
 }

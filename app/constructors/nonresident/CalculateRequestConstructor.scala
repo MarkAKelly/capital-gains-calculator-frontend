@@ -30,12 +30,8 @@ object CalculateRequestConstructor {
     otherPropertiesAmount(input.otherPropertiesModel) +
     isVulnerableTrustee(input.customerTypeModel.customerType, input.disabledTrusteeModel) +
     currentIncome(input.customerTypeModel.customerType, input.currentIncomeModel) +
-    s"${
-      input.personalAllowanceModel match {
-        case Some(data) => "&personalAllowanceAmt=" + data.personalAllowanceAmt
-        case None => ""
-      }
-    }&disposalValue=${
+    personalAllowanceAmount(input.customerTypeModel.customerType, input.personalAllowanceModel) +
+    s"&disposalValue=${
       input.disposalValueModel.disposalValue
     }&disposalCosts=${
       input.disposalCostsModel.disposalCosts
@@ -74,6 +70,11 @@ object CalculateRequestConstructor {
 
   def currentIncome(customerType: String, currentIncomeModel: Option[CurrentIncomeModel]): String = {
     if (customerType.equals("individual")) s"&currentIncome=${currentIncomeModel.get.currentIncome}"
+    else ""
+  }
+
+  def personalAllowanceAmount(customerType: String, personalAllowanceModel: Option[PersonalAllowanceModel]): String = {
+    if (customerType.equals("individual")) s"&personalAllowanceAmt=${personalAllowanceModel.get.personalAllowanceAmt}"
     else ""
   }
 
