@@ -22,9 +22,8 @@ import models.nonresident._
 object CalculateRequestConstructor {
 
   def baseCalcUrl(input: SummaryModel): String = {
-    s"customerType=${
-      input.customerTypeModel.customerType
-    }&priorDisposal=${
+    customerType(input.customerTypeModel.customerType) +
+    s"&priorDisposal=${
       input.otherPropertiesModel.otherProperties
     }${
       input.otherPropertiesModel match {
@@ -62,6 +61,8 @@ object CalculateRequestConstructor {
       input.disposalDateModel.day
     }"
   }
+
+  def customerType(customerType: String) = s"customerType=$customerType"
 
   def flatCalcUrlExtra(input: SummaryModel): String = {
     s"${

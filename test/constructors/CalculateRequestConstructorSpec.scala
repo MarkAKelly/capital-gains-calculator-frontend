@@ -191,4 +191,17 @@ class CalculateRequestConstructorSpec extends UnitSpec {
 
   }
 
+  "Calling customerType" should {
+
+    "return a value of individual" in {
+      val result = CalculateRequestConstructor.customerType("individual")
+      result shouldBe "customerType=individual"
+    }
+
+    "return a value of trustee" in {
+      val result = CalculateRequestConstructor.customerType("trustee")
+      result shouldBe "customerType=trustee"
+    }
+  }
+
 }
