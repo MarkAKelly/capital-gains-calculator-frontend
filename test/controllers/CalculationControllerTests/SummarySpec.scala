@@ -737,7 +737,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
         "have a value for the other reliefs rebased" in {
           document.body.getElementById("deductions(2)").text() shouldBe "£777.00"
-          document.body().getElementById("deductions(2)").attr("href") shouldEqual routes.CalculationController.otherReliefsRebased().toString()
+          document.body().getElementById("deductions(2)").attr("href") shouldEqual routes.OtherReliefsRebasedController.otherReliefsRebased().toString()
         }
 
       }

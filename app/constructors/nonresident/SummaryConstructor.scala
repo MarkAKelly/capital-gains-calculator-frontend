@@ -575,7 +575,7 @@ object SummaryConstructor {
               case Some(data) => MoneyPounds(data).quantity
               case None => "0.00"
             }),
-            Some(routes.CalculationController.otherReliefsRebased().toString())
+            Some(routes.OtherReliefsRebasedController.otherReliefsRebased().toString())
           )
         )
       }
