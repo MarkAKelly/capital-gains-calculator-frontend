@@ -65,7 +65,7 @@ trait CalculationElectionConstructor {
             ("time", timeResult.get.taxOwed.setScale(2).toString(),
               Messages("calc.calculationElection.message.time"),
               Some(Messages("calc.calculationElection.message.timeDate")),
-              routes.CalculationController.otherReliefsTA().toString(),
+              routes.OtherReliefsTAController.otherReliefsTA().toString(),
               otherReliefsTA),
             ("rebased", rebasedResult.get.taxOwed.setScale(2).toString(),
               Messages("calc.calculationElection.message.rebased"),
@@ -84,7 +84,7 @@ trait CalculationElectionConstructor {
             ("time", timeResult.get.taxOwed.setScale(2).toString(),
               Messages("calc.calculationElection.message.time"),
               Some(Messages("calc.calculationElection.message.timeDate")),
-              routes.CalculationController.otherReliefsTA().toString(),
+              routes.OtherReliefsTAController.otherReliefsTA().toString(),
               otherReliefsTA)
           )
         }

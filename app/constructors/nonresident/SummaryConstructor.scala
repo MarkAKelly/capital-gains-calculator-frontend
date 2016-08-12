@@ -552,7 +552,7 @@ object SummaryConstructor {
               case Some(data) => MoneyPounds(data).quantity
               case None => "0.00"
             }),
-            Some(routes.CalculationController.otherReliefsTA().toString())
+            Some(routes.OtherReliefsTAController.otherReliefsTA().toString())
           )
         )
         case "rebased" => Array(
