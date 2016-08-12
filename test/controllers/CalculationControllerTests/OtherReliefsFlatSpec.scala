@@ -19,7 +19,7 @@ package controllers.CalculationControllerTests
 import common.{Constants, KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
-import controllers.nonresident.CalculationController
+import controllers.nonresident.OtherReliefsFlatController
 import models.nonresident._
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -47,7 +47,7 @@ class OtherReliefsFlatSpec extends UnitSpec with WithFakeApplication with Mockit
                    result: CalculationResultModel,
                    acquisitionDateData: Option[AcquisitionDateModel],
                    rebasedValueData: Option[RebasedValueModel]
-                   ): CalculationController = {
+                   ): OtherReliefsFlatController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -71,9 +71,8 @@ class OtherReliefsFlatSpec extends UnitSpec with WithFakeApplication with Mockit
     when(mockCalcConnector.saveFormData[OtherReliefsModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new OtherReliefsFlatController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
   }
 
@@ -160,7 +159,7 @@ class OtherReliefsFlatSpec extends UnitSpec with WithFakeApplication with Mockit
         Some(AcquisitionDateModel("Yes",Some(1),Some(1),Some(2017))),
         None
       )
-      lazy val result = target.otherReliefs(fakeRequest)
+      lazy val result = target.otherReliefsFlat(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200 with a valid calculation call" in {

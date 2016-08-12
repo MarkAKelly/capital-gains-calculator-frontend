@@ -367,7 +367,7 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
       }
 
       "redirect to the other reliefs page" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.otherReliefsFlat()}")
+        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsFlatController.otherReliefsFlat()}")
       }
     }
 
