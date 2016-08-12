@@ -23,8 +23,8 @@ GET         /other-properties                   controllers.nonresident.Calculat
 POST        /other-properties                   controllers.nonresident.CalculationController.submitOtherProperties
 
 #Allowance
-GET         /allowance                          controllers.nonresident.CalculationController.annualExemptAmount
-POST        /allowance                          controllers.nonresident.CalculationController.submitAnnualExemptAmount
+GET         /allowance                          controllers.nonresident.AnnualExemptAmountController.annualExemptAmount
+POST        /allowance                          controllers.nonresident.AnnualExemptAmountController.submitAnnualExemptAmount
 
 #Acquisition Date
 GET         /acquisition-date                   controllers.nonresident.AcquisitionDateController.acquisitionDate
@@ -47,8 +47,8 @@ GET         /improvements                       controllers.nonresident.Calculat
 POST        /improvements                       controllers.nonresident.CalculationController.submitImprovements
 
 #Disposal Date
-GET         /disposal-date                      controllers.nonresident.CalculationController.disposalDate
-POST        /disposal-date                      controllers.nonresident.CalculationController.submitDisposalDate
+GET         /disposal-date                      controllers.nonresident.DisposalDateController.disposalDate
+POST        /disposal-date                      controllers.nonresident.DisposalDateController.submitDisposalDate
 
 #No Capital Gains Tax
 GET         /no-capital-gains-tax               controllers.nonresident.NoCapitalGainsTaxController.noCapitalGainsTax

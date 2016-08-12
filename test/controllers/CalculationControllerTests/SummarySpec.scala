@@ -302,7 +302,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "have a remaining CGT Allowance of £1,500 and link to the allowance page" in {
               document.body().getElementById("personalDetails(4)").text() shouldBe "£1,500.00"
-              document.body().getElementById("personalDetails(4)").attr("href") shouldEqual routes.CalculationController.annualExemptAmount().toString()
+              document.body().getElementById("personalDetails(4)").attr("href") shouldEqual routes.AnnualExemptAmountController.annualExemptAmount().toString()
             }
           }
 
@@ -369,7 +369,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "the date of disposal should be '10 October 2010 and link to the disposal-date page" in {
               document.body().getElementById("saleDetails(0)").text shouldBe "10 October 2010"
-              document.body().getElementById("saleDetails(0)").attr("href") shouldEqual routes.CalculationController.disposalDate().toString()
+              document.body().getElementById("saleDetails(0)").attr("href") shouldEqual routes.DisposalDateController.disposalDate().toString()
             }
 
             "include the question 'How much did you sell or give away the property for?'" in {

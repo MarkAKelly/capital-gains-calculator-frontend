@@ -79,9 +79,6 @@ trait CustomerTypeController extends FrontendController with ValidActiveSession 
       }
     }
 
-    customerTypeForm.bindFromRequest.fold(
-      errors => errorAction(errors),
-      success => successAction(success)
-    )
+    customerTypeForm.bindFromRequest.fold(errorAction, successAction)
   }
 }
