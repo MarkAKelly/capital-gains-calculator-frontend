@@ -88,7 +88,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
       success => {
         calcConnector.saveFormData(KeystoreKeys.rebasedValue, success)
         success.hasRebasedValue match {
-          case "Yes" => Future.successful(Redirect(routes.CalculationController.rebasedCosts()))
+          case "Yes" => Future.successful(Redirect(routes.RebasedCostsController.rebasedCosts()))
           case "No" => Future.successful(Redirect(routes.ImprovementsController.improvements()))
         }
       }
@@ -96,22 +96,6 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   }
 
   //################### Rebased costs methods #######################
-  val rebasedCosts = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[RebasedCostsModel](KeystoreKeys.rebasedCosts).map {
-      case Some(data) => Ok(calculation.nonresident.rebasedCosts(rebasedCostsForm.fill(data)))
-      case None => Ok(calculation.nonresident.rebasedCosts(rebasedCostsForm))
-    }
-  }
-
-  val submitRebasedCosts = ValidateSession.async { implicit request =>
-    rebasedCostsForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(calculation.nonresident.rebasedCosts(errors))),
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.rebasedCosts, success)
-        Future.successful(Redirect(routes.ImprovementsController.improvements()))
-      }
-    )
-  }
 
   //################### Improvements methods #######################
 
@@ -132,39 +116,6 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   //################### Flat Other Reliefs methods #######################
 
   //################### Time Apportioned Other Reliefs methods #######################
-  val otherReliefsTA = ValidateSession.async { implicit request =>
-
-    def action(dataResult: Option[CalculationResultModel]) = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA).map {
-      case Some(data) if data.otherReliefs.isDefined => Ok(calculation.nonresident.otherReliefsTA(otherReliefsForm(false).fill(data), dataResult.get, true))
-      case _ => Ok(calculation.nonresident.otherReliefsTA(otherReliefsForm(true), dataResult.get, false))
-    }
-
-    for {
-      construct <- calcConnector.createSummary(hc)
-      calculation <- calcConnector.calculateTA(construct)
-      finalResult <- action(calculation)
-    } yield finalResult
-  }
-
-  val submitOtherReliefsTA = ValidateSession.async { implicit request =>
-    def action(dataResult: Option[CalculationResultModel]) = otherReliefsForm(true).bindFromRequest.fold(
-      errors =>
-        calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA).map {
-          case Some(data) if data.otherReliefs.isDefined => BadRequest(calculation.nonresident.otherReliefsTA(errors, dataResult.get, true))
-          case _ => BadRequest(calculation.nonresident.otherReliefsTA(errors, dataResult.get, false))
-        },
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.otherReliefsTA, success)
-        Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
-      }
-    )
-
-    for {
-      construct <- calcConnector.createSummary(hc)
-      calculation <- calcConnector.calculateTA(construct)
-      finalResult <- action(calculation)
-    } yield finalResult
-  }
 
   //################### Rebased Other Reliefs methods #######################
 

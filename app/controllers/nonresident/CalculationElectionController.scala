@@ -119,7 +119,7 @@ trait CalculationElectionController extends FrontendController with ValidActiveS
       calcConnector.saveFormData(KeystoreKeys.calculationElection, model)
       request.body.asFormUrlEncoded.get("action").headOption match {
         case Some("flat") => Future.successful(Redirect(routes.OtherReliefsFlatController.otherReliefsFlat()))
-        case Some("time") => Future.successful(Redirect(routes.CalculationController.otherReliefsTA()))
+        case Some("time") => Future.successful(Redirect(routes.OtherReliefsTAController.otherReliefsTA()))
         case Some("rebased") => Future.successful(Redirect(routes.OtherReliefsRebasedController.otherReliefsRebased()))
         case _ => Future.successful(Redirect(routes.CalculationController.summary()))
       }

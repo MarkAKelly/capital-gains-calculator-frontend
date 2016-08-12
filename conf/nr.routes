@@ -39,8 +39,8 @@ GET         /rebased-value                      controllers.nonresident.Calculat
 POST        /rebased-value                      controllers.nonresident.CalculationController.submitRebasedValue
 
 #Rebased Costs
-GET         /rebased-costs                      controllers.nonresident.CalculationController.rebasedCosts
-POST        /rebased-costs                      controllers.nonresident.CalculationController.submitRebasedCosts
+GET         /rebased-costs                      controllers.nonresident.RebasedCostsController.rebasedCosts
+POST        /rebased-costs                      controllers.nonresident.RebasedCostsController.submitRebasedCosts
 
 #Improvements
 GET         /improvements                       controllers.nonresident.ImprovementsController.improvements
@@ -84,8 +84,8 @@ POST        /other-reliefs                      controllers.nonresident.OtherRel
 GET         /other-reliefs-flat                 controllers.nonresident.OtherReliefsFlatController.otherReliefsFlat
 POST        /other-reliefs-flat                 controllers.nonresident.OtherReliefsFlatController.submitOtherReliefsFlat
 
-GET         /other-reliefs-time-apportioned     controllers.nonresident.CalculationController.otherReliefsTA
-POST        /other-reliefs-time-apportioned     controllers.nonresident.CalculationController.submitOtherReliefsTA
+GET         /other-reliefs-time-apportioned     controllers.nonresident.OtherReliefsTAController.otherReliefsTA
+POST        /other-reliefs-time-apportioned     controllers.nonresident.OtherReliefsTAController.submitOtherReliefsTA
 
 GET         /other-reliefs-rebased              controllers.nonresident.OtherReliefsRebasedController.otherReliefsRebased
 POST        /other-reliefs-rebased              controllers.nonresident.OtherReliefsRebasedController.submitOtherReliefsRebased

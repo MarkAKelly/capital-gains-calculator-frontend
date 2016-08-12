@@ -75,9 +75,9 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
         ("flat", "8000.00", "flat calculation",
           None, routes.OtherReliefsController.otherReliefs().toString(), flatReliefs),
         ("time", "8000.00", "time apportioned calculation",
-          Some(Messages("calc.calculationElection.message.timeDate")), routes.CalculationController.otherReliefsTA().toString(), timeReliefs),
+          Some(Messages("calc.calculationElection.message.timeDate")), routes.OtherReliefsTAController.otherReliefsTA().toString(), timeReliefs),
         ("rebased", "10000.00", "time apportioned calculation",
-          Some(Messages("calc.calculationElection.message.timeDate")), routes.CalculationController.otherReliefsTA().toString(), rebasedReliefs)
+          Some(Messages("calc.calculationElection.message.timeDate")), routes.OtherReliefsTAController.otherReliefsTA().toString(), rebasedReliefs)
       ))
 
     when(mockCalcConnector.calculateFlat(Matchers.any())(Matchers.any()))
@@ -380,7 +380,7 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
       }
 
       "redirect to the Other Reliefs Time Apportioned page" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.otherReliefsTA()}")
+        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsTAController.otherReliefsTA()}")
       }
     }
 
