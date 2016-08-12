@@ -421,7 +421,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "the PRR claimed question's answer should be 'No' and be a link to the PRR page" in {
               document.body().getElementById("deductions(0)").text shouldBe "No"
-              document.body().getElementById("deductions(0)").attr("href") shouldEqual routes.CalculationController.privateResidenceRelief().toString()
+              document.body().getElementById("deductions(0)").attr("href") shouldEqual routes.PrivateResidenceReliefController.privateResidenceRelief().toString()
             }
 
           }

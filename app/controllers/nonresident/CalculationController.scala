@@ -17,22 +17,12 @@
 package controllers.nonresident
 
 import common.{Dates, KeystoreKeys}
-import common.nonresident.CustomerTypeKeys
 import forms.nonresident.ImprovementsForm._
-import forms.nonresident.PrivateResidenceReliefForm._
 import forms.nonresident.OtherReliefsForm._
-import forms.nonresident.OtherPropertiesForm._
 import forms.nonresident.PersonalAllowanceForm._
 import forms.nonresident.RebasedCostsForm._
 import forms.nonresident.RebasedValueForm._
 import forms.nonresident.AllowableLossesForm._
-import forms.nonresident.AnnualExemptAmountForm._
-import forms.nonresident.AcquisitionValueForm._
-import forms.nonresident.CalculationElectionForm._
-import forms.nonresident.DisposalDateForm._
-import forms.nonresident.DisposalCostsForm._
-import forms.nonresident.DisposalValueForm._
-import forms.nonresident.DisabledTrusteeForm._
 import java.util.{Date, UUID}
 
 import play.api.mvc.{Action, AnyContent, Result}
@@ -199,83 +189,14 @@ trait CalculationController extends FrontendController with ValidActiveSession {
       case _ => None
     }
 
-  def getRebasedAmount(implicit hc: HeaderCarrier): Future[Boolean] =
-    calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).map {
-      case Some(data) if data.hasRebasedValue == "Yes" => true
-      case _ => false
-    }
-
-  def displayBetweenQuestion(disposalDate: Option[Date], acquisitionDate: Option[Date], hasRebasedValue: Boolean): Boolean =
-    (disposalDate, acquisitionDate) match {
-      case (Some(dDate), Some(aDate)) if Dates.dateAfterOctober(dDate) && !Dates.dateAfterStart(aDate) => true
-      case (Some(dDate), aDateOption) if Dates.dateAfterOctober(dDate) && hasRebasedValue => true
-      case _ => false
-    }
-
-  def displayBeforeQuestion(disposalDate: Option[Date], acquisitionDate: Option[Date], hasRebasedValue: Boolean): Boolean =
-    (disposalDate, acquisitionDate) match {
-      case (Some(dDate), Some(aDate)) if Dates.dateAfterOctober(dDate) => true
-      case (Some(dDate), Some(aDate)) if !Dates.dateAfterStart(aDate) => true
-      case _ => false
-    }
-
-
-  val privateResidenceRelief = ValidateSession.async { implicit request =>
-
-    def action(disposalDate: Option[Date], acquisitionDate: Option[Date], hasRebasedValue: Boolean) = {
-
-      val showBetweenQuestion = displayBetweenQuestion(disposalDate, acquisitionDate, hasRebasedValue)
-      val showBeforeQuestion = displayBeforeQuestion(disposalDate, acquisitionDate, hasRebasedValue)
-      val disposalDateLess18Months = Dates.dateMinusMonths(disposalDate, 18)
-
-      calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief).map {
-        case Some(data) => Ok(calculation.nonresident.privateResidenceRelief(privateResidenceReliefForm(showBeforeQuestion, showBetweenQuestion).fill(data), showBetweenQuestion, showBeforeQuestion, disposalDateLess18Months))
-        case None => Ok(calculation.nonresident.privateResidenceRelief(privateResidenceReliefForm(showBeforeQuestion, showBetweenQuestion), showBetweenQuestion, showBeforeQuestion, disposalDateLess18Months))
-      }
-
-    }
-
-    for {
-      disposalDate <- getDisposalDate
-      acquisitionDate <- getAcquisitionDate
-      hasRebasedValue <- getRebasedAmount
-      finalResult <- action(disposalDate, acquisitionDate, hasRebasedValue)
-    } yield finalResult
-  }
-
-  val submitPrivateResidenceRelief = ValidateSession.async { implicit request =>
-
-    def action(disposalDate: Option[Date], acquisitionDate: Option[Date], hasRebasedValue: Boolean) = {
-      val showBetweenQuestion = displayBetweenQuestion(disposalDate, acquisitionDate, hasRebasedValue)
-      val showBeforeQuestion = displayBeforeQuestion(disposalDate, acquisitionDate, hasRebasedValue)
-      val disposalDateLess18Months = Dates.dateMinusMonths(disposalDate, 18)
-      privateResidenceReliefForm(showBeforeQuestion, showBetweenQuestion).bindFromRequest.fold(
-        errors => {
-          Future.successful(BadRequest(calculation.nonresident.privateResidenceRelief(errors, showBetweenQuestion, showBeforeQuestion, disposalDateLess18Months)))
-        },
-        success => {
-          calcConnector.saveFormData(KeystoreKeys.privateResidenceRelief, success)
-          Future.successful(Redirect(routes.CalculationController.allowableLosses()))
-        }
-      )
-    }
-
-    for {
-      disposalDate <- getDisposalDate
-      acquisitionDate <- getAcquisitionDate
-      hasRebasedValue <- getRebasedAmount
-      finalResult <- action(disposalDate, acquisitionDate, hasRebasedValue)
-    } yield finalResult
-  }
-
   //################### Allowable Losses methods #######################
   def allowableLossesBackLink(implicit hc: HeaderCarrier): Future[String] = {
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
       case Some(acquisitionData) if acquisitionData.hasAcquisitionDate == "Yes" =>
-        Future.successful(routes.CalculationController.privateResidenceRelief().url)
+        Future.successful(routes.PrivateResidenceReliefController.privateResidenceRelief().url)
       case _ => calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
         case Some(rebasedData) if rebasedData.hasRebasedValue == "Yes" =>
-          Future.successful(routes.CalculationController.privateResidenceRelief().url)
+          Future.successful(routes.PrivateResidenceReliefController.privateResidenceRelief().url)
         case _ => Future.successful(routes.DisposalCostsController.disposalCosts().url)
       }
     }

@@ -497,7 +497,7 @@ object SummaryConstructor {
           SummaryDataItemModel(
             Messages("calc.privateResidenceRelief.question"),
             simplePRRResult(result.simplePRR, summary.privateResidenceReliefModel),
-            Some(routes.CalculationController.privateResidenceRelief().toString())
+            Some(routes.PrivateResidenceReliefController.privateResidenceRelief().toString())
           ),
           SummaryDataItemModel(
             Messages("calc.allowableLosses.question.two"),
@@ -536,7 +536,7 @@ object SummaryConstructor {
           SummaryDataItemModel(
             Messages("calc.privateResidenceRelief.question"),
             simplePRRResult(result.simplePRR, summary.privateResidenceReliefModel),
-            Some(routes.CalculationController.privateResidenceRelief().toString())
+            Some(routes.PrivateResidenceReliefController.privateResidenceRelief().toString())
           ),
           SummaryDataItemModel(
             Messages("calc.allowableLosses.question.two"),
@@ -559,7 +559,7 @@ object SummaryConstructor {
           SummaryDataItemModel(
             Messages("calc.privateResidenceRelief.question"),
             simplePRRResult(result.simplePRR, summary.privateResidenceReliefModel),
-            Some(routes.CalculationController.privateResidenceRelief().toString())
+            Some(routes.PrivateResidenceReliefController.privateResidenceRelief().toString())
           ),
           SummaryDataItemModel(
             Messages("calc.allowableLosses.question.two"),
