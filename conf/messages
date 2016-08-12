@@ -419,6 +419,12 @@ calc.resident.reliefsValue.question = How much tax relief are you claiming on yo
 calc.resident.reliefsValue.externalLinkOne = Private Residence Relief
 calc.resident.reliefsValue.externalLinkTwo = Lettings Relief
 
+## No Prr Reliefs Value messages
+calc.resident.reliefsValueNoPrr.title = How much tax relief are you claiming?
+calc.resident.reliefsValueNoPrr.question = How much tax relief are you claiming?
+calc.resident.reliefsValueNoPrr.externalLinkOne = Private Residence Relief
+calc.resident.reliefsValueNoPrr.externalLinkTwo = Lettings Relief
+
 ## Losses Brought Forward messages
 calc.resident.lossesBroughtForward.title = Are there any previous losses you want to bring forward?
 
