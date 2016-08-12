@@ -40,7 +40,7 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
   private def improvementsBackUrl(implicit hc: HeaderCarrier): Future[String] = {
     def checkRebasedValue = {
       calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
-        case Some(RebasedValueModel("Yes", data)) => Future.successful(routes.CalculationController.rebasedCosts().url)
+        case Some(RebasedValueModel("Yes", data)) => Future.successful(routes.RebasedCostsController.rebasedCosts().url)
         case Some(RebasedValueModel("No", data)) => Future.successful(routes.CalculationController.rebasedValue().url)
         case _ => Future.successful(missingDataRoute)
       }
