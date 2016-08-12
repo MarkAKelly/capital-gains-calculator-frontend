@@ -73,7 +73,7 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
     when(mockCalcElectionConstructor.generateElection(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any()))
       .thenReturn(Seq(
         ("flat", "8000.00", "flat calculation",
-          None, routes.CalculationController.otherReliefs().toString(), flatReliefs),
+          None, routes.OtherReliefsController.otherReliefs().toString(), flatReliefs),
         ("time", "8000.00", "time apportioned calculation",
           Some(Messages("calc.calculationElection.message.timeDate")), routes.CalculationController.otherReliefsTA().toString(), timeReliefs),
         ("rebased", "10000.00", "time apportioned calculation",
