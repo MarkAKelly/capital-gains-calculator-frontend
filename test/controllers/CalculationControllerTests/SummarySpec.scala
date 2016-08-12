@@ -369,7 +369,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "the date of disposal should be '10 October 2010 and link to the disposal-date page" in {
               document.body().getElementById("saleDetails(0)").text shouldBe "10 October 2010"
-              document.body().getElementById("saleDetails(0)").attr("href") shouldEqual routes.CalculationController.disposalDate().toString()
+              document.body().getElementById("saleDetails(0)").attr("href") shouldEqual routes.DisposalDateController.disposalDate().toString()
             }
 
             "include the question 'How much did you sell or give away the property for?'" in {
