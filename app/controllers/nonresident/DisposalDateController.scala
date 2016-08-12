@@ -38,6 +38,7 @@ object DisposalDateController extends DisposalDateController {
 trait DisposalDateController extends FrontendController with ValidActiveSession {
 
   val calcConnector: CalculatorConnector
+  override val sessionTimeoutUrl = controllers.nonresident.routes.CalculationController.restart().url
 
   private def getAcquisitionDate(implicit hc: HeaderCarrier): Future[Option[Date]] =
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).map {

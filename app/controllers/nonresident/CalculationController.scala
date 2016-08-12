@@ -88,7 +88,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
       success => {
         calcConnector.saveFormData(KeystoreKeys.rebasedValue, success)
         success.hasRebasedValue match {
-          case "Yes" => Future.successful(Redirect(routes.CalculationController.rebasedCosts()))
+          case "Yes" => Future.successful(Redirect(routes.RebasedCostsController.rebasedCosts()))
           case "No" => Future.successful(Redirect(routes.ImprovementsController.improvements()))
         }
       }
@@ -96,22 +96,6 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   }
 
   //################### Rebased costs methods #######################
-  val rebasedCosts = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[RebasedCostsModel](KeystoreKeys.rebasedCosts).map {
-      case Some(data) => Ok(calculation.nonresident.rebasedCosts(rebasedCostsForm.fill(data)))
-      case None => Ok(calculation.nonresident.rebasedCosts(rebasedCostsForm))
-    }
-  }
-
-  val submitRebasedCosts = ValidateSession.async { implicit request =>
-    rebasedCostsForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(calculation.nonresident.rebasedCosts(errors))),
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.rebasedCosts, success)
-        Future.successful(Redirect(routes.ImprovementsController.improvements()))
-      }
-    )
-  }
 
   //################### Improvements methods #######################
 
