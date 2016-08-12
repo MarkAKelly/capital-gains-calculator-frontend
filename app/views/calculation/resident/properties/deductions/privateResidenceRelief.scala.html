@@ -9,7 +9,9 @@
 
 @radioLabel = {
     <p>@Messages("calc.resident.properties.privateResidenceRelief.legendFirstText")
-        <a href="https://www.gov.uk/tax-relief-selling-home" rel="external" target="_blank"> @Messages("calc.resident.properties.privateResidenceRelief.legendLinkText")
+        <a href="https://www.gov.uk/tax-relief-selling-home" rel="external" target="_blank"
+           data-journey-click="help:govUK:rtt-properties-taxReliefSellingHome">
+            @Messages("calc.resident.properties.privateResidenceRelief.legendLinkText")
             <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
         </a>
         @Messages("calc.resident.properties.privateResidenceRelief.legendSecondText")

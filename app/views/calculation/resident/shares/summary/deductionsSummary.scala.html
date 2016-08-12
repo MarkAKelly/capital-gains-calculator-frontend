@@ -15,7 +15,8 @@
 @allowableLossesHelpText() = {
     <span>
         @Messages("calc.resident.summary.remainingLossHelp")
-        <a href="https://www.gov.uk/capital-gains-tax/losses" rel="external">
+        <a href="https://www.gov.uk/capital-gains-tax/losses" rel="external"
+           data-journey-click="rtt-shares-help:govUK:summary-cgt-losses">
             @Messages("calc.resident.summary.remainingLossLink")
             <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
         </a>
@@ -26,7 +27,8 @@
 @broughtForwardLossesHelpText() = {
     <span>
         @Messages("calc.resident.summary.remainingLossHelp")
-        <a href="https://www.gov.uk/capital-gains-tax/losses" rel="external">
+        <a href="https://www.gov.uk/capital-gains-tax/losses" rel="external"
+           data-journey-click="rtt-shares-help:govUK:summary-cgt-losses">
             @Messages("calc.resident.summary.remainingLossLink")
             <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
         </a>
@@ -64,6 +66,36 @@ homeLink = navHomeLink
     }
 }
 
+<!-- Google Analytics -->
+<div id="ga-reporting" class="visuallyhidden">
+
+    <!-- Tax Year -->
+    <span data-metrics="rtt-shares-summary:calculationYear:@{taxYear.calculationTaxYear}"></span>
+
+    <!-- No Gain Stats -->
+    <span data-metrics="rtt-shares-summary:result:no-gain"></span>
+
+    <!-- Other Disposal Stats -->
+    @if(deductionAnswers.otherPropertiesModel.fold(false)(_.hasOtherProperties)){
+        <span data-metrics="rtt-shares-summary:otherDisposals:yes"></span>
+    } else {
+        <span data-metrics="rtt-shares-summary:otherDisposals:no"></span>
+    }
+
+    <!-- Claiming In Year Allowable Losses Stats -->
+    @if(deductionAnswers.allowableLossesModel.fold(false)(_.isClaiming)){
+        <span data-metrics="rtt-shares-summary:inYearAllowableLosses:yes"></span>
+    } else {
+        <span data-metrics="rtt-shares-summary:inYearAllowableLosses:no"></span>
+    }
+
+    <!-- Claiming Brought Forward Losses Stats -->
+    @if(deductionAnswers.broughtForwardModel.fold(false)(_.option)){
+        <span data-metrics="rtt-shares-summary:broughtForwardLosses:yes"></span>
+    } else {
+        <span data-metrics="rtt-shares-summary:broughtForwardLosses:no"></span>
+    }
+</div>
 
 <!-- Calculation Details Section -->
 <section id="calcDetails">
@@ -130,7 +162,8 @@ homeLink = navHomeLink
                 <h3 id="whatToDoNextNoLossTitle" class="bold-medium">@Messages("calc.resident.summary.whatNext")</h3>
                 <div id="whatToDoNextNoLossText" class="font-medium what-to-do-next-text">
                     @Messages("calc.resident.summary.whatNext.noLossOrGain")
-                    <a href="https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax" target="_blank" rel="external">
+                    <a href="https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax" target="_blank" rel="external"
+                       data-journey-click="help:govUK:rtt-shares-whatToDoNext">
                         @Messages("calc.resident.summary.whatNext.noLossOrGainLinkShares")
                     </a>
                     <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>.
@@ -138,6 +171,7 @@ homeLink = navHomeLink
             </section>
     }
 
-    <a type="submit" class="button save-pdf-button" href="@controllers.resident.shares.routes.ReportController.deductionsReport.toString">@Messages("calc.resident.summary.saveAsPdf")</a>
+    <a type="submit" class="button save-pdf-button" href="@controllers.resident.shares.routes.ReportController.deductionsReport.toString"
+       data-journey-click="rtt-shares-summary:pdf:save">@Messages("calc.resident.summary.saveAsPdf")</a>
 
 }
