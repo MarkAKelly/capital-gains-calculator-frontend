@@ -432,19 +432,19 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.improvements.question"),
               summary.improvementsModel.isClaimingImprovements,
-              Some(routes.CalculationController.improvements().toString())
+              Some(routes.ImprovementsController.improvements().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.improvements.questionFour"),
               "&pound;" + MoneyPounds(summary.improvementsModel.improvementsAmtAfter.getOrElse(BigDecimal(0))).quantity,
-              Some(routes.CalculationController.improvements().toString())
+              Some(routes.ImprovementsController.improvements().toString())
             )
           )
           case _ => Array(
             SummaryDataItemModel(
               Messages("calc.improvements.question"),
               summary.improvementsModel.isClaimingImprovements,
-              Some(routes.CalculationController.improvements().toString())
+              Some(routes.ImprovementsController.improvements().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.improvements.questionTwo"),
@@ -452,7 +452,7 @@ object SummaryConstructor {
                 MoneyPounds(summary.improvementsModel.improvementsAmt.getOrElse(BigDecimal(0))
                   .+(summary.improvementsModel.improvementsAmtAfter.getOrElse(BigDecimal(0)))).quantity
               },
-              Some(routes.CalculationController.improvements().toString())
+              Some(routes.ImprovementsController.improvements().toString())
             )
           )
         }
@@ -461,7 +461,7 @@ object SummaryConstructor {
           SummaryDataItemModel(
             Messages("calc.improvements.question"),
             summary.improvementsModel.isClaimingImprovements,
-            Some(routes.CalculationController.improvements().toString())
+            Some(routes.ImprovementsController.improvements().toString())
           )
         )
       }
@@ -497,7 +497,7 @@ object SummaryConstructor {
           SummaryDataItemModel(
             Messages("calc.privateResidenceRelief.question"),
             simplePRRResult(result.simplePRR, summary.privateResidenceReliefModel),
-            Some(routes.CalculationController.privateResidenceRelief().toString())
+            Some(routes.PrivateResidenceReliefController.privateResidenceRelief().toString())
           ),
           SummaryDataItemModel(
             Messages("calc.allowableLosses.question.two"),
@@ -505,7 +505,7 @@ object SummaryConstructor {
               case "Yes" => MoneyPounds(summary.allowableLossesModel.allowableLossesAmt.get).quantity
               case "No" => "0.00"
             }),
-            Some(routes.CalculationController.allowableLosses().toString())
+            Some(routes.AllowableLossesController.allowableLosses().toString())
           ),
           summary.otherReliefsModelFlat.isClaimingOtherReliefs match {
             case Some("No") =>
@@ -530,13 +530,13 @@ object SummaryConstructor {
                 case Some(data) => MoneyPounds(data).quantity
                 case None => "0.00"
               }),
-              Some(routes.CalculationController.otherReliefsFlat().toString()))
+              Some(routes.OtherReliefsFlatController.otherReliefsFlat().toString()))
           })
         case "time" => Array(
           SummaryDataItemModel(
             Messages("calc.privateResidenceRelief.question"),
             simplePRRResult(result.simplePRR, summary.privateResidenceReliefModel),
-            Some(routes.CalculationController.privateResidenceRelief().toString())
+            Some(routes.PrivateResidenceReliefController.privateResidenceRelief().toString())
           ),
           SummaryDataItemModel(
             Messages("calc.allowableLosses.question.two"),
@@ -544,7 +544,7 @@ object SummaryConstructor {
               case "Yes" => MoneyPounds(summary.allowableLossesModel.allowableLossesAmt.get).quantity
               case "No" => "0.00"
             }),
-            Some(routes.CalculationController.allowableLosses().toString())
+            Some(routes.AllowableLossesController.allowableLosses().toString())
           ),
           SummaryDataItemModel(
             Messages("calc.otherReliefs.question"),
@@ -559,7 +559,7 @@ object SummaryConstructor {
           SummaryDataItemModel(
             Messages("calc.privateResidenceRelief.question"),
             simplePRRResult(result.simplePRR, summary.privateResidenceReliefModel),
-            Some(routes.CalculationController.privateResidenceRelief().toString())
+            Some(routes.PrivateResidenceReliefController.privateResidenceRelief().toString())
           ),
           SummaryDataItemModel(
             Messages("calc.allowableLosses.question.two"),
@@ -567,7 +567,7 @@ object SummaryConstructor {
               case "Yes" => MoneyPounds(summary.allowableLossesModel.allowableLossesAmt.get).quantity
               case "No" => "0.00"
             }),
-            Some(routes.CalculationController.allowableLosses().toString())
+            Some(routes.AllowableLossesController.allowableLosses().toString())
           ),
           SummaryDataItemModel(
             Messages("calc.otherReliefs.question"),
@@ -575,7 +575,7 @@ object SummaryConstructor {
               case Some(data) => MoneyPounds(data).quantity
               case None => "0.00"
             }),
-            Some(routes.CalculationController.otherReliefsRebased().toString())
+            Some(routes.OtherReliefsRebasedController.otherReliefsRebased().toString())
           )
         )
       }

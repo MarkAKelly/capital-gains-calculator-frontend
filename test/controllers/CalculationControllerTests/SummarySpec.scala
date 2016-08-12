@@ -353,7 +353,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "the answer to the improvements question should be No and should link to the improvements page" in {
               document.body.getElementById("propertyDetails(0)").text shouldBe "No"
-              document.body().getElementById("propertyDetails(0)").attr("href") shouldEqual routes.CalculationController.improvements().toString()
+              document.body().getElementById("propertyDetails(0)").attr("href") shouldEqual routes.ImprovementsController.improvements().toString()
             }
           }
 
@@ -403,7 +403,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "the value of allowable losses should be £0 and link to the allowable-losses page" in {
               document.body().getElementById("deductions(1)").text shouldBe "£0.00"
-              document.body().getElementById("deductions(1)").attr("href") shouldEqual routes.CalculationController.allowableLosses().toString()
+              document.body().getElementById("deductions(1)").attr("href") shouldEqual routes.AllowableLossesController.allowableLosses().toString()
             }
 
             "include the question 'How much extra tax relief are you claiming?'" in {
@@ -421,7 +421,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "the PRR claimed question's answer should be 'No' and be a link to the PRR page" in {
               document.body().getElementById("deductions(0)").text shouldBe "No"
-              document.body().getElementById("deductions(0)").attr("href") shouldEqual routes.CalculationController.privateResidenceRelief().toString()
+              document.body().getElementById("deductions(0)").attr("href") shouldEqual routes.PrivateResidenceReliefController.privateResidenceRelief().toString()
             }
 
           }
@@ -737,7 +737,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
         "have a value for the other reliefs rebased" in {
           document.body.getElementById("deductions(2)").text() shouldBe "£777.00"
-          document.body().getElementById("deductions(2)").attr("href") shouldEqual routes.CalculationController.otherReliefsRebased().toString()
+          document.body().getElementById("deductions(2)").attr("href") shouldEqual routes.OtherReliefsRebasedController.otherReliefsRebased().toString()
         }
 
       }

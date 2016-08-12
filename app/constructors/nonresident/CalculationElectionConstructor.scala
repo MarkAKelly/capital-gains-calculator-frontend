@@ -70,7 +70,7 @@ trait CalculationElectionConstructor {
             ("rebased", rebasedResult.get.taxOwed.setScale(2).toString(),
               Messages("calc.calculationElection.message.rebased"),
               Some(Messages("calc.calculationElection.message.rebasedDate")),
-              routes.CalculationController.otherReliefsRebased().toString(),
+              routes.OtherReliefsRebasedController.otherReliefsRebased().toString(),
               otherReliefsRebased)
           )
         }
@@ -100,7 +100,7 @@ trait CalculationElectionConstructor {
             ("rebased", rebasedResult.get.taxOwed.setScale(2).toString(),
               Messages("calc.calculationElection.message.rebased"),
               Some(Messages("calc.calculationElection.message.rebasedDate")),
-              routes.CalculationController.otherReliefsRebased().toString(),
+              routes.OtherReliefsRebasedController.otherReliefsRebased().toString(),
               otherReliefsRebased)
           )
         }
