@@ -27,13 +27,8 @@ object CalculateRequestConstructor {
     customerType(input.customerTypeModel.customerType) +
     priorDisposal(input.otherPropertiesModel.otherProperties) +
     annualExemptAmount(input.otherPropertiesModel, input.annualExemptAmountModel) +
-    s"${
-      input.otherPropertiesModel match {
-        case OtherPropertiesModel("Yes", data) if data.getOrElse(0) == 0 => "&otherPropertiesAmt=" + input.otherPropertiesModel.otherPropertiesAmt.getOrElse(0)
-        case OtherPropertiesModel("Yes", data) if data.get > 0 => "&otherPropertiesAmt=" + input.otherPropertiesModel.otherPropertiesAmt.get
-        case _ => ""
-      }
-    }${
+    otherPropertiesAmount(input.otherPropertiesModel) +
+      s"${
       input.disabledTrusteeModel match {
         case Some(data) => "&isVulnerable=" + data.isVulnerable
         case None => ""
@@ -70,9 +65,14 @@ object CalculateRequestConstructor {
 
   def annualExemptAmount(otherPropertiesModel: OtherPropertiesModel, annualExemptAmountModel: Option[AnnualExemptAmountModel]): String = {
     otherPropertiesModel match {
-      case OtherPropertiesModel("Yes", data) if data.getOrElse(0) == 0 => s"&annualExemptAmount=${annualExemptAmountModel.get.annualExemptAmount}"
+      case OtherPropertiesModel("Yes", data) if data.get == 0 => s"&annualExemptAmount=${annualExemptAmountModel.get.annualExemptAmount}"
       case _ => ""
     }
+  }
+
+  def otherPropertiesAmount(otherPropertiesModel: OtherPropertiesModel): String = {
+    if (otherPropertiesModel.otherProperties.equals("Yes")) s"&otherPropertiesAmt=${otherPropertiesModel.otherPropertiesAmt.get}"
+    else ""
   }
 
   def flatCalcUrlExtra(input: SummaryModel): String = {

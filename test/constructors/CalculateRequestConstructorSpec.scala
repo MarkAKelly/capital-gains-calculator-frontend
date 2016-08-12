@@ -239,7 +239,28 @@ class CalculateRequestConstructorSpec extends UnitSpec {
 
     "return an empty AEA string with no other property disposals" in {
       val otherPropertiesModel = OtherPropertiesModel("No", Some(BigDecimal(500)))
-      val result = CalculateRequestConstructor.annualExemptAmount(otherPropertiesModel, Some(AnnualExemptAmountModel(10000)))
+      val result = CalculateRequestConstructor.annualExemptAmount(otherPropertiesModel, None)
+      result shouldBe ""
+    }
+  }
+
+  "Calling otherPropertiesAmount" should {
+
+    "return a value for other properties of 10000" in {
+      val otherPropertiesModel = OtherPropertiesModel("Yes", Some(BigDecimal(10000)))
+      val result = CalculateRequestConstructor.otherPropertiesAmount(otherPropertiesModel)
+      result shouldBe "&otherPropertiesAmt=10000"
+    }
+
+    "return a value for other properties of 2000" in {
+      val otherPropertiesModel = OtherPropertiesModel("Yes", Some(BigDecimal(2000)))
+      val result = CalculateRequestConstructor.otherPropertiesAmount(otherPropertiesModel)
+      result shouldBe "&otherPropertiesAmt=2000"
+    }
+
+    "return an empty string for other properties" in {
+      val otherPropertiesModel = OtherPropertiesModel("No", None)
+      val result = CalculateRequestConstructor.otherPropertiesAmount(otherPropertiesModel)
       result shouldBe ""
     }
   }
