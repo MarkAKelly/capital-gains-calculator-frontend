@@ -324,4 +324,17 @@ class CalculateRequestConstructorSpec extends UnitSpec {
       result shouldBe ""
     }
   }
+
+  "Calling disposalValue" should {
+
+    "return a value of 10000" in {
+      val result = CalculateRequestConstructor.disposalValue(10000)
+      result shouldBe "&disposalValue=10000"
+    }
+
+    "return a value of 2000" in {
+      val result = CalculateRequestConstructor.disposalValue(2000)
+      result shouldBe "&disposalValue=2000"
+    }
+  }
 }

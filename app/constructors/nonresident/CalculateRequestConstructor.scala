@@ -31,9 +31,8 @@ object CalculateRequestConstructor {
     isVulnerableTrustee(input.customerTypeModel.customerType, input.disabledTrusteeModel) +
     currentIncome(input.customerTypeModel.customerType, input.currentIncomeModel) +
     personalAllowanceAmount(input.customerTypeModel.customerType, input.personalAllowanceModel) +
-    s"&disposalValue=${
-      input.disposalValueModel.disposalValue
-    }&disposalCosts=${
+    disposalValue(input.disposalValueModel.disposalValue) +
+    s"&disposalCosts=${
       input.disposalCostsModel.disposalCosts
     }&allowableLossesAmt=${
       input.allowableLossesModel.isClaimingAllowableLosses match {
@@ -77,6 +76,8 @@ object CalculateRequestConstructor {
     if (customerType.equals("individual")) s"&personalAllowanceAmt=${personalAllowanceModel.get.personalAllowanceAmt}"
     else ""
   }
+
+  def disposalValue(disposalValue: BigDecimal): String = s"&disposalValue=$disposalValue"
 
   def flatCalcUrlExtra(input: SummaryModel): String = {
     s"${
