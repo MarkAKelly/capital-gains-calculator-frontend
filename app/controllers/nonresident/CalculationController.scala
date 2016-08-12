@@ -189,22 +189,6 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   //################### No Capital Gains Tax #######################
 
   //################### Disposal Value methods #######################
-  val disposalValue = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.disposalValue).map {
-      case Some(data) => Ok(calculation.nonresident.disposalValue(disposalValueForm.fill(data)))
-      case None => Ok(calculation.nonresident.disposalValue(disposalValueForm))
-    }
-  }
-
-  val submitDisposalValue = ValidateSession.async { implicit request =>
-    disposalValueForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(calculation.nonresident.disposalValue(errors))),
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.disposalValue, success)
-        Future.successful(Redirect(routes.AcquisitionCostsController.acquisitionCosts()))
-      }
-    )
-  }
 
   //################### Disposal Costs methods #######################
 

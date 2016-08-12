@@ -69,7 +69,7 @@ trait DisposalDateController extends FrontendController with ValidActiveSession 
       if (!Dates.dateAfterStart(model.day, model.month, model.year)) {
         Future.successful(Redirect(routes.NoCapitalGainsTaxController.noCapitalGainsTax()))
       } else {
-        Future.successful(Redirect(routes.CalculationController.disposalValue()))
+        Future.successful(Redirect(routes.DisposalValueController.disposalValue()))
       }
     }
 

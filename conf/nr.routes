@@ -54,8 +54,8 @@ POST        /disposal-date                      controllers.nonresident.Disposal
 GET         /no-capital-gains-tax               controllers.nonresident.NoCapitalGainsTaxController.noCapitalGainsTax
 
 #Disposal Value
-GET         /disposal-value                     controllers.nonresident.CalculationController.disposalValue
-POST        /disposal-value                     controllers.nonresident.CalculationController.submitDisposalValue
+GET         /disposal-value                     controllers.nonresident.DisposalValueController.disposalValue
+POST        /disposal-value                     controllers.nonresident.DisposalValueController.submitDisposalValue
 
 #Acquisition Costs
 GET         /acquisition-costs                  controllers.nonresident.AcquisitionCostsController.acquisitionCosts
