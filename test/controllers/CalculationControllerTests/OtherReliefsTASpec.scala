@@ -19,7 +19,7 @@ package controllers.CalculationControllerTests
 import common.{Constants, TestModels}
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{OtherReliefsTAController, routes}
 import models.nonresident.{CalculationResultModel, OtherReliefsModel, SummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -46,7 +46,7 @@ class OtherReliefsTASpec extends UnitSpec with WithFakeApplication with MockitoS
                    postData: Option[OtherReliefsModel],
                    summary: SummaryModel,
                    result: CalculationResultModel
-                 ): CalculationController = {
+                 ): OtherReliefsTAController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -64,9 +64,8 @@ class OtherReliefsTASpec extends UnitSpec with WithFakeApplication with MockitoS
     when(mockCalcConnector.saveFormData[OtherReliefsModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new OtherReliefsTAController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
   }
 
