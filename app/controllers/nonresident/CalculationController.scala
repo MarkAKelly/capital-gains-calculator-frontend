@@ -17,18 +17,12 @@
 package controllers.nonresident
 
 import common.{Dates, KeystoreKeys}
-import common.nonresident.CustomerTypeKeys
 import forms.nonresident.ImprovementsForm._
 import forms.nonresident.PrivateResidenceReliefForm._
 import forms.nonresident.OtherReliefsForm._
-import forms.nonresident.OtherPropertiesForm._
 import forms.nonresident.PersonalAllowanceForm._
 import forms.nonresident.RebasedCostsForm._
 import forms.nonresident.RebasedValueForm._
-import forms.nonresident.AnnualExemptAmountForm._
-import forms.nonresident.CalculationElectionForm._
-import forms.nonresident.DisposalDateForm._
-import forms.nonresident.DisposalValueForm._
 import java.util.{Date, UUID}
 
 import play.api.mvc.{Action, AnyContent, Result}
@@ -262,129 +256,6 @@ trait CalculationController extends FrontendController with ValidActiveSession {
       hasRebasedValue <- getRebasedAmount
       finalResult <- action(disposalDate, acquisitionDate, hasRebasedValue)
     } yield finalResult
-  }
-
-
-  //################### Calculation Election methods #######################
-  def getOtherReliefsFlat(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] =
-    calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
-      case Some(data) => data.otherReliefs
-      case _ => None
-    }
-
-  def getOtherReliefsTA(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] =
-    calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA).map {
-      case Some(data) => data.otherReliefs
-      case _ => None
-    }
-
-  def getOtherReliefsRebased(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] =
-    calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map {
-      case Some(data) => data.otherReliefs
-      case _ => None
-    }
-
-  val calculationElection = ValidateSession.async { implicit request =>
-
-    def action
-    (
-      construct: SummaryModel,
-      content: Seq[(String, String, String, Option[String], String, Option[BigDecimal])]
-      ) =
-      calcConnector.fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection).map {
-        case Some(data) =>
-          Ok(calculation.nonresident.calculationElection(
-            calculationElectionForm.fill(data),
-            construct,
-            content)
-          )
-        case None =>
-          Ok(calculation.nonresident.calculationElection(
-            calculationElectionForm,
-            construct,
-            content)
-          )
-      }
-
-    def calcTimeCall(summary: SummaryModel): Future[Option[CalculationResultModel]] = {
-      summary.acquisitionDateModel.hasAcquisitionDate match {
-        case "Yes" if !Dates.dateAfterStart(summary.acquisitionDateModel.day.get, summary.acquisitionDateModel.month.get, summary.acquisitionDateModel.year.get) =>
-          calcConnector.calculateTA(summary)
-        case _ => Future(None)
-      }
-    }
-
-    def calcRebasedCall(summary: SummaryModel): Future[Option[CalculationResultModel]] = {
-      (summary.rebasedValueModel.getOrElse(RebasedValueModel("No", None)).hasRebasedValue, summary.acquisitionDateModel.hasAcquisitionDate) match {
-        case ("Yes", "Yes") if !Dates.dateAfterStart(summary.acquisitionDateModel.day.get, summary.acquisitionDateModel.month.get, summary.acquisitionDateModel.year.get) =>
-          calcConnector.calculateRebased(summary)
-        case ("Yes", "No") => calcConnector.calculateRebased(summary)
-        case _ => Future(None)
-      }
-    }
-
-    for {
-      construct <- calcConnector.createSummary(hc)
-      calcFlat <- calcConnector.calculateFlat(construct)
-      calcTA <- calcTimeCall(construct)
-      calcRebased <- calcRebasedCall(construct)
-      otherReliefsFlat <- getOtherReliefsFlat
-      otherReliefsTA <- getOtherReliefsTA
-      otherReliefsRebased <- getOtherReliefsRebased
-      finalResult <- action(
-        construct,
-        calcElectionConstructor.generateElection(construct, hc, calcFlat, calcTA, calcRebased, otherReliefsFlat, otherReliefsTA, otherReliefsRebased)
-      )
-    } yield finalResult
-  }
-
-  val submitCalculationElection = ValidateSession.async { implicit request =>
-
-    def calcTimeCall(summary: SummaryModel): Future[Option[CalculationResultModel]] = {
-      summary.acquisitionDateModel.hasAcquisitionDate match {
-        case "Yes" if !Dates.dateAfterStart(summary.acquisitionDateModel.day.get, summary.acquisitionDateModel.month.get, summary.acquisitionDateModel.year.get) =>
-          calcConnector.calculateTA(summary)
-        case _ => Future(None)
-      }
-    }
-
-    def calcRebasedCall(summary: SummaryModel): Future[Option[CalculationResultModel]] = {
-      (summary.rebasedValueModel.getOrElse(RebasedValueModel("No", None)).hasRebasedValue, summary.acquisitionDateModel.hasAcquisitionDate) match {
-        case ("Yes", "Yes") if !Dates.dateAfterStart(summary.acquisitionDateModel.day.get, summary.acquisitionDateModel.month.get, summary.acquisitionDateModel.year.get) =>
-          calcConnector.calculateRebased(summary)
-        case ("Yes", "No") => calcConnector.calculateRebased(summary)
-        case _ => Future(None)
-      }
-    }
-
-    calculationElectionForm.bindFromRequest.fold(
-      errors => {
-        for {
-          construct <- calcConnector.createSummary(hc)
-          calcFlat <- calcConnector.calculateFlat(construct)
-          calcTA <- calcTimeCall(construct)
-          otherReliefsFlat <- getOtherReliefsFlat
-          otherReliefsTA <- getOtherReliefsTA
-          otherReliefsRebased <- getOtherReliefsRebased
-          calcRebased <- calcRebasedCall(construct)
-        } yield {
-          BadRequest(calculation.nonresident.calculationElection(
-            errors,
-            construct,
-            calcElectionConstructor.generateElection(construct, hc, calcFlat, calcTA, calcRebased, otherReliefsFlat, otherReliefsTA, otherReliefsRebased)
-          ))
-        }
-      },
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.calculationElection, success)
-        request.body.asFormUrlEncoded.get("action").headOption match {
-          case Some("flat") => Future.successful(Redirect(routes.CalculationController.otherReliefsFlat()))
-          case Some("time") => Future.successful(Redirect(routes.CalculationController.otherReliefsTA()))
-          case Some("rebased") => Future.successful(Redirect(routes.CalculationController.otherReliefsRebased()))
-          case _ => Future.successful(Redirect(routes.CalculationController.summary()))
-        }
-      }
-    )
   }
 
   //################### Other Reliefs with no calc selection methods (flat) #######################
