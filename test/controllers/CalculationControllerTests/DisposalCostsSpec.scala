@@ -206,8 +206,8 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.CalculationController.allowableLosses()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.allowableLosses()}")
+      s"redirect to ${routes.AllowableLossesController.allowableLosses()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.AllowableLossesController.allowableLosses()}")
       }
     }
 
@@ -218,8 +218,8 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.CalculationController.allowableLosses()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.allowableLosses()}")
+      s"redirect to ${routes.AllowableLossesController.allowableLosses()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.AllowableLossesController.allowableLosses()}")
       }
     }
 
