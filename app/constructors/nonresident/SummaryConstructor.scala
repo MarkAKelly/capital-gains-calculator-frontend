@@ -177,7 +177,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.otherProperties.question"),
               summary.otherPropertiesModel.otherProperties.toString,
-              Some(routes.CalculationController.otherProperties().toString())
+              Some(routes.OtherPropertiesController.otherProperties().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.annualExemptAmount.question"),
@@ -199,7 +199,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.otherProperties.question"),
               summary.otherPropertiesModel.otherProperties.toString,
-              Some(routes.CalculationController.otherProperties().toString())
+              Some(routes.OtherPropertiesController.otherProperties().toString())
             )
           )
         }
@@ -226,7 +226,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.otherProperties.questionTwo"),
                     "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
-                    Some(routes.CalculationController.otherProperties().toString())
+                    Some(routes.OtherPropertiesController.otherProperties().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.annualExemptAmount.question"),
@@ -249,7 +249,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.otherProperties.questionTwo"),
                     "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
-                    Some(routes.CalculationController.otherProperties().toString())
+                    Some(routes.OtherPropertiesController.otherProperties().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.annualExemptAmount.question"),
@@ -280,7 +280,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.otherProperties.question"),
                     summary.otherPropertiesModel.otherProperties.toString,
-                    Some(routes.CalculationController.otherProperties().toString())
+                    Some(routes.OtherPropertiesController.otherProperties().toString())
                   )
                 )
               case _ =>
@@ -298,7 +298,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.otherProperties.question"),
                     summary.otherPropertiesModel.otherProperties.toString,
-                    Some(routes.CalculationController.otherProperties().toString())
+                    Some(routes.OtherPropertiesController.otherProperties().toString())
                   )
                 )
             }
@@ -313,7 +313,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.otherProperties.question"),
               summary.otherPropertiesModel.otherProperties.toString,
-              Some(routes.CalculationController.otherProperties().toString())
+              Some(routes.OtherPropertiesController.otherProperties().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.annualExemptAmount.question"),
@@ -330,7 +330,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.otherProperties.question"),
               summary.otherPropertiesModel.otherProperties.toString,
-              Some(routes.CalculationController.otherProperties().toString())
+              Some(routes.OtherPropertiesController.otherProperties().toString())
             )
           )
         }

@@ -35,7 +35,7 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{OtherPropertiesController, routes}
 import models.nonresident.{CurrentIncomeModel, CustomerTypeModel, OtherPropertiesModel}
 import play.api.mvc.Result
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
@@ -47,7 +47,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
   def setupTarget(getData: Option[OtherPropertiesModel],
                   postData: Option[OtherPropertiesModel],
                   customerTypeData: Option[CustomerTypeModel],
-                  currentIncomeData: Option[CurrentIncomeModel] = None): CalculationController = {
+                  currentIncomeData: Option[CurrentIncomeModel] = None): OtherPropertiesController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -65,9 +65,8 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
     when(mockCalcConnector.saveFormData[OtherPropertiesModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new OtherPropertiesController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
   }
 

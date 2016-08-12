@@ -75,7 +75,7 @@ trait CustomerTypeController extends FrontendController with ValidActiveSession 
 
         case CustomerTypeKeys.individual => Future.successful(Redirect(routes.CurrentIncomeController.currentIncome()))
         case CustomerTypeKeys.trustee => Future.successful(Redirect(routes.DisabledTrusteeController.disabledTrustee()))
-        case CustomerTypeKeys.personalRep => Future.successful(Redirect(routes.CalculationController.otherProperties()))
+        case CustomerTypeKeys.personalRep => Future.successful(Redirect(routes.OtherPropertiesController.otherProperties()))
       }
     }
 

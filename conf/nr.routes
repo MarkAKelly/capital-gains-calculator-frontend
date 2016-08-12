@@ -19,8 +19,8 @@ GET         /personal-allowance                 controllers.nonresident.Calculat
 POST        /personal-allowance                 controllers.nonresident.CalculationController.submitPersonalAllowance
 
 #Other Properties
-GET         /other-properties                   controllers.nonresident.CalculationController.otherProperties
-POST        /other-properties                   controllers.nonresident.CalculationController.submitOtherProperties
+GET         /other-properties                   controllers.nonresident.OtherPropertiesController.otherProperties
+POST        /other-properties                   controllers.nonresident.OtherPropertiesController.submitOtherProperties
 
 #Allowance
 GET         /allowance                          controllers.nonresident.AnnualExemptAmountController.annualExemptAmount
