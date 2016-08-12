@@ -250,39 +250,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   }
 
   //################### Flat Other Reliefs methods #######################
-  val otherReliefsFlat: Action[AnyContent] = Action.async { implicit request =>
 
-    def action(dataResult: Option[CalculationResultModel]) = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
-      case Some(data) if data.otherReliefs.isDefined => Ok(calculation.nonresident.otherReliefsFlat(otherReliefsForm(true).fill(data), dataResult.get, true))
-      case _ => Ok(calculation.nonresident.otherReliefsFlat(otherReliefsForm(false), dataResult.get, false))
-    }
-
-    for {
-      construct <- calcConnector.createSummary(hc)
-      calculation <- calcConnector.calculateFlat(construct)
-      finalResult <- action(calculation)
-    } yield finalResult
-  }
-
-  val submitOtherReliefsFlat = Action.async { implicit request =>
-    def action(dataResult: Option[CalculationResultModel]) = otherReliefsForm(true).bindFromRequest.fold(
-      errors =>
-        calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
-          case Some(data) if data.otherReliefs.isDefined => BadRequest(calculation.nonresident.otherReliefsFlat(errors, dataResult.get, true))
-          case _ => BadRequest(calculation.nonresident.otherReliefsFlat(errors, dataResult.get, false))
-        },
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.otherReliefsFlat, success)
-        Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
-      }
-    )
-
-    for {
-      construct <- calcConnector.createSummary(hc)
-      calculation <- calcConnector.calculateFlat(construct)
-      finalResult <- action(calculation)
-    } yield finalResult
-  }
   //################### Time Apportioned Other Reliefs methods #######################
   val otherReliefsTA = ValidateSession.async { implicit request =>
 

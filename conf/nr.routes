@@ -81,8 +81,8 @@ POST        /calculation-election               controllers.nonresident.Calculat
 GET         /other-reliefs                      controllers.nonresident.CalculationController.otherReliefs
 POST        /other-reliefs                      controllers.nonresident.CalculationController.submitOtherReliefs
 
-GET         /other-reliefs-flat                 controllers.nonresident.CalculationController.otherReliefsFlat
-POST        /other-reliefs-flat                 controllers.nonresident.CalculationController.submitOtherReliefsFlat
+GET         /other-reliefs-flat                 controllers.nonresident.OtherReliefsFlatController.otherReliefsFlat
+POST        /other-reliefs-flat                 controllers.nonresident.OtherReliefsFlatController.submitOtherReliefsFlat
 
 GET         /other-reliefs-time-apportioned     controllers.nonresident.CalculationController.otherReliefsTA
 POST        /other-reliefs-time-apportioned     controllers.nonresident.CalculationController.submitOtherReliefsTA

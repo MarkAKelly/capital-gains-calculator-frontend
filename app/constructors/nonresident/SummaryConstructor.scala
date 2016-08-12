@@ -530,7 +530,7 @@ object SummaryConstructor {
                 case Some(data) => MoneyPounds(data).quantity
                 case None => "0.00"
               }),
-              Some(routes.CalculationController.otherReliefsFlat().toString()))
+              Some(routes.OtherReliefsFlatController.otherReliefsFlat().toString()))
           })
         case "time" => Array(
           SummaryDataItemModel(
