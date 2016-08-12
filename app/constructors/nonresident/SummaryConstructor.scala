@@ -359,7 +359,7 @@ object SummaryConstructor {
                 case "Yes" => MoneyPounds(summary.rebasedCostsModel.get.rebasedCosts.get).quantity
                 case "No" => "0.00"
               }),
-              Some(routes.CalculationController.rebasedCosts().toString())
+              Some(routes.RebasedCostsController.rebasedCosts().toString())
             )
           )
           case "No" => Array(
@@ -379,7 +379,7 @@ object SummaryConstructor {
                 case "Yes" => MoneyPounds(summary.rebasedCostsModel.get.rebasedCosts.get).quantity
                 case "No" => "0.00"
               }),
-              Some(routes.CalculationController.rebasedCosts().toString())
+              Some(routes.RebasedCostsController.rebasedCosts().toString())
             )
           )
         }
@@ -505,7 +505,7 @@ object SummaryConstructor {
               case "Yes" => MoneyPounds(summary.allowableLossesModel.allowableLossesAmt.get).quantity
               case "No" => "0.00"
             }),
-            Some(routes.CalculationController.allowableLosses().toString())
+            Some(routes.AllowableLossesController.allowableLosses().toString())
           ),
           summary.otherReliefsModelFlat.isClaimingOtherReliefs match {
             case Some("No") =>
@@ -515,7 +515,7 @@ object SummaryConstructor {
                   case Some(data) => summary.otherReliefsModelFlat.isClaimingOtherReliefs.get
                   case None => "No"
                 },
-                Some(routes.CalculationController.otherReliefs().toString())
+                Some(routes.OtherReliefsController.otherReliefs().toString())
               )
             case Some("Yes") => SummaryDataItemModel(
               Messages("calc.otherReliefs.question"),
@@ -523,14 +523,14 @@ object SummaryConstructor {
                 case Some(data) => MoneyPounds(data).quantity
                 case None => "0.00"
               }),
-              Some(routes.CalculationController.otherReliefs().toString()))
+              Some(routes.OtherReliefsController.otherReliefs().toString()))
             case _ => SummaryDataItemModel(
               Messages("calc.otherReliefs.question"),
               "&pound;" + (summary.otherReliefsModelFlat.otherReliefs match {
                 case Some(data) => MoneyPounds(data).quantity
                 case None => "0.00"
               }),
-              Some(routes.CalculationController.otherReliefsFlat().toString()))
+              Some(routes.OtherReliefsFlatController.otherReliefsFlat().toString()))
           })
         case "time" => Array(
           SummaryDataItemModel(
@@ -544,7 +544,7 @@ object SummaryConstructor {
               case "Yes" => MoneyPounds(summary.allowableLossesModel.allowableLossesAmt.get).quantity
               case "No" => "0.00"
             }),
-            Some(routes.CalculationController.allowableLosses().toString())
+            Some(routes.AllowableLossesController.allowableLosses().toString())
           ),
           SummaryDataItemModel(
             Messages("calc.otherReliefs.question"),
@@ -552,7 +552,7 @@ object SummaryConstructor {
               case Some(data) => MoneyPounds(data).quantity
               case None => "0.00"
             }),
-            Some(routes.CalculationController.otherReliefsTA().toString())
+            Some(routes.OtherReliefsTAController.otherReliefsTA().toString())
           )
         )
         case "rebased" => Array(
@@ -567,7 +567,7 @@ object SummaryConstructor {
               case "Yes" => MoneyPounds(summary.allowableLossesModel.allowableLossesAmt.get).quantity
               case "No" => "0.00"
             }),
-            Some(routes.CalculationController.allowableLosses().toString())
+            Some(routes.AllowableLossesController.allowableLosses().toString())
           ),
           SummaryDataItemModel(
             Messages("calc.otherReliefs.question"),

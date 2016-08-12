@@ -85,9 +85,9 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${routes.CalculationController.otherReliefs().url}" in {
+        s"have a 'Back' link to ${routes.OtherReliefsController.otherReliefs().url}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.otherReliefs().url
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.OtherReliefsController.otherReliefs().url
         }
       }
 
@@ -101,9 +101,9 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${routes.CalculationController.otherReliefs().url}" in {
+        s"have a 'Back' link to ${routes.OtherReliefsController.otherReliefs().url}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.otherReliefs().url
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.OtherReliefsController.otherReliefs().url
         }
       }
 
@@ -403,7 +403,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "the value of allowable losses should be £0 and link to the allowable-losses page" in {
               document.body().getElementById("deductions(1)").text shouldBe "£0.00"
-              document.body().getElementById("deductions(1)").attr("href") shouldEqual routes.CalculationController.allowableLosses().toString()
+              document.body().getElementById("deductions(1)").attr("href") shouldEqual routes.AllowableLossesController.allowableLosses().toString()
             }
 
             "include the question 'How much extra tax relief are you claiming?'" in {
@@ -412,7 +412,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "the answer to question should be No and link to the other-reliefs page" in {
               document.body().getElementById("deductions(2)").text shouldBe "No"
-              document.body().getElementById("deductions(2)").attr("href") shouldEqual routes.CalculationController.otherReliefs().toString()
+              document.body().getElementById("deductions(2)").attr("href") shouldEqual routes.OtherReliefsController.otherReliefs().toString()
             }
 
             "include the question 'Do you want to add other tax relief?'" in {

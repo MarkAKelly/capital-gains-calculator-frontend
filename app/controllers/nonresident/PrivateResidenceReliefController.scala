@@ -34,6 +34,7 @@ object PrivateResidenceReliefController extends PrivateResidenceReliefController
 
 trait PrivateResidenceReliefController extends FrontendController with ValidActiveSession {
 
+  override val sessionTimeoutUrl = controllers.nonresident.routes.CalculationController.restart().url
   val calcConnector: CalculatorConnector
 
   def getAcquisitionDate(implicit hc: HeaderCarrier): Future[Option[LocalDate]] =
@@ -108,7 +109,7 @@ trait PrivateResidenceReliefController extends FrontendController with ValidActi
         },
         success => {
           calcConnector.saveFormData(KeystoreKeys.privateResidenceRelief, success)
-          Future.successful(Redirect(routes.CalculationController.allowableLosses()))
+          Future.successful(Redirect(routes.AllowableLossesController.allowableLosses()))
         }
       )
     }
@@ -120,5 +121,4 @@ trait PrivateResidenceReliefController extends FrontendController with ValidActi
       finalResult <- action(disposalDate, acquisitionDate, hasRebasedValue)
     } yield finalResult
   }
-
 }

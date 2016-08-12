@@ -18,6 +18,7 @@ package views.resident
 
 import assets.MessageLookup.{previousTaxableGains => messages}
 import assets.{MessageLookup => commonMessages}
+import common.resident.JourneyKeys
 import controllers.helpers.FakeRequestHelper
 import forms.resident.income.PreviousTaxableGainsForm.previousTaxableGainsForm
 import org.jsoup.Jsoup
@@ -30,7 +31,7 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
 
     lazy val postAction = controllers.resident.properties.routes.IncomeController.previousTaxableGains()
     lazy val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
-    lazy val view = views.previousTaxableGains(previousTaxableGainsForm, "#", postAction, homeLink)(fakeRequest)
+    lazy val view = views.previousTaxableGains(previousTaxableGainsForm, "#", postAction, homeLink, JourneyKeys.properties)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -118,7 +119,7 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
     val form = previousTaxableGainsForm.bind(Map("amount" -> "100"))
     lazy val postAction = controllers.resident.shares.routes.IncomeController.previousTaxableGains()
     lazy val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
-    lazy val view = views.previousTaxableGains(form, "#", postAction, homeLink)(fakeRequest)
+    lazy val view = views.previousTaxableGains(form, "#", postAction, homeLink, JourneyKeys.properties)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a home link that" should {
@@ -153,7 +154,7 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
     val form = previousTaxableGainsForm.bind(Map("amount" -> ""))
     lazy val postAction = controllers.resident.properties.routes.IncomeController.previousTaxableGains()
     lazy val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
-    lazy val view = views.previousTaxableGains(form, "#", postAction, homeLink)(fakeRequest)
+    lazy val view = views.previousTaxableGains(form, "#", postAction, homeLink, JourneyKeys.properties)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {

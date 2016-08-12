@@ -18,6 +18,7 @@ package views.resident
 
 import assets.MessageLookup.{annualExemptAmount => messages}
 import assets.{MessageLookup => commonMessages}
+import common.resident.JourneyKeys
 import controllers.helpers.FakeRequestHelper
 import forms.resident.AnnualExemptAmountForm._
 import org.jsoup.Jsoup
@@ -29,7 +30,7 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
     lazy val postAction = controllers.resident.properties.routes.DeductionsController.submitAnnualExemptAmount
     lazy val backLink = Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForward().toString)
     lazy val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
-    lazy val view = views.annualExemptAmount(annualExemptAmountForm(), backLink, postAction, homeLink)(fakeRequest)
+    lazy val view = views.annualExemptAmount(annualExemptAmountForm(), backLink, postAction, homeLink, JourneyKeys.properties)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
     "have a charset of UTF-8" in {
       doc.charset().toString shouldBe "UTF-8"
@@ -138,7 +139,7 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
     lazy val backLink = Some(controllers.resident.shares.routes.DeductionsController.lossesBroughtForwardValue().toString)
     lazy val form = annualExemptAmountForm().bind(Map(("amount", "1000")))
     lazy val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
-    lazy val view = views.annualExemptAmount(form, backLink, postAction, homeLink)(fakeRequest)
+    lazy val view = views.annualExemptAmount(form, backLink, postAction, homeLink, JourneyKeys.properties)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a home link that" should {
@@ -176,7 +177,7 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
       lazy val backLink = Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForwardValue().toString)
       val form = annualExemptAmountForm().bind(Map("amount" -> ""))
       lazy val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
-      lazy val view = views.annualExemptAmount(form, backLink, postAction, homeLink)(fakeRequest)
+      lazy val view = views.annualExemptAmount(form, backLink, postAction, homeLink, JourneyKeys.properties)(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
       s"output an error summary with message '${commonMessages.errorMessages.mandatoryAmount}'" in {
         doc.body.getElementById("amount-error-summary").text should include(commonMessages.errorMessages.mandatoryAmount)
