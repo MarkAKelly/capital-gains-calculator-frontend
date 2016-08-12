@@ -16,58 +16,44 @@
 
 package common
 
-import java.text.SimpleDateFormat
-import java.util.{Calendar, Date}
+import java.time._
+import java.time.format.{DateTimeFormatter, ResolverStyle}
+import java.time.temporal.ChronoUnit
 
 object Dates {
 
-  val sf = new SimpleDateFormat("dd/MM/yyyy")
-  val datePageFormat = new SimpleDateFormat("dd MMMM yyyy")
-  val datePageFormatNoZero = new SimpleDateFormat("d MMMM yyyy")
-  val taxStartDate = sf.parse("05/04/2015")
-  val taxStartDatePlus18Months = sf.parse("05/10/2016")
-  val taxYearStartDate = sf.parse("05/04/2016")
-  val taxYearEndDate = sf.parse("06/04/2017")
-  val cal = Calendar.getInstance()
+  val formatter = DateTimeFormatter.ofPattern("d/M/uuuu").withResolverStyle(ResolverStyle.STRICT)
+  val requestFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd").withResolverStyle(ResolverStyle.STRICT)
+  val datePageFormat = DateTimeFormatter.ofPattern("dd MMMM uuuu").withResolverStyle(ResolverStyle.STRICT)
+  val datePageFormatNoZero = DateTimeFormatter.ofPattern("d MMMM uuuu").withResolverStyle(ResolverStyle.STRICT)
+  val taxStartDate = LocalDate.parse("5/4/2015", formatter)
+  val taxStartDatePlus18Months = LocalDate.parse("5/10/2016", formatter)
+  val taxYearStartDate = LocalDate.parse("5/4/2016", formatter)
+  val taxYearEndDate = LocalDate.parse("5/4/2017", formatter)
 
-  def constructDate (day: Int, month: Int, year: Int): Date = sf.parse(s"$day/$month/$year")
+  def constructDate (day: Int, month: Int, year: Int): LocalDate = LocalDate.parse(s"$day/$month/$year", formatter)
 
-  def dateAfterStart (day: Int, month: Int, year: Int): Boolean = constructDate(day, month, year).after(taxStartDate)
+  def dateAfterStart (day: Int, month: Int, year: Int): Boolean = constructDate(day, month, year).isAfter(taxStartDate)
 
-  def dateAfterStart (date: Date): Boolean = date.after(taxStartDate)
+  def dateAfterStart (date: LocalDate): Boolean = date.isAfter(taxStartDate)
 
-  def dateAfter18Months (day: Int, month: Int, year: Int): Boolean = constructDate(day, month, year).after(taxStartDatePlus18Months)
+  def dateAfter18Months (day: Int, month: Int, year: Int): Boolean = constructDate(day, month, year).isAfter(taxStartDatePlus18Months)
 
-  def dateAfterOctober (date: Date): Boolean = date.after(taxStartDatePlus18Months)
+  def dateAfterOctober (date: LocalDate): Boolean = date.isAfter(taxStartDatePlus18Months)
 
-  def dateMinusMonths(date: Option[Date], months: Int): String =
-    date.fold(""){a =>
-      val cal = Calendar.getInstance()
-      cal.setTime(a)
-      cal.add(Calendar.MONTH, months * -1)
-      datePageFormatNoZero.format(cal.getTime)
-    }
+  def dateMinusMonths(date: Option[LocalDate], months: Int): String = date.fold(""){a => a.minus(months, ChronoUnit.MONTHS).format(datePageFormatNoZero)}
 
-  def getDay(date: Date): Int = {
-    cal.setTime(date)
-    cal.get(Calendar.DAY_OF_MONTH)
-  }
+  def getDay(date: LocalDate): Int = date.getDayOfMonth
 
-  def getMonth(date: Date): Int = {
-    cal.setTime(date)
-    cal.get(Calendar.MONTH) + 1
-  }
+  def getMonth(date: LocalDate): Int = date.getMonthValue
 
-  def getYear(date: Date): Int = {
-    cal.setTime(date)
-    cal.get(Calendar.YEAR)
-  }
+  def getYear(date: LocalDate): Int = date.getYear
 
   def dateInsideTaxYear (day: Int, month: Int, year: Int): Boolean =
-    constructDate(day, month, year).after(taxYearStartDate) && constructDate(day, month, year).before(taxYearEndDate)
+    constructDate(day, month, year).isAfter(taxYearStartDate) && constructDate(day, month, year).isBefore(taxYearEndDate)
 
   def dateInsideAcceptedTaxYears (day: Int, month: Int, year: Int): Boolean =
-    constructDate(day, month, year).after(taxStartDate) && constructDate(day, month, year).before(taxYearEndDate)
+    constructDate(day, month, year).isAfter(taxStartDate) && constructDate(day, month, year).isBefore(taxYearEndDate)
 
   def taxYearStringToInteger (taxYear: String): Int = (taxYear.take(2) + taxYear.takeRight(2)).toInt
 }
