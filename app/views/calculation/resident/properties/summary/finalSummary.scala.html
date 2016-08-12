@@ -59,13 +59,12 @@ articleLayout = false
     <!-- Other Reliefs Stats -->
     @if(deductionAnswers.reliefsModel.fold(false)(_.isClaiming)){
         <span data-metrics="rtt-properties-summary:otherReliefs:yes"></span>
+        <!-- Other Reliefs Value Figure Entered Stats -->
+        @if(deductionAnswers.reliefsValueModel.fold(BigDecimal(0))(_.amount) > BigDecimal(0)){
+            <span data-metrics="rtt-properties-summary:otherReliefs:figureEntered"></span>
+        }
     } else {
         <span data-metrics="rtt-properties-summary:otherReliefs:no"></span>
-    }
-
-    <!-- Other Reliefs Value Figure Entered Stats -->
-    @if(deductionAnswers.reliefsValueModel.fold(BigDecimal(0))(_.amount) > BigDecimal(0)){
-        <span data-metrics="rtt-properties-summary:otherReliefs:figureEntered"></span>
     }
 
     <!-- Other Disposal Stats -->
