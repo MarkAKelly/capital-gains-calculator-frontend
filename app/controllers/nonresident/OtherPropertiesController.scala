@@ -39,7 +39,6 @@ trait OtherPropertiesController extends FrontendController with ValidActiveSessi
   val calcConnector: CalculatorConnector
   override val sessionTimeoutUrl = controllers.nonresident.routes.CalculationController.restart().url
 
-
   private def otherPropertiesBackUrl(implicit hc: HeaderCarrier): Future[String] =
     calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).flatMap {
       case Some(CustomerTypeModel("individual")) =>

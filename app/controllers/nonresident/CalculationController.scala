@@ -108,73 +108,10 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   //################### Disposal Costs methods #######################
 
   //################### Private Residence Relief methods #######################
-  def getDisposalDate(implicit hc: HeaderCarrier): Future[Option[Date]] =
-    calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.disposalDate).map {
-      case Some(data) => Some(Dates.constructDate(data.day, data.month, data.year))
-      case _ => None
-    }
 
-   //################### Other Reliefs with no calc selection methods (flat) #######################
-  def otherReliefsBackUrl(implicit hc: HeaderCarrier): Future[String] = {
-    calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
-      case (Some(AcquisitionDateModel("Yes", day, month, year))) if Dates.dateAfterStart(day.get, month.get, year.get) =>
-        Future.successful(routes.AllowableLossesController.allowableLosses().url)
-      case (Some(AcquisitionDateModel("Yes", day, month, year))) => Future.successful(routes.CalculationElectionController.calculationElection().url)
-      case (Some(AcquisitionDateModel("No", _, _, _))) =>
-        calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
-          case Some(RebasedValueModel("Yes", _)) => Future.successful(routes.CalculationElectionController.calculationElection().url)
-          case Some(RebasedValueModel("No", _)) => Future.successful(routes.AllowableLossesController.allowableLosses().url)
-          case _ => Future.successful(missingDataRoute)
-        }
-      case _ => Future.successful(missingDataRoute)
-    }
-  }
+  //################### Allowable Losses methods #######################
 
-  val otherReliefs = ValidateSession.async { implicit request =>
-
-    def action(dataResult: Option[CalculationResultModel], backUrl: String) = {
-      calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
-        case Some(data) if data.otherReliefs.isDefined => Ok(calculation.nonresident.otherReliefs(otherReliefsForm(false).fill(data), dataResult.get))
-        case _ => Ok(calculation.nonresident.otherReliefs(otherReliefsForm(true), dataResult.get))
-      }
-    }
-
-    for {
-      construct <- calcConnector.createSummary(hc)
-      calculation <- calcConnector.calculateFlat(construct)
-      backUrl <- otherReliefsBackUrl
-      finalResult <- action(calculation, backUrl)
-    } yield finalResult
-  }
-
-  val submitOtherReliefs = ValidateSession.async { implicit request =>
-
-    def action(dataResult: Option[CalculationResultModel], construct: SummaryModel, backUrl: String) = otherReliefsForm(false).bindFromRequest.fold(
-      errors =>
-        calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
-          case Some(data) if data.otherReliefs.isDefined => BadRequest(calculation.nonresident.otherReliefs(errors, dataResult.get))
-          case _ => BadRequest(calculation.nonresident.otherReliefs(errors, dataResult.get))
-        },
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.otherReliefsFlat, success)
-        (construct.acquisitionDateModel.hasAcquisitionDate, construct.rebasedValueModel.getOrElse(RebasedValueModel("No", None)).hasRebasedValue) match {
-          case ("Yes", _) if Dates.dateAfterStart(construct.acquisitionDateModel.day.get,
-            construct.acquisitionDateModel.month.get, construct.acquisitionDateModel.year.get) => {
-            Future.successful(Redirect(routes.CalculationController.summary()))
-          }
-          case ("No", "No") => Future.successful(Redirect(routes.CalculationController.summary()))
-          case _ => Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
-        }
-      }
-    )
-
-    for {
-      construct <- calcConnector.createSummary(hc)
-      calculation <- calcConnector.calculateFlat(construct)
-      backUrl <- otherReliefsBackUrl
-      finalResult <- action(calculation, construct, backUrl)
-    } yield finalResult
-  }
+  //################### Other Reliefs with no calc selection methods (flat) #######################
 
   //################### Flat Other Reliefs methods #######################
 
@@ -186,12 +123,12 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   def summaryBackUrl(implicit hc: HeaderCarrier): Future[String] = {
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
       case Some(AcquisitionDateModel("Yes", day, month, year)) if Dates.dateAfterStart(day.get, month.get, year.get) =>
-        Future.successful(routes.CalculationController.otherReliefs().url)
+        Future.successful(routes.OtherReliefsController.otherReliefs().url)
       case Some(AcquisitionDateModel("Yes", _, _, _)) => Future.successful(routes.CalculationElectionController.calculationElection().url)
       case Some(AcquisitionDateModel("No", _, _, _)) =>
         calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
           case Some(RebasedValueModel("Yes", _)) => Future.successful(routes.CalculationElectionController.calculationElection().url)
-          case Some(RebasedValueModel("No", _)) => Future.successful(routes.CalculationController.otherReliefs().url)
+          case Some(RebasedValueModel("No", _)) => Future.successful(routes.OtherReliefsController.otherReliefs().url)
           case _ => Future.successful(missingDataRoute)
         }
       case _ => Future.successful(missingDataRoute)

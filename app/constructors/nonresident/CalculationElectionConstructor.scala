@@ -48,7 +48,7 @@ trait CalculationElectionConstructor {
         Seq(("flat", flatResult.get.taxOwed.setScale(2).toString(),
           Messages("calc.calculationElection.message.flat"),
           None,
-          routes.CalculationController.otherReliefs().toString(),
+          routes.OtherReliefsController.otherReliefs().toString(),
           otherReliefsFlat))
       }
       case "Yes" if !Dates.dateAfterStart(summary.acquisitionDateModel.day.get,
@@ -60,7 +60,7 @@ trait CalculationElectionConstructor {
             ("flat", flatResult.get.taxOwed.setScale(2).toString(),
               Messages("calc.calculationElection.message.flat"),
               None,
-              routes.CalculationController.otherReliefs().toString(),
+              routes.OtherReliefsController.otherReliefs().toString(),
               otherReliefsFlat),
             ("time", timeResult.get.taxOwed.setScale(2).toString(),
               Messages("calc.calculationElection.message.time"),
@@ -79,7 +79,7 @@ trait CalculationElectionConstructor {
             ("flat", flatResult.get.taxOwed.setScale(2).toString(),
               Messages("calc.calculationElection.message.flat"),
               None,
-              routes.CalculationController.otherReliefs().toString(),
+              routes.OtherReliefsController.otherReliefs().toString(),
               otherReliefsFlat),
             ("time", timeResult.get.taxOwed.setScale(2).toString(),
               Messages("calc.calculationElection.message.time"),
@@ -95,7 +95,7 @@ trait CalculationElectionConstructor {
             ("flat", flatResult.get.taxOwed.setScale(2).toString(),
               Messages("calc.calculationElection.message.flat"),
               None,
-              routes.CalculationController.otherReliefs().toString(),
+              routes.OtherReliefsController.otherReliefs().toString(),
               otherReliefsFlat),
             ("rebased", rebasedResult.get.taxOwed.setScale(2).toString(),
               Messages("calc.calculationElection.message.rebased"),
@@ -108,7 +108,7 @@ trait CalculationElectionConstructor {
           Seq(("flat", flatResult.get.taxOwed.setScale(2).toString(),
             Messages("calc.calculationElection.message.flat"),
             None,
-            routes.CalculationController.otherReliefs().toString(),
+            routes.OtherReliefsController.otherReliefs().toString(),
             otherReliefsFlat)
           )
         }

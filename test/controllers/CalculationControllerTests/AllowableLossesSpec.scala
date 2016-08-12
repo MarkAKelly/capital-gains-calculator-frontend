@@ -264,7 +264,7 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
       }
 
       "redirect to the other reliefs view" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.otherReliefs()}")
+        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsController.otherReliefs()}")
       }
     }
 
@@ -277,7 +277,7 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
       }
 
       "redirect to the other reliefs view" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.otherReliefs()}")
+        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsController.otherReliefs()}")
       }
     }
 
@@ -303,8 +303,8 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.CalculationController.otherReliefs()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.otherReliefs()}")
+      s"redirect to ${routes.OtherReliefsController.otherReliefs()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsController.otherReliefs()}")
       }
     }
 

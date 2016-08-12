@@ -515,7 +515,7 @@ object SummaryConstructor {
                   case Some(data) => summary.otherReliefsModelFlat.isClaimingOtherReliefs.get
                   case None => "No"
                 },
-                Some(routes.CalculationController.otherReliefs().toString())
+                Some(routes.OtherReliefsController.otherReliefs().toString())
               )
             case Some("Yes") => SummaryDataItemModel(
               Messages("calc.otherReliefs.question"),
@@ -523,7 +523,7 @@ object SummaryConstructor {
                 case Some(data) => MoneyPounds(data).quantity
                 case None => "0.00"
               }),
-              Some(routes.CalculationController.otherReliefs().toString()))
+              Some(routes.OtherReliefsController.otherReliefs().toString()))
             case _ => SummaryDataItemModel(
               Messages("calc.otherReliefs.question"),
               "&pound;" + (summary.otherReliefsModelFlat.otherReliefs match {

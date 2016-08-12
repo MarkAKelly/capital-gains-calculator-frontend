@@ -20,7 +20,7 @@ import common.DefaultRoutes._
 import common.{Constants, KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{OtherReliefsController, routes}
 import models._
 import models.nonresident._
 import org.jsoup.Jsoup
@@ -49,7 +49,7 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
                    result: CalculationResultModel,
                    acquisitionDateData: Option[AcquisitionDateModel],
                    rebasedValueData: Option[RebasedValueModel]
-                 ): CalculationController = {
+                 ): OtherReliefsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -73,9 +73,8 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
     when(mockCalcConnector.saveFormData[OtherReliefsModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new OtherReliefsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
   }
 
