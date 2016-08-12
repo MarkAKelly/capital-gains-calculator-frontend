@@ -265,4 +265,44 @@ class CalculateRequestConstructorSpec extends UnitSpec {
     }
   }
 
+  "Calling isVulnerableTrustee" should {
+
+    "return a value of Yes" in {
+      val disabledTrusteeModel = DisabledTrusteeModel("Yes")
+      val result = CalculateRequestConstructor.isVulnerableTrustee("trustee", Some(disabledTrusteeModel))
+      result shouldBe "&isVulnerable=Yes"
+    }
+
+    "return a value of No" in {
+      val disabledTrusteeModel = DisabledTrusteeModel("No")
+      val result = CalculateRequestConstructor.isVulnerableTrustee("trustee", Some(disabledTrusteeModel))
+      result shouldBe "&isVulnerable=No"
+    }
+
+    "return an empty string" in {
+      val result = CalculateRequestConstructor.isVulnerableTrustee("individual", None)
+      result shouldBe ""
+    }
+  }
+
+  "Calling currentIncome" should {
+
+    "return a value of 10000" in {
+      val currentIncomeModel = CurrentIncomeModel(10000)
+      val result = CalculateRequestConstructor.currentIncome("individual", Some(currentIncomeModel))
+      result shouldBe "&currentIncome=10000"
+    }
+
+    "return a value of 2000" in {
+      val currentIncomeModel = CurrentIncomeModel(2000)
+      val result = CalculateRequestConstructor.currentIncome("individual", Some(currentIncomeModel))
+      result shouldBe "&currentIncome=2000"
+    }
+
+    "return an empty string" in {
+      val result = CalculateRequestConstructor.currentIncome("trustee", None)
+      result shouldBe ""
+    }
+  }
+
 }

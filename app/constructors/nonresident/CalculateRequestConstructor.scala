@@ -28,17 +28,9 @@ object CalculateRequestConstructor {
     priorDisposal(input.otherPropertiesModel.otherProperties) +
     annualExemptAmount(input.otherPropertiesModel, input.annualExemptAmountModel) +
     otherPropertiesAmount(input.otherPropertiesModel) +
-      s"${
-      input.disabledTrusteeModel match {
-        case Some(data) => "&isVulnerable=" + data.isVulnerable
-        case None => ""
-      }
-    }${
-      input.currentIncomeModel match {
-        case Some(data) => "&currentIncome=" + data.currentIncome
-        case None => ""
-      }
-    }${
+    isVulnerableTrustee(input.customerTypeModel.customerType, input.disabledTrusteeModel) +
+    currentIncome(input.customerTypeModel.customerType, input.currentIncomeModel) +
+    s"${
       input.personalAllowanceModel match {
         case Some(data) => "&personalAllowanceAmt=" + data.personalAllowanceAmt
         case None => ""
@@ -72,6 +64,16 @@ object CalculateRequestConstructor {
 
   def otherPropertiesAmount(otherPropertiesModel: OtherPropertiesModel): String = {
     if (otherPropertiesModel.otherProperties.equals("Yes")) s"&otherPropertiesAmt=${otherPropertiesModel.otherPropertiesAmt.get}"
+    else ""
+  }
+
+  def isVulnerableTrustee(customerType: String, disabledTrusteeModel: Option[DisabledTrusteeModel]): String = {
+    if (customerType.equals("trustee")) s"&isVulnerable=${disabledTrusteeModel.get.isVulnerable}"
+    else ""
+  }
+
+  def currentIncome(customerType: String, currentIncomeModel: Option[CurrentIncomeModel]): String = {
+    if (customerType.equals("individual")) s"&currentIncome=${currentIncomeModel.get.currentIncome}"
     else ""
   }
 
