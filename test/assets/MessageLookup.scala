@@ -167,6 +167,10 @@ object MessageLookup {
     val helpOne = "Capital Gains Tax reliefs can lower the amount of tax you owe. For example, you might be able to claim"
     val helpLinkOne = "Private Residence Relief"
     val errorSelect = s"Tell us if you want to claim any other tax reliefs"
+    def errorSelectNoPrr(value: String) = s"Tell us if you want to claim any tax reliefs on your total gain of £$value"
+    val titleNoPrr = "Do you want to claim any tax reliefs on your total gain of £10,000?"
+    val questionSummaryNoPrr = "Do you want to claim any tax reliefs on your total gain of £50,000?"
+    def questionNoPrr(input: String = "100") = s"Do you want to claim any tax reliefs on your total gain of £$input?"
     val helpButton = "What are Capital Gains Tax reliefs?"
   }
 

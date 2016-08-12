@@ -35,7 +35,7 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{AnnualExemptAmountController, CalculationController, routes}
 import models.nonresident.{AnnualExemptAmountModel, CustomerTypeModel, DisabledTrusteeModel}
 import play.api.mvc.Result
 
@@ -48,7 +48,7 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
                    postData: Option[AnnualExemptAmountModel],
                    customerType: String = CustomerTypeKeys.individual,
                    disabledTrustee: String = ""
-                 ): CalculationController = {
+                 ): AnnualExemptAmountController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -72,7 +72,7 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
     when(mockCalcConnector.saveFormData[AnnualExemptAmountModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new AnnualExemptAmountController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
       override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
@@ -108,9 +108,9 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
           document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
         }
 
-        s"have a 'Back' link to ${routes.CalculationController.otherProperties}" in {
+        s"have a 'Back' link to ${routes.OtherPropertiesController.otherProperties}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.otherProperties.toString()
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.OtherPropertiesController.otherProperties.toString()
         }
 
         "have the question 'How much of your Capital Gains Tax allowance have you got left?' as the legend of the input" in {

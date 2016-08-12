@@ -47,7 +47,7 @@ trait CurrentIncomeController extends FrontendController with ValidActiveSession
 
     def routeRequest(success: CurrentIncomeModel) = {
       if (success.currentIncome > 0) Future.successful(Redirect(routes.CalculationController.personalAllowance()))
-      else Future.successful(Redirect(routes.CalculationController.otherProperties()))
+      else Future.successful(Redirect(routes.OtherPropertiesController.otherProperties()))
     }
 
     def successAction(success: CurrentIncomeModel) = {

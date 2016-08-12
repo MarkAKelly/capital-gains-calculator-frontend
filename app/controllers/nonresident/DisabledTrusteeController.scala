@@ -46,7 +46,7 @@ trait DisabledTrusteeController extends FrontendController with ValidActiveSessi
       errors => Future.successful(BadRequest(calculation.nonresident.disabledTrustee(errors))),
       success => {
         calcConnector.saveFormData(KeystoreKeys.disabledTrustee, success)
-        Future.successful(Redirect(routes.CalculationController.otherProperties()))
+        Future.successful(Redirect(routes.OtherPropertiesController.otherProperties()))
       }
     )
   }

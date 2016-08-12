@@ -98,9 +98,9 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
             document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
           }
 
-          s"have a 'Back' link to ${routes.CalculationController.otherProperties().url} " in {
+          s"have a 'Back' link to ${routes.OtherPropertiesController.otherProperties().url} " in {
             document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-            document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.otherProperties().url
+            document.body.getElementById("back-link").attr("href") shouldEqual routes.OtherPropertiesController.otherProperties().url
           }
 
           s"have the question '${Messages("calc.acquisitionDate.question")}" in {
@@ -137,9 +137,9 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
         lazy val result = target.acquisitionDate(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${routes.CalculationController.annualExemptAmount().url} " in {
+        s"have a 'Back' link to ${routes.AnnualExemptAmountController.annualExemptAmount().url} " in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.annualExemptAmount().url
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.AnnualExemptAmountController.annualExemptAmount().url
         }
       }
 
@@ -149,9 +149,9 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
         lazy val result = target.acquisitionDate(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${routes.CalculationController.otherProperties().url} " in {
+        s"have a 'Back' link to ${routes.OtherPropertiesController.otherProperties().url} " in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.otherProperties().url
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.OtherPropertiesController.otherProperties().url
         }
       }
 

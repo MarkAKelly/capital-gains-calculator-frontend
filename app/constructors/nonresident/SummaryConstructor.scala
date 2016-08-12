@@ -177,12 +177,12 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.otherProperties.question"),
               summary.otherPropertiesModel.otherProperties.toString,
-              Some(routes.CalculationController.otherProperties().toString())
+              Some(routes.OtherPropertiesController.otherProperties().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.annualExemptAmount.question"),
               "&pound;" + MoneyPounds(summary.annualExemptAmountModel.get.annualExemptAmount).quantity,
-              Some(routes.CalculationController.annualExemptAmount().toString())
+              Some(routes.AnnualExemptAmountController.annualExemptAmount().toString())
             )
           )
           case "No" => Array(
@@ -199,7 +199,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.otherProperties.question"),
               summary.otherPropertiesModel.otherProperties.toString,
-              Some(routes.CalculationController.otherProperties().toString())
+              Some(routes.OtherPropertiesController.otherProperties().toString())
             )
           )
         }
@@ -226,12 +226,12 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.otherProperties.questionTwo"),
                     "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
-                    Some(routes.CalculationController.otherProperties().toString())
+                    Some(routes.OtherPropertiesController.otherProperties().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.annualExemptAmount.question"),
                     "&pound;" + MoneyPounds(summary.annualExemptAmountModel.get.annualExemptAmount).quantity,
-                    Some(routes.CalculationController.annualExemptAmount().toString())
+                    Some(routes.AnnualExemptAmountController.annualExemptAmount().toString())
                   )
                 )
               case _ =>
@@ -249,12 +249,12 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.otherProperties.questionTwo"),
                     "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
-                    Some(routes.CalculationController.otherProperties().toString())
+                    Some(routes.OtherPropertiesController.otherProperties().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.annualExemptAmount.question"),
                     "&pound;" + MoneyPounds(summary.annualExemptAmountModel.get.annualExemptAmount).quantity,
-                    Some(routes.CalculationController.annualExemptAmount().toString())
+                    Some(routes.AnnualExemptAmountController.annualExemptAmount().toString())
                   )
                 )
             }
@@ -280,7 +280,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.otherProperties.question"),
                     summary.otherPropertiesModel.otherProperties.toString,
-                    Some(routes.CalculationController.otherProperties().toString())
+                    Some(routes.OtherPropertiesController.otherProperties().toString())
                   )
                 )
               case _ =>
@@ -298,7 +298,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.otherProperties.question"),
                     summary.otherPropertiesModel.otherProperties.toString,
-                    Some(routes.CalculationController.otherProperties().toString())
+                    Some(routes.OtherPropertiesController.otherProperties().toString())
                   )
                 )
             }
@@ -313,12 +313,12 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.otherProperties.question"),
               summary.otherPropertiesModel.otherProperties.toString,
-              Some(routes.CalculationController.otherProperties().toString())
+              Some(routes.OtherPropertiesController.otherProperties().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.annualExemptAmount.question"),
               "&pound;" + MoneyPounds(summary.annualExemptAmountModel.get.annualExemptAmount).quantity,
-              Some(routes.CalculationController.annualExemptAmount().toString())
+              Some(routes.AnnualExemptAmountController.annualExemptAmount().toString())
             )
           )
           case "No" => Array(
@@ -330,7 +330,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.otherProperties.question"),
               summary.otherPropertiesModel.otherProperties.toString,
-              Some(routes.CalculationController.otherProperties().toString())
+              Some(routes.OtherPropertiesController.otherProperties().toString())
             )
           )
         }
@@ -474,12 +474,12 @@ object SummaryConstructor {
         SummaryDataItemModel(
           Messages("calc.disposalDate.question"),
           Dates.datePageFormat.format(Dates.constructDate(summary.disposalDateModel.day, summary.disposalDateModel.month, summary.disposalDateModel.year)),
-          Some(routes.CalculationController.disposalDate().toString())
+          Some(routes.DisposalDateController.disposalDate().toString())
         ),
         SummaryDataItemModel(
           Messages("calc.disposalValue.question"),
           "&pound;" + MoneyPounds(summary.disposalValueModel.disposalValue).quantity,
-          Some(routes.CalculationController.disposalValue().toString())
+          Some(routes.DisposalValueController.disposalValue().toString())
         ),
         SummaryDataItemModel(
           Messages("calc.disposalCosts.question"),

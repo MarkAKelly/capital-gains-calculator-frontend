@@ -15,13 +15,13 @@
 
 @main_template(Messages("calc.annualExemptAmount.question"), sidebarLinks = Some(sidebar)) {
 
-    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.CalculationController.otherProperties">Back</a>
+    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.OtherPropertiesController.otherProperties">Back</a>
 
     @errorSummary(annualExemptAmountForm, "annual-exempt-amount")
 
     <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
 
-    @form(action = controllers.nonresident.routes.CalculationController.submitAnnualExemptAmount) {
+    @form(action = controllers.nonresident.routes.AnnualExemptAmountController.submitAnnualExemptAmount) {
 
         @formInputMoney(annualExemptAmountForm, "annualExemptAmount", Messages("calc.annualExemptAmount.question"))
 
