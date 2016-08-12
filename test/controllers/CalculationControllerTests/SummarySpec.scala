@@ -353,7 +353,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "the answer to the improvements question should be No and should link to the improvements page" in {
               document.body.getElementById("propertyDetails(0)").text shouldBe "No"
-              document.body().getElementById("propertyDetails(0)").attr("href") shouldEqual routes.CalculationController.improvements().toString()
+              document.body().getElementById("propertyDetails(0)").attr("href") shouldEqual routes.ImprovementsController.improvements().toString()
             }
           }
 

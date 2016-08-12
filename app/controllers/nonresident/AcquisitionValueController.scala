@@ -65,7 +65,7 @@ trait AcquisitionValueController extends FrontendController with ValidActiveSess
     def getRoute(date: AcquisitionDateModel) =
       if (!Dates.dateAfterStart(date.day.getOrElse(0), date.month.getOrElse(0), date.year.getOrElse(0)))
         Future.successful(Redirect(routes.CalculationController.rebasedValue()))
-      else Future.successful(Redirect(routes.CalculationController.improvements()))
+      else Future.successful(Redirect(routes.ImprovementsController.improvements()))
 
     acquisitionValueForm.bindFromRequest.fold(
       errors => errorAction(errors),

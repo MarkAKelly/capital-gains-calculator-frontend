@@ -432,19 +432,19 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.improvements.question"),
               summary.improvementsModel.isClaimingImprovements,
-              Some(routes.CalculationController.improvements().toString())
+              Some(routes.ImprovementsController.improvements().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.improvements.questionFour"),
               "&pound;" + MoneyPounds(summary.improvementsModel.improvementsAmtAfter.getOrElse(BigDecimal(0))).quantity,
-              Some(routes.CalculationController.improvements().toString())
+              Some(routes.ImprovementsController.improvements().toString())
             )
           )
           case _ => Array(
             SummaryDataItemModel(
               Messages("calc.improvements.question"),
               summary.improvementsModel.isClaimingImprovements,
-              Some(routes.CalculationController.improvements().toString())
+              Some(routes.ImprovementsController.improvements().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.improvements.questionTwo"),
@@ -452,7 +452,7 @@ object SummaryConstructor {
                 MoneyPounds(summary.improvementsModel.improvementsAmt.getOrElse(BigDecimal(0))
                   .+(summary.improvementsModel.improvementsAmtAfter.getOrElse(BigDecimal(0)))).quantity
               },
-              Some(routes.CalculationController.improvements().toString())
+              Some(routes.ImprovementsController.improvements().toString())
             )
           )
         }
@@ -461,7 +461,7 @@ object SummaryConstructor {
           SummaryDataItemModel(
             Messages("calc.improvements.question"),
             summary.improvementsModel.isClaimingImprovements,
-            Some(routes.CalculationController.improvements().toString())
+            Some(routes.ImprovementsController.improvements().toString())
           )
         )
       }

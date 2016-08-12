@@ -35,7 +35,7 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{ImprovementsController, routes}
 import models.nonresident.{AcquisitionDateModel, ImprovementsModel, RebasedValueModel}
 import play.api.mvc.Result
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
@@ -48,7 +48,7 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
                   postData: Option[ImprovementsModel],
                   acquisitionDateData: Option[AcquisitionDateModel],
                   rebasedValueData: Option[RebasedValueModel] = None
-                 ): CalculationController = {
+                 ): ImprovementsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -66,9 +66,8 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
     when(mockCalcConnector.saveFormData[ImprovementsModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new ImprovementsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
   }
 
