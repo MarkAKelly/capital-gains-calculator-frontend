@@ -35,8 +35,8 @@ GET         /acquisition-value                  controllers.nonresident.Acquisit
 POST        /acquisition-value                  controllers.nonresident.AcquisitionValueController.submitAcquisitionValue
 
 #Rebased Value
-GET         /rebased-value                      controllers.nonresident.CalculationController.rebasedValue
-POST        /rebased-value                      controllers.nonresident.CalculationController.submitRebasedValue
+GET         /rebased-value                      controllers.nonresident.RebasedValueController.rebasedValue
+POST        /rebased-value                      controllers.nonresident.RebasedValueController.submitRebasedValue
 
 #Rebased Costs
 GET         /rebased-costs                      controllers.nonresident.CalculationController.rebasedCosts

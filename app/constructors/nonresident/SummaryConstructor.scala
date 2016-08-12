@@ -351,7 +351,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.rebasedValue.questionTwo"),
               "&pound;" + MoneyPounds(summary.rebasedValueModel.get.rebasedValueAmt.get).quantity,
-              Some(routes.CalculationController.rebasedValue().toString())
+              Some(routes.RebasedValueController.rebasedValue().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.rebasedCosts.questionTwo"),
@@ -371,7 +371,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.rebasedValue.questionTwo"),
               "&pound;" + MoneyPounds(summary.rebasedValueModel.get.rebasedValueAmt.get).quantity,
-              Some(routes.CalculationController.rebasedValue().toString())
+              Some(routes.RebasedValueController.rebasedValue().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.rebasedCosts.questionTwo"),
