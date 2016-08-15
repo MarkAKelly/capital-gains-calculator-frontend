@@ -34,7 +34,7 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.nonresident.{CalculationController, CalculationElectionController, routes}
+import controllers.nonresident.{CalculationElectionController, routes}
 import models.nonresident.{CalculationElectionModel, CalculationResultModel, OtherReliefsModel, SummaryModel}
 import play.api.mvc.Result
 
