@@ -46,8 +46,10 @@ object CalculateRequestConstructor {
     s"&annualExemptAmount=${if (isUsingAnnualExemptAmount(answers.otherPropertiesModel, answers.allowableLossesModel, answers.allowableLossesValueModel)) {
       answers.annualExemptAmountModel.get.amount}
     else maxAEA}" +
-    s"&prrType=${answers.privateResidenceReliefModel.getOrElse(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)).prrClaiming}" +
-    s"${if (answers.privateResidenceReliefModel.get.prrClaiming.equals(PrivateResidenceReliefKeys.part)) {
+    s"&prrType=${
+      if (config.ApplicationConfig.featureRTTPRREnabled)answers.privateResidenceReliefModel.get.prrClaiming
+    else PrivateResidenceReliefKeys.none}" +
+    s"${if (config.ApplicationConfig.featureRTTPRREnabled &&answers.privateResidenceReliefModel.get.prrClaiming.equals(PrivateResidenceReliefKeys.part)) {
       s"&prrValue=${answers.privateResidenceReliefValueModel.get.amount}"
     } else ""}"
   }
