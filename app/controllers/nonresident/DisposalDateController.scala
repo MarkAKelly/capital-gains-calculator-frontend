@@ -16,6 +16,7 @@
 
 package controllers.nonresident
 
+import java.time.LocalDate
 import java.util.Date
 
 import common.{Dates, KeystoreKeys}
@@ -38,9 +39,9 @@ object DisposalDateController extends DisposalDateController {
 trait DisposalDateController extends FrontendController with ValidActiveSession {
 
   val calcConnector: CalculatorConnector
-  override val sessionTimeoutUrl = controllers.nonresident.routes.CalculationController.restart().url
+  override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
 
-  private def getAcquisitionDate(implicit hc: HeaderCarrier): Future[Option[Date]] =
+  private def getAcquisitionDate(implicit hc: HeaderCarrier): Future[Option[LocalDate]] =
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).map {
       case Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year))) => Some(Dates.constructDate(day, month, year))
       case _ => None
@@ -48,7 +49,7 @@ trait DisposalDateController extends FrontendController with ValidActiveSession 
 
   val disposalDate = ValidateSession.async { implicit request =>
 
-    def routeRequest(acquisitionDate: Option[Date]): Future[Result] = {
+    def routeRequest(acquisitionDate: Option[LocalDate]): Future[Result] = {
       calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.disposalDate).map {
         case Some(data) => Ok(calculation.nonresident.disposalDate(disposalDateForm(acquisitionDate).fill(data)))
         case None => Ok(calculation.nonresident.disposalDate(disposalDateForm(acquisitionDate)))
@@ -74,7 +75,7 @@ trait DisposalDateController extends FrontendController with ValidActiveSession 
       }
     }
 
-    def routeRequest(acquisitionDate: Option[Date]): Future[Result] = disposalDateForm(acquisitionDate).bindFromRequest.fold(errorAction, successAction)
+    def routeRequest(acquisitionDate: Option[LocalDate]): Future[Result] = disposalDateForm(acquisitionDate).bindFromRequest.fold(errorAction, successAction)
 
     for {
       acquisitionDate <- getAcquisitionDate

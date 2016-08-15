@@ -33,7 +33,7 @@ object RebasedCostsController extends RebasedCostsController {
 
 trait RebasedCostsController extends FrontendController with ValidActiveSession {
 
-  override val sessionTimeoutUrl = controllers.nonresident.routes.CalculationController.restart().url
+  override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   val calcConnector: CalculatorConnector
 
   val rebasedCosts = ValidateSession.async { implicit request =>

@@ -22,12 +22,7 @@ case class AcquisitionDateModel (
                                   hasAcquisitionDate: String,
                                   day: Option[Int],
                                   month: Option[Int],
-                                  year: Option[Int]){
-  val date = (hasAcquisitionDate, day, month, year) match {
-    case ("Yes", Some(d), Some(m), Some(y)) => Some(common.Dates.constructDate(d, m, y))
-    case _ => None
-  }
-}
+                                  year: Option[Int])
 
 object AcquisitionDateModel {
   implicit val format = Json.format[AcquisitionDateModel]

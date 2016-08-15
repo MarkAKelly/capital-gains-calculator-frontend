@@ -23,18 +23,16 @@ import play.api.i18n.Messages
 
 object CalculationElectionForm {
 
-  def validate(calculationElection: String): Option[CalculationElectionModel] = {
-    calculationElection match {
-      case "flat" => Some(CalculationElectionModel(calculationElection))
-      case "time" => Some(CalculationElectionModel(calculationElection))
-      case "rebased" => Some(CalculationElectionModel(calculationElection))
-      case _ => None
-    }
+  def validate: String => Boolean = calculationElection => calculationElection match {
+    case "flat" => true
+    case "time" => true
+    case "rebased" => true
+    case _ => false
   }
 
   val calculationElectionForm = Form(
     mapping(
-      "calculationElection" -> text.verifying(Messages("calc.base.optionReqError"), calculationElection => validate(calculationElection).isDefined)
+      "calculationElection" -> text.verifying(Messages("calc.base.optionReqError"), validate)
     )(CalculationElectionModel.apply)(CalculationElectionModel.unapply)
   )
 

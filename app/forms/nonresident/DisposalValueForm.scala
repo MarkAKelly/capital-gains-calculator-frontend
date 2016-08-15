@@ -29,9 +29,10 @@ object DisposalValueForm {
   val disposalValueForm = Form(
     mapping(
       "disposalValue" -> bigDecimal
-        .verifying(Messages("calc.disposalValue.errorNegative"), disposalValue => isPositive(disposalValue))
-        .verifying(Messages("calc.disposalValue.errorDecimalPlaces"), disposalValue => isMaxTwoDecimalPlaces(disposalValue))
-        .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"), disposalValue => isLessThanEqualMaxNumeric(disposalValue))
+        .verifying(Messages("calc.disposalValue.errorNegative"), isPositive)
+        .verifying(Messages("calc.disposalValue.errorDecimalPlaces"), decimalPlacesCheck)
+        .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " +
+          Messages("calc.common.error.maxNumericExceeded.OrLess"), maxCheck)
     )(DisposalValueModel.apply)(DisposalValueModel.unapply)
   )
 }

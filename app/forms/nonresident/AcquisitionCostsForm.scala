@@ -29,10 +29,10 @@ object AcquisitionCostsForm {
   val acquisitionCostsForm = Form(
     mapping(
       "acquisitionCosts" -> bigDecimal
-        .verifying(Messages("calc.acquisitionCosts.errorNegative"), costs => isPositive(costs))
-        .verifying(Messages("calc.acquisitionCosts.errorDecimalPlaces"), costs => isMaxTwoDecimalPlaces(costs))
-        .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"),
-          costs => isLessThanEqualMaxNumeric(costs))
+        .verifying(Messages("calc.acquisitionCosts.errorNegative"), isPositive)
+        .verifying(Messages("calc.acquisitionCosts.errorDecimalPlaces"), decimalPlacesCheck)
+        .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " +
+          Messages("calc.common.error.maxNumericExceeded.OrLess"), maxCheck)
     )(AcquisitionCostsModel.apply)(AcquisitionCostsModel.unapply)
   )
 

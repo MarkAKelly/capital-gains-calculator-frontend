@@ -16,8 +16,7 @@
 
 package forms.nonresident
 
-import java.util.Date
-
+import java.time.LocalDate
 import common.Dates._
 import common.Validation._
 import models.nonresident.DisposalDateModel
@@ -27,12 +26,12 @@ import play.api.i18n.Messages
 
 object DisposalDateForm {
 
-  def isAfterAcquisitionDate(day: Int, month: Int, year: Int, acquisitionDate: Option[Date]): Boolean = acquisitionDate match {
-    case Some(acquisitionDateValue) => constructDate(day,month,year).after(acquisitionDateValue)
+  def isAfterAcquisitionDate(day: Int, month: Int, year: Int, acquisitionDate: Option[LocalDate]): Boolean = acquisitionDate match {
+    case Some(acquisitionDateValue) => constructDate(day,month,year).isAfter(acquisitionDateValue)
     case _ => true
   }
 
-  def disposalDateForm(acquisitionDate: Option[Date]): Form[DisposalDateModel] = Form(
+  def disposalDateForm(acquisitionDate: Option[LocalDate]): Form[DisposalDateModel] = Form(
     mapping(
       "disposalDateDay" -> number,
       "disposalDateMonth" -> number,

@@ -16,15 +16,12 @@
 
 package constructors.resident.properties
 
-import java.text.SimpleDateFormat
-
+import common.Dates._
 import common.resident.PrivateResidenceReliefKeys
 import models.resident._
 import models.resident.properties.{ChargeableGainAnswers, PrivateResidenceReliefModel, YourAnswersSummaryModel}
 
 object CalculateRequestConstructor {
-
-  val format = new SimpleDateFormat("yyyy-MM-dd")
 
   def totalGainRequestString (answers: YourAnswersSummaryModel): String = {
       s"?disposalValue=${answers.disposalValue}" +
@@ -32,7 +29,7 @@ object CalculateRequestConstructor {
       s"&acquisitionValue=${answers.acquisitionValue}" +
       s"&acquisitionCosts=${answers.acquisitionCosts}" +
       s"&improvements=${answers.improvements}" +
-      s"&disposalDate=${format.format(answers.disposalDate)}"
+      s"&disposalDate=${answers.disposalDate.format(requestFormatter)}"
   }
 
   def chargeableGainRequestString (answers: ChargeableGainAnswers, maxAEA: BigDecimal): String = {
