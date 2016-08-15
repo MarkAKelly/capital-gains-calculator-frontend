@@ -270,4 +270,24 @@ class CalculateRequestConstructorSpec extends UnitSpec {
     }
   }
 
+  "Calling isClaimingPrrRebased" should {
+
+    "return a value of 'Yes'" in {
+      val model = PrivateResidenceReliefModel("Yes", None, None)
+      val result = CalculateRequestConstructor.isClaimingPrrRebased(Some(model))
+      result shouldBe "&isClaimingPRR=Yes"
+    }
+
+    "return a value of 'No' when given by the user" in {
+      val model = PrivateResidenceReliefModel("No", None, None)
+      val result = CalculateRequestConstructor.isClaimingPrrRebased(Some(model))
+      result shouldBe "&isClaimingPRR=No"
+    }
+
+    "return a value of 'No' when no PRR is available" in {
+      val result = CalculateRequestConstructor.isClaimingPrrRebased(None)
+      result shouldBe "&isClaimingPRR=No"
+    }
+  }
+
 }

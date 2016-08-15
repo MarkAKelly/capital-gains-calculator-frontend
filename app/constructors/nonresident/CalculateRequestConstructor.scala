@@ -110,12 +110,7 @@ object CalculateRequestConstructor {
       revaluationCost(input.rebasedCostsModel.get) +
       rebasedReliefs(input.otherReliefsModelRebased.otherReliefs) +
       privateResidenceReliefRebased(input) +
-      s"&isClaimingPRR=${
-        input.privateResidenceReliefModel match {
-          case Some(PrivateResidenceReliefModel("Yes", claimed, after)) => "Yes"
-          case _ => "No"
-        }
-      }"
+      isClaimingPrrRebased(input.privateResidenceReliefModel)
   }
 
   def rebasedImprovements(improvementsModel: ImprovementsModel): String = {
@@ -138,6 +133,13 @@ object CalculateRequestConstructor {
 
   def rebasedReliefs(reliefsValue: Option[BigDecimal]): String = {
     s"&reliefs=${reliefsValue.getOrElse(0)}"
+  }
+
+  def isClaimingPrrRebased(privateResidenceReliefModel: Option[PrivateResidenceReliefModel]): String = {
+    s"&isClaimingPRR=${
+      if (privateResidenceReliefModel.isDefined) privateResidenceReliefModel.get.isClaimingPRR
+      else "No"
+    }"
   }
 
   def improvements(input: SummaryModel) = s"&improvementsAmt=${
