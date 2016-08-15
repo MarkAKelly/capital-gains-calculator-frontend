@@ -252,4 +252,22 @@ class CalculateRequestConstructorSpec extends UnitSpec {
     }
   }
 
+  "Calling rebasedReliefs" should {
+
+    "return a value of 10000" in {
+      val result = CalculateRequestConstructor.rebasedReliefs(Some(10000))
+      result shouldBe "&reliefs=10000"
+    }
+
+    "return a value of 2000" in {
+      val result = CalculateRequestConstructor.rebasedReliefs(Some(2000))
+      result shouldBe "&reliefs=2000"
+    }
+
+    "return a value of 0" in {
+      val result = CalculateRequestConstructor.rebasedReliefs(None)
+      result shouldBe "&reliefs=0"
+    }
+  }
+
 }
