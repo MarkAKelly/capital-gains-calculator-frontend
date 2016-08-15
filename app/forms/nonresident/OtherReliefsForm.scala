@@ -26,11 +26,9 @@ import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object OtherReliefsForm {
 
-  def validateReliefSupplied(data: OtherReliefsModel) = {
-    data.isClaimingOtherReliefs match {
-      case Some("Yes") => data.otherReliefs.isDefined
-      case _ => true
-    }
+  def validateReliefSupplied: OtherReliefsModel => Boolean = data => data.isClaimingOtherReliefs match {
+    case Some("Yes") => data.otherReliefs.isDefined
+    case _ => true
   }
 
   def otherReliefsForm (electionMade: Boolean): Form[OtherReliefsModel] = Form (

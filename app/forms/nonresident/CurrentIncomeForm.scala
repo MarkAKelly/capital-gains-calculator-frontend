@@ -30,9 +30,10 @@ object CurrentIncomeForm {
   val currentIncomeForm = Form(
     mapping(
       "currentIncome" -> bigDecimal
-        .verifying(Messages("calc.currentIncome.errorNegative"), currentIncome => isPositive(currentIncome))
-        .verifying(Messages("calc.currentIncome.errorDecimalPlaces"), currentIncome => isMaxTwoDecimalPlaces(currentIncome))
-        .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"), currentIncome => isLessThanEqualMaxNumeric(currentIncome))
+        .verifying(Messages("calc.currentIncome.errorNegative"), isPositive)
+        .verifying(Messages("calc.currentIncome.errorDecimalPlaces"), isMaxTwoDecimalPlaces)
+        .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " +
+          Messages("calc.common.error.maxNumericExceeded.OrLess"), isLessThanEqualMaxNumeric)
     )(CurrentIncomeModel.apply)(CurrentIncomeModel.unapply)
   )
 }

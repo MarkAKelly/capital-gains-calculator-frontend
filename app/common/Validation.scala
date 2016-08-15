@@ -32,15 +32,15 @@ object Validation {
     }
   }
 
-  def isMaxTwoDecimalPlaces(amount: BigDecimal): Boolean = if (amount.scale <= 2) true else false
+  def isMaxTwoDecimalPlaces: BigDecimal => Boolean = amount => amount.scale <= 2
 
-  def hasNoDecimalPlaces (amount: BigDecimal): Boolean = if (amount.scale <= 0) true else false
+  def hasNoDecimalPlaces: BigDecimal => Boolean = amount => amount.scale <= 0
 
-  def isPositive(amount: BigDecimal): Boolean = if (amount >= 0) true else false
+  def isPositive: BigDecimal => Boolean = amount => amount >= 0
 
-  def isGreaterThanZero (amount: BigDecimal): Boolean = if (amount > 0) true else false
+  def isGreaterThanZero: BigDecimal => Boolean = amount => amount > 0
 
-  def isLessThanEqualMaxNumeric(amount: BigDecimal): Boolean = amount <= Constants.maxNumeric
+  def isLessThanEqualMaxNumeric: BigDecimal => Boolean = amount => amount <= Constants.maxNumeric
 
   def isNotEmpty (input: String): Boolean = !input.isEmpty
 
