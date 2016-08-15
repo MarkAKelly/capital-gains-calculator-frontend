@@ -350,4 +350,25 @@ class CalculateRequestConstructorSpec extends UnitSpec {
       result shouldBe "&disposalCosts=2000"
     }
   }
+
+  "Calling allowableLossesAmount" should {
+
+    "return a value of 10000" in {
+      val model = AllowableLossesModel("Yes", Some(BigDecimal(10000)))
+      val result = CalculateRequestConstructor.allowableLossesAmount(model)
+      result shouldBe "&allowableLossesAmt=10000"
+    }
+
+    "return a value of 2000" in {
+      val model = AllowableLossesModel("Yes", Some(BigDecimal(2000)))
+      val result = CalculateRequestConstructor.allowableLossesAmount(model)
+      result shouldBe "&allowableLossesAmt=2000"
+    }
+
+    "return a value of 0" in {
+      val model = AllowableLossesModel("No", None)
+      val result = CalculateRequestConstructor.allowableLossesAmount(model)
+      result shouldBe "&allowableLossesAmt=0"
+    }
+  }
 }

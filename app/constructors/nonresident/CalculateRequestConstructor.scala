@@ -33,12 +33,8 @@ object CalculateRequestConstructor {
     personalAllowanceAmount(input.customerTypeModel.customerType, input.personalAllowanceModel) +
     disposalValue(input.disposalValueModel.disposalValue) +
     disposalCosts(input.disposalCostsModel.disposalCosts) +
-    s"&allowableLossesAmt=${
-      input.allowableLossesModel.isClaimingAllowableLosses match {
-        case "Yes" => input.allowableLossesModel.allowableLossesAmt.get
-        case "No" => 0
-      }
-    }&disposalDate=${
+    allowableLossesAmount(input.allowableLossesModel) +
+    s"&disposalDate=${
       input.disposalDateModel.year
     }-${input.disposalDateModel.month}-${
       input.disposalDateModel.day
@@ -79,6 +75,13 @@ object CalculateRequestConstructor {
   def disposalValue(disposalValue: BigDecimal): String = s"&disposalValue=$disposalValue"
 
   def disposalCosts(disposalCosts: BigDecimal): String = s"&disposalCosts=$disposalCosts"
+
+  def allowableLossesAmount(allowableLossesModel: AllowableLossesModel): String = {
+    s"&allowableLossesAmt=${
+      if (allowableLossesModel.isClaimingAllowableLosses.equals("Yes")) allowableLossesModel.allowableLossesAmt.get
+      else "0"
+    }"
+  }
 
   def flatCalcUrlExtra(input: SummaryModel): String = {
     s"${
