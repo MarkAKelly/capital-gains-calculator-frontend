@@ -191,4 +191,46 @@ class CalculateRequestConstructorSpec extends UnitSpec {
 
   }
 
+  "Calling flatReliefs" should {
+
+    "return a value of 10000" in {
+      val result = CalculateRequestConstructor.flatReliefs(Some(10000))
+      result shouldBe "&reliefs=10000"
+    }
+
+    "return a value of 2000" in {
+      val result = CalculateRequestConstructor.flatReliefs(Some(2000))
+      result shouldBe "&reliefs=2000"
+    }
+
+    "return a value of 0" in {
+      val result = CalculateRequestConstructor.flatReliefs(None)
+      result shouldBe "&reliefs=0"
+    }
+  }
+
+  "Calling flatAcquisitionDate" should {
+
+    "return a value of 2015-10-5" in {
+      val model = AcquisitionDateModel("Yes", Some(5), Some(10), Some(2015))
+      val answer = "&isClaimingPRR=Yes"
+      val result = CalculateRequestConstructor.flatAcquisitionDate(answer, model)
+      result shouldBe "&acquisitionDate=2015-10-5"
+    }
+
+    "return a value of 2017-8-9" in {
+      val model = AcquisitionDateModel("Yes", Some(9), Some(8), Some(2017))
+      val answer = "&isClaimingPRR=Yes"
+      val result = CalculateRequestConstructor.flatAcquisitionDate(answer, model)
+      result shouldBe "&acquisitionDate=2017-8-9"
+    }
+
+    "return an empty string" in {
+      val model = AcquisitionDateModel("No", None, None, None)
+      val answer = "&isClaimingPRR=No"
+      val result = CalculateRequestConstructor.flatAcquisitionDate(answer, model)
+      result shouldBe ""
+    }
+  }
+
 }
