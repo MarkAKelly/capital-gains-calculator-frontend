@@ -231,4 +231,25 @@ class CalculateRequestConstructorSpec extends UnitSpec {
     }
   }
 
+  "Calling revaluationCost" should {
+
+    "return a value of 10000" in {
+      val model = RebasedCostsModel("Yes", Some(10000))
+      val result = CalculateRequestConstructor.revaluationCost(model)
+      result shouldBe "&revaluationCost=10000"
+    }
+
+    "return a value of 2000" in {
+      val model = RebasedCostsModel("Yes", Some(2000))
+      val result = CalculateRequestConstructor.revaluationCost(model)
+      result shouldBe "&revaluationCost=2000"
+    }
+
+    "return a value of 0" in {
+      val model = RebasedCostsModel("No", None)
+      val result = CalculateRequestConstructor.revaluationCost(model)
+      result shouldBe "&revaluationCost=0"
+    }
+  }
+
 }
