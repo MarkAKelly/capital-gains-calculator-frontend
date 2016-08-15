@@ -3,14 +3,14 @@
 @import views.html.helpers._
 @import views.html.calculation.resident._
 
-@(annualExemptAmountForm: Form[AnnualExemptAmountModel], backLink: Option[String], postAction: Call, homeLink: String)(implicit request: Request[_])
+@(annualExemptAmountForm: Form[AnnualExemptAmountModel], backLink: Option[String], postAction: Call, homeLink: String, journey: String)(implicit request: Request[_])
 
 @import views.html.helpers._
 
 @sidebar = {
 
 <a id="annualExemptAmountLink" class="external-link" rel="external" href="https://www.gov.uk/capital-gains-tax/allowances"
-   target="_blank" data-journey-click="help:govUK:allowances">
+   target="_blank" data-journey-click="help:govUK:rtt-@{journey}-allowances">
     @Messages("calc.resident.annualExemptAmount.link.one")
     <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
 </a>

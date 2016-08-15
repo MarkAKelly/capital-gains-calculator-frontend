@@ -34,6 +34,7 @@ object DisposalValueController extends DisposalValueController {
 trait DisposalValueController extends FrontendController with ValidActiveSession {
 
   val calcConnector: CalculatorConnector
+  override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
 
   val disposalValue = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.disposalValue).map {

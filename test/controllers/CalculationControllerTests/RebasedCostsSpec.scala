@@ -21,7 +21,6 @@ import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.CalculationElectionConstructor
-import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import play.api.i18n.Messages
@@ -34,7 +33,7 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{RebasedCostsController, routes}
 import models.nonresident.RebasedCostsModel
 import play.api.mvc.Result
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
@@ -43,7 +42,7 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget(getData: Option[RebasedCostsModel], postData: Option[RebasedCostsModel]): CalculationController = {
+  def setupTarget(getData: Option[RebasedCostsModel], postData: Option[RebasedCostsModel]): RebasedCostsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -55,9 +54,8 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
     when(mockCalcConnector.saveFormData[RebasedCostsModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new RebasedCostsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
   }
 
@@ -103,9 +101,9 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
           document.body.getElementById("hidden").html should include ("input")
         }
 
-        s"have a 'Back' link to ${routes.CalculationController.rebasedValue}" in {
+        s"have a 'Back' link to ${routes.RebasedValueController.rebasedValue()}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.rebasedValue.toString()
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.RebasedValueController.rebasedValue().toString()
         }
 
         "have a continue button" in {
@@ -229,7 +227,7 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
     "submitting a value which exceeds the maximum numeric" should {
 
-      lazy val result = executeTargetWithMockData("Yes", Constants.maxNumeric+0.01.toString())
+      lazy val result = executeTargetWithMockData("Yes", (Constants.maxNumeric + 0.01).toString)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {

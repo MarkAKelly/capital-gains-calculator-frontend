@@ -78,7 +78,7 @@ trait AllowableLossesController extends FrontendController with ValidActiveSessi
                   Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
                 case _ =>
                   calcConnector.saveFormData(KeystoreKeys.calculationElection, CalculationElectionModel("flat"))
-                  Future.successful(Redirect(routes.CalculationController.otherReliefs()))
+                  Future.successful(Redirect(routes.OtherReliefsController.otherReliefs()))
               }
           }
         }

@@ -221,7 +221,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.personalAllowance.question"),
                     "&pound;" + MoneyPounds(summary.personalAllowanceModel.get.personalAllowanceAmt).quantity,
-                    Some(routes.CalculationController.personalAllowance().toString())
+                    Some(routes.PersonalAllowanceController.personalAllowance().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.otherProperties.questionTwo"),
@@ -275,7 +275,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.personalAllowance.question"),
                     "&pound;" + MoneyPounds(summary.personalAllowanceModel.get.personalAllowanceAmt).quantity,
-                    Some(routes.CalculationController.personalAllowance().toString())
+                    Some(routes.PersonalAllowanceController.personalAllowance().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.otherProperties.question"),
@@ -351,7 +351,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.rebasedValue.questionTwo"),
               "&pound;" + MoneyPounds(summary.rebasedValueModel.get.rebasedValueAmt.get).quantity,
-              Some(routes.CalculationController.rebasedValue().toString())
+              Some(routes.RebasedValueController.rebasedValue().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.rebasedCosts.questionTwo"),
@@ -359,7 +359,7 @@ object SummaryConstructor {
                 case "Yes" => MoneyPounds(summary.rebasedCostsModel.get.rebasedCosts.get).quantity
                 case "No" => "0.00"
               }),
-              Some(routes.CalculationController.rebasedCosts().toString())
+              Some(routes.RebasedCostsController.rebasedCosts().toString())
             )
           )
           case "No" => Array(
@@ -371,7 +371,7 @@ object SummaryConstructor {
             SummaryDataItemModel(
               Messages("calc.rebasedValue.questionTwo"),
               "&pound;" + MoneyPounds(summary.rebasedValueModel.get.rebasedValueAmt.get).quantity,
-              Some(routes.CalculationController.rebasedValue().toString())
+              Some(routes.RebasedValueController.rebasedValue().toString())
             ),
             SummaryDataItemModel(
               Messages("calc.rebasedCosts.questionTwo"),
@@ -379,7 +379,7 @@ object SummaryConstructor {
                 case "Yes" => MoneyPounds(summary.rebasedCostsModel.get.rebasedCosts.get).quantity
                 case "No" => "0.00"
               }),
-              Some(routes.CalculationController.rebasedCosts().toString())
+              Some(routes.RebasedCostsController.rebasedCosts().toString())
             )
           )
         }
@@ -515,7 +515,7 @@ object SummaryConstructor {
                   case Some(data) => summary.otherReliefsModelFlat.isClaimingOtherReliefs.get
                   case None => "No"
                 },
-                Some(routes.CalculationController.otherReliefs().toString())
+                Some(routes.OtherReliefsController.otherReliefs().toString())
               )
             case Some("Yes") => SummaryDataItemModel(
               Messages("calc.otherReliefs.question"),
@@ -523,7 +523,7 @@ object SummaryConstructor {
                 case Some(data) => MoneyPounds(data).quantity
                 case None => "0.00"
               }),
-              Some(routes.CalculationController.otherReliefs().toString()))
+              Some(routes.OtherReliefsController.otherReliefs().toString()))
             case _ => SummaryDataItemModel(
               Messages("calc.otherReliefs.question"),
               "&pound;" + (summary.otherReliefsModelFlat.otherReliefs match {
@@ -552,7 +552,7 @@ object SummaryConstructor {
               case Some(data) => MoneyPounds(data).quantity
               case None => "0.00"
             }),
-            Some(routes.CalculationController.otherReliefsTA().toString())
+            Some(routes.OtherReliefsTAController.otherReliefsTA().toString())
           )
         )
         case "rebased" => Array(
