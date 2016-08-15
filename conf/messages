@@ -405,7 +405,7 @@ calc.resident.reliefs.helpButton = What are Capital Gains Tax reliefs?
 ## No PRR Reliefs messages
 calc.resident.reliefsNoPrr.title = Do you want to claim any tax reliefs on your total gain of £{0}?
 calc.resident.reliefsNoPrr.question = Do you want to claim any tax reliefs on your total gain of £{0}?
-calc.resident.reliefsNoPrr.helpText = For example, lettings relief
+calc.resident.reliefsNoPrr.helpText = For example, Private Residence Relief
 calc.resident.reliefsNoPrr.additionalContent.one = Capital Gains Tax reliefs can lower the amount of tax you owe. For example, you might be able to claim
 calc.resident.reliefsNoPrr.link.one = Private Residence Relief
 calc.resident.reliefsNoPrr.link.two = Lettings Relief

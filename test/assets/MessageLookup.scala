@@ -172,6 +172,7 @@ object MessageLookup {
     val questionSummaryNoPrr = "Do you want to claim any tax reliefs on your total gain of £50,000?"
     def questionNoPrr(input: String = "100") = s"Do you want to claim any tax reliefs on your total gain of £$input?"
     val helpButton = "What are Capital Gains Tax reliefs?"
+    val helpNoPrr = "For example, Private Residence Relief"
   }
 
   //Reliefs Value messages
