@@ -206,4 +206,22 @@ class CalculateRequestConstructorSpec extends UnitSpec {
     }
   }
 
+  "Calling taReliefs" should {
+
+    "return a value of 10000" in {
+      val result = CalculateRequestConstructor.taReliefs(Some(10000))
+      result shouldBe "&reliefs=10000"
+    }
+
+    "return a value of 2000" in {
+      val result = CalculateRequestConstructor.taReliefs(Some(2000))
+      result shouldBe "&reliefs=2000"
+    }
+
+    "return a value of 0" in {
+      val result = CalculateRequestConstructor.taReliefs(None)
+      result shouldBe "&reliefs=0"
+    }
+  }
+
 }
