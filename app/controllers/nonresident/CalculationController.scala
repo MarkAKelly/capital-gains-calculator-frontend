@@ -16,16 +16,15 @@
 
 package controllers.nonresident
 
+import java.time.LocalDate
 import common.{Dates, KeystoreKeys}
 import forms.nonresident.OtherReliefsForm._
 import forms.nonresident.PersonalAllowanceForm._
 import forms.nonresident.RebasedValueForm._
 import java.util.{Date, UUID}
-
 import play.api.mvc.{Action, AnyContent, Result}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
-
 import scala.concurrent.Future
 import views.html._
 import common.DefaultRoutes._
@@ -41,7 +40,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   val calcElectionConstructor: CalculationElectionConstructor
 
   //################### Shared/Common methods #######################
-  def getAcquisitionDate(implicit hc: HeaderCarrier): Future[Option[Date]] =
+  def getAcquisitionDate(implicit hc: HeaderCarrier): Future[Option[LocalDate]] =
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).map {
       case Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year))) => Some(Dates.constructDate(day, month, year))
       case _ => None

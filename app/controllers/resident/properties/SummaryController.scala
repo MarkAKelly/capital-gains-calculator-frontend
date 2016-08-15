@@ -16,9 +16,8 @@
 
 package controllers.resident.properties
 
-import java.text.SimpleDateFormat
-import java.util.Date
-
+import common.Dates._
+import java.time.LocalDate
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
@@ -81,10 +80,7 @@ trait SummaryController extends FeatureLock {
       else Future.successful(None)
     }
 
-    def getTaxYear(disposalDate: Date): Future[Option[TaxYearModel]] = {
-      val formats = new SimpleDateFormat("yyyy-MM-dd")
-      calculatorConnector.getTaxYear(formats.format(disposalDate))
-    }
+    def getTaxYear(disposalDate: LocalDate): Future[Option[TaxYearModel]] = calculatorConnector.getTaxYear(disposalDate.format(requestFormatter))
 
     def routeRequest(totalGainAnswers: YourAnswersSummaryModel,
                      grossGain: BigDecimal,
