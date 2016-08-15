@@ -20,7 +20,7 @@ import assets.MessageLookup
 import common.Constants
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
-import controllers.nonresident.{AcquisitionCostsController, CalculationController, routes}
+import controllers.nonresident.{AcquisitionCostsController, routes}
 import models.nonresident.AcquisitionCostsModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers

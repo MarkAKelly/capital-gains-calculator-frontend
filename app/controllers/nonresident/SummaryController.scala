@@ -16,69 +16,27 @@
 
 package controllers.nonresident
 
-import java.time.LocalDate
-import common.{Dates, KeystoreKeys}
-import forms.nonresident.OtherReliefsForm._
-import forms.nonresident.PersonalAllowanceForm._
-import forms.nonresident.RebasedValueForm._
-import java.util.{Date, UUID}
-import play.api.mvc.{Action, AnyContent, Result}
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
-import scala.concurrent.Future
-import views.html._
 import common.DefaultRoutes._
+import common.{Dates, KeystoreKeys}
 import connectors.CalculatorConnector
-import constructors.nonresident.CalculationElectionConstructor
 import controllers.predicates.ValidActiveSession
-import models.nonresident._
+import models.nonresident.{AcquisitionDateModel, RebasedValueModel}
+import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.play.http.HeaderCarrier
+import views.html.calculation
 
-trait CalculationController extends FrontendController with ValidActiveSession {
+import scala.concurrent.Future
 
-  override val sessionTimeoutUrl = controllers.nonresident.routes.CalculationController.restart().url
+object SummaryController extends SummaryController {
+  val calcConnector = CalculatorConnector
+}
+
+trait SummaryController extends FrontendController with ValidActiveSession {
+
+  override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   val calcConnector: CalculatorConnector
-  val calcElectionConstructor: CalculationElectionConstructor
 
-  //################### Shared/Common methods #######################
-  def getAcquisitionDate(implicit hc: HeaderCarrier): Future[Option[LocalDate]] =
-    calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).map {
-      case Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year))) => Some(Dates.constructDate(day, month, year))
-      case _ => None
-    }
-
-  //################### Disabled Trustee methods #######################
-
-  //################### Personal Allowance methods #######################
-  
-  //################### Other Properties methods #######################
-
-  //################### Rebased value methods #######################
-
-  //################### Rebased costs methods #######################
-
-  //################### Improvements methods #######################
-
-  //################### Disposal Date methods #######################
-
-  //################### No Capital Gains Tax #######################
-
-  //################### Disposal Value methods #######################
-
-  //################### Disposal Costs methods #######################
-
-  //################### Private Residence Relief methods #######################
-
-  //################### Allowable Losses methods #######################
-
-  //################### Other Reliefs with no calc selection methods (flat) #######################
-
-  //################### Flat Other Reliefs methods #######################
-
-  //################### Time Apportioned Other Reliefs methods #######################
-
-  //################### Rebased Other Reliefs methods #######################
-
-  //################### Summary Methods ##########################
   def summaryBackUrl(implicit hc: HeaderCarrier): Future[String] = {
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
       case Some(AcquisitionDateModel("Yes", day, month, year)) if Dates.dateAfterStart(day.get, month.get, year.get) =>
@@ -121,9 +79,4 @@ trait CalculationController extends FrontendController with ValidActiveSession {
     calcConnector.clearKeystore(hc)
     Future.successful(Redirect(routes.CustomerTypeController.customerType()))
   }
-}
-
-object CalculationController extends CalculationController {
-  val calcConnector = CalculatorConnector
-  val calcElectionConstructor = CalculationElectionConstructor
 }

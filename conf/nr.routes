@@ -94,6 +94,6 @@ POST        /other-reliefs-rebased              controllers.nonresident.OtherRel
 
 #Summary screen route
 ########################################################
-GET         /summary                            controllers.nonresident.CalculationController.summary
-GET         /restart                            controllers.nonresident.CalculationController.restart
+GET         /summary                            controllers.nonresident.SummaryController.summary
+GET         /restart                            controllers.nonresident.SummaryController.restart
 ########################################################
