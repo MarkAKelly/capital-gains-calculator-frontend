@@ -17,6 +17,7 @@
 package controllers.resident.shares
 
 import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
+import common.resident.JourneyKeys
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import models.resident._
@@ -408,8 +409,8 @@ trait DeductionsController extends FeatureLock {
   val annualExemptAmount = FeatureLockForRTTShares.async { implicit request =>
     def routeRequest(backLink: Option[String]) = {
       calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](keystoreKeys.annualExemptAmount).map {
-        case Some(data) => Ok(commonViews.annualExemptAmount(annualExemptAmountForm().fill(data), backLink, annualExemptAmountPostAction, homeLink))
-        case None => Ok(commonViews.annualExemptAmount(annualExemptAmountForm(), backLink, annualExemptAmountPostAction, homeLink))
+        case Some(data) => Ok(commonViews.annualExemptAmount(annualExemptAmountForm().fill(data), backLink, annualExemptAmountPostAction, homeLink, JourneyKeys.shares))
+        case None => Ok(commonViews.annualExemptAmount(annualExemptAmountForm(), backLink, annualExemptAmountPostAction, homeLink, JourneyKeys.shares))
       }
     }
 
@@ -435,7 +436,7 @@ trait DeductionsController extends FeatureLock {
 
     def routeRequest(maxAEA: BigDecimal, backLink: Option[String]): Future[Result] = {
       annualExemptAmountForm(maxAEA).bindFromRequest.fold(
-        errors => Future.successful(BadRequest(commonViews.annualExemptAmount(errors, backLink, annualExemptAmountPostAction, homeLink))),
+        errors => Future.successful(BadRequest(commonViews.annualExemptAmount(errors, backLink, annualExemptAmountPostAction, homeLink, JourneyKeys.shares))),
         success => {
           for {
             save <- calcConnector.saveFormData(keystoreKeys.annualExemptAmount, success)

@@ -5,14 +5,14 @@
 @import views.html.calculation.resident._
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-@(personalAllowanceForm: Form[PersonalAllowanceModel], taxYear: TaxYearModel, standardPA: BigDecimal, homeLink: String, postAction: Call, backLink: Option[String])(implicit request: Request[_])
+@(personalAllowanceForm: Form[PersonalAllowanceModel], taxYear: TaxYearModel, standardPA: BigDecimal, homeLink: String, postAction: Call, backLink: Option[String], journey: String)(implicit request: Request[_])
 
 @import views.html.helpers._
 
 @sidebar = {
 
     <a id="personalAllowanceLink" class="external-link" rel="external" href="https://www.gov.uk/income-tax-rates/current-rates-and-allowances"
-       target="_blank" data-journey-click="help:govUK:currentRatesAndAllowances">
+       target="_blank" data-journey-click="help:govUK:rtt-@{journey}-currentRatesAndAllowances">
         @Messages("calc.resident.personalAllowance.link.one")
         <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
     </a>

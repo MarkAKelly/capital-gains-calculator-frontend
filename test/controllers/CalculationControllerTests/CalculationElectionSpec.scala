@@ -73,11 +73,11 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
     when(mockCalcElectionConstructor.generateElection(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any()))
       .thenReturn(Seq(
         ("flat", "8000.00", "flat calculation",
-          None, routes.CalculationController.otherReliefs().toString(), flatReliefs),
+          None, routes.OtherReliefsController.otherReliefs().toString(), flatReliefs),
         ("time", "8000.00", "time apportioned calculation",
-          Some(Messages("calc.calculationElection.message.timeDate")), routes.CalculationController.otherReliefsTA().toString(), timeReliefs),
+          Some(Messages("calc.calculationElection.message.timeDate")), routes.OtherReliefsTAController.otherReliefsTA().toString(), timeReliefs),
         ("rebased", "10000.00", "time apportioned calculation",
-          Some(Messages("calc.calculationElection.message.timeDate")), routes.CalculationController.otherReliefsTA().toString(), rebasedReliefs)
+          Some(Messages("calc.calculationElection.message.timeDate")), routes.OtherReliefsTAController.otherReliefsTA().toString(), rebasedReliefs)
       ))
 
     when(mockCalcConnector.calculateFlat(Matchers.any())(Matchers.any()))
@@ -152,9 +152,9 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
           }
         }
 
-        s"have a 'Back' link to ${routes.CalculationController.allowableLosses}" in {
+        s"have a 'Back' link to ${routes.AllowableLossesController.allowableLosses}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.allowableLosses.toString()
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.AllowableLossesController.allowableLosses.toString()
         }
 
         s"have the paragraph '${Messages("calc.calculationElection.paragraph.one")}'" in {
@@ -367,7 +367,7 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
       }
 
       "redirect to the other reliefs page" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.otherReliefsFlat()}")
+        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsFlatController.otherReliefsFlat()}")
       }
     }
 
@@ -380,7 +380,7 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
       }
 
       "redirect to the Other Reliefs Time Apportioned page" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.otherReliefsTA()}")
+        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsTAController.otherReliefsTA()}")
       }
     }
 

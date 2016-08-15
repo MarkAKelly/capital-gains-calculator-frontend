@@ -34,6 +34,20 @@
         }
     }
 
+    <!-- Google Analytics -->
+    <div id="ga-reporting" class="visuallyhidden">
+
+        <!-- Tax Year -->
+        <span data-metrics="rtt-properties-summary:calculationYear:@{taxYear.calculationTaxYear}"></span>
+
+        <!-- Loss Stats -->
+        @if(gain < 0){
+            <span data-metrics="rtt-properties-summary:result:loss"></span>
+        } else {
+            <span data-metrics="rtt-properties-summary:result:no-gain"></span>
+        }
+    </div>
+
     <!-- Calculation Details Section -->
     <section id="calcDetails">
         <!-- Header -->
@@ -67,7 +81,7 @@
                                                                                                rel="external"
                                                                                                href="https://www.gov.uk/tax-sell-property/what-you-pay-it-on"
                                                                                                target="_blank"
-                                                                                               data-journey-click="help:govUK:CapitalGainsWhatToDoNext">@Messages("calc.resident.summary.whatNext.link")  <span id="opensInANewTab" class="visuallyhidden">@Messages("calc.base.externalLink")</span></a>
+                                                                                               data-journey-click="help:govUK:rtt-properties-whaToDoNext">@Messages("calc.resident.summary.whatNext.link")  <span id="opensInANewTab" class="visuallyhidden">@Messages("calc.base.externalLink")</span></a>
                     @Messages("calc.resident.summary.whatNext.text")</div>
 
             </section>
@@ -76,7 +90,8 @@
                 <h3 id="whatToDoNextNoLossTitle" class="bold-medium">@Messages("calc.resident.summary.whatNext")</h3>
                 <div id="whatToDoNextNoLossText" class="font-medium what-to-do-next-text">
                     @Messages("calc.resident.summary.whatNext.noLossOrGain")
-                    <a href="https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax" target="_blank" rel="external">
+                    <a href="https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax" target="_blank" rel="external"
+                       data-journey-click="help:govUK:rtt-properties-whaToDoNext">
                         @Messages("calc.resident.summary.whatNext.noLossOrGainLinkProperties")
                     </a>
                     <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>.
@@ -84,5 +99,6 @@
             </section>
         }
     }
-    <a type="submit" class="button save-pdf-button" href="@controllers.resident.properties.routes.ReportController.gainSummaryReport.toString">@Messages("calc.resident.summary.saveAsPdf")</a>
+    <a type="submit" class="button save-pdf-button" href="@controllers.resident.properties.routes.ReportController.gainSummaryReport.toString"
+       data-journey-click="rtt-properties-summary:pdf:save">@Messages("calc.resident.summary.saveAsPdf")</a>
 }

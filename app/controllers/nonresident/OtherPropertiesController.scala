@@ -37,13 +37,14 @@ object OtherPropertiesController extends OtherPropertiesController {
 trait OtherPropertiesController extends FrontendController with ValidActiveSession {
 
   val calcConnector: CalculatorConnector
+  override val sessionTimeoutUrl = controllers.nonresident.routes.CalculationController.restart().url
 
   private def otherPropertiesBackUrl(implicit hc: HeaderCarrier): Future[String] =
     calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).flatMap {
       case Some(CustomerTypeModel("individual")) =>
         calcConnector.fetchAndGetFormData[CurrentIncomeModel](KeystoreKeys.currentIncome).flatMap {
           case Some(data) if data.currentIncome == 0 => Future.successful(routes.CurrentIncomeController.currentIncome().url)
-          case _ => Future.successful(routes.CalculationController.personalAllowance().url)
+          case _ => Future.successful(routes.PersonalAllowanceController.personalAllowance().url)
         }
       case Some(CustomerTypeModel("trustee")) => Future.successful(routes.DisabledTrusteeController.disabledTrustee().url)
       case Some(_) => Future.successful(routes.CustomerTypeController.customerType().url)

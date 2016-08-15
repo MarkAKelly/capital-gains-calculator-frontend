@@ -16,20 +16,18 @@
 
 package common
 
-import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeParseException
+
+import common.Dates._
+
 import scala.util.{Failure, Success, Try}
 
 object Validation {
 
-  def isValidDate(day:Int,month:Int,year:Int): Boolean = {
-    try {
-      val fmt = new SimpleDateFormat("dd/MM/yyyy")
-      fmt.setLenient(false)
-      fmt.parse(s"$day/$month/$year")
-      true
-    } catch {
-      case e: Exception => false
-    }
+  def isValidDate(day:Int,month:Int,year:Int): Boolean = Try (constructDate(day, month, year)) match {
+    case Success(_) => true
+    case _ => false
   }
 
   def isMaxTwoDecimalPlaces: BigDecimal => Boolean = amount => amount.scale <= 2

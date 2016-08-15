@@ -18,7 +18,7 @@ package controllers.CalculationControllerTests
 
 import common.Constants
 import connectors.CalculatorConnector
-import controllers.nonresident.{CurrentIncomeController, routes}
+import controllers.nonresident.{CurrentIncomeController, PersonalAllowanceController, routes}
 import models.nonresident.CurrentIncomeModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -185,8 +185,8 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.CalculationController.personalAllowance()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.personalAllowance()}")
+      s"redirect to ${routes.PersonalAllowanceController.personalAllowance()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.PersonalAllowanceController.personalAllowance()}")
       }
     }
 

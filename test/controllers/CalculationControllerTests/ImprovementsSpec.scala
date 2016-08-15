@@ -21,8 +21,6 @@ import common.{Constants, KeystoreKeys}
 import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
-import constructors.nonresident.CalculationElectionConstructor
-import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import play.api.i18n.Messages
@@ -51,7 +49,6 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
                  ): ImprovementsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
-    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[ImprovementsModel](Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -133,9 +130,9 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         lazy val result = target.improvements(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${routes.CalculationController.rebasedCosts().url} " in {
+        s"have a 'Back' link to ${routes.RebasedCostsController.rebasedCosts().url} " in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.rebasedCosts().url
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.RebasedCostsController.rebasedCosts().url
         }
       }
 
@@ -152,9 +149,9 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         lazy val result = target.improvements(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${routes.CalculationController.rebasedValue().url} " in {
+        s"have a 'Back' link to ${routes.RebasedValueController.rebasedValue().url} " in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.rebasedValue().url
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.RebasedValueController.rebasedValue().url
         }
       }
 
@@ -168,7 +165,7 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         lazy val result = target.improvements(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${missingDataRoute} " in {
+        s"have a 'Back' link to $missingDataRoute " in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
           document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
         }
@@ -185,7 +182,7 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         lazy val result = target.improvements(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${missingDataRoute} " in {
+        s"have a 'Back' link to $missingDataRoute " in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
           document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
         }

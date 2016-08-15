@@ -27,51 +27,52 @@ import views.html.calculation
 
 import scala.concurrent.Future
 
-object OtherReliefsRebasedController extends OtherReliefsRebasedController{
+object OtherReliefsTAController extends OtherReliefsTAController {
   val calcConnector = CalculatorConnector
 }
 
-trait OtherReliefsRebasedController extends FrontendController with ValidActiveSession {
+trait OtherReliefsTAController extends FrontendController with ValidActiveSession {
+
   override val sessionTimeoutUrl = controllers.nonresident.routes.CalculationController.restart().url
   val calcConnector: CalculatorConnector
 
-  val otherReliefsRebased = ValidateSession.async { implicit request =>
-    def action(dataResult: Option[CalculationResultModel]) = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map {
-      case Some(data) if data.otherReliefs.isDefined => Ok(calculation.nonresident.otherReliefsRebased(otherReliefsForm(true).fill(data),
-        dataResult.get, hasExistingReliefAmount = true))
-      case _ => Ok(calculation.nonresident.otherReliefsRebased(otherReliefsForm(true), dataResult.get, hasExistingReliefAmount = false))
+  val otherReliefsTA = ValidateSession.async { implicit request =>
+
+    def action(dataResult: Option[CalculationResultModel]) = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA).map {
+      case Some(data) if data.otherReliefs.isDefined => Ok(calculation.nonresident.otherReliefsTA(otherReliefsForm(false).fill(data), dataResult.get, true))
+      case _ => Ok(calculation.nonresident.otherReliefsTA(otherReliefsForm(true), dataResult.get, false))
     }
 
     for {
       construct <- calcConnector.createSummary(hc)
-      calculation <- calcConnector.calculateRebased(construct)
+      calculation <- calcConnector.calculateTA(construct)
       finalResult <- action(calculation)
     } yield finalResult
   }
 
-  val submitOtherReliefsRebased = ValidateSession.async { implicit request =>
+  val submitOtherReliefsTA = ValidateSession.async { implicit request =>
 
     def errorAction(form: Form[OtherReliefsModel]) = {
       for {
         construct <- calcConnector.createSummary(hc)
-        calculation <- calcConnector.calculateRebased(construct)
+        calculation <- calcConnector.calculateTA(construct)
         route <- errorRoute(form, calculation)
       } yield route
     }
 
     def errorRoute(form: Form[OtherReliefsModel], dataResult: Option[CalculationResultModel]) = {
       calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map {
-        case Some(data) if data.otherReliefs.isDefined => BadRequest(calculation.nonresident.otherReliefsRebased(form, dataResult.get,
-          hasExistingReliefAmount = true))
-        case _ => BadRequest(calculation.nonresident.otherReliefsRebased(form, dataResult.get, hasExistingReliefAmount = false))
+        case Some(data) if data.otherReliefs.isDefined => BadRequest(calculation.nonresident.otherReliefsRebased(form, dataResult.get, true))
+        case _ => BadRequest(calculation.nonresident.otherReliefsRebased(form, dataResult.get, false))
       }
     }
 
     def successAction(model: OtherReliefsModel) = {
-      calcConnector.saveFormData(KeystoreKeys.otherReliefsRebased, model)
+      calcConnector.saveFormData(KeystoreKeys.otherReliefsTA, model)
       Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
     }
 
     otherReliefsForm(true).bindFromRequest.fold(errorAction, successAction)
   }
+
 }

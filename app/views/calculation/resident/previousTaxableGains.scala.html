@@ -3,10 +3,11 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
 
-@(previousTaxableGainsForm: Form[PreviousTaxableGainsModel], backUrl: String, postAction: Call, homeLink: String)(implicit request: Request[_])
+@(previousTaxableGainsForm: Form[PreviousTaxableGainsModel], backUrl: String, postAction: Call, homeLink: String, journey: String)(implicit request: Request[_])
 
 @sidebar =  {
-    <a id="helpLink1" class="external-link" rel="external" href="https://www.gov.uk/capital-gains-tax/work-out-need-to-pay" target="_blank" data-journey-click="help:govUK:res:previousTaxableGains">
+    <a id="helpLink1" class="external-link" rel="external" href="https://www.gov.uk/capital-gains-tax/work-out-need-to-pay" target="_blank"
+       data-journey-click="help:govUK:rtt-@{journey}-previousTaxableGains">
         @Messages("calc.resident.previousTaxableGain.link.one")
         <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>
     </a>

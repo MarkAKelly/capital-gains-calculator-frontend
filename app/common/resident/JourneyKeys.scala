@@ -14,16 +14,9 @@
  * limitations under the License.
  */
 
-package models.nonresident
+package common.resident
 
-import play.api.libs.json._
-
-case class AcquisitionDateModel (
-                                  hasAcquisitionDate: String,
-                                  day: Option[Int],
-                                  month: Option[Int],
-                                  year: Option[Int])
-
-object AcquisitionDateModel {
-  implicit val format = Json.format[AcquisitionDateModel]
+object JourneyKeys {
+  val properties = "properties"
+  val shares = "shares"
 }
