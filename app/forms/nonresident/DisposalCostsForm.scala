@@ -29,9 +29,9 @@ object DisposalCostsForm {
     mapping(
       "disposalCosts" -> bigDecimal
         .verifying(Messages("calc.disposalCosts.errorNegativeNumber"), isPositive)
-        .verifying(Messages("calc.disposalCosts.errorDecimalPlaces"), isMaxTwoDecimalPlaces)
+        .verifying(Messages("calc.disposalCosts.errorDecimalPlaces"), decimalPlacesCheck)
         .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " +
-          Messages("calc.common.error.maxNumericExceeded.OrLess"), isLessThanEqualMaxNumeric)
+          Messages("calc.common.error.maxNumericExceeded.OrLess"), maxCheck)
     )(DisposalCostsModel.apply)(DisposalCostsModel.unapply)
   )
 }

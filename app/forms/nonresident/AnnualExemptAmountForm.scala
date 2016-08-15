@@ -34,7 +34,7 @@ object AnnualExemptAmountForm {
       "annualExemptAmount" -> bigDecimal
         .verifying(errorMaxMessage(maxAEA), _ <= maxAEA)
         .verifying(Messages("calc.annualExemptAmount.errorNegative"), annualExemptAmount => isPositive(annualExemptAmount))
-        .verifying(Messages("calc.annualExemptAmount.errorDecimalPlaces"), annualExemptAmount => isMaxTwoDecimalPlaces(annualExemptAmount))
+        .verifying(Messages("calc.annualExemptAmount.errorDecimalPlaces"), annualExemptAmount => decimalPlacesCheck(annualExemptAmount))
     )(AnnualExemptAmountModel.apply)(AnnualExemptAmountModel.unapply)
   )
 }

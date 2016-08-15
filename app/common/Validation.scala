@@ -30,18 +30,6 @@ object Validation {
     case _ => false
   }
 
-  def isMaxTwoDecimalPlaces: BigDecimal => Boolean = amount => amount.scale <= 2
-
-  def hasNoDecimalPlaces: BigDecimal => Boolean = amount => amount.scale <= 0
-
-  def isPositive: BigDecimal => Boolean = amount => amount >= 0
-
-  def isGreaterThanZero: BigDecimal => Boolean = amount => amount > 0
-
-  def isLessThanEqualMaxNumeric: BigDecimal => Boolean = amount => amount <= Constants.maxNumeric
-
-  def isNotEmpty (input: String): Boolean = !input.isEmpty
-
   def isIntNumber (input: String): Boolean = Try (input.toInt) match {
     case Success(_) => true
     case Failure(_) => false
@@ -57,8 +45,6 @@ object Validation {
     case Failure(_) => false
   }
 
-  def isYesNo (input: String): Boolean = input.equals("Yes") || input.equals("No") || input.equals("")
-
   val bigDecimalCheck: String => Boolean = (input) => Try(BigDecimal(input)) match {
     case Success(_) => true
     case Failure(_) if input.trim == "" => true
@@ -71,6 +57,8 @@ object Validation {
     case Failure(_) => false
   }
 
+  val isGreaterThanZero: BigDecimal => Boolean = amount => amount > 0
+
   val mandatoryCheck: String => Boolean = (input) => input.trim != ""
 
   val decimalPlacesCheck: BigDecimal => Boolean = (input) => input.scale < 3
@@ -81,7 +69,7 @@ object Validation {
 
   val maxCheck: BigDecimal => Boolean = (input) => input <= Constants.maxNumeric
 
-  val minCheck: BigDecimal => Boolean = (input) => input >= 0
+  val isPositive: BigDecimal => Boolean = (input) => input >= 0
 
   val yesNoCheck: String => Boolean = {
     case "Yes" => true

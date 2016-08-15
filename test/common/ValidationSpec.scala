@@ -73,23 +73,23 @@ class ValidationSpec extends UnitSpec {
   }
 
 
-  //############# Tests for isMaxTwoDecimalPlaces ##########################################
-  "calling common.Validation.isMaxTwoDecimalPlaces(amount) " should {
+  //############# Tests for decimalPlacesCheck ##########################################
+  "calling common.Validation.decimalPlacesCheck(amount) " should {
 
-    "with no decimals supplied isMaxTwoDecimalPlaces(1) return true" in {
-      isMaxTwoDecimalPlaces(1) shouldBe true
+    "with no decimals supplied decimalPlacesCheck(1) return true" in {
+      decimalPlacesCheck(1) shouldBe true
     }
 
-    "with one decimal place supplied isMaxTwoDecimalPlaces(1.1) return true" in {
-      isMaxTwoDecimalPlaces(1.1) shouldBe true
+    "with one decimal place supplied decimalPlacesCheck(1.1) return true" in {
+      decimalPlacesCheck(1.1) shouldBe true
     }
 
-    "with two decimal places supplied isMaxTwoDecimalPlaces(1.11) return true" in {
-      isMaxTwoDecimalPlaces(1.11) shouldBe true
+    "with two decimal places supplied decimalPlacesCheck(1.11) return true" in {
+      decimalPlacesCheck(1.11) shouldBe true
     }
 
-    "with three decimal places supplied isMaxTwoDecimalPlaces(1.111) return false" in {
-      isMaxTwoDecimalPlaces(1.111) shouldBe false
+    "with three decimal places supplied decimalPlacesCheck(1.111) return false" in {
+      decimalPlacesCheck(1.111) shouldBe false
     }
   }
 
@@ -97,15 +97,15 @@ class ValidationSpec extends UnitSpec {
   "calling common.Validation.isGreaterThanMaxNumeric(amount) " should {
 
     "with a value of 1000000000" in {
-      isLessThanEqualMaxNumeric(1000000000) shouldBe true
+      maxCheck(1000000000) shouldBe true
     }
 
     "with a value of 1000000000.01" in {
-      isLessThanEqualMaxNumeric(1000000000.01) shouldBe false
+      maxCheck(1000000000.01) shouldBe false
     }
 
     "with a value of 999999999.99" in {
-      isLessThanEqualMaxNumeric(999999999.99) shouldBe true
+      maxCheck(999999999.99) shouldBe true
     }
 
     //############# Tests for isBigDecimalNumber ##########################################
@@ -121,19 +121,19 @@ class ValidationSpec extends UnitSpec {
     }
   }
 
-  //############# Tests for isYesNo ##########################################
-  "calling common.Validation.isYesNo" should {
+  //############# Tests for yesNoCheck ##########################################
+  "calling common.Validation.yesNoCheck" should {
 
     "return false with a non yes/no value" in {
-      isYesNo("a") shouldBe false
+      yesNoCheck("a") shouldBe false
     }
 
     "return true with a yes value" in {
-      isYesNo("Yes") shouldBe true
+      yesNoCheck("Yes") shouldBe true
     }
 
     "return true with a no value" in {
-      isYesNo("No") shouldBe true
+      yesNoCheck("No") shouldBe true
     }
   }
 
@@ -233,23 +233,23 @@ class ValidationSpec extends UnitSpec {
     }
   }
 
-  "calling minCheck" when {
+  "calling isPositive" when {
 
     "input is more than min value" should {
       "pass" in {
-        minCheck(BigDecimal(0.01)) shouldBe true
+        isPositive(BigDecimal(0.01)) shouldBe true
       }
     }
 
     "input is equal to min value" should {
       "pass" in {
-        minCheck(BigDecimal(0)) shouldBe true
+        isPositive(BigDecimal(0)) shouldBe true
       }
     }
 
     "input is less than min value" should {
       "fail" in {
-        minCheck(BigDecimal(-0.01)) shouldBe false
+        isPositive(BigDecimal(-0.01)) shouldBe false
       }
     }
   }

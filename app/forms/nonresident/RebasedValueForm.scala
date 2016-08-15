@@ -42,14 +42,14 @@ object RebasedValueForm {
 
   def verifyTwoDecimalPlaces(data: RebasedValueModel): Boolean = {
     data.hasRebasedValue match {
-      case "Yes" => isMaxTwoDecimalPlaces(data.rebasedValueAmt.getOrElse(0))
+      case "Yes" => decimalPlacesCheck(data.rebasedValueAmt.getOrElse(0))
       case "No" => true
     }
   }
 
   def validateMax(data: RebasedValueModel): Boolean = {
     data.hasRebasedValue match {
-      case "Yes" => isLessThanEqualMaxNumeric(data.rebasedValueAmt.getOrElse(0))
+      case "Yes" => maxCheck(data.rebasedValueAmt.getOrElse(0))
       case "No" => true
     }
   }

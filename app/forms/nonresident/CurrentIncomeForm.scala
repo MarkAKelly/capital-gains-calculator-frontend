@@ -31,9 +31,9 @@ object CurrentIncomeForm {
     mapping(
       "currentIncome" -> bigDecimal
         .verifying(Messages("calc.currentIncome.errorNegative"), isPositive)
-        .verifying(Messages("calc.currentIncome.errorDecimalPlaces"), isMaxTwoDecimalPlaces)
+        .verifying(Messages("calc.currentIncome.errorDecimalPlaces"), decimalPlacesCheck)
         .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " +
-          Messages("calc.common.error.maxNumericExceeded.OrLess"), isLessThanEqualMaxNumeric)
+          Messages("calc.common.error.maxNumericExceeded.OrLess"), maxCheck)
     )(CurrentIncomeModel.apply)(CurrentIncomeModel.unapply)
   )
 }

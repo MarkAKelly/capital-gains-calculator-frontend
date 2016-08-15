@@ -29,7 +29,7 @@ object PersonalAllowanceForm {
     mapping(
       "personalAllowance" -> bigDecimal
         .verifying(Messages("calc.personalAllowance.errorNegative"), isPositive)
-        .verifying(Messages("calc.personalAllowance.errorDecimalPlaces"), hasNoDecimalPlaces)
+        .verifying(Messages("calc.personalAllowance.errorDecimalPlaces"), decimalPlacesCheckNoDecimal)
         .verifying(Messages("calc.personalAllowance.errorMaxLimit") + MoneyPounds(maxPA, 0).quantity + " " +
           Messages("calc.personalAllowance.errorMaxLimitEnd"), personalAllowance => personalAllowance <= maxPA)
     )(PersonalAllowanceModel.apply)(PersonalAllowanceModel.unapply)

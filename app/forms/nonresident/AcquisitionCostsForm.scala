@@ -30,9 +30,9 @@ object AcquisitionCostsForm {
     mapping(
       "acquisitionCosts" -> bigDecimal
         .verifying(Messages("calc.acquisitionCosts.errorNegative"), isPositive)
-        .verifying(Messages("calc.acquisitionCosts.errorDecimalPlaces"), isMaxTwoDecimalPlaces)
+        .verifying(Messages("calc.acquisitionCosts.errorDecimalPlaces"), decimalPlacesCheck)
         .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " +
-          Messages("calc.common.error.maxNumericExceeded.OrLess"), isLessThanEqualMaxNumeric)
+          Messages("calc.common.error.maxNumericExceeded.OrLess"), maxCheck)
     )(AcquisitionCostsModel.apply)(AcquisitionCostsModel.unapply)
   )
 
