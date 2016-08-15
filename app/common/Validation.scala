@@ -45,13 +45,13 @@ object Validation {
     case Failure(_) => false
   }
 
-  val bigDecimalCheck: String => Boolean = (input) => Try(BigDecimal(input)) match {
+  val bigDecimalCheck: String => Boolean = input => Try(BigDecimal(input)) match {
     case Success(_) => true
     case Failure(_) if input.trim == "" => true
     case Failure(_) => false
   }
 
-  val integerCheck: String => Boolean = (input) => Try(input.trim.toInt) match {
+  val integerCheck: String => Boolean = input => Try(input.trim.toInt) match {
     case Success(_) => true
     case Failure(_) if input.trim == "" => true
     case Failure(_) => false
@@ -59,17 +59,17 @@ object Validation {
 
   val isGreaterThanZero: BigDecimal => Boolean = amount => amount > 0
 
-  val mandatoryCheck: String => Boolean = (input) => input.trim != ""
+  val mandatoryCheck: String => Boolean = input => input.trim != ""
 
-  val decimalPlacesCheck: BigDecimal => Boolean = (input) => input.scale < 3
+  val decimalPlacesCheck: BigDecimal => Boolean = input => input.scale < 3
 
-  val decimalPlacesCheckNoDecimal: BigDecimal => Boolean = (input) => input.scale < 1
+  val decimalPlacesCheckNoDecimal: BigDecimal => Boolean = input => input.scale < 1
 
-  val validYearRangeCheck: Int => Boolean = (input) => input >= 1900 && input <= 9999
+  val validYearRangeCheck: Int => Boolean = input => input >= 1900 && input <= 9999
 
-  val maxCheck: BigDecimal => Boolean = (input) => input <= Constants.maxNumeric
+  val maxCheck: BigDecimal => Boolean = input => input <= Constants.maxNumeric
 
-  val isPositive: BigDecimal => Boolean = (input) => input >= 0
+  val isPositive: BigDecimal => Boolean = input => input >= 0
 
   val yesNoCheck: String => Boolean = {
     case "Yes" => true
