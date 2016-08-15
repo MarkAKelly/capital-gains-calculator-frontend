@@ -191,4 +191,31 @@ class CalculateRequestConstructorSpec extends UnitSpec {
 
   }
 
+  "Calling rebasedImprovements" should {
+
+    "return a value of 10000" in {
+      val model = ImprovementsModel("Yes", None, Some(10000))
+      val result = CalculateRequestConstructor.rebasedImprovements(model)
+      result shouldBe "&improvementsAmt=10000"
+    }
+
+    "return a value of 2000" in {
+      val model = ImprovementsModel("Yes", None, Some(2000))
+      val result = CalculateRequestConstructor.rebasedImprovements(model)
+      result shouldBe "&improvementsAmt=2000"
+    }
+
+    "return a value of 0 when supplied a none" in {
+      val model = ImprovementsModel("Yes", Some(4000), None)
+      val result = CalculateRequestConstructor.rebasedImprovements(model)
+      result shouldBe "&improvementsAmt=0"
+    }
+
+    "return a value of 0 when improvements not supplied" in {
+      val model = ImprovementsModel("No", None, Some(1000))
+      val result = CalculateRequestConstructor.rebasedImprovements(model)
+      result shouldBe "&improvementsAmt=0"
+    }
+  }
+
 }

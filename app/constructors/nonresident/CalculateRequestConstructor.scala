@@ -105,12 +105,8 @@ object CalculateRequestConstructor {
   }
 
   def rebasedCalcUrlExtra(input: SummaryModel): String = {
-    s"&improvementsAmt=${
-      input.improvementsModel.isClaimingImprovements match {
-        case "Yes" => input.improvementsModel.improvementsAmtAfter.getOrElse(0)
-        case "No" => 0
-      }
-    }&rebasedValue=${
+    rebasedImprovements(input.improvementsModel) +
+    s"&rebasedValue=${
       input.rebasedValueModel.get.rebasedValueAmt.get
     }&revaluationCost=${
       input.rebasedCostsModel.get.hasRebasedCosts match {
@@ -126,6 +122,13 @@ object CalculateRequestConstructor {
         case Some(PrivateResidenceReliefModel("Yes", claimed, after)) => "Yes"
         case _ => "No"
       }
+    }"
+  }
+
+  def rebasedImprovements(improvementsModel: ImprovementsModel): String = {
+    s"&improvementsAmt=${
+      if (improvementsModel.isClaimingImprovements.equals("Yes")) improvementsModel.improvementsAmtAfter.getOrElse(0)
+      else 0
     }"
   }
 
