@@ -21,7 +21,6 @@ import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.CalculationElectionConstructor
-import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import play.api.i18n.Messages
@@ -34,7 +33,7 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.nonresident.{AcquisitionValueController, CalculationController, routes}
+import controllers.nonresident.{AcquisitionValueController, routes}
 import models.nonresident.{AcquisitionDateModel, AcquisitionValueModel}
 import play.api.mvc.Result
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
@@ -97,9 +96,9 @@ class AcquisitionValueSpec extends UnitSpec with WithFakeApplication with Mockit
           document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
         }
 
-        s"have a 'Back' link to ${routes.AcquisitionDateController.acquisitionDate}" in {
+        s"have a 'Back' link to ${routes.AcquisitionDateController.acquisitionDate()}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionDateController.acquisitionDate.toString()
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionDateController.acquisitionDate().toString()
         }
 
         "have the question 'How much did you pay for the property?'" in {
@@ -189,9 +188,9 @@ class AcquisitionValueSpec extends UnitSpec with WithFakeApplication with Mockit
       val date = new AcquisitionDateModel("Yes", Some(10), Some(10), Some(2010))
       lazy val result = executeTargetWithMockData("1000", Some(date))
 
-      s"return a 303 to ${routes.CalculationController.rebasedValue()}" in {
+      s"return a 303 to ${routes.RebasedValueController.rebasedValue()}" in {
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.rebasedValue()}")
+        redirectLocation(result) shouldBe Some(s"${routes.RebasedValueController.rebasedValue()}")
       }
     }
 
@@ -200,9 +199,9 @@ class AcquisitionValueSpec extends UnitSpec with WithFakeApplication with Mockit
       val noDate = new AcquisitionDateModel("No", None, None, None)
       lazy val result = executeTargetWithMockData("1000", Some(noDate))
 
-      s"return a 303 to ${routes.CalculationController.rebasedValue()}" in {
+      s"return a 303 to ${routes.RebasedValueController.rebasedValue()}" in {
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.rebasedValue()}")
+        redirectLocation(result) shouldBe Some(s"${routes.RebasedValueController.rebasedValue()}")
       }
     }
 

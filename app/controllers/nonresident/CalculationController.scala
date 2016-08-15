@@ -20,7 +20,6 @@ import java.time.LocalDate
 import common.{Dates, KeystoreKeys}
 import forms.nonresident.OtherReliefsForm._
 import forms.nonresident.PersonalAllowanceForm._
-import forms.nonresident.RebasedCostsForm._
 import forms.nonresident.RebasedValueForm._
 import java.util.{Date, UUID}
 import play.api.mvc.{Action, AnyContent, Result}
@@ -72,27 +71,6 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   //################### Other Properties methods #######################
 
   //################### Rebased value methods #######################
-  val rebasedValue = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap(acquisitionDateModel =>
-      calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).map {
-        case Some(data) => Ok(calculation.nonresident.rebasedValue(rebasedValueForm.fill(data), acquisitionDateModel.get.hasAcquisitionDate))
-        case None => Ok(calculation.nonresident.rebasedValue(rebasedValueForm, acquisitionDateModel.get.hasAcquisitionDate))
-      })
-  }
-
-  val submitRebasedValue = ValidateSession.async { implicit request =>
-    rebasedValueForm.bindFromRequest.fold(
-      errors => calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap(acquisitionDateModel =>
-        Future.successful(BadRequest(calculation.nonresident.rebasedValue(errors, acquisitionDateModel.get.hasAcquisitionDate)))),
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.rebasedValue, success)
-        success.hasRebasedValue match {
-          case "Yes" => Future.successful(Redirect(routes.RebasedCostsController.rebasedCosts()))
-          case "No" => Future.successful(Redirect(routes.ImprovementsController.improvements()))
-        }
-      }
-    )
-  }
 
   //################### Rebased costs methods #######################
 
