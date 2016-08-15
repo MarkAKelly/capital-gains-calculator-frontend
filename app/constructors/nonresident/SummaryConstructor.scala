@@ -221,7 +221,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.personalAllowance.question"),
                     "&pound;" + MoneyPounds(summary.personalAllowanceModel.get.personalAllowanceAmt).quantity,
-                    Some(routes.CalculationController.personalAllowance().toString())
+                    Some(routes.PersonalAllowanceController.personalAllowance().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.otherProperties.questionTwo"),
@@ -275,7 +275,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.personalAllowance.question"),
                     "&pound;" + MoneyPounds(summary.personalAllowanceModel.get.personalAllowanceAmt).quantity,
-                    Some(routes.CalculationController.personalAllowance().toString())
+                    Some(routes.PersonalAllowanceController.personalAllowance().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.otherProperties.question"),

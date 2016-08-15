@@ -284,7 +284,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "have a personal allowance of £9,000 that has a link to the personal allowance page." in {
               document.body().getElementById("personalDetails(2)").text() shouldBe "£9,000.00"
-              document.body().getElementById("personalDetails(2)").attr("href") shouldEqual routes.CalculationController.personalAllowance().toString()
+              document.body().getElementById("personalDetails(2)").attr("href") shouldEqual routes.PersonalAllowanceController.personalAllowance().toString()
             }
 
             "include the question 'What was the total taxable gain of your previous Capital Gains in the tax year you stopped owning the property?'" in {

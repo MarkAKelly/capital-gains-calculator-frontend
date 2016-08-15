@@ -102,9 +102,9 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
             document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
           }
 
-          s"have a 'Back' link to ${routes.CalculationController.personalAllowance().url}" in {
+          s"have a 'Back' link to ${routes.PersonalAllowanceController.personalAllowance().url}" in {
             document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-            document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationController.personalAllowance().url
+            document.body.getElementById("back-link").attr("href") shouldEqual routes.PersonalAllowanceController.personalAllowance().url
           }
 
           s"have the question '${Messages("calc.otherProperties.question")}' as the legend of the input" in {

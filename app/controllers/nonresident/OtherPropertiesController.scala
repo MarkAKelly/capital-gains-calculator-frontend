@@ -44,7 +44,7 @@ trait OtherPropertiesController extends FrontendController with ValidActiveSessi
       case Some(CustomerTypeModel("individual")) =>
         calcConnector.fetchAndGetFormData[CurrentIncomeModel](KeystoreKeys.currentIncome).flatMap {
           case Some(data) if data.currentIncome == 0 => Future.successful(routes.CurrentIncomeController.currentIncome().url)
-          case _ => Future.successful(routes.CalculationController.personalAllowance().url)
+          case _ => Future.successful(routes.PersonalAllowanceController.personalAllowance().url)
         }
       case Some(CustomerTypeModel("trustee")) => Future.successful(routes.DisabledTrusteeController.disabledTrustee().url)
       case Some(_) => Future.successful(routes.CustomerTypeController.customerType().url)
