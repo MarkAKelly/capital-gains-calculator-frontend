@@ -31,7 +31,7 @@
 
     <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
 
-    @form(action = controllers.nonresident.routes.CalculationController.submitPersonalAllowance) {
+    @form(action = controllers.nonresident.routes.PersonalAllowanceController.submitPersonalAllowance) {
 
         @formInputMoney(personalAllowanceForm, "personalAllowance", Messages("calc.personalAllowance.question"))
 

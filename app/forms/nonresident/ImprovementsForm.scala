@@ -46,20 +46,20 @@ object ImprovementsForm {
 
   def verifyTwoDecimalPlaces(data: ImprovementsModel): Boolean = {
     (data.isClaimingImprovements match {
-      case "Yes" => isMaxTwoDecimalPlaces(data.improvementsAmt.getOrElse(0))
+      case "Yes" => decimalPlacesCheck(data.improvementsAmt.getOrElse(0))
       case "No" => true
     }) && (data.isClaimingImprovements match {
-      case "Yes" => isMaxTwoDecimalPlaces(data.improvementsAmtAfter.getOrElse(0))
+      case "Yes" => decimalPlacesCheck(data.improvementsAmtAfter.getOrElse(0))
       case "No" => true
     })
   }
 
   def validateMax(data: ImprovementsModel): Boolean = {
     (data.isClaimingImprovements match {
-      case "Yes" => isLessThanEqualMaxNumeric(data.improvementsAmt.getOrElse(0))
+      case "Yes" => maxCheck(data.improvementsAmt.getOrElse(0))
       case "No" => true
     }) && (data.isClaimingImprovements match {
-      case "Yes" => isLessThanEqualMaxNumeric(data.improvementsAmtAfter.getOrElse(0))
+      case "Yes" => maxCheck(data.improvementsAmtAfter.getOrElse(0))
       case "No" => true
     })
   }

@@ -191,6 +191,202 @@ class CalculateRequestConstructorSpec extends UnitSpec {
 
   }
 
+  "Calling customerType" should {
+
+    "return a value of individual" in {
+      val result = CalculateRequestConstructor.customerType("individual")
+      result shouldBe "customerType=individual"
+    }
+
+    "return a value of trustee" in {
+      val result = CalculateRequestConstructor.customerType("trustee")
+      result shouldBe "customerType=trustee"
+    }
+  }
+
+  "Calling priorDisposal" should {
+
+    "return a value of yes" in {
+      val result = CalculateRequestConstructor.priorDisposal("Yes")
+      result shouldBe "&priorDisposal=Yes"
+    }
+
+    "return a value of No" in {
+      val result = CalculateRequestConstructor.priorDisposal("No")
+      result shouldBe "&priorDisposal=No"
+    }
+  }
+
+  "Calling annualExemptAmount" should {
+
+    "return an AEA of 10000" in {
+      val otherPropertiesModel = OtherPropertiesModel("Yes", Some(BigDecimal(0)))
+      val result = CalculateRequestConstructor.annualExemptAmount(otherPropertiesModel, Some(AnnualExemptAmountModel(10000)))
+      result shouldBe "&annualExemptAmount=10000"
+    }
+
+    "return an AEA of 2000" in {
+      val otherPropertiesModel = OtherPropertiesModel("Yes", Some(BigDecimal(0)))
+      val result = CalculateRequestConstructor.annualExemptAmount(otherPropertiesModel, Some(AnnualExemptAmountModel(2000)))
+      result shouldBe "&annualExemptAmount=2000"
+    }
+
+    "return an empty AEA string with a prior taxable gain" in {
+      val otherPropertiesModel = OtherPropertiesModel("Yes", Some(BigDecimal(500)))
+      val result = CalculateRequestConstructor.annualExemptAmount(otherPropertiesModel, None)
+      result shouldBe ""
+    }
+
+    "return an empty AEA string with no other property disposals" in {
+      val otherPropertiesModel = OtherPropertiesModel("No", Some(BigDecimal(500)))
+      val result = CalculateRequestConstructor.annualExemptAmount(otherPropertiesModel, None)
+      result shouldBe ""
+    }
+  }
+
+  "Calling otherPropertiesAmount" should {
+
+    "return a value for other properties of 10000" in {
+      val otherPropertiesModel = OtherPropertiesModel("Yes", Some(BigDecimal(10000)))
+      val result = CalculateRequestConstructor.otherPropertiesAmount(otherPropertiesModel)
+      result shouldBe "&otherPropertiesAmt=10000"
+    }
+
+    "return a value for other properties of 2000" in {
+      val otherPropertiesModel = OtherPropertiesModel("Yes", Some(BigDecimal(2000)))
+      val result = CalculateRequestConstructor.otherPropertiesAmount(otherPropertiesModel)
+      result shouldBe "&otherPropertiesAmt=2000"
+    }
+
+    "return an empty string for other properties" in {
+      val otherPropertiesModel = OtherPropertiesModel("No", None)
+      val result = CalculateRequestConstructor.otherPropertiesAmount(otherPropertiesModel)
+      result shouldBe ""
+    }
+  }
+
+  "Calling isVulnerableTrustee" should {
+
+    "return a value of Yes" in {
+      val disabledTrusteeModel = DisabledTrusteeModel("Yes")
+      val result = CalculateRequestConstructor.isVulnerableTrustee("trustee", Some(disabledTrusteeModel))
+      result shouldBe "&isVulnerable=Yes"
+    }
+
+    "return a value of No" in {
+      val disabledTrusteeModel = DisabledTrusteeModel("No")
+      val result = CalculateRequestConstructor.isVulnerableTrustee("trustee", Some(disabledTrusteeModel))
+      result shouldBe "&isVulnerable=No"
+    }
+
+    "return an empty string" in {
+      val result = CalculateRequestConstructor.isVulnerableTrustee("individual", None)
+      result shouldBe ""
+    }
+  }
+
+  "Calling currentIncome" should {
+
+    "return a value of 10000" in {
+      val currentIncomeModel = CurrentIncomeModel(10000)
+      val result = CalculateRequestConstructor.currentIncome("individual", Some(currentIncomeModel))
+      result shouldBe "&currentIncome=10000"
+    }
+
+    "return a value of 2000" in {
+      val currentIncomeModel = CurrentIncomeModel(2000)
+      val result = CalculateRequestConstructor.currentIncome("individual", Some(currentIncomeModel))
+      result shouldBe "&currentIncome=2000"
+    }
+
+    "return an empty string" in {
+      val result = CalculateRequestConstructor.currentIncome("trustee", None)
+      result shouldBe ""
+    }
+  }
+
+  "Calling personalAllowance" should {
+
+    "return a value of 10000" in {
+      val personalAllowanceModel = PersonalAllowanceModel(10000)
+      val result = CalculateRequestConstructor.personalAllowanceAmount("individual", Some(personalAllowanceModel))
+      result shouldBe "&personalAllowanceAmt=10000"
+    }
+
+    "return a value of 2000" in {
+      val personalAllowanceModel = PersonalAllowanceModel(2000)
+      val result = CalculateRequestConstructor.personalAllowanceAmount("individual", Some(personalAllowanceModel))
+      result shouldBe "&personalAllowanceAmt=2000"
+    }
+
+    "return an empty string" in {
+      val result = CalculateRequestConstructor.personalAllowanceAmount("trustee", None)
+      result shouldBe ""
+    }
+  }
+
+  "Calling disposalValue" should {
+
+    "return a value of 10000" in {
+      val result = CalculateRequestConstructor.disposalValue(10000)
+      result shouldBe "&disposalValue=10000"
+    }
+
+    "return a value of 2000" in {
+      val result = CalculateRequestConstructor.disposalValue(2000)
+      result shouldBe "&disposalValue=2000"
+    }
+  }
+
+  "Calling disposalCosts" should {
+
+    "return a value of 10000" in {
+      val result = CalculateRequestConstructor.disposalCosts(10000)
+      result shouldBe "&disposalCosts=10000"
+    }
+
+    "return a value of 2000" in {
+      val result = CalculateRequestConstructor.disposalCosts(2000)
+      result shouldBe "&disposalCosts=2000"
+    }
+  }
+
+  "Calling allowableLossesAmount" should {
+
+    "return a value of 10000" in {
+      val model = AllowableLossesModel("Yes", Some(BigDecimal(10000)))
+      val result = CalculateRequestConstructor.allowableLossesAmount(model)
+      result shouldBe "&allowableLossesAmt=10000"
+    }
+
+    "return a value of 2000" in {
+      val model = AllowableLossesModel("Yes", Some(BigDecimal(2000)))
+      val result = CalculateRequestConstructor.allowableLossesAmount(model)
+      result shouldBe "&allowableLossesAmt=2000"
+    }
+
+    "return a value of 0" in {
+      val model = AllowableLossesModel("No", None)
+      val result = CalculateRequestConstructor.allowableLossesAmount(model)
+      result shouldBe "&allowableLossesAmt=0"
+    }
+  }
+
+  "Calling disposalDate" should {
+
+    "return a date of 2014-5-10" in {
+      val model = DisposalDateModel(10, 5, 2014)
+      val result = CalculateRequestConstructor.disposalDate(model)
+      result shouldBe "&disposalDate=2014-5-10"
+    }
+
+    "return a date of 2013-7-13" in {
+      val model = DisposalDateModel(13, 7, 2013)
+      val result = CalculateRequestConstructor.disposalDate(model)
+      result shouldBe "&disposalDate=2013-7-13"
+    }
+  }
+
   "Calling flatReliefs" should {
 
     "return a value of 10000" in {
@@ -229,8 +425,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
       val model = AcquisitionDateModel("No", None, None, None)
       val answer = "&isClaimingPRR=No"
       val result = CalculateRequestConstructor.flatAcquisitionDate(answer, model)
-      result shouldBe ""
+
     }
   }
-
 }

@@ -16,8 +16,7 @@
 
 package controllers.nonresident
 
-import java.util.Date
-
+import java.time.LocalDate
 import common.{Dates, KeystoreKeys}
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
@@ -35,16 +34,16 @@ object PrivateResidenceReliefController extends PrivateResidenceReliefController
 
 trait PrivateResidenceReliefController extends FrontendController with ValidActiveSession {
 
-  override val sessionTimeoutUrl = controllers.nonresident.routes.CalculationController.restart().url
+  override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   val calcConnector: CalculatorConnector
 
-  def getAcquisitionDate(implicit hc: HeaderCarrier): Future[Option[Date]] =
+  def getAcquisitionDate(implicit hc: HeaderCarrier): Future[Option[LocalDate]] =
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).map {
       case Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year))) => Some(Dates.constructDate(day, month, year))
       case _ => None
     }
 
-  def getDisposalDate(implicit hc: HeaderCarrier): Future[Option[Date]] =
+  def getDisposalDate(implicit hc: HeaderCarrier): Future[Option[LocalDate]] =
     calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.disposalDate).map {
       case Some(data) => Some(Dates.constructDate(data.day, data.month, data.year))
       case _ => None
@@ -56,14 +55,14 @@ trait PrivateResidenceReliefController extends FrontendController with ValidActi
       case _ => false
     }
 
-  def displayBetweenQuestion(disposalDate: Option[Date], acquisitionDate: Option[Date], hasRebasedValue: Boolean): Boolean =
+  def displayBetweenQuestion(disposalDate: Option[LocalDate], acquisitionDate: Option[LocalDate], hasRebasedValue: Boolean): Boolean =
     (disposalDate, acquisitionDate) match {
       case (Some(dDate), Some(aDate)) if Dates.dateAfterOctober(dDate) && !Dates.dateAfterStart(aDate) => true
       case (Some(dDate), aDateOption) if Dates.dateAfterOctober(dDate) && hasRebasedValue => true
       case _ => false
     }
 
-  def displayBeforeQuestion(disposalDate: Option[Date], acquisitionDate: Option[Date], hasRebasedValue: Boolean): Boolean =
+  def displayBeforeQuestion(disposalDate: Option[LocalDate], acquisitionDate: Option[LocalDate], hasRebasedValue: Boolean): Boolean =
     (disposalDate, acquisitionDate) match {
       case (Some(dDate), Some(aDate)) if Dates.dateAfterOctober(dDate) => true
       case (Some(dDate), Some(aDate)) if !Dates.dateAfterStart(aDate) => true
@@ -73,7 +72,7 @@ trait PrivateResidenceReliefController extends FrontendController with ValidActi
 
   val privateResidenceRelief = ValidateSession.async { implicit request =>
 
-    def action(disposalDate: Option[Date], acquisitionDate: Option[Date], hasRebasedValue: Boolean) = {
+    def action(disposalDate: Option[LocalDate], acquisitionDate: Option[LocalDate], hasRebasedValue: Boolean) = {
 
       val showBetweenQuestion = displayBetweenQuestion(disposalDate, acquisitionDate, hasRebasedValue)
       val showBeforeQuestion = displayBeforeQuestion(disposalDate, acquisitionDate, hasRebasedValue)
@@ -97,7 +96,7 @@ trait PrivateResidenceReliefController extends FrontendController with ValidActi
 
   val submitPrivateResidenceRelief = ValidateSession.async { implicit request =>
 
-    def action(disposalDate: Option[Date], acquisitionDate: Option[Date], hasRebasedValue: Boolean) = {
+    def action(disposalDate: Option[LocalDate], acquisitionDate: Option[LocalDate], hasRebasedValue: Boolean) = {
 
       val showBetweenQuestion = displayBetweenQuestion(disposalDate, acquisitionDate, hasRebasedValue)
       val showBeforeQuestion = displayBeforeQuestion(disposalDate, acquisitionDate, hasRebasedValue)

@@ -32,7 +32,7 @@ object OtherReliefsRebasedController extends OtherReliefsRebasedController{
 }
 
 trait OtherReliefsRebasedController extends FrontendController with ValidActiveSession {
-  override val sessionTimeoutUrl = controllers.nonresident.routes.CalculationController.restart().url
+  override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   val calcConnector: CalculatorConnector
 
   val otherReliefsRebased = ValidateSession.async { implicit request =>

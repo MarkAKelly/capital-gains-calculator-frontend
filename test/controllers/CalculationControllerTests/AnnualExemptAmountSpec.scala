@@ -35,7 +35,7 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.nonresident.{AnnualExemptAmountController, CalculationController, routes}
+import controllers.nonresident.{AnnualExemptAmountController, routes}
 import models.nonresident.{AnnualExemptAmountModel, CustomerTypeModel, DisabledTrusteeModel}
 import play.api.mvc.Result
 

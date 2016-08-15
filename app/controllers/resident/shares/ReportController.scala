@@ -16,8 +16,8 @@
 
 package controllers.resident.shares
 
-import java.text.SimpleDateFormat
-import java.util.Date
+import common.Dates._
+import java.time.LocalDate
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import it.innove.play.pdf.PdfGenerator
@@ -26,6 +26,7 @@ import play.api.i18n.Messages
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation.resident.shares.{report => views}
+
 import scala.concurrent.Future
 
 object ReportController extends ReportController {
@@ -40,10 +41,7 @@ trait ReportController extends FeatureLock {
     s"http://${request.host}/"
   }
 
-  def getTaxYear(disposalDate: Date)(implicit hc: HeaderCarrier): Future[Option[TaxYearModel]] = {
-    val formats = new SimpleDateFormat("yyyy-MM-dd")
-    calcConnector.getTaxYear(formats.format(disposalDate))
-  }
+  def getTaxYear(disposalDate: LocalDate)(implicit hc: HeaderCarrier): Future[Option[TaxYearModel]] = calcConnector.getTaxYear(disposalDate.format(requestFormatter))
 
   def getMaxAEA(taxYear: Int)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
     calcConnector.getFullAEA(taxYear)

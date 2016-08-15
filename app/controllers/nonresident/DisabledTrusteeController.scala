@@ -33,7 +33,7 @@ object DisabledTrusteeController extends DisabledTrusteeController {
 trait DisabledTrusteeController extends FrontendController with ValidActiveSession {
 
   val calcConnector: CalculatorConnector
-  override val sessionTimeoutUrl = controllers.nonresident.routes.CalculationController.restart().url
+  override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
 
   val disabledTrustee = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[DisabledTrusteeModel](KeystoreKeys.disabledTrustee).map {

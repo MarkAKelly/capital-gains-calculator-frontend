@@ -32,7 +32,7 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{PersonalAllowanceController, routes}
 import models.nonresident.PersonalAllowanceModel
 import play.api.mvc.Result
 
@@ -40,7 +40,7 @@ class PersonalAllowanceSpec extends UnitSpec with WithFakeApplication with Mocki
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget(getData: Option[PersonalAllowanceModel], postData: Option[PersonalAllowanceModel]): CalculationController = {
+  def setupTarget(getData: Option[PersonalAllowanceModel], postData: Option[PersonalAllowanceModel]): PersonalAllowanceController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -55,14 +55,14 @@ class PersonalAllowanceSpec extends UnitSpec with WithFakeApplication with Mocki
     when(mockCalcConnector.saveFormData[PersonalAllowanceModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
 
-    new CalculationController {
+    new PersonalAllowanceController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
+     
     }
   }
 
   // GET Tests
-  "Calling the CalculationController.customerType" when {
+  "Calling the PersonalAllowanceController.customerType" when {
 
     lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/personal-allowance").withSession(SessionKeys.sessionId -> "12345")
 
@@ -147,7 +147,7 @@ class PersonalAllowanceSpec extends UnitSpec with WithFakeApplication with Mocki
   }
 
   // POST Tests
-  "In CalculationController calling the .submitPersonalAllowance action" when {
+  "In PersonalAllowanceController calling the .submitPersonalAllowance action" when {
 
     def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
       "/calculate-your-capital-gains/non-resident/personal-allowance")

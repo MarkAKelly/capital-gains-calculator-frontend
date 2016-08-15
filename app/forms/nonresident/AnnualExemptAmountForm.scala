@@ -26,20 +26,15 @@ import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object AnnualExemptAmountForm {
 
-  def validateMaximum(maxAEA: BigDecimal, aea: BigDecimal): Boolean = {
-    if (aea > maxAEA) false else true
-  }
-
-  def errorMaxMessage(maxAEA: BigDecimal): String = {
+  def errorMaxMessage(maxAEA: BigDecimal): String =
     Messages("calc.annualExemptAmount.errorMax") + MoneyPounds(maxAEA, 0).quantity + " " + Messages("calc.annualExemptAmount.errorMaxEnd")
-  }
 
   def annualExemptAmountForm (maxAEA: BigDecimal = BigDecimal(0)): Form[AnnualExemptAmountModel] = Form(
     mapping(
       "annualExemptAmount" -> bigDecimal
-        .verifying(errorMaxMessage(maxAEA), annualExemptAmount => validateMaximum(maxAEA, annualExemptAmount))
+        .verifying(errorMaxMessage(maxAEA), _ <= maxAEA)
         .verifying(Messages("calc.annualExemptAmount.errorNegative"), annualExemptAmount => isPositive(annualExemptAmount))
-        .verifying(Messages("calc.annualExemptAmount.errorDecimalPlaces"), annualExemptAmount => isMaxTwoDecimalPlaces(annualExemptAmount))
+        .verifying(Messages("calc.annualExemptAmount.errorDecimalPlaces"), annualExemptAmount => decimalPlacesCheck(annualExemptAmount))
     )(AnnualExemptAmountModel.apply)(AnnualExemptAmountModel.unapply)
   )
 }

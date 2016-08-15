@@ -16,13 +16,14 @@
 
 package models.resident.properties
 
-import java.util.Date
+import java.time.LocalDate
+import common.Dates._
 
-import play.api.libs.json.Json
+import play.api.libs.json._
 
 case class YourAnswersSummaryModel
 (
-  disposalDate: Date,
+  disposalDate: LocalDate,
   disposalValue: BigDecimal,
   disposalCosts: BigDecimal,
   acquisitionValue: BigDecimal,
@@ -31,5 +32,11 @@ case class YourAnswersSummaryModel
 )
 
 object YourAnswersSummaryModel {
+
+  implicit val localDateFormat = new Format[LocalDate] {
+    override def reads(json: JsValue): JsResult[LocalDate] = json.validate[String].map(LocalDate.parse(_,formatter))
+    override def writes(o: LocalDate): JsValue = Json.toJson(o.toString)
+  }
+
   implicit val format = Json.format[YourAnswersSummaryModel]
 }

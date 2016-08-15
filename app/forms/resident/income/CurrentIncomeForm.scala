@@ -34,7 +34,7 @@ object CurrentIncomeForm {
         .verifying(Messages("calc.common.error.invalidAmount"), bigDecimalCheck)
         .transform[BigDecimal](stringToBigDecimal, _.toString())
         .verifying(Messages("calc.common.error.maxAmountExceeded", MoneyPounds(Constants.maxNumeric, 0).quantity), maxCheck)
-        .verifying(Messages("calc.common.error.minimumAmount"), minCheck)
+        .verifying(Messages("calc.common.error.minimumAmount"), isPositive)
         .verifying(Messages("calc.common.error.invalidAmount"), decimalPlacesCheck)
     )(CurrentIncomeModel.apply)(CurrentIncomeModel.unapply)
   )
