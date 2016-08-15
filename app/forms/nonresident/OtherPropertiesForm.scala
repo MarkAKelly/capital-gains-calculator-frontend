@@ -42,14 +42,14 @@ object OtherPropertiesForm {
 
   def validateTwoDec(data: OtherPropertiesModel, showHiddenQuestion: Boolean) = {
     data.otherProperties match {
-        case "Yes" if showHiddenQuestion => isMaxTwoDecimalPlaces(data.otherPropertiesAmt.getOrElse(0))
+        case "Yes" if showHiddenQuestion => decimalPlacesCheck(data.otherPropertiesAmt.getOrElse(0))
         case _ => true
     }
   }
 
   def validateMax(data: OtherPropertiesModel, showHiddenQuestion: Boolean) = {
       data.otherProperties match {
-        case "Yes" if showHiddenQuestion => isLessThanEqualMaxNumeric(data.otherPropertiesAmt.getOrElse(0))
+        case "Yes" if showHiddenQuestion => maxCheck(data.otherPropertiesAmt.getOrElse(0))
         case _ => true
       }
   }
