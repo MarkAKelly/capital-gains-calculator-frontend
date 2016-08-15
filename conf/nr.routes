@@ -15,8 +15,8 @@ GET         /current-income                     controllers.nonresident.CurrentI
 POST        /current-income                     controllers.nonresident.CurrentIncomeController.submitCurrentIncome
 
 #Personal Allowance
-GET         /personal-allowance                 controllers.nonresident.CalculationController.personalAllowance
-POST        /personal-allowance                 controllers.nonresident.CalculationController.submitPersonalAllowance
+GET         /personal-allowance                 controllers.nonresident.PersonalAllowanceController.personalAllowance
+POST        /personal-allowance                 controllers.nonresident.PersonalAllowanceController.submitPersonalAllowance
 
 #Other Properties
 GET         /other-properties                   controllers.nonresident.OtherPropertiesController.otherProperties

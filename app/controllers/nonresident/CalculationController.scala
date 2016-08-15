@@ -50,25 +50,7 @@ trait CalculationController extends FrontendController with ValidActiveSession {
   //################### Disabled Trustee methods #######################
 
   //################### Personal Allowance methods #######################
-  val personalAllowance = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[PersonalAllowanceModel](KeystoreKeys.personalAllowance).map {
-      case Some(data) => Ok(calculation.nonresident.personalAllowance(personalAllowanceForm().fill(data)))
-      case None => Ok(calculation.nonresident.personalAllowance(personalAllowanceForm()))
-    }
-  }
-
-  val submitPersonalAllowance = ValidateSession.async { implicit request =>
-    calcConnector.getPA(2017).flatMap { pa =>
-      personalAllowanceForm(pa.get).bindFromRequest.fold(
-        errors => Future.successful(BadRequest(calculation.nonresident.personalAllowance(errors))),
-        success => {
-          calcConnector.saveFormData(KeystoreKeys.personalAllowance, success)
-          Future.successful(Redirect(routes.OtherPropertiesController.otherProperties()))
-        }
-      )
-    }
-  }
-
+  
   //################### Other Properties methods #######################
 
   //################### Rebased value methods #######################

@@ -46,7 +46,7 @@ trait CurrentIncomeController extends FrontendController with ValidActiveSession
   val submitCurrentIncome = ValidateSession.async { implicit request =>
 
     def routeRequest(success: CurrentIncomeModel) = {
-      if (success.currentIncome > 0) Future.successful(Redirect(routes.CalculationController.personalAllowance()))
+      if (success.currentIncome > 0) Future.successful(Redirect(routes.PersonalAllowanceController.personalAllowance()))
       else Future.successful(Redirect(routes.OtherPropertiesController.otherProperties()))
     }
 
