@@ -218,4 +218,17 @@ class CalculateRequestConstructorSpec extends UnitSpec {
     }
   }
 
+  "Calling rebasedValue" should {
+
+    "return a value of 10000" in {
+      val result = CalculateRequestConstructor.rebasedValue(10000)
+      result shouldBe "&rebasedValue=10000"
+    }
+
+    "return a value of 2000" in {
+      val result = CalculateRequestConstructor.rebasedValue(2000)
+      result shouldBe "&rebasedValue=2000"
+    }
+  }
+
 }
