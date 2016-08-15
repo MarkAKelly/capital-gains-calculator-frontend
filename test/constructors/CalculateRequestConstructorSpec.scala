@@ -191,4 +191,19 @@ class CalculateRequestConstructorSpec extends UnitSpec {
 
   }
 
+  "Calling taAcquisitionDate" should {
+
+    "return a value of 2015-10-9" in {
+      val model = AcquisitionDateModel("Yes", Some(9), Some(10), Some(2015))
+      val result = CalculateRequestConstructor.taAcquisitionDate(model)
+      result shouldBe "&acquisitionDate=2015-10-9"
+    }
+
+    "return a value of 2016-3-20" in {
+      val model = AcquisitionDateModel("Yes", Some(20), Some(3), Some(2016))
+      val result = CalculateRequestConstructor.taAcquisitionDate(model)
+      result shouldBe "&acquisitionDate=2016-3-20"
+    }
+  }
+
 }

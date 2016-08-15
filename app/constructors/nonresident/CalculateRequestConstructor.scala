@@ -87,21 +87,21 @@ object CalculateRequestConstructor {
   }
 
   def taCalcUrlExtra(input: SummaryModel): String = {
-    s"${
-      improvements(input)
-    }&acquisitionDate=${
-      input.acquisitionDateModel.year.get
-    }-${input.acquisitionDateModel.month.get}-${
-      input.acquisitionDateModel.day.get
-    }${
-      acquisition(input)
-    }&reliefs=${
-      input.otherReliefsModelTA.otherReliefs.getOrElse(0)
-    }${
-      privateResidenceReliefTA(input)
-    }${
-      isClaimingPRR(input)
-    }"
+    improvements(input) +
+      taAcquisitionDate(input.acquisitionDateModel) +
+      s"${
+        acquisition(input)
+      }&reliefs=${
+        input.otherReliefsModelTA.otherReliefs.getOrElse(0)
+      }${
+        privateResidenceReliefTA(input)
+      }${
+        isClaimingPRR(input)
+      }"
+  }
+
+  def taAcquisitionDate(acquisitionDateModel: AcquisitionDateModel): String = {
+    s"&acquisitionDate=${acquisitionDateModel.year.get}-${acquisitionDateModel.month.get}-${acquisitionDateModel.day.get}"
   }
 
   def rebasedCalcUrlExtra(input: SummaryModel): String = {
