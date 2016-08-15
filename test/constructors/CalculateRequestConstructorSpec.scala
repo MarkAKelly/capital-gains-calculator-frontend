@@ -371,4 +371,19 @@ class CalculateRequestConstructorSpec extends UnitSpec {
       result shouldBe "&allowableLossesAmt=0"
     }
   }
+
+  "Calling disposalDate" should {
+
+    "return a date of 2014-5-10" in {
+      val model = DisposalDateModel(10, 5, 2014)
+      val result = CalculateRequestConstructor.disposalDate(model)
+      result shouldBe "&disposalDate=2014-5-10"
+    }
+
+    "return a date of 2013-7-13" in {
+      val model = DisposalDateModel(13, 7, 2013)
+      val result = CalculateRequestConstructor.disposalDate(model)
+      result shouldBe "&disposalDate=2013-7-13"
+    }
+  }
 }
