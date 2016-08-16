@@ -67,11 +67,7 @@ trait CalculationElectionConstructor {
               Some(Messages("calc.calculationElection.message.timeDate")),
               routes.OtherReliefsTAController.otherReliefsTA().toString(),
               otherReliefsTA),
-            ("rebased", rebasedResult.get.taxOwed.setScale(2).toString(),
-              Messages("calc.calculationElection.message.rebased"),
-              Some(Messages("calc.calculationElection.message.rebasedDate")),
-              routes.OtherReliefsRebasedController.otherReliefsRebased().toString(),
-              otherReliefsRebased)
+            rebasedElementConstructor(rebasedResult, otherReliefsRebased)
           )
         }
         else {
@@ -97,11 +93,7 @@ trait CalculationElectionConstructor {
               None,
               routes.OtherReliefsController.otherReliefs().toString(),
               otherReliefsFlat),
-            ("rebased", rebasedResult.get.taxOwed.setScale(2).toString(),
-              Messages("calc.calculationElection.message.rebased"),
-              Some(Messages("calc.calculationElection.message.rebasedDate")),
-              routes.OtherReliefsRebasedController.otherReliefsRebased().toString(),
-              otherReliefsRebased)
+            rebasedElementConstructor(rebasedResult, otherReliefsRebased)
           )
         }
         else {
@@ -114,5 +106,13 @@ trait CalculationElectionConstructor {
         }
       }
     }
+  }
+
+  private def rebasedElementConstructor(rebasedResult: Option[CalculationResultModel], otherReliefsRebased: Option[BigDecimal]) = {
+    ("rebased", rebasedResult.get.taxOwed.setScale(2).toString(),
+      Messages("calc.calculationElection.message.rebased"),
+      Some(Messages("calc.calculationElection.message.rebasedDate")),
+      routes.OtherReliefsRebasedController.otherReliefsRebased().toString(),
+      otherReliefsRebased)
   }
 }
