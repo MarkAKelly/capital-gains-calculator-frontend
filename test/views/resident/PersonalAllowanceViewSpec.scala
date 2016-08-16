@@ -121,9 +121,6 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
         "has a step value of '1'" in {
           input.attr("step") shouldBe "1"
         }
-        s"has placeholder 'eg. 25000.00'" in {
-          input.attr("placeholder") shouldBe "eg. 25000.00"
-        }
       }
 
       "have a continue button that" should {
