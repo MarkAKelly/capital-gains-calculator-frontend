@@ -110,11 +110,7 @@ class CurrentIncomeViewSpec extends UnitSpec with WithFakeApplication with FakeR
         }
 
         "has a step value of '0.01'" in {
-          input.attr("step") shouldBe "0.01"
-        }
-
-        s"has placeholder 'eg. 25000.00'" in {
-          input.attr("placeholder") shouldBe "eg. 25000.00"
+          input.attr("step") shouldBe "0.01"git
         }
       }
 
