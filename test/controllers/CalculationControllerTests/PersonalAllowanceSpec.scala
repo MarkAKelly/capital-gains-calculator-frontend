@@ -19,7 +19,6 @@ package controllers.CalculationControllerTests
 import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
-import constructors.nonresident.CalculationElectionConstructor
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import play.api.i18n.Messages
@@ -43,7 +42,6 @@ class PersonalAllowanceSpec extends UnitSpec with WithFakeApplication with Mocki
   def setupTarget(getData: Option[PersonalAllowanceModel], postData: Option[PersonalAllowanceModel]): PersonalAllowanceController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
-    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[PersonalAllowanceModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))

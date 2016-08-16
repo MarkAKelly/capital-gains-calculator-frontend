@@ -24,7 +24,6 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{summary => views}
 import assets.{MessageLookup => commonMessages}
-import common.Dates._
 import common.resident.PrivateResidenceReliefKeys
 import controllers.resident.properties.routes
 import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, PreviousTaxableGainsModel}
@@ -106,7 +105,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
     }
 
     "does not have a notice summary" in {
-      doc.select("div.notice-wrapper").isEmpty() shouldBe true
+      doc.select("div.notice-wrapper").isEmpty shouldBe true
     }
 
     s"have a section for the Calculation details" which {
@@ -416,7 +415,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
         }
 
         "has the question as part of the link" in {
-          doc.select("#broughtForwardLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.lossesBroughtForward.question("2015/16")}"
+          doc.select("#broughtForwardLosses-option a").text shouldBe
+            s"${commonMessages.calcBaseChange} ${commonMessages.lossesBroughtForward.question("2015/16")}"
         }
 
         "has the question component of the link as visuallyhidden" in {
@@ -462,7 +462,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
           doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
         }
 
-        s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
+        s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport().toString}" in {
           doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/final-report"
         }
 
@@ -695,7 +695,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
         doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
       }
 
-      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
+      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport().toString}" in {
         doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/final-report"
       }
 
@@ -840,7 +840,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
         doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
       }
 
-      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
+      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport().toString}" in {
         doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/final-report"
       }
 
@@ -933,7 +933,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
         doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
       }
 
-      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
+      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport().toString}" in {
         doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/final-report"
       }
 
@@ -1000,7 +1000,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
         doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
       }
 
-      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
+      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport().toString}" in {
         doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/final-report"
       }
 
@@ -1069,7 +1069,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
         doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
       }
 
-      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
+      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport().toString}" in {
         doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/final-report"
       }
 

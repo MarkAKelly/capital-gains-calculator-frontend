@@ -20,7 +20,7 @@ import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import common.resident.{PrivateResidenceReliefKeys => prrKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.properties.{DeductionsController, GainController}
+import controllers.resident.properties.DeductionsController
 import models.resident.properties.PrivateResidenceReliefModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers

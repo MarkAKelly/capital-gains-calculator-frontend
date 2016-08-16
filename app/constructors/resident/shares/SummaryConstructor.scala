@@ -17,7 +17,6 @@
 package constructors.resident.shares
 
 import models.resident._
-import models.resident.properties._
 import models.resident.shares.DeductionGainAnswersModel
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.views.helpers.MoneyPounds

@@ -20,7 +20,6 @@ import common.{Constants, KeystoreKeys}
 import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
-import constructors.nonresident.CalculationElectionConstructor
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import play.api.i18n.Messages
@@ -45,7 +44,6 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
   def setupTarget(getData: Option[RebasedCostsModel], postData: Option[RebasedCostsModel]): RebasedCostsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
-    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[RebasedCostsModel](Matchers.eq(KeystoreKeys.rebasedCosts))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))

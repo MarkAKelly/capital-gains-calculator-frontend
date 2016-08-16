@@ -31,7 +31,6 @@ trait CalculationElectionConstructor {
 
   val calcConnector: CalculatorConnector
 
-  //scalastyle:off
   def generateElection(
                         summary: SummaryModel,
                         hc: HeaderCarrier,
@@ -44,17 +43,16 @@ trait CalculationElectionConstructor {
                       ): Seq[(String, String, String, Option[String], String, Option[BigDecimal])] = {
     summary.acquisitionDateModel.hasAcquisitionDate match {
       case "Yes" if Dates.dateAfterStart(summary.acquisitionDateModel.day.get,
-        summary.acquisitionDateModel.month.get, summary.acquisitionDateModel.year.get) => {
+        summary.acquisitionDateModel.month.get, summary.acquisitionDateModel.year.get) =>
         Seq(("flat", flatResult.get.taxOwed.setScale(2).toString(),
           Messages("calc.calculationElection.message.flat"),
           None,
           routes.OtherReliefsController.otherReliefs().toString(),
           otherReliefsFlat))
-      }
+
       case "Yes" if !Dates.dateAfterStart(summary.acquisitionDateModel.day.get,
         summary.acquisitionDateModel.month.get,
-        summary.acquisitionDateModel.year.get) => {
-
+        summary.acquisitionDateModel.year.get) =>
         if (summary.rebasedValueModel.get.hasRebasedValue.equals("Yes")) {
           Seq(
             ("flat", flatResult.get.taxOwed.setScale(2).toString(),
@@ -88,8 +86,7 @@ trait CalculationElectionConstructor {
               otherReliefsTA)
           )
         }
-      }
-      case "No" => {
+      case "No" =>
         if (summary.rebasedValueModel.get.hasRebasedValue.equals("Yes")) {
           Seq(
             ("flat", flatResult.get.taxOwed.setScale(2).toString(),
@@ -112,7 +109,6 @@ trait CalculationElectionConstructor {
             otherReliefsFlat)
           )
         }
-      }
     }
   }
 }

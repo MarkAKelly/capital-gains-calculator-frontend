@@ -21,7 +21,6 @@ import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.CalculationElectionConstructor
-import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import play.api.i18n.Messages
@@ -50,55 +49,39 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
                   otherReliefsTA: Option[OtherReliefsModel] = None,
                   otherReliefsRebased: Option[OtherReliefsModel] = None
                  ): CalculationElectionController = {
-
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.createSummary(Matchers.any()))
       .thenReturn(summaryData)
 
-    val flatReliefs = otherReliefsFlat match {
-      case Some(x) => x.otherReliefs
-      case _ => None
-    }
-    val timeReliefs = otherReliefsTA match {
-      case Some(x) => x.otherReliefs
-      case _ => None
-    }
-    val rebasedReliefs = otherReliefsRebased match {
-      case Some(x) => x.otherReliefs
-      case _ => None
-    }
+    val flatReliefs = otherReliefsFlat match { case Some(x) => x.otherReliefs case _ => None }
+    val timeReliefs = otherReliefsTA match { case Some(x) => x.otherReliefs case _ => None }
+    val rebasedReliefs = otherReliefsRebased match { case Some(x) => x.otherReliefs case _ => None }
 
-    when(mockCalcElectionConstructor.generateElection(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any()))
+    when(mockCalcElectionConstructor.generateElection(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(),
+      Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any()))
       .thenReturn(Seq(
-        ("flat", "8000.00", "flat calculation",
-          None, routes.OtherReliefsController.otherReliefs().toString(), flatReliefs),
+        ("flat", "8000.00", "flat calculation", None, routes.OtherReliefsController.otherReliefs().toString(), flatReliefs),
         ("time", "8000.00", "time apportioned calculation",
           Some(Messages("calc.calculationElection.message.timeDate")), routes.OtherReliefsTAController.otherReliefsTA().toString(), timeReliefs),
         ("rebased", "10000.00", "time apportioned calculation",
           Some(Messages("calc.calculationElection.message.timeDate")), routes.OtherReliefsTAController.otherReliefsTA().toString(), rebasedReliefs)
       ))
-
     when(mockCalcConnector.calculateFlat(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(calc))
     when(mockCalcConnector.calculateTA(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(calc))
     when(mockCalcConnector.calculateRebased(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(calc))
-
     when(mockCalcConnector.fetchAndGetFormData[CalculationElectionModel](Matchers.eq(KeystoreKeys.calculationElection))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
-
     when(mockCalcConnector.fetchAndGetFormData[OtherReliefsModel](Matchers.eq(KeystoreKeys.otherReliefsFlat))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(otherReliefsFlat))
-
     when(mockCalcConnector.fetchAndGetFormData[OtherReliefsModel](Matchers.eq(KeystoreKeys.otherReliefsTA))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(otherReliefsTA))
-
     when(mockCalcConnector.fetchAndGetFormData[OtherReliefsModel](Matchers.eq(KeystoreKeys.otherReliefsRebased))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(otherReliefsRebased))
-
     lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(CalculationElectionModel("")))))
     when(mockCalcConnector.saveFormData[CalculationElectionModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
@@ -147,14 +130,16 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
 
           "have a link to 'https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-calculating-taxable-gain-or-loss'" +
             s"with text '${Messages("calc.calculationElection.link.one")}'" in {
-              document.body.getElementById("helpLink1").text shouldEqual s"${Messages("calc.calculationElection.link.one")} ${Messages("calc.base.externalLink")}"
-              document.body.getElementById("helpLink1").attr("href") shouldEqual "https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-calculating-taxable-gain-or-loss"
+              document.body.getElementById("helpLink1").text shouldEqual
+                s"${Messages("calc.calculationElection.link.one")} ${Messages("calc.base.externalLink")}"
+              document.body.getElementById("helpLink1").attr("href") shouldEqual
+                "https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-calculating-taxable-gain-or-loss"
           }
         }
 
-        s"have a 'Back' link to ${routes.AllowableLossesController.allowableLosses}" in {
+        s"have a 'Back' link to ${routes.AllowableLossesController.allowableLosses()}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.AllowableLossesController.allowableLosses.toString()
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.AllowableLossesController.allowableLosses().toString()
         }
 
         s"have the paragraph '${Messages("calc.calculationElection.paragraph.one")}'" in {
@@ -199,7 +184,6 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
 
       val target = setupTarget(None, None, TestModels.summaryIndividualFlatWithAEA)
       lazy val result = target.calculationElection(fakeRequest)
-      lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
         status(result) shouldBe 200
@@ -211,7 +195,6 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
 
       val target = setupTarget(None, None, TestModels.summaryIndividualRebasedAcqDateAfter)
       lazy val result = target.calculationElection(fakeRequest)
-      lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
         status(result) shouldBe 200
@@ -223,7 +206,6 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
 
       val target = setupTarget(None, None, TestModels.summaryIndividualRebased)
       lazy val result = target.calculationElection(fakeRequest)
-      lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
         status(result) shouldBe 200
@@ -235,7 +217,6 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
 
       val target = setupTarget(None, None, TestModels.summaryIndividualImprovementsNoRebasedModel)
       lazy val result = target.calculationElection(fakeRequest)
-      lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
         status(result) shouldBe 200
@@ -247,7 +228,6 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
 
       val target = setupTarget(None, None, TestModels.summaryIndividualRebasedNoAcqDate)
       lazy val result = target.calculationElection(fakeRequest)
-      lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
         status(result) shouldBe 200
@@ -406,7 +386,7 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
       }
 
       "redirect to the summary page" in {
-        redirectLocation(result) shouldBe Some(s"${routes.SummaryController.summary}")
+        redirectLocation(result) shouldBe Some(s"${routes.SummaryController.summary()}")
       }
     }
 
@@ -448,7 +428,8 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
 
     "submitting a form with completely unrelated 'ew1234qwer'" should  {
 
-      lazy val result = executeTargetWithMockData("ew1234qwer", Some(TestModels.calcModelOneRate), TestModels.summaryIndividualImprovementsNoRebasedModel, "continue")
+      lazy val result = executeTargetWithMockData("ew1234qwer", Some(TestModels.calcModelOneRate),
+        TestModels.summaryIndividualImprovementsNoRebasedModel, "continue")
 
       "return a 400" in {
         status(result) shouldBe 400

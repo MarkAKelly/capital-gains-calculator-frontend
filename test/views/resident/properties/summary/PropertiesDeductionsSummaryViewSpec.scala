@@ -101,7 +101,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
     }
 
     "does not have a notice summary" in {
-      doc.select("div.notice-wrapper").isEmpty() shouldBe true
+      doc.select("div.notice-wrapper").isEmpty shouldBe true
     }
 
     s"have a section for the Calculation details" which {
@@ -397,7 +397,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         }
 
         "has the question as part of the link" in {
-          doc.select("#broughtForwardLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.lossesBroughtForward.question("2015/16")}"
+          doc.select("#broughtForwardLosses-option a").text shouldBe
+            s"${commonMessages.calcBaseChange} ${commonMessages.lossesBroughtForward.question("2015/16")}"
         }
 
         "has the question component of the link as visuallyhidden" in {
@@ -571,7 +572,9 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         }
 
         "should have the correct help text" in {
-          doc.select("#allowableLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${commonMessages.calcBaseExternalLink} ${messages.remainingAllowableLossHelp}")
+          doc.select("#allowableLossRemaining-amount div span").text() should
+            include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} " +
+              s"${commonMessages.calcBaseExternalLink} ${messages.remainingAllowableLossHelp}")
         }
 
         "should have a link in the help text to https://www.gov.uk/capital-gains-tax/losses" in {
@@ -590,7 +593,9 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         }
 
         "should have the correct help text" in {
-          doc.select("#broughtForwardLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${commonMessages.calcBaseExternalLink} ${messages.remainingBroughtForwardLossHelp}")
+          doc.select("#broughtForwardLossRemaining-amount div span").text() should
+            include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} " +
+              s"${commonMessages.calcBaseExternalLink} ${messages.remainingBroughtForwardLossHelp}")
         }
 
         "should have a link in the help text to https://www.gov.uk/capital-gains-tax/losses" in {
@@ -793,7 +798,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         }
 
         "has the question as part of the link" in {
-          doc.select("#broughtForwardLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.lossesBroughtForward.question("2013/14")}"
+          doc.select("#broughtForwardLosses-option a").text shouldBe
+            s"${commonMessages.calcBaseChange} ${commonMessages.lossesBroughtForward.question("2013/14")}"
         }
 
         "has the question component of the link as visuallyhidden" in {
@@ -926,7 +932,9 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       }
 
       "should have the correct help text" in {
-        doc.select("#allowableLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${commonMessages.calcBaseExternalLink} ${messages.remainingAllowableLossHelp}")
+        doc.select("#allowableLossRemaining-amount div span").text() should
+          include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} " +
+            s"${commonMessages.calcBaseExternalLink} ${messages.remainingAllowableLossHelp}")
       }
     }
 
@@ -949,7 +957,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       }
 
       s"display the text ${messages.whatToDoNextText}" in {
-        doc.select("div#whatToDoNextNoLossText").text shouldBe s"${messages.whatToDoNextNoLossText} ${messages.whatToDoNextNoLossLinkProperties} ${commonMessages.calcBaseExternalLink}."
+        doc.select("div#whatToDoNextNoLossText").text shouldBe
+          s"${messages.whatToDoNextNoLossText} ${messages.whatToDoNextNoLossLinkProperties} ${commonMessages.calcBaseExternalLink}."
       }
 
       s"have the link text ${messages.whatToDoNextNoLossLinkProperties}${commonMessages.calcBaseExternalLink}" in {
@@ -1024,7 +1033,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
     lazy val doc = Jsoup.parse(view.body)
 
     "has a numeric output row for allowable losses remaining" in {
-      doc.select("#allowableLossRemaining").isEmpty() shouldBe true
+      doc.select("#allowableLossRemaining").isEmpty shouldBe true
     }
 
     "has a numeric output row for brought forward losses remaining" which {
@@ -1038,7 +1047,9 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       }
 
       "should have the correct help text" in {
-        doc.select("#broughtForwardLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${commonMessages.calcBaseExternalLink} ${messages.remainingBroughtForwardLossHelp}")
+        doc.select("#broughtForwardLossRemaining-amount div span").text() should
+          include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} " +
+            s"${commonMessages.calcBaseExternalLink} ${messages.remainingBroughtForwardLossHelp}")
       }
     }
 
@@ -1051,7 +1062,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
     }
 
     s"display the text ${messages.whatToDoNextText}" in {
-      doc.select("div#whatToDoNextNoLossText").text shouldBe s"${messages.whatToDoNextNoLossText} ${messages.whatToDoNextNoLossLinkProperties} ${commonMessages.calcBaseExternalLink}."
+      doc.select("div#whatToDoNextNoLossText").text shouldBe
+        s"${messages.whatToDoNextNoLossText} ${messages.whatToDoNextNoLossLinkProperties} ${commonMessages.calcBaseExternalLink}."
     }
 
     s"have the link text ${messages.whatToDoNextNoLossLinkProperties}${commonMessages.calcBaseExternalLink}" in {

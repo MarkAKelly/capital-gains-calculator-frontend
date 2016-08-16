@@ -16,7 +16,6 @@
 
 package common
 
-import java.text.SimpleDateFormat
 import uk.gov.hmrc.play.test.UnitSpec
 import java.time.LocalDate
 import common.Dates._

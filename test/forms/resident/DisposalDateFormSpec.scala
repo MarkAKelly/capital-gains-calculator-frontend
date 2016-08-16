@@ -90,7 +90,7 @@ class DisposalDateFormSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
 
       s"have an error message for the date of ${messages.realDateError}" in {
-        form.errors.apply(0).message shouldBe messages.realDateError
+        form.errors.head.message shouldBe messages.realDateError
       }
     }
 
@@ -103,7 +103,7 @@ class DisposalDateFormSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
 
       s"have an error message for the date of ${messages.invalidYearRange}" in {
-        form.errors.apply(0).message shouldBe messages.invalidYearRange
+        form.errors.head.message shouldBe messages.invalidYearRange
       }
     }
 
@@ -116,7 +116,7 @@ class DisposalDateFormSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
 
       s"have an error message for the date of ${messages.invalidYearRange}" in {
-        form.errors.apply(0).message shouldBe messages.invalidYearRange
+        form.errors.head.message shouldBe messages.invalidYearRange
       }
     }
   }

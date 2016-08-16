@@ -19,11 +19,12 @@ package constructors.nonresident
 import models.nonresident.ImprovementsModel
 import play.api.data.Form
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import views.html.helpers._
 
 object ImprovementsConstructor {
 
-  def generateImprovements(improvementsForm: Form[ImprovementsModel], hasRebasedValue: String) = {
+  def generateImprovements(improvementsForm: Form[ImprovementsModel], hasRebasedValue: String): HtmlFormat.Appendable = {
     hasRebasedValue match {
       case "Yes" => formHiddenYesNoRadio(
         improvementsForm,

@@ -18,7 +18,7 @@ package controllers.resident.properties.DeductionsControllerSpec
 
 import assets.MessageLookup.{allowableLosses => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
-import config.{AppConfig, ApplicationConfig}
+import config.AppConfig
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.DeductionsController
@@ -81,7 +81,8 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
 
     "request has a valid session and some keystore value" should {
 
-      lazy val target = setupTarget(Some(AllowableLossesModel(true)), Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+      lazy val target = setupTarget(Some(AllowableLossesModel(true)), Some(DisposalDateModel(10, 10, 2015)),
+        Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val result = target.allowableLosses(fakeRequestWithSession)
 
       "return a status of 200" in {
