@@ -62,11 +62,7 @@ trait CalculationElectionConstructor {
               None,
               routes.OtherReliefsController.otherReliefs().toString(),
               otherReliefsFlat),
-            ("time", timeResult.get.taxOwed.setScale(2).toString(),
-              Messages("calc.calculationElection.message.time"),
-              Some(Messages("calc.calculationElection.message.timeDate")),
-              routes.OtherReliefsTAController.otherReliefsTA().toString(),
-              otherReliefsTA),
+            timeElementConstructor(timeResult, otherReliefsTA),
             ("rebased", rebasedResult.get.taxOwed.setScale(2).toString(),
               Messages("calc.calculationElection.message.rebased"),
               Some(Messages("calc.calculationElection.message.rebasedDate")),
@@ -81,11 +77,7 @@ trait CalculationElectionConstructor {
               None,
               routes.OtherReliefsController.otherReliefs().toString(),
               otherReliefsFlat),
-            ("time", timeResult.get.taxOwed.setScale(2).toString(),
-              Messages("calc.calculationElection.message.time"),
-              Some(Messages("calc.calculationElection.message.timeDate")),
-              routes.OtherReliefsTAController.otherReliefsTA().toString(),
-              otherReliefsTA)
+            timeElementConstructor(timeResult, otherReliefsTA)
           )
         }
       }
@@ -114,5 +106,13 @@ trait CalculationElectionConstructor {
         }
       }
     }
+  }
+
+  private def timeElementConstructor(timeResult: Option[CalculationResultModel], otherReliefsTa: Option[BigDecimal]) = {
+    ("time", timeResult.get.taxOwed.setScale(2).toString(),
+      Messages("calc.calculationElection.message.time"),
+      Some(Messages("calc.calculationElection.message.timeDate")),
+      routes.OtherReliefsTAController.otherReliefsTA().toString(),
+      otherReliefsTa)
   }
 }
