@@ -87,8 +87,8 @@ class PrivateResidenceReliefValueViewSpec extends UnitSpec with WithFakeApplicat
         linkOne.attr("href") shouldEqual "https://www.gov.uk/tax-sell-home/absence-from-home"
       }
 
-      s"contain a visually-hidden legend with text ${messages.prrLink}" in {
-        linkOne.select("span.visuallyhidden").text shouldEqual messages.prrLink
+      s"contain a visually-hidden legend with text ${MessageLookup.calcBaseExternalLink}" in {
+        linkOne.select("span.visuallyhidden").text shouldEqual MessageLookup.calcBaseExternalLink
       }
     }
   }

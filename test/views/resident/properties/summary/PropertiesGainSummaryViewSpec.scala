@@ -354,7 +354,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
     }
 
     s"have the link text ${messages.whatToDoNextNoLossLinkProperties}${commonMessages.calcBaseExternalLink}" in {
-      doc.select("div#whatToDoNextNoLossText a").text shouldBe s"${messages.whatToDoNextNoLossLinkProperties}"
+      doc.select("div#whatToDoNextNoLossText a").text should include(s"${messages.whatToDoNextNoLossLinkProperties}")
     }
 
     s"have a link to https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax" in {

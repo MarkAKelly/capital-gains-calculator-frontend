@@ -342,7 +342,7 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     }
 
     s"have the link text ${messages.whatToDoNextNoLossLinkShares}${commonMessages.calcBaseExternalLink}" in {
-      doc.select("div#whatToDoNextNoLossText a").text shouldBe s"${messages.whatToDoNextNoLossLinkShares}"
+      doc.select("div#whatToDoNextNoLossText a").text should include(s"${messages.whatToDoNextNoLossLinkShares}")
     }
 
     s"have a link to https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax" in {
