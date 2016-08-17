@@ -420,7 +420,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "the PRR claimed question's answer should be 'No' and be a link to the PRR page" in {
               document.body().getElementById("deductions(0)").text shouldBe "No"
-              document.body().getElementById("deductions(0)").attr("href") shouldEqual routes.PrivateResidenceReliefController.privateResidenceRelief().toString()
+              document.body().getElementById("deductions(0)").attr("href") shouldEqual
+                routes.PrivateResidenceReliefController.privateResidenceRelief().toString()
             }
 
           }
@@ -877,7 +878,6 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
       None
     )
     lazy val result = target.restart()(fakeRequest)
-    lazy val document = Jsoup.parse(bodyOf(result))
 
     "return a 303" in {
       status(result) shouldBe 303

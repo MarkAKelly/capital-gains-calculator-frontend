@@ -111,8 +111,10 @@ trait IncomeController extends FeatureLock {
 
     def routeRequest(backUrl: String): Future[Result] = {
       calcConnector.fetchAndGetFormData[PreviousTaxableGainsModel](keystoreKeys.previousTaxableGains).map {
-        case Some(data) => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm.fill(data), backUrl, previousTaxableGainsPostAction, homeLink, JourneyKeys.properties))
-        case None => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm, backUrl, previousTaxableGainsPostAction, homeLink, JourneyKeys.properties))
+        case Some(data) => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm.fill(data), backUrl,
+          previousTaxableGainsPostAction, homeLink, JourneyKeys.properties))
+        case None => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm, backUrl,
+          previousTaxableGainsPostAction, homeLink, JourneyKeys.properties))
       }
     }
 
@@ -212,7 +214,8 @@ trait IncomeController extends FeatureLock {
     }
 
     def routeRequest(taxYearModel: TaxYearModel, standardPA: BigDecimal, formData: Form[PersonalAllowanceModel]): Future[Result] = {
-      Future.successful(Ok(commonViews.personalAllowance(formData, taxYearModel, standardPA, homeLink, postActionPersonalAllowance, backLinkPersonalAllowance, JourneyKeys.properties)))
+      Future.successful(Ok(commonViews.personalAllowance(formData, taxYearModel, standardPA, homeLink,
+        postActionPersonalAllowance, backLinkPersonalAllowance, JourneyKeys.properties)))
     }
     for {
       disposalDate <- getDisposalDate
@@ -228,7 +231,7 @@ trait IncomeController extends FeatureLock {
   val submitPersonalAllowance = FeatureLockForRTT.async { implicit request =>
 
     def getMaxPA(year: Int): Future[Option[BigDecimal]] = {
-      calcConnector.getPA(year, true)(hc)
+      calcConnector.getPA(year, isEligibleBlindPersonsAllowance = true)(hc)
     }
 
     def routeRequest(maxPA: BigDecimal, standardPA: BigDecimal, taxYearModel: TaxYearModel): Future[Result] = {

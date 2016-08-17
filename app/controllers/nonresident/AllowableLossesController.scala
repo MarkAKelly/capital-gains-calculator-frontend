@@ -18,7 +18,6 @@ package controllers.nonresident
 
 import common.{Dates, KeystoreKeys}
 import connectors.CalculatorConnector
-import constructors.nonresident.CalculationElectionConstructor
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.AllowableLossesForm._
 import models.nonresident.{AcquisitionDateModel, AllowableLossesModel, CalculationElectionModel, RebasedValueModel}

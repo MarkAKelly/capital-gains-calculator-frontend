@@ -17,8 +17,7 @@
 package forms.resident
 
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.{MessageLookup => commonMessages}
-import commonMessages.{reliefs => messages}
+import assets.MessageLookup.{reliefs => messages}
 import forms.resident.properties.NoPrrReliefsForm._
 import models.resident.properties.ReliefsModel
 import uk.gov.hmrc.play.views.helpers.MoneyPounds

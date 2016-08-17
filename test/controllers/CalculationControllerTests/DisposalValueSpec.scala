@@ -20,8 +20,6 @@ import common.Constants
 import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
-import constructors.nonresident.CalculationElectionConstructor
-import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import play.api.i18n.Messages
@@ -46,7 +44,6 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
   def setupTarget(getData: Option[DisposalValueModel],postData: Option[DisposalValueModel]): DisposalValueController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
-    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[DisposalValueModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -90,9 +87,9 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
           document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
         }
 
-        s"have a 'Back' link to ${routes.DisposalDateController.disposalDate}" in {
+        s"have a 'Back' link to ${routes.DisposalDateController.disposalDate()}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalDateController.disposalDate.toString()
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalDateController.disposalDate().toString()
         }
 
         "have the question 'How much did you sell or give away the property for?' as the legend of the input" in {
@@ -143,7 +140,7 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
         }
 
         "have the value 1000 auto-filled into the input box" in {
-          document.getElementById("disposalValue").attr("value") shouldEqual ("1000")
+          document.getElementById("disposalValue").attr("value") shouldEqual "1000"
         }
       }
     }

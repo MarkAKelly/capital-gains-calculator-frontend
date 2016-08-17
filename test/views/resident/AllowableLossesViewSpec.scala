@@ -30,7 +30,7 @@ class AllowableLossesViewSpec extends UnitSpec with WithFakeApplication with Fak
 
   "Allowable Losses view" should {
 
-    lazy val backLink = Some(controllers.resident.properties.routes.DeductionsController.otherProperties.toString())
+    lazy val backLink = Some(controllers.resident.properties.routes.DeductionsController.otherProperties().toString())
     lazy val view = views.allowableLosses(allowableLossesForm, TaxYearModel("2015/16", true, "2015/16"), postAction, backLink)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
@@ -91,7 +91,7 @@ class AllowableLossesViewSpec extends UnitSpec with WithFakeApplication with Fak
  }
 
   "Allowable Losses view with pre-selected values" should {
-    lazy val backLink = Some(controllers.resident.shares.routes.DeductionsController.otherDisposals.toString())
+    lazy val backLink = Some(controllers.resident.shares.routes.DeductionsController.otherDisposals().toString())
     lazy val form = allowableLossesForm.bind(Map(("isClaiming", "Yes")))
     lazy val view = views.allowableLosses(form, TaxYearModel("2015/16", true, "2015/16"), postAction, backLink)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
@@ -102,7 +102,7 @@ class AllowableLossesViewSpec extends UnitSpec with WithFakeApplication with Fak
   }
 
   "Allowable Losses view with errors" should {
-    lazy val backLink = Some(controllers.resident.shares.routes.DeductionsController.otherDisposals.toString())
+    lazy val backLink = Some(controllers.resident.shares.routes.DeductionsController.otherDisposals().toString())
     lazy val form = allowableLossesForm.bind(Map(("isClaiming", "")))
     lazy val view = views.allowableLosses(form, TaxYearModel("2015/16", true, "2015/16"), postAction, backLink)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)

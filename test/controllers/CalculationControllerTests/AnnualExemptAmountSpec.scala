@@ -22,7 +22,6 @@ import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.CalculationElectionConstructor
-import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import play.api.i18n.Messages
@@ -108,9 +107,9 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
           document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
         }
 
-        s"have a 'Back' link to ${routes.OtherPropertiesController.otherProperties}" in {
+        s"have a 'Back' link to ${routes.OtherPropertiesController.otherProperties()}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.OtherPropertiesController.otherProperties.toString()
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.OtherPropertiesController.otherProperties().toString()
         }
 
         "have the question 'How much of your Capital Gains Tax allowance have you got left?' as the legend of the input" in {
@@ -154,7 +153,7 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
         }
 
         "have the value 1000 auto-filled into the input box" in {
-          document.getElementById("annualExemptAmount").attr("value") shouldEqual ("1000")
+          document.getElementById("annualExemptAmount").attr("value") shouldEqual "1000"
         }
       }
     }
