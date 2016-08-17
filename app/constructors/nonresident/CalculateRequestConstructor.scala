@@ -43,14 +43,16 @@ object CalculateRequestConstructor {
 
   def annualExemptAmount(otherPropertiesModel: OtherPropertiesModel, annualExemptAmountModel: Option[AnnualExemptAmountModel]): String = {
     otherPropertiesModel match {
-      case OtherPropertiesModel("Yes", data) if data.get == 0 => s"&annualExemptAmount=${annualExemptAmountModel.get.annualExemptAmount}"
+      case OtherPropertiesModel("Yes", Some(data)) if data == 0 => s"&annualExemptAmount=${annualExemptAmountModel.get.annualExemptAmount}"
       case _ => ""
     }
   }
 
   def otherPropertiesAmount(otherPropertiesModel: OtherPropertiesModel): String = {
-    if (otherPropertiesModel.otherProperties.equals("Yes")) s"&otherPropertiesAmt=${otherPropertiesModel.otherPropertiesAmt.get}"
-    else ""
+    otherPropertiesModel match {
+      case OtherPropertiesModel("Yes", Some(data)) => s"&otherPropertiesAmt=$data"
+      case _ => ""
+    }
   }
 
   def isVulnerableTrustee(customerType: String, disabledTrusteeModel: Option[DisabledTrusteeModel]): String = {
@@ -64,7 +66,7 @@ object CalculateRequestConstructor {
   }
 
   def personalAllowanceAmount(customerType: String, personalAllowanceModel: Option[PersonalAllowanceModel]): String = {
-    if (customerType.equals("individual")) s"&personalAllowanceAmt=${personalAllowanceModel.get.personalAllowanceAmt}"
+    if (customerType.equals("individual") && personalAllowanceModel.isDefined) s"&personalAllowanceAmt=${personalAllowanceModel.get.personalAllowanceAmt}"
     else ""
   }
 
@@ -148,8 +150,8 @@ object CalculateRequestConstructor {
 
   def improvements(input: SummaryModel): String = s"&improvementsAmt=${
     (input.improvementsModel.isClaimingImprovements, input.rebasedValueModel) match {
-      case ("Yes", Some(RebasedValueModel("Yes", _))) =>
-        input.improvementsModel.improvementsAmtAfter.getOrElse(BigDecimal(0)) + input.improvementsModel.improvementsAmt.getOrElse(BigDecimal(0))
+      case ("Yes", Some(RebasedValueModel("Yes", _))) => input.improvementsModel.improvementsAmtAfter.getOrElse(BigDecimal(0)) +
+        input.improvementsModel.improvementsAmt.getOrElse(BigDecimal(0))
       case ("No", _) => 0
       case _ => input.improvementsModel.improvementsAmt.getOrElse(0)
     }

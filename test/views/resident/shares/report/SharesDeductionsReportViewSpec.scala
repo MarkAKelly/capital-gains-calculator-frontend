@@ -77,7 +77,7 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
     }
 
     "does not have a notice summary" in {
-      doc.select("div.notice-wrapper").isEmpty() shouldBe true
+      doc.select("div.notice-wrapper").isEmpty shouldBe true
     }
 
     s"have a section for the Calculation details" which {
@@ -370,7 +370,8 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
         }
 
         "should have the correct help text" in {
-          doc.select("#allowableLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${messages.remainingAllowableLossHelp}")
+          doc.select("#allowableLossRemaining-amount div span").text() should
+            include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${messages.remainingAllowableLossHelp}")
         }
       }
 
@@ -385,7 +386,8 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
         }
 
         "should have the correct help text" in {
-          doc.select("#broughtForwardLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${messages.remainingBroughtForwardLossHelp}")
+          doc.select("#broughtForwardLossRemaining-amount div span").text() should
+            include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${messages.remainingBroughtForwardLossHelp}")
         }
       }
     }
@@ -522,7 +524,8 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
       }
 
       "should have the correct help text" in {
-        doc.select("#allowableLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${messages.remainingAllowableLossHelp}")
+        doc.select("#allowableLossRemaining-amount div span").text() should
+          include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${messages.remainingAllowableLossHelp}")
       }
     }
 

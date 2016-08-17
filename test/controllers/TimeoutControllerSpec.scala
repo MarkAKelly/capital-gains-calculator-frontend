@@ -16,13 +16,10 @@
 
 package controllers
 
-import java.util.UUID
 import org.jsoup.Jsoup
 import play.api.i18n.Messages
 import play.api.mvc.{AnyContent, Action}
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class TimeoutControllerSpec extends UnitSpec with WithFakeApplication {

@@ -19,7 +19,6 @@ package views.resident.properties.summary
 import assets.MessageLookup.{summaryPage => messages}
 import assets.{MessageLookup => commonMessages}
 import common.Dates._
-import com.sun.xml.internal.bind.v2.TODO
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.routes
 import models.resident.TaxYearModel
@@ -253,7 +252,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
           doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
         }
 
-        s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
+        s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport().toString}" in {
           doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/gain-report"
         }
 
@@ -288,7 +287,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
     }
 
     s"display the text ${messages.whatToDoNextText}" in {
-      doc.select("#whatToDoNextText").text shouldEqual s"${messages.whatNextYouCan}${messages.whatNextLink}${commonMessages.calcBaseExternalLink} ${messages.whatNextText}"
+      doc.select("#whatToDoNextText").text shouldEqual
+        s"${messages.whatNextYouCan}${messages.whatNextLink}${commonMessages.calcBaseExternalLink} ${messages.whatNextText}"
     }
 
     "have a link" which {
@@ -298,7 +298,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       }
 
       "should link to the what-you-pay-on-it govuk page" in {
-        doc.select("#whatToDoNextLink").attr("href") shouldEqual "https://www.gov.uk/tax-sell-property/what-you-pay-it-on"
+        doc.select("#whatToDoNextLink").attr("href") shouldEqual "https://www.gov.uk/capital-gains-tax/losses"
       }
 
       "have the externalLink attribute" in {
@@ -320,7 +320,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
         doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
       }
 
-      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
+      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport().toString}" in {
         doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/gain-report"
       }
     }
@@ -350,7 +350,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
     }
 
     s"display the text ${messages.whatToDoNextText}" in {
-      doc.select("div#whatToDoNextNoLossText").text shouldBe s"${messages.whatToDoNextNoLossText} ${messages.whatToDoNextNoLossLinkProperties} ${commonMessages.calcBaseExternalLink}."
+      doc.select("div#whatToDoNextNoLossText").text shouldBe
+        s"${messages.whatToDoNextNoLossText} ${messages.whatToDoNextNoLossLinkProperties} ${commonMessages.calcBaseExternalLink}."
     }
 
     s"have the link text ${messages.whatToDoNextNoLossLinkProperties}${commonMessages.calcBaseExternalLink}" in {
@@ -375,7 +376,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
         doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
       }
 
-      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
+      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport().toString}" in {
         doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/gain-report"
       }
 
@@ -454,7 +455,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
         doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
       }
 
-      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport.toString}" in {
+      s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport().toString}" in {
         doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/gain-report"
       }
 
