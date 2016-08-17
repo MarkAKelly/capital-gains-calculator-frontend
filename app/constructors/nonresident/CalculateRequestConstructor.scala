@@ -86,26 +86,23 @@ object CalculateRequestConstructor {
   }
 
   def flatCalcUrlExtra(input: SummaryModel): String = {
-    s"${
-      improvements(input)
-    }${
-      acquisition(input)
-    }&reliefs=${
-      input.otherReliefsModelFlat.otherReliefs.getOrElse(0)
-    }${
-      privateResidenceReliefFlat(input)
-    }${
-      isClaimingPRR(input)
-    }${
-      isClaimingPRR(input) match {
-        case "&isClaimingPRR=Yes" => s"&acquisitionDate=${
-          input.acquisitionDateModel.year.get
-        }-${input.acquisitionDateModel.month.get}-${
-          input.acquisitionDateModel.day.get
-        }"
-        case "&isClaimingPRR=No" => ""
-      }
-    }"
+    val isClaimingPrr = isClaimingPRR(input)
+    improvements(input) +
+      acquisition(input) +
+      flatReliefs(input.otherReliefsModelFlat.otherReliefs) +
+      privateResidenceReliefFlat(input) +
+      isClaimingPrr +
+      flatAcquisitionDate(isClaimingPrr, input.acquisitionDateModel)
+  }
+
+  def flatReliefs(reliefsValue: Option[BigDecimal]): String = {
+    s"&reliefs=${reliefsValue.getOrElse(0)}"
+  }
+
+  def flatAcquisitionDate(isClaimingPrr: String, acquisitionDateModel: AcquisitionDateModel): String = {
+    if (isClaimingPrr.contains("Yes"))
+      s"&acquisitionDate=${acquisitionDateModel.year.get}-${acquisitionDateModel.month.get}-${acquisitionDateModel.day.get}"
+    else ""
   }
 
   def taCalcUrlExtra(input: SummaryModel): String = {
