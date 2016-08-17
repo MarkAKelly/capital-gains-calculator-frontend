@@ -58,7 +58,8 @@ trait OtherReliefsController extends FrontendController with ValidActiveSession 
     def action(dataResult: Option[CalculationResultModel], backUrl: String) = {
       calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
         case Some(data) if data.otherReliefs.isDefined => Ok(calculation.nonresident.otherReliefs(otherReliefsForm(false).fill(data), dataResult.get))
-        case _ => Ok(calculation.nonresident.otherReliefs(otherReliefsForm(true), dataResult.get))
+        case Some(data) if data.otherReliefs.isEmpty => Ok(calculation.nonresident.otherReliefs(otherReliefsForm(true).fill(data), dataResult.get))
+        case _ => Ok(calculation.nonresident.otherReliefs(otherReliefsForm(false), dataResult.get))
       }
     }
 
