@@ -138,7 +138,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
         Some(DisposalDateModel(10, 10, 2015)),
         Some(TaxYearModel("2015/16", true, "2015/16")),
         Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.full)),
-        false)
+        prrEnabled = false)
       lazy val result = target.otherProperties(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 

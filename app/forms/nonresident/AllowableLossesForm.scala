@@ -43,14 +43,14 @@ object AllowableLossesForm {
 
   def validateTwoDec(data: AllowableLossesModel): Boolean = {
     data.isClaimingAllowableLosses match {
-      case "Yes" => isMaxTwoDecimalPlaces(data.allowableLossesAmt.getOrElse(0))
+      case "Yes" => decimalPlacesCheck(data.allowableLossesAmt.getOrElse(0))
       case "No" => true
     }
   }
 
   def validateMax(data: AllowableLossesModel): Boolean = {
     data.isClaimingAllowableLosses match {
-      case "Yes" => isLessThanEqualMaxNumeric(data.allowableLossesAmt.getOrElse(0))
+      case "Yes" => maxCheck(data.allowableLossesAmt.getOrElse(0))
       case "No" => true
     }
   }

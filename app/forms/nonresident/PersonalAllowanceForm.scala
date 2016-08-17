@@ -28,9 +28,10 @@ object PersonalAllowanceForm {
   def personalAllowanceForm (maxPA: BigDecimal = BigDecimal(0)) = Form (
     mapping(
       "personalAllowance" -> bigDecimal
-        .verifying(Messages("calc.personalAllowance.errorNegative"), personalAllowance => isPositive(personalAllowance))
-        .verifying(Messages("calc.personalAllowance.errorDecimalPlaces"), personalAllowance => hasNoDecimalPlaces(personalAllowance))
-        .verifying(Messages("calc.personalAllowance.errorMaxLimit") + MoneyPounds(maxPA, 0).quantity + " " + Messages("calc.personalAllowance.errorMaxLimitEnd"), personalAllowance => personalAllowance <= maxPA)
+        .verifying(Messages("calc.personalAllowance.errorNegative"), isPositive)
+        .verifying(Messages("calc.personalAllowance.errorDecimalPlaces"), decimalPlacesCheckNoDecimal)
+        .verifying(Messages("calc.personalAllowance.errorMaxLimit") + MoneyPounds(maxPA, 0).quantity + " " +
+          Messages("calc.personalAllowance.errorMaxLimitEnd"), personalAllowance => personalAllowance <= maxPA)
     )(PersonalAllowanceModel.apply)(PersonalAllowanceModel.unapply)
   )
 }

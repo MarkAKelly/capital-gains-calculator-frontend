@@ -16,11 +16,9 @@
 
 package models.resident.shares
 
-import java.util.Date
+import java.time.LocalDate
 
-import models.resident._
-
-case class GainAnswersModel(disposalDate: Date,
+case class GainAnswersModel(disposalDate: LocalDate,
                             disposalValue: BigDecimal,
                             disposalCosts: BigDecimal,
                             acquisitionValue: BigDecimal,

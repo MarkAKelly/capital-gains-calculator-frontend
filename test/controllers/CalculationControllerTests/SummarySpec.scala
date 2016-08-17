@@ -20,7 +20,7 @@ import common.DefaultRoutes._
 import common.{KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
-import controllers.nonresident.{CalculationController, routes}
+import controllers.nonresident.{SummaryController, routes}
 import models.nonresident.{AcquisitionDateModel, CalculationResultModel, RebasedValueModel, SummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -41,7 +41,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
                    result: CalculationResultModel,
                    acquisitionDateData: Option[AcquisitionDateModel],
                    rebasedValueData: Option[RebasedValueModel]
-                 ): CalculationController = {
+                 ): SummaryController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
@@ -64,9 +64,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
     when(mockCalcConnector.calculateRebased(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(Some(result)))
 
-    new CalculationController {
+    new SummaryController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
   }
 
@@ -284,7 +283,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "have a personal allowance of £9,000 that has a link to the personal allowance page." in {
               document.body().getElementById("personalDetails(2)").text() shouldBe "£9,000.00"
-              document.body().getElementById("personalDetails(2)").attr("href") shouldEqual routes.CalculationController.personalAllowance().toString()
+              document.body().getElementById("personalDetails(2)").attr("href") shouldEqual routes.PersonalAllowanceController.personalAllowance().toString()
             }
 
             "include the question 'What was the total taxable gain of your previous Capital Gains in the tax year you stopped owning the property?'" in {
@@ -421,7 +420,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             "the PRR claimed question's answer should be 'No' and be a link to the PRR page" in {
               document.body().getElementById("deductions(0)").text shouldBe "No"
-              document.body().getElementById("deductions(0)").attr("href") shouldEqual routes.PrivateResidenceReliefController.privateResidenceRelief().toString()
+              document.body().getElementById("deductions(0)").attr("href") shouldEqual
+                routes.PrivateResidenceReliefController.privateResidenceRelief().toString()
             }
 
           }
@@ -564,7 +564,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "have an acquisition date of '9 September 1990'" in{
-          document.body().getElementById("purchaseDetails(0)").text() shouldBe "09 September 1999"
+          document.body().getElementById("purchaseDetails(0)").text() shouldBe "9 September 1999"
         }
 
         "have a 'trustee' owner" in {
@@ -878,7 +878,6 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
       None
     )
     lazy val result = target.restart()(fakeRequest)
-    lazy val document = Jsoup.parse(bodyOf(result))
 
     "return a 303" in {
       status(result) shouldBe 303

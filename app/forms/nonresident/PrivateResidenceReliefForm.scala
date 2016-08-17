@@ -43,15 +43,15 @@ object PrivateResidenceReliefForm {
 
   def verifyNoDecimalPlaces (data: PrivateResidenceReliefModel, showBefore: Boolean, showAfter: Boolean): Boolean = {
     data.isClaimingPRR match {
-      case "Yes" if showBefore || showAfter => hasNoDecimalPlaces(data.daysClaimed.getOrElse(0)) && hasNoDecimalPlaces(data.daysClaimedAfter.getOrElse(0))
+      case "Yes" if showBefore || showAfter => decimalPlacesCheckNoDecimal(data.daysClaimed.getOrElse(0)) && decimalPlacesCheckNoDecimal(data.daysClaimedAfter.getOrElse(0))
       case _ => true
     }
   }
 
   def validateMax (data: PrivateResidenceReliefModel, showBefore: Boolean, showAfter: Boolean): Boolean = {
     data.isClaimingPRR match {
-      case "Yes" if showBefore && showAfter => isLessThanEqualMaxNumeric(data.daysClaimed.getOrElse(0)) && isLessThanEqualMaxNumeric(data.daysClaimedAfter.getOrElse(0))
-      case "Yes" if showBefore || showAfter => isLessThanEqualMaxNumeric(data.daysClaimed.getOrElse(0)) && isLessThanEqualMaxNumeric(data.daysClaimedAfter.getOrElse(0))
+      case "Yes" if showBefore && showAfter => maxCheck(data.daysClaimed.getOrElse(0)) && maxCheck(data.daysClaimedAfter.getOrElse(0))
+      case "Yes" if showBefore || showAfter => maxCheck(data.daysClaimed.getOrElse(0)) && maxCheck(data.daysClaimedAfter.getOrElse(0))
       case _ => true
     }
   }

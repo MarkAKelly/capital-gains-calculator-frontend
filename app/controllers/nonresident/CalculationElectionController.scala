@@ -36,7 +36,7 @@ object CalculationElectionController extends CalculationElectionController {
 
 trait CalculationElectionController extends FrontendController with ValidActiveSession {
 
-  override val sessionTimeoutUrl = controllers.nonresident.routes.CalculationController.restart().url
+  override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   val calcConnector: CalculatorConnector
   val calcElectionConstructor: CalculationElectionConstructor
 
@@ -121,7 +121,7 @@ trait CalculationElectionController extends FrontendController with ValidActiveS
         case Some("flat") => Future.successful(Redirect(routes.OtherReliefsFlatController.otherReliefsFlat()))
         case Some("time") => Future.successful(Redirect(routes.OtherReliefsTAController.otherReliefsTA()))
         case Some("rebased") => Future.successful(Redirect(routes.OtherReliefsRebasedController.otherReliefsRebased()))
-        case _ => Future.successful(Redirect(routes.CalculationController.summary()))
+        case _ => Future.successful(Redirect(routes.SummaryController.summary()))
       }
     }
 

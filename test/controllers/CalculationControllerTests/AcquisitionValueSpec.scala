@@ -118,7 +118,7 @@ class AcquisitionValueSpec extends UnitSpec with WithFakeApplication with Mockit
         }
         "have a link with a hidden external link field" in {
           document.select("ul li a#lossesLink").text should include(Messages("calc.acquisitionValue.bullet.three.link"))
-          document.select("span.visuallyhidden").text shouldEqual Messages("calc.base.externalLink")
+          document.select("span#opensInANewTab").text shouldEqual Messages("calc.base.externalLink")
         }
         "display an input box for the Acquisition Value" in {
           document.body.getElementById("acquisitionValue").tagName shouldEqual "input"
@@ -239,7 +239,7 @@ class AcquisitionValueSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "submitting a value which exceeds the maximum numeric" should {
 
-      lazy val result = executeTargetWithMockData(Constants.maxNumeric+0.01.toString(), None)
+      lazy val result = executeTargetWithMockData((Constants.maxNumeric + 0.01).toString(), None)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {

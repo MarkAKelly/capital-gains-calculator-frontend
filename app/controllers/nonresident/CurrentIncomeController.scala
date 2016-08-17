@@ -16,7 +16,6 @@
 
 package controllers.nonresident
 
-import akka.actor.Status.Success
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
@@ -33,7 +32,7 @@ object CurrentIncomeController extends CurrentIncomeController {
 
 trait CurrentIncomeController extends FrontendController with ValidActiveSession {
 
-  override val sessionTimeoutUrl = controllers.nonresident.routes.CalculationController.restart().url
+  override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   val calcConnector: CalculatorConnector
 
   val currentIncome = ValidateSession.async { implicit request =>
@@ -46,7 +45,7 @@ trait CurrentIncomeController extends FrontendController with ValidActiveSession
   val submitCurrentIncome = ValidateSession.async { implicit request =>
 
     def routeRequest(success: CurrentIncomeModel) = {
-      if (success.currentIncome > 0) Future.successful(Redirect(routes.CalculationController.personalAllowance()))
+      if (success.currentIncome > 0) Future.successful(Redirect(routes.PersonalAllowanceController.personalAllowance()))
       else Future.successful(Redirect(routes.OtherPropertiesController.otherProperties()))
     }
 

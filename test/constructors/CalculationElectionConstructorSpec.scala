@@ -19,10 +19,10 @@ package constructors
 import common.TestModels
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
-import models._
 import models.nonresident.CalculationResultModel
 import org.mockito.Matchers
 import org.mockito.Mockito._
+import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
@@ -37,13 +37,13 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar {
 
   implicit val hc = new HeaderCarrier()
   val mockCalcConnector = mock[CalculatorConnector]
-  def mockFlatCalc = when(mockCalcConnector.calculateFlat(Matchers.any())(Matchers.any()))
+  def mockFlatCalc: OngoingStubbing[Future[Option[CalculationResultModel]]] = when(mockCalcConnector.calculateFlat(Matchers.any())(Matchers.any()))
     .thenReturn(Future.successful(Some(CalculationResultModel(8000, 10000, 6000, 20, 0, None, None, None))))
 
-  def mockTimeCalc = when(mockCalcConnector.calculateTA(Matchers.any())(Matchers.any()))
+  def mockTimeCalc: OngoingStubbing[Future[Option[CalculationResultModel]]] = when(mockCalcConnector.calculateTA(Matchers.any())(Matchers.any()))
     .thenReturn(Future.successful(Some(CalculationResultModel(8000, 10000, 6000, 20, 0, None, None, None))))
 
-  def mockRebasedCalc = when(mockCalcConnector.calculateRebased(Matchers.any())(Matchers.any()))
+  def mockRebasedCalc: OngoingStubbing[Future[Option[CalculationResultModel]]] = when(mockCalcConnector.calculateRebased(Matchers.any())(Matchers.any()))
     .thenReturn(Future.successful(Some(CalculationResultModel(8000, 10000, 6000, 20, 0, None, None, None))))
 
   "Calling generateElection" should {
@@ -52,7 +52,8 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar {
 
       "produce a single entry sequence" in {
         mockFlatCalc
-        TestCalculationElectionConstructor.generateElection(TestModels.summaryIndividualFlatWithoutAEA, hc, Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), None, None, None).size shouldBe 1
+        TestCalculationElectionConstructor.generateElection(TestModels.summaryIndividualFlatWithoutAEA, hc, Some(TestModels.calcModelOneRate),
+          Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), None, None, None).size shouldBe 1
       }
     }
 
@@ -60,7 +61,8 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar {
 
       "produce a single entry sequence" in {
         mockFlatCalc
-        TestCalculationElectionConstructor.generateElection(TestModels.summaryIndividualAcqDateAfter, hc, Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), None, None, None).size shouldBe 1
+        TestCalculationElectionConstructor.generateElection(TestModels.summaryIndividualAcqDateAfter, hc, Some(TestModels.calcModelOneRate),
+          Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), None, None, None).size shouldBe 1
       }
     }
 
@@ -69,20 +71,23 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar {
       "produce a two entry sequence if there is no value for rebased supplied." in {
         mockFlatCalc
         mockTimeCalc
-        TestCalculationElectionConstructor.generateElection(TestModels.summaryTrusteeTAWithoutAEA, hc, Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), None, None, None).size shouldBe 2
+        TestCalculationElectionConstructor.generateElection(TestModels.summaryTrusteeTAWithoutAEA, hc, Some(TestModels.calcModelOneRate),
+          Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), None, None, None).size shouldBe 2
       }
 
       "produce a three entry sequence if there is a value for the rebased calculation supplied." in {
         mockFlatCalc
         mockTimeCalc
         mockRebasedCalc
-        TestCalculationElectionConstructor.generateElection(TestModels.summaryIndividualRebased, hc, Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), None, None, None).size shouldBe 3
+        TestCalculationElectionConstructor.generateElection(TestModels.summaryIndividualRebased, hc, Some(TestModels.calcModelOneRate),
+          Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), None, None, None).size shouldBe 3
       }
 
       "produce a two entry sequence if there is a value for the rebased calculation supplied but the acquisition date is not supplied." in {
         mockFlatCalc
         mockRebasedCalc
-        TestCalculationElectionConstructor.generateElection(TestModels.summaryIndividualRebasedNoAcqDate, hc, Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), None, None, None).size shouldBe 2
+        TestCalculationElectionConstructor.generateElection(TestModels.summaryIndividualRebasedNoAcqDate, hc, Some(TestModels.calcModelOneRate),
+          Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), None, None, None).size shouldBe 2
       }
     }
   }

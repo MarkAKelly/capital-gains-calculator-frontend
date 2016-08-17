@@ -35,7 +35,7 @@ object AcquisitionValueController extends AcquisitionValueController {
 
 trait AcquisitionValueController extends FrontendController with ValidActiveSession {
 
-  override val sessionTimeoutUrl = controllers.nonresident.routes.CalculationController.restart().url
+  override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   val calcConnector: CalculatorConnector
   val calcElectionConstructor: CalculationElectionConstructor
 
@@ -62,10 +62,12 @@ trait AcquisitionValueController extends FrontendController with ValidActiveSess
 
     def fetchData() = calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate)
 
-    def getRoute(date: AcquisitionDateModel) =
-      if (!Dates.dateAfterStart(date.day.getOrElse(0), date.month.getOrElse(0), date.year.getOrElse(0)))
-        Future.successful(Redirect(routes.RebasedValueController.rebasedValue()))
-      else Future.successful(Redirect(routes.ImprovementsController.improvements()))
+    def getRoute(date: AcquisitionDateModel) = date.hasAcquisitionDate match {
+      case "Yes" if !Dates.dateAfterStart(date.day.getOrElse(0), date.month.getOrElse(0), date.year.getOrElse(0)) =>
+                      Future.successful(Redirect(routes.RebasedValueController.rebasedValue()))
+      case "No" => Future.successful(Redirect(routes.RebasedValueController.rebasedValue()))
+      case _ => Future.successful(Redirect(routes.ImprovementsController.improvements()))
+    }
 
     acquisitionValueForm.bindFromRequest.fold(
       errors => errorAction(errors),

@@ -94,7 +94,6 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
         None,
         None)
 
-      lazy val taxYearModel = TaxYearModel("2017/18", false, "2015/16")
       lazy val target = setupTarget(
         gainAnswers,
         0,

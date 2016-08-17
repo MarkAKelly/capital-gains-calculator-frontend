@@ -39,7 +39,7 @@ object AnnualExemptAmountForm {
         .transform[BigDecimal](stringToBigDecimal, bigDecimalToString)
         .verifying(Messages("calc.common.error.maxAmountExceeded", MoneyPounds(Constants.maxNumeric, 0).quantity), maxCheck)
         .verifying(Messages("calc.common.error.maxAmountExceeded", MoneyPounds(maxAEA, 0).quantity), validateMaxAEA(maxAEA))
-        .verifying(Messages("calc.common.error.minimumAmount"), minCheck)
+        .verifying(Messages("calc.common.error.minimumAmount"), isPositive)
         .verifying(Messages("calc.common.error.invalidAmount"), decimalPlacesCheck)
     )(AnnualExemptAmountModel.apply)(AnnualExemptAmountModel.unapply)
   )

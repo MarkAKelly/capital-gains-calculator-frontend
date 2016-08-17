@@ -34,14 +34,15 @@ object OtherReliefsFlatController extends OtherReliefsFlatController {
 
 trait OtherReliefsFlatController extends FrontendController with ValidActiveSession {
 
-  override val sessionTimeoutUrl = controllers.nonresident.routes.CalculationController.restart().url
+  override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   val calcConnector: CalculatorConnector
 
   val otherReliefsFlat: Action[AnyContent] = Action.async { implicit request =>
 
     def action(dataResult: Option[CalculationResultModel]) = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
-      case Some(data) if data.otherReliefs.isDefined => Ok(calculation.nonresident.otherReliefsFlat(otherReliefsForm(true).fill(data), dataResult.get, true))
-      case _ => Ok(calculation.nonresident.otherReliefsFlat(otherReliefsForm(false), dataResult.get, false))
+      case Some(data) if data.otherReliefs.isDefined => Ok(calculation.nonresident.otherReliefsFlat(otherReliefsForm(true).fill(data),
+        dataResult.get, hasExistingReliefAmount = true))
+      case _ => Ok(calculation.nonresident.otherReliefsFlat(otherReliefsForm(false), dataResult.get, hasExistingReliefAmount = false))
     }
 
     for {
@@ -68,8 +69,9 @@ trait OtherReliefsFlatController extends FrontendController with ValidActiveSess
 
     def errorRoute(dataResult: Option[CalculationResultModel], form: Form[OtherReliefsModel]) = {
       calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
-        case Some(data) if data.otherReliefs.isDefined => BadRequest(calculation.nonresident.otherReliefsFlat(form, dataResult.get, true))
-        case _ => BadRequest(calculation.nonresident.otherReliefsFlat(form, dataResult.get, false))
+        case Some(data) if data.otherReliefs.isDefined => BadRequest(calculation.nonresident.otherReliefsFlat(form,
+          dataResult.get, hasExistingReliefAmount = true))
+        case _ => BadRequest(calculation.nonresident.otherReliefsFlat(form, dataResult.get, hasExistingReliefAmount = false))
       }
     }
 
