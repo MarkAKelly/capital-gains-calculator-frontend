@@ -334,7 +334,7 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     }
 
     s"display the title ${messages.whatToDoNextTitle}" in {
-      doc.select("h3#whatToDoNextNoLossTitle").text shouldEqual messages.whatToDoNextTitle
+      doc.select("h2#whatToDoNextNoLossTitle").text shouldEqual messages.whatToDoNextTitle
     }
 
     s"display the text ${messages.whatToDoNextText}" in {
