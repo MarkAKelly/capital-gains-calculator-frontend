@@ -41,7 +41,8 @@ trait ReportController extends FeatureLock {
     s"http://${request.host}/"
   }
 
-  def getTaxYear(disposalDate: LocalDate)(implicit hc: HeaderCarrier): Future[Option[TaxYearModel]] = calcConnector.getTaxYear(disposalDate.format(requestFormatter))
+  def getTaxYear(disposalDate: LocalDate)(implicit hc: HeaderCarrier): Future[Option[TaxYearModel]] =
+    calcConnector.getTaxYear(disposalDate.format(requestFormatter))
 
   def getMaxAEA(taxYear: Int)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
     calcConnector.getFullAEA(taxYear)

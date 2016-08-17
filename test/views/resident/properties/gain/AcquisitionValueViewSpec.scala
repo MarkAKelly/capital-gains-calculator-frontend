@@ -153,10 +153,6 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Fa
         "have a step value of '0.01'" in {
           input.attr("step") shouldBe "0.01"
         }
-
-        s"have placeholder 'eg. 25000.00'" in {
-          input.attr("placeholder") shouldBe "eg. 25000.00"
-        }
       }
 
       "has a continue button that" should {

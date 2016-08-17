@@ -90,9 +90,8 @@ trait OtherReliefsController extends FrontendController with ValidActiveSession 
       calcConnector.saveFormData(KeystoreKeys.otherReliefsFlat, model)
       (construct.acquisitionDateModel.hasAcquisitionDate, construct.rebasedValueModel.getOrElse(RebasedValueModel("No", None)).hasRebasedValue) match {
         case ("Yes", _) if Dates.dateAfterStart(construct.acquisitionDateModel.day.get,
-          construct.acquisitionDateModel.month.get, construct.acquisitionDateModel.year.get) => {
+          construct.acquisitionDateModel.month.get, construct.acquisitionDateModel.year.get) =>
           Future.successful(Redirect(routes.SummaryController.summary()))
-        }
         case ("No", "No") => Future.successful(Redirect(routes.SummaryController.summary()))
         case _ => Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
       }

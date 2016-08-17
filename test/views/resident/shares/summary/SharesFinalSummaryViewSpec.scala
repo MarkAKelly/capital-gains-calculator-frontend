@@ -58,7 +58,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       None,
       None
     )
-    lazy val taxYearModel = TaxYearModel("2015/16", isValidYear = true, "2015/16")
+    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
     lazy val backLink = "/calculate-your-capital-gains/resident/shares/personal-allowance"
     lazy val homeLink = "home-link"
     lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
@@ -429,7 +429,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       None,
       None
     )
-    lazy val taxYearModel = TaxYearModel("2013/14", isValidYear = false, "2015/16")
+    lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
     lazy val backLink = "/calculate-your-capital-gains/resident/shares/personal-allowance"
     lazy val homeLink = "home-link"
     lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
@@ -608,7 +608,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       None,
       None
     )
-    lazy val taxYearModel = TaxYearModel("2015/16", isValidYear = true, "2015/16")
+    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
     lazy val backLink = "/calculate-your-capital-gains/resident/shares/personal-allowance"
     lazy val homeLink = "home-link"
     lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
@@ -693,7 +693,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       None
     )
 
-    lazy val taxYearModel = TaxYearModel("2015/16", isValidYear = true, "2015/16")
+    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
     lazy val backLink = "/calculate-your-capital-gains/resident/shares/personal-allowance"
     lazy val homeLink = "home-link"
     lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
@@ -766,7 +766,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       None
     )
 
-    lazy val taxYearModel = TaxYearModel("2016/17", isValidYear = false, "2018/19")
+    lazy val taxYearModel = TaxYearModel("2016/17", false, "2018/19")
     lazy val backLink = "/calculate-your-capital-gains/resident/shares/personal-allowance"
     lazy val homeLink = "home-link"
     lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
@@ -811,7 +811,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       None
     )
 
-    lazy val taxYearModel = TaxYearModel("2016/17", isValidYear = true, "2016/17")
+    lazy val taxYearModel = TaxYearModel("2016/17", true, "2016/17")
     lazy val backLink = "/calculate-your-capital-gains/resident/shares/personal-allowance"
     lazy val homeLink = "home-link"
     lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)

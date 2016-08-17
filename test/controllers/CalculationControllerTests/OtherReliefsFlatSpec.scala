@@ -18,7 +18,6 @@ package controllers.CalculationControllerTests
 
 import common.{Constants, KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
-import constructors.nonresident.CalculationElectionConstructor
 import controllers.nonresident.OtherReliefsFlatController
 import models.nonresident._
 import org.jsoup.Jsoup
@@ -50,7 +49,6 @@ class OtherReliefsFlatSpec extends UnitSpec with WithFakeApplication with Mockit
                    ): OtherReliefsFlatController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
-    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[OtherReliefsModel](Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -115,7 +113,8 @@ class OtherReliefsFlatSpec extends UnitSpec with WithFakeApplication with Mockit
 
           s"have a 'Back' link to ${controllers.nonresident.routes.CalculationElectionController.calculationElection().url}" in {
             document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-            document.body.getElementById("back-link").attr("href") shouldEqual controllers.nonresident.routes.CalculationElectionController.calculationElection().url
+            document.body.getElementById("back-link").attr("href") shouldEqual
+              controllers.nonresident.routes.CalculationElectionController.calculationElection().url
           }
 
           "have the question 'How much extra tax relief are you claiming?' as the legend of the input" in {
@@ -277,7 +276,8 @@ class OtherReliefsFlatSpec extends UnitSpec with WithFakeApplication with Mockit
 
       s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
         document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric,0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric,0).quantity +
+            " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
       }
     }
   }

@@ -17,7 +17,6 @@
 package controllers.nonresident
 
 import java.time.LocalDate
-import java.util.Date
 
 import common.{Dates, KeystoreKeys}
 import connectors.CalculatorConnector

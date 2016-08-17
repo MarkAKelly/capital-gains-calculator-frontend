@@ -18,7 +18,6 @@ package controllers.CalculationControllerTests
 
 import common.{Constants, TestModels}
 import connectors.CalculatorConnector
-import constructors.nonresident.CalculationElectionConstructor
 import controllers.nonresident.{OtherReliefsTAController, routes}
 import models.nonresident.{CalculationResultModel, OtherReliefsModel, SummaryModel}
 import org.jsoup.Jsoup
@@ -49,7 +48,6 @@ class OtherReliefsTASpec extends UnitSpec with WithFakeApplication with MockitoS
                  ): OtherReliefsTAController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
-    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[OtherReliefsModel](Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -95,9 +93,9 @@ class OtherReliefsTASpec extends UnitSpec with WithFakeApplication with MockitoS
         document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
       }
 
-      s"have a 'Back' link to ${routes.CalculationElectionController.calculationElection}" in {
+      s"have a 'Back' link to ${routes.CalculationElectionController.calculationElection()}" in {
         document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-        document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationElectionController.calculationElection.toString()
+        document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationElectionController.calculationElection().toString()
       }
 
       "have the question 'How much extra tax relief are you claiming?' as the legend of the input" in {
@@ -174,7 +172,6 @@ class OtherReliefsTASpec extends UnitSpec with WithFakeApplication with MockitoS
 
     "submitting a valid form with and an amount of 1000" should {
       lazy val result = executeTargetWithMockData("1000", TestModels.summaryTrusteeTAWithAEA)
-      lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -183,7 +180,6 @@ class OtherReliefsTASpec extends UnitSpec with WithFakeApplication with MockitoS
 
     "submitting a valid form with and an amount with two decimal places" should {
       lazy val result = executeTargetWithMockData("1000.11", TestModels.summaryTrusteeTAWithAEA)
-      lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -192,7 +188,6 @@ class OtherReliefsTASpec extends UnitSpec with WithFakeApplication with MockitoS
 
     "submitting an valid form with no value" should {
       lazy val result = executeTargetWithMockData("", TestModels.summaryTrusteeTAWithAEA)
-      lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -201,7 +196,6 @@ class OtherReliefsTASpec extends UnitSpec with WithFakeApplication with MockitoS
 
     "submitting an invalid form with an amount with three decimal places" should {
       lazy val result = executeTargetWithMockData("1000.111", TestModels.summaryTrusteeTAWithAEA)
-      lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {
         status(result) shouldBe 400
@@ -210,7 +204,6 @@ class OtherReliefsTASpec extends UnitSpec with WithFakeApplication with MockitoS
 
     "submitting an invalid form with a negative value" should {
       lazy val result = executeTargetWithMockData("-1000", TestModels.summaryTrusteeTAWithAEA)
-      lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {
         status(result) shouldBe 400
@@ -219,7 +212,6 @@ class OtherReliefsTASpec extends UnitSpec with WithFakeApplication with MockitoS
 
     "submitting an invalid form with an value of shdgsaf" should {
       lazy val result = executeTargetWithMockData("shdgsaf", TestModels.summaryTrusteeTAWithAEA)
-      lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {
         status(result) shouldBe 400

@@ -18,7 +18,7 @@ package controllers.CalculationControllerTests
 
 import common.Constants
 import connectors.CalculatorConnector
-import controllers.nonresident.{CurrentIncomeController, PersonalAllowanceController, routes}
+import controllers.nonresident.{CurrentIncomeController, routes}
 import models.nonresident.CurrentIncomeModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers

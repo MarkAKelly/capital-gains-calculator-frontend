@@ -73,7 +73,6 @@
         @if( elements.args.contains('_type)){type="@elements.args.get('_type)" }else{type="text" }
         @if( elements.args.contains('_dataAttributes) ){ @elements.args.get('_dataAttributes)}
         class="moneyField @if( elements.args.get('_inputClass) ){ @elements.args.get('_inputClass) }"
-        placeholder="eg. 25000.00"
         @if( elements.args.get('_autoComplete) ){ autocomplete="@elements.args.get('_autoComplete)" }
         name="@elements.field.name"
         id="@elements.field.name"
