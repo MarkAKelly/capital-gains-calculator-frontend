@@ -16,7 +16,6 @@
 
 package controllers.nonresident
 
-import akka.actor.Status.Success
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession

@@ -118,7 +118,7 @@ class LossesBroughtForwardViewSpec extends UnitSpec with WithFakeApplication wit
     }
 
     "not have a drop down button" in {
-      doc.body.select("summary").isEmpty() shouldBe true
+      doc.body.select("summary").isEmpty shouldBe true
     }
   }
 

@@ -19,10 +19,9 @@ package controllers.resident.properties.ReportControllerSpec
 import common.Dates
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.properties.{ReportController, SummaryController}
+import controllers.resident.properties.ReportController
 import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel}
-import models.resident.{TaxYearModel, _}
-import org.jsoup.Jsoup
+import models.resident._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -92,9 +91,11 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
         None, Some(ReliefsModel(false)), None, Some(OtherPropertiesModel(false)),
         Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None)
-      lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 0, 11100, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)))
+      lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 0, 11100, BigDecimal(0),
+        BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)))
       lazy val incomeAnswersModel = IncomeAnswersModel(None, Some(CurrentIncomeModel(20000)), Some(PersonalAllowanceModel(10000)))
-      lazy val totalGainAndTaxOwedModel = TotalGainAndTaxOwedModel(20000, 20000, 11100, 11100, 3600, 20000, 18, None, None, Some(BigDecimal(0)), Some(BigDecimal(0)))
+      lazy val totalGainAndTaxOwedModel = TotalGainAndTaxOwedModel(20000, 20000, 11100, 11100, 3600, 20000, 18,
+        None, None, Some(BigDecimal(0)), Some(BigDecimal(0)))
       lazy val target = setupTarget(
         yourAnswersSummaryModel,
         10000,
@@ -133,9 +134,11 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
         None, Some(ReliefsModel(false)), None, Some(OtherPropertiesModel(false)),
         Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None)
-      lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 0, 11100, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)))
+      lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 0, 11100,
+        BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)))
       lazy val incomeAnswersModel = IncomeAnswersModel(None, Some(CurrentIncomeModel(20000)), Some(PersonalAllowanceModel(10000)))
-      lazy val totalGainAndTaxOwedModel = TotalGainAndTaxOwedModel(20000, 20000, 11100, 11100, 3600, 20000, 18, Some(5000), Some(28), Some(BigDecimal(0)), Some(BigDecimal(0)))
+      lazy val totalGainAndTaxOwedModel = TotalGainAndTaxOwedModel(20000, 20000, 11100, 11100,
+        3600, 20000, 18, Some(5000), Some(28), Some(BigDecimal(0)), Some(BigDecimal(0)))
       lazy val target = setupTarget(
         yourAnswersSummaryModel,
         10000,

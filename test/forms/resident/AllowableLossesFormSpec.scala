@@ -16,8 +16,7 @@
 
 package forms.resident
 
-import assets.{MessageLookup => commonMessages}
-import commonMessages.{allowableLosses => messages}
+import assets.MessageLookup.{allowableLosses => messages}
 import forms.resident.AllowableLossesForm._
 import models.resident.AllowableLossesModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}

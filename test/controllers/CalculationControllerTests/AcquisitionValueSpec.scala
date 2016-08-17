@@ -239,7 +239,7 @@ class AcquisitionValueSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "submitting a value which exceeds the maximum numeric" should {
 
-      lazy val result = executeTargetWithMockData(Constants.maxNumeric+0.01.toString(), None)
+      lazy val result = executeTargetWithMockData((Constants.maxNumeric + 0.01).toString(), None)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {
