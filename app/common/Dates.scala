@@ -24,7 +24,6 @@ object Dates {
 
   val formatter = DateTimeFormatter.ofPattern("d/M/uuuu").withResolverStyle(ResolverStyle.STRICT)
   val requestFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd").withResolverStyle(ResolverStyle.STRICT)
-  val datePageFormat = DateTimeFormatter.ofPattern("dd MMMM uuuu").withResolverStyle(ResolverStyle.STRICT)
   val datePageFormatNoZero = DateTimeFormatter.ofPattern("d MMMM uuuu").withResolverStyle(ResolverStyle.STRICT)
   val taxStartDate = LocalDate.parse("5/4/2015", formatter)
   val taxStartDatePlus18Months = LocalDate.parse("5/10/2016", formatter)
