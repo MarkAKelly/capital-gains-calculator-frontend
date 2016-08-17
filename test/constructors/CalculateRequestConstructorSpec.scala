@@ -203,6 +203,39 @@ class CalculateRequestConstructorSpec extends UnitSpec {
 
   }
 
+  "Calling taAcquisitionDate" should {
+
+    "return a value of 2015-10-9" in {
+      val model = AcquisitionDateModel("Yes", Some(9), Some(10), Some(2015))
+      val result = CalculateRequestConstructor.taAcquisitionDate(model)
+      result shouldBe "&acquisitionDate=2015-10-9"
+    }
+
+    "return a value of 2016-3-20" in {
+      val model = AcquisitionDateModel("Yes", Some(20), Some(3), Some(2016))
+      val result = CalculateRequestConstructor.taAcquisitionDate(model)
+      result shouldBe "&acquisitionDate=2016-3-20"
+    }
+  }
+
+  "Calling taReliefs" should {
+
+    "return a value of 10000" in {
+      val result = CalculateRequestConstructor.taReliefs(Some(10000))
+      result shouldBe "&reliefs=10000"
+    }
+
+    "return a value of 2000" in {
+      val result = CalculateRequestConstructor.taReliefs(Some(2000))
+      result shouldBe "&reliefs=2000"
+    }
+
+    "return a value of 0" in {
+      val result = CalculateRequestConstructor.taReliefs(None)
+      result shouldBe "&reliefs=0"
+    }
+  }
+
   "Calling customerType" should {
 
     "return a value of individual" in {
@@ -416,6 +449,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
       result shouldBe "&reliefs=0"
     }
   }
+
 
   "Calling flatAcquisitionDate" should {
 
