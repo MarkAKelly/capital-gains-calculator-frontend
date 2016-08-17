@@ -344,7 +344,7 @@ object SummaryConstructor {
           case "Yes" => Array(
             SummaryDataItemModel(
               Messages("calc.acquisitionDate.questionTwo"),
-              Dates.datePageFormat.format(Dates.constructDate(summary.acquisitionDateModel.day.get,
+              Dates.datePageFormatNoZero.format(Dates.constructDate(summary.acquisitionDateModel.day.get,
                 summary.acquisitionDateModel.month.get, summary.acquisitionDateModel.year.get)),
               Some(routes.AcquisitionDateController.acquisitionDate().toString())
             ),
@@ -387,7 +387,7 @@ object SummaryConstructor {
           case "Yes" => Array(
             SummaryDataItemModel(
               Messages("calc.acquisitionDate.questionTwo"),
-              Dates.datePageFormat.format(Dates.constructDate(summary.acquisitionDateModel.day.get,
+              Dates.datePageFormatNoZero.format(Dates.constructDate(summary.acquisitionDateModel.day.get,
                 summary.acquisitionDateModel.month.get, summary.acquisitionDateModel.year.get)),
               Some(routes.AcquisitionDateController.acquisitionDate().toString())
             ),
@@ -474,8 +474,7 @@ object SummaryConstructor {
       Array(
         SummaryDataItemModel(
           Messages("calc.disposalDate.question"),
-          Dates.datePageFormat.format(Dates.constructDate(summary.disposalDateModel.day,
-            summary.disposalDateModel.month, summary.disposalDateModel.year)),
+          Dates.datePageFormatNoZero.format(Dates.constructDate(summary.disposalDateModel.day, summary.disposalDateModel.month, summary.disposalDateModel.year)),
           Some(routes.DisposalDateController.disposalDate().toString())
         ),
         SummaryDataItemModel(

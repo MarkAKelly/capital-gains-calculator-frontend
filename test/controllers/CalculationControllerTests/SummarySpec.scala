@@ -564,7 +564,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "have an acquisition date of '9 September 1990'" in{
-          document.body().getElementById("purchaseDetails(0)").text() shouldBe "09 September 1999"
+          document.body().getElementById("purchaseDetails(0)").text() shouldBe "9 September 1999"
         }
 
         "have a 'trustee' owner" in {
