@@ -92,7 +92,8 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
       lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
       lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
       lazy val lossesBroughtForwardModel = LossesBroughtForwardModel(true)
-      lazy val target = setupTarget(None, gainModel, summaryModel, chargeableGainModel, disposalDateModel = disposalDateModel, taxYearModel = taxYearModel, lossesBroughtForwardModel = lossesBroughtForwardModel)
+      lazy val target = setupTarget(None, gainModel, summaryModel, chargeableGainModel, disposalDateModel = disposalDateModel,
+        taxYearModel = taxYearModel, lossesBroughtForwardModel = lossesBroughtForwardModel)
       lazy val result = target.annualExemptAmount(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -111,7 +112,8 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
       lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
       lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
       lazy val lossesBroughtForwardModel = LossesBroughtForwardModel(false)
-      lazy val target = setupTarget(Some(AnnualExemptAmountModel(1000)), gainModel, summaryModel, chargeableGainModel, disposalDateModel = disposalDateModel, taxYearModel = taxYearModel, lossesBroughtForwardModel = lossesBroughtForwardModel)
+      lazy val target = setupTarget(Some(AnnualExemptAmountModel(1000)), gainModel, summaryModel, chargeableGainModel,
+        disposalDateModel = disposalDateModel, taxYearModel = taxYearModel, lossesBroughtForwardModel = lossesBroughtForwardModel)
       lazy val result = target.annualExemptAmount(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -147,7 +149,9 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
       lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
       lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
       lazy val lossesBroughtForwardModel = LossesBroughtForwardModel(false)
-      lazy val target = setupTarget(Some(AnnualExemptAmountModel(1000)), gainModel, summaryModel, ChargeableGainResultModel(2000, 0, 1000, 0, 1000, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0))), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel, lossesBroughtForwardModel = lossesBroughtForwardModel)
+      lazy val target = setupTarget(Some(AnnualExemptAmountModel(1000)), gainModel, summaryModel,
+        ChargeableGainResultModel(2000, 0, 1000, 0, 1000, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)),
+          Some(BigDecimal(0))), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel, lossesBroughtForwardModel = lossesBroughtForwardModel)
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
       lazy val result = target.submitAnnualExemptAmount(request)
 
@@ -164,7 +168,9 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
       lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
       lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
       lazy val lossesBroughtForwardModel = LossesBroughtForwardModel(false)
-      lazy val target = setupTarget(Some(AnnualExemptAmountModel(0)), gainModel, summaryModel, ChargeableGainResultModel(1000, 1000, 0, 0, 0, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0))), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel, lossesBroughtForwardModel = lossesBroughtForwardModel)
+      lazy val target = setupTarget(Some(AnnualExemptAmountModel(0)), gainModel, summaryModel,
+        ChargeableGainResultModel(1000, 1000, 0, 0, 0, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)),
+          Some(BigDecimal(0))), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel, lossesBroughtForwardModel = lossesBroughtForwardModel)
       lazy val request = fakeRequestToPOSTWithSession(("amount", "0"))
       lazy val result = target.submitAnnualExemptAmount(request)
 
@@ -181,7 +187,9 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
       lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
       lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
       lazy val lossesBroughtForwardModel = LossesBroughtForwardModel(false)
-      lazy val target = setupTarget(Some(AnnualExemptAmountModel(1000)), gainModel, summaryModel, ChargeableGainResultModel(2000, 1000, 1000, 0, 0, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0))), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel, lossesBroughtForwardModel = lossesBroughtForwardModel)
+      lazy val target = setupTarget(Some(AnnualExemptAmountModel(1000)), gainModel, summaryModel,
+        ChargeableGainResultModel(2000, 1000, 1000, 0, 0, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)),
+          Some(BigDecimal(0))), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel, lossesBroughtForwardModel = lossesBroughtForwardModel)
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
       lazy val result = target.submitAnnualExemptAmount(request)
 
@@ -198,7 +206,9 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
       lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
       lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
       lazy val lossesBroughtForwardModel = LossesBroughtForwardModel(false)
-      lazy val target = setupTarget(None, gainModel, summaryModel, ChargeableGainResultModel(2000, 1000, 1000, 0, 0, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0))), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel, lossesBroughtForwardModel = lossesBroughtForwardModel)
+      lazy val target = setupTarget(None, gainModel, summaryModel,
+        ChargeableGainResultModel(2000, 1000, 1000, 0, 0, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0))),
+        disposalDateModel = disposalDateModel, taxYearModel = taxYearModel, lossesBroughtForwardModel = lossesBroughtForwardModel)
       lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
       lazy val result = target.submitAnnualExemptAmount(request)
       lazy val doc = Jsoup.parse(bodyOf(result))

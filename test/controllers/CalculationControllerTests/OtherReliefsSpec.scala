@@ -16,12 +16,9 @@
 
 package controllers.CalculationControllerTests
 
-import common.DefaultRoutes._
 import common.{Constants, KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
-import constructors.nonresident.CalculationElectionConstructor
 import controllers.nonresident.{OtherReliefsController, routes}
-import models._
 import models.nonresident._
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -52,7 +49,6 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
                  ): OtherReliefsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
-    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[OtherReliefsModel](Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))

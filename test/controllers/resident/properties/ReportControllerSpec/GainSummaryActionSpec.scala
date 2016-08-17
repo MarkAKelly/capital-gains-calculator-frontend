@@ -22,8 +22,7 @@ import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.ReportController
 import models.resident.properties.YourAnswersSummaryModel
-import models.resident.{TaxYearModel, _}
-import org.jsoup.Jsoup
+import models.resident.TaxYearModel
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar

@@ -22,13 +22,11 @@ import common.KeystoreKeys.{ResidentPropertyKeys, ResidentShareKeys}
 import config.{CalculatorSessionCache, WSHttp}
 import constructors.nonresident.CalculateRequestConstructor
 import constructors.resident.{shares, properties => propertyConstructor}
-import constructors.{resident => residentConstructors}
 import models.nonresident._
 import models.resident
 import models.resident.properties.{ImprovementsModel => _, PrivateResidenceReliefModel => _, _}
 import models.resident.{IncomeAnswersModel, TaxYearModel, properties}
 import play.api.libs.json.Format
-import play.mvc.Http.Response
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
@@ -125,13 +123,15 @@ trait CalculatorConnector {
     val acquisitionCosts = fetchAndGetFormData[AcquisitionCostsModel](KeystoreKeys.acquisitionCosts).map(formData => formData.get)
     val disposalCosts = fetchAndGetFormData[DisposalCostsModel](KeystoreKeys.disposalCosts).map(formData => formData.get)
     val allowableLosses = fetchAndGetFormData[AllowableLossesModel](KeystoreKeys.allowableLosses).map(formData => formData.get)
-    val calculationElection = fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection).map(formData => formData.getOrElse(CalculationElectionModel("")))
-    val otherReliefsFlat = fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map(formData => formData.getOrElse(OtherReliefsModel(Some("No"), None)))
-    val otherReliefsTA = fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA).map(formData => formData.getOrElse(OtherReliefsModel(Some("No"), None)))
-    val otherReliefsRebased = fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map(formData => formData.getOrElse(OtherReliefsModel(Some("No"), None)))
+    val calculationElection = fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection).map(formData =>
+      formData.getOrElse(CalculationElectionModel("")))
+    val otherReliefsFlat = fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map(formData =>
+      formData.getOrElse(OtherReliefsModel(Some("No"), None)))
+    val otherReliefsTA = fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA).map(formData =>
+      formData.getOrElse(OtherReliefsModel(Some("No"), None)))
+    val otherReliefsRebased = fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map(formData =>
+      formData.getOrElse(OtherReliefsModel(Some("No"), None)))
     val privateResidenceRelief = fetchAndGetFormData[PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief)
-
-
     for {
       customerTypeModel <- customerType
       disabledTrusteeModel <- disabledTrustee
@@ -348,7 +348,8 @@ trait CalculatorConnector {
   def calculateRttShareTotalGainAndTax(totalGainInput: resident.shares.GainAnswersModel,
                                        chargeableGainInput: resident.shares.DeductionGainAnswersModel,
                                        maxAEA: BigDecimal,
-                                       incomeAnswers: resident.IncomeAnswersModel)(implicit hc: HeaderCarrier): Future[Option[resident.TotalGainAndTaxOwedModel]] = {
+                                       incomeAnswers: resident.IncomeAnswersModel)(implicit hc: HeaderCarrier):
+  Future[Option[resident.TotalGainAndTaxOwedModel]] = {
     http.GET[Option[resident.TotalGainAndTaxOwedModel]](s"$serviceUrl/capital-gains-calculator/shares/calculate-resident-capital-gains-tax" +
       shares.CalculateRequestConstructor.totalGainRequestString(totalGainInput) +
       shares.CalculateRequestConstructor.chargeableGainRequestString(chargeableGainInput, maxAEA) +

@@ -18,13 +18,10 @@ package forms.resident
 import assets.MessageLookup._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import forms.resident.AnnualExemptAmountForm._
-import assets.{MessageLookup => commonMessages}
-import common.Constants
 import controllers.helpers.FakeRequestHelper
 import models.resident.AnnualExemptAmountModel
-import play.api.i18n.Messages
-import play.api.mvc.Request
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
+
 class AnnualExemptAmountFormSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
   "Creating a form using an empty model" should {
     val form = annualExemptAmountForm()

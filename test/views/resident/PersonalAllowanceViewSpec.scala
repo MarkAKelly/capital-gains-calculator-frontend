@@ -18,13 +18,13 @@ package views.resident
 
 import assets.MessageLookup.{personalAllowance => messages}
 import assets.{MessageLookup => commonMessages}
+import common.resident.JourneyKeys
 import controllers.helpers.FakeRequestHelper
 import forms.resident.income.PersonalAllowanceForm._
 import models.resident.TaxYearModel
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.{resident => views}
-import common.resident.JourneyKeys
 
 class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
@@ -35,7 +35,8 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
     "supplied with a 2015/16 tax year" should {
 
       lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
-      lazy val view = views.personalAllowance(personalAllowanceForm(), taxYearModel, BigDecimal(10600), "home", postAction, Some("back-link"), JourneyKeys.properties)(fakeRequest)
+      lazy val view = views.personalAllowance(personalAllowanceForm(), taxYearModel, BigDecimal(10600), "home", postAction,
+        Some("back-link"), JourneyKeys.properties)(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
 
       "have a charset of UTF-8" in {
@@ -140,7 +141,8 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
       "Personal Allowance view with stored values" should {
         lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
         lazy val form = personalAllowanceForm().bind(Map(("amount", "1000")))
-        lazy val view = views.personalAllowance(form, taxYearModel, BigDecimal(10600), "home", postAction, Some("back-link"), JourneyKeys.properties)(fakeRequest)
+        lazy val view = views.personalAllowance(form, taxYearModel, BigDecimal(10600), "home", postAction,
+          Some("back-link"), JourneyKeys.properties)(fakeRequest)
         lazy val doc = Jsoup.parse(view.body)
 
         "have the value of 1000 auto-filled in the input" in {
@@ -153,7 +155,8 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
     "supplied with a 2016/17 tax year" should {
 
       lazy val taxYearModel = TaxYearModel("2016/17", true, "2016/17")
-      lazy val view = views.personalAllowance(personalAllowanceForm(), taxYearModel, BigDecimal(11000), "home", postAction, Some("back-link"), JourneyKeys.properties)(fakeRequest)
+      lazy val view = views.personalAllowance(personalAllowanceForm(), taxYearModel, BigDecimal(11000), "home", postAction,
+        Some("back-link"), JourneyKeys.properties)(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
       lazy val h1Tag = doc.select("H1")
 
@@ -179,7 +182,8 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
     "supplied with a 2017/18 tax year" should {
 
       lazy val taxYearModel = TaxYearModel("2017/18", false, "2016/17")
-      lazy val view = views.personalAllowance(personalAllowanceForm(), taxYearModel, BigDecimal(11000), "home", postAction, Some("back-link"), JourneyKeys.properties)(fakeRequest)
+      lazy val view = views.personalAllowance(personalAllowanceForm(), taxYearModel, BigDecimal(11000), "home", postAction,
+        Some("back-link"), JourneyKeys.properties)(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
       lazy val h1Tag = doc.select("H1")
 
@@ -208,7 +212,8 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
 
         lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
         val form = personalAllowanceForm().bind(Map("amount" -> ""))
-        lazy val view = views.personalAllowance(form, taxYearModel, BigDecimal(11000), "home", postAction, Some("back-link"), JourneyKeys.properties)(fakeRequest)
+        lazy val view = views.personalAllowance(form, taxYearModel, BigDecimal(11000), "home", postAction,
+          Some("back-link"), JourneyKeys.properties)(fakeRequest)
         lazy val doc = Jsoup.parse(view.body)
 
         "display an error summary message for the amount" in {
