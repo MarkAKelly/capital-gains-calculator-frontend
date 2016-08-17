@@ -21,7 +21,7 @@ object MessageLookup {
   //Base messages
   val calcBaseBack = "Back"
   val calcBaseContinue = "Continue"
-  val calcBaseExternalLink = "opens in a new window"
+  val calcBaseExternalLink = "(opens in a new window)"
   val calcBaseChange = "change"
   val undefinedMessage = "Undefined message"
 
