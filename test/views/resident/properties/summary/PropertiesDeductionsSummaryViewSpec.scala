@@ -961,7 +961,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       }
 
       s"have the visually hidden text ${commonMessages.calcBaseExternalLink}" in {
-        doc.select("div#whatToDoNextNoLossText span.visuallyhidden").text shouldBe s"${commonMessages.calcBaseExternalLink}"
+        doc.select("div#whatToDoNextNoLossText span#opensInANewTab").text shouldBe s"${commonMessages.calcBaseExternalLink}"
       }
     }
 
@@ -1063,7 +1063,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
     }
 
     s"have the visually hidden text ${commonMessages.calcBaseExternalLink}" in {
-      doc.select("div#whatToDoNextNoLossText span.visuallyhidden").text shouldBe s"${commonMessages.calcBaseExternalLink}"
+      doc.select("div#whatToDoNextNoLossText span#opensInANewTab").text shouldBe s"${commonMessages.calcBaseExternalLink}"
     }
 
     "display the save as PDF Button" which {

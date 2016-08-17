@@ -350,7 +350,7 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     }
 
     s"have the visually hidden text ${commonMessages.calcBaseExternalLink}" in {
-      doc.select("div#whatToDoNextNoLossText span.visuallyhidden").text shouldBe s"${commonMessages.calcBaseExternalLink}"
+      doc.select("div#whatToDoNextNoLossText span#opensInANewTab2").text shouldBe s"${commonMessages.calcBaseExternalLink}"
     }
   }
 

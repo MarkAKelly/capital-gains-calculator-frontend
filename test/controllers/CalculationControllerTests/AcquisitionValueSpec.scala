@@ -118,7 +118,7 @@ class AcquisitionValueSpec extends UnitSpec with WithFakeApplication with Mockit
         }
         "have a link with a hidden external link field" in {
           document.select("ul li a#lossesLink").text should include(Messages("calc.acquisitionValue.bullet.three.link"))
-          document.select("span.visuallyhidden").text shouldEqual Messages("calc.base.externalLink")
+          document.select("span#opensInANewTab").text shouldEqual Messages("calc.base.externalLink")
         }
         "display an input box for the Acquisition Value" in {
           document.body.getElementById("acquisitionValue").tagName shouldEqual "input"

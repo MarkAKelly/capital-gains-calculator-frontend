@@ -744,7 +744,7 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
       }
 
       s"have the visually hidden text ${commonMessages.calcBaseExternalLink}" in {
-        doc.select("div#whatToDoNextNoLossText span.visuallyhidden").text shouldBe s"${commonMessages.calcBaseExternalLink}"
+        doc.select("div#whatToDoNextNoLossText span#opensInANewWindow").text shouldBe s"${commonMessages.calcBaseExternalLink}"
       }
     }
   }
@@ -823,7 +823,7 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
     }
 
     s"have the visually hidden text ${commonMessages.calcBaseExternalLink}" in {
-      doc.select("div#whatToDoNextNoLossText span.visuallyhidden").text shouldBe s"${commonMessages.calcBaseExternalLink}"
+      doc.select("div#whatToDoNextNoLossText span#opensInANewWindow").text shouldBe s"${commonMessages.calcBaseExternalLink}"
     }
   }
 

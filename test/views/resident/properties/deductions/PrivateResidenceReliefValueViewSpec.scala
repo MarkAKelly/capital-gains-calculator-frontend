@@ -88,7 +88,7 @@ class PrivateResidenceReliefValueViewSpec extends UnitSpec with WithFakeApplicat
       }
 
       s"contain a visually-hidden legend with text ${MessageLookup.calcBaseExternalLink}" in {
-        linkOne.select("span.visuallyhidden").text shouldEqual MessageLookup.calcBaseExternalLink
+        linkOne.select("span#opensInANewWindow").text shouldEqual MessageLookup.calcBaseExternalLink
       }
     }
   }

@@ -111,7 +111,7 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
         "have a link with a hidden external link field" in {
           document.select("ul li a#lossesLink").text should include(Messages("calc.disposalValue.bullet.two.link"))
-          document.select("span.visuallyhidden").text shouldEqual Messages("calc.base.externalLink")
+          document.select("span#opensInANewWindow").text shouldEqual Messages("calc.base.externalLink")
         }
 
         "display an input box for the Annual Exempt Amount" in {
