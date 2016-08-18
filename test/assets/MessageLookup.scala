@@ -309,8 +309,7 @@ object MessageLookup {
     val title = "How much did you pay for the shares?"
     val bulletListTitle = "Put the market value of the shares instead if you:"
     val bulletListOne = "inherited them"
-    val bulletListTwo = "got them from your employer"
-    val bulletListThree = "owned them before 1 April 1982"
+    val bulletListTwo = "owned them before 1 April 1982"
   }
 
   object sharesOtherDisposals {
