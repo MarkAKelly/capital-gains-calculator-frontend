@@ -518,7 +518,7 @@ calc.resident.shares.disposalValue.question = How much did you sell the shares f
 calc.resident.shares.disposalValue.helpText = Put the market value of the shares instead if you sold them for less than they were worth to help the buyer
 
 ## Disposal Costs messages
-calc.resident.shares.disposalCosts.question = How much did you pay in costs when you sold the shares?
+calc.resident.shares.disposalCosts.question = How much did you pay in costs when you sold or gave away the shares?
 calc.resident.shares.disposalCosts.helpText = For example, stockbroker fees
 
 ## Acquisition Value messages
