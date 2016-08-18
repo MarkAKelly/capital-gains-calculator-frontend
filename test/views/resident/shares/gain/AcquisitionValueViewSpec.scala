@@ -111,10 +111,6 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Fa
         s"have a second bullet point of ${messages.bulletListTwo}" in {
           doc.select("div.indent li#bullet-list-two").text() shouldEqual messages.bulletListTwo
         }
-
-        s"have a third bullet point of ${messages.bulletListThree}" in {
-          doc.select("div.indent li#bullet-list-three").text() shouldEqual messages.bulletListThree
-        }
       }
 
       "has a numeric input field that" should {
