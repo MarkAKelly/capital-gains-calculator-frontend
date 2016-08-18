@@ -7,8 +7,6 @@
 
 @(personalAllowanceForm: Form[PersonalAllowanceModel], taxYear: TaxYearModel, standardPA: BigDecimal, homeLink: String, postAction: Call, backLink: Option[String], journey: String)(implicit request: Request[_])
 
-@import views.html.helpers._
-
 @sidebar = {
 
     <a id="personalAllowanceLink" class="external-link" rel="external" href="https://www.gov.uk/income-tax-rates/current-rates-and-allowances"
