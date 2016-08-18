@@ -248,8 +248,8 @@ object MessageLookup {
 
   //Previous Taxable Gains messages
   object previousTaxableGains {
-    val title = "What was your taxable gain?"
-    val question = "What was your taxable gain?"
+    def title(year: String): String = s"What was your taxable gain in the $year tax year?"
+    def question(year: String): String = s"What was your taxable gain in the $year tax year?"
     val helpLinkOne = "How to work out your taxable gain"
   }
 

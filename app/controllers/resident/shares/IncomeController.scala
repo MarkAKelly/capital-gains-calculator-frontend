@@ -109,25 +109,41 @@ trait IncomeController extends FeatureLock {
 
   val previousTaxableGains = FeatureLockForRTTShares.async { implicit request =>
 
-    def routeRequest(backUrl: String): Future[Result] = {
+    def routeRequest(backUrl: String, calculationYear: String): Future[Result] = {
       calcConnector.fetchAndGetFormData[PreviousTaxableGainsModel](keystoreKeys.previousTaxableGains).map {
         case Some(data) => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm.fill(data), backUrl,
-          previousTaxableGainsPostAction, homeLink, JourneyKeys.shares))
+          previousTaxableGainsPostAction, homeLink, JourneyKeys.shares, calculationYear))
         case None => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm, backUrl,
-          previousTaxableGainsPostAction, homeLink, JourneyKeys.shares))
+          previousTaxableGainsPostAction, homeLink, JourneyKeys.shares, calculationYear))
       }
     }
 
     for {
       backUrl <- buildPreviousTaxableGainsBackUrl
-      finalResult <- routeRequest(backUrl)
+      disposalDate <- getDisposalDate
+      disposalDateString <- formatDisposalDate(disposalDate.get)
+      taxYear <- calcConnector.getTaxYear(disposalDateString)
+      finalResult <- routeRequest(backUrl, taxYear.get.calculationTaxYear)
     } yield finalResult
   }
 
   val submitPreviousTaxableGains = FeatureLockForRTTShares.async { implicit request =>
+
+    def errorAction (errors: Form[PreviousTaxableGainsModel], backUrl: String, taxYear: String) = {
+      Future.successful(BadRequest(commonViews.previousTaxableGains(errors, backUrl, previousTaxableGainsPostAction,
+        homeLink, JourneyKeys.properties, taxYear)))
+    }
+
     previousTaxableGainsForm.bindFromRequest.fold(
-      errors => buildPreviousTaxableGainsBackUrl.flatMap(url =>
-        Future.successful(BadRequest(commonViews.previousTaxableGains(errors, url, previousTaxableGainsPostAction, homeLink, JourneyKeys.shares)))),
+      errors => {
+        for {
+          backUrl <- buildPreviousTaxableGainsBackUrl
+          disposalDate <- getDisposalDate
+          disposalDateString <- formatDisposalDate(disposalDate.get)
+          taxYear <- calcConnector.getTaxYear(disposalDateString)
+          page <- errorAction(errors, backUrl, taxYear.get.taxYearSupplied)
+        } yield page
+      },
       success => {
         calcConnector.saveFormData(keystoreKeys.previousTaxableGains, success)
         Future.successful(Redirect(routes.IncomeController.currentIncome()))
