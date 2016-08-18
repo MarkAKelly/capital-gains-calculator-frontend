@@ -114,7 +114,7 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Fa
         }
 
         s"have a third bullet point link ${messages.bulletListThreeLink} with a visually hidden content span" in {
-          doc.select("#bullet-list-three span.visuallyhidden").text() shouldEqual commonMessages.calcBaseExternalLink
+          doc.select("#bullet-list-three span").text() shouldEqual commonMessages.calcBaseExternalLink
         }
 
         s"have a link to ${messages.bulletLink}" in {

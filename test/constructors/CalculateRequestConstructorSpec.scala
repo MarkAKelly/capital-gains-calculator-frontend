@@ -203,6 +203,118 @@ class CalculateRequestConstructorSpec extends UnitSpec {
 
   }
 
+  "Calling rebasedImprovements" should {
+
+    "return a value of 10000" in {
+      val model = ImprovementsModel("Yes", None, Some(10000))
+      val result = CalculateRequestConstructor.rebasedImprovements(model)
+      result shouldBe "&improvementsAmt=10000"
+    }
+
+    "return a value of 2000" in {
+      val model = ImprovementsModel("Yes", None, Some(2000))
+      val result = CalculateRequestConstructor.rebasedImprovements(model)
+      result shouldBe "&improvementsAmt=2000"
+    }
+
+    "return a value of 0 when supplied a none" in {
+      val model = ImprovementsModel("Yes", Some(4000), None)
+      val result = CalculateRequestConstructor.rebasedImprovements(model)
+      result shouldBe "&improvementsAmt=0"
+    }
+
+    "return a value of 0 when improvements not supplied" in {
+      val model = ImprovementsModel("No", None, Some(1000))
+      val result = CalculateRequestConstructor.rebasedImprovements(model)
+      result shouldBe "&improvementsAmt=0"
+    }
+  }
+
+  "Calling rebasedValue" should {
+
+    "return a value of 10000" in {
+      val result = CalculateRequestConstructor.rebasedValue(10000)
+      result shouldBe "&rebasedValue=10000"
+    }
+
+    "return a value of 2000" in {
+      val result = CalculateRequestConstructor.rebasedValue(2000)
+      result shouldBe "&rebasedValue=2000"
+    }
+  }
+
+  "Calling revaluationCost" should {
+
+    "return a value of 10000" in {
+      val model = RebasedCostsModel("Yes", Some(10000))
+      val result = CalculateRequestConstructor.revaluationCost(model)
+      result shouldBe "&revaluationCost=10000"
+    }
+
+    "return a value of 2000" in {
+      val model = RebasedCostsModel("Yes", Some(2000))
+      val result = CalculateRequestConstructor.revaluationCost(model)
+      result shouldBe "&revaluationCost=2000"
+    }
+
+    "return a value of 0" in {
+      val model = RebasedCostsModel("No", None)
+      val result = CalculateRequestConstructor.revaluationCost(model)
+      result shouldBe "&revaluationCost=0"
+    }
+  }
+
+  "Calling rebasedReliefs" should {
+
+    "return a value of 10000" in {
+      val result = CalculateRequestConstructor.rebasedReliefs(Some(10000))
+      result shouldBe "&reliefs=10000"
+    }
+
+    "return a value of 2000" in {
+      val result = CalculateRequestConstructor.rebasedReliefs(Some(2000))
+      result shouldBe "&reliefs=2000"
+    }
+
+    "return a value of 0" in {
+      val result = CalculateRequestConstructor.rebasedReliefs(None)
+      result shouldBe "&reliefs=0"
+    }
+  }
+
+  "Calling taAcquisitionDate" should {
+
+    "return a value of 2015-10-9" in {
+      val model = AcquisitionDateModel("Yes", Some(9), Some(10), Some(2015))
+      val result = CalculateRequestConstructor.taAcquisitionDate(model)
+      result shouldBe "&acquisitionDate=2015-10-9"
+    }
+
+    "return a value of 2016-3-20" in {
+      val model = AcquisitionDateModel("Yes", Some(20), Some(3), Some(2016))
+      val result = CalculateRequestConstructor.taAcquisitionDate(model)
+      result shouldBe "&acquisitionDate=2016-3-20"
+    }
+  }
+
+  "Calling taReliefs" should {
+
+    "return a value of 10000" in {
+      val result = CalculateRequestConstructor.taReliefs(Some(10000))
+      result shouldBe "&reliefs=10000"
+    }
+
+    "return a value of 2000" in {
+      val result = CalculateRequestConstructor.taReliefs(Some(2000))
+      result shouldBe "&reliefs=2000"
+    }
+
+    "return a value of 0" in {
+      val result = CalculateRequestConstructor.taReliefs(None)
+      result shouldBe "&reliefs=0"
+    }
+  }
+
   "Calling customerType" should {
 
     "return a value of individual" in {
@@ -396,6 +508,69 @@ class CalculateRequestConstructorSpec extends UnitSpec {
       val model = DisposalDateModel(13, 7, 2013)
       val result = CalculateRequestConstructor.disposalDate(model)
       result shouldBe "&disposalDate=2013-7-13"
+    }
+  }
+
+  "Calling flatReliefs" should {
+
+    "return a value of 10000" in {
+      val result = CalculateRequestConstructor.flatReliefs(Some(10000))
+      result shouldBe "&reliefs=10000"
+    }
+
+    "return a value of 2000" in {
+      val result = CalculateRequestConstructor.flatReliefs(Some(2000))
+      result shouldBe "&reliefs=2000"
+    }
+
+    "return a value of 0" in {
+      val result = CalculateRequestConstructor.flatReliefs(None)
+      result shouldBe "&reliefs=0"
+    }
+  }
+
+  "Calling isClaimingPrrRebased" should {
+
+    "return a value of 'Yes'" in {
+      val model = PrivateResidenceReliefModel("Yes", None, None)
+      val result = CalculateRequestConstructor.isClaimingPrrRebased(Some(model))
+      result shouldBe "&isClaimingPRR=Yes"
+    }
+
+    "return a value of 'No' when given by the user" in {
+      val model = PrivateResidenceReliefModel("No", None, None)
+      val result = CalculateRequestConstructor.isClaimingPrrRebased(Some(model))
+      result shouldBe "&isClaimingPRR=No"
+    }
+
+    "return a value of 'No' when no PRR is available" in {
+      val result = CalculateRequestConstructor.isClaimingPrrRebased(None)
+      result shouldBe "&isClaimingPRR=No"
+    }
+  }
+
+
+  "Calling flatAcquisitionDate" should {
+
+    "return a value of 2015-10-5" in {
+      val model = AcquisitionDateModel("Yes", Some(5), Some(10), Some(2015))
+      val answer = "&isClaimingPRR=Yes"
+      val result = CalculateRequestConstructor.flatAcquisitionDate(answer, model)
+      result shouldBe "&acquisitionDate=2015-10-5"
+    }
+
+    "return a value of 2017-8-9" in {
+      val model = AcquisitionDateModel("Yes", Some(9), Some(8), Some(2017))
+      val answer = "&isClaimingPRR=Yes"
+      val result = CalculateRequestConstructor.flatAcquisitionDate(answer, model)
+      result shouldBe "&acquisitionDate=2017-8-9"
+    }
+
+    "return an empty string" in {
+      val model = AcquisitionDateModel("No", None, None, None)
+      val answer = "&isClaimingPRR=No"
+      val result = CalculateRequestConstructor.flatAcquisitionDate(answer, model)
+
     }
   }
 }

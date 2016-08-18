@@ -117,13 +117,9 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
         }
       }
 
-      "contain a visually hidden span for the link" which {
+      "contain a span for the link indicating it opens in a new tab" which {
 
-        "has the class visuallyhidden" in {
-          legend.select("a span").hasClass("visuallyhidden") shouldEqual true
-        }
-
-        s"the text ${commonMessages.calcBaseExternalLink}" in {
+        s"has the text ${commonMessages.calcBaseExternalLink}" in {
           legend.select("a span").text shouldEqual s"${commonMessages.calcBaseExternalLink}"
         }
       }

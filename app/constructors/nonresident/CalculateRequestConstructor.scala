@@ -86,68 +86,77 @@ object CalculateRequestConstructor {
   }
 
   def flatCalcUrlExtra(input: SummaryModel): String = {
-    s"${
-      improvements(input)
-    }${
-      acquisition(input)
-    }&reliefs=${
-      input.otherReliefsModelFlat.otherReliefs.getOrElse(0)
-    }${
-      privateResidenceReliefFlat(input)
-    }${
-      isClaimingPRR(input)
-    }${
-      isClaimingPRR(input) match {
-        case "&isClaimingPRR=Yes" => s"&acquisitionDate=${
-          input.acquisitionDateModel.year.get
-        }-${input.acquisitionDateModel.month.get}-${
-          input.acquisitionDateModel.day.get
-        }"
-        case "&isClaimingPRR=No" => ""
-      }
-    }"
+    val isClaimingPrr = isClaimingPRR(input)
+    improvements(input) +
+      acquisition(input) +
+      flatReliefs(input.otherReliefsModelFlat.otherReliefs) +
+      privateResidenceReliefFlat(input) +
+      isClaimingPrr +
+      flatAcquisitionDate(isClaimingPrr, input.acquisitionDateModel)
+  }
+
+  def flatReliefs(reliefsValue: Option[BigDecimal]): String = {
+    s"&reliefs=${reliefsValue.getOrElse(0)}"
+  }
+
+  def flatAcquisitionDate(isClaimingPrr: String, acquisitionDateModel: AcquisitionDateModel): String = {
+    if (isClaimingPrr.contains("Yes"))
+      s"&acquisitionDate=${acquisitionDateModel.year.get}-${acquisitionDateModel.month.get}-${acquisitionDateModel.day.get}"
+    else ""
   }
 
   def taCalcUrlExtra(input: SummaryModel): String = {
-    s"${
-      improvements(input)
-    }&acquisitionDate=${
-      input.acquisitionDateModel.year.get
-    }-${input.acquisitionDateModel.month.get}-${
-      input.acquisitionDateModel.day.get
-    }${
-      acquisition(input)
-    }&reliefs=${
-      input.otherReliefsModelTA.otherReliefs.getOrElse(0)
-    }${
-      privateResidenceReliefTA(input)
-    }${
+    improvements(input) +
+      taAcquisitionDate(input.acquisitionDateModel) +
+      acquisition(input) +
+      taReliefs(input.otherReliefsModelTA.otherReliefs) +
+      privateResidenceReliefTA(input) +
       isClaimingPRR(input)
-    }"
+  }
+
+  def taAcquisitionDate(acquisitionDateModel: AcquisitionDateModel): String = {
+    s"&acquisitionDate=${acquisitionDateModel.year.get}-${acquisitionDateModel.month.get}-${acquisitionDateModel.day.get}"
+  }
+
+  def taReliefs(otherReliefs: Option[BigDecimal]): String = {
+    s"&reliefs=${otherReliefs.getOrElse(0)}"
   }
 
   def rebasedCalcUrlExtra(input: SummaryModel): String = {
+    rebasedImprovements(input.improvementsModel) +
+      rebasedValue(input.rebasedValueModel.get.rebasedValueAmt.get) +
+      revaluationCost(input.rebasedCostsModel.get) +
+      rebasedReliefs(input.otherReliefsModelRebased.otherReliefs) +
+      privateResidenceReliefRebased(input) +
+      isClaimingPrrRebased(input.privateResidenceReliefModel)
+  }
+
+  def rebasedImprovements(improvementsModel: ImprovementsModel): String = {
     s"&improvementsAmt=${
-      input.improvementsModel.isClaimingImprovements match {
-        case "Yes" => input.improvementsModel.improvementsAmtAfter.getOrElse(0)
-        case "No" => 0
-      }
-    }&rebasedValue=${
-      input.rebasedValueModel.get.rebasedValueAmt.get
-    }&revaluationCost=${
-      input.rebasedCostsModel.get.hasRebasedCosts match {
-        case "Yes" => input.rebasedCostsModel.get.rebasedCosts.get
-        case "No" => 0
-      }
-    }&reliefs=${
-      input.otherReliefsModelRebased.otherReliefs.getOrElse(0)
-    }${
-      privateResidenceReliefRebased(input)
-    }&isClaimingPRR=${
-      input.privateResidenceReliefModel match {
-        case Some(PrivateResidenceReliefModel("Yes", claimed, after)) => "Yes"
-        case _ => "No"
-      }
+      if (improvementsModel.isClaimingImprovements.equals("Yes")) improvementsModel.improvementsAmtAfter.getOrElse(0)
+      else 0
+    }"
+  }
+
+  def rebasedValue(value: BigDecimal): String = {
+    s"&rebasedValue=$value"
+  }
+
+  def revaluationCost(rebasedCostsModel: RebasedCostsModel): String = {
+    s"&revaluationCost=${
+      if (rebasedCostsModel.hasRebasedCosts.equals("Yes")) rebasedCostsModel.rebasedCosts.get
+      else 0
+    }"
+  }
+
+  def rebasedReliefs(reliefsValue: Option[BigDecimal]): String = {
+    s"&reliefs=${reliefsValue.getOrElse(0)}"
+  }
+
+  def isClaimingPrrRebased(privateResidenceReliefModel: Option[PrivateResidenceReliefModel]): String = {
+    s"&isClaimingPRR=${
+      if (privateResidenceReliefModel.isDefined) privateResidenceReliefModel.get.isClaimingPRR
+      else "No"
     }"
   }
 

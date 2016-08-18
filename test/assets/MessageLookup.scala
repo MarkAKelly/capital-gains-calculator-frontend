@@ -21,7 +21,7 @@ object MessageLookup {
   //Base messages
   val calcBaseBack = "Back"
   val calcBaseContinue = "Continue"
-  val calcBaseExternalLink = "opens in a new window"
+  val calcBaseExternalLink = "(opens in a new window)"
   val calcBaseChange = "change"
   val undefinedMessage = "Undefined message"
 
@@ -296,12 +296,12 @@ object MessageLookup {
   }
 
   object sharesAcquisitionCosts {
-    val title = "How much did you pay in costs when you bought the shares?"
+    val title = "How much did you pay in costs when you got the shares?"
     val helpText = "Costs include stockbroker fees and Stamp Duty tax"
   }
 
   object sharesDisposalCosts {
-    val title = "How much did you pay in costs when you sold the shares?"
+    val title = "How much did you pay in costs when you sold or gave away the shares?"
     val helpText = "For example, stockbroker fees"
   }
 
@@ -309,8 +309,7 @@ object MessageLookup {
     val title = "How much did you pay for the shares?"
     val bulletListTitle = "Put the market value of the shares instead if you:"
     val bulletListOne = "inherited them"
-    val bulletListTwo = "got them from your employer"
-    val bulletListThree = "owned them before 1 April 1982"
+    val bulletListTwo = "owned them before 1 April 1982"
   }
 
   object sharesOtherDisposals {
