@@ -123,27 +123,40 @@ object CalculateRequestConstructor {
   }
 
   def rebasedCalcUrlExtra(input: SummaryModel): String = {
+    rebasedImprovements(input.improvementsModel) +
+      rebasedValue(input.rebasedValueModel.get.rebasedValueAmt.get) +
+      revaluationCost(input.rebasedCostsModel.get) +
+      rebasedReliefs(input.otherReliefsModelRebased.otherReliefs) +
+      privateResidenceReliefRebased(input) +
+      isClaimingPrrRebased(input.privateResidenceReliefModel)
+  }
+
+  def rebasedImprovements(improvementsModel: ImprovementsModel): String = {
     s"&improvementsAmt=${
-      input.improvementsModel.isClaimingImprovements match {
-        case "Yes" => input.improvementsModel.improvementsAmtAfter.getOrElse(0)
-        case "No" => 0
-      }
-    }&rebasedValue=${
-      input.rebasedValueModel.get.rebasedValueAmt.get
-    }&revaluationCost=${
-      input.rebasedCostsModel.get.hasRebasedCosts match {
-        case "Yes" => input.rebasedCostsModel.get.rebasedCosts.get
-        case "No" => 0
-      }
-    }&reliefs=${
-      input.otherReliefsModelRebased.otherReliefs.getOrElse(0)
-    }${
-      privateResidenceReliefRebased(input)
-    }&isClaimingPRR=${
-      input.privateResidenceReliefModel match {
-        case Some(PrivateResidenceReliefModel("Yes", claimed, after)) => "Yes"
-        case _ => "No"
-      }
+      if (improvementsModel.isClaimingImprovements.equals("Yes")) improvementsModel.improvementsAmtAfter.getOrElse(0)
+      else 0
+    }"
+  }
+
+  def rebasedValue(value: BigDecimal): String = {
+    s"&rebasedValue=$value"
+  }
+
+  def revaluationCost(rebasedCostsModel: RebasedCostsModel): String = {
+    s"&revaluationCost=${
+      if (rebasedCostsModel.hasRebasedCosts.equals("Yes")) rebasedCostsModel.rebasedCosts.get
+      else 0
+    }"
+  }
+
+  def rebasedReliefs(reliefsValue: Option[BigDecimal]): String = {
+    s"&reliefs=${reliefsValue.getOrElse(0)}"
+  }
+
+  def isClaimingPrrRebased(privateResidenceReliefModel: Option[PrivateResidenceReliefModel]): String = {
+    s"&isClaimingPRR=${
+      if (privateResidenceReliefModel.isDefined) privateResidenceReliefModel.get.isClaimingPRR
+      else "No"
     }"
   }
 
