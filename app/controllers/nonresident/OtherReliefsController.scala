@@ -36,7 +36,7 @@ object OtherReliefsController extends OtherReliefsController {
 trait OtherReliefsController extends FrontendController with ValidActiveSession {
 
   val calcConnector: CalculatorConnector
-  override val sessionTimeoutUrl = controllers.nonresident.routes.CalculationController.restart().url
+  override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
 
   private def otherReliefsBackUrl(implicit hc: HeaderCarrier): Future[String] = {
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
@@ -58,7 +58,8 @@ trait OtherReliefsController extends FrontendController with ValidActiveSession 
     def action(dataResult: Option[CalculationResultModel], backUrl: String) = {
       calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
         case Some(data) if data.otherReliefs.isDefined => Ok(calculation.nonresident.otherReliefs(otherReliefsForm(false).fill(data), dataResult.get))
-        case _ => Ok(calculation.nonresident.otherReliefs(otherReliefsForm(true), dataResult.get))
+        case Some(data) if data.otherReliefs.isEmpty => Ok(calculation.nonresident.otherReliefs(otherReliefsForm(true).fill(data), dataResult.get))
+        case _ => Ok(calculation.nonresident.otherReliefs(otherReliefsForm(false), dataResult.get))
       }
     }
 
@@ -90,10 +91,9 @@ trait OtherReliefsController extends FrontendController with ValidActiveSession 
       calcConnector.saveFormData(KeystoreKeys.otherReliefsFlat, model)
       (construct.acquisitionDateModel.hasAcquisitionDate, construct.rebasedValueModel.getOrElse(RebasedValueModel("No", None)).hasRebasedValue) match {
         case ("Yes", _) if Dates.dateAfterStart(construct.acquisitionDateModel.day.get,
-          construct.acquisitionDateModel.month.get, construct.acquisitionDateModel.year.get) => {
-          Future.successful(Redirect(routes.CalculationController.summary()))
-        }
-        case ("No", "No") => Future.successful(Redirect(routes.CalculationController.summary()))
+          construct.acquisitionDateModel.month.get, construct.acquisitionDateModel.year.get) =>
+          Future.successful(Redirect(routes.SummaryController.summary()))
+        case ("No", "No") => Future.successful(Redirect(routes.SummaryController.summary()))
         case _ => Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
       }
     }

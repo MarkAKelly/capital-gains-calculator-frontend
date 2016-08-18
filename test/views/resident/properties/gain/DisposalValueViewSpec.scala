@@ -68,7 +68,7 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
     }
 
     s"the second bullet point link ${messages.bulletListTwoLink} should have a visually hidden content span" in {
-      doc.select("#bullet-list-two span.visuallyhidden").text() shouldEqual MessageLookup.calcBaseExternalLink
+      doc.select("#bullet-list-two span#opensInANewTab").text() shouldEqual MessageLookup.calcBaseExternalLink
     }
 
     s"the second bullet point link ${messages.bulletListTwoLink} should " +

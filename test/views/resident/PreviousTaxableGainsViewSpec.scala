@@ -93,7 +93,7 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
       }
 
       s"has a visually hidden external link message" in {
-        link.select("span.visuallyhidden").text() shouldBe commonMessages.calcBaseExternalLink
+        link.select("span#opensInANewTab").text() shouldBe commonMessages.calcBaseExternalLink
       }
 
       "links to https://www.gov.uk/capital-gains-tax/work-out-need-to-pay" in {

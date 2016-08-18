@@ -16,22 +16,20 @@
 
 package common
 
-import java.text.SimpleDateFormat
 import uk.gov.hmrc.play.test.UnitSpec
-import java.util.Date
+import java.time.LocalDate
+import common.Dates._
 
 class DatesSpec extends UnitSpec {
-
-  val sf = new SimpleDateFormat("dd/MM/yyyy")
 
   "Calling constructDate method" should {
 
     "return a valid date object with single digit inputs" in {
-      Dates.constructDate(1, 2, 1990) shouldBe sf.parse("01/02/1990")
+      Dates.constructDate(1, 2, 1990) shouldBe LocalDate.parse("01/02/1990", formatter)
     }
 
     "return a valid date object with double digit inputs" in {
-      Dates.constructDate(10, 11, 2016) shouldBe sf.parse("10/11/2016")
+      Dates.constructDate(10, 11, 2016) shouldBe LocalDate.parse("10/11/2016", formatter)
     }
   }
 
@@ -52,18 +50,18 @@ class DatesSpec extends UnitSpec {
 
   "Calling getDay" should {
     "return an integer value of the day" in {
-      Dates.getDay(sf.parse("12/12/2014")) shouldEqual 12
+      Dates.getDay(LocalDate.parse("12/12/2014", formatter)) shouldEqual 12
     }
   }
 
   "Calling getMonth" should {
     "return an integer value of the month" in {
-      Dates.getMonth(sf.parse("11/12/2014")) shouldEqual 12
+      Dates.getMonth(LocalDate.parse("11/12/2014", formatter)) shouldEqual 12
     }
   }
   "Calling getYear" should {
     "return an integer value of the year" in {
-      Dates.getYear(sf.parse("12/12/2014")) shouldEqual 2014
+      Dates.getYear(LocalDate.parse("12/12/2014", formatter)) shouldEqual 2014
     }
   }
 

@@ -77,11 +77,13 @@ articleLayout = false
     <span data-metrics="rtt-properties-summary:result:no-gain"></span>
 
     <!-- PRR Stats -->
-    <span data-metrics="@{deductionAnswers.privateResidenceReliefModel.get.prrClaiming match {
-        case "Full" => "rtt-properties-summary:prr:full"
-        case "Part" => "rtt-properties-summary:prr:part"
-        case _ => "rtt-properties-summary:prr:none"
-    }}"></span>
+    @{if(ApplicationConfig.featureRTTPRREnabled){
+        <span data-metrics={s"${deductionAnswers.privateResidenceReliefModel.get.prrClaiming match {
+            case "Full" => "rtt-properties-summary:prr:full"
+            case "Part" => "rtt-properties-summary:prr:part"
+            case _ => "rtt-properties-summary:prr:none"
+        }}"}></span>
+    }}
 
     <!-- Other Reliefs Stats -->
     @if(deductionAnswers.reliefsModel.fold(false)(_.isClaiming)){
@@ -206,14 +208,14 @@ articleLayout = false
 
     @if(dateInsideAcceptedTaxYears(getDay(gainAnswers.disposalDate), getMonth(gainAnswers.disposalDate), getYear(gainAnswers.disposalDate))) {
             <section id="whatToDoNext" class="summary-underline summary-overline">
-                <h3 id="whatToDoNextNoLossTitle" class="bold-medium">@Messages("calc.resident.summary.whatNext")</h3>
+                <h2 id="whatToDoNextNoLossTitle" class="bold-medium">@Messages("calc.resident.summary.whatNext")</h2>
                 <div id="whatToDoNextNoLossText" class="font-medium what-to-do-next-text">
                     @Messages("calc.resident.summary.whatNext.noLossOrGain")
                     <a href="https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax" target="_blank" rel="external"
                        data-journey-click="help:govUK:rtt-properties-whaToDoNext">
                         @Messages("calc.resident.summary.whatNext.noLossOrGainLinkProperties")
+                        <span id="opensInANewTab">@Messages("calc.base.externalLink")</span>.
                     </a>
-                    <span class="visuallyhidden">@Messages("calc.base.externalLink")</span>.
                 </div>
             </section>
     }

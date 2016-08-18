@@ -185,8 +185,8 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.CalculationController.personalAllowance()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationController.personalAllowance()}")
+      s"redirect to ${routes.PersonalAllowanceController.personalAllowance()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.PersonalAllowanceController.personalAllowance()}")
       }
     }
 

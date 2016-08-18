@@ -35,7 +35,7 @@ import forms.resident.properties.PrivateResidenceReliefForm._
 import forms.resident.properties.PrivateResidenceReliefValueForm._
 import forms.resident.properties.NoPrrReliefsForm
 import models.resident.properties._
-import play.api.mvc.{Action, Result}
+import play.api.mvc.Result
 import play.api.data.Form
 import views.html.calculation.{resident => commonViews}
 import views.html.calculation.resident.properties.{deductions => views}
@@ -334,7 +334,7 @@ trait DeductionsController extends FeatureLock {
   val allowableLosses = FeatureLockForRTT.async { implicit request =>
 
     val postAction = controllers.resident.properties.routes.DeductionsController.submitAllowableLosses()
-    val backLink = Some(controllers.resident.properties.routes.DeductionsController.otherProperties.toString())
+    val backLink = Some(controllers.resident.properties.routes.DeductionsController.otherProperties().toString())
 
     def routeRequest(taxYear: TaxYearModel): Future[Result] = {
       calcConnector.fetchAndGetFormData[AllowableLossesModel](keystoreKeys.allowableLosses).map {
@@ -353,7 +353,7 @@ trait DeductionsController extends FeatureLock {
   val submitAllowableLosses = FeatureLockForRTT.async { implicit request =>
 
     val postAction = controllers.resident.properties.routes.DeductionsController.submitAllowableLosses()
-    val backLink = Some(controllers.resident.properties.routes.DeductionsController.otherProperties.toString())
+    val backLink = Some(controllers.resident.properties.routes.DeductionsController.otherProperties().toString())
 
     def routeRequest(taxYear: TaxYearModel): Future[Result] = {
       allowableLossesForm.bindFromRequest.fold(
@@ -481,8 +481,10 @@ trait DeductionsController extends FeatureLock {
 
     def routeRequest(backLinkUrl: String, taxYear: TaxYearModel, otherPropertiesClaimed: Boolean): Future[Result] = {
       calcConnector.fetchAndGetFormData[LossesBroughtForwardModel](keystoreKeys.lossesBroughtForward).map {
-        case Some(data) => Ok(commonViews.lossesBroughtForward(lossesBroughtForwardForm.fill(data), lossesBroughtForwardPostAction, backLinkUrl, taxYear, otherPropertiesClaimed))
-        case _ => Ok(commonViews.lossesBroughtForward(lossesBroughtForwardForm, lossesBroughtForwardPostAction, backLinkUrl, taxYear, otherPropertiesClaimed))
+        case Some(data) => Ok(commonViews.lossesBroughtForward(lossesBroughtForwardForm.fill(data), lossesBroughtForwardPostAction,
+          backLinkUrl, taxYear, otherPropertiesClaimed))
+        case _ => Ok(commonViews.lossesBroughtForward(lossesBroughtForwardForm, lossesBroughtForwardPostAction, backLinkUrl,
+          taxYear, otherPropertiesClaimed))
       }
     }
 
@@ -514,7 +516,8 @@ trait DeductionsController extends FeatureLock {
 
     def routeRequest(backUrl: String, taxYearModel: TaxYearModel, otherPropertiesClaimed: Boolean): Future[Result] = {
       lossesBroughtForwardForm.bindFromRequest.fold(
-        errors => Future.successful(BadRequest(commonViews.lossesBroughtForward(errors, lossesBroughtForwardPostAction, backUrl, taxYearModel, otherPropertiesClaimed))),
+        errors => Future.successful(BadRequest(commonViews.lossesBroughtForward(errors, lossesBroughtForwardPostAction, backUrl,
+          taxYearModel, otherPropertiesClaimed))),
         success => {
           calcConnector.saveFormData[LossesBroughtForwardModel](keystoreKeys.lossesBroughtForward, success)
 
@@ -624,8 +627,10 @@ trait DeductionsController extends FeatureLock {
 
     def routeRequest(backLink: Option[String]) = {
       calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](keystoreKeys.annualExemptAmount).map {
-        case Some(data) => Ok(commonViews.annualExemptAmount(annualExemptAmountForm().fill(data), backLink, annualExemptAmountPostAction, homeLink, JourneyKeys.properties))
-        case None => Ok(commonViews.annualExemptAmount(annualExemptAmountForm(), backLink, annualExemptAmountPostAction, homeLink, JourneyKeys.properties))
+        case Some(data) => Ok(commonViews.annualExemptAmount(annualExemptAmountForm().fill(data), backLink, annualExemptAmountPostAction,
+          homeLink, JourneyKeys.properties))
+        case None => Ok(commonViews.annualExemptAmount(annualExemptAmountForm(), backLink, annualExemptAmountPostAction, homeLink,
+          JourneyKeys.properties))
       }
     }
 
@@ -655,7 +660,8 @@ trait DeductionsController extends FeatureLock {
 
     def routeRequest(maxAEA: BigDecimal, backLink: Option[String]): Future[Result] = {
       annualExemptAmountForm(maxAEA).bindFromRequest.fold(
-        errors => Future.successful(BadRequest(commonViews.annualExemptAmount(errors, backLink, annualExemptAmountPostAction, homeLink, JourneyKeys.properties))),
+        errors => Future.successful(BadRequest(commonViews.annualExemptAmount(errors, backLink, annualExemptAmountPostAction, homeLink,
+          JourneyKeys.properties))),
         success => {
           for {
             save <- calcConnector.saveFormData(keystoreKeys.annualExemptAmount, success)

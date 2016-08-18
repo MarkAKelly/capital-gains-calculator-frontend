@@ -149,7 +149,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
       .thenReturn(Future.successful(Some(mock[resident.AcquisitionValueModel])))
 
     when(mockSessionCache.fetchAndGetEntry[resident.DisposalDateModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.disposalDate))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(mock[resident.DisposalDateModel])))
+      .thenReturn(Future.successful(Some(resident.DisposalDateModel(1,1,2016))))
 
     when(mockSessionCache.fetchAndGetEntry[resident.DisposalCostsModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.disposalCosts))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(mock[resident.DisposalCostsModel])))
@@ -213,7 +213,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     Some(PersonalAllowanceModel(11100)),
     OtherPropertiesModel("No", None),
     None,
-    AcquisitionDateModel("Yes", Some(9), Some(9), Some(9)),
+    AcquisitionDateModel("Yes", Some(9), Some(9), Some(1999)),
     AcquisitionValueModel(100000),
     Some(RebasedValueModel("No", None)),
     None,
@@ -237,7 +237,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     Some(PersonalAllowanceModel(11100)),
     OtherPropertiesModel("No", None),
     None,
-    AcquisitionDateModel("Yes", Some(9), Some(9), Some(9)),
+    AcquisitionDateModel("Yes", Some(9), Some(9), Some(1999)),
     AcquisitionValueModel(100000),
     Some(RebasedValueModel("Yes", Some(1000))),
     Some(RebasedCostsModel("No", None)),

@@ -16,108 +16,59 @@
 
 package common
 
-import java.text.SimpleDateFormat
+import common.Dates._
+
 import scala.util.{Failure, Success, Try}
 
 object Validation {
 
-  def isValidDate(day:Int,month:Int,year:Int): Boolean = {
-    try {
-      val fmt = new SimpleDateFormat("dd/MM/yyyy")
-      fmt.setLenient(false)
-      fmt.parse(s"$day/$month/$year")
-      true
-    } catch {
-      case e: Exception => false
-    }
+  def isValidDate(day:Int,month:Int,year:Int): Boolean = Try (constructDate(day, month, year)) match {
+    case Success(_) => true
+    case _ => false
   }
 
-  def isMaxTwoDecimalPlaces(amount: BigDecimal): Boolean = {
-    amount match {
-      case amount if amount.scale <= 2 => true
-      case _ => false
-    }
+  def isIntNumber (input: String): Boolean = Try (input.toInt) match {
+    case Success(_) => true
+    case Failure(_) => false
   }
 
-  def hasNoDecimalPlaces (amount: BigDecimal): Boolean = {
-    amount match {
-      case value if amount.scale <= 0 => true
-      case _ => false
-    }
+  def isBigDecimalNumber (input: String): Boolean = Try(BigDecimal(input)) match {
+    case Success(_) => true
+    case Failure(_) => false
   }
 
-  def isPositive(amount: BigDecimal): Boolean = {
-    amount match {
-      case amount if amount < 0 => false
-      case _ => true
-    }
+  def isDoubleNumber (input: String): Boolean = Try (input.toDouble) match {
+    case Success(_) => true
+    case Failure(_) => false
   }
 
-  def isGreaterThanZero (amount: BigDecimal): Boolean = {
-    if (amount > 0) true
-    else false
+  val bigDecimalCheck: String => Boolean = input => Try(BigDecimal(input)) match {
+    case Success(_) => true
+    case Failure(_) if input.trim == "" => true
+    case Failure(_) => false
   }
 
-  def isLessThanEqualMaxNumeric(amount: BigDecimal): Boolean = {
-    amount <= Constants.maxNumeric
+  val integerCheck: String => Boolean = input => Try(input.trim.toInt) match {
+    case Success(_) => true
+    case Failure(_) if input.trim == "" => true
+    case Failure(_) => false
   }
 
-  def isNotEmpty (input: String): Boolean = !input.isEmpty
+  val isGreaterThanZero: BigDecimal => Boolean = amount => amount > 0
 
-  def isIntNumber (input: String): Boolean = {
-    Try (input.toInt) match {
-      case Success(_) => true
-      case Failure(_) => false
-    }
-  }
+  val mandatoryCheck: String => Boolean = input => input.trim != ""
 
-  def isBigDecimalNumber (input: String): Boolean = {
-    Try(BigDecimal(input)) match {
-      case Success(_) => true
-      case Failure(_) => false
-    }
-  }
+  val decimalPlacesCheck: BigDecimal => Boolean = input => input.scale < 3
 
-  def isDoubleNumber (input: String): Boolean = {
-    Try (input.toDouble) match {
-      case Success(_) => true
-      case Failure(_) => false
-    }
-  }
+  val decimalPlacesCheckNoDecimal: BigDecimal => Boolean = input => input.scale < 1
 
-  def isYesNo (input: String): Boolean = {
-    input.equals("Yes") || input.equals("No") || input.equals("")
-  }
+  val validYearRangeCheck: Int => Boolean = input => input >= 1900 && input <= 9999
 
-  val bigDecimalCheck: String => Boolean = (input) => {
-    Try(BigDecimal(input)) match {
-      case Success(_) => true
-      case Failure(_) if input.trim == "" => true
-      case Failure(_) => false
-    }
-  }
+  val maxCheck: BigDecimal => Boolean = input => input <= Constants.maxNumeric
 
-  val integerCheck: String => Boolean = (input) => {
-    Try(input.trim.toInt) match {
-      case Success(_) => true
-      case Failure(_) if input.trim == "" => true
-      case Failure(_) => false
-    }
-  }
+  val isPositive: BigDecimal => Boolean = input => input >= 0
 
-  val mandatoryCheck: String => Boolean = (input) => input.trim != ""
-
-  val decimalPlacesCheck: BigDecimal => Boolean = (input) => input.scale < 3
-
-  val decimalPlacesCheckNoDecimal: BigDecimal => Boolean = (input) => input.scale < 1
-
-  val validYearRangeCheck: Int => Boolean = (input) => input >= 1900 && input <= 9999
-
-  val maxCheck: BigDecimal => Boolean = (input) => input <= Constants.maxNumeric
-
-  val minCheck: BigDecimal => Boolean = (input) => input >= 0
-
-  val yesNoCheck: String =>  Boolean = {
+  val yesNoCheck: String => Boolean = {
     case "Yes" => true
     case "No" => true
     case "" => true

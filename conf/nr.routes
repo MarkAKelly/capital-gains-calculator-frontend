@@ -15,8 +15,8 @@ GET         /current-income                     controllers.nonresident.CurrentI
 POST        /current-income                     controllers.nonresident.CurrentIncomeController.submitCurrentIncome
 
 #Personal Allowance
-GET         /personal-allowance                 controllers.nonresident.CalculationController.personalAllowance
-POST        /personal-allowance                 controllers.nonresident.CalculationController.submitPersonalAllowance
+GET         /personal-allowance                 controllers.nonresident.PersonalAllowanceController.personalAllowance
+POST        /personal-allowance                 controllers.nonresident.PersonalAllowanceController.submitPersonalAllowance
 
 #Other Properties
 GET         /other-properties                   controllers.nonresident.OtherPropertiesController.otherProperties
@@ -94,6 +94,6 @@ POST        /other-reliefs-rebased              controllers.nonresident.OtherRel
 
 #Summary screen route
 ########################################################
-GET         /summary                            controllers.nonresident.CalculationController.summary
-GET         /restart                            controllers.nonresident.CalculationController.restart
+GET         /summary                            controllers.nonresident.SummaryController.summary
+GET         /restart                            controllers.nonresident.SummaryController.restart
 ########################################################

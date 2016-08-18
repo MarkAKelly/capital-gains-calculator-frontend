@@ -16,15 +16,12 @@
 
 package constructors.resident.properties
 
-import java.text.SimpleDateFormat
-
+import common.Dates._
 import common.resident.PrivateResidenceReliefKeys
 import models.resident._
 import models.resident.properties.{ChargeableGainAnswers, PrivateResidenceReliefModel, YourAnswersSummaryModel}
 
 object CalculateRequestConstructor {
-
-  val format = new SimpleDateFormat("yyyy-MM-dd")
 
   def totalGainRequestString (answers: YourAnswersSummaryModel): String = {
       s"?disposalValue=${answers.disposalValue}" +
@@ -32,7 +29,7 @@ object CalculateRequestConstructor {
       s"&acquisitionValue=${answers.acquisitionValue}" +
       s"&acquisitionCosts=${answers.acquisitionCosts}" +
       s"&improvements=${answers.improvements}" +
-      s"&disposalDate=${format.format(answers.disposalDate)}"
+      s"&disposalDate=${answers.disposalDate.format(requestFormatter)}"
   }
 
   def chargeableGainRequestString (answers: ChargeableGainAnswers, maxAEA: BigDecimal): String = {
@@ -49,8 +46,10 @@ object CalculateRequestConstructor {
     s"&annualExemptAmount=${if (isUsingAnnualExemptAmount(answers.otherPropertiesModel, answers.allowableLossesModel, answers.allowableLossesValueModel)) {
       answers.annualExemptAmountModel.get.amount}
     else maxAEA}" +
-    s"&prrType=${answers.privateResidenceReliefModel.getOrElse(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)).prrClaiming}" +
-    s"${if (answers.privateResidenceReliefModel.get.prrClaiming.equals(PrivateResidenceReliefKeys.part)) {
+    s"&prrType=${
+      if (config.ApplicationConfig.featureRTTPRREnabled)answers.privateResidenceReliefModel.get.prrClaiming
+    else PrivateResidenceReliefKeys.none}" +
+    s"${if (config.ApplicationConfig.featureRTTPRREnabled &&answers.privateResidenceReliefModel.get.prrClaiming.equals(PrivateResidenceReliefKeys.part)) {
       s"&prrValue=${answers.privateResidenceReliefValueModel.get.amount}"
     } else ""}"
   }

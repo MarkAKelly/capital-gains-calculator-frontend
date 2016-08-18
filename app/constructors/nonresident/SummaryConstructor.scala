@@ -29,7 +29,7 @@ import views.html.helpers._
 
 object SummaryConstructor {
 
-  def calcTypeMessage(calculationType: String) = {
+  def calcTypeMessage(calculationType: String): String = {
     calculationType match {
       case "flat" => Messages("calc.summary.calculation.details.flatCalculation")
       case "time" => Messages("calc.summary.calculation.details.timeCalculation")
@@ -37,7 +37,7 @@ object SummaryConstructor {
     }
   }
 
-  def simplePRRResult(simplePRR: Option[BigDecimal], privateResidenceReliefModel: Option[PrivateResidenceReliefModel]) = {
+  def simplePRRResult(simplePRR: Option[BigDecimal], privateResidenceReliefModel: Option[PrivateResidenceReliefModel]): String = {
     (simplePRR, privateResidenceReliefModel) match {
       case (Some(data), _) => "&pound;" + MoneyPounds(data).quantity
       case (None, Some(PrivateResidenceReliefModel("Yes", _, _))) => "&pound;0.00"
@@ -45,9 +45,8 @@ object SummaryConstructor {
     }
   }
 
-  //scalastyle:off
-
-  def calculationDetails(result: CalculationResultModel, summary: SummaryModel) = summaryPageSection("calcDetails", Messages("calc.summary.calculation.details.title"),
+  def calculationDetails(result: CalculationResultModel, summary: SummaryModel) = summaryPageSection("calcDetails",
+    Messages("calc.summary.calculation.details.title"),
     (result.totalGain, result.taxableGain) match {
       case (totalGain, taxableGain) if isGreaterThanZero(totalGain) && isGreaterThanZero(taxableGain) => Array(
         SummaryDataItemModel(
@@ -221,7 +220,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.personalAllowance.question"),
                     "&pound;" + MoneyPounds(summary.personalAllowanceModel.get.personalAllowanceAmt).quantity,
-                    Some(routes.CalculationController.personalAllowance().toString())
+                    Some(routes.PersonalAllowanceController.personalAllowance().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.otherProperties.questionTwo"),
@@ -275,7 +274,7 @@ object SummaryConstructor {
                   SummaryDataItemModel(
                     Messages("calc.personalAllowance.question"),
                     "&pound;" + MoneyPounds(summary.personalAllowanceModel.get.personalAllowanceAmt).quantity,
-                    Some(routes.CalculationController.personalAllowance().toString())
+                    Some(routes.PersonalAllowanceController.personalAllowance().toString())
                   ),
                   SummaryDataItemModel(
                     Messages("calc.otherProperties.question"),
@@ -345,7 +344,8 @@ object SummaryConstructor {
           case "Yes" => Array(
             SummaryDataItemModel(
               Messages("calc.acquisitionDate.questionTwo"),
-              Dates.datePageFormat.format(Dates.constructDate(summary.acquisitionDateModel.day.get, summary.acquisitionDateModel.month.get, summary.acquisitionDateModel.year.get)),
+              Dates.datePageFormatNoZero.format(Dates.constructDate(summary.acquisitionDateModel.day.get,
+                summary.acquisitionDateModel.month.get, summary.acquisitionDateModel.year.get)),
               Some(routes.AcquisitionDateController.acquisitionDate().toString())
             ),
             SummaryDataItemModel(
@@ -387,7 +387,8 @@ object SummaryConstructor {
           case "Yes" => Array(
             SummaryDataItemModel(
               Messages("calc.acquisitionDate.questionTwo"),
-              Dates.datePageFormat.format(Dates.constructDate(summary.acquisitionDateModel.day.get, summary.acquisitionDateModel.month.get, summary.acquisitionDateModel.year.get)),
+              Dates.datePageFormatNoZero.format(Dates.constructDate(summary.acquisitionDateModel.day.get,
+                summary.acquisitionDateModel.month.get, summary.acquisitionDateModel.year.get)),
               Some(routes.AcquisitionDateController.acquisitionDate().toString())
             ),
             SummaryDataItemModel(
@@ -473,7 +474,7 @@ object SummaryConstructor {
       Array(
         SummaryDataItemModel(
           Messages("calc.disposalDate.question"),
-          Dates.datePageFormat.format(Dates.constructDate(summary.disposalDateModel.day, summary.disposalDateModel.month, summary.disposalDateModel.year)),
+          Dates.datePageFormatNoZero.format(Dates.constructDate(summary.disposalDateModel.day, summary.disposalDateModel.month, summary.disposalDateModel.year)),
           Some(routes.DisposalDateController.disposalDate().toString())
         ),
         SummaryDataItemModel(

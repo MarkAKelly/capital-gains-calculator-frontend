@@ -55,8 +55,8 @@ class NoPrrReliefsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       doc.select("legend.visuallyhidden").text() shouldEqual messages.titleNoPrr
     }
 
-    s"have help text with the message ${messages.help}" in {
-      doc.select("span.form-hint").text() shouldEqual messages.help
+    s"have help text with the message ${messages.helpNoPrr}" in {
+      doc.select("span.form-hint").text() shouldEqual messages.helpNoPrr
     }
 
     "have a fieldset with aria-details attribute" in {

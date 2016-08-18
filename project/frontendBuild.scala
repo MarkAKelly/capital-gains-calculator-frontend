@@ -34,32 +34,20 @@ private object AppDependencies {
   import play.PlayImport._
   import play.core.PlayVersion
 
-  private val playHealthVersion = "1.1.0"
-  private val playJsonLoggerVersion = "2.1.1"
-  private val frontendBootstrapVersion = "6.5.0"
-  private val govukTemplateVersion = "4.0.0"
-  private val playUiVersion = "4.14.0"
-  private val playPartialsVersion = "4.2.0"
-  private val playAuthorisedFrontendVersion = "5.1.0"
-  private val playConfigVersion = "2.0.1"
-  private val hmrcTestVersion = "1.7.0"
-  private val cachingClientVersion = "5.3.0"
-  private val mongoCachingVersion = "3.2.0"
-  private val play2PdfVersion = "1.1.3"
-  
+
   val compile = Seq(
     ws,
-    "uk.gov.hmrc" %% "frontend-bootstrap" % frontendBootstrapVersion,
-    "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
-    "uk.gov.hmrc" %% "play-authorised-frontend" % playAuthorisedFrontendVersion,
-    "uk.gov.hmrc" %% "play-config" % playConfigVersion,
-    "uk.gov.hmrc" %% "play-json-logger" % playJsonLoggerVersion,
-    "uk.gov.hmrc" %% "govuk-template" % govukTemplateVersion,
-    "uk.gov.hmrc" %% "play-health" % playHealthVersion,
-    "uk.gov.hmrc" %% "play-ui" % playUiVersion,
-    "uk.gov.hmrc" %% "http-caching-client" % cachingClientVersion,
-    "uk.gov.hmrc" %% "mongo-caching" % mongoCachingVersion,
-    "it.innove" 	%  "play2-pdf" % play2PdfVersion
+    "uk.gov.hmrc" %% "frontend-bootstrap" % "6.7.0",
+    "uk.gov.hmrc" %% "play-partials" % "4.5.0",
+    "uk.gov.hmrc" %% "play-authorised-frontend" % "5.5.0",
+    "uk.gov.hmrc" %% "play-config" % "2.1.0",
+    "uk.gov.hmrc" %% "play-json-logger" % "2.1.1",
+    "uk.gov.hmrc" %% "govuk-template" % "4.0.0",
+    "uk.gov.hmrc" %% "play-health" % "1.1.0",
+    "uk.gov.hmrc" %% "play-ui" % "4.16.0",
+    "uk.gov.hmrc" %% "http-caching-client" % "5.3.0",
+    "uk.gov.hmrc" %% "mongo-caching" % "3.2.0",
+    "it.innove" 	%  "play2-pdf" % "1.1.3"
   )
 
   trait TestDependencies {
@@ -70,7 +58,7 @@ private object AppDependencies {
   object Test {
     def apply() = new TestDependencies {
       override lazy val test = Seq(
-        "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
+        "uk.gov.hmrc" %% "hmrctest" % "1.8.0" % scope,
         "org.scalatest" %% "scalatest" % "2.2.6" % scope,
         "org.pegdown" % "pegdown" % "1.6.0" % scope,
         "org.jsoup" % "jsoup" % "1.8.3" % scope,

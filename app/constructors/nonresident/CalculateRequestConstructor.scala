@@ -19,89 +19,107 @@ package constructors.nonresident
 import common.Dates
 import models.nonresident._
 
+import scala.math.BigDecimal
+
 object CalculateRequestConstructor {
 
   def baseCalcUrl(input: SummaryModel): String = {
-    s"customerType=${
-      input.customerTypeModel.customerType
-    }&priorDisposal=${
-      input.otherPropertiesModel.otherProperties
-    }${
-      input.otherPropertiesModel match {
-        case OtherPropertiesModel("Yes", data) if data.getOrElse(0) == 0 => "&annualExemptAmount=" + input.annualExemptAmountModel.get.annualExemptAmount + "&otherPropertiesAmt=" + input.otherPropertiesModel.otherPropertiesAmt.getOrElse(0)
-        case OtherPropertiesModel("Yes", data) if data.get > 0 => "&otherPropertiesAmt=" + input.otherPropertiesModel.otherPropertiesAmt.get
-        case _ => ""
-      }
-    }${
-      input.disabledTrusteeModel match {
-        case Some(data) => "&isVulnerable=" + data.isVulnerable
-        case None => ""
-      }
-    }${
-      input.currentIncomeModel match {
-        case Some(data) => "&currentIncome=" + data.currentIncome
-        case None => ""
-      }
-    }${
-      input.personalAllowanceModel match {
-        case Some(data) => "&personalAllowanceAmt=" + data.personalAllowanceAmt
-        case None => ""
-      }
-    }&disposalValue=${
-      input.disposalValueModel.disposalValue
-    }&disposalCosts=${
-      input.disposalCostsModel.disposalCosts
-    }&allowableLossesAmt=${
-      input.allowableLossesModel.isClaimingAllowableLosses match {
-        case "Yes" => input.allowableLossesModel.allowableLossesAmt.get
-        case "No" => 0
-      }
-    }&disposalDate=${
-      input.disposalDateModel.year
-    }-${input.disposalDateModel.month}-${
-      input.disposalDateModel.day
+    customerType(input.customerTypeModel.customerType) +
+    priorDisposal(input.otherPropertiesModel.otherProperties) +
+    annualExemptAmount(input.otherPropertiesModel, input.annualExemptAmountModel) +
+    otherPropertiesAmount(input.otherPropertiesModel) +
+    isVulnerableTrustee(input.customerTypeModel.customerType, input.disabledTrusteeModel) +
+    currentIncome(input.customerTypeModel.customerType, input.currentIncomeModel) +
+    personalAllowanceAmount(input.customerTypeModel.customerType, input.personalAllowanceModel) +
+    disposalValue(input.disposalValueModel.disposalValue) +
+    disposalCosts(input.disposalCostsModel.disposalCosts) +
+    allowableLossesAmount(input.allowableLossesModel) +
+    disposalDate(input.disposalDateModel)
+  }
+
+  def customerType(customerType: String): String = s"customerType=$customerType"
+
+  def priorDisposal(otherProperties: String): String = s"&priorDisposal=$otherProperties"
+
+  def annualExemptAmount(otherPropertiesModel: OtherPropertiesModel, annualExemptAmountModel: Option[AnnualExemptAmountModel]): String = {
+    otherPropertiesModel match {
+      case OtherPropertiesModel("Yes", Some(data)) if data == 0 => s"&annualExemptAmount=${annualExemptAmountModel.get.annualExemptAmount}"
+      case _ => ""
+    }
+  }
+
+  def otherPropertiesAmount(otherPropertiesModel: OtherPropertiesModel): String = {
+    otherPropertiesModel match {
+      case OtherPropertiesModel("Yes", Some(data)) => s"&otherPropertiesAmt=$data"
+      case _ => ""
+    }
+  }
+
+  def isVulnerableTrustee(customerType: String, disabledTrusteeModel: Option[DisabledTrusteeModel]): String = {
+    if (customerType.equals("trustee")) s"&isVulnerable=${disabledTrusteeModel.get.isVulnerable}"
+    else ""
+  }
+
+  def currentIncome(customerType: String, currentIncomeModel: Option[CurrentIncomeModel]): String = {
+    if (customerType.equals("individual")) s"&currentIncome=${currentIncomeModel.get.currentIncome}"
+    else ""
+  }
+
+  def personalAllowanceAmount(customerType: String, personalAllowanceModel: Option[PersonalAllowanceModel]): String = {
+    if (customerType.equals("individual") && personalAllowanceModel.isDefined) s"&personalAllowanceAmt=${personalAllowanceModel.get.personalAllowanceAmt}"
+    else ""
+  }
+
+  def disposalValue(disposalValue: BigDecimal): String = s"&disposalValue=$disposalValue"
+
+  def disposalCosts(disposalCosts: BigDecimal): String = s"&disposalCosts=$disposalCosts"
+
+  def allowableLossesAmount(allowableLossesModel: AllowableLossesModel): String = {
+    s"&allowableLossesAmt=${
+      if (allowableLossesModel.isClaimingAllowableLosses.equals("Yes")) allowableLossesModel.allowableLossesAmt.get
+      else "0"
     }"
+  }
+
+  def disposalDate(disposalDateModel: DisposalDateModel): String = {
+    s"&disposalDate=${disposalDateModel.year}-${disposalDateModel.month}-${disposalDateModel.day}"
   }
 
   def flatCalcUrlExtra(input: SummaryModel): String = {
-    s"${
-      improvements(input)
-    }${
-      acquisition(input)
-    }&reliefs=${
-      input.otherReliefsModelFlat.otherReliefs.getOrElse(0)
-    }${
-      privateResidenceReliefFlat(input)
-    }${
-      isClaimingPRR(input)
-    }${
-      isClaimingPRR(input) match {
-        case "&isClaimingPRR=Yes" => s"&acquisitionDate=${
-          input.acquisitionDateModel.year.get
-        }-${input.acquisitionDateModel.month.get}-${
-          input.acquisitionDateModel.day.get
-        }"
-        case "&isClaimingPRR=No" => ""
-      }
-    }"
+    val isClaimingPrr = isClaimingPRR(input)
+    improvements(input) +
+      acquisition(input) +
+      flatReliefs(input.otherReliefsModelFlat.otherReliefs) +
+      privateResidenceReliefFlat(input) +
+      isClaimingPrr +
+      flatAcquisitionDate(isClaimingPrr, input.acquisitionDateModel)
+  }
+
+  def flatReliefs(reliefsValue: Option[BigDecimal]): String = {
+    s"&reliefs=${reliefsValue.getOrElse(0)}"
+  }
+
+  def flatAcquisitionDate(isClaimingPrr: String, acquisitionDateModel: AcquisitionDateModel): String = {
+    if (isClaimingPrr.contains("Yes"))
+      s"&acquisitionDate=${acquisitionDateModel.year.get}-${acquisitionDateModel.month.get}-${acquisitionDateModel.day.get}"
+    else ""
   }
 
   def taCalcUrlExtra(input: SummaryModel): String = {
-    s"${
-      improvements(input)
-    }&acquisitionDate=${
-      input.acquisitionDateModel.year.get
-    }-${input.acquisitionDateModel.month.get}-${
-      input.acquisitionDateModel.day.get
-    }${
-      acquisition(input)
-    }&reliefs=${
-      input.otherReliefsModelTA.otherReliefs.getOrElse(0)
-    }${
-      privateResidenceReliefTA(input)
-    }${
+    improvements(input) +
+      taAcquisitionDate(input.acquisitionDateModel) +
+      acquisition(input) +
+      taReliefs(input.otherReliefsModelTA.otherReliefs) +
+      privateResidenceReliefTA(input) +
       isClaimingPRR(input)
-    }"
+  }
+
+  def taAcquisitionDate(acquisitionDateModel: AcquisitionDateModel): String = {
+    s"&acquisitionDate=${acquisitionDateModel.year.get}-${acquisitionDateModel.month.get}-${acquisitionDateModel.day.get}"
+  }
+
+  def taReliefs(otherReliefs: Option[BigDecimal]): String = {
+    s"&reliefs=${otherReliefs.getOrElse(0)}"
   }
 
   def rebasedCalcUrlExtra(input: SummaryModel): String = {
@@ -142,15 +160,16 @@ object CalculateRequestConstructor {
     }"
   }
 
-  def improvements(input: SummaryModel) = s"&improvementsAmt=${
+  def improvements(input: SummaryModel): String = s"&improvementsAmt=${
     (input.improvementsModel.isClaimingImprovements, input.rebasedValueModel) match {
-      case ("Yes", Some(RebasedValueModel("Yes", _))) => input.improvementsModel.improvementsAmtAfter.getOrElse(BigDecimal(0)) + input.improvementsModel.improvementsAmt.getOrElse(BigDecimal(0))
+      case ("Yes", Some(RebasedValueModel("Yes", _))) => input.improvementsModel.improvementsAmtAfter.getOrElse(BigDecimal(0)) +
+        input.improvementsModel.improvementsAmt.getOrElse(BigDecimal(0))
       case ("No", _) => 0
       case _ => input.improvementsModel.improvementsAmt.getOrElse(0)
     }
   }"
 
-  def privateResidenceReliefFlat(input: SummaryModel) = s"${
+  def privateResidenceReliefFlat(input: SummaryModel): String = s"${
     (input.acquisitionDateModel, input.privateResidenceReliefModel) match {
       case (AcquisitionDateModel("Yes", day, month, year), Some(PrivateResidenceReliefModel("Yes", claimed, after))) if claimed.isDefined =>
         s"&daysClaimed=${claimed.get}"
@@ -158,7 +177,7 @@ object CalculateRequestConstructor {
     }
   }"
 
-  def privateResidenceReliefTA(input: SummaryModel) = s"${
+  def privateResidenceReliefTA(input: SummaryModel): String = s"${
     (input.acquisitionDateModel, input.privateResidenceReliefModel) match {
       case (AcquisitionDateModel("Yes", day, month, year), Some(PrivateResidenceReliefModel("Yes", claimed, after)))
         if Dates.dateAfter18Months(input.disposalDateModel.day, input.disposalDateModel.month, input.disposalDateModel.year) && after.isDefined =>
@@ -168,7 +187,7 @@ object CalculateRequestConstructor {
     }
   }"
 
-  def privateResidenceReliefRebased(input: SummaryModel) = s"${
+  def privateResidenceReliefRebased(input: SummaryModel): String = s"${
     (input.rebasedValueModel, input.privateResidenceReliefModel) match {
       case (Some(RebasedValueModel("Yes", rebasedValue)), Some(PrivateResidenceReliefModel("Yes", claimed, after)))
         if Dates.dateAfter18Months(input.disposalDateModel.day, input.disposalDateModel.month, input.disposalDateModel.year) && after.isDefined =>
@@ -177,14 +196,14 @@ object CalculateRequestConstructor {
     }
   }"
 
-  def isClaimingPRR(input: SummaryModel) = s"&isClaimingPRR=${
+  def isClaimingPRR(input: SummaryModel): String = s"&isClaimingPRR=${
     (input.acquisitionDateModel, input.privateResidenceReliefModel) match {
       case (AcquisitionDateModel("Yes", day, month, year), Some(PrivateResidenceReliefModel("Yes", claimed, after))) => "Yes"
       case _ => "No"
     }
   }"
 
-  def acquisition(input: SummaryModel) = s"&acquisitionValueAmt=${
+  def acquisition(input: SummaryModel): String = s"&acquisitionValueAmt=${
     input.acquisitionValueModel.acquisitionValueAmt
   }&acquisitionCostsAmt=${
     input.acquisitionCostsModel.acquisitionCostsAmt

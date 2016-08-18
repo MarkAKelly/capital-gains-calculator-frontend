@@ -20,8 +20,6 @@ import common.KeystoreKeys
 import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
-import constructors.nonresident.CalculationElectionConstructor
-import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import play.api.i18n.Messages
@@ -48,7 +46,6 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
                  ): DisposalDateController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
-    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -94,9 +91,9 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
           document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
         }
 
-        s"have a 'Back' link to ${routes.ImprovementsController.improvements}" in {
+        s"have a 'Back' link to ${routes.ImprovementsController.improvements()}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.ImprovementsController.improvements.toString()
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.ImprovementsController.improvements().toString()
         }
 
         s"have the question '${Messages("calc.disposalDate.question")}'" in {
@@ -262,8 +259,6 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
       lazy val result = executeTargetWithMockData("31", "0", "2017")
       lazy val document = Jsoup.parse(bodyOf(result))
-
-      val testModel = new DisposalDateModel(31,0,2017)
 
       "return a 400" in {
         status(result) shouldBe 400

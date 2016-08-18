@@ -16,7 +16,6 @@
 
 package forms.resident
 
-import assets.MessageLookup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import forms.resident.LossesBroughtForwardForm._
 import assets.MessageLookup.{lossesBroughtForward => messages}

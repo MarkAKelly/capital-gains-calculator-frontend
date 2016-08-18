@@ -736,7 +736,7 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
       }
 
       s"have the link text ${messages.whatToDoNextNoLossLinkShares}${commonMessages.calcBaseExternalLink}" in {
-        doc.select("div#whatToDoNextNoLossText a").text shouldBe s"${messages.whatToDoNextNoLossLinkShares}"
+        doc.select("div#whatToDoNextNoLossText a").text should include(s"${messages.whatToDoNextNoLossLinkShares}")
       }
 
       s"have a link to https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax" in {
@@ -744,7 +744,7 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
       }
 
       s"have the visually hidden text ${commonMessages.calcBaseExternalLink}" in {
-        doc.select("div#whatToDoNextNoLossText span.visuallyhidden").text shouldBe s"${commonMessages.calcBaseExternalLink}"
+        doc.select("div#whatToDoNextNoLossText span#opensInANewWindow").text shouldBe s"${commonMessages.calcBaseExternalLink}"
       }
     }
   }
@@ -807,7 +807,7 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
     }
 
     s"display the title ${messages.whatToDoNextTitle}" in {
-      doc.select("h3#whatToDoNextNoLossTitle").text shouldEqual messages.whatToDoNextTitle
+      doc.select("h2#whatToDoNextNoLossTitle").text shouldEqual messages.whatToDoNextTitle
     }
 
     s"display the text ${messages.whatToDoNextText}" in {
@@ -815,7 +815,7 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
     }
 
     s"have the link text ${messages.whatToDoNextNoLossLinkShares}${commonMessages.calcBaseExternalLink}" in {
-      doc.select("div#whatToDoNextNoLossText a").text shouldBe s"${messages.whatToDoNextNoLossLinkShares}"
+      doc.select("div#whatToDoNextNoLossText a").text should  include(s"${messages.whatToDoNextNoLossLinkShares}")
     }
 
     s"have a link to https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax" in {
@@ -823,7 +823,7 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
     }
 
     s"have the visually hidden text ${commonMessages.calcBaseExternalLink}" in {
-      doc.select("div#whatToDoNextNoLossText span.visuallyhidden").text shouldBe s"${commonMessages.calcBaseExternalLink}"
+      doc.select("div#whatToDoNextNoLossText span#opensInANewWindow").text shouldBe s"${commonMessages.calcBaseExternalLink}"
     }
   }
 

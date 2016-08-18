@@ -16,7 +16,6 @@
 
 package controllers.resident.shares.DeductionsControllerSpec
 
-import common.KeystoreKeys
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.shares.DeductionsController
 import org.jsoup.Jsoup
