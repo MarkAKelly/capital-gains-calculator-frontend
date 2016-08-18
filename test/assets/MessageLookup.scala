@@ -259,8 +259,8 @@ object MessageLookup {
     def question(input: String): String = s"In the $input tax year, what was your income?"
     val currentYearTitle = "How much do you expect your income to be in this tax year?"
     val currentYearQuestion = "How much do you expect your income to be in this tax year?"
-    val helpText = "Include your salary and any other income, but not the money you made from selling the property."
-    val helpTextShares = "Include your salary and any other income, but not the money you made from selling the shares."
+    val helpText = "Include your salary before tax, and anything else you pay income tax on, but not the money you made from selling the property."
+    val helpTextShares = "Include your salary before tax, and anything else you pay income tax on, but not the money you made from selling the shares."
   }
 
   //Personal Allowance messages
