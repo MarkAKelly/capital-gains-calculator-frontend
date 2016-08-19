@@ -53,11 +53,7 @@ trait CalculationElectionConstructor {
         if (summary.rebasedValueModel.get.hasRebasedValue.equals("Yes")) {
           Seq(flatElementConstructor(flatResult, otherReliefsFlat),
             timeElementConstructor(timeResult, otherReliefsTA),
-            ("rebased", rebasedResult.get.taxOwed.setScale(2).toString(),
-              Messages("calc.calculationElection.message.rebased"),
-              Some(Messages("calc.calculationElection.message.rebasedDate")),
-              routes.OtherReliefsRebasedController.otherReliefsRebased().toString(),
-              otherReliefsRebased)
+            rebasedElementConstructor(rebasedResult, otherReliefsRebased)
           )
         }
         else {
@@ -67,12 +63,9 @@ trait CalculationElectionConstructor {
         }
       case "No" =>
         if (summary.rebasedValueModel.get.hasRebasedValue.equals("Yes")) {
-          Seq(flatElementConstructor(flatResult, otherReliefsFlat),
-            ("rebased", rebasedResult.get.taxOwed.setScale(2).toString(),
-              Messages("calc.calculationElection.message.rebased"),
-              Some(Messages("calc.calculationElection.message.rebasedDate")),
-              routes.OtherReliefsRebasedController.otherReliefsRebased().toString(),
-              otherReliefsRebased)
+          Seq(
+            flatElementConstructor(flatResult, otherReliefsFlat),
+            rebasedElementConstructor(rebasedResult, otherReliefsRebased)
           )
         }
         else {
@@ -81,6 +74,14 @@ trait CalculationElectionConstructor {
     }
   }
 
+  private def rebasedElementConstructor(rebasedResult: Option[CalculationResultModel], otherReliefsRebased: Option[BigDecimal]) = {
+    ("rebased", rebasedResult.get.taxOwed.setScale(2).toString(),
+      Messages("calc.calculationElection.message.rebased"),
+      Some(Messages("calc.calculationElection.message.rebasedDate")),
+      routes.OtherReliefsRebasedController.otherReliefsRebased().toString(),
+      otherReliefsRebased)
+  }
+  
   private def flatElementConstructor(flatResult: Option[CalculationResultModel], otherReliefsFlat: Option[BigDecimal]) = {
     ("flat", flatResult.get.taxOwed.setScale(2).toString(),
       Messages("calc.calculationElection.message.flat"),
