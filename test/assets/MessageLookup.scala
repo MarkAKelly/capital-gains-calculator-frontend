@@ -296,7 +296,7 @@ object MessageLookup {
   }
 
   object sharesAcquisitionCosts {
-    val title = "How much did you pay in costs when you bought the shares?"
+    val title = "How much did you pay in costs when you got the shares?"
     val helpText = "Costs include stockbroker fees and Stamp Duty tax"
   }
 
