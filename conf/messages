@@ -474,8 +474,9 @@ calc.resident.lossesBroughtForwardValue.title = What''s the total value of your 
 calc.resident.lossesBroughtForwardValue.pageHeading = What''s the total value of your Capital Gains Tax losses from tax years before {0}?
 
 ## Previous Taxable Gains messages
-calc.resident.previousTaxableGains.title = What was your taxable gain?
+calc.resident.previousTaxableGains.title = What was your taxable gain in the {0} tax year?
 calc.resident.previousTaxableGain.link.one = How to work out your taxable gain
+calc.resident.previousTaxableGains.helpText = This is the amount of taxable gain you made when you sold or gave away something that''s covered by Capital Gains Tax
 
 ## Current Income messages
 calc.resident.currentIncome.title = In the {0} tax year, what was your income?

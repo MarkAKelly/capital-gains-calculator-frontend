@@ -132,7 +132,7 @@
         summaryNumericRowHelper("annualExemptAmount",Messages("calc.resident.annualExemptAmount.title"),deductionAnswers.annualExemptAmountModel.get.amount,None)}
         @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties &&
         deductionAnswers.annualExemptAmountModel.isDefined && deductionAnswers.annualExemptAmountModel.get.amount == 0)
-        summaryNumericRowHelper("previousTaxableGains", Messages("calc.resident.previousTaxableGains.title"),
+        summaryNumericRowHelper("previousTaxableGains", Messages("calc.resident.previousTaxableGains.title", taxYear.taxYearSupplied),
         incomeAnswers.previousTaxableGainsModel.get.amount, None)}
         @summaryNumericRowHelper("currentIncome",if(taxYear.taxYearSupplied ==
         "2016/17"){Messages("calc.resident.currentIncome.questionCurrentYear")}else{Messages("calc.resident.currentIncome.question",

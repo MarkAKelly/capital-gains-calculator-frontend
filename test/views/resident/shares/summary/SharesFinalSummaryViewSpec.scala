@@ -518,8 +518,8 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
 
     "has an option output row for previous taxable gains" which {
 
-      s"should have the question text '${commonMessages.previousTaxableGains.title}'" in {
-        doc.select("#previousTaxableGains-question").text shouldBe commonMessages.previousTaxableGains.title
+      s"should have the question text '${commonMessages.previousTaxableGains.title("2013/14")}'" in {
+        doc.select("#previousTaxableGains-question").text shouldBe commonMessages.previousTaxableGains.title("2013/14")
       }
 
       "should have the value '£1,000'" in {
