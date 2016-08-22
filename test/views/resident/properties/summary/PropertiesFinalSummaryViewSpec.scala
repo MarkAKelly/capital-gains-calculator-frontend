@@ -129,7 +129,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
 
       "has a numeric output row for the gain" which {
 
-        "should have the question text 'Total Gain'" in {
+        "should have the question text 'Total profit'" in {
           doc.select("#gain-question").text shouldBe messages.totalGain
         }
 
@@ -174,7 +174,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
 
       "has a numeric output row for the chargeable gain" which {
 
-        "should have the question text 'Taxable Gain'" in {
+        "should have the question text 'Taxable profit'" in {
           doc.select("#chargeableGain-question").text shouldBe messages.chargeableGain
         }
 
