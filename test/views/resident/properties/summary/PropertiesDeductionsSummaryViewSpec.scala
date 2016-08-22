@@ -125,7 +125,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
 
       "has a numeric output row for the gain" which {
 
-        "should have the question text 'Total Gain'" in {
+        "should have the question text 'Total Profit'" in {
           doc.select("#gain-question").text shouldBe messages.totalGain
         }
 
