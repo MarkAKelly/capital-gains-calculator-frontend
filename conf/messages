@@ -354,7 +354,7 @@ calc.resident.summary.calcDetailsHeadingDate = Calculation details for {0} tax y
 calc.resident.summary.yourAnswersHeading = Your answers
 calc.resident.summary.totalGain = Total gain
 calc.resident.summary.totalLoss = Loss
-calc.resident.summary.reliefs = Reliefs
+calc.resident.summary.reliefs = Reliefs used
 
 calc.resident.summary.deductionsDetails.prrUsed = Private Residence Relief used
 calc.resident.summary.deductionsDetails.allowableLosses = Loss from {0} tax year
