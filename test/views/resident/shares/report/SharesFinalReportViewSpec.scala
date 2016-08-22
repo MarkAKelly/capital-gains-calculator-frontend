@@ -58,7 +58,9 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
       Some(10000),
       Some(28),
       None,
-      None
+      None,
+      0,
+      0
     )
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
@@ -130,7 +132,7 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
         "has a breakdown that" should {
 
           "include a value for Allowable Losses of £0" in {
-            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLosses("2015/16")} £0")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLossesUsed("2015/16")} £0")
           }
 
           "include a value for Capital gains tax allowance used of £0" in {
@@ -138,7 +140,7 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
           }
 
           "include a value for Loss brought forward of £0" in {
-            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYear("2015/16")} £0")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYearUsed("2015/16")} £0")
           }
         }
       }
@@ -351,7 +353,9 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
       Some(10000),
       Some(28),
       None,
-      None
+      None,
+      0,
+      0
     )
 
     lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel)(fakeRequestWithSession)

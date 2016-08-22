@@ -28,7 +28,9 @@ case class TotalGainAndTaxOwedModel(gain: BigDecimal,
                                     secondBand: Option[BigDecimal],
                                     secondRate: Option[Int],
                                     reliefsUsed: Option[BigDecimal],
-                                    prrUsed: Option[BigDecimal]
+                                    prrUsed: Option[BigDecimal],
+                                    broughtForwardLossesUsed: BigDecimal,
+                                    allowableLossesUsed: BigDecimal
                                    )
 
 object TotalGainAndTaxOwedModel {

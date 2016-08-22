@@ -187,7 +187,7 @@ class LossesBroughtForwardActionSpec extends UnitSpec with WithFakeApplication w
 
       lazy val target = setupTarget(Some(LossesBroughtForwardModel(false)), Some(OtherPropertiesModel(false)), None, gainModel,
         summaryModel, ChargeableGainResultModel(1000, 1000, 0, 0, 0, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)),
-          Some(BigDecimal(0))), None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+          Some(BigDecimal(0)), 0, 0), None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val request = fakeRequestToPOSTWithSession(("option", "No"))
       lazy val result = target.submitLossesBroughtForward(request)
 
@@ -204,7 +204,7 @@ class LossesBroughtForwardActionSpec extends UnitSpec with WithFakeApplication w
 
       lazy val target = setupTarget(Some(LossesBroughtForwardModel(false)), Some(OtherPropertiesModel(false)), None, gainModel,
         summaryModel, ChargeableGainResultModel(1000, 0, 0, 0, 1000, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)),
-          Some(BigDecimal(0))), None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+          Some(BigDecimal(0)), 0, 0), None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val request = fakeRequestToPOSTWithSession(("option", "No"))
       lazy val result = target.submitLossesBroughtForward(request)
 
@@ -221,7 +221,7 @@ class LossesBroughtForwardActionSpec extends UnitSpec with WithFakeApplication w
 
       lazy val target = setupTarget(Some(LossesBroughtForwardModel(false)), Some(OtherPropertiesModel(false)), None, gainModel,
         summaryModel, ChargeableGainResultModel(1000, -1000, 0, 0, 2000, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)),
-          Some(BigDecimal(0))), None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+          Some(BigDecimal(0)), 0, 0), None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val request = fakeRequestToPOSTWithSession(("option", "No"))
       lazy val result = target.submitLossesBroughtForward(request)
 
@@ -238,7 +238,7 @@ class LossesBroughtForwardActionSpec extends UnitSpec with WithFakeApplication w
 
       lazy val target = setupTarget(Some(LossesBroughtForwardModel(false)), Some(OtherPropertiesModel(true)),
         Some(AllowableLossesModel(true)), gainModel, summaryModel, ChargeableGainResultModel(0, 0, 0, 0, 0, BigDecimal(0),
-          BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0))), Some(AllowableLossesValueModel(1000)),
+          BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0), Some(AllowableLossesValueModel(1000)),
         Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val request = fakeRequestToPOSTWithSession(("option", "No"))
       lazy val result = target.submitLossesBroughtForward(request)
@@ -256,7 +256,7 @@ class LossesBroughtForwardActionSpec extends UnitSpec with WithFakeApplication w
 
       lazy val target = setupTarget(Some(LossesBroughtForwardModel(false)), Some(OtherPropertiesModel(true)),
         Some(AllowableLossesModel(true)), gainModel, summaryModel, ChargeableGainResultModel(0, 0, 0, 0, 0, BigDecimal(0),
-          BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0))), Some(AllowableLossesValueModel(0)), Some(DisposalDateModel(10, 10, 2015)),
+          BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0), Some(AllowableLossesValueModel(0)), Some(DisposalDateModel(10, 10, 2015)),
         Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val request = fakeRequestToPOSTWithSession(("option", "No"))
       lazy val result = target.submitLossesBroughtForward(request)
@@ -274,7 +274,7 @@ class LossesBroughtForwardActionSpec extends UnitSpec with WithFakeApplication w
 
       lazy val target = setupTarget(Some(LossesBroughtForwardModel(true)), Some(OtherPropertiesModel(false)),
         None, gainModel, summaryModel, ChargeableGainResultModel(0, 0, 0, 0, 0, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)),
-          Some(BigDecimal(0))), None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+          Some(BigDecimal(0)), 0, 0), None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val request = fakeRequestToPOSTWithSession(("option", "Yes"))
       lazy val result = target.submitLossesBroughtForward(request)
 
@@ -290,7 +290,7 @@ class LossesBroughtForwardActionSpec extends UnitSpec with WithFakeApplication w
     "a valid form 'Yes' is and other properties are claimed" should {
 
       lazy val target = setupTarget(Some(LossesBroughtForwardModel(true)), Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(false)),
-        gainModel, summaryModel, ChargeableGainResultModel(0, 0, 0, 0, 0, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0))),
+        gainModel, summaryModel, ChargeableGainResultModel(0, 0, 0, 0, 0, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0),
         None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val request = fakeRequestToPOSTWithSession(("option", "Yes"))
       lazy val result = target.submitLossesBroughtForward(request)

@@ -54,9 +54,9 @@
         @summaryNumericRowHelper("gain",gainMessage(result.gain),result.gain)
         @summaryNumericRowHelper("deductions", Messages("calc.resident.summary.deductions"), result.deductions, None,
         Some(Seq(
-        (Messages("calc.resident.summary.deductionsDetails.allowableLosses", taxYear.taxYearSupplied), allowableLossesUsed(deductionAnswers)),
+        (Messages("calc.resident.summary.deductionsDetails.allowableLossesUsed", taxYear.taxYearSupplied), MoneyPounds(result.allowableLossesUsed, 0).quantity),
         (Messages("calc.resident.summary.deductionsDetails.aeaUsed"), MoneyPounds(result.aeaUsed, 0).quantity),
-        (Messages("calc.resident.summary.deductionsDetails.broughtForwardLoss", taxYear.taxYearSupplied), broughtForwardLossesUsed(deductionAnswers))
+        (Messages("calc.resident.summary.deductionsDetails.broughtForwardLossesUsed", taxYear.taxYearSupplied), MoneyPounds(result.broughtForwardLossesUsed, 0).quantity)
         )))
 
         @summaryNumericRowHelper("chargeableGain", if(result.chargeableGain < 0) {

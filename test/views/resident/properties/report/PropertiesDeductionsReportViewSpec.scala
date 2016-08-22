@@ -56,7 +56,10 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(0),
       BigDecimal(0),
       Some(BigDecimal(0)),
-      Some(BigDecimal(0)))
+      Some(BigDecimal(0)),
+      0,
+      0
+    )
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
@@ -138,7 +141,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
           }
 
           "include a value for Allowable Losses of £0" in {
-            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLosses("2015/16")} £0")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLossesUsed("2015/16")} £0")
           }
 
           "include a value for Capital gains tax allowance used of £11,100" in {
@@ -146,7 +149,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
           }
 
           "include a value for Loss brought forward of £0" in {
-            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYear("2015/16")} £0")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYearUsed("2015/16")} £0")
           }
         }
       }
@@ -331,7 +334,10 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(1000),
       BigDecimal(2000),
       Some(BigDecimal(50000)),
-      Some(BigDecimal(1000)))
+      Some(BigDecimal(1000)),
+      10000,
+      10000
+    )
 
     lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
 
@@ -402,7 +408,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
           }
 
           "include a value for Allowable Losses of £10,000" in {
-            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLosses("2013/14")} £10,000")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLossesUsed("2013/14")} £10,000")
           }
 
           "include a value for Capital gains tax allowance used of £0" in {
@@ -410,7 +416,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
           }
 
           "include a value for Loss brought forward of £10,000" in {
-            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYear("2013/14")} £10,000")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYearUsed("2013/14")} £10,000")
           }
         }
       }
@@ -605,7 +611,10 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(1000),
       BigDecimal(0),
       Some(BigDecimal(30000)),
-      Some(BigDecimal(1500)))
+      Some(BigDecimal(1500)),
+      10000,
+      10000
+    )
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
     lazy val view = views.deductionsSummaryReport(gainAnswers, deductionAnswers, results, taxYearModel)(fakeRequestWithSession)
@@ -702,7 +711,10 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(0),
       BigDecimal(2000),
       Some(BigDecimal(50000)),
-      Some(BigDecimal(0)))
+      Some(BigDecimal(0)),
+      10000,
+      10000
+    )
 
     lazy val taxYearModel = TaxYearModel("2017/18", false, "2015/16")
 
