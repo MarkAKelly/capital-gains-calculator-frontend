@@ -35,6 +35,7 @@ object OtherReliefsFlatController extends OtherReliefsFlatController {
 trait OtherReliefsFlatController extends FrontendController with ValidActiveSession {
 
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
+  override val homeLink = controllers.nonresident.routes.CustomerTypeController.customerType().url
   val calcConnector: CalculatorConnector
 
   val otherReliefsFlat: Action[AnyContent] = Action.async { implicit request =>

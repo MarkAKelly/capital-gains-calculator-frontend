@@ -79,7 +79,8 @@ trait DeductionsController extends FeatureLock {
     }
   }
 
-  private val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
+  override val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
+  override val sessionTimeoutUrl = homeLink
 
   //########## Private Residence Relief Actions ##############
 

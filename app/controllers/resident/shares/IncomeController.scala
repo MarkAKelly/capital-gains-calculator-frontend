@@ -41,7 +41,8 @@ trait IncomeController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
 
-  private val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
+  override val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
+  override val sessionTimeoutUrl = homeLink
 
   def otherPropertiesResponse(implicit hc: HeaderCarrier): Future[Boolean] = {
     calcConnector.fetchAndGetFormData[OtherPropertiesModel](keystoreKeys.otherProperties).map {
@@ -154,7 +155,7 @@ trait IncomeController extends FeatureLock {
     }
   }
 
-  val currentIncome = FeatureLockForRTT.async { implicit request =>
+  val currentIncome = FeatureLockForRTTShares.async { implicit request =>
 
     def routeRequest(backUrl: String, taxYear: TaxYearModel): Future[Result] = {
       calcConnector.fetchAndGetFormData[CurrentIncomeModel](keystoreKeys.currentIncome).map {
@@ -172,7 +173,7 @@ trait IncomeController extends FeatureLock {
     } yield finalResult
   }
 
-  val submitCurrentIncome = FeatureLockForRTT.async { implicit request =>
+  val submitCurrentIncome = FeatureLockForRTTShares.async { implicit request =>
 
     def routeRequest(taxYearModel: TaxYearModel): Future[Result] = {
       currentIncomeForm.bindFromRequest.fold(

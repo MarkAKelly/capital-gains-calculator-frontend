@@ -144,7 +144,7 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
     "called with no active session or valid session Id" should {
 
       lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/current-income")
-      s"redirect to ${controllers.routes.TimeoutController.timeout("")}" in {
+      s"redirect to ${controllers.routes.TimeoutController.timeout("", "")}" in {
 
         val target = setupTarget(None, None)
         lazy val result = target.currentIncome(fakeRequest)

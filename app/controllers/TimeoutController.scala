@@ -25,7 +25,7 @@ object TimeoutController extends TimeoutController
 
 trait TimeoutController extends FrontendController {
 
-  def timeout(restartUrl: String) : Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(sessionTimeout(restartUrl)))
+  def timeout(restartUrl: String, homeLink: String) : Action[AnyContent] = Action.async { implicit request =>
+    Future.successful(Ok(sessionTimeout(restartUrl, homeLink)))
   }
 }

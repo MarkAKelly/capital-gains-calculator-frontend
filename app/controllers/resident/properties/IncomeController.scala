@@ -86,7 +86,8 @@ trait IncomeController extends FeatureLock {
     Future.successful(s"${disposalDateModel.year}-${disposalDateModel.month}-${disposalDateModel.day}")
   }
 
-  private val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
+  override val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
+  override val sessionTimeoutUrl = homeLink
 
   //################################# Previous Taxable Gain Actions ##########################################
   private val previousTaxableGainsPostAction = controllers.resident.properties.routes.IncomeController.submitPreviousTaxableGains()

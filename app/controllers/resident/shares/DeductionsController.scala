@@ -44,7 +44,8 @@ object DeductionsController extends DeductionsController {
 trait DeductionsController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
-  private val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
+  override val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
+  override val sessionTimeoutUrl = homeLink
 
   def getDisposalDate(implicit hc: HeaderCarrier): Future[Option[DisposalDateModel]] = {
     calcConnector.fetchAndGetFormData[DisposalDateModel](keystoreKeys.disposalDate)
@@ -349,7 +350,7 @@ trait DeductionsController extends FeatureLock {
   private val allowableLossesValuePostAction = controllers.resident.shares.routes.DeductionsController.submitAllowableLossesValue()
   private val allowableLossesValueBackLink = Some(controllers.resident.shares.routes.DeductionsController.allowableLosses().toString)
 
-  val allowableLossesValue = FeatureLockForRTT.async { implicit request =>
+  val allowableLossesValue = FeatureLockForRTTShares.async { implicit request =>
 
     def fetchStoredAllowableLosses(): Future[Form[AllowableLossesValueModel]]  = {
       calcConnector.fetchAndGetFormData[AllowableLossesValueModel](keystoreKeys.allowableLossesValue).map {
@@ -374,7 +375,7 @@ trait DeductionsController extends FeatureLock {
     } yield finalResult
   }
 
-  val submitAllowableLossesValue = FeatureLockForRTT.async { implicit request =>
+  val submitAllowableLossesValue = FeatureLockForRTTShares.async { implicit request =>
 
     def routeRequest(taxYearModel: TaxYearModel): Future[Result] = {
       allowableLossesValueForm.bindFromRequest.fold(
