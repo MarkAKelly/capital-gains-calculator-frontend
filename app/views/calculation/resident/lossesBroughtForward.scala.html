@@ -5,7 +5,7 @@
 @import views.html.helpers.resident._
 @import play.api.mvc.Call
 
-@(lossesBroughtForwardForm : Form[LossesBroughtForwardModel], postAction: Call, backLinkUrl : String, taxYear: TaxYearModel, hasOtherProperties: Boolean)(implicit request: Request[_])
+@(lossesBroughtForwardForm : Form[LossesBroughtForwardModel], postAction: Call, backLinkUrl : String, taxYear: TaxYearModel, hasOtherProperties: Boolean, navTitle: String)(implicit request: Request[_])
 
 @hiddenHelpTextContent = {
 <div id="helpInfo">
@@ -22,7 +22,8 @@
     title = Messages("calc.resident.lossesBroughtForward.title",
     taxYear.taxYearSupplied),
     backLink = Some(backLinkUrl),
-    homeLink = "TODO - needs parameter"
+    homeLink = "TODO - needs parameter",
+    navTitle = navTitle
 ) {
 
     @errorSummary(lossesBroughtForwardForm, "option")

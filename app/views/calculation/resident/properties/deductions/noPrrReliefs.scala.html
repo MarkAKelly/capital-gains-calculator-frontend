@@ -18,7 +18,8 @@
 title = Messages("calc.resident.reliefsNoPrr.title",
 MoneyPounds(totalGain, 0).quantity),
 backLink = Some(controllers.resident.properties.routes.GainController.improvements.toString()),
-homeLink = navHomeLink) {
+homeLink = navHomeLink,
+navTitle = Messages("calc.base.resident.properties.home")) {
 
 @errorSummary(reliefsForm, "reliefs")
 

@@ -23,6 +23,7 @@ import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import play.api.mvc.Result
 import uk.gov.hmrc.play.http.SessionKeys
+
 import scala.concurrent.Future
 import views.html.calculation.{resident => commonViews}
 import views.html.calculation.resident.shares.{gain => views}
@@ -33,6 +34,7 @@ import forms.resident.AcquisitionCostsForm._
 import forms.resident.AcquisitionValueForm._
 import models.resident._
 import common.Dates._
+import play.api.i18n.Messages
 
 object GainController extends GainController {
   val calcConnector = CalculatorConnector
@@ -41,6 +43,8 @@ object GainController extends GainController {
 trait GainController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
+
+  lazy val navTitle = Messages("calc.base.resident.shares.home")
 
   private val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
 
@@ -88,7 +92,8 @@ trait GainController extends FeatureLock {
         isAfterApril15 = dateAfterStart(constructDate(disposalDate.get.day, disposalDate.get.month, disposalDate.get.year)),
         navBackLink = routes.GainController.disposalDate().url,
         navHomeLink = homeLink,
-        continueUrl = routes.GainController.disposalValue().url
+        continueUrl = routes.GainController.disposalValue().url,
+        navTitle = navTitle
       ))
     }
   }

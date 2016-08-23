@@ -30,7 +30,7 @@ class OutsideTaxYearsViewSpec extends UnitSpec with WithFakeApplication with Fak
 
     "using a disposal date before 2015/16" should {
       lazy val taxYear = TaxYearModel("2014/15", false, "2015/16")
-      lazy val view = views.outsideTaxYear(taxYear, false, "back-link", "home-link", "continue-link")(fakeRequestWithSession)
+      lazy val view = views.outsideTaxYear(taxYear, false, "back-link", "home-link", "continue-link", "navTitle")(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(view.body)
 
       "have charset UTF-8" in {
@@ -39,6 +39,10 @@ class OutsideTaxYearsViewSpec extends UnitSpec with WithFakeApplication with Fak
 
       s"return a title of ${messages.title}" in {
         doc.title shouldBe messages.title
+      }
+
+      "have a dynamic navTitle of navTitle" in {
+        doc.select("span.header__menu__proposition-name").text() shouldBe "navTitle"
       }
 
       "have a home link to 'home-link'" in {
@@ -72,7 +76,7 @@ class OutsideTaxYearsViewSpec extends UnitSpec with WithFakeApplication with Fak
 
     "using a disposal date after 2016/17" should {
       lazy val taxYear = TaxYearModel("2017/18", false, "2016/17")
-      lazy val view = views.outsideTaxYear(taxYear, true, "back-link", "home-link", "continue-link")(fakeRequestWithSession)
+      lazy val view = views.outsideTaxYear(taxYear, true, "back-link", "home-link", "continue-link", "navTitle")(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(view.body)
 
       "have charset UTF-8" in {
