@@ -149,6 +149,8 @@ object MessageLookup {
     def deductionsDetailsAllowableLosses(taxYear: String): String = s"Loss from $taxYear tax year"
     val deductionsDetailsCapitalGainsTax = "Capital Gains Tax allowance used"
     def deductionsDetailsLossBeforeYear(taxYear: String): String = s"Loss from tax years before $taxYear"
+    def deductionsDetailsAllowableLossesUsed(taxYear: String): String = s"Loss used from $taxYear tax year"
+    def deductionsDetailsLossBeforeYearUsed(taxYear: String): String = s"Loss used from tax years before $taxYear"
   }
 
   //Private Residence Relief Value messages

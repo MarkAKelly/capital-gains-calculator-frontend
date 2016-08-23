@@ -52,7 +52,10 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
       BigDecimal(0),
       BigDecimal(0),
       None,
-      None)
+      None,
+      0,
+      0
+    )
     lazy val backLink = "/calculate-your-capital-gains/resident/shares/losses-brought-forward"
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
@@ -144,7 +147,7 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
         "has a breakdown that" should {
 
           "include a value for Allowable Losses of £0" in {
-            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLosses("2015/16")} £0")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLossesUsed("2015/16")} £0")
           }
 
           "include a value for Capital gains tax allowance used of £11,100" in {
@@ -152,7 +155,7 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
           }
 
           "include a value for Loss brought forward of £0" in {
-            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYear("2015/16")} £0")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYearUsed("2015/16")} £0")
           }
         }
       }
@@ -375,7 +378,10 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
       BigDecimal(1000),
       BigDecimal(2000),
       None,
-      None)
+      None,
+      10000,
+      10000
+    )
 
     lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
 
@@ -463,7 +469,7 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
         "has a breakdown that" should {
 
           "include a value for Allowable Losses of £10,000" in {
-            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLosses("2013/14")} £10,000")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLossesUsed("2013/14")} £10,000")
           }
 
           "include a value for Capital gains tax allowance used of £0" in {
@@ -471,7 +477,7 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
           }
 
           "include a value for Loss brought forward of £10,000" in {
-            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYear("2013/14")} £10,000")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYearUsed("2013/14")} £10,000")
           }
         }
       }
@@ -691,7 +697,10 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
       BigDecimal(1000),
       BigDecimal(0),
       None,
-      None)
+      None,
+      10000,
+      10000
+    )
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
     lazy val backLink = "/calculate-your-capital-gains/resident/shares/annual-exempt-amount"
@@ -773,7 +782,10 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
       BigDecimal(0),
       BigDecimal(2000),
       None,
-      None)
+      None,
+      0,
+      0
+    )
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
@@ -849,7 +861,10 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
       BigDecimal(0),
       BigDecimal(0),
       None,
-      None)
+      None,
+      10000,
+      10000
+    )
 
     lazy val taxYearModel = TaxYearModel("2017/18", false, "2015/16")
 
