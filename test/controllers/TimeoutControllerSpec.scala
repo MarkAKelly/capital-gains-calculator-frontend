@@ -34,7 +34,7 @@ class TimeoutControllerSpec extends UnitSpec with WithFakeApplication {
 
     "when called with no session" should {
 
-      object timeoutTestDataItem extends fakeRequestTo("", TimeoutController.timeout("test"))
+      object timeoutTestDataItem extends fakeRequestTo("", TimeoutController.timeout("test", "test2"))
 
       "return a 200" in {
         status(timeoutTestDataItem.result) shouldBe 200

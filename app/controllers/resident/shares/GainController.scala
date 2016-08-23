@@ -42,7 +42,8 @@ trait GainController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
 
-  private val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
+  override val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
+  override val sessionTimeoutUrl = homeLink
 
   //################# Disposal Date Actions ####################
   val disposalDate = FeatureLockForRTTShares.asyncNoTimeout { implicit request =>
@@ -112,14 +113,14 @@ trait GainController extends FeatureLock {
   }
 
   //################# Disposal Costs Actions ########################
-  val disposalCosts = FeatureLockForRTT.async { implicit request =>
+  val disposalCosts = FeatureLockForRTTShares.async { implicit request =>
     calcConnector.fetchAndGetFormData[DisposalCostsModel](keystoreKeys.disposalCosts).map {
       case Some(data) => Ok(views.disposalCosts(disposalCostsForm.fill(data), homeLink))
       case None => Ok(views.disposalCosts(disposalCostsForm, homeLink))
     }
   }
 
-  val submitDisposalCosts = FeatureLockForRTT.async { implicit request =>
+  val submitDisposalCosts = FeatureLockForRTTShares.async { implicit request =>
     disposalCostsForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.disposalCosts(errors, homeLink))),
       success => {
@@ -129,14 +130,14 @@ trait GainController extends FeatureLock {
   }
 
   //################# Acquisition Value Actions ########################
-  val acquisitionValue = FeatureLockForRTT.async { implicit request =>
+  val acquisitionValue = FeatureLockForRTTShares.async { implicit request =>
     calcConnector.fetchAndGetFormData[AcquisitionValueModel](keystoreKeys.acquisitionValue).map {
       case Some(data) => Ok(views.acquisitionValue(acquisitionValueForm.fill(data), homeLink))
       case None => Ok(views.acquisitionValue(acquisitionValueForm, homeLink))
     }
   }
 
-  val submitAcquisitionValue = FeatureLockForRTT.async { implicit request =>
+  val submitAcquisitionValue = FeatureLockForRTTShares.async { implicit request =>
     acquisitionValueForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.acquisitionValue(errors, homeLink))),
       success => {

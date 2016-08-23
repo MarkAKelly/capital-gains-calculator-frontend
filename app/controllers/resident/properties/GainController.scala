@@ -48,6 +48,9 @@ trait GainController extends FeatureLock {
   val calcConnector: CalculatorConnector
   val config: AppConfig
 
+  override val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
+  override val sessionTimeoutUrl = homeLink
+
   //################# Disposal Date Actions ####################
   val disposalDate = FeatureLockForRTT.asyncNoTimeout { implicit request =>
     if (request.session.get(SessionKeys.sessionId).isEmpty) {
