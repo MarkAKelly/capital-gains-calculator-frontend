@@ -482,9 +482,9 @@ trait DeductionsController extends FeatureLock {
     def routeRequest(backLinkUrl: String, taxYear: TaxYearModel, otherPropertiesClaimed: Boolean): Future[Result] = {
       calcConnector.fetchAndGetFormData[LossesBroughtForwardModel](keystoreKeys.lossesBroughtForward).map {
         case Some(data) => Ok(commonViews.lossesBroughtForward(lossesBroughtForwardForm.fill(data), lossesBroughtForwardPostAction,
-          backLinkUrl, taxYear, otherPropertiesClaimed))
+          backLinkUrl, taxYear, otherPropertiesClaimed, homeLink))
         case _ => Ok(commonViews.lossesBroughtForward(lossesBroughtForwardForm, lossesBroughtForwardPostAction, backLinkUrl,
-          taxYear, otherPropertiesClaimed))
+          taxYear, otherPropertiesClaimed, homeLink))
       }
     }
 
@@ -517,7 +517,7 @@ trait DeductionsController extends FeatureLock {
     def routeRequest(backUrl: String, taxYearModel: TaxYearModel, otherPropertiesClaimed: Boolean): Future[Result] = {
       lossesBroughtForwardForm.bindFromRequest.fold(
         errors => Future.successful(BadRequest(commonViews.lossesBroughtForward(errors, lossesBroughtForwardPostAction, backUrl,
-          taxYearModel, otherPropertiesClaimed))),
+          taxYearModel, otherPropertiesClaimed, homeLink))),
         success => {
           calcConnector.saveFormData[LossesBroughtForwardModel](keystoreKeys.lossesBroughtForward, success)
 
