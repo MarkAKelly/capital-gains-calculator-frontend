@@ -901,7 +901,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
     }
 
     s"display the text ${messages.whatToDoNextTextTwo}" in {
-      doc.select("#whatToDoNextText").text shouldEqual s"${messages.whatToDoNextTextTwo}${commonMessages.calcBaseExternalLink}"
+      doc.select("#whatToDoNextText").text shouldEqual s"${messages.whatToDoNextTextTwo} ${commonMessages.calcBaseExternalLink}"
     }
 
     "have a link" which {
