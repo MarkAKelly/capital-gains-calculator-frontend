@@ -17,7 +17,8 @@
 @resident_main_template(
     title = Messages("calc.resident.otherProperties.title", taxYear.taxYearSupplied),
     backLink = Some(controllers.resident.shares.routes.GainController.acquisitionCosts().toString),
-    homeLink = navHomeUrl
+    homeLink = navHomeUrl,
+    navTitle = Messages("calc.base.resident.shares.home")
 ) {
 
     @errorSummary(otherPropertiesForm, "hasOtherProperties")

@@ -37,6 +37,7 @@ import forms.resident.AcquisitionCostsForm._
 import forms.resident.properties.ImprovementsForm._
 import models.resident._
 import models.resident.properties.ImprovementsModel
+import play.api.i18n.Messages
 
 object GainController extends GainController {
   val calcConnector = CalculatorConnector
@@ -47,6 +48,8 @@ trait GainController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
   val config: AppConfig
+
+  lazy val navTitle = Messages("calc.base.resident.properties.home")
 
   //################# Disposal Date Actions ####################
   val disposalDate = FeatureLockForRTT.asyncNoTimeout { implicit request =>
@@ -92,7 +95,8 @@ trait GainController extends FeatureLock {
         isAfterApril15 = dateAfterStart(constructDate(disposalDate.get.day, disposalDate.get.month, disposalDate.get.year)),
         navBackLink = routes.GainController.disposalDate().url,
         navHomeLink = routes.GainController.disposalDate().url,
-        continueUrl = routes.GainController.disposalValue().url
+        continueUrl = routes.GainController.disposalValue().url,
+        navTitle = navTitle
       ))
     }
   }

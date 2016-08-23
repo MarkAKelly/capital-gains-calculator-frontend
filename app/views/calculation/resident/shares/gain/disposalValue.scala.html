@@ -14,7 +14,8 @@
 @resident_main_template(
     Messages("calc.resident.shares.disposalValue.question"),
     backLink = Some(controllers.resident.shares.routes.GainController.disposalDate().toString),
-    homeLink = navHomeLink
+    homeLink = navHomeLink,
+    navTitle = Messages("calc.base.resident.shares.home")
 ) {
 
     @errorSummary(disposalValueForm, "amount")

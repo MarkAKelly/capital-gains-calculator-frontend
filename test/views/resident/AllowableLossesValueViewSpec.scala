@@ -32,7 +32,7 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
     lazy val view = views.allowableLossesValue(allowableLossesValueForm, taxYearModel, "home",
       controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue(),
-      Some("back"))(fakeRequest)
+      Some("back"), "navTitle")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -41,6 +41,10 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
 
     s"have a title of ${messages.title("2015/16")}" in {
       doc.title() shouldBe messages.title("2015/16")
+    }
+
+    "have a dynamic navTitle of navTitle" in {
+      doc.select("span.header__menu__proposition-name").text() shouldBe "navTitle"
     }
 
     s"have the home link too ${controllers.resident.properties.routes.GainController.disposalDate().toString()}" in {
@@ -149,7 +153,7 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
     lazy val view = views.allowableLossesValue(form, TaxYearModel("2015/16", true, "2015/16"),
       "home",
       controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue(),
-      Some("back"))(fakeRequestWithSession)
+      Some("back"), "navTitle")(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "output an error summary" in {

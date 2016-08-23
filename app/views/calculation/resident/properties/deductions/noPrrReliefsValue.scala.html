@@ -28,7 +28,8 @@
 title = Messages("calc.resident.reliefsValueNoPrr.title"),
 backLink = Some(controllers.resident.properties.routes.DeductionsController.reliefs().toString),
 sidebarLinks = Some(sidebar),
-homeLink = navHomeLink) {
+homeLink = navHomeLink,
+navTitle = Messages("calc.base.resident.properties.home")) {
 
     @errorSummary(reliefsValueForm, "reliefs-value")
 

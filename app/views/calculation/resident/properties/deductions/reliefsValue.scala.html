@@ -9,7 +9,8 @@
 @resident_main_template(
     title = Messages("calc.resident.reliefsValue.title", MoneyPounds(totalGain, 0).quantity),
     backLink = Some(controllers.resident.properties.routes.DeductionsController.reliefs().toString),
-    homeLink = navHomeLink) {
+    homeLink = navHomeLink,
+    navTitle = Messages("calc.base.resident.properties.home")) {
 
     @errorSummary(reliefsValueForm, "reliefs-value")
 

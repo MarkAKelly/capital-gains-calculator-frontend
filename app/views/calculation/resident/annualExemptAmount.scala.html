@@ -3,7 +3,7 @@
 @import views.html.helpers._
 @import views.html.calculation.resident._
 
-@(annualExemptAmountForm: Form[AnnualExemptAmountModel], backLink: Option[String], postAction: Call, homeLink: String, journey: String)(implicit request: Request[_])
+@(annualExemptAmountForm: Form[AnnualExemptAmountModel], backLink: Option[String], postAction: Call, homeLink: String, journey: String, navTitle: String)(implicit request: Request[_])
 
 @import views.html.helpers._
 
@@ -20,7 +20,8 @@
     title = Messages("calc.resident.annualExemptAmount.title"),
     backLink = backLink,
     sidebarLinks = Some(sidebar),
-    homeLink = homeLink
+    homeLink = homeLink,
+    navTitle = navTitle
 ) {
 
     @errorSummary(annualExemptAmountForm, "amount")
