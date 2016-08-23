@@ -145,7 +145,7 @@ object MessageLookup {
     val remainingLossLink = "use this loss"
     val remainingAllowableLossHelp = "to reduce your Capital Gains Tax if you sell something in the same tax year"
     val remainingBroughtForwardLossHelp = "to reduce your Capital Gains Tax in the future"
-    val reliefsUsed = "Reliefs used"
+    val reliefsUsed = "Tax reliefs used"
     def deductionsDetailsAllowableLosses(taxYear: String): String = s"Loss from $taxYear tax year"
     val deductionsDetailsCapitalGainsTax = "Capital Gains Tax allowance used"
     def deductionsDetailsLossBeforeYear(taxYear: String): String = s"Loss from tax years before $taxYear"
