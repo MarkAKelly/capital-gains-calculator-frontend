@@ -45,7 +45,7 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "govuk-template" % "4.0.0",
     "uk.gov.hmrc" %% "play-health" % "1.1.0",
     "uk.gov.hmrc" %% "play-ui" % "4.16.0",
-    "uk.gov.hmrc" %% "http-caching-client" % "5.3.0",
+    "uk.gov.hmrc" %% "http-caching-client" % "5.6.0",
     "uk.gov.hmrc" %% "mongo-caching" % "3.2.0",
     "it.innove" 	%  "play2-pdf" % "1.1.3"
   )
