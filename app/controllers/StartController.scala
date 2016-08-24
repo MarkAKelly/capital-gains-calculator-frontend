@@ -16,16 +16,24 @@
 
 package controllers
 
-import views.html.warnings._
-import play.api.mvc.{AnyContent, Action}
+import connectors.CalculatorConnector
+import controllers.predicates.ValidActiveSession
+import play.api.mvc.Action
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+
 import scala.concurrent.Future
 
-object TimeoutController extends TimeoutController
+trait StartController extends FrontendController with ValidActiveSession {
 
-trait TimeoutController extends FrontendController {
+  val calcConnector: CalculatorConnector
+  override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
+  override val homeLink = controllers.nonresident.routes.CustomerTypeController.customerType().url
 
-  def timeout(restartUrl: String, homeLink: String) : Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(sessionTimeout(restartUrl, homeLink)))
+  val start = Action.async {implicit request =>
+    Future.successful(Redirect(nonresident.routes.CustomerTypeController.customerType()))
   }
+}
+
+object StartController extends StartController {
+  lazy val calcConnector = CalculatorConnector
 }

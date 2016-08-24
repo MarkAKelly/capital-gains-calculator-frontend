@@ -36,6 +36,9 @@ trait SummaryController extends FeatureLock {
 
   val calculatorConnector: CalculatorConnector
 
+  override val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
+  override val sessionTimeoutUrl = homeLink
+
   val summary = FeatureLockForRTT.async { implicit request =>
 
     def displayAnnualExemptAmountCheck(claimedOtherProperties: Boolean,

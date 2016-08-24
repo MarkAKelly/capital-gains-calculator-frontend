@@ -132,8 +132,8 @@ object MessageLookup {
     val whatNextYouCan = "You can "
     val whatNextLink = "tell us about this loss "
     val whatNextText = "so that you might need to pay less tax in the future."
-    val whatToDoNextTextTwo = "You need to tell HMRC about the property."
-    val whatToDoNextTextTwoShares = "You need to tell HMRC about the shares."
+    val whatToDoNextTextTwo = "You need to tell HMRC about the property"
+    val whatToDoNextTextTwoShares = "You need to tell HMRC about the shares"
     val whatToDoNextNoLossText = "Find out whether you need to"
     val whatToDoNextNoLossLinkProperties = "tell HMRC about the property"
     val whatToDoNextNoLossLinkShares = "tell HMRC about the shares"
@@ -145,7 +145,7 @@ object MessageLookup {
     val remainingLossLink = "use this loss"
     val remainingAllowableLossHelp = "to reduce your Capital Gains Tax if you sell something in the same tax year"
     val remainingBroughtForwardLossHelp = "to reduce your Capital Gains Tax in the future"
-
+    val reliefsUsed = "Tax reliefs used"
     def deductionsDetailsAllowableLosses(taxYear: String): String = s"Loss from $taxYear tax year"
     val deductionsDetailsCapitalGainsTax = "Capital Gains Tax allowance used"
     def deductionsDetailsLossBeforeYear(taxYear: String): String = s"Loss from tax years before $taxYear"
@@ -299,12 +299,12 @@ object MessageLookup {
   }
 
   object sharesAcquisitionCosts {
-    val title = "How much did you pay in costs when you bought the shares?"
+    val title = "How much did you pay in costs when you got the shares?"
     val helpText = "Costs include stockbroker fees and Stamp Duty tax"
   }
 
   object sharesDisposalCosts {
-    val title = "How much did you pay in costs when you sold the shares?"
+    val title = "How much did you pay in costs when you sold or gave away the shares?"
     val helpText = "For example, stockbroker fees"
   }
 
@@ -312,8 +312,7 @@ object MessageLookup {
     val title = "How much did you pay for the shares?"
     val bulletListTitle = "Put the market value of the shares instead if you:"
     val bulletListOne = "inherited them"
-    val bulletListTwo = "got them from your employer"
-    val bulletListThree = "owned them before 1 April 1982"
+    val bulletListTwo = "owned them before 1 April 1982"
   }
 
   object sharesOtherDisposals {

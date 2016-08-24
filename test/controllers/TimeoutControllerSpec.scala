@@ -34,10 +34,14 @@ class TimeoutControllerSpec extends UnitSpec with WithFakeApplication {
 
     "when called with no session" should {
 
-      object timeoutTestDataItem extends fakeRequestTo("", TimeoutController.timeout("test"))
+      object timeoutTestDataItem extends fakeRequestTo("", TimeoutController.timeout("test", "test2"))
 
       "return a 200" in {
         status(timeoutTestDataItem.result) shouldBe 200
+      }
+
+      s"have the home link too test2" in {
+        timeoutTestDataItem.jsoupDoc.select("#homeNavHref").attr("href") shouldEqual "test2"
       }
 
       "have the title" in {

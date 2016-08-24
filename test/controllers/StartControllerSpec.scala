@@ -16,16 +16,22 @@
 
 package controllers
 
-import views.html.warnings._
-import play.api.mvc.{AnyContent, Action}
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import scala.concurrent.Future
+import controllers.helpers.FakeRequestHelper
+import org.scalatest.mock.MockitoSugar
+import play.api.test.Helpers._
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-object TimeoutController extends TimeoutController
+class StartControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper{
 
-trait TimeoutController extends FrontendController {
+  "Calling the .start method" should {
+    val result = StartController.start(fakeRequest)
 
-  def timeout(restartUrl: String, homeLink: String) : Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(sessionTimeout(restartUrl, homeLink)))
+    "return a 303" in {
+      status(result) shouldBe 303
+    }
+
+    "redirect to the customer type page" in {
+      redirectLocation(result) shouldBe Some(nonresident.routes.CustomerTypeController.customerType().url)
+    }
   }
 }

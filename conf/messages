@@ -357,7 +357,7 @@ calc.resident.summary.calcDetailsHeadingDate = Calculation details for {0} tax y
 calc.resident.summary.yourAnswersHeading = Your answers
 calc.resident.summary.totalGain = Total profit
 calc.resident.summary.totalLoss = Loss
-calc.resident.summary.reliefs = Reliefs
+calc.resident.summary.reliefs = Tax reliefs used
 
 calc.resident.summary.deductionsDetails.prrUsed = Private Residence Relief used
 calc.resident.summary.deductionsDetails.allowableLosses = Loss from {0} tax year
@@ -381,8 +381,8 @@ calc.resident.summary.whatNext.noLossOrGain = Find out whether you need to
 calc.resident.summary.whatNext.noLossOrGainLinkProperties = tell HMRC about the property
 calc.resident.summary.whatNext.noLossOrGainLinkShares = tell HMRC about the shares
 calc.resident.summary.whatNext.youNeedTo = You need to
-calc.resident.summary.whatNext.linkTwo = tell HMRC about the property.
-calc.resident.summary.whatNext.sharesLinkTwo =  tell HMRC about the shares.
+calc.resident.summary.whatNext.linkTwo = tell HMRC about the property
+calc.resident.summary.whatNext.sharesLinkTwo =  tell HMRC about the shares
 calc.resident.summary.saveAsPdf = Save as PDF
 calc.resident.summary.remainingAllowableLoss = Remaining loss from {0} tax year
 calc.resident.summary.remainingBroughtForwardLoss = Remaining loss from tax years before {0}
@@ -525,18 +525,17 @@ calc.resident.shares.disposalValue.question = How much did you sell the shares f
 calc.resident.shares.disposalValue.helpText = Put the market value of the shares instead if you sold them for less than they were worth to help the buyer
 
 ## Disposal Costs messages
-calc.resident.shares.disposalCosts.question = How much did you pay in costs when you sold the shares?
+calc.resident.shares.disposalCosts.question = How much did you pay in costs when you sold or gave away the shares?
 calc.resident.shares.disposalCosts.helpText = For example, stockbroker fees
 
 ## Acquisition Value messages
 calc.resident.shares.acquisitionValue.question = How much did you pay for the shares?
 calc.resident.shares.acquisitionValue.bulletListTitle = Put the market value of the shares instead if you:
 calc.resident.shares.acquisitionValue.bulletListOne = inherited them
-calc.resident.shares.acquisitionValue.bulletListTwo = got them from your employer
-calc.resident.shares.acquisitionValue.bulletListThree = owned them before 1 April 1982
+calc.resident.shares.acquisitionValue.bulletListTwo = owned them before 1 April 1982
 
 ## Acquisition Costs messages
-calc.resident.shares.acquisitionCosts.title = How much did you pay in costs when you bought the shares?
+calc.resident.shares.acquisitionCosts.title = How much did you pay in costs when you got the shares?
 calc.resident.shares.acquisitionCosts.help = Costs include stockbroker fees and Stamp Duty tax
 
 ## Current Income messages

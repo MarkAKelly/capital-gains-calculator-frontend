@@ -36,7 +36,8 @@ trait SummaryController extends FeatureLock {
 
   val calculatorConnector: CalculatorConnector
 
-  private val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
+  override val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
+  override val sessionTimeoutUrl = homeLink
 
   val summary = FeatureLockForRTTShares.async { implicit request =>
 

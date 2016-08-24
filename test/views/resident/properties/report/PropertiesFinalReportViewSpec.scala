@@ -141,7 +141,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
           }
 
           "include a value for Reliefs of £0" in {
-            doc.select("#deductions-amount").text should include("Reliefs £0")
+            doc.select("#deductions-amount").text should include(s"${messages.reliefsUsed} £0")
           }
 
           "include a value for Allowable Losses of £0" in {
@@ -424,7 +424,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         }
 
         "include a value for Reliefs of £30,000" in {
-          doc.select("#deductions-amount").text should include("Reliefs £30,000")
+          doc.select("#deductions-amount").text should include(s"${messages.reliefsUsed} £30,000")
         }
       }
     }

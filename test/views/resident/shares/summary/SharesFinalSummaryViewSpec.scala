@@ -716,7 +716,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
     }
 
     s"display the text ${messages.whatToDoNextTextTwo}" in {
-      doc.select("#whatToDoNextText").text shouldEqual s"${messages.whatToDoNextTextTwoShares}${commonMessages.calcBaseExternalLink}"
+      doc.select("#whatToDoNextText").text shouldEqual s"${messages.whatToDoNextTextTwoShares} ${commonMessages.calcBaseExternalLink}"
     }
 
     "have a link" which {
