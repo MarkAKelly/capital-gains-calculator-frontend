@@ -227,9 +227,21 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
       }
     }
 
-    "not supplied with a pre-existing stored model but with a rebased value" should {
+    "not supplied with a pre-existing stored model but with an acquisition date and a rebased value" should {
 
-      val target = setupTarget(None,None,Some(AcquisitionDateModel("Yes", Some(1), Some(1),Some(2017))),Some(RebasedValueModel("Yes", Some(1000))))
+      val target = setupTarget(None,None,Some(AcquisitionDateModel("Yes", Some(1), Some(1),Some(2000))),Some(RebasedValueModel("Yes", Some(1000))))
+      lazy val result = target.improvements(fakeRequest)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "contain a two hidden input boxes for improvements" in {
+        document.body.getElementById("hidden").getElementsByTag("input").first().id() shouldBe "improvementsAmt"
+        document.body.getElementById("hidden").getElementsByTag("input").last().id() shouldBe "improvementsAmtAfter"
+      }
+    }
+
+    "not supplied with a pre-existing stored model and no acquisition date but with a rebased value" should {
+
+      val target = setupTarget(None,None,Some(AcquisitionDateModel("No", Some(1), Some(1),Some(2000))),Some(RebasedValueModel("Yes", Some(1000))))
       lazy val result = target.improvements(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
 

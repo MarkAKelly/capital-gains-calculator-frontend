@@ -24,9 +24,9 @@ import views.html.helpers._
 
 object ImprovementsConstructor {
 
-  def generateImprovements(improvementsForm: Form[ImprovementsModel], hasRebasedValue: String): HtmlFormat.Appendable = {
-    hasRebasedValue match {
-      case "Yes" => formHiddenYesNoRadio(
+  def generateImprovements(improvementsForm: Form[ImprovementsModel], improvementsOptions: Boolean): HtmlFormat.Appendable = {
+    if (improvementsOptions) {
+      formHiddenYesNoRadio(
         improvementsForm,
         "isClaimingImprovements",
         Messages("calc.improvements.question"),
@@ -38,7 +38,8 @@ object ImprovementsConstructor {
           )
         ), Some(Messages("calc.improvements.help"))
       )
-      case "No" => formHiddenYesNoRadio(
+    } else {
+      formHiddenYesNoRadio(
         improvementsForm,
         "isClaimingImprovements",
         Messages("calc.improvements.question"),
