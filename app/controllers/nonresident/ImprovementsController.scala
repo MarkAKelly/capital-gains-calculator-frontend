@@ -56,36 +56,61 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
     }
   }
 
+  private def fetchAcquisitionDate(implicit headerCarrier: HeaderCarrier): Future[Option[AcquisitionDateModel]] = {
+    calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate)
+  }
+
+  private def fetchImprovements(implicit headerCarrier: HeaderCarrier): Future[Option[ImprovementsModel]] = {
+    calcConnector.fetchAndGetFormData[ImprovementsModel](KeystoreKeys.improvements)
+  }
+
+  private def fetchRebasedValue(implicit headerCarrier: HeaderCarrier): Future[Option[RebasedValueModel]] = {
+    calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue)
+  }
+
+  private def displayImprovementsSectionCheck(rebasedValueModel: Option[RebasedValueModel],
+                                              acquisitionDateModel: Option[AcquisitionDateModel]): Future[Boolean] = {
+    (rebasedValueModel, acquisitionDateModel) match {
+      case (Some(value), Some(data)) if data.hasAcquisitionDate == "Yes" &&
+        !Dates.dateAfterStart(data.day.get, data.month.get, data.year.get) &&
+        value.hasRebasedValue == "Yes" =>
+        Future.successful(true)
+      case (_, _) =>
+        Future.successful(false)
+    }
+  }
+
   val improvements = ValidateSession.async { implicit request =>
 
-    def routeRequest(backUrl: String): Future[Result] = {
-      calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap(rebasedValueModel =>
-        calcConnector.fetchAndGetFormData[ImprovementsModel](KeystoreKeys.improvements).map {
-          case Some(data) =>
-            Ok(calculation.nonresident.improvements(improvementsForm.fill(data),
-              rebasedValueModel.getOrElse(RebasedValueModel("No", None)).hasRebasedValue,
-              backUrl))
-          case None =>
-            Ok(calculation.nonresident.improvements(improvementsForm, rebasedValueModel.getOrElse(RebasedValueModel("No", None)).hasRebasedValue, backUrl))
-        }
-      )
+    def routeRequest(backUrl: String, improvementsModel: Option[ImprovementsModel], improvementsOptions: Boolean): Future[Result] = {
+      improvementsModel match {
+        case Some(data) =>
+          Future.successful(Ok(calculation.nonresident.improvements(improvementsForm.fill(data),
+            improvementsOptions, backUrl)))
+        case None =>
+          Future.successful(Ok(calculation.nonresident.improvements(improvementsForm,
+            improvementsOptions, backUrl)))
+      }
     }
 
     for {
+      rebasedValue <- fetchRebasedValue(hc)
+      acquisitionDate <- fetchAcquisitionDate(hc)
+      improvements <- fetchImprovements(hc)
+      improvementsOptions <- displayImprovementsSectionCheck(rebasedValue, acquisitionDate)
       backUrl <- improvementsBackUrl
-      route <- routeRequest(backUrl)
+      route <- routeRequest(backUrl, improvements, improvementsOptions)
     } yield route
   }
 
   val submitImprovements = ValidateSession.async { implicit request =>
 
-    def routeRequest(backUrl: String): Future[Result] = {
+    def routeRequest(backUrl: String, improvementsOptions: Boolean): Future[Result] = {
       improvementsForm.bindFromRequest.fold(
         errors => {
-          calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap(rebasedValueModel =>
             Future.successful(BadRequest(calculation.nonresident.improvements(errors,
-              rebasedValueModel.getOrElse(RebasedValueModel("No", None)).hasRebasedValue,
-              backUrl))))
+              improvementsOptions,
+              backUrl)))
         },
         success => {
           calcConnector.saveFormData(KeystoreKeys.improvements, success)
@@ -95,8 +120,11 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
     }
 
     for {
+      rebasedValue <- fetchRebasedValue(hc)
+      acquisitionDate <- fetchAcquisitionDate(hc)
+      improvementsOptions <- displayImprovementsSectionCheck(rebasedValue, acquisitionDate)
       backUrl <- improvementsBackUrl
-      route <- routeRequest(backUrl)
+      route <- routeRequest(backUrl, improvementsOptions)
     } yield route
   }
 }

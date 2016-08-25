@@ -3,7 +3,7 @@
 @import views.html.helpers._
 @import constructors.nonresident.ImprovementsConstructor
 
-@(improvementsForm: Form[ImprovementsModel], hasRebasedValue: String, backUrl: String)(implicit request: Request[_])
+@(improvementsForm: Form[ImprovementsModel], improvementsOptions: Boolean, backUrl: String)(implicit request: Request[_])
 
 @main_template(Messages("calc.improvements.question")) {
 
@@ -15,7 +15,7 @@
 
     @form(action = controllers.nonresident.routes.ImprovementsController.submitImprovements) {
 
-        @ImprovementsConstructor.generateImprovements(improvementsForm, hasRebasedValue)
+        @ImprovementsConstructor.generateImprovements(improvementsForm, improvementsOptions)
 
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
     }
