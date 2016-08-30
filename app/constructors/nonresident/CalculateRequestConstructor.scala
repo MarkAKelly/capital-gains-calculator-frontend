@@ -16,7 +16,7 @@
 
 package constructors.nonresident
 
-import common.Dates
+import common.TaxDates.dateAfter18Months
 import models.nonresident._
 
 import scala.math.BigDecimal
@@ -180,7 +180,7 @@ object CalculateRequestConstructor {
   def privateResidenceReliefTA(input: SummaryModel): String = s"${
     (input.acquisitionDateModel, input.privateResidenceReliefModel) match {
       case (AcquisitionDateModel("Yes", day, month, year), Some(PrivateResidenceReliefModel("Yes", claimed, after)))
-        if Dates.dateAfter18Months(input.disposalDateModel.day, input.disposalDateModel.month, input.disposalDateModel.year) && after.isDefined =>
+        if dateAfter18Months(input.disposalDateModel.day, input.disposalDateModel.month, input.disposalDateModel.year) && after.isDefined =>
         s"&daysClaimedAfter=${after.get}"
 
       case _ => ""
@@ -190,7 +190,7 @@ object CalculateRequestConstructor {
   def privateResidenceReliefRebased(input: SummaryModel): String = s"${
     (input.rebasedValueModel, input.privateResidenceReliefModel) match {
       case (Some(RebasedValueModel("Yes", rebasedValue)), Some(PrivateResidenceReliefModel("Yes", claimed, after)))
-        if Dates.dateAfter18Months(input.disposalDateModel.day, input.disposalDateModel.month, input.disposalDateModel.year) && after.isDefined =>
+        if dateAfter18Months(input.disposalDateModel.day, input.disposalDateModel.month, input.disposalDateModel.year) && after.isDefined =>
         s"&daysClaimedAfter=${after.get}"
       case _ => ""
     }

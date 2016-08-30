@@ -17,7 +17,7 @@
 package controllers.nonresident
 
 import common.DefaultRoutes._
-import common.{Dates, KeystoreKeys}
+import common.{KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
 import models.nonresident.{AcquisitionDateModel, RebasedValueModel}
@@ -40,7 +40,7 @@ trait SummaryController extends FrontendController with ValidActiveSession {
 
   def summaryBackUrl(implicit hc: HeaderCarrier): Future[String] = {
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
-      case Some(AcquisitionDateModel("Yes", day, month, year)) if Dates.dateAfterStart(day.get, month.get, year.get) =>
+      case Some(AcquisitionDateModel("Yes", day, month, year)) if TaxDates.dateAfterStart(day.get, month.get, year.get) =>
         Future.successful(routes.OtherReliefsController.otherReliefs().url)
       case Some(AcquisitionDateModel("Yes", _, _, _)) => Future.successful(routes.CalculationElectionController.calculationElection().url)
       case Some(AcquisitionDateModel("No", _, _, _)) =>

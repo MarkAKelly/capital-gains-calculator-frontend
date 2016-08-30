@@ -17,7 +17,7 @@
 package controllers.nonresident
 
 import java.time.LocalDate
-import common.{Dates, KeystoreKeys}
+import common.{Dates, KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.PrivateResidenceReliefForm._
@@ -58,15 +58,15 @@ trait PrivateResidenceReliefController extends FrontendController with ValidActi
 
   def displayBetweenQuestion(disposalDate: Option[LocalDate], acquisitionDate: Option[LocalDate], hasRebasedValue: Boolean): Boolean =
     (disposalDate, acquisitionDate) match {
-      case (Some(dDate), Some(aDate)) if Dates.dateAfterOctober(dDate) && !Dates.dateAfterStart(aDate) => true
-      case (Some(dDate), aDateOption) if Dates.dateAfterOctober(dDate) && hasRebasedValue => true
+      case (Some(dDate), Some(aDate)) if TaxDates.dateAfterOctober(dDate) && !TaxDates.dateAfterStart(aDate) => true
+      case (Some(dDate), aDateOption) if TaxDates.dateAfterOctober(dDate) && hasRebasedValue => true
       case _ => false
     }
 
   def displayBeforeQuestion(disposalDate: Option[LocalDate], acquisitionDate: Option[LocalDate], hasRebasedValue: Boolean): Boolean =
     (disposalDate, acquisitionDate) match {
-      case (Some(dDate), Some(aDate)) if Dates.dateAfterOctober(dDate) => true
-      case (Some(dDate), Some(aDate)) if !Dates.dateAfterStart(aDate) => true
+      case (Some(dDate), Some(aDate)) if TaxDates.dateAfterOctober(dDate) => true
+      case (Some(dDate), Some(aDate)) if !TaxDates.dateAfterStart(aDate) => true
       case _ => false
     }
 

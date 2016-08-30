@@ -16,7 +16,7 @@
 
 package controllers.resident.properties
 
-import common.Dates
+import common.TaxDates
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import common.resident.JourneyKeys
 import connectors.CalculatorConnector
@@ -199,7 +199,7 @@ trait IncomeController extends FeatureLock {
   }
 
   def taxYearValue(taxYear: String): Future[Int] = {
-    Future.successful(Dates.taxYearStringToInteger(taxYear))
+    Future.successful(TaxDates.taxYearStringToInteger(taxYear))
   }
 
   private val backLinkPersonalAllowance = Some(controllers.resident.properties.routes.IncomeController.currentIncome().toString)

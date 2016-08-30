@@ -17,7 +17,7 @@
 package controllers.nonresident
 
 import common.DefaultRoutes._
-import common.{Dates, KeystoreKeys}
+import common.{KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.ImprovementsForm._
@@ -49,7 +49,7 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
     }
 
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
-      case Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year))) if Dates.dateAfterStart(day, month, year) =>
+      case Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year))) if TaxDates.dateAfterStart(day, month, year) =>
         Future.successful(routes.AcquisitionValueController.acquisitionValue().url)
       case None => Future.successful(missingDataRoute)
       case _ => checkRebasedValue
@@ -72,7 +72,7 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
                                               acquisitionDateModel: Option[AcquisitionDateModel]): Future[Boolean] = {
     (rebasedValueModel, acquisitionDateModel) match {
       case (Some(value), Some(data)) if data.hasAcquisitionDate == "Yes" &&
-        !Dates.dateAfterStart(data.day.get, data.month.get, data.year.get) &&
+        !TaxDates.dateAfterStart(data.day.get, data.month.get, data.year.get) &&
         value.hasRebasedValue == "Yes" =>
         Future.successful(true)
       case (Some(value), Some(data)) if data.hasAcquisitionDate == "No" &&
