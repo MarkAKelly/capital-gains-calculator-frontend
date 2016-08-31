@@ -16,7 +16,7 @@
 
 package common
 
-import common.Dates._
+import common.Dates.constructDate
 
 import scala.util.{Failure, Success, Try}
 

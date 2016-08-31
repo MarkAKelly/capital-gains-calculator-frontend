@@ -16,7 +16,7 @@
 
 package constructors.nonresident
 
-import common.Dates
+import common.{Dates, TaxDates}
 import connectors.CalculatorConnector
 import controllers.nonresident.routes
 import models.nonresident.{AcquisitionDateModel, CalculationResultModel, SummaryModel}
@@ -45,7 +45,7 @@ trait CalculationElectionConstructor {
 
     def withTimeCheck(sequence: Seq[(String, String, String, Option[String], String, Option[BigDecimal])]) = {
       if (summary.acquisitionDateModel.hasAcquisitionDate.equals("Yes") &&
-        !Dates.dateAfterStart(summary.acquisitionDateModel.day.get,
+        !TaxDates.dateAfterStart(summary.acquisitionDateModel.day.get,
           summary.acquisitionDateModel.month.get,
           summary.acquisitionDateModel.year.get)) {
         sequence.++(Seq(timeElementConstructor(timeResult, otherReliefsTA)))
@@ -56,7 +56,7 @@ trait CalculationElectionConstructor {
     def withRebasedCheck(sequence: Seq[(String, String, String, Option[String], String, Option[BigDecimal])]) = {
       summary.acquisitionDateModel match {
         case AcquisitionDateModel("Yes", day, month, year)
-          if !Dates.dateAfterStart(day.get, month.get, year.get) && summary.rebasedValueModel.get.hasRebasedValue.equals("Yes") =>
+          if !TaxDates.dateAfterStart(day.get, month.get, year.get) && summary.rebasedValueModel.get.hasRebasedValue.equals("Yes") =>
           sequence.++(Seq(rebasedElementConstructor(rebasedResult, otherReliefsRebased)))
         case AcquisitionDateModel("No", _, _, _) if summary.rebasedValueModel.get.hasRebasedValue.equals("Yes") =>
           sequence.++(Seq(rebasedElementConstructor(rebasedResult, otherReliefsRebased)))

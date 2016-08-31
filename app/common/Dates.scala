@@ -25,35 +25,17 @@ object Dates {
   val formatter = DateTimeFormatter.ofPattern("d/M/uuuu").withResolverStyle(ResolverStyle.STRICT)
   val requestFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd").withResolverStyle(ResolverStyle.STRICT)
   val datePageFormatNoZero = DateTimeFormatter.ofPattern("d MMMM uuuu").withResolverStyle(ResolverStyle.STRICT)
-  val taxStartDate = LocalDate.parse("5/4/2015", formatter)
-  val taxStartDatePlus18Months = LocalDate.parse("5/10/2016", formatter)
-  val taxYearStartDate = LocalDate.parse("5/4/2016", formatter)
-  val taxYearEndDate = LocalDate.parse("5/4/2017", formatter)
 
   def constructDate (day: Int, month: Int, year: Int): LocalDate = LocalDate.parse(s"$day/$month/$year", formatter)
 
-  def dateAfterStart (day: Int, month: Int, year: Int): Boolean = constructDate(day, month, year).isAfter(taxStartDate)
-
-  def dateAfterStart (date: LocalDate): Boolean = date.isAfter(taxStartDate)
-
-  def dateAfter18Months (day: Int, month: Int, year: Int): Boolean = constructDate(day, month, year).isAfter(taxStartDatePlus18Months)
-
-  def dateAfterOctober (date: LocalDate): Boolean = date.isAfter(taxStartDatePlus18Months)
-
-  def dateMinusMonths(date: Option[LocalDate], months: Int): String = date.fold(""){a => a.minus(months, ChronoUnit.MONTHS).format(datePageFormatNoZero)}
+  def dateMinusMonths(date: Option[LocalDate], months: Int): String = date.fold("") {
+    a => a.minus(months, ChronoUnit.MONTHS).format(datePageFormatNoZero)
+  }
 
   def getDay(date: LocalDate): Int = date.getDayOfMonth
 
   def getMonth(date: LocalDate): Int = date.getMonthValue
 
   def getYear(date: LocalDate): Int = date.getYear
-
-  def dateInsideTaxYear (day: Int, month: Int, year: Int): Boolean =
-    constructDate(day, month, year).isAfter(taxYearStartDate) && constructDate(day, month, year).isBefore(taxYearEndDate)
-
-  def dateInsideAcceptedTaxYears (day: Int, month: Int, year: Int): Boolean =
-    constructDate(day, month, year).isAfter(taxStartDate) && constructDate(day, month, year).isBefore(taxYearEndDate)
-
-  def taxYearStringToInteger (taxYear: String): Int = (taxYear.take(2) + taxYear.takeRight(2)).toInt
 }
 

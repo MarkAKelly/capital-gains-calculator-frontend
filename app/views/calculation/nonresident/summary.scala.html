@@ -4,6 +4,7 @@
 @import uk.gov.hmrc.play.views.helpers._
 @import views.html.helpers._
 
+@import common.TaxDates
 @(summary: SummaryModel, result: CalculationResultModel, backUrl: String)(implicit request: Request[_])
 
 @main_template(Messages("calc.summary.title"), articleLayout = false) {
@@ -20,7 +21,7 @@
         </h1>
     </div>
 
-    @(if (!Dates.dateInsideTaxYear(summary.disposalDateModel.day, summary.disposalDateModel.month, summary.disposalDateModel.year)) taxYearWarningNotice())
+    @(if (!TaxDates.dateInsideTaxYear(summary.disposalDateModel.day, summary.disposalDateModel.month, summary.disposalDateModel.year)) taxYearWarningNotice())
 
     <div class=font-medium" data-metrics="summary:calc-election:@summary.calculationElectionModel.calculationType">
 

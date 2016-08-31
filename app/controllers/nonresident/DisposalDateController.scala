@@ -18,7 +18,7 @@ package controllers.nonresident
 
 import java.time.LocalDate
 
-import common.{Dates, KeystoreKeys}
+import common.{Dates, KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.DisposalDateForm._
@@ -68,7 +68,7 @@ trait DisposalDateController extends FrontendController with ValidActiveSession 
 
     def successAction(model: DisposalDateModel) = {
       calcConnector.saveFormData(KeystoreKeys.disposalDate, model)
-      if (!Dates.dateAfterStart(model.day, model.month, model.year)) {
+      if (!TaxDates.dateAfterStart(model.day, model.month, model.year)) {
         Future.successful(Redirect(routes.NoCapitalGainsTaxController.noCapitalGainsTax()))
       } else {
         Future.successful(Redirect(routes.DisposalValueController.disposalValue()))
