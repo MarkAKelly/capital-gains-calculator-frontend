@@ -33,6 +33,7 @@ import forms.resident.AcquisitionCostsForm._
 import forms.resident.AcquisitionValueForm._
 import models.resident._
 import common.{Dates, TaxDates}
+import play.api.i18n.Messages
 
 object GainController extends GainController {
   val calcConnector = CalculatorConnector
@@ -42,6 +43,7 @@ trait GainController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
 
+  val navTitle = Messages("calc.base.resident.shares.home")
   override val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
   override val sessionTimeoutUrl = homeLink
 
@@ -89,7 +91,8 @@ trait GainController extends FeatureLock {
         isAfterApril15 = TaxDates.dateAfterStart(Dates.constructDate(disposalDate.get.day, disposalDate.get.month, disposalDate.get.year)),
         navBackLink = routes.GainController.disposalDate().url,
         navHomeLink = homeLink,
-        continueUrl = routes.GainController.disposalValue().url
+        continueUrl = routes.GainController.disposalValue().url,
+        navTitle = navTitle
       ))
     }
   }

@@ -16,7 +16,8 @@
 @resident_main_template(
     Messages("calc.resident.shares.acquisitionValue.question"),
     backLink = Some(controllers.resident.shares.routes.GainController.disposalCosts().toString),
-    homeLink = navHomeLink
+    homeLink = navHomeLink,
+    navTitle = Messages("calc.base.resident.shares.home")
 ) {
 
     @errorSummary(acquisitionValueForm, "amount")

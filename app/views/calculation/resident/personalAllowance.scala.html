@@ -5,9 +5,7 @@
 @import views.html.calculation.resident._
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-@(personalAllowanceForm: Form[PersonalAllowanceModel], taxYear: TaxYearModel, standardPA: BigDecimal, homeLink: String, postAction: Call, backLink: Option[String], journey: String)(implicit request: Request[_])
-
-@import views.html.helpers._
+@(personalAllowanceForm: Form[PersonalAllowanceModel], taxYear: TaxYearModel, standardPA: BigDecimal, homeLink: String, postAction: Call, backLink: Option[String], journey: String, navTitle: String)(implicit request: Request[_])
 
 @sidebar = {
 
@@ -22,7 +20,8 @@
     else {Messages("calc.resident.personalAllowance.title", taxYear.taxYearSupplied)}},
     backLink = backLink,
     sidebarLinks = Some(sidebar),
-    homeLink = homeLink) {
+    homeLink = homeLink,
+    navTitle = navTitle) {
 
     @errorSummary(personalAllowanceForm, "amount")
 

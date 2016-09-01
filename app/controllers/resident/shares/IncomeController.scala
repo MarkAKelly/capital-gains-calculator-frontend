@@ -30,8 +30,10 @@ import play.api.mvc.Result
 import uk.gov.hmrc.play.http.HeaderCarrier
 import play.api.data.Form
 import forms.resident.income.PreviousTaxableGainsForm._
+
 import scala.concurrent.Future
 import common.resident.JourneyKeys
+import play.api.i18n.Messages
 
 object IncomeController extends IncomeController {
   val calcConnector = CalculatorConnector
@@ -41,6 +43,7 @@ trait IncomeController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
 
+  val navTitle = Messages("calc.base.resident.shares.home")
   override val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
   override val sessionTimeoutUrl = homeLink
 
@@ -110,25 +113,41 @@ trait IncomeController extends FeatureLock {
 
   val previousTaxableGains = FeatureLockForRTTShares.async { implicit request =>
 
-    def routeRequest(backUrl: String): Future[Result] = {
+    def routeRequest(backUrl: String, calculationYear: String): Future[Result] = {
       calcConnector.fetchAndGetFormData[PreviousTaxableGainsModel](keystoreKeys.previousTaxableGains).map {
         case Some(data) => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm.fill(data), backUrl,
-          previousTaxableGainsPostAction, homeLink, JourneyKeys.shares))
+          previousTaxableGainsPostAction, homeLink, JourneyKeys.shares, calculationYear, navTitle))
         case None => Ok(commonViews.previousTaxableGains(previousTaxableGainsForm, backUrl,
-          previousTaxableGainsPostAction, homeLink, JourneyKeys.shares))
+          previousTaxableGainsPostAction, homeLink, JourneyKeys.shares, calculationYear, navTitle))
       }
     }
 
     for {
       backUrl <- buildPreviousTaxableGainsBackUrl
-      finalResult <- routeRequest(backUrl)
+      disposalDate <- getDisposalDate
+      disposalDateString <- formatDisposalDate(disposalDate.get)
+      taxYear <- calcConnector.getTaxYear(disposalDateString)
+      finalResult <- routeRequest(backUrl, taxYear.get.calculationTaxYear)
     } yield finalResult
   }
 
   val submitPreviousTaxableGains = FeatureLockForRTTShares.async { implicit request =>
+
+    def errorAction (errors: Form[PreviousTaxableGainsModel], backUrl: String, taxYear: String) = {
+      Future.successful(BadRequest(commonViews.previousTaxableGains(errors, backUrl, previousTaxableGainsPostAction,
+        homeLink, JourneyKeys.properties, taxYear, navTitle)))
+    }
+
     previousTaxableGainsForm.bindFromRequest.fold(
-      errors => buildPreviousTaxableGainsBackUrl.flatMap(url =>
-        Future.successful(BadRequest(commonViews.previousTaxableGains(errors, url, previousTaxableGainsPostAction, homeLink, JourneyKeys.shares)))),
+      errors => {
+        for {
+          backUrl <- buildPreviousTaxableGainsBackUrl
+          disposalDate <- getDisposalDate
+          disposalDateString <- formatDisposalDate(disposalDate.get)
+          taxYear <- calcConnector.getTaxYear(disposalDateString)
+          page <- errorAction(errors, backUrl, taxYear.get.taxYearSupplied)
+        } yield page
+      },
       success => {
         calcConnector.saveFormData(keystoreKeys.previousTaxableGains, success)
         Future.successful(Redirect(routes.IncomeController.currentIncome()))
@@ -216,7 +235,7 @@ trait IncomeController extends FeatureLock {
 
     def routeRequest(taxYearModel: TaxYearModel, standardPA: BigDecimal, formData: Form[PersonalAllowanceModel]): Future[Result] = {
       Future.successful(Ok(commonViews.personalAllowance(formData, taxYearModel, standardPA, homeLink,
-        postActionPersonalAllowance, backLinkPersonalAllowance, JourneyKeys.shares)))
+        postActionPersonalAllowance, backLinkPersonalAllowance, JourneyKeys.shares, navTitle)))
     }
     for {
       disposalDate <- getDisposalDate
@@ -239,7 +258,7 @@ trait IncomeController extends FeatureLock {
     def routeRequest(maxPA: BigDecimal, standardPA: BigDecimal, taxYearModel: TaxYearModel): Future[Result] = {
       personalAllowanceForm(maxPA).bindFromRequest.fold(
         errors => Future.successful(BadRequest(commonViews.personalAllowance(errors, taxYearModel, standardPA, homeLink,
-          postActionPersonalAllowance, backLinkPersonalAllowance, JourneyKeys.shares))),
+          postActionPersonalAllowance, backLinkPersonalAllowance, JourneyKeys.shares, navTitle))),
         success => {
           calcConnector.saveFormData(keystoreKeys.personalAllowance, success)
           Future.successful(Redirect(routes.SummaryController.summary()))

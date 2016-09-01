@@ -92,7 +92,10 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
         BigDecimal(0),
         BigDecimal(0),
         None,
-        None)
+        None,
+        0,
+        0
+      )
 
       lazy val target = setupTarget(
         gainAnswers,
@@ -128,7 +131,7 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
         0)
       lazy val chargeableGainAnswers = DeductionGainAnswersModel(Some(OtherPropertiesModel(false)),
         Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None)
-      lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 0, 11100, BigDecimal(0), BigDecimal(0), None, None)
+      lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 0, 11100, BigDecimal(0), BigDecimal(0), None, None, 0, 0)
       lazy val target = setupTarget(
         yourAnswersSummaryModel,
         -10000,

@@ -60,7 +60,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       None,
       None,
       Some(BigDecimal(0)),
-      Some(BigDecimal(0))
+      Some(BigDecimal(0)),
+      0,
+      0
     )
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
     lazy val backLink = "/calculate-your-capital-gains/resident/properties/personal-allowance"
@@ -129,7 +131,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
 
       "has a numeric output row for the gain" which {
 
-        "should have the question text 'Total Gain'" in {
+        "should have the question text 'Total profit'" in {
           doc.select("#gain-question").text shouldBe messages.totalGain
         }
 
@@ -159,7 +161,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
           }
 
           "include a value for Allowable Losses of £0" in {
-            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLosses("2015/16")} £0")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLossesUsed("2015/16")} £0")
           }
 
           "include a value for Capital gains tax allowance used of £0" in {
@@ -167,14 +169,14 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
           }
 
           "include a value for Loss brought forward of £0" in {
-            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYear("2015/16")} £0")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYearUsed("2015/16")} £0")
           }
         }
       }
 
       "has a numeric output row for the chargeable gain" which {
 
-        "should have the question text 'Taxable Gain'" in {
+        "should have the question text 'Taxable profit'" in {
           doc.select("#chargeableGain-question").text shouldBe messages.chargeableGain
         }
 
@@ -504,7 +506,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       None,
       None,
       Some(BigDecimal(0)),
-      Some(BigDecimal(0))
+      Some(BigDecimal(0)),
+      0,
+      0
     )
 
     lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
@@ -643,8 +647,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
 
     "has an option output row for previous taxable gains" which {
 
-      s"should have the question text '${commonMessages.previousTaxableGains.title}'" in {
-        doc.select("#previousTaxableGains-question").text shouldBe commonMessages.previousTaxableGains.title
+      s"should have the question text '${commonMessages.previousTaxableGains.title("2013/14")}'" in {
+        doc.select("#previousTaxableGains-question").text shouldBe commonMessages.previousTaxableGains.title("2013/14")
       }
 
       "should have the value '£1,000'" in {
@@ -736,7 +740,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       Some(10000),
       Some(28),
       Some(BigDecimal(1000)),
-      Some(BigDecimal(2000))
+      Some(BigDecimal(2000)),
+      5,
+      10
     )
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
@@ -882,7 +888,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       Some(0),
       Some(28),
       Some(BigDecimal(0)),
-      Some(BigDecimal(0))
+      Some(BigDecimal(0)),
+      0,
+      0
     )
 
     lazy val backLink = "/calculate-your-capital-gains/resident/properties/personal-allowance"
@@ -976,7 +984,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       Some(10000),
       Some(28),
       Some(BigDecimal(0)),
-      Some(BigDecimal(0))
+      Some(BigDecimal(0)),
+      0,
+      0
     )
 
     lazy val backLink = "/calculate-your-capital-gains/resident/properties/personal-allowance"
@@ -1042,7 +1052,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       Some(10000),
       Some(28),
       Some(BigDecimal(0)),
-      Some(BigDecimal(0))
+      Some(BigDecimal(0)),
+      0,
+      0
     )
 
     lazy val backLink = "/calculate-your-capital-gains/resident/properties/personal-allowance"

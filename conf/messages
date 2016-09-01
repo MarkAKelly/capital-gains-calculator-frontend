@@ -12,6 +12,9 @@ calc.base.optionReqError = Choose one of the options
 calc.base.externalLink = (opens in a new window)
 calc.base.undefinedMessage = Undefined message
 calc.base.change = change
+calc.base.nonresident.home = Calculate your Capital Gains Tax
+calc.base.resident.properties.home = Work out the tax for a property you''ve sold
+calc.base.resident.shares.home = Work out the tax for shares you''ve sold
 
 ## Error Summary ##
 calc.error.summary.heading = This page has errors
@@ -294,7 +297,7 @@ calc.summary.warning.taxYear = Your total might be less accurate because you did
 ###############################################################################################
 
 ## Disposal Date messages
-calc.resident.disposalDate.question = When did you sign the contract that made someone else the owner?
+calc.resident.disposalDate.question = When did you sell or give away the property?
 calc.resident.disposalDate.invalidDayError = Enter a day
 calc.resident.disposalDate.invalidMonthError = Enter a month
 calc.resident.disposalDate.invalidYearError = Enter a year
@@ -352,19 +355,21 @@ calc.resident.summary.pageHeading = Tax owed
 calc.resident.summary.calcDetailsHeading = Calculation details
 calc.resident.summary.calcDetailsHeadingDate = Calculation details for {0} tax year
 calc.resident.summary.yourAnswersHeading = Your answers
-calc.resident.summary.totalGain = Total gain
+calc.resident.summary.totalGain = Total profit
 calc.resident.summary.totalLoss = Loss
 calc.resident.summary.reliefs = Tax reliefs used
 
 calc.resident.summary.deductionsDetails.prrUsed = Private Residence Relief used
 calc.resident.summary.deductionsDetails.allowableLosses = Loss from {0} tax year
+calc.resident.summary.deductionsDetails.allowableLossesUsed = Loss used from {0} tax year
 calc.resident.summary.deductionsDetails.aeaUsed = Capital Gains Tax allowance used
 calc.resident.summary.deductionsDetails.broughtForwardLoss = Loss from tax years before {0}
+calc.resident.summary.deductionsDetails.broughtForwardLossesUsed = Loss used from tax years before {0}
 calc.resident.summary.aeaRemaining = Capital gains tax allowance left
 
 calc.resident.summary.deductions = Deductions
 calc.resident.summary.chargeableLoss = Carried forward loss
-calc.resident.summary.chargeableGain = Taxable gain
+calc.resident.summary.chargeableGain = Taxable profit
 calc.resident.summary.taxRate = Tax Rate
 calc.resident.summary.dateWarning = These figures are based on the tax rates from the {0} tax year
 calc.resident.summary.warning = Warning
@@ -388,7 +393,7 @@ calc.resident.summary.remainingBroughtForwardLossHelp = to reduce your Capital G
 calc.resident.summary.annualExemptAmountHelp = You can use this to reduce your tax if you sell something else that''s covered by Capital Gains Tax in the same tax year.
 
 ## Private Residence Relief Value messages
-calc.resident.prrValue.title = How much Private Residence Relief are you claiming on your total gain of £{0}?
+calc.resident.prrValue.title = How much Private Residence Relief are you claiming on your total profit of £{0}?
 calc.resident.prrValue.externalLink = Private Residence Relief
 
 ## Reliefs messages
@@ -414,8 +419,8 @@ calc.resident.reliefsNoPrr.errorSelect = Tell us if you want to claim any Capita
 calc.resident.reliefsNoPrr.helpButton = What are Capital Gains Tax reliefs?
 
 ## Reliefs Value messages
-calc.resident.reliefsValue.title = How much tax relief are you claiming on your total gain of £{0}?
-calc.resident.reliefsValue.question = How much tax relief are you claiming on your total gain of £{0}?
+calc.resident.reliefsValue.title = How much tax relief are you claiming on your total profit of £{0}?
+calc.resident.reliefsValue.question = How much tax relief are you claiming on your total profit of £{0}?
 calc.resident.reliefsValue.externalLinkOne = Private Residence Relief
 calc.resident.reliefsValue.externalLinkTwo = Lettings Relief
 
@@ -474,15 +479,17 @@ calc.resident.lossesBroughtForwardValue.title = What''s the total value of your 
 calc.resident.lossesBroughtForwardValue.pageHeading = What''s the total value of your Capital Gains Tax losses from tax years before {0}?
 
 ## Previous Taxable Gains messages
-calc.resident.previousTaxableGains.title = What was your taxable gain?
+calc.resident.previousTaxableGains.title = What was your taxable gain in the {0} tax year?
 calc.resident.previousTaxableGain.link.one = How to work out your taxable gain
+calc.resident.previousTaxableGains.helpText = This is the amount of taxable gain you made when you sold or gave away something that''s covered by Capital Gains Tax
 
 ## Current Income messages
 calc.resident.currentIncome.title = In the {0} tax year, what was your income?
 calc.resident.currentIncome.question = In the {0} tax year, what was your income?
 calc.resident.currentIncome.titleCurrentYear = How much do you expect your income to be in this tax year?
 calc.resident.currentIncome.questionCurrentYear = How much do you expect your income to be in this tax year?
-calc.resident.currentIncome.helpText = Include your salary and any other income, but not the money you made from selling the property.
+calc.resident.currentIncome.helpText = Include your salary before tax, and anything else you pay income tax on, but not the money you made from selling the property.
+calc.resident.currentIncome.linkText = Income tax
 
 ## Personal Allowance messages
 calc.resident.personalAllowance.title = In the {0} tax year, what was your Personal Allowance?
@@ -532,7 +539,7 @@ calc.resident.shares.acquisitionCosts.title = How much did you pay in costs when
 calc.resident.shares.acquisitionCosts.help = Costs include stockbroker fees and Stamp Duty tax
 
 ## Current Income messages
-calc.resident.shares.currentIncome.helpText = Include your salary and any other income, but not the money you made from selling the shares.
+calc.resident.shares.currentIncome.helpText = Include your salary before tax, and anything else you pay income tax on, but not the money you made from selling the shares.
 
 ## Other Disposals messages
 calc.resident.shares.otherDisposals.bullet.one = UK residential properties

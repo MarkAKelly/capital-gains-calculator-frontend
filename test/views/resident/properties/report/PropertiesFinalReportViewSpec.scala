@@ -63,7 +63,9 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       Some(10000),
       Some(28),
       Some(BigDecimal(0)),
-      Some(BigDecimal(0))
+      Some(BigDecimal(0)),
+      0,
+      0
     )
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
@@ -143,7 +145,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
           }
 
           "include a value for Allowable Losses of £0" in {
-            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLosses("2015/16")} £0")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLossesUsed("2015/16")} £0")
           }
 
           "include a value for Capital gains tax allowance used of £0" in {
@@ -151,7 +153,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
           }
 
           "include a value for Loss brought forward of £0" in {
-            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYear("2015/16")} £0")
+            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYearUsed("2015/16")} £0")
           }
         }
       }
@@ -333,8 +335,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
       "has an option output row for previous taxable gains" which {
 
-        s"should have the question text '${commonMessages.previousTaxableGains.title}'" in {
-          doc.select("#previousTaxableGains-question").text shouldBe commonMessages.previousTaxableGains.title
+        s"should have the question text '${commonMessages.previousTaxableGains.title("2015/16")}'" in {
+          doc.select("#previousTaxableGains-question").text shouldBe commonMessages.previousTaxableGains.title("2015/16")
         }
 
         "should have the value '£1,000'" in {
@@ -401,7 +403,9 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       Some(10000),
       Some(28),
       Some(BigDecimal(30000)),
-      Some(BigDecimal(2000))
+      Some(BigDecimal(2000)),
+      0,
+      0
     )
 
     lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel)(fakeRequestWithSession)

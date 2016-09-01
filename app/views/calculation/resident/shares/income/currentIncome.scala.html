@@ -6,10 +6,27 @@
 
 @(currentIncomeForm: Form[CurrentIncomeModel], backUrl: String, taxYear: TaxYearModel)(implicit request: Request[_])
 
-@resident_main_template(if(taxYear.taxYearSupplied == "2016/17") {Messages("calc.resident.currentIncome.questionCurrentYear")
-                        } else {Messages("calc.resident.currentIncome.question", taxYear.taxYearSupplied)},
+@sidebar = {
+<a id="incomeTaxLink" class="external-link" rel="external" href="https://www.gov.uk/income-tax"
+   target="_blank" data-journey-click="help:govUK:rtt-shares-incomeTax">
+    @Messages("calc.resident.currentIncome.linkText")
+    <span>@Messages("calc.base.externalLink")</span>
+</a>
+}
+
+@title = {
+    @{if(taxYear.taxYearSupplied == "2016/17") {
+        Messages("calc.resident.currentIncome.questionCurrentYear")
+    } else {
+        Messages("calc.resident.currentIncome.question", taxYear.taxYearSupplied)
+    }}
+}
+
+@resident_main_template(title = title.toString,
                         backLink = Some(backUrl),
-                        homeLink = controllers.resident.shares.routes.GainController.disposalDate().url) {
+                        sidebarLinks = Some(sidebar),
+                        homeLink = controllers.resident.shares.routes.GainController.disposalDate().url,
+                        navTitle = Messages("calc.base.resident.shares.home")) {
 
     @errorSummary(currentIncomeForm, "current-income")
 

@@ -41,8 +41,8 @@ object MessageLookup {
 
   //Disposal Date messages
   object disposalDate {
-    val title = "When did you sign the contract that made someone else the owner?"
-    val question = "When did you sign the contract that made someone else the owner?"
+    val title = "When did you sell or give away the property?"
+    val question = "When did you sell or give away the property?"
     val helpText = "For example, 4 9 2016"
     val day = "Day"
     val month = "Month"
@@ -120,10 +120,10 @@ object MessageLookup {
     val aeaHelp = "You can use this to reduce your tax if you sell something else that's covered by Capital Gains Tax in the same tax year."
     val yourAnswersHeading = "Your answers"
     val totalLoss = "Loss"
-    val totalGain = "Total gain"
+    val totalGain = "Total profit"
     val deductions = "Deductions"
     val chargeableLoss = "Carried forward loss"
-    val chargeableGain = "Taxable gain"
+    val chargeableGain = "Taxable profit"
     val taxRate = "Tax Rate"
     def noticeWarning(input: String): String = s"These figures are based on the tax rates from the $input tax year"
     val warning = "Warning"
@@ -149,12 +149,14 @@ object MessageLookup {
     def deductionsDetailsAllowableLosses(taxYear: String): String = s"Loss from $taxYear tax year"
     val deductionsDetailsCapitalGainsTax = "Capital Gains Tax allowance used"
     def deductionsDetailsLossBeforeYear(taxYear: String): String = s"Loss from tax years before $taxYear"
+    def deductionsDetailsAllowableLossesUsed(taxYear: String): String = s"Loss used from $taxYear tax year"
+    def deductionsDetailsLossBeforeYearUsed(taxYear: String): String = s"Loss used from tax years before $taxYear"
   }
 
   //Private Residence Relief Value messages
   object privateResidenceReliefValue {
-    def title(gain: String) = s"How much Private Residence Relief are you claiming on your total gain of £$gain?"
-    val question = "How much Private Residence Relief are you claiming on your total gain of £10,000?"
+    def title(gain: String) = s"How much Private Residence Relief are you claiming on your total profit of £$gain?"
+    val question = "How much Private Residence Relief are you claiming on your total profit of £10,000?"
     val prrLink = "Private Residence Relief"
   }
 
@@ -177,8 +179,8 @@ object MessageLookup {
 
   //Reliefs Value messages
   object reliefsValue {
-    def title(input: String) = s"How much tax relief are you claiming on your total gain of £$input?"
-    def question(input: String) = s"How much tax relief are you claiming on your total gain of £$input?"
+    def title(input: String) = s"How much tax relief are you claiming on your total profit of £$input?"
+    def question(input: String) = s"How much tax relief are you claiming on your total profit of £$input?"
     val prrLink = "Private Residence Relief"
     val lettingsReliefLink = "Lettings Relief"
   }
@@ -248,8 +250,8 @@ object MessageLookup {
 
   //Previous Taxable Gains messages
   object previousTaxableGains {
-    val title = "What was your taxable gain?"
-    val question = "What was your taxable gain?"
+    def title(year: String): String = s"What was your taxable gain in the $year tax year?"
+    def question(year: String): String = s"What was your taxable gain in the $year tax year?"
     val helpLinkOne = "How to work out your taxable gain"
   }
 
@@ -259,8 +261,9 @@ object MessageLookup {
     def question(input: String): String = s"In the $input tax year, what was your income?"
     val currentYearTitle = "How much do you expect your income to be in this tax year?"
     val currentYearQuestion = "How much do you expect your income to be in this tax year?"
-    val helpText = "Include your salary and any other income, but not the money you made from selling the property."
-    val helpTextShares = "Include your salary and any other income, but not the money you made from selling the shares."
+    val helpText = "Include your salary before tax, and anything else you pay income tax on, but not the money you made from selling the property."
+    val helpTextShares = "Include your salary before tax, and anything else you pay income tax on, but not the money you made from selling the shares."
+    val linkText = "Income tax"
   }
 
   //Personal Allowance messages

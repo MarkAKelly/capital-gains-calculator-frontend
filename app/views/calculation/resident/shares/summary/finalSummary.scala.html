@@ -20,7 +20,8 @@
 title = Messages("calc.resident.summary.title"),
 backLink = Some(backUrl),
 articleLayout = false,
-homeLink = navHomeLink
+homeLink = navHomeLink,
+navTitle = Messages("calc.base.resident.shares.home")
 ){
 
 <h1 class="heading-xlarge">
@@ -81,9 +82,9 @@ homeLink = navHomeLink
     <!-- Data Rows -->
     @summaryNumericRowHelper("gain", gainMessage(result.gain), result.gain)
     @summaryNumericRowHelper("deductions", Messages("calc.resident.summary.deductions"), result.deductions, None, Some(Seq(
-    (Messages("calc.resident.summary.deductionsDetails.allowableLosses", taxYear.taxYearSupplied), allowableLossesUsed(deductionAnswers)),
+    (Messages("calc.resident.summary.deductionsDetails.allowableLossesUsed", taxYear.taxYearSupplied), MoneyPounds(result.allowableLossesUsed, 0).quantity),
     (Messages("calc.resident.summary.deductionsDetails.aeaUsed"), MoneyPounds(result.aeaUsed, 0).quantity),
-    (Messages("calc.resident.summary.deductionsDetails.broughtForwardLoss", taxYear.taxYearSupplied), broughtForwardLossesUsed(deductionAnswers))
+    (Messages("calc.resident.summary.deductionsDetails.broughtForwardLossesUsed", taxYear.taxYearSupplied), MoneyPounds(result.broughtForwardLossesUsed, 0).quantity)
     )))
     @summaryNumericRowHelper("chargeableGain", if(result.chargeableGain < 0) {
     Messages("calc.resident.summary.chargeableLoss")} else {Messages("calc.resident.summary.chargeableGain")}, result.chargeableGain)
@@ -119,7 +120,7 @@ homeLink = navHomeLink
         summaryNumericRowHelper("annualExemptAmount",Messages("calc.resident.annualExemptAmount.title"),deductionAnswers.annualExemptAmountModel.get.amount,Some(deductionRoutes.annualExemptAmount().toString))
     }
     @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties && deductionAnswers.annualExemptAmountModel.isDefined && deductionAnswers.annualExemptAmountModel.get.amount == 0)
-        summaryNumericRowHelper("previousTaxableGains", Messages("calc.resident.previousTaxableGains.title"), incomeAnswers.previousTaxableGainsModel.get.amount, Some(incomeRoutes.previousTaxableGains().toString))}
+        summaryNumericRowHelper("previousTaxableGains", Messages("calc.resident.previousTaxableGains.title", taxYear.taxYearSupplied), incomeAnswers.previousTaxableGainsModel.get.amount, Some(incomeRoutes.previousTaxableGains().toString))}
     @summaryNumericRowHelper("currentIncome",if(taxYear.taxYearSupplied == "2016/17"){Messages("calc.resident.currentIncome.questionCurrentYear")}else{Messages("calc.resident.currentIncome.question", taxYear.taxYearSupplied)},incomeAnswers.currentIncomeModel.get.amount,Some(incomeRoutes.currentIncome().toString))
     @summaryNumericRowHelper("personalAllowance",
     {if(taxYear.taxYearSupplied == "2016/17") {Messages("calc.resident.personalAllowance.currentYearTitle")}

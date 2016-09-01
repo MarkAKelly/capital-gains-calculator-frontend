@@ -19,7 +19,8 @@
     MoneyPounds(totalGain, 0).quantity),
     backLink = Some(controllers.resident.properties.routes.DeductionsController.privateResidenceRelief().toString),
     sidebarLinks = Some(sidebar),
-    homeLink = navHomeLink) {
+    homeLink = navHomeLink,
+    navTitle = Messages("calc.base.resident.properties.home")) {
 
     @errorSummary(privateResidenceReliefValueForm, "private-residence-relief-value")
 

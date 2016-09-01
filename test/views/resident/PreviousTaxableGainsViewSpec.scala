@@ -31,23 +31,27 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
 
     lazy val postAction = controllers.resident.properties.routes.IncomeController.previousTaxableGains()
     lazy val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
-    lazy val view = views.previousTaxableGains(previousTaxableGainsForm, "#", postAction, homeLink, JourneyKeys.properties)(fakeRequest)
+    lazy val view = views.previousTaxableGains(previousTaxableGainsForm, "#", postAction, homeLink, JourneyKeys.properties, "2016/17", "navTitle")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
       doc.charset.toString shouldBe "UTF-8"
     }
 
-    s"have a title of ${messages.title}" in {
-      doc.title shouldBe messages.title
+    s"have a title of ${messages.title("2016/17")}" in {
+      doc.title shouldBe messages.title("2016/17")
+    }
+
+    "have a dynamic navTitle of navTitle" in {
+      doc.select("span.header__menu__proposition-name").text() shouldBe "navTitle"
     }
 
     "have a H1 tag that" should {
 
       lazy val heading = doc.select("h1")
 
-      s"have the page heading '${messages.title}'" in {
-        heading.text shouldBe messages.title
+      s"have the page heading '${messages.title("2016/17")}'" in {
+        heading.text shouldBe messages.title("2016/17")
       }
 
       "have the heading-large class" in {
@@ -72,7 +76,7 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
 
     "have the correct label" in {
       val label = doc.select("label")
-      label.text should startWith(messages.question)
+      label.text should startWith(messages.question("2016/17"))
     }
 
     "have a hidden label" in {
@@ -119,7 +123,7 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
     val form = previousTaxableGainsForm.bind(Map("amount" -> "100"))
     lazy val postAction = controllers.resident.shares.routes.IncomeController.previousTaxableGains()
     lazy val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
-    lazy val view = views.previousTaxableGains(form, "#", postAction, homeLink, JourneyKeys.properties)(fakeRequest)
+    lazy val view = views.previousTaxableGains(form, "#", postAction, homeLink, JourneyKeys.properties, "2016/17", "navTitle")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a home link that" should {
@@ -154,7 +158,7 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
     val form = previousTaxableGainsForm.bind(Map("amount" -> ""))
     lazy val postAction = controllers.resident.properties.routes.IncomeController.previousTaxableGains()
     lazy val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
-    lazy val view = views.previousTaxableGains(form, "#", postAction, homeLink, JourneyKeys.properties)(fakeRequest)
+    lazy val view = views.previousTaxableGains(form, "#", postAction, homeLink, JourneyKeys.properties, "2016/17", "navTitle")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {

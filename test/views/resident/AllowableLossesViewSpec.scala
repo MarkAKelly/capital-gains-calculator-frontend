@@ -31,7 +31,7 @@ class AllowableLossesViewSpec extends UnitSpec with WithFakeApplication with Fak
   "Allowable Losses view" should {
 
     lazy val backLink = Some(controllers.resident.properties.routes.DeductionsController.otherProperties().toString())
-    lazy val view = views.allowableLosses(allowableLossesForm, TaxYearModel("2015/16", true, "2015/16"), postAction, backLink, "home")(fakeRequest)
+    lazy val view = views.allowableLosses(allowableLossesForm, TaxYearModel("2015/16", true, "2015/16"), postAction, backLink, "home", "navTitle")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -40,6 +40,10 @@ class AllowableLossesViewSpec extends UnitSpec with WithFakeApplication with Fak
 
     s"have a title ${messages.title("2015/16")}" in {
       doc.title() shouldBe messages.title("2015/16")
+    }
+
+    "have a dynamic navTitle of navTitle" in {
+      doc.select("span.header__menu__proposition-name").text() shouldBe "navTitle"
     }
 
     "have a H1 tag that" should {
@@ -97,7 +101,7 @@ class AllowableLossesViewSpec extends UnitSpec with WithFakeApplication with Fak
   "Allowable Losses view with pre-selected values" should {
     lazy val backLink = Some(controllers.resident.shares.routes.DeductionsController.otherDisposals().toString())
     lazy val form = allowableLossesForm.bind(Map(("isClaiming", "Yes")))
-    lazy val view = views.allowableLosses(form, TaxYearModel("2015/16", true, "2015/16"), postAction, backLink, "home")(fakeRequest)
+    lazy val view = views.allowableLosses(form, TaxYearModel("2015/16", true, "2015/16"), postAction, backLink, "home", "navTitle")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have the option 'Yes' auto selected" in {
@@ -108,7 +112,7 @@ class AllowableLossesViewSpec extends UnitSpec with WithFakeApplication with Fak
   "Allowable Losses view with errors" should {
     lazy val backLink = Some(controllers.resident.shares.routes.DeductionsController.otherDisposals().toString())
     lazy val form = allowableLossesForm.bind(Map(("isClaiming", "")))
-    lazy val view = views.allowableLosses(form, TaxYearModel("2015/16", true, "2015/16"), postAction, backLink, "home")(fakeRequest)
+    lazy val view = views.allowableLosses(form, TaxYearModel("2015/16", true, "2015/16"), postAction, backLink, "home", "navTitle")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {

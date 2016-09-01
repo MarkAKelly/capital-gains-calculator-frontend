@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{previousTaxableGains => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystore}
 import connectors.CalculatorConnector
-import models.resident.{AllowableLossesModel, AllowableLossesValueModel, LossesBroughtForwardModel, OtherPropertiesModel}
+import models.resident._
 import models.resident.income.PreviousTaxableGainsModel
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -36,7 +36,9 @@ class PreviousTaxableGainsActionSpec extends UnitSpec with WithFakeApplication w
 
   def setupTarget(getData: Option[PreviousTaxableGainsModel], otherProperties: Boolean = true, lossesBroughtForward: Boolean = true,
                   allowableLossesModel: Option[AllowableLossesModel] = None,
-                  allowableLossesValueModel: Option[AllowableLossesValueModel] = None): IncomeController = {
+                  allowableLossesValueModel: Option[AllowableLossesValueModel] = None,
+                  taxYearModel: TaxYearModel = TaxYearModel("2015/16", true, "2015/16"),
+                  disposalDateModel: DisposalDateModel = DisposalDateModel(12, 12, 2015)): IncomeController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
@@ -54,6 +56,12 @@ class PreviousTaxableGainsActionSpec extends UnitSpec with WithFakeApplication w
 
     when(mockCalcConnector.fetchAndGetFormData[PreviousTaxableGainsModel](Matchers.eq(keystore.previousTaxableGains))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(keystore.disposalDate))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(disposalDateModel)))
+
+    when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(taxYearModel)))
 
     new IncomeController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -76,7 +84,7 @@ class PreviousTaxableGainsActionSpec extends UnitSpec with WithFakeApplication w
       }
 
       "display the previous taxable gains view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.title("2015/16")
       }
     }
 
@@ -94,7 +102,7 @@ class PreviousTaxableGainsActionSpec extends UnitSpec with WithFakeApplication w
       }
 
       "display the Improvements view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.title("2015/16")
       }
     }
 
@@ -186,7 +194,7 @@ class PreviousTaxableGainsActionSpec extends UnitSpec with WithFakeApplication w
       }
 
       "render the previous taxable gains page" in {
-        doc.title() shouldEqual messages.title
+        doc.title() shouldEqual messages.title("2015/16")
       }
     }
 
@@ -194,7 +202,6 @@ class PreviousTaxableGainsActionSpec extends UnitSpec with WithFakeApplication w
       lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
       lazy val result = target.submitPreviousTaxableGains(request)
-      lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a 303" in {
         status(result) shouldBe 303

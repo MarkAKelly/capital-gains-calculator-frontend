@@ -5,7 +5,7 @@
 @import views.html.calculation.resident._
 @import play.api.mvc.Call
 
-@(allowableLossesForm: Form[AllowableLossesModel], taxYear: TaxYearModel, postAction: Call, backLink: Option[String], navHomeLink: String)(implicit request: Request[_])
+@(allowableLossesForm: Form[AllowableLossesModel], taxYear: TaxYearModel, postAction: Call, backLink: Option[String], navHomeLink: String, navTitle: String)(implicit request: Request[_])
 
 @hiddenHelpTextContent = {
     <div id="helpInfo">
@@ -22,7 +22,8 @@
     title = Messages("calc.resident.allowableLosses.title",
     taxYear.taxYearSupplied),
     backLink = backLink,
-    homeLink = navHomeLink
+    homeLink = navHomeLink,
+    navTitle = navTitle
 ) {
 
     @errorSummary(allowableLossesForm, "isClaiming")
