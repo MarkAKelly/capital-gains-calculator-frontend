@@ -365,7 +365,7 @@ calc.resident.summary.deductionsDetails.allowableLossesUsed = Loss used from {0}
 calc.resident.summary.deductionsDetails.aeaUsed = Capital Gains Tax allowance used
 calc.resident.summary.deductionsDetails.broughtForwardLoss = Loss from tax years before {0}
 calc.resident.summary.deductionsDetails.broughtForwardLossesUsed = Loss used from tax years before {0}
-calc.resident.summary.aeaRemaining = Capital Gains Tax allowance left
+calc.resident.summary.aeaRemaining = Capital Gains Tax allowance left for {0}
 
 calc.resident.summary.deductions = Deductions
 calc.resident.summary.chargeableLoss = Carried forward loss

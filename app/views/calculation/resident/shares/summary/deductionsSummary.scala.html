@@ -128,7 +128,7 @@ navTitle = Messages("calc.base.resident.shares.home")
             Some(broughtForwardLossesHelpText()))
         }
     }
-    @summaryNumericHelpTextHelper("aeaRemaining", Messages("calc.resident.summary.aeaRemaining"), result.aeaRemaining, None,
+    @summaryNumericHelpTextHelper("aeaRemaining", Messages("calc.resident.summary.aeaRemaining", taxYear.calculationTaxYear), result.aeaRemaining, None,
         if(result.aeaRemaining > 0) {Some(annualExemptAmountHelpText())}
         else {None}
     )
