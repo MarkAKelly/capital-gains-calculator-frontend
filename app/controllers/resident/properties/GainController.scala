@@ -18,8 +18,8 @@ package controllers.resident.properties
 
 import java.util.UUID
 
-import common.Dates._
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
+import common.{Dates, TaxDates}
 import config.{AppConfig, ApplicationConfig}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
@@ -94,7 +94,7 @@ trait GainController extends FeatureLock {
     } yield {
       Ok(commonViews.outsideTaxYear(
         taxYear = taxYear.get,
-        isAfterApril15 = dateAfterStart(constructDate(disposalDate.get.day, disposalDate.get.month, disposalDate.get.year)),
+        isAfterApril15 = TaxDates.dateAfterStart(Dates.constructDate(disposalDate.get.day, disposalDate.get.month, disposalDate.get.year)),
         navBackLink = routes.GainController.disposalDate().url,
         navHomeLink = routes.GainController.disposalDate().url,
         continueUrl = routes.GainController.disposalValue().url,

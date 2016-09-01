@@ -3,6 +3,7 @@
 @import models.resident._
 @import models.resident.shares._
 @import common.Dates._
+@import common.TaxDates
 @import constructors.resident.shares.SummaryConstructor._
 @import constructors.resident.shares.CalculateRequestConstructor._
 @import controllers.resident.shares.routes.{GainController => gainRoutes}
@@ -158,7 +159,7 @@ navTitle = Messages("calc.base.resident.shares.home")
 
 
 
-    @if(dateInsideAcceptedTaxYears(getDay(gainAnswers.disposalDate), getMonth(gainAnswers.disposalDate), getYear(gainAnswers.disposalDate))) {
+    @if(TaxDates.dateInsideAcceptedTaxYears(getDay(gainAnswers.disposalDate), getMonth(gainAnswers.disposalDate), getYear(gainAnswers.disposalDate))) {
             <section id="whatToDoNext" class="summary-underline summary-overline">
                 <h2 id="whatToDoNextNoLossTitle" class="bold-medium">@Messages("calc.resident.summary.whatNext")</h2>
                 <div id="whatToDoNextNoLossText" class="font-medium what-to-do-next-text">

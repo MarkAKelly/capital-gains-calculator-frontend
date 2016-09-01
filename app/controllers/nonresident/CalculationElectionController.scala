@@ -16,7 +16,7 @@
 
 package controllers.nonresident
 
-import common.{Dates, KeystoreKeys}
+import common.{KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
 import controllers.predicates.ValidActiveSession
@@ -61,7 +61,7 @@ trait CalculationElectionController extends FrontendController with ValidActiveS
 
   private def calcTimeCall(summary: SummaryModel)(implicit hc: HeaderCarrier): Future[Option[CalculationResultModel]] = {
     summary.acquisitionDateModel.hasAcquisitionDate match {
-      case "Yes" if !Dates.dateAfterStart(summary.acquisitionDateModel.day.get,
+      case "Yes" if !TaxDates.dateAfterStart(summary.acquisitionDateModel.day.get,
         summary.acquisitionDateModel.month.get,
         summary.acquisitionDateModel.year.get) =>
         calcConnector.calculateTA(summary)
@@ -71,7 +71,7 @@ trait CalculationElectionController extends FrontendController with ValidActiveS
 
   private def calcRebasedCall(summary: SummaryModel)(implicit hc: HeaderCarrier): Future[Option[CalculationResultModel]] = {
     (summary.rebasedValueModel.getOrElse(RebasedValueModel("No", None)).hasRebasedValue, summary.acquisitionDateModel.hasAcquisitionDate) match {
-      case ("Yes", "Yes") if !Dates.dateAfterStart(summary.acquisitionDateModel.day.get,
+      case ("Yes", "Yes") if !TaxDates.dateAfterStart(summary.acquisitionDateModel.day.get,
         summary.acquisitionDateModel.month.get,
         summary.acquisitionDateModel.year.get) =>
         calcConnector.calculateRebased(summary)

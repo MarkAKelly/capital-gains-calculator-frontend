@@ -16,7 +16,7 @@
 
 package controllers.nonresident
 
-import common.{Dates, KeystoreKeys}
+import common.{KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
 import controllers.predicates.ValidActiveSession
@@ -64,7 +64,7 @@ trait AcquisitionValueController extends FrontendController with ValidActiveSess
     def fetchData() = calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate)
 
     def getRoute(date: AcquisitionDateModel) = date.hasAcquisitionDate match {
-      case "Yes" if !Dates.dateAfterStart(date.day.getOrElse(0), date.month.getOrElse(0), date.year.getOrElse(0)) =>
+      case "Yes" if !TaxDates.dateAfterStart(date.day.getOrElse(0), date.month.getOrElse(0), date.year.getOrElse(0)) =>
                       Future.successful(Redirect(routes.RebasedValueController.rebasedValue()))
       case "No" => Future.successful(Redirect(routes.RebasedValueController.rebasedValue()))
       case _ => Future.successful(Redirect(routes.ImprovementsController.improvements()))

@@ -3,6 +3,7 @@
 @import models.resident._
 @import models.resident.shares._
 @import common.Dates._
+@import common.TaxDates
 @import constructors.resident.shares.SummaryConstructor._
 @import constructors.resident.shares.CalculateRequestConstructor._
 @import controllers.resident.shares.routes.{GainController => gainRoutes}
@@ -10,7 +11,6 @@
 @import controllers.resident.shares.routes.{IncomeController => incomeRoutes}
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 @import views.html.calculation.resident._
-
 
 @(gainAnswers: GainAnswersModel, deductionAnswers: DeductionGainAnswersModel,
     incomeAnswers: IncomeAnswersModel, result: TotalGainAndTaxOwedModel,
@@ -129,7 +129,7 @@ navTitle = Messages("calc.base.resident.shares.home")
 
 </section>
 
-@if(dateInsideAcceptedTaxYears(getDay(gainAnswers.disposalDate), getMonth(gainAnswers.disposalDate), getYear(gainAnswers.disposalDate))) {
+@if(TaxDates.dateInsideAcceptedTaxYears(getDay(gainAnswers.disposalDate), getMonth(gainAnswers.disposalDate), getYear(gainAnswers.disposalDate))) {
 
 <section id="whatToDoNext" class="summary-underline summary-overline">
     <h2 id="whatToDoNextTitle" class="bold-medium">@Messages("calc.resident.summary.whatNext")</h2>

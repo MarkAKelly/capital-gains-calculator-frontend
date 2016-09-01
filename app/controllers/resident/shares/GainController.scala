@@ -23,7 +23,6 @@ import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import play.api.mvc.Result
 import uk.gov.hmrc.play.http.SessionKeys
-
 import scala.concurrent.Future
 import views.html.calculation.{resident => commonViews}
 import views.html.calculation.resident.shares.{gain => views}
@@ -33,7 +32,7 @@ import forms.resident.DisposalValueForm._
 import forms.resident.AcquisitionCostsForm._
 import forms.resident.AcquisitionValueForm._
 import models.resident._
-import common.Dates._
+import common.{Dates, TaxDates}
 import play.api.i18n.Messages
 
 object GainController extends GainController {
@@ -89,7 +88,7 @@ trait GainController extends FeatureLock {
     } yield {
       Ok(commonViews.outsideTaxYear(
         taxYear = taxYear.get,
-        isAfterApril15 = dateAfterStart(constructDate(disposalDate.get.day, disposalDate.get.month, disposalDate.get.year)),
+        isAfterApril15 = TaxDates.dateAfterStart(Dates.constructDate(disposalDate.get.day, disposalDate.get.month, disposalDate.get.year)),
         navBackLink = routes.GainController.disposalDate().url,
         navHomeLink = homeLink,
         continueUrl = routes.GainController.disposalValue().url,

@@ -16,7 +16,7 @@
 
 package controllers.resident.shares
 
-import common.Dates
+import common.TaxDates
 import views.html.calculation.{resident => commonViews}
 import views.html.calculation.resident.shares.{income => views}
 import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
@@ -218,7 +218,7 @@ trait IncomeController extends FeatureLock {
   }
 
   def taxYearValue(taxYear: String): Future[Int] = {
-    Future.successful(Dates.taxYearStringToInteger(taxYear))
+    Future.successful(TaxDates.taxYearStringToInteger(taxYear))
   }
 
   private val backLinkPersonalAllowance = Some(controllers.resident.shares.routes.IncomeController.currentIncome().toString)

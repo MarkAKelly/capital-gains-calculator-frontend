@@ -16,7 +16,7 @@
 
 package controllers.nonresident
 
-import common.{Dates, KeystoreKeys}
+import common.{KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.AllowableLossesForm._
@@ -70,7 +70,7 @@ trait AllowableLossesController extends FrontendController with ValidActiveSessi
         success => {
           calcConnector.saveFormData(KeystoreKeys.allowableLosses, success)
           calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
-            case Some(data) if data.hasAcquisitionDate == "Yes" && !Dates.dateAfterStart(data.day.get, data.month.get, data.year.get) =>
+            case Some(data) if data.hasAcquisitionDate == "Yes" && !TaxDates.dateAfterStart(data.day.get, data.month.get, data.year.get) =>
               Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
             case _ =>
               calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
