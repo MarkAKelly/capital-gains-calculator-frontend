@@ -184,8 +184,7 @@ trait GainController extends FeatureLock {
   val submitImprovements = FeatureLockForRTT.async { implicit request =>
 
     def routeRequest(totalGain: BigDecimal): Future[Result] = {
-      if (totalGain > 0 && config.featureRTTPRREnabled) Future.successful(Redirect(routes.DeductionsController.privateResidenceRelief()))
-      else if (totalGain > 0) Future.successful(Redirect(routes.DeductionsController.reliefs()))
+      if (totalGain > 0) Future.successful(Redirect(routes.DeductionsController.otherProperties()))
       else Future.successful(Redirect(routes.SummaryController.summary()))
     }
 
