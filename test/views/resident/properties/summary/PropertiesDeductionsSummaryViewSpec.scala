@@ -181,8 +181,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
 
       "has a numeric output row for the AEA remaining" which {
 
-        "should have the question text 'Capital gains tax allowance left" in {
-          doc.select("#aeaRemaining-question").text should include(messages.aeaRemaining)
+        "should have the question text 'Capital Gains Tax allowance left for 2015/16" in {
+          doc.select("#aeaRemaining-question").text should include(messages.aeaRemaining("2015/16"))
         }
 
         "include a value for Capital gains tax allowance left of £0" in {
@@ -612,8 +612,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
 
     "has a numeric output row for the AEA remaining" which {
 
-      "should have the question text 'Capital gains tax allowance left" in {
-        doc.select("#aeaRemaining-question").text should include(messages.aeaRemaining)
+      "should have the question text 'Capital Gains Tax allowance left for 2015/16" in {
+        doc.select("#aeaRemaining-question").text should include(messages.aeaRemaining("2015/16"))
       }
 
       "include a value for Capital gains tax allowance left of £11,000" in {
