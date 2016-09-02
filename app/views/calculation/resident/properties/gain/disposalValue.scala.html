@@ -13,8 +13,16 @@
     </a>
 }
 
+@bulletTitleContentLink = {
+    <a id="marketValueLink" class="external-link" rel="external" href="https://www.gov.uk/capital-gains-tax/market-value"
+       target="_blank" data-journey-click="help:govUK:rtt-properties-disposal-market-value">
+        @Messages("calc.disposalValue.bullet.titleTwo")
+        <span id="opensInANewTabAlt">@Messages("calc.base.externalLink")</span>
+    </a>
+}
+
 @bulletContent = {
-    <p id="bullet-list-title">@Messages("calc.resident.disposal.value.bullet.title") </p>
+    <p id="bullet-list-title">@Messages("calc.disposalValue.bullet.titleOne") @bulletTitleContentLink @Messages("calc.disposalValue.bullet.titleThree")</p>
     <ul class="list-bullet">
         <li id="bullet-list-one">@Messages("calc.resident.disposal.value.bullet.one")</li>
         <li id="bullet-list-two">@Messages("calc.resident.disposal.value.bullet.two")@contentLink</li>
