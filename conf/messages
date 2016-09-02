@@ -492,12 +492,11 @@ calc.resident.currentIncome.helpText = Include your salary before tax, and anyth
 calc.resident.currentIncome.linkText = Income tax
 
 ## Personal Allowance messages
-calc.resident.personalAllowance.title = In the {0} tax year, what was your Personal Allowance?
-calc.resident.personalAllowance.currentYearTitle = How much is your Personal Allowance?
 calc.resident.personalAllowance.question = In the {0} tax year, what was your Personal Allowance?
 calc.resident.personalAllowance.currentYearQuestion = How much is your Personal Allowance?
 calc.resident.personalAllowance.link.one = Personal Allowance
-calc.resident.personalAllowance.helpText = This is the amount of your income you don''t pay tax on. It''s £{0} unless you''re claiming other allowances.
+calc.resident.personalAllowance.currentYearHelpText = This is the amount of your income you don''t pay tax on. It''s £{0} unless you''re claiming other allowances.
+calc.resident.personalAllowance.helpText = This is the amount of your income you don''t pay tax on. It was £{0} unless you were claiming other allowances.
 
 ###############################################################################################
 ## Private Residence Relief messages ##

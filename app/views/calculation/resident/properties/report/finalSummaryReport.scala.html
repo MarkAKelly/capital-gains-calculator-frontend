@@ -138,8 +138,8 @@
         "2016/17"){Messages("calc.resident.currentIncome.questionCurrentYear")}else{Messages("calc.resident.currentIncome.question",
         taxYear.taxYearSupplied)},incomeAnswers.currentIncomeModel.get.amount,None)
         @summaryNumericRowHelper("personalAllowance",
-        {if(taxYear.taxYearSupplied == "2016/17") {Messages("calc.resident.personalAllowance.currentYearTitle")}
-        else {Messages("calc.resident.personalAllowance.title", taxYear.taxYearSupplied)}},
+        {if(taxYear.taxYearSupplied == "2016/17") {Messages("calc.resident.personalAllowance.currentYearQuestion")}
+        else {Messages("calc.resident.personalAllowance.question", taxYear.taxYearSupplied)}},
         incomeAnswers.personalAllowanceModel.get.amount,None)
     </section>
 </div>
