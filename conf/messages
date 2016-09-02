@@ -344,9 +344,12 @@ calc.resident.acquisitionCosts.helpText = Costs include stamp duty, agent fees, 
 
 ## Improvements messages
 calc.resident.improvements.title = How much have you spent on improvements since you became the property owner?
-calc.resident.improvements.note = If you used the market value of the property, tell us how much you''ve spent on improvements since the date of the valuation.
 calc.resident.improvements.label = How much have you spent on improvements since you became the property owner?
 calc.resident.improvements.hint = Improvements are permanent changes that raise the value of a property, like adding extensions or garages. Normal maintenance costs don''t count.
+calc.resident.improvements.helpButton = Show me an example
+calc.resident.improvements.additionalContent.one = Replacing a basic kitchen or bathroom with a luxury version is normally considered an improvement.
+calc.resident.improvements.additionalContent.two = But replacing them with something of a similar standard is normally not an improvement.
+
 
 
 ## Summary messages
