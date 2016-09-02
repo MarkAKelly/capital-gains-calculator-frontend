@@ -29,8 +29,7 @@ import play.api.mvc.RequestHeader
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{summaryPage => messages}
-import common.resident.PrivateResidenceReliefKeys
-import models.resident.properties.{ChargeableGainAnswers, PrivateResidenceReliefModel, ReliefsModel, YourAnswersSummaryModel}
+import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, YourAnswersSummaryModel}
 
 import scala.concurrent.Future
 
@@ -88,8 +87,7 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
         10000,
         0,
         0)
-      lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
-        None, Some(ReliefsModel(false)), None, Some(OtherPropertiesModel(false)),
+      lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)), None, Some(OtherPropertiesModel(false)),
         Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None)
       lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 0, 11100, BigDecimal(0),
         BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
@@ -131,8 +129,7 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
         10000,
         0,
         0)
-      lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
-        None, Some(ReliefsModel(false)), None, Some(OtherPropertiesModel(false)),
+      lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(ReliefsModel(false)), None, Some(OtherPropertiesModel(false)),
         Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None)
       lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 0, 11100,
         BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)

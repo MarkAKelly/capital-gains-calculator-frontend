@@ -22,7 +22,7 @@ import config.AppConfig
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.DeductionsController
-import models.resident.properties.{PrivateResidenceReliefModel, ReliefsModel, YourAnswersSummaryModel}
+import models.resident.properties.{ReliefsModel, YourAnswersSummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.scalatest.mock.MockitoSugar
@@ -53,9 +53,6 @@ class NoPrrReliefsActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     when(mockCalcConnector.calculateRttPropertyGrossGain(Matchers.any())(Matchers.any()))
       .thenReturn(totalGain)
-
-    when(mockCalcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.eq(keystoreKeys.privateResidenceRelief))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(None))
 
     when(mockAppConfig.featureRTTPRREnabled)
       .thenReturn(false)
