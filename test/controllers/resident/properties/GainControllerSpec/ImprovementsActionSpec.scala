@@ -148,7 +148,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
     }
 
-    "a valid form is submitted with a positive gain result and PRR disabled" should {
+    "a valid form is submitted with a positive gain result" should {
       lazy val target = setupTarget(None, summaryModel, BigDecimal(1000), false)
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
       lazy val result = target.submitImprovements(request)
@@ -157,22 +157,8 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
         status(result) shouldBe 303
       }
 
-      "redirect to the reliefs page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/reliefs")
-      }
-    }
-
-    "a valid form is submitted with a positive gain result and PRR enabled" should {
-      lazy val target = setupTarget(None, summaryModel, BigDecimal(1000))
-      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
-      lazy val result = target.submitImprovements(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the PRR page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/private-residence-relief")
+      "redirect to the other-properties page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/other-properties")
       }
     }
 

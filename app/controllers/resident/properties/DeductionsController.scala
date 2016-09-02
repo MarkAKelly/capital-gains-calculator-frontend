@@ -280,13 +280,8 @@ trait DeductionsController extends FeatureLock {
   }
 
   //################# Other Properties Actions #########################
-  def otherPropertiesBackUrl(isClaimingFullPrr: Boolean)(implicit hc: HeaderCarrier): Future[String] = {
-    if (config.featureRTTPRREnabled && isClaimingFullPrr) Future.successful(routes.DeductionsController.privateResidenceRelief().url)
-    else calcConnector.fetchAndGetFormData[ReliefsModel](keystoreKeys.reliefs).flatMap {
-      case Some(ReliefsModel(true)) => Future.successful(routes.DeductionsController.reliefsValue().url)
-      case _ => Future.successful(routes.DeductionsController.reliefs().url)
-    }
-  }
+
+  private val otherPropertiesBackUrl = routes.GainController.improvements().url
 
   val otherProperties = FeatureLockForRTT.async { implicit request =>
 
@@ -298,13 +293,10 @@ trait DeductionsController extends FeatureLock {
     }
 
     for {
-      prr <- calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief)
-      isClaimingFullPrr <- isClaimingFullPRR(prr)
-      backUrl <- otherPropertiesBackUrl(isClaimingFullPrr)
       disposalDate <- getDisposalDate
       disposalDateString <- formatDisposalDate(disposalDate.get)
       taxYear <- calcConnector.getTaxYear(disposalDateString)
-      finalResult <- routeRequest(backUrl, taxYear.get)
+      finalResult <- routeRequest(otherPropertiesBackUrl, taxYear.get)
     } yield finalResult
   }
 
@@ -324,13 +316,10 @@ trait DeductionsController extends FeatureLock {
       )
     }
     for {
-      prr <- calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief)
-      isClaimingFullPrr <- isClaimingFullPRR(prr)
-      backUrl <- otherPropertiesBackUrl(isClaimingFullPrr)
       disposalDate <- getDisposalDate
       disposalDateString <- formatDisposalDate(disposalDate.get)
       taxYear <- calcConnector.getTaxYear(disposalDateString)
-      route <- routeRequest(backUrl, taxYear.get)
+      route <- routeRequest(otherPropertiesBackUrl, taxYear.get)
     } yield route
   }
 

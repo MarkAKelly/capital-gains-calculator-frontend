@@ -18,12 +18,10 @@ package controllers.resident.properties.DeductionsControllerSpec
 
 import assets.MessageLookup.{otherProperties => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
-import common.resident.PrivateResidenceReliefKeys
 import config.AppConfig
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.DeductionsController
-import models.resident.properties.{PrivateResidenceReliefModel, ReliefsModel}
 import models.resident.{DisposalDateModel, OtherPropertiesModel, TaxYearModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -37,11 +35,8 @@ import scala.concurrent.Future
 class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
   def setupTarget(getData: Option[OtherPropertiesModel],
-                  reliefsData: Option[ReliefsModel],
                   disposalDate: Option[DisposalDateModel],
-                  taxYear: Option[TaxYearModel],
-                  prrModel: Option[PrivateResidenceReliefModel],
-                  prrEnabled: Boolean = true): DeductionsController = {
+                  taxYear: Option[TaxYearModel]): DeductionsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockAppConfig = mock[AppConfig]
@@ -49,20 +44,11 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
     when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.eq(keystoreKeys.otherProperties))(Matchers.any(), Matchers.any()))
     .thenReturn(Future.successful(getData))
 
-    when(mockCalcConnector.fetchAndGetFormData[ReliefsModel](Matchers.eq(keystoreKeys.reliefs))(Matchers.any(), Matchers.any()))
-    .thenReturn(Future.successful(reliefsData))
-
     when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(keystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
       .thenReturn(disposalDate)
 
     when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
       .thenReturn(taxYear)
-
-    when(mockCalcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.eq(keystoreKeys.privateResidenceRelief))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(prrModel))
-
-    when(mockAppConfig.featureRTTPRREnabled)
-      .thenReturn(prrEnabled)
 
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -74,10 +60,8 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
     "request has a valid session and no keystore value" should {
 
       lazy val target = setupTarget(None,
-        None,
         Some(DisposalDateModel(10, 10, 2015)),
-        Some(TaxYearModel("2015/16", true, "2015/16")),
-        Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.full)))
+        Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val result = target.otherProperties(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
@@ -93,80 +77,20 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
         Jsoup.parse(bodyOf(result)).title shouldEqual messages.title("2015/16")
       }
 
-      "have a back link to prr page value page" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/private-residence-relief"
+      "have a back link to improvements page" in {
+        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/improvements"
       }
     }
 
     "request has no session" should {
 
       lazy val target = setupTarget(None,
-        None,
         Some(DisposalDateModel(10, 10, 2015)),
-        Some(TaxYearModel("2015/16", true, "2015/16")),
-        None)
+        Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val result = target.otherProperties(fakeRequest)
 
       "return a status of 303" in {
         status(result) shouldBe 303
-      }
-    }
-
-    "reliefs model is populated with 'Yes'" should {
-
-      lazy val target = setupTarget(None,
-        Some(ReliefsModel(true)),
-        Some(DisposalDateModel(10, 10, 2015)),
-        Some(TaxYearModel("2015/16", true, "2015/16")),
-        None)
-      lazy val result = target.otherProperties(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a 200" in {
-        status(result) shouldBe 200
-      }
-
-      "have a back link to reliefs value page" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/reliefs-value"
-      }
-    }
-
-    "private residence relief is disabled" should {
-
-      lazy val target = setupTarget(None,
-        Some(ReliefsModel(true)),
-        Some(DisposalDateModel(10, 10, 2015)),
-        Some(TaxYearModel("2015/16", true, "2015/16")),
-        Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.full)),
-        prrEnabled = false)
-      lazy val result = target.otherProperties(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a 200" in {
-        status(result) shouldBe 200
-      }
-
-      "have a back link to reliefs value page" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/reliefs-value"
-      }
-    }
-
-    "reliefs model is populated with 'No'" should {
-
-      lazy val target = setupTarget(None,
-        Some(ReliefsModel(false)),
-        Some(DisposalDateModel(10, 10, 2015)),
-        Some(TaxYearModel("2015/16", true, "2015/16")),
-        None)
-      lazy val result = target.otherProperties(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a 200" in {
-        status(result) shouldBe 200
-      }
-
-      "have a back link to reliefs page" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/reliefs"
       }
     }
   }
@@ -175,10 +99,8 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
     "a valid form 'Yes' is submitted" should {
 
       lazy val target = setupTarget(None,
-        Some(ReliefsModel(true)),
         Some(DisposalDateModel(10, 10, 2015)),
-        Some(TaxYearModel("2015/16", true, "2015/16")),
-        None)
+        Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val request = fakeRequestToPOSTWithSession(("hasOtherProperties", "Yes"))
       lazy val result = target.submitOtherProperties(request)
 
@@ -193,10 +115,9 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
 
     "a valid form 'No' is submitted" should {
 
-      lazy val target = setupTarget(None, Some(ReliefsModel(true)),
+      lazy val target = setupTarget(None,
         Some(DisposalDateModel(10, 10, 2015)),
-        Some(TaxYearModel("2015/16", true, "2015/16")),
-        None)
+        Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val request = fakeRequestToPOSTWithSession(("hasOtherProperties", "No"))
       lazy val result = target.submitOtherProperties(request)
 
@@ -212,10 +133,8 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
     "an invalid form is submitted" should {
 
       lazy val target = setupTarget(None,
-        Some(ReliefsModel(true)),
         Some(DisposalDateModel(10, 10, 2015)),
-        Some(TaxYearModel("2015/16", true, "2015/16")),
-        None)
+        Some(TaxYearModel("2015/16", true, "2015/16")))
       lazy val request = fakeRequestToPOSTWithSession(("hasOtherProperties", ""))
       lazy val result = target.submitOtherProperties(request)
 
