@@ -311,8 +311,8 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
       "has a numeric output row for personal allowance" which {
 
-        s"should have the question text '${commonMessages.personalAllowance.title("2015/16")}'" in {
-          doc.select("#personalAllowance-question").text shouldBe commonMessages.personalAllowance.title("2015/16")
+        s"should have the question text '${commonMessages.personalAllowance.question("2015/16")}'" in {
+          doc.select("#personalAllowance-question").text shouldBe commonMessages.personalAllowance.question("2015/16")
         }
 
         "should have the value '£0'" in {
