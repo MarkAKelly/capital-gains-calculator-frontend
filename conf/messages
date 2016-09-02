@@ -13,7 +13,7 @@ calc.base.externalLink = (opens in a new window)
 calc.base.undefinedMessage = Undefined message
 calc.base.change = change
 calc.base.nonresident.home = Calculate your Capital Gains Tax
-calc.base.resident.properties.home = Calculate Capital Gains Tax
+calc.base.resident.properties.home = Calculate your Capital Gains Tax
 calc.base.resident.shares.home = Work out the tax for shares you''ve sold
 
 ## Error Summary ##
