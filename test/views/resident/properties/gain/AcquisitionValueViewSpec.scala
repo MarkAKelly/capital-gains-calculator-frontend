@@ -96,8 +96,11 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Fa
 
       "has additional content that" should {
 
-        s"have a bullet point list title of ${messages.bulletListTitle}" in {
+       /* s"have a bullet point list title of ${messages.bulletListTitle}" in {
           doc.select("div.indent p#bullet-list-title").text() shouldEqual messages.bulletListTitle
+        }*/
+        s"have a bullet point list title of ${messages.bulletListTitleOne + messages.bulletListTitleTwo + messages.bulletListTitleThree}" in {
+          doc.select("div.indent p#bullet-list-title").text() shouldEqual (messages.bulletListTitleOne + messages.bulletListTitleTwo+messages.bulletListTitleThree)
         }
 
         s"have a first bullet point of ${messages.bulletListOne}" in {
