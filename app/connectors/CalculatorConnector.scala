@@ -215,10 +215,13 @@ trait CalculatorConnector {
   }
 
   def getPropertyDeductionAnswers(implicit hc: HeaderCarrier): Future[ChargeableGainAnswers] = {
-    val privateResidenceReliefModel = fetchAndGetFormData[resident.properties.PrivateResidenceReliefModel](ResidentPropertyKeys.privateResidenceRelief)
-    val privateResidenceReliefValueModel = fetchAndGetFormData[PrivateResidenceReliefValueModel](ResidentPropertyKeys.prrValue)
-    val reliefsModel = fetchAndGetFormData[ReliefsModel](ResidentPropertyKeys.reliefs)
-    val reliefsValueModel = fetchAndGetFormData[ReliefsValueModel](ResidentPropertyKeys.reliefsValue)
+    //These have been updated as per Mac's suggestion just to return default values for now.
+    val privateResidenceReliefModel = Some(resident.properties.PrivateResidenceReliefModel("None"))
+    val privateResidenceReliefValueModel = None
+    val reliefsModel = Some(ReliefsModel(false))
+    val reliefsValueModel = None
+    //********************************************
+
     val otherPropertiesModel = fetchAndGetFormData[resident.OtherPropertiesModel](ResidentPropertyKeys.otherProperties)
     val allowableLossesModel = fetchAndGetFormData[resident.AllowableLossesModel](ResidentPropertyKeys.allowableLosses)
     val allowableLossesValueModel = fetchAndGetFormData[resident.AllowableLossesValueModel](ResidentPropertyKeys.allowableLossesValue)
@@ -227,10 +230,11 @@ trait CalculatorConnector {
     val annualExemptAmountModel = fetchAndGetFormData[resident.AnnualExemptAmountModel](ResidentPropertyKeys.annualExemptAmount)
 
     for {
-      privateResidenceRelief <- privateResidenceReliefModel
-      privateResidenceReliefValue <- privateResidenceReliefValueModel
-      reliefs <- reliefsModel
-      reliefsValue <- reliefsValueModel
+      //These have been commented out for now as they will be needed later.
+//      privateResidenceRelief <- privateResidenceReliefModel
+//      privateResidenceReliefValue <- privateResidenceReliefValueModel
+//      reliefs <- reliefsModel
+//      reliefsValue <- reliefsValueModel
       otherProperties <- otherPropertiesModel
       allowableLosses <- allowableLossesModel
       allowableLossesValue <- allowableLossesValueModel
@@ -238,10 +242,13 @@ trait CalculatorConnector {
       broughtForwardValue <- broughtForwardValueModel
       annualExemptAmount <- annualExemptAmountModel
     } yield {
-      properties.ChargeableGainAnswers(privateResidenceRelief,
-        privateResidenceReliefValue,
-        reliefs,
-        reliefsValue,
+      properties.ChargeableGainAnswers(
+        //These will need to be swapped back to for-yeilds.
+        privateResidenceReliefModel,
+        privateResidenceReliefValueModel,
+        reliefsModel,
+        reliefsValueModel,
+        //
         otherProperties,
         allowableLosses,
         allowableLossesValue,
