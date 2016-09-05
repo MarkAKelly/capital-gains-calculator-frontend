@@ -48,8 +48,6 @@ class CalculateRequestConstructorSpec extends UnitSpec {
 
       "return a valid url variable string" in {
         val answers = ChargeableGainAnswers(
-          Some(ReliefsModel(false)),
-          None,
           Some(OtherPropertiesModel(false)),
           None,
           None,
@@ -65,8 +63,6 @@ class CalculateRequestConstructorSpec extends UnitSpec {
 
       "return a valid url variable string" in {
         val answers = ChargeableGainAnswers(
-          Some(ReliefsModel(true)),
-          Some(ReliefsValueModel(BigDecimal(1000))),
           Some(OtherPropertiesModel(true)),
           Some(AllowableLossesModel(false)),
           None,
@@ -74,7 +70,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           Some(LossesBroughtForwardValueModel(BigDecimal(2000))),
           Some(AnnualExemptAmountModel(BigDecimal(3000))))
         val result = CalculateRequestConstructor.chargeableGainRequestString(answers, BigDecimal(11100))
-        result shouldBe "&reliefs=1000&broughtForwardLosses=2000&annualExemptAmount=3000"
+        result shouldBe "&broughtForwardLosses=2000&annualExemptAmount=3000"
       }
     }
 
@@ -82,8 +78,6 @@ class CalculateRequestConstructorSpec extends UnitSpec {
 
       "return a valid url variable string" in {
         val answers = ChargeableGainAnswers(
-          Some(ReliefsModel(true)),
-          Some(ReliefsValueModel(BigDecimal(1000))),
           Some(OtherPropertiesModel(true)),
           Some(AllowableLossesModel(true)),
           Some(AllowableLossesValueModel(BigDecimal(1000))),
@@ -91,7 +85,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           Some(LossesBroughtForwardValueModel(BigDecimal(2000))),
           Some(AnnualExemptAmountModel(BigDecimal(3000))))
         val result = CalculateRequestConstructor.chargeableGainRequestString(answers, BigDecimal(11100))
-        result shouldBe "&reliefs=1000&allowableLosses=1000&broughtForwardLosses=2000&annualExemptAmount=11100"
+        result shouldBe "&allowableLosses=1000&broughtForwardLosses=2000&annualExemptAmount=11100"
       }
     }
   }
