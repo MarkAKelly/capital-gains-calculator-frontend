@@ -34,6 +34,7 @@ import forms.resident.properties.ReliefsValueForm._
 import forms.resident.properties.PrivateResidenceReliefForm._
 import forms.resident.properties.PrivateResidenceReliefValueForm._
 import forms.resident.properties.NoPrrReliefsForm
+import forms.resident.properties.PropertyLivedInForm._
 import models.resident.properties._
 import play.api.mvc.Result
 import play.api.data.Form
@@ -683,5 +684,40 @@ trait DeductionsController extends FeatureLock {
       backLink <- annualExemptAmountBackLink(hc)
       route <- routeRequest(maxAEA.get, backLink)
     } yield route
+  }
+
+  //################# Property Lived In Actions #############################
+
+  val propertyLivedIn = FeatureLockForRTT.async {implicit request =>
+
+    val backLink = Some(controllers.resident.properties.GainController.improvements.toString())
+
+    calcConnector.fetchAndGetFormData[PropertyLivedInModel](keystoreKeys.propertyLivedIn).map{
+      case Some(data) => Ok(commonViews.properties.deductions.propertyLivedIn(propertyLivedInForm.fill(data), homeLink, backLink))
+      case _ => Ok(commonViews.properties.deductions.propertyLivedIn(propertyLivedInForm, homeLink, backLink))
+    }
+  }
+
+  val submitPropertyLivedIn = FeatureLockForRTT.async { implicit request =>
+
+    val backLink = Some(controllers.resident.properties.GainController.improvements.toString())
+
+    def errorAction(errors: Form[PropertyLivedInModel]) = Future.successful(BadRequest(commonViews.properties.deductions.propertyLivedIn(
+      errors, homeLink, backLink
+    )))
+
+    def routeRequest(model: PropertyLivedInModel) = {
+      if (model.livedInProperty) Future.successful(Redirect(routes.DeductionsController.privateResidenceRelief()))
+      else Future.successful(Redirect(routes.DeductionsController.otherProperties()))
+    }
+
+    def successAction(model: PropertyLivedInModel) = {
+      for {
+        save <- calcConnector.saveFormData(keystoreKeys.propertyLivedIn, model)
+        route <- routeRequest(model)
+      } yield route
+    }
+
+    propertyLivedInForm.bindFromRequest().fold(errorAction, successAction)
   }
 }

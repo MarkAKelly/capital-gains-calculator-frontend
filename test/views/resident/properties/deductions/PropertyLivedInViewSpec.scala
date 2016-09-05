@@ -21,12 +21,14 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{deductions => views}
 import assets.MessageLookup.{propertyLivedIn => messages}
+import assets.{MessageLookup => commonMessages}
+import forms.resident.properties.PropertyLivedInForm._
 
 class PropertyLivedInViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Property lived in view with an empty form" should {
 
-    lazy val view = views.propertyLivedIn("home-link", Some("back-link"))(fakeRequest)
+    lazy val view = views.propertyLivedIn(propertyLivedInForm, "home-link", Some("back-link"))(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -37,8 +39,42 @@ class PropertyLivedInViewSpec extends UnitSpec with WithFakeApplication with Fak
       doc.title shouldBe messages.title
     }
 
-    s"have the text ${messages.title} as the h1 tag" in {
-      doc.select("h1").text shouldEqual messages.title
+    "have a H1 tag that" should {
+
+      lazy val h1Tag = doc.select("h1")
+
+      s"have the page heading '${messages.title}'" in {
+        h1Tag.text shouldBe messages.title
+      }
+
+      "have the heading-large class" in {
+        h1Tag.hasClass("heading-large") shouldBe true
+      }
     }
+
+    s"have the home link to 'home'" in {
+      doc.select("#homeNavHref").attr("href") shouldEqual "home-link"
+    }
+
+    "have a back button" which {
+
+      lazy val backLink = doc.select("a#back-link")
+
+      "has the correct back link text" in {
+        backLink.text shouldBe commonMessages.calcBaseBack
+      }
+
+      "has the back-link class" in {
+        backLink.hasClass("back-link") shouldBe true
+      }
+
+      "has a back link to 'back'" in {
+        backLink.attr("href") shouldBe "back-link"
+      }
+    }
+
+//    "render a form tag with a submit action" in {
+//      doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/property-lived-in"
+//    }
   }
 }
