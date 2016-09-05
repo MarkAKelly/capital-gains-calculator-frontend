@@ -18,237 +18,237 @@ package routes.properties
 
 import org.scalatest._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import controllers.resident.properties.routes._
 
 class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
 
   "The URL for the disposal date Action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/disposal-date" in {
-      val path = controllers.resident.properties.routes.GainController.disposalDate().toString()
+      val path = GainController.disposalDate().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/disposal-date"
     }
   }
 
   "The URL for the submit disposal date Action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/disposal-date" in {
-      val path = controllers.resident.properties.routes.GainController.submitDisposalDate().toString()
+      val path = GainController.submitDisposalDate().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/disposal-date"
     }
   }
 
   "The URL for the outside tax years Action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/outside-tax-years" in {
-      val path = controllers.resident.properties.routes.GainController.outsideTaxYears().toString
+      val path = GainController.outsideTaxYears().toString
       path shouldEqual "/calculate-your-capital-gains/resident/properties/outside-tax-years"
     }
   }
 
   "The URL for the disposal value or market value Action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/disposal-value" in {
-      val path = controllers.resident.properties.routes.GainController.disposalValue().toString()
+      val path = GainController.disposalValue().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/disposal-value"
     }
   }
 
   "The URL for the submit disposal value Action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/disposal-value" in {
-      val path = controllers.resident.properties.routes.GainController.submitDisposalValue().toString()
+      val path = GainController.submitDisposalValue().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/disposal-value"
     }
   }
 
   "The URL for the acquisition value or market value Action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/acquisition-value" in {
-      val path = controllers.resident.properties.routes.GainController.acquisitionValue().toString()
+      val path = GainController.acquisitionValue().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/acquisition-value"
     }
   }
 
   "The URL for the submit acquisition value or market value Action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/acquisition-value" in {
-      val path = controllers.resident.properties.routes.GainController.submitAcquisitionValue().toString()
+      val path = GainController.submitAcquisitionValue().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/acquisition-value"
     }
   }
 
   "The URL for the disposal costs action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/disposal-costs" in {
-      val path = controllers.resident.properties.routes.GainController.disposalCosts().toString()
+      val path = GainController.disposalCosts().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/disposal-costs"
     }
   }
 
   "The URL for the acquisition costs action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/acquisition-costs" in {
-      val path = controllers.resident.properties.routes.GainController.acquisitionCosts().toString()
+      val path = GainController.acquisitionCosts().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/acquisition-costs"
     }
   }
 
   "The URL for the submit acquisition costs action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/acquisition-costs" in {
-      val path = controllers.resident.properties.routes.GainController.acquisitionCosts().toString()
+      val path = GainController.acquisitionCosts().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/acquisition-costs"
     }
   }
 
   "The URL for the improvements Action" should {
     s"be equal to /calculate-your-capital-gains/resident/properties/improvements" in {
-      val path = controllers.resident.properties.routes.GainController.improvements().toString()
+      val path = GainController.improvements().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/improvements"
     }
   }
 
   "The URL for the submit disposal costs action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/disposal-costs" in {
-      val path = controllers.resident.properties.routes.GainController.disposalCosts().toString()
+      val path = GainController.disposalCosts().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/disposal-costs"
     }
   }
 
   "The URL for the summary action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/summary" in {
-      val path = controllers.resident.properties.routes.SummaryController.summary().toString()
+      val path = SummaryController.summary().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/summary"
     }
   }
 
-
   "The URL for the reliefs action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/reliefs" in {
-      val path = controllers.resident.properties.routes.DeductionsController.reliefs().toString()
+      val path = DeductionsController.reliefs().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/reliefs"
     }
   }
 
   "The URL for the submitReliefs action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/reliefs" in {
-      val path = controllers.resident.properties.routes.DeductionsController.submitReliefs().toString()
+      val path = DeductionsController.submitReliefs().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/reliefs"
     }
   }
 
   "The URL for the reliefs input action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/reliefs-value" in {
-      val path = controllers.resident.properties.routes.DeductionsController.reliefsValue().toString()
+      val path = DeductionsController.reliefsValue().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/reliefs-value"
     }
   }
 
   "The URL for the other properties action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/other-properties" in {
-      val path = controllers.resident.properties.routes.DeductionsController.otherProperties().toString()
+      val path = DeductionsController.otherProperties().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/other-properties"
     }
   }
 
   "The URL for the submit other properties action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/other-properties" in {
-      val path = controllers.resident.properties.routes.DeductionsController.submitOtherProperties().toString()
+      val path = DeductionsController.submitOtherProperties().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/other-properties"
     }
   }
 
   "The URL for the allowable losses value action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/allowable-losses-value" in {
-      val path = controllers.resident.properties.routes.DeductionsController.allowableLossesValue().toString()
+      val path = DeductionsController.allowableLossesValue().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/allowable-losses-value"
     }
   }
 
   "The URL for the submit allowable losses value action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/allowable-losses-value" in {
-      val path = controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue().toString
+      val path = DeductionsController.submitAllowableLossesValue().toString
       path shouldEqual "/calculate-your-capital-gains/resident/properties/allowable-losses-value"
     }
   }
 
   "The URL for the lossesBroughtForward action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/losses-brought-forward" in {
-      val path = controllers.resident.properties.routes.DeductionsController.lossesBroughtForward().toString()
+      val path = DeductionsController.lossesBroughtForward().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/losses-brought-forward"
     }
   }
 
   "The URL for the annualExemptAmount action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/annual-exempt-amount" in {
-      val path = controllers.resident.properties.routes.DeductionsController.annualExemptAmount().toString()
+      val path = DeductionsController.annualExemptAmount().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/annual-exempt-amount"
     }
   }
 
   "The URL for the submit annualExemptAmount action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/annual-exempt-amount" in {
-      val path = controllers.resident.properties.routes.DeductionsController.submitAnnualExemptAmount().toString()
+      val path = DeductionsController.submitAnnualExemptAmount().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/annual-exempt-amount"
     }
   }
 
   "The URL for the allowableLosses action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/allowable-losses" in {
-      val path = controllers.resident.properties.routes.DeductionsController.allowableLosses().toString()
+      val path = DeductionsController.allowableLosses().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/allowable-losses"
     }
   }
 
   "The URL for the lossesBroughtForwardValue action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/losses-brought-forward-value" in {
-      val path = controllers.resident.properties.routes.DeductionsController.lossesBroughtForwardValue().toString()
+      val path = DeductionsController.lossesBroughtForwardValue().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/losses-brought-forward-value"
     }
   }
 
   "The URL for the submitLossesBroughtForwardValue action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/losses-brought-forward-value" in {
-      val path = controllers.resident.properties.routes.DeductionsController.submitLossesBroughtForwardValue().toString()
+      val path = DeductionsController.submitLossesBroughtForwardValue().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/losses-brought-forward-value"
     }
   }
 
   "The URL for the previousTaxableGains action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/previous-taxable-gains" in {
-      val path = controllers.resident.properties.routes.IncomeController.previousTaxableGains().toString()
+      val path = IncomeController.previousTaxableGains().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/previous-taxable-gains"
     }
   }
 
   "The URL for the currentIncome action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/current-income" in {
-      val path = controllers.resident.properties.routes.IncomeController.currentIncome().toString()
+      val path = IncomeController.currentIncome().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/current-income"
     }
   }
 
   "The URL for the personalAllowance action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/personal-allowance" in {
-      val path = controllers.resident.properties.routes.IncomeController.personalAllowance().toString()
+      val path = IncomeController.personalAllowance().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/personal-allowance"
     }
   }
 
   "The URL for the submit personalAllowance action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/personal-allowance" in {
-      val path = controllers.resident.properties.routes.IncomeController.submitPersonalAllowance().toString()
+      val path = IncomeController.submitPersonalAllowance().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/personal-allowance"
     }
   }
 
   "The URL for the gainSummaryReport action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/gain-report" in {
-      val path = controllers.resident.properties.routes.ReportController.gainSummaryReport().toString()
+      val path = ReportController.gainSummaryReport().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/gain-report"
     }
   }
 
   "The URL for the deductionsReport action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/deductions-report" in {
-      val path = controllers.resident.properties.routes.ReportController.deductionsReport().toString()
+      val path = ReportController.deductionsReport().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/deductions-report"
     }
   }
 
   "The URL for the finalSummaryReport action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/final-report" in {
-      val path = controllers.resident.properties.routes.ReportController.finalSummaryReport().toString()
+      val path = ReportController.finalSummaryReport().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/final-report"
     }
   }
