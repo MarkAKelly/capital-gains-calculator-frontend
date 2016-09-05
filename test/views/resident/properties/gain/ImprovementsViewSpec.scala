@@ -51,10 +51,6 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
     }
 
-    "have the correct note" in {
-      val note = doc.select(".panel.panel-border-wide>p")
-      note.text shouldBe messages.note
-    }
 
     "have the correct label" in {
       val label = doc.select("label")
@@ -69,6 +65,19 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     "have the correct hint" in {
       val hint = doc.select("label .form-hint")
       hint.text shouldBe messages.hint
+    }
+
+    s"have a drop down button with the text ${messages.improvementsHelpButton}" in {
+      doc.body.getElementsByTag("summary").attr("role") shouldBe "button"
+      doc.body.getElementsByTag("summary").text shouldEqual messages.improvementsHelpButton
+    }
+
+    s"have an additional line help line one ${messages.improvementsAdditionalContentOne}" in {
+      doc.body.getElementsByTag("p").text() should include(messages.improvementsAdditionalContentOne)
+    }
+
+    s"have an additional line help line two ${messages.improvementsAdditionalContentTwo}" in {
+      doc.body.getElementsByTag("p").text() should include(messages.improvementsAdditionalContentTwo)
     }
 
     "not display an error summary message for the amount" in {

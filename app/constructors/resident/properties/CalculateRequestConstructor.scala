@@ -17,9 +17,8 @@
 package constructors.resident.properties
 
 import common.Dates._
-import common.resident.PrivateResidenceReliefKeys
 import models.resident._
-import models.resident.properties.{ChargeableGainAnswers, PrivateResidenceReliefModel, YourAnswersSummaryModel}
+import models.resident.properties.{ChargeableGainAnswers, YourAnswersSummaryModel}
 
 object CalculateRequestConstructor {
 
@@ -33,8 +32,7 @@ object CalculateRequestConstructor {
   }
 
   def chargeableGainRequestString (answers: ChargeableGainAnswers, maxAEA: BigDecimal): String = {
-    s"${if (!answers.privateResidenceReliefModel.getOrElse(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)).prrClaiming
-      .equals(PrivateResidenceReliefKeys.full) && answers.reliefsModel.get.isClaiming)
+    s"${if (answers.reliefsModel.get.isClaiming)
       s"&reliefs=${answers.reliefsValueModel.get.amount}"
     else ""}" +
     s"${if (answers.otherPropertiesModel.get.hasOtherProperties && answers.allowableLossesModel.get.isClaiming)
@@ -45,13 +43,7 @@ object CalculateRequestConstructor {
     else ""}" +
     s"&annualExemptAmount=${if (isUsingAnnualExemptAmount(answers.otherPropertiesModel, answers.allowableLossesModel, answers.allowableLossesValueModel)) {
       answers.annualExemptAmountModel.get.amount}
-    else maxAEA}" +
-    s"&prrType=${
-      if (config.ApplicationConfig.featureRTTPRREnabled)answers.privateResidenceReliefModel.get.prrClaiming
-    else PrivateResidenceReliefKeys.none}" +
-    s"${if (config.ApplicationConfig.featureRTTPRREnabled &&answers.privateResidenceReliefModel.get.prrClaiming.equals(PrivateResidenceReliefKeys.part)) {
-      s"&prrValue=${answers.privateResidenceReliefValueModel.get.amount}"
-    } else ""}"
+    else maxAEA}"
   }
 
   def incomeAnswersRequestString (deductionsAnswers: ChargeableGainAnswers, answers: IncomeAnswersModel): String ={
