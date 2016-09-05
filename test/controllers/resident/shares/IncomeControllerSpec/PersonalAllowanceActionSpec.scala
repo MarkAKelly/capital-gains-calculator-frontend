@@ -84,7 +84,7 @@ class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with
       }
 
       "display the Personal Allowance view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.title("2015/16")
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.question("2015/16")
       }
     }
 
@@ -104,7 +104,7 @@ class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with
       }
 
       "display the Personal Allowance view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.inYearTitle
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.inYearQuestion
       }
     }
   }
@@ -158,7 +158,7 @@ class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with
       }
 
       "render the personal allowance page" in {
-        doc.title() shouldEqual messages.title("2015/16")
+        doc.title() shouldEqual messages.question("2015/16")
       }
     }
   }

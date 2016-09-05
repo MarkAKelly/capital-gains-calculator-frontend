@@ -43,8 +43,8 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
         doc.charset().toString shouldBe "UTF-8"
       }
 
-      s"have a title ${messages.title("2015/16")}" in {
-        doc.title() shouldBe messages.title("2015/16")
+      s"have a title ${messages.question("2015/16")}" in {
+        doc.title() shouldBe messages.question("2015/16")
       }
 
       "have a dynamic navTitle of navTitle" in {
@@ -73,8 +73,8 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
       "have a H1 tag that" should {
         lazy val h1Tag = doc.select("H1")
 
-        s"have the page heading '${messages.title("2015/16")}'" in {
-          h1Tag.text shouldBe messages.title("2015/16")
+        s"have the page heading '${messages.question("2015/16")}'" in {
+          h1Tag.text shouldBe messages.question("2015/16")
         }
 
         "have the heading-large class" in {
@@ -164,22 +164,20 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
       lazy val doc = Jsoup.parse(view.body)
       lazy val h1Tag = doc.select("H1")
 
-      s"have a title ${messages.inYearTitle}" in {
-        doc.title() shouldBe messages.inYearTitle
+      s"have a title ${messages.inYearQuestion}" in {
+        doc.title() shouldBe messages.inYearQuestion
       }
 
-      s"have the page heading '${messages.inYearTitle}'" in {
-        h1Tag.text shouldBe messages.inYearTitle
+      s"have the page heading '${messages.inYearQuestion}'" in {
+        h1Tag.text shouldBe messages.inYearQuestion
       }
 
       s"have a legend for an input with text ${messages.inYearQuestion}" in {
         doc.body.getElementsByClass("heading-large").text() shouldEqual messages.inYearQuestion
       }
 
-      "has help text that" should {
-        s"have the text ${messages.help("11,000")}" in {
-          doc.body().select("div.form-group span.form-hint").text() shouldBe messages.help("11,000")
-        }
+      s"have the help text '${messages.inYearHelp("11,000")}'" in {
+        doc.body().select("div.form-group span.form-hint").text() shouldBe messages.inYearHelp("11,000")
       }
     }
 
@@ -191,22 +189,20 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
       lazy val doc = Jsoup.parse(view.body)
       lazy val h1Tag = doc.select("H1")
 
-      s"have a title ${messages.title("2017/18")}" in {
-        doc.title() shouldBe messages.title("2017/18")
+      s"have a title ${messages.question("2017/18")}" in {
+        doc.title() shouldBe messages.question("2017/18")
       }
 
-      s"have the page heading '${messages.title("2017/18")}'" in {
-        h1Tag.text shouldBe messages.title("2017/18")
+      s"have the page heading '${messages.question("2017/18")}'" in {
+        h1Tag.text shouldBe messages.question("2017/18")
       }
 
       s"have a legend for an input with text ${messages.question("2017/18")}" in {
         doc.body.getElementsByClass("heading-large").text() shouldEqual messages.question("2017/18")
       }
 
-      "has help text that" should {
-        s"have the text ${messages.help("11,000")}" in {
-          doc.body().select("div.form-group span.form-hint").text() shouldBe messages.help("11,000")
-        }
+      s"have the help text '${messages.help("11,000")}'" in {
+        doc.body().select("div.form-group span.form-hint").text() shouldBe messages.help("11,000")
       }
     }
 
