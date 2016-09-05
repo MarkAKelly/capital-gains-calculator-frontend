@@ -37,8 +37,6 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       BigDecimal(10000),
       BigDecimal(30000))
     lazy val deductionAnswers = ChargeableGainAnswers(
-      Some(ReliefsModel(false)),
-      None,
       Some(OtherPropertiesModel(false)),
       None,
       None,
@@ -314,29 +312,6 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         }
       }
 
-      "has an option output row for tax reliefs" which {
-
-        s"should have the question text '${commonMessages.reliefs.questionSummary}'" in {
-          doc.select("#reliefs-question").text shouldBe commonMessages.reliefs.questionSummary
-        }
-
-        "should have the value 'No'" in {
-          doc.select("#reliefs-option span.bold-medium").text shouldBe "No"
-        }
-
-        s"should have a change link to ${routes.DeductionsController.reliefs().url}" in {
-          doc.select("#reliefs-option a").attr("href") shouldBe routes.DeductionsController.reliefs().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#reliefs-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.reliefs.question}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#reliefs-option a span.visuallyhidden").text shouldBe commonMessages.reliefs.question
-        }
-      }
-
       "has an option output row for other properties" which {
 
         s"should have the question text '${commonMessages.otherProperties.title("2015/16")}'" in {
@@ -413,8 +388,6 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       BigDecimal(10000),
       BigDecimal(30000))
     lazy val deductionAnswers = ChargeableGainAnswers(
-      Some(ReliefsModel(true)),
-      Some(ReliefsValueModel(BigDecimal(50000))),
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
       Some(AllowableLossesValueModel(10000)),
@@ -618,44 +591,6 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         }
       }
 
-      "has an option output row for tax reliefs" which {
-
-        s"should have the question text '${commonMessages.reliefs.questionSummary}'" in {
-          doc.select("#reliefs-question").text shouldBe commonMessages.reliefs.questionSummary
-        }
-
-        "should have the value 'Yes'" in {
-          doc.select("#reliefs-option span.bold-medium").text shouldBe "Yes"
-        }
-
-        s"should have a change link to ${routes.DeductionsController.reliefs().url}" in {
-          doc.select("#reliefs-option a").attr("href") shouldBe routes.DeductionsController.reliefs().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#reliefs-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.reliefs.question}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#reliefs-option a span.visuallyhidden").text shouldBe commonMessages.reliefs.question
-        }
-      }
-
-      "has a numeric output row for tax relief value" which {
-
-        s"should have the question text '${commonMessages.reliefsValue.title("50,000")}'" in {
-          doc.select("#reliefsValue-question").text shouldBe commonMessages.reliefsValue.title("50,000")
-        }
-
-        "should have the value '£50,000'" in {
-          doc.select("#reliefsValue-amount span.bold-medium").text shouldBe "£50,000"
-        }
-
-        s"should have a change link to ${routes.DeductionsController.reliefsValue().url}" in {
-          doc.select("#reliefsValue-amount a").attr("href") shouldBe routes.DeductionsController.reliefsValue().url
-        }
-      }
-
       "has an option output row for other properties" which {
 
         s"should have the question text '${commonMessages.otherProperties.title("2013/14")}'" in {
@@ -786,8 +721,6 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       BigDecimal(10000),
       BigDecimal(30000))
     lazy val deductionAnswers = ChargeableGainAnswers(
-      Some(ReliefsModel(true)),
-      Some(ReliefsValueModel(BigDecimal(50000))),
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
       Some(AllowableLossesValueModel(10000)),
@@ -914,8 +847,6 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       BigDecimal(0),
       BigDecimal(0))
     lazy val deductionAnswers = ChargeableGainAnswers(
-      Some(ReliefsModel(true)),
-      Some(ReliefsValueModel(BigDecimal(100000))),
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
       Some(AllowableLossesValueModel(0)),
@@ -1018,8 +949,6 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       BigDecimal(10000),
       BigDecimal(30000))
     lazy val deductionAnswers = ChargeableGainAnswers(
-      Some(ReliefsModel(true)),
-      Some(ReliefsValueModel(BigDecimal(50000))),
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
       Some(AllowableLossesValueModel(10000)),
