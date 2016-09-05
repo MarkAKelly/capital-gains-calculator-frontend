@@ -17,7 +17,7 @@
 package controllers.resident.properties
 
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
-import common.resident.{JourneyKeys, PrivateResidenceReliefKeys => prrKeys}
+import common.resident.JourneyKeys
 import config.{AppConfig, ApplicationConfig}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
@@ -31,8 +31,6 @@ import forms.resident.AnnualExemptAmountForm._
 import forms.resident.OtherPropertiesForm._
 import forms.resident.properties.ReliefsForm._
 import forms.resident.properties.ReliefsValueForm._
-import forms.resident.properties.PrivateResidenceReliefForm._
-import forms.resident.properties.PrivateResidenceReliefValueForm._
 import forms.resident.properties.NoPrrReliefsForm
 import models.resident.properties._
 import play.api.mvc.Result
@@ -68,144 +66,38 @@ trait DeductionsController extends FeatureLock {
 
   def answerSummary(hc: HeaderCarrier): Future[YourAnswersSummaryModel] = calcConnector.getPropertyGainAnswers(hc)
 
-  def isClaimingPartPRR(prr: Option[PrivateResidenceReliefModel]): Future[Boolean] = {
-    prr match {
-      case Some(PrivateResidenceReliefModel(prrKeys.part)) => Future.successful(true)
-      case _ => Future.successful(false)
-    }
-  }
-
-  def isClaimingFullPRR(prr: Option[PrivateResidenceReliefModel]): Future[Boolean] = {
-    prr match {
-      case Some(PrivateResidenceReliefModel(prrKeys.full)) => Future.successful(true)
-      case _ => Future.successful(false)
-    }
-  }
-
   override val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
   override val sessionTimeoutUrl = homeLink
 
   //########## Private Residence Relief Actions ##############
 
-  val prrBackLink = Some(routes.GainController.improvements().url)
+  //########## Private Residence Relief Value Actions ##############
 
-  val privateResidenceRelief = FeatureLockForPRR.async { implicit request =>
-    calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief).map {
-      case Some(data) => Ok(views.privateResidenceRelief(privateResidenceReliefForm.fill(data), homeLink, prrBackLink))
-      case None => Ok(views.privateResidenceRelief(privateResidenceReliefForm, homeLink, prrBackLink))
-    }
-  }
-
-  val submitPrivateResidenceRelief = FeatureLockForPRR.async { implicit request =>
-
-    def errorAction(form : Form[PrivateResidenceReliefModel]) = {
-      Future.successful(BadRequest(views.privateResidenceRelief(form, homeLink, prrBackLink)))
-    }
-
-    def successAction(model : PrivateResidenceReliefModel) = {
-      for {
-        save <- calcConnector.saveFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief, model)
-        route <- routeRequest(model)
-      } yield route
-    }
-
-    def routeRequest(data : PrivateResidenceReliefModel): Future[Result] = {
-      data.prrClaiming match {
-        case "Full" => Future.successful(Redirect(routes.DeductionsController.otherProperties()))
-        case "Part" => Future.successful(Redirect(routes.DeductionsController.privateResidenceReliefValue()))
-        case "None" => Future.successful(Redirect(routes.DeductionsController.reliefs()))
+  //################# Reliefs Actions ########################
+  val reliefs = FeatureLockForRTT.async { implicit request =>
+    if (config.featureRTTPRREnabled) {
+      calcConnector.fetchAndGetFormData[ReliefsModel](keystoreKeys.reliefs).map {
+        case Some(data) => Ok(views.reliefs(reliefsForm().fill(data), homeLink, false, Some(routes.GainController.improvements().url)))
+        case None => Ok(views.reliefs(reliefsForm(), homeLink, false, Some(routes.GainController.improvements().url)))
       }
     }
-
-    privateResidenceReliefForm.bindFromRequest.fold(
-      errors => errorAction(errors),
-      success => successAction(success)
-    )
-  }
-
-  //########## Private Residence Relief Actions ##############
-  val privateResidenceReliefValue = FeatureLockForPRR.async { implicit request =>
-
-    def routeRequest(totalGain: BigDecimal): Future[Result] = {
-      calcConnector.fetchAndGetFormData[PrivateResidenceReliefValueModel](keystoreKeys.prrValue).map {
-        case Some(data) => Ok(views.privateResidenceReliefValue(privateResidenceReliefValueForm.fill(data), totalGain, homeLink))
-        case None => Ok(views.privateResidenceReliefValue(privateResidenceReliefValueForm, totalGain, homeLink))
-      }
-    }
-
-    for {
-      answerSummary <- answerSummary(hc)
-      totalGain <- totalGain(answerSummary, hc)
-      route <- routeRequest(totalGain)
-    } yield route
-  }
-
-  val submitPrivateResidenceReliefValue = FeatureLockForPRR.async { implicit request =>
-
-    def errorAction(form: Form[PrivateResidenceReliefValueModel]) = {
+    else {
       for {
         answerSummary <- answerSummary(hc)
         totalGain <- totalGain(answerSummary, hc)
-      } yield BadRequest(views.privateResidenceReliefValue(form, totalGain, homeLink))
-    }
-
-    def successAction(model: PrivateResidenceReliefValueModel) = {
-      calcConnector.saveFormData[PrivateResidenceReliefValueModel](keystoreKeys.prrValue, model)
-      Future.successful(Redirect(routes.DeductionsController.reliefs()))
-    }
-
-    privateResidenceReliefValueForm.bindFromRequest.fold(
-      errors => errorAction(errors),
-      success => successAction(success)
-    )
-  }
-
-  //################# Reliefs Actions ########################
-  def reliefsBackLink(isClaimingPartPRR: Boolean): Future[Option[String]] = {
-    if (!config.featureRTTPRREnabled) Future.successful(Some(controllers.resident.properties.routes.GainController.improvements().url))
-    else if (isClaimingPartPRR) Future.successful(Some(controllers.resident.properties.routes.DeductionsController.privateResidenceReliefValue().url))
-    else Future.successful(Some(controllers.resident.properties.routes.DeductionsController.privateResidenceRelief().url))
-  }
-
-  val reliefs = FeatureLockForRTT.async { implicit request =>
-
-    def routeRequest(isClaimingPartPRR: Boolean, backLink: Option[String]) = {
-      if (config.featureRTTPRREnabled) {
-        calcConnector.fetchAndGetFormData[ReliefsModel](keystoreKeys.reliefs).map {
-          case Some(data) => Ok(views.reliefs(reliefsForm().fill(data), homeLink, isClaimingPartPRR, backLink))
-          case None => Ok(views.reliefs(reliefsForm(), homeLink, isClaimingPartPRR, backLink))
+        route <- calcConnector.fetchAndGetFormData[ReliefsModel](keystoreKeys.reliefs).map {
+          case Some(data) => Ok(views.noPrrReliefs(NoPrrReliefsForm.reliefsForm(totalGain).fill(data), totalGain, homeLink))
+          case None => Ok(views.noPrrReliefs(NoPrrReliefsForm.reliefsForm(totalGain), totalGain, homeLink))
         }
-      }
-      else {
-        for {
-          answerSummary <- answerSummary(hc)
-          totalGain <- totalGain(answerSummary, hc)
-          route <- calcConnector.fetchAndGetFormData[ReliefsModel](keystoreKeys.reliefs).map {
-            case Some(data) => Ok(views.noPrrReliefs(NoPrrReliefsForm.reliefsForm(totalGain).fill(data), totalGain, homeLink))
-            case None => Ok(views.noPrrReliefs(NoPrrReliefsForm.reliefsForm(totalGain), totalGain, homeLink))
-          }
-        } yield route
-      }
+      } yield route
     }
-
-    for {
-      prr <- calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief)
-      isClaimingPartPRR <- isClaimingPartPRR(prr)
-      backLink <- reliefsBackLink(isClaimingPartPRR)
-      route <- routeRequest(isClaimingPartPRR, backLink)
-    } yield route
   }
 
   val submitReliefs = FeatureLockForRTT.async { implicit request =>
 
     def errorAction(form: Form[ReliefsModel]) = {
       if (config.featureRTTPRREnabled) {
-        for {
-          prr <- calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief)
-          isClaimingPartPRR <- isClaimingPartPRR(prr)
-          backLink <- reliefsBackLink(isClaimingPartPRR)
-          route <- Future.successful(BadRequest(views.reliefs(form, homeLink, isClaimingPartPRR, backLink)))
-        } yield route
+        Future.successful(BadRequest(views.reliefs(form, homeLink, false, Some(routes.GainController.improvements().url))))
       }
       else {
         for {
