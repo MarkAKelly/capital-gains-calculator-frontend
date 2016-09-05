@@ -7,10 +7,8 @@
 @(improvementsForm : Form[ImprovementsModel])(implicit request: Request[_])
 
 @hiddenHelpTextContent = {
-<p>@Messages("calc.resident.improvements.additionalContent.one")<br />
-    <br />
-    @Messages("calc.resident.improvements.additionalContent.two")
-</p>
+    <p>@Messages("calc.resident.improvements.additionalContent.one")</p>
+    <p>@Messages("calc.resident.improvements.additionalContent.two")</p>
 }
 
 @resident_properties_main_template(title = Messages("calc.resident.improvements.title"), backLink = Some(controllers.resident.properties.routes.GainController.acquisitionCosts().toString)) {
