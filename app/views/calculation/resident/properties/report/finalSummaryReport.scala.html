@@ -10,7 +10,6 @@
 @import controllers.resident.properties.routes.{DeductionsController => deductionRoutes}
 @import controllers.resident.properties.routes.{IncomeController => incomeRoutes}
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
-@import common.resident.PrivateResidenceReliefKeys
 @import config.ApplicationConfig
 
 @(gainAnswers: YourAnswersSummaryModel, deductionAnswers: ChargeableGainAnswers, incomeAnswers: IncomeAnswersModel, result: TotalGainAndTaxOwedModel, taxYear: TaxYearModel)(implicit request: Request[_])
@@ -97,21 +96,8 @@
         @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),gainAnswers.acquisitionValue,None)
         @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),gainAnswers.acquisitionCosts,None)
         @summaryNumericRowHelper("improvements",Messages("calc.resident.improvements.title"),gainAnswers.improvements,None)
-        @{if (ApplicationConfig.featureRTTPRREnabled)
-            summaryTextRowHelper("prr",Messages("calc.resident.properties.privateResidenceRelief.title"),
-                deductionAnswers.privateResidenceReliefModel.get.prrClaiming match {
-                    case "Full" => Messages("calc.resident.properties.privateResidenceRelief.fullLabel")
-                    case "Part" => Messages("calc.resident.properties.privateResidenceRelief.partLabel")
-                    case _ => Messages("calc.resident.properties.privateResidenceRelief.noneLabel")
-                },
-                None)
-        }
-        @{if (ApplicationConfig.featureRTTPRREnabled && deductionAnswers.privateResidenceReliefModel.get.prrClaiming.equals(PrivateResidenceReliefKeys.part))
-            summaryNumericRowHelper("prrValue", Messages("calc.resident.prrValue.title", MoneyPounds(result.gain, 0).quantity),
-            deductionAnswers.privateResidenceReliefValueModel.get.amount, None)}
-        @{if (!deductionAnswers.privateResidenceReliefModel.equals(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.full))))
-            summaryOptionRowHelper("reliefs",Messages("calc.resident.reliefs.title"),deductionAnswers.reliefsModel.get.isClaiming, None)}
-        @{if (!deductionAnswers.privateResidenceReliefModel.equals(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.full))) && deductionAnswers.reliefsModel.get.isClaiming)
+        @summaryOptionRowHelper("reliefs",Messages("calc.resident.reliefs.title"),deductionAnswers.reliefsModel.get.isClaiming, None)
+        @{if (deductionAnswers.reliefsModel.get.isClaiming)
             summaryNumericRowHelper("reliefsValue",Messages("calc.resident.reliefsValue.title", MoneyPounds(result.gain, 0).quantity),deductionAnswers.reliefsValueModel.get.amount,None)}
         @summaryOptionRowHelper("otherProperties",Messages("calc.resident.otherProperties.title",
         taxYear.taxYearSupplied),deductionAnswers.otherPropertiesModel.get.hasOtherProperties,None)
@@ -138,8 +124,8 @@
         "2016/17"){Messages("calc.resident.currentIncome.questionCurrentYear")}else{Messages("calc.resident.currentIncome.question",
         taxYear.taxYearSupplied)},incomeAnswers.currentIncomeModel.get.amount,None)
         @summaryNumericRowHelper("personalAllowance",
-        {if(taxYear.taxYearSupplied == "2016/17") {Messages("calc.resident.personalAllowance.currentYearTitle")}
-        else {Messages("calc.resident.personalAllowance.title", taxYear.taxYearSupplied)}},
+        {if(taxYear.taxYearSupplied == "2016/17") {Messages("calc.resident.personalAllowance.currentYearQuestion")}
+        else {Messages("calc.resident.personalAllowance.question", taxYear.taxYearSupplied)}},
         incomeAnswers.personalAllowanceModel.get.amount,None)
     </section>
 </div>

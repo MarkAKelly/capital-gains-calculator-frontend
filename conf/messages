@@ -13,7 +13,7 @@ calc.base.externalLink = (opens in a new window)
 calc.base.undefinedMessage = Undefined message
 calc.base.change = change
 calc.base.nonresident.home = Calculate your Capital Gains Tax
-calc.base.resident.properties.home = Work out the tax for a property you''ve sold
+calc.base.resident.properties.home = Calculate your Capital Gains Tax
 calc.base.resident.shares.home = Work out the tax for shares you''ve sold
 
 ## Error Summary ##
@@ -187,7 +187,9 @@ nocgt.sidebar.linkone = Capital Gains Tax for non-residents
 calc.disposalValue.question = How much did you sell or give away the property for?
 calc.disposalValue.errorNegative = Enter a positive number for the amount you sold the property for
 calc.disposalValue.errorDecimalPlaces = The amount you sold the property for has too many numbers after the decimal point
-calc.disposalValue.bullet.title = Put the market value of the property instead if you:
+calc.disposalValue.bullet.titleOne = Put the
+calc.disposalValue.bullet.titleTwo = market value
+calc.disposalValue.bullet.titleThree = of the property instead if you:
 calc.disposalValue.bullet.one = gave it away as a gift
 calc.disposalValue.bullet.two = sold it to a relative, business partner or
 calc.disposalValue.bullet.two.link = someone else you''re connected to
@@ -344,9 +346,12 @@ calc.resident.acquisitionCosts.helpText = Costs include stamp duty, agent fees, 
 
 ## Improvements messages
 calc.resident.improvements.title = How much have you spent on improvements since you became the property owner?
-calc.resident.improvements.note = If you used the market value of the property, tell us how much you''ve spent on improvements since the date of the valuation.
 calc.resident.improvements.label = How much have you spent on improvements since you became the property owner?
 calc.resident.improvements.hint = Improvements are permanent changes that raise the value of a property, like adding extensions or garages. Normal maintenance costs don''t count.
+calc.resident.improvements.helpButton = Show me an example
+calc.resident.improvements.additionalContent.one = Replacing a basic kitchen or bathroom with a luxury version is normally considered an improvement.
+calc.resident.improvements.additionalContent.two = But replacing them with something of a similar standard is normally not an improvement.
+
 
 
 ## Summary messages
@@ -355,7 +360,7 @@ calc.resident.summary.pageHeading = Tax owed
 calc.resident.summary.calcDetailsHeading = Calculation details
 calc.resident.summary.calcDetailsHeadingDate = Calculation details for {0} tax year
 calc.resident.summary.yourAnswersHeading = Your answers
-calc.resident.summary.totalGain = Total profit
+calc.resident.summary.totalGain = Total gain
 calc.resident.summary.totalLoss = Loss
 calc.resident.summary.reliefs = Tax reliefs used
 
@@ -369,7 +374,7 @@ calc.resident.summary.aeaRemaining = Capital Gains Tax allowance left for {0}
 
 calc.resident.summary.deductions = Deductions
 calc.resident.summary.chargeableLoss = Carried forward loss
-calc.resident.summary.chargeableGain = Taxable profit
+calc.resident.summary.chargeableGain = Taxable gain
 calc.resident.summary.taxRate = Tax rate
 calc.resident.summary.dateWarning = These figures are based on the tax rates from the {0} tax year
 calc.resident.summary.warning = Warning
@@ -393,7 +398,7 @@ calc.resident.summary.remainingBroughtForwardLossHelp = to reduce your Capital G
 calc.resident.summary.annualExemptAmountHelp = You can use this to reduce your tax if you sell something else that''s covered by Capital Gains Tax in the same tax year.
 
 ## Private Residence Relief Value messages
-calc.resident.prrValue.title = How much Private Residence Relief are you claiming on your total profit of £{0}?
+calc.resident.prrValue.title = How much Private Residence Relief are you claiming on your total gain of £{0}?
 calc.resident.prrValue.externalLink = Private Residence Relief
 
 ## Reliefs messages
@@ -419,8 +424,8 @@ calc.resident.reliefsNoPrr.errorSelect = Tell us if you want to claim any Capita
 calc.resident.reliefsNoPrr.helpButton = What are Capital Gains Tax reliefs?
 
 ## Reliefs Value messages
-calc.resident.reliefsValue.title = How much tax relief are you claiming on your total profit of £{0}?
-calc.resident.reliefsValue.question = How much tax relief are you claiming on your total profit of £{0}?
+calc.resident.reliefsValue.title = How much tax relief are you claiming on your total gain of £{0}?
+calc.resident.reliefsValue.question = How much tax relief are you claiming on your total gain of £{0}?
 calc.resident.reliefsValue.externalLinkOne = Private Residence Relief
 calc.resident.reliefsValue.externalLinkTwo = Lettings Relief
 
@@ -492,12 +497,11 @@ calc.resident.currentIncome.helpText = Include your salary before tax, and anyth
 calc.resident.currentIncome.linkText = Income tax
 
 ## Personal Allowance messages
-calc.resident.personalAllowance.title = In the {0} tax year, what was your Personal Allowance?
-calc.resident.personalAllowance.currentYearTitle = How much is your Personal Allowance?
 calc.resident.personalAllowance.question = In the {0} tax year, what was your Personal Allowance?
 calc.resident.personalAllowance.currentYearQuestion = How much is your Personal Allowance?
 calc.resident.personalAllowance.link.one = Personal Allowance
-calc.resident.personalAllowance.helpText = This is the amount of your income you don''t pay tax on. It''s £{0} unless you''re claiming other allowances.
+calc.resident.personalAllowance.currentYearHelpText = This is the amount of your income you don''t pay tax on. It''s £{0} unless you''re claiming other allowances.
+calc.resident.personalAllowance.helpText = This is the amount of your income you don''t pay tax on. It was £{0} unless you were claiming other allowances.
 
 ###############################################################################################
 ## Private Residence Relief messages ##

@@ -1,5 +1,5 @@
 @import models.resident.income.PersonalAllowanceModel
-@import models.resident._
+@import models.resident.TaxYearModel
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
 @import views.html.calculation.resident._
@@ -16,27 +16,34 @@
     </a>
 }
 
-@resident_main_template(title = {if(taxYear.taxYearSupplied == "2016/17") {Messages("calc.resident.personalAllowance.currentYearTitle")}
-    else {Messages("calc.resident.personalAllowance.title", taxYear.taxYearSupplied)}},
-    backLink = backLink,
-    sidebarLinks = Some(sidebar),
-    homeLink = homeLink,
-    navTitle = navTitle) {
+@defining(taxYear.taxYearSupplied == "2016/17") { currentTaxYear =>
+    @defining(
+        if(currentTaxYear) Messages("calc.resident.personalAllowance.currentYearQuestion")
+        else Messages("calc.resident.personalAllowance.question", taxYear.taxYearSupplied)) { question =>
 
-    @errorSummary(personalAllowanceForm, "amount")
+        @defining(
+            if(currentTaxYear) "calc.resident.personalAllowance.currentYearHelpText" else "calc.resident.personalAllowance.helpText") { hintTextKey =>
 
-    <h1 class="heading-large">@{if(taxYear.taxYearSupplied == "2016/17")
-        {Messages("calc.resident.personalAllowance.currentYearTitle")}
-        else {Messages("calc.resident.personalAllowance.title", taxYear.taxYearSupplied)}}</h1>
+            @resident_main_template(title = question, backLink = backLink, sidebarLinks = Some(sidebar), homeLink = homeLink, navTitle = navTitle) {
 
-    @form(action = postAction) {
+                @errorSummary(personalAllowanceForm, "amount")
 
-        @formInputMoney(personalAllowanceForm, "amount", if(taxYear.taxYearSupplied == "2016/17")
-            {Messages("calc.resident.personalAllowance.currentYearQuestion")}
-            else {Messages("calc.resident.personalAllowance.question", taxYear.taxYearSupplied)},
-            Some(Messages("calc.resident.personalAllowance.helpText", MoneyPounds(standardPA, 0).quantity)), hideLabel = true, step = "1")
+                <h1 class="heading-large">@question</h1>
 
-        <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+                @form(action = postAction) {
 
+                    @formInputMoney(
+                        personalAllowanceForm,
+                        "amount",
+                        question,
+                        Some(Messages(hintTextKey, MoneyPounds(standardPA, 0).quantity)),
+                        hideLabel = true,
+                        step = "1")
+
+                    <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+
+                }
+            }
+        }
     }
 }
