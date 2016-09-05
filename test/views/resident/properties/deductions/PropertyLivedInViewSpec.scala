@@ -23,6 +23,7 @@ import views.html.calculation.resident.properties.{deductions => views}
 import assets.MessageLookup.{propertyLivedIn => messages}
 import assets.{MessageLookup => commonMessages}
 import forms.resident.properties.PropertyLivedInForm._
+import models.resident.properties.PropertyLivedInModel
 
 class PropertyLivedInViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
@@ -73,8 +74,160 @@ class PropertyLivedInViewSpec extends UnitSpec with WithFakeApplication with Fak
       }
     }
 
-//    "render a form tag with a submit action" in {
-//      doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/property-lived-in"
-//    }
+    "render a form tag with a submit action" in {
+      doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/property-lived-in"
+    }
+
+    "have a legend for the radio inputs" which {
+
+      lazy val legend = doc.select("legend")
+
+      s"contain the text ${messages.title}" in {
+        legend.text should include(s"${messages.title}")
+      }
+    }
+
+    "have a set of radio inputs" which {
+
+      "are surrounded in a div with class form-group" in {
+        doc.select("div#radio-input").hasClass("form-group") shouldEqual true
+      }
+
+      "for the option 'Yes'" should {
+
+        lazy val YesRadioOption = doc.select(".block-label[for=livedInProperty-yes]")
+
+        "have a label with class 'block-label'" in {
+          YesRadioOption.hasClass("block-label") shouldEqual true
+        }
+
+        "have the property 'for'" in {
+          YesRadioOption.hasAttr("for") shouldEqual true
+        }
+
+        "the for attribute has the value livedInProperty-Yes" in {
+          YesRadioOption.attr("for") shouldEqual "livedInProperty-yes"
+        }
+
+        "have the text 'Yes'" in {
+          YesRadioOption.text shouldEqual "Yes"
+        }
+
+        "have an input under the label that" should {
+
+          lazy val optionLabel = doc.select("#livedInProperty-yes")
+
+          "have the id 'livedInProperty-Yes'" in {
+            optionLabel.attr("id") shouldEqual "livedInProperty-yes"
+          }
+
+          "have the value 'Yes'" in {
+            optionLabel.attr("value") shouldEqual "Yes"
+          }
+
+          "be of type radio" in {
+            optionLabel.attr("type") shouldEqual "radio"
+          }
+        }
+      }
+
+      "for the option 'No'" should {
+
+        lazy val NoRadioOption = doc.select(".block-label[for=livedInProperty-no]")
+
+        "have a label with class 'block-label'" in {
+          NoRadioOption.hasClass("block-label") shouldEqual true
+        }
+
+        "have the property 'for'" in {
+          NoRadioOption.hasAttr("for") shouldEqual true
+        }
+
+        "the for attribute has the value livedInProperty-No" in {
+          NoRadioOption.attr("for") shouldEqual "livedInProperty-no"
+        }
+
+        "have the text 'No'" in {
+          NoRadioOption.text shouldEqual "No"
+        }
+
+        "have an input under the label that" should {
+
+          lazy val optionLabel = doc.select("#livedInProperty-no")
+
+          "have the id 'livedInProperty-No'" in {
+            optionLabel.attr("id") shouldEqual "livedInProperty-no"
+          }
+
+          "have the value 'No'" in {
+            optionLabel.attr("value") shouldEqual "No"
+          }
+
+          "be of type radio" in {
+            optionLabel.attr("type") shouldEqual "radio"
+          }
+        }
+      }
+    }
+
+    "have a continue button" which {
+
+      lazy val button = doc.select("button")
+
+      "has class 'button'" in {
+        button.hasClass("button") shouldEqual true
+      }
+
+      "has attribute 'type'" in {
+        button.hasAttr("type") shouldEqual true
+      }
+
+      "has type value of 'submit'" in {
+        button.attr("type") shouldEqual "submit"
+      }
+
+      "has attribute id" in {
+        button.hasAttr("id") shouldEqual true
+      }
+
+      "has id equal to continue-button" in {
+        button.attr("id") shouldEqual "continue-button"
+      }
+
+      s"has the text ${commonMessages.calcBaseContinue}" in {
+        button.text shouldEqual s"${commonMessages.calcBaseContinue}"
+      }
+    }
+  }
+
+  "Property lived in view with a filled form" which {
+    lazy val view = views.propertyLivedIn(propertyLivedInForm.fill(PropertyLivedInModel(true)), "home-link", Some("back-link"))(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "for the option 'Yes'" should {
+
+      lazy val YesRadioOption = doc.select(".block-label[for=livedInProperty-yes]")
+
+      "have the option auto-selected" in {
+        YesRadioOption.attr("class") shouldBe "block-label selected"
+      }
+    }
+  }
+
+  "Property Lived In view with form errors" should {
+
+    lazy val form = propertyLivedInForm.bind(Map("livedInProperty" -> ""))
+    lazy val view = views.propertyLivedIn(form, "home", Some("back"))(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "have an error summary" which {
+      "display an error summary message for the page" in {
+        doc.body.select("#livedInProperty-error-summary").size shouldBe 1
+      }
+
+      "display an error message for the input" in {
+        doc.body.select(".form-group .error-notification").size shouldBe 1
+      }
+    }
   }
 }

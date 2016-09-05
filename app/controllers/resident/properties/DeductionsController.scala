@@ -690,7 +690,7 @@ trait DeductionsController extends FeatureLock {
 
   val propertyLivedIn = FeatureLockForRTT.async {implicit request =>
 
-    val backLink = Some(controllers.resident.properties.GainController.improvements.toString())
+    val backLink = Some(controllers.resident.properties.routes.GainController.improvements().toString)
 
     calcConnector.fetchAndGetFormData[PropertyLivedInModel](keystoreKeys.propertyLivedIn).map{
       case Some(data) => Ok(commonViews.properties.deductions.propertyLivedIn(propertyLivedInForm.fill(data), homeLink, backLink))
@@ -700,7 +700,7 @@ trait DeductionsController extends FeatureLock {
 
   val submitPropertyLivedIn = FeatureLockForRTT.async { implicit request =>
 
-    val backLink = Some(controllers.resident.properties.GainController.improvements.toString())
+    lazy val backLink = Some(controllers.resident.properties.GainController.improvements.toString())
 
     def errorAction(errors: Form[PropertyLivedInModel]) = Future.successful(BadRequest(commonViews.properties.deductions.propertyLivedIn(
       errors, homeLink, backLink
