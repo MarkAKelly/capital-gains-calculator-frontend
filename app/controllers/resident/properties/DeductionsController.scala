@@ -599,7 +599,7 @@ trait DeductionsController extends FeatureLock {
     )))
 
     def routeRequest(model: PropertyLivedInModel) = {
-      if (model.livedInProperty) Future.successful(Redirect(routes.DeductionsController.privateResidenceRelief()))
+      if (model.livedInProperty) Future.successful(Redirect(???))
       else Future.successful(Redirect(routes.DeductionsController.otherProperties()))
     }
 
