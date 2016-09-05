@@ -108,9 +108,11 @@ object MessageLookup {
   //Improvements messages
   object improvementsView {
     val title = "How much have you spent on improvements since you became the property owner?"
-    val note = "If you used the market value of the property, tell us how much you've spent on improvements since the date of the valuation."
     val label = "How much have you spent on improvements since you became the property owner?"
     val hint = "Improvements are permanent changes that raise the value of a property, like adding extensions or garages. Normal maintenance costs don't count."
+    val improvementsHelpButton = "Show me an example"
+    val improvementsAdditionalContentOne = "Replacing a basic kitchen or bathroom with a luxury version is normally considered an improvement."
+    val improvementsAdditionalContentTwo = "But replacing them with something of a similar standard is normally not an improvement."
   }
 
   //Summary messages
