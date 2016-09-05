@@ -122,10 +122,10 @@ object MessageLookup {
     val aeaHelp = "You can use this to reduce your tax if you sell something else that's covered by Capital Gains Tax in the same tax year."
     val yourAnswersHeading = "Your answers"
     val totalLoss = "Loss"
-    val totalGain = "Total profit"
+    val totalGain = "Total gain"
     val deductions = "Deductions"
     val chargeableLoss = "Carried forward loss"
-    val chargeableGain = "Taxable profit"
+    val chargeableGain = "Taxable gain"
     val taxRate = "Tax rate"
     def noticeWarning(input: String): String = s"These figures are based on the tax rates from the $input tax year"
     val warning = "Warning"
@@ -157,8 +157,8 @@ object MessageLookup {
 
   //Private Residence Relief Value messages
   object privateResidenceReliefValue {
-    def title(gain: String) = s"How much Private Residence Relief are you claiming on your total profit of £$gain?"
-    val question = "How much Private Residence Relief are you claiming on your total profit of £10,000?"
+    def title(gain: String) = s"How much Private Residence Relief are you claiming on your total gain of £$gain?"
+    val question = "How much Private Residence Relief are you claiming on your total gain of £10,000?"
     val prrLink = "Private Residence Relief"
   }
 
@@ -181,8 +181,8 @@ object MessageLookup {
 
   //Reliefs Value messages
   object reliefsValue {
-    def title(input: String) = s"How much tax relief are you claiming on your total profit of £$input?"
-    def question(input: String) = s"How much tax relief are you claiming on your total profit of £$input?"
+    def title(input: String) = s"How much tax relief are you claiming on your total gain of £$input?"
+    def question(input: String) = s"How much tax relief are you claiming on your total gain of £$input?"
     val prrLink = "Private Residence Relief"
     val lettingsReliefLink = "Lettings Relief"
   }
