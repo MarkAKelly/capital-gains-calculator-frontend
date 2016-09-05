@@ -159,9 +159,10 @@ object MessageLookup {
 
   //Private Residence Relief Value messages
   object privateResidenceReliefValue {
-    def title(gain: String) = s"How much Private Residence Relief are you claiming on your total gain of £$gain?"
-    val question = "How much Private Residence Relief are you claiming on your total gain of £10,000?"
-    val prrLink = "Private Residence Relief"
+    val title = "How much Private Residence Relief are you claiming?"
+    val question = title
+    val link = "Find out how much you can claim"
+    def help(value: String): String = s"We've calculated that you've made a gain of £$value on your property. You'll need this figure to calculate your Private Residence Relief."
   }
 
   //Reliefs messages

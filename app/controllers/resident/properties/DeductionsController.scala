@@ -32,6 +32,7 @@ import forms.resident.OtherPropertiesForm._
 import forms.resident.properties.ReliefsForm._
 import forms.resident.properties.ReliefsValueForm._
 import forms.resident.properties.NoPrrReliefsForm
+import forms.resident.properties.PrivateResidenceReliefValueForm._
 import models.resident.properties._
 import play.api.mvc.Result
 import play.api.data.Form
@@ -70,6 +71,7 @@ trait DeductionsController extends FeatureLock {
   override val sessionTimeoutUrl = homeLink
 
   //########## Private Residence Relief Actions ##############
+  val privateResidenceRelief = TODO
 
   //########## Private Residence Relief Value Actions ##############
   val privateResidenceReliefValue = TODO

@@ -398,8 +398,10 @@ calc.resident.summary.remainingBroughtForwardLossHelp = to reduce your Capital G
 calc.resident.summary.annualExemptAmountHelp = You can use this to reduce your tax if you sell something else that''s covered by Capital Gains Tax in the same tax year.
 
 ## Private Residence Relief Value messages
-calc.resident.prrValue.title = How much Private Residence Relief are you claiming on your total gain of £{0}?
-calc.resident.prrValue.externalLink = Private Residence Relief
+calc.resident.privateResidenceReliefValue.title = How much Private Residence Relief are you claiming?
+calc.resident.privateResidenceReliefValue.question = How much Private Residence Relief are you claiming?
+calc.resident.privateResidenceReliefValue.help = We''ve calculated that you''ve made a gain of £{0} on your property. You''ll need this figure to calculate your Private Residence Relief.
+calc.resident.privateResidenceReliefValue.link = Find out how much you can claim
 
 ## Reliefs messages
 calc.resident.reliefs.title = Do you want to claim any other tax reliefs?
