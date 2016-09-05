@@ -219,4 +219,16 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
       ReportController.finalSummaryReport().url shouldEqual "/calculate-your-capital-gains/resident/properties/final-report"
     }
   }
+
+  "The URL for the GET Private Residence Relief Value action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/private-residence-relief-value" in {
+      DeductionsController.privateResidenceReliefValue().url shouldEqual "/calculate-your-capital-gains/resident/properties/private-residence-relief-value"
+    }
+  }
+
+  "The URL for the POST Private Residence Relief Value action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/private-residence-relief-value" in {
+      DeductionsController.submitPrivateResidenceReliefValue().url shouldEqual "/calculate-your-capital-gains/resident/properties/private-residence-relief-value"
+    }
+  }
 }

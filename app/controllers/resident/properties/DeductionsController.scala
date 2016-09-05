@@ -72,6 +72,9 @@ trait DeductionsController extends FeatureLock {
   //########## Private Residence Relief Actions ##############
 
   //########## Private Residence Relief Value Actions ##############
+  val privateResidenceReliefValue = TODO
+
+  val submitPrivateResidenceReliefValue = TODO
 
   //################# Reliefs Actions ########################
   val reliefs = FeatureLockForRTT.async { implicit request =>
