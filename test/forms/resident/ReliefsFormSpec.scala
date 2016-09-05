@@ -18,7 +18,6 @@ package forms.resident
 
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{reliefs => messages}
-import forms.resident.properties.ReliefsForm._
 import models.resident.properties.ReliefsModel
 
 class ReliefsFormSpec extends UnitSpec with WithFakeApplication {

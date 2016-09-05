@@ -29,9 +29,6 @@ import forms.resident.AllowableLossesForm._
 import forms.resident.AllowableLossesValueForm._
 import forms.resident.AnnualExemptAmountForm._
 import forms.resident.OtherPropertiesForm._
-import forms.resident.properties.ReliefsForm._
-import forms.resident.properties.ReliefsValueForm._
-import forms.resident.properties.NoPrrReliefsForm
 import models.resident.properties._
 import play.api.mvc.Result
 import play.api.data.Form
@@ -74,102 +71,8 @@ trait DeductionsController extends FeatureLock {
   //########## Private Residence Relief Value Actions ##############
 
   //################# Reliefs Actions ########################
-  val reliefs = FeatureLockForRTT.async { implicit request =>
-    if (config.featureRTTPRREnabled) {
-      calcConnector.fetchAndGetFormData[ReliefsModel](keystoreKeys.reliefs).map {
-        case Some(data) => Ok(views.reliefs(reliefsForm().fill(data), homeLink, false, Some(routes.GainController.improvements().url)))
-        case None => Ok(views.reliefs(reliefsForm(), homeLink, false, Some(routes.GainController.improvements().url)))
-      }
-    }
-    else {
-      for {
-        answerSummary <- answerSummary(hc)
-        totalGain <- totalGain(answerSummary, hc)
-        route <- calcConnector.fetchAndGetFormData[ReliefsModel](keystoreKeys.reliefs).map {
-          case Some(data) => Ok(views.noPrrReliefs(NoPrrReliefsForm.reliefsForm(totalGain).fill(data), totalGain, homeLink))
-          case None => Ok(views.noPrrReliefs(NoPrrReliefsForm.reliefsForm(totalGain), totalGain, homeLink))
-        }
-      } yield route
-    }
-  }
-
-  val submitReliefs = FeatureLockForRTT.async { implicit request =>
-
-    def errorAction(form: Form[ReliefsModel]) = {
-      if (config.featureRTTPRREnabled) {
-        Future.successful(BadRequest(views.reliefs(form, homeLink, false, Some(routes.GainController.improvements().url))))
-      }
-      else {
-        for {
-          answerSummary <- answerSummary(hc)
-          totalGain <- totalGain(answerSummary, hc)
-          route <- Future.successful(BadRequest(views.noPrrReliefs(form, totalGain, homeLink)))
-        } yield route
-      }
-    }
-
-    def successAction(model: ReliefsModel) = {
-      calcConnector.saveFormData[ReliefsModel](keystoreKeys.reliefs, model)
-      model match {
-        case ReliefsModel(true) => Future.successful(Redirect(routes.DeductionsController.reliefsValue()))
-        case _ => Future.successful(Redirect(routes.DeductionsController.otherProperties()))
-      }
-    }
-
-    reliefsForm().bindFromRequest().fold(
-      errors => errorAction(errors),
-      success => successAction(success)
-    )
-  }
 
   //################# Reliefs Value Input Actions ########################
-
-  val reliefsValue = FeatureLockForRTT.async { implicit request =>
-
-    def routeRequest(totalGain: BigDecimal) = {
-      if (config.featureRTTPRREnabled) {
-        calcConnector.fetchAndGetFormData[ReliefsValueModel](keystoreKeys.reliefsValue).map {
-          case Some(data) => Ok(views.reliefsValue(reliefsValueForm.fill(data), homeLink, totalGain))
-          case None => Ok(views.reliefsValue(reliefsValueForm, homeLink, totalGain))
-        }
-      }
-      else {
-        calcConnector.fetchAndGetFormData[ReliefsValueModel](keystoreKeys.reliefsValue).map {
-          case Some(data) => Ok(views.noPrrReliefsValue(reliefsValueForm.fill(data), homeLink))
-          case None => Ok(views.noPrrReliefsValue(reliefsValueForm, homeLink))
-        }
-      }
-    }
-
-    for {
-      answerSummary <- answerSummary(hc)
-      totalGain <- totalGain(answerSummary, hc)
-      route <- routeRequest(totalGain)
-    } yield route
-  }
-
-  val submitReliefsValue = FeatureLockForRTT.async { implicit request =>
-
-    def errorAction(form: Form[ReliefsValueModel]) = {
-      if (config.featureRTTPRREnabled) {
-        for {
-          answerSummary <- answerSummary(hc)
-          totalGain <- totalGain(answerSummary, hc)
-        } yield BadRequest(views.reliefsValue(form, homeLink, totalGain))
-      }
-      else Future.successful(BadRequest(views.noPrrReliefsValue(form, homeLink)))
-    }
-
-    def successAction(model: ReliefsValueModel) = {
-      calcConnector.saveFormData[ReliefsValueModel](keystoreKeys.reliefsValue, model)
-      Future.successful(Redirect(routes.DeductionsController.otherProperties()))
-    }
-    
-    reliefsValueForm.bindFromRequest.fold(
-      errors => errorAction(errors),
-      success => successAction(success)
-    )
-  }
 
   //################# Other Properties Actions #########################
 
