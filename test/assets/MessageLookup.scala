@@ -289,6 +289,12 @@ object MessageLookup {
     val no = "No"
   }
 
+  //############ Property Lived In messages #################//
+  object propertyLivedIn {
+    val title = "Have you ever lived in the property since you became the owner?"
+    val errorNoSelect = "Tell us if you have ever lived in the property since you became the owner"
+  }
+
   //############ Shares messages ##############//
   object sharesDisposalDate {
     val title = "When did you sell or give away the shares?"
