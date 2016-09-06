@@ -29,6 +29,7 @@ import forms.resident.AllowableLossesForm._
 import forms.resident.AllowableLossesValueForm._
 import forms.resident.AnnualExemptAmountForm._
 import forms.resident.OtherPropertiesForm._
+import forms.resident.properties.PrivateResidenceReliefValueForm._
 import forms.resident.properties.LettingsReliefValueForm._
 import forms.resident.properties.LettingsReliefForm._
 import forms.resident.properties.PrivateResidenceReliefForm._
@@ -70,8 +71,41 @@ trait DeductionsController extends FeatureLock {
   override val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
   override val sessionTimeoutUrl = homeLink
 
-  //########## Private Residence Relief Actions ##############
+  //########## Private Residence Relief Value Actions ##############
+  val privateResidenceReliefValue = FeatureLockForRTT.async { implicit request =>
 
+    def routeRequest(totalGain: BigDecimal) = {
+      calcConnector.fetchAndGetFormData[PrivateResidenceReliefValueModel](keystoreKeys.prrValue).map {
+        case Some(data) => Ok(views.privateResidenceReliefValue(privateResidenceReliefValueForm.fill(data), homeLink, totalGain))
+        case None => Ok(views.privateResidenceReliefValue(privateResidenceReliefValueForm, homeLink, totalGain))
+      }
+    }
+
+    for {
+      answerSummary <- answerSummary(hc)
+      totalGain <- totalGain(answerSummary, hc)
+      route <- routeRequest(totalGain)
+    } yield route
+  }
+
+  val submitPrivateResidenceReliefValue = FeatureLockForRTT.async { implicit request =>
+
+    def errorAction(form: Form[PrivateResidenceReliefValueModel]) = {
+      for {
+        answerSummary <- answerSummary(hc)
+        totalGain <- totalGain(answerSummary, hc)
+      } yield BadRequest(views.privateResidenceReliefValue(form, homeLink, totalGain))
+    }
+
+    def successAction(model: PrivateResidenceReliefValueModel) = {
+      calcConnector.saveFormData[PrivateResidenceReliefValueModel](keystoreKeys.prrValue, model)
+      Future.successful(Redirect(routes.DeductionsController.lettingsRelief()))
+    }
+
+    privateResidenceReliefValueForm.bindFromRequest.fold(errors => errorAction(errors), success => successAction(success))
+  }
+
+  //########## Private Residence Relief Actions ##############
   val privateResidenceRelief = FeatureLockForRTT.async { implicit request =>
     calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief).map{
       case Some(data) => Ok(views.privateResidenceRelief(privateResidenceReliefForm.fill(data)))
@@ -84,9 +118,7 @@ trait DeductionsController extends FeatureLock {
     def errorAction(errors: Form[PrivateResidenceReliefModel]) = Future.successful(BadRequest(views.privateResidenceRelief(errors)))
 
     def routeRequest(model: PrivateResidenceReliefModel) = {
-      //This route will need to be updated when the private-residence-relief-value page is added.
-      //There are scala tests ready for this in the PrivateResidenceReliefActionSpec.
-      if (model.isClaiming) Future.successful(Redirect(???))
+      if (model.isClaiming) Future.successful(Redirect(routes.DeductionsController.privateResidenceReliefValue()))
       else Future.successful(Redirect(routes.DeductionsController.otherProperties()))
     }
 
@@ -99,9 +131,6 @@ trait DeductionsController extends FeatureLock {
 
     privateResidenceReliefForm.bindFromRequest().fold(errorAction, successAction)
   }
-
-  //########## Private Residence Relief Value Actions ##############
-  val privateResidenceReliefValue = TODO
 
   //############## Lettings Relief Actions ##################
 

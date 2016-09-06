@@ -100,20 +100,20 @@ class PrivateResidenceReliefActionSpec extends UnitSpec with WithFakeApplication
 
   "Calling .submitPrivateResidenceRelief from the resident DeductionsCalculator" when {
 
-//    "a valid form with the answer 'Yes' is submitted" should {
-//
-//      lazy val target = setupTarget(None)
-//      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "Yes"))
-//      lazy val result = target.submitPrivateResidenceRelief(request)
-//
-//      "return a status of 303" in {
-//        status(result) shouldBe 303
-//      }
-//
-//      "redirect to the private residence relief page" in {
-//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/private-residence-relief-value")
-//      }
-//    }
+    "a valid form with the answer 'Yes' is submitted" should {
+
+      lazy val target = setupTarget(None)
+      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "Yes"))
+      lazy val result = target.submitPrivateResidenceRelief(request)
+
+      "return a status of 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the private residence relief page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/private-residence-relief-value")
+      }
+    }
 
     "a valid form with the answer 'No' is submitted" should {
 
