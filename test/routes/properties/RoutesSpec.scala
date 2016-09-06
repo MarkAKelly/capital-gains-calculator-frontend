@@ -102,29 +102,25 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
 
   "The URL for the lettingsRelief action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/lettings-relief" in {
-      val path = controllers.resident.properties.routes.DeductionsController.lettingsRelief().toString()
-      path shouldEqual "/calculate-your-capital-gains/resident/properties/lettings-relief"
+      DeductionsController.lettingsRelief().url shouldEqual "/calculate-your-capital-gains/resident/properties/lettings-relief"
     }
   }
 
   "The URL for the submitLettingsRelief action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/lettings-relief" in {
-      val path = controllers.resident.properties.routes.DeductionsController.submitLettingsRelief().toString()
-      path shouldEqual "/calculate-your-capital-gains/resident/properties/lettings-relief"
+      DeductionsController.submitLettingsRelief().url shouldEqual "/calculate-your-capital-gains/resident/properties/lettings-relief"
     }
   }
 
   "The URL for the private residence relief action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/private-residence-relief" in {
-      val path = controllers.resident.properties.routes.DeductionsController.privateResidenceRelief().toString()
-      path shouldEqual "/calculate-your-capital-gains/resident/properties/private-residence-relief"
+      DeductionsController.privateResidenceRelief().url shouldEqual "/calculate-your-capital-gains/resident/properties/private-residence-relief"
     }
   }
 
   "The URL for the submit private residence relief action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/private-residence-relief" in {
-      val path = controllers.resident.properties.routes.DeductionsController.submitPrivateResidenceRelief().toString()
-      path shouldEqual "/calculate-your-capital-gains/resident/properties/private-residence-relief"
+      DeductionsController.submitPrivateResidenceRelief().url shouldEqual "/calculate-your-capital-gains/resident/properties/private-residence-relief"
     }
   }
 
@@ -214,15 +210,13 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
 
   "The URL for the propertyLivedIn action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/property-lived-in" in {
-      val path = controllers.resident.properties.routes.DeductionsController.propertyLivedIn().toString()
-      path shouldEqual "/calculate-your-capital-gains/resident/properties/property-lived-in"
+      DeductionsController.propertyLivedIn().url shouldEqual "/calculate-your-capital-gains/resident/properties/property-lived-in"
     }
   }
 
   "The URL for the submit propertyLivedIn action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/property-lived-in" in {
-      val path = controllers.resident.properties.routes.DeductionsController.submitPropertyLivedIn().toString()
-      path shouldEqual "/calculate-your-capital-gains/resident/properties/property-lived-in"
+      DeductionsController.submitPropertyLivedIn().url shouldEqual "/calculate-your-capital-gains/resident/properties/property-lived-in"
     }
   }
 
