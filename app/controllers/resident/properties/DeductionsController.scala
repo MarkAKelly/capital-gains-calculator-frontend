@@ -31,6 +31,7 @@ import forms.resident.AnnualExemptAmountForm._
 import forms.resident.OtherPropertiesForm._
 import forms.resident.properties.ReliefsForm._
 import forms.resident.properties.ReliefsValueForm._
+import forms.resident.properties.PrivateResidenceReliefForm._
 import forms.resident.properties.NoPrrReliefsForm
 import models.resident.properties._
 import play.api.mvc.Result
@@ -70,6 +71,10 @@ trait DeductionsController extends FeatureLock {
   override val sessionTimeoutUrl = homeLink
 
   //########## Private Residence Relief Actions ##############
+
+  val privateResidenceRelief = FeatureLockForRTT.async { implicit request =>
+    Future.successful(Ok(views.privateResidenceRelief(privateResidenceReliefForm)))
+  }
 
   //########## Private Residence Relief Value Actions ##############
 

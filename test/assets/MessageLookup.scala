@@ -281,13 +281,12 @@ object MessageLookup {
 
   //############ Private Residence Relief messages #################//
   object privateResidenceRelief {
-    val title = "Do you want to claim Private Residence Relief?"
-    val legendFirstSection = "You may be able to claim full or part"
-    val legendLink = "Private Residence Relief"
-    val legendSecondSection = "if you've lived at the property"
+    val title = "Are you entitled to Private Residence Relief?"
+    val helpTextOne = "You'll be entitled to Private Residence Relief if you've lived in the property as your main home " +
+      "at some point while you owned it. Find out more about"
+    val helpTextLink = "Private Residence Relief"
     val errorSelect = "Tell us if you want to claim Private Residence Relief"
-    val yesPart = "Yes, part relief"
-    val yesFull = "Yes, full relief"
+    val yes = "Yes"
     val no = "No"
   }
 
