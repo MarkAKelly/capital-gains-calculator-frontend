@@ -16,6 +16,8 @@
 
 package forms.resident
 
+
+
 import models.resident.properties.LettingsReliefModel
 import forms.resident.properties.LettingsReliefForm._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -65,3 +67,4 @@ class LettingsReliefFormSpec extends UnitSpec with WithFakeApplication {
     }
   }
 }
+

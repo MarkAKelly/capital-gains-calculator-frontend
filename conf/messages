@@ -401,6 +401,12 @@ calc.resident.summary.annualExemptAmountHelp = You can use this to reduce your t
 
 ## No PRR Reliefs messages
 
+## Lettings Relief Value messages
+calc.resident.lettingsReliefValue.title = How much Letting Relief are you entitled to?
+calc.resident.lettingsReliefValue.question = How much Letting Relief are you entitled to?
+calc.resident.lettingsReliefValue.additionalContent = We''ve calculated that you''ve made a gain of £{0} on your property. You''ll need this figure to calculate your Letting Relief.
+
+
 ## Reliefs Value messages
 
 ## No Prr Reliefs Value messages

@@ -42,11 +42,14 @@ GET     /private-residence-relief-value   controllers.resident.properties.Deduct
 #Reliefs Value Routes
 
 #Lettings Relief Routes
-GET     /lettings-relief                  controllers.resident.properties.DeductionsController.lettingsRelief
-POST    /lettings-relief                  controllers.resident.properties.DeductionsController.submitLettingsRelief
 
 #Lettings Relief Value Routes
 GET     /lettings-relief-value            controllers.resident.properties.DeductionsController.lettingsReliefValue
+POST    /lettings-relief-value            controllers.resident.properties.DeductionsController.submitLettingsReliefValue
+
+GET     /lettings-relief                  controllers.resident.properties.DeductionsController.lettingsRelief
+POST    /lettings-relief                  controllers.resident.properties.DeductionsController.submitLettingsRelief
+
 
 #Other Properties Routes
 GET     /other-properties                 controllers.resident.properties.DeductionsController.otherProperties
