@@ -286,6 +286,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         }
       }
 
+      "has an option output row for property lived in" which {
+
+        s"should have the question text '${commonMessages.propertyLivedIn.title}'" in {
+          doc.select("#propertyLivedIn-question").text shouldBe commonMessages.propertyLivedIn.title
+        }
+
+        "should have the value 'No'" in {
+          doc.select("#propertyLivedIn-option span.bold-medium").text shouldBe "No"
+        }
+      }
+
       "has an option output row for other properties" which {
 
         s"should have the question text '${commonMessages.otherProperties.title("2015/16")}'" in {
@@ -361,7 +372,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       Some(LossesBroughtForwardModel(false)),
       None,
       Some(AnnualExemptAmountModel(0)),
-      Some(PropertyLivedInModel(false)))
+      Some(PropertyLivedInModel(true)))
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -399,6 +410,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         "include a value for Reliefs of £30,000" in {
           doc.select("#deductions-amount").text should include(s"${messages.reliefsUsed} £30,000")
         }
+      }
+    }
+
+    "has an option output row for property lived in" which {
+
+      s"should have the question text '${commonMessages.propertyLivedIn.title}'" in {
+        doc.select("#propertyLivedIn-question").text shouldBe commonMessages.propertyLivedIn.title
+      }
+
+      "should have the value 'Yes'" in {
+        doc.select("#propertyLivedIn-option span.bold-medium").text shouldBe "Yes"
       }
     }
 
