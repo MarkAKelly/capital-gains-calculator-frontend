@@ -176,10 +176,7 @@ trait DeductionsController extends FeatureLock {
       Future.successful(Redirect(routes.DeductionsController.otherProperties()))
     }
 
-    lettingsReliefValueForm.bindFromRequest.fold(
-      errors => errorAction(errors),
-      success => successAction(success)
-    )
+    lettingsReliefValueForm.bindFromRequest().fold(errorAction, successAction)
   }
 
 
