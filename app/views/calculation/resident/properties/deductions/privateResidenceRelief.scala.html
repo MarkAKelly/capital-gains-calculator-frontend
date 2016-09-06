@@ -16,7 +16,7 @@
 
 @resident_main_template(
     title = Messages("calc.resident.properties.privateResidenceRelief.title"),
-    backLink = Some("TODO"),
+    backLink = Some(controllers.resident.properties.routes.DeductionsController.propertyLivedIn().url),
     homeLink = controllers.resident.properties.routes.GainController.disposalDate().url,
     navTitle = Messages("calc.base.resident.properties.home")
 ) {
@@ -25,7 +25,7 @@
 
     <h1 class="heading-large">@Messages("calc.resident.properties.privateResidenceRelief.title")</h1>
 
-    @form(action = controllers.resident.properties.routes.DeductionsController.privateResidenceRelief) {
+    @form(action = controllers.resident.properties.routes.DeductionsController.submitPrivateResidenceRelief) {
 
         @formInputRadioGroup(
             field = privateResidenceReliefForm("isClaiming"),

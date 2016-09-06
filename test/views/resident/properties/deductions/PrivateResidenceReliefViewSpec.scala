@@ -24,7 +24,7 @@ import forms.resident.properties.PrivateResidenceReliefForm._
 import org.jsoup.Jsoup
 import views.html.calculation.resident.properties.{deductions => views}
 
-class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Private Residence Relief view" should {
 
@@ -35,12 +35,32 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       doc.charset().toString shouldBe "UTF-8"
     }
 
-    s"have a title ${messages.title}" in {
-      doc.title() shouldBe messages.title
+    "have a H1 tag that" should {
+
+      lazy val h1Tag = doc.select("h1")
+
+      s"have the page heading '${messages.title}'" in {
+        h1Tag.text shouldBe messages.title
+      }
+
+      "have the heading-large class" in {
+        h1Tag.hasClass("heading-large") shouldBe true
+      }
     }
 
-    s"have a back link with text ${commonMessages.calcBaseBack}" in {
-      doc.select("#back-link").text() shouldEqual "Back"
+    "have a back link" which {
+
+      s"should have text ${commonMessages.calcBaseBack}" in {
+        doc.select("#back-link").text() shouldEqual "Back"
+      }
+
+      "has the back-link class" in {
+        doc.select("#back-link").hasClass("back-link") shouldBe true
+      }
+
+      "and link back to the property lived in page" in {
+        doc.select("#back-link").attr("href") shouldEqual s"${controllers.resident.properties.routes.DeductionsController.propertyLivedIn().url}"
+      }
     }
 
     s"have the question of the page ${messages.title}" in {

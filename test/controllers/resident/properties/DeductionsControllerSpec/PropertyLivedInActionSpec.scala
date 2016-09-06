@@ -100,22 +100,20 @@ class PropertyLivedInActionSpec extends UnitSpec with WithFakeApplication with F
 
   "Calling .submitPropertyLivedIn from the resident DeductionsCalculator" when {
 
-    //to be uncommented when prr page is added again
+    "a valid form with the answer 'Yes' is submitted" should {
 
-//    "a valid form with the answer 'Yes' is submitted" should {
-//
-//      lazy val target = setupTarget(None)
-//      lazy val request = fakeRequestToPOSTWithSession(("livedInProperty", "Yes"))
-//      lazy val result = target.submitPropertyLivedIn(request)
-//
-//      "return a status of 303" in {
-//        status(result) shouldBe 303
-//      }
-//
-//      "redirect to the private residence relief page" in {
-//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/private-residence-relief")
-//      }
-//    }
+      lazy val target = setupTarget(None)
+      lazy val request = fakeRequestToPOSTWithSession(("livedInProperty", "Yes"))
+      lazy val result = target.submitPropertyLivedIn(request)
+
+      "return a status of 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the private residence relief page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/private-residence-relief")
+      }
+    }
 
     "a valid form with the answer 'No' is submitted" should {
 

@@ -74,6 +74,10 @@ trait DeductionsController extends FeatureLock {
     Future.successful(Ok(views.privateResidenceRelief(privateResidenceReliefForm)))
   }
 
+  val submitPrivateResidenceRelief = FeatureLockForRTT.async { implicit request =>
+    Future.successful(Ok(views.privateResidenceRelief(privateResidenceReliefForm)))
+  }
+
   //########## Private Residence Relief Value Actions ##############
 
   //################# Reliefs Actions ########################
@@ -507,7 +511,7 @@ trait DeductionsController extends FeatureLock {
     )))
 
     def routeRequest(model: PropertyLivedInModel) = {
-      if (model.livedInProperty) Future.successful(Redirect(???))
+      if (model.livedInProperty) Future.successful(Redirect(routes.DeductionsController.privateResidenceRelief()))
       else Future.successful(Redirect(routes.DeductionsController.otherProperties()))
     }
 

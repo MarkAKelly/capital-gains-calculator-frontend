@@ -482,10 +482,6 @@ calc.resident.properties.privateResidenceRelief.title = Are you entitled to Priv
 calc.resident.properties.privateResidenceRelief.helpText = You''ll be entitled to Private Residence Relief if you''ve lived in the property as your main home at some point while you owned it. Find out more about
 calc.resident.properties.privateResidenceRelief.helpTextLink = Private Residence Relief
 
-calc.resident.properties.privateResidenceRelief.fullLabel = Yes, full relief
-calc.resident.properties.privateResidenceRelief.partLabel = Yes, part relief
-calc.resident.properties.privateResidenceRelief.noneLabel = No
-
 calc.resident.properties.propertyLivedIn.title = Have you ever lived in the property since you became the owner?
 calc.resident.properties.propertyLivedIn.noSelectError = Tell us if you have ever lived in the property since you became the owner
 
