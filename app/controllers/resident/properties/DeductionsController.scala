@@ -32,6 +32,7 @@ import forms.resident.OtherPropertiesForm._
 import forms.resident.properties.ReliefsForm._
 import forms.resident.properties.ReliefsValueForm._
 import forms.resident.properties.NoPrrReliefsForm
+import forms.resident.properties.LettingsReliefForm._
 import models.resident.properties._
 import play.api.mvc.Result
 import play.api.data.Form
@@ -72,6 +73,45 @@ trait DeductionsController extends FeatureLock {
   //########## Private Residence Relief Actions ##############
 
   //########## Private Residence Relief Value Actions ##############
+  val privateResidenceReliefValue = TODO
+
+  //############## Lettings Relief Actions ##################
+
+  private val lettingsReliefBackUrl = routes.DeductionsController.privateResidenceReliefValue().url
+
+  val lettingsRelief = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[LettingsReliefModel](keystoreKeys.lettingsRelief).map {
+      case Some(data) => Ok(views.lettingsRelief(lettingsReliefForm.fill(data), homeLink, Some(lettingsReliefBackUrl)))
+      case None => Ok(views.lettingsRelief(lettingsReliefForm, homeLink, Some(lettingsReliefBackUrl)))
+    }
+  }
+
+  val submitLettingsRelief = FeatureLockForRTT.async { implicit request =>
+
+    def errorAction(form: Form[LettingsReliefModel]) = {
+      for {
+        answerSummary <- answerSummary(hc)
+        totalGain <- totalGain(answerSummary, hc)
+        route <- Future.successful(BadRequest(views.lettingsRelief(form, homeLink, Some(lettingsReliefBackUrl))))
+      } yield route
+    }
+
+    def successAction(model: LettingsReliefModel) = {
+      calcConnector.saveFormData[LettingsReliefModel](keystoreKeys.lettingsRelief, model)
+      model match {
+        case LettingsReliefModel(true) => Future.successful(Redirect(routes.DeductionsController.lettingsReliefValue()))
+        case _ => Future.successful(Redirect(routes.DeductionsController.otherProperties()))
+      }
+    }
+
+    lettingsReliefForm.bindFromRequest().fold(
+      errors => errorAction(errors),
+      success => successAction(success)
+    )
+  }
+
+  //########### Lettings Relief Value Actions ###############
+  val lettingsReliefValue = TODO
 
   //################# Reliefs Actions ########################
   val reliefs = FeatureLockForRTT.async { implicit request =>

@@ -197,6 +197,15 @@ object MessageLookup {
     val lettingsReliefLink = "Lettings Relief"
   }
 
+  //Lettings Relief messages
+  object lettingsRelief {
+    val title = "Are you entitled to Letting Relief?"
+    val help = "You may be able entitled to Letting Relief if you've rented out the property. Find out more about Letting Relief (opens in a new window)"
+    val helpOne = "Letting Relief (opens in a new window)"
+    val helpLink = "https://www.gov.uk/government/publications/private-residence-relief-hs283-self-assessment-helpsheet/hs283-private-residence-relief-2016#letting-relief"
+    val errorSelect = "Tell us if you want to claim Letting Relief"
+  }
+
   //Other Properties messages
   object otherProperties {
     def title(input: String): String = s"In the $input tax year, did you sell or give away anything else that's covered by Capital Gains Tax?"
