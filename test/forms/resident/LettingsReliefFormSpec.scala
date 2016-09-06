@@ -16,180 +16,55 @@
 
 package forms.resident
 
-import assets.MessageLookup
-import controllers.helpers.FakeRequestHelper
-import forms.resident.properties.LettingsReliefValueForm._
-import models.resident.properties.LettingsReliefValueModel
+
+
+import models.resident.properties.LettingsReliefModel
+import forms.resident.properties.LettingsReliefForm._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import assets.MessageLookup.{lettingsRelief => messages}
 
-class LettingsReliefFormSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class LettingsReliefFormSpec extends UnitSpec with WithFakeApplication {
 
-  "Creating a form using an empty model" should {
+  "Creating the form for Lettings Relief from a valid selection" should {
+    "return a populated form using .fill" in {
 
-    lazy val form = lettingsReliefValueForm
+      lazy val model = LettingsReliefModel(true)
+      lazy val form = lettingsReliefForm.fill(model)
 
-    "return an empty string for amount" in {
-      form.data.isEmpty shouldBe true
+      form.value shouldBe Some(LettingsReliefModel(true))
+    }
+
+    "return a valid model if supplied with valid selection" in {
+      val form = lettingsReliefForm.bind(Map(("isClaiming", "Yes")))
+      form.value shouldBe Some(LettingsReliefModel(true))
     }
   }
 
-  "Creating a form using a valid model" should {
+  "Creating the form for Lettings Relief from invalid selection" when {
+    "supplied with no selection" should {
 
-    lazy val model = LettingsReliefValueModel(1)
-    lazy val form = lettingsReliefValueForm.fill(model)
+      lazy val form = lettingsReliefForm.bind(Map(("isClaiming", "")))
 
-    "return a form with the data specified in the model" in {
-      form.data("amount") shouldBe "1"
-    }
-
-  }
-
-  "Creating a form using an invalid post" when {
-
-    "supplied with no data for amount" should {
-
-      lazy val form = lettingsReliefValueForm.bind(Map("amount" -> ""))
-
-      "raise a form error" in {
+      "return a form with errors" in {
         form.hasErrors shouldBe true
       }
 
-      "raise 1 form error" in {
-        form.errors.length shouldBe 1
-      }
-
-      "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.errorMessages.mandatoryAmount
+      s"return a form with the error message ${messages.errorSelect}" in {
+        form.error("isClaiming").get.message shouldBe messages.errorSelect
       }
     }
 
-    "supplied with empty space for amount" should {
+    "supplied with non Yes/No selection" should {
+      lazy val form = lettingsReliefForm.bind(Map(("isClaiming", "abc")))
 
-      lazy val form = lettingsReliefValueForm.bind(Map("amount" -> "  "))
-
-      "raise a form error" in {
+      "return a form with errors" in {
         form.hasErrors shouldBe true
       }
 
-      "raise 1 form error" in {
-        form.errors.length shouldBe 1
-      }
-
-      "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.errorMessages.mandatoryAmount
-      }
-    }
-
-    "supplied with non numeric input for amount" should {
-
-      lazy val form = lettingsReliefValueForm.bind(Map("amount" -> "a"))
-
-      "raise a form error" in {
-        form.hasErrors shouldBe true
-      }
-
-      "raise 1 form error" in {
-        form.errors.length shouldBe 1
-      }
-
-      "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.errorMessages.invalidAmount
-      }
-    }
-
-    "supplied with an amount with 3 numbers after the decimal" should {
-
-      lazy val form = lettingsReliefValueForm.bind(Map("amount" -> "1.000"))
-
-      "raise a form error" in {
-        form.hasErrors shouldBe true
-      }
-
-      "raise 1 form error" in {
-        form.errors.length shouldBe 1
-      }
-
-      "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.errorMessages.invalidAmount
-      }
-    }
-
-    "supplied with an amount that's greater than the max" should {
-
-      lazy val form = lettingsReliefValueForm.bind(Map("amount" -> "1000000000.01"))
-
-      "raise a form error" in {
-        form.hasErrors shouldBe true
-      }
-
-      "raise 1 form error" in {
-        form.errors.length shouldBe 1
-      }
-
-      "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.errorMessages.maximumAmount
-      }
-    }
-
-    "supplied with an amount that's less than the zero" should {
-
-      lazy val form = lettingsReliefValueForm.bind(Map("amount" -> "-0.01"))
-
-      "raise a form error" in {
-        form.hasErrors shouldBe true
-      }
-
-      "raise 1 form error" in {
-        form.errors.length shouldBe 1
-      }
-
-      "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.errorMessages.minimumAmount
-      }
-    }
-  }
-
-  "Creating a form using a valid post" when {
-
-    "supplied with a valid amount" should {
-
-      lazy val form = lettingsReliefValueForm.bind(Map("amount" -> "1"))
-
-      "build a model with the correct amount" in {
-        form.value.get shouldBe LettingsReliefValueModel(BigDecimal(1))
-      }
-
-      "not raise form error" in {
-        form.hasErrors shouldBe false
-      }
-    }
-
-    "supplied with an amount with 1 number after the decimal" should {
-      "not raise a form error" in {
-        val form = lettingsReliefValueForm.bind(Map("amount" -> "1.1"))
-        form.hasErrors shouldBe false
-      }
-    }
-
-    "supplied with an amount with 2 numbers after the decimal" should {
-      "not raise a form error" in {
-        val form = lettingsReliefValueForm.bind(Map("amount" -> "1.11"))
-        form.hasErrors shouldBe false
-      }
-    }
-
-    "supplied with an amount that's equal to the max" should {
-      "not raise a form error" in {
-        val form = lettingsReliefValueForm.bind(Map("amount" -> "1000000000"))
-        form.hasErrors shouldBe false
-      }
-    }
-
-    "supplied with an amount that's equal to the min" should {
-      "not raise a form error" in {
-        val form = lettingsReliefValueForm.bind(Map("amount" -> "0"))
-        form.hasErrors shouldBe false
+      s"return a form with the error message ${messages.errorSelect}" in {
+        form.error("isClaiming").get.message shouldBe messages.errorSelect
       }
     }
   }
 }
+

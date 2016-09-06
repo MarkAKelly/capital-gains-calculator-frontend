@@ -53,6 +53,7 @@ object KeystoreKeys {
     val reliefs = "res:property:reliefs"
     val reliefsValue = "res:property:reliefsValue"
     val lettingsReliefValue = "res:property:lettingsReliefValue"
+    val lettingsRelief = "res:property:lettingsRelief"
     val lossesBroughtForward = "res:property:lossesBroughtForward"
     val lossesBroughtForwardValue = "res:property:lossesBroughtForwardValue"
     val allowableLossesValue = "res:property:allowableLossesValue"
