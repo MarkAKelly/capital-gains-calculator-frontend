@@ -45,7 +45,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       Some(LossesBroughtForwardModel(false)),
       None,
       Some(AnnualExemptAmountModel(0)),
-      Some(PropertyLivedInModel(false)))
+      Some(PropertyLivedInModel(false)),
+      None)
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -297,6 +298,13 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         }
       }
 
+      "does not have an option output row for the eligible for private residence relief" which {
+
+        s"should not display" in {
+          doc.select("#privateResidenceRelief-question").size() shouldBe 0
+        }
+      }
+
       "has an option output row for other properties" which {
 
         s"should have the question text '${commonMessages.otherProperties.title("2015/16")}'" in {
@@ -372,7 +380,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       Some(LossesBroughtForwardModel(false)),
       None,
       Some(AnnualExemptAmountModel(0)),
-      Some(PropertyLivedInModel(true)))
+      Some(PropertyLivedInModel(true)),
+      Some(PrivateResidenceReliefModel(false)))
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -421,6 +430,18 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
       "should have the value 'Yes'" in {
         doc.select("#propertyLivedIn-option span.bold-medium").text shouldBe "Yes"
+      }
+    }
+
+
+    "has an option output row for the eligible for private residence relief" which {
+
+      s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
+        doc.select("#privateResidenceRelief-question").text shouldBe commonMessages.privateResidenceRelief.title
+      }
+
+      "should have the value 'No'" in {
+        doc.select("#privateResidenceRelief-option span.bold-medium").text shouldBe "No"
       }
     }
 
