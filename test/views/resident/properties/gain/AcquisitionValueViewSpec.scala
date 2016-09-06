@@ -96,13 +96,12 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Fa
 
       "has additional content that" should {
 
-       /* s"have a bullet point list title of ${messages.bulletListTitle}" in {
-          doc.select("div.indent p#bullet-list-title").text() shouldEqual messages.bulletListTitle
-        }*/
         s"have a bullet point list title of ${messages.bulletListTitleOne + messages.bulletListTitleTwo + messages.bulletListTitleThree}" in {
           doc.select("div.indent p#bullet-list-title").text() shouldEqual (messages.bulletListTitleOne + messages.bulletListTitleTwo+messages.bulletListTitleThree)
         }
-
+        s"have an external link that points to the appropriate URL for the market value" in {
+          doc.getElementById("marketValueLink").attr("href")
+        }
         s"have a first bullet point of ${messages.bulletListOne}" in {
           doc.select("div.indent li#bullet-list-one").text() shouldEqual messages.bulletListOne
         }
