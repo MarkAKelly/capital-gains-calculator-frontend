@@ -71,11 +71,29 @@ trait DeductionsController extends FeatureLock {
   //########## Private Residence Relief Actions ##############
 
   val privateResidenceRelief = FeatureLockForRTT.async { implicit request =>
-    Future.successful(Ok(views.privateResidenceRelief(privateResidenceReliefForm)))
+    calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief).map{
+      case Some(data) => Ok(views.privateResidenceRelief(privateResidenceReliefForm.fill(data)))
+      case _ => Ok(views.privateResidenceRelief(privateResidenceReliefForm))
+    }
   }
 
   val submitPrivateResidenceRelief = FeatureLockForRTT.async { implicit request =>
-    Future.successful(Ok(views.privateResidenceRelief(privateResidenceReliefForm)))
+
+    def errorAction(errors: Form[PrivateResidenceReliefModel]) = Future.successful(BadRequest(views.privateResidenceRelief(errors)))
+
+    def routeRequest(model: PrivateResidenceReliefModel) = {
+      if (model.isClaiming) Future.successful(Redirect(???))
+      else Future.successful(Redirect(routes.DeductionsController.otherProperties()))
+    }
+
+    def successAction(model: PrivateResidenceReliefModel) = {
+      for {
+        save <- calcConnector.saveFormData(keystoreKeys.privateResidenceRelief, model)
+        route <- routeRequest(model)
+      } yield route
+    }
+
+    privateResidenceReliefForm.bindFromRequest().fold(errorAction, successAction)
   }
 
   //########## Private Residence Relief Value Actions ##############
