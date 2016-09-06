@@ -35,12 +35,8 @@ GET     /summary                          controllers.resident.properties.Summar
 #Private Residence Relief Value Routes
 
 #Reliefs Routes
-GET     /reliefs                          controllers.resident.properties.DeductionsController.reliefs
-POST    /reliefs                          controllers.resident.properties.DeductionsController.submitReliefs
 
 #Reliefs Value Routes
-GET     /reliefs-value                    controllers.resident.properties.DeductionsController.reliefsValue
-POST    /reliefs-value                    controllers.resident.properties.DeductionsController.submitReliefsValue
 
 #Other Properties Routes
 GET     /other-properties                 controllers.resident.properties.DeductionsController.otherProperties

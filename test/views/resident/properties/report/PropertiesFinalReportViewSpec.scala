@@ -39,8 +39,6 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       BigDecimal(30000))
 
     lazy val deductionAnswers = ChargeableGainAnswers(
-      Some(ReliefsModel(false)),
-      None,
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
       None,
@@ -287,17 +285,6 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         }
       }
 
-      "has an option output row for tax reliefs" which {
-
-        s"should have the question text '${commonMessages.reliefs.questionSummary}'" in {
-          doc.select("#reliefs-question").text shouldBe commonMessages.reliefs.questionSummary
-        }
-
-        "should have the value 'No'" in {
-          doc.select("#reliefs-option span.bold-medium").text shouldBe "No"
-        }
-      }
-
       "has an option output row for other properties" which {
 
         s"should have the question text '${commonMessages.otherProperties.title("2015/16")}'" in {
@@ -367,8 +354,6 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       BigDecimal(30000))
 
     lazy val deductionAnswers = ChargeableGainAnswers(
-      Some(ReliefsModel(false)),
-      None,
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
       None,
