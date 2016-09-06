@@ -329,6 +329,29 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
         }
       }
 
+      "has an option output row for property lived in" which {
+
+        s"should have the question text '${commonMessages.propertyLivedIn.title}'" in {
+          doc.select("#propertyLivedIn-question").text shouldBe commonMessages.propertyLivedIn.title
+        }
+
+        "should have the value 'No'" in {
+          doc.select("#propertyLivedIn-option span.bold-medium").text shouldBe "No"
+        }
+
+        s"should have a change link to ${routes.DeductionsController.propertyLivedIn().url}" in {
+          doc.select("#propertyLivedIn-option a").attr("href") shouldBe routes.DeductionsController.propertyLivedIn().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#propertyLivedIn-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.propertyLivedIn.title}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#propertyLivedIn-option a span.visuallyhidden").text shouldBe commonMessages.propertyLivedIn.title
+        }
+      }
+
       "has an option output row for other properties" which {
 
         s"should have the question text '${commonMessages.otherProperties.title("2015/16")}'" in {
@@ -439,7 +462,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       Some(LossesBroughtForwardModel(false)),
       None,
       Some(AnnualExemptAmountModel(0)),
-      Some(PropertyLivedInModel(false)))
+      Some(PropertyLivedInModel(true)))
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -544,6 +567,29 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
       "Should have the tax rate 18%" in {
         doc.select("#firstBand").text should include("18%")
+      }
+    }
+
+    "has an option output row for property lived in" which {
+
+      s"should have the question text '${commonMessages.propertyLivedIn.title}'" in {
+        doc.select("#propertyLivedIn-question").text shouldBe commonMessages.propertyLivedIn.title
+      }
+
+      "should have the value 'No'" in {
+        doc.select("#propertyLivedIn-option span.bold-medium").text shouldBe "Yes"
+      }
+
+      s"should have a change link to ${routes.DeductionsController.propertyLivedIn().url}" in {
+        doc.select("#propertyLivedIn-option a").attr("href") shouldBe routes.DeductionsController.propertyLivedIn().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#propertyLivedIn-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.propertyLivedIn.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#propertyLivedIn-option a span.visuallyhidden").text shouldBe commonMessages.propertyLivedIn.title
       }
     }
 
