@@ -113,27 +113,6 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
   }
 
 
-  "The URL for the reliefs action" should {
-    "be equal to /calculate-your-capital-gains/resident/properties/reliefs" in {
-      val path = controllers.resident.properties.routes.DeductionsController.reliefs().toString()
-      path shouldEqual "/calculate-your-capital-gains/resident/properties/reliefs"
-    }
-  }
-
-  "The URL for the submitReliefs action" should {
-    "be equal to /calculate-your-capital-gains/resident/properties/reliefs" in {
-      val path = controllers.resident.properties.routes.DeductionsController.submitReliefs().toString()
-      path shouldEqual "/calculate-your-capital-gains/resident/properties/reliefs"
-    }
-  }
-
-  "The URL for the reliefs input action" should {
-    "be equal to /calculate-your-capital-gains/resident/properties/reliefs-value" in {
-      val path = controllers.resident.properties.routes.DeductionsController.reliefsValue().toString()
-      path shouldEqual "/calculate-your-capital-gains/resident/properties/reliefs-value"
-    }
-  }
-
   "The URL for the lettings relief value input action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/lettings-relief-value" in {
       val path = controllers.resident.properties.routes.DeductionsController.lettingsReliefValue().toString()
@@ -236,6 +215,20 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     "be equal to /calculate-your-capital-gains/resident/properties/personal-allowance" in {
       val path = controllers.resident.properties.routes.IncomeController.submitPersonalAllowance().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/properties/personal-allowance"
+    }
+  }
+
+  "The URL for the propertyLivedIn action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/property-lived-in" in {
+      val path = controllers.resident.properties.routes.DeductionsController.propertyLivedIn().toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/properties/property-lived-in"
+    }
+  }
+
+  "The URL for the submit propertyLivedIn action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/property-lived-in" in {
+      val path = controllers.resident.properties.routes.DeductionsController.submitPropertyLivedIn().toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/properties/property-lived-in"
     }
   }
 

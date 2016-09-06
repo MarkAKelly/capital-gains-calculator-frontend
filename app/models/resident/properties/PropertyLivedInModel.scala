@@ -18,8 +18,8 @@ package models.resident.properties
 
 import play.api.libs.json.Json
 
-case class ReliefsValueModel(amount: BigDecimal)
+case class PropertyLivedInModel (livedInProperty: Boolean)
 
-object ReliefsValueModel {
-  implicit val format = Json.format[ReliefsValueModel]
+object PropertyLivedInModel {
+  implicit val format = Json.format[PropertyLivedInModel]
 }
