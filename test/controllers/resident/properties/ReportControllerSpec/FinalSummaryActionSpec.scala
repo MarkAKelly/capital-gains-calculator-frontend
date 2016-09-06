@@ -29,7 +29,7 @@ import play.api.mvc.RequestHeader
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{summaryPage => messages}
-import models.resident.properties.{ChargeableGainAnswers, YourAnswersSummaryModel}
+import models.resident.properties.{ChargeableGainAnswers, PropertyLivedInModel, YourAnswersSummaryModel}
 
 import scala.concurrent.Future
 
@@ -88,7 +88,7 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
         0,
         0)
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
-        Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None)
+        Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None, Some(PropertyLivedInModel(false)))
       lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 0, 11100, BigDecimal(0),
         BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
       lazy val incomeAnswersModel = IncomeAnswersModel(None, Some(CurrentIncomeModel(20000)), Some(PersonalAllowanceModel(10000)))
@@ -130,7 +130,7 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
         0,
         0)
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
-        Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None)
+        Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None, Some(PropertyLivedInModel(false)))
       lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 0, 11100,
         BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
       lazy val incomeAnswersModel = IncomeAnswersModel(None, Some(CurrentIncomeModel(20000)), Some(PersonalAllowanceModel(10000)))

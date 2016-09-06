@@ -221,8 +221,10 @@ trait CalculatorConnector {
     val broughtForwardModel = fetchAndGetFormData[resident.LossesBroughtForwardModel](ResidentPropertyKeys.lossesBroughtForward)
     val broughtForwardValueModel = fetchAndGetFormData[resident.LossesBroughtForwardValueModel](ResidentPropertyKeys.lossesBroughtForwardValue)
     val annualExemptAmountModel = fetchAndGetFormData[resident.AnnualExemptAmountModel](ResidentPropertyKeys.annualExemptAmount)
+    val propertyLivedInModel = fetchAndGetFormData[resident.properties.PropertyLivedInModel](ResidentPropertyKeys.propertyLivedIn)
 
     for {
+      propertyLivedIn <- propertyLivedInModel
       otherProperties <- otherPropertiesModel
       allowableLosses <- allowableLossesModel
       allowableLossesValue <- allowableLossesValueModel
@@ -236,7 +238,8 @@ trait CalculatorConnector {
         allowableLossesValue,
         broughtForward,
         broughtForwardValue,
-        annualExemptAmount)
+        annualExemptAmount,
+        propertyLivedIn)
     }
 
   }
