@@ -18,21 +18,19 @@ package forms.resident.properties
 
 import common.Transformers._
 import common.Validation._
-import models.resident.properties.ReliefsModel
+import models.resident.properties.LettingsReliefModel
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.Messages
-import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
+object LettingsReliefForm {
 
-object NoPrrReliefsForm {
-
-  def reliefsForm(totalGain: BigDecimal): Form[ReliefsModel] = Form(
+  def lettingsReliefForm: Form[LettingsReliefModel] = Form(
     mapping(
       "isClaiming" -> text
-        .verifying(Messages("calc.resident.reliefsNoPrr.errorSelect", MoneyPounds(totalGain, 0).quantity), _.nonEmpty)
-        .verifying(Messages("calc.resident.reliefsNoPrr.errorSelect", MoneyPounds(totalGain, 0).quantity), yesNoCheck)
+        .verifying(Messages("calc.resident.lettingsRelief.errorSelect"), mandatoryCheck)
+        .verifying(Messages("calc.resident.lettingsRelief.errorSelect"), yesNoCheck)
         .transform[Boolean](stringToBoolean, booleanToString)
-    )(ReliefsModel.apply)(ReliefsModel.unapply)
+    )(LettingsReliefModel.apply)(LettingsReliefModel.unapply)
   )
 }

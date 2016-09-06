@@ -32,21 +32,22 @@ GET     /summary                          controllers.resident.properties.Summar
 
 #Private Residence Relief Routes
 GET     /private-residence-relief         controllers.resident.properties.DeductionsController.privateResidenceRelief
+POST    /private-residence-relief         controllers.resident.properties.DeductionsController.submitPrivateResidenceRelief
 
 #Private Residence Relief Value Routes
 GET     /private-residence-relief-value   controllers.resident.properties.DeductionsController.privateResidenceReliefValue
 POST    /private-residence-relief-value   controllers.resident.properties.DeductionsController.submitPrivateResidenceReliefValue
 
-#Lettings Relief Routes
-GET     /lettings-relief                  controllers.resident.properties.DeductionsController.lettingsRelief
-
 #Reliefs Routes
-GET     /reliefs                          controllers.resident.properties.DeductionsController.reliefs
-POST    /reliefs                          controllers.resident.properties.DeductionsController.submitReliefs
 
 #Reliefs Value Routes
-GET     /reliefs-value                    controllers.resident.properties.DeductionsController.reliefsValue
-POST    /reliefs-value                    controllers.resident.properties.DeductionsController.submitReliefsValue
+
+#Lettings Relief Routes
+GET     /lettings-relief                  controllers.resident.properties.DeductionsController.lettingsRelief
+POST    /lettings-relief                  controllers.resident.properties.DeductionsController.submitLettingsRelief
+
+#Lettings Relief Value Routes
+GET     /lettings-relief-value            controllers.resident.properties.DeductionsController.lettingsReliefValue
 
 #Other Properties Routes
 GET     /other-properties                 controllers.resident.properties.DeductionsController.otherProperties
@@ -83,6 +84,10 @@ POST    /current-income                   controllers.resident.properties.Income
 #Personal Allowance Routes
 GET     /personal-allowance               controllers.resident.properties.IncomeController.personalAllowance
 POST    /personal-allowance               controllers.resident.properties.IncomeController.submitPersonalAllowance
+
+#Property Lived In Routes
+GET     /property-lived-in                controllers.resident.properties.DeductionsController.propertyLivedIn
+POST    /property-lived-in                controllers.resident.properties.DeductionsController.submitPropertyLivedIn
 
 #Gain Summary PDF Routes
 GET     /gain-report                      controllers.resident.properties.ReportController.gainSummaryReport

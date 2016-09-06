@@ -37,14 +37,13 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       BigDecimal(10000),
       BigDecimal(30000))
     lazy val deductionAnswers = ChargeableGainAnswers(
-      Some(ReliefsModel(false)),
-      None,
       Some(OtherPropertiesModel(false)),
       None,
       None,
       Some(LossesBroughtForwardModel(false)),
       None,
-      None)
+      None,
+      Some(PropertyLivedInModel(false)))
     lazy val results = ChargeableGainResultModel(BigDecimal(50000),
       BigDecimal(38900),
       BigDecimal(11100),
@@ -314,26 +313,26 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         }
       }
 
-      "has an option output row for tax reliefs" which {
+      "has an option output row for property lived in" which {
 
-        s"should have the question text '${commonMessages.reliefs.questionSummary}'" in {
-          doc.select("#reliefs-question").text shouldBe commonMessages.reliefs.questionSummary
+        s"should have the question text '${commonMessages.propertyLivedIn.title}'" in {
+          doc.select("#propertyLivedIn-question").text shouldBe commonMessages.propertyLivedIn.title
         }
 
         "should have the value 'No'" in {
-          doc.select("#reliefs-option span.bold-medium").text shouldBe "No"
+          doc.select("#propertyLivedIn-option span.bold-medium").text shouldBe "No"
         }
 
-        s"should have a change link to ${routes.DeductionsController.reliefs().url}" in {
-          doc.select("#reliefs-option a").attr("href") shouldBe routes.DeductionsController.reliefs().url
+        s"should have a change link to ${routes.DeductionsController.propertyLivedIn().url}" in {
+          doc.select("#propertyLivedIn-option a").attr("href") shouldBe routes.DeductionsController.propertyLivedIn().url
         }
 
         "has the question as part of the link" in {
-          doc.select("#reliefs-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.reliefs.question}"
+          doc.select("#propertyLivedIn-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.propertyLivedIn.title}"
         }
 
         "has the question component of the link as visuallyhidden" in {
-          doc.select("#reliefs-option a span.visuallyhidden").text shouldBe commonMessages.reliefs.question
+          doc.select("#propertyLivedIn-option a span.visuallyhidden").text shouldBe commonMessages.propertyLivedIn.title
         }
       }
 
@@ -413,14 +412,13 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       BigDecimal(10000),
       BigDecimal(30000))
     lazy val deductionAnswers = ChargeableGainAnswers(
-      Some(ReliefsModel(true)),
-      Some(ReliefsValueModel(BigDecimal(50000))),
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
       Some(AllowableLossesValueModel(10000)),
       Some(LossesBroughtForwardModel(true)),
       Some(LossesBroughtForwardValueModel(10000)),
-      Some(AnnualExemptAmountModel(1000)))
+      Some(AnnualExemptAmountModel(1000)),
+      Some(PropertyLivedInModel(true)))
     lazy val results = ChargeableGainResultModel(BigDecimal(50000),
       BigDecimal(-11000),
       BigDecimal(0),
@@ -618,41 +616,26 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         }
       }
 
-      "has an option output row for tax reliefs" which {
+      "has an option output row for property lived in" which {
 
-        s"should have the question text '${commonMessages.reliefs.questionSummary}'" in {
-          doc.select("#reliefs-question").text shouldBe commonMessages.reliefs.questionSummary
+        s"should have the question text '${commonMessages.propertyLivedIn.title}'" in {
+          doc.select("#propertyLivedIn-question").text shouldBe commonMessages.propertyLivedIn.title
         }
 
         "should have the value 'Yes'" in {
-          doc.select("#reliefs-option span.bold-medium").text shouldBe "Yes"
+          doc.select("#propertyLivedIn-option span.bold-medium").text shouldBe "Yes"
         }
 
-        s"should have a change link to ${routes.DeductionsController.reliefs().url}" in {
-          doc.select("#reliefs-option a").attr("href") shouldBe routes.DeductionsController.reliefs().url
+        s"should have a change link to ${routes.DeductionsController.propertyLivedIn().url}" in {
+          doc.select("#propertyLivedIn-option a").attr("href") shouldBe routes.DeductionsController.propertyLivedIn().url
         }
 
         "has the question as part of the link" in {
-          doc.select("#reliefs-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.reliefs.question}"
+          doc.select("#propertyLivedIn-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.propertyLivedIn.title}"
         }
 
         "has the question component of the link as visuallyhidden" in {
-          doc.select("#reliefs-option a span.visuallyhidden").text shouldBe commonMessages.reliefs.question
-        }
-      }
-
-      "has a numeric output row for tax relief value" which {
-
-        s"should have the question text '${commonMessages.reliefsValue.title("50,000")}'" in {
-          doc.select("#reliefsValue-question").text shouldBe commonMessages.reliefsValue.title("50,000")
-        }
-
-        "should have the value '£50,000'" in {
-          doc.select("#reliefsValue-amount span.bold-medium").text shouldBe "£50,000"
-        }
-
-        s"should have a change link to ${routes.DeductionsController.reliefsValue().url}" in {
-          doc.select("#reliefsValue-amount a").attr("href") shouldBe routes.DeductionsController.reliefsValue().url
+          doc.select("#propertyLivedIn-option a span.visuallyhidden").text shouldBe commonMessages.propertyLivedIn.title
         }
       }
 
@@ -786,14 +769,13 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       BigDecimal(10000),
       BigDecimal(30000))
     lazy val deductionAnswers = ChargeableGainAnswers(
-      Some(ReliefsModel(true)),
-      Some(ReliefsValueModel(BigDecimal(50000))),
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
       Some(AllowableLossesValueModel(10000)),
       Some(LossesBroughtForwardModel(true)),
       Some(LossesBroughtForwardValueModel(10000)),
-      Some(AnnualExemptAmountModel(1000)))
+      Some(AnnualExemptAmountModel(1000)),
+      Some(PropertyLivedInModel(false)))
     lazy val results = ChargeableGainResultModel(BigDecimal(50000),
       BigDecimal(-11000),
       BigDecimal(0),
@@ -914,14 +896,13 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       BigDecimal(0),
       BigDecimal(0))
     lazy val deductionAnswers = ChargeableGainAnswers(
-      Some(ReliefsModel(true)),
-      Some(ReliefsValueModel(BigDecimal(100000))),
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
       Some(AllowableLossesValueModel(0)),
       Some(LossesBroughtForwardModel(true)),
       Some(LossesBroughtForwardValueModel(0)),
-      Some(AnnualExemptAmountModel(0)))
+      Some(AnnualExemptAmountModel(0)),
+      Some(PropertyLivedInModel(false)))
     lazy val results = ChargeableGainResultModel(BigDecimal(0),
       BigDecimal(0),
       BigDecimal(0),
@@ -1018,14 +999,13 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       BigDecimal(10000),
       BigDecimal(30000))
     lazy val deductionAnswers = ChargeableGainAnswers(
-      Some(ReliefsModel(true)),
-      Some(ReliefsValueModel(BigDecimal(50000))),
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
       Some(AllowableLossesValueModel(10000)),
       Some(LossesBroughtForwardModel(true)),
       Some(LossesBroughtForwardValueModel(10000)),
-      Some(AnnualExemptAmountModel(1000)))
+      Some(AnnualExemptAmountModel(1000)),
+      Some(PropertyLivedInModel(false)))
     lazy val results = ChargeableGainResultModel(BigDecimal(50000),
       BigDecimal(-11000),
       BigDecimal(0),

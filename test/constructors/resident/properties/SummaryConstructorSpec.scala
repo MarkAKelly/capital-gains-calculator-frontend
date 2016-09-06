@@ -18,7 +18,7 @@ package constructors.resident.properties
 
 import assets.MessageLookup.{summaryPage => messages}
 import models.resident._
-import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, ReliefsValueModel}
+import models.resident.properties.{ChargeableGainAnswers, PropertyLivedInModel}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
@@ -47,45 +47,10 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
     }
   }
 
-  "Calling the .reliefsUsed function" when {
-
-    "no reliefs are claimed" should {
-      lazy val answers = ChargeableGainAnswers(Some(ReliefsModel(false)), None, None, None, None, None, None, None)
-
-      "return a value of '0'" in {
-        SummaryConstructor.reliefsUsed(answers) shouldBe "0"
-      }
-    }
-
-    "no reliefs are claimed with a provided value" should {
-      lazy val answers = ChargeableGainAnswers(Some(ReliefsModel(false)), Some(ReliefsValueModel(BigDecimal(10000))), None, None, None, None, None, None)
-
-      "return a value of '0'" in {
-        SummaryConstructor.reliefsUsed(answers) shouldBe "0"
-      }
-    }
-
-    "reliefs are claimed with a provided value" should {
-      lazy val answers = ChargeableGainAnswers(Some(ReliefsModel(true)), Some(ReliefsValueModel(BigDecimal(10000))), None, None, None, None, None, None)
-
-      "return a value of '10,000'" in {
-        SummaryConstructor.reliefsUsed(answers) shouldBe "10,000"
-      }
-    }
-
-    "reliefs are claimed with a provided value with decimal places" should {
-      lazy val answers = ChargeableGainAnswers(Some(ReliefsModel(true)), Some(ReliefsValueModel(BigDecimal(9999.99))), None, None, None, None, None, None)
-
-      "return a value of '10,000' when rounded up" in {
-        SummaryConstructor.reliefsUsed(answers) shouldBe "10,000"
-      }
-    }
-  }
-
   "Calling the .broughtForwardLossesUsed function" when {
 
     "no brought forward losses are claimed" should {
-      lazy val answers = ChargeableGainAnswers(None, None, None, None, None, Some(LossesBroughtForwardModel(false)), None, None)
+      lazy val answers = ChargeableGainAnswers(None, None, None, Some(LossesBroughtForwardModel(false)), None, None, Some(PropertyLivedInModel(false)))
 
       "return a value of '0'" in {
         SummaryConstructor.broughtForwardLossesUsed(answers) shouldBe "0"
@@ -93,8 +58,8 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
     }
 
     "no brought forward losses are claimed with a provided value" should {
-      lazy val answers = ChargeableGainAnswers(None, None, None, None, None,
-        Some(LossesBroughtForwardModel(false)), Some(LossesBroughtForwardValueModel(BigDecimal(10000))), None)
+      lazy val answers = ChargeableGainAnswers(None, None, None,
+        Some(LossesBroughtForwardModel(false)), Some(LossesBroughtForwardValueModel(BigDecimal(10000))), None, Some(PropertyLivedInModel(false)))
 
       "return a value of '0'" in {
         SummaryConstructor.broughtForwardLossesUsed(answers) shouldBe "0"
@@ -102,8 +67,8 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
     }
 
     "brought forward losses are claimed with a provided value" should {
-      lazy val answers = ChargeableGainAnswers(None, None, None, None, None,
-        Some(LossesBroughtForwardModel(true)), Some(LossesBroughtForwardValueModel(BigDecimal(10000))), None)
+      lazy val answers = ChargeableGainAnswers(None, None, None,
+        Some(LossesBroughtForwardModel(true)), Some(LossesBroughtForwardValueModel(BigDecimal(10000))), None, Some(PropertyLivedInModel(false)))
 
       "return a value of '10,000'" in {
         SummaryConstructor.broughtForwardLossesUsed(answers) shouldBe "10,000"
@@ -111,8 +76,8 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
     }
 
     "brought forward losses are claimed with a provided value with decimal places" should {
-      lazy val answers = ChargeableGainAnswers(None, None, None, None, None,
-        Some(LossesBroughtForwardModel(true)), Some(LossesBroughtForwardValueModel(BigDecimal(9999.99))), None)
+      lazy val answers = ChargeableGainAnswers(None, None, None,
+        Some(LossesBroughtForwardModel(true)), Some(LossesBroughtForwardValueModel(BigDecimal(9999.99))), None, Some(PropertyLivedInModel(false)))
 
       "return a value of '10,000' when rounded up" in {
         SummaryConstructor.broughtForwardLossesUsed(answers) shouldBe "10,000"
@@ -123,7 +88,7 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
   "Calling the .allowableLossesUsed function" when {
 
     "no other properties are claimed" should {
-      lazy val answers = ChargeableGainAnswers(None, None, Some(OtherPropertiesModel(false)), None, None, None, None, None)
+      lazy val answers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)), None, None, None, None, None, Some(PropertyLivedInModel(false)))
 
       "return a value of 0" in {
         SummaryConstructor.allowableLossesUsed(answers) shouldBe "0"
@@ -131,7 +96,8 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
     }
 
     "no allowable losses are claimed" should {
-      lazy val answers = ChargeableGainAnswers(None, None, Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(false)), None, None, None, None)
+      lazy val answers = ChargeableGainAnswers(Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(false)),
+        None, None, None, None, Some(PropertyLivedInModel(false)))
 
       "return a value of 0" in {
         SummaryConstructor.allowableLossesUsed(answers) shouldBe "0"
@@ -139,9 +105,9 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
     }
 
     "no allowable losses are claimed with a provided value" should {
-      lazy val answers = ChargeableGainAnswers(None, None,
+      lazy val answers = ChargeableGainAnswers(
         Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(false)), Some(AllowableLossesValueModel(BigDecimal(10000))),
-        None, None, None)
+        None, None, None, Some(PropertyLivedInModel(false)))
 
       "return a value of 0" in {
         SummaryConstructor.allowableLossesUsed(answers) shouldBe "0"
@@ -149,9 +115,9 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
     }
 
     "allowable losses are claimed but other properties is not" should {
-      lazy val answers = ChargeableGainAnswers(None, None,
+      lazy val answers = ChargeableGainAnswers(
         Some(OtherPropertiesModel(false)), Some(AllowableLossesModel(true)), Some(AllowableLossesValueModel(BigDecimal(10000))),
-        None, None, None)
+        None, None, None, Some(PropertyLivedInModel(false)))
 
       "return a value of 0" in {
         SummaryConstructor.allowableLossesUsed(answers) shouldBe "0"
@@ -159,9 +125,9 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
     }
 
     "other properties and allowable losses are claimed" should {
-      lazy val answers = ChargeableGainAnswers(None, None,
+      lazy val answers = ChargeableGainAnswers(
         Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(true)), Some(AllowableLossesValueModel(BigDecimal(10000))),
-        None, None, None)
+        None, None, None, Some(PropertyLivedInModel(false)))
 
       "return a value of 10,000" in {
         SummaryConstructor.allowableLossesUsed(answers) shouldBe "10,000"
@@ -169,9 +135,9 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
     }
 
     "other properties and allowable losses are claimed with decimal places" should {
-      lazy val answers = ChargeableGainAnswers(None, None,
+      lazy val answers = ChargeableGainAnswers(
         Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(true)), Some(AllowableLossesValueModel(BigDecimal(9999.99))),
-        None, None, None)
+        None, None, None, Some(PropertyLivedInModel(false)))
 
       "return a value of 10,000 when rounded up" in {
         SummaryConstructor.allowableLossesUsed(answers) shouldBe "10,000"

@@ -352,8 +352,6 @@ calc.resident.improvements.helpButton = Show me an example
 calc.resident.improvements.additionalContent.one = Replacing a basic kitchen or bathroom with a luxury version is normally considered an improvement.
 calc.resident.improvements.additionalContent.two = But replacing them with something of a similar standard is normally not an improvement.
 
-
-
 ## Summary messages
 calc.resident.summary.title = Summary
 calc.resident.summary.pageHeading = Tax owed
@@ -404,38 +402,18 @@ calc.resident.privateResidenceReliefValue.help = We''ve calculated that you''ve 
 calc.resident.privateResidenceReliefValue.link = Find out how much you can claim
 
 ## Reliefs messages
-calc.resident.reliefs.title = Do you want to claim any other tax reliefs?
-calc.resident.reliefs.question = Do you want to claim any other tax reliefs?
-calc.resident.reliefs.helpText = For example, lettings relief
-calc.resident.reliefs.additionalContent.one = Capital Gains Tax reliefs can lower the amount of tax you owe. For example, you might be able to claim
-calc.resident.reliefs.link.one = Private Residence Relief
-calc.resident.reliefs.link.two = Lettings Relief
-calc.resident.reliefs.additionalContent.two = Tax reliefs are different from your Capital Gains Tax Allowance and Personal Allowance.
-calc.resident.reliefs.errorSelect = Tell us if you want to claim any other tax reliefs
-calc.resident.reliefs.helpButton = What are Capital Gains Tax reliefs?
 
 ## No PRR Reliefs messages
-calc.resident.reliefsNoPrr.title = Do you want to claim any Capital Gains Tax reliefs on your total gain of  £{0}?
-calc.resident.reliefsNoPrr.question = Do you want to claim any Capital Gains Tax reliefs on your total gain of £{0}?
-calc.resident.reliefsNoPrr.helpText = For example, Private Residence Relief
-calc.resident.reliefsNoPrr.additionalContent.one = Capital Gains Tax reliefs can lower the amount of tax you owe. For example, you might be able to claim
-calc.resident.reliefsNoPrr.link.one = Private Residence Relief
-calc.resident.reliefsNoPrr.link.two = Lettings Relief
-calc.resident.reliefsNoPrr.additionalContent.two = Tax reliefs are different from your Capital Gains Tax Allowance and Personal Allowance.
-calc.resident.reliefsNoPrr.errorSelect = Tell us if you want to claim any Capital Gains Tax reliefs on your total gain of £{0}
-calc.resident.reliefsNoPrr.helpButton = What are Capital Gains Tax reliefs?
 
 ## Reliefs Value messages
-calc.resident.reliefsValue.title = How much tax relief are you claiming on your total gain of £{0}?
-calc.resident.reliefsValue.question = How much tax relief are you claiming on your total gain of £{0}?
-calc.resident.reliefsValue.externalLinkOne = Private Residence Relief
-calc.resident.reliefsValue.externalLinkTwo = Lettings Relief
 
 ## No Prr Reliefs Value messages
-calc.resident.reliefsValueNoPrr.title = How much Capital Gains Tax relief are you claiming?
-calc.resident.reliefsValueNoPrr.question = How much Capital Gains Tax relief are you claiming?
-calc.resident.reliefsValueNoPrr.externalLinkOne = Private Residence Relief
-calc.resident.reliefsValueNoPrr.externalLinkTwo = Lettings Relief
+
+## Lettings Relief messages
+calc.resident.lettingsRelief.title = Are you entitled to Letting Relief?
+calc.resident.lettingsRelief.help = You may be able entitled to Letting Relief if you''ve rented out the property. Find out more about
+calc.resident.lettingsRelief.helpOne = Letting Relief
+calc.resident.lettingsRelief.errorSelect = Tell us if you want to claim Letting Relief
 
 ## Losses Brought Forward messages
 calc.resident.lossesBroughtForward.title = Are there any previous losses you want to bring forward?
@@ -508,16 +486,14 @@ calc.resident.personalAllowance.helpText = This is the amount of your income you
 ###############################################################################################
 ## Private Residence Relief messages ##
 ###############################################################################################
-calc.resident.privateResidenceRelief.noSelectError = Tell us if you want to claim Private Residence Relief
-calc.resident.properties.privateResidenceRelief.title = Do you want to claim Private Residence Relief?
+calc.resident.privateResidenceRelief.errorSelect = Tell us if you want to claim Private Residence Relief
+calc.resident.properties.privateResidenceRelief.title = Are you entitled to Private Residence Relief?
 
-calc.resident.properties.privateResidenceRelief.legendFirstText = You may be able to claim full or part
-calc.resident.properties.privateResidenceRelief.legendLinkText = Private Residence Relief
-calc.resident.properties.privateResidenceRelief.legendSecondText = if you''ve lived at the property.
+calc.resident.properties.privateResidenceRelief.helpText = You''ll be entitled to Private Residence Relief if you''ve lived in the property as your main home at some point while you owned it. Find out more about
+calc.resident.properties.privateResidenceRelief.helpTextLink = Private Residence Relief
 
-calc.resident.properties.privateResidenceRelief.fullLabel = Yes, full relief
-calc.resident.properties.privateResidenceRelief.partLabel = Yes, part relief
-calc.resident.properties.privateResidenceRelief.noneLabel = No
+calc.resident.properties.propertyLivedIn.title = Have you ever lived in the property since you became the owner?
+calc.resident.properties.propertyLivedIn.noSelectError = Tell us if you have ever lived in the property since you became the owner
 
 ###############################################################################################
 ## Resident Shares messages ##

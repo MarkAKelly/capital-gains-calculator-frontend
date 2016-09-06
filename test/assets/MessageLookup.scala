@@ -198,6 +198,15 @@ object MessageLookup {
     val lettingsReliefLink = "Lettings Relief"
   }
 
+  //Lettings Relief messages
+  object lettingsRelief {
+    val title = "Are you entitled to Letting Relief?"
+    val help = "You may be able entitled to Letting Relief if you've rented out the property. Find out more about Letting Relief (opens in a new window)"
+    val helpOne = "Letting Relief (opens in a new window)"
+    val helpLink = "https://www.gov.uk/government/publications/private-residence-relief-hs283-self-assessment-helpsheet/hs283-private-residence-relief-2016#letting-relief"
+    val errorSelect = "Tell us if you want to claim Letting Relief"
+  }
+
   //Other Properties messages
   object otherProperties {
     def title(input: String): String = s"In the $input tax year, did you sell or give away anything else that's covered by Capital Gains Tax?"
@@ -282,14 +291,17 @@ object MessageLookup {
 
   //############ Private Residence Relief messages #################//
   object privateResidenceRelief {
-    val title = "Do you want to claim Private Residence Relief?"
-    val legendFirstSection = "You may be able to claim full or part"
-    val legendLink = "Private Residence Relief"
-    val legendSecondSection = "if you've lived at the property"
+    val title = "Are you entitled to Private Residence Relief?"
+    val helpTextOne = "You'll be entitled to Private Residence Relief if you've lived in the property as your main home " +
+      "at some point while you owned it. Find out more about"
+    val helpTextLink = "Private Residence Relief"
     val errorSelect = "Tell us if you want to claim Private Residence Relief"
-    val yesPart = "Yes, part relief"
-    val yesFull = "Yes, full relief"
-    val no = "No"
+  }
+
+  //############ Property Lived In messages #################//
+  object propertyLivedIn {
+    val title = "Have you ever lived in the property since you became the owner?"
+    val errorNoSelect = "Tell us if you have ever lived in the property since you became the owner"
   }
 
   //############ Shares messages ##############//

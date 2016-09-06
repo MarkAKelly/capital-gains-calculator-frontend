@@ -52,6 +52,7 @@ object KeystoreKeys {
     val prrValue = "res:property:prrValue"
     val reliefs = "res:property:reliefs"
     val reliefsValue = "res:property:reliefsValue"
+    val lettingsRelief = "res:property:lettingsRelief"
     val lossesBroughtForward = "res:property:lossesBroughtForward"
     val lossesBroughtForwardValue = "res:property:lossesBroughtForwardValue"
     val allowableLossesValue = "res:property:allowableLossesValue"
@@ -62,6 +63,7 @@ object KeystoreKeys {
     val incomeForPreviousYear = "res:property:incomeForPreviousYear"
     val personalAllowance = "res:property:personalAllowance"
     val privateResidenceRelief = "res:property:privateResidenceRelief"
+    val propertyLivedIn = "res:property:propertyLivedIn"
   }
 
   object ResidentShareKeys {

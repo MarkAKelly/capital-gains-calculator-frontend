@@ -51,17 +51,7 @@ articleLayout = false
 
     <!-- PRR Stats -->
 
-
     <!-- Other Reliefs Stats -->
-    @if(deductionAnswers.reliefsModel.fold(false)(_.isClaiming)){
-        <span data-metrics="rtt-properties-summary:otherReliefs:yes"></span>
-        <!-- Other Reliefs Value Figure Entered Stats -->
-        @if(deductionAnswers.reliefsValueModel.fold(BigDecimal(0))(_.amount) > BigDecimal(0)){
-            <span data-metrics="rtt-properties-summary:otherReliefs:figureEntered"></span>
-        }
-    } else {
-        <span data-metrics="rtt-properties-summary:otherReliefs:no"></span>
-    }
 
     <!-- Other Disposal Stats -->
     @if(deductionAnswers.otherPropertiesModel.fold(false)(_.hasOtherProperties)){
@@ -131,9 +121,7 @@ articleLayout = false
     @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),gainAnswers.acquisitionValue,Some(gainRoutes.acquisitionValue().toString))
     @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),gainAnswers.acquisitionCosts,Some(gainRoutes.acquisitionCosts().toString))
     @summaryNumericRowHelper("improvements",Messages("calc.resident.improvements.title"),gainAnswers.improvements,Some(gainRoutes.improvements().toString))
-    @summaryOptionRowHelper("reliefs",Messages("calc.resident.reliefs.title"),deductionAnswers.reliefsModel.get.isClaiming, Some(deductionRoutes.reliefs().toString))
-    @{if (deductionAnswers.reliefsModel.get.isClaiming)
-        summaryNumericRowHelper("reliefsValue",Messages("calc.resident.reliefsValue.title", MoneyPounds(result.gain, 0).quantity),deductionAnswers.reliefsValueModel.get.amount,Some(deductionRoutes.reliefsValue().toString))}
+    @summaryOptionRowHelper("propertyLivedIn", Messages("calc.resident.properties.propertyLivedIn.title"), deductionAnswers.propertyLivedInModel.get.livedInProperty, Some(deductionRoutes.propertyLivedIn().toString))
     @summaryOptionRowHelper("otherProperties",Messages("calc.resident.otherProperties.title", taxYear.taxYearSupplied),deductionAnswers.otherPropertiesModel.get.hasOtherProperties,Some(deductionRoutes.otherProperties().toString))
     @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties)
     summaryOptionRowHelper("allowableLosses",Messages("calc.resident.allowableLosses.title", taxYear.taxYearSupplied),deductionAnswers.allowableLossesModel.get.isClaiming,Some(deductionRoutes.allowableLosses().toString))}
