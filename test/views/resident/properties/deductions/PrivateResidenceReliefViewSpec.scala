@@ -216,21 +216,21 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
     }
   }
 
-//  "The Current Income View with form with errors" which {
-//
-//    "is due to mandatory field error" should {
-//
-//      val form = currentIncomeForm.bind(Map("amount" -> ""))
-//      lazy val view = views.currentIncome(form, "", taxYearModel)(fakeRequest)
-//      lazy val doc = Jsoup.parse(view.body)
-//
-//      "display an error summary message for the amount" in {
-//        doc.body.select("#amount-error-summary").size shouldBe 1
-//      }
-//
-//      "display an error message for the input" in {
-//        doc.body.select(".form-group .error-notification").size shouldBe 1
-//      }
-//    }
-//  }
+  "The Private Residence Relief View with form with errors" which {
+
+    "is due to mandatory field error" should {
+
+      val form = privateResidenceReliefForm.bind(Map("amount" -> ""))
+      lazy val view = views.privateResidenceRelief(form)(fakeRequest)
+      lazy val doc = Jsoup.parse(view.body)
+
+      "display an error summary message for the amount" in {
+        doc.body.select("#isClaiming-error-summary").size shouldBe 1
+      }
+
+      "display an error message for the input" in {
+        doc.body.select(".form-group .error-notification").size shouldBe 1
+      }
+    }
+  }
 }
