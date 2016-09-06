@@ -389,8 +389,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       None,
       Some(AnnualExemptAmountModel(0)),
       Some(PropertyLivedInModel(true)),
-      Some(PrivateResidenceReliefModel(false)),
-      None)
+      Some(PrivateResidenceReliefModel(true)),
+      Some(LettingsReliefModel(true)))
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -443,14 +443,26 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
     }
 
 
-    "has an option output row for the eligible for private residence relief" which {
+    "has an option output row for eligible for private residence relief in" which {
 
       s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
         doc.select("#privateResidenceRelief-question").text shouldBe commonMessages.privateResidenceRelief.title
       }
 
-      "should have the value 'No'" in {
-        doc.select("#privateResidenceRelief-option span.bold-medium").text shouldBe "No"
+      "should have the value 'Yes'" in {
+        doc.select("#privateResidenceRelief-option span.bold-medium").text shouldBe "Yes"
+      }
+
+    }
+
+    "has an option output row for eligible for lettings relief in" which {
+
+      s"should have the question text '${commonMessages.lettingsRelief.title}'" in {
+        doc.select("#lettingsRelief-question").text shouldBe commonMessages.lettingsRelief.title
+      }
+
+      "should have the value 'Yes'" in {
+        doc.select("#lettingsRelief-option span.bold-medium").text shouldBe "Yes"
       }
     }
 

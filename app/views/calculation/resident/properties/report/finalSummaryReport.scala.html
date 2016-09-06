@@ -102,6 +102,9 @@
         @{if (deductionAnswers.propertyLivedInModel.get.livedInProperty)
         summaryOptionRowHelper("privateResidenceRelief", Messages("calc.resident.properties.privateResidenceRelief.title"),
         deductionAnswers.privateResidenceReliefModel.get.isClaiming, None)}
+        @{if (deductionAnswers.propertyLivedInModel.get.livedInProperty && deductionAnswers.privateResidenceReliefModel.get.isClaiming)
+        summaryOptionRowHelper("lettingsRelief", Messages("calc.resident.lettingsRelief.title"),
+        deductionAnswers.lettingsReliefModel.get.isClaiming, None)}
 
         @summaryOptionRowHelper("otherProperties",Messages("calc.resident.otherProperties.title",
         taxYear.taxYearSupplied),deductionAnswers.otherPropertiesModel.get.hasOtherProperties,None)
