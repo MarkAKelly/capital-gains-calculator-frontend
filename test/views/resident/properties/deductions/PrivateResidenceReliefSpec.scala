@@ -103,8 +103,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
       lazy val form = doc.getElementsByTag("form")
 
-      s"has the action '${controllers.resident.properties.routes.IncomeController.submitCurrentIncome().toString}'" in {
-        form.attr("action") shouldBe controllers.resident.properties.routes.IncomeController.submitCurrentIncome().toString
+      s"has the action '${controllers.resident.properties.routes.DeductionsController.privateResidenceRelief().toString}'" in {
+        form.attr("action") shouldBe controllers.resident.properties.routes.DeductionsController.privateResidenceRelief().toString
       }
 
       "has the method of POST" in {
@@ -115,8 +115,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
         lazy val radioButtons = doc.body.getElementsByTag("fieldset")
 
-        "are contained within a fieldset with id 'option'" in {
-          radioButtons.attr("id") shouldBe "option"
+        "are contained within a fieldset with id 'isClaiming'" in {
+          radioButtons.attr("id") shouldBe "isClaiming"
         }
 
         "has a legend" which {
@@ -136,35 +136,43 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
         "has an input for the yes option" which {
 
-          lazy val yesButton = radioButtons.select("label[for=option-yes]")
+          lazy val yesButton = radioButtons.select("label[for=isClaiming-yes]")
 
           "has a label with text 'Yes'" in {
             yesButton.text shouldEqual "Yes"
           }
 
           "has id option-yes" in {
-            yesButton.select("input").attr("id") shouldEqual "option-yes"
+            yesButton.select("input").attr("id") shouldEqual "isClaiming-yes"
+          }
+
+          "has a name of 'isClaiming'" in {
+            yesButton.select("input").attr("name") shouldEqual "isClaiming"
           }
 
           "has a value of 'Yes'" in {
-            yesButton.select("input[value]") shouldEqual "Yes"
+            yesButton.select("input").attr("value") shouldEqual "Yes"
           }
         }
 
         "has an input for the no option" which {
 
-          lazy val yesButton = radioButtons.select("label[for=option-no]")
+          lazy val noButton = radioButtons.select("label[for=isClaiming-no]")
 
           "has a label with text 'No'" in {
-            yesButton.text shouldEqual "No"
+            noButton.text shouldEqual "No"
           }
 
           "has id option-no" in {
-            yesButton.select("input").attr("id") shouldEqual "option-no"
+            noButton.select("input").attr("id") shouldEqual "isClaiming-no"
+          }
+
+          "has a name of 'isClaiming'" in {
+            noButton.select("input").attr("name") shouldEqual "isClaiming"
           }
 
           "has a value of 'No'" in {
-            yesButton.select("input[value]") shouldEqual "No"
+            noButton.select("input").attr("value") shouldEqual "No"
           }
         }
       }
