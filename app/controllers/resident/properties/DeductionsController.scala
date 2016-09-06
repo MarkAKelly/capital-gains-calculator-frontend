@@ -29,6 +29,7 @@ import forms.resident.AllowableLossesForm._
 import forms.resident.AllowableLossesValueForm._
 import forms.resident.AnnualExemptAmountForm._
 import forms.resident.OtherPropertiesForm._
+import forms.resident.properties.LettingsReliefForm._
 import forms.resident.properties.PrivateResidenceReliefForm._
 import forms.resident.properties.PropertyLivedInForm._
 import models.resident.properties._
@@ -99,6 +100,47 @@ trait DeductionsController extends FeatureLock {
   }
 
   //########## Private Residence Relief Value Actions ##############
+  val privateResidenceReliefValue = TODO
+
+  //############## Lettings Relief Actions ##################
+
+  private val lettingsReliefBackUrl = routes.DeductionsController.privateResidenceReliefValue().url
+
+  val lettingsRelief = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[LettingsReliefModel](keystoreKeys.lettingsRelief).map {
+      case Some(data) => Ok(views.lettingsRelief(lettingsReliefForm.fill(data), homeLink, Some(lettingsReliefBackUrl)))
+      case None => Ok(views.lettingsRelief(lettingsReliefForm, homeLink, Some(lettingsReliefBackUrl)))
+    }
+  }
+
+  val submitLettingsRelief = FeatureLockForRTT.async { implicit request =>
+
+    def errorAction(form: Form[LettingsReliefModel]) = {
+      Future.successful(BadRequest(views.lettingsRelief(form, homeLink, Some(lettingsReliefBackUrl))))
+    }
+
+    def routeRequest(model: LettingsReliefModel) = {
+      model match {
+        case LettingsReliefModel(true) => Future.successful(Redirect(routes.DeductionsController.lettingsReliefValue()))
+        case _ => Future.successful(Redirect(routes.DeductionsController.otherProperties()))
+      }
+    }
+
+    def successAction(model: LettingsReliefModel) = {
+      for {
+        save <- calcConnector.saveFormData[LettingsReliefModel](keystoreKeys.lettingsRelief, model)
+        route <- routeRequest(model)
+      } yield route
+    }
+
+    lettingsReliefForm.bindFromRequest().fold(
+      errors => errorAction(errors),
+      success => successAction(success)
+    )
+  }
+
+  //########### Lettings Relief Value Actions ###############
+  val lettingsReliefValue = TODO
 
   //################# Reliefs Actions ########################
 
