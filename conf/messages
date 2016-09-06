@@ -493,6 +493,9 @@ calc.resident.properties.privateResidenceRelief.fullLabel = Yes, full relief
 calc.resident.properties.privateResidenceRelief.partLabel = Yes, part relief
 calc.resident.properties.privateResidenceRelief.noneLabel = No
 
+calc.resident.properties.propertyLivedIn.title = Have you ever lived in the property since you became the owner?
+calc.resident.properties.propertyLivedIn.noSelectError = Tell us if you have ever lived in the property since you became the owner
+
 ###############################################################################################
 ## Resident Shares messages ##
 ###############################################################################################

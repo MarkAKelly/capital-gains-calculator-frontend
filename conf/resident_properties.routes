@@ -82,6 +82,10 @@ POST    /current-income                   controllers.resident.properties.Income
 GET     /personal-allowance               controllers.resident.properties.IncomeController.personalAllowance
 POST    /personal-allowance               controllers.resident.properties.IncomeController.submitPersonalAllowance
 
+#Property Lived In Routes
+GET     /property-lived-in                controllers.resident.properties.DeductionsController.propertyLivedIn
+POST    /property-lived-in                controllers.resident.properties.DeductionsController.submitPropertyLivedIn
+
 #Gain Summary PDF Routes
 GET     /gain-report                      controllers.resident.properties.ReportController.gainSummaryReport
 
