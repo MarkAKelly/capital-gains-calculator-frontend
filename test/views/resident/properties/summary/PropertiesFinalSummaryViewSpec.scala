@@ -45,6 +45,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       None,
       None,
       Some(PropertyLivedInModel(false)),
+      None,
       None)
     lazy val incomeAnswers = IncomeAnswersModel(None, Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
     lazy val results = TotalGainAndTaxOwedModel(
@@ -471,7 +472,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       None,
       Some(AnnualExemptAmountModel(0)),
       Some(PropertyLivedInModel(true)),
-      Some(PrivateResidenceReliefModel(false)))
+      Some(PrivateResidenceReliefModel(false)),
+      None)
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -704,6 +706,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       None,
       Some(AnnualExemptAmountModel(0)),
       Some(PropertyLivedInModel(false)),
+      None,
       None)
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
@@ -824,6 +827,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       None,
       Some(AnnualExemptAmountModel(0)),
       Some(PropertyLivedInModel(false)),
+      None,
       None)
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(0)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
@@ -919,6 +923,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       None,
       Some(AnnualExemptAmountModel(0)),
       Some(PropertyLivedInModel(false)),
+      None,
       None)
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
@@ -986,6 +991,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       None,
       Some(AnnualExemptAmountModel(0)),
       Some(PropertyLivedInModel(false)),
+      None,
       None)
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))

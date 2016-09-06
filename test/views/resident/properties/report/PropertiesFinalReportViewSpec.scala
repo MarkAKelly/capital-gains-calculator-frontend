@@ -46,6 +46,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       None,
       Some(AnnualExemptAmountModel(0)),
       Some(PropertyLivedInModel(false)),
+      None,
       None)
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
@@ -381,7 +382,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       None,
       Some(AnnualExemptAmountModel(0)),
       Some(PropertyLivedInModel(true)),
-      Some(PrivateResidenceReliefModel(false)))
+      Some(PrivateResidenceReliefModel(false)),
+      None)
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
