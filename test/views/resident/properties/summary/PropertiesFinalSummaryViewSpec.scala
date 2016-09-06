@@ -576,7 +576,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
         doc.select("#propertyLivedIn-question").text shouldBe commonMessages.propertyLivedIn.title
       }
 
-      "should have the value 'No'" in {
+      "should have the value 'Yes'" in {
         doc.select("#propertyLivedIn-option span.bold-medium").text shouldBe "Yes"
       }
 

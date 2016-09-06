@@ -258,6 +258,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         }
       }
 
+      "has an option output row for property lived in" which {
+
+        s"should have the question text '${commonMessages.propertyLivedIn.title}'" in {
+          doc.select("#propertyLivedIn-question").text shouldBe commonMessages.propertyLivedIn.title
+        }
+
+        "should have the value 'No'" in {
+          doc.select("#propertyLivedIn-option span.bold-medium").text shouldBe "No"
+        }
+      }
+
       "has an option output row for other properties" which {
 
         s"should have the question text '${commonMessages.otherProperties.title("2015/16")}'" in {
@@ -296,7 +307,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       Some(LossesBroughtForwardModel(true)),
       Some(LossesBroughtForwardValueModel(10000)),
       Some(AnnualExemptAmountModel(1000)),
-      Some(PropertyLivedInModel(false)))
+      Some(PropertyLivedInModel(true)))
     lazy val results = ChargeableGainResultModel(BigDecimal(50000),
       BigDecimal(-11000),
       BigDecimal(0),
@@ -389,6 +400,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
           "include a value for Loss brought forward of £10,000" in {
             doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYearUsed("2013/14")} £10,000")
           }
+        }
+      }
+
+      "has an option output row for property lived in" which {
+
+        s"should have the question text '${commonMessages.propertyLivedIn.title}'" in {
+          doc.select("#propertyLivedIn-question").text shouldBe commonMessages.propertyLivedIn.title
+        }
+
+        "should have the value 'Yes'" in {
+          doc.select("#propertyLivedIn-option span.bold-medium").text shouldBe "Yes"
         }
       }
 

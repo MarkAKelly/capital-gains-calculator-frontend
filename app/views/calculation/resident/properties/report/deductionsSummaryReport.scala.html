@@ -136,6 +136,8 @@
         gainAnswers.acquisitionCosts, None)
         @summaryNumericRowHelper("improvements", Messages("calc.resident.improvements.title"), gainAnswers.improvements,
         None)
+        @summaryOptionRowHelper("propertyLivedIn", Messages("calc.resident.properties.propertyLivedIn.title"),
+        deductionAnswers.propertyLivedInModel.get.livedInProperty, None)
         @summaryOptionRowHelper("otherProperties", Messages("calc.resident.otherProperties.title",
         taxYear.taxYearSupplied), deductionAnswers.otherPropertiesModel.get.hasOtherProperties, None)
         @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties)
