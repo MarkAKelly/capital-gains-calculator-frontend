@@ -286,8 +286,6 @@ object MessageLookup {
       "at some point while you owned it. Find out more about"
     val helpTextLink = "Private Residence Relief"
     val errorSelect = "Tell us if you want to claim Private Residence Relief"
-    val yes = "Yes"
-    val no = "No"
   }
 
   //############ Property Lived In messages #################//
