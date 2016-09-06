@@ -82,6 +82,8 @@ trait DeductionsController extends FeatureLock {
     def errorAction(errors: Form[PrivateResidenceReliefModel]) = Future.successful(BadRequest(views.privateResidenceRelief(errors)))
 
     def routeRequest(model: PrivateResidenceReliefModel) = {
+      //This route will need to be updated when the private-residence-relief-value page is added.
+      //There are scala tests ready for this in the PrivateResidenceReliefActionSpec.
       if (model.isClaiming) Future.successful(Redirect(???))
       else Future.successful(Redirect(routes.DeductionsController.otherProperties()))
     }
