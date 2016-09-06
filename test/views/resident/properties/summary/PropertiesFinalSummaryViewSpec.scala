@@ -361,6 +361,13 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
         }
       }
 
+      "does not have an option output row for the lettings relief" which {
+
+        s"should not display" in {
+          doc.select("#lettingsRelief-question").size() shouldBe 0
+        }
+      }
+
       "has an option output row for other properties" which {
 
         s"should have the question text '${commonMessages.otherProperties.title("2015/16")}'" in {
