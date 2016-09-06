@@ -23,4 +23,5 @@ case class ChargeableGainAnswers (otherPropertiesModel: Option[OtherPropertiesMo
                                   allowableLossesValueModel: Option[AllowableLossesValueModel],
                                   broughtForwardModel: Option[LossesBroughtForwardModel],
                                   broughtForwardValueModel: Option[LossesBroughtForwardValueModel],
-                                  annualExemptAmountModel: Option[AnnualExemptAmountModel])
+                                  annualExemptAmountModel: Option[AnnualExemptAmountModel],
+                                  propertyLivedInModel: Option[PropertyLivedInModel])

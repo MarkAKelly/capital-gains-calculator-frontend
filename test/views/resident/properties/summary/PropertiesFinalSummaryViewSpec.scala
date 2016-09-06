@@ -43,7 +43,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       None,
       Some(LossesBroughtForwardModel(false)),
       None,
-      None)
+      None,
+      Some(PropertyLivedInModel(false)))
     lazy val incomeAnswers = IncomeAnswersModel(None, Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
     lazy val results = TotalGainAndTaxOwedModel(
       50000,
@@ -437,7 +438,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       None,
       Some(LossesBroughtForwardModel(false)),
       None,
-      Some(AnnualExemptAmountModel(0)))
+      Some(AnnualExemptAmountModel(0)),
+      Some(PropertyLivedInModel(false)))
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -622,7 +624,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       None,
       Some(LossesBroughtForwardModel(false)),
       None,
-      Some(AnnualExemptAmountModel(0)))
+      Some(AnnualExemptAmountModel(0)),
+      Some(PropertyLivedInModel(false)))
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -740,7 +743,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       None,
       Some(LossesBroughtForwardModel(false)),
       None,
-      Some(AnnualExemptAmountModel(0)))
+      Some(AnnualExemptAmountModel(0)),
+      Some(PropertyLivedInModel(false)))
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(0)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -833,7 +837,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       None,
       Some(LossesBroughtForwardModel(false)),
       None,
-      Some(AnnualExemptAmountModel(0)))
+      Some(AnnualExemptAmountModel(0)),
+      Some(PropertyLivedInModel(false)))
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -898,7 +903,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       None,
       Some(LossesBroughtForwardModel(false)),
       None,
-      Some(AnnualExemptAmountModel(0)))
+      Some(AnnualExemptAmountModel(0)),
+      Some(PropertyLivedInModel(false)))
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 

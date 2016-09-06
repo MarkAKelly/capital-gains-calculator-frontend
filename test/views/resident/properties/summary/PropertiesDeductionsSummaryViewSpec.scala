@@ -42,7 +42,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       None,
       Some(LossesBroughtForwardModel(false)),
       None,
-      None)
+      None,
+      Some(PropertyLivedInModel(false)))
     lazy val results = ChargeableGainResultModel(BigDecimal(50000),
       BigDecimal(38900),
       BigDecimal(11100),
@@ -393,7 +394,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       Some(AllowableLossesValueModel(10000)),
       Some(LossesBroughtForwardModel(true)),
       Some(LossesBroughtForwardValueModel(10000)),
-      Some(AnnualExemptAmountModel(1000)))
+      Some(AnnualExemptAmountModel(1000)),
+      Some(PropertyLivedInModel(false)))
     lazy val results = ChargeableGainResultModel(BigDecimal(50000),
       BigDecimal(-11000),
       BigDecimal(0),
@@ -726,7 +728,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       Some(AllowableLossesValueModel(10000)),
       Some(LossesBroughtForwardModel(true)),
       Some(LossesBroughtForwardValueModel(10000)),
-      Some(AnnualExemptAmountModel(1000)))
+      Some(AnnualExemptAmountModel(1000)),
+      Some(PropertyLivedInModel(false)))
     lazy val results = ChargeableGainResultModel(BigDecimal(50000),
       BigDecimal(-11000),
       BigDecimal(0),
@@ -852,7 +855,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       Some(AllowableLossesValueModel(0)),
       Some(LossesBroughtForwardModel(true)),
       Some(LossesBroughtForwardValueModel(0)),
-      Some(AnnualExemptAmountModel(0)))
+      Some(AnnualExemptAmountModel(0)),
+      Some(PropertyLivedInModel(false)))
     lazy val results = ChargeableGainResultModel(BigDecimal(0),
       BigDecimal(0),
       BigDecimal(0),
@@ -954,7 +958,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       Some(AllowableLossesValueModel(10000)),
       Some(LossesBroughtForwardModel(true)),
       Some(LossesBroughtForwardValueModel(10000)),
-      Some(AnnualExemptAmountModel(1000)))
+      Some(AnnualExemptAmountModel(1000)),
+      Some(PropertyLivedInModel(false)))
     lazy val results = ChargeableGainResultModel(BigDecimal(50000),
       BigDecimal(-11000),
       BigDecimal(0),
