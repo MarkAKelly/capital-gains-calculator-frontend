@@ -24,7 +24,7 @@ import models.nonresident._
 import models.resident
 import models.resident.IncomeAnswersModel
 import models.resident.shares.{DeductionGainAnswersModel, GainAnswersModel}
-import models.resident.properties.{ChargeableGainAnswers, ReliefsModel, ReliefsValueModel}
+import models.resident.properties.ChargeableGainAnswers
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -116,11 +116,6 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
   }
 
   def mockResidentFetchAndGetFormData(): Unit = {
-    when(mockSessionCache.fetchAndGetEntry[ReliefsModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.reliefs))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(mock[ReliefsModel])))
-
-    when(mockSessionCache.fetchAndGetEntry[ReliefsValueModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.reliefsValue))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(mock[ReliefsValueModel])))
 
     when(mockSessionCache.fetchAndGetEntry[resident.OtherPropertiesModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.otherProperties))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(mock[resident.OtherPropertiesModel])))

@@ -215,11 +215,6 @@ trait CalculatorConnector {
   }
 
   def getPropertyDeductionAnswers(implicit hc: HeaderCarrier): Future[ChargeableGainAnswers] = {
-    //These have been updated as per Mac's suggestion just to return default values for now.
-    val reliefsModel = Some(ReliefsModel(false))
-    val reliefsValueModel = None
-    //********************************************
-
     val otherPropertiesModel = fetchAndGetFormData[resident.OtherPropertiesModel](ResidentPropertyKeys.otherProperties)
     val allowableLossesModel = fetchAndGetFormData[resident.AllowableLossesModel](ResidentPropertyKeys.allowableLosses)
     val allowableLossesValueModel = fetchAndGetFormData[resident.AllowableLossesValueModel](ResidentPropertyKeys.allowableLossesValue)
@@ -228,9 +223,6 @@ trait CalculatorConnector {
     val annualExemptAmountModel = fetchAndGetFormData[resident.AnnualExemptAmountModel](ResidentPropertyKeys.annualExemptAmount)
 
     for {
-      //These have been commented out for now as they will be needed later.
-//      reliefs <- reliefsModel
-//      reliefsValue <- reliefsValueModel
       otherProperties <- otherPropertiesModel
       allowableLosses <- allowableLossesModel
       allowableLossesValue <- allowableLossesValueModel
@@ -239,10 +231,6 @@ trait CalculatorConnector {
       annualExemptAmount <- annualExemptAmountModel
     } yield {
       properties.ChargeableGainAnswers(
-        //These will need to be swapped back to for-yeilds.
-        reliefsModel,
-        reliefsValueModel,
-        //
         otherProperties,
         allowableLosses,
         allowableLossesValue,

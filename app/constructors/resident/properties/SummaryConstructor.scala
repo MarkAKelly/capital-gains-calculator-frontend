@@ -30,13 +30,6 @@ object SummaryConstructor {
     else Messages("calc.resident.summary.totalLoss")
   }
 
-  def reliefsUsed (input: ChargeableGainAnswers): String = {
-    input.reliefsModel match {
-      case Some(ReliefsModel(true)) => MoneyPounds(input.reliefsValueModel.get.amount.setScale(0, RoundingMode.UP), 0).quantity
-      case _ => MoneyPounds(0,0).quantity
-    }
-  }
-
   def allowableLossesUsed (input: ChargeableGainAnswers): String = {
     (input.otherPropertiesModel, input.allowableLossesModel) match {
       case (Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(true))) =>
