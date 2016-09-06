@@ -189,6 +189,13 @@ object MessageLookup {
     val lettingsReliefLink = "Lettings Relief"
   }
 
+  //Lettings Relief Value messages
+  object lettingsReliefValue {
+    val title = s"How much Letting Relief are you entitled to?"
+    val question = s"How much Letting Relief are you entitled to?"
+    def additionalContent(input: String) = s"We've calculated that you've made a gain of £$input on your property. You'll need this figure to calculate your Letting Relief."
+  }
+
   //No Prr Reliefs Value messages
   object reliefsValueNoPrr {
     val title = "How much Capital Gains Tax relief are you claiming?"

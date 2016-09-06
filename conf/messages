@@ -423,6 +423,12 @@ calc.resident.reliefsNoPrr.additionalContent.two = Tax reliefs are different fro
 calc.resident.reliefsNoPrr.errorSelect = Tell us if you want to claim any Capital Gains Tax reliefs on your total gain of £{0}
 calc.resident.reliefsNoPrr.helpButton = What are Capital Gains Tax reliefs?
 
+## Lettings Relief Value messages
+calc.resident.lettingsReliefValue.title = How much Letting Relief are you entitled to?
+calc.resident.lettingsReliefValue.question = How much Letting Relief are you entitled to?
+calc.resident.lettingsReliefValue.additionalContent = We''ve calculated that you''ve made a gain of £{0} on your property. You''ll need this figure to calculate your Letting Relief.
+
+
 ## Reliefs Value messages
 calc.resident.reliefsValue.title = How much tax relief are you claiming on your total gain of £{0}?
 calc.resident.reliefsValue.question = How much tax relief are you claiming on your total gain of £{0}?

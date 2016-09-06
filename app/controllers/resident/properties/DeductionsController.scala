@@ -32,6 +32,7 @@ import forms.resident.OtherPropertiesForm._
 import forms.resident.properties.ReliefsForm._
 import forms.resident.properties.ReliefsValueForm._
 import forms.resident.properties.NoPrrReliefsForm
+import forms.resident.properties.LettingsReliefValueForm._
 import models.resident.properties._
 import play.api.mvc.Result
 import play.api.data.Form
@@ -166,6 +167,49 @@ trait DeductionsController extends FeatureLock {
     }
     
     reliefsValueForm.bindFromRequest.fold(
+      errors => errorAction(errors),
+      success => successAction(success)
+    )
+  }
+
+
+  //################# Lettings Relief Actions ########################
+
+  val lettingsRelief = TODO
+
+  //################# Lettings Relief Value Input Actions ########################
+
+  val lettingsReliefValue = FeatureLockForRTT.async { implicit request =>
+
+    def routeRequest(totalGain: BigDecimal): Future[Result] = {
+      calcConnector.fetchAndGetFormData[LettingsReliefValueModel](keystoreKeys.lettingsReliefValue).map {
+        case Some(data) => Ok(views.lettingsReliefValue(lettingsReliefValueForm.fill(data), homeLink, totalGain))
+        case None => Ok(views.lettingsReliefValue(lettingsReliefValueForm, homeLink, totalGain))
+      }
+    }
+
+    for {
+      answerSummary <- answerSummary(hc)
+      totalGain <- totalGain(answerSummary, hc)
+      route <- routeRequest(totalGain)
+    } yield route
+  }
+
+  val submitLettingsReliefValue = FeatureLockForRTT.async { implicit request =>
+
+    def errorAction(form: Form[LettingsReliefValueModel]) = {
+      for {
+        answerSummary <- answerSummary(hc)
+        totalGain <- totalGain(answerSummary, hc)
+      } yield BadRequest(views.lettingsReliefValue(form, homeLink, totalGain))
+    }
+
+    def successAction(model: LettingsReliefValueModel) = {
+      calcConnector.saveFormData[LettingsReliefValueModel](keystoreKeys.lettingsReliefValue, model)
+      Future.successful(Redirect(routes.DeductionsController.otherProperties()))
+    }
+
+    lettingsReliefValueForm.bindFromRequest.fold(
       errors => errorAction(errors),
       success => successAction(success)
     )
