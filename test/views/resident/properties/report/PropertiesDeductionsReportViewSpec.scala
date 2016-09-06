@@ -43,7 +43,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       None,
       None,
       Some(PropertyLivedInModel(false)),
-      None)
+      Some(PrivateResidenceReliefModel(true)))
     lazy val results = ChargeableGainResultModel(BigDecimal(50000),
       BigDecimal(38900),
       BigDecimal(11100),
@@ -316,7 +316,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       Some(LossesBroughtForwardValueModel(10000)),
       Some(AnnualExemptAmountModel(1000)),
       Some(PropertyLivedInModel(true)),
-      Some(PrivateResidenceReliefModel(false)))
+      Some(PrivateResidenceReliefModel(true)))
     lazy val results = ChargeableGainResultModel(BigDecimal(50000),
       BigDecimal(-11000),
       BigDecimal(0),
