@@ -32,6 +32,12 @@ object CalculateRequestConstructor {
   }
 
   def chargeableGainRequestString (answers: ChargeableGainAnswers, maxAEA: BigDecimal): String = {
+
+    //Two new parameters in here the private residence relief claiming and the lettings relief claiming
+    s"${if (answers.propertyLivedInModel.get.livedInProperty && answers.privateResidenceReliefModel.get.isClaiming)
+      s"&privateResidenceReliefs=${answers.privateResidenceReliefValueModel}"
+    }"
+
     s"${if (answers.otherPropertiesModel.get.hasOtherProperties && answers.allowableLossesModel.get.isClaiming)
       s"&allowableLosses=${answers.allowableLossesValueModel.get.amount}"
     else ""}" +
