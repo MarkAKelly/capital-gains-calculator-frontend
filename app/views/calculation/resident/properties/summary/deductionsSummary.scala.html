@@ -1,5 +1,4 @@
 @import views.html.helpers.resident._
-@import models.SummaryDataItemModel
 @import models.resident._
 @import models.resident.properties._
 @import common.Dates._
@@ -12,7 +11,13 @@
 @import views.html.calculation.resident.properties._
 @import config.ApplicationConfig
 
-@(gainAnswers: YourAnswersSummaryModel, deductionAnswers: ChargeableGainAnswers, result: ChargeableGainResultModel, backUrl: String, taxYear: TaxYearModel)(implicit request: Request[_])
+@(gainAnswers: YourAnswersSummaryModel,
+        deductionAnswers: ChargeableGainAnswers,
+        result: ChargeableGainResultModel,
+        backUrl: String,
+        taxYear: TaxYearModel,
+        prrUsed: Option[Boolean] = None,
+        lettingsReliefUsed: Option[Boolean] = None)(implicit request: Request[_])
 
 @allowableLossesHelpText() = {
     <span>
@@ -77,10 +82,20 @@ articleLayout = false
     <span data-metrics="rtt-properties-summary:result:no-gain"></span>
 
     <!-- PRR Stats -->
+    @{prrUsed match {
+        case Some(true) => <span data-metrics="rtt-properties-summary:prr:yes"></span>
+        case Some(false) => <span data-metrics="rtt-properties-summary:prr:no"></span>
+        case _ => ()
+    }}
 
-    <!-- Other Reliefs Stats -->
+    <!-- Lettings Reliefs Stats -->
+    @{lettingsReliefUsed match {
+        case Some(true) => <span data-metrics="rtt-properties-summary:lettingsRelief:yes"></span>
+        case Some(false) => <span data-metrics="rtt-properties-summary:lettingsRelief:no"></span>
+        case _ => ()
+    }}
 
-    <!-- Other Disposal Stats -->
+        <!-- Other Disposal Stats -->
     @if(deductionAnswers.otherPropertiesModel.fold(false)(_.hasOtherProperties)){
         <span data-metrics="rtt-properties-summary:otherDisposals:yes"></span>
     } else {
