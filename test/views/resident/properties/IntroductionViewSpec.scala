@@ -71,6 +71,10 @@ class IntroductionViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       "take the user to disposal date page" in {
         hyperlink.attr("href") shouldBe routes.disposalDate.toString
       }
+
+      "have the id continue-button" in {
+        hyperlink.attr("id") shouldBe "continue-button"
+      }
     }
 
   }
