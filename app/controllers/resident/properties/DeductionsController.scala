@@ -211,7 +211,26 @@ trait DeductionsController extends FeatureLock {
 
   //################# Other Properties Actions #########################
 
-  private val otherPropertiesBackUrl = routes.GainController.improvements().url
+  private def otherPropertiesBackUrl()(implicit hc: HeaderCarrier): Future[String] = {
+    for {
+      livedInProperty <- calcConnector.fetchAndGetFormData[PropertyLivedInModel](keystoreKeys.propertyLivedIn)
+      privateResidenceRelief <- calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief)
+      lettingsRelief <- calcConnector.fetchAndGetFormData[LettingsReliefModel](keystoreKeys.lettingsRelief)
+      backUrl <- otherPropertiesData(livedInProperty, privateResidenceRelief, lettingsRelief)
+    } yield backUrl
+  }
+
+  private def otherPropertiesData(propertyLivedInModel: Option[PropertyLivedInModel],
+                                  privateResidenceReliefModel: Option[PrivateResidenceReliefModel],
+                                  lettingsReliefModel: Option[LettingsReliefModel]): Future[String] = {
+    (propertyLivedInModel.get.livedInProperty, privateResidenceReliefModel, lettingsReliefModel) match {
+      case (true, Some(PrivateResidenceReliefModel(true)), Some(LettingsReliefModel(true))) =>
+        Future.successful(routes.DeductionsController.lettingsReliefValue().url)
+      case (true, Some(PrivateResidenceReliefModel(true)), _) => Future.successful(routes.DeductionsController.lettingsRelief().url)
+      case (true, _, _) => Future.successful(routes.DeductionsController.privateResidenceRelief().url)
+      case _ => Future.successful(routes.DeductionsController.propertyLivedIn().url)
+    }
+  }
 
   val otherProperties = FeatureLockForRTT.async { implicit request =>
 
@@ -226,7 +245,8 @@ trait DeductionsController extends FeatureLock {
       disposalDate <- getDisposalDate
       disposalDateString <- formatDisposalDate(disposalDate.get)
       taxYear <- calcConnector.getTaxYear(disposalDateString)
-      finalResult <- routeRequest(otherPropertiesBackUrl, taxYear.get)
+      backUrl <- otherPropertiesBackUrl()
+      finalResult <- routeRequest(backUrl, taxYear.get)
     } yield finalResult
   }
 
@@ -249,7 +269,8 @@ trait DeductionsController extends FeatureLock {
       disposalDate <- getDisposalDate
       disposalDateString <- formatDisposalDate(disposalDate.get)
       taxYear <- calcConnector.getTaxYear(disposalDateString)
-      route <- routeRequest(otherPropertiesBackUrl, taxYear.get)
+      backUrl <- otherPropertiesBackUrl()
+      route <- routeRequest(backUrl, taxYear.get)
     } yield route
   }
 
