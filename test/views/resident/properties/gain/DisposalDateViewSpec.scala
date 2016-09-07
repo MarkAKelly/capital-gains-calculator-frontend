@@ -62,6 +62,14 @@ class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     "have a button with the text 'Continue'" in {
       doc.body.getElementById("continue-button").text shouldBe calcBaseContinue
     }
+
+    "have a back link" in {
+      doc.body.getElementById("back-link").text shouldBe assets.MessageLookup.calcBaseBack
+    }
+
+    "have a back link to the introduction page" in {
+      doc.body.getElementById("back-link").attr("href") shouldBe controllers.resident.properties.routes.PropertiesController.introduction().toString
+    }
   }
 
   "Disposal Date view with a pre-filled form" should {
