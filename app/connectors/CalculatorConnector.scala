@@ -223,9 +223,11 @@ trait CalculatorConnector {
     val annualExemptAmountModel = fetchAndGetFormData[resident.AnnualExemptAmountModel](ResidentPropertyKeys.annualExemptAmount)
     val propertyLivedInModel = fetchAndGetFormData[resident.properties.PropertyLivedInModel](ResidentPropertyKeys.propertyLivedIn)
     val privateResidenceReliefModel = fetchAndGetFormData[resident.PrivateResidenceReliefModel](ResidentPropertyKeys.privateResidenceRelief)
+    val lettingsReliefModel = fetchAndGetFormData[resident.properties.LettingsReliefModel](ResidentPropertyKeys.lettingsRelief)
 
     for {
       propertyLivedIn <- propertyLivedInModel
+      lettingsRelief <- lettingsReliefModel
       otherProperties <- otherPropertiesModel
       allowableLosses <- allowableLossesModel
       allowableLossesValue <- allowableLossesValueModel
@@ -242,7 +244,8 @@ trait CalculatorConnector {
         broughtForwardValue,
         annualExemptAmount,
         propertyLivedIn,
-        privateResidenceRelief)
+        privateResidenceRelief,
+        lettingsRelief)
     }
 
   }
