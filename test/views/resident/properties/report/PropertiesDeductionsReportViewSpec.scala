@@ -43,7 +43,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       None,
       None,
       Some(PropertyLivedInModel(false)),
-      Some(PrivateResidenceReliefModel(true)))
+      Some(PrivateResidenceReliefModel(true)),
+      None)
     lazy val results = ChargeableGainResultModel(BigDecimal(50000),
       BigDecimal(38900),
       BigDecimal(11100),
@@ -277,6 +278,13 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         }
       }
 
+      "does not have an option output row for the lettings relief" which {
+
+        s"should not display" in {
+          doc.select("#lettingsRelief-question").size() shouldBe 0
+        }
+      }
+
       "has an option output row for other properties" which {
 
         s"should have the question text '${commonMessages.otherProperties.title("2015/16")}'" in {
@@ -316,7 +324,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       Some(LossesBroughtForwardValueModel(10000)),
       Some(AnnualExemptAmountModel(1000)),
       Some(PropertyLivedInModel(true)),
-      Some(PrivateResidenceReliefModel(true)))
+      Some(PrivateResidenceReliefModel(false)),
+      None)
     lazy val results = ChargeableGainResultModel(BigDecimal(50000),
       BigDecimal(-11000),
       BigDecimal(0),
@@ -429,8 +438,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
           doc.select("#privateResidenceRelief-question").text shouldBe commonMessages.privateResidenceRelief.title
         }
 
-        "should have the value 'Yes'" in {
-          doc.select("#privateResidenceRelief-option span.bold-medium").text shouldBe "Yes"
+        "should have the value 'No'" in {
+          doc.select("#privateResidenceRelief-option span.bold-medium").text shouldBe "No"
         }
       }
 
@@ -569,8 +578,9 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       Some(LossesBroughtForwardModel(true)),
       Some(LossesBroughtForwardValueModel(10000)),
       Some(AnnualExemptAmountModel(1000)),
-      Some(PropertyLivedInModel(false)),
-      None)
+      Some(PropertyLivedInModel(true)),
+      Some(PrivateResidenceReliefModel(true)),
+      Some(LettingsReliefModel(false)))
     lazy val results = ChargeableGainResultModel(BigDecimal(50000),
       BigDecimal(-11000),
       BigDecimal(0),
@@ -635,6 +645,30 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         doc.select("#annualExemptAmount-amount span.bold-medium").text shouldBe "£1,000"
       }
     }
+
+    "has an option output row for eligible for private residence relief in" which {
+
+      s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
+        doc.select("#privateResidenceRelief-question").text shouldBe commonMessages.privateResidenceRelief.title
+      }
+
+      "should have the value 'Yes'" in {
+        doc.select("#privateResidenceRelief-option span.bold-medium").text shouldBe "Yes"
+      }
+
+    }
+
+    "has an option output row for eligible for lettings relief in" which {
+
+      s"should have the question text '${commonMessages.lettingsRelief.title}'" in {
+        doc.select("#lettingsRelief-question").text shouldBe commonMessages.lettingsRelief.title
+      }
+
+      "should have the value 'No'" in {
+        doc.select("#lettingsRelief-option span.bold-medium").text shouldBe "No"
+      }
+
+    }
   }
 
 
@@ -654,6 +688,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       Some(LossesBroughtForwardValueModel(10000)),
       Some(AnnualExemptAmountModel(1000)),
       Some(PropertyLivedInModel(false)),
+      None,
       None)
     lazy val results = ChargeableGainResultModel(BigDecimal(50000),
       BigDecimal(-11000),
