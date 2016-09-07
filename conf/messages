@@ -403,14 +403,30 @@ calc.resident.summary.remainingBroughtForwardLossHelp = to reduce your Capital G
 calc.resident.summary.annualExemptAmountHelp = You can use this to reduce your tax if you sell something else that''s covered by Capital Gains Tax in the same tax year.
 
 ## Private Residence Relief Value messages
+calc.resident.privateResidenceReliefValue.title = How much Private Residence Relief are you entitled to?
+calc.resident.privateResidenceReliefValue.question = How much Private Residence Relief are you entitled to?
+calc.resident.privateResidenceReliefValue.help = We''ve calculated that you''ve made a gain of £{0} on your property. You''ll need this figure to calculate your Private Residence Relief.
+calc.resident.privateResidenceReliefValue.link = Find out how much you''re entitled to
 
 ## Reliefs messages
 
 ## No PRR Reliefs messages
 
+## Lettings Relief Value messages
+calc.resident.lettingsReliefValue.title = How much Letting Relief are you entitled to?
+calc.resident.lettingsReliefValue.question = How much Letting Relief are you entitled to?
+calc.resident.lettingsReliefValue.additionalContent = We''ve calculated that you''ve made a gain of £{0} on your property. You''ll need this figure to calculate your Letting Relief.
+
+
 ## Reliefs Value messages
 
 ## No Prr Reliefs Value messages
+
+## Lettings Relief messages
+calc.resident.lettingsRelief.title = Are you entitled to Letting Relief?
+calc.resident.lettingsRelief.help = You may be able entitled to Letting Relief if you''ve rented out the property. Find out more about
+calc.resident.lettingsRelief.helpOne = Letting Relief
+calc.resident.lettingsRelief.errorSelect = Tell us if you want to claim Letting Relief
 
 ## Losses Brought Forward messages
 calc.resident.lossesBroughtForward.title = Are there any previous losses you want to bring forward?
@@ -483,16 +499,14 @@ calc.resident.personalAllowance.helpText = This is the amount of your income you
 ###############################################################################################
 ## Private Residence Relief messages ##
 ###############################################################################################
-calc.resident.privateResidenceRelief.noSelectError = Tell us if you want to claim Private Residence Relief
-calc.resident.properties.privateResidenceRelief.title = Do you want to claim Private Residence Relief?
+calc.resident.privateResidenceRelief.errorSelect = Tell us if you want to claim Private Residence Relief
+calc.resident.properties.privateResidenceRelief.title = Are you entitled to Private Residence Relief?
 
-calc.resident.properties.privateResidenceRelief.legendFirstText = You may be able to claim full or part
-calc.resident.properties.privateResidenceRelief.legendLinkText = Private Residence Relief
-calc.resident.properties.privateResidenceRelief.legendSecondText = if you''ve lived at the property.
+calc.resident.properties.privateResidenceRelief.helpText = You''ll be entitled to Private Residence Relief if you''ve lived in the property as your main home at some point while you owned it. Find out more about
+calc.resident.properties.privateResidenceRelief.helpTextLink = Private Residence Relief
 
-calc.resident.properties.privateResidenceRelief.fullLabel = Yes, full relief
-calc.resident.properties.privateResidenceRelief.partLabel = Yes, part relief
-calc.resident.properties.privateResidenceRelief.noneLabel = No
+calc.resident.properties.propertyLivedIn.title = Have you ever lived in the property since you became the owner?
+calc.resident.properties.propertyLivedIn.noSelectError = Tell us if you have ever lived in the property since you became the owner
 
 ###############################################################################################
 ## Resident Shares messages ##

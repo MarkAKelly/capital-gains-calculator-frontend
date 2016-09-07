@@ -29,6 +29,11 @@ import forms.resident.AllowableLossesForm._
 import forms.resident.AllowableLossesValueForm._
 import forms.resident.AnnualExemptAmountForm._
 import forms.resident.OtherPropertiesForm._
+import forms.resident.properties.PrivateResidenceReliefValueForm._
+import forms.resident.properties.LettingsReliefValueForm._
+import forms.resident.properties.LettingsReliefForm._
+import forms.resident.properties.PrivateResidenceReliefForm._
+import forms.resident.properties.PropertyLivedInForm._
 import models.resident.properties._
 import play.api.mvc.Result
 import play.api.data.Form
@@ -66,13 +71,143 @@ trait DeductionsController extends FeatureLock {
   override val homeLink = controllers.resident.properties.routes.PropertiesController.introduction().url
   override val sessionTimeoutUrl = homeLink
 
-  //########## Private Residence Relief Actions ##############
-
   //########## Private Residence Relief Value Actions ##############
+  val privateResidenceReliefValue = FeatureLockForRTT.async { implicit request =>
 
-  //################# Reliefs Actions ########################
+    def routeRequest(totalGain: BigDecimal) = {
+      calcConnector.fetchAndGetFormData[PrivateResidenceReliefValueModel](keystoreKeys.prrValue).map {
+        case Some(data) => Ok(views.privateResidenceReliefValue(privateResidenceReliefValueForm.fill(data), homeLink, totalGain))
+        case None => Ok(views.privateResidenceReliefValue(privateResidenceReliefValueForm, homeLink, totalGain))
+      }
+    }
+
+    for {
+      answerSummary <- answerSummary(hc)
+      totalGain <- totalGain(answerSummary, hc)
+      route <- routeRequest(totalGain)
+    } yield route
+  }
+
+  val submitPrivateResidenceReliefValue = FeatureLockForRTT.async { implicit request =>
+
+    def errorAction(form: Form[PrivateResidenceReliefValueModel]) = {
+      for {
+        answerSummary <- answerSummary(hc)
+        totalGain <- totalGain(answerSummary, hc)
+      } yield BadRequest(views.privateResidenceReliefValue(form, homeLink, totalGain))
+    }
+
+    def successAction(model: PrivateResidenceReliefValueModel) = {
+      calcConnector.saveFormData[PrivateResidenceReliefValueModel](keystoreKeys.prrValue, model)
+      Future.successful(Redirect(routes.DeductionsController.lettingsRelief()))
+    }
+
+    privateResidenceReliefValueForm.bindFromRequest.fold(errors => errorAction(errors), success => successAction(success))
+  }
+
+  //########## Private Residence Relief Actions ##############
+  val privateResidenceRelief = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](keystoreKeys.privateResidenceRelief).map{
+      case Some(data) => Ok(views.privateResidenceRelief(privateResidenceReliefForm.fill(data)))
+      case _ => Ok(views.privateResidenceRelief(privateResidenceReliefForm))
+    }
+  }
+
+  val submitPrivateResidenceRelief = FeatureLockForRTT.async { implicit request =>
+
+    def errorAction(errors: Form[PrivateResidenceReliefModel]) = Future.successful(BadRequest(views.privateResidenceRelief(errors)))
+
+    def routeRequest(model: PrivateResidenceReliefModel) = {
+      if (model.isClaiming) Future.successful(Redirect(routes.DeductionsController.privateResidenceReliefValue()))
+      else Future.successful(Redirect(routes.DeductionsController.otherProperties()))
+    }
+
+    def successAction(model: PrivateResidenceReliefModel) = {
+      for {
+        save <- calcConnector.saveFormData(keystoreKeys.privateResidenceRelief, model)
+        route <- routeRequest(model)
+      } yield route
+    }
+
+    privateResidenceReliefForm.bindFromRequest().fold(errorAction, successAction)
+  }
+
+  //############## Lettings Relief Actions ##################
+
+  private val lettingsReliefBackUrl = routes.DeductionsController.privateResidenceReliefValue().url
+
+  val lettingsRelief = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[LettingsReliefModel](keystoreKeys.lettingsRelief).map {
+      case Some(data) => Ok(views.lettingsRelief(lettingsReliefForm.fill(data), homeLink, Some(lettingsReliefBackUrl)))
+      case None => Ok(views.lettingsRelief(lettingsReliefForm, homeLink, Some(lettingsReliefBackUrl)))
+    }
+  }
+
+  val submitLettingsRelief = FeatureLockForRTT.async { implicit request =>
+
+    def errorAction(form: Form[LettingsReliefModel]) = {
+      Future.successful(BadRequest(views.lettingsRelief(form, homeLink, Some(lettingsReliefBackUrl))))
+    }
+
+    def routeRequest(model: LettingsReliefModel) = {
+      model match {
+        case LettingsReliefModel(true) => Future.successful(Redirect(routes.DeductionsController.lettingsReliefValue()))
+        case _ => Future.successful(Redirect(routes.DeductionsController.otherProperties()))
+      }
+    }
+
+    def successAction(model: LettingsReliefModel) = {
+      for {
+        save <- calcConnector.saveFormData[LettingsReliefModel](keystoreKeys.lettingsRelief, model)
+        route <- routeRequest(model)
+      } yield route
+    }
+
+    lettingsReliefForm.bindFromRequest().fold(
+      errors => errorAction(errors),
+      success => successAction(success)
+    )
+  }
+
+   //################# Reliefs Actions ########################
 
   //################# Reliefs Value Input Actions ########################
+
+  //################# Lettings Relief Value Input Actions ########################
+
+  val lettingsReliefValue = FeatureLockForRTT.async { implicit request =>
+
+    def routeRequest(totalGain: BigDecimal): Future[Result] = {
+      calcConnector.fetchAndGetFormData[LettingsReliefValueModel](keystoreKeys.lettingsReliefValue).map {
+        case Some(data) => Ok(views.lettingsReliefValue(lettingsReliefValueForm.fill(data), homeLink, totalGain))
+        case None => Ok(views.lettingsReliefValue(lettingsReliefValueForm, homeLink, totalGain))
+      }
+    }
+
+    for {
+      answerSummary <- answerSummary(hc)
+      totalGain <- totalGain(answerSummary, hc)
+      route <- routeRequest(totalGain)
+    } yield route
+  }
+
+  val submitLettingsReliefValue = FeatureLockForRTT.async { implicit request =>
+
+    def errorAction(form: Form[LettingsReliefValueModel]) = {
+      for {
+        answerSummary <- answerSummary(hc)
+        totalGain <- totalGain(answerSummary, hc)
+      } yield BadRequest(views.lettingsReliefValue(form, homeLink, totalGain))
+    }
+
+    def successAction(model: LettingsReliefValueModel) = {
+      calcConnector.saveFormData[LettingsReliefValueModel](keystoreKeys.lettingsReliefValue, model)
+      Future.successful(Redirect(routes.DeductionsController.otherProperties()))
+    }
+
+    lettingsReliefValueForm.bindFromRequest().fold(errorAction, successAction)
+  }
+
 
   //################# Other Properties Actions #########################
 
@@ -478,5 +613,40 @@ trait DeductionsController extends FeatureLock {
       backLink <- annualExemptAmountBackLink(hc)
       route <- routeRequest(maxAEA.get, backLink)
     } yield route
+  }
+
+  //################# Property Lived In Actions #############################
+
+  val propertyLivedIn = FeatureLockForRTT.async {implicit request =>
+
+    val backLink = Some(controllers.resident.properties.routes.GainController.improvements().toString)
+
+    calcConnector.fetchAndGetFormData[PropertyLivedInModel](keystoreKeys.propertyLivedIn).map{
+      case Some(data) => Ok(commonViews.properties.deductions.propertyLivedIn(propertyLivedInForm.fill(data), homeLink, backLink))
+      case _ => Ok(commonViews.properties.deductions.propertyLivedIn(propertyLivedInForm, homeLink, backLink))
+    }
+  }
+
+  val submitPropertyLivedIn = FeatureLockForRTT.async { implicit request =>
+
+    lazy val backLink = Some(controllers.resident.properties.GainController.improvements.toString())
+
+    def errorAction(errors: Form[PropertyLivedInModel]) = Future.successful(BadRequest(commonViews.properties.deductions.propertyLivedIn(
+      errors, homeLink, backLink
+    )))
+
+    def routeRequest(model: PropertyLivedInModel) = {
+      if (model.livedInProperty) Future.successful(Redirect(routes.DeductionsController.privateResidenceRelief()))
+      else Future.successful(Redirect(routes.DeductionsController.otherProperties()))
+    }
+
+    def successAction(model: PropertyLivedInModel) = {
+      for {
+        save <- calcConnector.saveFormData(keystoreKeys.propertyLivedIn, model)
+        route <- routeRequest(model)
+      } yield route
+    }
+
+    propertyLivedInForm.bindFromRequest().fold(errorAction, successAction)
   }
 }

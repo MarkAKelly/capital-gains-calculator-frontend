@@ -131,7 +131,7 @@ trait CalculatorConnector {
       formData.getOrElse(OtherReliefsModel(Some("No"), None)))
     val otherReliefsRebased = fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map(formData =>
       formData.getOrElse(OtherReliefsModel(Some("No"), None)))
-    val privateResidenceRelief = fetchAndGetFormData[PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief)
+    val privateResidenceRelief = fetchAndGetFormData[models.nonresident.PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief)
     for {
       customerTypeModel <- customerType
       disabledTrusteeModel <- disabledTrustee
@@ -221,14 +221,20 @@ trait CalculatorConnector {
     val broughtForwardModel = fetchAndGetFormData[resident.LossesBroughtForwardModel](ResidentPropertyKeys.lossesBroughtForward)
     val broughtForwardValueModel = fetchAndGetFormData[resident.LossesBroughtForwardValueModel](ResidentPropertyKeys.lossesBroughtForwardValue)
     val annualExemptAmountModel = fetchAndGetFormData[resident.AnnualExemptAmountModel](ResidentPropertyKeys.annualExemptAmount)
+    val propertyLivedInModel = fetchAndGetFormData[resident.properties.PropertyLivedInModel](ResidentPropertyKeys.propertyLivedIn)
+    val privateResidenceReliefModel = fetchAndGetFormData[resident.PrivateResidenceReliefModel](ResidentPropertyKeys.privateResidenceRelief)
+    val lettingsReliefModel = fetchAndGetFormData[resident.properties.LettingsReliefModel](ResidentPropertyKeys.lettingsRelief)
 
     for {
+      propertyLivedIn <- propertyLivedInModel
+      lettingsRelief <- lettingsReliefModel
       otherProperties <- otherPropertiesModel
       allowableLosses <- allowableLossesModel
       allowableLossesValue <- allowableLossesValueModel
       broughtForward <- broughtForwardModel
       broughtForwardValue <- broughtForwardValueModel
       annualExemptAmount <- annualExemptAmountModel
+      privateResidenceRelief <- privateResidenceReliefModel
     } yield {
       properties.ChargeableGainAnswers(
         otherProperties,
@@ -236,7 +242,10 @@ trait CalculatorConnector {
         allowableLossesValue,
         broughtForward,
         broughtForwardValue,
-        annualExemptAmount)
+        annualExemptAmount,
+        propertyLivedIn,
+        privateResidenceRelief,
+        lettingsRelief)
     }
 
   }

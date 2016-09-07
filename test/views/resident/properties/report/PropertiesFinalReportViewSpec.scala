@@ -44,7 +44,10 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       None,
       Some(LossesBroughtForwardModel(false)),
       None,
-      Some(AnnualExemptAmountModel(0)))
+      Some(AnnualExemptAmountModel(0)),
+      Some(PropertyLivedInModel(false)),
+      None,
+      None)
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -285,6 +288,31 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         }
       }
 
+      "has an option output row for property lived in" which {
+
+        s"should have the question text '${commonMessages.propertyLivedIn.title}'" in {
+          doc.select("#propertyLivedIn-question").text shouldBe commonMessages.propertyLivedIn.title
+        }
+
+        "should have the value 'No'" in {
+          doc.select("#propertyLivedIn-option span.bold-medium").text shouldBe "No"
+        }
+      }
+
+      "does not have an option output row for the eligible for private residence relief" which {
+
+        s"should not display" in {
+          doc.select("#privateResidenceRelief-question").size() shouldBe 0
+        }
+      }
+
+      "does not have an option output row for the lettings relief" which {
+
+        s"should not display" in {
+          doc.select("#lettingsRelief-question").size() shouldBe 0
+        }
+      }
+
       "has an option output row for other properties" which {
 
         s"should have the question text '${commonMessages.otherProperties.title("2015/16")}'" in {
@@ -359,7 +387,10 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       None,
       Some(LossesBroughtForwardModel(false)),
       None,
-      Some(AnnualExemptAmountModel(0)))
+      Some(AnnualExemptAmountModel(0)),
+      Some(PropertyLivedInModel(true)),
+      Some(PrivateResidenceReliefModel(true)),
+      Some(LettingsReliefModel(true)))
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -397,6 +428,41 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         "include a value for Reliefs of £30,000" in {
           doc.select("#deductions-amount").text should include(s"${messages.reliefsUsed} £30,000")
         }
+      }
+    }
+
+    "has an option output row for property lived in" which {
+
+      s"should have the question text '${commonMessages.propertyLivedIn.title}'" in {
+        doc.select("#propertyLivedIn-question").text shouldBe commonMessages.propertyLivedIn.title
+      }
+
+      "should have the value 'Yes'" in {
+        doc.select("#propertyLivedIn-option span.bold-medium").text shouldBe "Yes"
+      }
+    }
+
+
+    "has an option output row for eligible for private residence relief in" which {
+
+      s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
+        doc.select("#privateResidenceRelief-question").text shouldBe commonMessages.privateResidenceRelief.title
+      }
+
+      "should have the value 'Yes'" in {
+        doc.select("#privateResidenceRelief-option span.bold-medium").text shouldBe "Yes"
+      }
+
+    }
+
+    "has an option output row for eligible for lettings relief in" which {
+
+      s"should have the question text '${commonMessages.lettingsRelief.title}'" in {
+        doc.select("#lettingsRelief-question").text shouldBe commonMessages.lettingsRelief.title
+      }
+
+      "should have the value 'Yes'" in {
+        doc.select("#lettingsRelief-option span.bold-medium").text shouldBe "Yes"
       }
     }
 
