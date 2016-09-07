@@ -16,63 +16,61 @@
 
 package views.resident.properties
 
-import assets.{MessageLookup => commonMessages}
 import assets.MessageLookup.{introductionView => messages}
+import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
+import controllers.resident.properties.routes.{GainController => routes}
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.{properties => views}
-import controllers.resident.properties.routes.{GainController => routes}
 
 class IntroductionViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Introduction view" should {
 
     lazy val view = views.introduction()(fakeRequest)
-    lazy val doc = Jsoup.parse(view.body)
-
-    def scopedSelector(selector: String): String = s"article.content__body $selector"
-
-    val headingSelector = scopedSelector("h1")
-    val subheadingSelector = scopedSelector("h2")
-    val helpTextSelector = scopedSelector("p:nth-of-type(1)")
-    val entitlementLinkSelector = scopedSelector("a:nth-of-type(1)")
-    val continueLinkSelector = scopedSelector("a:nth-of-type(2)")
-
-    "have a charset of UTF-8" in {
-      doc.charset().toString shouldBe "UTF-8"
-    }
+    lazy val doc = Jsoup.parse(view.body).select("article.content__body")
 
     "have the correct title" in {
-      doc.select(headingSelector).text shouldBe messages.title
+      doc.select("h1").text shouldBe messages.title
     }
 
     "have the correct sub-heading" in {
-      doc.select(subheadingSelector).text.trim shouldBe messages.subheading
+      doc.select("h2").text.trim shouldBe messages.subheading
     }
 
     "have the correct paragraph text" in {
-      doc.select(helpTextSelector).text.trim shouldBe messages.paragraph
+      doc.select("p:nth-of-type(1)").text.trim shouldBe messages.paragraph
     }
 
-    "have the correct hyperlink text" in {
-      doc.select(entitlementLinkSelector).text.trim shouldBe messages.entitledLinkText
-    }
+    "have a hyperlink to GOV.UK that" should {
 
-    "have the correct URL referenced too by the hyperlink" in {
-      doc.select(entitlementLinkSelector).attr("href") shouldBe "https://www.gov.uk/tax-relief-selling-home"
+      lazy val hyperlink = doc.select("a:nth-of-type(1)")
+
+      "have the correct text" in {
+        hyperlink.text.trim shouldBe messages.entitledLinkText
+      }
+
+      "link to the correct GOV.UK page" in {
+        hyperlink.attr("href") shouldBe "https://www.gov.uk/tax-relief-selling-home"
+      }
     }
 
     "have the correct continuation instructions" in {
-      doc.select("article.content__body p:nth-of-type(2)").text.trim shouldBe messages.continuationInstructions
+      doc.select("p:nth-of-type(2)").text.trim shouldBe messages.continuationInstructions
     }
 
-    "have the correct hyperlink text for Continue" in {
-      doc.select(continueLinkSelector).text.trim shouldBe commonMessages.calcBaseContinue
-    }
+    "have a continue link that" should {
 
-    "have the correct URL reference too for Continue" in {
-      doc.select(continueLinkSelector).attr("href") shouldBe routes.disposalDate.toString
+      lazy val hyperlink = doc.select("a:nth-of-type(2)")
+
+      "have the correct text" in {
+        hyperlink.text.trim shouldBe commonMessages.calcBaseContinue
+      }
+
+      "take the user to disposal date page" in {
+        hyperlink.attr("href") shouldBe routes.disposalDate.toString
+      }
     }
 
   }
