@@ -1,4 +1,6 @@
 #Routes file for the resident routes.
+#Introduction
+GET     /                                  controllers.resident.properties.PropertiesController.introduction
 
 #Disposal Date Routes
 GET     /disposal-date                    controllers.resident.properties.GainController.disposalDate

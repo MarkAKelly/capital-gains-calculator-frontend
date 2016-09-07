@@ -22,6 +22,13 @@ import controllers.resident.properties.routes._
 
 class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
 
+  "The URL for the introduction Action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/" in {
+      val path = controllers.resident.properties.routes.PropertiesController.introduction().toString()
+      path shouldEqual "/calculate-your-capital-gains/resident/properties/"
+    }
+  }
+
   "The URL for the disposal date Action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/disposal-date" in {
       GainController.disposalDate().url shouldEqual "/calculate-your-capital-gains/resident/properties/disposal-date"

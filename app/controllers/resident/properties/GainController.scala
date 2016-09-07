@@ -50,7 +50,7 @@ trait GainController extends FeatureLock {
   val config: AppConfig
 
   val navTitle = Messages("calc.base.resident.properties.home")
-  override val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
+  override val homeLink = controllers.resident.properties.routes.PropertiesController.introduction().url
   override val sessionTimeoutUrl = homeLink
 
   //################# Disposal Date Actions ####################
@@ -96,7 +96,7 @@ trait GainController extends FeatureLock {
         taxYear = taxYear.get,
         isAfterApril15 = TaxDates.dateAfterStart(Dates.constructDate(disposalDate.get.day, disposalDate.get.month, disposalDate.get.year)),
         navBackLink = routes.GainController.disposalDate().url,
-        navHomeLink = routes.GainController.disposalDate().url,
+        navHomeLink = homeLink,
         continueUrl = routes.GainController.disposalValue().url,
         navTitle = navTitle
       ))
