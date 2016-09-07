@@ -224,6 +224,8 @@ trait DeductionsController extends FeatureLock {
                                   privateResidenceReliefModel: Option[PrivateResidenceReliefModel],
                                   lettingsReliefModel: Option[LettingsReliefModel]): Future[String] = {
     (propertyLivedInModel.get.livedInProperty, privateResidenceReliefModel, lettingsReliefModel) match {
+      case (true, Some(PrivateResidenceReliefModel(true)), Some(LettingsReliefModel(true))) =>
+        Future.successful(routes.DeductionsController.lettingsReliefValue().url)
       case (true, Some(PrivateResidenceReliefModel(true)), _) => Future.successful(routes.DeductionsController.lettingsRelief().url)
       case (true, _, _) => Future.successful(routes.DeductionsController.privateResidenceRelief().url)
       case _ => Future.successful(routes.DeductionsController.propertyLivedIn().url)

@@ -151,6 +151,23 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
         backLink.attr("href") shouldBe "/calculate-your-capital-gains/resident/properties/lettings-relief"
       }
     }
+
+    "prr was claimed with  lettings relief" should {
+      lazy val target = setupTarget(
+        None,
+        Some(DisposalDateModel(10, 10, 2015)),
+        Some(TaxYearModel("2015/16", true, "2015/16")),
+        Some(PropertyLivedInModel(true)),
+        Some(PrivateResidenceReliefModel(true)),
+        Some(LettingsReliefModel(true)))
+      lazy val result = target.otherProperties(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+      lazy val backLink = doc.select("a#back-link")
+
+      "have a back link to the Lettings Relief page" in {
+        backLink.attr("href") shouldBe "/calculate-your-capital-gains/resident/properties/lettings-relief-value"
+      }
+    }
   }
 
   "Calling .submitOtherProperties from the DeductionsController" when {
