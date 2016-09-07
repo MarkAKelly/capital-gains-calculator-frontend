@@ -167,6 +167,9 @@ articleLayout = false
     summaryOptionRowHelper("privateResidenceRelief", Messages("calc.resident.properties.privateResidenceRelief.title"),
     deductionAnswers.privateResidenceReliefModel.get.isClaiming, Some(deductionRoutes.privateResidenceRelief().toString))}
     @{if (deductionAnswers.propertyLivedInModel.get.livedInProperty && deductionAnswers.privateResidenceReliefModel.get.isClaiming)
+    summaryNumericRowHelper("privateResidenceReliefValue", Messages("calc.resident.privateResidenceReliefValue.title"),
+    deductionAnswers.privateResidenceReliefValueModel.get.amount, Some(deductionRoutes.privateResidenceReliefValue().toString))}
+    @{if (deductionAnswers.propertyLivedInModel.get.livedInProperty && deductionAnswers.privateResidenceReliefModel.get.isClaiming)
     summaryOptionRowHelper("lettingsRelief", Messages("calc.resident.lettingsRelief.title"),
     deductionAnswers.lettingsReliefModel.get.isClaiming, Some(deductionRoutes.lettingsRelief().toString))}
 
