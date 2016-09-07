@@ -25,7 +25,7 @@ import common.Dates
 import connectors.CalculatorConnector
 import models.resident._
 import models.resident.income._
-import models.resident.properties.{ChargeableGainAnswers, PropertyLivedInModel, YourAnswersSummaryModel}
+import models.resident.properties.{ChargeableGainAnswers, LettingsReliefModel, PropertyLivedInModel, YourAnswersSummaryModel}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -326,7 +326,143 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     }
   }
 
+  "Calling .summary while not eligible for PRR or Lettings Relief with a negative taxable gain" should {
+    lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
+      3000,
+      10,
+      5000,
+      5,
+      0)
+    lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
+      None, None, Some(LossesBroughtForwardModel(false)), None, None, Some(PropertyLivedInModel(false)), None, None)
+    lazy val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 0, 11100, BigDecimal(0),
+      BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
+    lazy val incomeAnswersModel = IncomeAnswersModel(None, None, None)
+    lazy val target = setupTarget(
+      yourAnswersSummaryModel,
+      10000,
+      chargeableGainAnswers,
+      Some(chargeableGainResultModel),
+      incomeAnswersModel,
+      taxYearModel = Some(TaxYearModel("2015/2016", true, "2015/16"))
+    )
+    lazy val result = target.summary()(fakeRequestWithSession)
+    lazy val doc = Jsoup.parse(bodyOf(result))
 
+    "not have GA metrics for prr" in {
+      doc.select("[data-metrics=\"rtt-properties-summary:prr:yes\"]").size shouldBe 0
+      doc.select("[data-metrics=\"rtt-properties-summary:prr:no\"]").size shouldBe 0
+    }
+
+    "not have GA metrics for lettings relief" in {
+      doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:yes\"]").size shouldBe 0
+      doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:no\"]").size shouldBe 0
+    }
+  }
+
+  "Calling .summary while eligible but not claiming PRR and Lettings Relief with a negative taxable gain" should {
+    lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
+      3000,
+      10,
+      5000,
+      5,
+      0)
+    lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
+      None, None, Some(LossesBroughtForwardModel(false)), None, None, Some(PropertyLivedInModel(true)), Some(PrivateResidenceReliefModel(false)), None)
+    lazy val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 0, 11100, BigDecimal(0),
+      BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
+    lazy val incomeAnswersModel = IncomeAnswersModel(None, None, None)
+    lazy val target = setupTarget(
+      yourAnswersSummaryModel,
+      10000,
+      chargeableGainAnswers,
+      Some(chargeableGainResultModel),
+      incomeAnswersModel,
+      taxYearModel = Some(TaxYearModel("2015/2016", true, "2015/16"))
+    )
+    lazy val result = target.summary()(fakeRequestWithSession)
+    lazy val doc = Jsoup.parse(bodyOf(result))
+
+    "not have GA metrics for prr" in {
+      doc.select("[data-metrics=\"rtt-properties-summary:prr:yes\"]").size shouldBe 0
+      doc.select("[data-metrics=\"rtt-properties-summary:prr:no\"]").size shouldBe 1
+    }
+
+    "not have GA metrics for lettings relief" in {
+      doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:yes\"]").size shouldBe 0
+      doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:no\"]").size shouldBe 0
+    }
+  }
+
+  "Calling .summary while eligible but and claiming PRR but not Lettings Relief with a negative taxable gain" should {
+    lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
+      3000,
+      10,
+      5000,
+      5,
+      0)
+    lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
+      None, None, Some(LossesBroughtForwardModel(false)), None, None, Some(PropertyLivedInModel(true)),
+      Some(PrivateResidenceReliefModel(true)), Some(LettingsReliefModel(false)))
+    lazy val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 0, 11100, BigDecimal(0),
+      BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
+    lazy val incomeAnswersModel = IncomeAnswersModel(None, None, None)
+    lazy val target = setupTarget(
+      yourAnswersSummaryModel,
+      10000,
+      chargeableGainAnswers,
+      Some(chargeableGainResultModel),
+      incomeAnswersModel,
+      taxYearModel = Some(TaxYearModel("2015/2016", true, "2015/16"))
+    )
+    lazy val result = target.summary()(fakeRequestWithSession)
+    lazy val doc = Jsoup.parse(bodyOf(result))
+
+    "not have GA metrics for prr" in {
+      doc.select("[data-metrics=\"rtt-properties-summary:prr:yes\"]").size shouldBe 1
+      doc.select("[data-metrics=\"rtt-properties-summary:prr:no\"]").size shouldBe 0
+    }
+
+    "not have GA metrics for lettings relief" in {
+      doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:yes\"]").size shouldBe 0
+      doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:no\"]").size shouldBe 1
+    }
+  }
+
+  "Calling .summary while eligible and claiming PRR and Lettings Relief with a negative taxable gain" should {
+    lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
+      3000,
+      10,
+      5000,
+      5,
+      0)
+    lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
+      None, None, Some(LossesBroughtForwardModel(false)), None, None, Some(PropertyLivedInModel(true)),
+      Some(PrivateResidenceReliefModel(true)), Some(LettingsReliefModel(true)))
+    lazy val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 0, 11100, BigDecimal(0),
+      BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
+    lazy val incomeAnswersModel = IncomeAnswersModel(None, None, None)
+    lazy val target = setupTarget(
+      yourAnswersSummaryModel,
+      10000,
+      chargeableGainAnswers,
+      Some(chargeableGainResultModel),
+      incomeAnswersModel,
+      taxYearModel = Some(TaxYearModel("2015/2016", true, "2015/16"))
+    )
+    lazy val result = target.summary()(fakeRequestWithSession)
+    lazy val doc = Jsoup.parse(bodyOf(result))
+
+    "not have GA metrics for prr" in {
+      doc.select("[data-metrics=\"rtt-properties-summary:prr:yes\"]").size shouldBe 1
+      doc.select("[data-metrics=\"rtt-properties-summary:prr:no\"]").size shouldBe 0
+    }
+
+    "not have GA metrics for lettings relief" in {
+      doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:yes\"]").size shouldBe 1
+      doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:no\"]").size shouldBe 0
+    }
+  }
 
   "Calling .summary from the SummaryController with no session" should {
 
