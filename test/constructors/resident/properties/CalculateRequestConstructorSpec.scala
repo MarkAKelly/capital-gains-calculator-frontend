@@ -57,7 +57,9 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           Some(PropertyLivedInModel(false)),
           None,
           None,
-          None)
+          None,
+          None
+        )
         val result = CalculateRequestConstructor.chargeableGainRequestString(answers, BigDecimal(11100))
         result shouldBe "&annualExemptAmount=11100"
       }
@@ -76,7 +78,9 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           Some(PropertyLivedInModel(false)),
           None,
           None,
-          None)
+          None,
+          None
+        )
         val result = CalculateRequestConstructor.chargeableGainRequestString(answers, BigDecimal(11100))
         result shouldBe "&broughtForwardLosses=2000&annualExemptAmount=3000"
       }
@@ -95,7 +99,9 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           Some(PropertyLivedInModel(false)),
           None,
           None,
-          None)
+          None,
+          None
+        )
         val result = CalculateRequestConstructor.chargeableGainRequestString(answers, BigDecimal(11100))
         result shouldBe "&allowableLosses=1000&broughtForwardLosses=2000&annualExemptAmount=11100"
       }

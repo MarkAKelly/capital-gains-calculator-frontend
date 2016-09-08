@@ -46,7 +46,9 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       Some(PropertyLivedInModel(false)),
       None,
       None,
-      None)
+      None,
+      None
+    )
     lazy val results = ChargeableGainResultModel(BigDecimal(50000),
       BigDecimal(38900),
       BigDecimal(11100),
@@ -443,9 +445,11 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       Some(LossesBroughtForwardValueModel(10000)),
       Some(AnnualExemptAmountModel(1000)),
       Some(PropertyLivedInModel(true)),
-      Some(PrivateResidenceReliefModel(false)),
-      None,
-      None)
+      Some(PrivateResidenceReliefModel(true)),
+      Some(PrivateResidenceReliefValueModel(4000)),
+      Some(LettingsReliefModel(true)),
+      Some(LettingsReliefValueModel(4500))
+    )
     lazy val results = ChargeableGainResultModel(BigDecimal(50000),
       BigDecimal(-11000),
       BigDecimal(0),
@@ -672,8 +676,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
           doc.select("#privateResidenceRelief-question").text shouldBe commonMessages.privateResidenceRelief.title
         }
 
-        "should have the value 'No'" in {
-          doc.select("#privateResidenceRelief-option span.bold-medium").text shouldBe "No"
+        "should have the value 'Yes'" in {
+          doc.select("#privateResidenceRelief-option span.bold-medium").text shouldBe "Yes"
         }
 
         s"should have a change link to ${routes.DeductionsController.privateResidenceRelief().url}" in {
@@ -686,6 +690,29 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
 
         "has the question component of the link as visuallyhidden" in {
           doc.select("#privateResidenceRelief-option a span.visuallyhidden").text shouldBe commonMessages.privateResidenceRelief.title
+        }
+      }
+
+      "has an option output row for lettings relief value" which {
+
+        s"should have the question text '${commonMessages.lettingsReliefValue.title}'" in {
+          doc.select("#lettingsReliefValue-question").text shouldBe commonMessages.lettingsReliefValue.title
+        }
+
+        "should have the value '£4500'" in {
+          doc.select("#lettingsReliefValue-amount span.bold-medium").text shouldBe "£4,500"
+        }
+
+        s"should have a change link to ${routes.DeductionsController.lettingsReliefValue().url}" in {
+          doc.select("#lettingsReliefValue-amount a").attr("href") shouldBe routes.DeductionsController.lettingsReliefValue().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#lettingsReliefValue-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.lettingsReliefValue.title}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#lettingsReliefValue-amount a span.visuallyhidden").text shouldBe commonMessages.lettingsReliefValue.title
         }
       }
 
@@ -828,7 +855,9 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       Some(PropertyLivedInModel(true)),
       Some(PrivateResidenceReliefModel(true)),
       Some(PrivateResidenceReliefValueModel(5000)),
-      Some(LettingsReliefModel(true)))
+      Some(LettingsReliefModel(true)),
+      Some(LettingsReliefValueModel(4500))
+    )
     lazy val results = ChargeableGainResultModel(BigDecimal(50000),
       BigDecimal(-11000),
       BigDecimal(0),
@@ -1027,7 +1056,9 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       Some(PropertyLivedInModel(false)),
       None,
       None,
-      None)
+      None,
+      None
+    )
     lazy val results = ChargeableGainResultModel(BigDecimal(0),
       BigDecimal(0),
       BigDecimal(0),
@@ -1131,6 +1162,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       Some(LossesBroughtForwardValueModel(10000)),
       Some(AnnualExemptAmountModel(1000)),
       Some(PropertyLivedInModel(false)),
+      None,
       None,
       None,
       None)

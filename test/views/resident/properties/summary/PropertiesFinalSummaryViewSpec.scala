@@ -47,7 +47,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       Some(PropertyLivedInModel(false)),
       None,
       None,
-      None)
+      None,
+      None
+    )
     lazy val incomeAnswers = IncomeAnswersModel(None, Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
     lazy val results = TotalGainAndTaxOwedModel(
       50000,
@@ -489,7 +491,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       Some(PropertyLivedInModel(true)),
       Some(PrivateResidenceReliefModel(false)),
       None,
-      None)
+      None,
+      None
+    )
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -724,7 +728,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       Some(PropertyLivedInModel(true)),
       Some(PrivateResidenceReliefModel(true)),
       Some(PrivateResidenceReliefValueModel(5000)),
-      Some(LettingsReliefModel(false)))
+      Some(LettingsReliefModel(true)),
+      Some(LettingsReliefValueModel(5000))
+    )
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -861,7 +867,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
 
       "should have the value 'No'" in {
-        doc.select("#lettingsRelief-option span.bold-medium").text shouldBe "No"
+        doc.select("#lettingsRelief-option span.bold-medium").text shouldBe "Yes"
       }
 
       s"should have a change link to ${routes.DeductionsController.lettingsRelief().url}" in {
@@ -874,6 +880,29 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
 
       "has the question component of the link as visuallyhidden" in {
         doc.select("#lettingsRelief-option a span.visuallyhidden").text shouldBe commonMessages.lettingsRelief.title
+      }
+    }
+
+    "has an option output row for lettings relief value" which {
+
+      s"should have the question text '${commonMessages.lettingsReliefValue.title}'" in {
+        doc.select("#lettingsReliefValue-question").text shouldBe commonMessages.lettingsReliefValue.title
+      }
+
+      "should have the value '£4500'" in {
+        doc.select("#lettingsReliefValue-amount span.bold-medium").text shouldBe "£5,000"
+      }
+
+      s"should have a change link to ${routes.DeductionsController.lettingsReliefValue().url}" in {
+        doc.select("#lettingsReliefValue-amount a").attr("href") shouldBe routes.DeductionsController.lettingsReliefValue().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#lettingsReliefValue-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.lettingsReliefValue.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#lettingsReliefValue-amount a span.visuallyhidden").text shouldBe commonMessages.lettingsReliefValue.title
       }
     }
 
@@ -915,7 +944,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       Some(PropertyLivedInModel(false)),
       None,
       None,
-      None)
+      None,
+      None
+    )
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(0)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -1012,7 +1043,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       Some(PropertyLivedInModel(false)),
       None,
       None,
-      None)
+      None,
+      None
+    )
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -1081,7 +1114,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       Some(PropertyLivedInModel(false)),
       None,
       None,
-      None)
+      None,
+      None
+    )
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
