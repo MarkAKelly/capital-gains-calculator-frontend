@@ -42,13 +42,13 @@ class FrontendGlobalSpec extends UnitSpec with WithFakeApplication {
 
     "on the resident/properties journey" should {
 
-      s"have a link to the resident/properties start journey '${controllers.resident.properties.routes.GainController.disposalDate().url}'" in {
+      s"have a link to the resident/properties start journey '${controllers.resident.properties.routes.PropertiesController.introduction().url}'" in {
 
         val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/resident/properties/error").withSession(SessionKeys.sessionId -> "12345")
         val result = standardErrorTemplate("test", "teat-heading", "test-message")(fakeRequest)
         val doc = Jsoup.parse(result.body)
 
-        doc.getElementById("homeNavHref").attr("href") shouldBe controllers.resident.properties.routes.GainController.disposalDate().url
+        doc.getElementById("homeNavHref").attr("href") shouldBe controllers.resident.properties.routes.PropertiesController.introduction().url
       }
 
     }

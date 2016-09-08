@@ -39,6 +39,14 @@ object MessageLookup {
     val numericPlayErrorOverride = "Enter a number without commas, for example 10000.00"
   }
 
+  object introductionView {
+    val title = "Work out how much Capital Gains Tax you owe"
+    val subheading = "Do you need to use this calculator?"
+    val paragraph = "You probably don't need to pay Capital Gains Tax if the property you've sold is your own home. You'll be entitled to a tax relief called Private Residence Relief."
+    val entitledLinkText = "Find out if you're entitled to Private Residence Relief (opens in a new window)."
+    val continuationInstructions = "Continue to use this calculator if you've never lived at the property, or you're entitled to only some or no Private Residence Relief."
+  }
+
   //Disposal Date messages
   object disposalDate {
     val title = "When did you sell or give away the property?"
@@ -66,7 +74,9 @@ object MessageLookup {
   object disposalValue {
     val title = "How much did you sell the property for?"
     val question = "How much did you sell the property for?"
-    val bulletListTitle = "Put the market value of the property instead if you:"
+    val bulletListTitlePartOne = "Put the"
+    val bulletListTitlePartTwo = "market value"
+    val bulletListTitlePartThree = "of the property instead if you:"
     val bulletListOne = "gave it away as a gift"
     val bulletListTwo = "sold it to a relative, business partner or"
     val bulletListTwoLink = "someone else you're connected to"
@@ -108,9 +118,11 @@ object MessageLookup {
   //Improvements messages
   object improvementsView {
     val title = "How much have you spent on improvements since you became the property owner?"
-    val note = "If you used the market value of the property, tell us how much you've spent on improvements since the date of the valuation."
     val label = "How much have you spent on improvements since you became the property owner?"
     val hint = "Improvements are permanent changes that raise the value of a property, like adding extensions or garages. Normal maintenance costs don't count."
+    val improvementsHelpButton = "Show me an example"
+    val improvementsAdditionalContentOne = "Replacing a basic kitchen or bathroom with a luxury version is normally considered an improvement."
+    val improvementsAdditionalContentTwo = "But replacing them with something of a similar standard is normally not an improvement."
   }
 
   //Summary messages
@@ -122,10 +134,10 @@ object MessageLookup {
     val aeaHelp = "You can use this to reduce your tax if you sell something else that's covered by Capital Gains Tax in the same tax year."
     val yourAnswersHeading = "Your answers"
     val totalLoss = "Loss"
-    val totalGain = "Total profit"
+    val totalGain = "Total gain"
     val deductions = "Deductions"
     val chargeableLoss = "Carried forward loss"
-    val chargeableGain = "Taxable profit"
+    val chargeableGain = "Taxable gain"
     val taxRate = "Tax rate"
     def noticeWarning(input: String): String = s"These figures are based on the tax rates from the $input tax year"
     val warning = "Warning"
@@ -157,9 +169,10 @@ object MessageLookup {
 
   //Private Residence Relief Value messages
   object privateResidenceReliefValue {
-    def title(gain: String) = s"How much Private Residence Relief are you claiming on your total profit of £$gain?"
-    val question = "How much Private Residence Relief are you claiming on your total profit of £10,000?"
-    val prrLink = "Private Residence Relief"
+    val title = "How much Private Residence Relief are you entitled to?"
+    val question = title
+    val link = "Find out how much you're entitled to"
+    def help(value: String): String = s"We've calculated that you've made a gain of £$value on your property. You'll need this figure to calculate your Private Residence Relief."
   }
 
   //Reliefs messages
@@ -181,10 +194,17 @@ object MessageLookup {
 
   //Reliefs Value messages
   object reliefsValue {
-    def title(input: String) = s"How much tax relief are you claiming on your total profit of £$input?"
-    def question(input: String) = s"How much tax relief are you claiming on your total profit of £$input?"
+    def title(input: String) = s"How much tax relief are you claiming on your total gain of £$input?"
+    def question(input: String) = s"How much tax relief are you claiming on your total gain of £$input?"
     val prrLink = "Private Residence Relief"
     val lettingsReliefLink = "Lettings Relief"
+  }
+
+  //Lettings Relief Value messages
+  object lettingsReliefValue {
+    val title = s"How much Letting Relief are you entitled to?"
+    val question = s"How much Letting Relief are you entitled to?"
+    def additionalContent(input: String) = s"We've calculated that you've made a gain of £$input on your property. You'll need this figure to calculate your Letting Relief."
   }
 
   //No Prr Reliefs Value messages
@@ -193,6 +213,15 @@ object MessageLookup {
     val question = "How much Capital Gains Tax relief are you claiming?"
     val prrLink = "Private Residence Relief"
     val lettingsReliefLink = "Lettings Relief"
+  }
+
+  //Lettings Relief messages
+  object lettingsRelief {
+    val title = "Are you entitled to Letting Relief?"
+    val help = "You may be able entitled to Letting Relief if you've rented out the property. Find out more about Letting Relief (opens in a new window)"
+    val helpOne = "Letting Relief (opens in a new window)"
+    val helpLink = "https://www.gov.uk/government/publications/private-residence-relief-hs283-self-assessment-helpsheet/hs283-private-residence-relief-2016#letting-relief"
+    val errorSelect = "Tell us if you want to claim Letting Relief"
   }
 
   //Other Properties messages
@@ -270,24 +299,26 @@ object MessageLookup {
 
   //Personal Allowance messages
   object personalAllowance {
-    def title(input: String): String = s"In the $input tax year, what was your Personal Allowance?"
-    val inYearTitle = "How much is your Personal Allowance?"
     def question(input: String): String = s"In the $input tax year, what was your Personal Allowance?"
     val inYearQuestion = "How much is your Personal Allowance?"
-    def help(input: String): String = s"This is the amount of your income you don't pay tax on. It's £$input unless you're claiming other allowances."
+    def help(input: String): String = s"This is the amount of your income you don't pay tax on. It was £$input unless you were claiming other allowances."
+    def inYearHelp(input: String): String = s"This is the amount of your income you don't pay tax on. It's £$input unless you're claiming other allowances."
     val helpLinkOne = "Personal Allowance"
   }
 
   //############ Private Residence Relief messages #################//
   object privateResidenceRelief {
-    val title = "Do you want to claim Private Residence Relief?"
-    val legendFirstSection = "You may be able to claim full or part"
-    val legendLink = "Private Residence Relief"
-    val legendSecondSection = "if you've lived at the property"
+    val title = "Are you entitled to Private Residence Relief?"
+    val helpTextOne = "You'll be entitled to Private Residence Relief if you've lived in the property as your main home " +
+      "at some point while you owned it. Find out more about"
+    val helpTextLink = "Private Residence Relief"
     val errorSelect = "Tell us if you want to claim Private Residence Relief"
-    val yesPart = "Yes, part relief"
-    val yesFull = "Yes, full relief"
-    val no = "No"
+  }
+
+  //############ Property Lived In messages #################//
+  object propertyLivedIn {
+    val title = "Have you ever lived in the property since you became the owner?"
+    val errorNoSelect = "Tell us if you have ever lived in the property since you became the owner"
   }
 
   //############ Shares messages ##############//

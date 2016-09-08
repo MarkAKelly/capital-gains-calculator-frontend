@@ -22,7 +22,6 @@ import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, Previ
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.{MessageLookup => commonMessages}
 import assets.MessageLookup.{summaryPage => messages}
-import common.resident.PrivateResidenceReliefKeys
 import models.resident._
 import models.resident.properties._
 import org.jsoup.Jsoup
@@ -39,16 +38,19 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       BigDecimal(10000),
       BigDecimal(30000))
 
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
-      None,
-      Some(ReliefsModel(false)),
-      None,
+    lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
       None,
       Some(LossesBroughtForwardModel(false)),
       None,
-      Some(AnnualExemptAmountModel(0)))
+      Some(AnnualExemptAmountModel(0)),
+      Some(PropertyLivedInModel(false)),
+      None,
+      None,
+      None,
+      None
+    )
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -289,25 +291,35 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         }
       }
 
-      "has an option output row for prr" which {
+      "has an option output row for property lived in" which {
 
-        s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
-          doc.select("#prr-question").text shouldBe commonMessages.privateResidenceRelief.title
-        }
-
-        s"should have the value '${commonMessages.privateResidenceRelief.no}'" in {
-          doc.select("#prr-option span.bold-medium").text shouldBe commonMessages.privateResidenceRelief.no
-        }
-      }
-
-      "has an option output row for tax reliefs" which {
-
-        s"should have the question text '${commonMessages.reliefs.questionSummary}'" in {
-          doc.select("#reliefs-question").text shouldBe commonMessages.reliefs.questionSummary
+        s"should have the question text '${commonMessages.propertyLivedIn.title}'" in {
+          doc.select("#propertyLivedIn-question").text shouldBe commonMessages.propertyLivedIn.title
         }
 
         "should have the value 'No'" in {
-          doc.select("#reliefs-option span.bold-medium").text shouldBe "No"
+          doc.select("#propertyLivedIn-option span.bold-medium").text shouldBe "No"
+        }
+      }
+
+      "does not have an option output row for the eligible for private residence relief" which {
+
+        s"should not display" in {
+          doc.select("#privateResidenceRelief-question").size() shouldBe 0
+        }
+      }
+
+      "does not have an option output row for the private residence relief value entry" which {
+
+        s"should not display" in {
+          doc.select("#privateResidenceReliefValue-question").size() shouldBe 0
+        }
+      }
+
+      "does not have an option output row for the lettings relief" which {
+
+        s"should not display" in {
+          doc.select("#lettingsRelief-question").size() shouldBe 0
         }
       }
 
@@ -357,8 +369,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
       "has a numeric output row for personal allowance" which {
 
-        s"should have the question text '${commonMessages.personalAllowance.title("2015/16")}'" in {
-          doc.select("#personalAllowance-question").text shouldBe commonMessages.personalAllowance.title("2015/16")
+        s"should have the question text '${commonMessages.personalAllowance.question("2015/16")}'" in {
+          doc.select("#personalAllowance-question").text shouldBe commonMessages.personalAllowance.question("2015/16")
         }
 
         "should have the value '£0'" in {
@@ -379,16 +391,19 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       BigDecimal(10000),
       BigDecimal(30000))
 
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.part)),
-      Some(PrivateResidenceReliefValueModel(1500)),
-      Some(ReliefsModel(false)),
-      None,
+    lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
       None,
       Some(LossesBroughtForwardModel(false)),
       None,
-      Some(AnnualExemptAmountModel(0)))
+      Some(AnnualExemptAmountModel(0)),
+      Some(PropertyLivedInModel(true)),
+      Some(PrivateResidenceReliefModel(true)),
+      Some(PrivateResidenceReliefValueModel(5000)),
+      Some(LettingsReliefModel(true)),
+      Some(LettingsReliefValueModel(7000))
+    )
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -429,25 +444,61 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       }
     }
 
-    "has an option output row for prr" which {
+    "has an option output row for property lived in" which {
 
-      s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
-        doc.select("#prr-question").text shouldBe commonMessages.privateResidenceRelief.title
+      s"should have the question text '${commonMessages.propertyLivedIn.title}'" in {
+        doc.select("#propertyLivedIn-question").text shouldBe commonMessages.propertyLivedIn.title
       }
 
-      s"should have the value '${commonMessages.privateResidenceRelief.yesPart}'" in {
-        doc.select("#prr-option span.bold-medium").text shouldBe commonMessages.privateResidenceRelief.yesPart
+      "should have the value 'Yes'" in {
+        doc.select("#propertyLivedIn-option span.bold-medium").text shouldBe "Yes"
       }
     }
 
-    "has a numeric output row for prr value" which {
 
-      s"should have the question text '${commonMessages.privateResidenceReliefValue.title("50,000")}'" in {
-        doc.select("#prrValue-question").text shouldBe commonMessages.privateResidenceReliefValue.title("50,000")
+    "has an option output row for eligible for private residence relief in" which {
+
+      s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
+        doc.select("#privateResidenceRelief-question").text shouldBe commonMessages.privateResidenceRelief.title
       }
 
-      "should have the value '£1,500'" in {
-        doc.select("#prrValue-amount span.bold-medium").text shouldBe "£1,500"
+      "should have the value 'Yes'" in {
+        doc.select("#privateResidenceRelief-option span.bold-medium").text shouldBe "Yes"
+      }
+
+    }
+
+    "has an option output row for private residence relief value in" which {
+
+      s"should have the question text '${commonMessages.privateResidenceReliefValue.title}'" in {
+        doc.select("#privateResidenceReliefValue-question").text shouldBe commonMessages.privateResidenceReliefValue.title
+      }
+
+      "should have the value '5000'" in {
+        doc.select("#privateResidenceReliefValue-amount span.bold-medium").text shouldBe "£5,000"
+      }
+
+    }
+
+    "has an option output row for eligible for lettings relief in" which {
+
+      s"should have the question text '${commonMessages.lettingsRelief.title}'" in {
+        doc.select("#lettingsRelief-question").text shouldBe commonMessages.lettingsRelief.title
+      }
+
+      "should have the value 'Yes'" in {
+        doc.select("#lettingsRelief-option span.bold-medium").text shouldBe "Yes"
+      }
+    }
+
+    "has an option output row for eligible for lettings relief value in" which {
+
+      s"should have the question text '${commonMessages.lettingsReliefValue.title}'" in {
+        doc.select("#lettingsReliefValue-question").text shouldBe commonMessages.lettingsReliefValue.title
+      }
+
+      "should have the value 'Yes'" in {
+        doc.select("#lettingsReliefValue-amount span.bold-medium").text shouldBe "£7,000"
       }
     }
 

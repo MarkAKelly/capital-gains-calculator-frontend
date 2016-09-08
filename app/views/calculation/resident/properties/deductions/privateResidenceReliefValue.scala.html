@@ -1,37 +1,41 @@
 @import models.resident.properties.PrivateResidenceReliefValueModel
 @import uk.gov.hmrc.play.views.html.helpers.form
-@import uk.gov.hmrc.play.views.helpers.MoneyPounds
 @import views.html.helpers._
 @import views.html.calculation.resident._
+@import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-@(privateResidenceReliefValueForm: Form[PrivateResidenceReliefValueModel], totalGain: BigDecimal, navHomeLink: String)(implicit request: Request[_])
-
-@sidebar = {
-    <a id="privateResidenceReliefLink" class="external-link" rel="external" href="https://www.gov.uk/tax-sell-home/absence-from-home"
-       target="_blank" data-journey-click="help:govUK:rtt-properties-absenceFromHome">
-        @Messages("calc.resident.prrValue.externalLink")
-        <span id="opensInANewWindow">@Messages("calc.base.externalLink")</span>
-    </a>
-}
+@(privateResidenceReliefValueForm : Form[PrivateResidenceReliefValueModel], navHomeLink: String, totalGain: BigDecimal)(implicit request: Request[_])
 
 @resident_main_template(
-    title = Messages("calc.resident.prrValue.title",
-    MoneyPounds(totalGain, 0).quantity),
-    backLink = Some(controllers.resident.properties.routes.DeductionsController.privateResidenceRelief().toString),
-    sidebarLinks = Some(sidebar),
-    homeLink = navHomeLink,
-    navTitle = Messages("calc.base.resident.properties.home")) {
+title = Messages("calc.resident.privateResidenceReliefValue.title"),
+backLink = Some(controllers.resident.properties.routes.DeductionsController.privateResidenceRelief().url),
+homeLink = navHomeLink,
+navTitle = Messages("calc.base.resident.properties.home")) {
 
-    @errorSummary(privateResidenceReliefValueForm, "private-residence-relief-value")
+    @errorSummary(privateResidenceReliefValueForm, "reliefs-value")
 
-    <h1>@Messages("calc.resident.prrValue.title", MoneyPounds(totalGain, 0).quantity)</h1>
+    <h1>@Messages("calc.resident.privateResidenceReliefValue.question")</h1>
 
     @form(action = controllers.resident.properties.routes.DeductionsController.submitPrivateResidenceReliefValue) {
 
-        @formInputMoney(privateResidenceReliefValueForm, "amount", Messages("calc.resident.prrValue.title", MoneyPounds(totalGain, 0).quantity), hideLabel = true)
+        <div class="form-group">
+            <div id="helpText" class="indent">
+                <p>@Messages("calc.resident.privateResidenceReliefValue.help", MoneyPounds(totalGain, 0).quantity)</p>
+            </div>
+            <a id="privateResidenceReliefLink" class="external-link" rel="external" href="https://www.gov.uk/government/publications/private-residence-relief-hs283-self-assessment-helpsheet/hs283-private-residence-relief-2016"
+               target="_blank" data-journey-click="help:govUK:rtt-properties-privateResidenceReliefLink">
+                @Messages("calc.resident.privateResidenceReliefValue.link") @Messages("calc.base.externalLink")
+            </a>
+        </div>
+
+        @formInputMoney(
+            privateResidenceReliefValueForm,
+            "amount",
+            Messages("calc.resident.privateResidenceReliefValue.question",
+            MoneyPounds(totalGain, 0).quantity),
+            hideLabel = true
+        )
 
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
-
     }
-
 }

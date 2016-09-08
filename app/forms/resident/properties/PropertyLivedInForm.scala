@@ -16,23 +16,21 @@
 
 package forms.resident.properties
 
-import common.Transformers._
-import common.Validation._
-import models.resident.properties.ReliefsModel
 import play.api.data.Form
 import play.api.data.Forms._
+import common.Transformers._
+import common.Validation._
+import models.resident.properties.PropertyLivedInModel
 import play.api.i18n.Messages
-import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
+object PropertyLivedInForm {
 
-object ReliefsForm {
-
-  def reliefsForm(): Form[ReliefsModel] = Form(
+  val propertyLivedInForm = Form(
     mapping(
-      "isClaiming" -> text
-        .verifying(Messages("calc.resident.reliefs.errorSelect"), _.nonEmpty)
-        .verifying(Messages("calc.resident.reliefs.errorSelect"), yesNoCheck)
-        .transform[Boolean](stringToBoolean, booleanToString)
-    )(ReliefsModel.apply)(ReliefsModel.unapply)
+      "livedInProperty" -> text
+        .verifying(Messages("calc.resident.properties.propertyLivedIn.noSelectError"), mandatoryCheck)
+        .verifying(Messages("calc.resident.properties.propertyLivedIn.noSelectError"), yesNoCheck)
+        .transform(stringToBoolean, booleanToString)
+    )(PropertyLivedInModel.apply)(PropertyLivedInModel.unapply)
   )
 }

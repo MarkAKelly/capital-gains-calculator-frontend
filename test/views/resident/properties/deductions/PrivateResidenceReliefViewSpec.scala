@@ -16,53 +16,23 @@
 
 package views.resident.properties.deductions
 
+import controllers.helpers.FakeRequestHelper
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{privateResidenceRelief => messages}
 import assets.{MessageLookup => commonMessages}
-import common.resident.PrivateResidenceReliefKeys
-import controllers.helpers.FakeRequestHelper
 import forms.resident.properties.PrivateResidenceReliefForm._
 import org.jsoup.Jsoup
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{deductions => views}
 
 class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Private Residence Relief view with no form errors" should {
+  "Private Residence Relief view" should {
 
-    lazy val form = privateResidenceReliefForm
-    lazy val view = views.privateResidenceRelief(
-      form,
-      "home",
-      Some("back"))(fakeRequest)
+    lazy val view = views.privateResidenceRelief(privateResidenceReliefForm)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
       doc.charset().toString shouldBe "UTF-8"
-    }
-
-    s"have a title of ${messages.title}" in {
-      doc.title() shouldBe messages.title
-    }
-
-    s"have the home link too 'home'" in {
-      doc.select("#homeNavHref").attr("href") shouldEqual "home"
-    }
-
-    "have a back button" which {
-
-      lazy val backLink = doc.select("a#back-link")
-
-      "has the correct back link text" in {
-        backLink.text shouldBe commonMessages.calcBaseBack
-      }
-
-      "has the back-link class" in {
-        backLink.hasClass("back-link") shouldBe true
-      }
-
-      "has a back link to 'back'" in {
-        backLink.attr("href") shouldBe "back"
-      }
     }
 
     "have a H1 tag that" should {
@@ -78,232 +48,184 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
       }
     }
 
-    "have a legend for the radio inputs" which {
+    "have a back link" which {
 
-      lazy val legend = doc.select("legend")
-
-      s"contain the text ${messages.legendFirstSection}" in {
-        legend.text should include(s"${messages.legendFirstSection}")
+      s"should have text ${commonMessages.calcBaseBack}" in {
+        doc.select("#back-link").text() shouldEqual "Back"
       }
 
-      "contain a link within the legend" which {
+      "has the back-link class" in {
+        doc.select("#back-link").hasClass("back-link") shouldBe true
+      }
 
-        "has an href" in {
-          legend.select("a").hasAttr("href") shouldEqual true
-        }
+      "and link back to the property lived in page" in {
+        doc.select("#back-link").attr("href") shouldEqual s"${controllers.resident.properties.routes.DeductionsController.propertyLivedIn().url}"
+      }
+    }
 
-        "who's href links to 'https://www.gov.uk/tax-relief-selling-home'" in {
-          legend.select("a").attr("href") shouldEqual "https://www.gov.uk/tax-relief-selling-home"
+    s"have the question of the page ${messages.title}" in {
+      doc.select("h1").text shouldEqual messages.title
+    }
+
+    "have a help text with the link that" should {
+
+      lazy val helptext = doc.select("span.form-hint")
+
+      s"have the text ${messages.helpTextLink}" in {
+        helptext.text() should include(messages.helpTextLink)
+      }
+
+      s"have an internal span with the text ${commonMessages.calcBaseExternalLink}" in {
+        helptext.select("a#privateResidenceReliefLink span").text() shouldEqual commonMessages.calcBaseExternalLink
+      }
+
+      "have the address https://www.gov.uk/government/publications/" +
+        "private-residence-relief-hs283-self-assessment-helpsheet/hs283-private-residence-relief-2016" in {
+        helptext.select("a").attr("href") shouldEqual "https://www.gov.uk/government/publications/" +
+          "private-residence-relief-hs283-self-assessment-helpsheet/hs283-private-residence-relief-2016"
+      }
+
+      "the link should have a set of attributes" which {
+
+        "has the external link class" in {
+          doc.select("#privateResidenceReliefLink").hasClass("external-link") shouldEqual true
         }
 
         "has the attribute rel" in {
-          legend.select("a").hasAttr("rel") shouldEqual true
+          doc.select("#privateResidenceReliefLink").hasAttr("rel") shouldEqual true
         }
 
-        "with a rel value of 'external'" in {
-          legend.select("a").attr("rel") shouldEqual "external"
+        "rel has the value of external" in {
+          doc.select("#privateResidenceReliefLink").attr("rel") shouldEqual "external"
         }
 
-        "has the attribute 'target'" in {
-          legend.select("a").hasAttr("target") shouldEqual true
+        "has a target attribute" in {
+          doc.select("#privateResidenceReliefLink").hasAttr("target") shouldEqual true
         }
 
-        "with a target value of '_blank'" in {
-          legend.select("a").attr("target") shouldEqual "_blank"
-        }
-
-        s"have the text ${messages.legendLink}" in {
-          legend.select("a").text should include(s"${messages.legendLink}")
+        "has a target value of _blank" in {
+          doc.select("#privateResidenceReliefLink").attr("target") shouldEqual "_blank"
         }
       }
 
-      "contain a span for the link indicating it opens in a new tab" which {
-
-        s"has the text ${commonMessages.calcBaseExternalLink}" in {
-          legend.select("a span").text shouldEqual s"${commonMessages.calcBaseExternalLink}"
-        }
-      }
-
-      s"contain the text ${messages.legendSecondSection}" in {
-        legend.text should include(s"${messages.legendSecondSection}")
-      }
-    }
-
-    "have a set of radio inputs" which {
-
-      "are surrounded in a div with class form-group" in {
-        doc.select("div#radio-input").hasClass("form-group") shouldEqual true
-      }
-
-      "for the option 'Yes claiming full prr'" should {
-
-        lazy val fullRadioOption = doc.select(".block-label[for=prrClaiming-full]")
-
-        "have a label with class 'block-label'" in {
-          fullRadioOption.hasClass("block-label") shouldEqual true
+      "record GA statistics" which {
+        "has a data-journey-click attribute" in {
+          doc.select("#privateResidenceReliefLink").hasAttr("data-journey-click") shouldEqual true
         }
 
-        "have the property 'for'" in {
-          fullRadioOption.hasAttr("for") shouldEqual true
-        }
-
-        "the for attribute has the value prrClaiming-Full" in {
-          fullRadioOption.attr("for") shouldEqual "prrClaiming-full"
-        }
-
-        "have the text 'Yes, full relief'" in {
-          fullRadioOption.text shouldEqual "Yes, full relief"
-        }
-
-        "have an input under the label that" should {
-
-          lazy val optionLabel = doc.select("#prrClaiming-full")
-
-          "have the id 'prrClaiming-Full'" in {
-            optionLabel.attr("id") shouldEqual "prrClaiming-full"
-          }
-
-          "have the value 'Full'" in {
-            optionLabel.attr("value") shouldEqual PrivateResidenceReliefKeys.full
-          }
-
-          "be of type radio" in {
-            optionLabel.attr("type") shouldEqual "radio"
-          }
-        }
-      }
-
-      "for the option 'Yes claiming part prr'" should {
-
-        lazy val fullRadioOption = doc.select(".block-label[for=prrClaiming-part]")
-
-        "have a label with class 'block-label'" in {
-          fullRadioOption.hasClass("block-label") shouldEqual true
-        }
-
-        "have the property 'for'" in {
-          fullRadioOption.hasAttr("for") shouldEqual true
-        }
-
-        "the for attribute has the value prrClaiming-part" in {
-          fullRadioOption.attr("for") shouldEqual "prrClaiming-part"
-        }
-
-        "have the text 'Yes, part relief'" in {
-          fullRadioOption.text shouldEqual "Yes, part relief"
-        }
-
-        "have an input under the label that" should {
-
-          lazy val optionLabel = doc.select("#prrClaiming-part")
-
-          "have the id 'prrClaiming-part'" in {
-            optionLabel.attr("id") shouldEqual "prrClaiming-part"
-          }
-
-          "have the value 'Part'" in {
-            optionLabel.attr("value") shouldEqual PrivateResidenceReliefKeys.part
-          }
-
-          "be of type radio" in {
-            optionLabel.attr("type") shouldEqual "radio"
-          }
-        }
-      }
-
-      "for the option 'No not claiming prr'" should {
-
-        lazy val fullRadioOption = doc.select(".block-label[for=prrClaiming-none]")
-
-        "have a label with class 'block-label'" in {
-          fullRadioOption.hasClass("block-label") shouldEqual true
-        }
-
-        "have the property 'for'" in {
-          fullRadioOption.hasAttr("for") shouldEqual true
-        }
-
-        "the for attribute has the value prrClaiming-none" in {
-          fullRadioOption.attr("for") shouldEqual "prrClaiming-none"
-        }
-
-        "have the text 'No'" in {
-          fullRadioOption.text shouldEqual "No"
-        }
-
-        "have an input under the label that" should {
-
-          lazy val optionLabel = doc.select("#prrClaiming-none")
-
-          "have the id 'prrClaiming-none'" in {
-            optionLabel.attr("id") shouldEqual "prrClaiming-none"
-          }
-
-          "have the value 'None'" in {
-            optionLabel.attr("value") shouldEqual PrivateResidenceReliefKeys.none
-          }
-
-          "be of type radio" in {
-            optionLabel.attr("type") shouldEqual "radio"
-          }
+        "with the GA value of help:govUK:rtt-properties-privateResidenceReliefHelp" in {
+          doc.select("#privateResidenceReliefLink").attr("data-journey-click") shouldEqual "help:govUK:rtt-properties-privateResidenceReliefHelp"
         }
       }
     }
 
-    "have a continue button" which {
+    "have a form" which {
 
-      lazy val button = doc.select("button")
+      lazy val form = doc.getElementsByTag("form")
 
-      "has class 'button'" in {
-        button.hasClass("button") shouldEqual true
+      s"has the action '${controllers.resident.properties.routes.DeductionsController.privateResidenceRelief().toString}'" in {
+        form.attr("action") shouldBe controllers.resident.properties.routes.DeductionsController.privateResidenceRelief().toString
       }
 
-      "has attribute 'type'" in {
-        button.hasAttr("type") shouldEqual true
+      "has the method of POST" in {
+        form.attr("method") shouldBe "POST"
       }
 
-      "has type value of 'submit'" in {
-        button.attr("type") shouldEqual "submit"
+      "has a set of radio of options" which {
+
+        lazy val radioButtons = doc.body.getElementsByTag("fieldset")
+
+        "are contained within a fieldset with id 'isClaiming'" in {
+          radioButtons.attr("id") shouldBe "isClaiming"
+        }
+
+        "has a legend" which {
+
+          "exists" in {
+            radioButtons.select("legend").size() shouldEqual 1
+          }
+
+          "has the class 'visuallyhidden'" in {
+            radioButtons.select("legend").hasClass("visuallyhidden") shouldEqual true
+          }
+
+          s"has the text '${messages.title}'" in {
+            radioButtons.select("legend").text() shouldEqual messages.title
+          }
+        }
+
+        "has an input for the yes option" which {
+
+          lazy val yesButton = radioButtons.select("label[for=isClaiming-yes]")
+
+          "has a label with text 'Yes'" in {
+            yesButton.text shouldEqual "Yes"
+          }
+
+          "has id option-yes" in {
+            yesButton.select("input").attr("id") shouldEqual "isClaiming-yes"
+          }
+
+          "has a name of 'isClaiming'" in {
+            yesButton.select("input").attr("name") shouldEqual "isClaiming"
+          }
+
+          "has a value of 'Yes'" in {
+            yesButton.select("input").attr("value") shouldEqual "Yes"
+          }
+        }
+
+        "has an input for the no option" which {
+
+          lazy val noButton = radioButtons.select("label[for=isClaiming-no]")
+
+          "has a label with text 'No'" in {
+            noButton.text shouldEqual "No"
+          }
+
+          "has id option-no" in {
+            noButton.select("input").attr("id") shouldEqual "isClaiming-no"
+          }
+
+          "has a name of 'isClaiming'" in {
+            noButton.select("input").attr("name") shouldEqual "isClaiming"
+          }
+
+          "has a value of 'No'" in {
+            noButton.select("input").attr("value") shouldEqual "No"
+          }
+        }
       }
 
-      "has attribute id" in {
-        button.hasAttr("id") shouldEqual true
-      }
+      "have a continue button that" should {
 
-      "has id equal to continue-button" in {
-        button.attr("id") shouldEqual "continue-button"
-      }
+        lazy val continueButton = doc.select("button#continue-button")
 
-      s"has the text ${commonMessages.calcBaseContinue}" in {
-        button.text shouldEqual s"${commonMessages.calcBaseContinue}"
+        s"have the button text '${commonMessages.calcBaseContinue}'" in {
+          continueButton.text shouldBe commonMessages.calcBaseContinue
+        }
+
+        "be of type submit" in {
+          continueButton.attr("type") shouldBe "submit"
+        }
+
+        "have the class 'button'" in {
+          continueButton.hasClass("button") shouldBe true
+        }
       }
     }
   }
 
-  "Private Residence Relief view with form errors" should {
+  "The Private Residence Relief View with form with errors" which {
 
-    lazy val form = privateResidenceReliefForm.bind(Map("prrClaiming" -> ""))
-    lazy val view = views.privateResidenceRelief(
-      form,
-      "home",
-      Some("back"))(fakeRequest)
-    lazy val doc = Jsoup.parse(view.body)
+    "is due to mandatory field error" should {
 
-    "have a charset of UTF-8" in {
-      doc.charset().toString shouldBe "UTF-8"
-    }
+      val form = privateResidenceReliefForm.bind(Map("amount" -> ""))
+      lazy val view = views.privateResidenceRelief(form)(fakeRequest)
+      lazy val doc = Jsoup.parse(view.body)
 
-    s"have a title of ${messages.title}" in {
-      doc.title() shouldBe messages.title
-    }
-
-    s"have the home link too 'home'" in {
-      doc.select("#homeNavHref").attr("href") shouldEqual "home"
-    }
-
-    "have an error summary" which {
-      "display an error summary message for the page" in {
-        doc.body.select("#prrClaiming-error-summary").size shouldBe 1
+      "display an error summary message for the amount" in {
+        doc.body.select("#isClaiming-error-summary").size shouldBe 1
       }
 
       "display an error message for the input" in {

@@ -17,7 +17,6 @@
 package constructors.resident.properties
 
 import common.Dates
-import common.resident.PrivateResidenceReliefKeys
 import models.resident._
 import models.resident.properties._
 import uk.gov.hmrc.play.test.UnitSpec
@@ -48,54 +47,63 @@ class CalculateRequestConstructorSpec extends UnitSpec {
     "supplied with no optional values" should {
 
       "return a valid url variable string" in {
-        val answers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
-          None,
-          Some(ReliefsModel(false)),
-          None,
+        val answers = ChargeableGainAnswers(
           Some(OtherPropertiesModel(false)),
           None,
           None,
           Some(LossesBroughtForwardModel(false)),
           None,
-          None)
+          None,
+          Some(PropertyLivedInModel(false)),
+          None,
+          None,
+          None,
+          None
+        )
         val result = CalculateRequestConstructor.chargeableGainRequestString(answers, BigDecimal(11100))
-        result shouldBe "&annualExemptAmount=11100&prrType=None"
+        result shouldBe "&annualExemptAmount=11100"
       }
     }
 
     "supplied with all optional values except allowable losses" should {
 
       "return a valid url variable string" in {
-        val answers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.part)),
-          Some(PrivateResidenceReliefValueModel(1500)),
-          Some(ReliefsModel(true)),
-          Some(ReliefsValueModel(BigDecimal(1000))),
+        val answers = ChargeableGainAnswers(
           Some(OtherPropertiesModel(true)),
           Some(AllowableLossesModel(false)),
           None,
           Some(LossesBroughtForwardModel(true)),
           Some(LossesBroughtForwardValueModel(BigDecimal(2000))),
-          Some(AnnualExemptAmountModel(BigDecimal(3000))))
+          Some(AnnualExemptAmountModel(BigDecimal(3000))),
+          Some(PropertyLivedInModel(false)),
+          None,
+          None,
+          None,
+          None
+        )
         val result = CalculateRequestConstructor.chargeableGainRequestString(answers, BigDecimal(11100))
-        result shouldBe "&reliefs=1000&broughtForwardLosses=2000&annualExemptAmount=3000&prrType=Part&prrValue=1500"
+        result shouldBe "&broughtForwardLosses=2000&annualExemptAmount=3000"
       }
     }
 
     "supplied with all optional values including allowable losses" should {
 
       "return a valid url variable string" in {
-        val answers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.full)),
-          None,
-          Some(ReliefsModel(true)),
-          Some(ReliefsValueModel(BigDecimal(1000))),
+        val answers = ChargeableGainAnswers(
           Some(OtherPropertiesModel(true)),
           Some(AllowableLossesModel(true)),
           Some(AllowableLossesValueModel(BigDecimal(1000))),
           Some(LossesBroughtForwardModel(true)),
           Some(LossesBroughtForwardValueModel(BigDecimal(2000))),
-          Some(AnnualExemptAmountModel(BigDecimal(3000))))
+          Some(AnnualExemptAmountModel(BigDecimal(3000))),
+          Some(PropertyLivedInModel(false)),
+          None,
+          None,
+          None,
+          None
+        )
         val result = CalculateRequestConstructor.chargeableGainRequestString(answers, BigDecimal(11100))
-        result shouldBe "&allowableLosses=1000&broughtForwardLosses=2000&annualExemptAmount=11100&prrType=Full"
+        result shouldBe "&allowableLosses=1000&broughtForwardLosses=2000&annualExemptAmount=11100"
       }
     }
   }

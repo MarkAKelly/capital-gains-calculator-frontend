@@ -16,20 +16,21 @@
 
 package forms.resident.properties
 
+import common.Transformers._
 import common.Validation._
-import models.resident.properties.PrivateResidenceReliefModel
-import play.api.data.Forms._
+import models.resident.PrivateResidenceReliefModel
 import play.api.data.Form
+import play.api.data.Forms._
 import play.api.i18n.Messages
 
 object PrivateResidenceReliefForm {
 
-  val privateResidenceReliefForm = Form(
+  val privateResidenceReliefForm: Form[PrivateResidenceReliefModel] = Form(
     mapping(
-      "prrClaiming" -> text
-        .verifying(Messages("calc.resident.privateResidenceRelief.noSelectError"), mandatoryCheck)
-        .verifying(Messages("calc.resident.privateResidenceRelief.noSelectError"), fullPartNoneCheck)
+      "isClaiming" -> text
+        .verifying(Messages("calc.resident.privateResidenceRelief.errorSelect"), _.nonEmpty)
+        .verifying(Messages("calc.resident.privateResidenceRelief.errorSelect"), yesNoCheck)
+        .transform[Boolean](stringToBoolean, booleanToString)
     )(PrivateResidenceReliefModel.apply)(PrivateResidenceReliefModel.unapply)
   )
 }
-

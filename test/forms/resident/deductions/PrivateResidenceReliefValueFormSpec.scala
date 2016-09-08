@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package forms.resident
+package forms.resident.deductions
 
 import assets.MessageLookup
 import controllers.helpers.FakeRequestHelper
-import forms.resident.properties.ReliefsValueForm._
-import models.resident.properties.ReliefsValueModel
+import forms.resident.properties.PrivateResidenceReliefValueForm._
+import models.resident.properties.PrivateResidenceReliefValueModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class ReliefsValueFormSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class PrivateResidenceReliefValueFormSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Creating a form using an empty model" should {
 
-    lazy val form = reliefsValueForm
+    lazy val form = privateResidenceReliefValueForm
 
     "return an empty string for amount" in {
       form.data.isEmpty shouldBe true
@@ -35,8 +35,8 @@ class ReliefsValueFormSpec extends UnitSpec with WithFakeApplication with FakeRe
 
   "Creating a form using a valid model" should {
 
-    lazy val model = ReliefsValueModel(1)
-    lazy val form = reliefsValueForm.fill(model)
+    lazy val model = PrivateResidenceReliefValueModel(1)
+    lazy val form = privateResidenceReliefValueForm.fill(model)
 
     "return a form with the data specified in the model" in {
       form.data("amount") shouldBe "1"
@@ -48,7 +48,7 @@ class ReliefsValueFormSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     "supplied with no data for amount" should {
 
-      lazy val form = reliefsValueForm.bind(Map("amount" -> ""))
+      lazy val form = privateResidenceReliefValueForm.bind(Map("amount" -> ""))
 
       "raise a form error" in {
         form.hasErrors shouldBe true
@@ -65,7 +65,7 @@ class ReliefsValueFormSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     "supplied with empty space for amount" should {
 
-      lazy val form = reliefsValueForm.bind(Map("amount" -> "  "))
+      lazy val form = privateResidenceReliefValueForm.bind(Map("amount" -> "  "))
 
       "raise a form error" in {
         form.hasErrors shouldBe true
@@ -82,7 +82,7 @@ class ReliefsValueFormSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     "supplied with non numeric input for amount" should {
 
-      lazy val form = reliefsValueForm.bind(Map("amount" -> "a"))
+      lazy val form = privateResidenceReliefValueForm.bind(Map("amount" -> "a"))
 
       "raise a form error" in {
         form.hasErrors shouldBe true
@@ -99,7 +99,7 @@ class ReliefsValueFormSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     "supplied with an amount with 3 numbers after the decimal" should {
 
-      lazy val form = reliefsValueForm.bind(Map("amount" -> "1.000"))
+      lazy val form = privateResidenceReliefValueForm.bind(Map("amount" -> "1.000"))
 
       "raise a form error" in {
         form.hasErrors shouldBe true
@@ -116,7 +116,7 @@ class ReliefsValueFormSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     "supplied with an amount that's greater than the max" should {
 
-      lazy val form = reliefsValueForm.bind(Map("amount" -> "1000000000.01"))
+      lazy val form = privateResidenceReliefValueForm.bind(Map("amount" -> "1000000000.01"))
 
       "raise a form error" in {
         form.hasErrors shouldBe true
@@ -133,7 +133,7 @@ class ReliefsValueFormSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     "supplied with an amount that's less than the zero" should {
 
-      lazy val form = reliefsValueForm.bind(Map("amount" -> "-0.01"))
+      lazy val form = privateResidenceReliefValueForm.bind(Map("amount" -> "-0.01"))
 
       "raise a form error" in {
         form.hasErrors shouldBe true
@@ -153,10 +153,10 @@ class ReliefsValueFormSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     "supplied with a valid amount" should {
 
-      lazy val form = reliefsValueForm.bind(Map("amount" -> "1"))
+      lazy val form = privateResidenceReliefValueForm.bind(Map("amount" -> "1"))
 
       "build a model with the correct amount" in {
-        form.value.get shouldBe ReliefsValueModel(BigDecimal(1))
+        form.value.get shouldBe PrivateResidenceReliefValueModel(BigDecimal(1))
       }
 
       "not raise form error" in {
@@ -166,28 +166,28 @@ class ReliefsValueFormSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     "supplied with an amount with 1 number after the decimal" should {
       "not raise a form error" in {
-        val form = reliefsValueForm.bind(Map("amount" -> "1.1"))
+        val form = privateResidenceReliefValueForm.bind(Map("amount" -> "1.1"))
         form.hasErrors shouldBe false
       }
     }
 
     "supplied with an amount with 2 numbers after the decimal" should {
       "not raise a form error" in {
-        val form = reliefsValueForm.bind(Map("amount" -> "1.11"))
+        val form = privateResidenceReliefValueForm.bind(Map("amount" -> "1.11"))
         form.hasErrors shouldBe false
       }
     }
 
     "supplied with an amount that's equal to the max" should {
       "not raise a form error" in {
-        val form = reliefsValueForm.bind(Map("amount" -> "1000000000"))
+        val form = privateResidenceReliefValueForm.bind(Map("amount" -> "1000000000"))
         form.hasErrors shouldBe false
       }
     }
 
     "supplied with an amount that's equal to the min" should {
       "not raise a form error" in {
-        val form = reliefsValueForm.bind(Map("amount" -> "0"))
+        val form = privateResidenceReliefValueForm.bind(Map("amount" -> "0"))
         form.hasErrors shouldBe false
       }
     }

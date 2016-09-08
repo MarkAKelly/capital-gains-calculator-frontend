@@ -16,44 +16,62 @@
 
 package forms.resident
 
-import models.resident.properties.PrivateResidenceReliefModel
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
-import forms.resident.properties.PrivateResidenceReliefForm._
 import assets.MessageLookup.{privateResidenceRelief => messages}
+import forms.resident.properties.PrivateResidenceReliefForm._
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class PrivateResidenceReliefFormSpec extends UnitSpec with WithFakeApplication {
 
-  "Creating the form for Private Residence Relief from a valid selection" should {
-    "return a populated form using .fill" in {
-      val model = PrivateResidenceReliefModel("Full")
-      val form = privateResidenceReliefForm.fill(model)
+  "Creating the form with an empty model" should {
 
-      form.value.get shouldBe PrivateResidenceReliefModel("Full")
-    }
+    lazy val form = privateResidenceReliefForm
 
-    "return a valid model if supplied with valid selection 'Full'" in {
-      val form = privateResidenceReliefForm.bind(Map(("prrClaiming", "Full")))
-      form.value shouldBe Some(PrivateResidenceReliefModel("Full"))
-    }
-
-    "return a valid model if supplied with valid selection 'Part'" in {
-      val form = privateResidenceReliefForm.bind(Map(("prrClaiming", "Part")))
-      form.value shouldBe Some(PrivateResidenceReliefModel("Part"))
-    }
-
-    "return a valid model if supplied with valid selection 'None'" in {
-      val form = privateResidenceReliefForm.bind(Map(("prrClaiming", "None")))
-      form.value shouldBe Some(PrivateResidenceReliefModel("None"))
+    "create an empty form" in {
+      form.data.isEmpty shouldEqual true
     }
   }
 
-  "Creating the form for Private Residence Relief from invalid selection" when {
+  "Creating a form with an valid 'yes' model" should {
 
-    "supplied with no selection" should {
+    lazy val form = privateResidenceReliefForm.bind(Map("isClaiming" -> "Yes"))
 
-      lazy val form = privateResidenceReliefForm.bind(Map(("prrClaiming", "")))
+    "create a form with the data from the model" in {
+      form.data("isClaiming") shouldEqual "Yes"
+    }
 
-      "return a form with errors" in {
+    "raise no form error" in {
+      form.hasErrors shouldBe false
+    }
+
+    "raise 0 form errors" in {
+      form.errors.length shouldBe 0
+    }
+  }
+
+  "Creating a form with a valid 'no' model" should {
+
+    lazy val form = privateResidenceReliefForm.bind(Map("isClaiming" -> "No"))
+
+    "create a form with the data from the model" in {
+      form.data("isClaiming") shouldEqual "No"
+    }
+
+    "raise no form error" in {
+      form.hasErrors shouldBe false
+    }
+
+    "raise 0 form errors" in {
+      form.errors.length shouldBe 0
+    }
+  }
+
+  "Creating a form using an invalid post" when {
+
+    "supplied with no data for option" should {
+
+      lazy val form = privateResidenceReliefForm.bind(Map("isClaiming" -> ""))
+
+      "raise form error" in {
         form.hasErrors shouldBe true
       }
 
@@ -61,26 +79,26 @@ class PrivateResidenceReliefFormSpec extends UnitSpec with WithFakeApplication {
         form.errors.length shouldBe 1
       }
 
-      s"return a form with the error message ${messages.errorSelect}" in {
-        form.error("prrClaiming").get.message shouldBe messages.errorSelect
-      }
-    }
-
-    "supplied with non Full/Part/None selection" should {
-      lazy val form = privateResidenceReliefForm.bind(Map(("prrClaiming", "abc")))
-
-      "return a form with errors" in {
-        form.hasErrors shouldBe true
+      "associate the correct error message to the error" in {
+        form.error("isClaiming").get.message shouldBe messages.errorSelect
       }
 
-      "raise 1 form error" in {
-        form.errors.length shouldBe 1
-      }
+      "supplied with invalid data for option" should {
 
-      s"return a form with the error message ${messages.errorSelect}" in {
-        form.error("prrClaiming").get.message shouldBe messages.errorSelect
+        lazy val form = privateResidenceReliefForm.bind(Map("isClaiming" -> "asdas"))
+
+        "raise form error" in {
+          form.hasErrors shouldBe true
+        }
+
+        "raise 1 form error" in {
+          form.errors.length shouldBe 1
+        }
+
+        "associate the correct error message to the error" in {
+          form.error("isClaiming").get.message shouldBe messages.errorSelect
+        }
       }
     }
   }
-
 }

@@ -54,8 +54,51 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
       doc.select("h1").text shouldEqual messages.question
     }
 
-    s"have bullet point list title of ${messages.bulletListTitle}" in {
-      doc.select("div.indent p#bullet-list-title").text() shouldEqual messages.bulletListTitle
+    s"have bullet point list title" which {
+
+      lazy val title = doc.select("div.indent p#bullet-list-title")
+
+      s"should contain the text ${messages.bulletListTitlePartOne}" in {
+        title.text() should include(messages.bulletListTitlePartOne)
+      }
+
+      s"should contain a link to the market value page" which {
+
+        lazy val link = title.select("a")
+
+        s"should have the text ${messages.bulletListTitlePartTwo}" in {
+          link.text() should include(messages.bulletListTitlePartTwo)
+        }
+
+        "has the external link class" in {
+          link.hasClass("external-link") shouldEqual true
+        }
+
+        "has the attribute rel" in {
+          link.hasAttr("rel") shouldEqual true
+        }
+
+        "rel has the value of external" in {
+          link.attr("rel") shouldEqual "external"
+        }
+
+        "has a target attribute" in {
+          link.hasAttr("target") shouldEqual true
+        }
+
+        "has a target value of _blank" in {
+          link.attr("target") shouldEqual "_blank"
+        }
+
+        s"and also has the text ${MessageLookup.calcBaseExternalLink}" in {
+          link.text() should include(MessageLookup.calcBaseExternalLink)
+        }
+      }
+
+      s"should contain the text ${messages.bulletListTitlePartThree}" in {
+        title.text() should include(messages.bulletListTitlePartThree)
+      }
+
     }
 
     s"have first bullet point of ${messages.bulletListOne}" in {

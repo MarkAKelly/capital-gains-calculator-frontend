@@ -18,8 +18,8 @@ package models.resident.properties
 
 import play.api.libs.json.Json
 
-case class PrivateResidenceReliefModel (prrClaiming: String)
+case class LettingsReliefModel (isClaiming: Boolean)
 
-object PrivateResidenceReliefModel {
-  implicit val format = Json.format[PrivateResidenceReliefModel]
+object LettingsReliefModel {
+  implicit val format = Json.format[LettingsReliefModel]
 }

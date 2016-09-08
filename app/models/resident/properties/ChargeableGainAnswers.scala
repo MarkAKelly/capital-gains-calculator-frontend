@@ -18,13 +18,15 @@ package models.resident.properties
 
 import models.resident._
 
-case class ChargeableGainAnswers (privateResidenceReliefModel: Option[PrivateResidenceReliefModel],
-                                  privateResidenceReliefValueModel: Option[PrivateResidenceReliefValueModel],
-                                  reliefsModel: Option[ReliefsModel],
-                                  reliefsValueModel: Option[ReliefsValueModel],
-                                  otherPropertiesModel: Option[OtherPropertiesModel],
+case class ChargeableGainAnswers (otherPropertiesModel: Option[OtherPropertiesModel],
                                   allowableLossesModel: Option[AllowableLossesModel],
                                   allowableLossesValueModel: Option[AllowableLossesValueModel],
                                   broughtForwardModel: Option[LossesBroughtForwardModel],
                                   broughtForwardValueModel: Option[LossesBroughtForwardValueModel],
-                                  annualExemptAmountModel: Option[AnnualExemptAmountModel])
+                                  annualExemptAmountModel: Option[AnnualExemptAmountModel],
+                                  propertyLivedInModel: Option[PropertyLivedInModel],
+                                  privateResidenceReliefModel: Option[PrivateResidenceReliefModel],
+                                  privateResidenceReliefValueModel: Option[PrivateResidenceReliefValueModel],
+                                  lettingsReliefModel: Option[LettingsReliefModel],
+                                  lettingsReliefValueModel: Option[LettingsReliefValueModel]
+                                 )

@@ -86,7 +86,7 @@ class AllowableLossesValueActionSpec extends UnitSpec with WithFakeApplication w
       }
 
       "have a home link to the properties disposal date" in {
-        doc.select("#homeNavHref").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/disposal-date"
+        doc.select("#homeNavHref").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/"
       }
 
       s"has the action '${controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue().toString}'" in {

@@ -24,7 +24,7 @@ import constructors.nonresident.CalculateRequestConstructor
 import constructors.resident.{shares, properties => propertyConstructor}
 import models.nonresident._
 import models.resident
-import models.resident.properties.{ImprovementsModel => _, PrivateResidenceReliefModel => _, _}
+import models.resident.properties.{ImprovementsModel => _, _}
 import models.resident.{IncomeAnswersModel, TaxYearModel, properties}
 import play.api.libs.json.Format
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
@@ -131,7 +131,7 @@ trait CalculatorConnector {
       formData.getOrElse(OtherReliefsModel(Some("No"), None)))
     val otherReliefsRebased = fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map(formData =>
       formData.getOrElse(OtherReliefsModel(Some("No"), None)))
-    val privateResidenceRelief = fetchAndGetFormData[PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief)
+    val privateResidenceRelief = fetchAndGetFormData[models.nonresident.PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief)
     for {
       customerTypeModel <- customerType
       disabledTrusteeModel <- disabledTrustee
@@ -215,46 +215,44 @@ trait CalculatorConnector {
   }
 
   def getPropertyDeductionAnswers(implicit hc: HeaderCarrier): Future[ChargeableGainAnswers] = {
-    //These have been updated as per Mac's suggestion just to return default values for now.
-    val privateResidenceReliefModel = Some(resident.properties.PrivateResidenceReliefModel("None"))
-    val privateResidenceReliefValueModel = None
-    val reliefsModel = Some(ReliefsModel(false))
-    val reliefsValueModel = None
-    //********************************************
-
     val otherPropertiesModel = fetchAndGetFormData[resident.OtherPropertiesModel](ResidentPropertyKeys.otherProperties)
     val allowableLossesModel = fetchAndGetFormData[resident.AllowableLossesModel](ResidentPropertyKeys.allowableLosses)
     val allowableLossesValueModel = fetchAndGetFormData[resident.AllowableLossesValueModel](ResidentPropertyKeys.allowableLossesValue)
     val broughtForwardModel = fetchAndGetFormData[resident.LossesBroughtForwardModel](ResidentPropertyKeys.lossesBroughtForward)
     val broughtForwardValueModel = fetchAndGetFormData[resident.LossesBroughtForwardValueModel](ResidentPropertyKeys.lossesBroughtForwardValue)
     val annualExemptAmountModel = fetchAndGetFormData[resident.AnnualExemptAmountModel](ResidentPropertyKeys.annualExemptAmount)
+    val propertyLivedInModel = fetchAndGetFormData[resident.properties.PropertyLivedInModel](ResidentPropertyKeys.propertyLivedIn)
+    val privateResidenceReliefModel = fetchAndGetFormData[resident.PrivateResidenceReliefModel](ResidentPropertyKeys.privateResidenceRelief)
+    val privateResidenceReliefValueModel = fetchAndGetFormData[resident.properties.PrivateResidenceReliefValueModel](ResidentPropertyKeys.prrValue)
+    val lettingsReliefModel = fetchAndGetFormData[resident.properties.LettingsReliefModel](ResidentPropertyKeys.lettingsRelief)
+    val lettingsReliefValueModel = fetchAndGetFormData[resident.properties.LettingsReliefValueModel](ResidentPropertyKeys.lettingsReliefValue)
 
     for {
-      //These have been commented out for now as they will be needed later.
-//      privateResidenceRelief <- privateResidenceReliefModel
-//      privateResidenceReliefValue <- privateResidenceReliefValueModel
-//      reliefs <- reliefsModel
-//      reliefsValue <- reliefsValueModel
+      propertyLivedIn <- propertyLivedInModel
+      lettingsRelief <- lettingsReliefModel
       otherProperties <- otherPropertiesModel
       allowableLosses <- allowableLossesModel
       allowableLossesValue <- allowableLossesValueModel
       broughtForward <- broughtForwardModel
       broughtForwardValue <- broughtForwardValueModel
       annualExemptAmount <- annualExemptAmountModel
+      privateResidenceRelief <- privateResidenceReliefModel
+      lettingsReliefValue <- lettingsReliefValueModel
+      privateResidenceReliefValue <- privateResidenceReliefValueModel
     } yield {
       properties.ChargeableGainAnswers(
-        //These will need to be swapped back to for-yeilds.
-        privateResidenceReliefModel,
-        privateResidenceReliefValueModel,
-        reliefsModel,
-        reliefsValueModel,
-        //
         otherProperties,
         allowableLosses,
         allowableLossesValue,
         broughtForward,
         broughtForwardValue,
-        annualExemptAmount)
+        annualExemptAmount,
+        propertyLivedIn,
+        privateResidenceRelief,
+        privateResidenceReliefValue,
+        lettingsRelief,
+        lettingsReliefValue
+      )
     }
 
   }

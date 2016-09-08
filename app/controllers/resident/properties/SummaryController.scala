@@ -36,7 +36,7 @@ trait SummaryController extends FeatureLock {
 
   val calculatorConnector: CalculatorConnector
 
-  override val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
+  override val homeLink = controllers.resident.properties.routes.PropertiesController.introduction().url
   override val sessionTimeoutUrl = homeLink
 
   val summary = FeatureLockForRTT.async { implicit request =>
@@ -92,11 +92,23 @@ trait SummaryController extends FeatureLock {
                      totalGainAndTax: Option[TotalGainAndTaxOwedModel],
                      backUrl: String,
                      taxYear: Option[TaxYearModel])(implicit hc: HeaderCarrier): Future[Result] = {
+
+      //These lazy vals are called only when the values are determined to be available
+      lazy val isPrrUsed = if (chargeableGainAnswers.propertyLivedInModel.get.livedInProperty) {
+        Some(chargeableGainAnswers.privateResidenceReliefModel.get.isClaiming)
+      } else None
+
+      lazy val isLettingsReliefUsed = isPrrUsed match {
+        case Some(true) => Some(chargeableGainAnswers.lettingsReliefModel.get.isClaiming)
+        case _ => None
+      }
+
+
       if (chargeableGain.isDefined && chargeableGain.get.chargeableGain > 0 &&
         incomeAnswers.personalAllowanceModel.isDefined && incomeAnswers.currentIncomeModel.isDefined) Future.successful(
         Ok(views.finalSummary(totalGainAnswers, chargeableGainAnswers, incomeAnswers,
-          totalGainAndTax.get, routes.IncomeController.personalAllowance().url, taxYear.get)))
-      else if (grossGain > 0) Future.successful(Ok(views.deductionsSummary(totalGainAnswers, chargeableGainAnswers, chargeableGain.get, backUrl, taxYear.get)))
+          totalGainAndTax.get, routes.IncomeController.personalAllowance().url, taxYear.get, isPrrUsed, isLettingsReliefUsed)))
+      else if (grossGain > 0) Future.successful(Ok(views.deductionsSummary(totalGainAnswers, chargeableGainAnswers, chargeableGain.get, backUrl, taxYear.get, isPrrUsed, isLettingsReliefUsed)))
       else Future.successful(Ok(views.gainSummary(totalGainAnswers, grossGain, taxYear.get)))
     }
 

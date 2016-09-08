@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package common.resident
+package models.resident.properties
 
-object PrivateResidenceReliefKeys {
-  val full = "Full"
-  val part = "Part"
-  val none = "None"
+import play.api.libs.json.Json
+
+case class LettingsReliefValueModel(amount: BigDecimal)
+
+object LettingsReliefValueModel {
+  implicit val format = Json.format[LettingsReliefValueModel]
 }

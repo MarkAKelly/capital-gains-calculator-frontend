@@ -14,12 +14,19 @@
  * limitations under the License.
  */
 
-package models.resident.properties
+package controllers.resident.properties
 
-import play.api.libs.json.Json
+import play.api.mvc.Action
+import uk.gov.hmrc.play.frontend.controller.FrontendController
+import views.html.calculation.resident.{properties => views}
 
-case class PrivateResidenceReliefValueModel(amount: BigDecimal)
+import scala.concurrent.Future
 
-object PrivateResidenceReliefValueModel {
-  implicit val format = Json.format[PrivateResidenceReliefValueModel]
+object PropertiesController extends PropertiesController
+
+trait PropertiesController extends FrontendController {
+
+  val introduction = Action.async { implicit request =>
+    Future.successful(Ok(views.introduction()))
+  }
 }

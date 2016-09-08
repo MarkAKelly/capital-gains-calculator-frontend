@@ -24,7 +24,6 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{summary => views}
 import assets.{MessageLookup => commonMessages}
-import common.resident.PrivateResidenceReliefKeys
 import controllers.resident.properties.routes
 import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, PreviousTaxableGainsModel}
 import models.resident.properties._
@@ -38,16 +37,19 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
-      None,
-      Some(ReliefsModel(false)),
-      None,
+    lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(false)),
       None,
       None,
       Some(LossesBroughtForwardModel(false)),
       None,
-      None)
+      None,
+      Some(PropertyLivedInModel(false)),
+      None,
+      None,
+      None,
+      None
+    )
     lazy val incomeAnswers = IncomeAnswersModel(None, Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
     lazy val results = TotalGainAndTaxOwedModel(
       50000,
@@ -131,7 +133,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
 
       "has a numeric output row for the gain" which {
 
-        "should have the question text 'Total profit'" in {
+        "should have the question text 'Total gain'" in {
           doc.select("#gain-question").text shouldBe messages.totalGain
         }
 
@@ -176,7 +178,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
 
       "has a numeric output row for the chargeable gain" which {
 
-        "should have the question text 'Taxable profit'" in {
+        "should have the question text 'Taxable gain'" in {
           doc.select("#chargeableGain-question").text shouldBe messages.chargeableGain
         }
 
@@ -332,50 +334,47 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
         }
       }
 
-      "has an option output row for prr" which {
+      "has an option output row for property lived in" which {
 
-        s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
-          doc.select("#prr-question").text shouldBe commonMessages.privateResidenceRelief.title
-        }
-
-        s"should have the value '${commonMessages.privateResidenceRelief.no}'" in {
-          doc.select("#prr-option span.bold-medium").text shouldBe commonMessages.privateResidenceRelief.no
-        }
-
-        s"should have a change link to ${routes.DeductionsController.privateResidenceRelief().url}" in {
-          doc.select("#prr-option a").attr("href") shouldBe routes.DeductionsController.privateResidenceRelief().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#prr-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.privateResidenceRelief.title}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#prr-option a span.visuallyhidden").text shouldBe commonMessages.privateResidenceRelief.title
-        }
-      }
-
-
-      "has an option output row for tax reliefs" which {
-
-        s"should have the question text '${commonMessages.reliefs.questionSummary}'" in {
-          doc.select("#reliefs-question").text shouldBe commonMessages.reliefs.questionSummary
+        s"should have the question text '${commonMessages.propertyLivedIn.title}'" in {
+          doc.select("#propertyLivedIn-question").text shouldBe commonMessages.propertyLivedIn.title
         }
 
         "should have the value 'No'" in {
-          doc.select("#reliefs-option span.bold-medium").text shouldBe "No"
+          doc.select("#propertyLivedIn-option span.bold-medium").text shouldBe "No"
         }
 
-        s"should have a change link to ${routes.DeductionsController.reliefs().url}" in {
-          doc.select("#reliefs-option a").attr("href") shouldBe routes.DeductionsController.reliefs().url
+        s"should have a change link to ${routes.DeductionsController.propertyLivedIn().url}" in {
+          doc.select("#propertyLivedIn-option a").attr("href") shouldBe routes.DeductionsController.propertyLivedIn().url
         }
 
         "has the question as part of the link" in {
-          doc.select("#reliefs-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.reliefs.question}"
+          doc.select("#propertyLivedIn-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.propertyLivedIn.title}"
         }
 
         "has the question component of the link as visuallyhidden" in {
-          doc.select("#reliefs-option a span.visuallyhidden").text shouldBe commonMessages.reliefs.question
+          doc.select("#propertyLivedIn-option a span.visuallyhidden").text shouldBe commonMessages.propertyLivedIn.title
+        }
+      }
+
+      "does not have an option output row for the eligible for private residence relief" which {
+
+        s"should not display" in {
+          doc.select("#privateResidenceRelief-question").size() shouldBe 0
+        }
+      }
+
+      "does not have an option output row for private residence relief value" which {
+
+        s"should not display" in {
+          doc.select("#privateResidenceReliefValue-question").size() shouldBe 0
+        }
+      }
+
+      "does not have an option output row for the lettings relief" which {
+
+        s"should not display" in {
+          doc.select("#lettingsRelief-question").size() shouldBe 0
         }
       }
 
@@ -441,8 +440,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
       "has a numeric output row for personal allowance" which {
 
-        s"should have the question text '${commonMessages.personalAllowance.title("2015/16")}'" in {
-          doc.select("#personalAllowance-question").text shouldBe commonMessages.personalAllowance.title("2015/16")
+        s"should have the question text '${commonMessages.personalAllowance.question("2015/16")}'" in {
+          doc.select("#personalAllowance-question").text shouldBe commonMessages.personalAllowance.question("2015/16")
         }
 
         "should have the value '£0'" in {
@@ -482,16 +481,19 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.part)),
-      Some(PrivateResidenceReliefValueModel(1500)),
-      Some(ReliefsModel(false)),
-      None,
+    lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
       None,
       Some(LossesBroughtForwardModel(false)),
       None,
-      Some(AnnualExemptAmountModel(0)))
+      Some(AnnualExemptAmountModel(0)),
+      Some(PropertyLivedInModel(true)),
+      Some(PrivateResidenceReliefModel(false)),
+      None,
+      None,
+      None
+    )
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -599,49 +601,49 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
     }
 
-    "has an option output row for prr" which {
+    "has an option output row for property lived in" which {
 
-      s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
-        doc.select("#prr-question").text shouldBe commonMessages.privateResidenceRelief.title
+      s"should have the question text '${commonMessages.propertyLivedIn.title}'" in {
+        doc.select("#propertyLivedIn-question").text shouldBe commonMessages.propertyLivedIn.title
       }
 
-      s"should have the value '${commonMessages.privateResidenceRelief.yesPart}'" in {
-        doc.select("#prr-option span.bold-medium").text shouldBe commonMessages.privateResidenceRelief.yesPart
+      "should have the value 'Yes'" in {
+        doc.select("#propertyLivedIn-option span.bold-medium").text shouldBe "Yes"
       }
 
-      s"should have a change link to ${routes.DeductionsController.privateResidenceRelief().url}" in {
-        doc.select("#prr-option a").attr("href") shouldBe routes.DeductionsController.privateResidenceRelief().url
+      s"should have a change link to ${routes.DeductionsController.propertyLivedIn().url}" in {
+        doc.select("#propertyLivedIn-option a").attr("href") shouldBe routes.DeductionsController.propertyLivedIn().url
       }
 
       "has the question as part of the link" in {
-        doc.select("#prr-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.privateResidenceRelief.title}"
+        doc.select("#propertyLivedIn-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.propertyLivedIn.title}"
       }
 
       "has the question component of the link as visuallyhidden" in {
-        doc.select("#prr-option a span.visuallyhidden").text shouldBe commonMessages.privateResidenceRelief.title
+        doc.select("#propertyLivedIn-option a span.visuallyhidden").text shouldBe commonMessages.propertyLivedIn.title
       }
     }
 
-    "has a numeric output row for prr value" which {
+    "has an option output row for eligible for private residence relief in" which {
 
-      s"should have the question text '${commonMessages.privateResidenceReliefValue.title("50,000")}'" in {
-        doc.select("#prrValue-question").text shouldBe commonMessages.privateResidenceReliefValue.title("50,000")
+      s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
+        doc.select("#privateResidenceRelief-question").text shouldBe commonMessages.privateResidenceRelief.title
       }
 
-      "should have the value '£1,500'" in {
-        doc.select("#prrValue-amount span.bold-medium").text shouldBe "£1,500"
+      "should have the value 'No'" in {
+        doc.select("#privateResidenceRelief-option span.bold-medium").text shouldBe "No"
       }
 
-      s"should have a change link to ${routes.DeductionsController.privateResidenceReliefValue().url}" in {
-        doc.select("#prrValue-amount a").attr("href") shouldBe routes.DeductionsController.privateResidenceReliefValue().url
+      s"should have a change link to ${routes.DeductionsController.privateResidenceRelief().url}" in {
+        doc.select("#privateResidenceRelief-option a").attr("href") shouldBe routes.DeductionsController.privateResidenceRelief().url
       }
 
       "has the question as part of the link" in {
-        doc.select("#prrValue-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.privateResidenceReliefValue.title("50,000")}"
+        doc.select("#privateResidenceRelief-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.privateResidenceRelief.title}"
       }
 
       "has the question component of the link as visuallyhidden" in {
-        doc.select("#prrValue-amount a span.visuallyhidden").text shouldBe commonMessages.privateResidenceReliefValue.title("50,000")
+        doc.select("#privateResidenceRelief-option a span.visuallyhidden").text shouldBe commonMessages.privateResidenceRelief.title
       }
     }
 
@@ -676,8 +678,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
     }
     "has an option output row for personal allowance" which {
 
-      s"should have the question text '${commonMessages.personalAllowance.title("2013/14")}'" in {
-        doc.select("#personalAllowance-question").text shouldBe commonMessages.personalAllowance.title("2013/14")
+      s"should have the question text '${commonMessages.personalAllowance.question("2013/14")}'" in {
+        doc.select("#personalAllowance-question").text shouldBe commonMessages.personalAllowance.question("2013/14")
       }
 
       "should have the value '£0'" in {
@@ -716,16 +718,19 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.full)),
-      None,
-      Some(ReliefsModel(false)),
-      None,
+    lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
       None,
       Some(LossesBroughtForwardModel(false)),
       None,
-      Some(AnnualExemptAmountModel(0)))
+      Some(AnnualExemptAmountModel(0)),
+      Some(PropertyLivedInModel(true)),
+      Some(PrivateResidenceReliefModel(true)),
+      Some(PrivateResidenceReliefValueModel(5000)),
+      Some(LettingsReliefModel(true)),
+      Some(LettingsReliefValueModel(5000))
+    )
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -809,31 +814,96 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
     }
 
-    "has an option output row for prr" which {
+    "has an option output row for eligible for private residence relief in" which {
 
       s"should have the question text '${commonMessages.privateResidenceRelief.title}'" in {
-        doc.select("#prr-question").text shouldBe commonMessages.privateResidenceRelief.title
+        doc.select("#privateResidenceRelief-question").text shouldBe commonMessages.privateResidenceRelief.title
       }
 
-      s"should have the value '${commonMessages.privateResidenceRelief.yesFull}'" in {
-        doc.select("#prr-option span.bold-medium").text shouldBe commonMessages.privateResidenceRelief.yesFull
+      "should have the value 'Yes'" in {
+        doc.select("#privateResidenceRelief-option span.bold-medium").text shouldBe "Yes"
       }
 
       s"should have a change link to ${routes.DeductionsController.privateResidenceRelief().url}" in {
-        doc.select("#prr-option a").attr("href") shouldBe routes.DeductionsController.privateResidenceRelief().url
+        doc.select("#privateResidenceRelief-option a").attr("href") shouldBe routes.DeductionsController.privateResidenceRelief().url
       }
 
       "has the question as part of the link" in {
-        doc.select("#prr-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.privateResidenceRelief.title}"
+        doc.select("#privateResidenceRelief-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.privateResidenceRelief.title}"
       }
 
       "has the question component of the link as visuallyhidden" in {
-        doc.select("#prr-option a span.visuallyhidden").text shouldBe commonMessages.privateResidenceRelief.title
+        doc.select("#privateResidenceRelief-option a span.visuallyhidden").text shouldBe commonMessages.privateResidenceRelief.title
       }
     }
 
-    "does not have a reliefs question row" in {
-      doc.select("#reliefs-question").isEmpty shouldBe true
+    "has an option output row for private residence relief value in" which {
+
+      s"should have the question text '${commonMessages.privateResidenceReliefValue.title}'" in {
+        doc.select("#privateResidenceReliefValue-question").text shouldBe commonMessages.privateResidenceReliefValue.title
+      }
+
+      "should have the value '5000'" in {
+        doc.select("#privateResidenceReliefValue-amount span.bold-medium").text shouldBe "£5,000"
+      }
+
+      s"should have a change link to ${routes.DeductionsController.privateResidenceReliefValue().url}" in {
+        doc.select("#privateResidenceReliefValue-amount a").attr("href") shouldBe routes.DeductionsController.privateResidenceReliefValue().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#privateResidenceReliefValue-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.privateResidenceReliefValue.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#privateResidenceReliefValue-amount a span.visuallyhidden").text shouldBe commonMessages.privateResidenceReliefValue.title
+      }
+    }
+
+    "has an option output row for eligible for lettings relief in" which {
+
+      s"should have the question text '${commonMessages.lettingsRelief.title}'" in {
+        doc.select("#lettingsRelief-question").text shouldBe commonMessages.lettingsRelief.title
+      }
+
+      "should have the value 'No'" in {
+        doc.select("#lettingsRelief-option span.bold-medium").text shouldBe "Yes"
+      }
+
+      s"should have a change link to ${routes.DeductionsController.lettingsRelief().url}" in {
+        doc.select("#lettingsRelief-option a").attr("href") shouldBe routes.DeductionsController.lettingsRelief().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#lettingsRelief-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.lettingsRelief.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#lettingsRelief-option a span.visuallyhidden").text shouldBe commonMessages.lettingsRelief.title
+      }
+    }
+
+    "has an option output row for lettings relief value" which {
+
+      s"should have the question text '${commonMessages.lettingsReliefValue.title}'" in {
+        doc.select("#lettingsReliefValue-question").text shouldBe commonMessages.lettingsReliefValue.title
+      }
+
+      "should have the value '£4500'" in {
+        doc.select("#lettingsReliefValue-amount span.bold-medium").text shouldBe "£5,000"
+      }
+
+      s"should have a change link to ${routes.DeductionsController.lettingsReliefValue().url}" in {
+        doc.select("#lettingsReliefValue-amount a").attr("href") shouldBe routes.DeductionsController.lettingsReliefValue().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#lettingsReliefValue-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.lettingsReliefValue.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#lettingsReliefValue-amount a span.visuallyhidden").text shouldBe commonMessages.lettingsReliefValue.title
+      }
     }
 
     "display the save as PDF Button" which {
@@ -864,16 +934,19 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(0),
       BigDecimal(0),
       BigDecimal(0))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
-      None,
-      Some(ReliefsModel(false)),
-      None,
+    lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
       None,
       Some(LossesBroughtForwardModel(false)),
       None,
-      Some(AnnualExemptAmountModel(0)))
+      Some(AnnualExemptAmountModel(0)),
+      Some(PropertyLivedInModel(false)),
+      None,
+      None,
+      None,
+      None
+    )
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(0)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -951,7 +1024,6 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
     }
   }
 
-
   "Summary when supplied with a date above the known tax years" should {
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
@@ -960,16 +1032,19 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
-      None,
-      Some(ReliefsModel(false)),
-      None,
+    lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
       None,
       Some(LossesBroughtForwardModel(false)),
       None,
-      Some(AnnualExemptAmountModel(0)))
+      Some(AnnualExemptAmountModel(0)),
+      Some(PropertyLivedInModel(false)),
+      None,
+      None,
+      None,
+      None
+    )
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -1028,16 +1103,19 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000))
-    lazy val deductionAnswers = ChargeableGainAnswers(Some(PrivateResidenceReliefModel(PrivateResidenceReliefKeys.none)),
-      None,
-      Some(ReliefsModel(false)),
-      None,
+    lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
       None,
       Some(LossesBroughtForwardModel(false)),
       None,
-      Some(AnnualExemptAmountModel(0)))
+      Some(AnnualExemptAmountModel(0)),
+      Some(PropertyLivedInModel(false)),
+      None,
+      None,
+      None,
+      None
+    )
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -1089,5 +1167,97 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
         doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
       }
     }
+  }
+
+  "Properties Final Summary view" should {
+
+    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
+      BigDecimal(200000),
+      BigDecimal(10000),
+      BigDecimal(100000),
+      BigDecimal(10000),
+      BigDecimal(30000))
+
+    lazy val deductionAnswers = ChargeableGainAnswers(
+      Some(OtherPropertiesModel(true)),
+      Some(AllowableLossesModel(false)),
+      None,
+      Some(LossesBroughtForwardModel(false)),
+      None,
+      Some(AnnualExemptAmountModel(0)),
+      Some(PropertyLivedInModel(false)),
+      None,
+      None)
+
+    lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
+
+    lazy val results = TotalGainAndTaxOwedModel(
+      50000,
+      20000,
+      0,
+      30000,
+      3600,
+      30000,
+      18,
+      Some(10000),
+      Some(28),
+      Some(BigDecimal(0)),
+      Some(BigDecimal(0)),
+      0,
+      0
+    )
+
+    lazy val backLink = "/calculate-your-capital-gains/resident/properties/personal-allowance"
+
+    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+
+    "not have PRR GA metrics when PRR is not in scope" in {
+      val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
+      val doc = Jsoup.parse(view.body)
+
+      doc.select("[data-metrics=\"rtt-properties-summary:prr:yes\"]").size shouldBe 0
+      doc.select("[data-metrics=\"rtt-properties-summary:prr:no\"]").size shouldBe 0
+    }
+
+    "not have lettings relief GA metrics when it is not in scope" in {
+      val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
+      val doc = Jsoup.parse(view.body)
+
+      doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:yes\"]").size shouldBe 0
+      doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:no\"]").size shouldBe 0
+    }
+
+    "have PRR GA metrics when PRR is used" in {
+      val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, Some(true))(fakeRequestWithSession)
+      val doc = Jsoup.parse(view.body)
+
+      doc.select("[data-metrics=\"rtt-properties-summary:prr:yes\"]").size shouldBe 1
+      doc.select("[data-metrics=\"rtt-properties-summary:prr:no\"]").size shouldBe 0
+    }
+
+    "not have lettings relief GA metrics when it is used" in {
+      val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, None, Some(true))(fakeRequestWithSession)
+      val doc = Jsoup.parse(view.body)
+
+      doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:yes\"]").size shouldBe 1
+      doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:no\"]").size shouldBe 0
+    }
+
+    "have PRR GA metrics when PRR is not used" in {
+      val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, Some(false))(fakeRequestWithSession)
+      val doc = Jsoup.parse(view.body)
+
+      doc.select("[data-metrics=\"rtt-properties-summary:prr:yes\"]").size shouldBe 0
+      doc.select("[data-metrics=\"rtt-properties-summary:prr:no\"]").size shouldBe 1
+    }
+
+    "have lettings relief GA metrics when it is not used" in {
+      val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, None, Some(false))(fakeRequestWithSession)
+      val doc = Jsoup.parse(view.body)
+
+      doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:yes\"]").size shouldBe 0
+      doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:no\"]").size shouldBe 1
+    }
+
   }
 }

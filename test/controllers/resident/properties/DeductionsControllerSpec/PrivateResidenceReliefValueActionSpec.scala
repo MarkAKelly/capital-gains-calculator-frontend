@@ -18,7 +18,6 @@ package controllers.resident.properties.DeductionsControllerSpec
 
 import assets.MessageLookup.{privateResidenceReliefValue => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
-import common.Dates._
 import config.AppConfig
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
@@ -36,11 +35,10 @@ import scala.concurrent.Future
 
 class PrivateResidenceReliefValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  val summaryModel = YourAnswersSummaryModel(constructDate(10, 10, 2016), 100000, 10000, 50000, 1000, 2500)
-
-  def setupTarget(getData: Option[PrivateResidenceReliefValueModel], summary: YourAnswersSummaryModel, totalGain: BigDecimal): DeductionsController = {
+  def setupTarget(getData: Option[PrivateResidenceReliefValueModel], totalGain: BigDecimal): DeductionsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
+    val mockAppConfig = mock[AppConfig]
 
     when(mockCalcConnector.fetchAndGetFormData[PrivateResidenceReliefValueModel](Matchers.eq(keystoreKeys.prrValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -49,14 +47,15 @@ class PrivateResidenceReliefValueActionSpec extends UnitSpec with WithFakeApplic
       .thenReturn(Future.successful(mock[CacheMap]))
 
     when(mockCalcConnector.getPropertyGainAnswers(Matchers.any()))
-      .thenReturn(summary)
+      .thenReturn(Future.successful(mock[YourAnswersSummaryModel]))
 
-    when(mockCalcConnector.calculateRttPropertyGrossGain(Matchers.any())(Matchers.any()))
-      .thenReturn(totalGain)
+    when(mockCalcConnector.calculateRttPropertyGrossGain(Matchers.any())(Matchers.any())).thenReturn(Future.successful(totalGain))
+
+    when(mockAppConfig.featureRTTPRREnabled).thenReturn(true)
 
     new DeductionsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      val config = mock[AppConfig]
+      val config = mockAppConfig
     }
   }
 
@@ -64,7 +63,7 @@ class PrivateResidenceReliefValueActionSpec extends UnitSpec with WithFakeApplic
 
     "there is no keystore data" should {
 
-      lazy val target = setupTarget(None, summaryModel, BigDecimal(10000))
+      lazy val target = setupTarget(None, 10000)
       lazy val result = target.privateResidenceReliefValue(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -75,14 +74,14 @@ class PrivateResidenceReliefValueActionSpec extends UnitSpec with WithFakeApplic
         contentType(result) shouldBe Some("text/html")
       }
 
-      "display the Private Residence Relief Value view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.question
+      "display the reliefs value view" in {
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
       }
     }
 
     "there is some keystore data" should {
 
-      lazy val target = setupTarget(Some(PrivateResidenceReliefValueModel(1000)), summaryModel, BigDecimal(10000))
+      lazy val target = setupTarget(Some(PrivateResidenceReliefValueModel(1000)), 2500)
       lazy val result = target.privateResidenceReliefValue(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -93,30 +92,30 @@ class PrivateResidenceReliefValueActionSpec extends UnitSpec with WithFakeApplic
         contentType(result) shouldBe Some("text/html")
       }
 
-      "display the Private Residence Relief Value view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.question
+      "display the Reliefs Value view" in {
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
       }
     }
   }
 
   "request has an invalid session" should {
 
-    lazy val target = setupTarget(None, summaryModel, BigDecimal(10000))
+    lazy val target = setupTarget(None, 1500)
     lazy val result = target.privateResidenceReliefValue(fakeRequest)
 
     "return a status of 303" in {
       status(result) shouldBe 303
     }
 
-    "return you to the session timeout page" in {
+    "redirect you to the session timeout page" in {
       redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
     }
   }
 
-  "Calling .submitPrivateResidenceReliefValue from the resident DeductionsController" when {
+  "Calling .submitPrivateResidenceReliefValue from the GainCalculationController" when {
 
     "a valid form is submitted" should {
-      lazy val target = setupTarget(Some(PrivateResidenceReliefValueModel(1000)), summaryModel, BigDecimal(10000))
+      lazy val target = setupTarget(None, 1)
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
       lazy val result = target.submitPrivateResidenceReliefValue(request)
 
@@ -124,13 +123,13 @@ class PrivateResidenceReliefValueActionSpec extends UnitSpec with WithFakeApplic
         status(result) shouldBe 303
       }
 
-      "redirect to the reliefs page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/reliefs")
+      "redirect to the lettings relief page" in {
+        redirectLocation(result) shouldBe Some(controllers.resident.properties.routes.DeductionsController.lettingsRelief().url)
       }
     }
 
     "an invalid form is submitted" should {
-      lazy val target = setupTarget(None, summaryModel, BigDecimal(10000))
+      lazy val target = setupTarget(None, 1000000)
       lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
       lazy val result = target.submitPrivateResidenceReliefValue(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
@@ -139,8 +138,8 @@ class PrivateResidenceReliefValueActionSpec extends UnitSpec with WithFakeApplic
         status(result) shouldBe 400
       }
 
-      "render the Private Residence Relief Value page" in {
-        doc.title() shouldEqual messages.question
+      "render the Reliefs Value page" in {
+        doc.title() shouldEqual messages.title
       }
     }
   }
