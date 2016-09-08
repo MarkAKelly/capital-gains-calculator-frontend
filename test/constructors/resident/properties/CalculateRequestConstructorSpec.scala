@@ -82,7 +82,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           Some(LettingsReliefValueModel(4000))
         )
         val result = CalculateRequestConstructor.chargeableGainRequestString(answers, BigDecimal(11100))
-        result shouldBe "&privateResidenceRelief=5000&broughtForwardLosses=2000&annualExemptAmount=3000"
+        result shouldBe "&prrValue=5000&broughtForwardLosses=2000&annualExemptAmount=3000"
       }
     }
 
@@ -103,7 +103,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           Some(LettingsReliefValueModel(4000))
         )
         val result = CalculateRequestConstructor.chargeableGainRequestString(answers, BigDecimal(11100))
-        result shouldBe "&privateResidenceRelief=5000&lettingsRelief=4000&allowableLosses=1000&broughtForwardLosses=2000&annualExemptAmount=11100"
+        result shouldBe "&prrValue=5000&lettingReliefs=4000&allowableLosses=1000&broughtForwardLosses=2000&annualExemptAmount=11100"
       }
     }
   }
