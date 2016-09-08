@@ -226,8 +226,9 @@ articleLayout = false
                     <a href="https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax" target="_blank" rel="external"
                        data-journey-click="help:govUK:rtt-properties-whaToDoNext">
                         @Messages("calc.resident.summary.whatNext.noLossOrGainLinkProperties")
-                        <span id="opensInANewTab">@Messages("calc.base.externalLink")</span>.
+                        <span id="opensInANewTab">@Messages("calc.base.externalLink")</span>
                     </a>
+                    @{if (result.allowableLossesRemaining > 0 || result.broughtForwardLossesRemaining > 0) Messages("calc.resident.summary.whatNext.withLossRemaining")}.
                 </div>
             </section>
     }

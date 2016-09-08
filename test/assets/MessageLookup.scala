@@ -151,6 +151,7 @@ object MessageLookup {
     val whatToDoNextNoLossText = "Find out whether you need to"
     val whatToDoNextNoLossLinkProperties = "tell HMRC about the property"
     val whatToDoNextNoLossLinkShares = "tell HMRC about the shares"
+    val whatToDoNextLossRemaining = "so that you might need to pay less tax in the future"
     def aeaRemaining(taxYear: String): String = s"Capital Gains Tax allowance left for $taxYear"
     val saveAsPdf = "Save as PDF"
     def remainingAllowableLoss(taxYear: String): String = s"Remaining loss from $taxYear tax year"

@@ -396,6 +396,7 @@ calc.resident.summary.whatNext.noLossOrGainLinkShares = tell HMRC about the shar
 calc.resident.summary.whatNext.youNeedTo = You need to
 calc.resident.summary.whatNext.linkTwo = tell HMRC about the property
 calc.resident.summary.whatNext.sharesLinkTwo =  tell HMRC about the shares
+calc.resident.summary.whatNext.withLossRemaining = so that you might need to pay less tax in the future
 calc.resident.summary.saveAsPdf = Save as PDF
 calc.resident.summary.remainingAllowableLoss = Remaining loss from {0} tax year
 calc.resident.summary.remainingBroughtForwardLoss = Remaining loss from tax years before {0}
