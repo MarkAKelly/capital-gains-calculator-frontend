@@ -22,6 +22,8 @@ import config.AppConfig
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.DeductionsController
+import models.resident.PrivateResidenceReliefModel
+import models.resident.properties.{LettingsReliefModel, PropertyLivedInModel}
 import models.resident.{DisposalDateModel, OtherPropertiesModel, TaxYearModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -36,7 +38,11 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
 
   def setupTarget(getData: Option[OtherPropertiesModel],
                   disposalDate: Option[DisposalDateModel],
-                  taxYear: Option[TaxYearModel]): DeductionsController = {
+                  taxYear: Option[TaxYearModel],
+                  propertyLivedInModel: Option[PropertyLivedInModel] = Some(PropertyLivedInModel(false)),
+                  privateResidenceReliefModel: Option[PrivateResidenceReliefModel] = None,
+                  lettingsReliefModel: Option[LettingsReliefModel] = None
+                 ): DeductionsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockAppConfig = mock[AppConfig]
@@ -46,6 +52,15 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
 
     when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(keystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
       .thenReturn(disposalDate)
+
+    when(mockCalcConnector.fetchAndGetFormData[PropertyLivedInModel](Matchers.eq(keystoreKeys.propertyLivedIn))(Matchers.any(), Matchers.any()))
+      .thenReturn(propertyLivedInModel)
+
+    when(mockCalcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.eq(keystoreKeys.privateResidenceRelief))(Matchers.any(), Matchers.any()))
+      .thenReturn(privateResidenceReliefModel)
+
+    when(mockCalcConnector.fetchAndGetFormData[LettingsReliefModel](Matchers.eq(keystoreKeys.lettingsRelief))(Matchers.any(), Matchers.any()))
+      .thenReturn(lettingsReliefModel)
 
     when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
       .thenReturn(taxYear)
@@ -76,10 +91,6 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
       s"have a title of ${messages.title("2015/16")}" in {
         Jsoup.parse(bodyOf(result)).title shouldEqual messages.title("2015/16")
       }
-
-      "have a back link to improvements page" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/improvements"
-      }
     }
 
     "request has no session" should {
@@ -91,6 +102,70 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with F
 
       "return a status of 303" in {
         status(result) shouldBe 303
+      }
+    }
+
+    "the property was not lived in" should {
+      lazy val target = setupTarget(
+        None,
+        Some(DisposalDateModel(10, 10, 2015)),
+        Some(TaxYearModel("2015/16", true, "2015/16")))
+      lazy val result = target.otherProperties(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+      lazy val backLink = doc.select("a#back-link")
+
+      "have a back link to the Property Lived In page" in {
+        backLink.attr("href") shouldBe "/calculate-your-capital-gains/resident/properties/property-lived-in"
+      }
+    }
+
+    "the property was lived in but without prr" should {
+      lazy val target = setupTarget(
+        None,
+        Some(DisposalDateModel(10, 10, 2015)),
+        Some(TaxYearModel("2015/16", true, "2015/16")),
+        Some(PropertyLivedInModel(true)),
+        Some(PrivateResidenceReliefModel(false)))
+      lazy val result = target.otherProperties(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+      lazy val backLink = doc.select("a#back-link")
+
+      "have a back link to the Private Residence Relief page" in {
+        backLink.attr("href") shouldBe "/calculate-your-capital-gains/resident/properties/private-residence-relief"
+      }
+    }
+
+    "prr was claimed with no lettings relief" should {
+      lazy val target = setupTarget(
+        None,
+        Some(DisposalDateModel(10, 10, 2015)),
+        Some(TaxYearModel("2015/16", true, "2015/16")),
+        Some(PropertyLivedInModel(true)),
+        Some(PrivateResidenceReliefModel(true)),
+        Some(LettingsReliefModel(false)))
+      lazy val result = target.otherProperties(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+      lazy val backLink = doc.select("a#back-link")
+
+      "have a back link to the Lettings Relief page" in {
+        backLink.attr("href") shouldBe "/calculate-your-capital-gains/resident/properties/lettings-relief"
+      }
+    }
+
+    "prr was claimed with  lettings relief" should {
+      lazy val target = setupTarget(
+        None,
+        Some(DisposalDateModel(10, 10, 2015)),
+        Some(TaxYearModel("2015/16", true, "2015/16")),
+        Some(PropertyLivedInModel(true)),
+        Some(PrivateResidenceReliefModel(true)),
+        Some(LettingsReliefModel(true)))
+      lazy val result = target.otherProperties(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+      lazy val backLink = doc.select("a#back-link")
+
+      "have a back link to the Lettings Relief page" in {
+        backLink.attr("href") shouldBe "/calculate-your-capital-gains/resident/properties/lettings-relief-value"
       }
     }
   }
