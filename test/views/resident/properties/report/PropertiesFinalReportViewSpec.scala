@@ -47,7 +47,10 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       Some(AnnualExemptAmountModel(0)),
       Some(PropertyLivedInModel(false)),
       None,
-      None)
+      None,
+      None,
+      None
+    )
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -306,6 +309,13 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         }
       }
 
+      "does not have an option output row for the private residence relief value entry" which {
+
+        s"should not display" in {
+          doc.select("#privateResidenceReliefValue-question").size() shouldBe 0
+        }
+      }
+
       "does not have an option output row for the lettings relief" which {
 
         s"should not display" in {
@@ -390,7 +400,10 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       Some(AnnualExemptAmountModel(0)),
       Some(PropertyLivedInModel(true)),
       Some(PrivateResidenceReliefModel(true)),
-      Some(LettingsReliefModel(true)))
+      Some(PrivateResidenceReliefValueModel(5000)),
+      Some(LettingsReliefModel(true)),
+      Some(LettingsReliefValueModel(7000))
+    )
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
@@ -455,6 +468,18 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
     }
 
+    "has an option output row for private residence relief value in" which {
+
+      s"should have the question text '${commonMessages.privateResidenceReliefValue.title}'" in {
+        doc.select("#privateResidenceReliefValue-question").text shouldBe commonMessages.privateResidenceReliefValue.title
+      }
+
+      "should have the value '5000'" in {
+        doc.select("#privateResidenceReliefValue-amount span.bold-medium").text shouldBe "£5,000"
+      }
+
+    }
+
     "has an option output row for eligible for lettings relief in" which {
 
       s"should have the question text '${commonMessages.lettingsRelief.title}'" in {
@@ -463,6 +488,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
       "should have the value 'Yes'" in {
         doc.select("#lettingsRelief-option span.bold-medium").text shouldBe "Yes"
+      }
+    }
+
+    "has an option output row for eligible for lettings relief value in" which {
+
+      s"should have the question text '${commonMessages.lettingsReliefValue.title}'" in {
+        doc.select("#lettingsReliefValue-question").text shouldBe commonMessages.lettingsReliefValue.title
+      }
+
+      "should have the value 'Yes'" in {
+        doc.select("#lettingsReliefValue-amount span.bold-medium").text shouldBe "£7,000"
       }
     }
 

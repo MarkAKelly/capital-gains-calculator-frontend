@@ -1,5 +1,3 @@
-@import views.html.calculation.resident.properties.resident_properties_main_template
-
 @()(implicit request : Request[_])
 
 @resident_properties_main_template(title = Messages("calc.resident.properties.introduction.title")) {
@@ -8,5 +6,5 @@
     <p>@Messages("calc.resident.properties.introduction.paragraph")</p>
     <a href="https://www.gov.uk/tax-relief-selling-home" target="_blank" rel="external">@Messages("calc.resident.properties.introduction.entitledLinkText")</a>
     <p>@Messages("calc.resident.properties.introduction.continuationInstructions")</p>
-    <a href="@controllers.resident.properties.routes.GainController.disposalDate.toString" class="button">@Messages("calc.base.button.continue")</a>
+    <a id="continue-button" href="@controllers.resident.properties.routes.GainController.disposalDate.toString" class="button">@Messages("calc.base.button.continue")</a>
 }
