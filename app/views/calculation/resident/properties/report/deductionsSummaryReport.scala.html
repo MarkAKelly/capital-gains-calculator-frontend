@@ -147,7 +147,7 @@
         @{if(deductionAnswers.propertyLivedInModel.get.livedInProperty && deductionAnswers.privateResidenceReliefModel.get.isClaiming
             && deductionAnswers.lettingsReliefModel.get.isClaiming)
             summaryNumericRowHelper("lettingsReliefValue", Messages("calc.resident.lettingsReliefValue.title"),
-                deductionAnswers.lettingsReliefValueModel.get.amount, Some(deductionRoutes.lettingsReliefValue().toString))}
+                deductionAnswers.lettingsReliefValueModel.get.amount, None)}
 
         @summaryOptionRowHelper("otherProperties", Messages("calc.resident.otherProperties.title",
             taxYear.taxYearSupplied), deductionAnswers.otherPropertiesModel.get.hasOtherProperties, None)
