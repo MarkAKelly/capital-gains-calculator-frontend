@@ -1187,6 +1187,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       Some(AnnualExemptAmountModel(0)),
       Some(PropertyLivedInModel(false)),
       None,
+      None,
+      None,
       None)
 
     lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))

@@ -95,7 +95,9 @@ object MessageLookup {
   object acquisitionValue {
     val title = "How much did you pay for the property?"
     val pageHeading = "How much did you pay for the property?"
-    val bulletListTitle = "Put the market value of the property instead if you:"
+    val bulletListTitleOne = "Put the "
+    val bulletListTitleTwo = "market value (opens in a new window) "
+    val bulletListTitleThree = "of the property instead if you:"
     val bulletListOne = "inherited it"
     val bulletListTwo = "got it as a gift"
     val bulletListThree = "bought it from a relative, business partner or"

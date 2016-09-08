@@ -25,7 +25,7 @@ import common.Dates
 import connectors.CalculatorConnector
 import models.resident._
 import models.resident.income._
-import models.resident.properties.{ChargeableGainAnswers, LettingsReliefModel, PropertyLivedInModel, YourAnswersSummaryModel}
+import models.resident.properties._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -334,7 +334,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       5,
       0)
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
-      None, None, Some(LossesBroughtForwardModel(false)), None, None, Some(PropertyLivedInModel(false)), None, None)
+      None, None, Some(LossesBroughtForwardModel(false)), None, None, Some(PropertyLivedInModel(false)), None, None, None, None)
     lazy val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 0, 11100, BigDecimal(0),
       BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
     lazy val incomeAnswersModel = IncomeAnswersModel(None, None, None)
@@ -368,7 +368,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       5,
       0)
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
-      None, None, Some(LossesBroughtForwardModel(false)), None, None, Some(PropertyLivedInModel(true)), Some(PrivateResidenceReliefModel(false)), None)
+      None, None, Some(LossesBroughtForwardModel(false)), None, None, Some(PropertyLivedInModel(true)), Some(PrivateResidenceReliefModel(false)), None, None, None)
     lazy val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 0, 11100, BigDecimal(0),
       BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
     lazy val incomeAnswersModel = IncomeAnswersModel(None, None, None)
@@ -403,7 +403,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       0)
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
       None, None, Some(LossesBroughtForwardModel(false)), None, None, Some(PropertyLivedInModel(true)),
-      Some(PrivateResidenceReliefModel(true)), Some(LettingsReliefModel(false)))
+      Some(PrivateResidenceReliefModel(true)), Some(PrivateResidenceReliefValueModel(1000)),
+      Some(LettingsReliefModel(false)), None)
     lazy val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 0, 11100, BigDecimal(0),
       BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
     lazy val incomeAnswersModel = IncomeAnswersModel(None, None, None)
@@ -438,7 +439,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       0)
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
       None, None, Some(LossesBroughtForwardModel(false)), None, None, Some(PropertyLivedInModel(true)),
-      Some(PrivateResidenceReliefModel(true)), Some(LettingsReliefModel(true)))
+      Some(PrivateResidenceReliefModel(true)), Some(PrivateResidenceReliefValueModel(2000)), Some(LettingsReliefModel(true)),
+      Some(LettingsReliefValueModel(1000)))
     lazy val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 0, 11100, BigDecimal(0),
       BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
     lazy val incomeAnswersModel = IncomeAnswersModel(None, None, None)
@@ -473,7 +475,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       0)
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
       Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None,
-      Some(PropertyLivedInModel(false)), None, None)
+      Some(PropertyLivedInModel(false)), None, None, None, None)
     lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 0, 11100, BigDecimal(0),
       BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
     lazy val incomeAnswersModel = IncomeAnswersModel(None, Some(CurrentIncomeModel(20000)), Some(PersonalAllowanceModel(10000)))
@@ -511,7 +513,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       0)
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
       Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None,
-      Some(PropertyLivedInModel(true)), Some(PrivateResidenceReliefModel(false)), None)
+      Some(PropertyLivedInModel(true)), Some(PrivateResidenceReliefModel(false)), None, None, None)
     lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 0, 11100, BigDecimal(0),
       BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
     lazy val incomeAnswersModel = IncomeAnswersModel(None, Some(CurrentIncomeModel(20000)), Some(PersonalAllowanceModel(10000)))
@@ -549,7 +551,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       0)
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
       Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None,
-      Some(PropertyLivedInModel(true)), Some(PrivateResidenceReliefModel(true)), Some(LettingsReliefModel(false)))
+      Some(PropertyLivedInModel(true)), Some(PrivateResidenceReliefModel(true)), Some(PrivateResidenceReliefValueModel(2000)),
+      Some(LettingsReliefModel(false)), None)
     lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 0, 11100, BigDecimal(0),
       BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
     lazy val incomeAnswersModel = IncomeAnswersModel(None, Some(CurrentIncomeModel(20000)), Some(PersonalAllowanceModel(10000)))
@@ -587,7 +590,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       0)
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
       Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None,
-      Some(PropertyLivedInModel(true)), Some(PrivateResidenceReliefModel(true)), Some(LettingsReliefModel(true)))
+      Some(PropertyLivedInModel(true)), Some(PrivateResidenceReliefModel(true)), Some(PrivateResidenceReliefValueModel(2000)),
+      Some(LettingsReliefModel(true)), Some(LettingsReliefValueModel(1000)))
     lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 0, 11100, BigDecimal(0),
       BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
     lazy val incomeAnswersModel = IncomeAnswersModel(None, Some(CurrentIncomeModel(20000)), Some(PersonalAllowanceModel(10000)))
