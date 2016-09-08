@@ -1036,7 +1036,6 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
     }
   }
 
-
   "Properties Deductions Summary when supplied with a date within the known tax years and no gain or loss" should {
 
 
@@ -1207,5 +1206,89 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
       }
     }
+  }
+
+  "Properties Deductions Summary view" should {
+
+    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+      BigDecimal(200000),
+      BigDecimal(10000),
+      BigDecimal(100000),
+      BigDecimal(10000),
+      BigDecimal(30000))
+    lazy val deductionAnswers = ChargeableGainAnswers(
+      Some(OtherPropertiesModel(true)),
+      Some(AllowableLossesModel(false)),
+      Some(AllowableLossesValueModel(10000)),
+      Some(LossesBroughtForwardModel(true)),
+      Some(LossesBroughtForwardValueModel(10000)),
+      Some(AnnualExemptAmountModel(1000)),
+      Some(PropertyLivedInModel(true)),
+      Some(PrivateResidenceReliefModel(true)),
+      Some(LettingsReliefModel(true)))
+    lazy val results = ChargeableGainResultModel(BigDecimal(50000),
+      BigDecimal(-11000),
+      BigDecimal(0),
+      BigDecimal(11000),
+      BigDecimal(71000),
+      BigDecimal(1000),
+      BigDecimal(0),
+      Some(BigDecimal(30000)),
+      Some(BigDecimal(1500)),
+      10000,
+      10000
+    )
+    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+
+    lazy val backLink = "/calculate-your-capital-gains/resident/properties/annual-exempt-amount"
+
+    "not have PRR GA metrics when PRR is not in scope" in {
+      val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
+      val doc = Jsoup.parse(view.body)
+
+      doc.select("[data-metrics=\"rtt-properties-summary:prr:yes\"]").size shouldBe 0
+      doc.select("[data-metrics=\"rtt-properties-summary:prr:no\"]").size shouldBe 0
+    }
+
+    "not have lettings relief GA metrics when it is not in scope" in {
+      val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
+      val doc = Jsoup.parse(view.body)
+
+      doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:yes\"]").size shouldBe 0
+      doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:no\"]").size shouldBe 0
+    }
+
+    "have PRR GA metrics when PRR is used" in {
+      val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel, Some(true))(fakeRequestWithSession)
+      val doc = Jsoup.parse(view.body)
+
+      doc.select("[data-metrics=\"rtt-properties-summary:prr:yes\"]").size shouldBe 1
+      doc.select("[data-metrics=\"rtt-properties-summary:prr:no\"]").size shouldBe 0
+    }
+
+    "not have lettings relief GA metrics when it is used" in {
+      val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel, None, Some(true))(fakeRequestWithSession)
+      val doc = Jsoup.parse(view.body)
+
+      doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:yes\"]").size shouldBe 1
+      doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:no\"]").size shouldBe 0
+    }
+
+    "have PRR GA metrics when PRR is not used" in {
+      val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel, Some(false))(fakeRequestWithSession)
+      val doc = Jsoup.parse(view.body)
+
+      doc.select("[data-metrics=\"rtt-properties-summary:prr:yes\"]").size shouldBe 0
+      doc.select("[data-metrics=\"rtt-properties-summary:prr:no\"]").size shouldBe 1
+    }
+
+    "have lettings relief GA metrics when it is not used" in {
+      val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel, None, Some(false))(fakeRequestWithSession)
+      val doc = Jsoup.parse(view.body)
+
+      doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:yes\"]").size shouldBe 0
+      doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:no\"]").size shouldBe 1
+    }
+
   }
 }
