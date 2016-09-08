@@ -1225,7 +1225,9 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       Some(AnnualExemptAmountModel(1000)),
       Some(PropertyLivedInModel(true)),
       Some(PrivateResidenceReliefModel(true)),
-      Some(LettingsReliefModel(true)))
+      Some(PrivateResidenceReliefValueModel(5000)),
+      Some(LettingsReliefModel(true)),
+      Some(LettingsReliefValueModel(2000)))
     lazy val results = ChargeableGainResultModel(BigDecimal(50000),
       BigDecimal(-11000),
       BigDecimal(0),
