@@ -137,7 +137,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
           }
 
           "include a value for Reliefs of £0" in {
-            doc.select("#deductions-amount").text should include(s"${messages.reliefsUsed} £0")
+            doc.select("#deductions-amount").text should include(s"${messages.lettingReliefsUsed} £0")
           }
 
           "include a value for Allowable Losses of £0" in {
@@ -417,7 +417,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
           }
 
           "include a value for Reliefs of £50,000" in {
-            doc.select("#deductions-amount").text should include(s"${messages.reliefsUsed} £50,000")
+            doc.select("#deductions-amount").text should include(s"${messages.lettingReliefsUsed} £50,000")
           }
 
           "include a value for Allowable Losses of £10,000" in {
@@ -646,7 +646,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         }
 
         "include a value for Reliefs of £30,000" in {
-          doc.select("#deductions-amount").text should include(s"${messages.reliefsUsed} £30,000")
+          doc.select("#deductions-amount").text should include(s"${messages.lettingReliefsUsed} £30,000")
         }
       }
     }
