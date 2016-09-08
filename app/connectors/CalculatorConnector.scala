@@ -223,6 +223,7 @@ trait CalculatorConnector {
     val annualExemptAmountModel = fetchAndGetFormData[resident.AnnualExemptAmountModel](ResidentPropertyKeys.annualExemptAmount)
     val propertyLivedInModel = fetchAndGetFormData[resident.properties.PropertyLivedInModel](ResidentPropertyKeys.propertyLivedIn)
     val privateResidenceReliefModel = fetchAndGetFormData[resident.PrivateResidenceReliefModel](ResidentPropertyKeys.privateResidenceRelief)
+    val privateResidenceReliefValueModel = fetchAndGetFormData[resident.properties.PrivateResidenceReliefValueModel](ResidentPropertyKeys.prrValue)
     val lettingsReliefModel = fetchAndGetFormData[resident.properties.LettingsReliefModel](ResidentPropertyKeys.lettingsRelief)
     val lettingsReliefValueModel = fetchAndGetFormData[resident.properties.LettingsReliefValueModel](ResidentPropertyKeys.lettingsReliefValue)
 
@@ -237,6 +238,7 @@ trait CalculatorConnector {
       annualExemptAmount <- annualExemptAmountModel
       privateResidenceRelief <- privateResidenceReliefModel
       lettingsReliefValue <- lettingsReliefValueModel
+      privateResidenceReliefValue <- privateResidenceReliefValueModel
     } yield {
       properties.ChargeableGainAnswers(
         otherProperties,
@@ -247,6 +249,7 @@ trait CalculatorConnector {
         annualExemptAmount,
         propertyLivedIn,
         privateResidenceRelief,
+        privateResidenceReliefValue,
         lettingsRelief,
         lettingsReliefValue
       )

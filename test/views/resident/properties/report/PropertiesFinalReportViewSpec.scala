@@ -48,6 +48,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       Some(PropertyLivedInModel(false)),
       None,
       None,
+      None,
       None
     )
 
@@ -308,6 +309,13 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         }
       }
 
+      "does not have an option output row for the private residence relief value entry" which {
+
+        s"should not display" in {
+          doc.select("#privateResidenceReliefValue-question").size() shouldBe 0
+        }
+      }
+
       "does not have an option output row for the lettings relief" which {
 
         s"should not display" in {
@@ -392,6 +400,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       Some(AnnualExemptAmountModel(0)),
       Some(PropertyLivedInModel(true)),
       Some(PrivateResidenceReliefModel(true)),
+      Some(PrivateResidenceReliefValueModel(5000)),
       Some(LettingsReliefModel(true)),
       Some(LettingsReliefValueModel(7000))
     )
@@ -455,6 +464,18 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
       "should have the value 'Yes'" in {
         doc.select("#privateResidenceRelief-option span.bold-medium").text shouldBe "Yes"
+      }
+
+    }
+
+    "has an option output row for private residence relief value in" which {
+
+      s"should have the question text '${commonMessages.privateResidenceReliefValue.title}'" in {
+        doc.select("#privateResidenceReliefValue-question").text shouldBe commonMessages.privateResidenceReliefValue.title
+      }
+
+      "should have the value '5000'" in {
+        doc.select("#privateResidenceReliefValue-amount span.bold-medium").text shouldBe "£5,000"
       }
 
     }

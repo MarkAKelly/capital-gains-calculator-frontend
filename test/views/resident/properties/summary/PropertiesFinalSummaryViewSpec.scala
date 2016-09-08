@@ -47,6 +47,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       Some(PropertyLivedInModel(false)),
       None,
       None,
+      None,
       None
     )
     lazy val incomeAnswers = IncomeAnswersModel(None, Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
@@ -363,6 +364,13 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
         }
       }
 
+      "does not have an option output row for private residence relief value" which {
+
+        s"should not display" in {
+          doc.select("#privateResidenceReliefValue-question").size() shouldBe 0
+        }
+      }
+
       "does not have an option output row for the lettings relief" which {
 
         s"should not display" in {
@@ -482,6 +490,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       Some(AnnualExemptAmountModel(0)),
       Some(PropertyLivedInModel(true)),
       Some(PrivateResidenceReliefModel(false)),
+      None,
       None,
       None
     )
@@ -718,6 +727,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       Some(AnnualExemptAmountModel(0)),
       Some(PropertyLivedInModel(true)),
       Some(PrivateResidenceReliefModel(true)),
+      Some(PrivateResidenceReliefValueModel(5000)),
       Some(LettingsReliefModel(true)),
       Some(LettingsReliefValueModel(5000))
     )
@@ -827,6 +837,29 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
     }
 
+    "has an option output row for private residence relief value in" which {
+
+      s"should have the question text '${commonMessages.privateResidenceReliefValue.title}'" in {
+        doc.select("#privateResidenceReliefValue-question").text shouldBe commonMessages.privateResidenceReliefValue.title
+      }
+
+      "should have the value '5000'" in {
+        doc.select("#privateResidenceReliefValue-amount span.bold-medium").text shouldBe "£5,000"
+      }
+
+      s"should have a change link to ${routes.DeductionsController.privateResidenceReliefValue().url}" in {
+        doc.select("#privateResidenceReliefValue-amount a").attr("href") shouldBe routes.DeductionsController.privateResidenceReliefValue().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#privateResidenceReliefValue-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.privateResidenceReliefValue.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#privateResidenceReliefValue-amount a span.visuallyhidden").text shouldBe commonMessages.privateResidenceReliefValue.title
+      }
+    }
+
     "has an option output row for eligible for lettings relief in" which {
 
       s"should have the question text '${commonMessages.lettingsRelief.title}'" in {
@@ -909,6 +942,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       None,
       Some(AnnualExemptAmountModel(0)),
       Some(PropertyLivedInModel(false)),
+      None,
       None,
       None,
       None
@@ -1009,6 +1043,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       Some(PropertyLivedInModel(false)),
       None,
       None,
+      None,
       None
     )
 
@@ -1077,6 +1112,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       None,
       Some(AnnualExemptAmountModel(0)),
       Some(PropertyLivedInModel(false)),
+      None,
       None,
       None,
       None

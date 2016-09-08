@@ -155,34 +155,58 @@ articleLayout = false
 
     <!-- Data Rows-->
     @summaryDateRowHelper("disposalDate",Messages("calc.resident.disposalDate.question"),gainAnswers.disposalDate,Some(gainRoutes.disposalDate().toString))
+
     @summaryNumericRowHelper("disposalValue",Messages("calc.resident.disposal.value.title"),gainAnswers.disposalValue,Some(gainRoutes.disposalValue().toString))
+
     @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.disposalCosts.title"),gainAnswers.disposalCosts,Some(gainRoutes.disposalCosts().toString))
+
     @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),gainAnswers.acquisitionValue,Some(gainRoutes.acquisitionValue().toString))
+
     @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),gainAnswers.acquisitionCosts,Some(gainRoutes.acquisitionCosts().toString))
+
     @summaryNumericRowHelper("improvements",Messages("calc.resident.improvements.title"),gainAnswers.improvements,Some(gainRoutes.improvements().toString))
 
     @summaryOptionRowHelper("propertyLivedIn", Messages("calc.resident.properties.propertyLivedIn.title"),
-    deductionAnswers.propertyLivedInModel.get.livedInProperty, Some(deductionRoutes.propertyLivedIn().toString))
+        deductionAnswers.propertyLivedInModel.get.livedInProperty, Some(deductionRoutes.propertyLivedIn().toString))
+
     @{if (deductionAnswers.propertyLivedInModel.get.livedInProperty)
         summaryOptionRowHelper("privateResidenceRelief", Messages("calc.resident.properties.privateResidenceRelief.title"),
         deductionAnswers.privateResidenceReliefModel.get.isClaiming, Some(deductionRoutes.privateResidenceRelief().toString))}
-    @if(deductionAnswers.propertyLivedInModel.get.livedInProperty && deductionAnswers.privateResidenceReliefModel.get.isClaiming){
-        @summaryOptionRowHelper("lettingsRelief", Messages("calc.resident.lettingsRelief.title"),deductionAnswers.lettingsReliefModel.get.isClaiming, Some(deductionRoutes.lettingsRelief().toString))
-        @if(deductionAnswers.lettingsReliefModel.get.isClaiming){
-            @summaryNumericRowHelper("lettingsReliefValue", Messages("calc.resident.lettingsReliefValue.title"),
-                deductionAnswers.lettingsReliefValueModel.get.amount, Some(deductionRoutes.lettingsReliefValue().toString))
-        }
-    }
-    @summaryOptionRowHelper("otherProperties",Messages("calc.resident.otherProperties.title", taxYear.taxYearSupplied),deductionAnswers.otherPropertiesModel.get.hasOtherProperties,Some(deductionRoutes.otherProperties().toString))
+
+    @{if(deductionAnswers.propertyLivedInModel.get.livedInProperty && deductionAnswers.privateResidenceReliefModel.get.isClaiming)
+        summaryNumericRowHelper("privateResidenceReliefValue", Messages("calc.resident.privateResidenceReliefValue.title"),
+            deductionAnswers.privateResidenceReliefValueModel.get.amount, Some(deductionRoutes.privateResidenceReliefValue().toString))}
+
+    @{if(deductionAnswers.propertyLivedInModel.get.livedInProperty && deductionAnswers.privateResidenceReliefModel.get.isClaiming)
+        summaryOptionRowHelper("lettingsRelief", Messages("calc.resident.lettingsRelief.title"),
+            deductionAnswers.lettingsReliefModel.get.isClaiming, Some(deductionRoutes.lettingsRelief().toString))}
+
+    @{if(deductionAnswers.propertyLivedInModel.get.livedInProperty && deductionAnswers.privateResidenceReliefModel.get.isClaiming
+        && deductionAnswers.lettingsReliefModel.get.isClaiming)
+        summaryNumericRowHelper("lettingsReliefValue", Messages("calc.resident.lettingsReliefValue.title"),
+            deductionAnswers.lettingsReliefValueModel.get.amount, Some(deductionRoutes.lettingsReliefValue().toString))}
+
+    @summaryOptionRowHelper("otherProperties",Messages("calc.resident.otherProperties.title", taxYear.taxYearSupplied),
+        deductionAnswers.otherPropertiesModel.get.hasOtherProperties,Some(deductionRoutes.otherProperties().toString))
+
     @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties)
-        summaryOptionRowHelper("allowableLosses",Messages("calc.resident.allowableLosses.title", taxYear.taxYearSupplied),deductionAnswers.allowableLossesModel.get.isClaiming,Some(deductionRoutes.allowableLosses().toString))}
+        summaryOptionRowHelper("allowableLosses",Messages("calc.resident.allowableLosses.title", taxYear.taxYearSupplied),
+            deductionAnswers.allowableLossesModel.get.isClaiming,Some(deductionRoutes.allowableLosses().toString))}
+
     @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties && deductionAnswers.allowableLossesModel.get.isClaiming)
-        summaryNumericRowHelper("allowableLossesValue",Messages("calc.resident.allowableLossesValue.title", taxYear.taxYearSupplied),deductionAnswers.allowableLossesValueModel.get.amount,Some(deductionRoutes.allowableLossesValue().toString))}
-    @summaryOptionRowHelper("broughtForwardLosses",Messages("calc.resident.lossesBroughtForward.title", taxYear.taxYearSupplied),deductionAnswers.broughtForwardModel.get.option, Some(deductionRoutes.lossesBroughtForward().toString))
+        summaryNumericRowHelper("allowableLossesValue",Messages("calc.resident.allowableLossesValue.title", taxYear.taxYearSupplied),
+            deductionAnswers.allowableLossesValueModel.get.amount,Some(deductionRoutes.allowableLossesValue().toString))}
+
+    @summaryOptionRowHelper("broughtForwardLosses",Messages("calc.resident.lossesBroughtForward.title", taxYear.taxYearSupplied),
+        deductionAnswers.broughtForwardModel.get.option, Some(deductionRoutes.lossesBroughtForward().toString))
+
     @{if (deductionAnswers.broughtForwardModel.get.option)
-        summaryNumericRowHelper("broughtForwardLossesValue",Messages("calc.resident.lossesBroughtForwardValue.title", taxYear.taxYearSupplied),deductionAnswers.broughtForwardValueModel.get.amount,Some(deductionRoutes.lossesBroughtForwardValue().toString))}
+        summaryNumericRowHelper("broughtForwardLossesValue",Messages("calc.resident.lossesBroughtForwardValue.title", taxYear.taxYearSupplied),
+            deductionAnswers.broughtForwardValueModel.get.amount,Some(deductionRoutes.lossesBroughtForwardValue().toString))}
+
     @{if (isUsingAnnualExemptAmount(deductionAnswers.otherPropertiesModel, deductionAnswers.allowableLossesModel, deductionAnswers.allowableLossesValueModel))
-        summaryNumericRowHelper("annualExemptAmount",Messages("calc.resident.annualExemptAmount.title"),deductionAnswers.annualExemptAmountModel.get.amount,Some(deductionRoutes.annualExemptAmount().toString))}
+        summaryNumericRowHelper("annualExemptAmount",Messages("calc.resident.annualExemptAmount.title"),
+            deductionAnswers.annualExemptAmountModel.get.amount,Some(deductionRoutes.annualExemptAmount().toString))}
 </section>
 
 
