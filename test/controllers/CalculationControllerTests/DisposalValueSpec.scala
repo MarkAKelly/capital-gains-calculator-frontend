@@ -97,7 +97,7 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
         }
 
         "have the bullet list content title and content" in {
-          document.select("p#bullet-list-title").text shouldEqual Messages("calc.disposalValue.bullet.title")
+          document.select("p#bullet-list-title").text shouldEqual "Put the market value of the property instead if you:"
         }
 
         "Have the bullet content" in {
