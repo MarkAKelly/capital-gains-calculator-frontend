@@ -353,4 +353,8 @@ object MessageLookup {
     val helpOne = "UK residential properties"
     val helpThree = "other shares"
   }
+
+  object propertiesSellOrGiveAway {
+    val errorMandatory = "Tell us if you sold the property or gave it away"
+  }
 }

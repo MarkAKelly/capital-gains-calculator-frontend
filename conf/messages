@@ -322,6 +322,9 @@ calc.resident.outsideTaxYears.message = You can continue to use it, but we''ll u
 calc.resident.outsideTaxYears.message.tooEarly = You can use this calculator if you''ve sold a property since 5 April 2015.
 calc.resident.outsideTaxYears.changeDate = Change your date
 
+## Sell Or Give Away messages
+calc.resident.sellOrGiveAway.errors.mandatory = Tell us if you sold the property or gave it away
+
 ## Disposal Value messages
 calc.resident.disposal.value.title = How much did you sell the property for?
 calc.resident.disposal.value.question = How much did you sell the property for?
