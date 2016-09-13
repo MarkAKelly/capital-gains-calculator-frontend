@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package forms.resident
+package forms.resident.gain
 
 import assets.MessageLookup.errorMessages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import models.resident.AcquisitionCostsModel
-import forms.resident.AcquisitionCostsForm._
-import controllers.helpers.FakeRequestHelper
+import forms.resident.properties.PropertyWorthWhenSoldForm._
+import models.resident.properties.PropertyWorthWhenSoldModel
 
-class AcquisitionCostsFormSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class PropertyWorthWhenSoldFormSpec extends UnitSpec with WithFakeApplication {
 
   "Creating a form using an empty model" should {
 
-    val form = acquisitionCostsForm
+    lazy val form = propertyWorthWhenSoldForm
 
     "return an empty string for amount" in {
       form.data.isEmpty shouldBe true
@@ -36,8 +35,12 @@ class AcquisitionCostsFormSpec extends UnitSpec with WithFakeApplication with Fa
   "Creating a form using a valid model" should {
 
     "return a form with the data specified in the model" in {
-      val model = AcquisitionCostsModel(1)
-      val form = acquisitionCostsForm.fill(model)
+      lazy val form = propertyWorthWhenSoldForm.fill(PropertyWorthWhenSoldModel(1))
+      form.data("amount") shouldBe "1"
+    }
+
+    "return a form with the data specified from the map" in {
+      lazy val form = propertyWorthWhenSoldForm.bind(Map("amount" -> "1"))
       form.data("amount") shouldBe "1"
     }
   }
@@ -46,10 +49,14 @@ class AcquisitionCostsFormSpec extends UnitSpec with WithFakeApplication with Fa
 
     "supplied with no data for amount" should {
 
-      lazy val form = acquisitionCostsForm.bind(Map("amount" -> ""))
+      lazy val form = propertyWorthWhenSoldForm.bind(Map("amount" -> ""))
 
-      "raise form error" in {
+      "raise a form error" in {
         form.hasErrors shouldBe true
+      }
+
+      "raise only one error" in {
+        form.errors.length shouldEqual 1
       }
 
       s"error with message '${errorMessages.mandatoryAmount}'" in {
@@ -59,10 +66,14 @@ class AcquisitionCostsFormSpec extends UnitSpec with WithFakeApplication with Fa
 
     "supplied with a non-numeric value for amount" should {
 
-      lazy val form = acquisitionCostsForm.bind(Map("amount" -> "a"))
+      lazy val form = propertyWorthWhenSoldForm.bind(Map("amount" -> "a"))
 
       "raise a form error" in {
         form.hasErrors shouldBe true
+      }
+
+      "raise only one error" in {
+        form.errors.length shouldEqual 1
       }
 
       s"error with message '${errorMessages.invalidAmount}'" in {
@@ -71,10 +82,14 @@ class AcquisitionCostsFormSpec extends UnitSpec with WithFakeApplication with Fa
     }
 
     "supplied with an amount that is too big" should {
-      lazy val form = acquisitionCostsForm.bind(Map(("amount", "9999999999999")))
+      lazy val form = propertyWorthWhenSoldForm.bind(Map(("amount", "9999999999999")))
 
       "return a form with errors" in {
         form.hasErrors shouldBe true
+      }
+
+      "raise only one error" in {
+        form.errors.length shouldEqual 1
       }
 
       s"return a form with the error message ${errorMessages.maximumAmount}" in {
@@ -84,10 +99,14 @@ class AcquisitionCostsFormSpec extends UnitSpec with WithFakeApplication with Fa
 
     "supplied with a negative amount" should {
 
-      lazy val form = acquisitionCostsForm.bind(Map("amount" -> "-1000"))
+      lazy val form = propertyWorthWhenSoldForm.bind(Map("amount" -> "-1000"))
 
       "raise form error" in {
         form.hasErrors shouldBe true
+      }
+
+      "raise only one error" in {
+        form.errors.length shouldEqual 1
       }
 
       s"error with message '${errorMessages.minimumAmount}'" in {
@@ -97,10 +116,14 @@ class AcquisitionCostsFormSpec extends UnitSpec with WithFakeApplication with Fa
 
     "supplied with an amount that has too many decimal places" should {
 
-      lazy val form = acquisitionCostsForm.bind(Map("amount" -> "100.1234"))
+      lazy val form = propertyWorthWhenSoldForm.bind(Map("amount" -> "100.1234"))
 
       "raise form error" in {
         form.hasErrors shouldBe true
+      }
+
+      "raise only one error" in {
+        form.errors.length shouldEqual 1
       }
 
       s"error with message '${errorMessages.invalidAmount}'" in {
