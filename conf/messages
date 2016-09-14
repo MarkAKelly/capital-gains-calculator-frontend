@@ -326,6 +326,11 @@ calc.resident.outsideTaxYears.changeDate = Change your date
 calc.resident.sellOrGiveAway.title = Did you sell the property or give it away?
 calc.resident.sellOrGiveAway.errors.mandatory = Tell us if you sold the property or gave it away
 
+## No Tax To Pay messages
+calc.resident.noTaxToPay.title = You have no tax to pay
+calc.resident.noTaxToPay.spouseText = This is because Capital Gains Tax doesn''t apply if you give a property to your spouse or civil partner.
+calc.resident.noTaxToPay.charityText = This is because Capital Gains Tax doesn''t apply if you give a property to a charity.
+
 ## Disposal Value messages
 calc.resident.disposal.value.title = How much did you sell the property for?
 calc.resident.disposal.value.question = How much did you sell the property for?

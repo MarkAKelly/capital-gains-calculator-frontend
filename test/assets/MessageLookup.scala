@@ -71,6 +71,13 @@ object MessageLookup {
     def content(year: String): String = s"You can continue to use it, but we'll use the tax rates from the $year tax year."
   }
 
+  //No Tax To Pay messages
+  object noTaxToPay {
+    val title = "You have no tax to pay"
+    val spouseText = "This is because Capital Gains Tax doesn't apply if you give a property to your spouse or civil partner."
+    val charityText = "This is because Capital Gains Tax doesn't apply if you give a property to a charity."
+  }
+
   //Disposal Value messages
   object disposalValue {
     val title = "How much did you sell the property for?"
