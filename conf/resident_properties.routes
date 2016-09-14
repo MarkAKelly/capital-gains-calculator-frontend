@@ -19,6 +19,9 @@ GET     /sell-for-less                    controllers.resident.properties.GainCo
 #Who Did You Give It To Routes
 GET     /who-did-you-give-it-to           controllers.resident.properties.GainController.whoDidYouGiveItTo
 
+#No Tax to Pay Routes
+GET     /no-tax-to-pay                    controllers.resident.properties.GainController.noTaxToPay
+
 #Disposal Value or Market Value Routes
 GET     /disposal-value                   controllers.resident.properties.GainController.disposalValue
 POST    /disposal-value                   controllers.resident.properties.GainController.submitDisposalValue

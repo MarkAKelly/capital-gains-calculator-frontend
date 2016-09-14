@@ -124,6 +124,9 @@ trait GainController extends FeatureLock {
     TODO.apply(request)
   }
 
+  //################ No Tax to Pay Actions ######################
+  val noTaxToPay = TODO
+
   //################ Outside Tax Years Actions ######################
   val outsideTaxYears = FeatureLockForRTT.async { implicit request =>
     for {
