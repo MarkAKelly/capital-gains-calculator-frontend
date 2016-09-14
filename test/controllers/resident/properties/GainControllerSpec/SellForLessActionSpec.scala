@@ -77,10 +77,6 @@ class SellForLessActionSpec extends UnitSpec with WithFakeApplication with FakeR
         status(result) shouldBe 200
       }
 
-      s"return some html with title of ${messages.title}" in {
-        contentType(result) shouldBe Some("text/html")
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
-      }
     }
 
     "request has an invalid session" should {

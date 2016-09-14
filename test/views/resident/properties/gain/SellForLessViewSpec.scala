@@ -31,6 +31,7 @@ class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeReq
 
     lazy val view = views.sellForLess(sellForLessForm, "home-link", Some("back-link"))(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
+    lazy val form = doc.getElementsByTag("form")
 
     "have a charset of UTF-8" in {
       doc.charset.toString shouldBe "UTF-8"
@@ -78,6 +79,10 @@ class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/sell-for-less"
     }
 
+    "has the method of POST" in {
+      form.attr("method") shouldBe "POST"
+    }
+
     "have a legend for the radio inputs" which {
 
       lazy val legend = doc.select("legend")
@@ -85,6 +90,11 @@ class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       s"contain the text ${messages.title}" in {
         legend.text should include(s"${messages.title}")
       }
+
+    }
+
+    s"have a hidden label with the text ${messages.title}" in {
+      doc.select("legend.visuallyhidden").text shouldEqual messages.title
     }
 
     "have a set of radio inputs" which {
