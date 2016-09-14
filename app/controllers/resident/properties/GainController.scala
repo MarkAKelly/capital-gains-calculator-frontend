@@ -72,7 +72,7 @@ trait GainController extends FeatureLock {
 
     def routeRequest(taxYearResult: Option[TaxYearModel]): Future[Result] = {
       if (taxYearResult.isDefined && !taxYearResult.get.isValidYear) Future.successful(Redirect(routes.GainController.outsideTaxYears()))
-      else Future.successful(Redirect(routes.GainController.disposalValue()))
+      else Future.successful(Redirect(routes.GainController.sellOrGiveAway()))
     }
 
     disposalDateForm.bindFromRequest.fold(
