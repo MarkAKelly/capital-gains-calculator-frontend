@@ -342,6 +342,10 @@ calc.resident.disposalCosts.title = How much did you pay in costs when you stopp
 calc.resident.disposalCosts.pageHeading = How much did you pay in costs when you stopped owning the property?
 calc.resident.disposalCosts.helpText = Costs include agent fees, legal fees and surveys
 
+## Owner Before 1st April 1982 messages
+calc.resident.properties.ownerBeforeApril.title = Did you become the property owner before 1 April 1982?
+calc.resident.properties.ownerBeforeApril.noSelectError = Tell us if you became the property owner before 1 April 1982
+
 ## Acquisition Value messages
 calc.resident.acquisitionValue.title = How much did you pay for the property?
 calc.resident.acquisitionValue.question = How much did you pay for the property?

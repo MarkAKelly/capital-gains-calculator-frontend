@@ -19,6 +19,7 @@ package forms.resident.properties.gain
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import models.resident.properties.gain.OwnerBeforeAprilModel
 import forms.resident.properties.gain.OwnerBeforeAprilForm._
+import assets.MessageLookup.{ownerBeforeAprilNineteenEightyTwo => messages}
 
 class OwnerBeforeAprilFormSpec  extends UnitSpec with WithFakeApplication {
 
@@ -57,8 +58,8 @@ class OwnerBeforeAprilFormSpec  extends UnitSpec with WithFakeApplication {
         form.errors.size shouldBe 1
       }
 
-      s"return an error with message ${"UPDATE MESSAGE LOOKUP"}" in {
-        form.error("ownedBeforeAprilNineteenEightyTwo").get.message shouldBe "UPDATE MESSAGE LOOKUP"
+      s"return an error with message ${messages.errorSelectAnOption}" in {
+        form.error("ownedBeforeAprilNineteenEightyTwo").get.message shouldBe messages.errorSelectAnOption
       }
     }
 
@@ -73,8 +74,8 @@ class OwnerBeforeAprilFormSpec  extends UnitSpec with WithFakeApplication {
         form.errors.size shouldBe 1
       }
 
-      s"return an error with message ${"UPDATE MESSAGE LOOKUP"}" in {
-        form.error("ownedBeforeAprilNineteenEightyTwo").get.message shouldBe "UPDATE MESSAGE LOOKUP"
+      s"return an error with message ${messages.errorSelectAnOption}" in {
+        form.error("ownedBeforeAprilNineteenEightyTwo").get.message shouldBe messages.errorSelectAnOption
       }
     }
   }

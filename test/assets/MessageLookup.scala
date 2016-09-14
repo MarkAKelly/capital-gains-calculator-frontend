@@ -18,6 +18,12 @@ package assets
 
 object MessageLookup {
 
+  // TO MOVE
+  object ownerBeforeAprilNineteenEightyTwo {
+    val title = "Did you become the property owner before 1 April 1982?"
+    val errorSelectAnOption = "Tell us if you became the property owner before 1 April 1982"
+  }
+
   //Base messages
   val calcBaseBack = "Back"
   val calcBaseContinue = "Continue"

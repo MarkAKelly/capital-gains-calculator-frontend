@@ -28,8 +28,8 @@ object OwnerBeforeAprilForm {
   val ownerBeforeAprilForm = Form(
     mapping(
       "ownedBeforeAprilNineteenEightyTwo" -> text
-//        .verifying(Messages("calc.resident.properties.ownerBeforeApril.noSelectError"), mandatoryCheck)
-//        .verifying(Messages("calc.resident.properties.ownerBeforeApril.noSelectError"), yesNoCheck)
+        .verifying(Messages("calc.resident.properties.ownerBeforeApril.noSelectError"), mandatoryCheck)
+        .verifying(Messages("calc.resident.properties.ownerBeforeApril.noSelectError"), yesNoCheck)
         .transform(stringToBoolean, booleanToString)
     )(OwnerBeforeAprilModel.apply)(OwnerBeforeAprilModel.unapply)
   )
