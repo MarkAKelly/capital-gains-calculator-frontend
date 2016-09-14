@@ -82,4 +82,11 @@ object Validation {
     case "" => true
     case _ => false
   }
+
+  val givenAwayCheck: String => Boolean = {
+    case "Given" => true
+    case "Sold" => true
+    case "" => true
+    case _ => false
+  }
 }
