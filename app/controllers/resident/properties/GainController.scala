@@ -35,8 +35,9 @@ import forms.resident.DisposalCostsForm._
 import forms.resident.AcquisitionValueForm._
 import forms.resident.AcquisitionCostsForm._
 import forms.resident.properties.ImprovementsForm._
+import forms.resident.properties.PropertyWorthWhenSoldForm._
 import models.resident._
-import models.resident.properties.ImprovementsModel
+import models.resident.properties.{ImprovementsModel, PropertyWorthWhenSoldModel}
 import play.api.i18n.Messages
 
 object GainController extends GainController {
@@ -116,6 +117,25 @@ trait GainController extends FeatureLock {
       errors => Future.successful(BadRequest(views.disposalValue(errors))),
       success => {
         calcConnector.saveFormData[DisposalValueModel](keystoreKeys.disposalValue, success)
+        Future.successful(Redirect(routes.GainController.disposalCosts()))
+      }
+    )
+  }
+
+  //################ Property Worth When Sold Actions ######################
+  val propertyWorthWhenSold = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[PropertyWorthWhenSoldModel](keystoreKeys.propertyWorthWhenSold).map {
+      case Some(data) => Ok(views.propertyWorthWhenSold(propertyWorthWhenSoldForm.fill(data)))
+      case _ => Ok(views.propertyWorthWhenSold(propertyWorthWhenSoldForm))
+    }
+  }
+
+  val submitPropertyWorthWhenSold = FeatureLockForRTT.async { implicit request =>
+
+    propertyWorthWhenSoldForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.propertyWorthWhenSold(errors))),
+      success => {
+        calcConnector.saveFormData(keystoreKeys.propertyWorthWhenSold, success)
         Future.successful(Redirect(routes.GainController.disposalCosts()))
       }
     )

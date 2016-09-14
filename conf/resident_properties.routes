@@ -13,6 +13,10 @@ GET     /outside-tax-years                controllers.resident.properties.GainCo
 GET     /disposal-value                   controllers.resident.properties.GainController.disposalValue
 POST    /disposal-value                   controllers.resident.properties.GainController.submitDisposalValue
 
+#Property Worth When Sold Routes
+GET     /property-worth-when-sold         controllers.resident.properties.GainController.propertyWorthWhenSold
+POST    /property-worth-when-sold         controllers.resident.properties.GainController.submitPropertyWorthWhenSold
+
 #Disposal Costs Routes
 GET     /disposal-costs                   controllers.resident.properties.GainController.disposalCosts
 POST    /disposal-costs                   controllers.resident.properties.GainController.submitDisposalCosts

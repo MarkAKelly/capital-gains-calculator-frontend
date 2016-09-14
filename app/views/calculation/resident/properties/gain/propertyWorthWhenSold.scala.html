@@ -8,4 +8,18 @@
 
 @resident_properties_main_template(title = Messages("calc.resident.properties.propertyWorthWhenSold.title"),
                                    backLink = Some("TODO")) {
+
+    @errorSummary(propertyWorthWhenSoldForm, "amount")
+
+    <h1 class="heading-large">@Messages("calc.resident.properties.propertyWorthWhenSold.title")</h1>
+
+    <p id="additionalText">@Messages("calc.resident.properties.propertyWorthWhenSold.extraText")</p>
+
+    @form(action = controllers.resident.properties.routes.GainController.submitPropertyWorthWhenSold) {
+
+        @formInputMoney(propertyWorthWhenSoldForm, "amount", Messages("calc.resident.properties.propertyWorthWhenSold.title"), hideLabel = true)
+
+        <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+
+    }
 }

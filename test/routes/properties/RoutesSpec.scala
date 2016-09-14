@@ -47,7 +47,7 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
-  "The URL for the disposal value or market value Action" should {
+  "The URL for the disposal value Action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/disposal-value" in {
       GainController.disposalValue().url shouldEqual "/calculate-your-capital-gains/resident/properties/disposal-value"
     }
@@ -56,6 +56,18 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
   "The URL for the submit disposal value Action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/disposal-value" in {
       GainController.submitDisposalValue().url shouldEqual "/calculate-your-capital-gains/resident/properties/disposal-value"
+    }
+  }
+
+  "The URL for the property worth when sold Action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/property-worth-when-sold" in {
+      GainController.propertyWorthWhenSold().url shouldEqual "/calculate-your-capital-gains/resident/properties/property-worth-when-sold"
+    }
+  }
+
+  "The URL for the submit property worth when sold Action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/property-worth-when-sold" in {
+      GainController.submitPropertyWorthWhenSold().url shouldEqual "/calculate-your-capital-gains/resident/properties/property-worth-when-sold"
     }
   }
 
