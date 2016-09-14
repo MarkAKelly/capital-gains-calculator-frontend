@@ -35,8 +35,11 @@ import forms.resident.DisposalCostsForm._
 import forms.resident.AcquisitionValueForm._
 import forms.resident.AcquisitionCostsForm._
 import forms.resident.properties.ImprovementsForm._
+import forms.resident.properties.PropertyLivedInForm._
+import forms.resident.properties.SellForLessForm._
 import models.resident._
-import models.resident.properties.ImprovementsModel
+import models.resident.properties.{ImprovementsModel, PropertyLivedInModel, SellForLessModel}
+import play.api.data.Form
 import play.api.i18n.Messages
 
 object GainController extends GainController {
@@ -101,6 +104,46 @@ trait GainController extends FeatureLock {
         navTitle = navTitle
       ))
     }
+  }
+
+  //############## Sell or Give Away Actions ##################
+  val sellOrGiveway = TODO
+
+  //############## Worth when Sold Actions ##################
+  val worthWhenSold = TODO
+
+  //############## Sell for Less Actions ##################
+    val sellForLess = FeatureLockForRTT.async {implicit request =>
+
+    val backLink = Some(controllers.resident.properties.routes.GainController.sellOrGiveway().toString)
+
+    calcConnector.fetchAndGetFormData[SellForLessModel](keystoreKeys.sellForLess).map{
+      case Some(data) => Ok(commonViews.properties.gain.sellForLess(sellForLessForm.fill(data), homeLink, backLink))
+      case _ => Ok(commonViews.properties.gain.sellForLess(sellForLessForm, homeLink, backLink))
+    }
+  }
+
+  val submitSellForLess = FeatureLockForRTT.async { implicit request =>
+
+    lazy val backLink = Some(controllers.resident.properties.GainController.sellOrGiveway.toString())
+
+    def errorAction(errors: Form[SellForLessModel]) = Future.successful(BadRequest(commonViews.properties.gain.sellForLess(
+      errors, homeLink, backLink
+    )))
+
+    def routeRequest(model: SellForLessModel) = {
+      if (model.sellForLess) Future.successful(Redirect(routes.GainController.worthWhenSold()))
+      else Future.successful(Redirect(routes.GainController.disposalValue()))
+    }
+
+    def successAction(model: SellForLessModel) = {
+      for {
+        save <- calcConnector.saveFormData(keystoreKeys.sellForLess, model)
+        route <- routeRequest(model)
+      } yield route
+    }
+
+    sellForLessForm.bindFromRequest().fold(errorAction, successAction)
   }
 
   //################ Disposal Value Actions ######################

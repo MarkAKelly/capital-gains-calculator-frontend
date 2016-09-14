@@ -234,6 +234,18 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
+  "The URL for the sellForLess action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/sell-for-less" in {
+      GainController.sellForLess().url shouldEqual "/calculate-your-capital-gains/resident/properties/sell-for-less"
+    }
+  }
+
+  "The URL for the submit sellForLess action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/sell-for-less" in {
+      GainController.submitSellForLess().url shouldEqual "/calculate-your-capital-gains/resident/properties/sell-for-less"
+    }
+  }
+
   "The URL for the gainSummaryReport action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/gain-report" in {
       ReportController.gainSummaryReport().url shouldEqual "/calculate-your-capital-gains/resident/properties/gain-report"
