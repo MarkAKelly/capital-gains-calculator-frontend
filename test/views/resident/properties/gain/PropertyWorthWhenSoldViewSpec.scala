@@ -48,7 +48,7 @@ class PropertyWorthWhenSoldViewSpec extends UnitSpec with WithFakeApplication wi
       }
 
       "should link to the Did you sell it for less than it was worth page." in {
-        true shouldEqual false
+        backLink.attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/sell-for-less"
       }
     }
 

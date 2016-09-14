@@ -24,6 +24,7 @@ object MessageLookup {
   val calcBaseExternalLink = "(opens in a new window)"
   val calcBaseChange = "change"
   val undefinedMessage = "Undefined message"
+  val propertiesHomeText = "Calculate your Capital Gains Tax"
 
   //Common messages
   val maxNumericExceededStart = "Enter an amount that's £"
@@ -91,6 +92,11 @@ object MessageLookup {
     val tooEarly = "You can use this calculator if you've sold a property since 5 April 2015."
     val changeDate = "Change your date"
     def content(year: String): String = s"You can continue to use it, but we'll use the tax rates from the $year tax year."
+  }
+
+  //############ Sell For Less messages #################//
+  object sellForLess {
+    val title = "Did you sell the property for less than it was worth to help the buyer?"
   }
 
   //Disposal Value messages
@@ -375,5 +381,10 @@ object MessageLookup {
   object sharesOtherDisposals {
     val helpOne = "UK residential properties"
     val helpThree = "other shares"
+  }
+
+  object propertiesSellOrGiveAway {
+    val title = "Did you sell the property or give it away?"
+    val errorMandatory = "Tell us if you sold the property or gave it away"
   }
 }

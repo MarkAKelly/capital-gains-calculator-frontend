@@ -47,6 +47,18 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
+  "The URL for the GET Sell Or Give Away action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/sell-or-give-away" in {
+      GainController.sellOrGiveAway().url shouldEqual "/calculate-your-capital-gains/resident/properties/sell-or-give-away"
+    }
+  }
+
+  "The URL for the POST Sell Or Give Away action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/sell-or-give-away" in {
+      GainController.submitSellOrGiveAway().url shouldEqual "/calculate-your-capital-gains/resident/properties/sell-or-give-away"
+    }
+  }
+
   "The URL for the disposal value Action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/disposal-value" in {
       GainController.disposalValue().url shouldEqual "/calculate-your-capital-gains/resident/properties/disposal-value"
@@ -243,6 +255,18 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
   "The URL for the submit propertyLivedIn action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/property-lived-in" in {
       DeductionsController.submitPropertyLivedIn().url shouldEqual "/calculate-your-capital-gains/resident/properties/property-lived-in"
+    }
+  }
+
+  "The URL for the sellForLess action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/sell-for-less" in {
+      GainController.sellForLess().url shouldEqual "/calculate-your-capital-gains/resident/properties/sell-for-less"
+    }
+  }
+
+  "The URL for the submit sellForLess action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/sell-for-less" in {
+      GainController.submitSellForLess().url shouldEqual "/calculate-your-capital-gains/resident/properties/sell-for-less"
     }
   }
 

@@ -9,9 +9,23 @@ POST    /disposal-date                    controllers.resident.properties.GainCo
 #Outside Tax Years Routes
 GET     /outside-tax-years                controllers.resident.properties.GainController.outsideTaxYears
 
+#Sell or Give Away Routes
+GET     /sell-or-give-away                controllers.resident.properties.GainController.sellOrGiveAway
+POST    /sell-or-give-away                controllers.resident.properties.GainController.submitSellOrGiveAway
+
+#Sell for Less Routes
+GET     /sell-for-less                    controllers.resident.properties.GainController.sellForLess
+
+#Who Did You Give It To Routes
+GET     /who-did-you-give-it-to           controllers.resident.properties.GainController.whoDidYouGiveItTo
+
 #Disposal Value or Market Value Routes
 GET     /disposal-value                   controllers.resident.properties.GainController.disposalValue
 POST    /disposal-value                   controllers.resident.properties.GainController.submitDisposalValue
+
+#Sell For Less Routes
+GET     /sell-for-less                    controllers.resident.properties.GainController.sellForLess
+POST    /sell-for-less                    controllers.resident.properties.GainController.submitSellForLess
 
 #Property Worth When Sold Routes
 GET     /property-worth-when-sold         controllers.resident.properties.GainController.propertyWorthWhenSold
