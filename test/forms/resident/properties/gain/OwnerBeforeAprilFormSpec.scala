@@ -23,12 +23,26 @@ import assets.MessageLookup.{ownerBeforeAprilNineteenEightyTwo => messages}
 
 class OwnerBeforeAprilFormSpec  extends UnitSpec with WithFakeApplication {
 
+  "Creating a form without a model" should {
+
+    "create an empty form" in {
+      lazy val form = ownerBeforeAprilForm
+      form.data.isEmpty shouldEqual true
+    }
+  }
+
   "Creating a form using a valid model" should {
 
     "return a form with the data specified in the model" in {
       lazy val model = OwnerBeforeAprilModel(true)
       lazy val form = ownerBeforeAprilForm.fill(model)
-      form.value shouldBe Some(model)
+      form.data.get("ownedBeforeAprilNineteenEightyTwo") shouldEqual Some("Yes")
+    }
+
+    "return a form with the data specified in the model" in {
+      lazy val model = OwnerBeforeAprilModel(false)
+      lazy val form = ownerBeforeAprilForm.fill(model)
+      form.data.get("ownedBeforeAprilNineteenEightyTwo") shouldEqual Some("No")
     }
   }
 
@@ -36,12 +50,12 @@ class OwnerBeforeAprilFormSpec  extends UnitSpec with WithFakeApplication {
 
     "return a form with a value of Yes" in {
       lazy val form = ownerBeforeAprilForm.bind(Map(("ownedBeforeAprilNineteenEightyTwo", "Yes")))
-      form.value shouldBe Some(OwnerBeforeAprilModel(true))
+      form.value shouldEqual Some(OwnerBeforeAprilModel(true))
     }
 
     "return a form with a value of No" in {
-      lazy val form = ownerBeforeAprilForm.bind(Map(("ownedBeforeAprilNineteenEightyTwo", "Yes")))
-      form.value shouldBe Some(OwnerBeforeAprilModel(true))
+      lazy val form = ownerBeforeAprilForm.bind(Map(("ownedBeforeAprilNineteenEightyTwo", "No")))
+      form.value shouldEqual Some(OwnerBeforeAprilModel(false))
     }
   }
 
@@ -51,15 +65,15 @@ class OwnerBeforeAprilFormSpec  extends UnitSpec with WithFakeApplication {
       lazy val form = ownerBeforeAprilForm.bind(Map(("ownedBeforeAprilNineteenEightyTwo", "")))
 
       "return a form with errors" in {
-        form.hasErrors shouldBe true
+        form.hasErrors shouldEqual true
       }
 
       "return 1 error" in {
-        form.errors.size shouldBe 1
+        form.errors.size shouldEqual 1
       }
 
       s"return an error with message ${messages.errorSelectAnOption}" in {
-        form.error("ownedBeforeAprilNineteenEightyTwo").get.message shouldBe messages.errorSelectAnOption
+        form.error("ownedBeforeAprilNineteenEightyTwo").get.message shouldEqual messages.errorSelectAnOption
       }
     }
 
@@ -67,15 +81,15 @@ class OwnerBeforeAprilFormSpec  extends UnitSpec with WithFakeApplication {
       lazy val form = ownerBeforeAprilForm.bind(Map(("ownedBeforeAprilNineteenEightyTwo", "a")))
 
       "return a form with errors" in {
-        form.hasErrors shouldBe true
+        form.hasErrors shouldEqual true
       }
 
       "return 1 error" in {
-        form.errors.size shouldBe 1
+        form.errors.size shouldEqual 1
       }
 
       s"return an error with message ${messages.errorSelectAnOption}" in {
-        form.error("ownedBeforeAprilNineteenEightyTwo").get.message shouldBe messages.errorSelectAnOption
+        form.error("ownedBeforeAprilNineteenEightyTwo").get.message shouldEqual messages.errorSelectAnOption
       }
     }
   }
