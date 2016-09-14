@@ -23,7 +23,7 @@ import common.{Dates, TaxDates}
 import config.{AppConfig, ApplicationConfig}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
-import play.api.mvc.{Action, Result}
+import play.api.mvc.{Action, Call, Result}
 import uk.gov.hmrc.play.http.SessionKeys
 
 import scala.concurrent.Future
@@ -35,8 +35,9 @@ import forms.resident.DisposalCostsForm._
 import forms.resident.AcquisitionValueForm._
 import forms.resident.AcquisitionCostsForm._
 import forms.resident.properties.ImprovementsForm._
+import forms.resident.properties.SellOrGiveAwayForm._
 import models.resident._
-import models.resident.properties.ImprovementsModel
+import models.resident.properties.{ImprovementsModel, SellOrGiveAwayModel}
 import play.api.i18n.Messages
 
 object GainController extends GainController {
@@ -71,7 +72,7 @@ trait GainController extends FeatureLock {
 
     def routeRequest(taxYearResult: Option[TaxYearModel]): Future[Result] = {
       if (taxYearResult.isDefined && !taxYearResult.get.isValidYear) Future.successful(Redirect(routes.GainController.outsideTaxYears()))
-      else Future.successful(Redirect(routes.GainController.disposalValue()))
+      else Future.successful(Redirect(routes.GainController.sellOrGiveAway()))
     }
 
     disposalDateForm.bindFromRequest.fold(
@@ -84,6 +85,43 @@ trait GainController extends FeatureLock {
         } yield route
       }
     )
+  }
+
+  //################ Sell or Give Away Actions ######################
+  val sellOrGiveAway = FeatureLockForRTT.async { implicit request =>
+    val backUrl = routes.GainController.disposalDate().url
+    val postAction = controllers.resident.properties.routes.GainController.submitSellOrGiveAway()
+
+    calcConnector.fetchAndGetFormData[SellOrGiveAwayModel](keystoreKeys.sellOrGiveAway).map {
+      case Some(data) => Ok(views.sellOrGiveAway(sellOrGiveAwayForm.fill(data), Some(backUrl), homeLink, postAction))
+      case _ => Ok(views.sellOrGiveAway(sellOrGiveAwayForm, Some(backUrl), homeLink, postAction))
+    }
+  }
+
+  val submitSellOrGiveAway = FeatureLockForRTT.async { implicit request =>
+    val backUrl = routes.GainController.disposalDate().url
+    val postAction = controllers.resident.properties.routes.GainController.submitSellOrGiveAway()
+
+    sellOrGiveAwayForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.sellOrGiveAway(errors, Some(backUrl), homeLink, postAction))),
+      success => {
+        calcConnector.saveFormData[SellOrGiveAwayModel](keystoreKeys.sellOrGiveAway, success)
+        success match {
+          case SellOrGiveAwayModel(true) => Future.successful(Redirect(routes.GainController.whoDidYouGiveItTo()))
+          case SellOrGiveAwayModel(false) => Future.successful(Redirect(routes.GainController.sellForLess()))
+        }
+      }
+    )
+  }
+
+  //################ Sell for Less Actions ######################
+  val sellForLess = FeatureLockForRTT.async { implicit request =>
+    TODO.apply(request)
+  }
+
+  //################ Who Did You Give It To Actions ######################
+  val whoDidYouGiveItTo = FeatureLockForRTT.async { implicit request =>
+    TODO.apply(request)
   }
 
   //################ Outside Tax Years Actions ######################
