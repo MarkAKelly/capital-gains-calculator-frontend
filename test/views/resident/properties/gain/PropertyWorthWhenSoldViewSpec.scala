@@ -1,0 +1,41 @@
+/*
+ * Copyright 2016 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package views.resident.properties.gain
+
+import assets.MessageLookup.Resident.Properties.{PropertyWorthWhenSold => messages}
+import controllers.helpers.FakeRequestHelper
+import forms.resident.properties.PropertyWorthWhenSoldForm._
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import views.html.calculation.resident.properties.{gain => views}
+import org.jsoup.Jsoup
+
+class PropertyWorthWhenSoldViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+
+  "The Property Worth When Sold View" should {
+
+    lazy val view = views.propertyWorthWhenSold(propertyWorthWhenSoldForm)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "have a charset of UTF-8" in {
+      doc.charset.toString shouldBe "UTF-8"
+    }
+
+    s"have a title of ${messages.title}" in {
+      doc.title shouldBe messages.title
+    }
+  }
+}
