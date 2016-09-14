@@ -24,6 +24,7 @@ object MessageLookup {
   val calcBaseExternalLink = "(opens in a new window)"
   val calcBaseChange = "change"
   val undefinedMessage = "Undefined message"
+  val propertiesHomeText = "Calculate your Capital Gains Tax"
 
   //Common messages
   val maxNumericExceededStart = "Enter an amount that's £"
@@ -355,6 +356,7 @@ object MessageLookup {
   }
 
   object propertiesSellOrGiveAway {
+    val title = "Did you sell the property or give it away?"
     val errorMandatory = "Tell us if you sold the property or gave it away"
   }
 }
