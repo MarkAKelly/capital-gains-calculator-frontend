@@ -92,6 +92,11 @@ object MessageLookup {
     val helpText = "Costs include agent fees, legal fees and surveys"
   }
 
+  //How Became Owner messages
+  object howBecameOwner {
+    val errorMandatory = "Tell us how you became the property owner"
+  }
+
   //Acquisition Value messages
   object acquisitionValue {
     val title = "How much did you pay for the property?"
