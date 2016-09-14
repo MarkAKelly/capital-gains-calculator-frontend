@@ -36,8 +36,9 @@ import forms.resident.AcquisitionValueForm._
 import forms.resident.AcquisitionCostsForm._
 import forms.resident.properties.ImprovementsForm._
 import forms.resident.properties.SellOrGiveAwayForm._
+import forms.resident.properties.WorthWhenGaveAwayForm._
 import models.resident._
-import models.resident.properties.{ImprovementsModel, SellOrGiveAwayModel}
+import models.resident.properties.{ImprovementsModel, SellOrGiveAwayModel, WorthWhenGaveAwayModel}
 import play.api.i18n.Messages
 
 object GainController extends GainController {
@@ -139,6 +140,28 @@ trait GainController extends FeatureLock {
         navTitle = navTitle
       ))
     }
+  }
+
+  //################# Worth When Gave Away Actions ############################
+
+  private val worthWhenGaveAwayPostAction = controllers.resident.properties.routes.GainController.submitWorthWhenGaveAway()
+  private val worthWhenGaveAwayBackLink = Some(controllers.resident.properties.routes.GainController.whoDidYouGiveItTo().toString)
+
+  val worthWhenGaveAway = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[WorthWhenGaveAwayModel](keystoreKeys.worthWhenGaveAway).map {
+      case Some(data) => Ok(views.worthWhenGaveAway(worthWhenGaveAwayForm.fill(data), worthWhenGaveAwayBackLink, homeLink, worthWhenGaveAwayPostAction))
+      case None => Ok(views.worthWhenGaveAway(worthWhenGaveAwayForm, worthWhenGaveAwayBackLink, homeLink, worthWhenGaveAwayPostAction))
+    }
+  }
+
+  val submitWorthWhenGaveAway = FeatureLockForRTT.async { implicit request =>
+    worthWhenGaveAwayForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.worthWhenGaveAway(errors, worthWhenGaveAwayBackLink, homeLink, worthWhenGaveAwayPostAction))),
+      success => {
+        calcConnector.saveFormData[WorthWhenGaveAwayModel](keystoreKeys.worthWhenGaveAway, success)
+        Future.successful(Redirect(routes.GainController.disposalCosts()))
+      }
+    )
   }
 
   //################ Disposal Value Actions ######################

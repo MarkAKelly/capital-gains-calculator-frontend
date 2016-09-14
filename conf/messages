@@ -326,6 +326,10 @@ calc.resident.outsideTaxYears.changeDate = Change your date
 calc.resident.sellOrGiveAway.title = Did you sell the property or give it away?
 calc.resident.sellOrGiveAway.errors.mandatory = Tell us if you sold the property or gave it away
 
+##Worth When Gave Away messages
+calc.resident.properties.worthWhenGaveAway.title = What was the property worth when you gave it away?
+calc.resident.properties.worthWhenGaveAway.pageHeading = What was the property worth when you gave it away?
+
 ## Disposal Value messages
 calc.resident.disposal.value.title = How much did you sell the property for?
 calc.resident.disposal.value.question = How much did you sell the property for?
