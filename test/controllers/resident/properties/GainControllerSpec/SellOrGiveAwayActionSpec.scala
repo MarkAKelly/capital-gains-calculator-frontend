@@ -69,8 +69,16 @@ class SellOrGiveAwayActionSpec extends UnitSpec with WithFakeApplication with Fa
         doc.body().select("a#back-link").attr("href") shouldBe "/calculate-your-capital-gains/resident/properties/disposal-date"
       }
 
-      s"have a home link to 'homeLink'" in {
+      "have a home link to 'homeLink'" in {
         doc.select("a#homeNavHref").attr("href") shouldBe "/calculate-your-capital-gains/resident/properties/"
+      }
+
+      "have a method to POST" in {
+        doc.select("form").attr("method") shouldBe "POST"
+      }
+
+      "have an action to sell-or-give-away" in {
+        doc.select("form").attr("action") shouldBe "/calculate-your-capital-gains/resident/properties/sell-or-give-away"
       }
     }
 

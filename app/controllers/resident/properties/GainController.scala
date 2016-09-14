@@ -90,7 +90,7 @@ trait GainController extends FeatureLock {
   //################ Sell or Give Away Actions ######################
   val sellOrGiveAway = FeatureLockForRTT.async { implicit request =>
     val backUrl = routes.GainController.disposalDate().url
-    val postAction = new Call("POST", "test") //TODO update to actual method
+    val postAction = controllers.resident.properties.routes.GainController.submitSellOrGiveAway()
 
     calcConnector.fetchAndGetFormData[SellOrGiveAwayModel](keystoreKeys.sellOrGiveAway).map {
       case Some(data) => Ok(views.sellOrGiveAway(sellOrGiveAwayForm.fill(data), Some(backUrl), homeLink, postAction))
@@ -100,7 +100,7 @@ trait GainController extends FeatureLock {
 
   val submitSellOrGiveAway = FeatureLockForRTT.async { implicit request =>
     val backUrl = routes.GainController.disposalDate().url
-    val postAction = new Call("POST", "test") //TODO update to actual method
+    val postAction = controllers.resident.properties.routes.GainController.submitSellOrGiveAway()
 
     sellOrGiveAwayForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.sellOrGiveAway(errors, Some(backUrl), homeLink, postAction))),
