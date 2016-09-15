@@ -17,7 +17,7 @@
 package views.resident.properties.gain
 
 import assets.MessageLookup
-import assets.MessageLookup.{propertiesWorthWhenGaveAway => messages}
+import assets.MessageLookup.Resident.Properties.{propertiesWorthWhenGaveAway => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.properties.WorthWhenGaveAwayForm._
 import org.jsoup.Jsoup
@@ -53,11 +53,87 @@ class WorthWhenGaveAwayViewSpec extends UnitSpec with WithFakeApplication with F
       doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/who-did-you-give-it-to"
     }
 
-    s"have the question of the page ${messages.question}" in {
-      doc.select("h1").text shouldEqual messages.question
+    "have a H1 tag that" should {
+
+      lazy val heading = doc.select("H1")
+
+      s"have the page heading '${messages.title}'" in {
+        heading.text shouldBe messages.title
+      }
+
+      "have the heading-large class" in {
+        heading.hasClass("heading-large") shouldEqual true
+      }
     }
 
+
+    "have a form that" should {
+
+      lazy val form = doc.select("form")
+
+      "have the action /calculate-your-capital-gains/resident/properties/worth-when-gave-away" in {
+        form.attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/worth-when-gave-away"
+      }
+
+      "have the method POST" in {
+        form.attr("method") shouldEqual "POST"
+      }
+
+      "have an input for the amount" which {
+
+        lazy val input = doc.select("#amount")
+
+        "has a label" which {
+
+          lazy val label = doc.select("label")
+
+          s"has the text ${messages.title}" in {
+            label.select("div > span").text() shouldEqual messages.title
+          }
+
+          "has the class visually hidden" in {
+            label.select("div > span").hasClass("visuallyhidden") shouldEqual true
+          }
+
+          "is tied to the input field" in {
+            label.attr("for") shouldEqual "amount"
+          }
+        }
+
+        "renders in input tags" in {
+          input.is("input") shouldEqual true
+        }
+
+        "has the field name as 'amount' to bind correctly to the form" in {
+
+        }
+      }
+
+      "has a continue button" which {
+
+        lazy val button = doc.select("#continue-button")
+
+        "renders as button tags" in {
+          button.is("button") shouldEqual true
+        }
+
+        "has type equal to 'submit'" in {
+          button.attr("type") shouldEqual "submit"
+        }
+
+        "has class of button" in {
+          button.hasClass("button") shouldEqual true
+        }
+
+        s"has the text ${MessageLookup.calcBaseContinue}" in {
+          button.text() shouldEqual MessageLookup.calcBaseContinue
+        }
+      }
     }
+
+
+
+  }
 
 
 

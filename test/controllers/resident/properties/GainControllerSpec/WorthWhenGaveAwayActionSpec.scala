@@ -80,9 +80,9 @@ class WorthWhenGaveAwayActionSpec extends UnitSpec with WithFakeApplication with
       status(result) shouldBe 200
     }
 
-    s"return some html with title of ${MessageLookup.propertiesWorthWhenGaveAway.question}" in {
+    s"return some html with title of ${MessageLookup.Resident.Properties.propertiesWorthWhenGaveAway.title}" in {
       contentType(result) shouldBe Some("text/html")
-      Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.propertiesWorthWhenGaveAway.question
+      Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.Resident.Properties.propertiesWorthWhenGaveAway.title
     }
   }
 
@@ -101,8 +101,11 @@ class WorthWhenGaveAwayActionSpec extends UnitSpec with WithFakeApplication with
     lazy val request = fakeRequestToPOSTWithSession(("amount", "100"))
     lazy val result = target.submitWorthWhenGaveAway(request)
 
-    "re-direct to the disposal Costs page when supplied with a valid form" in {
+    "re-direct to the disposal Costs page with a status of 303" in {
       status(result) shouldEqual 303
+    }
+
+    "re-direct to the disposal Costs page when supplied with a valid form" in {
       redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/disposal-costs")
     }
   }
@@ -112,9 +115,12 @@ class WorthWhenGaveAwayActionSpec extends UnitSpec with WithFakeApplication with
     lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
     lazy val result = target.submitWorthWhenGaveAway(request)
 
-    "render the worth when gave away page when supplied with an invalid form" in {
+    "render with a status of 400" in {
       status(result) shouldEqual 400
-      Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.propertiesWorthWhenGaveAway.title
+    }
+
+    "render the worth when gave away page when supplied with an invalid form" in {
+      Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.Resident.Properties.propertiesWorthWhenGaveAway.title
     }
   }
 }

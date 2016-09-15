@@ -46,6 +46,10 @@ object MessageLookup {
 
       }
 
+      object propertiesWorthWhenGaveAway {
+        val title = "What was the property worth when you gave it away?"
+      }
+
     }
 
   }
@@ -118,6 +122,15 @@ object MessageLookup {
     val title = "How much did you pay in costs when you stopped owning the property?"
     val pageHeading = "How much did you pay in costs when you stopped owning the property?"
     val helpText = "Costs include agent fees, legal fees and surveys"
+  }
+
+  //How Became Owner messages
+  object howBecameOwner {
+    val title = "How did you become the property owner?"
+    val errorMandatory = "Tell us how you became the property owner"
+    val bought = "Bought it"
+    val gifted = "Got it as a gift"
+    val inherited = "Inherited it"
   }
 
   //Acquisition Value messages
@@ -386,10 +399,8 @@ object MessageLookup {
   object propertiesSellOrGiveAway {
     val title = "Did you sell the property or give it away?"
     val errorMandatory = "Tell us if you sold the property or gave it away"
+    val sold = "Sold it"
+    val gift = "Gave it away"
   }
 
-  object propertiesWorthWhenGaveAway {
-    val title = "What was the property worth when you gave it away?"
-    val question = "What was the property worth when you gave it away?"
-  }
 }

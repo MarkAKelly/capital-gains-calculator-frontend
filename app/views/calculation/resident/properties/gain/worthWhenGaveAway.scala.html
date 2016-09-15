@@ -15,11 +15,11 @@ navTitle = ""
 
 @errorSummary(worthWhenGaveAwayForm, "amount")
 
-<h1 class="heading-large">@Messages("calc.resident.properties.worthWhenGaveAway.question")</h1>
+<h1 class="heading-large">@Messages("calc.resident.properties.worthWhenGaveAway.title")</h1>
 
 @form(action = postAction){
 
-@formInputMoney(worthWhenGaveAwayForm, "amount", Messages("calc.resident.properties.worthWhenGaveAway.question"), hideLabel = true)
+@formInputMoney(worthWhenGaveAwayForm, "amount", Messages("calc.resident.properties.worthWhenGaveAway.title"), hideLabel = true)
 
 <button id="continue-button" class="button" type="submit">@Messages("calc.base.continue")</button>
 
