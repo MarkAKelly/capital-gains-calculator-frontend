@@ -40,8 +40,9 @@ import forms.resident.properties.SellForLessForm._
 import play.api.data.Form
 import forms.resident.properties.SellOrGiveAwayForm._
 import forms.resident.properties.HowBecameOwnerForm._
+import forms.resident.properties.WorthWhenInheritedForm._
 import models.resident._
-import models.resident.properties.{HowBecameOwnerModel, ImprovementsModel, SellOrGiveAwayModel, SellForLessModel, PropertyWorthWhenSoldModel}
+import models.resident.properties._
 import play.api.i18n.Messages
 
 object GainController extends GainController {
@@ -263,7 +264,28 @@ trait GainController extends FeatureLock {
   val boughtForLessThanWorth = TODO
 
   //################# Worth When Inherited Actions ########################
-  val worthWhenInherited = TODO
+  val worthWhenInherited = FeatureLockForRTT.async {implicit request =>
+    val backLink = Some(controllers.resident.properties.routes.GainController.howBecameOwner().url)
+    val postAction = controllers.resident.properties.routes.GainController.submitWorthWhenInherited()
+
+    calcConnector.fetchAndGetFormData[WorthWhenInheritedModel](keystoreKeys.worthWhenInherited).map {
+      case Some(data) => Ok(views.worthWhenInherited(worthWhenInheritedForm.fill(data), backLink, homeLink, postAction))
+      case _ => Ok(views.worthWhenInherited(worthWhenInheritedForm, backLink, homeLink, postAction))
+    }
+  }
+
+  val submitWorthWhenInherited = FeatureLockForRTT.async { implicit request =>
+    val backLink = Some(controllers.resident.properties.routes.GainController.howBecameOwner().url)
+    val postAction = controllers.resident.properties.routes.GainController.submitWorthWhenInherited()
+
+    worthWhenInheritedForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.worthWhenInherited(errors, backLink, homeLink, postAction))),
+      success => {
+        calcConnector.saveFormData(keystoreKeys.worthWhenInherited, success)
+        Future.successful(Redirect(routes.GainController.acquisitionCosts()))
+      }
+    )
+  }
 
   //################# Worth When Gifted Actions ########################
   val worthWhenGifted = TODO
