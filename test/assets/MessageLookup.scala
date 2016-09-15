@@ -30,6 +30,29 @@ object MessageLookup {
   val maxNumericExceededStart = "Enter an amount that's £"
   val maxNumericExceededEnd = "or less"
 
+  //########################################################################################
+  //These nested objects have been created in anticipation of the Tech-Debt to refactor
+  // the message lookup and add the non-resident messages.  Any new added pages should be added
+  // to the right place in this object.
+
+  object Resident {
+
+    object Properties {
+
+      object PropertyWorthWhenSold {
+
+        val title = "What was the property worth when you sold it?"
+        val paragraphText = "You can use a valuation from a surveyor or a property website."
+
+      }
+
+    }
+
+  }
+
+
+  //########################################################################################
+
   object errorMessages {
     val mandatoryAmount = "Enter an amount"
     val minimumAmount = "Enter an amount that's £0 or more"
