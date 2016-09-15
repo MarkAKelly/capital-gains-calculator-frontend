@@ -12,6 +12,8 @@
     navTitle = Messages("calc.base.resident.properties.home")
     ) {
 
+    @errorSummary(howBecameOwnerForm, "gainedBy")
+
     <h1 class="heading-large">@Messages("calc.resident.howBecameOwner.title")</h1>
 
     @form(action = postAction) {

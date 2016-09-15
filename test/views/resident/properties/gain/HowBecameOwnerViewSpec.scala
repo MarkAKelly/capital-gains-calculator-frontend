@@ -137,4 +137,21 @@ class HowBecameOwnerViewSpec extends UnitSpec with WithFakeApplication with Fake
       doc.select("label[for=gainedBy-gifted]").attr("class") shouldBe "block-label selected"
     }
   }
+
+  "howBecameOwner view with mandatory input erros" should {
+    val backLink = Some("back-link")
+    val homeLink = "home-link"
+    val postAction = new Call("POST", "post-action")
+    val form = howBecameOwnerForm.bind(Map(("gainedBy", "")))
+    lazy val view = views.howBecameOwner(form, backLink, homeLink, postAction)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "display an error summary message for the amount" in {
+      doc.body.select("#gainedBy-error-summary").size shouldBe 1
+    }
+
+    "display an error message for the input" in {
+      doc.body.select(".form-group .error-notification").size shouldBe 1
+    }
+  }
 }

@@ -91,7 +91,7 @@ class SellOrGiveAwayViewSpec extends UnitSpec with WithFakeApplication with Fake
     }
   }
 
-  "Losses Brought Forward view with pre-selected value of Sold" should {
+  "Sell Or Give Away view with pre-selected value of Sold" should {
     val backLink = Some("/calculate-your-capital-gains/resident/properties/disposal-date")
     val homeLink = "homeLink"
     val call = new Call("POST", "postAction")
@@ -104,7 +104,7 @@ class SellOrGiveAwayViewSpec extends UnitSpec with WithFakeApplication with Fake
     }
   }
 
-  "Losses Brought Forward view with pre-selected value of Given" should {
+  "Sell Or Give Away view with pre-selected value of Given" should {
     val backLink = Some("/calculate-your-capital-gains/resident/properties/disposal-date")
     val homeLink = "homeLink"
     val call = new Call("POST", "postAction")
@@ -117,7 +117,7 @@ class SellOrGiveAwayViewSpec extends UnitSpec with WithFakeApplication with Fake
     }
   }
 
-  "The Private Residence Relief View with form with errors" which {
+  "The Sell Or Give Away View with form with errors" which {
 
     "is due to mandatory field error" should {
       val backLink = Some("/calculate-your-capital-gains/resident/properties/disposal-date")
