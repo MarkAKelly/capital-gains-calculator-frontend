@@ -34,6 +34,16 @@ GET     /worth-when-sold                 controllers.resident.properties.GainCon
 GET     /disposal-costs                   controllers.resident.properties.GainController.disposalCosts
 POST    /disposal-costs                   controllers.resident.properties.GainController.submitDisposalCosts
 
+#Owner Before April Nineteen Eighty Two Routes
+GET     /owner-before-april               controllers.resident.properties.GainController.ownerBeforeAprilNineteenEightyTwo
+POST    /owner-before-april               controllers.resident.properties.GainController.submitOwnerBeforeAprilNineteenEightyTwo
+
+#How Became Owner Routes
+GET     /how-became-owner                 controllers.resident.properties.GainController.howBecameOwner
+
+#Property Worth on 31/03/1982 Routes
+GET     /property-worth-in-may            controllers.resident.properties.GainController.propertyWorthInMayEightyTwo
+
 #Acquisition Value or Market Value Routes
 GET     /acquisition-value                controllers.resident.properties.GainController.acquisitionValue
 POST    /acquisition-value                controllers.resident.properties.GainController.submitAcquisitionValue

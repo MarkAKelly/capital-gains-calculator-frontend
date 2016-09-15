@@ -36,10 +36,12 @@ import forms.resident.AcquisitionValueForm._
 import forms.resident.AcquisitionCostsForm._
 import forms.resident.properties.ImprovementsForm._
 import forms.resident.properties.SellForLessForm._
+import forms.resident.properties.gain.OwnerBeforeAprilForm._
 import play.api.data.Form
 import forms.resident.properties.SellOrGiveAwayForm._
 import models.resident._
 import models.resident.properties.{ImprovementsModel, SellOrGiveAwayModel,SellForLessModel}
+import models.resident.properties.gain.OwnerBeforeAprilModel
 import play.api.i18n.Messages
 
 object GainController extends GainController {
@@ -209,6 +211,39 @@ trait GainController extends FeatureLock {
         Future.successful(Redirect(routes.GainController.acquisitionValue()))}
     )
   }
+
+  //################# Disposal Costs Actions ########################
+  val ownerBeforeAprilNineteenEightyTwo = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[OwnerBeforeAprilModel](keystoreKeys.ownerBeforeAprilNineteenEightyTwo).map {
+      case Some(data) => Ok(views.ownerBeforeApril(ownerBeforeAprilForm.fill(data)))
+      case None => Ok(views.ownerBeforeApril(ownerBeforeAprilForm))
+    }
+  }
+
+  val submitOwnerBeforeAprilNineteenEightyTwo = FeatureLockForRTT.async { implicit request =>
+
+    def errorAction(errors: Form[OwnerBeforeAprilModel]) = Future.successful(BadRequest(views.ownerBeforeApril(errors)))
+
+    def routeRequest(model: OwnerBeforeAprilModel) = {
+      if (model.ownedBeforeAprilNineteenEightyTwo) Future.successful(Redirect(routes.GainController.propertyWorthInMayEightyTwo()))
+      else Future.successful(Redirect(routes.GainController.howBecameOwner()))
+    }
+
+    def successAction(model: OwnerBeforeAprilModel) = {
+      for {
+        save <- calcConnector.saveFormData(keystoreKeys.ownerBeforeAprilNineteenEightyTwo, model)
+        route <- routeRequest(model)
+      } yield route
+    }
+
+    ownerBeforeAprilForm.bindFromRequest().fold(errorAction, successAction)
+  }
+
+  //################# How Became Owner Actions ########################
+  val howBecameOwner = TODO
+
+  //################# Property Worth on 31/03/1982 Actions ########################
+  val propertyWorthInMayEightyTwo = TODO
 
   //################# Acquisition Value Actions ########################
   val acquisitionValue = FeatureLockForRTT.async { implicit request =>

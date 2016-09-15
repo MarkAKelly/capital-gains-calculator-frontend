@@ -98,8 +98,15 @@ class OwnerBeforeAprilViewSpec extends UnitSpec with WithFakeApplication with Fa
 
     "have a set of radio inputs" which {
 
-      "are surrounded in a div with class form-group" in {
-        doc.select("div#radio-input").hasClass("form-group") shouldEqual true
+      "are surrounded in a fieldset" which {
+
+        "has the class form-group" in {
+          doc.select("#ownedBeforeAprilNineteenEightyTwo").hasClass("form-group") shouldEqual true
+        }
+
+        "has the class inline" in {
+          doc.select("#ownedBeforeAprilNineteenEightyTwo").hasClass("inline") shouldEqual true
+        }
       }
 
       "for the option 'Yes'" should {
@@ -210,7 +217,7 @@ class OwnerBeforeAprilViewSpec extends UnitSpec with WithFakeApplication with Fa
   }
 
   "ownedBeforeAprilNineteenEightyTwo view with a filled form" which {
-    
+
     "for the option 'Yes'" should {
       lazy val view = views.ownerBeforeApril(ownerBeforeAprilForm.fill(OwnerBeforeAprilModel(true)))(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)

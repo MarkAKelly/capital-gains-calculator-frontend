@@ -89,6 +89,24 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
+  "The URL for the submit disposal costs action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/disposal-costs" in {
+      GainController.submitDisposalCosts().url shouldEqual "/calculate-your-capital-gains/resident/properties/disposal-costs"
+    }
+  }
+
+  "The URL for the ownedBeforeAprilNineteenEightyTwo action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/disposal-costs" in {
+      GainController.ownerBeforeAprilNineteenEightyTwo().url shouldEqual "/calculate-your-capital-gains/resident/properties/owner-before-april"
+    }
+  }
+
+  "The URL for the submit ownedBeforeAprilNineteenEightyTwo action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/owned-before" in {
+      GainController.submitOwnerBeforeAprilNineteenEightyTwo().url shouldEqual "/calculate-your-capital-gains/resident/properties/owner-before-april"
+    }
+  }
+
   "The URL for the acquisition costs action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/acquisition-costs" in {
       GainController.acquisitionCosts().url shouldEqual "/calculate-your-capital-gains/resident/properties/acquisition-costs"
@@ -104,12 +122,6 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
   "The URL for the improvements Action" should {
     s"be equal to /calculate-your-capital-gains/resident/properties/improvements" in {
       GainController.improvements().url shouldEqual "/calculate-your-capital-gains/resident/properties/improvements"
-    }
-  }
-
-  "The URL for the submit disposal costs action" should {
-    "be equal to /calculate-your-capital-gains/resident/properties/disposal-costs" in {
-      GainController.disposalCosts().url shouldEqual "/calculate-your-capital-gains/resident/properties/disposal-costs"
     }
   }
 
