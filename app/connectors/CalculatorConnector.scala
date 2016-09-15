@@ -196,6 +196,7 @@ trait CalculatorConnector {
     val acquisitionCosts = fetchAndGetFormData[resident.AcquisitionCostsModel](ResidentPropertyKeys.acquisitionCosts).map(_.get.amount)
     val disposalCosts = fetchAndGetFormData[resident.DisposalCostsModel](ResidentPropertyKeys.disposalCosts).map(_.get.amount)
     val improvements = fetchAndGetFormData[properties.ImprovementsModel](ResidentPropertyKeys.improvements).map(_.get.amount)
+    val givenAway = fetchAndGetFormData[properties.SellOrGiveAwayModel](ResidentPropertyKeys.sellOrGiveAway).map(_.get.givenAway)
 
     for {
       acquisitionValue <- acquisitionValue
@@ -204,13 +205,15 @@ trait CalculatorConnector {
       acquisitionCosts <- acquisitionCosts
       disposalCosts <- disposalCosts
       improvements <- improvements
+      givenAway <- givenAway
     } yield properties.YourAnswersSummaryModel(
       disposalDate,
       disposalValue,
       disposalCosts,
       acquisitionValue,
       acquisitionCosts,
-      improvements
+      improvements,
+      givenAway
     )
   }
 

@@ -36,7 +36,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
-      BigDecimal(30000))
+      BigDecimal(30000),
+      true)
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -236,6 +237,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         }
       }
 
+      "has an option output row for sell or give away" which {
+
+        s"should have the question text '${commonMessages.propertiesSellOrGiveAway.title}'" in {
+          doc.select("#sellOrGiveAway-question").text shouldBe commonMessages.propertiesSellOrGiveAway.title
+        }
+
+        "should have the value 'Gave it away'" in {
+          doc.select("#sellOrGiveAway-option span.bold-medium").text shouldBe "Gave it away"
+        }
+      }
+
       "has a numeric output row for the Disposal Value" which {
 
         s"should have the question text '${commonMessages.disposalValue.question}'" in {
@@ -389,7 +401,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
-      BigDecimal(30000))
+      BigDecimal(30000),
+      false)
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -441,6 +454,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         "include a value for Reliefs of £30,000" in {
           doc.select("#deductions-amount").text should include(s"${messages.lettingReliefsUsed} £30,000")
         }
+      }
+    }
+
+    "has an option output row for sell or give away" which {
+
+      s"should have the question text '${commonMessages.propertiesSellOrGiveAway.title}'" in {
+        doc.select("#sellOrGiveAway-question").text shouldBe commonMessages.propertiesSellOrGiveAway.title
+      }
+
+      "should have the value 'Sold it'" in {
+        doc.select("#sellOrGiveAway-option span.bold-medium").text shouldBe "Sold it"
       }
     }
 
