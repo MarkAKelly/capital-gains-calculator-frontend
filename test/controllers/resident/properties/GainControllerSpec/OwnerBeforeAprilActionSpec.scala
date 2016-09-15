@@ -33,9 +33,6 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
-/**
-  * Created by david on 15/09/16.
-  */
 class OwnerBeforeAprilActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
   def setupTarget(getData: Option[OwnerBeforeAprilModel]): GainController = {
@@ -100,42 +97,40 @@ class OwnerBeforeAprilActionSpec extends UnitSpec with WithFakeApplication with 
 
   "Calling .submitOwnerBeforeAprilNineteenEightyTwo from the resident GainCalculator" when {
 
-    //Un-comment these when the pages and routes are actually added.
+    "a valid form with the answer 'Yes' is submitted" should {
 
-//    "a valid form with the answer 'Yes' is submitted" should {
-//
-//      lazy val target = setupTarget(None)
-//      lazy val request = fakeRequestToPOSTWithSession(("ownerBeforeAprilNineteenEightyTwo", "Yes"))
-//      lazy val result = target.submitOwnerBeforeAprilNineteenEightyTwo(request)
-//
-//      "return a status of 303" in {
-//        status(result) shouldBe 303
-//      }
-//
-//      "redirect to the worth when sold page" in {
-//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/worth-on-march-thirty-first")
-//      }
-//    }
-//
-//    "a valid form with the answer 'No' is submitted" should {
-//
-//      lazy val target = setupTarget(None)
-//      lazy val request = fakeRequestToPOSTWithSession(("ownerBeforeAprilNineteenEightyTwo", "No"))
-//      lazy val result = target.submitOwnerBeforeAprilNineteenEightyTwo(request)
-//
-//      "return a status of 303" in {
-//        status(result) shouldBe 303
-//      }
-//
-//      "redirect to the disposal value page" in {
-//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/how-became-owner")
-//      }
-//    }
+      lazy val target = setupTarget(None)
+      lazy val request = fakeRequestToPOSTWithSession(("ownedBeforeAprilNineteenEightyTwo", "Yes"))
+      lazy val result = target.submitOwnerBeforeAprilNineteenEightyTwo(request)
+
+      "return a status of 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the worth on 31/03/1982 sold page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/property-worth-in-may")
+      }
+    }
+
+    "a valid form with the answer 'No' is submitted" should {
+
+      lazy val target = setupTarget(None)
+      lazy val request = fakeRequestToPOSTWithSession(("ownedBeforeAprilNineteenEightyTwo", "No"))
+      lazy val result = target.submitOwnerBeforeAprilNineteenEightyTwo(request)
+
+      "return a status of 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the how did you become the owner page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/how-became-owner")
+      }
+    }
 
     "an invalid form with the answer '' is submitted" should {
 
       lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("ownerBeforeAprilNineteenEightyTwo", ""))
+      lazy val request = fakeRequestToPOSTWithSession(("ownedBeforeAprilNineteenEightyTwo", ""))
       lazy val result = target.submitOwnerBeforeAprilNineteenEightyTwo(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
