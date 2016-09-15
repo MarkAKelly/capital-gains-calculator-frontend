@@ -39,9 +39,11 @@ import forms.resident.properties.PropertyWorthWhenSoldForm._
 import forms.resident.properties.SellForLessForm._
 import play.api.data.Form
 import forms.resident.properties.SellOrGiveAwayForm._
+import forms.resident.properties.WorthWhenGaveAwayForm._
 import forms.resident.properties.HowBecameOwnerForm._
 import models.resident._
-import models.resident.properties.{HowBecameOwnerModel, ImprovementsModel, SellOrGiveAwayModel, SellForLessModel, PropertyWorthWhenSoldModel}
+import models.resident.properties.{HowBecameOwnerModel, ImprovementsModel, SellOrGiveAwayModel, SellForLessModel, PropertyWorthWhenSoldModel, WorthWhenGaveAwayModel}
+
 import play.api.i18n.Messages
 
 object GainController extends GainController {
@@ -140,6 +142,29 @@ trait GainController extends FeatureLock {
     }
   }
 
+
+  //################# Worth When Gave Away Actions ############################
+
+  private val worthWhenGaveAwayPostAction = controllers.resident.properties.routes.GainController.submitWorthWhenGaveAway()
+  private val worthWhenGaveAwayBackLink = Some(controllers.resident.properties.routes.GainController.whoDidYouGiveItTo().toString)
+
+  val worthWhenGaveAway = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[WorthWhenGaveAwayModel](keystoreKeys.worthWhenGaveAway).map {
+      case Some(data) => Ok(views.worthWhenGaveAway(worthWhenGaveAwayForm.fill(data), worthWhenGaveAwayBackLink, homeLink, worthWhenGaveAwayPostAction))
+      case None => Ok(views.worthWhenGaveAway(worthWhenGaveAwayForm, worthWhenGaveAwayBackLink, homeLink, worthWhenGaveAwayPostAction))
+    }
+  }
+
+  val submitWorthWhenGaveAway = FeatureLockForRTT.async { implicit request =>
+    worthWhenGaveAwayForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.worthWhenGaveAway(errors, worthWhenGaveAwayBackLink, homeLink, worthWhenGaveAwayPostAction))),
+      success => {
+        calcConnector.saveFormData[WorthWhenGaveAwayModel](keystoreKeys.worthWhenGaveAway, success)
+        Future.successful(Redirect(routes.GainController.disposalCosts()))
+      }
+    )
+  }
+
   //############## Sell for Less Actions ##################
     val sellForLess = FeatureLockForRTT.async {implicit request =>
 
@@ -172,6 +197,7 @@ trait GainController extends FeatureLock {
     }
 
     sellForLessForm.bindFromRequest().fold(errorAction, successAction)
+
   }
 
   //################ Disposal Value Actions ######################

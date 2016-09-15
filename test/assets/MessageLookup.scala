@@ -46,6 +46,10 @@ object MessageLookup {
 
       }
 
+      object propertiesWorthWhenGaveAway {
+        val title = "What was the property worth when you gave it away?"
+      }
+
     }
 
   }
@@ -398,4 +402,5 @@ object MessageLookup {
     val sold = "Sold it"
     val gift = "Gave it away"
   }
+
 }
