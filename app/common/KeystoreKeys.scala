@@ -70,6 +70,7 @@ object KeystoreKeys {
     val propertyLivedIn = "res:property:propertyLivedIn"
     val sellForLess = "res:property:sellForLess"
     val sellOrGiveAway = "res:property:sellOrGiveAway"
+    val worthWhenGaveAway = "res:property:worthWhenGaveAway"
   }
 
   object ResidentShareKeys {

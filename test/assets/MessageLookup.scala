@@ -47,9 +47,14 @@ object MessageLookup {
         val paragraphText = "You can use a valuation from a surveyor or a property website."
 
       }
+      
       object ownerBeforeAprilNineteenEightyTwo {
         val title = "Did you become the property owner before 1 April 1982?"
         val errorSelectAnOption = "Tell us if you became the property owner before 1 April 1982"
+      }
+
+      object propertiesWorthWhenGaveAway {
+        val title = "What was the property worth when you gave it away?"
       }
     }
   }
@@ -402,4 +407,5 @@ object MessageLookup {
     val sold = "Sold it"
     val gift = "Gave it away"
   }
+
 }

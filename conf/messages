@@ -333,6 +333,9 @@ calc.resident.sellOrGiveAway.errors.mandatory = Tell us if you sold the property
 calc.resident.sellOrGiveAway.given = Gave it away
 calc.resident.sellOrGiveAway.sold = Sold it
 
+##Worth When Gave Away messages
+calc.resident.properties.worthWhenGaveAway.title = What was the property worth when you gave it away?
+
 ## Disposal Value messages
 calc.resident.disposal.value.title = How much did you sell the property for?
 calc.resident.disposal.value.question = How much did you sell the property for?
