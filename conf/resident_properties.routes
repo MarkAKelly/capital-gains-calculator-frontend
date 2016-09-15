@@ -19,6 +19,10 @@ GET     /sell-for-less                    controllers.resident.properties.GainCo
 #Who Did You Give It To Routes
 GET     /who-did-you-give-it-to           controllers.resident.properties.GainController.whoDidYouGiveItTo
 
+#Worth When Gave Away Routes
+GET     /worth-when-gave-away             controllers.resident.properties.GainController.worthWhenGaveAway
+POST    /worth-when-gave-away             controllers.resident.properties.GainController.submitWorthWhenGaveAway
+
 #Disposal Value or Market Value Routes
 GET     /disposal-value                   controllers.resident.properties.GainController.disposalValue
 POST    /disposal-value                   controllers.resident.properties.GainController.submitDisposalValue
@@ -35,8 +39,12 @@ POST    /property-worth-when-sold         controllers.resident.properties.GainCo
 GET     /disposal-costs                   controllers.resident.properties.GainController.disposalCosts
 POST    /disposal-costs                   controllers.resident.properties.GainController.submitDisposalCosts
 
-#Owner Before Routes
-GET     /owner-before                     controllers.resident.properties.GainController.ownerBefore
+#Owner Before April Nineteen Eighty Two Routes
+GET     /owner-before-april               controllers.resident.properties.GainController.ownerBeforeAprilNineteenEightyTwo
+POST    /owner-before-april               controllers.resident.properties.GainController.submitOwnerBeforeAprilNineteenEightyTwo
+
+#Property Worth on 31/03/1982 Routes
+GET     /property-worth-in-may            controllers.resident.properties.GainController.propertyWorthInMayEightyTwo
 
 #How Became Owner Routes
 GET     /how-became-owner                 controllers.resident.properties.GainController.howBecameOwner

@@ -17,39 +17,40 @@
 package views.resident.properties.gain
 
 import assets.MessageLookup
-import assets.MessageLookup.Resident.Properties.{PropertyWorthWhenSold => messages}
+import assets.MessageLookup.Resident.Properties.{propertiesWorthWhenGaveAway => messages}
 import controllers.helpers.FakeRequestHelper
-import forms.resident.properties.gain.PropertyWorthWhenSoldForm._
+import forms.resident.properties.WorthWhenGaveAwayForm._
+import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{gain => views}
-import org.jsoup.Jsoup
+import controllers.resident.properties.routes
 
-class PropertyWorthWhenSoldViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class WorthWhenGaveAwayViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "The Property Worth When Sold View when supplied with an empty form" should {
+  case class FakePOST(value: String) {
+    lazy val request = fakeRequestToPOSTWithSession(("amount", value))
+    lazy val form = worthWhenGaveAwayForm.bind(Map(("amount", value)))
+    lazy val backLink = Some(controllers.resident.properties.routes.GainController.whoDidYouGiveItTo().toString())
+    lazy val view = views.worthWhenGaveAway(worthWhenGaveAwayForm, backLink, "home-link", routes.GainController.submitWorthWhenGaveAway())(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+  }
 
-    lazy val view = views.propertyWorthWhenSold(propertyWorthWhenSoldForm)(fakeRequest)
+  "Worth when gave away View" should {
+
+    lazy val backLink = Some(controllers.resident.properties.routes.GainController.whoDidYouGiveItTo().toString())
+    lazy val view = views.worthWhenGaveAway(worthWhenGaveAwayForm, backLink, "home-link", routes.GainController.submitWorthWhenGaveAway())(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
-    "have a charset of UTF-8" in {
+    "have charset UTF-8" in {
       doc.charset.toString shouldBe "UTF-8"
     }
 
-    s"have a title of ${messages.title}" in {
-      doc.title shouldBe messages.title
+    s"have the title of the page ${messages.title}" in {
+      doc.title shouldEqual messages.title
     }
 
-    "have a back link" which {
-
-      lazy val backLink = doc.select("#back-link")
-
-      s"should have the text ${MessageLookup.calcBaseBack}" in {
-        backLink.text shouldEqual MessageLookup.calcBaseBack
-      }
-
-      "should link to the Did you sell it for less than it was worth page." in {
-        backLink.attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/sell-for-less"
-      }
+    s"have a back link to the Who did you give it to Page with text ${MessageLookup.calcBaseBack}" in {
+      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/who-did-you-give-it-to"
     }
 
     "have a H1 tag that" should {
@@ -65,16 +66,13 @@ class PropertyWorthWhenSoldViewSpec extends UnitSpec with WithFakeApplication wi
       }
     }
 
-    s"have text under the heading equal to ${messages.paragraphText}" in {
-      doc.select("#additionalText").text shouldEqual messages.paragraphText
-    }
 
     "have a form that" should {
 
       lazy val form = doc.select("form")
 
-      "have the action /calculate-your-capital-gains/resident/properties/property-worth-when-sold" in {
-        form.attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/property-worth-when-sold"
+      "have the action /calculate-your-capital-gains/resident/properties/worth-when-gave-away" in {
+        form.attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/worth-when-gave-away"
       }
 
       "have the method POST" in {
@@ -132,15 +130,21 @@ class PropertyWorthWhenSoldViewSpec extends UnitSpec with WithFakeApplication wi
         }
       }
     }
+
+
+
   }
 
-  "The Property Worth When Sold View when supplied with a correct form" should {
 
-    val form = propertyWorthWhenSoldForm.bind(Map("amount" -> "100"))
-    lazy val view = views.propertyWorthWhenSold(form)(fakeRequest)
+
+  "Worth When Gave Away View with form without errors" should {
+
+    val form = worthWhenGaveAwayForm.bind(Map("amount" -> "100"))
+    lazy val backLink = Some(controllers.resident.properties.routes.GainController.whoDidYouGiveItTo().toString())
+    lazy val view = views.worthWhenGaveAway(form, backLink, "home-link", routes.GainController.submitWorthWhenGaveAway())(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
-    "display the value of the form in the input" in {
+    "display the value of the form" in {
       doc.body.select("#amount").attr("value") shouldEqual "100"
     }
 
@@ -153,10 +157,11 @@ class PropertyWorthWhenSoldViewSpec extends UnitSpec with WithFakeApplication wi
     }
   }
 
-  "The Property Worth When Sold View when supplied with an incorrect form" should {
+  "Worth When Gave Away View with form with errors" should {
 
-    val form = propertyWorthWhenSoldForm.bind(Map("amount" -> "adsa"))
-    lazy val view = views.propertyWorthWhenSold(form)(fakeRequest)
+    val form = worthWhenGaveAwayForm.bind(Map("amount" -> ""))
+    lazy val backLink = Some(controllers.resident.properties.routes.GainController.whoDidYouGiveItTo().toString())
+    lazy val view = views.worthWhenGaveAway(form, backLink, "home-link", routes.GainController.submitWorthWhenGaveAway())(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {

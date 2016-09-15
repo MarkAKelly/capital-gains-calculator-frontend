@@ -64,7 +64,7 @@ class HowBecameOwnerActionSpec extends UnitSpec with WithFakeApplication with Fa
       }
 
       "have a back link to owner-before" in {
-        doc.body().select("a#back-link").attr("href") shouldBe "/calculate-your-capital-gains/resident/properties/owner-before"
+        doc.body().select("a#back-link").attr("href") shouldBe "/calculate-your-capital-gains/resident/properties/owner-before-april"
       }
 
       "have a home link to 'homeLink'" in {

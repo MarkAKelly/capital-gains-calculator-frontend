@@ -333,6 +333,9 @@ calc.resident.sellOrGiveAway.errors.mandatory = Tell us if you sold the property
 calc.resident.sellOrGiveAway.given = Gave it away
 calc.resident.sellOrGiveAway.sold = Sold it
 
+##Worth When Gave Away messages
+calc.resident.properties.worthWhenGaveAway.title = What was the property worth when you gave it away?
+
 ## Disposal Value messages
 calc.resident.disposal.value.title = How much did you sell the property for?
 calc.resident.disposal.value.question = How much did you sell the property for?
@@ -352,6 +355,11 @@ calc.resident.properties.propertyWorthWhenSold.extraText = You can use a valuati
 calc.resident.disposalCosts.title = How much did you pay in costs when you stopped owning the property?
 calc.resident.disposalCosts.pageHeading = How much did you pay in costs when you stopped owning the property?
 calc.resident.disposalCosts.helpText = Costs include agent fees, legal fees and surveys
+
+
+## Owner Before 1st April 1982 messages
+calc.resident.properties.ownerBeforeApril.title = Did you become the property owner before 1 April 1982?
+calc.resident.properties.ownerBeforeApril.noSelectError = Tell us if you became the property owner before 1 April 1982
 
 ## How Became Owner messages
 calc.resident.howBecameOwner.errors.mandatory = Tell us how you became the property owner

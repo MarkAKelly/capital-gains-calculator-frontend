@@ -18,8 +18,8 @@ package forms.resident.gain
 
 import assets.MessageLookup.errorMessages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import forms.resident.properties.PropertyWorthWhenSoldForm._
-import models.resident.properties.PropertyWorthWhenSoldModel
+import forms.resident.properties.gain.PropertyWorthWhenSoldForm._
+import models.resident.properties.gain.PropertyWorthWhenSoldModel
 
 class PropertyWorthWhenSoldFormSpec extends UnitSpec with WithFakeApplication {
 
