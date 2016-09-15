@@ -256,6 +256,29 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
         }
       }
 
+      "has an option output row for sell or give away" which {
+
+        s"should have the question text '${commonMessages.propertiesSellOrGiveAway.title}'" in {
+          doc.select("#sellOrGiveAway-question").text shouldBe commonMessages.propertiesSellOrGiveAway.title
+        }
+
+        "should have the value 'Gave it away'" in {
+          doc.select("#sellOrGiveAway-option span.bold-medium").text shouldBe "Gave it away"
+        }
+
+        s"should have a change link to ${routes.GainController.sellOrGiveAway().url}" in {
+          doc.select("#sellOrGiveAway-option a").attr("href") shouldBe routes.GainController.sellOrGiveAway().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#sellOrGiveAway-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.propertiesSellOrGiveAway.title}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#sellOrGiveAway-option a span.visuallyhidden").text shouldBe commonMessages.propertiesSellOrGiveAway.title
+        }
+      }
+
       "has a numeric output row for the Disposal Value" which {
 
         s"should have the question text '${commonMessages.disposalValue.question}'" in {
@@ -600,6 +623,29 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
       "Should have the tax rate 18%" in {
         doc.select("#firstBand").text should include("18%")
+      }
+    }
+
+    "has an option output row for sell or give away" which {
+
+      s"should have the question text '${commonMessages.propertiesSellOrGiveAway.title}'" in {
+        doc.select("#sellOrGiveAway-question").text shouldBe commonMessages.propertiesSellOrGiveAway.title
+      }
+
+      "should have the value 'Sold it'" in {
+        doc.select("#sellOrGiveAway-option span.bold-medium").text shouldBe "Sold it"
+      }
+
+      s"should have a change link to ${routes.GainController.sellOrGiveAway().url}" in {
+        doc.select("#sellOrGiveAway-option a").attr("href") shouldBe routes.GainController.sellOrGiveAway().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#sellOrGiveAway-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.propertiesSellOrGiveAway.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#sellOrGiveAway-option a span.visuallyhidden").text shouldBe commonMessages.propertiesSellOrGiveAway.title
       }
     }
 
