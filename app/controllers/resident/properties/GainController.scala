@@ -39,8 +39,9 @@ import forms.resident.properties.PropertyWorthWhenSoldForm._
 import forms.resident.properties.SellForLessForm._
 import play.api.data.Form
 import forms.resident.properties.SellOrGiveAwayForm._
+import forms.resident.properties.HowBecameOwnerForm._
 import models.resident._
-import models.resident.properties.{ImprovementsModel, SellOrGiveAwayModel, SellForLessModel, PropertyWorthWhenSoldModel}
+import models.resident.properties.{HowBecameOwnerModel, ImprovementsModel, SellOrGiveAwayModel, SellForLessModel, PropertyWorthWhenSoldModel}
 import play.api.i18n.Messages
 
 object GainController extends GainController {
@@ -226,6 +227,46 @@ trait GainController extends FeatureLock {
         Future.successful(Redirect(routes.GainController.acquisitionValue()))}
     )
   }
+
+  //################# Owner Before Actions ########################
+  val ownerBefore = TODO
+
+  //################# How Became Owner Actions ########################
+  val howBecameOwner = FeatureLockForRTT.async { implicit request =>
+    val backLink = Some(controllers.resident.properties.routes.GainController.ownerBefore().url)
+    val postAction = controllers.resident.properties.routes.GainController.submitHowBecameOwner()
+
+    calcConnector.fetchAndGetFormData[HowBecameOwnerModel](keystoreKeys.howBecameOwner).map {
+      case Some(data) => Ok(views.howBecameOwner(howBecameOwnerForm.fill(data), backLink, homeLink, postAction))
+      case _ => Ok(views.howBecameOwner(howBecameOwnerForm, backLink, homeLink, postAction))
+    }
+  }
+
+  val submitHowBecameOwner = FeatureLockForRTT.async { implicit request =>
+    val backLink = Some(controllers.resident.properties.routes.GainController.ownerBefore().url)
+    val postAction = controllers.resident.properties.routes.GainController.submitHowBecameOwner()
+
+    howBecameOwnerForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.howBecameOwner(errors, backLink, homeLink, postAction))),
+      success => {
+        calcConnector.saveFormData(keystoreKeys.howBecameOwner, success)
+        success.gainedBy match {
+          case "Gifted" => Future.successful(Redirect(routes.GainController.worthWhenGifted()))
+          case "Inherited" => Future.successful(Redirect(routes.GainController.worthWhenInherited()))
+          case _ => Future.successful(Redirect(routes.GainController.boughtForLessThanWorth()))
+        }
+      }
+    )
+  }
+
+  //################# Brought For Less Than Worth Actions ########################
+  val boughtForLessThanWorth = TODO
+
+  //################# Worth When Inherited Actions ########################
+  val worthWhenInherited = TODO
+
+  //################# Worth When Gifted Actions ########################
+  val worthWhenGifted = TODO
 
   //################# Acquisition Value Actions ########################
   val acquisitionValue = FeatureLockForRTT.async { implicit request =>
