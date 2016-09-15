@@ -57,6 +57,8 @@
 
         <!-- Data Rows-->
         @summaryDateRowHelper("disposalDate",Messages("calc.resident.disposalDate.question"),answers.disposalDate,None)
+        @summaryTextRowHelper("sellOrGiveAway", Messages("calc.resident.sellOrGiveAway.title"), if (answers.givenAway) {Messages("calc.resident.sellOrGiveAway.given")}
+        else {Messages("calc.resident.sellOrGiveAway.sold")}, None)
         @summaryNumericRowHelper("disposalValue",Messages("calc.resident.disposal.value.title"),answers.disposalValue,None)
         @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.disposalCosts.title"),answers.disposalCosts,None)
         @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),answers.acquisitionValue,None)

@@ -18,6 +18,9 @@ package assets
 
 object MessageLookup {
 
+  // TO MOVE
+
+
   //Base messages
   val calcBaseBack = "Back"
   val calcBaseContinue = "Continue"
@@ -29,6 +32,35 @@ object MessageLookup {
   //Common messages
   val maxNumericExceededStart = "Enter an amount that's £"
   val maxNumericExceededEnd = "or less"
+
+  //########################################################################################
+  //These nested objects have been created in anticipation of the Tech-Debt to refactor
+  // the message lookup and add the non-resident messages.  Any new added pages should be added
+  // to the right place in this object.
+
+  object Resident {
+
+    object Properties {
+
+      object PropertyWorthWhenSold {
+        val title = "What was the property worth when you sold it?"
+        val paragraphText = "You can use a valuation from a surveyor or a property website."
+
+      }
+      
+      object ownerBeforeAprilNineteenEightyTwo {
+        val title = "Did you become the property owner before 1 April 1982?"
+        val errorSelectAnOption = "Tell us if you became the property owner before 1 April 1982"
+      }
+
+      object propertiesWorthWhenGaveAway {
+        val title = "What was the property worth when you gave it away?"
+      }
+    }
+  }
+
+
+  //########################################################################################
 
   object errorMessages {
     val mandatoryAmount = "Enter an amount"
@@ -78,6 +110,11 @@ object MessageLookup {
     val charityText = "This is because Capital Gains Tax doesn't apply if you give a property to a charity."
   }
 
+  //############ Sell For Less messages #################//
+  object sellForLess {
+    val title = "Did you sell the property for less than it was worth to help the buyer?"
+  }
+
   //Disposal Value messages
   object disposalValue {
     val title = "How much did you sell the property for?"
@@ -97,6 +134,15 @@ object MessageLookup {
     val title = "How much did you pay in costs when you stopped owning the property?"
     val pageHeading = "How much did you pay in costs when you stopped owning the property?"
     val helpText = "Costs include agent fees, legal fees and surveys"
+  }
+
+  //How Became Owner messages
+  object howBecameOwner {
+    val title = "How did you become the property owner?"
+    val errorMandatory = "Tell us how you became the property owner"
+    val bought = "Bought it"
+    val gifted = "Got it as a gift"
+    val inherited = "Inherited it"
   }
 
   //Acquisition Value messages
@@ -365,5 +411,8 @@ object MessageLookup {
   object propertiesSellOrGiveAway {
     val title = "Did you sell the property or give it away?"
     val errorMandatory = "Tell us if you sold the property or gave it away"
+    val sold = "Sold it"
+    val gift = "Gave it away"
   }
+
 }

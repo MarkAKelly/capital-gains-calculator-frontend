@@ -37,7 +37,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       20,
       30,
       40,
-      50
+      50,
+      true
     )
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
@@ -159,6 +160,29 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
         }
       }
 
+      "has an option output row for sell or give away" which {
+
+        s"should have the question text '${commonMessages.propertiesSellOrGiveAway.title}'" in {
+          doc.select("#sellOrGiveAway-question").text shouldBe commonMessages.propertiesSellOrGiveAway.title
+        }
+
+        "should have the value 'Gave it away'" in {
+          doc.select("#sellOrGiveAway-option span.bold-medium").text shouldBe "Gave it away"
+        }
+
+        s"should have a change link to ${routes.GainController.sellOrGiveAway().url}" in {
+          doc.select("#sellOrGiveAway-option a").attr("href") shouldBe routes.GainController.sellOrGiveAway().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#sellOrGiveAway-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.propertiesSellOrGiveAway.title}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#sellOrGiveAway-option a span.visuallyhidden").text shouldBe commonMessages.propertiesSellOrGiveAway.title
+        }
+      }
+
       "has a numeric output row for the Disposal Value" which {
 
         s"should have the question text '${commonMessages.disposalValue.question}'" in {
@@ -273,7 +297,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       20,
       30,
       40,
-      50
+      50,
+      false
     )
     lazy val view = views.gainSummary(testModel, -2000, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
@@ -289,6 +314,29 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
     s"display the text ${messages.whatToDoNextText}" in {
       doc.select("#whatToDoNextText").text shouldEqual
         s"${messages.whatNextYouCan}${messages.whatNextLink}${commonMessages.calcBaseExternalLink} ${messages.whatNextText}"
+    }
+
+    "has an option output row for sell or give away" which {
+
+      s"should have the question text '${commonMessages.propertiesSellOrGiveAway.title}'" in {
+        doc.select("#sellOrGiveAway-question").text shouldBe commonMessages.propertiesSellOrGiveAway.title
+      }
+
+      "should have the value 'Sold it'" in {
+        doc.select("#sellOrGiveAway-option span.bold-medium").text shouldBe "Sold it"
+      }
+
+      s"should have a change link to ${routes.GainController.sellOrGiveAway().url}" in {
+        doc.select("#sellOrGiveAway-option a").attr("href") shouldBe routes.GainController.sellOrGiveAway().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#sellOrGiveAway-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.propertiesSellOrGiveAway.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#sellOrGiveAway-option a span.visuallyhidden").text shouldBe commonMessages.propertiesSellOrGiveAway.title
+      }
     }
 
     "have a link" which {
@@ -336,7 +384,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       20,
       30,
       40,
-      50
+      50,
+      true
     )
     lazy val view = views.gainSummary(testModel, 0, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
@@ -396,7 +445,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       20,
       30,
       40,
-      50
+      50,
+      false
     )
     lazy val view = views.gainSummary(testModel,-2000, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
@@ -414,7 +464,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       20,
       30,
       40,
-      50
+      50,
+      true
     )
 
     lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")

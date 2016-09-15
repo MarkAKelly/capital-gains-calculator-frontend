@@ -23,7 +23,7 @@ import common.{Dates, TaxDates}
 import config.{AppConfig, ApplicationConfig}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
-import play.api.mvc.{Action, Call, Result}
+import play.api.mvc.{Action, Result}
 import uk.gov.hmrc.play.http.SessionKeys
 
 import scala.concurrent.Future
@@ -35,9 +35,16 @@ import forms.resident.DisposalCostsForm._
 import forms.resident.AcquisitionValueForm._
 import forms.resident.AcquisitionCostsForm._
 import forms.resident.properties.ImprovementsForm._
+import forms.resident.properties.SellForLessForm._
+import forms.resident.properties.gain.OwnerBeforeAprilForm._
+import play.api.data.Form
 import forms.resident.properties.SellOrGiveAwayForm._
+import forms.resident.properties.gain.PropertyWorthWhenSoldForm._
+import models.resident.properties.gain.{OwnerBeforeAprilModel, PropertyWorthWhenSoldModel}
+import forms.resident.properties.WorthWhenGaveAwayForm._
+import forms.resident.properties.HowBecameOwnerForm._
 import models.resident._
-import models.resident.properties.{ImprovementsModel, SellOrGiveAwayModel}
+import models.resident.properties.{HowBecameOwnerModel, ImprovementsModel, SellOrGiveAwayModel, SellForLessModel, WorthWhenGaveAwayModel}
 import play.api.i18n.Messages
 
 object GainController extends GainController {
@@ -114,11 +121,6 @@ trait GainController extends FeatureLock {
     )
   }
 
-  //################ Sell for Less Actions ######################
-  val sellForLess = FeatureLockForRTT.async { implicit request =>
-    TODO.apply(request)
-  }
-
   //################ Who Did You Give It To Actions ######################
   val whoDidYouGiveItTo = FeatureLockForRTT.async { implicit request =>
     TODO.apply(request)
@@ -144,6 +146,64 @@ trait GainController extends FeatureLock {
     }
   }
 
+
+  //################# Worth When Gave Away Actions ############################
+
+  private val worthWhenGaveAwayPostAction = controllers.resident.properties.routes.GainController.submitWorthWhenGaveAway()
+  private val worthWhenGaveAwayBackLink = Some(controllers.resident.properties.routes.GainController.whoDidYouGiveItTo().toString)
+
+  val worthWhenGaveAway = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[WorthWhenGaveAwayModel](keystoreKeys.worthWhenGaveAway).map {
+      case Some(data) => Ok(views.worthWhenGaveAway(worthWhenGaveAwayForm.fill(data), worthWhenGaveAwayBackLink, homeLink, worthWhenGaveAwayPostAction))
+      case None => Ok(views.worthWhenGaveAway(worthWhenGaveAwayForm, worthWhenGaveAwayBackLink, homeLink, worthWhenGaveAwayPostAction))
+    }
+  }
+
+  val submitWorthWhenGaveAway = FeatureLockForRTT.async { implicit request =>
+    worthWhenGaveAwayForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.worthWhenGaveAway(errors, worthWhenGaveAwayBackLink, homeLink, worthWhenGaveAwayPostAction))),
+      success => {
+        calcConnector.saveFormData[WorthWhenGaveAwayModel](keystoreKeys.worthWhenGaveAway, success)
+        Future.successful(Redirect(routes.GainController.disposalCosts()))
+      }
+    )
+  }
+
+  //############## Sell for Less Actions ##################
+    val sellForLess = FeatureLockForRTT.async {implicit request =>
+
+    val backLink = Some(controllers.resident.properties.routes.GainController.sellOrGiveAway().toString)
+
+    calcConnector.fetchAndGetFormData[SellForLessModel](keystoreKeys.sellForLess).map{
+      case Some(data) => Ok(commonViews.properties.gain.sellForLess(sellForLessForm.fill(data), homeLink, backLink))
+      case _ => Ok(commonViews.properties.gain.sellForLess(sellForLessForm, homeLink, backLink))
+    }
+  }
+
+  val submitSellForLess = FeatureLockForRTT.async { implicit request =>
+
+    lazy val backLink = Some(controllers.resident.properties.GainController.sellOrGiveAway().toString())
+
+    def errorAction(errors: Form[SellForLessModel]) = Future.successful(BadRequest(commonViews.properties.gain.sellForLess(
+      errors, homeLink, backLink
+    )))
+
+    def routeRequest(model: SellForLessModel) = {
+      if (model.sellForLess) Future.successful(Redirect(routes.GainController.propertyWorthWhenSold()))
+      else Future.successful(Redirect(routes.GainController.disposalValue()))
+    }
+
+    def successAction(model: SellForLessModel) = {
+      for {
+        save <- calcConnector.saveFormData(keystoreKeys.sellForLess, model)
+        route <- routeRequest(model)
+      } yield route
+    }
+
+    sellForLessForm.bindFromRequest().fold(errorAction, successAction)
+
+  }
+
   //################ Disposal Value Actions ######################
   val disposalValue = FeatureLockForRTT.async { implicit request =>
     calcConnector.fetchAndGetFormData[DisposalValueModel](keystoreKeys.disposalValue).map {
@@ -157,6 +217,25 @@ trait GainController extends FeatureLock {
       errors => Future.successful(BadRequest(views.disposalValue(errors))),
       success => {
         calcConnector.saveFormData[DisposalValueModel](keystoreKeys.disposalValue, success)
+        Future.successful(Redirect(routes.GainController.disposalCosts()))
+      }
+    )
+  }
+
+  //################ Property Worth When Sold Actions ######################
+  val propertyWorthWhenSold = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[PropertyWorthWhenSoldModel](keystoreKeys.propertyWorthWhenSold).map {
+      case Some(data) => Ok(views.propertyWorthWhenSold(propertyWorthWhenSoldForm.fill(data)))
+      case _ => Ok(views.propertyWorthWhenSold(propertyWorthWhenSoldForm))
+    }
+  }
+
+  val submitPropertyWorthWhenSold = FeatureLockForRTT.async { implicit request =>
+
+    propertyWorthWhenSoldForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.propertyWorthWhenSold(errors))),
+      success => {
+        calcConnector.saveFormData(keystoreKeys.propertyWorthWhenSold, success)
         Future.successful(Redirect(routes.GainController.disposalCosts()))
       }
     )
@@ -178,6 +257,73 @@ trait GainController extends FeatureLock {
         Future.successful(Redirect(routes.GainController.acquisitionValue()))}
     )
   }
+
+  //################# Owner Before April Eighty Two Actions ########################
+  val ownerBeforeAprilNineteenEightyTwo = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[OwnerBeforeAprilModel](keystoreKeys.ownerBeforeAprilNineteenEightyTwo).map {
+      case Some(data) => Ok(views.ownerBeforeApril(ownerBeforeAprilForm.fill(data)))
+      case None => Ok(views.ownerBeforeApril(ownerBeforeAprilForm))
+    }
+  }
+
+  val submitOwnerBeforeAprilNineteenEightyTwo = FeatureLockForRTT.async { implicit request =>
+
+    def errorAction(errors: Form[OwnerBeforeAprilModel]) = Future.successful(BadRequest(views.ownerBeforeApril(errors)))
+
+    def routeRequest(model: OwnerBeforeAprilModel) = {
+      if (model.ownedBeforeAprilNineteenEightyTwo) Future.successful(Redirect(routes.GainController.propertyWorthInMayEightyTwo()))
+      else Future.successful(Redirect(routes.GainController.howBecameOwner()))
+    }
+
+    def successAction(model: OwnerBeforeAprilModel) = {
+      for {
+        save <- calcConnector.saveFormData(keystoreKeys.ownerBeforeAprilNineteenEightyTwo, model)
+        route <- routeRequest(model)
+      } yield route
+    }
+
+    ownerBeforeAprilForm.bindFromRequest().fold(errorAction, successAction)
+  }
+
+  //################# Property Worth on 31/03/1982 Actions ########################
+  val propertyWorthInMayEightyTwo = TODO
+
+  //################# How Became Owner Actions ########################
+  val howBecameOwner = FeatureLockForRTT.async { implicit request =>
+    val backLink = Some(controllers.resident.properties.routes.GainController.ownerBeforeAprilNineteenEightyTwo().url)
+    val postAction = controllers.resident.properties.routes.GainController.submitHowBecameOwner()
+
+    calcConnector.fetchAndGetFormData[HowBecameOwnerModel](keystoreKeys.howBecameOwner).map {
+      case Some(data) => Ok(views.howBecameOwner(howBecameOwnerForm.fill(data), backLink, homeLink, postAction))
+      case _ => Ok(views.howBecameOwner(howBecameOwnerForm, backLink, homeLink, postAction))
+    }
+  }
+
+  val submitHowBecameOwner = FeatureLockForRTT.async { implicit request =>
+    val backLink = Some(controllers.resident.properties.routes.GainController.ownerBeforeAprilNineteenEightyTwo().url)
+    val postAction = controllers.resident.properties.routes.GainController.submitHowBecameOwner()
+
+    howBecameOwnerForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.howBecameOwner(errors, backLink, homeLink, postAction))),
+      success => {
+        calcConnector.saveFormData(keystoreKeys.howBecameOwner, success)
+        success.gainedBy match {
+          case "Gifted" => Future.successful(Redirect(routes.GainController.worthWhenGifted()))
+          case "Inherited" => Future.successful(Redirect(routes.GainController.worthWhenInherited()))
+          case _ => Future.successful(Redirect(routes.GainController.boughtForLessThanWorth()))
+        }
+      }
+    )
+  }
+
+  //################# Brought For Less Than Worth Actions ########################
+  val boughtForLessThanWorth = TODO
+
+  //################# Worth When Inherited Actions ########################
+  val worthWhenInherited = TODO
+
+  //################# Worth When Gifted Actions ########################
+  val worthWhenGifted = TODO
 
   //################# Acquisition Value Actions ########################
   val acquisitionValue = FeatureLockForRTT.async { implicit request =>

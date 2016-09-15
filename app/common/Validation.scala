@@ -89,4 +89,12 @@ object Validation {
     case "" => true
     case _ => false
   }
+
+  val howBecameOwnerCheck: String => Boolean = {
+    case "Bought" => true
+    case "Gifted" => true
+    case "Inherited" => true
+    case "" => true
+    case _ => false
+  }
 }

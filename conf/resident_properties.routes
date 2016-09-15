@@ -22,13 +22,45 @@ GET     /who-did-you-give-it-to           controllers.resident.properties.GainCo
 #No Tax to Pay Routes
 GET     /no-tax-to-pay                    controllers.resident.properties.GainController.noTaxToPay
 
+#Worth When Gave Away Routes
+GET     /worth-when-gave-away             controllers.resident.properties.GainController.worthWhenGaveAway
+POST    /worth-when-gave-away             controllers.resident.properties.GainController.submitWorthWhenGaveAway
+
 #Disposal Value or Market Value Routes
 GET     /disposal-value                   controllers.resident.properties.GainController.disposalValue
 POST    /disposal-value                   controllers.resident.properties.GainController.submitDisposalValue
 
+#Sell For Less Routes
+GET     /sell-for-less                    controllers.resident.properties.GainController.sellForLess
+POST    /sell-for-less                    controllers.resident.properties.GainController.submitSellForLess
+
+#Property Worth When Sold Routes
+GET     /property-worth-when-sold         controllers.resident.properties.GainController.propertyWorthWhenSold
+POST    /property-worth-when-sold         controllers.resident.properties.GainController.submitPropertyWorthWhenSold
+
 #Disposal Costs Routes
 GET     /disposal-costs                   controllers.resident.properties.GainController.disposalCosts
 POST    /disposal-costs                   controllers.resident.properties.GainController.submitDisposalCosts
+
+#Owner Before April Nineteen Eighty Two Routes
+GET     /owner-before-april               controllers.resident.properties.GainController.ownerBeforeAprilNineteenEightyTwo
+POST    /owner-before-april               controllers.resident.properties.GainController.submitOwnerBeforeAprilNineteenEightyTwo
+
+#Property Worth on 31/03/1982 Routes
+GET     /property-worth-in-may            controllers.resident.properties.GainController.propertyWorthInMayEightyTwo
+
+#How Became Owner Routes
+GET     /how-became-owner                 controllers.resident.properties.GainController.howBecameOwner
+POST    /how-became-owner                 controllers.resident.properties.GainController.submitHowBecameOwner
+
+#Bought For Less Than Worth Routes
+GET     /bought-for-less-than-worth       controllers.resident.properties.GainController.boughtForLessThanWorth
+
+#Worth When Inherited Routes
+GET     /worth-when-inherited             controllers.resident.properties.GainController.worthWhenInherited
+
+#Worth When Gifted Routes
+GET     /worth-when-gifted                controllers.resident.properties.GainController.worthWhenGifted
 
 #Acquisition Value or Market Value Routes
 GET     /acquisition-value                controllers.resident.properties.GainController.acquisitionValue
