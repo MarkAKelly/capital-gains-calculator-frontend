@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package forms.resident.properties
+package forms.resident.properties.gain
 
 import common.Constants
 import common.Transformers._
 import common.Validation._
-import models.resident.properties.PropertyWorthWhenSoldModel
+import models.resident.properties.gain.PropertyWorthWhenSoldModel
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.Messages

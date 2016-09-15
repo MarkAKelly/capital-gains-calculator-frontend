@@ -18,13 +18,13 @@ package controllers.resident.properties.GainControllerSpec
 
 import assets.MessageLookup
 import controllers.helpers.FakeRequestHelper
-import models.resident.properties.PropertyWorthWhenSoldModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import org.mockito.Matchers
 import config.AppConfig
 import controllers.resident.properties.GainController
+import models.resident.properties.gain.PropertyWorthWhenSoldModel
 import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
 import org.jsoup.Jsoup

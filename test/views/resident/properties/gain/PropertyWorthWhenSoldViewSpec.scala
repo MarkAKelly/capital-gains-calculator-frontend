@@ -19,7 +19,7 @@ package views.resident.properties.gain
 import assets.MessageLookup
 import assets.MessageLookup.Resident.Properties.{PropertyWorthWhenSold => messages}
 import controllers.helpers.FakeRequestHelper
-import forms.resident.properties.PropertyWorthWhenSoldForm._
+import forms.resident.properties.gain.PropertyWorthWhenSoldForm._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{gain => views}
 import org.jsoup.Jsoup

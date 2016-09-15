@@ -35,15 +35,16 @@ import forms.resident.DisposalCostsForm._
 import forms.resident.AcquisitionValueForm._
 import forms.resident.AcquisitionCostsForm._
 import forms.resident.properties.ImprovementsForm._
-import forms.resident.properties.PropertyWorthWhenSoldForm._
 import forms.resident.properties.SellForLessForm._
+import forms.resident.properties.gain.OwnerBeforeAprilForm._
 import play.api.data.Form
 import forms.resident.properties.SellOrGiveAwayForm._
+import forms.resident.properties.gain.PropertyWorthWhenSoldForm._
+import models.resident.properties.gain.{OwnerBeforeAprilModel, PropertyWorthWhenSoldModel}
 import forms.resident.properties.WorthWhenGaveAwayForm._
 import forms.resident.properties.HowBecameOwnerForm._
 import models.resident._
-import models.resident.properties.{HowBecameOwnerModel, ImprovementsModel, SellOrGiveAwayModel, SellForLessModel, PropertyWorthWhenSoldModel, WorthWhenGaveAwayModel}
-
+import models.resident.properties.{HowBecameOwnerModel, ImprovementsModel, SellOrGiveAwayModel, SellForLessModel, WorthWhenGaveAwayModel}
 import play.api.i18n.Messages
 
 object GainController extends GainController {
@@ -254,12 +255,39 @@ trait GainController extends FeatureLock {
     )
   }
 
-  //################# Owner Before Actions ########################
-  val ownerBefore = TODO
+  //################# Owner Before April Eighty Two Actions ########################
+  val ownerBeforeAprilNineteenEightyTwo = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[OwnerBeforeAprilModel](keystoreKeys.ownerBeforeAprilNineteenEightyTwo).map {
+      case Some(data) => Ok(views.ownerBeforeApril(ownerBeforeAprilForm.fill(data)))
+      case None => Ok(views.ownerBeforeApril(ownerBeforeAprilForm))
+    }
+  }
+
+  val submitOwnerBeforeAprilNineteenEightyTwo = FeatureLockForRTT.async { implicit request =>
+
+    def errorAction(errors: Form[OwnerBeforeAprilModel]) = Future.successful(BadRequest(views.ownerBeforeApril(errors)))
+
+    def routeRequest(model: OwnerBeforeAprilModel) = {
+      if (model.ownedBeforeAprilNineteenEightyTwo) Future.successful(Redirect(routes.GainController.propertyWorthInMayEightyTwo()))
+      else Future.successful(Redirect(routes.GainController.howBecameOwner()))
+    }
+
+    def successAction(model: OwnerBeforeAprilModel) = {
+      for {
+        save <- calcConnector.saveFormData(keystoreKeys.ownerBeforeAprilNineteenEightyTwo, model)
+        route <- routeRequest(model)
+      } yield route
+    }
+
+    ownerBeforeAprilForm.bindFromRequest().fold(errorAction, successAction)
+  }
+
+  //################# Property Worth on 31/03/1982 Actions ########################
+  val propertyWorthInMayEightyTwo = TODO
 
   //################# How Became Owner Actions ########################
   val howBecameOwner = FeatureLockForRTT.async { implicit request =>
-    val backLink = Some(controllers.resident.properties.routes.GainController.ownerBefore().url)
+    val backLink = Some(controllers.resident.properties.routes.GainController.ownerBeforeAprilNineteenEightyTwo().url)
     val postAction = controllers.resident.properties.routes.GainController.submitHowBecameOwner()
 
     calcConnector.fetchAndGetFormData[HowBecameOwnerModel](keystoreKeys.howBecameOwner).map {
@@ -269,7 +297,7 @@ trait GainController extends FeatureLock {
   }
 
   val submitHowBecameOwner = FeatureLockForRTT.async { implicit request =>
-    val backLink = Some(controllers.resident.properties.routes.GainController.ownerBefore().url)
+    val backLink = Some(controllers.resident.properties.routes.GainController.ownerBeforeAprilNineteenEightyTwo().url)
     val postAction = controllers.resident.properties.routes.GainController.submitHowBecameOwner()
 
     howBecameOwnerForm.bindFromRequest.fold(
