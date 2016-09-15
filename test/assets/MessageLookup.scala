@@ -77,6 +77,11 @@ object MessageLookup {
     def content(year: String): String = s"You can continue to use it, but we'll use the tax rates from the $year tax year."
   }
 
+  //############ Sell For Less messages #################//
+  object sellForLess {
+    val title = "Did you sell the property for less than it was worth to help the buyer?"
+  }
+
   //Disposal Value messages
   object disposalValue {
     val title = "How much did you sell the property for?"
