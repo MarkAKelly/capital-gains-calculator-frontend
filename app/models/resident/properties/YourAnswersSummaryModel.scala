@@ -28,7 +28,8 @@ case class YourAnswersSummaryModel
   disposalCosts: BigDecimal,
   acquisitionValue: BigDecimal,
   acquisitionCosts: BigDecimal,
-  improvements: BigDecimal
+  improvements: BigDecimal,
+  givenAway: Boolean
 )
 
 object YourAnswersSummaryModel {

@@ -37,7 +37,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       20,
       30,
       40,
-      50
+      50,
+      true
     )
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
@@ -273,7 +274,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       20,
       30,
       40,
-      50
+      50,
+      false
     )
     lazy val view = views.gainSummary(testModel, -2000, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
@@ -336,7 +338,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       20,
       30,
       40,
-      50
+      50,
+      true
     )
     lazy val view = views.gainSummary(testModel, 0, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
@@ -396,7 +399,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       20,
       30,
       40,
-      50
+      50,
+      false
     )
     lazy val view = views.gainSummary(testModel,-2000, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
@@ -414,7 +418,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       20,
       30,
       40,
-      50
+      50,
+      true
     )
 
     lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
