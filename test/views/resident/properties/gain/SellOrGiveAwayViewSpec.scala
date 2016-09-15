@@ -74,8 +74,16 @@ class SellOrGiveAwayViewSpec extends UnitSpec with WithFakeApplication with Fake
       doc.select("input#givenAway-sold").size() shouldBe 1
     }
 
+    s"have a label for sold of ${messages.sold}" in {
+      doc.select("label[for=givenAway-sold]").text() shouldBe messages.sold
+    }
+
     s"have an input field with id gaveAway-given " in {
       doc.select("input#givenAway-given").size() shouldBe 1
+    }
+
+    s"have a label for sold of ${messages.gift}" in {
+      doc.select("label[for=givenAway-given]").text() shouldBe messages.gift
     }
 
     "have a continue button " in {

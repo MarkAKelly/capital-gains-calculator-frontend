@@ -325,6 +325,8 @@ calc.resident.outsideTaxYears.changeDate = Change your date
 ## Sell Or Give Away messages
 calc.resident.sellOrGiveAway.title = Did you sell the property or give it away?
 calc.resident.sellOrGiveAway.errors.mandatory = Tell us if you sold the property or gave it away
+calc.resident.sellOrGiveAway.given = Gave it away
+calc.resident.sellOrGiveAway.sold = Sold it
 
 ## Disposal Value messages
 calc.resident.disposal.value.title = How much did you sell the property for?
@@ -344,6 +346,10 @@ calc.resident.disposalCosts.helpText = Costs include agent fees, legal fees and 
 
 ## How Became Owner messages
 calc.resident.howBecameOwner.errors.mandatory = Tell us how you became the property owner
+calc.resident.howBecameOwner.title = How did you become the property owner?
+calc.resident.howBecameOwner.bought = Bought it
+calc.resident.howBecameOwner.gifted = Got it as a gift
+calc.resident.howBecameOwner.inherited= Inherited it
 
 ## Acquisition Value messages
 calc.resident.acquisitionValue.title = How much did you pay for the property?
