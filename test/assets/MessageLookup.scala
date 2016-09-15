@@ -99,6 +99,12 @@ object MessageLookup {
     val title = "Did you sell the property for less than it was worth to help the buyer?"
   }
 
+  //############ Worth When Inherited messages #################//
+  object worthWhenInherited {
+    val title = "What was the property worth when you inherited it?"
+    val additionalContent = "You can use a valuation from a surveyor or a property website."
+  }
+
   //Disposal Value messages
   object disposalValue {
     val title = "How much did you sell the property for?"
