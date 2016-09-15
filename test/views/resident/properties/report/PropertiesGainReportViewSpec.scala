@@ -129,6 +129,17 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
         }
       }
 
+      "has an option output row for sell or give away" which {
+
+        s"should have the question text '${commonMessages.propertiesSellOrGiveAway.title}'" in {
+          doc.select("#sellOrGiveAway-question").text shouldBe commonMessages.propertiesSellOrGiveAway.title
+        }
+
+        "should have the value 'Gave it away'" in {
+          doc.select("#sellOrGiveAway-option span.bold-medium").text shouldBe "Gave it away"
+        }
+      }
+
       "has a numeric output row for the Disposal Value" which {
 
         s"should have the question text '${commonMessages.disposalValue.question}'" in {
@@ -216,6 +227,17 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
 
     s"have the text ${messages.noticeWarning("2016/17")}" in {
       doc.select("strong.bold-small").text shouldBe messages.noticeWarning("2016/17")
+    }
+
+    "has an option output row for sell or give away" which {
+
+      s"should have the question text '${commonMessages.propertiesSellOrGiveAway.title}'" in {
+        doc.select("#sellOrGiveAway-question").text shouldBe commonMessages.propertiesSellOrGiveAway.title
+      }
+
+      "should have the value 'Sold it'" in {
+        doc.select("#sellOrGiveAway-option span.bold-medium").text shouldBe "Sold it"
+      }
     }
   }
 }

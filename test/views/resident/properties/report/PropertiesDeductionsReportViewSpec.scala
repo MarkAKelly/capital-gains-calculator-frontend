@@ -20,6 +20,7 @@ import assets.MessageLookup.{summaryPage => messages}
 import assets.{MessageLookup => commonMessages}
 import common.Dates
 import controllers.helpers.FakeRequestHelper
+import controllers.resident.properties.routes
 import models.resident._
 import models.resident.properties._
 import org.jsoup.Jsoup
@@ -206,6 +207,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
         "should have the date '10 October 2016'" in {
           doc.select("#disposalDate-date span.bold-medium").text shouldBe "10 October 2016"
+        }
+      }
+
+      "has an option output row for sell or give away" which {
+
+        s"should have the question text '${commonMessages.propertiesSellOrGiveAway.title}'" in {
+          doc.select("#sellOrGiveAway-question").text shouldBe commonMessages.propertiesSellOrGiveAway.title
+        }
+
+        "should have the value 'Gave it away'" in {
+          doc.select("#sellOrGiveAway-option span.bold-medium").text shouldBe "Gave it away"
         }
       }
 
@@ -433,6 +445,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
           "include a value for Loss brought forward of £10,000" in {
             doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYearUsed("2013/14")} £10,000")
           }
+        }
+      }
+
+      "has an option output row for sell or give away" which {
+
+        s"should have the question text '${commonMessages.propertiesSellOrGiveAway.title}'" in {
+          doc.select("#sellOrGiveAway-question").text shouldBe commonMessages.propertiesSellOrGiveAway.title
+        }
+
+        "should have the value 'Sold it'" in {
+          doc.select("#sellOrGiveAway-option span.bold-medium").text shouldBe "Sold it"
         }
       }
 
