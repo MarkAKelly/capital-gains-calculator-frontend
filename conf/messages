@@ -345,6 +345,10 @@ calc.resident.disposal.value.bullet.two.link =someone else you''re connected to
 calc.resident.disposal.value.bullet.three = sold it for less than it’s worth to help the buyer
 calc.resident.disposal.value.bullet.end = You can use a valuation from a surveyor or a property website.
 
+## Property Worth when you sold it messages
+calc.resident.properties.propertyWorthWhenSold.title = What was the property worth when you sold it?
+calc.resident.properties.propertyWorthWhenSold.extraText = You can use a valuation from a surveyor or a property website.
+
 
 ## Disposal Costs messages
 calc.resident.disposalCosts.title = How much did you pay in costs when you stopped owning the property?

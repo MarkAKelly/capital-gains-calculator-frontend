@@ -31,8 +31,9 @@ POST    /disposal-value                   controllers.resident.properties.GainCo
 GET     /sell-for-less                    controllers.resident.properties.GainController.sellForLess
 POST    /sell-for-less                    controllers.resident.properties.GainController.submitSellForLess
 
-#Worth When Sold Routes
-GET     /worth-when-sold                 controllers.resident.properties.GainController.worthWhenSold
+#Property Worth When Sold Routes
+GET     /property-worth-when-sold         controllers.resident.properties.GainController.propertyWorthWhenSold
+POST    /property-worth-when-sold         controllers.resident.properties.GainController.submitPropertyWorthWhenSold
 
 #Disposal Costs Routes
 GET     /disposal-costs                   controllers.resident.properties.GainController.disposalCosts
