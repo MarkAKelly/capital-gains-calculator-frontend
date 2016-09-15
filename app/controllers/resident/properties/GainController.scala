@@ -40,9 +40,10 @@ import forms.resident.properties.gain.OwnerBeforeAprilForm._
 import play.api.data.Form
 import forms.resident.properties.SellOrGiveAwayForm._
 import forms.resident.properties.gain.PropertyWorthWhenSoldForm._
-import models.resident._
-import models.resident.properties.{ImprovementsModel, SellForLessModel, SellOrGiveAwayModel}
 import models.resident.properties.gain.{OwnerBeforeAprilModel, PropertyWorthWhenSoldModel}
+import forms.resident.properties.HowBecameOwnerForm._
+import models.resident._
+import models.resident.properties.{HowBecameOwnerModel, ImprovementsModel, SellOrGiveAwayModel, SellForLessModel}
 import play.api.i18n.Messages
 
 object GainController extends GainController {
@@ -229,7 +230,7 @@ trait GainController extends FeatureLock {
     )
   }
 
-  //################# Disposal Costs Actions ########################
+  //################# Owner Before April Eighty Two Actions ########################
   val ownerBeforeAprilNineteenEightyTwo = FeatureLockForRTT.async { implicit request =>
     calcConnector.fetchAndGetFormData[OwnerBeforeAprilModel](keystoreKeys.ownerBeforeAprilNineteenEightyTwo).map {
       case Some(data) => Ok(views.ownerBeforeApril(ownerBeforeAprilForm.fill(data)))
@@ -256,11 +257,45 @@ trait GainController extends FeatureLock {
     ownerBeforeAprilForm.bindFromRequest().fold(errorAction, successAction)
   }
 
-  //################# How Became Owner Actions ########################
-  val howBecameOwner = TODO
-
   //################# Property Worth on 31/03/1982 Actions ########################
   val propertyWorthInMayEightyTwo = TODO
+
+  //################# How Became Owner Actions ########################
+  val howBecameOwner = FeatureLockForRTT.async { implicit request =>
+    val backLink = Some(controllers.resident.properties.routes.GainController.ownerBeforeAprilNineteenEightyTwo().url)
+    val postAction = controllers.resident.properties.routes.GainController.submitHowBecameOwner()
+
+    calcConnector.fetchAndGetFormData[HowBecameOwnerModel](keystoreKeys.howBecameOwner).map {
+      case Some(data) => Ok(views.howBecameOwner(howBecameOwnerForm.fill(data), backLink, homeLink, postAction))
+      case _ => Ok(views.howBecameOwner(howBecameOwnerForm, backLink, homeLink, postAction))
+    }
+  }
+
+  val submitHowBecameOwner = FeatureLockForRTT.async { implicit request =>
+    val backLink = Some(controllers.resident.properties.routes.GainController.ownerBeforeAprilNineteenEightyTwo().url)
+    val postAction = controllers.resident.properties.routes.GainController.submitHowBecameOwner()
+
+    howBecameOwnerForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.howBecameOwner(errors, backLink, homeLink, postAction))),
+      success => {
+        calcConnector.saveFormData(keystoreKeys.howBecameOwner, success)
+        success.gainedBy match {
+          case "Gifted" => Future.successful(Redirect(routes.GainController.worthWhenGifted()))
+          case "Inherited" => Future.successful(Redirect(routes.GainController.worthWhenInherited()))
+          case _ => Future.successful(Redirect(routes.GainController.boughtForLessThanWorth()))
+        }
+      }
+    )
+  }
+
+  //################# Brought For Less Than Worth Actions ########################
+  val boughtForLessThanWorth = TODO
+
+  //################# Worth When Inherited Actions ########################
+  val worthWhenInherited = TODO
+
+  //################# Worth When Gifted Actions ########################
+  val worthWhenGifted = TODO
 
   //################# Acquisition Value Actions ########################
   val acquisitionValue = FeatureLockForRTT.async { implicit request =>

@@ -124,6 +124,15 @@ object MessageLookup {
     val helpText = "Costs include agent fees, legal fees and surveys"
   }
 
+  //How Became Owner messages
+  object howBecameOwner {
+    val title = "How did you become the property owner?"
+    val errorMandatory = "Tell us how you became the property owner"
+    val bought = "Bought it"
+    val gifted = "Got it as a gift"
+    val inherited = "Inherited it"
+  }
+
   //Acquisition Value messages
   object acquisitionValue {
     val title = "How much did you pay for the property?"
@@ -390,5 +399,7 @@ object MessageLookup {
   object propertiesSellOrGiveAway {
     val title = "Did you sell the property or give it away?"
     val errorMandatory = "Tell us if you sold the property or gave it away"
+    val sold = "Sold it"
+    val gift = "Gave it away"
   }
 }

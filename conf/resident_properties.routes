@@ -45,6 +45,19 @@ GET     /how-became-owner                 controllers.resident.properties.GainCo
 #Property Worth on 31/03/1982 Routes
 GET     /property-worth-in-may            controllers.resident.properties.GainController.propertyWorthInMayEightyTwo
 
+#How Became Owner Routes
+GET     /how-became-owner                 controllers.resident.properties.GainController.howBecameOwner
+POST    /how-became-owner                 controllers.resident.properties.GainController.submitHowBecameOwner
+
+#Bought For Less Than Worth Routes
+GET     /bought-for-less-than-worth       controllers.resident.properties.GainController.boughtForLessThanWorth
+
+#Worth When Inherited Routes
+GET     /worth-when-inherited             controllers.resident.properties.GainController.worthWhenInherited
+
+#Worth When Gifted Routes
+GET     /worth-when-gifted                controllers.resident.properties.GainController.worthWhenGifted
+
 #Acquisition Value or Market Value Routes
 GET     /acquisition-value                controllers.resident.properties.GainController.acquisitionValue
 POST    /acquisition-value                controllers.resident.properties.GainController.submitAcquisitionValue
