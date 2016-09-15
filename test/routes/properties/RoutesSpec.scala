@@ -59,6 +59,18 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
+  "The URL for the GET Worth When Gave Away action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/worth-when-gave-away" in {
+      GainController.worthWhenGaveAway().url shouldEqual "/calculate-your-capital-gains/resident/properties/worth-when-gave-away"
+    }
+  }
+
+  "The URL for the POST Worth When Gave Away action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/worth-when-gave-away" in {
+      GainController.submitWorthWhenGaveAway().url shouldEqual "/calculate-your-capital-gains/resident/properties/worth-when-gave-away"
+    }
+  }
+
   "The URL for the disposal value or market value Action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/disposal-value" in {
       GainController.disposalValue().url shouldEqual "/calculate-your-capital-gains/resident/properties/disposal-value"

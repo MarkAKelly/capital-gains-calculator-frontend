@@ -359,4 +359,9 @@ object MessageLookup {
     val title = "Did you sell the property or give it away?"
     val errorMandatory = "Tell us if you sold the property or gave it away"
   }
+
+  object propertiesWorthWhenGaveAway {
+    val title = "What was the property worth when you gave it away?"
+    val question = "What was the property worth when you gave it away?"
+  }
 }
