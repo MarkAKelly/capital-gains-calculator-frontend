@@ -33,13 +33,13 @@ class OwnerBeforeAprilFormSpec  extends UnitSpec with WithFakeApplication {
 
   "Creating a form using a valid model" should {
 
-    "return a form with the data specified in the model" in {
+    "return a form with the answer of Yes" in {
       lazy val model = OwnerBeforeAprilModel(true)
       lazy val form = ownerBeforeAprilForm.fill(model)
       form.data.get("ownedBeforeAprilNineteenEightyTwo") shouldEqual Some("Yes")
     }
 
-    "return a form with the data specified in the model" in {
+    "return a form with the answer of No" in {
       lazy val model = OwnerBeforeAprilModel(false)
       lazy val form = ownerBeforeAprilForm.fill(model)
       form.data.get("ownedBeforeAprilNineteenEightyTwo") shouldEqual Some("No")
