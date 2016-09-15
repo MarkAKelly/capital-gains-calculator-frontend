@@ -16,7 +16,7 @@
 
 package controllers.resident.properties.GainControllerSpec
 
-import assets.MessageLookup.{ownerBeforeAprilNineteenEightyTwo => messages}
+import assets.MessageLookup.Resident.Properties.{ownerBeforeAprilNineteenEightyTwo => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keyStoreKeys}
 import config.{AppConfig, ApplicationConfig}
 import connectors.CalculatorConnector

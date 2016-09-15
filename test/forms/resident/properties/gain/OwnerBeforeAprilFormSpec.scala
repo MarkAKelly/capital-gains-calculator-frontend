@@ -19,7 +19,7 @@ package forms.resident.properties.gain
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import models.resident.properties.gain.OwnerBeforeAprilModel
 import forms.resident.properties.gain.OwnerBeforeAprilForm._
-import assets.MessageLookup.{ownerBeforeAprilNineteenEightyTwo => messages}
+import assets.MessageLookup.Resident.Properties.{ownerBeforeAprilNineteenEightyTwo => messages}
 
 class OwnerBeforeAprilFormSpec  extends UnitSpec with WithFakeApplication {
 

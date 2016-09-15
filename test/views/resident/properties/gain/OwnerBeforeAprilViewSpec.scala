@@ -21,13 +21,10 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import forms.resident.properties.gain.OwnerBeforeAprilForm._
 import models.resident.properties.gain.OwnerBeforeAprilModel
 import views.html.calculation.resident.properties.{gain => views}
-import assets.MessageLookup.{ownerBeforeAprilNineteenEightyTwo => messages}
+import assets.MessageLookup.Resident.Properties.{ownerBeforeAprilNineteenEightyTwo => messages}
 import assets.{MessageLookup => commonMessages}
 import org.jsoup.Jsoup
 
-/**
-  * Created by david on 14/09/16.
-  */
 class OwnerBeforeAprilViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "The Owner Before April view" should {
