@@ -439,6 +439,8 @@ calc.resident.privateResidenceReliefValue.question = How much Private Residence 
 calc.resident.privateResidenceReliefValue.help = We''ve calculated that you''ve made a gain of £{0} on your property. You''ll need this figure to calculate your Private Residence Relief.
 calc.resident.privateResidenceReliefValue.link = Find out how much you''re entitled to
 
+calc.resident.properties.privateResidenceReliefValue.gainExceededError = Enter an amount that is less than your gain of £{0}
+
 ## Reliefs messages
 
 ## No PRR Reliefs messages
