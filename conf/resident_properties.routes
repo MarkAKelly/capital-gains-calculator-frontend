@@ -43,12 +43,13 @@ POST    /disposal-costs                   controllers.resident.properties.GainCo
 GET     /owner-before-april               controllers.resident.properties.GainController.ownerBeforeAprilNineteenEightyTwo
 POST    /owner-before-april               controllers.resident.properties.GainController.submitOwnerBeforeAprilNineteenEightyTwo
 
-#Property Worth on 31/03/1982 Routes
-GET     /property-worth-in-may            controllers.resident.properties.GainController.propertyWorthInMayEightyTwo
-
 #How Became Owner Routes
 GET     /how-became-owner                 controllers.resident.properties.GainController.howBecameOwner
 POST    /how-became-owner                 controllers.resident.properties.GainController.submitHowBecameOwner
+
+#Worth On Routes
+GET     /worth-on                         controllers.resident.properties.GainController.worthOn
+POST    /worth-on                         controllers.resident.properties.GainController.submitWorthOn
 
 #Bought For Less Than Worth Routes
 GET     /bought-for-less-than-worth       controllers.resident.properties.GainController.boughtForLessThanWorth

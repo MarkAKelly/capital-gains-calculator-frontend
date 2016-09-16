@@ -43,8 +43,9 @@ import forms.resident.properties.gain.PropertyWorthWhenSoldForm._
 import models.resident.properties.gain.{OwnerBeforeAprilModel, PropertyWorthWhenSoldModel}
 import forms.resident.properties.WorthWhenGaveAwayForm._
 import forms.resident.properties.HowBecameOwnerForm._
+import forms.resident.properties.WorthOnForm._
 import models.resident._
-import models.resident.properties.{HowBecameOwnerModel, ImprovementsModel, SellOrGiveAwayModel, SellForLessModel, WorthWhenGaveAwayModel}
+import models.resident.properties.{HowBecameOwnerModel, ImprovementsModel, SellOrGiveAwayModel, SellForLessModel, WorthWhenGaveAwayModel, WorthOnModel}
 import play.api.i18n.Messages
 
 object GainController extends GainController {
@@ -268,7 +269,7 @@ trait GainController extends FeatureLock {
     def errorAction(errors: Form[OwnerBeforeAprilModel]) = Future.successful(BadRequest(views.ownerBeforeApril(errors)))
 
     def routeRequest(model: OwnerBeforeAprilModel) = {
-      if (model.ownedBeforeAprilNineteenEightyTwo) Future.successful(Redirect(routes.GainController.propertyWorthInMayEightyTwo()))
+      if (model.ownedBeforeAprilNineteenEightyTwo) Future.successful(Redirect(routes.GainController.worthOn()))
       else Future.successful(Redirect(routes.GainController.howBecameOwner()))
     }
 
@@ -283,7 +284,25 @@ trait GainController extends FeatureLock {
   }
 
   //################# Property Worth on 31/03/1982 Actions ########################
-  val propertyWorthInMayEightyTwo = TODO
+  private val worthOnPostAction = controllers.resident.properties.routes.GainController.submitWorthOn()
+  private val worthOnBackLink = Some(controllers.resident.properties.routes.GainController.ownerBeforeAprilNineteenEightyTwo().toString)
+
+  val worthOn = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[WorthOnModel](keystoreKeys.worthOn).map {
+      case Some(data) => Ok(views.worthOn(worthOnForm.fill(data), worthOnBackLink, homeLink, worthOnPostAction))
+      case None => Ok(views.worthOn(worthOnForm, worthOnBackLink, homeLink, worthOnPostAction))
+    }
+  }
+
+  val submitWorthOn = FeatureLockForRTT.async { implicit request =>
+    worthOnForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.worthOn(errors, worthWhenGaveAwayBackLink, homeLink, worthWhenGaveAwayPostAction))),
+      success => {
+        calcConnector.saveFormData[WorthOnModel](keystoreKeys.worthOn, success)
+        Future.successful(Redirect(routes.GainController.acquisitionCosts()))
+      }
+    )
+  }
 
   //################# How Became Owner Actions ########################
   val howBecameOwner = FeatureLockForRTT.async { implicit request =>

@@ -368,6 +368,9 @@ calc.resident.howBecameOwner.bought = Bought it
 calc.resident.howBecameOwner.gifted = Got it as a gift
 calc.resident.howBecameOwner.inherited= Inherited it
 
+##Worth On messages
+calc.resident.properties.worthOn.title = What was the property worth on 31 March 1982?
+
 ## Acquisition Value messages
 calc.resident.acquisitionValue.title = How much did you pay for the property?
 calc.resident.acquisitionValue.question = How much did you pay for the property?
