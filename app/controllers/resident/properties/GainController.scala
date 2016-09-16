@@ -25,6 +25,7 @@ import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import play.api.mvc.{Action, Result}
 import uk.gov.hmrc.play.http.SessionKeys
+
 import scala.concurrent.Future
 import views.html.calculation.{resident => commonViews}
 import views.html.calculation.resident.properties.{gain => views}
@@ -39,10 +40,11 @@ import forms.resident.properties.gain.OwnerBeforeAprilForm._
 import play.api.data.Form
 import forms.resident.properties.SellOrGiveAwayForm._
 import forms.resident.properties.gain.PropertyWorthWhenSoldForm._
-import models.resident.properties.gain.{OwnerBeforeAprilModel, PropertyWorthWhenSoldModel}
+import models.resident.properties.gain.{OwnerBeforeAprilModel, PropertyWorthWhenSoldModel, WorthWhenGiftedModel}
 import forms.resident.properties.WorthWhenGaveAwayForm._
 import forms.resident.properties.HowBecameOwnerForm._
 import forms.resident.properties.WorthWhenInheritedForm._
+import forms.resident.properties.gain.WorthWhenGiftedForm._
 import models.resident._
 import models.resident.properties._
 import play.api.i18n.Messages
@@ -341,7 +343,28 @@ trait GainController extends FeatureLock {
   }
 
   //################# Worth When Gifted Actions ########################
-  val worthWhenGifted = TODO
+   val worthWhenGifted = FeatureLockForRTT.async {implicit request =>
+    val backLink = Some(controllers.resident.properties.routes.GainController.howBecameOwner().url)
+    val postAction = controllers.resident.properties.routes.GainController.submitWorthWhenGifted()
+
+    calcConnector.fetchAndGetFormData[WorthWhenGiftedModel](keystoreKeys.worthWhenGifted).map {
+      case Some(data) => Ok(views.worthWhenGifted(worthWhenGiftedForm.fill(data), backLink, homeLink, postAction))
+      case _ => Ok(views.worthWhenGifted(worthWhenGiftedForm, backLink, homeLink, postAction))
+    }
+  }
+
+  val submitWorthWhenGifted = FeatureLockForRTT.async { implicit request =>
+    val backLink = Some(controllers.resident.properties.routes.GainController.howBecameOwner().url)
+    val postAction = controllers.resident.properties.routes.GainController.submitWorthWhenGifted()
+
+    worthWhenGiftedForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.worthWhenGifted(errors, backLink, homeLink, postAction))),
+      success => {
+        calcConnector.saveFormData(keystoreKeys.worthWhenGifted, success)
+        Future.successful(Redirect(routes.GainController.acquisitionCosts()))
+      }
+    )
+  }
 
   //################# Acquisition Value Actions ########################
   val acquisitionValue = FeatureLockForRTT.async { implicit request =>
