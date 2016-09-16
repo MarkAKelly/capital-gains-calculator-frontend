@@ -56,6 +56,7 @@ GET     /bought-for-less-than-worth       controllers.resident.properties.GainCo
 
 #Worth When Inherited Routes
 GET     /worth-when-inherited             controllers.resident.properties.GainController.worthWhenInherited
+POST    /worth-when-inherited             controllers.resident.properties.GainController.submitWorthWhenInherited
 
 #Worth When Gifted Routes
 GET     /worth-when-gifted                controllers.resident.properties.GainController.worthWhenGifted
