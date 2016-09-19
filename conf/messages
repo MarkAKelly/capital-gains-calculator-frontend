@@ -327,6 +327,10 @@ calc.resident.properties.sellForLess.title = Did you sell the property for less 
 calc.resident.properties.sellForLess.question = Did you sell the property for less than it was worth to help the buyer?
 calc.resident.properties.sellForLess.noSelectError = Tell us if you have ever sold the property for less than its worth
 
+## Buy For Less messages ##
+calc.resident.properties.boughtForLessThanWorth.title = Did you buy the property for less than it was worth because the seller wanted to help you?
+calc.resident.properties.boughtForLessThanWorth.noSelectError = Tell us if you have ever bought the property for less than its worth
+
 ## Sell Or Give Away messages
 calc.resident.sellOrGiveAway.title = Did you sell the property or give it away?
 calc.resident.sellOrGiveAway.errors.mandatory = Tell us if you sold the property or gave it away
