@@ -22,22 +22,22 @@ import scala.util.{Failure, Success, Try}
 
 object Validation {
 
-  def isValidDate(day:Int,month:Int,year:Int): Boolean = Try (constructDate(day, month, year)) match {
+  def isValidDate(day: Int, month: Int, year: Int): Boolean = Try(constructDate(day, month, year)) match {
     case Success(_) => true
     case _ => false
   }
 
-  def isIntNumber (input: String): Boolean = Try (input.toInt) match {
+  def isIntNumber(input: String): Boolean = Try(input.toInt) match {
     case Success(_) => true
     case Failure(_) => false
   }
 
-  def isBigDecimalNumber (input: String): Boolean = Try(BigDecimal(input)) match {
+  def isBigDecimalNumber(input: String): Boolean = Try(BigDecimal(input)) match {
     case Success(_) => true
     case Failure(_) => false
   }
 
-  def isDoubleNumber (input: String): Boolean = Try (input.toDouble) match {
+  def isDoubleNumber(input: String): Boolean = Try(input.toDouble) match {
     case Success(_) => true
     case Failure(_) => false
   }
@@ -65,6 +65,8 @@ object Validation {
   val validYearRangeCheck: Int => Boolean = input => input >= 1900 && input <= 9999
 
   val maxCheck: BigDecimal => Boolean = input => input <= Constants.maxNumeric
+
+  def maxPRRCheck(gain: BigDecimal): BigDecimal => Boolean = input => input <= gain
 
   val isPositive: BigDecimal => Boolean = input => input >= 0
 
