@@ -1,0 +1,28 @@
+@import views.html.helpers._
+@import views.html.calculation.resident._
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import models.resident.properties.WorthWhenBoughtModel
+
+@(worthWhenBoughtForm: Form[WorthWhenBoughtModel], backLink: Option[String], homeLink: String, postAction: Call)(implicit request: Request[_])
+
+@resident_main_template(
+title = Messages("calc.resident.worthWhenBought.title"),
+backLink = backLink,
+homeLink = homeLink,
+navTitle = Messages("calc.base.resident.properties.home")
+) {
+
+@errorSummary(worthWhenBoughtForm, "amount")
+
+<h1 class="heading-large">@Messages("calc.resident.worthWhenBought.title")</h1>
+
+<p>@Messages("calc.resident.worthWhenBought.additionalContent")</p>
+
+@form(action = postAction) {
+
+@formInputMoney(worthWhenBoughtForm, "amount", Messages("calc.resident.worthWhenBought.title"), hideLabel = true)
+
+<button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+
+}
+}
