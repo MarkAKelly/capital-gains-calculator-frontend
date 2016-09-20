@@ -46,8 +46,8 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
       doc.title shouldEqual messages.title
     }
 
-    s"have a back link to the Disposal Date Page with text ${MessageLookup.calcBaseBack}" in {
-      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/disposal-date"
+    s"have a back link to the Sell For less Page with text ${MessageLookup.calcBaseBack}" in {
+      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/sell-for-less"
     }
 
     s"have the question of the page ${messages.question}" in {
