@@ -51,7 +51,7 @@ class WorthWhenGiftedActionSpec extends UnitSpec with WithFakeApplication with F
     }
   }
 
-  "Calling .sellOrGiveAway action" when {
+  "Calling .worthWhenGifted action" when {
 
     "request has a valid session" should {
       lazy val target = setupTarget(None)
@@ -110,7 +110,7 @@ class WorthWhenGiftedActionSpec extends UnitSpec with WithFakeApplication with F
     }
   }
 
-  "Calling .submitSellOrGiveAway action" when {
+  "Calling .submitWorthWhenGifted action" when {
 
     "a valid form with the answer '100' is submitted" should {
       lazy val target = setupTarget(None)
