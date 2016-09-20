@@ -71,6 +71,7 @@ object KeystoreKeys {
     val boughtForLessThanWorth = "res:property:boughtForLessThanWorth"
     val sellForLess = "res:property:sellForLess"
     val sellOrGiveAway = "res:property:sellOrGiveAway"
+    val worthWhenBought = "res:property:worthWhenBought"
     val worthWhenInherited = "res:property:worthWhenInherited"
     val worthWhenGaveAway = "res:property:worthWhenGaveAway"
   }
