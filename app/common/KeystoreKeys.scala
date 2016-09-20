@@ -68,6 +68,7 @@ object KeystoreKeys {
     val personalAllowance = "res:property:personalAllowance"
     val privateResidenceRelief = "res:property:privateResidenceRelief"
     val propertyLivedIn = "res:property:propertyLivedIn"
+    val boughtForLessThanWorth = "res:property:boughtForLessThanWorth"
     val sellForLess = "res:property:sellForLess"
     val sellOrGiveAway = "res:property:sellOrGiveAway"
     val worthWhenBought = "res:property:worthWhenBought"

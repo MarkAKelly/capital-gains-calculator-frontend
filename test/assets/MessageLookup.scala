@@ -150,6 +150,11 @@ object MessageLookup {
     val inherited = "Inherited it"
   }
 
+  //############ Bought For Less Than Worth messages #################//
+  object boughtForLessThanWorth {
+    val title = "Did you buy the property for less than it was worth because the seller wanted to help you?"
+  }
+
   //Acquisition Value messages
   object acquisitionValue {
     val title = "How much did you pay for the property?"

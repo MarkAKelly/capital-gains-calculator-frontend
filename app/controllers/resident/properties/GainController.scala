@@ -43,7 +43,9 @@ import models.resident.properties.gain.{OwnerBeforeAprilModel, PropertyWorthWhen
 import forms.resident.properties.WorthWhenGaveAwayForm._
 import forms.resident.properties.HowBecameOwnerForm._
 import forms.resident.properties.WorthWhenInheritedForm._
+import forms.resident.properties.BoughtForLessThanWorthForm._
 import forms.resident.properties.WorthWhenBoughtForm._
+
 import models.resident._
 import models.resident.properties._
 import play.api.i18n.Messages
@@ -314,8 +316,40 @@ trait GainController extends FeatureLock {
     )
   }
 
-  //################# Brought For Less Than Worth Actions ########################
-  val boughtForLessThanWorth = TODO
+  //################# Bought For Less Than Worth Actions ########################
+  val boughtForLessThanWorth = FeatureLockForRTT.async {implicit request =>
+
+    val backLink = Some(controllers.resident.properties.routes.GainController.howBecameOwner().toString)
+
+    calcConnector.fetchAndGetFormData[BoughtForLessThanWorthModel](keystoreKeys.boughtForLessThanWorth).map{
+      case Some(data) => Ok(commonViews.properties.gain.buyForLess(boughtForLessThanWorthForm.fill(data), homeLink, backLink))
+      case _ => Ok(commonViews.properties.gain.buyForLess(boughtForLessThanWorthForm, homeLink, backLink))
+    }
+  }
+
+  val submitBoughtForLessThanWorth = FeatureLockForRTT.async { implicit request =>
+
+    lazy val backLink = Some(controllers.resident.properties.GainController.howBecameOwner().toString())
+
+    def errorAction(errors: Form[BoughtForLessThanWorthModel]) = Future.successful(BadRequest(commonViews.properties.gain.buyForLess(
+      errors, homeLink, backLink
+    )))
+
+    def routeRequest(model: BoughtForLessThanWorthModel) = {
+      if (model.boughtForLessThanWorth) Future.successful(Redirect(routes.GainController.worthWhenBought()))
+      else Future.successful(Redirect(routes.GainController.acquisitionValue()))
+    }
+
+    def successAction(model: BoughtForLessThanWorthModel) = {
+      for {
+        save <- calcConnector.saveFormData(keystoreKeys.boughtForLessThanWorth, model)
+        route <- routeRequest(model)
+      } yield route
+    }
+
+    boughtForLessThanWorthForm.bindFromRequest().fold(errorAction, successAction)
+
+  }
 
   //################# Worth When Inherited Actions ########################
   val worthWhenInherited = FeatureLockForRTT.async {implicit request =>
