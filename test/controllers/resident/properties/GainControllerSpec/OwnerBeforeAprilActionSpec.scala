@@ -16,7 +16,7 @@
 
 package controllers.resident.properties.GainControllerSpec
 
-import assets.MessageLookup.Resident.Properties.{ownerBeforeAprilNineteenEightyTwo => messages}
+import  assets.MessageLookup.Resident.Properties.{ownerBeforeAprilNineteenEightyTwo => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keyStoreKeys}
 import config.{AppConfig, ApplicationConfig}
 import connectors.CalculatorConnector
@@ -108,7 +108,7 @@ class OwnerBeforeAprilActionSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "redirect to the worth on 31/03/1982 sold page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/property-worth-in-may")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/market-value-on-31-march-1982")
       }
     }
 
