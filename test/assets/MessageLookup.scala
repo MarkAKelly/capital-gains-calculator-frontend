@@ -438,4 +438,11 @@ object MessageLookup {
     val gift = "Gave it away"
   }
 
+  object whoDidYouGiveItTo {
+    val title = "Who did you give the property to?"
+    val spouse = "Your spouse or a civil partner"
+    val charity = "A charity"
+    val other = "Someone else"
+    val error = "Please select a valid option"
+  }
 }
