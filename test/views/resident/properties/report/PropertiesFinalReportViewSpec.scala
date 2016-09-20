@@ -37,6 +37,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000),
+      true,
       true)
 
     lazy val deductionAnswers = ChargeableGainAnswers(
@@ -402,6 +403,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000),
+      false,
       false)
 
     lazy val deductionAnswers = ChargeableGainAnswers(

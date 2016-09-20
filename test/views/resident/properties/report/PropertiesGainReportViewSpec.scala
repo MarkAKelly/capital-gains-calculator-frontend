@@ -37,6 +37,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       30,
       40,
       50,
+      true,
       true
     )
 
@@ -212,6 +213,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       30,
       40,
       50,
+      false,
       false
     )
     lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)

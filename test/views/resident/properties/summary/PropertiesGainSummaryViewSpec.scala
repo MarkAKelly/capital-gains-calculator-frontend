@@ -38,6 +38,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       30,
       40,
       50,
+      true,
       true
     )
 
@@ -298,6 +299,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       30,
       40,
       50,
+      false,
       false
     )
     lazy val view = views.gainSummary(testModel, -2000, taxYearModel)(fakeRequest)
@@ -385,6 +387,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       30,
       40,
       50,
+      true,
       true
     )
     lazy val view = views.gainSummary(testModel, 0, taxYearModel)(fakeRequest)
@@ -446,6 +449,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       30,
       40,
       50,
+      false,
       false
     )
     lazy val view = views.gainSummary(testModel,-2000, taxYearModel)(fakeRequest)
@@ -465,6 +469,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       30,
       40,
       50,
+      true,
       true
     )
 
