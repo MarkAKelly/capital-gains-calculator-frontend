@@ -20,6 +20,7 @@ import assets.MessageLookup.{summaryPage => messages}
 import assets.{MessageLookup => commonMessages}
 import common.Dates
 import controllers.helpers.FakeRequestHelper
+import controllers.resident.properties.routes
 import models.resident._
 import models.resident.properties._
 import org.jsoup.Jsoup
@@ -34,7 +35,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
-      BigDecimal(30000))
+      BigDecimal(30000),
+      true)
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(false)),
       None,
@@ -208,6 +210,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         }
       }
 
+      "has an option output row for sell or give away" which {
+
+        s"should have the question text '${commonMessages.propertiesSellOrGiveAway.title}'" in {
+          doc.select("#sellOrGiveAway-question").text shouldBe commonMessages.propertiesSellOrGiveAway.title
+        }
+
+        "should have the value 'Gave it away'" in {
+          doc.select("#sellOrGiveAway-option span.bold-medium").text shouldBe "Gave it away"
+        }
+      }
+
       "has a numeric output row for the Disposal Value" which {
 
         s"should have the question text '${commonMessages.disposalValue.question}'" in {
@@ -325,7 +338,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
-      BigDecimal(30000))
+      BigDecimal(30000),
+      false)
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
@@ -431,6 +445,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
           "include a value for Loss brought forward of £10,000" in {
             doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYearUsed("2013/14")} £10,000")
           }
+        }
+      }
+
+      "has an option output row for sell or give away" which {
+
+        s"should have the question text '${commonMessages.propertiesSellOrGiveAway.title}'" in {
+          doc.select("#sellOrGiveAway-question").text shouldBe commonMessages.propertiesSellOrGiveAway.title
+        }
+
+        "should have the value 'Sold it'" in {
+          doc.select("#sellOrGiveAway-option span.bold-medium").text shouldBe "Sold it"
         }
       }
 
@@ -602,7 +627,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
-      BigDecimal(30000))
+      BigDecimal(30000),
+      true)
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -736,7 +762,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
-      BigDecimal(30000))
+      BigDecimal(30000),
+      false)
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),

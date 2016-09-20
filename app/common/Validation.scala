@@ -22,22 +22,22 @@ import scala.util.{Failure, Success, Try}
 
 object Validation {
 
-  def isValidDate(day:Int,month:Int,year:Int): Boolean = Try (constructDate(day, month, year)) match {
+  def isValidDate(day: Int, month: Int, year: Int): Boolean = Try(constructDate(day, month, year)) match {
     case Success(_) => true
     case _ => false
   }
 
-  def isIntNumber (input: String): Boolean = Try (input.toInt) match {
+  def isIntNumber(input: String): Boolean = Try(input.toInt) match {
     case Success(_) => true
     case Failure(_) => false
   }
 
-  def isBigDecimalNumber (input: String): Boolean = Try(BigDecimal(input)) match {
+  def isBigDecimalNumber(input: String): Boolean = Try(BigDecimal(input)) match {
     case Success(_) => true
     case Failure(_) => false
   }
 
-  def isDoubleNumber (input: String): Boolean = Try (input.toDouble) match {
+  def isDoubleNumber(input: String): Boolean = Try(input.toDouble) match {
     case Success(_) => true
     case Failure(_) => false
   }
@@ -66,6 +66,8 @@ object Validation {
 
   val maxCheck: BigDecimal => Boolean = input => input <= Constants.maxNumeric
 
+  def maxPRRCheck(gain: BigDecimal): BigDecimal => Boolean = input => input <= gain
+
   val isPositive: BigDecimal => Boolean = input => input >= 0
 
   val yesNoCheck: String => Boolean = {
@@ -79,6 +81,21 @@ object Validation {
     case "Full" => true
     case "Part" => true
     case "None" => true
+    case "" => true
+    case _ => false
+  }
+
+  val givenAwayCheck: String => Boolean = {
+    case "Given" => true
+    case "Sold" => true
+    case "" => true
+    case _ => false
+  }
+
+  val howBecameOwnerCheck: String => Boolean = {
+    case "Bought" => true
+    case "Gifted" => true
+    case "Inherited" => true
     case "" => true
     case _ => false
   }

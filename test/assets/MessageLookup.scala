@@ -18,16 +18,53 @@ package assets
 
 object MessageLookup {
 
+  // TO MOVE
+
+
   //Base messages
   val calcBaseBack = "Back"
   val calcBaseContinue = "Continue"
   val calcBaseExternalLink = "(opens in a new window)"
   val calcBaseChange = "change"
   val undefinedMessage = "Undefined message"
+  val propertiesHomeText = "Calculate your Capital Gains Tax"
 
   //Common messages
   val maxNumericExceededStart = "Enter an amount that's £"
   val maxNumericExceededEnd = "or less"
+
+  //########################################################################################
+  //These nested objects have been created in anticipation of the Tech-Debt to refactor
+  // the message lookup and add the non-resident messages.  Any new added pages should be added
+  // to the right place in this object.
+
+  object Resident {
+
+    object Properties {
+
+      object PropertyWorthWhenSold {
+        val title = "What was the property worth when you sold it?"
+        val paragraphText = "You can use a valuation from a surveyor or a property website."
+
+      }
+      
+      object ownerBeforeAprilNineteenEightyTwo {
+        val title = "Did you become the property owner before 1 April 1982?"
+        val errorSelectAnOption = "Tell us if you became the property owner before 1 April 1982"
+      }
+
+      object propertiesWorthWhenGaveAway {
+        val title = "What was the property worth when you gave it away?"
+      }
+
+      object worthOn {
+        val question = "What was the property worth on 31 March 1982?"
+      }
+    }
+  }
+
+
+  //########################################################################################
 
   object errorMessages {
     val mandatoryAmount = "Enter an amount"
@@ -70,6 +107,29 @@ object MessageLookup {
     def content(year: String): String = s"You can continue to use it, but we'll use the tax rates from the $year tax year."
   }
 
+  //############ Sell For Less messages #################//
+  object sellForLess {
+    val title = "Did you sell the property for less than it was worth to help the buyer?"
+  }
+
+  //############ Worth When Inherited messages #################//
+  object worthWhenInherited {
+    val title = "What was the property worth when you inherited it?"
+    val additionalContent = "You can use a valuation from a surveyor or a property website."
+  }
+
+  //############ Worth When Gifted messages #################//
+  object worthWhenGifted {
+    val question = "What was the property worth when you got it as a gift?"
+    val additionalContent = "You can use a valuation from a surveyor or a property website."
+  }
+
+  //############ Worth When Bought messages #################//
+  object worthWhenBought {
+    val question = "What was the property worth when you bought it?"
+    val additionalContent = "You can use a valuation from a surveyor or a property website."
+  }
+
   //Disposal Value messages
   object disposalValue {
     val title = "How much did you sell the property for?"
@@ -89,6 +149,20 @@ object MessageLookup {
     val title = "How much did you pay in costs when you stopped owning the property?"
     val pageHeading = "How much did you pay in costs when you stopped owning the property?"
     val helpText = "Costs include agent fees, legal fees and surveys"
+  }
+
+  //How Became Owner messages
+  object howBecameOwner {
+    val title = "How did you become the property owner?"
+    val errorMandatory = "Tell us how you became the property owner"
+    val bought = "Bought it"
+    val gifted = "Got it as a gift"
+    val inherited = "Inherited it"
+  }
+
+  //############ Bought For Less Than Worth messages #################//
+  object boughtForLessThanWorth {
+    val title = "Did you buy the property for less than it was worth because the seller wanted to help you?"
   }
 
   //Acquisition Value messages
@@ -173,7 +247,9 @@ object MessageLookup {
     val title = "How much Private Residence Relief are you entitled to?"
     val question = title
     val link = "Find out how much you're entitled to"
-    def help(value: String): String = s"We've calculated that you've made a gain of £$value on your property. You'll need this figure to calculate your Private Residence Relief."
+    def help(value: String): String = s"We've calculated that you've made a gain of £$value on your property. " +
+      s"You'll need this figure to calculate your Private Residence Relief."
+    def error(value: String): String = s"Enter an amount that is less than your gain of £$value"
   }
 
   //Reliefs messages
@@ -195,8 +271,8 @@ object MessageLookup {
 
   //Reliefs Value messages
   object reliefsValue {
-    def title(input: String) = s"How much tax relief are you claiming on your total gain of £$input?"
-    def question(input: String) = s"How much tax relief are you claiming on your total gain of £$input?"
+    def title(input: String): String = s"How much tax relief are you claiming on your total gain of £$input?"
+    def question(input: String): String = s"How much tax relief are you claiming on your total gain of £$input?"
     val prrLink = "Private Residence Relief"
     val lettingsReliefLink = "Lettings Relief"
   }
@@ -205,7 +281,8 @@ object MessageLookup {
   object lettingsReliefValue {
     val title = s"How much Letting Relief are you entitled to?"
     val question = s"How much Letting Relief are you entitled to?"
-    def additionalContent(input: String) = s"We've calculated that you've made a gain of £$input on your property. You'll need this figure to calculate your Letting Relief."
+    def additionalContent(input: String): String = s"We've calculated that you've made a gain of £$input on your property. " +
+      s"You'll need this figure to calculate your Letting Relief."
   }
 
   //No Prr Reliefs Value messages
@@ -353,4 +430,12 @@ object MessageLookup {
     val helpOne = "UK residential properties"
     val helpThree = "other shares"
   }
+
+  object propertiesSellOrGiveAway {
+    val title = "Did you sell the property or give it away?"
+    val errorMandatory = "Tell us if you sold the property or gave it away"
+    val sold = "Sold it"
+    val gift = "Gave it away"
+  }
+
 }

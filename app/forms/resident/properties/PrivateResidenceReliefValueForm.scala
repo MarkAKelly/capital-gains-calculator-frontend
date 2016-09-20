@@ -19,7 +19,8 @@ package forms.resident.properties
 import common.Constants
 import common.Transformers._
 import common.Validation._
-import models.resident.properties.PrivateResidenceReliefValueModel
+import connectors.CalculatorConnector
+import models.resident.properties.{PrivateResidenceReliefValueModel, YourAnswersSummaryModel}
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.Messages
@@ -27,13 +28,13 @@ import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object PrivateResidenceReliefValueForm {
 
-  val privateResidenceReliefValueForm = Form(
+  def privateResidenceReliefValueForm(gain: BigDecimal): Form[PrivateResidenceReliefValueModel] = Form(
     mapping(
       "amount" -> text
         .verifying(Messages("calc.common.error.mandatoryAmount"), mandatoryCheck)
         .verifying(Messages("calc.common.error.invalidAmount"), bigDecimalCheck)
         .transform[BigDecimal](stringToBigDecimal, bigDecimalToString)
-        .verifying(Messages("calc.common.error.maxAmountExceeded", MoneyPounds(Constants.maxNumeric, 0).quantity), maxCheck)
+        .verifying(Messages("calc.resident.properties.privateResidenceReliefValue.gainExceededError", MoneyPounds(gain, 0).quantity), maxPRRCheck(gain))
         .verifying(Messages("calc.common.error.minimumAmount"), isPositive)
         .verifying(Messages("calc.common.error.invalidAmount"), decimalPlacesCheck)
     )(PrivateResidenceReliefValueModel.apply)(PrivateResidenceReliefValueModel.unapply)

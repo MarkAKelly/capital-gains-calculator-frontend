@@ -322,6 +322,24 @@ calc.resident.outsideTaxYears.message = You can continue to use it, but we''ll u
 calc.resident.outsideTaxYears.message.tooEarly = You can use this calculator if you''ve sold a property since 5 April 2015.
 calc.resident.outsideTaxYears.changeDate = Change your date
 
+## Sell For Less messages ##
+calc.resident.properties.sellForLess.title = Did you sell the property for less than it was worth to help the buyer?
+calc.resident.properties.sellForLess.question = Did you sell the property for less than it was worth to help the buyer?
+calc.resident.properties.sellForLess.noSelectError = Tell us if you have ever sold the property for less than its worth
+
+## Buy For Less messages ##
+calc.resident.properties.boughtForLessThanWorth.title = Did you buy the property for less than it was worth because the seller wanted to help you?
+calc.resident.properties.boughtForLessThanWorth.noSelectError = Tell us if you have bought the property for less than its worth
+
+## Sell Or Give Away messages
+calc.resident.sellOrGiveAway.title = Did you sell the property or give it away?
+calc.resident.sellOrGiveAway.errors.mandatory = Tell us if you sold the property or gave it away
+calc.resident.sellOrGiveAway.given = Gave it away
+calc.resident.sellOrGiveAway.sold = Sold it
+
+##Worth When Gave Away messages
+calc.resident.properties.worthWhenGaveAway.title = What was the property worth when you gave it away?
+
 ## Disposal Value messages
 calc.resident.disposal.value.title = How much did you sell the property for?
 calc.resident.disposal.value.question = How much did you sell the property for?
@@ -332,11 +350,43 @@ calc.resident.disposal.value.bullet.two.link =someone else you''re connected to
 calc.resident.disposal.value.bullet.three = sold it for less than it’s worth to help the buyer
 calc.resident.disposal.value.bullet.end = You can use a valuation from a surveyor or a property website.
 
+## Property Worth when you sold it messages
+calc.resident.properties.propertyWorthWhenSold.title = What was the property worth when you sold it?
+calc.resident.properties.propertyWorthWhenSold.extraText = You can use a valuation from a surveyor or a property website.
+
 
 ## Disposal Costs messages
 calc.resident.disposalCosts.title = How much did you pay in costs when you stopped owning the property?
 calc.resident.disposalCosts.pageHeading = How much did you pay in costs when you stopped owning the property?
 calc.resident.disposalCosts.helpText = Costs include agent fees, legal fees and surveys
+
+
+## Owner Before 1st April 1982 messages
+calc.resident.properties.ownerBeforeApril.title = Did you become the property owner before 1 April 1982?
+calc.resident.properties.ownerBeforeApril.noSelectError = Tell us if you became the property owner before 1 April 1982
+
+## How Became Owner messages
+calc.resident.howBecameOwner.errors.mandatory = Tell us how you became the property owner
+calc.resident.howBecameOwner.title = How did you become the property owner?
+calc.resident.howBecameOwner.bought = Bought it
+calc.resident.howBecameOwner.gifted = Got it as a gift
+calc.resident.howBecameOwner.inherited= Inherited it
+
+
+##Worth On messages
+calc.resident.properties.worthOn.question = What was the property worth on 31 March 1982?
+
+## Worth When Inherited messages
+calc.resident.worthWhenInherited.title = What was the property worth when you inherited it?
+calc.resident.worthWhenInherited.additionalContent = You can use a valuation from a surveyor or a property website.
+
+## Worth When Bought messages
+calc.resident.worthWhenBought.question = What was the property worth when you bought it?
+calc.resident.worthWhenBought.additionalContent = You can use a valuation from a surveyor or a property website.
+
+## Worth When Gifted messages
+calc.resident.worthWhenGifted.question = What was the property worth when you got it as a gift?
+calc.resident.worthWhenGifted.additionalContent = You can use a valuation from a surveyor or a property website.
 
 ## Acquisition Value messages
 calc.resident.acquisitionValue.title = How much did you pay for the property?
@@ -413,6 +463,8 @@ calc.resident.privateResidenceReliefValue.title = How much Private Residence Rel
 calc.resident.privateResidenceReliefValue.question = How much Private Residence Relief are you entitled to?
 calc.resident.privateResidenceReliefValue.help = We''ve calculated that you''ve made a gain of £{0} on your property. You''ll need this figure to calculate your Private Residence Relief.
 calc.resident.privateResidenceReliefValue.link = Find out how much you''re entitled to
+
+calc.resident.properties.privateResidenceReliefValue.gainExceededError = Enter an amount that is less than your gain of £{0}
 
 ## Reliefs messages
 

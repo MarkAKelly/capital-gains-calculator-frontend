@@ -40,7 +40,6 @@ class AcquisitionCostsFormSpec extends UnitSpec with WithFakeApplication with Fa
       val form = acquisitionCostsForm.fill(model)
       form.data("amount") shouldBe "1"
     }
-
   }
 
   "Creating a form using an invalid post" when {
