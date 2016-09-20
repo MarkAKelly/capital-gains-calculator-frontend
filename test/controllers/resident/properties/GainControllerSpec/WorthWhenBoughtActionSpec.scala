@@ -62,8 +62,8 @@ class WorthWhenBoughtActionSpec extends UnitSpec with WithFakeApplication with F
         status(result) shouldBe 200
       }
 
-      s"return some html with title of ${messages.title}" in {
-        doc.title shouldEqual messages.title
+      s"return some html with title of ${messages.question}" in {
+        doc.title shouldEqual messages.question
       }
 
       "have a back link to how-became-owner" in {
@@ -91,8 +91,8 @@ class WorthWhenBoughtActionSpec extends UnitSpec with WithFakeApplication with F
         status(result) shouldBe 200
       }
 
-      s"return some html with title of ${messages.title}" in {
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+      s"return some html with title of ${messages.question}" in {
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.question
       }
     }
 
@@ -135,7 +135,7 @@ class WorthWhenBoughtActionSpec extends UnitSpec with WithFakeApplication with F
       }
 
       "return to the page" in {
-        doc.title shouldEqual messages.title
+        doc.title shouldEqual messages.question
       }
 
       "raise an error on the page" in {
