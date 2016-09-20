@@ -137,7 +137,7 @@ class BoughtForLessThanWorthActionSpec extends UnitSpec with WithFakeApplication
         status(result) shouldBe 400
       }
 
-      "render the Sell For Less page" in {
+      "render the Bought for Less than worth page" in {
         doc.title() shouldEqual messages.title
       }
     }
