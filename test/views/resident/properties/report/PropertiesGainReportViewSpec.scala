@@ -37,6 +37,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       30,
       40,
       50,
+      true,
       true
     )
 
@@ -162,6 +163,17 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
         }
       }
 
+      "has an option output row for owner before april 1982" which {
+
+        s"should have the question text '${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}'" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-question").text shouldBe commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
+        }
+
+        "should have the value 'Yes'" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-option span.bold-medium").text shouldBe "Yes"
+        }
+      }
+
       "has a numeric output row for the Acquisition Value" which {
 
         s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
@@ -212,6 +224,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       30,
       40,
       50,
+      false,
       false
     )
     lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)
@@ -237,6 +250,17 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
 
       "should have the value 'Sold it'" in {
         doc.select("#sellOrGiveAway-option span.bold-medium").text shouldBe "Sold it"
+      }
+    }
+
+    "has an option output row for owner before april 1982" which {
+
+      s"should have the question text '${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}'" in {
+        doc.select("#ownerBeforeAprilNineteenEightyTwo-question").text shouldBe commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
+      }
+
+      "should have the value 'No'" in {
+        doc.select("#ownerBeforeAprilNineteenEightyTwo-option span.bold-medium").text shouldBe "No"
       }
     }
   }
