@@ -43,6 +43,7 @@ import models.resident.properties.gain.{OwnerBeforeAprilModel, PropertyWorthWhen
 import forms.resident.properties.WorthWhenGaveAwayForm._
 import forms.resident.properties.HowBecameOwnerForm._
 import forms.resident.properties.WorthWhenInheritedForm._
+import forms.resident.properties.WorthWhenBoughtForm._
 import models.resident._
 import models.resident.properties._
 import play.api.i18n.Messages
@@ -342,6 +343,26 @@ trait GainController extends FeatureLock {
 
   //################# Worth When Gifted Actions ########################
   val worthWhenGifted = TODO
+
+
+  //################# Worth When Bought Actions ########################
+
+  val worthWhenBought = FeatureLockForRTT.async {implicit request =>
+    calcConnector.fetchAndGetFormData[WorthWhenBoughtModel](keystoreKeys.worthWhenBought).map {
+      case Some(data) => Ok(views.worthWhenBought(worthWhenBoughtForm.fill(data)))
+      case _ => Ok(views.worthWhenBought(worthWhenBoughtForm))
+    }
+  }
+
+  val submitWorthWhenBought = FeatureLockForRTT.async { implicit request =>
+    worthWhenBoughtForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.worthWhenBought(errors))),
+      success => {
+        calcConnector.saveFormData(keystoreKeys.worthWhenBought, success)
+        Future.successful(Redirect(routes.GainController.acquisitionCosts()))
+      }
+    )
+  }
 
   //################# Acquisition Value Actions ########################
   val acquisitionValue = FeatureLockForRTT.async { implicit request =>

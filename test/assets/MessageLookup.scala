@@ -114,6 +114,12 @@ object MessageLookup {
     val additionalContent = "You can use a valuation from a surveyor or a property website."
   }
 
+  //############ Worth When Bought messages #################//
+  object worthWhenBought {
+    val question = "What was the property worth when you bought it?"
+    val additionalContent = "You can use a valuation from a surveyor or a property website."
+  }
+
   //Disposal Value messages
   object disposalValue {
     val title = "How much did you sell the property for?"
