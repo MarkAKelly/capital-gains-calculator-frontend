@@ -1,15 +1,13 @@
 @import views.html.helpers._
-@import views.html.calculation.resident._
+@import views.html.calculation.resident.properties._
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import models.resident.properties.WorthWhenBoughtModel
 
-@(worthWhenBoughtForm: Form[WorthWhenBoughtModel], backLink: Option[String], homeLink: String, postAction: Call)(implicit request: Request[_])
+@(worthWhenBoughtForm: Form[WorthWhenBoughtModel])(implicit request: Request[_])
 
-@resident_main_template(
+@resident_properties_main_template(
 title = Messages("calc.resident.worthWhenBought.title"),
-backLink = backLink,
-homeLink = homeLink,
-navTitle = Messages("calc.base.resident.properties.home")
+backLink = Some(controllers.resident.properties.routes.GainController.boughtForLessThanWorth().url)
 ) {
 
 @errorSummary(worthWhenBoughtForm, "amount")
@@ -18,7 +16,7 @@ navTitle = Messages("calc.base.resident.properties.home")
 
 <p>@Messages("calc.resident.worthWhenBought.additionalContent")</p>
 
-@form(action = postAction) {
+@form(action = controllers.resident.properties.routes.GainController.submitWorthWhenBought()) {
 
 @formInputMoney(worthWhenBoughtForm, "amount", Messages("calc.resident.worthWhenBought.title"), hideLabel = true)
 

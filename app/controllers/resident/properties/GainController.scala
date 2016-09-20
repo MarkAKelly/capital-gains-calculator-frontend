@@ -346,22 +346,17 @@ trait GainController extends FeatureLock {
 
 
   //################# Worth When Bought Actions ########################
-  val worthWhenBought = FeatureLockForRTT.async {implicit request =>
-    val backLink = Some(controllers.resident.properties.routes.GainController.boughtForLessThanWorth().url)
-    val postAction = controllers.resident.properties.routes.GainController.submitWorthWhenBought()
 
+  val worthWhenBought = FeatureLockForRTT.async {implicit request =>
     calcConnector.fetchAndGetFormData[WorthWhenBoughtModel](keystoreKeys.worthWhenBought).map {
-      case Some(data) => Ok(views.worthWhenBought(worthWhenBoughtForm.fill(data), backLink, homeLink, postAction))
-      case _ => Ok(views.worthWhenBought(worthWhenBoughtForm, backLink, homeLink, postAction))
+      case Some(data) => Ok(views.worthWhenBought(worthWhenBoughtForm.fill(data)))
+      case _ => Ok(views.worthWhenBought(worthWhenBoughtForm))
     }
   }
 
   val submitWorthWhenBought = FeatureLockForRTT.async { implicit request =>
-    val backLink = Some(controllers.resident.properties.routes.GainController.boughtForLessThanWorth().url)
-    val postAction = controllers.resident.properties.routes.GainController.submitWorthWhenBought()
-
     worthWhenBoughtForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.worthWhenBought(errors, backLink, homeLink, postAction))),
+      errors => Future.successful(BadRequest(views.worthWhenBought(errors))),
       success => {
         calcConnector.saveFormData(keystoreKeys.worthWhenBought, success)
         Future.successful(Redirect(routes.GainController.acquisitionCosts()))

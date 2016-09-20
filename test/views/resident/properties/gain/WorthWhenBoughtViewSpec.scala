@@ -27,11 +27,8 @@ import play.api.mvc.Call
 class WorthWhenBoughtViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "worthWhenBought view" should {
-    val backLink = Some("back-link")
-    val homeLink = "homeLink"
-    val call = new Call("POST", "postAction")
     val form = worthWhenBoughtForm
-    lazy val view = views.worthWhenBought(form, backLink, homeLink, call)(fakeRequest)
+    lazy val view = views.worthWhenBought(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -39,7 +36,7 @@ class WorthWhenBoughtViewSpec extends UnitSpec with WithFakeApplication with Fak
     }
 
     s"have a back link to back-link" in {
-      doc.select("#back-link").attr("href") shouldBe "back-link"
+      doc.select("#back-link").attr("href") shouldBe "/calculate-your-capital-gains/resident/properties/bought-for-less-than-worth"
     }
 
     s"have a nav title of 'navTitle'" in {
@@ -47,7 +44,7 @@ class WorthWhenBoughtViewSpec extends UnitSpec with WithFakeApplication with Fak
     }
 
     s"have a home link to 'homeLink'" in {
-      doc.select("a#homeNavHref").attr("href") shouldBe "homeLink"
+      doc.select("a#homeNavHref").attr("href") shouldBe "/calculate-your-capital-gains/resident/properties/"
     }
 
     s"have a title of ${messages.title}" in {
@@ -63,7 +60,7 @@ class WorthWhenBoughtViewSpec extends UnitSpec with WithFakeApplication with Fak
     }
 
     "have a form action of 'postAction'" in {
-      doc.select("form").attr("action") shouldBe "postAction"
+      doc.select("form").attr("action") shouldBe "/calculate-your-capital-gains/resident/properties/worth-when-bought"
     }
 
     "have a form method of 'POST'" in {
@@ -88,11 +85,8 @@ class WorthWhenBoughtViewSpec extends UnitSpec with WithFakeApplication with Fak
   }
 
   "Disposal Value View with form without errors" should {
-    val backLink = Some("back-link")
-    val homeLink = "homeLink"
-    val call = new Call("POST", "postAction")
     val form = worthWhenBoughtForm.bind(Map("amount" -> "100"))
-    lazy val view = views.worthWhenBought(form, backLink, homeLink, call)(fakeRequest)
+    lazy val view = views.worthWhenBought(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display the value of the form" in {
@@ -109,11 +103,8 @@ class WorthWhenBoughtViewSpec extends UnitSpec with WithFakeApplication with Fak
   }
 
   "Disposal Value View with form with errors" should {
-    val backLink = Some("back-link")
-    val homeLink = "homeLink"
-    val call = new Call("POST", "postAction")
     val form = worthWhenBoughtForm.bind(Map("amount" -> ""))
-    lazy val view = views.worthWhenBought(form, backLink, homeLink, call)(fakeRequest)
+    lazy val view = views.worthWhenBought(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {
