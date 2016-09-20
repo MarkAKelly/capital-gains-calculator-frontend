@@ -65,22 +65,6 @@ class WorthWhenBoughtActionSpec extends UnitSpec with WithFakeApplication with F
       s"return some html with title of ${messages.question}" in {
         doc.title shouldEqual messages.question
       }
-
-      "have a back link to how-became-owner" in {
-        doc.body().select("a#back-link").attr("href") shouldBe "/calculate-your-capital-gains/resident/properties/bought-for-less-than-worth"
-      }
-
-      "have a home link to 'homeLink'" in {
-        doc.select("a#homeNavHref").attr("href") shouldBe "/calculate-your-capital-gains/resident/properties/"
-      }
-
-      "have a method to POST" in {
-        doc.select("form").attr("method") shouldBe "POST"
-      }
-
-      "have an action to worth-when-Bought" in {
-        doc.select("form").attr("action") shouldBe "/calculate-your-capital-gains/resident/properties/worth-when-bought"
-      }
     }
 
     "request has a valid session with existing data" should {
