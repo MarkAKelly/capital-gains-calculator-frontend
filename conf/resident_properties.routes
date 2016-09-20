@@ -23,6 +23,10 @@ GET     /who-did-you-give-it-to           controllers.resident.properties.GainCo
 GET     /worth-when-gave-away             controllers.resident.properties.GainController.worthWhenGaveAway
 POST    /worth-when-gave-away             controllers.resident.properties.GainController.submitWorthWhenGaveAway
 
+#Worth When Bought Routes
+GET     /worth-when-bought                controllers.resident.properties.GainController.worthWhenBought
+POST    /worth-when-bought                controllers.resident.properties.GainController.submitWorthWhenBought
+
 #Disposal Value or Market Value Routes
 GET     /disposal-value                   controllers.resident.properties.GainController.disposalValue
 POST    /disposal-value                   controllers.resident.properties.GainController.submitDisposalValue
@@ -52,6 +56,7 @@ POST    /how-became-owner                 controllers.resident.properties.GainCo
 
 #Bought For Less Than Worth Routes
 GET     /bought-for-less-than-worth       controllers.resident.properties.GainController.boughtForLessThanWorth
+POST    /bought-for-less-than-worth       controllers.resident.properties.GainController.submitBoughtForLessThanWorth
 
 #Worth When Inherited Routes
 GET     /worth-when-inherited             controllers.resident.properties.GainController.worthWhenInherited
@@ -60,6 +65,9 @@ POST    /worth-when-inherited             controllers.resident.properties.GainCo
 #Worth When Gifted Routes
 GET     /worth-when-gifted                controllers.resident.properties.GainController.worthWhenGifted
 POST    /worth-when-gifted                controllers.resident.properties.GainController.submitWorthWhenGifted
+
+#Worth When Bought Routes
+GET     /worth-when-bought                controllers.resident.properties.GainController.worthWhenBought
 
 #Acquisition Value or Market Value Routes
 GET     /acquisition-value                controllers.resident.properties.GainController.acquisitionValue

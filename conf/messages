@@ -327,6 +327,10 @@ calc.resident.properties.sellForLess.title = Did you sell the property for less 
 calc.resident.properties.sellForLess.question = Did you sell the property for less than it was worth to help the buyer?
 calc.resident.properties.sellForLess.noSelectError = Tell us if you have ever sold the property for less than its worth
 
+## Buy For Less messages ##
+calc.resident.properties.boughtForLessThanWorth.title = Did you buy the property for less than it was worth because the seller wanted to help you?
+calc.resident.properties.boughtForLessThanWorth.noSelectError = Tell us if you have bought the property for less than its worth
+
 ## Sell Or Give Away messages
 calc.resident.sellOrGiveAway.title = Did you sell the property or give it away?
 calc.resident.sellOrGiveAway.errors.mandatory = Tell us if you sold the property or gave it away
@@ -371,6 +375,10 @@ calc.resident.howBecameOwner.inherited= Inherited it
 ## Worth When Inherited messages
 calc.resident.worthWhenInherited.title = What was the property worth when you inherited it?
 calc.resident.worthWhenInherited.additionalContent = You can use a valuation from a surveyor or a property website.
+
+## Worth When Bought messages
+calc.resident.worthWhenBought.question = What was the property worth when you bought it?
+calc.resident.worthWhenBought.additionalContent = You can use a valuation from a surveyor or a property website.
 
 ## Worth When Gifted messages
 calc.resident.worthWhenGifted.question = What was the property worth when you got it as a gift?
@@ -451,6 +459,8 @@ calc.resident.privateResidenceReliefValue.title = How much Private Residence Rel
 calc.resident.privateResidenceReliefValue.question = How much Private Residence Relief are you entitled to?
 calc.resident.privateResidenceReliefValue.help = We''ve calculated that you''ve made a gain of £{0} on your property. You''ll need this figure to calculate your Private Residence Relief.
 calc.resident.privateResidenceReliefValue.link = Find out how much you''re entitled to
+
+calc.resident.properties.privateResidenceReliefValue.gainExceededError = Enter an amount that is less than your gain of £{0}
 
 ## Reliefs messages
 
