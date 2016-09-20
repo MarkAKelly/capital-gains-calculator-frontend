@@ -38,8 +38,8 @@ private object AppDependencies {
   val compile = Seq(
     ws,
     "uk.gov.hmrc" %% "frontend-bootstrap" % "6.7.0",
-    "uk.gov.hmrc" %% "play-partials" % "4.5.0",
-    "uk.gov.hmrc" %% "play-authorised-frontend" % "5.5.0",
+    "uk.gov.hmrc" %% "play-partials" % "4.6.0",
+    "uk.gov.hmrc" %% "play-authorised-frontend" % "5.7.0",
     "uk.gov.hmrc" %% "play-config" % "2.1.0",
     "uk.gov.hmrc" %% "play-json-logger" % "2.1.1",
     "uk.gov.hmrc" %% "govuk-template" % "4.0.0",

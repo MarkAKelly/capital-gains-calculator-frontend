@@ -26,7 +26,7 @@ case class ChargeableGainResultModel (
                                        deductions: BigDecimal,
                                        allowableLossesRemaining: BigDecimal,
                                        broughtForwardLossesRemaining: BigDecimal,
-                                       reliefsUsed: Option[BigDecimal],
+                                       lettingReliefsUsed: Option[BigDecimal],
                                        prrUsed: Option[BigDecimal],
                                        broughtForwardLossesUsed: BigDecimal,
                                        allowableLossesUsed: BigDecimal

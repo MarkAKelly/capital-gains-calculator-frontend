@@ -156,7 +156,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
           }
 
           "include a value for Reliefs of £0" in {
-            doc.select("#deductions-amount").text should include(s"${messages.reliefsUsed} £0")
+            doc.select("#deductions-amount").text should include(s"${messages.lettingReliefsUsed} £0")
           }
 
           "include a value for Allowable Losses of £0" in {
@@ -409,6 +409,23 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         }
       }
 
+      s"display the text ${messages.whatToDoNextText}" in {
+        doc.select("div#whatToDoNextNoLossText").text shouldBe
+          s"${messages.whatToDoNextNoLossText} ${messages.whatToDoNextNoLossLinkProperties} ${commonMessages.calcBaseExternalLink} ."
+      }
+
+      s"have the link text ${messages.whatToDoNextNoLossLinkProperties}${commonMessages.calcBaseExternalLink}" in {
+        doc.select("div#whatToDoNextNoLossText a").text should include(s"${messages.whatToDoNextNoLossLinkProperties}")
+      }
+
+      s"have a link to https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax" in {
+        doc.select("div#whatToDoNextNoLossText a").attr("href") shouldBe "https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax"
+      }
+
+      s"have the visually hidden text ${commonMessages.calcBaseExternalLink}" in {
+        doc.select("div#whatToDoNextNoLossText span#opensInANewTab").text shouldBe s"${commonMessages.calcBaseExternalLink}"
+      }
+
       "display the save as PDF Button" which {
 
         "should render only one button" in {
@@ -553,7 +570,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
           }
 
           "include a value for Reliefs of £50,000" in {
-            doc.select("#deductions-amount").text should include(s"${messages.reliefsUsed} £50,000")
+            doc.select("#deductions-amount").text should include(s"${messages.lettingReliefsUsed} £50,000")
           }
 
           "include a value for Allowable Losses of £10,000" in {
@@ -885,7 +902,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       "has a breakdown that" should {
 
         "include a value for Reliefs of £30,000" in {
-          doc.select("#deductions-amount").text should include(s"${messages.reliefsUsed} £30,000")
+          doc.select("#deductions-amount").text should include(s"${messages.lettingReliefsUsed} £30,000")
         }
 
         "include a value for PRR of £1,500" in {
@@ -1000,7 +1017,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
 
       s"display the text ${messages.whatToDoNextText}" in {
         doc.select("div#whatToDoNextNoLossText").text shouldBe
-          s"${messages.whatToDoNextNoLossText} ${messages.whatToDoNextNoLossLinkProperties} ${commonMessages.calcBaseExternalLink}."
+          s"${messages.whatToDoNextNoLossText} ${messages.whatToDoNextNoLossLinkProperties} ${commonMessages.calcBaseExternalLink} ${messages.whatToDoNextLossRemaining}."
       }
 
       s"have the link text ${messages.whatToDoNextNoLossLinkProperties}${commonMessages.calcBaseExternalLink}" in {
@@ -1008,7 +1025,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       }
 
       s"have a link to https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax" in {
-        doc.select("div#whatToDoNextNoLossText a").attr("href") shouldBe "https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax"
+        doc.select("div#whatToDoNextNoLossText a").attr("href") shouldBe "https://www.gov.uk/capital-gains-tax/losses"
       }
 
       s"have the visually hidden text ${commonMessages.calcBaseExternalLink}" in {
@@ -1110,7 +1127,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
 
     s"display the text ${messages.whatToDoNextText}" in {
       doc.select("div#whatToDoNextNoLossText").text shouldBe
-        s"${messages.whatToDoNextNoLossText} ${messages.whatToDoNextNoLossLinkProperties} ${commonMessages.calcBaseExternalLink}."
+        s"${messages.whatToDoNextNoLossText} ${messages.whatToDoNextNoLossLinkProperties} ${commonMessages.calcBaseExternalLink} ${messages.whatToDoNextLossRemaining}."
     }
 
     s"have the link text ${messages.whatToDoNextNoLossLinkProperties}${commonMessages.calcBaseExternalLink}" in {
@@ -1118,7 +1135,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
     }
 
     s"have a link to https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax" in {
-      doc.select("div#whatToDoNextNoLossText a").attr("href") shouldBe "https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax"
+      doc.select("div#whatToDoNextNoLossText a").attr("href") shouldBe "https://www.gov.uk/capital-gains-tax/losses"
     }
 
     s"have the visually hidden text ${commonMessages.calcBaseExternalLink}" in {

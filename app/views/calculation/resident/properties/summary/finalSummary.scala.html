@@ -99,22 +99,14 @@ articleLayout = false
 
     <!-- Data Rows -->
     @summaryNumericRowHelper("gain",gainMessage(result.gain),result.gain)
-    @{if (ApplicationConfig.featureRTTPRREnabled)
-        summaryNumericRowHelper("deductions", Messages("calc.resident.summary.deductions"), result.deductions, None, Some(Seq(
-            (Messages("calc.resident.summary.deductionsDetails.prrUsed"), MoneyPounds(result.prrUsed.get, 0).quantity),
-            (Messages("calc.resident.summary.reliefs"), MoneyPounds(result.reliefsUsed.get, 0).quantity),
-            (Messages("calc.resident.summary.deductionsDetails.allowableLossesUsed", taxYear.taxYearSupplied), MoneyPounds(result.allowableLossesUsed, 0).quantity),
-            (Messages("calc.resident.summary.deductionsDetails.aeaUsed"), MoneyPounds(result.aeaUsed, 0).quantity),
-            (Messages("calc.resident.summary.deductionsDetails.broughtForwardLossesUsed", taxYear.taxYearSupplied), MoneyPounds(result.broughtForwardLossesUsed, 0).quantity)
-        )))
-    else
-        summaryNumericRowHelper("deductions", Messages("calc.resident.summary.deductions"), result.deductions, None, Some(Seq(
-            (Messages("calc.resident.summary.reliefs"), MoneyPounds(result.reliefsUsed.get, 0).quantity),
-            (Messages("calc.resident.summary.deductionsDetails.allowableLossesUsed", taxYear.taxYearSupplied), MoneyPounds(result.allowableLossesUsed, 0).quantity),
-            (Messages("calc.resident.summary.deductionsDetails.aeaUsed"), MoneyPounds(result.aeaUsed, 0).quantity),
-            (Messages("calc.resident.summary.deductionsDetails.broughtForwardLossesUsed", taxYear.taxYearSupplied), MoneyPounds(result.broughtForwardLossesUsed, 0).quantity)
-        )))
-    }
+    @summaryNumericRowHelper("deductions", Messages("calc.resident.summary.deductions"), result.deductions, None, Some(Seq(
+        (Messages("calc.resident.summary.deductionsDetails.prrUsed"), MoneyPounds(result.prrUsed.get, 0).quantity),
+        (Messages("calc.resident.summary.deductionsDetails.lettingReliefsUsed"), MoneyPounds(result.lettingReliefsUsed.get, 0).quantity),
+        (Messages("calc.resident.summary.deductionsDetails.allowableLossesUsed", taxYear.taxYearSupplied), MoneyPounds(result.allowableLossesUsed, 0).quantity),
+        (Messages("calc.resident.summary.deductionsDetails.aeaUsed"), MoneyPounds(result.aeaUsed, 0).quantity),
+        (Messages("calc.resident.summary.deductionsDetails.broughtForwardLossesUsed", taxYear.taxYearSupplied), MoneyPounds(result.broughtForwardLossesUsed, 0).quantity)
+    )))
+
     @summaryNumericRowHelper("chargeableGain", if(result.chargeableGain < 0) {
     Messages("calc.resident.summary.chargeableLoss")} else {Messages("calc.resident.summary.chargeableGain")}, result.chargeableGain)
 
@@ -210,7 +202,7 @@ articleLayout = false
                 <div id="whatToDoNextText" class="font-medium what-to-do-next-text">@Messages("calc.resident.summary.whatNext.youNeedTo") <a id="whatToDoNextLink"
                                                                                                                               class="external-link"
                                                                                                                               rel="external"
-                                                                                                                              href="https://www.gov.uk/tax-sell-property/what-you-pay-it-on"
+                                                                                                                              href="https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax"
                                                                                                                               target="_blank"
                                                                                                                               data-journey-click=help:govUK:rtt-properties-whatToDoNext">@Messages("calc.resident.summary.whatNext.linkTwo")<span id="opensInANewTab"> @Messages("calc.base.externalLink")</span></a>
                 </div>

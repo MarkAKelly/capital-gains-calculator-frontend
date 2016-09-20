@@ -159,7 +159,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
           }
 
           "include a value for Reliefs of £0" in {
-            doc.select("#deductions-amount").text should include(s"${messages.reliefsUsed} £0")
+            doc.select("#deductions-amount").text should include(s"${messages.lettingReliefsUsed} £0")
           }
 
           "include a value for Allowable Losses of £0" in {
@@ -785,7 +785,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
     "has a breakdown that" should {
 
       "include a value for Reliefs of £1,000" in {
-        doc.select("#deductions-amount").text should include(s"${messages.reliefsUsed} £1,000")
+        doc.select("#deductions-amount").text should include(s"${messages.lettingReliefsUsed} £1,000")
       }
 
       "include a value for PRR of £2,000" in {
@@ -992,7 +992,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
 
       "should link to the what-you-pay-on-it govuk page" in {
-        doc.select("#whatToDoNextLink").attr("href") shouldEqual "https://www.gov.uk/tax-sell-property/what-you-pay-it-on"
+        doc.select("#whatToDoNextLink").attr("href") shouldEqual "https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax"
       }
 
       "have the externalLink attribute" in {
