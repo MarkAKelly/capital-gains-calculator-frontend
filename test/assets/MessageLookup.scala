@@ -58,7 +58,7 @@ object MessageLookup {
       }
 
       object worthOn {
-        val title = "What was the property worth on 31 March 1982?"
+        val question = "What was the property worth on 31 March 1982?"
       }
     }
   }

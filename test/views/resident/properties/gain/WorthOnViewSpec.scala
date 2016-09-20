@@ -31,22 +31,22 @@ class WorthOnViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
     lazy val request = fakeRequestToPOSTWithSession(("amount", value))
     lazy val form = worthOnForm.bind(Map(("amount", value)))
     lazy val backLink = Some(controllers.resident.properties.routes.GainController.whoDidYouGiveItTo().toString())
-    lazy val view = views.worthOn(worthOnForm, backLink, "home-link", routes.GainController.submitWorthOn())(fakeRequest)
+    lazy val view = views.worthOn(worthOnForm)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
   }
 
   "Worth when gave away View" should {
 
     lazy val backLink = Some(controllers.resident.properties.routes.GainController.ownerBeforeAprilNineteenEightyTwo().toString())
-    lazy val view = views.worthOn(worthOnForm, backLink, "home-link", routes.GainController.submitWorthOn())(fakeRequest)
+    lazy val view = views.worthOn(worthOnForm)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have charset UTF-8" in {
       doc.charset.toString shouldBe "UTF-8"
     }
 
-    s"have the title of the page ${messages.title}" in {
-      doc.title shouldEqual messages.title
+    s"have the title of the page ${messages.question}" in {
+      doc.title shouldEqual messages.question
     }
 
     s"have a back link to the owner before April 1982 with text ${MessageLookup.calcBaseBack}" in {
@@ -57,8 +57,8 @@ class WorthOnViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
 
       lazy val heading = doc.select("H1")
 
-      s"have the page heading '${messages.title}'" in {
-        heading.text shouldBe messages.title
+      s"have the page heading '${messages.question}'" in {
+        heading.text shouldBe messages.question
       }
 
       "have the heading-large class" in {
@@ -72,7 +72,7 @@ class WorthOnViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
       lazy val form = doc.select("form")
 
       "have the action /calculate-your-capital-gains/resident/properties/worth-on" in {
-        form.attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/worth-on"
+        form.attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/market-value-on-31-march-1982"
       }
 
       "have the method POST" in {
@@ -87,8 +87,8 @@ class WorthOnViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
 
           lazy val label = doc.select("label")
 
-          s"has the text ${messages.title}" in {
-            label.select("div > span").text() shouldEqual messages.title
+          s"has the text ${messages.question}" in {
+            label.select("div > span").text() shouldEqual messages.question
           }
 
           "has the class visually hidden" in {
@@ -141,7 +141,7 @@ class WorthOnViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
 
     val form = worthOnForm.bind(Map("amount" -> "100"))
     lazy val backLink = Some(controllers.resident.properties.routes.GainController.ownerBeforeAprilNineteenEightyTwo().toString())
-    lazy val view = views.worthOn(form, backLink, "home-link", routes.GainController.submitWorthOn())(fakeRequest)
+    lazy val view = views.worthOn(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display the value of the form" in {
@@ -161,7 +161,7 @@ class WorthOnViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
 
     val form = worthOnForm.bind(Map("amount" -> ""))
     lazy val backLink = Some(controllers.resident.properties.routes.GainController.ownerBeforeAprilNineteenEightyTwo().toString())
-    lazy val view = views.worthOn(form, backLink, "home-link", routes.GainController.submitWorthOn())(fakeRequest)
+    lazy val view = views.worthOn(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {

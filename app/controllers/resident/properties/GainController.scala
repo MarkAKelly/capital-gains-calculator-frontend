@@ -286,19 +286,17 @@ trait GainController extends FeatureLock {
   }
 
   //################# Property Worth on 31/03/1982 Actions ########################
-  private val worthOnPostAction = controllers.resident.properties.routes.GainController.submitWorthOn()
-  private val worthOnBackLink = Some(controllers.resident.properties.routes.GainController.ownerBeforeAprilNineteenEightyTwo().toString)
 
   val worthOn = FeatureLockForRTT.async { implicit request =>
     calcConnector.fetchAndGetFormData[WorthOnModel](keystoreKeys.worthOn).map {
-      case Some(data) => Ok(views.worthOn(worthOnForm.fill(data), worthOnBackLink, homeLink, worthOnPostAction))
-      case None => Ok(views.worthOn(worthOnForm, worthOnBackLink, homeLink, worthOnPostAction))
+      case Some(data) => Ok(views.worthOn(worthOnForm.fill(data)))
+      case None => Ok(views.worthOn(worthOnForm))
     }
   }
 
   val submitWorthOn = FeatureLockForRTT.async { implicit request =>
     worthOnForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.worthOn(errors, worthWhenGaveAwayBackLink, homeLink, worthWhenGaveAwayPostAction))),
+      errors => Future.successful(BadRequest(views.worthOn(errors))),
       success => {
         calcConnector.saveFormData[WorthOnModel](keystoreKeys.worthOn, success)
         Future.successful(Redirect(routes.GainController.acquisitionCosts()))

@@ -80,9 +80,9 @@ class WorthOnActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       status(result) shouldBe 200
     }
 
-    s"return some html with title of ${MessageLookup.Resident.Properties.worthOn.title}" in {
+    s"return some html with title of ${MessageLookup.Resident.Properties.worthOn.question}" in {
       contentType(result) shouldBe Some("text/html")
-      Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.Resident.Properties.worthOn.title
+      Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.Resident.Properties.worthOn.question
     }
   }
 
@@ -120,7 +120,7 @@ class WorthOnActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     }
 
     "render the worth when gave away page when supplied with an invalid form" in {
-      Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.Resident.Properties.worthOn.title
+      Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.Resident.Properties.worthOn.question
     }
   }
 }

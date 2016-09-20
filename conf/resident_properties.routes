@@ -48,8 +48,8 @@ GET     /how-became-owner                 controllers.resident.properties.GainCo
 POST    /how-became-owner                 controllers.resident.properties.GainController.submitHowBecameOwner
 
 #Worth On Routes
-GET     /worth-on                         controllers.resident.properties.GainController.worthOn
-POST    /worth-on                         controllers.resident.properties.GainController.submitWorthOn
+GET     /market-value-on-31-march-1982    controllers.resident.properties.GainController.worthOn
+POST    /market-value-on-31-march-1982                         controllers.resident.properties.GainController.submitWorthOn
 
 #Bought For Less Than Worth Routes
 GET     /bought-for-less-than-worth       controllers.resident.properties.GainController.boughtForLessThanWorth
