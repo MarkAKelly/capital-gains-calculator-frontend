@@ -61,6 +61,8 @@
         else {Messages("calc.resident.sellOrGiveAway.sold")}, None)
         @summaryNumericRowHelper("disposalValue",Messages("calc.resident.disposal.value.title"),answers.disposalValue,None)
         @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.disposalCosts.title"),answers.disposalCosts,None)
+        @summaryOptionRowHelper("ownerBeforeAprilNineteenEightyTwo", Messages("calc.resident.properties.ownerBeforeApril.title"),
+        answers.ownerBeforeAprilNineteenEightyTwo, None)
         @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),answers.acquisitionValue,None)
         @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),answers.acquisitionCosts,None)
         @summaryNumericRowHelper("improvements",Messages("calc.resident.improvements.title"),answers.improvements,None)

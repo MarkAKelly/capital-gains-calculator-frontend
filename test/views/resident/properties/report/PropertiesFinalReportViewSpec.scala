@@ -271,6 +271,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         }
       }
 
+      "has an option output row for owner before april 1982" which {
+
+        s"should have the question text '${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}'" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-question").text shouldBe commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
+        }
+
+        "should have the value 'Yes'" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-option span.bold-medium").text shouldBe "Yes"
+        }
+      }
+
       "has a numeric output row for the Acquisition Value" which {
 
         s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
@@ -467,6 +478,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
       "should have the value 'Sold it'" in {
         doc.select("#sellOrGiveAway-option span.bold-medium").text shouldBe "Sold it"
+      }
+    }
+
+    "has an option output row for owner before april 1982" which {
+
+      s"should have the question text '${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}'" in {
+        doc.select("#ownerBeforeAprilNineteenEightyTwo-question").text shouldBe commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
+      }
+
+      "should have the value 'No'" in {
+        doc.select("#ownerBeforeAprilNineteenEightyTwo-option span.bold-medium").text shouldBe "No"
       }
     }
 
