@@ -142,8 +142,8 @@ trait DeductionsController extends FeatureLock {
 
     def routeRequest(totalGain: BigDecimal) = {
       calcConnector.fetchAndGetFormData[PrivateResidenceReliefValueModel](keystoreKeys.prrValue).map {
-        case Some(data) => Ok(views.privateResidenceReliefValue(privateResidenceReliefValueForm.fill(data), homeLink, totalGain))
-        case None => Ok(views.privateResidenceReliefValue(privateResidenceReliefValueForm, homeLink, totalGain))
+        case Some(data) => Ok(views.privateResidenceReliefValue(privateResidenceReliefValueForm(totalGain).fill(data), homeLink, totalGain))
+        case None => Ok(views.privateResidenceReliefValue(privateResidenceReliefValueForm(totalGain), homeLink, totalGain))
       }
     }
 
@@ -156,22 +156,23 @@ trait DeductionsController extends FeatureLock {
 
   val submitPrivateResidenceReliefValue = FeatureLockForRTT.async { implicit request =>
 
-    def errorAction(form: Form[PrivateResidenceReliefValueModel]) = {
-      for {
-        answerSummary <- answerSummary(hc)
-        totalGain <- totalGain(answerSummary, hc)
-      } yield BadRequest(views.privateResidenceReliefValue(form, homeLink, totalGain))
-    }
-
     def successAction(model: PrivateResidenceReliefValueModel) = {
       calcConnector.saveFormData[PrivateResidenceReliefValueModel](keystoreKeys.prrValue, model)
       Future.successful(Redirect(routes.DeductionsController.lettingsRelief()))
     }
 
-    privateResidenceReliefValueForm.bindFromRequest.fold(errors => errorAction(errors), success => successAction(success))
+    def routeRequest(gain: BigDecimal): Future[Result] = {
+      privateResidenceReliefValueForm(gain).bindFromRequest.fold(
+        errors => Future.successful(BadRequest(views.privateResidenceReliefValue(errors, homeLink, gain))),
+        success => successAction(success)
+      )
+    }
+    for {
+      answerSummary <- answerSummary(hc)
+      totalGain <- totalGain(answerSummary, hc)
+      route <- routeRequest(totalGain)
+    } yield route
   }
-
-
 
   //############## Lettings Relief Actions ##################
   private val lettingsReliefBackUrl = routes.DeductionsController.privateResidenceReliefValue().url

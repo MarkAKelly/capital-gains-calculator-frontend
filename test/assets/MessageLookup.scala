@@ -230,7 +230,9 @@ object MessageLookup {
     val title = "How much Private Residence Relief are you entitled to?"
     val question = title
     val link = "Find out how much you're entitled to"
-    def help(value: String): String = s"We've calculated that you've made a gain of £$value on your property. You'll need this figure to calculate your Private Residence Relief."
+    def help(value: String): String = s"We've calculated that you've made a gain of £$value on your property. " +
+      s"You'll need this figure to calculate your Private Residence Relief."
+    def error(value: String): String = s"Enter an amount that is less than your gain of £$value"
   }
 
   //Reliefs messages
@@ -252,8 +254,8 @@ object MessageLookup {
 
   //Reliefs Value messages
   object reliefsValue {
-    def title(input: String) = s"How much tax relief are you claiming on your total gain of £$input?"
-    def question(input: String) = s"How much tax relief are you claiming on your total gain of £$input?"
+    def title(input: String): String = s"How much tax relief are you claiming on your total gain of £$input?"
+    def question(input: String): String = s"How much tax relief are you claiming on your total gain of £$input?"
     val prrLink = "Private Residence Relief"
     val lettingsReliefLink = "Lettings Relief"
   }
@@ -262,7 +264,8 @@ object MessageLookup {
   object lettingsReliefValue {
     val title = s"How much Letting Relief are you entitled to?"
     val question = s"How much Letting Relief are you entitled to?"
-    def additionalContent(input: String) = s"We've calculated that you've made a gain of £$input on your property. You'll need this figure to calculate your Letting Relief."
+    def additionalContent(input: String): String = s"We've calculated that you've made a gain of £$input on your property. " +
+      s"You'll need this figure to calculate your Letting Relief."
   }
 
   //No Prr Reliefs Value messages
