@@ -16,52 +16,87 @@
 
 package routes.nrcgt
 
-import controllers.resident.properties.GainController
 import org.scalatest.Matchers
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-/**
-  * Created by emma on 12/09/16.
-  */
 class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
   /* Customer Type routes */
-  "The URL for the customer type Action" should {
+  "The URL for the customerType Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/" in {
       val path = controllers.nonresident.routes.CustomerTypeController.customerType().url
-
       path shouldEqual "/calculate-your-capital-gains/non-resident/"
     }
   }
 
-  "The URL for the disabled trustee Action" should {
+  "The URL for the submit customerType Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/" in {
+      val path = controllers.nonresident.routes.CustomerTypeController.submitCustomerType().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/customer-type"
+    }
+  }
+
+  /* Disabled Trustee routes */
+  "The URL for the disabledTrustee Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/disabled-trustee" in {
-      val path = controllers.nonresident.routes.DisabledTrusteeController.disabledTrustee.url
+      val path = controllers.nonresident.routes.DisabledTrusteeController.disabledTrustee().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/disabled-trustee"
+    }
+  }
+
+  "The URL for the submitDisabledTrustee Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/disabled-trustee" in {
+      val path = controllers.nonresident.routes.DisabledTrusteeController.submitDisabledTrustee().url
 
       path shouldEqual "/calculate-your-capital-gains/non-resident/disabled-trustee"
     }
   }
 
-  "The URL for the current income Action" should {
+  /* Current Income routes */
+  "The URL for the currentIncome Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/current-income" in {
-      val path = controllers.nonresident.routes.CurrentIncomeController.currentIncome.url
+      val path = controllers.nonresident.routes.CurrentIncomeController.currentIncome().url
       path shouldEqual "/calculate-your-capital-gains/non-resident/current-income"
     }
   }
 
-  "The URL for personal allowance Action" should {
+  "The URL for the submitCurrentIncome Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/current-income" in {
+      val path = controllers.nonresident.routes.CurrentIncomeController.submitCurrentIncome().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/current-income"
+    }
+  }
+
+  /* Personal Allowance routes */
+  "The URL for personalAllowance Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/personal-allowance" in {
       val path = controllers.nonresident.routes.PersonalAllowanceController.personalAllowance().url
       path shouldEqual "/calculate-your-capital-gains/non-resident/personal-allowance"
     }
   }
 
-  "The URL for other properties Action" should {
+  "The URL for submitPersonalAllowance Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/personal-allowance" in {
+      val path = controllers.nonresident.routes.PersonalAllowanceController.submitPersonalAllowance().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/personal-allowance"
+    }
+  }
+
+  /* Other Properties routes */
+  "The URL for otherProperties Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/other-properties" in {
       val path = controllers.nonresident.routes.OtherPropertiesController.otherProperties().url
       path shouldEqual "/calculate-your-capital-gains/non-resident/other-properties"
     }
   }
 
+  "The URL for submitOtherProperties Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/other-properties" in {
+      val path = controllers.nonresident.routes.OtherPropertiesController.submitOtherProperties().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/other-properties"
+    }
+  }
+
+  /* Allowance routes */
   "The URL for the allowance Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/allowance" in {
       val path = controllers.nonresident.routes.AnnualExemptAmountController.annualExemptAmount().url
@@ -69,41 +104,89 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
-  "The URL for the acquisition date Action" should {
+  "The URL for the submitAllowance Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/allowance" in {
+      val path = controllers.nonresident.routes.AnnualExemptAmountController.submitAnnualExemptAmount().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/allowance"
+    }
+  }
+
+  /* Acquisition Date routes */
+  "The URL for the acquisitionDate Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/acquisition-date" in {
       val path = controllers.nonresident.routes.AcquisitionDateController.acquisitionDate().url
       path shouldEqual "/calculate-your-capital-gains/non-resident/acquisition-date"
     }
   }
 
-  "The URL for the rebased value Action" should {
+  "The URL for the submitAcquisitionDate Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/acquisition-date" in {
+      val path = controllers.nonresident.routes.AcquisitionDateController.submitAcquisitionDate().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/acquisition-date"
+    }
+  }
+
+  /* Rebased Value routes */
+  "The URL for the rebasedValue Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/rebased-value" in {
       val path = controllers.nonresident.routes.RebasedValueController.rebasedValue().url
       path shouldEqual "/calculate-your-capital-gains/non-resident/rebased-value"
     }
   }
 
-  "The URL for the rebased costs Action" should {
+  "The URL for the submitRebasedValue Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/rebased-value" in {
+      val path = controllers.nonresident.routes.RebasedValueController.submitRebasedValue().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/rebased-value"
+    }
+  }
+
+  /* Rebased Costs routes */
+  "The URL for the rebasedCosts Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/rebased-costs" in {
-      val path = controllers.nonresident.routes.RebasedCostsController.rebasedCosts().url.toString
+      val path = controllers.nonresident.routes.RebasedCostsController.rebasedCosts().url
       path shouldEqual "/calculate-your-capital-gains/non-resident/rebased-costs"
     }
   }
 
+  "The URL for the submitRebasedCosts Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/rebased-costs" in {
+      val path = controllers.nonresident.routes.RebasedCostsController.submitRebasedCosts().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/rebased-costs"
+    }
+  }
+
+  /* Improvements routes */
   "The URL for the improvements Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/improvements" in {
-      val path = controllers.nonresident.routes.ImprovementsController.improvements().toString()
+      val path = controllers.nonresident.routes.ImprovementsController.improvements().url
       path shouldEqual "/calculate-your-capital-gains/non-resident/improvements"
     }
   }
 
-  "The URL for the disposal dates Action" should {
+  "The URL for the submitImprovements Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/improvements" in {
+      val path = controllers.nonresident.routes.ImprovementsController.submitImprovements().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/improvements"
+    }
+  }
+
+  /* Disposal Date routes */
+  "The URL for the disposalDate Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/disposal-date" in {
       val path = controllers.nonresident.routes.DisposalDateController.disposalDate().url
       path shouldEqual "/calculate-your-capital-gains/non-resident/disposal-date"
     }
   }
 
+  "The URL for the submitDisposalDate Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/disposal-date" in {
+      val path = controllers.nonresident.routes.DisposalDateController.submitDisposalDate().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/disposal-date"
+    }
+  }
+
+  /* No Capital Gains Tax routes */
   "The URL for the no capital gains tax Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/no-capital-gains-tax" in {
       val path = controllers.nonresident.routes.NoCapitalGainsTaxController.noCapitalGainsTax().url
@@ -111,76 +194,154 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
-  "The URL for the disposal value Action" should {
+  /* Disposal Value routes */
+  "The URL for the disposalValue Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/disposal-value" in {
       val path = controllers.nonresident.routes.DisposalValueController.disposalValue().url
       path shouldEqual "/calculate-your-capital-gains/non-resident/disposal-value"
     }
   }
 
-  "The URL for the acquisition costs Action" should {
+  "The URL for the submitDisposalValue Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/disposal-value" in {
+      val path = controllers.nonresident.routes.DisposalValueController.submitDisposalValue().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/disposal-value"
+    }
+  }
+
+  /* Acquisition Costs routes */
+  "The URL for the acquisitionCosts Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/acquisition-costs" in {
       val path = controllers.nonresident.routes.AcquisitionCostsController.acquisitionCosts().url
       path shouldEqual "/calculate-your-capital-gains/non-resident/acquisition-costs"
     }
   }
 
-  "The URL for the disposal costs Action" should {
+  "The URL for the submitAcquisitionCosts Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/acquisition-costs" in {
+      val path = controllers.nonresident.routes.AcquisitionCostsController.submitAcquisitionCosts().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/acquisition-costs"
+    }
+  }
+
+  /* Disposal Costs routes */
+  "The URL for the disposalCosts Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/disposal-costs" in {
       val path = controllers.nonresident.routes.DisposalCostsController.disposalCosts().url
       path shouldEqual "/calculate-your-capital-gains/non-resident/disposal-costs"
     }
   }
 
-  "The URL for the private residence relief Action" should {
+  "The URL for the submitDisposalCosts Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/disposal-costs" in {
+      val path = controllers.nonresident.routes.DisposalCostsController.submitDisposalCosts().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/disposal-costs"
+    }
+  }
+
+  /* Private Residence Relief routes */
+  "The URL for the privateResidenceRelief Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/private-residence-relief" in {
       val path = controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url
       path shouldEqual "/calculate-your-capital-gains/non-resident/private-residence-relief"
     }
   }
 
-  "The URL for the allowable losses Action" should {
+  "The URL for the submitPrivateResidenceRelief Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/private-residence-relief" in {
+      val path = controllers.nonresident.routes.PrivateResidenceReliefController.submitPrivateResidenceRelief().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/private-residence-relief"
+    }
+  }
+
+  /* Allowable Losses routes */
+  "The URL for the allowableLosses Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/allowable-losses" in {
       val path = controllers.nonresident.routes.AllowableLossesController.allowableLosses().url
       path shouldEqual "/calculate-your-capital-gains/non-resident/allowable-losses"
     }
   }
 
-  "The URL for the calculation election Action" should {
+  "The URL for the submitAllowableLosses Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/allowable-losses" in {
+      val path = controllers.nonresident.routes.AllowableLossesController.submitAllowableLosses().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/allowable-losses"
+    }
+  }
+
+  /* Calculation Election routes */
+  "The URL for the calculationElection Action" should {
     "be equal to /calculate/your-capital-gains/non-resident/calculation-election" in {
       val path = controllers.nonresident.routes.CalculationElectionController.calculationElection().url
       path shouldEqual "/calculate-your-capital-gains/non-resident/calculation-election"
     }
   }
 
-  "The URL for the other reliefs Action" should {
+  "The URL for the submitCalculationElection Action" should {
+    "be equal to /calculate/your-capital-gains/non-resident/calculation-election" in {
+      val path = controllers.nonresident.routes.CalculationElectionController.submitCalculationElection().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/calculation-election"
+    }
+  }
+
+  /* Other Reliefs routes */
+  "The URL for the otherReliefs Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/other-reliefs" in {
       val path = controllers.nonresident.routes.OtherReliefsController.otherReliefs().url
       path shouldEqual "/calculate-your-capital-gains/non-resident/other-reliefs"
     }
   }
 
-  "The URL for the other reliefs flat Action" should {
+  "The URL for the submitOtherReliefs Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/other-reliefs" in {
+      val path = controllers.nonresident.routes.OtherReliefsController.submitOtherReliefs().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/other-reliefs"
+    }
+  }
+
+  "The URL for the otherReliefsFlat Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/other-reliefs-flat" in {
-      val path = controllers.nonresident.routes.OtherReliefsFlatController.otherReliefsFlat().url.toString
+      val path = controllers.nonresident.routes.OtherReliefsFlatController.otherReliefsFlat().url
       path shouldEqual "/calculate-your-capital-gains/non-resident/other-reliefs-flat"
     }
   }
 
-  "The URL for the other reliefs time apportioned Action" should {
+  "The URL for the submitOtherReliefsFlat Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/other-reliefs-flat" in {
+      val path = controllers.nonresident.routes.OtherReliefsFlatController.submitOtherReliefsFlat().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/other-reliefs-flat"
+    }
+  }
+
+  "The URL for the otherReliefsTimeApportioned Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/other-reliefs-time-apportioned" in {
-      val path = controllers.nonresident.routes.OtherReliefsTAController.otherReliefsTA().url.toString
+      val path = controllers.nonresident.routes.OtherReliefsTAController.otherReliefsTA().url
       path shouldEqual "/calculate-your-capital-gains/non-resident/other-reliefs-time-apportioned"
     }
   }
 
-  "The URL for the other reliefs rebased Action" should {
+  "The URL for the submitOtherReliefsTimeApportioned Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/other-reliefs-time-apportioned" in {
+      val path = controllers.nonresident.routes.OtherReliefsTAController.submitOtherReliefsTA().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/other-reliefs-time-apportioned"
+    }
+  }
+
+  "The URL for the otherReliefsRebased Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/other-reliefs-rebased" in {
-      val path = controllers.nonresident.routes.OtherReliefsRebasedController.otherReliefsRebased().url.toString
+      val path = controllers.nonresident.routes.OtherReliefsRebasedController.otherReliefsRebased().url
       path shouldEqual "/calculate-your-capital-gains/non-resident/other-reliefs-rebased"
     }
   }
 
+  "The URL for the submitOtherReliefsRebased Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/other-reliefs-rebased" in {
+      val path = controllers.nonresident.routes.OtherReliefsRebasedController.submitOtherReliefsRebased().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/other-reliefs-rebased"
+    }
+  }
+
+  /* Summary routes */
   "The URL for the summary Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/summary" in {
       val path = controllers.nonresident.routes.SummaryController.summary().url
