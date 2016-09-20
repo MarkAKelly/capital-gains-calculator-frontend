@@ -74,6 +74,7 @@ object KeystoreKeys {
     val worthWhenBought = "res:property:worthWhenBought"
     val worthWhenInherited = "res:property:worthWhenInherited"
     val worthWhenGaveAway = "res:property:worthWhenGaveAway"
+    val worthOn = "res:property:worthOn"
   }
 
   object ResidentShareKeys {
