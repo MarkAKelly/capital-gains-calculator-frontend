@@ -38,7 +38,8 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       40,
       50,
       true,
-      true
+      true,
+      Some(BigDecimal(5000))
     )
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
@@ -225,7 +226,8 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       40,
       50,
       false,
-      false
+      false,
+      None
     )
     lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)

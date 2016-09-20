@@ -30,7 +30,8 @@ case class YourAnswersSummaryModel
   acquisitionCosts: BigDecimal,
   improvements: BigDecimal,
   givenAway: Boolean,
-  ownerBeforeAprilNineteenEightyTwo: Boolean
+  ownerBeforeAprilNineteenEightyTwo: Boolean,
+  worthOnAprilNineteenEightyTwo: Option[BigDecimal]
 )
 
 object YourAnswersSummaryModel {
