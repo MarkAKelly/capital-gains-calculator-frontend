@@ -118,6 +118,12 @@ object MessageLookup {
     val additionalContent = "You can use a valuation from a surveyor or a property website."
   }
 
+  //############ Worth When Gifted messages #################//
+  object worthWhenGifted {
+    val question = "What was the property worth when you got it as a gift?"
+    val additionalContent = "You can use a valuation from a surveyor or a property website."
+  }
+
   //############ Worth When Bought messages #################//
   object worthWhenBought {
     val question = "What was the property worth when you bought it?"

@@ -384,6 +384,10 @@ calc.resident.worthWhenInherited.additionalContent = You can use a valuation fro
 calc.resident.worthWhenBought.question = What was the property worth when you bought it?
 calc.resident.worthWhenBought.additionalContent = You can use a valuation from a surveyor or a property website.
 
+## Worth When Gifted messages
+calc.resident.worthWhenGifted.question = What was the property worth when you got it as a gift?
+calc.resident.worthWhenGifted.additionalContent = You can use a valuation from a surveyor or a property website.
+
 ## Acquisition Value messages
 calc.resident.acquisitionValue.title = How much did you pay for the property?
 calc.resident.acquisitionValue.question = How much did you pay for the property?
