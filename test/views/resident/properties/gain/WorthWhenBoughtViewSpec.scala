@@ -71,8 +71,12 @@ class WorthWhenBoughtViewSpec extends UnitSpec with WithFakeApplication with Fak
       doc.select("div.resident p").text() shouldBe messages.additionalContent
     }
 
+    "have a visually hidden label for the question" in {
+      doc.select("label[for=amount] > div > span").attr("class") shouldBe "visuallyhidden"
+    }
+
     s"have a label for an input with text ${messages.question}" in {
-      doc.select("label > div > span.visuallyhidden").text() shouldEqual messages.question
+      doc.select("label[for=amount] > div > span").text() shouldEqual messages.question
     }
 
     s"have an input field with id amount " in {
