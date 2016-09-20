@@ -42,8 +42,8 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
       doc.charset.toString shouldBe "UTF-8"
     }
 
-    s"have the title of the page ${messages.title}" in {
-      doc.title shouldEqual messages.title
+    s"have the title of the page ${messages.question}" in {
+      doc.title shouldEqual messages.question
     }
 
     s"have a back link to the Sell For less Page with text ${MessageLookup.calcBaseBack}" in {

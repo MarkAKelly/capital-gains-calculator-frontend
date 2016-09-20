@@ -67,7 +67,7 @@
         @summaryDateRowHelper("disposalDate",Messages("calc.resident.disposalDate.question"),answers.disposalDate,Some(routes.disposalDate().toString))
         @summaryTextRowHelper("sellOrGiveAway", Messages("calc.resident.sellOrGiveAway.title"), if (answers.givenAway) {Messages("calc.resident.sellOrGiveAway.given")}
         else {Messages("calc.resident.sellOrGiveAway.sold")}, Some(routes.sellOrGiveAway().toString))
-        @summaryNumericRowHelper("disposalValue",Messages("calc.resident.disposal.value.title"),answers.disposalValue,Some(routes.disposalValue().toString))
+        @summaryNumericRowHelper("disposalValue",Messages("calc.resident.disposal.value.question"),answers.disposalValue,Some(routes.disposalValue().toString))
         @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.disposalCosts.title"),answers.disposalCosts,Some(routes.disposalCosts().toString))
         @summaryOptionRowHelper("ownerBeforeAprilNineteenEightyTwo", Messages("calc.resident.properties.ownerBeforeApril.title"),
         answers.ownerBeforeAprilNineteenEightyTwo, Some(routes.ownerBeforeAprilNineteenEightyTwo().toString))

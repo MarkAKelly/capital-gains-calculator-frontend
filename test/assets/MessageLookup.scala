@@ -132,7 +132,6 @@ object MessageLookup {
 
   //Disposal Value messages
   object disposalValue {
-    val title = "How much did you sell the property for?"
     val question = "How much did you sell the property for?"
   }
 
@@ -397,7 +396,7 @@ object MessageLookup {
   }
 
   object sharesDisposalValue {
-    val title = "How much did you sell the shares for?"
+    val question = "How much did you sell the shares for?"
     val helpText = "Put the market value of the shares instead if you sold them for less than they were worth to help the buyer"
   }
 
