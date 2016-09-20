@@ -32,6 +32,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
         BigDecimal(500),
         BigDecimal(100),
         BigDecimal(10),
+        true,
         true)
       val result = CalculateRequestConstructor.totalGainRequestString(answers)
       result shouldBe s"?disposalValue=1000" +
