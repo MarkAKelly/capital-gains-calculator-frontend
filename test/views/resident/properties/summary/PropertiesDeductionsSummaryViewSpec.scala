@@ -689,6 +689,31 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         }
       }
 
+      "has an output row for how became owner" which {
+
+        s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
+          doc.select("#howBecameOwner-question").text shouldBe commonMessages.howBecameOwner.title
+        }
+
+        s"should have the value '${commonMessages.howBecameOwner.bought}'" in {
+          doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.bought
+        }
+
+        s"should have a change link to ${routes.GainController.howBecameOwner().url}" in {
+          doc.select("#howBecameOwner-option a").attr("href") shouldBe routes.GainController.howBecameOwner().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#howBecameOwner-option a").text shouldBe
+            s"${commonMessages.calcBaseChange} ${commonMessages.howBecameOwner.title}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#howBecameOwner-option a span.visuallyhidden").text shouldBe
+            commonMessages.howBecameOwner.title
+        }
+      }
+
       "has a numeric output row for allowable losses remaining" which {
 
         "should have the question text for an in year loss" in {
@@ -1225,6 +1250,31 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       }
     }
 
+    "has an output row for how became owner" which {
+
+      s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
+        doc.select("#howBecameOwner-question").text shouldBe commonMessages.howBecameOwner.title
+      }
+
+      s"should have the value '${commonMessages.howBecameOwner.inherited}'" in {
+        doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.inherited
+      }
+
+      s"should have a change link to ${routes.GainController.howBecameOwner().url}" in {
+        doc.select("#howBecameOwner-option a").attr("href") shouldBe routes.GainController.howBecameOwner().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#howBecameOwner-option a").text shouldBe
+          s"${commonMessages.calcBaseChange} ${commonMessages.howBecameOwner.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#howBecameOwner-option a span.visuallyhidden").text shouldBe
+          commonMessages.howBecameOwner.title
+      }
+    }
+
     "display the what to do next section" in {
       doc.select("#whatToDoNext").hasText shouldEqual true
     }
@@ -1421,6 +1471,33 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
 
       doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:yes\"]").size shouldBe 0
       doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:no\"]").size shouldBe 1
+    }
+
+    "has an output row for how became owner" which {
+      lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel, None, Some(false))(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(view.body)
+
+      s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
+        doc.select("#howBecameOwner-question").text shouldBe commonMessages.howBecameOwner.title
+      }
+
+      s"should have the value '${commonMessages.howBecameOwner.gifted}'" in {
+        doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.gifted
+      }
+
+      s"should have a change link to ${routes.GainController.howBecameOwner().url}" in {
+        doc.select("#howBecameOwner-option a").attr("href") shouldBe routes.GainController.howBecameOwner().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#howBecameOwner-option a").text shouldBe
+          s"${commonMessages.calcBaseChange} ${commonMessages.howBecameOwner.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#howBecameOwner-option a span.visuallyhidden").text shouldBe
+          commonMessages.howBecameOwner.title
+      }
     }
 
   }
