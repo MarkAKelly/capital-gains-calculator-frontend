@@ -31,7 +31,8 @@ case class YourAnswersSummaryModel
   improvements: BigDecimal,
   givenAway: Boolean,
   ownerBeforeAprilNineteenEightyTwo: Boolean,
-  howBecameOwner: Option[String]
+  howBecameOwner: Option[String],
+  boughtForLessThanWorth: Option[Boolean]
 )
 
 object YourAnswersSummaryModel {
