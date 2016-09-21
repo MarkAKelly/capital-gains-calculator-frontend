@@ -37,7 +37,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       BigDecimal(10000),
       BigDecimal(30000),
       true,
-      true)
+      true,
+      None)
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(false)),
       None,
@@ -505,7 +506,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       BigDecimal(10000),
       BigDecimal(30000),
       false,
-      false)
+      false,
+      Some("Bought"))
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
@@ -684,6 +686,31 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         "has the question component of the link as visuallyhidden" in {
           doc.select("#ownerBeforeAprilNineteenEightyTwo-option a span.visuallyhidden").text shouldBe
             commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
+        }
+      }
+
+      "has an output row for how became owner" which {
+
+        s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
+          doc.select("#howBecameOwner-question").text shouldBe commonMessages.howBecameOwner.title
+        }
+
+        s"should have the value '${commonMessages.howBecameOwner.bought}'" in {
+          doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.bought
+        }
+
+        s"should have a change link to ${routes.GainController.howBecameOwner().url}" in {
+          doc.select("#howBecameOwner-option a").attr("href") shouldBe routes.GainController.howBecameOwner().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#howBecameOwner-option a").text shouldBe
+            s"${commonMessages.calcBaseChange} ${commonMessages.howBecameOwner.title}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#howBecameOwner-option a span.visuallyhidden").text shouldBe
+            commonMessages.howBecameOwner.title
         }
       }
 
@@ -978,7 +1005,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       BigDecimal(10000),
       BigDecimal(30000),
       true,
-      true)
+      true,
+      None)
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -1180,7 +1208,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       BigDecimal(0),
       BigDecimal(0),
       true,
-      false)
+      false,
+      Some("Inherited"))
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
@@ -1233,6 +1262,31 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         doc.select("#broughtForwardLossRemaining-amount div span").text() should
           include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} " +
             s"${commonMessages.calcBaseExternalLink} ${messages.remainingBroughtForwardLossHelp}")
+      }
+    }
+
+    "has an output row for how became owner" which {
+
+      s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
+        doc.select("#howBecameOwner-question").text shouldBe commonMessages.howBecameOwner.title
+      }
+
+      s"should have the value '${commonMessages.howBecameOwner.inherited}'" in {
+        doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.inherited
+      }
+
+      s"should have a change link to ${routes.GainController.howBecameOwner().url}" in {
+        doc.select("#howBecameOwner-option a").attr("href") shouldBe routes.GainController.howBecameOwner().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#howBecameOwner-option a").text shouldBe
+          s"${commonMessages.calcBaseChange} ${commonMessages.howBecameOwner.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#howBecameOwner-option a span.visuallyhidden").text shouldBe
+          commonMessages.howBecameOwner.title
       }
     }
 
@@ -1290,7 +1344,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       BigDecimal(10000),
       BigDecimal(30000),
       false,
-      true)
+      true,
+      None)
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
@@ -1355,7 +1410,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       BigDecimal(10000),
       BigDecimal(30000),
       true,
-      false)
+      false,
+      Some("Gifted"))
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -1430,6 +1486,33 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
 
       doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:yes\"]").size shouldBe 0
       doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:no\"]").size shouldBe 1
+    }
+
+    "has an output row for how became owner" which {
+      lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel, None, Some(false))(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(view.body)
+
+      s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
+        doc.select("#howBecameOwner-question").text shouldBe commonMessages.howBecameOwner.title
+      }
+
+      s"should have the value '${commonMessages.howBecameOwner.gifted}'" in {
+        doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.gifted
+      }
+
+      s"should have a change link to ${routes.GainController.howBecameOwner().url}" in {
+        doc.select("#howBecameOwner-option a").attr("href") shouldBe routes.GainController.howBecameOwner().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#howBecameOwner-option a").text shouldBe
+          s"${commonMessages.calcBaseChange} ${commonMessages.howBecameOwner.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#howBecameOwner-option a span.visuallyhidden").text shouldBe
+          commonMessages.howBecameOwner.title
+      }
     }
 
   }

@@ -199,6 +199,10 @@ trait CalculatorConnector {
     val givenAway = fetchAndGetFormData[properties.SellOrGiveAwayModel](ResidentPropertyKeys.sellOrGiveAway).map(_.get.givenAway)
     val ownerBeforeAprilNineteenEightyTwo = fetchAndGetFormData[properties.gain.OwnerBeforeAprilModel](ResidentPropertyKeys.ownerBeforeAprilNineteenEightyTwo)
       .map(_.get.ownedBeforeAprilNineteenEightyTwo)
+    val howBecameOwner = fetchAndGetFormData[properties.HowBecameOwnerModel](ResidentPropertyKeys.howBecameOwner).map {
+      case Some(data) => Some(data.gainedBy)
+      case None => None
+    }
 
     for {
       acquisitionValue <- acquisitionValue
@@ -209,6 +213,7 @@ trait CalculatorConnector {
       improvements <- improvements
       givenAway <- givenAway
       ownerBeforeAprilNineteenEightyTwo <- ownerBeforeAprilNineteenEightyTwo
+      howBecameOwner <- howBecameOwner
     } yield properties.YourAnswersSummaryModel(
       disposalDate,
       disposalValue,
@@ -217,7 +222,8 @@ trait CalculatorConnector {
       acquisitionCosts,
       improvements,
       givenAway,
-      ownerBeforeAprilNineteenEightyTwo
+      ownerBeforeAprilNineteenEightyTwo,
+      howBecameOwner
     )
   }
 

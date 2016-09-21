@@ -160,17 +160,6 @@ object MessageLookup {
   object acquisitionValue {
     val title = "How much did you pay for the property?"
     val pageHeading = "How much did you pay for the property?"
-    val bulletListTitleOne = "Put the "
-    val bulletListTitleTwo = "market value (opens in a new window) "
-    val bulletListTitleThree = "of the property instead if you:"
-    val bulletListOne = "inherited it"
-    val bulletListTwo = "got it as a gift"
-    val bulletListThree = "bought it from a relative, business partner or"
-    val bulletListThreeLink = "someone else you're connected to"
-    val bulletListFour = "bought it for less than it’s worth because the seller wanted to help you"
-    val bulletListFive = "became the owner before 1 April 1982"
-    val bulletLink = "https://www.gov.uk/capital-gains-tax/losses"
-    val bulletEnd = "You can use a valuation from a surveyor or a property website."
   }
 
   //Acquisition Costs messages
