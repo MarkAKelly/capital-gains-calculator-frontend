@@ -39,7 +39,8 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       50,
       true,
       Some(false),
-      true
+      true,
+      None
     )
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
@@ -228,7 +229,8 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       50,
       false,
       Some(true),
-     false
+      false,
+      Some("Bought")
     )
 
     lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)
@@ -278,6 +280,79 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
         doc.select("#ownerBeforeAprilNineteenEightyTwo-option span.bold-medium").text shouldBe "No"
       }
     }
+
+    "has an output row for how became owner" which {
+
+      s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
+        doc.select("#howBecameOwner-question").text shouldBe commonMessages.howBecameOwner.title
+      }
+
+      s"should have the value '${commonMessages.howBecameOwner.bought}'" in {
+        doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.bought
+      }
+    }
+  }
+
+  "Summary when supplied with an inherited property" should {
+
+    lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
+
+    val testModel = YourAnswersSummaryModel(
+      constructDate(12, 9, 2015),
+      10,
+      20,
+      30,
+      40,
+      50,
+      false,
+      Some(true),
+      false,
+      Some("Inherited")
+    )
+    lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "has an output row for how became owner" which {
+
+      s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
+        doc.select("#howBecameOwner-question").text shouldBe commonMessages.howBecameOwner.title
+      }
+
+      s"should have the value '${commonMessages.howBecameOwner.inherited}'" in {
+        doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.inherited
+      }
+    }
+  }
+
+  "Summary when supplied with a gifted property" should {
+
+    lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
+
+    val testModel = YourAnswersSummaryModel(
+      constructDate(12, 9, 2015),
+      10,
+      20,
+      30,
+      40,
+      50,
+      false,
+      Some(true),
+      false,
+      Some("Gifted")
+    )
+    lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "has an output row for how became owner" which {
+
+      s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
+        doc.select("#howBecameOwner-question").text shouldBe commonMessages.howBecameOwner.title
+      }
+
+      s"should have the value '${commonMessages.howBecameOwner.gifted}'" in {
+        doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.gifted
+      }
+    }
   }
 
   "Summary for Sell for Loss with option No" should {
@@ -293,7 +368,8 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       50,
       false,
       Some(false),
-      false
+      false,
+      Some("Inherited")
     )
     lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)

@@ -144,7 +144,7 @@ trait GainController extends FeatureLock {
         isAfterApril15 = TaxDates.dateAfterStart(Dates.constructDate(disposalDate.get.day, disposalDate.get.month, disposalDate.get.year)),
         navBackLink = routes.GainController.disposalDate().url,
         navHomeLink = homeLink,
-        continueUrl = routes.GainController.disposalValue().url,
+        continueUrl = routes.GainController.sellOrGiveAway().url,
         navTitle = navTitle
       ))
     }
@@ -258,7 +258,7 @@ trait GainController extends FeatureLock {
       errors => Future.successful(BadRequest(views.disposalCosts(errors))),
       success => {
         calcConnector.saveFormData(keystoreKeys.disposalCosts, success)
-        Future.successful(Redirect(routes.GainController.acquisitionValue()))}
+        Future.successful(Redirect(routes.GainController.ownerBeforeAprilNineteenEightyTwo()))}
     )
   }
 

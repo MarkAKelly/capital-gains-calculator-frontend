@@ -176,6 +176,10 @@ articleLayout = false
     @summaryOptionRowHelper("ownerBeforeAprilNineteenEightyTwo", Messages("calc.resident.properties.ownerBeforeApril.title"),
     gainAnswers.ownerBeforeAprilNineteenEightyTwo, Some(gainRoutes.ownerBeforeAprilNineteenEightyTwo().toString))
 
+    @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo)
+    summaryTextRowHelper("howBecameOwner", Messages("calc.resident.howBecameOwner.title"), Messages(s"calc.resident.howBecameOwner.${gainAnswers.howBecameOwner.get.toLowerCase}"),
+    Some(gainRoutes.howBecameOwner().toString))}
+
     @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),gainAnswers.acquisitionValue,Some(gainRoutes.acquisitionValue().toString))
 
     @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),gainAnswers.acquisitionCosts,Some(gainRoutes.acquisitionCosts().toString))

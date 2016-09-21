@@ -68,7 +68,8 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
         5,
         0,
         true,Some(false),
-        true)
+        true,
+        Some("Bought"))
 
       lazy val target = setupTarget(
         yourAnswersSummaryModel,
@@ -102,7 +103,8 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
         5,
         0,
         false,Some(true),
-        false)
+        false,
+        Some("Bought"))
 
       lazy val target = setupTarget(
         yourAnswersSummaryModel,
