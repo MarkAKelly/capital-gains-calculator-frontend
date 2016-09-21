@@ -730,6 +730,29 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
     }
 
+    "has an option output row for bought for less than worth" which {
+
+      s"should have the question text '${commonMessages.boughtForLessThanWorth.title}'" in {
+        doc.select("#boughtForLessThanWorth-question").text shouldBe commonMessages.boughtForLessThanWorth.title
+      }
+
+      "should have the value 'No'" in {
+        doc.select("#boughtForLessThanWorth-option span.bold-medium").text shouldBe "No"
+      }
+
+      s"should have a change link to ${routes.GainController.boughtForLessThanWorth().url}" in {
+        doc.select("#boughtForLessThanWorth-option a").attr("href") shouldBe routes.GainController.boughtForLessThanWorth().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#boughtForLessThanWorth-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.boughtForLessThanWorth.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#boughtForLessThanWorth-option a span.visuallyhidden").text shouldBe commonMessages.boughtForLessThanWorth.title
+      }
+    }
+
     "has an option output row for property lived in" which {
 
       s"should have the question text '${commonMessages.propertyLivedIn.title}'" in {
@@ -836,6 +859,80 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
 
       s"have the text ${messages.saveAsPdf}" in {
         doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
+      }
+    }
+  }
+
+  "Properties Final Summary view when property was sold for less than worth" should {
+    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+      BigDecimal(200000),
+      BigDecimal(10000),
+      BigDecimal(100000),
+      BigDecimal(10000),
+      BigDecimal(30000),
+      false,
+      false,
+      Some("Bought"),
+      Some(true))
+    lazy val deductionAnswers = ChargeableGainAnswers(
+      Some(OtherPropertiesModel(true)),
+      Some(AllowableLossesModel(false)),
+      None,
+      Some(LossesBroughtForwardModel(false)),
+      None,
+      Some(AnnualExemptAmountModel(0)),
+      Some(PropertyLivedInModel(true)),
+      Some(PrivateResidenceReliefModel(false)),
+      None,
+      None,
+      None
+    )
+
+    lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
+
+    lazy val results = TotalGainAndTaxOwedModel(
+      50000,
+      20000,
+      0,
+      30000,
+      3600,
+      30000,
+      18,
+      None,
+      None,
+      Some(BigDecimal(0)),
+      Some(BigDecimal(0)),
+      0,
+      0
+    )
+
+    lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
+
+    lazy val backLink = "/calculate-your-capital-gains/resident/properties/personal-allowance"
+
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "has an option output row for bought for less than worth" which {
+
+      s"should have the question text '${commonMessages.boughtForLessThanWorth.title}'" in {
+        doc.select("#boughtForLessThanWorth-question").text shouldBe commonMessages.boughtForLessThanWorth.title
+      }
+
+      "should have the value 'Yes'" in {
+        doc.select("#boughtForLessThanWorth-option span.bold-medium").text shouldBe "Yes"
+      }
+
+      s"should have a change link to ${routes.GainController.boughtForLessThanWorth().url}" in {
+        doc.select("#boughtForLessThanWorth-option a").attr("href") shouldBe routes.GainController.boughtForLessThanWorth().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#boughtForLessThanWorth-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.boughtForLessThanWorth.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#boughtForLessThanWorth-option a span.visuallyhidden").text shouldBe commonMessages.boughtForLessThanWorth.title
       }
     }
   }
