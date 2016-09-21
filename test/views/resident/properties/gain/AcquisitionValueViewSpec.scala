@@ -51,8 +51,8 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Fa
         backLink.hasClass("back-link") shouldBe true
       }
 
-      "have a link to Disposal Value" in {
-        backLink.attr("href") shouldBe controllers.resident.properties.routes.GainController.disposalCosts().toString
+      "have a link to Bought For Less Than Worth" in {
+        backLink.attr("href") shouldBe controllers.resident.properties.routes.GainController.boughtForLessThanWorth().toString
       }
     }
 
@@ -91,48 +91,6 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Fa
 
         "have the class 'visuallyhidden'" in {
           label.select("span").hasClass("visuallyhidden") shouldBe true
-        }
-      }
-
-      "has additional content that" should {
-
-        s"have a bullet point list title of ${messages.bulletListTitleOne + messages.bulletListTitleTwo + messages.bulletListTitleThree}" in {
-          doc.select("div.indent p#bullet-list-title").text() shouldEqual (messages.bulletListTitleOne + messages.bulletListTitleTwo+messages.bulletListTitleThree)
-        }
-        s"have an external link that points to the appropriate URL for the market value" in {
-          doc.getElementById("marketValueLink").attr("href") shouldEqual "https://www.gov.uk/capital-gains-tax/market-value"
-        }
-        s"have a first bullet point of ${messages.bulletListOne}" in {
-          doc.select("div.indent li#bullet-list-one").text() shouldEqual messages.bulletListOne
-        }
-
-        s"have a second bullet point of ${messages.bulletListTwo}" in {
-          doc.select("div.indent li#bullet-list-two").text() shouldEqual messages.bulletListTwo
-        }
-
-        s"have a third bullet point of ${messages.bulletListThree} with link text ${messages.bulletListThreeLink}" in {
-          doc.select("div.indent li#bullet-list-three").text() shouldEqual messages.bulletListThree +
-            " " + messages.bulletListThreeLink + " " + commonMessages.calcBaseExternalLink
-        }
-
-        s"have a third bullet point link ${messages.bulletListThreeLink} with a visually hidden content span" in {
-          doc.select("#bullet-list-three span").text() shouldEqual commonMessages.calcBaseExternalLink
-        }
-
-        s"have a link to ${messages.bulletLink}" in {
-          doc.getElementById("lossesLink").attr("href") shouldBe messages.bulletLink
-        }
-
-        s"have a fourth bullet point of ${messages.bulletListFour}" in {
-          doc.select("div.indent li#bullet-list-four").text() shouldEqual messages.bulletListFour
-        }
-
-        s"have a fifth bullet point of ${messages.bulletListFive}" in {
-          doc.select("div.indent li#bullet-list-five").text() shouldEqual messages.bulletListFive
-        }
-
-        s"have final additional guidance of ${messages.bulletEnd}" in {
-          doc.select("div.indent p#bullet-list-end").text() shouldEqual messages.bulletEnd
         }
       }
 
