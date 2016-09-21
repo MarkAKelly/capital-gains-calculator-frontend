@@ -37,7 +37,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000),
-      true)
+      true,
+      Some(false))
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(false)),
       None,
@@ -279,6 +280,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
         }
       }
 
+
       "has a numeric output row for the Disposal Value" which {
 
         s"should have the question text '${commonMessages.disposalValue.question}'" in {
@@ -505,7 +507,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000),
-      false)
+      false,
+      Some(true))
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -649,6 +652,29 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
     }
 
+    "has an option output row for sell for less" which {
+
+      s"should have the question text '${commonMessages.sellForLess.title}'" in {
+        doc.select("#sellForLess-question").text shouldBe commonMessages.sellForLess.title
+      }
+
+      "should have the value 'Yes'" in {
+        doc.select("#sellForLess-option span.bold-medium").text shouldBe "Yes"
+      }
+
+      s"should have a change link to ${routes.GainController.sellForLess().url}" in {
+        doc.select("#sellForLess-option a").attr("href") shouldBe routes.GainController.sellForLess().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#sellForLess-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.sellForLess.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#sellForLess-option a span.visuallyhidden").text shouldBe commonMessages.sellForLess.title
+      }
+    }
+
     "has an option output row for property lived in" which {
 
       s"should have the question text '${commonMessages.propertyLivedIn.title}'" in {
@@ -766,7 +792,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000),
-      true)
+      true,
+      Some(false))
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -983,7 +1010,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(0),
       BigDecimal(0),
       BigDecimal(0),
-      false)
+      false,
+      Some(true))
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -1082,7 +1110,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000),
-      true)
+      true,
+      Some(false))
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -1154,7 +1183,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000),
-      false)
+      false,
+      Some(false))
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -1201,6 +1231,29 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
     }
 
+    "has an option output row for sell for less" which {
+
+      s"should have the question text '${commonMessages.sellForLess.title}'" in {
+        doc.select("#sellForLess-question").text shouldBe commonMessages.sellForLess.title
+      }
+
+      "should have the value 'No'" in {
+        doc.select("#sellForLess-option span.bold-medium").text shouldBe "No"
+      }
+
+      s"should have a change link to ${routes.GainController.sellForLess().url}" in {
+        doc.select("#sellForLess-option a").attr("href") shouldBe routes.GainController.sellForLess().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#sellForLess-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.sellForLess.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#sellForLess-option a span.visuallyhidden").text shouldBe commonMessages.sellForLess.title
+      }
+    }
+
     "display the save as PDF Button" which {
 
       "should render only one button" in {
@@ -1229,7 +1282,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000),
-      true)
+      true,
+      Some(false))
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),

@@ -36,7 +36,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000),
-      true)
+      true,
+      Some(false))
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(false)),
       None,
@@ -221,6 +222,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         }
       }
 
+
       "has a numeric output row for the Disposal Value" which {
 
         s"should have the question text '${commonMessages.disposalValue.question}'" in {
@@ -339,7 +341,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000),
-      false)
+      false,
+      Some(true))
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
@@ -456,6 +459,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
         "should have the value 'Sold it'" in {
           doc.select("#sellOrGiveAway-option span.bold-medium").text shouldBe "Sold it"
+        }
+      }
+
+      "has an option output row for sell for less" which {
+
+        s"should have the question text '${commonMessages.sellForLess.title}'" in {
+          doc.select("#sellForLess-question").text shouldBe commonMessages.sellForLess.title
+        }
+
+        "should have the value 'Yes'" in {
+          doc.select("#sellForLess-option span.bold-medium").text shouldBe "Yes"
         }
       }
 
@@ -628,7 +642,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000),
-      true)
+      true,
+      Some(false))
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -763,7 +778,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000),
-      false)
+      false,
+      Some(false))
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
@@ -811,6 +827,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
       "should have the correct help text" in {
         doc.select("#broughtForwardLossRemaining-amount div span").text() should include(s"${messages.remainingLossHelp} ${messages.remainingLossLink} ${messages.remainingBroughtForwardLossHelp}")
+      }
+    }
+
+    "has an option output row for sell for less" which {
+
+      s"should have the question text '${commonMessages.sellForLess.title}'" in {
+        doc.select("#sellForLess-question").text shouldBe commonMessages.sellForLess.title
+      }
+
+      "should have the value 'No'" in {
+        doc.select("#sellForLess-option span.bold-medium").text shouldBe "No"
       }
     }
 
