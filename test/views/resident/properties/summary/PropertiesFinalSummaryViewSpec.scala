@@ -38,7 +38,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(10000),
       BigDecimal(30000),
       true,
-      true)
+      true,
+      None)
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(false)),
       None,
@@ -532,7 +533,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(10000),
       BigDecimal(30000),
       false,
-      false)
+      false,
+      Some("Bought"))
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -701,6 +703,31 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
     }
 
+    "has an output row for how became owner" which {
+
+      s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
+        doc.select("#howBecameOwner-question").text shouldBe commonMessages.howBecameOwner.title
+      }
+
+      s"should have the value '${commonMessages.howBecameOwner.bought}'" in {
+        doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.bought
+      }
+
+      s"should have a change link to ${routes.GainController.howBecameOwner().url}" in {
+        doc.select("#howBecameOwner-option a").attr("href") shouldBe routes.GainController.howBecameOwner().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#howBecameOwner-option a").text shouldBe
+          s"${commonMessages.calcBaseChange} ${commonMessages.howBecameOwner.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#howBecameOwner-option a span.visuallyhidden").text shouldBe
+          commonMessages.howBecameOwner.title
+      }
+    }
+
     "has an option output row for property lived in" which {
 
       s"should have the question text '${commonMessages.propertyLivedIn.title}'" in {
@@ -819,7 +846,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(10000),
       BigDecimal(30000),
       true,
-      true)
+      true,
+      None)
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -1037,7 +1065,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(0),
       BigDecimal(0),
       false,
-      false)
+      false,
+      Some("Inherited"))
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -1089,6 +1118,31 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       doc.select("#whatToDoNextText").text shouldEqual s"${messages.whatToDoNextTextTwo} ${commonMessages.calcBaseExternalLink}"
     }
 
+    "has an output row for how became owner" which {
+
+      s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
+        doc.select("#howBecameOwner-question").text shouldBe commonMessages.howBecameOwner.title
+      }
+
+      s"should have the value '${commonMessages.howBecameOwner.inherited}'" in {
+        doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.inherited
+      }
+
+      s"should have a change link to ${routes.GainController.howBecameOwner().url}" in {
+        doc.select("#howBecameOwner-option a").attr("href") shouldBe routes.GainController.howBecameOwner().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#howBecameOwner-option a").text shouldBe
+          s"${commonMessages.calcBaseChange} ${commonMessages.howBecameOwner.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#howBecameOwner-option a span.visuallyhidden").text shouldBe
+          commonMessages.howBecameOwner.title
+      }
+    }
+
     "have a link" which {
 
       "should have a href attribute" in {
@@ -1137,7 +1191,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(10000),
       BigDecimal(30000),
       true,
-      true)
+      true,
+      None)
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -1210,7 +1265,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(10000),
       BigDecimal(30000),
       false,
-      false)
+      false,
+      Some("Gifted"))
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -1257,6 +1313,31 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
     }
 
+    "has an output row for how became owner" which {
+
+      s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
+        doc.select("#howBecameOwner-question").text shouldBe commonMessages.howBecameOwner.title
+      }
+
+      s"should have the value '${commonMessages.howBecameOwner.gifted}'" in {
+        doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.gifted
+      }
+
+      s"should have a change link to ${routes.GainController.howBecameOwner().url}" in {
+        doc.select("#howBecameOwner-option a").attr("href") shouldBe routes.GainController.howBecameOwner().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#howBecameOwner-option a").text shouldBe
+          s"${commonMessages.calcBaseChange} ${commonMessages.howBecameOwner.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#howBecameOwner-option a span.visuallyhidden").text shouldBe
+          commonMessages.howBecameOwner.title
+      }
+    }
+
     "display the save as PDF Button" which {
 
       "should render only one button" in {
@@ -1286,7 +1367,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(10000),
       BigDecimal(30000),
       true,
-      true)
+      true,
+      None)
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
