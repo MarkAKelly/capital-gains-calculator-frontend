@@ -51,8 +51,8 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Fa
         backLink.hasClass("back-link") shouldBe true
       }
 
-      "have a link to Disposal Value" in {
-        backLink.attr("href") shouldBe controllers.resident.properties.routes.GainController.disposalCosts().toString
+      "have a link to Bought For Less Than Worth" in {
+        backLink.attr("href") shouldBe controllers.resident.properties.routes.GainController.boughtForLessThanWorth().toString
       }
     }
 

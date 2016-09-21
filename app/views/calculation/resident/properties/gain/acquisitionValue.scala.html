@@ -33,7 +33,7 @@
     <p id="bullet-list-end">@Messages("calc.resident.acquisitionValue.bullet.end")</p>
 }
 
-@resident_properties_main_template(Messages("calc.resident.acquisitionValue.title"), backLink = Some(controllers.resident.properties.routes.GainController.disposalCosts().toString)) {
+@resident_properties_main_template(Messages("calc.resident.acquisitionValue.title"), backLink = Some(controllers.resident.properties.routes.GainController.boughtForLessThanWorth().toString)) {
 
     @errorSummary(acquisitionValueForm, "amount")
 
