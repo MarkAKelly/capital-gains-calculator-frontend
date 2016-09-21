@@ -498,6 +498,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         }
       }
 
+      "has an option output row for bought for less than worth" which {
+
+        s"should have the question text '${commonMessages.boughtForLessThanWorth.title}'" in {
+          doc.select("#boughtForLessThanWorth-question").text shouldBe commonMessages.boughtForLessThanWorth.title
+        }
+
+        "should have the value 'No'" in {
+          doc.select("#boughtForLessThanWorth-option span.bold-medium").text shouldBe "No"
+        }
+      }
+
       "has an option output row for property lived in" which {
 
         s"should have the question text '${commonMessages.propertyLivedIn.title}'" in {
@@ -655,6 +666,60 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
           doc.select("#lettingsReliefValue-amount span.bold-medium").text shouldBe "£6,000"
         }
 
+      }
+    }
+  }
+
+  "Deductions Report view when property bought for less than worth" should {
+    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+      BigDecimal(200000),
+      BigDecimal(10000),
+      BigDecimal(100000),
+      BigDecimal(10000),
+      BigDecimal(30000),
+      false,
+      false,
+      Some("Bought"),
+      Some(true))
+    lazy val deductionAnswers = ChargeableGainAnswers(
+      Some(OtherPropertiesModel(true)),
+      Some(AllowableLossesModel(true)),
+      Some(AllowableLossesValueModel(10000)),
+      Some(LossesBroughtForwardModel(true)),
+      Some(LossesBroughtForwardValueModel(10000)),
+      Some(AnnualExemptAmountModel(1000)),
+      Some(PropertyLivedInModel(true)),
+      Some(PrivateResidenceReliefModel(true)),
+      Some(PrivateResidenceReliefValueModel(1000)),
+      Some(LettingsReliefModel(true)),
+      Some(LettingsReliefValueModel(6000))
+    )
+    lazy val results = ChargeableGainResultModel(BigDecimal(50000),
+      BigDecimal(-11000),
+      BigDecimal(0),
+      BigDecimal(11000),
+      BigDecimal(71000),
+      BigDecimal(1000),
+      BigDecimal(2000),
+      Some(BigDecimal(50000)),
+      Some(BigDecimal(1000)),
+      10000,
+      10000
+    )
+
+    lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
+
+    lazy val view = views.deductionsSummaryReport(gainAnswers, deductionAnswers, results, taxYearModel)(fakeRequestWithSession)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "has an option output row for bought for less than worth" which {
+
+      s"should have the question text '${commonMessages.boughtForLessThanWorth.title}'" in {
+        doc.select("#boughtForLessThanWorth-question").text shouldBe commonMessages.boughtForLessThanWorth.title
+      }
+
+      "should have the value 'Yes'" in {
+        doc.select("#boughtForLessThanWorth-option span.bold-medium").text shouldBe "Yes"
       }
     }
   }

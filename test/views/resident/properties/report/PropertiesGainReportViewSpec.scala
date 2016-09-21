@@ -278,6 +278,48 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
         doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.bought
       }
     }
+
+    "has an option output row for bought for less than worth" which {
+
+      s"should have the question text '${commonMessages.boughtForLessThanWorth.title}'" in {
+        doc.select("#boughtForLessThanWorth-question").text shouldBe commonMessages.boughtForLessThanWorth.title
+      }
+
+      "should have the value 'No'" in {
+        doc.select("#boughtForLessThanWorth-option span.bold-medium").text shouldBe "No"
+      }
+    }
+  }
+
+  "Summary when supplied with a property bought for less than its worth" should {
+
+    lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
+
+    val testModel = YourAnswersSummaryModel(
+      constructDate(12, 9, 2015),
+      10,
+      20,
+      30,
+      40,
+      50,
+      false,
+      false,
+      Some("Bought"),
+      Some(true)
+    )
+    lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "has an option output row for bought for less than worth" which {
+
+      s"should have the question text '${commonMessages.boughtForLessThanWorth.title}'" in {
+        doc.select("#boughtForLessThanWorth-question").text shouldBe commonMessages.boughtForLessThanWorth.title
+      }
+
+      "should have the value 'Yes'" in {
+        doc.select("#boughtForLessThanWorth-option span.bold-medium").text shouldBe "Yes"
+      }
+    }
   }
 
   "Summary when supplied with an inherited property" should {
