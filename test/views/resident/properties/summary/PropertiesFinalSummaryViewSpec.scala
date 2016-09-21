@@ -38,7 +38,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(10000),
       BigDecimal(30000),
       true,
-      true)
+      true,
+      None)
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(false)),
       None,
@@ -532,7 +533,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(10000),
       BigDecimal(30000),
       false,
-      false)
+      false,
+      Some("Bought"))
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -819,7 +821,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(10000),
       BigDecimal(30000),
       true,
-      true)
+      true,
+      None)
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -1037,7 +1040,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(0),
       BigDecimal(0),
       false,
-      false)
+      false,
+      Some("Inherited"))
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -1137,7 +1141,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(10000),
       BigDecimal(30000),
       true,
-      true)
+      true,
+      None)
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -1210,7 +1215,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(10000),
       BigDecimal(30000),
       false,
-      false)
+      false,
+      Some("Gifted"))
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -1286,7 +1292,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(10000),
       BigDecimal(30000),
       true,
-      true)
+      true,
+      None)
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
