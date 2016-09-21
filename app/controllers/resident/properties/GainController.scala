@@ -248,14 +248,14 @@ trait GainController extends FeatureLock {
   //################# Disposal Costs Actions ########################
   val disposalCosts = FeatureLockForRTT.async { implicit request =>
     calcConnector.fetchAndGetFormData[DisposalCostsModel](keystoreKeys.disposalCosts).map {
-      case Some(data) => Ok(views.disposalCosts(disposalCostsForm.fill(data)))
-      case None => Ok(views.disposalCosts(disposalCostsForm))
+      case Some(data) => Ok(views.disposalCosts(disposalCostsForm.fill(data), controllers.resident.properties.routes.GainController.disposalValue().toString))
+      case None => Ok(views.disposalCosts(disposalCostsForm, controllers.resident.properties.routes.GainController.disposalValue().toString))
     }
   }
 
   val submitDisposalCosts = FeatureLockForRTT.async { implicit request =>
     disposalCostsForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.disposalCosts(errors))),
+      errors => Future.successful(BadRequest(views.disposalCosts(errors, controllers.resident.properties.routes.GainController.disposalValue().toString))),
       success => {
         calcConnector.saveFormData(keystoreKeys.disposalCosts, success)
         Future.successful(Redirect(routes.GainController.acquisitionValue()))}
