@@ -224,7 +224,7 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
       "has a numeric output row for the Disposal Value" which {
 
         s"should have the question text '${commonMessages.disposalValue.question}'" in {
-          doc.select("#disposalValue-question").text shouldBe commonMessages.sharesDisposalValue.title
+          doc.select("#disposalValue-question").text shouldBe commonMessages.sharesDisposalValue.question
         }
 
         "should have the value '£200,000'" in {

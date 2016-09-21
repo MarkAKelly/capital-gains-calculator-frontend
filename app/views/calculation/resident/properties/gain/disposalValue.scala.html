@@ -5,33 +5,7 @@
 
 @(disposalValueForm : Form[DisposalValueModel])(implicit request: Request[_])
 
-@contentLink = {
-    <a id="lossesLink" class="external-link" rel="external" href="https://www.gov.uk/capital-gains-tax/losses"
-       target="_blank" data-journey-click="help:govUK:rtt-properties-disposalCgtLosses">
-        @Messages("calc.resident.disposal.value.bullet.two.link")
-        <span id="opensInANewTab">@Messages("calc.base.externalLink")</span>
-    </a>
-}
-
-@bulletTitleContentLink = {
-    <a id="marketValueLink" class="external-link" rel="external" href="https://www.gov.uk/capital-gains-tax/market-value"
-       target="_blank" data-journey-click="help:govUK:rtt-properties-disposal-market-value">
-        @Messages("calc.disposalValue.bullet.titleTwo")
-        <span id="opensInANewTabAlt">@Messages("calc.base.externalLink")</span>
-    </a>
-}
-
-@bulletContent = {
-    <p id="bullet-list-title">@Messages("calc.disposalValue.bullet.titleOne") @bulletTitleContentLink @Messages("calc.disposalValue.bullet.titleThree")</p>
-    <ul class="list-bullet">
-        <li id="bullet-list-one">@Messages("calc.resident.disposal.value.bullet.one")</li>
-        <li id="bullet-list-two">@Messages("calc.resident.disposal.value.bullet.two")@contentLink</li>
-        <li id="bullet-list-three">@Messages("calc.resident.disposal.value.bullet.three")</li>
-    </ul>
-    <p id="bullet-list-end">@Messages("calc.resident.disposal.value.bullet.end")</p>
-}
-
-@resident_properties_main_template(title = Messages("calc.resident.disposal.value.title"), backLink = Some(controllers.resident.properties.routes.GainController.disposalDate().toString)) {
+@resident_properties_main_template(title = Messages("calc.resident.disposal.value.question"), backLink = Some(controllers.resident.properties.routes.GainController.sellForLess().toString)) {
 
     @errorSummary(disposalValueForm, "amount")
 
@@ -39,7 +13,7 @@
 
     @form(action = controllers.resident.properties.routes.GainController.submitDisposalValue) {
 
-        @formInputMoney(disposalValueForm, "amount", Messages("calc.resident.disposal.value.question"), additionalHTMLContent = Some(bulletContent.toString()), hideLabel = true)
+        @formInputMoney(disposalValueForm, "amount", Messages("calc.resident.disposal.value.question"), hideLabel = true)
 
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
     }
