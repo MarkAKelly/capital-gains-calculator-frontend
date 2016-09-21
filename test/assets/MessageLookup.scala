@@ -444,5 +444,6 @@ object MessageLookup {
     val charity = "A charity"
     val other = "Someone else"
     val error = "Please select a valid option"
+    val errormandatory = "Please tell us who you gave the property to"
   }
 }
