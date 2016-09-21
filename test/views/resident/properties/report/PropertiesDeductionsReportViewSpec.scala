@@ -485,6 +485,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         }
       }
 
+      "has an output row for how became owner" which {
+
+        s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
+          doc.select("#howBecameOwner-question").text shouldBe commonMessages.howBecameOwner.title
+        }
+
+        s"should have the value '${commonMessages.howBecameOwner.bought}'" in {
+          doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.bought
+        }
+      }
+
       "has an option output row for property lived in" which {
 
         s"should have the question text '${commonMessages.propertyLivedIn.title}'" in {
@@ -825,6 +836,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
     lazy val view = views.deductionsSummaryReport(gainAnswers, deductionAnswers, results, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
+    "has an output row for how became owner" which {
+
+      s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
+        doc.select("#howBecameOwner-question").text shouldBe commonMessages.howBecameOwner.title
+      }
+
+      s"should have the value '${commonMessages.howBecameOwner.inherited}'" in {
+        doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.inherited
+      }
+    }
+
     "has a numeric output row for allowable losses remaining" in {
       doc.select("#allowableLossRemaining").isEmpty shouldBe true
     }
@@ -846,6 +868,60 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
     "does not display the section for what to do next" in {
       doc.select("#whatToDoNext").isEmpty shouldBe true
+    }
+  }
+
+  "Report when supplied with a gifted property" should {
+
+    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
+      BigDecimal(200000),
+      BigDecimal(10000),
+      BigDecimal(100000),
+      BigDecimal(10000),
+      BigDecimal(30000),
+      false,
+      false,
+      Some("Gifted"))
+    lazy val deductionAnswers = ChargeableGainAnswers(
+      Some(OtherPropertiesModel(true)),
+      Some(AllowableLossesModel(true)),
+      Some(AllowableLossesValueModel(10000)),
+      Some(LossesBroughtForwardModel(true)),
+      Some(LossesBroughtForwardValueModel(10000)),
+      Some(AnnualExemptAmountModel(1000)),
+      Some(PropertyLivedInModel(false)),
+      None,
+      None,
+      None,
+      None
+    )
+    lazy val results = ChargeableGainResultModel(BigDecimal(50000),
+      BigDecimal(-11000),
+      BigDecimal(0),
+      BigDecimal(11000),
+      BigDecimal(71000),
+      BigDecimal(0),
+      BigDecimal(2000),
+      Some(BigDecimal(50000)),
+      Some(BigDecimal(0)),
+      10000,
+      10000
+    )
+
+    lazy val taxYearModel = TaxYearModel("2017/18", false, "2015/16")
+
+    lazy val view = views.deductionsSummaryReport(gainAnswers, deductionAnswers, results, taxYearModel)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "has an output row for how became owner" which {
+
+      s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
+        doc.select("#howBecameOwner-question").text shouldBe commonMessages.howBecameOwner.title
+      }
+
+      s"should have the value '${commonMessages.howBecameOwner.gifted}'" in {
+        doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.gifted
+      }
     }
   }
 }
