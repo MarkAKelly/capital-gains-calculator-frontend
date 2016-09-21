@@ -38,7 +38,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(10000),
       BigDecimal(30000),
       true,
-      Some(false))
+      Some(false),
+      true)
+
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(false)),
       None,
@@ -313,6 +315,31 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
 
       }
 
+      "has an option output row for owner before april 1982" which {
+
+        s"should have the question text '${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}'" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-question").text shouldBe commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
+        }
+
+        "should have the value 'Yes'" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-option span.bold-medium").text shouldBe "Yes"
+        }
+
+        s"should have a change link to ${routes.GainController.ownerBeforeAprilNineteenEightyTwo().url}" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-option a").attr("href") shouldBe routes.GainController.ownerBeforeAprilNineteenEightyTwo().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-option a").text shouldBe
+            s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-option a span.visuallyhidden").text shouldBe
+            commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
+        }
+      }
+
       "has a numeric output row for the Acquisition Value" which {
 
         s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
@@ -508,7 +535,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(10000),
       BigDecimal(30000),
       false,
-      Some(true))
+      Some(true),
+      false)
+
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -652,6 +681,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
     }
 
+
     "has an option output row for sell for less" which {
 
       s"should have the question text '${commonMessages.sellForLess.title}'" in {
@@ -672,6 +702,30 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
 
       "has the question component of the link as visuallyhidden" in {
         doc.select("#sellForLess-option a span.visuallyhidden").text shouldBe commonMessages.sellForLess.title
+      }
+    }
+    "has an option output row for owner before april 1982" which {
+
+      s"should have the question text '${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}'" in {
+        doc.select("#ownerBeforeAprilNineteenEightyTwo-question").text shouldBe commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
+      }
+
+      "should have the value 'No'" in {
+        doc.select("#ownerBeforeAprilNineteenEightyTwo-option span.bold-medium").text shouldBe "No"
+      }
+
+      s"should have a change link to ${routes.GainController.ownerBeforeAprilNineteenEightyTwo().url}" in {
+        doc.select("#ownerBeforeAprilNineteenEightyTwo-option a").attr("href") shouldBe routes.GainController.ownerBeforeAprilNineteenEightyTwo().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#ownerBeforeAprilNineteenEightyTwo-option a").text shouldBe
+          s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#ownerBeforeAprilNineteenEightyTwo-option a span.visuallyhidden").text shouldBe
+          commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
       }
     }
 
@@ -793,7 +847,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(10000),
       BigDecimal(30000),
       true,
-      Some(false))
+      Some(false),
+      true)
+
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -1011,7 +1067,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(0),
       BigDecimal(0),
       false,
-      Some(true))
+      Some(true),
+      false)
+
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -1111,7 +1169,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(10000),
       BigDecimal(30000),
       true,
-      Some(false))
+      Some(false),
+      true)
+
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -1184,7 +1244,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(10000),
       BigDecimal(30000),
       false,
-      Some(false))
+      Some(false),
+      false)
+
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -1283,7 +1345,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       BigDecimal(10000),
       BigDecimal(30000),
       true,
-      Some(false))
+      Some(false),
+      true)
+
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),

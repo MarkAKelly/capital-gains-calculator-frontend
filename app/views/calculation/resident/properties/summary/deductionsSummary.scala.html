@@ -169,9 +169,12 @@ articleLayout = false
     @{if(!gainAnswers.givenAway)
     summaryOptionRowHelper("sellForLess", Messages("calc.resident.properties.sellForLess.title"), gainAnswers.sellForLess.get, Some(gainRoutes.sellForLess().toString))}
 
-    @summaryNumericRowHelper("disposalValue",Messages("calc.resident.disposal.value.title"),gainAnswers.disposalValue,Some(gainRoutes.disposalValue().toString))
+    @summaryNumericRowHelper("disposalValue",Messages("calc.resident.disposal.value.question"),gainAnswers.disposalValue,Some(gainRoutes.disposalValue().toString))
 
     @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.disposalCosts.title"),gainAnswers.disposalCosts,Some(gainRoutes.disposalCosts().toString))
+
+    @summaryOptionRowHelper("ownerBeforeAprilNineteenEightyTwo", Messages("calc.resident.properties.ownerBeforeApril.title"),
+    gainAnswers.ownerBeforeAprilNineteenEightyTwo, Some(gainRoutes.ownerBeforeAprilNineteenEightyTwo().toString))
 
     @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),gainAnswers.acquisitionValue,Some(gainRoutes.acquisitionValue().toString))
 

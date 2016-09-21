@@ -42,89 +42,16 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
       doc.charset.toString shouldBe "UTF-8"
     }
 
-    s"have the title of the page ${messages.title}" in {
-      doc.title shouldEqual messages.title
+    s"have the title of the page ${messages.question}" in {
+      doc.title shouldEqual messages.question
     }
 
-    s"have a back link to the Disposal Date Page with text ${MessageLookup.calcBaseBack}" in {
-      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/disposal-date"
+    s"have a back link to the Sell For less Page with text ${MessageLookup.calcBaseBack}" in {
+      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/sell-for-less"
     }
 
     s"have the question of the page ${messages.question}" in {
       doc.select("h1").text shouldEqual messages.question
-    }
-
-    s"have bullet point list title" which {
-
-      lazy val title = doc.select("div.indent p#bullet-list-title")
-
-      s"should contain the text ${messages.bulletListTitlePartOne}" in {
-        title.text() should include(messages.bulletListTitlePartOne)
-      }
-
-      s"should contain a link to the market value page" which {
-
-        lazy val link = title.select("a")
-
-        s"should have the text ${messages.bulletListTitlePartTwo}" in {
-          link.text() should include(messages.bulletListTitlePartTwo)
-        }
-
-        "has the external link class" in {
-          link.hasClass("external-link") shouldEqual true
-        }
-
-        "has the attribute rel" in {
-          link.hasAttr("rel") shouldEqual true
-        }
-
-        "rel has the value of external" in {
-          link.attr("rel") shouldEqual "external"
-        }
-
-        "has a target attribute" in {
-          link.hasAttr("target") shouldEqual true
-        }
-
-        "has a target value of _blank" in {
-          link.attr("target") shouldEqual "_blank"
-        }
-
-        s"and also has the text ${MessageLookup.calcBaseExternalLink}" in {
-          link.text() should include(MessageLookup.calcBaseExternalLink)
-        }
-      }
-
-      s"should contain the text ${messages.bulletListTitlePartThree}" in {
-        title.text() should include(messages.bulletListTitlePartThree)
-      }
-
-    }
-
-    s"have first bullet point of ${messages.bulletListOne}" in {
-      doc.select("div.indent li#bullet-list-one").text() shouldEqual messages.bulletListOne
-    }
-
-    s"have second bullet point of ${messages.bulletListTwo} with link text ${messages.bulletListTwoLink}" in {
-      doc.select("div.indent li#bullet-list-two").text() shouldEqual messages.bulletListTwo +
-        " " + messages.bulletListTwoLink + " " + MessageLookup.calcBaseExternalLink
-    }
-
-    s"the second bullet point link ${messages.bulletListTwoLink} should have a visually hidden content span" in {
-      doc.select("#bullet-list-two span#opensInANewTab").text() shouldEqual MessageLookup.calcBaseExternalLink
-    }
-
-    s"the second bullet point link ${messages.bulletListTwoLink} should " +
-      "have the address Some(https://www.gov.uk/capital-gains-tax/losses)" in {
-      doc.select("a#lossesLink").attr("href") shouldEqual "https://www.gov.uk/capital-gains-tax/losses"
-    }
-
-    s"have third bullet point of ${messages.bulletListThree}" in {
-      doc.select("div.indent li#bullet-list-three").text() shouldEqual MessageLookup.disposalValue.bulletListThree
-    }
-
-    s"have final additional guidance of ${messages.bulletEnd}" in {
-      doc.select("div.indent p#bullet-list-end").text() shouldEqual messages.bulletEnd
     }
 
     "render a form tag with a submit action" in {

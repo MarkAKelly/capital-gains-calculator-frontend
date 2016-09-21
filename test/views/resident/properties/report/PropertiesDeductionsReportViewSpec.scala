@@ -37,7 +37,9 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(10000),
       BigDecimal(30000),
       true,
-      Some(false))
+      Some(false),
+      true)
+
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(false)),
       None,
@@ -245,6 +247,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         }
       }
 
+      "has an option output row for owner before april 1982" which {
+
+        s"should have the question text '${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}'" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-question").text shouldBe commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
+        }
+
+        "should have the value 'Yes'" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-option span.bold-medium").text shouldBe "Yes"
+        }
+      }
+
       "has a numeric output row for the Acquisition Value" which {
 
         s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
@@ -342,7 +355,9 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(10000),
       BigDecimal(30000),
       false,
-      Some(true))
+      Some(true),
+      false)
+
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
@@ -470,6 +485,18 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
         "should have the value 'Yes'" in {
           doc.select("#sellForLess-option span.bold-medium").text shouldBe "Yes"
+        }
+      }
+
+      "has an option output row for owner before april 1982" which {
+
+        s"should have the question text '${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}'" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-question").text shouldBe commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
+        }
+
+        "should have the value 'No'" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-option span.bold-medium").text shouldBe "No"
+
         }
       }
 
@@ -643,7 +670,9 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(10000),
       BigDecimal(30000),
       true,
-      Some(false))
+      Some(false),
+      true)
+
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -779,7 +808,9 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(10000),
       BigDecimal(30000),
       false,
-      Some(false))
+      Some(false),
+      false)
+
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),

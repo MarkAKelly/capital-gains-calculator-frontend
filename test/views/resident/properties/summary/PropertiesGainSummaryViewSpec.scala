@@ -39,7 +39,10 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       40,
       50,
       true,
-      Some(false))
+      Some(false),
+      true
+    )
+
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
@@ -216,6 +219,31 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
       }
 
+      "has an option output row for owner before april 1982" which {
+
+        s"should have the question text '${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}'" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-question").text shouldBe commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
+        }
+
+        "should have the value 'Yes'" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-option span.bold-medium").text shouldBe "Yes"
+        }
+
+        s"should have a change link to ${routes.GainController.ownerBeforeAprilNineteenEightyTwo().url}" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-option a").attr("href") shouldBe routes.GainController.ownerBeforeAprilNineteenEightyTwo().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-option a").text shouldBe
+            s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-option a span.visuallyhidden").text shouldBe
+            commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
+        }
+      }
+
       "has a numeric output row for the Acquisition Value" which {
 
         s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
@@ -300,7 +328,10 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       40,
       50,
       false,
-      Some(true))
+      Some(true),
+      false
+    )
+
     lazy val view = views.gainSummary(testModel, -2000, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
@@ -340,6 +371,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       }
     }
 
+
     "has an option output row for sell for less" which {
 
       s"should have the question text '${commonMessages.sellForLess.title}'" in {
@@ -360,6 +392,31 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
       "has the question component of the link as visuallyhidden" in {
         doc.select("#sellForLess-option a span.visuallyhidden").text shouldBe commonMessages.sellForLess.title
+      }
+    }
+
+    "has an option output row for owner before april 1982" which {
+
+      s"should have the question text '${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}'" in {
+        doc.select("#ownerBeforeAprilNineteenEightyTwo-question").text shouldBe commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
+      }
+
+      "should have the value 'No'" in {
+        doc.select("#ownerBeforeAprilNineteenEightyTwo-option span.bold-medium").text shouldBe "No"
+      }
+
+      s"should have a change link to ${routes.GainController.ownerBeforeAprilNineteenEightyTwo().url}" in {
+        doc.select("#ownerBeforeAprilNineteenEightyTwo-option a").attr("href") shouldBe routes.GainController.ownerBeforeAprilNineteenEightyTwo().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#ownerBeforeAprilNineteenEightyTwo-option a").text shouldBe
+          s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#ownerBeforeAprilNineteenEightyTwo-option a span.visuallyhidden").text shouldBe
+          commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
       }
     }
 
@@ -410,7 +467,9 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       40,
       50,
       true,
-      Some(false)
+      Some(false),
+      true
+
     )
     lazy val view = views.gainSummary(testModel, 0, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
@@ -472,7 +531,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       40,
       50,
       false,
-      Some(false)
+      Some(false),
+      false
     )
     lazy val view = views.gainSummary(testModel,-2000, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
@@ -492,7 +552,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       40,
       50,
       false,
-      Some(false)
+      Some(false),
+      true
     )
 
     lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")

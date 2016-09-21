@@ -46,16 +46,16 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
       doc.getElementById("homeNavHref").attr("href") shouldEqual "home-link"
     }
 
-    s"have the title of the page ${messages.title}" in {
-      doc.title shouldEqual messages.title
+    s"have the title of the page ${messages.question}" in {
+      doc.title shouldEqual messages.question
     }
 
     s"have a back link to the Disposal Date Page with text ${MessageLookup.calcBaseBack}" in {
       doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/disposal-date"
     }
 
-    s"have the question of the page ${messages.title}" in {
-      doc.select("h1").text shouldEqual messages.title
+    s"have the question of the page ${messages.question}" in {
+      doc.select("h1").text shouldEqual messages.question
     }
 
     s"have the extra text ${messages.helpText}" in {
@@ -66,8 +66,8 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
       doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/shares/disposal-value"
     }
 
-    s"have a label for an input with text ${messages.title}" in {
-      doc.select("label > div > span.visuallyhidden").text() shouldEqual messages.title
+    s"have a label for an input with text ${messages.question}" in {
+      doc.select("label > div > span.visuallyhidden").text() shouldEqual messages.question
     }
 
     s"have an input field with id amount " in {

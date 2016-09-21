@@ -125,9 +125,12 @@
         @{if(!gainAnswers.givenAway)
         summaryOptionRowHelper("sellForLess", Messages("calc.resident.properties.sellForLess.title"), gainAnswers.sellForLess.get, None)}
 
-        @summaryNumericRowHelper("disposalValue", Messages("calc.resident.disposal.value.title"),gainAnswers.disposalValue, None)
+        @summaryNumericRowHelper("disposalValue", Messages("calc.resident.disposal.value.question"),gainAnswers.disposalValue, None)
 
         @summaryNumericRowHelper("disposalCosts", Messages("calc.resident.disposalCosts.title"),gainAnswers.disposalCosts, None)
+
+        @summaryOptionRowHelper("ownerBeforeAprilNineteenEightyTwo", Messages("calc.resident.properties.ownerBeforeApril.title"),
+        gainAnswers.ownerBeforeAprilNineteenEightyTwo, None)
 
         @summaryNumericRowHelper("acquisitionValue", Messages("calc.resident.acquisitionValue.title"),gainAnswers.acquisitionValue, None)
 

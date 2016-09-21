@@ -114,7 +114,7 @@ class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "render the disposal value page when supplied with an invalid form" in {
       status(result) shouldEqual 400
-      Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.disposalValue.title
+      Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.disposalValue.question
     }
   }
 }

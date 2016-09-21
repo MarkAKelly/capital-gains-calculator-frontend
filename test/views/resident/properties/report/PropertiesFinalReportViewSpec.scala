@@ -38,7 +38,9 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       BigDecimal(10000),
       BigDecimal(30000),
       true,
-      Some(false))
+      Some(false),
+      true)
+
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -272,6 +274,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         }
       }
 
+      "has an option output row for owner before april 1982" which {
+
+        s"should have the question text '${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}'" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-question").text shouldBe commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
+        }
+
+        "should have the value 'Yes'" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-option span.bold-medium").text shouldBe "Yes"
+        }
+      }
+
       "has a numeric output row for the Acquisition Value" which {
 
         s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
@@ -405,7 +418,9 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       BigDecimal(10000),
       BigDecimal(30000),
       false,
-      Some(true))
+      Some(true),
+      false)
+
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -482,6 +497,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       }
     }
 
+    "has an option output row for owner before april 1982" which {
+
+      s"should have the question text '${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}'" in {
+        doc.select("#ownerBeforeAprilNineteenEightyTwo-question").text shouldBe commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
+      }
+
+      "should have the value 'No'" in {
+        doc.select("#ownerBeforeAprilNineteenEightyTwo-option span.bold-medium").text shouldBe "No"
+      }
+    }
+
     "has an option output row for property lived in" which {
 
       s"should have the question text '${commonMessages.propertyLivedIn.title}'" in {
@@ -538,7 +564,6 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       "should have the value 'Yes'" in {
         doc.select("#lettingsReliefValue-amount span.bold-medium").text shouldBe "£7,000"
       }
-    }
 
     "have the class notice-wrapper" in {
       doc.select("div.notice-wrapper").isEmpty shouldBe false
@@ -548,6 +573,9 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       doc.select("strong.bold-small").text shouldBe messages.noticeWarning("2016/17")
     }
   }
+  }
+
+
 
   "Final Summary view with sell for less option No" should {
 
@@ -558,7 +586,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       BigDecimal(10000),
       BigDecimal(30000),
       false,
-      Some(false))
+      Some(false),
+     false)
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
