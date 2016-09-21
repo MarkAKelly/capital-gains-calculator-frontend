@@ -500,9 +500,9 @@ trait GainController extends FeatureLock {
     }
 
     def errorAction(form: Form[ImprovementsModel]): Future[Result] = {
-      for {
-        ownerBeforeAprilNineteenEightyTwo <- getOwnerBeforeAprilNineteenEightyTwo()
-      } yield BadRequest(views.improvements(form, ownerBeforeAprilNineteenEightyTwo))
+      getOwnerBeforeAprilNineteenEightyTwo().map(ownerBeforeAprilNineteenEightyTwo =>
+        BadRequest(views.improvements(form, ownerBeforeAprilNineteenEightyTwo))
+      )
     }
 
     def successAction(model: ImprovementsModel): Future[Result] = {
