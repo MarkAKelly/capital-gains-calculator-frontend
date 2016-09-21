@@ -476,8 +476,8 @@ trait GainController extends FeatureLock {
   //################# Improvements Actions ########################
   val improvements = FeatureLockForRTT.async { implicit request =>
     calcConnector.fetchAndGetFormData[ImprovementsModel](keystoreKeys.improvements).map {
-      case Some(data) => Ok(views.improvements(improvementsForm.fill(data)))
-      case None => Ok(views.improvements(improvementsForm))
+      case Some(data) => Ok(views.improvements(improvementsForm.fill(data), false))
+      case None => Ok(views.improvements(improvementsForm, false))
     }
   }
 
@@ -489,7 +489,7 @@ trait GainController extends FeatureLock {
     }
 
     improvementsForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.improvements(errors))),
+      errors => Future.successful(BadRequest(views.improvements(errors, false))),
       success => {
         for {
           save <- calcConnector.saveFormData(keystoreKeys.improvements, success)

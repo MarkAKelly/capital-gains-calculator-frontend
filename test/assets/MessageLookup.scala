@@ -184,6 +184,7 @@ object MessageLookup {
   object improvementsView {
     val title = "How much have you spent on improvements since you became the property owner?"
     val label = "How much have you spent on improvements since you became the property owner?"
+    val questionBefore = "How much have you spent on improvements since 31 March 1982?"
     val hint = "Improvements are permanent changes that raise the value of a property, like adding extensions or garages. Normal maintenance costs don't count."
     val improvementsHelpButton = "Show me an example"
     val improvementsAdditionalContentOne = "Replacing a basic kitchen or bathroom with a luxury version is normally considered an improvement."
