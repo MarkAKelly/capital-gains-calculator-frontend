@@ -45,7 +45,6 @@ object MessageLookup {
       object PropertyWorthWhenSold {
         val title = "What was the property worth when you sold it?"
         val paragraphText = "You can use a valuation from a surveyor or a property website."
-
       }
       
       object ownerBeforeAprilNineteenEightyTwo {
@@ -59,6 +58,16 @@ object MessageLookup {
 
       object worthOn {
         val question = "What was the property worth on 31 March 1982?"
+      }
+
+      object improvementsView {
+        val question = "How much have you spent on improvements since you became the property owner?"
+        val label = "How much have you spent on improvements since you became the property owner?"
+        val questionBefore = "How much have you spent on improvements since 31 March 1982?"
+        val hint = "Improvements are permanent changes that raise the value of a property, like adding extensions or garages. Normal maintenance costs don't count."
+        val improvementsHelpButton = "Show me an example"
+        val improvementsAdditionalContentOne = "Replacing a basic kitchen or bathroom with a luxury version is normally considered an improvement."
+        val improvementsAdditionalContentTwo = "But replacing them with something of a similar standard is normally not an improvement."
       }
     }
   }
@@ -170,15 +179,7 @@ object MessageLookup {
   }
 
   //Improvements messages
-  object improvementsView {
-    val title = "How much have you spent on improvements since you became the property owner?"
-    val label = "How much have you spent on improvements since you became the property owner?"
-    val questionBefore = "How much have you spent on improvements since 31 March 1982?"
-    val hint = "Improvements are permanent changes that raise the value of a property, like adding extensions or garages. Normal maintenance costs don't count."
-    val improvementsHelpButton = "Show me an example"
-    val improvementsAdditionalContentOne = "Replacing a basic kitchen or bathroom with a luxury version is normally considered an improvement."
-    val improvementsAdditionalContentTwo = "But replacing them with something of a similar standard is normally not an improvement."
-  }
+
 
   //Summary messages
   object summaryPage {

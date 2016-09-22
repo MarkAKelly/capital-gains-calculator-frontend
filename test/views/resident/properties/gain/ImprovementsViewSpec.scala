@@ -16,7 +16,7 @@
 
 package views.resident.properties.gain
 
-import assets.MessageLookup.{improvementsView => messages}
+import assets.MessageLookup.Resident.Properties.{improvementsView => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.properties.ImprovementsForm._
 import org.jsoup.Jsoup
@@ -34,16 +34,16 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       doc.charset.toString shouldBe "UTF-8"
     }
 
-    s"have a title of ${messages.title}" in {
-      doc.title shouldBe messages.title
+    s"have a title of ${messages.question}" in {
+      doc.title shouldBe messages.question
     }
 
     "have a H1 tag that" should {
 
       lazy val heading = doc.select("H1")
 
-      s"have the page heading '${messages.title}'" in {
-        heading.text shouldBe messages.title
+      s"have the page heading '${messages.question}'" in {
+        heading.text shouldBe messages.question
       }
 
       "have the heading-large class" in {

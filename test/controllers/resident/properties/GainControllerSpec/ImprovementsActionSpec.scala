@@ -16,7 +16,7 @@
 
 package controllers.resident.properties.GainControllerSpec
 
-import assets.MessageLookup.{improvementsView => messages}
+import assets.MessageLookup.Resident.Properties.{improvementsView => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import config.AppConfig
 import connectors.CalculatorConnector
@@ -88,7 +88,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
 
       "display the improvements view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.question
       }
     }
 
@@ -106,7 +106,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
 
       "display the Improvements view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.question
       }
     }
 
@@ -196,7 +196,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
 
       "render the Improvements page" in {
-        doc.title() shouldEqual messages.title
+        doc.title() shouldEqual messages.question
       }
     }
   }

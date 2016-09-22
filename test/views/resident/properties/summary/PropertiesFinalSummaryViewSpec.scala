@@ -372,8 +372,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
 
       "has a numeric output row for the Improvements" which {
 
-        s"should have the question text '${commonMessages.improvementsView.questionBefore}'" in {
-          doc.select("#improvements-question").text shouldBe commonMessages.improvementsView.questionBefore
+        s"should have the question text '${commonMessages.Resident.Properties.improvementsView.questionBefore}'" in {
+          doc.select("#improvements-question").text shouldBe commonMessages.Resident.Properties.improvementsView.questionBefore
         }
 
         "should have the value '£30,000'" in {
@@ -730,8 +730,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
 
     "has a numeric output row for the Improvements" which {
 
-      s"should have the question text '${commonMessages.improvementsView.title}'" in {
-        doc.select("#improvements-question").text shouldBe commonMessages.improvementsView.title
+      s"should have the question text '${commonMessages.Resident.Properties.improvementsView.question}'" in {
+        doc.select("#improvements-question").text shouldBe commonMessages.Resident.Properties.improvementsView.question
       }
 
       "should have the value '£30,000'" in {
