@@ -25,8 +25,7 @@ import play.api.i18n.Messages
 object PropertyRecipientForm {
   val propertyRecipientForm = Form(
     mapping("propertyRecipient" -> text
-        .verifying(Messages("calc.resident.whoDidYouGiveThePropertyTo.error.mandatory"), mandatoryCheck)
-        .verifying(Messages("calc.resident.whoDidYouGiveThePropertyTo.error"), whoDidYouGiveItTooCheck)
+        .verifying(Messages("calc.resident.whoDidYouGiveThePropertyTo.errormandatory"), mandatoryCheck)
     )(PropertyRecipientModel.apply)(PropertyRecipientModel.unapply)
   )
 }

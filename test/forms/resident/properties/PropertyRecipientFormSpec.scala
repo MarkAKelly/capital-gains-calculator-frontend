@@ -63,34 +63,10 @@ class PropertyRecipientFormSpec extends UnitSpec with WithFakeApplication {
       }
     }
 
-    "supplied with an invalid option for property recipient" should {
-      lazy val map = Map(("propertyRecipient" -> "Blah"))
-      lazy val form = propertyRecipientForm.bind(map)
-
-      "raise a form error" in {
-        form.hasErrors shouldBe true
-      }
-
-      "raise only one error" in {
-        form.errors.length shouldBe 1
-      }
-
-      s"error with message '${whoDidYouGiveItTo.error}" in {
-        form.error("propertyRecipient").get.message shouldBe whoDidYouGiveItTo.error
-      }
-    }
-
   }
 
     "throw an error when supplied with an empty value" in {
       lazy val map = Map(("propertyRecipient", ""))
-      lazy val form = propertyRecipientForm.bind(map)
-
-      form.hasErrors shouldBe true
-    }
-
-    "throw an error when supplied with incorrect mappings" in {
-      lazy val map = Map(("propertyRecipient", "Something"))
       lazy val form = propertyRecipientForm.bind(map)
 
       form.hasErrors shouldBe true

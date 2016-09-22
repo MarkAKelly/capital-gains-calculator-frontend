@@ -228,8 +228,7 @@ calc.resident.whoDidYouGiveThePropertyTo.title = Who did you give the property t
 calc.resident.whoDidYouGiveThePropertyTo.spouse = Your spouse or a civil partner
 calc.resident.whoDidYouGiveThePropertyTo.charity = A charity
 calc.resident.whoDidYouGiveThePropertyTo.other = Someone else
-calc.resident.whoDidYouGiveThePropertyTo.error = Please select a valid option
-calc.resident.whoDidYouGiveThePropertyTo.error.mandatory = Please tell us who you gave the property to
+calc.resident.whoDidYouGiveThePropertyTo.errormandatory = Please tell us who you gave the property to
 
 
 ## Entrepreneurs Relief ##

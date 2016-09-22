@@ -93,17 +93,33 @@ class PropertyRecipientActionSpec extends UnitSpec with WithFakeApplication with
 
   }
 
-  "Calling .submitWhoDidYouGiveItTo from the GainController with a Spouse or Charity value" should {
+  "Calling .submitWhoDidYouGiveItTo from the GainController with a Charity value" should {
     lazy val target = setupTarget(None)
     lazy val request = fakeRequestToPOSTWithSession(("propertyRecipient","Charity"))
     lazy val result = target.submitWhoDidYouGiveItTo(request)
 
     "when supplied with a valid form" which {
-      "redirect" in {
+      "redirects" in {
         status(result) shouldEqual 303
       }
 
-      "to the  page" in {
+      "to the You Have No Tax To Pay page" in {
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/you-have-no-tax-to-pay")
+      }
+    }
+  }
+
+  "Calling .submitWhoDidYouGiveItTo from the GainController with a Spouse value" should {
+    lazy val target = setupTarget(None)
+    lazy val request = fakeRequestToPOSTWithSession(("propertyRecipient", "Spouse"))
+    lazy val result = target.submitWhoDidYouGiveItTo(request)
+
+    "when supplied with a valid form" which {
+      "redirects" in {
+        status(result) shouldEqual 303
+      }
+
+      "to the You Have No Tax To Pay page" in {
         redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/you-have-no-tax-to-pay")
       }
     }

@@ -67,7 +67,7 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
 
   "The URL for POST for the Who Did You Give It To action" should {
     "be equal to /calculate-your-capital/gains/resident/properties/who-did-you-give-it-to" in {
-      GainController.whoDidYouGiveItTo().url shouldEqual "/calculate-your-capital-gains/resident/properties/who-did-you-give-it-to"
+      GainController.submitWhoDidYouGiveItTo().url shouldEqual "/calculate-your-capital-gains/resident/properties/who-did-you-give-it-to"
     }
   }
 

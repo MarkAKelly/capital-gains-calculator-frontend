@@ -132,10 +132,6 @@ trait GainController extends FeatureLock {
     TODO.apply(request)
   }
 
-  val whatWasItWorthWhenYouGaveItAway = FeatureLockForRTT.async { implicit request =>
-    TODO.apply(request)
-  }
-
   //################ Who Did You Give It To Actions ######################
   val whoDidYouGiveItTo = FeatureLockForRTT.async { implicit request =>
 
