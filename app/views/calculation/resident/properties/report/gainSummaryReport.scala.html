@@ -70,6 +70,9 @@
         @{if (!answers.ownerBeforeAprilNineteenEightyTwo)
         summaryTextRowHelper("howBecameOwner", Messages("calc.resident.howBecameOwner.title"),
         Messages(s"calc.resident.howBecameOwner.${answers.howBecameOwner.get.toLowerCase}"), None)}
+        @{if (!answers.ownerBeforeAprilNineteenEightyTwo && answers.howBecameOwner.get.equals("Bought"))
+        summaryOptionRowHelper("boughtForLessThanWorth", Messages("calc.resident.properties.boughtForLessThanWorth.title"),
+        answers.boughtForLessThanWorth.get, None)}
         @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),answers.acquisitionValue,None)
         @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),answers.acquisitionCosts,None)
         @summaryNumericRowHelper("improvements",Messages("calc.resident.improvements.title"),answers.improvements,None)

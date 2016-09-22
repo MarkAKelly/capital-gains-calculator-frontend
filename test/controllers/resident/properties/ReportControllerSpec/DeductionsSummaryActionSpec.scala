@@ -80,7 +80,9 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
         BigDecimal(30000),
         true,Some(false),
         true,
-        Some("Bought"))
+        Some("Bought"),
+        Some(false))
+
 
       lazy val deductionAnswers = ChargeableGainAnswers(
         Some(OtherPropertiesModel(true)),
@@ -143,7 +145,8 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
         0,
         false,Some(false),
         false,
-        Some("Bought"))
+        Some("Bought"),
+        Some(false))
 
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
         Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None,

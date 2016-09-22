@@ -41,6 +41,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       true,
       None,
       true,
+      None,
       None
     )
 
@@ -331,7 +332,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       false,
       Some(true),
       false,
-      Some("Bought")
+      Some("Bought"),
+      Some(false)
     )
 
     lazy val view = views.gainSummary(testModel, -2000, taxYearModel)(fakeRequest)
@@ -447,6 +449,29 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       }
     }
 
+    "has an option output row for bought for less than worth" which {
+
+      s"should have the question text '${commonMessages.boughtForLessThanWorth.title}'" in {
+        doc.select("#boughtForLessThanWorth-question").text shouldBe commonMessages.boughtForLessThanWorth.title
+      }
+
+      "should have the value 'No'" in {
+        doc.select("#boughtForLessThanWorth-option span.bold-medium").text shouldBe "No"
+      }
+
+      s"should have a change link to ${routes.GainController.boughtForLessThanWorth().url}" in {
+        doc.select("#boughtForLessThanWorth-option a").attr("href") shouldBe routes.GainController.boughtForLessThanWorth().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#boughtForLessThanWorth-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.boughtForLessThanWorth.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#boughtForLessThanWorth-option a span.visuallyhidden").text shouldBe commonMessages.boughtForLessThanWorth.title
+      }
+    }
+
     "have a link" which {
 
       "should have a href attribute" in {
@@ -482,6 +507,50 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
     }
   }
 
+  "Summary when supplied with a property bought for less than worth" should {
+
+    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+
+    val testModel = YourAnswersSummaryModel(
+      constructDate(12, 9, 2015),
+      10,
+      20,
+      30,
+      40,
+      50,
+      false,
+      Some(true),
+      false,
+      Some("Bought"),
+      Some(true)
+    )
+    lazy val view = views.gainSummary(testModel, -2000, taxYearModel)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "has an option output row for bought for less than worth" which {
+
+      s"should have the question text '${commonMessages.boughtForLessThanWorth.title}'" in {
+        doc.select("#boughtForLessThanWorth-question").text shouldBe commonMessages.boughtForLessThanWorth.title
+      }
+
+      "should have the value 'Yes'" in {
+        doc.select("#boughtForLessThanWorth-option span.bold-medium").text shouldBe "Yes"
+      }
+
+      s"should have a change link to ${routes.GainController.boughtForLessThanWorth().url}" in {
+        doc.select("#boughtForLessThanWorth-option a").attr("href") shouldBe routes.GainController.boughtForLessThanWorth().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#boughtForLessThanWorth-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.boughtForLessThanWorth.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#boughtForLessThanWorth-option a span.visuallyhidden").text shouldBe commonMessages.boughtForLessThanWorth.title
+      }
+    }
+  }
+
   "Summary when supplied with a date within the known tax years and no gain or loss" should {
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
@@ -496,6 +565,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       true,
       None,
       true,
+      None,
       None
     )
     lazy val view = views.gainSummary(testModel, 0, taxYearModel)(fakeRequest)
@@ -560,8 +630,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       false,
       Some(false),
       false,
-      Some("Inherited")
-
+      Some("Inherited"),
+      None
     )
     lazy val view = views.gainSummary(testModel,-2000, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
@@ -608,6 +678,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       false,
       Some(false),
       true,
+      None,
       None
 
     )
@@ -697,7 +768,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       false,
       Some(false),
       false,
-      Some("Gifted")
+      Some("Gifted"),
+      None
     )
     lazy val view = views.gainSummary(testModel,-2000, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
