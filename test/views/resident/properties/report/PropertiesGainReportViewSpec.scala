@@ -26,7 +26,7 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{report => views}
 
-class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper{
+class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Summary view" should {
 
@@ -38,6 +38,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       40,
       50,
       true,
+      None,
       true,
       None
     )
@@ -142,6 +143,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
         }
       }
 
+
       "has a numeric output row for the Disposal Value" which {
 
         s"should have the question text '${commonMessages.disposalValue.question}'" in {
@@ -226,9 +228,11 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       40,
       50,
       false,
+      Some(true),
       false,
       Some("Bought")
     )
+
     lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
@@ -252,6 +256,17 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
 
       "should have the value 'Sold it'" in {
         doc.select("#sellOrGiveAway-option span.bold-medium").text shouldBe "Sold it"
+      }
+    }
+
+    "has an option output row for sell for less" which {
+
+      s"should have the question text '${commonMessages.sellForLess.title}'" in {
+        doc.select("#sellForLess-question").text shouldBe commonMessages.sellForLess.title
+      }
+
+      "should have the value 'Yes'" in {
+        doc.select("#sellForLess-option span.bold-medium").text shouldBe "Yes"
       }
     }
 
@@ -301,6 +316,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       40,
       50,
       false,
+      Some(true),
       false,
       Some("Inherited")
     )
@@ -331,6 +347,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       40,
       50,
       false,
+      Some(true),
       false,
       Some("Gifted")
     )
@@ -345,6 +362,37 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
 
       s"should have the value '${commonMessages.howBecameOwner.gifted}'" in {
         doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.gifted
+      }
+    }
+  }
+
+  "Summary for Sell for Loss with option No" should {
+
+    lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
+
+    val testModel = YourAnswersSummaryModel(
+      constructDate(12, 9, 2015),
+      10,
+      20,
+      30,
+      40,
+      50,
+      false,
+      Some(false),
+      false,
+      Some("Inherited")
+    )
+    lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "has an option output row for sell for less" which {
+
+      s"should have the question text '${commonMessages.sellForLess.title}'" in {
+        doc.select("#sellForLess-question").text shouldBe commonMessages.sellForLess.title
+      }
+
+      "should have the value 'No'" in {
+        doc.select("#sellForLess-option span.bold-medium").text shouldBe "No"
       }
     }
   }

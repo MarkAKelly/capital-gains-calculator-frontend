@@ -574,7 +574,7 @@ calc.resident.shares.acquisitionValue.bulletListOne = inherited them
 calc.resident.shares.acquisitionValue.bulletListTwo = owned them before 1 April 1982
 
 ## Acquisition Costs messages
-calc.resident.shares.acquisitionCosts.title = How much did you pay in costs when you got the shares?
+calc.resident.shares.acquisitionCosts.question = How much did you pay in costs when you got the shares?
 calc.resident.shares.acquisitionCosts.help = Costs include stockbroker fees and Stamp Duty tax
 
 ## Current Income messages

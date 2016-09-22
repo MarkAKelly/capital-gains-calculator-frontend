@@ -33,8 +33,10 @@ class CalculateRequestConstructorSpec extends UnitSpec {
         BigDecimal(100),
         BigDecimal(10),
         true,
+        Some(false),
         true,
         None)
+
       val result = CalculateRequestConstructor.totalGainRequestString(answers)
       result shouldBe s"?disposalValue=1000" +
         s"&disposalCosts=0" +

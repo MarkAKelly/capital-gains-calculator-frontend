@@ -39,9 +39,11 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       40,
       50,
       true,
+      None,
       true,
       None
     )
+
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
@@ -185,6 +187,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
         }
       }
 
+
       "has a numeric output row for the Disposal Value" which {
 
         s"should have the question text '${commonMessages.disposalValue.question}'" in {
@@ -326,9 +329,11 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       40,
       50,
       false,
+      Some(true),
       false,
       Some("Bought")
     )
+
     lazy val view = views.gainSummary(testModel, -2000, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
@@ -365,6 +370,30 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
       "has the question component of the link as visuallyhidden" in {
         doc.select("#sellOrGiveAway-option a span.visuallyhidden").text shouldBe commonMessages.propertiesSellOrGiveAway.title
+      }
+    }
+
+
+    "has an option output row for sell for less" which {
+
+      s"should have the question text '${commonMessages.sellForLess.title}'" in {
+        doc.select("#sellForLess-question").text shouldBe commonMessages.sellForLess.title
+      }
+
+      "should have the value 'Yes'" in {
+        doc.select("#sellForLess-option span.bold-medium").text shouldBe "Yes"
+      }
+
+      s"should have a change link to ${routes.GainController.sellForLess().url}" in {
+        doc.select("#sellForLess-option a").attr("href") shouldBe routes.GainController.sellForLess().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#sellForLess-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.sellForLess.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#sellForLess-option a span.visuallyhidden").text shouldBe commonMessages.sellForLess.title
       }
     }
 
@@ -480,6 +509,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       40,
       50,
       true,
+      None,
       true,
       None
     )
@@ -543,8 +573,10 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       40,
       50,
       false,
+      Some(false),
       false,
       Some("Inherited")
+
     )
     lazy val view = views.gainSummary(testModel,-2000, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
@@ -588,9 +620,11 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       30,
       40,
       50,
-      true,
+      false,
+      Some(false),
       true,
       None
+
     )
 
     lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
@@ -618,6 +652,29 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
       s"should have the title '${messages.calcDetailsHeadingDate("2013/14")}'" in {
         doc.select("section#calcDetails h2").text shouldBe messages.calcDetailsHeadingDate("2013/14")
+      }
+    }
+
+    "has an option output row for sell for less" which {
+
+      s"should have the question text '${commonMessages.sellForLess.title}'" in {
+        doc.select("#sellForLess-question").text shouldBe commonMessages.sellForLess.title
+      }
+
+      "should have the value 'No'" in {
+        doc.select("#sellForLess-option span.bold-medium").text shouldBe "No"
+      }
+
+      s"should have a change link to ${routes.GainController.sellForLess().url}" in {
+        doc.select("#sellForLess-option a").attr("href") shouldBe routes.GainController.sellForLess().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#sellForLess-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.sellForLess.title}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#sellForLess-option a span.visuallyhidden").text shouldBe commonMessages.sellForLess.title
       }
     }
 
@@ -653,6 +710,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       40,
       50,
       false,
+      Some(false),
       false,
       Some("Gifted")
     )

@@ -70,6 +70,23 @@ object MessageLookup {
         val improvementsAdditionalContentTwo = "But replacing them with something of a similar standard is normally not an improvement."
       }
     }
+
+    object Shares {
+
+      //This object will have some duplication of text from the properties summary as well as duplicating
+      //some of the questions for the shares pages however it will still pull form the same messages location
+      //this is to encourage making the changes in the tests first in both places and understanding what changing
+      //the message will affect.
+      object SharesSummaryMessages {
+
+        val disposalDateQuestion = "When did you sell or give away the shares?"
+        val disposalValueQuestion = "How much did you sell the shares for?"
+        val disposalCostsQuestion = "How much did you pay in costs when you sold or gave away the shares?"
+        val acquisitionValueQuestion = "How much did you pay for the shares?"
+        val acquisitionCostsQuestion = "How much did you pay in costs when you got the shares?"
+
+      }
+    }
   }
 
 

@@ -37,8 +37,10 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(10000),
       BigDecimal(30000),
       true,
+      None,
       true,
       None)
+
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(false)),
       None,
@@ -223,6 +225,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         }
       }
 
+
       "has a numeric output row for the Disposal Value" which {
 
         s"should have the question text '${commonMessages.disposalValue.question}'" in {
@@ -353,8 +356,10 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(10000),
       BigDecimal(30000),
       false,
+      Some(true),
       false,
       Some("Bought"))
+
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
@@ -474,6 +479,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         }
       }
 
+      "has an option output row for sell for less" which {
+
+        s"should have the question text '${commonMessages.sellForLess.title}'" in {
+          doc.select("#sellForLess-question").text shouldBe commonMessages.sellForLess.title
+        }
+
+        "should have the value 'Yes'" in {
+          doc.select("#sellForLess-option span.bold-medium").text shouldBe "Yes"
+        }
+      }
+
       "has an option output row for owner before april 1982" which {
 
         s"should have the question text '${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}'" in {
@@ -482,6 +498,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
         "should have the value 'No'" in {
           doc.select("#ownerBeforeAprilNineteenEightyTwo-option span.bold-medium").text shouldBe "No"
+
         }
       }
 
@@ -677,8 +694,10 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(10000),
       BigDecimal(30000),
       true,
+      None,
       true,
       None)
+
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -814,8 +833,10 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(10000),
       BigDecimal(30000),
       false,
+      Some(false),
       false,
       Some("Inherited"))
+
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
@@ -877,6 +898,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       }
     }
 
+    "has an option output row for sell for less" which {
+
+      s"should have the question text '${commonMessages.sellForLess.title}'" in {
+        doc.select("#sellForLess-question").text shouldBe commonMessages.sellForLess.title
+      }
+
+      "should have the value 'No'" in {
+        doc.select("#sellForLess-option span.bold-medium").text shouldBe "No"
+      }
+    }
+
     "does not display the section for what to do next" in {
       doc.select("#whatToDoNext").isEmpty shouldBe true
     }
@@ -891,6 +923,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(10000),
       BigDecimal(30000),
       false,
+      Some(false),
       false,
       Some("Gifted"))
     lazy val deductionAnswers = ChargeableGainAnswers(

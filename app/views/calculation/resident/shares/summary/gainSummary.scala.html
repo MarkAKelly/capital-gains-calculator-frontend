@@ -70,7 +70,7 @@
         @summaryNumericRowHelper("disposalValue",Messages("calc.resident.shares.disposalValue.question"),answers.disposalValue,Some(routes.disposalValue().toString))
         @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.shares.disposalCosts.question"),answers.disposalCosts,Some(routes.disposalCosts().toString))
         @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.shares.acquisitionValue.question"),answers.acquisitionValue,Some(routes.acquisitionValue().toString))
-        @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.shares.acquisitionCosts.title"),answers.acquisitionCosts,Some(routes.acquisitionCosts().toString))
+        @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.shares.acquisitionCosts.question"),answers.acquisitionCosts,Some(routes.acquisitionCosts().toString))
     </section>
 
     @if(TaxDates.dateInsideAcceptedTaxYears(getDay(answers.disposalDate), getMonth(answers.disposalDate), getYear(answers.disposalDate))) {
