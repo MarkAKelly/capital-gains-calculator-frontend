@@ -280,8 +280,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
       "has a numeric output row for the Improvements" which {
 
-        s"should have the question text '${commonMessages.improvementsView.title}'" in {
-          doc.select("#improvements-question").text shouldBe commonMessages.improvementsView.title
+        s"should have the question text '${commonMessages.Resident.Properties.improvementsView.questionBefore}'" in {
+          doc.select("#improvements-question").text shouldBe commonMessages.Resident.Properties.improvementsView.questionBefore
         }
 
         "should have the value '£50'" in {
@@ -449,6 +449,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       }
     }
 
+
     "has an option output row for bought for less than worth" which {
 
       s"should have the question text '${commonMessages.boughtForLessThanWorth.title}'" in {
@@ -469,6 +470,21 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
       "has the question component of the link as visuallyhidden" in {
         doc.select("#boughtForLessThanWorth-option a span.visuallyhidden").text shouldBe commonMessages.boughtForLessThanWorth.title
+      }
+    }
+
+    "has a numeric output row for the Improvements" which {
+
+      s"should have the question text '${commonMessages.Resident.Properties.improvementsView.question}'" in {
+        doc.select("#improvements-question").text shouldBe commonMessages.Resident.Properties.improvementsView.question
+      }
+
+      "should have the value '£30,000'" in {
+        doc.select("#improvements-amount span.bold-medium").text shouldBe "£50"
+      }
+
+      s"should have a change link to ${routes.GainController.improvements().url}" in {
+        doc.select("#improvements-amount a").attr("href") shouldBe routes.GainController.improvements().url
       }
     }
 

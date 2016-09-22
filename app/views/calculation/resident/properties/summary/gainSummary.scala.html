@@ -81,7 +81,10 @@
         answers.boughtForLessThanWorth.get, Some(routes.boughtForLessThanWorth().toString))}
         @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),answers.acquisitionValue,Some(routes.acquisitionValue().toString))
         @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),answers.acquisitionCosts,Some(routes.acquisitionCosts().toString))
-        @summaryNumericRowHelper("improvements",Messages("calc.resident.improvements.title"),answers.improvements,Some(routes.improvements().toString))
+        @summaryNumericRowHelper("improvements",
+        if(answers.ownerBeforeAprilNineteenEightyTwo) Messages("calc.resident.properties.improvements.questionBefore")
+        else Messages("calc.resident.properties.improvements.question"),
+        answers.improvements,Some(routes.improvements().toString))
     </section>
 
     @if(dateInsideAcceptedTaxYears(getDay(answers.disposalDate), getMonth(answers.disposalDate), getYear(answers.disposalDate))) {

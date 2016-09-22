@@ -284,8 +284,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
       "has a numeric output row for the Improvements" which {
 
-        s"should have the question text '${commonMessages.improvementsView.title}'" in {
-          doc.select("#improvements-question").text shouldBe commonMessages.improvementsView.title
+        s"should have the question text '${commonMessages.Resident.Properties.improvementsView.questionBefore}'" in {
+          doc.select("#improvements-question").text shouldBe commonMessages.Resident.Properties.improvementsView.questionBefore
         }
 
         "should have the value '£30,000'" in {
@@ -515,6 +515,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         }
       }
 
+
       "has an option output row for bought for less than worth" which {
 
         s"should have the question text '${commonMessages.boughtForLessThanWorth.title}'" in {
@@ -523,6 +524,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
         "should have the value 'No'" in {
           doc.select("#boughtForLessThanWorth-option span.bold-medium").text shouldBe "No"
+        }
+      }
+
+      "has a numeric output row for the Improvements" which {
+
+        s"should have the question text '${commonMessages.Resident.Properties.improvementsView.question}'" in {
+          doc.select("#improvements-question").text shouldBe commonMessages.Resident.Properties.improvementsView.question
+        }
+
+        "should have the value '£30,000'" in {
+          doc.select("#improvements-amount span.bold-medium").text shouldBe "£30,000"
         }
       }
 
