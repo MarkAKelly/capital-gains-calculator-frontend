@@ -193,6 +193,10 @@ trait CalculatorConnector {
     val disposalDate = fetchAndGetFormData[resident.DisposalDateModel](ResidentPropertyKeys.disposalDate).map(formData =>
       constructDate(formData.get.day, formData.get.month, formData.get.year))
     val disposalValue = fetchAndGetFormData[resident.DisposalValueModel](ResidentPropertyKeys.disposalValue).map(_.get.amount)
+    val worthWhenSoldForLess = fetchAndGetFormData[resident.properties.gain.WorthWhenSoldForLessModel](ResidentPropertyKeys.worthWhenSoldForLess).map(_ match {
+      case Some(data) => Some(data.amount)
+      case _ => None
+    })
     val acquisitionCosts = fetchAndGetFormData[resident.AcquisitionCostsModel](ResidentPropertyKeys.acquisitionCosts).map(_.get.amount)
     val disposalCosts = fetchAndGetFormData[resident.DisposalCostsModel](ResidentPropertyKeys.disposalCosts).map(_.get.amount)
     val improvements = fetchAndGetFormData[properties.ImprovementsModel](ResidentPropertyKeys.improvements).map(_.get.amount)
@@ -216,6 +220,7 @@ trait CalculatorConnector {
       acquisitionValue <- acquisitionValue
       disposalDate <- disposalDate
       disposalValue <- disposalValue
+      worthWhenSoldForLess <- worthWhenSoldForLess
       acquisitionCosts <- acquisitionCosts
       disposalCosts <- disposalCosts
       improvements <- improvements
@@ -227,6 +232,7 @@ trait CalculatorConnector {
     } yield properties.YourAnswersSummaryModel(
       disposalDate,
       disposalValue,
+      worthWhenSoldForLess,
       disposalCosts,
       acquisitionValue,
       acquisitionCosts,
