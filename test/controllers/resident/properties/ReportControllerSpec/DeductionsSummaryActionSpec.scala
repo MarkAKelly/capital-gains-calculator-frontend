@@ -79,7 +79,8 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
         BigDecimal(100000),
         BigDecimal(10000),
         BigDecimal(30000),
-        true,Some(false),
+        true,
+        Some(false),
         true,
         Some("Bought"),
         Some(false))
@@ -145,7 +146,8 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
         10000,
         0,
         0,
-        false,Some(false),
+        false,
+        Some(false),
         false,
         Some("Bought"),
         Some(false))

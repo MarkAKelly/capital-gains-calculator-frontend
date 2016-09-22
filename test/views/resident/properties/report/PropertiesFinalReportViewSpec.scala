@@ -16,6 +16,7 @@
 
 package views.resident.properties.report
 
+import assets.MessageLookup.Resident.{Properties => propertiesMessages}
 import common.Dates
 import controllers.helpers.FakeRequestHelper
 import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, PreviousTaxableGainsModel}
@@ -417,7 +418,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       BigDecimal(200000),
-      None,
+      Some(500),
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -502,6 +503,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
       "should have the value 'Yes'" in {
         doc.select("#sellForLess-option span.bold-medium").text shouldBe "Yes"
+      }
+    }
+
+    "has an amount output row for worth when sold for less" which {
+
+      s"should have the question text ${propertiesMessages.WorthWhenSoldForLess.question}" in {
+        doc.select("#worthWhenSoldForLess-question").text shouldBe propertiesMessages.WorthWhenSoldForLess.question
+      }
+
+      "should have the value £500" in {
+        doc.select("#worthWhenSoldForLess-amount span.bold-medium").text shouldBe "£500"
       }
     }
 
@@ -622,7 +634,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       BigDecimal(200000),
-      None,
+      Some(500),
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),

@@ -52,7 +52,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     lazy val mockCalculatorConnector = mock[CalculatorConnector]
 
     when(mockCalculatorConnector.getPropertyGainAnswers(Matchers.any()))
-        .thenReturn(Future.successful(yourAnswersSummaryModel))
+      .thenReturn(Future.successful(yourAnswersSummaryModel))
 
     when(mockCalculatorConnector.calculateRttPropertyGrossGain(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(grossGain))
@@ -90,7 +90,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         5000,
         5,
         0,
-        true,Some(false),
+        true,
+        Some(false),
         true,
         Some("Bought"),
         Some(false))
@@ -127,12 +128,13 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     "a negative taxable gain is returned with no other properties disposed of or brought forward losses" should {
       lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
         3000,
-        None,
+        Some(500),
         10,
         5000,
         5,
         0,
-        false,Some(true),
+        false,
+        Some(true),
         false,
         Some("Bought"),
         Some(false))
@@ -178,7 +180,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         5000,
         5,
         0,
-        true,Some(false),
+        true,
+        Some(false),
         true,
         Some("Bought"),
         Some(false))
@@ -220,12 +223,13 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     "a negative taxable gain is returned with other properties disposed of" should {
       lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
         3000,
-        None,
+        Some(500),
         10,
         5000,
         5,
         0,
-        false,Some(true),
+        false,
+        Some(true),
         false,
         Some("Bought"),
         Some(false))
@@ -272,7 +276,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         5000,
         5,
         0,
-        true,Some(false),
+        true,
+        Some(false),
         true,
         Some("Bought"),
         Some(false))
@@ -319,7 +324,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         10000,
         0,
         0,
-        false,Some(false),
+        false,
+        Some(false),
         false,
         Some("Bought"),
         Some(false))
@@ -331,7 +337,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
       lazy val incomeAnswersModel = IncomeAnswersModel(None, Some(CurrentIncomeModel(20000)), Some(PersonalAllowanceModel(10000)))
       lazy val totalGainAndTaxOwedModel = TotalGainAndTaxOwedModel(20000, 20000, 11100, 11100, 3600, 20000, 18,
-        None, None, Some(BigDecimal(0)),Some(BigDecimal(0)), 0, 0)
+        None, None, Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
       lazy val target = setupTarget(
         yourAnswersSummaryModel,
         10000,
@@ -370,7 +376,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       5000,
       5,
       0,
-      true,Some(false),
+      true,
+      Some(false),
       true,
       Some("Bought"),
       Some(false))
@@ -410,7 +417,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       5000,
       5,
       0,
-      false,Some(false),
+      false,
+      Some(false),
       false,
       Some("Bought"),
       Some(false)
@@ -451,7 +459,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       5000,
       5,
       0,
-     true,Some(false),
+      true,
+      Some(false),
       true,
       Some("Bought"),
       Some(false))
@@ -493,7 +502,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       5000,
       5,
       0,
-      false,Some(false),
+      false,
+      Some(false),
       false,
       Some("Bought"),
       Some(false))
@@ -535,7 +545,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       10000,
       0,
       0,
-      true,Some(false),
+      true,
+      Some(false),
       true,
       Some("Bought"),
       Some(false))
@@ -547,7 +558,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
     lazy val incomeAnswersModel = IncomeAnswersModel(None, Some(CurrentIncomeModel(20000)), Some(PersonalAllowanceModel(10000)))
     lazy val totalGainAndTaxOwedModel = TotalGainAndTaxOwedModel(20000, 20000, 11100, 11100, 3600, 20000, 18,
-      None, None, Some(BigDecimal(0)),Some(BigDecimal(0)), 0, 0)
+      None, None, Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
     lazy val target = setupTarget(
       yourAnswersSummaryModel,
       10000,
@@ -574,12 +585,13 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
   "Calling .summary while eligible but not claiming PRR and Lettings Relief with a positive taxable gain" should {
     lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
       30000,
-      None,
+      Some(500),
       0,
       10000,
       0,
       0,
-      false,Some(true),
+      false,
+      Some(true),
       false,
       Some("Bought"),
       Some(false))
@@ -591,7 +603,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
     lazy val incomeAnswersModel = IncomeAnswersModel(None, Some(CurrentIncomeModel(20000)), Some(PersonalAllowanceModel(10000)))
     lazy val totalGainAndTaxOwedModel = TotalGainAndTaxOwedModel(20000, 20000, 11100, 11100, 3600, 20000, 18,
-      None, None, Some(BigDecimal(0)),Some(BigDecimal(0)), 0, 0)
+      None, None, Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
     lazy val target = setupTarget(
       yourAnswersSummaryModel,
       10000,
@@ -623,7 +635,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       10000,
       0,
       0,
-      true,Some(false),
+      true,
+      Some(false),
       true,
       Some("Bought"),
       Some(false))
@@ -636,7 +649,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
     lazy val incomeAnswersModel = IncomeAnswersModel(None, Some(CurrentIncomeModel(20000)), Some(PersonalAllowanceModel(10000)))
     lazy val totalGainAndTaxOwedModel = TotalGainAndTaxOwedModel(20000, 20000, 11100, 11100, 3600, 20000, 18,
-      None, None, Some(BigDecimal(0)),Some(BigDecimal(0)), 0, 0)
+      None, None, Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
     lazy val target = setupTarget(
       yourAnswersSummaryModel,
       10000,
@@ -663,12 +676,13 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
   "Calling .summary while eligible and claiming PRR and Lettings Relief with a positive taxable gain" should {
     lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
       30000,
-      None,
+      Some(500),
       0,
       10000,
       0,
       0,
-     false,Some(true),
+      false,
+      Some(true),
       false,
       Some("Bought"),
       Some(false))
@@ -681,7 +695,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
     lazy val incomeAnswersModel = IncomeAnswersModel(None, Some(CurrentIncomeModel(20000)), Some(PersonalAllowanceModel(10000)))
     lazy val totalGainAndTaxOwedModel = TotalGainAndTaxOwedModel(20000, 20000, 11100, 11100, 3600, 20000, 18,
-      None, None, Some(BigDecimal(0)),Some(BigDecimal(0)), 0, 0)
+      None, None, Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0)
     lazy val target = setupTarget(
       yourAnswersSummaryModel,
       10000,
@@ -715,7 +729,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     }
 
     "return you to the session timeout view" in {
-      redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+      redirectLocation(result).get should include("/calculate-your-capital-gains/session-timeout")
     }
   }
 }

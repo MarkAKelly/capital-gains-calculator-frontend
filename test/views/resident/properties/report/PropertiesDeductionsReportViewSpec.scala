@@ -18,9 +18,9 @@ package views.resident.properties.report
 
 import assets.MessageLookup.{summaryPage => messages}
 import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.Resident.{Properties => propertiesMessages}
 import common.Dates
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.properties.routes
 import models.resident._
 import models.resident.properties._
 import org.jsoup.Jsoup
@@ -353,7 +353,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
   "Deductions Report view with all options selected" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       BigDecimal(200000),
-      None,
+      Some(500),
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -469,6 +469,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
           "include a value for Loss brought forward of £10,000" in {
             doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYearUsed("2013/14")} £10,000")
           }
+        }
+      }
+
+      "has an amount output row for worth when sold for less" which {
+
+        s"should have the question text ${propertiesMessages.WorthWhenSoldForLess.question}" in {
+          doc.select("#worthWhenSoldForLess-question").text shouldBe propertiesMessages.WorthWhenSoldForLess.question
+        }
+
+        "should have the value £500" in {
+          doc.select("#worthWhenSoldForLess-amount span.bold-medium").text shouldBe "£500"
         }
       }
 
@@ -710,7 +721,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       BigDecimal(10000),
       BigDecimal(30000),
       false,
-      Some(true),
+      Some(false),
       false,
       Some("Bought"),
       Some(true))
