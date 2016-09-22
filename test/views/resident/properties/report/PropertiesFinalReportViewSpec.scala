@@ -40,6 +40,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       true,
       None,
       true,
+      None,
       None)
 
 
@@ -422,7 +423,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       false,
       Some(true),
       false,
-      Some("Bought"))
+      Some("Bought"),
+      Some(false))
 
 
 
@@ -523,6 +525,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       }
     }
 
+    "has an option output row for bought for less than worth" which {
+
+      s"should have the question text '${commonMessages.boughtForLessThanWorth.title}'" in {
+        doc.select("#boughtForLessThanWorth-question").text shouldBe commonMessages.boughtForLessThanWorth.title
+      }
+
+      "should have the value 'No'" in {
+        doc.select("#boughtForLessThanWorth-option span.bold-medium").text shouldBe "No"
+      }
+    }
+
     "has a numeric output row for the Improvements" which {
 
       s"should have the question text '${commonMessages.Resident.Properties.improvementsView.question}'" in {
@@ -591,15 +604,77 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         doc.select("#lettingsReliefValue-amount span.bold-medium").text shouldBe "£7,000"
       }
 
-    "have the class notice-wrapper" in {
-      doc.select("div.notice-wrapper").isEmpty shouldBe false
-    }
+      "have the class notice-wrapper" in {
+        doc.select("div.notice-wrapper").isEmpty shouldBe false
+      }
 
-    s"have the text ${messages.noticeWarning("2016/17")}" in {
-      doc.select("strong.bold-small").text shouldBe messages.noticeWarning("2016/17")
+      s"have the text ${messages.noticeWarning("2016/17")}" in {
+        doc.select("strong.bold-small").text shouldBe messages.noticeWarning("2016/17")
+      }
     }
   }
 
+  "Final Summary when property bought for less than worth" should {
+
+    lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
+
+    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
+      BigDecimal(200000),
+      BigDecimal(10000),
+      BigDecimal(100000),
+      BigDecimal(10000),
+      BigDecimal(30000),
+      false,
+      Some(true),
+      false,
+      Some("Bought"),
+      Some(true))
+
+    lazy val deductionAnswers = ChargeableGainAnswers(
+      Some(OtherPropertiesModel(true)),
+      Some(AllowableLossesModel(false)),
+      None,
+      Some(LossesBroughtForwardModel(false)),
+      None,
+      Some(AnnualExemptAmountModel(0)),
+      Some(PropertyLivedInModel(true)),
+      Some(PrivateResidenceReliefModel(true)),
+      Some(PrivateResidenceReliefValueModel(5000)),
+      Some(LettingsReliefModel(true)),
+      Some(LettingsReliefValueModel(7000))
+    )
+
+    lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
+
+    lazy val results = TotalGainAndTaxOwedModel(
+      50000,
+      20000,
+      0,
+      30000,
+      3600,
+      30000,
+      18,
+      Some(10000),
+      Some(28),
+      Some(BigDecimal(30000)),
+      Some(BigDecimal(2000)),
+      0,
+      0
+    )
+
+    lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel)(fakeRequestWithSession)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "has an option output row for bought for less than worth" which {
+
+      s"should have the question text '${commonMessages.boughtForLessThanWorth.title}'" in {
+        doc.select("#boughtForLessThanWorth-question").text shouldBe commonMessages.boughtForLessThanWorth.title
+      }
+
+      "should have the value 'Yes'" in {
+        doc.select("#boughtForLessThanWorth-option span.bold-medium").text shouldBe "Yes"
+      }
+    }
   }
 
 
@@ -616,7 +691,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       false,
       Some(false),
       false,
-      Some("Inherited"))
+      Some("Inherited"),
+      None)
 
 
     lazy val deductionAnswers = ChargeableGainAnswers(
@@ -678,7 +754,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       false,
       Some(false),
       false,
-      Some("Gifted"))
+      Some("Gifted"),
+      None)
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -739,7 +816,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         false,
         Some(false),
         false,
-        Some("Inherited"))
+        Some("Inherited"),
+        None)
 
       lazy val deductionAnswers = ChargeableGainAnswers(
         Some(OtherPropertiesModel(true)),
