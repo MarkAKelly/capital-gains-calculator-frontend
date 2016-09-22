@@ -97,6 +97,9 @@
         @summaryOptionRowHelper("ownerBeforeAprilNineteenEightyTwo", Messages("calc.resident.properties.ownerBeforeApril.title"),
         gainAnswers.ownerBeforeAprilNineteenEightyTwo, None)
 
+        @{if (gainAnswers.ownerBeforeAprilNineteenEightyTwo)
+        summaryNumericRowHelper("worthOn",Messages("calc.resident.properties.worthOn.question"),gainAnswers.worthOnThirtyFirstMarchEightyTwo.get,None)}
+
         @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo)
         summaryTextRowHelper("howBecameOwner", Messages("calc.resident.howBecameOwner.title"),
         Messages(s"calc.resident.howBecameOwner.${gainAnswers.howBecameOwner.get.toLowerCase}"), None)}

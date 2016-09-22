@@ -89,6 +89,7 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
         0,
         true,Some(false),
         true,
+        Some(BigDecimal(5000)),
         Some("Bought"),
         Some(false)
       )
@@ -138,6 +139,7 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
         0,
         false,Some(true),
         false,
+        None,
         Some("Bought"),
         Some(false))
 

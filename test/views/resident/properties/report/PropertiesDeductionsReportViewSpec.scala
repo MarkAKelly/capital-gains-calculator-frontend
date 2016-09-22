@@ -38,6 +38,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       true,
       None,
       true,
+      Some(BigDecimal(5000)),
       None,
       None)
 
@@ -259,6 +260,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         }
       }
 
+      "has a numeric output row for the Worth Before April Nineteen Eighty Two" which {
+
+        s"should have the question text '${commonMessages.Resident.Properties.worthOn.question}'" in {
+          doc.select("#worthOn-question").text shouldBe commonMessages.Resident.Properties.worthOn.question
+        }
+
+        "should have the value '£5,000'" in {
+          doc.select("#worthOn-amount span.bold-medium").text shouldBe "£5,000"
+        }
+      }
+
       "has a numeric output row for the Acquisition Value" which {
 
         s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
@@ -358,6 +370,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       false,
       Some(true),
       false,
+      None,
       Some("Bought"),
       Some(false))
 
@@ -708,6 +721,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       false,
       Some(true),
       false,
+      None,
       Some("Bought"),
       Some(true))
     lazy val deductionAnswers = ChargeableGainAnswers(
@@ -764,6 +778,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       true,
       None,
       true,
+      Some(BigDecimal(5000)),
       None,
       None)
 
@@ -904,6 +919,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       false,
       Some(false),
       false,
+      None,
       Some("Inherited"),
       None)
 
@@ -995,6 +1011,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       false,
       Some(false),
       false,
+      None,
       Some("Gifted"),
       None)
     lazy val deductionAnswers = ChargeableGainAnswers(
