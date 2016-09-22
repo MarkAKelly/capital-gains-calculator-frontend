@@ -12,19 +12,19 @@
 }
 
 @resident_properties_main_template(title = if(ownedBeforeAprilNineteenEightyTwo) Messages("calc.resident.properties.improvements.questionBefore")
-    else Messages("calc.resident.properties.improvements.title"),
+    else Messages("calc.resident.properties.improvements.question"),
     backLink = Some(controllers.resident.properties.routes.GainController.acquisitionCosts().toString)) {
 
     @errorSummary(improvementsForm, "improvements")
 
     <h1 class="heading-large">@{if(ownedBeforeAprilNineteenEightyTwo) Messages("calc.resident.properties.improvements.questionBefore")
-        else Messages("calc.resident.properties.improvements.title")}</h1>
+        else Messages("calc.resident.properties.improvements.question")}</h1>
 
     @form(action = controllers.resident.properties.routes.GainController.submitImprovements) {
 
         @formInputMoney(improvementsForm, "amount",
             if(ownedBeforeAprilNineteenEightyTwo) Messages("calc.resident.properties.improvements.questionBefore")
-            else Messages("calc.resident.properties.improvements.title"),
+            else Messages("calc.resident.properties.improvements.question"),
             Some(Messages("calc.resident.properties.improvements.hint")), hideLabel = true)
 
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>

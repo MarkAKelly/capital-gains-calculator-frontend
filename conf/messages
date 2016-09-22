@@ -391,7 +391,7 @@ calc.resident.acquisitionCosts.question = How much did you pay in costs when you
 calc.resident.acquisitionCosts.helpText = Costs include stamp duty, agent fees, legal fees and surveys
 
 ## Improvements messages
-calc.resident.properties.improvements.title = How much have you spent on improvements since you became the property owner?
+calc.resident.properties.improvements.question = How much have you spent on improvements since you became the property owner?
 calc.resident.properties.improvements.label = How much have you spent on improvements since you became the property owner?
 calc.resident.properties.improvements.questionBefore = How much have you spent on improvements since 31 March 1982?
 calc.resident.properties.improvements.hint = Improvements are permanent changes that raise the value of a property, like adding extensions or garages. Normal maintenance costs don''t count.
