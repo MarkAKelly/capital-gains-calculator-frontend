@@ -34,7 +34,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       constructDate(12, 9, 1990),
       None,
       20,
-      30,
+      None,
       40,
       50,
       true,
@@ -178,17 +178,6 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
         }
       }
 
-      "has a numeric output row for the Acquisition Value" which {
-
-        s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
-          doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
-        }
-
-        "should have the value '£30'" in {
-          doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£30"
-        }
-      }
-
       "has a numeric output row for the Acquisition Costs" which {
 
         s"should have the question text '${commonMessages.acquisitionCosts.title}'" in {
@@ -225,7 +214,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       constructDate(12, 9, 2015),
       None,
       20,
-      30,
+      Some(30),
       40,
       50,
       false,
@@ -306,6 +295,17 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       }
     }
 
+    "has a numeric output row for the Acquisition Value" which {
+
+      s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
+        doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
+      }
+
+      "should have the value '£30'" in {
+        doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£30"
+      }
+    }
+
     "has a numeric output row for the Improvements" which {
 
       s"should have the question text '${commonMessages.Resident.Properties.improvementsView.question}'" in {
@@ -326,7 +326,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       constructDate(12, 9, 2015),
       None,
       20,
-      30,
+      None,
       40,
       50,
       false,
@@ -359,7 +359,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       constructDate(12, 9, 2015),
       None,
       20,
-      30,
+      None,
       40,
       50,
       false,
@@ -392,7 +392,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       constructDate(12, 9, 2015),
       None,
       20,
-      30,
+      None,
       40,
       50,
       false,
@@ -425,7 +425,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       constructDate(12, 9, 2015),
       Some(10),
       20,
-      30,
+      None,
       40,
       50,
       false,

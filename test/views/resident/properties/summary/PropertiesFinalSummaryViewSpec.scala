@@ -34,7 +34,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
       BigDecimal(10000),
       BigDecimal(30000),
       true,
@@ -351,22 +351,6 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
         }
       }
 
-      "has a numeric output row for the Acquisition Value" which {
-
-        s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
-          doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
-        }
-
-        "should have the value '£100,000'" in {
-          doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£100,000"
-        }
-
-        s"should have a change link to ${routes.GainController.acquisitionValue().url}" in {
-          doc.select("#acquisitionValue-amount a").attr("href") shouldBe routes.GainController.acquisitionValue().url
-        }
-
-      }
-
       "has a numeric output row for the Acquisition Costs" which {
 
         s"should have the question text '${commonMessages.acquisitionCosts.title}'" in {
@@ -542,7 +526,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      Some(BigDecimal(100000)),
       BigDecimal(10000),
       BigDecimal(30000),
       false,
@@ -791,6 +775,22 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
     }
 
+    "has a numeric output row for the Acquisition Value" which {
+
+      s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
+        doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
+      }
+
+      "should have the value '£100,000'" in {
+        doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£100,000"
+      }
+
+      s"should have a change link to ${routes.GainController.acquisitionValue().url}" in {
+        doc.select("#acquisitionValue-amount a").attr("href") shouldBe routes.GainController.acquisitionValue().url
+      }
+
+    }
+
     "has a numeric output row for the Improvements" which {
 
       s"should have the question text '${commonMessages.Resident.Properties.improvementsView.question}'" in {
@@ -920,7 +920,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
       BigDecimal(10000),
       BigDecimal(30000),
       false,
@@ -996,7 +996,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
       BigDecimal(10000),
       BigDecimal(30000),
       true,
@@ -1219,7 +1219,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2015),
       None,
       BigDecimal(0),
-      BigDecimal(0),
+      None,
       BigDecimal(0),
       BigDecimal(0),
       false,
@@ -1349,7 +1349,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
       BigDecimal(10000),
       BigDecimal(30000),
       true,
@@ -1427,7 +1427,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       Some(BigDecimal(200000)),
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
       BigDecimal(10000),
       BigDecimal(30000),
       false,
@@ -1557,7 +1557,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
       BigDecimal(10000),
       BigDecimal(30000),
       true,

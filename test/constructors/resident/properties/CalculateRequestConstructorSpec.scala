@@ -29,7 +29,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
       val answers = YourAnswersSummaryModel(Dates.constructDate(10, 2, 2016),
         Some(BigDecimal(1000)),
         BigDecimal(0),
-        BigDecimal(500),
+        Some(BigDecimal(500)),
         BigDecimal(100),
         BigDecimal(10),
         true,
