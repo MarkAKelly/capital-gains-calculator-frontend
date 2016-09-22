@@ -92,7 +92,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         true,Some(false),
         true,
         Some("Bought"),
-        Some(false))
+        Some(false),
+        None)
 
       lazy val chargeableGainAnswers = ChargeableGainAnswers(None, None, None, None, None, None, None, None, None, None, None)
       lazy val incomeAnswersModel = IncomeAnswersModel(None, None, None)
@@ -133,7 +134,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         false,Some(true),
         false,
         Some("Bought"),
-        Some(false))
+        Some(false),
+        None)
 
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
         None, None, Some(LossesBroughtForwardModel(false)), None, None, Some(PropertyLivedInModel(false)), None, None, None, None)
@@ -178,7 +180,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         true,Some(false),
         true,
         Some("Bought"),
-        Some(false))
+        Some(false),
+        None)
 
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
         None, None, Some(LossesBroughtForwardModel(true)), Some(LossesBroughtForwardValueModel(1000)), None,
@@ -224,7 +227,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         false,Some(true),
         false,
         Some("Bought"),
-        Some(false))
+        Some(false),
+        None)
 
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(true)),
         Some(AllowableLossesModel(true)), Some(AllowableLossesValueModel(BigDecimal(1000))), Some(LossesBroughtForwardModel(false)), None, Some(AnnualExemptAmountModel(10000)),
@@ -270,7 +274,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         true,Some(false),
         true,
         Some("Bought"),
-        Some(false))
+        Some(false),
+        None)
 
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(true)),
         Some(AllowableLossesModel(true)), Some(AllowableLossesValueModel(BigDecimal(0))),
@@ -316,7 +321,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         false,Some(false),
         false,
         Some("Bought"),
-        Some(false))
+        Some(false),
+        None)
 
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
         Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None,
@@ -366,7 +372,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       true,Some(false),
       true,
       Some("Bought"),
-      Some(false))
+      Some(false),
+      None)
 
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
       None, None, Some(LossesBroughtForwardModel(false)), None, None, Some(PropertyLivedInModel(false)), None, None, None, None)
@@ -405,7 +412,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       false,Some(false),
       false,
       Some("Bought"),
-      Some(false)
+      Some(false),
+      None
     )
 
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
@@ -445,7 +453,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
      true,Some(false),
       true,
       Some("Bought"),
-      Some(false))
+      Some(false),
+      None)
 
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
       None, None, Some(LossesBroughtForwardModel(false)), None, None, Some(PropertyLivedInModel(true)),
@@ -486,7 +495,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       false,Some(false),
       false,
       Some("Bought"),
-      Some(false))
+      Some(false),
+      None)
 
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
       None, None, Some(LossesBroughtForwardModel(false)), None, None, Some(PropertyLivedInModel(true)),
@@ -527,7 +537,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       true,Some(false),
       true,
       Some("Bought"),
-      Some(false))
+      Some(false),
+      None)
 
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
       Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None,
@@ -570,7 +581,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       false,Some(true),
       false,
       Some("Bought"),
-      Some(false))
+      Some(false),
+      None)
 
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
       Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None,
@@ -613,7 +625,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       true,Some(false),
       true,
       Some("Bought"),
-      Some(false))
+      Some(false),
+      None)
 
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
       Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None,
@@ -657,7 +670,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
      false,Some(true),
       false,
       Some("Bought"),
-      Some(false))
+      Some(false),
+      None)
 
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
       Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None,

@@ -211,6 +211,10 @@ trait CalculatorConnector {
       case Some(data) => Some(data.boughtForLessThanWorth)
       case None => None
     }
+    val worthWhenBought = fetchAndGetFormData[properties.WorthWhenBoughtModel](ResidentPropertyKeys.worthWhenBought).map {
+      case Some(data) => Some(data.amount)
+      case None => None
+    }
 
     for {
       acquisitionValue <- acquisitionValue
@@ -224,6 +228,7 @@ trait CalculatorConnector {
       ownerBeforeAprilNineteenEightyTwo <- ownerBeforeAprilNineteenEightyTwo
       howBecameOwner <- howBecameOwner
       boughtForLessThanWorth <- boughtForLessThanWorth
+      worthWhenBought <- worthWhenBought
     } yield properties.YourAnswersSummaryModel(
       disposalDate,
       disposalValue,
@@ -235,7 +240,8 @@ trait CalculatorConnector {
       sellForLess,
       ownerBeforeAprilNineteenEightyTwo,
       howBecameOwner,
-      boughtForLessThanWorth
+      boughtForLessThanWorth,
+      worthWhenBought
     )
   }
 

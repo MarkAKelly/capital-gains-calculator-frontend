@@ -40,6 +40,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       None,
       true,
       None,
+      None,
       None)
 
     lazy val deductionAnswers = ChargeableGainAnswers(
@@ -513,7 +514,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       Some(true),
       false,
       Some("Bought"),
-      Some(false))
+      Some(false),
+      None)
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -1059,7 +1061,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       Some(true),
       false,
       Some("Bought"),
-      Some(true))
+      Some(true),
+      Some(1500))
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
@@ -1127,6 +1130,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       true,
       None,
       true,
+      None,
       None,
       None)
 
@@ -1334,6 +1338,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       None,
       false,
       Some("Inherited"),
+      None,
       None)
 
     lazy val deductionAnswers = ChargeableGainAnswers(
@@ -1473,6 +1478,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       Some(false),
       true,
       None,
+      None,
       None)
 
     lazy val deductionAnswers = ChargeableGainAnswers(
@@ -1565,6 +1571,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       Some(false),
       false,
       Some("Gifted"),
+      None,
       None)
 
     lazy val deductionAnswers = ChargeableGainAnswers(

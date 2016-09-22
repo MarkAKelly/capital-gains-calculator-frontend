@@ -33,7 +33,8 @@ case class YourAnswersSummaryModel
   sellForLess: Option[Boolean],
   ownerBeforeAprilNineteenEightyTwo: Boolean,
   howBecameOwner: Option[String],
-  boughtForLessThanWorth: Option[Boolean]
+  boughtForLessThanWorth: Option[Boolean],
+  worthWhenBought: Option[BigDecimal]
 )
 
 object YourAnswersSummaryModel {

@@ -41,6 +41,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       None,
       true,
       None,
+      None,
       None)
 
 
@@ -424,7 +425,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       Some(true),
       false,
       Some("Bought"),
-      Some(false))
+      Some(false),
+      None)
 
 
 
@@ -628,7 +630,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       Some(true),
       false,
       Some("Bought"),
-      Some(true))
+      Some(true),
+      Some(1500))
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -692,6 +695,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       Some(false),
       false,
       Some("Inherited"),
+      None,
       None)
 
 
@@ -755,6 +759,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       Some(false),
       false,
       Some("Gifted"),
+      None,
       None)
 
     lazy val deductionAnswers = ChargeableGainAnswers(
@@ -817,6 +822,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         Some(false),
         false,
         Some("Inherited"),
+        None,
         None)
 
       lazy val deductionAnswers = ChargeableGainAnswers(

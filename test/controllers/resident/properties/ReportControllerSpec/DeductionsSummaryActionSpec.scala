@@ -81,7 +81,8 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
         true,Some(false),
         true,
         Some("Bought"),
-        Some(false))
+        Some(false),
+        None)
 
 
       lazy val deductionAnswers = ChargeableGainAnswers(
@@ -146,7 +147,8 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
         false,Some(false),
         false,
         Some("Bought"),
-        Some(false))
+        Some(false),
+        None)
 
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
         Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None,

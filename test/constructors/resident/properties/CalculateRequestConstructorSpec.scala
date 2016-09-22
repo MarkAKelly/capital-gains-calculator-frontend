@@ -36,7 +36,8 @@ class CalculateRequestConstructorSpec extends UnitSpec {
         Some(false),
         true,
         Some("Bought"),
-        Some(false))
+        Some(false),
+        None)
 
       val result = CalculateRequestConstructor.totalGainRequestString(answers)
       result shouldBe s"?disposalValue=1000" +
