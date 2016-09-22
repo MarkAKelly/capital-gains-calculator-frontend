@@ -33,6 +33,7 @@ case class YourAnswersSummaryModel
   givenAway: Boolean,
   sellForLess: Option[Boolean],
   ownerBeforeAprilNineteenEightyTwo: Boolean,
+  worthOnThirtyFirstMarchEightyTwo: Option[BigDecimal],
   howBecameOwner: Option[String],
   boughtForLessThanWorth: Option[Boolean]
 )

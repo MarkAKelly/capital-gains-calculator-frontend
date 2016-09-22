@@ -41,6 +41,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       true,
       None,
       true,
+      Some(BigDecimal(5000)),
       None,
       None)
 
@@ -328,6 +329,31 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         }
       }
 
+      "has a numeric output row for the Worth Before April Nineteen Eighty Two" which {
+
+        s"should have the question text '${commonMessages.Resident.Properties.worthOn.question}'" in {
+          doc.select("#worthOn-question").text shouldBe commonMessages.Resident.Properties.worthOn.question
+        }
+
+        "should have the value '£5,000'" in {
+          doc.select("#worthOn-amount span.bold-medium").text shouldBe "£5,000"
+        }
+
+        s"should have a change link to ${routes.GainController.worthOn.url}" in {
+          doc.select("#worthOn-amount a").attr("href") shouldBe routes.GainController.worthOn.url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#worthOn-amount a").text shouldBe
+            s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.worthOn.question}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#worthOn-amount a span.visuallyhidden").text shouldBe
+            commonMessages.Resident.Properties.worthOn.question
+        }
+      }
+
       "has a numeric output row for the Acquisition Value" which {
 
         s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
@@ -515,6 +541,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       false,
       Some(true),
       false,
+      None,
       Some("Bought"),
       Some(false))
 
@@ -1085,6 +1112,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       false,
       Some(true),
       false,
+      None,
       Some("Bought"),
       Some(true))
     lazy val deductionAnswers = ChargeableGainAnswers(
@@ -1155,6 +1183,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       true,
       None,
       true,
+      Some(BigDecimal(5000)),
       None,
       None)
 
@@ -1362,6 +1391,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       true,
       None,
       false,
+      None,
       Some("Inherited"),
       None)
 
@@ -1502,6 +1532,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       false,
       Some(false),
       true,
+      Some(BigDecimal(5000)),
       None,
       None)
 
@@ -1595,6 +1626,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       true,
       Some(false),
       false,
+      None,
       Some("Gifted"),
       None)
 

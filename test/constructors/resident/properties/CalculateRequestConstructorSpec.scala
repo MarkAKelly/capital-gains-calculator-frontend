@@ -36,6 +36,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
         true,
         Some(false),
         true,
+        Some(BigDecimal(5000)),
         Some("Bought"),
         Some(false))
 

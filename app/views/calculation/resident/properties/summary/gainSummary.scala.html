@@ -76,6 +76,8 @@
         @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.disposalCosts.title"),answers.disposalCosts,Some(routes.disposalCosts().toString))
         @summaryOptionRowHelper("ownerBeforeAprilNineteenEightyTwo", Messages("calc.resident.properties.ownerBeforeApril.title"),
         answers.ownerBeforeAprilNineteenEightyTwo, Some(routes.ownerBeforeAprilNineteenEightyTwo().toString))
+        @{if (answers.ownerBeforeAprilNineteenEightyTwo)
+        summaryNumericRowHelper("worthOn",Messages("calc.resident.properties.worthOn.question"),answers.worthOnThirtyFirstMarchEightyTwo.get,Some(routes.worthOn().toString))}
         @{if (!answers.ownerBeforeAprilNineteenEightyTwo)
         summaryTextRowHelper("howBecameOwner", Messages("calc.resident.howBecameOwner.title"), Messages(s"calc.resident.howBecameOwner.${answers.howBecameOwner.get.toLowerCase}"),
         Some(routes.howBecameOwner().toString))}

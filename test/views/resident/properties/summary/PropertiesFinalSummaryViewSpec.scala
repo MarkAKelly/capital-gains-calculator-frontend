@@ -42,6 +42,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       true,
       None,
       true,
+      Some(BigDecimal(5000)),
       None,
       None)
 
@@ -344,6 +345,31 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
         }
       }
 
+      "has a numeric output row for the Worth Before April Nineteen Eighty Two" which {
+
+        s"should have the question text '${commonMessages.Resident.Properties.worthOn.question}'" in {
+          doc.select("#worthOn-question").text shouldBe commonMessages.Resident.Properties.worthOn.question
+        }
+
+        "should have the value '£5,000'" in {
+          doc.select("#worthOn-amount span.bold-medium").text shouldBe "£5,000"
+        }
+
+        s"should have a change link to ${routes.GainController.worthOn.url}" in {
+          doc.select("#worthOn-amount a").attr("href") shouldBe routes.GainController.worthOn.url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#worthOn-amount a").text shouldBe
+            s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.worthOn.question}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#worthOn-amount a span.visuallyhidden").text shouldBe
+            commonMessages.Resident.Properties.worthOn.question
+        }
+      }
+
       "has a numeric output row for the Acquisition Value" which {
 
         s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
@@ -542,6 +568,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       false,
       Some(true),
       false,
+      None,
       Some("Bought"),
       Some(false))
 
@@ -942,6 +969,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       false,
       Some(true),
       false,
+      None,
       Some("Bought"),
       Some(true))
     lazy val deductionAnswers = ChargeableGainAnswers(
@@ -1018,6 +1046,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       true,
       None,
       true,
+      Some(BigDecimal(5000)),
       None,
       None)
 
@@ -1241,6 +1270,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       false,
       Some(true),
       false,
+      None,
       Some("Inherited"),
       None)
 
@@ -1371,6 +1401,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       true,
       None,
       true,
+      Some(BigDecimal(5000)),
       None,
       None)
 
@@ -1449,6 +1480,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       false,
       Some(false),
       false,
+      None,
       Some("Gifted"),
       None)
 
@@ -1579,10 +1611,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       true,
       None,
       true,
+      Some(BigDecimal(5000)),
       None,
       None)
-
-
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),

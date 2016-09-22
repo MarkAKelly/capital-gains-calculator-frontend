@@ -71,6 +71,7 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
         true,
         Some(false),
         true,
+        Some(BigDecimal(5000)),
         Some("Bought"),
         Some(false))
 
@@ -109,6 +110,7 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
         false,
         Some(true),
         false,
+        None,
         Some("Bought"),
         Some(false))
 
