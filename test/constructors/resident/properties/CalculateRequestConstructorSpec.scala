@@ -27,7 +27,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
 
     "return a valid url variable string" in {
       val answers = YourAnswersSummaryModel(Dates.constructDate(10, 2, 2016),
-        BigDecimal(1000),
+        Some(BigDecimal(1000)),
         BigDecimal(0),
         BigDecimal(500),
         BigDecimal(100),

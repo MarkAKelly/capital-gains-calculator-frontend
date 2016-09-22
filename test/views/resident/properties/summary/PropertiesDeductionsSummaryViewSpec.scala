@@ -31,7 +31,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
 
   "Properties Deductions Summary view" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -267,23 +267,6 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         "has the question component of the link as visuallyhidden" in {
           doc.select("#sellOrGiveAway-option a span.visuallyhidden").text shouldBe commonMessages.propertiesSellOrGiveAway.title
         }
-      }
-
-
-      "has a numeric output row for the Disposal Value" which {
-
-        s"should have the question text '${commonMessages.disposalValue.question}'" in {
-          doc.select("#disposalValue-question").text shouldBe commonMessages.disposalValue.question
-        }
-
-        "should have the value '£200,000'" in {
-          doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£200,000"
-        }
-
-        s"should have a change link to ${routes.GainController.disposalValue().url}" in {
-          doc.select("#disposalValue-amount a").attr("href") shouldBe routes.GainController.disposalValue().url
-        }
-
       }
 
       "has a numeric output row for the Disposal Costs" which {
@@ -530,7 +513,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
 
   "Properties Deductions Summary view with all options selected" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -1077,7 +1060,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
 
   "Properties Deductions Summary view when property was sold for less than worth" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -1147,7 +1130,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
   "Properties Deductions Summary view with AEA options selected" which {
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -1354,7 +1337,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
 
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
+      None,
       BigDecimal(0),
       BigDecimal(100000),
       BigDecimal(0),
@@ -1494,7 +1477,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
   "Properties Deductions Summary when supplied with a date above the known tax years" should {
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
-      BigDecimal(200000),
+      Some(BigDecimal(200000)),
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -1560,6 +1543,22 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       }
     }
 
+    "has a numeric output row for the Disposal Value" which {
+
+      s"should have the question text '${commonMessages.disposalValue.question}'" in {
+        doc.select("#disposalValue-question").text shouldBe commonMessages.disposalValue.question
+      }
+
+      "should have the value '£200,000'" in {
+        doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£200,000"
+      }
+
+      s"should have a change link to ${routes.GainController.disposalValue().url}" in {
+        doc.select("#disposalValue-amount a").attr("href") shouldBe routes.GainController.disposalValue().url
+      }
+
+    }
+
     "has an option output row for sell for less" which {
 
       s"should have the question text '${commonMessages.sellForLess.title}'" in {
@@ -1587,7 +1586,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
   "Properties Deductions Summary view" should {
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),

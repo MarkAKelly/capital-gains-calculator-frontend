@@ -24,7 +24,7 @@ import play.api.libs.json._
 case class YourAnswersSummaryModel
 (
   disposalDate: LocalDate,
-  disposalValue: BigDecimal,
+  disposalValue: Option[BigDecimal],
   disposalCosts: BigDecimal,
   acquisitionValue: BigDecimal,
   acquisitionCosts: BigDecimal,
