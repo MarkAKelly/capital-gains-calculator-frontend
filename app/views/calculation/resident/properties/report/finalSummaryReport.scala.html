@@ -90,7 +90,9 @@
         @{if(!gainAnswers.givenAway)
         summaryOptionRowHelper("sellForLess", Messages("calc.resident.properties.sellForLess.title"), gainAnswers.sellForLess.get, None)}
 
-        @summaryNumericRowHelper("disposalValue",Messages("calc.resident.disposal.value.question"),gainAnswers.disposalValue,None)
+        @{if(!gainAnswers.givenAway && !gainAnswers.sellForLess.get)
+            summaryNumericRowHelper("disposalValue", Messages("calc.resident.disposal.value.question"), gainAnswers.disposalValue.get, None)
+        }
 
         @{if(!gainAnswers.givenAway && gainAnswers.sellForLess.get)
             summaryNumericRowHelper("worthWhenSoldForLess", Messages("calc.resident.properties.worthWhenSoldForLess.question"), gainAnswers.worthWhenSoldForLess.get, None)
