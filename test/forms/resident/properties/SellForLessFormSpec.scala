@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package forms.resident
+package forms.resident.properties
 
 import forms.resident.properties.SellForLessForm._
-import models.resident.properties.SellForLessModel
+import models.resident.SellForLessModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.{sellForLess => messages}
 
 class SellForLessFormSpec extends UnitSpec with WithFakeApplication {
 

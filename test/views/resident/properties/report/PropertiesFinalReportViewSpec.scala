@@ -494,8 +494,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
     "has an option output row for sell for less" which {
 
-      s"should have the question text '${commonMessages.sellForLess.title}'" in {
-        doc.select("#sellForLess-question").text shouldBe commonMessages.sellForLess.title
+      s"should have the question text '${commonMessages.Resident.Properties.sellForLess.title}'" in {
+        doc.select("#sellForLess-question").text shouldBe commonMessages.Resident.Properties.sellForLess.title
       }
 
       "should have the value 'Yes'" in {
@@ -861,8 +861,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
     "has an option output row for sell for less" which {
 
-      s"should have the question text '${commonMessages.sellForLess.title}'" in {
-        doc.select("#sellForLess-question").text shouldBe commonMessages.sellForLess.title
+      s"should have the question text '${commonMessages.Resident.Properties.sellForLess.title}'" in {
+        doc.select("#sellForLess-question").text shouldBe commonMessages.Resident.Properties.sellForLess.title
       }
 
       "should have the value 'No'" in {

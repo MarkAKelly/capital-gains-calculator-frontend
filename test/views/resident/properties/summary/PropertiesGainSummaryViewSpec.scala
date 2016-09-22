@@ -378,8 +378,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     "has an option output row for sell for less" which {
 
-      s"should have the question text '${commonMessages.sellForLess.title}'" in {
-        doc.select("#sellForLess-question").text shouldBe commonMessages.sellForLess.title
+      s"should have the question text '${commonMessages.Resident.Properties.sellForLess.title}'" in {
+        doc.select("#sellForLess-question").text shouldBe commonMessages.Resident.Properties.sellForLess.title
       }
 
       "should have the value 'Yes'" in {
@@ -391,11 +391,11 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       }
 
       "has the question as part of the link" in {
-        doc.select("#sellForLess-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.sellForLess.title}"
+        doc.select("#sellForLess-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.sellForLess.title}"
       }
 
       "has the question component of the link as visuallyhidden" in {
-        doc.select("#sellForLess-option a span.visuallyhidden").text shouldBe commonMessages.sellForLess.title
+        doc.select("#sellForLess-option a span.visuallyhidden").text shouldBe commonMessages.Resident.Properties.sellForLess.title
       }
     }
 
@@ -729,8 +729,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     "has an option output row for sell for less" which {
 
-      s"should have the question text '${commonMessages.sellForLess.title}'" in {
-        doc.select("#sellForLess-question").text shouldBe commonMessages.sellForLess.title
+      s"should have the question text '${commonMessages.Resident.Properties.sellForLess.title}'" in {
+        doc.select("#sellForLess-question").text shouldBe commonMessages.Resident.Properties.sellForLess.title
       }
 
       "should have the value 'No'" in {
@@ -742,11 +742,11 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       }
 
       "has the question as part of the link" in {
-        doc.select("#sellForLess-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.sellForLess.title}"
+        doc.select("#sellForLess-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.sellForLess.title}"
       }
 
       "has the question component of the link as visuallyhidden" in {
-        doc.select("#sellForLess-option a span.visuallyhidden").text shouldBe commonMessages.sellForLess.title
+        doc.select("#sellForLess-option a span.visuallyhidden").text shouldBe commonMessages.Resident.Properties.sellForLess.title
       }
     }
 

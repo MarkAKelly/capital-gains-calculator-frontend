@@ -69,6 +69,11 @@ object MessageLookup {
         val improvementsAdditionalContentOne = "Replacing a basic kitchen or bathroom with a luxury version is normally considered an improvement."
         val improvementsAdditionalContentTwo = "But replacing them with something of a similar standard is normally not an improvement."
       }
+
+      //############ Sell For Less messages #################//
+      object sellForLess {
+        val title = "Did you sell the property for less than it was worth to help the buyer?"
+      }
     }
 
     object Shares {
@@ -85,6 +90,11 @@ object MessageLookup {
         val acquisitionValueQuestion = "How much did you pay for the shares?"
         val acquisitionCostsQuestion = "How much did you pay in costs when you got the shares?"
 
+      }
+
+      //############ Sell For Less messages #################//
+      object sellForLess {
+        val title = "Did you sell the shares for less than they were worth to help the buyer?"
       }
     }
   }
@@ -131,11 +141,6 @@ object MessageLookup {
     val tooEarly = "You can use this calculator if you've sold a property since 5 April 2015."
     val changeDate = "Change your date"
     def content(year: String): String = s"You can continue to use it, but we'll use the tax rates from the $year tax year."
-  }
-
-  //############ Sell For Less messages #################//
-  object sellForLess {
-    val title = "Did you sell the property for less than it was worth to help the buyer?"
   }
 
   //############ Worth When Inherited messages #################//
