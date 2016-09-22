@@ -122,6 +122,9 @@
         @summaryTextRowHelper("sellOrGiveAway", Messages("calc.resident.sellOrGiveAway.title"), if (gainAnswers.givenAway) {Messages("calc.resident.sellOrGiveAway.given")}
         else {Messages("calc.resident.sellOrGiveAway.sold")}, None)
 
+        @{if(!gainAnswers.givenAway)
+        summaryOptionRowHelper("sellForLess", Messages("calc.resident.properties.sellForLess.title"), gainAnswers.sellForLess.get, None)}
+
         @summaryNumericRowHelper("disposalValue", Messages("calc.resident.disposal.value.question"),gainAnswers.disposalValue, None)
 
         @summaryNumericRowHelper("disposalCosts", Messages("calc.resident.disposalCosts.title"),gainAnswers.disposalCosts, None)
