@@ -197,12 +197,24 @@ trait CalculatorConnector {
     val disposalCosts = fetchAndGetFormData[resident.DisposalCostsModel](ResidentPropertyKeys.disposalCosts).map(_.get.amount)
     val improvements = fetchAndGetFormData[properties.ImprovementsModel](ResidentPropertyKeys.improvements).map(_.get.amount)
     val givenAway = fetchAndGetFormData[properties.SellOrGiveAwayModel](ResidentPropertyKeys.sellOrGiveAway).map(_.get.givenAway)
+    val sellForLess = fetchAndGetFormData[properties.SellForLessModel](ResidentPropertyKeys.sellForLess).map(_ match {
+      case Some(data) => Some(data.sellForLess)
+      case _ => None
+    })
     val ownerBeforeAprilNineteenEightyTwo = fetchAndGetFormData[properties.gain.OwnerBeforeAprilModel](ResidentPropertyKeys.ownerBeforeAprilNineteenEightyTwo)
       .map(_.get.ownedBeforeAprilNineteenEightyTwo)
     val worthOnAprilNineteenEightyTwo = fetchAndGetFormData[properties.WorthOnModel](ResidentPropertyKeys.worthOn).map(_ match {
       case Some(data) => Some(data.amount)
       case _ => None
     })
+    val howBecameOwner = fetchAndGetFormData[properties.HowBecameOwnerModel](ResidentPropertyKeys.howBecameOwner).map {
+      case Some(data) => Some(data.gainedBy)
+      case None => None
+    }
+    val boughtForLessThanWorth = fetchAndGetFormData[properties.BoughtForLessThanWorthModel](ResidentPropertyKeys.boughtForLessThanWorth).map {
+      case Some(data) => Some(data.boughtForLessThanWorth)
+      case None => None
+    }
 
     for {
       acquisitionValue <- acquisitionValue
@@ -212,8 +224,11 @@ trait CalculatorConnector {
       disposalCosts <- disposalCosts
       improvements <- improvements
       givenAway <- givenAway
+      sellForLess <- sellForLess
       ownerBeforeAprilNineteenEightyTwo <- ownerBeforeAprilNineteenEightyTwo
       worthOnAprilNineteenEightyTwo <- worthOnAprilNineteenEightyTwo
+      howBecameOwner <- howBecameOwner
+      boughtForLessThanWorth <- boughtForLessThanWorth
     } yield properties.YourAnswersSummaryModel(
       disposalDate,
       disposalValue,
@@ -222,8 +237,11 @@ trait CalculatorConnector {
       acquisitionCosts,
       improvements,
       givenAway,
+      sellForLess,
       ownerBeforeAprilNineteenEightyTwo,
-      worthOnAprilNineteenEightyTwo
+      worthOnAprilNineteenEightyTwo,
+      howBecameOwner,
+      boughtForLessThanWorth
     )
   }
 

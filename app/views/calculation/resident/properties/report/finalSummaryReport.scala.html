@@ -87,7 +87,10 @@
         @summaryTextRowHelper("sellOrGiveAway", Messages("calc.resident.sellOrGiveAway.title"), if (gainAnswers.givenAway) {Messages("calc.resident.sellOrGiveAway.given")}
         else {Messages("calc.resident.sellOrGiveAway.sold")}, None)
 
-        @summaryNumericRowHelper("disposalValue",Messages("calc.resident.disposal.value.title"),gainAnswers.disposalValue,None)
+        @{if(!gainAnswers.givenAway)
+        summaryOptionRowHelper("sellForLess", Messages("calc.resident.properties.sellForLess.title"), gainAnswers.sellForLess.get, None)}
+
+        @summaryNumericRowHelper("disposalValue",Messages("calc.resident.disposal.value.question"),gainAnswers.disposalValue,None)
 
         @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.disposalCosts.title"),gainAnswers.disposalCosts,None)
 
@@ -96,6 +99,14 @@
 
         @{if (gainAnswers.ownerBeforeAprilNineteenEightyTwo)
         summaryNumericRowHelper("worthOn",Messages("calc.resident.properties.worthOn.question"),gainAnswers.worthOnAprilNineteenEightyTwo.get,None)}
+
+        @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo)
+        summaryTextRowHelper("howBecameOwner", Messages("calc.resident.howBecameOwner.title"),
+        Messages(s"calc.resident.howBecameOwner.${gainAnswers.howBecameOwner.get.toLowerCase}"), None)}
+
+        @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Bought"))
+        summaryOptionRowHelper("boughtForLessThanWorth", Messages("calc.resident.properties.boughtForLessThanWorth.title"),
+        gainAnswers.boughtForLessThanWorth.get, None)}
 
         @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),gainAnswers.acquisitionValue,None)
 

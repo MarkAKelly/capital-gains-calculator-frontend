@@ -67,12 +67,20 @@
         @summaryDateRowHelper("disposalDate",Messages("calc.resident.disposalDate.question"),answers.disposalDate,Some(routes.disposalDate().toString))
         @summaryTextRowHelper("sellOrGiveAway", Messages("calc.resident.sellOrGiveAway.title"), if (answers.givenAway) {Messages("calc.resident.sellOrGiveAway.given")}
         else {Messages("calc.resident.sellOrGiveAway.sold")}, Some(routes.sellOrGiveAway().toString))
-        @summaryNumericRowHelper("disposalValue",Messages("calc.resident.disposal.value.title"),answers.disposalValue,Some(routes.disposalValue().toString))
+        @{if(!answers.givenAway)
+        summaryOptionRowHelper("sellForLess", Messages("calc.resident.properties.sellForLess.title"), answers.sellForLess.get, Some(routes.sellForLess().toString))}
+        @summaryNumericRowHelper("disposalValue",Messages("calc.resident.disposal.value.question"),answers.disposalValue,Some(routes.disposalValue().toString))
         @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.disposalCosts.title"),answers.disposalCosts,Some(routes.disposalCosts().toString))
         @summaryOptionRowHelper("ownerBeforeAprilNineteenEightyTwo", Messages("calc.resident.properties.ownerBeforeApril.title"),
         answers.ownerBeforeAprilNineteenEightyTwo, Some(routes.ownerBeforeAprilNineteenEightyTwo().toString))
         @{if (answers.ownerBeforeAprilNineteenEightyTwo)
         summaryNumericRowHelper("worthOn",Messages("calc.resident.properties.worthOn.question"),answers.worthOnAprilNineteenEightyTwo.get,Some(routes.worthOn().toString))}
+        @{if (!answers.ownerBeforeAprilNineteenEightyTwo)
+        summaryTextRowHelper("howBecameOwner", Messages("calc.resident.howBecameOwner.title"), Messages(s"calc.resident.howBecameOwner.${answers.howBecameOwner.get.toLowerCase}"),
+        Some(routes.howBecameOwner().toString))}
+        @{if (!answers.ownerBeforeAprilNineteenEightyTwo && answers.howBecameOwner.get.equals("Bought"))
+        summaryOptionRowHelper("boughtForLessThanWorth", Messages("calc.resident.properties.boughtForLessThanWorth.title"),
+        answers.boughtForLessThanWorth.get, Some(routes.boughtForLessThanWorth().toString))}
         @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),answers.acquisitionValue,Some(routes.acquisitionValue().toString))
         @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),answers.acquisitionCosts,Some(routes.acquisitionCosts().toString))
         @summaryNumericRowHelper("improvements",Messages("calc.resident.improvements.title"),answers.improvements,Some(routes.improvements().toString))

@@ -341,14 +341,7 @@ calc.resident.sellOrGiveAway.sold = Sold it
 calc.resident.properties.worthWhenGaveAway.title = What was the property worth when you gave it away?
 
 ## Disposal Value messages
-calc.resident.disposal.value.title = How much did you sell the property for?
 calc.resident.disposal.value.question = How much did you sell the property for?
-calc.resident.disposal.value.bullet.title = Put the market value of the property instead if you:
-calc.resident.disposal.value.bullet.one = gave it away as a gift
-calc.resident.disposal.value.bullet.two = sold it to a relative, business partner or
-calc.resident.disposal.value.bullet.two.link =someone else you''re connected to
-calc.resident.disposal.value.bullet.three = sold it for less than it’s worth to help the buyer
-calc.resident.disposal.value.bullet.end = You can use a valuation from a surveyor or a property website.
 
 ## Property Worth when you sold it messages
 calc.resident.properties.propertyWorthWhenSold.title = What was the property worth when you sold it?
@@ -391,14 +384,6 @@ calc.resident.worthWhenGifted.additionalContent = You can use a valuation from a
 ## Acquisition Value messages
 calc.resident.acquisitionValue.title = How much did you pay for the property?
 calc.resident.acquisitionValue.question = How much did you pay for the property?
-calc.resident.acquisitionValue.bullet.title = Put the market value of the property instead if you:
-calc.resident.acquisitionValue.bullet.one = inherited it
-calc.resident.acquisitionValue.bullet.two = got it as a gift
-calc.resident.acquisitionValue.bullet.three = bought it from a relative, business partner or
-calc.resident.acquisitionValue.bullet.three.link = someone else you''re connected to
-calc.resident.acquisitionValue.bullet.four = bought it for less than it’s worth because the seller wanted to help you
-calc.resident.acquisitionValue.bullet.five = became the owner before 1 April 1982
-calc.resident.acquisitionValue.bullet.end = You can use a valuation from a surveyor or a property website.
 
 ## Acquisition Costs messages
 calc.resident.acquisitionCosts.title = How much did you pay in costs when you became the property owner?
@@ -588,7 +573,7 @@ calc.resident.shares.acquisitionValue.bulletListOne = inherited them
 calc.resident.shares.acquisitionValue.bulletListTwo = owned them before 1 April 1982
 
 ## Acquisition Costs messages
-calc.resident.shares.acquisitionCosts.title = How much did you pay in costs when you got the shares?
+calc.resident.shares.acquisitionCosts.question = How much did you pay in costs when you got the shares?
 calc.resident.shares.acquisitionCosts.help = Costs include stockbroker fees and Stamp Duty tax
 
 ## Current Income messages

@@ -89,9 +89,12 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         5000,
         5,
         0,
+        true,Some(false),
         true,
-        true,
-        Some(BigDecimal(5000)))
+        Some(BigDecimal(5000)),
+        Some("Bought"),
+        Some(false))
+
       lazy val chargeableGainAnswers = ChargeableGainAnswers(None, None, None, None, None, None, None, None, None, None, None)
       lazy val incomeAnswersModel = IncomeAnswersModel(None, None, None)
       lazy val target = setupTarget(
@@ -128,9 +131,12 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         5000,
         5,
         0,
+        false,Some(true),
         false,
-        false,
-        None)
+        None,
+        Some("Bought"),
+        Some(false))
+
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
         None, None, Some(LossesBroughtForwardModel(false)), None, None, Some(PropertyLivedInModel(false)), None, None, None, None)
       lazy val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 0, 11100, BigDecimal(0),
@@ -171,9 +177,12 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         5000,
         5,
         0,
+        true,Some(false),
         true,
-        true,
-        Some(BigDecimal(5000)))
+        Some(BigDecimal(5000)),
+        Some("Bought"),
+        Some(false))
+
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
         None, None, Some(LossesBroughtForwardModel(true)), Some(LossesBroughtForwardValueModel(1000)), None,
         Some(PropertyLivedInModel(false)), None, None, None, None)
@@ -215,9 +224,12 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         5000,
         5,
         0,
+        false,Some(true),
         false,
-        false,
-        None)
+        None,
+        Some("Bought"),
+        Some(false))
+
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(true)),
         Some(AllowableLossesModel(true)), Some(AllowableLossesValueModel(BigDecimal(1000))), Some(LossesBroughtForwardModel(false)), None, Some(AnnualExemptAmountModel(10000)),
         Some(PropertyLivedInModel(false)), None, None, None, None)
@@ -259,9 +271,12 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         5000,
         5,
         0,
+        true,Some(false),
         true,
-        true,
-        Some(BigDecimal(5000)))
+        Some(BigDecimal(5000)),
+        Some("Bought"),
+        Some(false))
+
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(true)),
         Some(AllowableLossesModel(true)), Some(AllowableLossesValueModel(BigDecimal(0))),
         Some(LossesBroughtForwardModel(false)), None, Some(AnnualExemptAmountModel(10000)), Some(PropertyLivedInModel(false)), None, None, None, None)
@@ -303,9 +318,12 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         10000,
         0,
         0,
+        false,Some(false),
         false,
-        false,
-        None)
+        None,
+        Some("Bought"),
+        Some(false))
+
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
         Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None,
         Some(PropertyLivedInModel(false)), None, None, None, None)
@@ -351,9 +369,12 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       5000,
       5,
       0,
+      true,Some(false),
       true,
-      true,
-      Some(BigDecimal(5000)))
+      Some(BigDecimal(5000)),
+      Some("Bought"),
+      Some(false))
+
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
       None, None, Some(LossesBroughtForwardModel(false)), None, None, Some(PropertyLivedInModel(false)), None, None, None, None)
     lazy val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 0, 11100, BigDecimal(0),
@@ -388,9 +409,13 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       5000,
       5,
       0,
+      false,Some(false),
       false,
-      false,
-      None)
+      None,
+      Some("Bought"),
+      Some(false)
+    )
+
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
       None, None, Some(LossesBroughtForwardModel(false)), None, None, Some(PropertyLivedInModel(true)), Some(PrivateResidenceReliefModel(false)), None, None, None)
     lazy val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 0, 11100, BigDecimal(0),
@@ -425,9 +450,12 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       5000,
       5,
       0,
+      true,Some(false),
       true,
-      true,
-      Some(BigDecimal(5000)))
+      Some(BigDecimal(5000)),
+      Some("Bought"),
+      Some(false))
+
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
       None, None, Some(LossesBroughtForwardModel(false)), None, None, Some(PropertyLivedInModel(true)),
       Some(PrivateResidenceReliefModel(true)), Some(PrivateResidenceReliefValueModel(1000)),
@@ -464,9 +492,12 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       5000,
       5,
       0,
+      false,Some(false),
       false,
-      false,
-      None)
+      None,
+      Some("Bought"),
+      Some(false))
+
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
       None, None, Some(LossesBroughtForwardModel(false)), None, None, Some(PropertyLivedInModel(true)),
       Some(PrivateResidenceReliefModel(true)), Some(PrivateResidenceReliefValueModel(2000)), Some(LettingsReliefModel(true)),
@@ -503,9 +534,12 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       10000,
       0,
       0,
+      true,Some(false),
       true,
-      true,
-      Some(BigDecimal(5000)))
+      Some(BigDecimal(5000)),
+      Some("Bought"),
+      Some(false))
+
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
       Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None,
       Some(PropertyLivedInModel(false)), None, None, None, None)
@@ -544,9 +578,12 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       10000,
       0,
       0,
+      false,Some(true),
       false,
-      false,
-      None)
+      None,
+      Some("Bought"),
+      Some(false))
+
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
       Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None,
       Some(PropertyLivedInModel(true)), Some(PrivateResidenceReliefModel(false)), None, None, None)
@@ -585,9 +622,12 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       10000,
       0,
       0,
+      true,Some(false),
       true,
-      true,
-      Some(BigDecimal(5000)))
+      Some(BigDecimal(5000)),
+      Some("Bought"),
+      Some(false))
+
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
       Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None,
       Some(PropertyLivedInModel(true)), Some(PrivateResidenceReliefModel(true)), Some(PrivateResidenceReliefValueModel(2000)),
@@ -627,9 +667,12 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       10000,
       0,
       0,
+      false,Some(true),
       false,
-      false,
-      None)
+      None,
+      Some("Bought"),
+      Some(false))
+
     lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
       Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None,
       Some(PropertyLivedInModel(true)), Some(PrivateResidenceReliefModel(true)), Some(PrivateResidenceReliefValueModel(2000)),

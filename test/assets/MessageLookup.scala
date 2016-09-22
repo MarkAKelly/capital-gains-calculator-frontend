@@ -61,6 +61,23 @@ object MessageLookup {
         val question = "What was the property worth on 31 March 1982?"
       }
     }
+
+    object Shares {
+
+      //This object will have some duplication of text from the properties summary as well as duplicating
+      //some of the questions for the shares pages however it will still pull form the same messages location
+      //this is to encourage making the changes in the tests first in both places and understanding what changing
+      //the message will affect.
+      object SharesSummaryMessages {
+
+        val disposalDateQuestion = "When did you sell or give away the shares?"
+        val disposalValueQuestion = "How much did you sell the shares for?"
+        val disposalCostsQuestion = "How much did you pay in costs when you sold or gave away the shares?"
+        val acquisitionValueQuestion = "How much did you pay for the shares?"
+        val acquisitionCostsQuestion = "How much did you pay in costs when you got the shares?"
+
+      }
+    }
   }
 
 
@@ -132,16 +149,7 @@ object MessageLookup {
 
   //Disposal Value messages
   object disposalValue {
-    val title = "How much did you sell the property for?"
     val question = "How much did you sell the property for?"
-    val bulletListTitlePartOne = "Put the"
-    val bulletListTitlePartTwo = "market value"
-    val bulletListTitlePartThree = "of the property instead if you:"
-    val bulletListOne = "gave it away as a gift"
-    val bulletListTwo = "sold it to a relative, business partner or"
-    val bulletListTwoLink = "someone else you're connected to"
-    val bulletListThree = "sold it for less than it’s worth to help the buyer"
-    val bulletEnd = "You can use a valuation from a surveyor or a property website."
   }
 
   //Disposal Costs messages
@@ -169,17 +177,6 @@ object MessageLookup {
   object acquisitionValue {
     val title = "How much did you pay for the property?"
     val pageHeading = "How much did you pay for the property?"
-    val bulletListTitleOne = "Put the "
-    val bulletListTitleTwo = "market value (opens in a new window) "
-    val bulletListTitleThree = "of the property instead if you:"
-    val bulletListOne = "inherited it"
-    val bulletListTwo = "got it as a gift"
-    val bulletListThree = "bought it from a relative, business partner or"
-    val bulletListThreeLink = "someone else you're connected to"
-    val bulletListFour = "bought it for less than it’s worth because the seller wanted to help you"
-    val bulletListFive = "became the owner before 1 April 1982"
-    val bulletLink = "https://www.gov.uk/capital-gains-tax/losses"
-    val bulletEnd = "You can use a valuation from a surveyor or a property website."
   }
 
   //Acquisition Costs messages
@@ -405,7 +402,7 @@ object MessageLookup {
   }
 
   object sharesDisposalValue {
-    val title = "How much did you sell the shares for?"
+    val question = "How much did you sell the shares for?"
     val helpText = "Put the market value of the shares instead if you sold them for less than they were worth to help the buyer"
   }
 
