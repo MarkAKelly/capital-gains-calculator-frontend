@@ -179,9 +179,9 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
         }
       }
 
-      "has a numeric output row for the Worth On April Nineteen Eighty Two" which {
+      "has a numeric output row for the Worth Before April Nineteen Eighty Two" which {
 
-        s"should have the question text '${commonMessages.disposalValue.question}'" in {
+        s"should have the question text '${commonMessages.Resident.Properties.worthOn.question}'" in {
           doc.select("#worthOn-question").text shouldBe commonMessages.Resident.Properties.worthOn.question
         }
 
