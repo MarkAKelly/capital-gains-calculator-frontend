@@ -982,6 +982,29 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
         doc.select("#boughtForLessThanWorth-option a span.visuallyhidden").text shouldBe commonMessages.boughtForLessThanWorth.title
       }
     }
+
+    "has a numeric output row worth when bought" should {
+
+      s"should have the question text '${commonMessages.worthWhenBought.question}'" in {
+        doc.select("#worthWhenBought-question").text shouldBe commonMessages.worthWhenBought.question
+      }
+
+      "should have the value '£1,500'" in {
+        doc.select("#worthWhenBought-amount span.bold-medium").text shouldBe "£1,500"
+      }
+
+      s"should have a change link to ${routes.GainController.worthWhenBought().url}" in {
+        doc.select("#worthWhenBought-amount a").attr("href") shouldBe routes.GainController.worthWhenBought().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#worthWhenBought-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.worthWhenBought.question}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#worthWhenBought-amount a span.visuallyhidden").text shouldBe commonMessages.worthWhenBought.question
+      }
+    }
   }
 
   "Final Summary view with a calculation that returns tax on both side of the rate boundary" should {

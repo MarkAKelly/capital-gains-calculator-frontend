@@ -350,6 +350,17 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
         doc.select("#boughtForLessThanWorth-option span.bold-medium").text shouldBe "Yes"
       }
     }
+
+    "has a numeric output row worth when bought" should {
+
+      s"should have the question text '${commonMessages.worthWhenBought.question}'" in {
+        doc.select("#worthWhenBought-question").text shouldBe commonMessages.worthWhenBought.question
+      }
+
+      "should have the value '£1,500'" in {
+        doc.select("#worthWhenBought-amount span.bold-medium").text shouldBe "£1,500"
+      }
+    }
   }
 
   "Summary when supplied with an inherited property" should {
