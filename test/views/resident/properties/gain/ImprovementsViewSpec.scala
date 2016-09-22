@@ -16,7 +16,7 @@
 
 package views.resident.properties.gain
 
-import assets.MessageLookup.{improvementsView => messages}
+import assets.MessageLookup.Resident.Properties.{improvementsView => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.properties.ImprovementsForm._
 import org.jsoup.Jsoup
@@ -27,23 +27,23 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
   "Improvements view" should {
 
-    lazy val view = views.improvements(improvementsForm)(fakeRequest)
+    lazy val view = views.improvements(improvementsForm, false)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
       doc.charset.toString shouldBe "UTF-8"
     }
 
-    s"have a title of ${messages.title}" in {
-      doc.title shouldBe messages.title
+    s"have a title of ${messages.question}" in {
+      doc.title shouldBe messages.question
     }
 
     "have a H1 tag that" should {
 
       lazy val heading = doc.select("H1")
 
-      s"have the page heading '${messages.title}'" in {
-        heading.text shouldBe messages.title
+      s"have the page heading '${messages.question}'" in {
+        heading.text shouldBe messages.question
       }
 
       "have the heading-large class" in {
@@ -89,10 +89,46 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     }
   }
 
+  "Improvements View with a property acquired before April 1982" should {
+    lazy val view = views.improvements(improvementsForm, true)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    s"have a title of ${messages.questionBefore}" in {
+      doc.title shouldBe messages.questionBefore
+    }
+
+    "have a H1 tag that" should {
+
+      lazy val heading = doc.select("H1")
+
+      s"have the page heading '${messages.questionBefore}'" in {
+        heading.text shouldBe messages.questionBefore
+      }
+
+      "have the heading-large class" in {
+        heading.hasClass("heading-large") shouldBe true
+      }
+    }
+
+    "have the correct label" in {
+      val label = doc.select("label")
+      label.text should startWith(messages.questionBefore)
+    }
+
+    "have a hidden label" in {
+      val label = doc.select("label > div > span")
+      label.hasClass("visuallyhidden") shouldBe true
+    }
+
+    "not have any example text" in {
+      doc.select("span.summary").size() shouldBe 0
+    }
+  }
+
   "Improvements View with form without errors" should {
 
     val form = improvementsForm.bind(Map("amount" -> "100"))
-    lazy val view = views.improvements(form)(fakeRequest)
+    lazy val view = views.improvements(form, false)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display the value of the form" in {
@@ -111,7 +147,7 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
   "Improvements View with form with errors" should {
 
     val form = improvementsForm.bind(Map("amount" -> ""))
-    lazy val view = views.improvements(form)(fakeRequest)
+    lazy val view = views.improvements(form, false)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {

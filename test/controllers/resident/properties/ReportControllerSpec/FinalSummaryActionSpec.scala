@@ -87,7 +87,12 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
         10000,
         0,
         0,
-        true)
+        true,Some(false),
+        true,
+        Some("Bought"),
+        Some(false)
+      )
+
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
         Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None,
         Some(PropertyLivedInModel(false)), None, None, None, None)
@@ -131,7 +136,11 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
         10000,
         0,
         0,
-        false)
+        false,Some(true),
+        false,
+        Some("Bought"),
+        Some(false))
+
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
         Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None,
         Some(PropertyLivedInModel(false)), None, None, None, None)

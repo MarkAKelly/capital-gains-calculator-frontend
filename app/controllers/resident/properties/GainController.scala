@@ -24,7 +24,8 @@ import config.{AppConfig, ApplicationConfig}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import play.api.mvc.{Action, Result}
-import uk.gov.hmrc.play.http.SessionKeys
+import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
+
 import scala.concurrent.Future
 import views.html.calculation.{resident => commonViews}
 import views.html.calculation.resident.properties.{gain => views}
@@ -44,15 +45,13 @@ import models.resident.properties.gain.{OwnerBeforeAprilModel, PropertyWorthWhen
 import forms.resident.properties.WorthWhenGaveAwayForm._
 import forms.resident.properties.HowBecameOwnerForm._
 import forms.resident.properties.WorthOnForm._
-import models.resident.properties.{HowBecameOwnerModel, ImprovementsModel, SellOrGiveAwayModel, SellForLessModel, WorthWhenGaveAwayModel, WorthOnModel}
+import models.resident.properties.{HowBecameOwnerModel, ImprovementsModel, SellForLessModel, SellOrGiveAwayModel, WorthOnModel, WorthWhenGaveAwayModel}
 import forms.resident.properties.WorthWhenInheritedForm._
 import forms.resident.properties.gain.WorthWhenGiftedForm._
 import forms.resident.properties.BoughtForLessThanWorthForm._
 import forms.resident.properties.WorthWhenBoughtForm._
-
 import models.resident._
 import models.resident.properties._
-
 import play.api.i18n.Messages
 
 object GainController extends GainController {
@@ -171,7 +170,7 @@ trait GainController extends FeatureLock {
         isAfterApril15 = TaxDates.dateAfterStart(Dates.constructDate(disposalDate.get.day, disposalDate.get.month, disposalDate.get.year)),
         navBackLink = routes.GainController.disposalDate().url,
         navHomeLink = homeLink,
-        continueUrl = routes.GainController.disposalValue().url,
+        continueUrl = routes.GainController.sellOrGiveAway().url,
         navTitle = navTitle
       ))
     }
@@ -285,7 +284,7 @@ trait GainController extends FeatureLock {
       errors => Future.successful(BadRequest(views.disposalCosts(errors))),
       success => {
         calcConnector.saveFormData(keystoreKeys.disposalCosts, success)
-        Future.successful(Redirect(routes.GainController.acquisitionValue()))}
+        Future.successful(Redirect(routes.GainController.ownerBeforeAprilNineteenEightyTwo()))}
     )
   }
 
@@ -501,11 +500,23 @@ trait GainController extends FeatureLock {
   }
 
   //################# Improvements Actions ########################
-  val improvements = FeatureLockForRTT.async { implicit request =>
+  private def getOwnerBeforeAprilNineteenEightyTwo()(implicit hc: HeaderCarrier): Future[Boolean] = {
+    calcConnector.fetchAndGetFormData[OwnerBeforeAprilModel](keystoreKeys.ownerBeforeAprilNineteenEightyTwo)
+      .map(_.get.ownedBeforeAprilNineteenEightyTwo)
+  }
+
+  private def getImprovementsForm()(implicit hc: HeaderCarrier): Future[Form[ImprovementsModel]] = {
     calcConnector.fetchAndGetFormData[ImprovementsModel](keystoreKeys.improvements).map {
-      case Some(data) => Ok(views.improvements(improvementsForm.fill(data)))
-      case None => Ok(views.improvements(improvementsForm))
+      case Some(data) => improvementsForm.fill(data)
+      case _ => improvementsForm
     }
+  }
+
+  val improvements = FeatureLockForRTT.async { implicit request =>
+    for{
+      ownerBeforeAprilNineteenEightyTwo <- getOwnerBeforeAprilNineteenEightyTwo()
+      improvementsForm <- getImprovementsForm
+    } yield Ok(views.improvements(improvementsForm, ownerBeforeAprilNineteenEightyTwo))
   }
 
   val submitImprovements = FeatureLockForRTT.async { implicit request =>
@@ -515,16 +526,21 @@ trait GainController extends FeatureLock {
       else Future.successful(Redirect(routes.SummaryController.summary()))
     }
 
-    improvementsForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.improvements(errors))),
-      success => {
-        for {
-          save <- calcConnector.saveFormData(keystoreKeys.improvements, success)
-          answers <- calcConnector.getPropertyGainAnswers
-          grossGain <- calcConnector.calculateRttPropertyGrossGain(answers)
-          route <- routeRequest(grossGain)
-        } yield route
-      }
-    )
+    def errorAction(form: Form[ImprovementsModel]): Future[Result] = {
+      getOwnerBeforeAprilNineteenEightyTwo().map(ownerBeforeAprilNineteenEightyTwo =>
+        BadRequest(views.improvements(form, ownerBeforeAprilNineteenEightyTwo))
+      )
+    }
+
+    def successAction(model: ImprovementsModel): Future[Result] = {
+      for {
+        save <- calcConnector.saveFormData(keystoreKeys.improvements, model)
+        answers <- calcConnector.getPropertyGainAnswers
+        grossGain <- calcConnector.calculateRttPropertyGrossGain(answers)
+        route <- routeRequest(grossGain)
+      } yield route
+    }
+
+    improvementsForm.bindFromRequest.fold(errorAction, successAction)
   }
 }
