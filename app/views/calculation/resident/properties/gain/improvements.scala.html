@@ -7,29 +7,29 @@
 @(improvementsForm : Form[ImprovementsModel], ownedBeforeAprilNineteenEightyTwo: Boolean)(implicit request: Request[_])
 
 @hiddenHelpTextContent = {
-    <p>@Messages("calc.resident.improvements.additionalContent.one")</p>
-    <p>@Messages("calc.resident.improvements.additionalContent.two")</p>
+    <p>@Messages("calc.resident.properties.improvements.additionalContent.one")</p>
+    <p>@Messages("calc.resident.properties.improvements.additionalContent.two")</p>
 }
 
-@resident_properties_main_template(title = if(ownedBeforeAprilNineteenEightyTwo) Messages("calc.resident.improvements.questionBefore")
-    else Messages("calc.resident.improvements.title"),
+@resident_properties_main_template(title = if(ownedBeforeAprilNineteenEightyTwo) Messages("calc.resident.properties.improvements.questionBefore")
+    else Messages("calc.resident.properties.improvements.title"),
     backLink = Some(controllers.resident.properties.routes.GainController.acquisitionCosts().toString)) {
 
     @errorSummary(improvementsForm, "improvements")
 
-    <h1 class="heading-large">@{if(ownedBeforeAprilNineteenEightyTwo) Messages("calc.resident.improvements.questionBefore")
-        else Messages("calc.resident.improvements.title")}</h1>
+    <h1 class="heading-large">@{if(ownedBeforeAprilNineteenEightyTwo) Messages("calc.resident.properties.improvements.questionBefore")
+        else Messages("calc.resident.properties.improvements.title")}</h1>
 
     @form(action = controllers.resident.properties.routes.GainController.submitImprovements) {
 
         @formInputMoney(improvementsForm, "amount",
-            if(ownedBeforeAprilNineteenEightyTwo) Messages("calc.resident.improvements.questionBefore")
-            else Messages("calc.resident.improvements.title"),
-            Some(Messages("calc.resident.improvements.hint")), hideLabel = true)
+            if(ownedBeforeAprilNineteenEightyTwo) Messages("calc.resident.properties.improvements.questionBefore")
+            else Messages("calc.resident.properties.improvements.title"),
+            Some(Messages("calc.resident.properties.improvements.hint")), hideLabel = true)
 
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
     }
 
-    @{if(!ownedBeforeAprilNineteenEightyTwo) expandableHelpTextHelper(Messages("calc.resident.improvements.helpButton"), hiddenHelpTextContent)}
+    @{if(!ownedBeforeAprilNineteenEightyTwo) expandableHelpTextHelper(Messages("calc.resident.properties.improvements.helpButton"), hiddenHelpTextContent)}
 
 }

@@ -103,8 +103,8 @@
         @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),gainAnswers.acquisitionCosts,None)
 
         @summaryNumericRowHelper("improvements",
-        if(gainAnswers.ownerBeforeAprilNineteenEightyTwo) Messages("calc.resident.improvements.questionBefore")
-        else Messages("calc.resident.improvements.title"),
+        if(gainAnswers.ownerBeforeAprilNineteenEightyTwo) Messages("calc.resident.properties.improvements.questionBefore")
+        else Messages("calc.resident.properties.improvements.title"),
         gainAnswers.improvements, None)
 
         @summaryOptionRowHelper("propertyLivedIn", Messages("calc.resident.properties.propertyLivedIn.title"),
