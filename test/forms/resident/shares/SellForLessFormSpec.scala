@@ -16,6 +16,7 @@
 
 package forms.resident.shares
 
+import assets.MessageLookup.Resident.Shares.{sellForLess => Messages}
 import forms.resident.shares.SellForLessForm._
 import models.resident.SellForLessModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -57,6 +58,10 @@ class SellForLessFormSpec extends UnitSpec with WithFakeApplication {
         form.errors.length shouldBe 1
       }
 
+      s"error with message '${}'" in {
+        form.error("sellForLess").get.message shouldBe Messages.errorSelect
+      }
+
     }
 
     "supplied with an incorrect selection" should {
@@ -68,6 +73,10 @@ class SellForLessFormSpec extends UnitSpec with WithFakeApplication {
 
       "raise 1 form error" in {
         form.errors.length shouldBe 1
+      }
+
+      s"error with message '${}'" in {
+        form.error("sellForLess").get.message shouldBe Messages.errorSelect
       }
     }
   }
