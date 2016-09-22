@@ -30,6 +30,7 @@ case class YourAnswersSummaryModel
   acquisitionCosts: BigDecimal,
   improvements: BigDecimal,
   givenAway: Boolean,
+  sellForLess: Option[Boolean],
   ownerBeforeAprilNineteenEightyTwo: Boolean,
   howBecameOwner: Option[String],
   boughtForLessThanWorth: Option[Boolean]
