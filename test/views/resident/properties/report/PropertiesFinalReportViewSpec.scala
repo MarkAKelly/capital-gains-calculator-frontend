@@ -40,10 +40,9 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       true,
       None,
       true,
+      Some(BigDecimal(5000)),
       None,
       None)
-
-
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -288,6 +287,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         }
       }
 
+      "has a numeric output row for the Worth Before April Nineteen Eighty Two" which {
+
+        s"should have the question text '${commonMessages.Resident.Properties.worthOn.question}'" in {
+          doc.select("#worthOn-question").text shouldBe commonMessages.Resident.Properties.worthOn.question
+        }
+
+        "should have the value '£5,000'" in {
+          doc.select("#worthOn-amount span.bold-medium").text shouldBe "£5,000"
+        }
+      }
+
       "has a numeric output row for the Acquisition Value" which {
 
         s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
@@ -423,10 +433,9 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       false,
       Some(true),
       false,
+      None,
       Some("Bought"),
       Some(false))
-
-
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -627,6 +636,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       false,
       Some(true),
       false,
+      None,
       Some("Bought"),
       Some(true))
 
@@ -691,6 +701,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       false,
       Some(false),
       false,
+      None,
       Some("Inherited"),
       None)
 
@@ -754,6 +765,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       false,
       Some(false),
       false,
+      None,
       Some("Gifted"),
       None)
 
@@ -816,6 +828,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         false,
         Some(false),
         false,
+        None,
         Some("Inherited"),
         None)
 

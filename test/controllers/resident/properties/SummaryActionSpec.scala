@@ -91,6 +91,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         0,
         true,Some(false),
         true,
+        Some(BigDecimal(5000)),
         Some("Bought"),
         Some(false))
 
@@ -132,6 +133,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         0,
         false,Some(true),
         false,
+        None,
         Some("Bought"),
         Some(false))
 
@@ -177,6 +179,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         0,
         true,Some(false),
         true,
+        Some(BigDecimal(5000)),
         Some("Bought"),
         Some(false))
 
@@ -223,6 +226,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         0,
         false,Some(true),
         false,
+        None,
         Some("Bought"),
         Some(false))
 
@@ -269,6 +273,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         0,
         true,Some(false),
         true,
+        Some(BigDecimal(5000)),
         Some("Bought"),
         Some(false))
 
@@ -315,6 +320,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         0,
         false,Some(false),
         false,
+        None,
         Some("Bought"),
         Some(false))
 
@@ -365,6 +371,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       0,
       true,Some(false),
       true,
+      Some(BigDecimal(5000)),
       Some("Bought"),
       Some(false))
 
@@ -404,6 +411,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       0,
       false,Some(false),
       false,
+      None,
       Some("Bought"),
       Some(false)
     )
@@ -442,8 +450,9 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       5000,
       5,
       0,
-     true,Some(false),
+      true,Some(false),
       true,
+      Some(BigDecimal(5000)),
       Some("Bought"),
       Some(false))
 
@@ -485,6 +494,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       0,
       false,Some(false),
       false,
+      None,
       Some("Bought"),
       Some(false))
 
@@ -526,6 +536,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       0,
       true,Some(false),
       true,
+      Some(BigDecimal(5000)),
       Some("Bought"),
       Some(false))
 
@@ -569,6 +580,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       0,
       false,Some(true),
       false,
+      None,
       Some("Bought"),
       Some(false))
 
@@ -612,6 +624,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       0,
       true,Some(false),
       true,
+      Some(BigDecimal(5000)),
       Some("Bought"),
       Some(false))
 
@@ -654,8 +667,9 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       10000,
       0,
       0,
-     false,Some(true),
+      false,Some(true),
       false,
+      None,
       Some("Bought"),
       Some(false))
 
