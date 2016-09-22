@@ -141,7 +141,7 @@ class PropertyRecipientActionSpec extends UnitSpec with WithFakeApplication with
     }
   }
 
-  "Calling .submitWhoDidYouGiveIt to from the GainConttroller with an invalid value/bad request" should {
+  "Calling .submitWhoDidYouGiveIt to from the GainController with an invalid value/bad request" should {
     lazy val target = setupTarget(None)
     lazy val request = fakeRequestToPOSTWithSession(("propertyRecipient", "blah"))
     lazy val result = target.submitWhoDidYouGiveItTo(request)
