@@ -100,4 +100,12 @@ object Validation {
     case _ => false
   }
 
+  val whoDidYouGiveItTooCheck: String => Boolean = {
+    case "Spouse" => true
+    case "Charity" => true
+    case "Other" => true
+    case "" => true
+    case _ => false
+  }
+
 }

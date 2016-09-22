@@ -26,6 +26,7 @@ object PropertyRecipientForm {
   val propertyRecipientForm = Form(
     mapping("propertyRecipient" -> text
         .verifying(Messages("calc.resident.whoDidYouGiveThePropertyTo.errormandatory"), mandatoryCheck)
+      .verifying(Messages("calc.resident.whoDidYouGiveThePropertyTo.errormandatory"), whoDidYouGiveItTooCheck)
     )(PropertyRecipientModel.apply)(PropertyRecipientModel.unapply)
   )
 }

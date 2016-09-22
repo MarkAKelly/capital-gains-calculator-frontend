@@ -141,4 +141,20 @@ class PropertyRecipientActionSpec extends UnitSpec with WithFakeApplication with
     }
   }
 
+  "Calling .submitWhoDidYouGiveIt to from the GainConttroller with an invalid value/bad request" should {
+    lazy val target = setupTarget(None)
+    lazy val request = fakeRequestToPOSTWithSession(("propertyRecipient", "blah"))
+    lazy val result = target.submitWhoDidYouGiveItTo(request)
+
+    "when supplied with an invalid form" which {
+      "will generate a 400 error" in {
+        status(result) shouldEqual 400
+      }
+      s"and lead to the current page reloading and return some HTML with title of ${MessageLookup.whoDidYouGiveItTo.title} " in {
+        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.whoDidYouGiveItTo.title
+
+      }
+    }
+  }
+
 }
