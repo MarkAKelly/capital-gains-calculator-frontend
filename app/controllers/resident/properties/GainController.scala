@@ -39,7 +39,7 @@ import forms.resident.properties.SellForLessForm._
 import forms.resident.properties.gain.OwnerBeforeAprilForm._
 import play.api.data.Form
 import forms.resident.properties.SellOrGiveAwayForm._
-import forms.resident.properties.gain.PropertyWorthWhenSoldForm._
+import forms.resident.properties.gain.WorthWhenSoldForLessForm._
 import models.resident.properties.gain.{OwnerBeforeAprilModel, WorthWhenSoldForLessModel, WorthWhenGiftedModel}
 import forms.resident.properties.WorthWhenGaveAwayForm._
 import forms.resident.properties.HowBecameOwnerForm._

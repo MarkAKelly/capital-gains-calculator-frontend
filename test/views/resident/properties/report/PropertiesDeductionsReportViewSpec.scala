@@ -32,6 +32,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
   "Deductions Report view" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       BigDecimal(200000),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -352,6 +353,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
   "Deductions Report view with all options selected" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       BigDecimal(200000),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -702,6 +704,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
   "Deductions Report view when property bought for less than worth" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       BigDecimal(200000),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -758,6 +761,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       BigDecimal(200000),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -898,6 +902,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       BigDecimal(200000),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -989,6 +994,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       BigDecimal(200000),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),

@@ -85,6 +85,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     "a negative total gain is returned" should {
       lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
         3000,
+        None,
         10,
         5000,
         5,
@@ -126,6 +127,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     "a negative taxable gain is returned with no other properties disposed of or brought forward losses" should {
       lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
         3000,
+        None,
         10,
         5000,
         5,
@@ -171,6 +173,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     "a negative taxable gain is returned with no other properties disposed of but with brought forward losses" should {
       lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
         3000,
+        None,
         10,
         5000,
         5,
@@ -217,6 +220,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     "a negative taxable gain is returned with other properties disposed of" should {
       lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
         3000,
+        None,
         10,
         5000,
         5,
@@ -263,6 +267,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     "a negative taxable gain is returned with other properties disposed of but an allowable loss of 0" should {
       lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
         3000,
+        None,
         10,
         5000,
         5,
@@ -309,6 +314,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     "a positive taxable gain is returned with no other" should {
       lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
         30000,
+        None,
         0,
         10000,
         0,
@@ -359,6 +365,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
   "Calling .summary while not eligible for PRR or Lettings Relief with a negative taxable gain" should {
     lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
       3000,
+      None,
       10,
       5000,
       5,
@@ -398,6 +405,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
   "Calling .summary while eligible but not claiming PRR and Lettings Relief with a negative taxable gain" should {
     lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
       3000,
+      None,
       10,
       5000,
       5,
@@ -438,6 +446,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
   "Calling .summary while eligible and claiming PRR but not Lettings Relief with a negative taxable gain" should {
     lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
       3000,
+      None,
       10,
       5000,
       5,
@@ -479,6 +488,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
   "Calling .summary while eligible and claiming PRR and Lettings Relief with a negative taxable gain" should {
     lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
       3000,
+      None,
       10,
       5000,
       5,
@@ -520,6 +530,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
   "Calling .summary while not eligible for PRR or Lettings Relief with a positive taxable gain" should {
     lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
       30000,
+      None,
       0,
       10000,
       0,
@@ -563,6 +574,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
   "Calling .summary while eligible but not claiming PRR and Lettings Relief with a positive taxable gain" should {
     lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
       30000,
+      None,
       0,
       10000,
       0,
@@ -606,6 +618,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
   "Calling .summary while eligible and claiming PRR but not Lettings Relief with a positive taxable gain" should {
     lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
       30000,
+      None,
       0,
       10000,
       0,
@@ -650,6 +663,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
   "Calling .summary while eligible and claiming PRR and Lettings Relief with a positive taxable gain" should {
     lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
       30000,
+      None,
       0,
       10000,
       0,

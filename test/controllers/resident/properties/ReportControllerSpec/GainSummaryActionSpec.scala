@@ -63,6 +63,7 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
     "a negative total gain is returned" should {
       lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
         3000,
+        None,
         10,
         5000,
         5,
@@ -99,6 +100,7 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
     "a zero total gain is returned with an invalid tax year" should {
       lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
         3000,
+        None,
         10,
         5000,
         5,

@@ -33,6 +33,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2015),
       BigDecimal(200000),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -416,6 +417,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       BigDecimal(200000),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -620,6 +622,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       BigDecimal(200000),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -684,6 +687,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       BigDecimal(200000),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -747,6 +751,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       BigDecimal(200000),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -809,6 +814,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
       lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2015),
         BigDecimal(200000),
+        None,
         BigDecimal(10000),
         BigDecimal(100000),
         BigDecimal(10000),

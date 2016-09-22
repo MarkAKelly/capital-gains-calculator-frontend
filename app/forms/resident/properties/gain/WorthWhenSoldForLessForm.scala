@@ -25,7 +25,7 @@ import play.api.data._
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-object PropertyWorthWhenSoldForm {
+object WorthWhenSoldForLessForm {
 
   val worthWhenSoldForLessForm = Form(
     mapping(

@@ -33,6 +33,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 1990),
       10,
+      None,
       20,
       30,
       40,
@@ -224,6 +225,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
       10,
+      None,
       20,
       30,
       40,
@@ -324,6 +326,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
       10,
+      None,
       20,
       30,
       40,
@@ -356,6 +359,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
       10,
+      None,
       20,
       30,
       40,
@@ -388,6 +392,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
       10,
+      None,
       20,
       30,
       40,
@@ -420,6 +425,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
       10,
+      None,
       20,
       30,
       40,
