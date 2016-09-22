@@ -32,7 +32,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
   "Final Summary view" should {
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2015),
-      BigDecimal(200000),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -254,18 +254,6 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         }
       }
 
-
-      "has a numeric output row for the Disposal Value" which {
-
-        s"should have the question text '${commonMessages.disposalValue.question}'" in {
-          doc.select("#disposalValue-question").text shouldBe commonMessages.disposalValue.question
-        }
-
-        "should have the value '£200,000'" in {
-          doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£200,000"
-        }
-      }
-
       "has a numeric output row for the Disposal Costs" which {
 
         s"should have the question text '${commonMessages.disposalCosts.title}'" in {
@@ -415,7 +403,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
     lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
-      BigDecimal(200000),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -619,7 +607,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
     lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
-      BigDecimal(200000),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -683,7 +671,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
     lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
-      BigDecimal(200000),
+      Some(BigDecimal(200000)),
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -730,6 +718,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
     lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
+    "has a numeric output row for the Disposal Value" which {
+
+      s"should have the question text '${commonMessages.disposalValue.question}'" in {
+        doc.select("#disposalValue-question").text shouldBe commonMessages.disposalValue.question
+      }
+
+      "should have the value '£200,000'" in {
+        doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£200,000"
+      }
+    }
+
     "has an output row for how became owner" which {
 
       s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
@@ -746,7 +745,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
     lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
-      BigDecimal(200000),
+      Some(BigDecimal(200000)),
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -808,7 +807,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
     "Final Summary view with sell for less option No" should {
 
       lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2015),
-        BigDecimal(200000),
+        Some(BigDecimal(200000)),
         BigDecimal(10000),
         BigDecimal(100000),
         BigDecimal(10000),

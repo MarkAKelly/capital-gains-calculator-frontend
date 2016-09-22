@@ -31,7 +31,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
   "Deductions Report view" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -226,18 +226,6 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         }
       }
 
-
-      "has a numeric output row for the Disposal Value" which {
-
-        s"should have the question text '${commonMessages.disposalValue.question}'" in {
-          doc.select("#disposalValue-question").text shouldBe commonMessages.disposalValue.question
-        }
-
-        "should have the value '£200,000'" in {
-          doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£200,000"
-        }
-      }
-
       "has a numeric output row for the Disposal Costs" which {
 
         s"should have the question text '${commonMessages.disposalCosts.title}'" in {
@@ -351,7 +339,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
   "Deductions Report view with all options selected" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -701,7 +689,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
   "Deductions Report view when property bought for less than worth" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -757,7 +745,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
   "Deductions Report view with AEA options selected" which {
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -897,7 +885,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
   "Report when supplied with a date above the known tax years" should {
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
-      BigDecimal(200000),
+      Some(BigDecimal(200000)),
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -938,6 +926,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
     lazy val view = views.deductionsSummaryReport(gainAnswers, deductionAnswers, results, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
+
+    "has a numeric output row for the Disposal Value" which {
+
+      s"should have the question text '${commonMessages.disposalValue.question}'" in {
+        doc.select("#disposalValue-question").text shouldBe commonMessages.disposalValue.question
+      }
+
+      "should have the value '£200,000'" in {
+        doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£200,000"
+      }
+    }
 
     "has an output row for how became owner" which {
 
@@ -988,7 +987,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
   "Report when supplied with a gifted property" should {
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
-      BigDecimal(200000),
+      Some(BigDecimal(200000)),
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),

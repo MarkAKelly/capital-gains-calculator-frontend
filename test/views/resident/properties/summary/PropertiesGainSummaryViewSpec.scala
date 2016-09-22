@@ -33,7 +33,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 1990),
-      10,
+      None,
       20,
       30,
       40,
@@ -188,23 +188,6 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
         }
       }
 
-
-      "has a numeric output row for the Disposal Value" which {
-
-        s"should have the question text '${commonMessages.disposalValue.question}'" in {
-          doc.select("#disposalValue-question").text shouldBe commonMessages.disposalValue.question
-        }
-
-        "should have the value '£10'" in {
-          doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£10"
-        }
-
-        s"should have a change link to ${routes.GainController.disposalValue().url}" in {
-          doc.select("#disposalValue-amount a").attr("href") shouldBe routes.GainController.disposalValue().url
-        }
-
-      }
-
       "has a numeric output row for the Disposal Costs" which {
 
         s"should have the question text '${commonMessages.disposalCosts.title}'" in {
@@ -324,7 +307,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
-      10,
+      None,
       20,
       30,
       40,
@@ -529,7 +512,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
-      10,
+      None,
       20,
       30,
       40,
@@ -573,7 +556,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
-      10,
+      None,
       20,
       30,
       40,
@@ -638,7 +621,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     val testModel = YourAnswersSummaryModel(
       constructDate(12,9,2018),
-      10,
+      Some(10),
       20,
       30,
       40,
@@ -654,6 +637,22 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     "does not display the what to do next content" in {
       doc.select("#whatToDoNext").isEmpty shouldBe true
+    }
+
+    "has a numeric output row for the Disposal Value" which {
+
+      s"should have the question text '${commonMessages.disposalValue.question}'" in {
+        doc.select("#disposalValue-question").text shouldBe commonMessages.disposalValue.question
+      }
+
+      "should have the value '£10'" in {
+        doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£10"
+      }
+
+      s"should have a change link to ${routes.GainController.disposalValue().url}" in {
+        doc.select("#disposalValue-amount a").attr("href") shouldBe routes.GainController.disposalValue().url
+      }
+
     }
 
     "has an output row for how became owner" which {
@@ -686,7 +685,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2013),
-      10,
+      Some(10),
       20,
       30,
       40,
@@ -776,7 +775,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     val testModel = YourAnswersSummaryModel(
       constructDate(12,9,2018),
-      10,
+      Some(10),
       20,
       30,
       40,

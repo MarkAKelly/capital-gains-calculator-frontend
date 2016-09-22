@@ -132,7 +132,8 @@ articleLayout = false
     @{if(!gainAnswers.givenAway)
     summaryOptionRowHelper("sellForLess", Messages("calc.resident.properties.sellForLess.title"), gainAnswers.sellForLess.get, Some(gainRoutes.sellForLess().toString))}
 
-    @summaryNumericRowHelper("disposalValue",Messages("calc.resident.disposal.value.question"),gainAnswers.disposalValue,Some(gainRoutes.disposalValue().toString))
+    @{if(!gainAnswers.givenAway && !gainAnswers.sellForLess.get)
+    summaryNumericRowHelper("disposalValue",Messages("calc.resident.disposal.value.question"),gainAnswers.disposalValue.get,Some(gainRoutes.disposalValue().toString))}
 
     @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.disposalCosts.title"),gainAnswers.disposalCosts,Some(gainRoutes.disposalCosts().toString))
 
