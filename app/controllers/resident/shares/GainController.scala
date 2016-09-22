@@ -81,7 +81,7 @@ trait GainController extends FeatureLock {
     )
   }
 
-  //################ Outside Tax Years Actions ######################
+  //################ Sell for Less Actions ######################
   val sellForLess = FeatureLockForRTTShares.async { implicit request =>
       calcConnector.fetchAndGetFormData[SellForLessModel](keystoreKeys.sellForLess).map {
         case Some(data) => Ok(views.sellForLess(sellForLessForm.fill(data), homeLink))
