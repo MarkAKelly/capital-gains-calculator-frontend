@@ -18,9 +18,9 @@ package views.resident.properties.report
 
 import assets.MessageLookup.{summaryPage => messages}
 import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.Resident.{Properties => propertiesMessages}
 import common.Dates
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.properties.routes
 import models.resident._
 import models.resident.properties._
 import org.jsoup.Jsoup
@@ -31,6 +31,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
   "Deductions Report view" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+      None,
       None,
       BigDecimal(10000),
       BigDecimal(100000),
@@ -352,6 +353,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
   "Deductions Report view with all options selected" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       None,
+      Some(500),
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -468,6 +470,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
           "include a value for Loss brought forward of £10,000" in {
             doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYearUsed("2013/14")} £10,000")
           }
+        }
+      }
+
+      "has an amount output row for worth when sold for less" which {
+
+        s"should have the question text ${propertiesMessages.WorthWhenSoldForLess.question}" in {
+          doc.select("#worthWhenSoldForLess-question").text shouldBe propertiesMessages.WorthWhenSoldForLess.question
+        }
+
+        "should have the value £500" in {
+          doc.select("#worthWhenSoldForLess-amount span.bold-medium").text shouldBe "£500"
         }
       }
 
@@ -703,12 +716,13 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
   "Deductions Report view when property bought for less than worth" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       None,
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
       BigDecimal(30000),
-      false,
-      Some(true),
+      true,
+      Some(false),
       false,
       None,
       Some("Bought"),
@@ -759,6 +773,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
   "Deductions Report view with AEA options selected" which {
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+      None,
       None,
       BigDecimal(10000),
       BigDecimal(100000),
@@ -901,6 +916,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       Some(BigDecimal(200000)),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -1004,6 +1020,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       Some(BigDecimal(200000)),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),

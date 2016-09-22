@@ -18,14 +18,14 @@ package forms.resident.gain
 
 import assets.MessageLookup.errorMessages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import forms.resident.properties.gain.PropertyWorthWhenSoldForm._
-import models.resident.properties.gain.PropertyWorthWhenSoldModel
+import forms.resident.properties.gain.WorthWhenSoldForLessForm._
+import models.resident.properties.gain.WorthWhenSoldForLessModel
 
-class PropertyWorthWhenSoldFormSpec extends UnitSpec with WithFakeApplication {
+class WorthWhenSoldForLessFormSpec extends UnitSpec with WithFakeApplication {
 
   "Creating a form using an empty model" should {
 
-    lazy val form = propertyWorthWhenSoldForm
+    lazy val form = worthWhenSoldForLessForm
 
     "return an empty string for amount" in {
       form.data.isEmpty shouldBe true
@@ -35,12 +35,12 @@ class PropertyWorthWhenSoldFormSpec extends UnitSpec with WithFakeApplication {
   "Creating a form using a valid model" should {
 
     "return a form with the data specified in the model" in {
-      lazy val form = propertyWorthWhenSoldForm.fill(PropertyWorthWhenSoldModel(1))
+      lazy val form = worthWhenSoldForLessForm.fill(WorthWhenSoldForLessModel(1))
       form.data("amount") shouldBe "1"
     }
 
     "return a form with the data specified from the map" in {
-      lazy val form = propertyWorthWhenSoldForm.bind(Map("amount" -> "1"))
+      lazy val form = worthWhenSoldForLessForm.bind(Map("amount" -> "1"))
       form.data("amount") shouldBe "1"
     }
   }
@@ -49,7 +49,7 @@ class PropertyWorthWhenSoldFormSpec extends UnitSpec with WithFakeApplication {
 
     "supplied with no data for amount" should {
 
-      lazy val form = propertyWorthWhenSoldForm.bind(Map("amount" -> ""))
+      lazy val form = worthWhenSoldForLessForm.bind(Map("amount" -> ""))
 
       "raise a form error" in {
         form.hasErrors shouldBe true
@@ -66,7 +66,7 @@ class PropertyWorthWhenSoldFormSpec extends UnitSpec with WithFakeApplication {
 
     "supplied with a non-numeric value for amount" should {
 
-      lazy val form = propertyWorthWhenSoldForm.bind(Map("amount" -> "a"))
+      lazy val form = worthWhenSoldForLessForm.bind(Map("amount" -> "a"))
 
       "raise a form error" in {
         form.hasErrors shouldBe true
@@ -82,7 +82,7 @@ class PropertyWorthWhenSoldFormSpec extends UnitSpec with WithFakeApplication {
     }
 
     "supplied with an amount that is too big" should {
-      lazy val form = propertyWorthWhenSoldForm.bind(Map(("amount", "9999999999999")))
+      lazy val form = worthWhenSoldForLessForm.bind(Map(("amount", "9999999999999")))
 
       "return a form with errors" in {
         form.hasErrors shouldBe true
@@ -99,7 +99,7 @@ class PropertyWorthWhenSoldFormSpec extends UnitSpec with WithFakeApplication {
 
     "supplied with a negative amount" should {
 
-      lazy val form = propertyWorthWhenSoldForm.bind(Map("amount" -> "-1000"))
+      lazy val form = worthWhenSoldForLessForm.bind(Map("amount" -> "-1000"))
 
       "raise form error" in {
         form.hasErrors shouldBe true
@@ -116,7 +116,7 @@ class PropertyWorthWhenSoldFormSpec extends UnitSpec with WithFakeApplication {
 
     "supplied with an amount that has too many decimal places" should {
 
-      lazy val form = propertyWorthWhenSoldForm.bind(Map("amount" -> "100.1234"))
+      lazy val form = worthWhenSoldForLessForm.bind(Map("amount" -> "100.1234"))
 
       "raise form error" in {
         form.hasErrors shouldBe true

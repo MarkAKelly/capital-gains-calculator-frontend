@@ -18,6 +18,7 @@ package views.resident.properties.summary
 
 import assets.MessageLookup.{summaryPage => messages}
 import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.Resident.{Properties => propertiesMessages}
 import common.Dates._
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.routes
@@ -33,6 +34,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 1990),
+      None,
       None,
       20,
       30,
@@ -334,6 +336,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
       None,
+      Some(500),
       20,
       30,
       40,
@@ -385,7 +388,6 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       }
     }
 
-
     "has an option output row for sell for less" which {
 
       s"should have the question text '${commonMessages.sellForLess.title}'" in {
@@ -406,6 +408,29 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
       "has the question component of the link as visuallyhidden" in {
         doc.select("#sellForLess-option a span.visuallyhidden").text shouldBe commonMessages.sellForLess.title
+      }
+    }
+
+    "has an amount output row for worth when sold for less" which {
+
+      s"should have the question text '${propertiesMessages.WorthWhenSoldForLess.question}'" in {
+        doc.select("#worthWhenSoldForLess-question").text shouldBe propertiesMessages.WorthWhenSoldForLess.question
+      }
+
+      "should have the value '£500'" in {
+        doc.select("#worthWhenSoldForLess-amount span.bold-medium").text shouldBe "£500"
+      }
+
+      s"should have a change link to ${routes.GainController.worthWhenSoldForLess().url}" in {
+        doc.select("#worthWhenSoldForLess-amount a").attr("href") shouldBe routes.GainController.worthWhenSoldForLess().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#worthWhenSoldForLess-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${propertiesMessages.WorthWhenSoldForLess.question}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#worthWhenSoldForLess-amount a span.visuallyhidden").text shouldBe propertiesMessages.WorthWhenSoldForLess.question
       }
     }
 
@@ -540,6 +565,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
       None,
+      Some(500),
       20,
       30,
       40,
@@ -584,6 +610,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
+      None,
       None,
       20,
       30,
@@ -651,6 +678,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
     val testModel = YourAnswersSummaryModel(
       constructDate(12,9,2018),
       Some(10),
+      None,
       20,
       30,
       40,
@@ -716,6 +744,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2013),
       Some(10),
+      None,
       20,
       30,
       40,
@@ -806,6 +835,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
     val testModel = YourAnswersSummaryModel(
       constructDate(12,9,2018),
       Some(10),
+      None,
       20,
       30,
       40,

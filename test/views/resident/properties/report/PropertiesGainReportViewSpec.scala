@@ -16,6 +16,7 @@
 
 package views.resident.properties.report
 
+import assets.MessageLookup.Resident.{Properties => propertiesMessages}
 import assets.{MessageLookup => commonMessages}
 import assets.MessageLookup.{summaryPage => messages}
 import common.Dates._
@@ -32,6 +33,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
 
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 1990),
+      None,
       None,
       20,
       30,
@@ -224,6 +226,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
       None,
+      Some(500),
       20,
       30,
       40,
@@ -270,6 +273,17 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
 
       "should have the value 'Yes'" in {
         doc.select("#sellForLess-option span.bold-medium").text shouldBe "Yes"
+      }
+    }
+
+    "has an amount output row for worth when sold for less" which {
+
+      s"should have the question text ${propertiesMessages.WorthWhenSoldForLess.question}" in {
+        doc.select("#worthWhenSoldForLess-question").text shouldBe propertiesMessages.WorthWhenSoldForLess.question
+      }
+
+      "should have the value £500" in {
+        doc.select("#worthWhenSoldForLess-amount span.bold-medium").text shouldBe "£500"
       }
     }
 
@@ -325,6 +339,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
       None,
+      Some(500),
       20,
       30,
       40,
@@ -358,6 +373,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
       None,
+      Some(500),
       20,
       30,
       40,
@@ -391,6 +407,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
       None,
+      Some(500),
       20,
       30,
       40,
@@ -424,6 +441,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
       Some(10),
+      None,
       20,
       30,
       40,

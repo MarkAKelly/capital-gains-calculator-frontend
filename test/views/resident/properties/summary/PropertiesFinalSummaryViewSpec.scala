@@ -16,6 +16,7 @@
 
 package views.resident.properties.summary
 
+import assets.MessageLookup.Resident.{Properties => propertiesMessages}
 import assets.MessageLookup.{summaryPage => messages}
 import common.Dates
 import controllers.helpers.FakeRequestHelper
@@ -32,6 +33,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
 
   "Final Summary view" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+      None,
       None,
       BigDecimal(10000),
       BigDecimal(100000),
@@ -541,6 +543,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
   "Final Summary view with a calculation has some previous taxable gains" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       None,
+      Some(500),
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -695,6 +698,28 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
     }
 
+    "has an amount output row for worth when sold for less" which {
+
+      s"should have the question text '${propertiesMessages.WorthWhenSoldForLess.question}'" in {
+        doc.select("#worthWhenSoldForLess-question").text shouldBe propertiesMessages.WorthWhenSoldForLess.question
+      }
+
+      "should have the value '£500'" in {
+        doc.select("#worthWhenSoldForLess-amount span.bold-medium").text shouldBe "£500"
+      }
+
+      s"should have a change link to ${routes.GainController.worthWhenSoldForLess().url}" in {
+        doc.select("#worthWhenSoldForLess-amount a").attr("href") shouldBe routes.GainController.worthWhenSoldForLess().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#worthWhenSoldForLess-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${propertiesMessages.WorthWhenSoldForLess.question}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#worthWhenSoldForLess-amount a span.visuallyhidden").text shouldBe propertiesMessages.WorthWhenSoldForLess.question
+      }
+    }
 
     "has an option output row for sell for less" which {
 
@@ -919,6 +944,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
   "Properties Final Summary view when property was sold for less than worth" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       None,
+      Some(500),
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -994,6 +1020,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
 
   "Final Summary view with a calculation that returns tax on both side of the rate boundary" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+      None,
       None,
       BigDecimal(10000),
       BigDecimal(100000),
@@ -1218,6 +1245,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2015),
       None,
+      Some(500),
       BigDecimal(0),
       BigDecimal(0),
       BigDecimal(0),
@@ -1348,6 +1376,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       None,
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -1426,6 +1455,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       Some(BigDecimal(200000)),
+      None,
       BigDecimal(10000),
       BigDecimal(100000),
       BigDecimal(10000),
@@ -1555,6 +1585,7 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
   "Properties Final Summary view" should {
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
+      None,
       None,
       BigDecimal(10000),
       BigDecimal(100000),

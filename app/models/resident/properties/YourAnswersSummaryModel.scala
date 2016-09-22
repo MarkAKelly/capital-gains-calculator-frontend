@@ -25,6 +25,7 @@ case class YourAnswersSummaryModel
 (
   disposalDate: LocalDate,
   disposalValue: Option[BigDecimal],
+  worthWhenSoldForLess: Option[BigDecimal],
   disposalCosts: BigDecimal,
   acquisitionValue: BigDecimal,
   acquisitionCosts: BigDecimal,
