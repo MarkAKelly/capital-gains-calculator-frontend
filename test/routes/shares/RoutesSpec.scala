@@ -16,7 +16,6 @@
 
 package routes.shares
 
-import controllers.resident.shares.ReportController
 import org.scalatest._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import controllers.resident.shares.routes._
@@ -43,6 +42,29 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     "be equal to /calculate-your-capital-gains/resident/shares/disposal-date" in {
       val path = GainController.submitDisposalDate().url
       path shouldEqual "/calculate-your-capital-gains/resident/shares/disposal-date"
+    }
+  }
+
+  /* Sell for Less routes */
+  "The URL for the resident/shares sellForLess Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/sell-for-less" in {
+      val path = GainController.sellForLess().url
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/sell-for-less"
+    }
+  }
+
+  "The URL for the resident/shares submit sellForLess Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/sell-for-less" in {
+      val path = GainController.submitSellForLess().url
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/sell-for-less"
+    }
+  }
+
+  /* Worth when Sold routes */
+  "The URL for the resident/shares worthWhenSold Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/worth-when-sold" in {
+      val path = GainController.worthWhenSold().url
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/worth-when-sold"
     }
   }
 
@@ -73,6 +95,37 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     "be equal to /calculate-your-capital-gains/resident/shares/disposal-costs" in {
       val path = GainController.submitDisposalCosts().toString()
       path shouldEqual "/calculate-your-capital-gains/resident/shares/disposal-costs"
+    }
+  }
+
+  /* Shares Owned before 1 April 1982 Routes */
+  "The URL for the resident/shares owned before 1982 Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/owned-before-april-first-nineteen-eighty-two" in {
+      val path = GainController.ownedBeforeEightyTwo().url
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/owned-before-april-first-nineteen-eighty-two"
+    }
+  }
+
+  "The URL for the resident/shares submit owned before 1982 Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/owned-before-april-first-nineteen-eighty-two" in {
+      val path = GainController.submitOwnedBeforeEightyTwo().url
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/owned-before-april-first-nineteen-eighty-two"
+    }
+  }
+
+  /* Shares Worth on 31 March 1982 Routes */
+  "The URL for the resident/shares Worth on 31 March 1982 Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/worth-on-thirty-first-march-nineteen-eighty-two" in {
+      val path = GainController.worthOnMarchEightyTwo().url
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/worth-on-thirty-first-march-nineteen-eighty-two"
+    }
+  }
+
+  /* Did You Inherit the Shares Routes */
+  "The URL for the resident/shares Did You Inherit the Shares Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/did-you-inherit-the-shares" in {
+      val path = GainController.didYouInheritThem().url
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/did-you-inherit-them"
     }
   }
 

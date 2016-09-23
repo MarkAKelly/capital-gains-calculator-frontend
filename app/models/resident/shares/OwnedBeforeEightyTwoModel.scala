@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package models.resident.properties
+package models.resident.shares
 
 import play.api.libs.json.Json
 
-case class SellForLessModel (sellForLess: Boolean)
+case class OwnedBeforeEightyTwoModel (ownedBeforeEightyTwo: Boolean)
 
-object SellForLessModel {
-  implicit val format = Json.format[SellForLessModel]
+object OwnedBeforeEightyTwoModel {
+  implicit val format = Json.format[OwnedBeforeEightyTwoModel]
 }

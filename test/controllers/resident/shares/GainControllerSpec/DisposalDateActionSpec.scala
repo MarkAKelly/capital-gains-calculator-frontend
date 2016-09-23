@@ -130,8 +130,8 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Fake
         status(request.result) shouldBe 303
       }
 
-      "redirect to the Disposal Value page" in {
-        redirectLocation(request.result) shouldBe Some("/calculate-your-capital-gains/resident/shares/disposal-value")
+      "redirect to the Sell for Less page" in {
+        redirectLocation(request.result) shouldBe Some("/calculate-your-capital-gains/resident/shares/sell-for-less")
       }
     }
 

@@ -29,7 +29,7 @@ import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.{worthWhenInherited => messages}
+import assets.MessageLookup.Resident.Properties.{worthWhenInherited => messages}
 
 import scala.concurrent.Future
 
@@ -62,8 +62,8 @@ class WorthWhenInheritedActionSpec extends UnitSpec with WithFakeApplication wit
         status(result) shouldBe 200
       }
 
-      s"return some html with title of ${messages.title}" in {
-        doc.title shouldEqual messages.title
+      s"return some html with title of ${messages.question}" in {
+        doc.title shouldEqual messages.question
       }
 
       "have a back link to how-became-owner" in {
@@ -91,8 +91,8 @@ class WorthWhenInheritedActionSpec extends UnitSpec with WithFakeApplication wit
         status(result) shouldBe 200
       }
 
-      s"return some html with title of ${messages.title}" in {
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+      s"return some html with title of ${messages.question}" in {
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.question
       }
     }
 
@@ -135,7 +135,7 @@ class WorthWhenInheritedActionSpec extends UnitSpec with WithFakeApplication wit
       }
 
       "return to the page" in {
-        doc.title shouldEqual messages.title
+        doc.title shouldEqual messages.question
       }
 
       "raise an error on the page" in {

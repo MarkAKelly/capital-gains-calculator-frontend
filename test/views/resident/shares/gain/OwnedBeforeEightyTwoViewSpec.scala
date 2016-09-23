@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package views.resident.properties.gain
+package views.resident.shares.gain
 
+import assets.MessageLookup.Resident.Shares.{OwnedBeforeEightyTwoMessages => Messages}
+import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
+import forms.resident.shares.OwnedBeforeEightyTwoForm._
+import models.resident.shares.OwnedBeforeEightyTwoModel
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import views.html.calculation.resident.properties.{gain => views}
-import assets.MessageLookup.Resident.Properties.{sellForLess => messages}
-import assets.{MessageLookup => commonMessages}
-import forms.resident.properties.SellForLessForm._
-import models.resident.SellForLessModel
+import views.html.calculation.resident.shares.{gain => views}
 
-class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class OwnedBeforeEightyTwoViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Sell for less view with an empty form" should {
+  "Owned Before 1982 view with an empty form" should {
 
-    lazy val view = views.sellForLess(sellForLessForm, "home-link", Some("back-link"))(fakeRequest)
+    lazy val view = views.ownedBeforeEightyTwo(ownedBeforeEightyTwoForm, "home-link", Some("back-link"))(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
     lazy val form = doc.getElementsByTag("form")
 
@@ -37,16 +37,16 @@ class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       doc.charset.toString shouldBe "UTF-8"
     }
 
-    s"have a title ${messages.title}" in {
-      doc.title shouldBe messages.title
+    s"have a title ${Messages.title}" in {
+      doc.title shouldBe Messages.title
     }
 
     "have a H1 tag that" should {
 
       lazy val h1Tag = doc.select("h1")
 
-      s"have the page heading '${messages.title}'" in {
-        h1Tag.text shouldBe messages.title
+      s"have the page heading '${Messages.title}'" in {
+        h1Tag.text shouldBe Messages.title
       }
 
       "have the heading-large class" in {
@@ -76,7 +76,7 @@ class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeReq
     }
 
     "render a form tag with a submit action" in {
-      doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/sell-for-less"
+      doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/shares/owned-before-april-first-nineteen-eighty-two"
     }
 
     "has the method of POST" in {
@@ -87,8 +87,8 @@ class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeReq
 
       lazy val legend = doc.select("legend")
 
-      s"contain the text ${messages.title}" in {
-        legend.text should include(s"${messages.title}")
+      s"contain the text ${Messages.title}" in {
+        legend.text should include(s"${Messages.title}")
       }
 
       "that is visually hidden" in {
@@ -104,7 +104,7 @@ class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeReq
 
       "for the option 'Yes'" should {
 
-        lazy val YesRadioOption = doc.select(".block-label[for=sellForLess-yes]")
+        lazy val YesRadioOption = doc.select(".block-label[for=ownedBeforeEightyTwo-yes]")
 
         "have a label with class 'block-label'" in {
           YesRadioOption.hasClass("block-label") shouldEqual true
@@ -114,8 +114,8 @@ class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeReq
           YesRadioOption.hasAttr("for") shouldEqual true
         }
 
-        "the for attribute has the value sellForLess-Yes" in {
-          YesRadioOption.attr("for") shouldEqual "sellForLess-yes"
+        "the for attribute has the value ownedBeforeEightyTwo-Yes" in {
+          YesRadioOption.attr("for") shouldEqual "ownedBeforeEightyTwo-yes"
         }
 
         "have the text 'Yes'" in {
@@ -124,10 +124,10 @@ class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeReq
 
         "have an input under the label that" should {
 
-          lazy val optionLabel = doc.select("#sellForLess-yes")
+          lazy val optionLabel = doc.select("#ownedBeforeEightyTwo-yes")
 
-          "have the id 'sellForLess-Yes'" in {
-            optionLabel.attr("id") shouldEqual "sellForLess-yes"
+          "have the id 'ownedBeforeEightyTwo-Yes'" in {
+            optionLabel.attr("id") shouldEqual "ownedBeforeEightyTwo-yes"
           }
 
           "have the value 'Yes'" in {
@@ -142,7 +142,7 @@ class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeReq
 
       "for the option 'No'" should {
 
-        lazy val NoRadioOption = doc.select(".block-label[for=sellForLess-no]")
+        lazy val NoRadioOption = doc.select(".block-label[for=ownedBeforeEightyTwo-no]")
 
         "have a label with class 'block-label'" in {
           NoRadioOption.hasClass("block-label") shouldEqual true
@@ -152,8 +152,8 @@ class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeReq
           NoRadioOption.hasAttr("for") shouldEqual true
         }
 
-        "the for attribute has the value sellForLess-No" in {
-          NoRadioOption.attr("for") shouldEqual "sellForLess-no"
+        "the for attribute has the value ownedBeforeEightyTwo-No" in {
+          NoRadioOption.attr("for") shouldEqual "ownedBeforeEightyTwo-no"
         }
 
         "have the text 'No'" in {
@@ -162,10 +162,10 @@ class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeReq
 
         "have an input under the label that" should {
 
-          lazy val optionLabel = doc.select("#sellForLess-no")
+          lazy val optionLabel = doc.select("#ownedBeforeEightyTwo-no")
 
           "have the id 'livedInProperty-No'" in {
-            optionLabel.attr("id") shouldEqual "sellForLess-no"
+            optionLabel.attr("id") shouldEqual "ownedBeforeEightyTwo-no"
           }
 
           "have the value 'No'" in {
@@ -209,13 +209,13 @@ class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeReq
     }
   }
 
-  "Sell for less view with a filled form" which {
-    lazy val view = views.sellForLess(sellForLessForm.fill(SellForLessModel(true)), "home-link", Some("back-link"))(fakeRequest)
+  "Owned Before 1982 view with a filled form" which {
+    lazy val view = views.ownedBeforeEightyTwo(ownedBeforeEightyTwoForm.fill(OwnedBeforeEightyTwoModel(true)), "home-link", Some("back-link"))(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "for the option 'Yes'" should {
 
-      lazy val YesRadioOption = doc.select(".block-label[for=sellForLess-yes]")
+      lazy val YesRadioOption = doc.select(".block-label[for=ownedBeforeEightyTwo-yes]")
 
       "have the option auto-selected" in {
         YesRadioOption.attr("class") shouldBe "block-label selected"
@@ -223,15 +223,15 @@ class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeReq
     }
   }
 
-  "Sell for less view with form errors" should {
+  "Owned Before 1982 view with form errors" should {
 
-    lazy val form = sellForLessForm.bind(Map("sellForLess" -> ""))
-    lazy val view = views.sellForLess(form, "home", Some("back"))(fakeRequest)
+    lazy val form = ownedBeforeEightyTwoForm.bind(Map("ownedBeforeEightyTwo" -> ""))
+    lazy val view = views.ownedBeforeEightyTwo(form, "home", Some("back"))(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have an error summary" which {
       "display an error summary message for the page" in {
-        doc.body.select("#sellForLess-error-summary").size shouldBe 1
+        doc.body.select("#ownedBeforeEightyTwo-error-summary").size shouldBe 1
       }
 
       "display an error message for the input" in {

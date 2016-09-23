@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package forms.resident.properties
+package forms.resident.shares
 
-import play.api.data.Form
-import play.api.data.Forms._
 import common.Transformers._
 import common.Validation._
-import models.resident.SellForLessModel
+import models.resident.shares.OwnedBeforeEightyTwoModel
+import play.api.data.Form
+import play.api.data.Forms._
 import play.api.i18n.Messages
 
-object SellForLessForm {
+object OwnedBeforeEightyTwoForm {
 
-  val sellForLessForm = Form(
+  val ownedBeforeEightyTwoForm = Form(
     mapping(
-      "sellForLess" -> text
-        .verifying(Messages("calc.resident.properties.sellForLess.noSelectError"), mandatoryCheck)
-        .verifying(Messages("calc.resident.properties.sellForLess.noSelectError"), yesNoCheck)
+      "ownedBeforeEightyTwo" -> text
+        .verifying(Messages("calc.resident.shares.ownedBeforeEightyTwo.noSelectError"), mandatoryCheck)
+        .verifying(Messages("calc.resident.shares.ownedBeforeEightyTwo.noSelectError"), yesNoCheck)
         .transform(stringToBoolean, booleanToString)
-    )(SellForLessModel.apply)(SellForLessModel.unapply)
+    )(OwnedBeforeEightyTwoModel.apply)(OwnedBeforeEightyTwoModel.unapply)
   )
 }

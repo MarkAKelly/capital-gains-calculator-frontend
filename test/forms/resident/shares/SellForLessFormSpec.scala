@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package forms.resident
+package forms.resident.shares
 
-import forms.resident.properties.SellForLessForm._
-import models.resident.properties.SellForLessModel
+import assets.MessageLookup.Resident.Shares.{sellForLess => Messages}
+import forms.resident.shares.SellForLessForm._
+import models.resident.SellForLessModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.{sellForLess => messages}
 
 class SellForLessFormSpec extends UnitSpec with WithFakeApplication {
 
@@ -45,7 +45,7 @@ class SellForLessFormSpec extends UnitSpec with WithFakeApplication {
     }
   }
 
-  "Creating the PropertyLivedIn form from invalid inputs" when {
+  "Creating the SellForLess form from invalid inputs" when {
 
     "supplied with no selection" should {
       lazy val form = sellForLessForm.bind(Map(("sellForLess", "")))
@@ -56,6 +56,10 @@ class SellForLessFormSpec extends UnitSpec with WithFakeApplication {
 
       "raise 1 form error" in {
         form.errors.length shouldBe 1
+      }
+
+      s"error with message '${}'" in {
+        form.error("sellForLess").get.message shouldBe Messages.errorSelect
       }
 
     }
@@ -69,6 +73,10 @@ class SellForLessFormSpec extends UnitSpec with WithFakeApplication {
 
       "raise 1 form error" in {
         form.errors.length shouldBe 1
+      }
+
+      s"error with message '${}'" in {
+        form.error("sellForLess").get.message shouldBe Messages.errorSelect
       }
     }
   }

@@ -36,6 +36,9 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       None,
       BigDecimal(10000),
       None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
       true,
@@ -43,7 +46,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       true,
       Some(BigDecimal(5000)),
       None,
-      None)
+      None
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(false)),
@@ -503,6 +507,9 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       Some(500),
       BigDecimal(10000),
       Some(BigDecimal(100000)),
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
       false,
@@ -510,7 +517,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       false,
       None,
       Some("Bought"),
-      Some(false))
+      Some(false)
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -693,8 +701,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
 
       "has an option output row for sell for less" which {
 
-        s"should have the question text '${commonMessages.sellForLess.title}'" in {
-          doc.select("#sellForLess-question").text shouldBe commonMessages.sellForLess.title
+        s"should have the question text '${commonMessages.Resident.Properties.sellForLess.title}'" in {
+          doc.select("#sellForLess-question").text shouldBe commonMessages.Resident.Properties.sellForLess.title
         }
 
         "should have the value 'Yes'" in {
@@ -706,11 +714,11 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         }
 
         "has the question as part of the link" in {
-          doc.select("#sellForLess-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.sellForLess.title}"
+          doc.select("#sellForLess-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.sellForLess.title}"
         }
 
         "has the question component of the link as visuallyhidden" in {
-          doc.select("#sellForLess-option a span.visuallyhidden").text shouldBe commonMessages.sellForLess.title
+          doc.select("#sellForLess-option a span.visuallyhidden").text shouldBe commonMessages.Resident.Properties.sellForLess.title
         }
       }
       "has an option output row for owner before april 1982" which {
@@ -1090,6 +1098,9 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       Some(500),
       BigDecimal(10000),
       None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = Some(3000),
       BigDecimal(10000),
       BigDecimal(30000),
       false,
@@ -1097,7 +1108,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       false,
       None,
       Some("Bought"),
-      Some(true))
+      Some(true)
+    )
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
@@ -1152,6 +1164,29 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         doc.select("#boughtForLessThanWorth-option a span.visuallyhidden").text shouldBe commonMessages.boughtForLessThanWorth.title
       }
     }
+
+    "has a numeric output row for the bought for less than worth value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenBought.question}'" in {
+        doc.select("#worthWhenBought-question").text shouldBe propertiesMessages.worthWhenBought.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenBought-amount span.bold-medium").text shouldBe "£3,000"
+      }
+
+      s"should have a change link to ${routes.GainController.worthWhenBought().url}" in {
+        doc.select("#worthWhenBought-amount a").attr("href") shouldBe routes.GainController.worthWhenBought().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#worthWhenBought-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${propertiesMessages.worthWhenBought.question}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#worthWhenBought-amount a span.visuallyhidden").text shouldBe propertiesMessages.worthWhenBought.question
+      }
+    }
   }
 
   "Properties Deductions Summary view with AEA options selected" which {
@@ -1161,6 +1196,9 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       None,
       BigDecimal(10000),
       None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
       true,
@@ -1168,7 +1206,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       true,
       Some(BigDecimal(5000)),
       None,
-      None)
+      None
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -1369,6 +1408,9 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       None,
       BigDecimal(0),
       None,
+      worthWhenInherited = Some(3000),
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       BigDecimal(0),
       BigDecimal(0),
       true,
@@ -1376,7 +1418,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       false,
       None,
       Some("Inherited"),
-      None)
+      None
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -1458,6 +1501,21 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       }
     }
 
+    "has a numeric output row for the inherited value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenInherited.question}'" in {
+        doc.select("#worthWhenInherited-question").text shouldBe propertiesMessages.worthWhenInherited.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenInherited-amount span.bold-medium").text shouldBe "£3,000"
+      }
+
+      s"should have a change link to ${routes.GainController.worthWhenInherited().url}" in {
+        doc.select("#worthWhenInherited-amount a").attr("href") shouldBe routes.GainController.worthWhenInherited().url
+      }
+    }
+
     "display the what to do next section" in {
       doc.select("#whatToDoNext").hasText shouldEqual true
     }
@@ -1510,6 +1568,9 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       None,
       BigDecimal(10000),
       None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
       false,
@@ -1517,7 +1578,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       true,
       Some(BigDecimal(5000)),
       None,
-      None)
+      None
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -1586,13 +1648,12 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       s"should have a change link to ${routes.GainController.disposalValue().url}" in {
         doc.select("#disposalValue-amount a").attr("href") shouldBe routes.GainController.disposalValue().url
       }
-
     }
 
     "has an option output row for sell for less" which {
 
-      s"should have the question text '${commonMessages.sellForLess.title}'" in {
-        doc.select("#sellForLess-question").text shouldBe commonMessages.sellForLess.title
+      s"should have the question text '${commonMessages.Resident.Properties.sellForLess.title}'" in {
+        doc.select("#sellForLess-question").text shouldBe commonMessages.Resident.Properties.sellForLess.title
       }
 
       "should have the value 'No'" in {
@@ -1604,11 +1665,11 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       }
 
       "has the question as part of the link" in {
-        doc.select("#sellForLess-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.sellForLess.title}"
+        doc.select("#sellForLess-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.sellForLess.title}"
       }
 
       "has the question component of the link as visuallyhidden" in {
-        doc.select("#sellForLess-option a span.visuallyhidden").text shouldBe commonMessages.sellForLess.title
+        doc.select("#sellForLess-option a span.visuallyhidden").text shouldBe commonMessages.Resident.Properties.sellForLess.title
       }
     }
   }
@@ -1620,6 +1681,9 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       None,
       BigDecimal(10000),
       None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = Some(3000),
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
       true,
@@ -1627,7 +1691,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       false,
       None,
       Some("Gifted"),
-      None)
+      None
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -1705,9 +1770,10 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       doc.select("[data-metrics=\"rtt-properties-summary:lettingsRelief:no\"]").size shouldBe 1
     }
 
+    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel, None, Some(false))(fakeRequestWithSession)
+    lazy val doc = Jsoup.parse(view.body)
+
     "has an output row for how became owner" which {
-      lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel, None, Some(false))(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(view.body)
 
       s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
         doc.select("#howBecameOwner-question").text shouldBe commonMessages.howBecameOwner.title
@@ -1729,6 +1795,21 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       "has the question component of the link as visuallyhidden" in {
         doc.select("#howBecameOwner-option a span.visuallyhidden").text shouldBe
           commonMessages.howBecameOwner.title
+      }
+    }
+
+    "has a numeric output row for the gifted value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenGifted.question}'" in {
+        doc.select("#worthWhenGifted-question").text shouldBe propertiesMessages.worthWhenGifted.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenGifted-amount span.bold-medium").text shouldBe "£3,000"
+      }
+
+      s"should have a change link to ${routes.GainController.worthWhenGifted().url}" in {
+        doc.select("#worthWhenGifted-amount a").attr("href") shouldBe routes.GainController.worthWhenGifted().url
       }
     }
 

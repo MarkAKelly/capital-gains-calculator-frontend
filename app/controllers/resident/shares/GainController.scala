@@ -31,8 +31,11 @@ import forms.resident.DisposalCostsForm._
 import forms.resident.DisposalValueForm._
 import forms.resident.AcquisitionCostsForm._
 import forms.resident.AcquisitionValueForm._
+import forms.resident.shares.OwnedBeforeEightyTwoForm._
+import forms.resident.shares.SellForLessForm._
 import models.resident._
 import common.{Dates, TaxDates}
+import models.resident.shares.OwnedBeforeEightyTwoModel
 import play.api.i18n.Messages
 
 object GainController extends GainController {
@@ -65,7 +68,7 @@ trait GainController extends FeatureLock {
 
     def routeRequest(taxYearResult: Option[TaxYearModel]): Future[Result] = {
       if (taxYearResult.isDefined && !taxYearResult.get.isValidYear) Future.successful(Redirect(routes.GainController.outsideTaxYears()))
-      else Future.successful(Redirect(routes.GainController.disposalValue()))
+      else Future.successful(Redirect(routes.GainController.sellForLess()))
     }
 
     disposalDateForm.bindFromRequest.fold(
@@ -79,6 +82,33 @@ trait GainController extends FeatureLock {
       }
     )
   }
+
+  //################ Sell for Less Actions ######################
+  val sellForLess = FeatureLockForRTTShares.async { implicit request =>
+      calcConnector.fetchAndGetFormData[SellForLessModel](keystoreKeys.sellForLess).map {
+        case Some(data) => Ok(views.sellForLess(sellForLessForm.fill(data), homeLink))
+        case None => Ok(views.sellForLess(sellForLessForm, homeLink))
+    }
+  }
+
+  val submitSellForLess = FeatureLockForRTTShares.async { implicit request =>
+    sellForLessForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.sellForLess(errors, homeLink))),
+      success => {
+        calcConnector.saveFormData[SellForLessModel](keystoreKeys.sellForLess, success)
+        success.sellForLess match {
+          case true => Future.successful(Redirect(routes.GainController.worthWhenSold()))
+          case _ => Future.successful(Redirect(routes.GainController.disposalValue()))
+        }
+      }
+    )
+  }
+
+  //################ Worth When Sold Actions ######################
+  val worthWhenSold = FeatureLockForRTT.async { implicit request =>
+    TODO.apply(request)
+  }
+
 
   //################ Outside Tax Years Actions ######################
   val outsideTaxYears = FeatureLockForRTTShares.async { implicit request =>
@@ -128,9 +158,39 @@ trait GainController extends FeatureLock {
       errors => Future.successful(BadRequest(views.disposalCosts(errors, homeLink))),
       success => {
         calcConnector.saveFormData(keystoreKeys.disposalCosts, success)
-        Future.successful(Redirect(routes.GainController.acquisitionValue()))}
+        Future.successful(Redirect(routes.GainController.ownedBeforeEightyTwo()))}
     )
   }
+
+
+  //################# Owned Before 1982 Actions ########################
+  private val ownedBeforeEightyTwoBackLink = Some(controllers.resident.shares.routes.GainController.disposalCosts().url)
+
+  val ownedBeforeEightyTwo = FeatureLockForRTTShares.async { implicit request =>
+    calcConnector.fetchAndGetFormData[OwnedBeforeEightyTwoModel](keystoreKeys.ownedBeforeEightyTwo).map {
+      case Some(data) => Ok(views.ownedBeforeEightyTwo(ownedBeforeEightyTwoForm.fill(data), homeLink, ownedBeforeEightyTwoBackLink))
+      case None => Ok(views.ownedBeforeEightyTwo(ownedBeforeEightyTwoForm, homeLink, ownedBeforeEightyTwoBackLink))
+    }
+  }
+
+  val submitOwnedBeforeEightyTwo = FeatureLockForRTTShares.async { implicit request =>
+    ownedBeforeEightyTwoForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.ownedBeforeEightyTwo(errors, homeLink, ownedBeforeEightyTwoBackLink))),
+      success => {
+        calcConnector.saveFormData(keystoreKeys.ownedBeforeEightyTwo, success)
+        success.ownedBeforeEightyTwo match {
+          case true => Future.successful(Redirect(routes.GainController.worthOnMarchEightyTwo()))
+          case _ => Future.successful(Redirect(routes.GainController.didYouInheritThem()))
+        }
+      }
+    )
+  }
+
+  //################# What were they worth on 31 March 1982 Actions ########################
+  val worthOnMarchEightyTwo = TODO
+
+  //################# Did you Inherit the Shares Actions ########################
+  val didYouInheritThem = TODO
 
   //################# Acquisition Value Actions ########################
   val acquisitionValue = FeatureLockForRTTShares.async { implicit request =>
