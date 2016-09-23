@@ -625,6 +625,14 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       s"should have a change link to ${routes.GainController.worthWhenBought().url}" in {
         doc.select("#worthWhenBought-amount a").attr("href") shouldBe routes.GainController.worthWhenBought().url
       }
+
+      "has the question as part of the link" in {
+        doc.select("#worthWhenBought-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${propertiesMessages.worthWhenBought.question}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#worthWhenBought-amount a span.visuallyhidden").text shouldBe propertiesMessages.worthWhenBought.question
+      }
     }
   }
 

@@ -46,7 +46,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       true,
       Some(BigDecimal(5000)),
       None,
-      None)
+      None
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(false)),
@@ -516,7 +517,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       false,
       None,
       Some("Bought"),
-      Some(false))
+      Some(false)
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -1106,7 +1108,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       false,
       None,
       Some("Bought"),
-      Some(true))
+      Some(true)
+    )
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
@@ -1175,6 +1178,14 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       s"should have a change link to ${routes.GainController.worthWhenBought().url}" in {
         doc.select("#worthWhenBought-amount a").attr("href") shouldBe routes.GainController.worthWhenBought().url
       }
+
+      "has the question as part of the link" in {
+        doc.select("#worthWhenBought-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${propertiesMessages.worthWhenBought.question}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#worthWhenBought-amount a span.visuallyhidden").text shouldBe propertiesMessages.worthWhenBought.question
+      }
     }
   }
 
@@ -1195,7 +1206,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       true,
       Some(BigDecimal(5000)),
       None,
-      None)
+      None
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -1406,7 +1418,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       false,
       None,
       Some("Inherited"),
-      None)
+      None
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -1565,7 +1578,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       true,
       Some(BigDecimal(5000)),
       None,
-      None)
+      None
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -1677,7 +1691,8 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       false,
       None,
       Some("Gifted"),
-      None)
+      None
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),

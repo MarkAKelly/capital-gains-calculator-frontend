@@ -160,7 +160,8 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
         ownerBeforeAprilNineteenEightyTwo = false,
         worthOnThirtyFirstMarchEightyTwo =  None,
         howBecameOwner = Some("Bought"),
-        boughtForLessThanWorth = Some(false))
+        boughtForLessThanWorth = Some(false)
+      )
 
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
         Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None,

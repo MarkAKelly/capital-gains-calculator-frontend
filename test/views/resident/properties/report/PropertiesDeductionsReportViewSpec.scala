@@ -358,7 +358,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       false,
       None,
       Some("Bought"),
-      Some(false))
+      Some(false)
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -734,7 +735,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       false,
       None,
       Some("Bought"),
-      Some(true))
+      Some(true)
+    )
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
@@ -806,7 +808,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       true,
       Some(BigDecimal(5000)),
       None,
-      None)
+      None
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -951,7 +954,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       false,
       None,
       Some("Inherited"),
-      None)
+      None
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -1069,7 +1073,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       false,
       None,
       Some("Gifted"),
-      None)
+      None
+    )
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),

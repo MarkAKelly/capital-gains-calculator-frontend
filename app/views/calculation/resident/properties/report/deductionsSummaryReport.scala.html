@@ -153,15 +153,15 @@
 
         <!--- --->
         @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Bought") && gainAnswers.boughtForLessThanWorth.get)
-            summaryNumericRowHelper("worthWhenBought", Messages("calc.resident.worthWhenBought.question"),gainAnswers.worthWhenBoughtForLess.get, None)
+            summaryNumericRowHelper("worthWhenBought", Messages("calc.resident.properties.worthWhenBought.question"),gainAnswers.worthWhenBoughtForLess.get, None)
         }
 
         @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Gifted"))
-            summaryNumericRowHelper("worthWhenGifted", Messages("calc.resident.worthWhenGifted.question"),gainAnswers.worthWhenGaveAway.get, None)
+            summaryNumericRowHelper("worthWhenGifted", Messages("calc.resident.properties.worthWhenGifted.question"),gainAnswers.worthWhenGaveAway.get, None)
         }
 
         @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Inherited"))
-            summaryNumericRowHelper("worthWhenInherited", Messages("calc.resident.worthWhenInherited.title"),gainAnswers.worthWhenInherited.get, None)
+            summaryNumericRowHelper("worthWhenInherited", Messages("calc.resident.properties.worthWhenInherited.question"),gainAnswers.worthWhenInherited.get, None)
         }
         <!--- --->
         @summaryNumericRowHelper("acquisitionCosts", Messages("calc.resident.acquisitionCosts.title"),gainAnswers.acquisitionCosts, None)

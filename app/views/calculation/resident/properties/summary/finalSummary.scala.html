@@ -161,15 +161,15 @@ articleLayout = false
 
     <!--- --->
     @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Bought") && gainAnswers.boughtForLessThanWorth.get)
-        summaryNumericRowHelper("worthWhenBought", Messages("calc.resident.worthWhenBought.question"), gainAnswers.worthWhenBoughtForLess.get, Some(gainRoutes.worthWhenBought().toString))
+        summaryNumericRowHelper("worthWhenBought", Messages("calc.resident.properties.worthWhenBought.question"), gainAnswers.worthWhenBoughtForLess.get, Some(gainRoutes.worthWhenBought().toString))
     }
 
     @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Gifted"))
-        summaryNumericRowHelper("worthWhenGifted", Messages("calc.resident.worthWhenGifted.question"), gainAnswers.worthWhenGaveAway.get, Some(gainRoutes.worthWhenGifted().toString))
+        summaryNumericRowHelper("worthWhenGifted", Messages("calc.resident.properties.worthWhenGifted.question"), gainAnswers.worthWhenGaveAway.get, Some(gainRoutes.worthWhenGifted().toString))
     }
 
     @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Inherited"))
-        summaryNumericRowHelper("worthWhenInherited", Messages("calc.resident.worthWhenInherited.title"), gainAnswers.worthWhenInherited.get, Some(gainRoutes.worthWhenInherited().toString))
+        summaryNumericRowHelper("worthWhenInherited", Messages("calc.resident.properties.worthWhenInherited.question"), gainAnswers.worthWhenInherited.get, Some(gainRoutes.worthWhenInherited().toString))
     }
     <!--- --->
 
