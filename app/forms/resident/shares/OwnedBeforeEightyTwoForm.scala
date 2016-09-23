@@ -28,8 +28,8 @@ object OwnedBeforeEightyTwoForm {
   val ownedBeforeEightyTwoForm = Form(
     mapping(
       "ownedBeforeEightyTwo" -> text
-        .verifying(Messages("calc.resident.properties.ownedBeforeEightyTwo.noSelectError"), mandatoryCheck)
-        .verifying(Messages("calc.resident.properties.ownedBeforeEightyTwo.noSelectError"), yesNoCheck)
+        .verifying(Messages("calc.resident.shares.ownedBeforeEightyTwo.noSelectError"), mandatoryCheck)
+        .verifying(Messages("calc.resident.shares.ownedBeforeEightyTwo.noSelectError"), yesNoCheck)
         .transform(stringToBoolean, booleanToString)
     )(OwnedBeforeEightyTwoModel.apply)(OwnedBeforeEightyTwoModel.unapply)
   )

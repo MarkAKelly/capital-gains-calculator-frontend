@@ -86,6 +86,11 @@ object MessageLookup {
         val acquisitionCostsQuestion = "How much did you pay in costs when you got the shares?"
 
       }
+
+      object OwnedBeforeEightyTwoMessages {
+        val title = "Did you own the shares before 1 April 1982?"
+        val errorNoSelect = "Tell us if you owned the shares before 1 April 1982"
+      }
     }
   }
 

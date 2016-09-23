@@ -16,11 +16,12 @@
 
 package forms.resident.shares
 
+import assets.MessageLookup.Resident.Shares.{OwnedBeforeEightyTwoMessages => Messages}
 import forms.resident.shares.OwnedBeforeEightyTwoForm._
 import models.resident.shares.OwnedBeforeEightyTwoModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class OwnerBeforeEightyTwoSpec extends UnitSpec with WithFakeApplication {
+class OwnerBeforeEightyTwoFormSpec extends UnitSpec with WithFakeApplication {
 
   "Creating the OwnedBeforeEightyTwo form from valid inputs" should {
 
@@ -54,6 +55,10 @@ class OwnerBeforeEightyTwoSpec extends UnitSpec with WithFakeApplication {
         form.errors.length shouldBe 1
       }
 
+      s"return a form with the error message ${Messages.errorNoSelect}" in {
+        form.error("ownedBeforeEightyTwo").get.message shouldBe Messages.errorNoSelect
+      }
+
     }
 
     "supplied with an incorrect selection" should {
@@ -65,6 +70,10 @@ class OwnerBeforeEightyTwoSpec extends UnitSpec with WithFakeApplication {
 
       "raise 1 form error" in {
         form.errors.length shouldBe 1
+      }
+
+      s"return a form with the error message ${Messages.errorNoSelect}" in {
+        form.error("ownedBeforeEightyTwo").get.message shouldBe Messages.errorNoSelect
       }
     }
   }
