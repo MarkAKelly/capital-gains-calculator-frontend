@@ -132,6 +132,12 @@ trait GainController extends FeatureLock {
     )
   }
 
+
+  //################# Owned Before 1982 Actions ########################
+  val ownedBeforeEightyTwo = {TODO}
+
+  val submitOwnedBeforeEightyTwo = {TODO}
+
   //################# Acquisition Value Actions ########################
   val acquisitionValue = FeatureLockForRTTShares.async { implicit request =>
     calcConnector.fetchAndGetFormData[AcquisitionValueModel](keystoreKeys.acquisitionValue).map {

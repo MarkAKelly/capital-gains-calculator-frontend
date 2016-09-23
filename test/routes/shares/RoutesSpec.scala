@@ -76,6 +76,21 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
+  /* Shares Owned before 1 April 1982 Routes */
+  "The URL for the resident/shares owned before 1982 costs Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/owned-before-april-first-nineteen-eighty-two" in {
+      val path = GainController.ownedBeforeEightyTwo().url
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/owned-before-april-first-nineteen-eighty-two"
+    }
+  }
+
+  "The URL for the resident/shares submit disposal costs Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/owned-before-april-first-nineteen-eighty-two" in {
+      val path = GainController.submitOwnedBeforeEightyTwo().url
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/owned-before-april-first-nineteen-eighty-two"
+    }
+  }
+
   /* Acquisition Value routes */
   "The URL for the resident/shares acquisition value Action" should {
     "be equal to /calculate-your-capital-gains/resident/shares/acquisition-value" in {
