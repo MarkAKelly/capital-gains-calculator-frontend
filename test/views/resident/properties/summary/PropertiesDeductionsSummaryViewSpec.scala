@@ -16,6 +16,7 @@
 
 package views.resident.properties.summary
 
+import assets.MessageLookup.Resident.{Properties => propertiesMessages}
 import assets.MessageLookup.{summaryPage => messages}
 import assets.{MessageLookup => commonMessages}
 import common.Dates
@@ -31,14 +32,16 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
 
   "Properties Deductions Summary view" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
+      None,
+      None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
       BigDecimal(10000),
       BigDecimal(30000),
       true,
       None,
       true,
+      Some(BigDecimal(5000)),
       None,
       None)
 
@@ -268,23 +271,6 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         }
       }
 
-
-      "has a numeric output row for the Disposal Value" which {
-
-        s"should have the question text '${commonMessages.disposalValue.question}'" in {
-          doc.select("#disposalValue-question").text shouldBe commonMessages.disposalValue.question
-        }
-
-        "should have the value '£200,000'" in {
-          doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£200,000"
-        }
-
-        s"should have a change link to ${routes.GainController.disposalValue().url}" in {
-          doc.select("#disposalValue-amount a").attr("href") shouldBe routes.GainController.disposalValue().url
-        }
-
-      }
-
       "has a numeric output row for the Disposal Costs" which {
 
         s"should have the question text '${commonMessages.disposalCosts.title}'" in {
@@ -326,20 +312,29 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         }
       }
 
-      "has a numeric output row for the Acquisition Value" which {
+      "has a numeric output row for the Worth Before April Nineteen Eighty Two" which {
 
-        s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
-          doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
+        s"should have the question text '${commonMessages.Resident.Properties.worthOn.question}'" in {
+          doc.select("#worthOn-question").text shouldBe commonMessages.Resident.Properties.worthOn.question
         }
 
-        "should have the value '£100,000'" in {
-          doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£100,000"
+        "should have the value '£5,000'" in {
+          doc.select("#worthOn-amount span.bold-medium").text shouldBe "£5,000"
         }
 
-        s"should have a change link to ${routes.GainController.acquisitionValue().url}" in {
-          doc.select("#acquisitionValue-amount a").attr("href") shouldBe routes.GainController.acquisitionValue().url
+        s"should have a change link to ${routes.GainController.worthOn.url}" in {
+          doc.select("#worthOn-amount a").attr("href") shouldBe routes.GainController.worthOn.url
         }
 
+        "has the question as part of the link" in {
+          doc.select("#worthOn-amount a").text shouldBe
+            s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.worthOn.question}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#worthOn-amount a span.visuallyhidden").text shouldBe
+            commonMessages.Resident.Properties.worthOn.question
+        }
       }
 
       "has a numeric output row for the Acquisition Costs" which {
@@ -504,14 +499,16 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
 
   "Properties Deductions Summary view with all options selected" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
+      None,
+      Some(500),
       BigDecimal(10000),
-      BigDecimal(100000),
+      Some(BigDecimal(100000)),
       BigDecimal(10000),
       BigDecimal(30000),
       false,
       Some(true),
       false,
+      None,
       Some("Bought"),
       Some(false))
 
@@ -671,6 +668,29 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         }
       }
 
+      "has an amount output row for worth when sold for less" which {
+
+        s"should have the question text '${propertiesMessages.WorthWhenSoldForLess.question}'" in {
+          doc.select("#worthWhenSoldForLess-question").text shouldBe propertiesMessages.WorthWhenSoldForLess.question
+        }
+
+        "should have the value '£500'" in {
+          doc.select("#worthWhenSoldForLess-amount span.bold-medium").text shouldBe "£500"
+        }
+
+        s"should have a change link to ${routes.GainController.worthWhenSoldForLess().url}" in {
+          doc.select("#worthWhenSoldForLess-amount a").attr("href") shouldBe routes.GainController.worthWhenSoldForLess().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#worthWhenSoldForLess-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${propertiesMessages.WorthWhenSoldForLess.question}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#worthWhenSoldForLess-amount a span.visuallyhidden").text shouldBe propertiesMessages.WorthWhenSoldForLess.question
+        }
+      }
+
       "has an option output row for sell for less" which {
 
         s"should have the question text '${commonMessages.sellForLess.title}'" in {
@@ -764,6 +784,22 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         "has the question component of the link as visuallyhidden" in {
           doc.select("#boughtForLessThanWorth-option a span.visuallyhidden").text shouldBe commonMessages.boughtForLessThanWorth.title
         }
+      }
+
+      "has a numeric output row for the Acquisition Value" which {
+
+        s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
+          doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
+        }
+
+        "should have the value '£100,000'" in {
+          doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£100,000"
+        }
+
+        s"should have a change link to ${routes.GainController.acquisitionValue().url}" in {
+          doc.select("#acquisitionValue-amount a").attr("href") shouldBe routes.GainController.acquisitionValue().url
+        }
+
       }
 
       "has a numeric output row for the Improvements" which {
@@ -1050,14 +1086,16 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
 
   "Properties Deductions Summary view when property was sold for less than worth" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
+      None,
+      Some(500),
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
       BigDecimal(10000),
       BigDecimal(30000),
       false,
       Some(true),
       false,
+      None,
       Some("Bought"),
       Some(true))
     lazy val deductionAnswers = ChargeableGainAnswers(
@@ -1119,14 +1157,16 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
   "Properties Deductions Summary view with AEA options selected" which {
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
+      None,
+      None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
       BigDecimal(10000),
       BigDecimal(30000),
       true,
       None,
       true,
+      Some(BigDecimal(5000)),
       None,
       None)
 
@@ -1325,14 +1365,16 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
 
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
+      None,
+      None,
       BigDecimal(0),
-      BigDecimal(100000),
+      None,
       BigDecimal(0),
       BigDecimal(0),
       true,
       None,
       false,
+      None,
       Some("Inherited"),
       None)
 
@@ -1464,14 +1506,16 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
   "Properties Deductions Summary when supplied with a date above the known tax years" should {
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
-      BigDecimal(200000),
+      Some(BigDecimal(200000)),
+      None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
       BigDecimal(10000),
       BigDecimal(30000),
       false,
       Some(false),
       true,
+      Some(BigDecimal(5000)),
       None,
       None)
 
@@ -1529,6 +1573,22 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       }
     }
 
+    "has a numeric output row for the Disposal Value" which {
+
+      s"should have the question text '${commonMessages.disposalValue.question}'" in {
+        doc.select("#disposalValue-question").text shouldBe commonMessages.disposalValue.question
+      }
+
+      "should have the value '£200,000'" in {
+        doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£200,000"
+      }
+
+      s"should have a change link to ${routes.GainController.disposalValue().url}" in {
+        doc.select("#disposalValue-amount a").attr("href") shouldBe routes.GainController.disposalValue().url
+      }
+
+    }
+
     "has an option output row for sell for less" which {
 
       s"should have the question text '${commonMessages.sellForLess.title}'" in {
@@ -1556,14 +1616,16 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
   "Properties Deductions Summary view" should {
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
+      None,
+      None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
       BigDecimal(10000),
       BigDecimal(30000),
       true,
       Some(false),
       false,
+      None,
       Some("Gifted"),
       None)
 

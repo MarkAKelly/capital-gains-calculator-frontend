@@ -169,12 +169,20 @@ articleLayout = false
     @{if(!gainAnswers.givenAway)
     summaryOptionRowHelper("sellForLess", Messages("calc.resident.properties.sellForLess.title"), gainAnswers.sellForLess.get, Some(gainRoutes.sellForLess().toString))}
 
-    @summaryNumericRowHelper("disposalValue",Messages("calc.resident.disposal.value.question"),gainAnswers.disposalValue,Some(gainRoutes.disposalValue().toString))
+    @{if(!gainAnswers.givenAway && !gainAnswers.sellForLess.get)
+    summaryNumericRowHelper("disposalValue",Messages("calc.resident.disposal.value.question"),gainAnswers.disposalValue.get,Some(gainRoutes.disposalValue().toString))}
+
+    @{if(!gainAnswers.givenAway && gainAnswers.sellForLess.get)
+        summaryNumericRowHelper("worthWhenSoldForLess", Messages("calc.resident.properties.worthWhenSoldForLess.question"), gainAnswers.worthWhenSoldForLess.get, Some(gainRoutes.worthWhenSoldForLess().toString))
+    }
 
     @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.disposalCosts.title"),gainAnswers.disposalCosts,Some(gainRoutes.disposalCosts().toString))
 
     @summaryOptionRowHelper("ownerBeforeAprilNineteenEightyTwo", Messages("calc.resident.properties.ownerBeforeApril.title"),
     gainAnswers.ownerBeforeAprilNineteenEightyTwo, Some(gainRoutes.ownerBeforeAprilNineteenEightyTwo().toString))
+
+    @{if (gainAnswers.ownerBeforeAprilNineteenEightyTwo)
+    summaryNumericRowHelper("worthOn",Messages("calc.resident.properties.worthOn.question"),gainAnswers.worthOnThirtyFirstMarchEightyTwo.get,Some(gainRoutes.worthOn().toString))}
 
     @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo)
     summaryTextRowHelper("howBecameOwner", Messages("calc.resident.howBecameOwner.title"), Messages(s"calc.resident.howBecameOwner.${gainAnswers.howBecameOwner.get.toLowerCase}"),
@@ -184,7 +192,8 @@ articleLayout = false
     summaryOptionRowHelper("boughtForLessThanWorth", Messages("calc.resident.properties.boughtForLessThanWorth.title"),
     gainAnswers.boughtForLessThanWorth.get, Some(gainRoutes.boughtForLessThanWorth().toString))}
 
-    @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),gainAnswers.acquisitionValue,Some(gainRoutes.acquisitionValue().toString))
+    @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Bought") && !gainAnswers.boughtForLessThanWorth.get)
+    summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),gainAnswers.acquisitionValue.get,Some(gainRoutes.acquisitionValue().toString))}
 
     @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),gainAnswers.acquisitionCosts,Some(gainRoutes.acquisitionCosts().toString))
 
