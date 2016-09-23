@@ -130,7 +130,7 @@ trait GainController extends FeatureLock {
       errors => Future.successful(BadRequest(views.disposalCosts(errors, homeLink))),
       success => {
         calcConnector.saveFormData(keystoreKeys.disposalCosts, success)
-        Future.successful(Redirect(routes.GainController.acquisitionValue()))}
+        Future.successful(Redirect(routes.GainController.ownedBeforeEightyTwo()))}
     )
   }
 
