@@ -18,7 +18,7 @@ package controllers.resident.properties
 
 import java.util.UUID
 
-import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
+import common.KeystoreKeys.{ResidentShareKeys, ResidentPropertyKeys => keystoreKeys}
 import common.{Dates, TaxDates}
 import config.{AppConfig, ApplicationConfig}
 import connectors.CalculatorConnector
@@ -40,7 +40,7 @@ import forms.resident.properties.gain.OwnerBeforeAprilForm._
 import play.api.data.Form
 import forms.resident.properties.SellOrGiveAwayForm._
 import forms.resident.properties.gain.WorthWhenSoldForLessForm._
-import models.resident.properties.gain.{OwnerBeforeAprilModel, WorthWhenSoldForLessModel, WorthWhenGiftedModel}
+import models.resident.properties.gain.{OwnerBeforeAprilModel, WorthWhenGiftedModel, WorthWhenSoldForLessModel}
 import forms.resident.properties.WorthWhenGaveAwayForm._
 import forms.resident.properties.HowBecameOwnerForm._
 import forms.resident.properties.WorthOnForm._
@@ -245,20 +245,43 @@ trait GainController extends FeatureLock {
   }
 
   //################# Disposal Costs Actions ########################
+  private def disposalCostsBackLink: (SellOrGiveAwayModel, Option[SellForLessModel]) => String = {
+    case (gaveAwayAnswer, _) if gaveAwayAnswer.givenAway => routes.GainController.worthWhenGaveAway().url
+    case (_, soldForLessAnswer) if soldForLessAnswer.get.sellForLess => routes.GainController.worthWhenSoldForLess().url
+    case (_, _) => routes.GainController.disposalValue().url
+  }
+
   val disposalCosts = FeatureLockForRTT.async { implicit request =>
-    calcConnector.fetchAndGetFormData[DisposalCostsModel](keystoreKeys.disposalCosts).map {
-      case Some(data) => Ok(views.disposalCosts(disposalCostsForm.fill(data)))
-      case None => Ok(views.disposalCosts(disposalCostsForm))
+
+    def routeRequest(backLink: String) = {
+      calcConnector.fetchAndGetFormData[DisposalCostsModel](keystoreKeys.disposalCosts).map {
+        case Some(data) => Ok(views.disposalCosts(disposalCostsForm.fill(data), backLink))
+        case None => Ok(views.disposalCosts(disposalCostsForm, backLink))
+      }
     }
+
+    for {
+      gaveAway <- calcConnector.fetchAndGetFormData[SellOrGiveAwayModel](keystoreKeys.sellOrGiveAway)
+      soldForLess <- calcConnector.fetchAndGetFormData[SellForLessModel](keystoreKeys.sellForLess)
+      route <- routeRequest(disposalCostsBackLink(gaveAway.get, soldForLess))
+    } yield route
   }
 
   val submitDisposalCosts = FeatureLockForRTT.async { implicit request =>
-    disposalCostsForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.disposalCosts(errors))),
-      success => {
-        calcConnector.saveFormData(keystoreKeys.disposalCosts, success)
-        Future.successful(Redirect(routes.GainController.ownerBeforeAprilNineteenEightyTwo()))}
-    )
+    def routeRequest(backLink: String) = {
+      disposalCostsForm.bindFromRequest.fold(
+        errors => Future.successful(BadRequest(views.disposalCosts(errors,backLink))),
+        success => {
+          calcConnector.saveFormData(keystoreKeys.disposalCosts, success)
+          Future.successful(Redirect(routes.GainController.ownerBeforeAprilNineteenEightyTwo()))}
+      )
+    }
+
+    for {
+      gaveAway <- calcConnector.fetchAndGetFormData[SellOrGiveAwayModel](keystoreKeys.sellOrGiveAway)
+      soldForLess <- calcConnector.fetchAndGetFormData[SellForLessModel](keystoreKeys.sellForLess)
+      route <- routeRequest(disposalCostsBackLink(gaveAway.get, soldForLess))
+    } yield route
   }
 
   //################# Owner Before April Eighty Two Actions ########################
