@@ -100,7 +100,7 @@ class LettingsReliefValueFormSpec extends UnitSpec with WithFakeApplication with
 
     "supplied with an amount with 3 numbers after the decimal" should {
 
-      lazy val form = lettingsReliefValueForm(10,20).bind(Map("amount" -> "1.000"))
+      lazy val form = lettingsReliefValueForm(400,20).bind(Map("amount" -> "1.000"))
 
       "raise a form error" in {
         form.hasErrors shouldBe true
@@ -168,7 +168,7 @@ class LettingsReliefValueFormSpec extends UnitSpec with WithFakeApplication with
 
     "supplied with an amount that's less than the zero" should {
 
-      lazy val form = lettingsReliefValueForm(10,20).bind(Map("amount" -> "-0.01"))
+      lazy val form = lettingsReliefValueForm(500,20).bind(Map("amount" -> "-0.01"))
 
       "raise a form error" in {
         form.hasErrors shouldBe true

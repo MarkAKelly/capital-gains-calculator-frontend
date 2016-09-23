@@ -46,10 +46,10 @@ object LettingsReliefValueForm {
         .verifying(Messages("calc.common.error.minimumAmount"), isPositive)
         .verifying(Messages("calc.common.error.invalidAmount"), decimalPlacesCheck)
         .verifying(Messages("calc.resident.lettingsReliefValue.error.moreThanCappedAmount", maxLettingsRelief), x =>
-          displayMaxLettingsRelief(x, prrValue, gain - prrValue) || !isPositive(x) || !decimalPlacesCheck(x))
+          displayMaxLettingsRelief(x, prrValue, gain - prrValue))
         .verifying(Messages("calc.resident.lettingsReliefValue.error.moreThanPrr", prrValue), x =>
-          displayGreaterThanPrr(x, prrValue, gain - prrValue) || !isPositive(x) || !decimalPlacesCheck(x))
+          displayGreaterThanPrr(x, prrValue, gain - prrValue))
         .verifying(Messages("calc.resident.lettingsReliefValue.error.moreThanRemainingGain", gain - prrValue), x =>
-          displayGreaterThanRemainingGain(x, prrValue, gain - prrValue) || !isPositive(x) || !decimalPlacesCheck(x))
+          displayGreaterThanRemainingGain(x, prrValue, gain - prrValue))
     )(LettingsReliefValueModel.apply)(LettingsReliefValueModel.unapply))
 }
