@@ -24,7 +24,7 @@ import connectors.CalculatorConnector
 import org.mockito.Matchers
 import config.AppConfig
 import controllers.resident.properties.GainController
-import models.resident.properties.gain.PropertyWorthWhenSoldModel
+import models.resident.properties.gain.WorthWhenSoldForLessModel
 import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
 import org.jsoup.Jsoup
@@ -34,17 +34,17 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import scala.concurrent.Future
 
 
-class PropertyWorthWhenSoldActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
+class WorthWhenSoldForLessActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
 
-  def setupTarget(getData: Option[PropertyWorthWhenSoldModel]): GainController = {
+  def setupTarget(getData: Option[WorthWhenSoldForLessModel]): GainController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[PropertyWorthWhenSoldModel](Matchers.eq(keystoreKeys.propertyWorthWhenSold))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[WorthWhenSoldForLessModel](Matchers.eq(keystoreKeys.worthWhenSoldForLess))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
-    when(mockCalcConnector.saveFormData[PropertyWorthWhenSoldModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.saveFormData[WorthWhenSoldForLessModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
 
     new GainController {
@@ -56,27 +56,27 @@ class PropertyWorthWhenSoldActionSpec extends UnitSpec with WithFakeApplication 
   "Calling .propertyWorthWhenSold from the GainCalculationController" when {
     "there is no keystore data" should {
       lazy val target = setupTarget(None)
-      lazy val result = target.propertyWorthWhenSold(fakeRequestWithSession)
+      lazy val result = target.worthWhenSoldForLess(fakeRequestWithSession)
 
       "return a status of 200" in {
         status(result) shouldEqual 200
       }
 
-      s"return some html with title of ${MessageLookup.Resident.Properties.PropertyWorthWhenSold.title}" in {
-        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.Resident.Properties.PropertyWorthWhenSold.title
+      s"return some html with title of ${MessageLookup.Resident.Properties.WorthWhenSoldForLess.question}" in {
+        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.Resident.Properties.WorthWhenSoldForLess.question
       }
     }
 
     "there is keystore data" should {
-      lazy val target = setupTarget(Some(PropertyWorthWhenSoldModel(100)))
-      lazy val result = target.propertyWorthWhenSold(fakeRequestWithSession)
+      lazy val target = setupTarget(Some(WorthWhenSoldForLessModel(100)))
+      lazy val result = target.worthWhenSoldForLess(fakeRequestWithSession)
 
       "return a status of 200" in {
         status(result) shouldEqual 200
       }
 
-      s"return some html with title of ${MessageLookup.Resident.Properties.PropertyWorthWhenSold.title}" in {
-        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.Resident.Properties.PropertyWorthWhenSold.title
+      s"return some html with title of ${MessageLookup.Resident.Properties.WorthWhenSoldForLess.question}" in {
+        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.Resident.Properties.WorthWhenSoldForLess.question
       }
     }
   }
@@ -84,7 +84,7 @@ class PropertyWorthWhenSoldActionSpec extends UnitSpec with WithFakeApplication 
   "Calling .propertyWorthWhenSold from the GainCalculationController with no session" should {
 
     lazy val target = setupTarget(None)
-    lazy val result = target.propertyWorthWhenSold(fakeRequest)
+    lazy val result = target.worthWhenSoldForLess(fakeRequest)
 
     "return a status of 303" in {
       status(result) shouldBe 303
@@ -99,7 +99,7 @@ class PropertyWorthWhenSoldActionSpec extends UnitSpec with WithFakeApplication 
   "Calling .submitPropertyWorthWhenSold from the GainController" should {
     lazy val target = setupTarget(None)
     lazy val request = fakeRequestToPOSTWithSession(("amount", "100"))
-    lazy val result = target.submitPropertyWorthWhenSold(request)
+    lazy val result = target.submitWorthWhenSoldForLess(request)
 
     "when supplied with a valid form" which {
 
@@ -116,7 +116,7 @@ class PropertyWorthWhenSoldActionSpec extends UnitSpec with WithFakeApplication 
   "Calling .submitPropertyWorthWhenSold from the GainController" should {
     lazy val target = setupTarget(None)
     lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
-    lazy val result = target.submitPropertyWorthWhenSold(request)
+    lazy val result = target.submitWorthWhenSoldForLess(request)
 
     "when supplied with an invalid form" which {
 
@@ -125,7 +125,7 @@ class PropertyWorthWhenSoldActionSpec extends UnitSpec with WithFakeApplication 
       }
 
       "stay on the Property Worth When Sold page" in {
-        Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.Resident.Properties.PropertyWorthWhenSold.title
+        Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.Resident.Properties.WorthWhenSoldForLess.question
       }
     }
   }

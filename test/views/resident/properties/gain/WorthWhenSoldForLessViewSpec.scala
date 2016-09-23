@@ -17,26 +17,26 @@
 package views.resident.properties.gain
 
 import assets.MessageLookup
-import assets.MessageLookup.Resident.Properties.{PropertyWorthWhenSold => messages}
+import assets.MessageLookup.Resident.Properties.{WorthWhenSoldForLess => messages}
 import controllers.helpers.FakeRequestHelper
-import forms.resident.properties.gain.PropertyWorthWhenSoldForm._
+import forms.resident.properties.gain.WorthWhenSoldForLessForm._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{gain => views}
 import org.jsoup.Jsoup
 
-class PropertyWorthWhenSoldViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class WorthWhenSoldForLessViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "The Property Worth When Sold View when supplied with an empty form" should {
 
-    lazy val view = views.propertyWorthWhenSold(propertyWorthWhenSoldForm)(fakeRequest)
+    lazy val view = views.worthWhenSoldForLess(worthWhenSoldForLessForm)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
       doc.charset.toString shouldBe "UTF-8"
     }
 
-    s"have a title of ${messages.title}" in {
-      doc.title shouldBe messages.title
+    s"have a title of ${messages.question}" in {
+      doc.title shouldBe messages.question
     }
 
     "have a back link" which {
@@ -56,8 +56,8 @@ class PropertyWorthWhenSoldViewSpec extends UnitSpec with WithFakeApplication wi
 
       lazy val heading = doc.select("H1")
 
-      s"have the page heading '${messages.title}'" in {
-        heading.text shouldBe messages.title
+      s"have the page heading '${messages.question}'" in {
+        heading.text shouldBe messages.question
       }
 
       "have the heading-large class" in {
@@ -74,7 +74,7 @@ class PropertyWorthWhenSoldViewSpec extends UnitSpec with WithFakeApplication wi
       lazy val form = doc.select("form")
 
       "have the action /calculate-your-capital-gains/resident/properties/property-worth-when-sold" in {
-        form.attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/property-worth-when-sold"
+        form.attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/worth-when-sold"
       }
 
       "have the method POST" in {
@@ -89,8 +89,8 @@ class PropertyWorthWhenSoldViewSpec extends UnitSpec with WithFakeApplication wi
 
           lazy val label = doc.select("label")
 
-          s"has the text ${messages.title}" in {
-            label.select("div > span").text() shouldEqual messages.title
+          s"has the text ${messages.question}" in {
+            label.select("div > span").text() shouldEqual messages.question
           }
 
           "has the class visually hidden" in {
@@ -136,8 +136,8 @@ class PropertyWorthWhenSoldViewSpec extends UnitSpec with WithFakeApplication wi
 
   "The Property Worth When Sold View when supplied with a correct form" should {
 
-    val form = propertyWorthWhenSoldForm.bind(Map("amount" -> "100"))
-    lazy val view = views.propertyWorthWhenSold(form)(fakeRequest)
+    val form = worthWhenSoldForLessForm.bind(Map("amount" -> "100"))
+    lazy val view = views.worthWhenSoldForLess(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display the value of the form in the input" in {
@@ -155,8 +155,8 @@ class PropertyWorthWhenSoldViewSpec extends UnitSpec with WithFakeApplication wi
 
   "The Property Worth When Sold View when supplied with an incorrect form" should {
 
-    val form = propertyWorthWhenSoldForm.bind(Map("amount" -> "adsa"))
-    lazy val view = views.propertyWorthWhenSold(form)(fakeRequest)
+    val form = worthWhenSoldForLessForm.bind(Map("amount" -> "adsa"))
+    lazy val view = views.worthWhenSoldForLess(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {
