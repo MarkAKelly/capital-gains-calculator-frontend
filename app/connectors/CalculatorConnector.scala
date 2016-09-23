@@ -189,10 +189,6 @@ trait CalculatorConnector {
   }
 
   def getPropertyGainAnswers(implicit hc: HeaderCarrier): Future[YourAnswersSummaryModel] = {
-    val acquisitionValue = fetchAndGetFormData[resident.AcquisitionValueModel](ResidentPropertyKeys.acquisitionValue).map{
-      case Some(data) => Some(data.amount)
-      case _ => None
-    }
     val disposalDate = fetchAndGetFormData[resident.DisposalDateModel](ResidentPropertyKeys.disposalDate).map(formData =>
       constructDate(formData.get.day, formData.get.month, formData.get.year))
 
@@ -205,6 +201,24 @@ trait CalculatorConnector {
       case Some(data) => Some(data.amount)
       case _ => None
     }
+
+    val acquisitionValue = fetchAndGetFormData[resident.AcquisitionValueModel](ResidentPropertyKeys.acquisitionValue).map{
+      case Some(data) => Some(data.amount)
+      case _ => None
+    }
+    val worthWhenInherited = fetchAndGetFormData[WorthWhenInheritedModel](ResidentPropertyKeys.worthWhenInherited).map {
+      case Some(data) => Some(data.amount)
+      case _ => None
+    }
+    val worthWhenGaveAway = fetchAndGetFormData[WorthWhenGaveAwayModel](ResidentPropertyKeys.worthWhenGaveAway).map {
+      case Some(data) => Some(data.amount)
+      case _ => None
+    }
+    val worthWhenBoughtForLess = fetchAndGetFormData[WorthWhenBoughtModel](ResidentPropertyKeys.worthWhenBought).map {
+      case Some(data) => Some(data.amount)
+      case _ => None
+    }
+
     val acquisitionCosts = fetchAndGetFormData[resident.AcquisitionCostsModel](ResidentPropertyKeys.acquisitionCosts).map(_.get.amount)
     val disposalCosts = fetchAndGetFormData[resident.DisposalCostsModel](ResidentPropertyKeys.disposalCosts).map(_.get.amount)
     val improvements = fetchAndGetFormData[properties.ImprovementsModel](ResidentPropertyKeys.improvements).map(_.get.amount)
@@ -229,12 +243,15 @@ trait CalculatorConnector {
     }
 
     for {
-      acquisitionValue <- acquisitionValue
       disposalDate <- disposalDate
       disposalValue <- disposalValue
-      worthWhenSoldForLess <- worthWhenSoldForLess
-      acquisitionCosts <- acquisitionCosts
       disposalCosts <- disposalCosts
+      worthWhenSoldForLess <- worthWhenSoldForLess
+      acquisitionValue <- acquisitionValue
+      worthWhenInherited <- worthWhenInherited
+      worthWhenGaveAway <- worthWhenGaveAway
+      worthWhenBoughtForLess <- worthWhenBoughtForLess
+      acquisitionCosts <- acquisitionCosts
       improvements <- improvements
       givenAway <- givenAway
       sellForLess <- sellForLess
@@ -248,6 +265,9 @@ trait CalculatorConnector {
       worthWhenSoldForLess,
       disposalCosts,
       acquisitionValue,
+      worthWhenInherited,
+      worthWhenGaveAway,
+      worthWhenBoughtForLess,
       acquisitionCosts,
       improvements,
       givenAway,
