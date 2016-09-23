@@ -87,6 +87,11 @@ object MessageLookup {
         val improvementsAdditionalContentOne = "Replacing a basic kitchen or bathroom with a luxury version is normally considered an improvement."
         val improvementsAdditionalContentTwo = "But replacing them with something of a similar standard is normally not an improvement."
       }
+
+      //############ Sell For Less messages #################//
+      object sellForLess {
+        val title = "Did you sell the property for less than it was worth to help the buyer?"
+      }
     }
 
     object Shares {
@@ -103,6 +108,12 @@ object MessageLookup {
         val acquisitionValueQuestion = "How much did you pay for the shares?"
         val acquisitionCostsQuestion = "How much did you pay in costs when you got the shares?"
 
+      }
+
+      //############ Sell For Less messages #################//
+      object sellForLess {
+        val title = "Did you sell the shares for less than they were worth to help the buyer?"
+        val errorSelect = s"Tell us if you sold the shares for less than they were worth to help the buyer?"
       }
     }
   }
@@ -154,6 +165,24 @@ object MessageLookup {
   //############ Sell For Less messages #################//
   object sellForLess {
     val title = "Did you sell the property for less than it was worth to help the buyer?"
+  }
+
+  //############ Worth When Inherited messages #################//
+  object worthWhenInherited {
+    val title = "What was the property worth when you inherited it?"
+    val additionalContent = "You can use a valuation from a surveyor or a property website."
+  }
+
+  //############ Worth When Gifted messages #################//
+  object worthWhenGifted {
+    val question = "What was the property worth when you got it as a gift?"
+    val additionalContent = "You can use a valuation from a surveyor or a property website."
+  }
+
+  //############ Worth When Bought messages #################//
+  object worthWhenBought {
+    val question = "What was the property worth when you bought it?"
+    val additionalContent = "You can use a valuation from a surveyor or a property website."
   }
 
   //Disposal Value messages

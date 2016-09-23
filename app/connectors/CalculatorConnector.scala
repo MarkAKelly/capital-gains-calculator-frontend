@@ -25,7 +25,7 @@ import constructors.resident.{shares, properties => propertyConstructor}
 import models.nonresident._
 import models.resident
 import models.resident.properties.{ImprovementsModel => _, _}
-import models.resident.{IncomeAnswersModel, TaxYearModel, properties}
+import models.resident.{IncomeAnswersModel, SellForLessModel, TaxYearModel, properties}
 import play.api.libs.json.Format
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -223,10 +223,10 @@ trait CalculatorConnector {
     val disposalCosts = fetchAndGetFormData[resident.DisposalCostsModel](ResidentPropertyKeys.disposalCosts).map(_.get.amount)
     val improvements = fetchAndGetFormData[properties.ImprovementsModel](ResidentPropertyKeys.improvements).map(_.get.amount)
     val givenAway = fetchAndGetFormData[properties.SellOrGiveAwayModel](ResidentPropertyKeys.sellOrGiveAway).map(_.get.givenAway)
-    val sellForLess = fetchAndGetFormData[properties.SellForLessModel](ResidentPropertyKeys.sellForLess).map {
+    val sellForLess = fetchAndGetFormData[SellForLessModel](ResidentPropertyKeys.sellForLess).map(_ match {
       case Some(data) => Some(data.sellForLess)
       case _ => None
-    }
+    })
     val ownerBeforeAprilNineteenEightyTwo = fetchAndGetFormData[properties.gain.OwnerBeforeAprilModel](ResidentPropertyKeys.ownerBeforeAprilNineteenEightyTwo)
       .map(_.get.ownedBeforeAprilNineteenEightyTwo)
     val worthOnThirtyFirstMarchEightyTwo = fetchAndGetFormData[properties.WorthOnModel](ResidentPropertyKeys.worthOn).map {

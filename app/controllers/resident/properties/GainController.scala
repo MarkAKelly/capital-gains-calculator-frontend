@@ -44,7 +44,7 @@ import models.resident.properties.gain.{OwnerBeforeAprilModel, WorthWhenSoldForL
 import forms.resident.properties.WorthWhenGaveAwayForm._
 import forms.resident.properties.HowBecameOwnerForm._
 import forms.resident.properties.WorthOnForm._
-import models.resident.properties.{HowBecameOwnerModel, ImprovementsModel, SellForLessModel, SellOrGiveAwayModel, WorthOnModel, WorthWhenGaveAwayModel}
+import models.resident.properties.{HowBecameOwnerModel, ImprovementsModel, SellOrGiveAwayModel, WorthOnModel, WorthWhenGaveAwayModel}
 import forms.resident.properties.WorthWhenInheritedForm._
 import forms.resident.properties.gain.WorthWhenGiftedForm._
 import forms.resident.properties.BoughtForLessThanWorthForm._

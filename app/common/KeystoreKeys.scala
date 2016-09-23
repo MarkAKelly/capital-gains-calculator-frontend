@@ -80,6 +80,7 @@ object KeystoreKeys {
 
   object ResidentShareKeys {
     val disposalDate = "res:share:disposalDate"
+    val sellForLess = "res:share:sellForLess"
     val disposalValue = "res:share:disposalValue"
     val disposalCosts = "res:share:disposalCosts"
     val acquisitionValue = "res:share:acquisitionValue"
