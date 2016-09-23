@@ -16,6 +16,9 @@
 
 package assets
 
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
+import common.Constants
+
 object MessageLookup {
 
   // TO MOVE
@@ -311,6 +314,10 @@ object MessageLookup {
     val question = s"How much Letting Relief are you entitled to?"
     def additionalContent(input: String): String = s"We've calculated that you've made a gain of £$input on your property. " +
       s"You'll need this figure to calculate your Letting Relief."
+    val maxLettingsReliefExceeded = "The Letting Relief you've entered is more than the maximum amount of £" + MoneyPounds(Constants.maxLettingsRelief,0).quantity
+    val lettingsReliefMoreThanPRR = "The Letting Relief amount you've entered is more than your Private Residence Relief"
+    def lettingsReliefMoreThanRemainingGain(input: BigDecimal): String = s"The Letting Relief you've entered is more than your remaining gain of £" + MoneyPounds(input,0).quantity
+    val reducYourLettingsRelief = "Reduce your Letting Relief amount"
   }
 
   //No Prr Reliefs Value messages

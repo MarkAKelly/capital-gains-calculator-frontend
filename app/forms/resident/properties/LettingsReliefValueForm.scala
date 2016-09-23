@@ -16,26 +16,40 @@
 
 package forms.resident.properties
 
-import common.Constants
 import common.Transformers._
 import common.Validation._
+import common.Constants._
 import play.api.data.Forms._
 import play.api.data._
 import models.resident.properties.LettingsReliefValueModel
 import play.api.i18n.Messages
-import uk.gov.hmrc.play.views.helpers.MoneyPounds
+
+import scala.math._
 
 object LettingsReliefValueForm {
 
-  val lettingsReliefValueForm = Form(
-    mapping(
+  def displayMaxLettingsRelief(amount: BigDecimal, prr: BigDecimal, remainingGain: BigDecimal): Boolean =
+    !(amount > maxLettingsRelief && prr >= maxLettingsRelief && remainingGain >= maxLettingsRelief)
+
+  def displayGreaterThanPrr(amount: BigDecimal, prr: BigDecimal, remainingGain: BigDecimal): Boolean =
+    !(amount > prr && remainingGain >= prr && maxLettingsRelief >= prr)
+
+  def displayGreaterThanRemainingGain(amount: BigDecimal, prr: BigDecimal, remainingGain: BigDecimal): Boolean =
+    !(amount > remainingGain && remainingGain <= prr && remainingGain <= maxLettingsRelief)
+
+  def lettingsReliefValueForm(gain: BigDecimal, prrValue: BigDecimal): Form[LettingsReliefValueModel] =
+    Form(mapping(
       "amount" -> text
         .verifying(Messages("calc.common.error.mandatoryAmount"), mandatoryCheck)
         .verifying(Messages("calc.common.error.invalidAmount"), bigDecimalCheck)
         .transform[BigDecimal](stringToBigDecimal, bigDecimalToString)
-        .verifying(Messages("calc.common.error.maxAmountExceeded", MoneyPounds(Constants.maxNumeric, 0).quantity), maxCheck)
         .verifying(Messages("calc.common.error.minimumAmount"), isPositive)
         .verifying(Messages("calc.common.error.invalidAmount"), decimalPlacesCheck)
-    )(LettingsReliefValueModel.apply)(LettingsReliefValueModel.unapply)
-  )
+        .verifying(Messages("calc.resident.lettingsReliefValue.error.moreThanCappedAmount", maxLettingsRelief), x =>
+          displayMaxLettingsRelief(x, prrValue, gain - prrValue) || !isPositive(x) || !decimalPlacesCheck(x))
+        .verifying(Messages("calc.resident.lettingsReliefValue.error.moreThanPrr", prrValue), x =>
+          displayGreaterThanPrr(x, prrValue, gain - prrValue) || !isPositive(x) || !decimalPlacesCheck(x))
+        .verifying(Messages("calc.resident.lettingsReliefValue.error.moreThanRemainingGain", gain - prrValue), x =>
+          displayGreaterThanRemainingGain(x, prrValue, gain - prrValue) || !isPositive(x) || !decimalPlacesCheck(x))
+    )(LettingsReliefValueModel.apply)(LettingsReliefValueModel.unapply))
 }

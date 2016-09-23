@@ -22,7 +22,7 @@ import config.AppConfig
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.DeductionsController
-import models.resident.properties.{LettingsReliefValueModel, YourAnswersSummaryModel}
+import models.resident.properties.{LettingsReliefValueModel, PrivateResidenceReliefValueModel, YourAnswersSummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -35,13 +35,20 @@ import scala.concurrent.Future
 
 class LettingsReliefValueActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  def setupTarget(getData: Option[LettingsReliefValueModel], totalGain: BigDecimal): DeductionsController = {
+  def setupTarget(
+                   getData: Option[LettingsReliefValueModel],
+                   prrValue: Option[PrivateResidenceReliefValueModel],
+                   totalGain: BigDecimal
+                 ): DeductionsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockAppConfig = mock[AppConfig]
 
     when(mockCalcConnector.fetchAndGetFormData[LettingsReliefValueModel](Matchers.eq(keystoreKeys.lettingsReliefValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.fetchAndGetFormData[PrivateResidenceReliefValueModel](Matchers.eq(keystoreKeys.prrValue))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(prrValue))
 
     when(mockCalcConnector.saveFormData[LettingsReliefValueModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
@@ -65,7 +72,7 @@ class LettingsReliefValueActionSpec extends UnitSpec with WithFakeApplication wi
 
     "there is no keystore data" should {
 
-      lazy val target = setupTarget(None, 10000)
+      lazy val target = setupTarget(None, Some(PrivateResidenceReliefValueModel(1000)), 10000)
       lazy val result = target.lettingsReliefValue(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -83,7 +90,7 @@ class LettingsReliefValueActionSpec extends UnitSpec with WithFakeApplication wi
 
     "there is some keystore data" should {
 
-      lazy val target = setupTarget(Some(LettingsReliefValueModel(1000)), 2500)
+      lazy val target = setupTarget(Some(LettingsReliefValueModel(1000)), Some(PrivateResidenceReliefValueModel(1000)), 2500)
       lazy val result = target.lettingsReliefValue(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -102,7 +109,7 @@ class LettingsReliefValueActionSpec extends UnitSpec with WithFakeApplication wi
 
   "request has an invalid session" should {
 
-    lazy val target = setupTarget(None, 1500)
+    lazy val target = setupTarget(None, Some(PrivateResidenceReliefValueModel(1000)), 1500)
     lazy val result = target.lettingsReliefValue(fakeRequest)
 
     "return a status of 303" in {
@@ -117,7 +124,7 @@ class LettingsReliefValueActionSpec extends UnitSpec with WithFakeApplication wi
   "Calling .submitLettingsReliefValue from the GainCalculationController" when {
 
     "a valid form is submitted" should {
-      lazy val target = setupTarget(None, 1)
+      lazy val target = setupTarget(None, Some(PrivateResidenceReliefValueModel(10000)), 100000)
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
       lazy val result = target.submitLettingsReliefValue(request)
 
@@ -131,8 +138,8 @@ class LettingsReliefValueActionSpec extends UnitSpec with WithFakeApplication wi
     }
 
     "an invalid form is submitted" should {
-      lazy val target = setupTarget(None, 1000000)
-      lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
+      lazy val target = setupTarget(None, Some(PrivateResidenceReliefValueModel(200)), 1000000)
+      lazy val request = fakeRequestToPOSTWithSession(("amount", "10000"))
       lazy val result = target.submitLettingsReliefValue(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
