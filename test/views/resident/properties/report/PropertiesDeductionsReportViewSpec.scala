@@ -35,13 +35,15 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       None,
       BigDecimal(10000),
       None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
       true,
       None,
       true,
       Some(BigDecimal(5000)),
-      None,
       None,
       None)
 
@@ -346,6 +348,9 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       Some(500),
       BigDecimal(10000),
       Some(BigDecimal(100000)),
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
       false,
@@ -353,8 +358,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       false,
       None,
       Some("Bought"),
-      Some(false),
-      None)
+      Some(false)
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -710,7 +715,6 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         "should have the value 'No'" in {
           doc.select("#lettingsReliefValue-amount span.bold-medium").text shouldBe "£6,000"
         }
-
       }
     }
   }
@@ -721,6 +725,9 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       None,
       BigDecimal(10000),
       None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = Some(3000),
       BigDecimal(10000),
       BigDecimal(30000),
       true,
@@ -728,8 +735,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       false,
       None,
       Some("Bought"),
-      Some(true),
-      Some(1500))
+      Some(true)
+    )
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
@@ -772,14 +779,14 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       }
     }
 
-    "has a numeric output row worth when bought" should {
+    "has an amount output row for bought for less than worth value" which {
 
-      s"should have the question text '${commonMessages.worthWhenBought.question}'" in {
-        doc.select("#worthWhenBought-question").text shouldBe commonMessages.worthWhenBought.question
+      s"should have the question text '${propertiesMessages.worthWhenBought.question}'" in {
+        doc.select("#worthWhenBought-question").text shouldBe propertiesMessages.worthWhenBought.question
       }
 
-      "should have the value '£1,500'" in {
-        doc.select("#worthWhenBought-amount span.bold-medium").text shouldBe "£1,500"
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenBought-amount span.bold-medium").text shouldBe "£3,000"
       }
     }
   }
@@ -791,6 +798,9 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       None,
       BigDecimal(10000),
       None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
       true,
@@ -798,8 +808,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       true,
       Some(BigDecimal(5000)),
       None,
-      None,
-      None)
+      None
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -934,6 +944,9 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       None,
       BigDecimal(10000),
       None,
+      worthWhenInherited = Some(3000),
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
       false,
@@ -941,8 +954,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       false,
       None,
       Some("Inherited"),
-      None,
-      None)
+      None
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -997,6 +1010,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       }
     }
 
+    "has an amount output row for inherited value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenInherited.question}'" in {
+        doc.select("#worthWhenInherited-question").text shouldBe propertiesMessages.worthWhenInherited.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenInherited-amount span.bold-medium").text shouldBe "£3,000"
+      }
+    }
+
     "has a numeric output row for allowable losses remaining" in {
       doc.select("#allowableLossRemaining").isEmpty shouldBe true
     }
@@ -1039,6 +1063,9 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       None,
       BigDecimal(10000),
       None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = Some(3000),
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
       false,
@@ -1046,8 +1073,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       false,
       None,
       Some("Gifted"),
-      None,
-      None)
+      None
+    )
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
@@ -1087,6 +1114,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
       s"should have the value '${commonMessages.howBecameOwner.gifted}'" in {
         doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.gifted
+      }
+    }
+
+    "has an amount output row for gifted value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenGifted.question}'" in {
+        doc.select("#worthWhenGifted-question").text shouldBe propertiesMessages.worthWhenGifted.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenGifted-amount span.bold-medium").text shouldBe "£3,000"
       }
     }
   }

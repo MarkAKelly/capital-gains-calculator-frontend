@@ -6,23 +6,23 @@
 @(worthWhenGiftedForm: Form[WorthWhenGiftedModel], backLink: Option[String], homeLink: String, postAction: Call)(implicit request: Request[_])
 
 @resident_main_template(
-title = Messages("calc.resident.worthWhenGifted.question"),
-backLink = backLink,
-homeLink = homeLink,
-navTitle = Messages("calc.base.resident.properties.home")
-) {
+    title = Messages("calc.resident.properties.worthWhenGifted.question"),
+    backLink = backLink,
+    homeLink = homeLink,
+    navTitle = Messages("calc.base.resident.properties.home")
+    ) {
 
-@errorSummary(worthWhenGiftedForm, "amount")
+    @errorSummary(worthWhenGiftedForm, "amount")
 
-<h1 class="heading-large">@Messages("calc.resident.worthWhenGifted.question")</h1>
+    <h1 class="heading-large">@Messages("calc.resident.properties.worthWhenGifted.question")</h1>
 
-<p>@Messages("calc.resident.worthWhenGifted.additionalContent")</p>
+    <p>@Messages("calc.resident.properties.worthWhenGifted.additionalContent")</p>
 
-@form(action = postAction) {
+    @form(action = postAction) {
 
-@formInputMoney(worthWhenGiftedForm, "amount", Messages("calc.resident.worthWhenGifted.question"), hideLabel = true)
+        @formInputMoney(worthWhenGiftedForm, "amount", Messages("calc.resident.properties.worthWhenGifted.question"), hideLabel = true)
 
-<button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+        <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
 
-}
+    }
 }

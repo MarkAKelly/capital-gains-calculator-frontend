@@ -28,6 +28,9 @@ case class YourAnswersSummaryModel
   worthWhenSoldForLess: Option[BigDecimal],
   disposalCosts: BigDecimal,
   acquisitionValue: Option[BigDecimal],
+  worthWhenInherited: Option[BigDecimal],
+  worthWhenGaveAway: Option[BigDecimal],
+  worthWhenBoughtForLess: Option[BigDecimal],
   acquisitionCosts: BigDecimal,
   improvements: BigDecimal,
   givenAway: Boolean,
@@ -35,8 +38,7 @@ case class YourAnswersSummaryModel
   ownerBeforeAprilNineteenEightyTwo: Boolean,
   worthOnThirtyFirstMarchEightyTwo: Option[BigDecimal],
   howBecameOwner: Option[String],
-  boughtForLessThanWorth: Option[Boolean],
-  worthWhenBought: Option[BigDecimal]
+  boughtForLessThanWorth: Option[Boolean]
 )
 
 object YourAnswersSummaryModel {

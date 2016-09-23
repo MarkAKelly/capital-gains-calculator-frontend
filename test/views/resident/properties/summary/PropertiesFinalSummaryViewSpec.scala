@@ -37,6 +37,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       None,
       BigDecimal(10000),
       None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
       true,
@@ -44,8 +47,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       true,
       Some(BigDecimal(5000)),
       None,
-      None,
-      None)
+      None
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(false)),
@@ -531,6 +534,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       Some(500),
       BigDecimal(10000),
       Some(BigDecimal(100000)),
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
       false,
@@ -538,8 +544,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       false,
       None,
       Some("Bought"),
-      Some(false),
-      None)
+      Some(false)
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -949,6 +955,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       Some(500),
       BigDecimal(10000),
       None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = Some(3000),
       BigDecimal(10000),
       BigDecimal(30000),
       false,
@@ -956,8 +965,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       false,
       None,
       Some("Bought"),
-      Some(true),
-      Some(1500))
+      Some(true)
+    )
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -1020,14 +1029,14 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
     }
 
-    "has a numeric output row worth when bought" should {
+    "has a numeric output row for the bought for less than worth value" which {
 
-      s"should have the question text '${commonMessages.worthWhenBought.question}'" in {
-        doc.select("#worthWhenBought-question").text shouldBe commonMessages.worthWhenBought.question
+      s"should have the question text '${propertiesMessages.worthWhenBought.question}'" in {
+        doc.select("#worthWhenBought-question").text shouldBe propertiesMessages.worthWhenBought.question
       }
 
-      "should have the value '£1,500'" in {
-        doc.select("#worthWhenBought-amount span.bold-medium").text shouldBe "£1,500"
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenBought-amount span.bold-medium").text shouldBe "£3,000"
       }
 
       s"should have a change link to ${routes.GainController.worthWhenBought().url}" in {
@@ -1035,11 +1044,11 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
 
       "has the question as part of the link" in {
-        doc.select("#worthWhenBought-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.worthWhenBought.question}"
+        doc.select("#worthWhenBought-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${propertiesMessages.worthWhenBought.question}"
       }
 
       "has the question component of the link as visuallyhidden" in {
-        doc.select("#worthWhenBought-amount a span.visuallyhidden").text shouldBe commonMessages.worthWhenBought.question
+        doc.select("#worthWhenBought-amount a span.visuallyhidden").text shouldBe propertiesMessages.worthWhenBought.question
       }
     }
   }
@@ -1050,6 +1059,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       None,
       BigDecimal(10000),
       None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
       true,
@@ -1057,8 +1069,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       true,
       Some(BigDecimal(5000)),
       None,
-      None,
-      None)
+      None
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -1275,6 +1287,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       Some(500),
       BigDecimal(0),
       None,
+      worthWhenInherited = Some(3000),
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       BigDecimal(0),
       BigDecimal(0),
       false,
@@ -1282,8 +1297,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       false,
       None,
       Some("Inherited"),
-      None,
-      None)
+      None
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -1361,6 +1376,21 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
     }
 
+    "has a numeric output row for the inherited value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenInherited.question}'" in {
+        doc.select("#worthWhenInherited-question").text shouldBe propertiesMessages.worthWhenInherited.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenInherited-amount span.bold-medium").text shouldBe "£3,000"
+      }
+
+      s"should have a change link to ${routes.GainController.worthWhenInherited().url}" in {
+        doc.select("#worthWhenInherited-amount a").attr("href") shouldBe routes.GainController.worthWhenInherited().url
+      }
+    }
+
     "have a link" which {
 
       "should have a href attribute" in {
@@ -1407,6 +1437,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       None,
       BigDecimal(10000),
       None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
       true,
@@ -1414,8 +1447,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       true,
       Some(BigDecimal(5000)),
       None,
-      None,
-      None)
+      None
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -1487,6 +1520,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       None,
       BigDecimal(10000),
       None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = Some(3000),
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
       false,
@@ -1494,8 +1530,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       false,
       None,
       Some("Gifted"),
-      None,
-      None)
+      None
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -1592,6 +1628,21 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
     }
 
+    "has a numeric output row for the gifted value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenGifted.question}'" in {
+        doc.select("#worthWhenGifted-question").text shouldBe propertiesMessages.worthWhenGifted.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenGifted-amount span.bold-medium").text shouldBe "£3,000"
+      }
+
+      s"should have a change link to ${routes.GainController.worthWhenGifted().url}" in {
+        doc.select("#worthWhenGifted-amount a").attr("href") shouldBe routes.GainController.worthWhenGifted().url
+      }
+    }
+
     "display the save as PDF Button" which {
 
       "should render only one button" in {
@@ -1619,6 +1670,9 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       None,
       BigDecimal(10000),
       None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
       true,
@@ -1626,8 +1680,8 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       true,
       Some(BigDecimal(5000)),
       None,
-      None,
-      None)
+      None
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),

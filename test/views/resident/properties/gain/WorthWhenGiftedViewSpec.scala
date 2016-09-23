@@ -21,7 +21,7 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{gain => views}
 import forms.resident.properties.gain.WorthWhenGiftedForm._
-import assets.MessageLookup.{worthWhenGifted => messages}
+import assets.MessageLookup.Resident.Properties.{worthWhenGifted => messages}
 import play.api.mvc.Call
 
 class WorthWhenGiftedViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {

@@ -72,20 +72,24 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
   "Calling .deductionReport from the ReportController" when {
 
     "a 0 gain is returned" should {
-      lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
-        Some(BigDecimal(200000)),
-        None,
-        BigDecimal(10000),
-        Some(BigDecimal(100000)),
-        BigDecimal(10000),
-        BigDecimal(30000),
-        true,
-        Some(false),
-        true,
-        Some(BigDecimal(5000)),
-        Some("Bought"),
-        Some(false),
-        None)
+      lazy val gainAnswers = YourAnswersSummaryModel(
+        disposalDate = Dates.constructDate(10, 10, 2018),
+        disposalValue = Some(200000),
+        worthWhenSoldForLess = None,
+        disposalCosts = 10000,
+        acquisitionValue = Some(100000),
+        worthWhenInherited = None,
+        worthWhenGaveAway = None,
+        worthWhenBoughtForLess = None,
+        acquisitionCosts = 10000,
+        improvements = 30000,
+        givenAway = true,
+        sellForLess = Some(false),
+        ownerBeforeAprilNineteenEightyTwo = true,
+        worthOnThirtyFirstMarchEightyTwo = Some(5000),
+        howBecameOwner = Some("Bought"),
+        boughtForLessThanWorth = Some(false)
+      )
 
       lazy val deductionAnswers = ChargeableGainAnswers(
         Some(OtherPropertiesModel(true)),
@@ -140,20 +144,24 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
     }
 
     "a carried forward loss is returned with an invalid tax year" should {
-      lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
-        Some(30000),
-        None,
-        0,
-        Some(10000),
-        0,
-        0,
-        false,
-        Some(false),
-        false,
-        None,
-        Some("Bought"),
-        Some(false),
-        None)
+      lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(
+        disposalDate = Dates.constructDate(12, 1, 2016),
+        disposalValue = Some(30000),
+        worthWhenSoldForLess = None,
+        disposalCosts = 0,
+        acquisitionValue = Some(10000),
+        worthWhenInherited = None,
+        worthWhenGaveAway = None,
+        worthWhenBoughtForLess = None,
+        acquisitionCosts = 0,
+        improvements = 0,
+        givenAway = false,
+        sellForLess = Some(false),
+        ownerBeforeAprilNineteenEightyTwo = false,
+        worthOnThirtyFirstMarchEightyTwo =  None,
+        howBecameOwner = Some("Bought"),
+        boughtForLessThanWorth = Some(false)
+      )
 
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
         Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None,

@@ -370,16 +370,16 @@ calc.resident.howBecameOwner.inherited= Inherited it
 calc.resident.properties.worthOn.question = What was the property worth on 31 March 1982?
 
 ## Worth When Inherited messages
-calc.resident.worthWhenInherited.title = What was the property worth when you inherited it?
-calc.resident.worthWhenInherited.additionalContent = You can use a valuation from a surveyor or a property website.
+calc.resident.properties.worthWhenInherited.question = What was the property worth when you inherited it?
+calc.resident.properties.worthWhenInherited.additionalContent = You can use a valuation from a surveyor or a property website.
 
 ## Worth When Bought messages
 calc.resident.properties.worthWhenBought.question = What was the property worth when you bought it?
 calc.resident.properties.worthWhenBought.additionalContent = You can use a valuation from a surveyor or a property website.
 
 ## Worth When Gifted messages
-calc.resident.worthWhenGifted.question = What was the property worth when you got it as a gift?
-calc.resident.worthWhenGifted.additionalContent = You can use a valuation from a surveyor or a property website.
+calc.resident.properties.worthWhenGifted.question = What was the property worth when you got it as a gift?
+calc.resident.properties.worthWhenGifted.additionalContent = You can use a valuation from a surveyor or a property website.
 
 ## Acquisition Value messages
 calc.resident.acquisitionValue.title = How much did you pay for the property?

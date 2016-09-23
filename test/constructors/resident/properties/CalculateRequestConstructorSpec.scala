@@ -31,6 +31,9 @@ class CalculateRequestConstructorSpec extends UnitSpec {
         None,
         BigDecimal(0),
         Some(BigDecimal(500)),
+        worthWhenInherited = None,
+        worthWhenGaveAway = None,
+        worthWhenBoughtForLess = None,
         BigDecimal(100),
         BigDecimal(10),
         true,
@@ -38,8 +41,8 @@ class CalculateRequestConstructorSpec extends UnitSpec {
         true,
         Some(BigDecimal(5000)),
         Some("Bought"),
-        Some(false),
-        None)
+        Some(false)
+      )
 
       val result = CalculateRequestConstructor.totalGainRequestString(answers)
       result shouldBe s"?disposalValue=1000" +

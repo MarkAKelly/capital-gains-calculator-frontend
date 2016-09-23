@@ -37,13 +37,15 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       None,
       20,
       None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       40,
       50,
       true,
       None,
       true,
       Some(BigDecimal(5000)),
-      None,
       None,
       None
     )
@@ -219,6 +221,9 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       Some(500),
       20,
       Some(30),
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       40,
       50,
       false,
@@ -226,8 +231,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       false,
       None,
       Some("Bought"),
-      Some(false),
-      None
+      Some(false)
     )
 
     lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)
@@ -344,6 +348,9 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       Some(500),
       20,
       None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = Some(3000),
       40,
       50,
       false,
@@ -351,8 +358,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       false,
       None,
       Some("Bought"),
-      Some(true),
-      Some(1500)
+      Some(true)
     )
     lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
@@ -368,14 +374,14 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       }
     }
 
-    "has a numeric output row worth when bought" should {
+    "has an amount output row for bought for less than worth value" which {
 
-      s"should have the question text '${commonMessages.worthWhenBought.question}'" in {
-        doc.select("#worthWhenBought-question").text shouldBe commonMessages.worthWhenBought.question
+      s"should have the question text '${propertiesMessages.worthWhenBought.question}'" in {
+        doc.select("#worthWhenBought-question").text shouldBe propertiesMessages.worthWhenBought.question
       }
 
-      "should have the value '£1,500'" in {
-        doc.select("#worthWhenBought-amount span.bold-medium").text shouldBe "£1,500"
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenBought-amount span.bold-medium").text shouldBe "£3,000"
       }
     }
   }
@@ -390,6 +396,9 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       Some(500),
       20,
       None,
+      worthWhenInherited = Some(3000),
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       40,
       50,
       false,
@@ -397,7 +406,6 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       false,
       None,
       Some("Inherited"),
-      None,
       None
     )
     lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)
@@ -413,6 +421,18 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
         doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.inherited
       }
     }
+
+    "has an amount output row for inherited value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenInherited.question}'" in {
+        doc.select("#worthWhenInherited-question").text shouldBe propertiesMessages.worthWhenInherited.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenInherited-amount span.bold-medium").text shouldBe "£3,000"
+      }
+    }
+
   }
 
   "Summary when supplied with a gifted property" should {
@@ -425,6 +445,9 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       Some(500),
       20,
       None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = Some(3000),
+      worthWhenBoughtForLess = None,
       40,
       50,
       false,
@@ -432,7 +455,6 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       false,
       None,
       Some("Gifted"),
-      None,
       None
     )
     lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)
@@ -448,6 +470,17 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
         doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.gifted
       }
     }
+
+    "has an amount output row for gifted value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenGifted.question}'" in {
+        doc.select("#worthWhenGifted-question").text shouldBe propertiesMessages.worthWhenGifted.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenGifted-amount span.bold-medium").text shouldBe "£3,000"
+      }
+    }
   }
 
   "Summary for Sell for Loss with option No" should {
@@ -460,6 +493,9 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       None,
       20,
       None,
+      worthWhenInherited = Some(3000),
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       40,
       50,
       false,
@@ -467,7 +503,6 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       false,
       None,
       Some("Inherited"),
-      None,
       None
     )
     lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)

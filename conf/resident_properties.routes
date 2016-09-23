@@ -67,9 +67,6 @@ POST    /worth-when-inherited             controllers.resident.properties.GainCo
 GET     /worth-when-gifted                controllers.resident.properties.GainController.worthWhenGifted
 POST    /worth-when-gifted                controllers.resident.properties.GainController.submitWorthWhenGifted
 
-#Worth When Bought Routes
-GET     /worth-when-bought                controllers.resident.properties.GainController.worthWhenBought
-
 #Acquisition Value or Market Value Routes
 GET     /acquisition-value                controllers.resident.properties.GainController.acquisitionValue
 POST    /acquisition-value                controllers.resident.properties.GainController.submitAcquisitionValue
