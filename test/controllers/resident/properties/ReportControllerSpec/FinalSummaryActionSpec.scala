@@ -81,9 +81,11 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
   "Calling .finalSummaryReport from the ReportController" when {
 
     "a positive taxable gain is returned" should {
-      lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
+      lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(
+        Dates.constructDate(12, 1, 2016),
         Some(30000),
         None,
+        worthWhenGaveAway = None,
         0,
         Some(10000),
         worthWhenInherited = None,
@@ -136,9 +138,11 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
     }
 
     "a positive taxable gain is returned with an invalid tax year and two tax rates" should {
-      lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
+      lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(
+        Dates.constructDate(12, 1, 2016),
         Some(30000),
         Some(500),
+        worthWhenGaveAway = None,
         0,
         Some(10000),
         worthWhenInherited = None,

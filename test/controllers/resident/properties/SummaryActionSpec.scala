@@ -83,9 +83,11 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
   "Calling .summary from the SummaryController" when {
 
     "a negative total gain is returned" should {
-      lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
+      lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(
+        Dates.constructDate(12, 1, 2016),
         Some(3000),
         None,
+        worthWhenGaveAway = None,
         10,
         Some(5000),
         worthWhenInherited = None,
@@ -134,6 +136,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
         Some(3000),
         Some(500),
+        worthWhenGaveAway = None,
         10,
         Some(5000),
         worthWhenInherited = None,
@@ -186,6 +189,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
         Some(3000),
         None,
+        worthWhenGaveAway = None,
         10,
         Some(5000),
         worthWhenInherited = None,
@@ -239,6 +243,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
         Some(3000),
         Some(500),
+        worthWhenGaveAway = None,
         10,
         Some(5000),
         worthWhenInherited = None,
@@ -289,9 +294,11 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     }
 
     "a negative taxable gain is returned with other properties disposed of but an allowable loss of 0" should {
-      lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
+      lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(
+        Dates.constructDate(12, 1, 2016),
         Some(3000),
         None,
+        worthWhenGaveAway = None,
         10,
         Some(5000),
         worthWhenInherited = None,
@@ -342,9 +349,11 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     }
 
     "a positive taxable gain is returned with no other" should {
-      lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
+      lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(
+        Dates.constructDate(12, 1, 2016),
         Some(30000),
         None,
+        worthWhenGaveAway = None,
         0,
         Some(10000),
         worthWhenInherited = None,
@@ -402,6 +411,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
       Some(3000),
       None,
+      worthWhenGaveAway = None,
       10,
       Some(5000),
       worthWhenInherited = None,
@@ -448,6 +458,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
       Some(3000),
       None,
+      worthWhenGaveAway = None,
       10,
       Some(5000),
       worthWhenInherited = None,
@@ -494,6 +505,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
       Some(3000),
       None,
+      worthWhenGaveAway = None,
       10,
       Some(5000),
       worthWhenInherited = None,
@@ -542,6 +554,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
       Some(3000),
       None,
+      worthWhenGaveAway = None,
       10,
       Some(5000),
       worthWhenInherited = None,
@@ -590,6 +603,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
       Some(30000),
       None,
+      worthWhenGaveAway = None,
       0,
       Some(10000),
       worthWhenInherited = None,
@@ -640,6 +654,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
       Some(30000),
       Some(500),
+      worthWhenGaveAway = None,
       0,
       Some(10000),
       worthWhenInherited = None,
@@ -690,6 +705,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
       Some(30000),
       None,
+      worthWhenGaveAway = None,
       0,
       Some(10000),
       worthWhenInherited = None,
@@ -741,6 +757,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
       Some(30000),
       Some(500),
+      worthWhenGaveAway = None,
       0,
       Some(10000),
       worthWhenInherited = None,
