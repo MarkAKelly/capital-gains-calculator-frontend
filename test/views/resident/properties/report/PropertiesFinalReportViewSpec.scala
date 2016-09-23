@@ -642,7 +642,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       None,
       worthWhenInherited = None,
       worthWhenGaveAway = None,
-      worthWhenBoughtForLess = Some(2000),
+      worthWhenBoughtForLess = Some(3000),
       BigDecimal(10000),
       BigDecimal(30000),
       false,
@@ -697,6 +697,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         doc.select("#boughtForLessThanWorth-option span.bold-medium").text shouldBe "Yes"
       }
     }
+
+    "has an amount output row for bought for less than worth value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenBought.question}'" in {
+        doc.select("#worthWhenBought-question").text shouldBe propertiesMessages.worthWhenBought.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenBought-amount span.bold-medium").text shouldBe "£3,000"
+      }
+    }
   }
 
 
@@ -709,7 +720,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       None,
       BigDecimal(10000),
       None,
-      worthWhenInherited = None,
+      worthWhenInherited = Some(3000),
       worthWhenGaveAway = None,
       worthWhenBoughtForLess = None,
       BigDecimal(10000),
@@ -778,6 +789,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.inherited
       }
     }
+
+    "has an amount output row for inherited value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenInherited.question}'" in {
+        doc.select("#worthWhenInherited-question").text shouldBe propertiesMessages.worthWhenInherited.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenInherited-amount span.bold-medium").text shouldBe "£3,000"
+      }
+    }
   }
 
   "Final Summary when supplied with a gifted property" which {
@@ -843,6 +865,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
       s"should have the value '${commonMessages.howBecameOwner.gifted}'" in {
         doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.gifted
+      }
+    }
+
+    "has an amount output row for gifted value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenGifted.question}'" in {
+        doc.select("#worthWhenGifted-question").text shouldBe propertiesMessages.worthWhenGifted.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenGifted-amount span.bold-medium").text shouldBe "£3,000"
       }
     }
   }

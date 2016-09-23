@@ -1025,6 +1025,21 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
         doc.select("#boughtForLessThanWorth-option a span.visuallyhidden").text shouldBe commonMessages.boughtForLessThanWorth.title
       }
     }
+
+    "has a numeric output row for the bought for less than worth value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenBought.question}'" in {
+        doc.select("#worthWhenBought-question").text shouldBe propertiesMessages.worthWhenBought.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenBought-amount span.bold-medium").text shouldBe "£3,000"
+      }
+
+      s"should have a change link to ${routes.GainController.worthWhenBought().url}" in {
+        doc.select("#worthWhenBought-amount a").attr("href") shouldBe routes.GainController.worthWhenBought().url
+      }
+    }
   }
 
   "Final Summary view with a calculation that returns tax on both side of the rate boundary" should {
@@ -1348,6 +1363,21 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
     }
 
+    "has a numeric output row for the inherited value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenInherited.question}'" in {
+        doc.select("#worthWhenInherited-question").text shouldBe propertiesMessages.worthWhenInherited.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenInherited-amount span.bold-medium").text shouldBe "£3,000"
+      }
+
+      s"should have a change link to ${routes.GainController.worthWhenInherited().url}" in {
+        doc.select("#worthWhenInherited-amount a").attr("href") shouldBe routes.GainController.worthWhenInherited().url
+      }
+    }
+
     "have a link" which {
 
       "should have a href attribute" in {
@@ -1580,6 +1610,21 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       "has the question component of the link as visuallyhidden" in {
         doc.select("#howBecameOwner-option a span.visuallyhidden").text shouldBe
           commonMessages.howBecameOwner.title
+      }
+    }
+
+    "has a numeric output row for the gifted value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenGifted.question}'" in {
+        doc.select("#worthWhenGifted-question").text shouldBe propertiesMessages.worthWhenGifted.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenGifted-amount span.bold-medium").text shouldBe "£3,000"
+      }
+
+      s"should have a change link to ${routes.GainController.worthWhenGifted().url}" in {
+        doc.select("#worthWhenGifted-amount a").attr("href") shouldBe routes.GainController.worthWhenGifted().url
       }
     }
 
