@@ -32,7 +32,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
         BigDecimal(0),
         Some(BigDecimal(500)),
         worthWhenInherited = None,
-        worthWhenGaveAway = None,
+        worthWhenGifted = None,
         worthWhenBoughtForLess = None,
         BigDecimal(100),
         BigDecimal(10),

@@ -91,7 +91,7 @@
         }
 
         @{if (!answers.ownerBeforeAprilNineteenEightyTwo && answers.howBecameOwner.get.equals("Gifted"))
-            summaryNumericRowHelper("worthWhenGifted", Messages("calc.resident.properties.worthWhenGifted.question"), answers.worthWhenGaveAway.get, None)
+            summaryNumericRowHelper("worthWhenGifted", Messages("calc.resident.properties.worthWhenGifted.question"), answers.worthWhenGifted.get, None)
         }
 
         @{if (!answers.ownerBeforeAprilNineteenEightyTwo && answers.howBecameOwner.get.equals("Inherited"))

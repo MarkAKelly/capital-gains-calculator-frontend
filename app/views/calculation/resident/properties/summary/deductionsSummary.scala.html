@@ -202,7 +202,7 @@ articleLayout = false
     }
 
     @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Gifted"))
-        summaryNumericRowHelper("worthWhenGifted", Messages("calc.resident.properties.worthWhenGifted.question"),gainAnswers.worthWhenGaveAway.get, Some(gainRoutes.worthWhenGifted().toString))
+        summaryNumericRowHelper("worthWhenGifted", Messages("calc.resident.properties.worthWhenGifted.question"),gainAnswers.worthWhenGifted.get, Some(gainRoutes.worthWhenGifted().toString))
     }
 
     @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Inherited"))
