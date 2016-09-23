@@ -22,6 +22,16 @@ GET     /worth-when-sold                  controllers.resident.shares.GainContro
 GET     /disposal-costs                   controllers.resident.shares.GainController.disposalCosts
 POST    /disposal-costs                   controllers.resident.shares.GainController.submitDisposalCosts
 
+#Owned Before 1 April 1982 Routes
+GET     /owned-before-april-first-nineteen-eighty-two    controllers.resident.shares.GainController.ownedBeforeEightyTwo
+POST    /owned-before-april-first-nineteen-eighty-two    controllers.resident.shares.GainController.submitOwnedBeforeEightyTwo
+
+#Worth on 31 March 1982 Routes
+GET     /worth-on-thirty-first-march-nineteen-eighty-two controllers.resident.shares.GainController.worthOnMarchEightyTwo
+
+#Did you Inherit the Shares Routes
+GET     /did-you-inherit-them             controllers.resident.shares.GainController.didYouInheritThem
+
 #Acquisition Value or Market Value Routes
 GET     /acquisition-value                controllers.resident.shares.GainController.acquisitionValue
 POST    /acquisition-value                controllers.resident.shares.GainController.submitAcquisitionValue

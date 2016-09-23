@@ -110,6 +110,12 @@ object MessageLookup {
 
       }
 
+      //############ Owned Before 1982 messages #################//
+      object OwnedBeforeEightyTwoMessages {
+        val title = "Did you own the shares before 1 April 1982?"
+        val errorNoSelect = "Tell us if you owned the shares before 1 April 1982"
+      }
+
       //############ Sell For Less messages #################//
       object sellForLess {
         val title = "Did you sell the shares for less than they were worth to help the buyer?"

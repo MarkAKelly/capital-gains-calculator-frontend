@@ -571,6 +571,11 @@ calc.resident.shares.sellForLess.noSelectError = Tell us if you sold the shares 
 calc.resident.shares.disposalCosts.question = How much did you pay in costs when you sold or gave away the shares?
 calc.resident.shares.disposalCosts.helpText = For example, stockbroker fees
 
+
+## Owned Before 1982 Messages
+calc.resident.shares.ownedBeforeEightyTwo.title = Did you own the shares before 1 April 1982?
+calc.resident.shares.ownedBeforeEightyTwo.noSelectError = Tell us if you owned the shares before 1 April 1982
+
 ## Acquisition Value messages
 calc.resident.shares.acquisitionValue.question = How much did you pay for the shares?
 calc.resident.shares.acquisitionValue.bulletListTitle = Put the market value of the shares instead if you:
