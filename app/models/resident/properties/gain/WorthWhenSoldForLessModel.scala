@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package models.resident.properties
+package models.resident.properties.gain
 
 import play.api.libs.json.Json
 
-case class SellForLessModel (sellForLess: Boolean)
+case class WorthWhenSoldForLessModel(amount: BigDecimal)
 
-object SellForLessModel {
-  implicit val format = Json.format[SellForLessModel]
+object WorthWhenSoldForLessModel {
+  implicit val format = Json.format[WorthWhenSoldForLessModel]
 }

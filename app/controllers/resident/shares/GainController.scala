@@ -32,6 +32,7 @@ import forms.resident.DisposalValueForm._
 import forms.resident.AcquisitionCostsForm._
 import forms.resident.AcquisitionValueForm._
 import forms.resident.shares.OwnedBeforeEightyTwoForm._
+import forms.resident.shares.SellForLessForm._
 import models.resident._
 import common.{Dates, TaxDates}
 import models.resident.shares.OwnedBeforeEightyTwoModel
@@ -67,7 +68,7 @@ trait GainController extends FeatureLock {
 
     def routeRequest(taxYearResult: Option[TaxYearModel]): Future[Result] = {
       if (taxYearResult.isDefined && !taxYearResult.get.isValidYear) Future.successful(Redirect(routes.GainController.outsideTaxYears()))
-      else Future.successful(Redirect(routes.GainController.disposalValue()))
+      else Future.successful(Redirect(routes.GainController.sellForLess()))
     }
 
     disposalDateForm.bindFromRequest.fold(
@@ -81,6 +82,33 @@ trait GainController extends FeatureLock {
       }
     )
   }
+
+  //################ Sell for Less Actions ######################
+  val sellForLess = FeatureLockForRTTShares.async { implicit request =>
+      calcConnector.fetchAndGetFormData[SellForLessModel](keystoreKeys.sellForLess).map {
+        case Some(data) => Ok(views.sellForLess(sellForLessForm.fill(data), homeLink))
+        case None => Ok(views.sellForLess(sellForLessForm, homeLink))
+    }
+  }
+
+  val submitSellForLess = FeatureLockForRTTShares.async { implicit request =>
+    sellForLessForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.sellForLess(errors, homeLink))),
+      success => {
+        calcConnector.saveFormData[SellForLessModel](keystoreKeys.sellForLess, success)
+        success.sellForLess match {
+          case true => Future.successful(Redirect(routes.GainController.worthWhenSold()))
+          case _ => Future.successful(Redirect(routes.GainController.disposalValue()))
+        }
+      }
+    )
+  }
+
+  //################ Worth When Sold Actions ######################
+  val worthWhenSold = FeatureLockForRTT.async { implicit request =>
+    TODO.apply(request)
+  }
+
 
   //################ Outside Tax Years Actions ######################
   val outsideTaxYears = FeatureLockForRTTShares.async { implicit request =>

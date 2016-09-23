@@ -16,6 +16,7 @@
 
 package views.resident.properties.report
 
+import assets.MessageLookup.Resident.{Properties => propertiesMessages}
 import common.Dates
 import controllers.helpers.FakeRequestHelper
 import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, PreviousTaxableGainsModel}
@@ -33,8 +34,12 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2015),
       None,
+      None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
       true,
@@ -42,7 +47,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       true,
       Some(BigDecimal(5000)),
       None,
-      None)
+      None
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -286,17 +292,6 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         }
       }
 
-      "has a numeric output row for the Acquisition Value" which {
-
-        s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
-          doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
-        }
-
-        "should have the value '£100,000'" in {
-          doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£100,000"
-        }
-      }
-
       "has a numeric output row for the Acquisition Costs" which {
 
         s"should have the question text '${commonMessages.acquisitionCosts.title}'" in {
@@ -414,8 +409,12 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       None,
+      Some(500),
       BigDecimal(10000),
-      BigDecimal(100000),
+      Some(BigDecimal(100000)),
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
       false,
@@ -423,7 +422,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       false,
       None,
       Some("Bought"),
-      Some(false))
+      Some(false)
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -491,12 +491,23 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
     "has an option output row for sell for less" which {
 
-      s"should have the question text '${commonMessages.sellForLess.title}'" in {
-        doc.select("#sellForLess-question").text shouldBe commonMessages.sellForLess.title
+      s"should have the question text '${commonMessages.Resident.Properties.sellForLess.title}'" in {
+        doc.select("#sellForLess-question").text shouldBe commonMessages.Resident.Properties.sellForLess.title
       }
 
       "should have the value 'Yes'" in {
         doc.select("#sellForLess-option span.bold-medium").text shouldBe "Yes"
+      }
+    }
+
+    "has an amount output row for worth when sold for less" which {
+
+      s"should have the question text ${propertiesMessages.WorthWhenSoldForLess.question}" in {
+        doc.select("#worthWhenSoldForLess-question").text shouldBe propertiesMessages.WorthWhenSoldForLess.question
+      }
+
+      "should have the value £500" in {
+        doc.select("#worthWhenSoldForLess-amount span.bold-medium").text shouldBe "£500"
       }
     }
 
@@ -530,6 +541,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
       "should have the value 'No'" in {
         doc.select("#boughtForLessThanWorth-option span.bold-medium").text shouldBe "No"
+      }
+    }
+
+    "has a numeric output row for the Acquisition Value" which {
+
+      s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
+        doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
+      }
+
+      "should have the value '£100,000'" in {
+        doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£100,000"
       }
     }
 
@@ -617,8 +639,12 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       None,
+      Some(500),
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = Some(3000),
       BigDecimal(10000),
       BigDecimal(30000),
       false,
@@ -626,7 +652,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       false,
       None,
       Some("Bought"),
-      Some(true))
+      Some(true)
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -673,6 +700,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         doc.select("#boughtForLessThanWorth-option span.bold-medium").text shouldBe "Yes"
       }
     }
+
+    "has an amount output row for bought for less than worth value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenBought.question}'" in {
+        doc.select("#worthWhenBought-question").text shouldBe propertiesMessages.worthWhenBought.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenBought-amount span.bold-medium").text shouldBe "£3,000"
+      }
+    }
   }
 
 
@@ -682,8 +720,12 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       Some(BigDecimal(200000)),
+      None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
+      worthWhenInherited = Some(3000),
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
       false,
@@ -691,7 +733,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       false,
       None,
       Some("Inherited"),
-      None)
+      None
+    )
 
 
     lazy val deductionAnswers = ChargeableGainAnswers(
@@ -750,6 +793,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.inherited
       }
     }
+
+    "has an amount output row for inherited value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenInherited.question}'" in {
+        doc.select("#worthWhenInherited-question").text shouldBe propertiesMessages.worthWhenInherited.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenInherited-amount span.bold-medium").text shouldBe "£3,000"
+      }
+    }
   }
 
   "Final Summary when supplied with a gifted property" which {
@@ -757,8 +811,12 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       Some(BigDecimal(200000)),
+      None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = Some(3000),
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
       false,
@@ -766,7 +824,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       false,
       None,
       Some("Gifted"),
-      None)
+      None
+    )
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -813,6 +872,17 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.gifted
       }
     }
+
+    "has an amount output row for gifted value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenGifted.question}'" in {
+        doc.select("#worthWhenGifted-question").text shouldBe propertiesMessages.worthWhenGifted.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenGifted-amount span.bold-medium").text shouldBe "£3,000"
+      }
+    }
   }
 
 
@@ -820,8 +890,12 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
       lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2015),
         Some(BigDecimal(200000)),
+        None,
         BigDecimal(10000),
-        BigDecimal(100000),
+        None,
+        worthWhenInherited = Some(5000),
+        worthWhenGaveAway = None,
+        worthWhenBoughtForLess = None,
         BigDecimal(10000),
         BigDecimal(30000),
         false,
@@ -829,7 +903,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         false,
         None,
         Some("Inherited"),
-        None)
+        None
+      )
 
       lazy val deductionAnswers = ChargeableGainAnswers(
         Some(OtherPropertiesModel(true)),
@@ -873,8 +948,8 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
     "has an option output row for sell for less" which {
 
-      s"should have the question text '${commonMessages.sellForLess.title}'" in {
-        doc.select("#sellForLess-question").text shouldBe commonMessages.sellForLess.title
+      s"should have the question text '${commonMessages.Resident.Properties.sellForLess.title}'" in {
+        doc.select("#sellForLess-question").text shouldBe commonMessages.Resident.Properties.sellForLess.title
       }
 
       "should have the value 'No'" in {

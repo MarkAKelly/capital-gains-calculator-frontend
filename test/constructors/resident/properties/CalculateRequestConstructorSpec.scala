@@ -28,8 +28,12 @@ class CalculateRequestConstructorSpec extends UnitSpec {
     "return a valid url variable string" in {
       val answers = YourAnswersSummaryModel(Dates.constructDate(10, 2, 2016),
         Some(BigDecimal(1000)),
+        None,
         BigDecimal(0),
-        BigDecimal(500),
+        Some(BigDecimal(500)),
+        worthWhenInherited = None,
+        worthWhenGaveAway = None,
+        worthWhenBoughtForLess = None,
         BigDecimal(100),
         BigDecimal(10),
         true,
@@ -37,7 +41,8 @@ class CalculateRequestConstructorSpec extends UnitSpec {
         true,
         Some(BigDecimal(5000)),
         Some("Bought"),
-        Some(false))
+        Some(false)
+      )
 
       val result = CalculateRequestConstructor.totalGainRequestString(answers)
       result shouldBe s"?disposalValue=1000" +

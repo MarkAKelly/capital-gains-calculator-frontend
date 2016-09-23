@@ -42,8 +42,8 @@ object MessageLookup {
 
     object Properties {
 
-      object PropertyWorthWhenSold {
-        val title = "What was the property worth when you sold it?"
+      object WorthWhenSoldForLess {
+        val question = "What was the property worth when you sold it?"
         val paragraphText = "You can use a valuation from a surveyor or a property website."
       }
       
@@ -60,6 +60,24 @@ object MessageLookup {
         val question = "What was the property worth on 31 March 1982?"
       }
 
+      //############ Worth When Inherited messages #################//
+      object worthWhenInherited {
+        val question = "What was the property worth when you inherited it?"
+        val additionalContent = "You can use a valuation from a surveyor or a property website."
+      }
+
+      //############ Worth When Gifted messages #################//
+      object worthWhenGifted {
+        val question = "What was the property worth when you got it as a gift?"
+        val additionalContent = "You can use a valuation from a surveyor or a property website."
+      }
+
+      //############ Worth When Bought messages #################//
+      object worthWhenBought {
+        val question = "What was the property worth when you bought it?"
+        val additionalContent = "You can use a valuation from a surveyor or a property website."
+      }
+
       object improvementsView {
         val question = "How much have you spent on improvements since you became the property owner?"
         val label = "How much have you spent on improvements since you became the property owner?"
@@ -68,6 +86,11 @@ object MessageLookup {
         val improvementsHelpButton = "Show me an example"
         val improvementsAdditionalContentOne = "Replacing a basic kitchen or bathroom with a luxury version is normally considered an improvement."
         val improvementsAdditionalContentTwo = "But replacing them with something of a similar standard is normally not an improvement."
+      }
+
+      //############ Sell For Less messages #################//
+      object sellForLess {
+        val title = "Did you sell the property for less than it was worth to help the buyer?"
       }
     }
 
@@ -87,9 +110,16 @@ object MessageLookup {
 
       }
 
+      //############ Owned Before 1982 messages #################//
       object OwnedBeforeEightyTwoMessages {
         val title = "Did you own the shares before 1 April 1982?"
         val errorNoSelect = "Tell us if you owned the shares before 1 April 1982"
+      }
+
+      //############ Sell For Less messages #################//
+      object sellForLess {
+        val title = "Did you sell the shares for less than they were worth to help the buyer?"
+        val errorSelect = s"Tell us if you sold the shares for less than they were worth to help the buyer?"
       }
     }
   }

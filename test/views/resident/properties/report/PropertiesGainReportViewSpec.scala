@@ -16,6 +16,7 @@
 
 package views.resident.properties.report
 
+import assets.MessageLookup.Resident.{Properties => propertiesMessages}
 import assets.{MessageLookup => commonMessages}
 import assets.MessageLookup.{summaryPage => messages}
 import common.Dates._
@@ -33,8 +34,12 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 1990),
       None,
+      None,
       20,
-      30,
+      None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       40,
       50,
       true,
@@ -178,17 +183,6 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
         }
       }
 
-      "has a numeric output row for the Acquisition Value" which {
-
-        s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
-          doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
-        }
-
-        "should have the value '£30'" in {
-          doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£30"
-        }
-      }
-
       "has a numeric output row for the Acquisition Costs" which {
 
         s"should have the question text '${commonMessages.acquisitionCosts.title}'" in {
@@ -224,8 +218,12 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
       None,
+      Some(500),
       20,
-      30,
+      Some(30),
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       40,
       50,
       false,
@@ -264,12 +262,23 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
 
     "has an option output row for sell for less" which {
 
-      s"should have the question text '${commonMessages.sellForLess.title}'" in {
-        doc.select("#sellForLess-question").text shouldBe commonMessages.sellForLess.title
+      s"should have the question text '${commonMessages.Resident.Properties.sellForLess.title}'" in {
+        doc.select("#sellForLess-question").text shouldBe commonMessages.Resident.Properties.sellForLess.title
       }
 
       "should have the value 'Yes'" in {
         doc.select("#sellForLess-option span.bold-medium").text shouldBe "Yes"
+      }
+    }
+
+    "has an amount output row for worth when sold for less" which {
+
+      s"should have the question text ${propertiesMessages.WorthWhenSoldForLess.question}" in {
+        doc.select("#worthWhenSoldForLess-question").text shouldBe propertiesMessages.WorthWhenSoldForLess.question
+      }
+
+      "should have the value £500" in {
+        doc.select("#worthWhenSoldForLess-amount span.bold-medium").text shouldBe "£500"
       }
     }
 
@@ -306,6 +315,17 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       }
     }
 
+    "has a numeric output row for the Acquisition Value" which {
+
+      s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
+        doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
+      }
+
+      "should have the value '£30'" in {
+        doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£30"
+      }
+    }
+
     "has a numeric output row for the Improvements" which {
 
       s"should have the question text '${commonMessages.Resident.Properties.improvementsView.question}'" in {
@@ -325,8 +345,12 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
       None,
+      Some(500),
       20,
-      30,
+      None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = Some(3000),
       40,
       50,
       false,
@@ -349,6 +373,17 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
         doc.select("#boughtForLessThanWorth-option span.bold-medium").text shouldBe "Yes"
       }
     }
+
+    "has an amount output row for bought for less than worth value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenBought.question}'" in {
+        doc.select("#worthWhenBought-question").text shouldBe propertiesMessages.worthWhenBought.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenBought-amount span.bold-medium").text shouldBe "£3,000"
+      }
+    }
   }
 
   "Summary when supplied with an inherited property" should {
@@ -358,8 +393,12 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
       None,
+      Some(500),
       20,
-      30,
+      None,
+      worthWhenInherited = Some(3000),
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       40,
       50,
       false,
@@ -382,6 +421,18 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
         doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.inherited
       }
     }
+
+    "has an amount output row for inherited value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenInherited.question}'" in {
+        doc.select("#worthWhenInherited-question").text shouldBe propertiesMessages.worthWhenInherited.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenInherited-amount span.bold-medium").text shouldBe "£3,000"
+      }
+    }
+
   }
 
   "Summary when supplied with a gifted property" should {
@@ -391,8 +442,12 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
       None,
+      Some(500),
       20,
-      30,
+      None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = Some(3000),
+      worthWhenBoughtForLess = None,
       40,
       50,
       false,
@@ -415,6 +470,17 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
         doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.gifted
       }
     }
+
+    "has an amount output row for gifted value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenGifted.question}'" in {
+        doc.select("#worthWhenGifted-question").text shouldBe propertiesMessages.worthWhenGifted.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenGifted-amount span.bold-medium").text shouldBe "£3,000"
+      }
+    }
   }
 
   "Summary for Sell for Loss with option No" should {
@@ -424,8 +490,12 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
       Some(10),
+      None,
       20,
-      30,
+      None,
+      worthWhenInherited = Some(3000),
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       40,
       50,
       false,
@@ -441,8 +511,8 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
 
     "has an option output row for sell for less" which {
 
-      s"should have the question text '${commonMessages.sellForLess.title}'" in {
-        doc.select("#sellForLess-question").text shouldBe commonMessages.sellForLess.title
+      s"should have the question text '${commonMessages.Resident.Properties.sellForLess.title}'" in {
+        doc.select("#sellForLess-question").text shouldBe commonMessages.Resident.Properties.sellForLess.title
       }
 
       "should have the value 'No'" in {
