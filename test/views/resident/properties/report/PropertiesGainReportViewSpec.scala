@@ -16,6 +16,7 @@
 
 package views.resident.properties.report
 
+import assets.MessageLookup.Resident.{Properties => propertiesMessages}
 import assets.{MessageLookup => commonMessages}
 import assets.MessageLookup.{summaryPage => messages}
 import common.Dates._
@@ -32,14 +33,16 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
 
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 1990),
-      10,
+      None,
+      None,
       20,
-      30,
+      None,
       40,
       50,
       true,
       None,
       true,
+      Some(BigDecimal(5000)),
       None,
       None,
       None
@@ -145,18 +148,6 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
         }
       }
 
-
-      "has a numeric output row for the Disposal Value" which {
-
-        s"should have the question text '${commonMessages.disposalValue.question}'" in {
-          doc.select("#disposalValue-question").text shouldBe commonMessages.disposalValue.question
-        }
-
-        "should have the value '£10'" in {
-          doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£10"
-        }
-      }
-
       "has a numeric output row for the Disposal Costs" which {
 
         s"should have the question text '${commonMessages.disposalCosts.title}'" in {
@@ -179,14 +170,14 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
         }
       }
 
-      "has a numeric output row for the Acquisition Value" which {
+      "has a numeric output row for the Worth Before April Nineteen Eighty Two" which {
 
-        s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
-          doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
+        s"should have the question text '${commonMessages.Resident.Properties.worthOn.question}'" in {
+          doc.select("#worthOn-question").text shouldBe commonMessages.Resident.Properties.worthOn.question
         }
 
-        "should have the value '£30'" in {
-          doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£30"
+        "should have the value '£5,000'" in {
+          doc.select("#worthOn-amount span.bold-medium").text shouldBe "£5,000"
         }
       }
 
@@ -224,14 +215,16 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
 
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
-      10,
+      None,
+      Some(500),
       20,
-      30,
+      Some(30),
       40,
       50,
       false,
       Some(true),
       false,
+      None,
       Some("Bought"),
       Some(false),
       None
@@ -274,6 +267,17 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       }
     }
 
+    "has an amount output row for worth when sold for less" which {
+
+      s"should have the question text ${propertiesMessages.WorthWhenSoldForLess.question}" in {
+        doc.select("#worthWhenSoldForLess-question").text shouldBe propertiesMessages.WorthWhenSoldForLess.question
+      }
+
+      "should have the value £500" in {
+        doc.select("#worthWhenSoldForLess-amount span.bold-medium").text shouldBe "£500"
+      }
+    }
+
     "has an option output row for owner before april 1982" which {
 
       s"should have the question text '${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}'" in {
@@ -307,6 +311,17 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       }
     }
 
+    "has a numeric output row for the Acquisition Value" which {
+
+      s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
+        doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
+      }
+
+      "should have the value '£30'" in {
+        doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£30"
+      }
+    }
+
     "has a numeric output row for the Improvements" which {
 
       s"should have the question text '${commonMessages.Resident.Properties.improvementsView.question}'" in {
@@ -325,14 +340,16 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
 
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
-      10,
+      None,
+      Some(500),
       20,
-      30,
+      None,
       40,
       50,
       false,
       Some(true),
       false,
+      None,
       Some("Bought"),
       Some(true),
       Some(1500)
@@ -369,14 +386,16 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
 
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
-      10,
+      None,
+      Some(500),
       20,
-      30,
+      None,
       40,
       50,
       false,
       Some(true),
       false,
+      None,
       Some("Inherited"),
       None,
       None
@@ -402,14 +421,16 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
 
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
-      10,
+      None,
+      Some(500),
       20,
-      30,
+      None,
       40,
       50,
       false,
       Some(true),
       false,
+      None,
       Some("Gifted"),
       None,
       None
@@ -435,20 +456,23 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
 
     val testModel = YourAnswersSummaryModel(
       constructDate(12, 9, 2015),
-      10,
+      Some(10),
+      None,
       20,
-      30,
+      None,
       40,
       50,
       false,
       Some(false),
       false,
+      None,
       Some("Inherited"),
       None,
       None
     )
     lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
+
 
     "has an option output row for sell for less" which {
 
@@ -458,6 +482,17 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
 
       "should have the value 'No'" in {
         doc.select("#sellForLess-option span.bold-medium").text shouldBe "No"
+      }
+    }
+
+    "has a numeric output row for the Disposal Value" which {
+
+      s"should have the question text '${commonMessages.disposalValue.question}'" in {
+        doc.select("#disposalValue-question").text shouldBe commonMessages.disposalValue.question
+      }
+
+      "should have the value '£10'" in {
+        doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£10"
       }
     }
   }

@@ -73,17 +73,19 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
 
     "a 0 gain is returned" should {
       lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
-        BigDecimal(200000),
+        Some(BigDecimal(200000)),
+        None,
         BigDecimal(10000),
-        BigDecimal(100000),
+        Some(BigDecimal(100000)),
         BigDecimal(10000),
         BigDecimal(30000),
-        true,Some(false),
         true,
+        Some(false),
+        true,
+        Some(BigDecimal(5000)),
         Some("Bought"),
         Some(false),
         None)
-
 
       lazy val deductionAnswers = ChargeableGainAnswers(
         Some(OtherPropertiesModel(true)),
@@ -139,13 +141,16 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
 
     "a carried forward loss is returned with an invalid tax year" should {
       lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
-        30000,
+        Some(30000),
+        None,
         0,
-        10000,
+        Some(10000),
         0,
         0,
-        false,Some(false),
         false,
+        Some(false),
+        false,
+        None,
         Some("Bought"),
         Some(false),
         None)

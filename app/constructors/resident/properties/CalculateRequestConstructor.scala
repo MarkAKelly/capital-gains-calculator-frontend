@@ -23,9 +23,9 @@ import models.resident.properties.{ChargeableGainAnswers, YourAnswersSummaryMode
 object CalculateRequestConstructor {
 
   def totalGainRequestString (answers: YourAnswersSummaryModel): String = {
-      s"?disposalValue=${answers.disposalValue}" +
+      s"?disposalValue=${answers.disposalValue.get}" +
       s"&disposalCosts=${answers.disposalCosts}" +
-      s"&acquisitionValue=${answers.acquisitionValue}" +
+      s"&acquisitionValue=${answers.acquisitionValue.get}" +
       s"&acquisitionCosts=${answers.acquisitionCosts}" +
       s"&improvements=${answers.improvements}" +
       s"&disposalDate=${answers.disposalDate.format(requestFormatter)}"

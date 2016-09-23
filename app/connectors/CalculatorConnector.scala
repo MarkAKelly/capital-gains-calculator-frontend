@@ -189,20 +189,36 @@ trait CalculatorConnector {
   }
 
   def getPropertyGainAnswers(implicit hc: HeaderCarrier): Future[YourAnswersSummaryModel] = {
-    val acquisitionValue = fetchAndGetFormData[resident.AcquisitionValueModel](ResidentPropertyKeys.acquisitionValue).map(_.get.amount)
+    val acquisitionValue = fetchAndGetFormData[resident.AcquisitionValueModel](ResidentPropertyKeys.acquisitionValue).map{
+      case Some(data) => Some(data.amount)
+      case _ => None
+    }
     val disposalDate = fetchAndGetFormData[resident.DisposalDateModel](ResidentPropertyKeys.disposalDate).map(formData =>
       constructDate(formData.get.day, formData.get.month, formData.get.year))
-    val disposalValue = fetchAndGetFormData[resident.DisposalValueModel](ResidentPropertyKeys.disposalValue).map(_.get.amount)
+
+    //This is a proposed alternate method of writing the map without needing the case statement, need a judgement on whether
+    //to use this method or older ones. Fold automatically handles the None/Some cases without matching manually
+    val disposalValue = fetchAndGetFormData[resident.DisposalValueModel](ResidentPropertyKeys.disposalValue)
+      .map(_.fold[Option[BigDecimal]](None)(input => Some(input.amount)))
+
+    val worthWhenSoldForLess = fetchAndGetFormData[resident.properties.gain.WorthWhenSoldForLessModel](ResidentPropertyKeys.worthWhenSoldForLess).map {
+      case Some(data) => Some(data.amount)
+      case _ => None
+    }
     val acquisitionCosts = fetchAndGetFormData[resident.AcquisitionCostsModel](ResidentPropertyKeys.acquisitionCosts).map(_.get.amount)
     val disposalCosts = fetchAndGetFormData[resident.DisposalCostsModel](ResidentPropertyKeys.disposalCosts).map(_.get.amount)
     val improvements = fetchAndGetFormData[properties.ImprovementsModel](ResidentPropertyKeys.improvements).map(_.get.amount)
     val givenAway = fetchAndGetFormData[properties.SellOrGiveAwayModel](ResidentPropertyKeys.sellOrGiveAway).map(_.get.givenAway)
-    val sellForLess = fetchAndGetFormData[properties.SellForLessModel](ResidentPropertyKeys.sellForLess).map(_ match {
+    val sellForLess = fetchAndGetFormData[properties.SellForLessModel](ResidentPropertyKeys.sellForLess).map {
       case Some(data) => Some(data.sellForLess)
       case _ => None
-    })
+    }
     val ownerBeforeAprilNineteenEightyTwo = fetchAndGetFormData[properties.gain.OwnerBeforeAprilModel](ResidentPropertyKeys.ownerBeforeAprilNineteenEightyTwo)
       .map(_.get.ownedBeforeAprilNineteenEightyTwo)
+    val worthOnThirtyFirstMarchEightyTwo = fetchAndGetFormData[properties.WorthOnModel](ResidentPropertyKeys.worthOn).map {
+      case Some(data) => Some(data.amount)
+      case _ => None
+    }
     val howBecameOwner = fetchAndGetFormData[properties.HowBecameOwnerModel](ResidentPropertyKeys.howBecameOwner).map {
       case Some(data) => Some(data.gainedBy)
       case None => None
@@ -220,18 +236,21 @@ trait CalculatorConnector {
       acquisitionValue <- acquisitionValue
       disposalDate <- disposalDate
       disposalValue <- disposalValue
+      worthWhenSoldForLess <- worthWhenSoldForLess
       acquisitionCosts <- acquisitionCosts
       disposalCosts <- disposalCosts
       improvements <- improvements
       givenAway <- givenAway
       sellForLess <- sellForLess
       ownerBeforeAprilNineteenEightyTwo <- ownerBeforeAprilNineteenEightyTwo
+      worthOnThirtyFirstMarchEightyTwo <- worthOnThirtyFirstMarchEightyTwo
       howBecameOwner <- howBecameOwner
       boughtForLessThanWorth <- boughtForLessThanWorth
       worthWhenBought <- worthWhenBought
     } yield properties.YourAnswersSummaryModel(
       disposalDate,
       disposalValue,
+      worthWhenSoldForLess,
       disposalCosts,
       acquisitionValue,
       acquisitionCosts,
@@ -239,6 +258,7 @@ trait CalculatorConnector {
       givenAway,
       sellForLess,
       ownerBeforeAprilNineteenEightyTwo,
+      worthOnThirtyFirstMarchEightyTwo,
       howBecameOwner,
       boughtForLessThanWorth,
       worthWhenBought

@@ -42,8 +42,8 @@ object MessageLookup {
 
     object Properties {
 
-      object PropertyWorthWhenSold {
-        val title = "What was the property worth when you sold it?"
+      object WorthWhenSoldForLess {
+        val question = "What was the property worth when you sold it?"
         val paragraphText = "You can use a valuation from a surveyor or a property website."
       }
       
