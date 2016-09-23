@@ -27,7 +27,7 @@ case class YourAnswersSummaryModel
   disposalValue: Option[BigDecimal],
   worthWhenSoldForLess: Option[BigDecimal],
   disposalCosts: BigDecimal,
-  acquisitionValue: BigDecimal,
+  acquisitionValue: Option[BigDecimal],
   acquisitionCosts: BigDecimal,
   improvements: BigDecimal,
   givenAway: Boolean,

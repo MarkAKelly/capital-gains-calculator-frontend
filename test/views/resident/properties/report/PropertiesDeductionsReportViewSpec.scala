@@ -34,7 +34,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       None,
       None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
       BigDecimal(10000),
       BigDecimal(30000),
       true,
@@ -261,17 +261,6 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         }
       }
 
-      "has a numeric output row for the Acquisition Value" which {
-
-        s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
-          doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
-        }
-
-        "should have the value '£100,000'" in {
-          doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£100,000"
-        }
-      }
-
       "has a numeric output row for the Acquisition Costs" which {
 
         s"should have the question text '${commonMessages.acquisitionCosts.title}'" in {
@@ -355,7 +344,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       None,
       Some(500),
       BigDecimal(10000),
-      BigDecimal(100000),
+      Some(BigDecimal(100000)),
       BigDecimal(10000),
       BigDecimal(30000),
       false,
@@ -541,6 +530,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         }
       }
 
+      "has a numeric output row for the Acquisition Value" which {
+
+        s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
+          doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
+        }
+
+        "should have the value '£100,000'" in {
+          doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£100,000"
+        }
+      }
+
       "has a numeric output row for the Improvements" which {
 
         s"should have the question text '${commonMessages.Resident.Properties.improvementsView.question}'" in {
@@ -718,7 +718,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       None,
       None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
       BigDecimal(10000),
       BigDecimal(30000),
       true,
@@ -776,7 +776,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       None,
       None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
       BigDecimal(10000),
       BigDecimal(30000),
       true,
@@ -918,7 +918,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       Some(BigDecimal(200000)),
       None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
       BigDecimal(10000),
       BigDecimal(30000),
       false,
@@ -1022,7 +1022,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       Some(BigDecimal(200000)),
       None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
       BigDecimal(10000),
       BigDecimal(30000),
       false,

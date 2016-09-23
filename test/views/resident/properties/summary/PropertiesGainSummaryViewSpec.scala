@@ -37,7 +37,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       None,
       None,
       20,
-      30,
+      None,
       40,
       50,
       true,
@@ -257,22 +257,6 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
         }
       }
 
-      "has a numeric output row for the Acquisition Value" which {
-
-        s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
-          doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
-        }
-
-        "should have the value '£30'" in {
-          doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£30"
-        }
-
-        s"should have a change link to ${routes.GainController.acquisitionValue().url}" in {
-          doc.select("#acquisitionValue-amount a").attr("href") shouldBe routes.GainController.acquisitionValue().url
-        }
-
-      }
-
       "has a numeric output row for the Acquisition Costs" which {
 
         s"should have the question text '${commonMessages.acquisitionCosts.title}'" in {
@@ -338,7 +322,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       None,
       Some(500),
       20,
-      30,
+      Some(30),
       40,
       50,
       false,
@@ -508,6 +492,22 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       }
     }
 
+    "has a numeric output row for the Acquisition Value" which {
+
+      s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
+        doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
+      }
+
+      "should have the value '£30'" in {
+        doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£30"
+      }
+
+      s"should have a change link to ${routes.GainController.acquisitionValue().url}" in {
+        doc.select("#acquisitionValue-amount a").attr("href") shouldBe routes.GainController.acquisitionValue().url
+      }
+
+    }
+
     "has a numeric output row for the Improvements" which {
 
       s"should have the question text '${commonMessages.Resident.Properties.improvementsView.question}'" in {
@@ -567,7 +567,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       None,
       Some(500),
       20,
-      30,
+      None,
       40,
       50,
       false,
@@ -613,7 +613,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       None,
       None,
       20,
-      30,
+      None,
       40,
       50,
       true,
@@ -680,7 +680,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       Some(10),
       None,
       20,
-      30,
+      None,
       40,
       50,
       false,
@@ -746,7 +746,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       Some(10),
       None,
       20,
-      30,
+      None,
       40,
       50,
       false,
@@ -837,7 +837,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       Some(10),
       None,
       20,
-      30,
+      None,
       40,
       50,
       false,

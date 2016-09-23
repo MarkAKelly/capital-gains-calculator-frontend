@@ -30,7 +30,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
         Some(BigDecimal(1000)),
         None,
         BigDecimal(0),
-        BigDecimal(500),
+        Some(BigDecimal(500)),
         BigDecimal(100),
         BigDecimal(10),
         true,

@@ -35,7 +35,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       None,
       None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
       BigDecimal(10000),
       BigDecimal(30000),
       true,
@@ -337,22 +337,6 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         }
       }
 
-      "has a numeric output row for the Acquisition Value" which {
-
-        s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
-          doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
-        }
-
-        "should have the value '£100,000'" in {
-          doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£100,000"
-        }
-
-        s"should have a change link to ${routes.GainController.acquisitionValue().url}" in {
-          doc.select("#acquisitionValue-amount a").attr("href") shouldBe routes.GainController.acquisitionValue().url
-        }
-
-      }
-
       "has a numeric output row for the Acquisition Costs" which {
 
         s"should have the question text '${commonMessages.acquisitionCosts.title}'" in {
@@ -518,7 +502,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       None,
       Some(500),
       BigDecimal(10000),
-      BigDecimal(100000),
+      Some(BigDecimal(100000)),
       BigDecimal(10000),
       BigDecimal(30000),
       false,
@@ -800,6 +784,22 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         "has the question component of the link as visuallyhidden" in {
           doc.select("#boughtForLessThanWorth-option a span.visuallyhidden").text shouldBe commonMessages.boughtForLessThanWorth.title
         }
+      }
+
+      "has a numeric output row for the Acquisition Value" which {
+
+        s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
+          doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
+        }
+
+        "should have the value '£100,000'" in {
+          doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£100,000"
+        }
+
+        s"should have a change link to ${routes.GainController.acquisitionValue().url}" in {
+          doc.select("#acquisitionValue-amount a").attr("href") shouldBe routes.GainController.acquisitionValue().url
+        }
+
       }
 
       "has a numeric output row for the Improvements" which {
@@ -1089,7 +1089,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       None,
       Some(500),
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
       BigDecimal(10000),
       BigDecimal(30000),
       false,
@@ -1160,7 +1160,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       None,
       None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
       BigDecimal(10000),
       BigDecimal(30000),
       true,
@@ -1368,7 +1368,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       None,
       None,
       BigDecimal(0),
-      BigDecimal(100000),
+      None,
       BigDecimal(0),
       BigDecimal(0),
       true,
@@ -1509,7 +1509,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       Some(BigDecimal(200000)),
       None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
       BigDecimal(10000),
       BigDecimal(30000),
       false,
@@ -1619,7 +1619,7 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
       None,
       None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
       BigDecimal(10000),
       BigDecimal(30000),
       true,
