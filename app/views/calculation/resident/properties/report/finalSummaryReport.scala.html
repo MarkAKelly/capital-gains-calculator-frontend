@@ -114,6 +114,10 @@
         summaryOptionRowHelper("boughtForLessThanWorth", Messages("calc.resident.properties.boughtForLessThanWorth.title"),
         gainAnswers.boughtForLessThanWorth.get, None)}
 
+        @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Bought") && gainAnswers.boughtForLessThanWorth.get)
+        summaryNumericRowHelper("worthWhenBought",Messages("calc.resident.properties.worthWhenBought.question"),
+        gainAnswers.worthWhenBought.get,None)}
+
         @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Bought") && !gainAnswers.boughtForLessThanWorth.get)
         summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),gainAnswers.acquisitionValue.get,None)}
 

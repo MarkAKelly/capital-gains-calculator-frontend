@@ -44,6 +44,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       true,
       Some(BigDecimal(5000)),
       None,
+      None,
       None
     )
 
@@ -225,7 +226,8 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       false,
       None,
       Some("Bought"),
-      Some(false)
+      Some(false),
+      None
     )
 
     lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)
@@ -349,7 +351,8 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       false,
       None,
       Some("Bought"),
-      Some(true)
+      Some(true),
+      Some(1500)
     )
     lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
@@ -362,6 +365,17 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
 
       "should have the value 'Yes'" in {
         doc.select("#boughtForLessThanWorth-option span.bold-medium").text shouldBe "Yes"
+      }
+    }
+
+    "has a numeric output row worth when bought" should {
+
+      s"should have the question text '${commonMessages.worthWhenBought.question}'" in {
+        doc.select("#worthWhenBought-question").text shouldBe commonMessages.worthWhenBought.question
+      }
+
+      "should have the value '£1,500'" in {
+        doc.select("#worthWhenBought-amount span.bold-medium").text shouldBe "£1,500"
       }
     }
   }
@@ -383,6 +397,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       false,
       None,
       Some("Inherited"),
+      None,
       None
     )
     lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)
@@ -417,6 +432,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       false,
       None,
       Some("Gifted"),
+      None,
       None
     )
     lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)
@@ -451,6 +467,7 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
       false,
       None,
       Some("Inherited"),
+      None,
       None
     )
     lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)

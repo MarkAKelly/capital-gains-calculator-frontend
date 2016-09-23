@@ -6,19 +6,19 @@
 @(worthWhenBoughtForm: Form[WorthWhenBoughtModel])(implicit request: Request[_])
 
 @resident_properties_main_template(
-title = Messages("calc.resident.worthWhenBought.question"),
+title = Messages("calc.resident.properties.worthWhenBought.question"),
 backLink = Some(controllers.resident.properties.routes.GainController.boughtForLessThanWorth().url)
 ) {
 
 @errorSummary(worthWhenBoughtForm, "amount")
 
-<h1 class="heading-large">@Messages("calc.resident.worthWhenBought.question")</h1>
+<h1 class="heading-large">@Messages("calc.resident.properties.worthWhenBought.question")</h1>
 
-<p>@Messages("calc.resident.worthWhenBought.additionalContent")</p>
+<p>@Messages("calc.resident.properties.worthWhenBought.additionalContent")</p>
 
 @form(action = controllers.resident.properties.routes.GainController.submitWorthWhenBought()) {
 
-@formInputMoney(worthWhenBoughtForm, "amount", Messages("calc.resident.worthWhenBought.question"), hideLabel = true)
+@formInputMoney(worthWhenBoughtForm, "amount", Messages("calc.resident.properties.worthWhenBought.question"), hideLabel = true)
 
 <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
 

@@ -87,6 +87,9 @@
         @{if (!answers.ownerBeforeAprilNineteenEightyTwo && answers.howBecameOwner.get.equals("Bought"))
         summaryOptionRowHelper("boughtForLessThanWorth", Messages("calc.resident.properties.boughtForLessThanWorth.title"),
         answers.boughtForLessThanWorth.get, Some(routes.boughtForLessThanWorth().toString))}
+        @{if (!answers.ownerBeforeAprilNineteenEightyTwo && answers.howBecameOwner.get.equals("Bought") && answers.boughtForLessThanWorth.get)
+        summaryNumericRowHelper("worthWhenBought",Messages("calc.resident.properties.worthWhenBought.question"),
+        answers.worthWhenBought.get,Some(routes.worthWhenBought().toString))}
         @{if (!answers.ownerBeforeAprilNineteenEightyTwo && answers.howBecameOwner.get.equals("Bought") && !answers.boughtForLessThanWorth.get)
         summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),answers.acquisitionValue.get,Some(routes.acquisitionValue().toString))}
         @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),answers.acquisitionCosts,Some(routes.acquisitionCosts().toString))

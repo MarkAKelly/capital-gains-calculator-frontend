@@ -42,6 +42,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       true,
       Some(BigDecimal(5000)),
       None,
+      None,
       None)
 
     lazy val deductionAnswers = ChargeableGainAnswers(
@@ -352,7 +353,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       false,
       None,
       Some("Bought"),
-      Some(false))
+      Some(false),
+      None)
 
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
@@ -726,7 +728,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       false,
       None,
       Some("Bought"),
-      Some(true))
+      Some(true),
+      Some(1500))
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
@@ -768,6 +771,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         doc.select("#boughtForLessThanWorth-option span.bold-medium").text shouldBe "Yes"
       }
     }
+
+    "has a numeric output row worth when bought" should {
+
+      s"should have the question text '${commonMessages.worthWhenBought.question}'" in {
+        doc.select("#worthWhenBought-question").text shouldBe commonMessages.worthWhenBought.question
+      }
+
+      "should have the value '£1,500'" in {
+        doc.select("#worthWhenBought-amount span.bold-medium").text shouldBe "£1,500"
+      }
+    }
   }
 
   "Deductions Report view with AEA options selected" which {
@@ -783,6 +797,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       None,
       true,
       Some(BigDecimal(5000)),
+      None,
       None,
       None)
 
@@ -926,6 +941,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       false,
       None,
       Some("Inherited"),
+      None,
       None)
 
     lazy val deductionAnswers = ChargeableGainAnswers(
@@ -1030,6 +1046,7 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       false,
       None,
       Some("Gifted"),
+      None,
       None)
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
