@@ -63,6 +63,16 @@
         @{if(!answers.givenAway)
         summaryOptionRowHelper("sellForLess", Messages("calc.resident.properties.sellForLess.title"), answers.sellForLess.get, None)}
 
+        <!-- Given to someone else Block -->
+        @{if(answers.givenAway)
+            summaryTextRowHelper("whoDidYouGiveItTo", Messages("calc.resident.whoDidYouGiveThePropertyTo.title"), Messages("calc.resident.whoDidYouGiveThePropertyTo.other"), None)
+        }
+
+        @{if(answers.givenAway)
+            summaryNumericRowHelper("worthWhenGaveAway", Messages("calc.resident.properties.worthWhenGaveAway.title"), answers.worthWhenGaveAway.get, None)
+        }
+        <!-- ^^^^^^ Given to someone else Block ^^^^^^ -->
+
         @{if(!answers.givenAway && !answers.sellForLess.get)
             summaryNumericRowHelper("disposalValue", Messages("calc.resident.disposal.value.question"), answers.disposalValue.get, None)
         }

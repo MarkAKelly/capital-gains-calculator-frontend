@@ -67,6 +67,17 @@
         @summaryDateRowHelper("disposalDate",Messages("calc.resident.disposalDate.question"),answers.disposalDate,Some(routes.disposalDate().toString))
         @summaryTextRowHelper("sellOrGiveAway", Messages("calc.resident.sellOrGiveAway.title"), if (answers.givenAway) {Messages("calc.resident.sellOrGiveAway.given")}
         else {Messages("calc.resident.sellOrGiveAway.sold")}, Some(routes.sellOrGiveAway().toString))
+
+        <!-- Given to someone else Block -->
+        @{if(answers.givenAway)
+            summaryTextRowHelper("whoDidYouGiveItTo", Messages("calc.resident.whoDidYouGiveThePropertyTo.title"), Messages("calc.resident.whoDidYouGiveThePropertyTo.other"), Some(routes.whoDidYouGiveItTo().toString))
+        }
+
+        @{if(answers.givenAway)
+            summaryNumericRowHelper("worthWhenGaveAway", Messages("calc.resident.properties.worthWhenGaveAway.title"), answers.worthWhenGaveAway.get, Some(routes.worthWhenGaveAway().toString))
+        }
+        <!-- ^^^^^^ Given to someone else Block ^^^^^^ -->
+
         @{if(!answers.givenAway)
         summaryOptionRowHelper("sellForLess", Messages("calc.resident.properties.sellForLess.title"), answers.sellForLess.get, Some(routes.sellForLess().toString))}
 

@@ -33,8 +33,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       None,
       None,
-      whoDidYouGiveItTo = None,
-      worthWhenGaveAway = None,
+      whoDidYouGiveItTo = Some("Other"),
+      worthWhenGaveAway = Some(10000),
       BigDecimal(10000),
       None,
       worthWhenInherited = None,
@@ -232,6 +232,29 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
           doc.select("#sellOrGiveAway-option span.bold-medium").text shouldBe "Gave it away"
         }
       }
+
+      //#########################################################################
+      "has an option output row for who did you give it to" which {
+        s"should have the question text '${commonMessages.whoDidYouGiveItTo.title}'" in {
+          doc.select("#whoDidYouGiveItTo-question").text shouldBe commonMessages.whoDidYouGiveItTo.title
+        }
+
+        "should have the value 'Someone else'" in {
+          doc.select("#whoDidYouGiveItTo-option span.bold-medium").text shouldBe "Someone else"
+        }
+      }
+
+      "has a numeric output row for the Value when you gave it away" which {
+
+        s"should have the question text '${propertiesMessages.propertiesWorthWhenGaveAway.title}'" in {
+          doc.select("#worthWhenGaveAway-question").text shouldBe propertiesMessages.propertiesWorthWhenGaveAway.title
+        }
+
+        "should have the value '£10,000'" in {
+          doc.select("#worthWhenGaveAway-amount span.bold-medium").text shouldBe "£10,000"
+        }
+      }
+      //#########################################################################
 
       "has a numeric output row for the Disposal Costs" which {
 
@@ -727,8 +750,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       None,
       None,
-      whoDidYouGiveItTo = None,
-      worthWhenGaveAway = None,
+      whoDidYouGiveItTo = Some("Other"),
+      worthWhenGaveAway = Some(10000),
       BigDecimal(10000),
       None,
       worthWhenInherited = None,
@@ -802,8 +825,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       None,
       None,
-      whoDidYouGiveItTo = None,
-      worthWhenGaveAway = None,
+      whoDidYouGiveItTo = Some("Other"),
+      worthWhenGaveAway = Some(10000),
       BigDecimal(10000),
       None,
       worthWhenInherited = None,
