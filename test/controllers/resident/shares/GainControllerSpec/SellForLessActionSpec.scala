@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package controllers.resident.properties.GainControllerSpec
+package controllers.resident.shares.GainControllerSpec
 
+import assets.MessageLookup.Resident.Shares.{sellForLess => messages}
+import common.KeystoreKeys.{ResidentShareKeys => keyStoreKeys}
 import config.{AppConfig, ApplicationConfig}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.properties.GainController
-import org.scalatest.mock.MockitoSugar
-import org.mockito.Mockito._
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import common.KeystoreKeys.{ResidentPropertyKeys => keyStoreKeys}
-import org.mockito.Matchers
-import assets.MessageLookup.Resident.Properties.{sellForLess => messages}
+import controllers.resident.shares.GainController
 import models.resident.SellForLessModel
 import org.jsoup.Jsoup
+import org.mockito.Matchers
+import org.mockito.Mockito._
+import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
@@ -47,11 +47,10 @@ class SellForLessActionSpec extends UnitSpec with WithFakeApplication with FakeR
 
     new GainController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val config: AppConfig = ApplicationConfig
     }
   }
 
-  "Calling .sellForLess from the resident GainController" when {
+  "Calling .sellForLess from the resident shares GainController" when {
 
     "request has a valid session and no keystore value" should {
 
@@ -94,7 +93,7 @@ class SellForLessActionSpec extends UnitSpec with WithFakeApplication with FakeR
     }
   }
 
-  "Calling .submitSellForLess from the resident GainCalculator" when {
+  "Calling .submitSellForLess from the resident shares GainCalculator" when {
 
     "a valid form with the answer 'Yes' is submitted" should {
 
@@ -107,7 +106,7 @@ class SellForLessActionSpec extends UnitSpec with WithFakeApplication with FakeR
       }
 
       "redirect to the worth when sold page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/worth-when-sold")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/worth-when-sold")
       }
     }
 
@@ -122,7 +121,7 @@ class SellForLessActionSpec extends UnitSpec with WithFakeApplication with FakeR
       }
 
       "redirect to the disposal value page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/disposal-value")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/disposal-value")
       }
     }
 

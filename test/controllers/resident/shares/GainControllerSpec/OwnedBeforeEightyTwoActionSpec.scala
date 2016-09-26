@@ -14,64 +14,62 @@
  * limitations under the License.
  */
 
-package controllers.resident.properties.GainControllerSpec
+package controllers.resident.shares.GainControllerSpec
 
-import config.{AppConfig, ApplicationConfig}
+import assets.MessageLookup.Resident.Shares.{OwnedBeforeEightyTwoMessages => Messages}
+import common.KeystoreKeys.{ResidentShareKeys => keyStoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.properties.GainController
-import org.scalatest.mock.MockitoSugar
-import org.mockito.Mockito._
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import common.KeystoreKeys.{ResidentPropertyKeys => keyStoreKeys}
-import org.mockito.Matchers
-import assets.MessageLookup.Resident.Properties.{sellForLess => messages}
-import models.resident.SellForLessModel
+import controllers.resident.shares.GainController
+import models.resident.shares.OwnedBeforeEightyTwoModel
 import org.jsoup.Jsoup
+import org.mockito.Matchers
+import org.mockito.Mockito._
+import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
-class SellForLessActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
+class OwnedBeforeEightyTwoActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  def setupTarget(getData: Option[SellForLessModel]): GainController= {
+  def setupTarget(getData: Option[OwnedBeforeEightyTwoModel]): GainController= {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[SellForLessModel](Matchers.eq(keyStoreKeys.sellForLess))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[OwnedBeforeEightyTwoModel](Matchers.eq(keyStoreKeys.ownedBeforeEightyTwo))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
-    when(mockCalcConnector.saveFormData[SellForLessModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.saveFormData[OwnedBeforeEightyTwoModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
 
     new GainController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val config: AppConfig = ApplicationConfig
     }
   }
 
-  "Calling .sellForLess from the resident GainController" when {
+  "Calling .ownedBeforeEightyTwo from the resident GainController" when {
 
     "request has a valid session and no keystore value" should {
 
       lazy val target = setupTarget(None)
-      lazy val result = target.sellForLess(fakeRequestWithSession)
+      lazy val result = target.ownedBeforeEightyTwo(fakeRequestWithSession)
 
       "return a status of 200" in {
         status(result) shouldBe 200
       }
 
-      s"return some html with title of ${messages.title}" in {
+      s"return some html with title of ${Messages.title}" in {
         contentType(result) shouldBe Some("text/html")
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+        Jsoup.parse(bodyOf(result)).title shouldEqual Messages.title
       }
     }
 
     "request has a valid session and some keystore value" should {
 
-      lazy val target = setupTarget(Some(SellForLessModel(true)))
-      lazy val result = target.sellForLess(fakeRequestWithSession)
+      lazy val target = setupTarget(Some(OwnedBeforeEightyTwoModel(true)))
+      lazy val result = target.ownedBeforeEightyTwo(fakeRequestWithSession)
 
       "return a status of 200" in {
         status(result) shouldBe 200
@@ -82,7 +80,7 @@ class SellForLessActionSpec extends UnitSpec with WithFakeApplication with FakeR
     "request has an invalid session" should {
 
       lazy val target = setupTarget(None)
-      lazy val result = target.sellForLess(fakeRequest)
+      lazy val result = target.ownedBeforeEightyTwo(fakeRequest)
 
       "return a status of 303" in {
         status(result) shouldBe 303
@@ -94,43 +92,43 @@ class SellForLessActionSpec extends UnitSpec with WithFakeApplication with FakeR
     }
   }
 
-  "Calling .submitSellForLess from the resident GainCalculator" when {
+  "Calling .submitOwnedBeforeEightyTwo from the resident GainCalculator" when {
 
     "a valid form with the answer 'Yes' is submitted" should {
 
       lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("sellForLess", "Yes"))
-      lazy val result = target.submitSellForLess(request)
+      lazy val request = fakeRequestToPOSTWithSession(("ownedBeforeEightyTwo", "Yes"))
+      lazy val result = target.submitOwnedBeforeEightyTwo(request)
 
       "return a status of 303" in {
         status(result) shouldBe 303
       }
 
       "redirect to the worth when sold page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/worth-when-sold")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/worth-on-thirty-first-march-nineteen-eighty-two")
       }
     }
 
     "a valid form with the answer 'No' is submitted" should {
 
       lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("sellForLess", "No"))
-      lazy val result = target.submitSellForLess(request)
+      lazy val request = fakeRequestToPOSTWithSession(("ownedBeforeEightyTwo", "No"))
+      lazy val result = target.submitOwnedBeforeEightyTwo(request)
 
       "return a status of 303" in {
         status(result) shouldBe 303
       }
 
       "redirect to the disposal value page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/disposal-value")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/did-you-inherit-them")
       }
     }
 
     "an invalid form with the answer '' is submitted" should {
 
       lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("sellForLess", ""))
-      lazy val result = target.submitSellForLess(request)
+      lazy val request = fakeRequestToPOSTWithSession(("ownedBeforeEightyTwo", ""))
+      lazy val result = target.submitOwnedBeforeEightyTwo(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a status of 400" in {
@@ -138,7 +136,7 @@ class SellForLessActionSpec extends UnitSpec with WithFakeApplication with FakeR
       }
 
       "render the Sell For Less page" in {
-        doc.title() shouldEqual messages.title
+        doc.title() shouldEqual Messages.title
       }
     }
   }

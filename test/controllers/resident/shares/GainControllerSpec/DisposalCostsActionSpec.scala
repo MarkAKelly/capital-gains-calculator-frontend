@@ -112,7 +112,7 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Fak
       }
 
       s"redirect to '${controllers.resident.shares.routes.GainController.acquisitionValue().toString}'" in {
-        redirectLocation(result).get shouldBe controllers.resident.shares.routes.GainController.acquisitionValue().toString
+        redirectLocation(result).get shouldBe controllers.resident.shares.routes.GainController.ownedBeforeEightyTwo().toString
       }
     }
 

@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package views.resident.properties.gain
+package views.resident.shares.gain
 
+import assets.MessageLookup.Resident.Shares.{sellForLess => messages}
+import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
+import forms.resident.shares.SellForLessForm._
+import models.resident.SellForLessModel
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import views.html.calculation.resident.properties.{gain => views}
-import assets.MessageLookup.Resident.Properties.{sellForLess => messages}
-import assets.{MessageLookup => commonMessages}
-import forms.resident.properties.SellForLessForm._
-import models.resident.SellForLessModel
+import views.html.calculation.resident.shares.{gain => views}
 
 class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Sell for less view with an empty form" should {
 
-    lazy val view = views.sellForLess(sellForLessForm, "home-link", Some("back-link"))(fakeRequest)
+    lazy val view = views.sellForLess(sellForLessForm, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
     lazy val form = doc.getElementsByTag("form")
 
@@ -71,12 +71,12 @@ class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       }
 
       "has a back link to 'back'" in {
-        backLink.attr("href") shouldBe "back-link"
+        backLink.attr("href") shouldBe controllers.resident.shares.routes.GainController.disposalDate().url
       }
     }
 
     "render a form tag with a submit action" in {
-      doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/sell-for-less"
+      doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/shares/sell-for-less"
     }
 
     "has the method of POST" in {
@@ -210,7 +210,7 @@ class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeReq
   }
 
   "Sell for less view with a filled form" which {
-    lazy val view = views.sellForLess(sellForLessForm.fill(SellForLessModel(true)), "home-link", Some("back-link"))(fakeRequest)
+    lazy val view = views.sellForLess(sellForLessForm.fill(SellForLessModel(true)), "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "for the option 'Yes'" should {
@@ -226,7 +226,7 @@ class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeReq
   "Sell for less view with form errors" should {
 
     lazy val form = sellForLessForm.bind(Map("sellForLess" -> ""))
-    lazy val view = views.sellForLess(form, "home", Some("back"))(fakeRequest)
+    lazy val view = views.sellForLess(form, "home")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have an error summary" which {

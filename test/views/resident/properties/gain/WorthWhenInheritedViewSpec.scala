@@ -21,7 +21,7 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{gain => views}
 import forms.resident.properties.WorthWhenInheritedForm._
-import assets.MessageLookup.{worthWhenInherited => messages}
+import assets.MessageLookup.Resident.Properties.{worthWhenInherited => messages}
 import play.api.mvc.Call
 
 class WorthWhenInheritedViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
@@ -50,12 +50,12 @@ class WorthWhenInheritedViewSpec extends UnitSpec with WithFakeApplication with 
       doc.select("a#homeNavHref").attr("href") shouldBe "homeLink"
     }
 
-    s"have a title of ${messages.title}" in {
-      doc.title() shouldBe messages.title
+    s"have a title of ${messages.question}" in {
+      doc.title() shouldBe messages.question
     }
 
-    s"have a question of ${messages.title}" in {
-      doc.select("h1.heading-large").text() shouldBe messages.title
+    s"have a question of ${messages.question}" in {
+      doc.select("h1.heading-large").text() shouldBe messages.question
     }
 
     "have a form tag" in {
@@ -74,8 +74,8 @@ class WorthWhenInheritedViewSpec extends UnitSpec with WithFakeApplication with 
       doc.select("div.resident p").text() shouldBe messages.additionalContent
     }
 
-    s"have a label for an input with text ${messages.title}" in {
-      doc.select("label > div > span.visuallyhidden").text() shouldEqual messages.title
+    s"have a label for an input with text ${messages.question}" in {
+      doc.select("label > div > span.visuallyhidden").text() shouldEqual messages.question
     }
 
     s"have an input field with id amount " in {

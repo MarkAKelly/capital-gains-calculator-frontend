@@ -38,6 +38,9 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       None,
       20,
       None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       40,
       50,
       true,
@@ -323,6 +326,9 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       Some(500),
       20,
       Some(30),
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       40,
       50,
       false,
@@ -374,8 +380,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     "has an option output row for sell for less" which {
 
-      s"should have the question text '${commonMessages.sellForLess.title}'" in {
-        doc.select("#sellForLess-question").text shouldBe commonMessages.sellForLess.title
+      s"should have the question text '${commonMessages.Resident.Properties.sellForLess.title}'" in {
+        doc.select("#sellForLess-question").text shouldBe commonMessages.Resident.Properties.sellForLess.title
       }
 
       "should have the value 'Yes'" in {
@@ -387,11 +393,11 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       }
 
       "has the question as part of the link" in {
-        doc.select("#sellForLess-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.sellForLess.title}"
+        doc.select("#sellForLess-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.sellForLess.title}"
       }
 
       "has the question component of the link as visuallyhidden" in {
-        doc.select("#sellForLess-option a span.visuallyhidden").text shouldBe commonMessages.sellForLess.title
+        doc.select("#sellForLess-option a span.visuallyhidden").text shouldBe commonMessages.Resident.Properties.sellForLess.title
       }
     }
 
@@ -568,6 +574,9 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       Some(500),
       20,
       None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = Some(3000),
       40,
       50,
       false,
@@ -602,6 +611,29 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
         doc.select("#boughtForLessThanWorth-option a span.visuallyhidden").text shouldBe commonMessages.boughtForLessThanWorth.title
       }
     }
+
+    "has a numeric output row for the bought for less than worth value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenBought.question}'" in {
+        doc.select("#worthWhenBought-question").text shouldBe propertiesMessages.worthWhenBought.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenBought-amount span.bold-medium").text shouldBe "£3,000"
+      }
+
+      s"should have a change link to ${routes.GainController.worthWhenBought().url}" in {
+        doc.select("#worthWhenBought-amount a").attr("href") shouldBe routes.GainController.worthWhenBought().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#worthWhenBought-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${propertiesMessages.worthWhenBought.question}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#worthWhenBought-amount a span.visuallyhidden").text shouldBe propertiesMessages.worthWhenBought.question
+      }
+    }
   }
 
   "Summary when supplied with a date within the known tax years and no gain or loss" should {
@@ -614,6 +646,9 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       None,
       20,
       None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       40,
       50,
       true,
@@ -681,6 +716,9 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       None,
       20,
       None,
+      worthWhenInherited = Some(3000),
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       40,
       50,
       false,
@@ -737,6 +775,21 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
           commonMessages.howBecameOwner.title
       }
     }
+
+    "has a numeric output row for the inherited value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenInherited.question}'" in {
+        doc.select("#worthWhenInherited-question").text shouldBe propertiesMessages.worthWhenInherited.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenInherited-amount span.bold-medium").text shouldBe "£3,000"
+      }
+
+      s"should have a change link to ${routes.GainController.worthWhenInherited().url}" in {
+        doc.select("#worthWhenInherited-amount a").attr("href") shouldBe routes.GainController.worthWhenInherited().url
+      }
+    }
   }
 
   "Summary view with an out of tax year date" should {
@@ -747,6 +800,9 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       None,
       20,
       None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       40,
       50,
       false,
@@ -787,8 +843,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     "has an option output row for sell for less" which {
 
-      s"should have the question text '${commonMessages.sellForLess.title}'" in {
-        doc.select("#sellForLess-question").text shouldBe commonMessages.sellForLess.title
+      s"should have the question text '${commonMessages.Resident.Properties.sellForLess.title}'" in {
+        doc.select("#sellForLess-question").text shouldBe commonMessages.Resident.Properties.sellForLess.title
       }
 
       "should have the value 'No'" in {
@@ -800,11 +856,11 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       }
 
       "has the question as part of the link" in {
-        doc.select("#sellForLess-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.sellForLess.title}"
+        doc.select("#sellForLess-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.sellForLess.title}"
       }
 
       "has the question component of the link as visuallyhidden" in {
-        doc.select("#sellForLess-option a span.visuallyhidden").text shouldBe commonMessages.sellForLess.title
+        doc.select("#sellForLess-option a span.visuallyhidden").text shouldBe commonMessages.Resident.Properties.sellForLess.title
       }
     }
 
@@ -838,6 +894,9 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       None,
       20,
       None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = Some(3000),
+      worthWhenBoughtForLess = None,
       40,
       50,
       false,
@@ -872,6 +931,21 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       "has the question component of the link as visuallyhidden" in {
         doc.select("#howBecameOwner-option a span.visuallyhidden").text shouldBe
           commonMessages.howBecameOwner.title
+      }
+    }
+
+    "has a numeric output row for the gifted value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenGifted.question}'" in {
+        doc.select("#worthWhenGifted-question").text shouldBe propertiesMessages.worthWhenGifted.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenGifted-amount span.bold-medium").text shouldBe "£3,000"
+      }
+
+      s"should have a change link to ${routes.GainController.worthWhenGifted().url}" in {
+        doc.select("#worthWhenGifted-amount a").attr("href") shouldBe routes.GainController.worthWhenGifted().url
       }
     }
   }
