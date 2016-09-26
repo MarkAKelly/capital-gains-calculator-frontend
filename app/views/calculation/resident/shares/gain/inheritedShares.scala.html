@@ -11,7 +11,7 @@ backLink = Some(controllers.resident.shares.routes.GainController.ownedBeforeEig
 homeLink = controllers.resident.shares.routes.GainController.disposalDate().url,
 navTitle = Messages("calc.base.resident.shares.home")){
 
-@errorSummary(inheritedSharesForm, "wasInherited")
+@errorSummary(inheritedSharesForm, "wereInherited")
 
 <h1 class="heading-large">@Messages("calc.resident.shares.inheritedShares.question")</h1>
 
@@ -19,7 +19,7 @@ navTitle = Messages("calc.base.resident.shares.home")){
 
 <div id="radio-input" class="form-group">
     @formInputRadioGroup(
-    field = inheritedSharesForm("wasInherited"),
+    field = inheritedSharesForm("wereInherited"),
     Seq(
     "Yes" -> Messages("calc.base.yes"),
     "No" -> Messages("calc.base.no")),

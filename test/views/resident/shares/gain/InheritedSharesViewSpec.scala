@@ -104,7 +104,7 @@ class InheritedSharesViewSpec extends UnitSpec with WithFakeApplication with Fak
 
       "for the option 'Yes'" should {
 
-        lazy val YesRadioOption = doc.select(".block-label[for=wasInherited-yes]")
+        lazy val YesRadioOption = doc.select(".block-label[for=wereInherited-yes]")
 
         "have a label with class 'block-label'" in {
           YesRadioOption.hasClass("block-label") shouldEqual true
@@ -114,8 +114,8 @@ class InheritedSharesViewSpec extends UnitSpec with WithFakeApplication with Fak
           YesRadioOption.hasAttr("for") shouldEqual true
         }
 
-        "the for attribute has the value wasInherited-Yes" in {
-          YesRadioOption.attr("for") shouldEqual "wasInherited-yes"
+        "the for attribute has the value wereInherited-Yes" in {
+          YesRadioOption.attr("for") shouldEqual "wereInherited-yes"
         }
 
         "have the text 'Yes'" in {
@@ -124,10 +124,10 @@ class InheritedSharesViewSpec extends UnitSpec with WithFakeApplication with Fak
 
         "have an input under the label that" should {
 
-          lazy val optionLabel = doc.select("#wasInherited-yes")
+          lazy val optionLabel = doc.select("#wereInherited-yes")
 
           "have the id 'inheritedShares-Yes'" in {
-            optionLabel.attr("id") shouldEqual "wasInherited-yes"
+            optionLabel.attr("id") shouldEqual "wereInherited-yes"
           }
 
           "have the value 'Yes'" in {
@@ -142,7 +142,7 @@ class InheritedSharesViewSpec extends UnitSpec with WithFakeApplication with Fak
 
       "for the option 'No'" should {
 
-        lazy val NoRadioOption = doc.select(".block-label[for=wasInherited-no]")
+        lazy val NoRadioOption = doc.select(".block-label[for=wereInherited-no]")
 
         "have a label with class 'block-label'" in {
           NoRadioOption.hasClass("block-label") shouldEqual true
@@ -152,8 +152,8 @@ class InheritedSharesViewSpec extends UnitSpec with WithFakeApplication with Fak
           NoRadioOption.hasAttr("for") shouldEqual true
         }
 
-        "the for attribute has the value wasInherited-No" in {
-          NoRadioOption.attr("for") shouldEqual "wasInherited-no"
+        "the for attribute has the value wereInherited-No" in {
+          NoRadioOption.attr("for") shouldEqual "wereInherited-no"
         }
 
         "have the text 'No'" in {
@@ -162,10 +162,10 @@ class InheritedSharesViewSpec extends UnitSpec with WithFakeApplication with Fak
 
         "have an input under the label that" should {
 
-          lazy val optionLabel = doc.select("#wasInherited-no")
+          lazy val optionLabel = doc.select("#wereInherited-no")
 
           "have the id 'livedInProperty-No'" in {
-            optionLabel.attr("id") shouldEqual "wasInherited-no"
+            optionLabel.attr("id") shouldEqual "wereInherited-no"
           }
 
           "have the value 'No'" in {
@@ -215,7 +215,7 @@ class InheritedSharesViewSpec extends UnitSpec with WithFakeApplication with Fak
 
     "for the option 'Yes'" should {
 
-      lazy val YesRadioOption = doc.select(".block-label[for=wasInherited-yes]")
+      lazy val YesRadioOption = doc.select(".block-label[for=wereInherited-yes]")
 
       "have the option auto-selected" in {
         YesRadioOption.attr("class") shouldBe "block-label selected"
@@ -225,13 +225,13 @@ class InheritedSharesViewSpec extends UnitSpec with WithFakeApplication with Fak
 
   "Sell for less view with form errors" should {
 
-    lazy val form = inheritedSharesForm.bind(Map("wasInherited" -> ""))
+    lazy val form = inheritedSharesForm.bind(Map("wereInherited" -> ""))
     lazy val view = views.inheritedShares(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have an error summary" which {
       "display an error summary message for the page" in {
-        doc.body.select("#wasInherited-error-summary").size shouldBe 1
+        doc.body.select("#wereInherited-error-summary").size shouldBe 1
       }
 
       "display an error message for the input" in {

@@ -33,10 +33,10 @@ class InheritedSharesFormSpec extends UnitSpec with WithFakeApplication {
 
   "Creating a form with an valid 'yes' model" should {
 
-    lazy val form = inheritedSharesForm.bind(Map("wasInherited" -> "Yes"))
+    lazy val form = inheritedSharesForm.bind(Map("wereInherited" -> "Yes"))
 
     "create a form with the data from the model" in {
-      form.data("wasInherited") shouldEqual "Yes"
+      form.data("wereInherited") shouldEqual "Yes"
     }
 
     "raise no form error" in {
@@ -50,10 +50,10 @@ class InheritedSharesFormSpec extends UnitSpec with WithFakeApplication {
 
   "Creating a form with a valid 'no' model" should {
 
-    lazy val form = inheritedSharesForm.bind(Map("wasInherited" -> "No"))
+    lazy val form = inheritedSharesForm.bind(Map("wereInherited" -> "No"))
 
     "create a form with the data from the model" in {
-      form.data("wasInherited") shouldEqual "No"
+      form.data("wereInherited") shouldEqual "No"
     }
 
     "raise no form error" in {
@@ -67,9 +67,9 @@ class InheritedSharesFormSpec extends UnitSpec with WithFakeApplication {
 
   "Creating a form using an invalid post" when {
 
-    "supplied with no data for wasInherited" should {
+    "supplied with no data for wereInherited" should {
 
-      lazy val form = inheritedSharesForm.bind(Map("wasInherited" -> ""))
+      lazy val form = inheritedSharesForm.bind(Map("wereInherited" -> ""))
 
       "raise form error" in {
         form.hasErrors shouldBe true
@@ -80,12 +80,12 @@ class InheritedSharesFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       "associate the correct error message to the error" in {
-        form.error("wasInherited").get.message shouldBe messages.errorSelect
+        form.error("wereInherited").get.message shouldBe messages.errorSelect
       }
 
-      "supplied with invalid data for wasInherited" should {
+      "supplied with invalid data for wereInherited" should {
 
-        lazy val form = inheritedSharesForm.bind(Map("wasInherited" -> "asdas"))
+        lazy val form = inheritedSharesForm.bind(Map("wereInherited" -> "asdas"))
 
         "raise form error" in {
           form.hasErrors shouldBe true
@@ -96,7 +96,7 @@ class InheritedSharesFormSpec extends UnitSpec with WithFakeApplication {
         }
 
         "associate the correct error message to the error" in {
-          form.error("wasInherited").get.message shouldBe messages.errorSelect
+          form.error("wereInherited").get.message shouldBe messages.errorSelect
         }
       }
     }

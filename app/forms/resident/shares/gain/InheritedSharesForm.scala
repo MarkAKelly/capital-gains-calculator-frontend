@@ -27,7 +27,7 @@ object InheritedSharesForm {
 
   val inheritedSharesForm = Form(
     mapping(
-      "wasInherited" -> text
+      "wereInherited" -> text
         .verifying(Messages("calc.resident.shares.inheritedShares.errorSelect", "2015/16"), mandatoryCheck)
         .verifying(Messages("calc.resident.shares.inheritedShares.errorSelect", "2015/16"), yesNoCheck)
         .transform[Boolean](stringToBoolean, booleanToString)

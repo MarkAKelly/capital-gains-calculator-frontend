@@ -205,7 +205,7 @@ trait GainController extends FeatureLock {
       errors => Future.successful(BadRequest(views.inheritedShares(errors))),
       success => {
         calcConnector.saveFormData(keystoreKeys.inheritedShares, success)
-        if(success.wasInherited) Future.successful(Redirect(routes.GainController.worthWhenInherited()))
+        if(success.wereInherited) Future.successful(Redirect(routes.GainController.worthWhenInherited()))
         else Future.successful(Redirect(routes.GainController.acquisitionValue()))
       }
     )

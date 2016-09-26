@@ -18,7 +18,7 @@ package models.resident.shares.gain
 
 import play.api.libs.json.Json
 
-case class InheritedSharesModel (wasInherited: Boolean)
+case class InheritedSharesModel (wereInherited: Boolean)
 
 object InheritedSharesModel {
   implicit val format = Json.format[InheritedSharesModel]
