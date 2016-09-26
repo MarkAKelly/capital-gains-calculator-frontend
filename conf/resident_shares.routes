@@ -30,7 +30,7 @@ POST    /owned-before-april-first-nineteen-eighty-two    controllers.resident.sh
 GET     /worth-on-thirty-first-march-nineteen-eighty-two controllers.resident.shares.GainController.worthOnMarchEightyTwo
 
 #Did you Inherit the Shares Routes
-GET     /did-you-inherit-them             controllers.resident.shares.GainController.didYouInheritThem
+GET     /did-you-inherit-them             controllers.resident.shares.GainController.inheritedShares
 
 #Acquisition Value or Market Value Routes
 GET     /acquisition-value                controllers.resident.shares.GainController.acquisitionValue

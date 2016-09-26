@@ -120,8 +120,8 @@ object MessageLookup {
         val errorNoSelect = "Tell us if you owned the shares before 1 April 1982"
       }
 
-      object inheritedShares {
-        val title = "Did you inherit the shares?"
+      object InheritedShares {
+        val question = "Did you inherit the shares?"
         val errorSelect = "Tell us if you inherited the shares"
       }
 

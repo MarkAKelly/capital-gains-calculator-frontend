@@ -1,0 +1,37 @@
+@import views.html.helpers._
+@import views.html.calculation.resident._
+@import models.resident.shares.gain.InheritedSharesModel
+@import models.resident.shares._
+@import uk.gov.hmrc.play.views.html.helpers.form
+
+@(inheritedSharesForm: Form[InheritedSharesModel])(implicit request: Request[_])
+
+@resident_main_template(title = Messages("calc.resident.shares.inheritedShares.question"),
+backLink = Some(""),
+homeLink = "",
+navTitle = Messages("calc.base.resident.shares.home")){
+
+@errorSummary(inheritedSharesForm, "wasInherited")
+
+<h1 class="heading-large">@Messages("calc.resident.shares.inheritedShares.question")</h1>
+
+@form(action = controllers.resident.shares.routes.GainController.inheritedShares) {
+
+<div id="radio-input" class="form-group">
+    @formInputRadioGroup(
+    field = inheritedSharesForm("wasInherited"),
+    Seq(
+    "Yes" -> Messages("calc.base.yes"),
+    "No" -> Messages("calc.base.no")),
+    '_legend -> Messages("calc.resident.shares.inheritedShares.question"),
+    '_labelClass -> "block-label",
+    '_legendClass -> "visuallyhidden",
+    '_groupClass -> "inline"
+    )
+</div>
+
+<input type="hidden" name="inheritedShares" value="" />
+<button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+}
+
+}

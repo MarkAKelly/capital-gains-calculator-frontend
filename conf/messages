@@ -587,7 +587,8 @@ calc.resident.shares.ownedBeforeEightyTwo.title = Did you own the shares before 
 calc.resident.shares.ownedBeforeEightyTwo.noSelectError = Tell us if you owned the shares before 1 April 1982
 
 ## Inherited Shares Messages
-calc.resident.inheritedShares.errorSelect = Tell us if you inherited the shares
+calc.resident.shares.inheritedShares.errorSelect = Tell us if you inherited the shares
+calc.resident.shares.inheritedShares.question = Did you inherit the shares?
 
 ## Acquisition Value messages
 calc.resident.shares.acquisitionValue.question = How much did you pay for the shares?
