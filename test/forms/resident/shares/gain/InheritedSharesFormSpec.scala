@@ -17,14 +17,14 @@
 package forms.resident.shares.gain
 
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import forms.resident.shares.gain.InheritedSharesForm._
-import assets.MessageLookup.Resident.Shares.{InheritedShares => messages}
+import forms.resident.shares.gain.DidYouInheritThemForm._
+import assets.MessageLookup.Resident.Shares.{DidYouInheritThem => messages}
 
 class InheritedSharesFormSpec extends UnitSpec with WithFakeApplication {
 
   "Creating the form with an empty model" should {
 
-    lazy val form = inheritedSharesForm
+    lazy val form = didYouInheritThemForm
 
     "create an empty form" in {
       form.data.isEmpty shouldEqual true
@@ -33,7 +33,7 @@ class InheritedSharesFormSpec extends UnitSpec with WithFakeApplication {
 
   "Creating a form with an valid 'yes' model" should {
 
-    lazy val form = inheritedSharesForm.bind(Map("wereInherited" -> "Yes"))
+    lazy val form = didYouInheritThemForm.bind(Map("wereInherited" -> "Yes"))
 
     "create a form with the data from the model" in {
       form.data("wereInherited") shouldEqual "Yes"
@@ -50,7 +50,7 @@ class InheritedSharesFormSpec extends UnitSpec with WithFakeApplication {
 
   "Creating a form with a valid 'no' model" should {
 
-    lazy val form = inheritedSharesForm.bind(Map("wereInherited" -> "No"))
+    lazy val form = didYouInheritThemForm.bind(Map("wereInherited" -> "No"))
 
     "create a form with the data from the model" in {
       form.data("wereInherited") shouldEqual "No"
@@ -69,7 +69,7 @@ class InheritedSharesFormSpec extends UnitSpec with WithFakeApplication {
 
     "supplied with no data for wereInherited" should {
 
-      lazy val form = inheritedSharesForm.bind(Map("wereInherited" -> ""))
+      lazy val form = didYouInheritThemForm.bind(Map("wereInherited" -> ""))
 
       "raise form error" in {
         form.hasErrors shouldBe true
@@ -85,7 +85,7 @@ class InheritedSharesFormSpec extends UnitSpec with WithFakeApplication {
 
       "supplied with invalid data for wereInherited" should {
 
-        lazy val form = inheritedSharesForm.bind(Map("wereInherited" -> "asdas"))
+        lazy val form = didYouInheritThemForm.bind(Map("wereInherited" -> "asdas"))
 
         "raise form error" in {
           form.hasErrors shouldBe true

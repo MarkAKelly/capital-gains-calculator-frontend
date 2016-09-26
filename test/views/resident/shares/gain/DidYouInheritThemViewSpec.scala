@@ -17,19 +17,19 @@
 package views.resident.shares.gain
 
 import controllers.helpers.FakeRequestHelper
-import forms.resident.shares.gain.InheritedSharesForm._
-import models.resident.shares.gain.InheritedSharesModel
+import forms.resident.shares.gain.DidYouInheritThemForm._
+import models.resident.shares.gain.DidYouInheritThemModel
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.shares.{gain => views}
 import assets.MessageLookup
-import assets.MessageLookup.Resident.Shares.{InheritedShares => messages}
+import assets.MessageLookup.Resident.Shares.{DidYouInheritThem => messages}
 
-class InheritedSharesViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class DidYouInheritThemViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Sell for less view with an empty form" should {
 
-    lazy val view = views.inheritedShares(inheritedSharesForm)(fakeRequest)
+    lazy val view = views.didYouInheritThem(didYouInheritThemForm)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
     lazy val form = doc.getElementsByTag("form")
 
@@ -210,7 +210,7 @@ class InheritedSharesViewSpec extends UnitSpec with WithFakeApplication with Fak
   }
 
   "Sell for less view with a filled form" which {
-    lazy val view = views.inheritedShares(inheritedSharesForm.fill(InheritedSharesModel(true)))(fakeRequest)
+    lazy val view = views.inheritedShares(didYouInheritThemForm.fill(DidYouInheritThemModel(true)))(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "for the option 'Yes'" should {
@@ -225,7 +225,7 @@ class InheritedSharesViewSpec extends UnitSpec with WithFakeApplication with Fak
 
   "Sell for less view with form errors" should {
 
-    lazy val form = inheritedSharesForm.bind(Map("wereInherited" -> ""))
+    lazy val form = didYouInheritThemForm.bind(Map("wereInherited" -> ""))
     lazy val view = views.inheritedShares(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 

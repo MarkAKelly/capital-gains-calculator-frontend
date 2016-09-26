@@ -16,12 +16,12 @@
 
 package controllers.resident.shares.GainControllerSpec
 
-import assets.MessageLookup.Resident.Shares.{InheritedShares => messages}
+import assets.MessageLookup.Resident.Shares.{DidYouInheritThem => messages}
 import common.KeystoreKeys.{ResidentShareKeys => keyStoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.shares.GainController
-import models.resident.shares.gain.InheritedSharesModel
+import models.resident.shares.gain.DidYouInheritThemModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -34,14 +34,14 @@ import scala.concurrent.Future
 
 class InheritedSharesActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  def setupTarget(getData: Option[InheritedSharesModel]): GainController= {
+  def setupTarget(getData: Option[DidYouInheritThemModel]): GainController= {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[InheritedSharesModel](Matchers.eq(keyStoreKeys.inheritedShares))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[DidYouInheritThemModel](Matchers.eq(keyStoreKeys.inheritedShares))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
-    when(mockCalcConnector.saveFormData[InheritedSharesModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.saveFormData[DidYouInheritThemModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
 
     new GainController {
@@ -67,7 +67,7 @@ class InheritedSharesActionSpec extends UnitSpec with WithFakeApplication with F
 
     "request has a valid session and some keystore value" should {
 
-      lazy val target = setupTarget(Some(InheritedSharesModel(true)))
+      lazy val target = setupTarget(Some(DidYouInheritThemModel(true)))
       lazy val result = target.didYouInheritThem(fakeRequestWithSession)
 
       "return a status of 200" in {

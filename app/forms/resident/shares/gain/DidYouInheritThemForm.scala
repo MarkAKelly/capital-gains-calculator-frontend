@@ -18,20 +18,20 @@ package forms.resident.shares.gain
 
 import common.Transformers._
 import common.Validation._
-import models.resident.shares.gain.InheritedSharesModel
+import models.resident.shares.gain.DidYouInheritThemModel
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.Messages
 
-object InheritedSharesForm {
+object DidYouInheritThemForm {
 
-  val inheritedSharesForm = Form(
+  val didYouInheritThemForm = Form(
     mapping(
       "wereInherited" -> text
-        .verifying(Messages("calc.resident.shares.inheritedShares.errorSelect", "2015/16"), mandatoryCheck)
-        .verifying(Messages("calc.resident.shares.inheritedShares.errorSelect", "2015/16"), yesNoCheck)
+        .verifying(Messages("calc.resident.shares.didYouInheritThem.errorSelect", "2015/16"), mandatoryCheck)
+        .verifying(Messages("calc.resident.shares.didYouInheritThem.errorSelect", "2015/16"), yesNoCheck)
         .transform[Boolean](stringToBoolean, booleanToString)
-    )(InheritedSharesModel.apply)(InheritedSharesModel.unapply)
+    )(DidYouInheritThemModel.apply)(DidYouInheritThemModel.unapply)
   )
 
 }

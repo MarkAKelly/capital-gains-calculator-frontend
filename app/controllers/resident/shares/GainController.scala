@@ -34,11 +34,11 @@ import forms.resident.AcquisitionCostsForm._
 import forms.resident.AcquisitionValueForm._
 import forms.resident.shares.OwnedBeforeEightyTwoForm._
 import forms.resident.shares.SellForLessForm._
-import forms.resident.shares.gain.InheritedSharesForm._
+import forms.resident.shares.gain.DidYouInheritThemForm._
 import models.resident._
 import common.{Dates, TaxDates}
 import models.resident.shares.OwnedBeforeEightyTwoModel
-import models.resident.shares.gain.InheritedSharesModel
+import models.resident.shares.gain.DidYouInheritThemModel
 import play.api.i18n.Messages
 
 object GainController extends GainController {
@@ -194,15 +194,15 @@ trait GainController extends FeatureLock {
 
   //################# Did you Inherit the Shares Actions ########################
   val didYouInheritThem = FeatureLockForRTTShares.async { implicit request =>
-    calcConnector.fetchAndGetFormData[InheritedSharesModel](keystoreKeys.inheritedShares).map {
-      case Some(data) => Ok(views.inheritedShares(inheritedSharesForm.fill(data)))
-      case None => Ok(views.inheritedShares(inheritedSharesForm))
+    calcConnector.fetchAndGetFormData[DidYouInheritThemModel](keystoreKeys.inheritedShares).map {
+      case Some(data) => Ok(views.didYouInheritThem(didYouInheritThemForm.fill(data)))
+      case None => Ok(views.didYouInheritThem(didYouInheritThemForm))
     }
   }
 
   val submitDidYouInheritThem = FeatureLockForRTTShares.async { implicit request =>
-    inheritedSharesForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.inheritedShares(errors))),
+    didYouInheritThemForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.didYouInheritThem(errors))),
       success => {
         calcConnector.saveFormData(keystoreKeys.inheritedShares, success)
         if(success.wereInherited) Future.successful(Redirect(routes.GainController.worthWhenInherited()))
