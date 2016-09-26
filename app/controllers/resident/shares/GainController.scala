@@ -192,6 +192,11 @@ trait GainController extends FeatureLock {
   //################# Did you Inherit the Shares Actions ########################
   val didYouInheritThem = TODO
 
+  //################# Worth when Inherited Actions ########################
+  val worthWhenInherited = TODO
+
+  val submitWorthWhenInherited = TODO
+
   //################# Acquisition Value Actions ########################
   val acquisitionValue = FeatureLockForRTTShares.async { implicit request =>
     calcConnector.fetchAndGetFormData[AcquisitionValueModel](keystoreKeys.acquisitionValue).map {

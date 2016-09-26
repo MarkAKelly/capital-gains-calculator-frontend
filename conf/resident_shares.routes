@@ -32,6 +32,10 @@ GET     /worth-on-thirty-first-march-nineteen-eighty-two controllers.resident.sh
 #Did you Inherit the Shares Routes
 GET     /did-you-inherit-them             controllers.resident.shares.GainController.didYouInheritThem
 
+#Worth when Inherited Routes
+GET     /worth-when-inherited             controllers.resident.shares.GainController.worthWhenInherited
+POST    /worth-when-inherited             controllers.resident.shares.GainController.submitWorthWhenInherited
+
 #Acquisition Value or Market Value Routes
 GET     /acquisition-value                controllers.resident.shares.GainController.acquisitionValue
 POST    /acquisition-value                controllers.resident.shares.GainController.submitAcquisitionValue
