@@ -166,6 +166,16 @@ articleLayout = false
     @summaryTextRowHelper("sellOrGiveAway", Messages("calc.resident.sellOrGiveAway.title"), if (gainAnswers.givenAway) {Messages("calc.resident.sellOrGiveAway.given")}
     else {Messages("calc.resident.sellOrGiveAway.sold")}, Some(gainRoutes.sellOrGiveAway().toString))
 
+    <!-- Given to someone else Block -->
+    @{if(gainAnswers.givenAway)
+        summaryTextRowHelper("whoDidYouGiveItTo", Messages("calc.resident.whoDidYouGiveThePropertyTo.title"), Messages("calc.resident.whoDidYouGiveThePropertyTo.other"), Some(gainRoutes.whoDidYouGiveItTo().toString))
+    }
+
+    @{if(gainAnswers.givenAway)
+        summaryNumericRowHelper("worthWhenGaveAway", Messages("calc.resident.properties.worthWhenGaveAway.title"), gainAnswers.worthWhenGaveAway.get, Some(gainRoutes.worthWhenGaveAway().toString))
+    }
+    <!-- ^^^^^^ Given to someone else Block ^^^^^^ -->
+
     @{if(!gainAnswers.givenAway)
     summaryOptionRowHelper("sellForLess", Messages("calc.resident.properties.sellForLess.title"), gainAnswers.sellForLess.get, Some(gainRoutes.sellForLess().toString))}
 
@@ -202,7 +212,7 @@ articleLayout = false
     }
 
     @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Gifted"))
-        summaryNumericRowHelper("worthWhenGifted", Messages("calc.resident.properties.worthWhenGifted.question"),gainAnswers.worthWhenGaveAway.get, Some(gainRoutes.worthWhenGifted().toString))
+        summaryNumericRowHelper("worthWhenGifted", Messages("calc.resident.properties.worthWhenGifted.question"),gainAnswers.worthWhenGifted.get, Some(gainRoutes.worthWhenGifted().toString))
     }
 
     @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Inherited"))
