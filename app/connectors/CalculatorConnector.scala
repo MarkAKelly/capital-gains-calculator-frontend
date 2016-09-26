@@ -31,7 +31,6 @@ import play.api.libs.json.Format
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -189,6 +188,7 @@ trait CalculatorConnector {
     )
   }
 
+  //scalastyle:off
   def getPropertyGainAnswers(implicit hc: HeaderCarrier): Future[YourAnswersSummaryModel] = {
     val disposalDate = fetchAndGetFormData[resident.DisposalDateModel](ResidentPropertyKeys.disposalDate).map(formData =>
       constructDate(formData.get.day, formData.get.month, formData.get.year))
@@ -280,11 +280,11 @@ trait CalculatorConnector {
       disposalValue,
       worthWhenSoldForLess,
       whoDidYouGiveItTo,
-      worthWhenGifted,
+      worthWhenGaveAway,
       disposalCosts,
       acquisitionValue,
       worthWhenInherited,
-      worthWhenGaveAway,
+      worthWhenGifted,
       worthWhenBoughtForLess,
       acquisitionCosts,
       improvements,
@@ -296,6 +296,7 @@ trait CalculatorConnector {
       boughtForLessThanWorth
     )
   }
+  //scalastyle:on
 
   def getPropertyDeductionAnswers(implicit hc: HeaderCarrier): Future[ChargeableGainAnswers] = {
     val otherPropertiesModel = fetchAndGetFormData[resident.OtherPropertiesModel](ResidentPropertyKeys.otherProperties)
