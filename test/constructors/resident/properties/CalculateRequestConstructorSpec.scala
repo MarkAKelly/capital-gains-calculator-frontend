@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 class CalculateRequestConstructorSpec extends UnitSpec {
 
-  "Calling determineDisposalValue" when {
+  "Calling determineDisposalValueToUse" when {
 
     "The property was: not gifted & not sold for less & was sold for £5000" should {
 
@@ -52,7 +52,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           worthWhenGifted = None
         )
 
-        CalculateRequestConstructor.determineDisposalValue(answers) shouldEqual 5000
+        CalculateRequestConstructor.determineDisposalValueToUse(answers) shouldEqual 5000
       }
     }
 
@@ -82,7 +82,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           worthWhenGifted = None
         )
 
-        CalculateRequestConstructor.determineDisposalValue(answers) shouldEqual 4000
+        CalculateRequestConstructor.determineDisposalValueToUse(answers) shouldEqual 4000
       }
     }
 
@@ -112,19 +112,19 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           worthWhenGifted = None
         )
 
-        CalculateRequestConstructor.determineDisposalValue(answers) shouldEqual 3000
+        CalculateRequestConstructor.determineDisposalValueToUse(answers) shouldEqual 3000
       }
     }
   }
 
-  "Calling determineAcquisitionValue" when {
+  "Calling determineAcquisitionValueToUse" when {
 
     /* Property was bought for market value */
     "The property was acquired for £4000 and was: " +
-      "\n - acquired after 31 March 1982" +
-      "\n - not inherited" +
-      "\n - not given away as a gift" +
-      "\n - not sold for less than Market Value" should {
+      "\n     >> acquired after 31 March 1982" +
+      "\n     >> not inherited" +
+      "\n     >> not given away as a gift" +
+      "\n     >> not sold for less than Market Value" should {
 
       "return £4000 as the acquisition value" in {
 
@@ -150,16 +150,16 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           improvements = BigDecimal(10)
         )
 
-        CalculateRequestConstructor.determineAcquisitionValue(answers) shouldEqual 4000
+        CalculateRequestConstructor.determineAcquisitionValueToUse(answers) shouldEqual 4000
       }
     }
 
     /* Property was bought for less than market value */
     "The property was acquired for £300 and was: " +
-      "\n - acquired after 31 March 1982" +
-      "\n - not inherited" +
-      "\n - not given away as a gift" +
-      "\n - sold for less than Market Value" should {
+      "\n     >> acquired after 31 March 1982" +
+      "\n     >> not inherited" +
+      "\n     >> not given away as a gift" +
+      "\n     >> sold for less than Market Value" should {
 
       "return £300 as the acquisition value" in {
 
@@ -185,15 +185,15 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           improvements = BigDecimal(10)
         )
 
-        CalculateRequestConstructor.determineAcquisitionValue(answers) shouldEqual 300
+        CalculateRequestConstructor.determineAcquisitionValueToUse(answers) shouldEqual 300
       }
     }
 
     /* Property was gifted */
     "The property was acquired for £390 and was: " +
-      "\n - acquired after 31 March 1982" +
-      "\n - not inherited" +
-      "\n - given away as a gift" should {
+      "\n     >> acquired after 31 March 1982" +
+      "\n     >> not inherited" +
+      "\n     >> given away as a gift" should {
 
       "return £290 as the acquisition value" in {
 
@@ -219,14 +219,14 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           improvements = BigDecimal(10)
         )
 
-        CalculateRequestConstructor.determineAcquisitionValue(answers) shouldEqual 290
+        CalculateRequestConstructor.determineAcquisitionValueToUse(answers) shouldEqual 290
       }
     }
 
     /* Property was inherited */
     "The property was acquired for £230 and was: " +
-      "\n - acquired after 31 March 1982" +
-      "\n - inherited" should {
+      "\n     >> acquired after 31 March 1982" +
+      "\n     >> inherited" should {
 
       "return £230 as the acquisition value" in {
 
@@ -252,19 +252,19 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           improvements = BigDecimal(10)
         )
 
-        CalculateRequestConstructor.determineAcquisitionValue(answers) shouldEqual 230
+        CalculateRequestConstructor.determineAcquisitionValueToUse(answers) shouldEqual 230
       }
     }
 
     /* Property was acquired on/before 31 March 1982 */
     "The property was acquired for £29 and was: " +
-      "\n - acquired on/before 31 March 1982" should {
+      "\n     >> acquired on/before 31 March 1982" should {
 
       "return £29 as the acquisition value" in {
 
         val answers = YourAnswersSummaryModel(
-          ownerBeforeAprilNineteenEightyTwo = false,
-          howBecameOwner = Some(inheritedIt),
+          ownerBeforeAprilNineteenEightyTwo = true,
+          howBecameOwner = None,
           boughtForLessThanWorth = None,
           worthOnThirtyFirstMarchEightyTwo = Some(BigDecimal(29)),
           worthWhenInherited = None,
@@ -284,42 +284,46 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           improvements = BigDecimal(10)
         )
 
-        CalculateRequestConstructor.determineAcquisitionValue(answers) shouldEqual 29
+        CalculateRequestConstructor.determineAcquisitionValueToUse(answers) shouldEqual 29
       }
     }
   }
 
-  "totalGainRequestString" should {
+  "calling totalGainRequestString" when {
 
-    "return a valid url variable string with the " in {
-      val answers = YourAnswersSummaryModel(
-        disposalDate = Dates.constructDate(10, 2, 2016),
-        disposalValue = Some(BigDecimal(1000)),
-        worthWhenSoldForLess = None,
-        whoDidYouGiveItTo = None,
-        worthWhenGaveAway = None,
-        disposalCosts = BigDecimal(0),
-        acquisitionValue = Some(BigDecimal(500)),
-        worthWhenInherited = None,
-        worthWhenGifted = None,
-        worthWhenBoughtForLess = None,
-        acquisitionCosts = BigDecimal(100),
-        improvements = BigDecimal(10),
-        givenAway = true,
-        sellForLess = Some(false),
-        ownerBeforeAprilNineteenEightyTwo = true,
-        worthOnThirtyFirstMarchEightyTwo = Some(BigDecimal(5000)),
-        howBecameOwner = Some("Bought"),
-        boughtForLessThanWorth = Some(false)
-      )
+    /* This proves that the determined values are being used */
+    "property has been given away and the acquisition was gifted" should {
 
-      val result = CalculateRequestConstructor.totalGainRequestString(answers)
-      result shouldBe s"?disposalValue=1000" +
-        s"&disposalCosts=0" +
-        s"&acquisitionValue=500" +
-        s"&acquisitionCosts=100" +
-        s"&improvements=10" +
-        s"&disposalDate=2016-02-10"
+      "return a valid url variable string" in {
+        val answers = YourAnswersSummaryModel(
+          disposalDate = Dates.constructDate(10, 2, 2016),
+          disposalValue = None,
+          worthWhenSoldForLess = None,
+          whoDidYouGiveItTo = None,
+          worthWhenGaveAway = Some(4000),
+          disposalCosts = BigDecimal(0),
+          acquisitionValue = None,
+          worthWhenInherited = None,
+          worthWhenGifted = Some(2000),
+          worthWhenBoughtForLess = None,
+          acquisitionCosts = BigDecimal(100),
+          improvements = BigDecimal(10),
+          givenAway = true,
+          sellForLess = None,
+          ownerBeforeAprilNineteenEightyTwo = false,
+          worthOnThirtyFirstMarchEightyTwo = None,
+          howBecameOwner = Some(giftedIt),
+          boughtForLessThanWorth = Some(true)
+        )
+
+        val result = CalculateRequestConstructor.totalGainRequestString(answers)
+        result shouldBe s"?disposalValue=4000" +
+          s"&disposalCosts=0" +
+          s"&acquisitionValue=2000" +
+          s"&acquisitionCosts=100" +
+          s"&improvements=10" +
+          s"&disposalDate=2016-02-10"
+      }
     }
   }
 
