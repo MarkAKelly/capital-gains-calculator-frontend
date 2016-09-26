@@ -207,6 +207,8 @@ trait GainController extends FeatureLock {
   //################# What were they worth on 31 March 1982 Actions ########################
   val worthOnMarchEightyTwo = TODO
 
+  val submitWorthOnMarchEightyTwo = TODO
+
   //################# Did you Inherit the Shares Actions ########################
   val didYouInheritThem = FeatureLockForRTTShares.async { implicit request =>
     calcConnector.fetchAndGetFormData[DidYouInheritThemModel](keystoreKeys.inheritedShares).map {
