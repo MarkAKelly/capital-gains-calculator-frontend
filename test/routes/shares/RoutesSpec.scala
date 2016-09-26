@@ -60,11 +60,18 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
-  /* Worth when Sold routes */
-  "The URL for the resident/shares worthWhenSold Action" should {
-    "be equal to /calculate-your-capital-gains/resident/shares/worth-when-sold" in {
-      val path = GainController.worthWhenSold().url
-      path shouldEqual "/calculate-your-capital-gains/resident/shares/worth-when-sold"
+  /* Worth when Sold For Less routes */
+  "The URL for the resident/shares worthWhenSoldForLess Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/worth-when-sold-for-less" in {
+      val path = GainController.worthWhenSoldForLess().url
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/worth-when-sold-for-less"
+    }
+  }
+
+  "The URL for the resident/shares submit worthWhenSoldForLess Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/worth-when-sold-for-less" in {
+      val path = GainController.submitWorthWhenSoldForLess().url
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/worth-when-sold-for-less"
     }
   }
 
@@ -122,9 +129,16 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
   }
 
   /* Did You Inherit the Shares Routes */
-  "The URL for the resident/shares Did You Inherit the Shares Action" should {
+  "The URL for the resident/shares inheritedShares Action" should {
     "be equal to /calculate-your-capital-gains/resident/shares/did-you-inherit-the-shares" in {
       val path = GainController.didYouInheritThem().url
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/did-you-inherit-them"
+    }
+  }
+
+  "The URL for the resident/shares submitInheritedShares Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/did-you-inherit-the-shares" in {
+      val path = GainController.submitDidYouInheritThem().url
       path shouldEqual "/calculate-your-capital-gains/resident/shares/did-you-inherit-them"
     }
   }

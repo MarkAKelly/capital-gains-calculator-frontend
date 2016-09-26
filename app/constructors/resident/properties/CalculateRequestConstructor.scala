@@ -17,15 +17,30 @@
 package constructors.resident.properties
 
 import common.Dates._
+import common.resident.HowYouBecameTheOwnerKeys._
 import models.resident._
 import models.resident.properties.{ChargeableGainAnswers, YourAnswersSummaryModel}
 
 object CalculateRequestConstructor {
 
+  val determineDisposalValueToUse: YourAnswersSummaryModel => BigDecimal = {
+    case x if x.givenAway => x.worthWhenGaveAway.get
+    case x if x.sellForLess.get => x.worthWhenSoldForLess.get
+    case x => x.disposalValue.get
+  }
+
+  val determineAcquisitionValueToUse: YourAnswersSummaryModel => BigDecimal = {
+    case x if x.ownerBeforeAprilNineteenEightyTwo => x.worthOnThirtyFirstMarchEightyTwo.get
+    case x if x.howBecameOwner.get == inheritedIt => x.worthWhenInherited.get
+    case x if x.howBecameOwner.get == giftedIt => x.worthWhenGifted.get
+    case x if x.boughtForLessThanWorth.get => x.worthWhenBoughtForLess.get
+    case x => x.acquisitionValue.get
+  }
+
   def totalGainRequestString (answers: YourAnswersSummaryModel): String = {
-      s"?disposalValue=${answers.disposalValue.get}" +
+      s"?disposalValue=${determineDisposalValueToUse(answers)}" +
       s"&disposalCosts=${answers.disposalCosts}" +
-      s"&acquisitionValue=${answers.acquisitionValue.get}" +
+      s"&acquisitionValue=${determineAcquisitionValueToUse(answers)}" +
       s"&acquisitionCosts=${answers.acquisitionCosts}" +
       s"&improvements=${answers.improvements}" +
       s"&disposalDate=${answers.disposalDate.format(requestFormatter)}"

@@ -129,8 +129,8 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
 
       "has a numeric output row for the Disposal Value" which {
 
-        s"should have the question text '${commonMessages.sharesDisposalValue.question}'" in {
-          doc.select("#disposalValue-question").text shouldBe commonMessages.sharesDisposalValue.question
+        s"should have the question text '${commonMessages.Resident.Shares.DisposalValue.question}'" in {
+          doc.select("#disposalValue-question").text shouldBe commonMessages.Resident.Shares.DisposalValue.question
         }
 
         "should have the value '£10'" in {

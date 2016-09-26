@@ -23,6 +23,7 @@ import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import play.api.mvc.Result
 import uk.gov.hmrc.play.http.SessionKeys
+
 import scala.concurrent.Future
 import views.html.calculation.{resident => commonViews}
 import views.html.calculation.resident.shares.{gain => views}
@@ -34,9 +35,13 @@ import forms.resident.AcquisitionValueForm._
 import forms.resident.WorthWhenInheritedForm._
 import forms.resident.shares.OwnedBeforeEightyTwoForm._
 import forms.resident.shares.SellForLessForm._
+import forms.resident.WorthWhenSoldForLessForm._
+import forms.resident.shares.gain.DidYouInheritThemForm._
+
 import models.resident._
 import common.{Dates, TaxDates}
 import models.resident.shares.OwnedBeforeEightyTwoModel
+import models.resident.shares.gain.DidYouInheritThemModel
 import play.api.i18n.Messages
 
 object GainController extends GainController {
@@ -98,7 +103,7 @@ trait GainController extends FeatureLock {
       success => {
         calcConnector.saveFormData[SellForLessModel](keystoreKeys.sellForLess, success)
         success.sellForLess match {
-          case true => Future.successful(Redirect(routes.GainController.worthWhenSold()))
+          case true => Future.successful(Redirect(routes.GainController.worthWhenSoldForLess()))
           case _ => Future.successful(Redirect(routes.GainController.disposalValue()))
         }
       }
@@ -106,8 +111,22 @@ trait GainController extends FeatureLock {
   }
 
   //################ Worth When Sold Actions ######################
-  val worthWhenSold = FeatureLockForRTT.async { implicit request =>
-    TODO.apply(request)
+  val worthWhenSoldForLess = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[WorthWhenSoldForLessModel](keystoreKeys.worthWhenSoldForLess).map {
+      case Some(data) => Ok(views.worthWhenSoldForLess(worthWhenSoldForLessForm.fill(data), homeLink))
+      case _ => Ok(views.worthWhenSoldForLess(worthWhenSoldForLessForm, homeLink))
+    }
+  }
+
+  val submitWorthWhenSoldForLess = FeatureLockForRTT.async { implicit request =>
+
+    worthWhenSoldForLessForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.worthWhenSoldForLess(errors, homeLink))),
+      success => {
+        calcConnector.saveFormData(keystoreKeys.worthWhenSoldForLess, success)
+        Future.successful(Redirect(routes.GainController.disposalCosts()))
+      }
+    )
   }
 
 
@@ -191,7 +210,23 @@ trait GainController extends FeatureLock {
   val worthOnMarchEightyTwo = TODO
 
   //################# Did you Inherit the Shares Actions ########################
-  val didYouInheritThem = TODO
+  val didYouInheritThem = FeatureLockForRTTShares.async { implicit request =>
+    calcConnector.fetchAndGetFormData[DidYouInheritThemModel](keystoreKeys.inheritedShares).map {
+      case Some(data) => Ok(views.didYouInheritThem(didYouInheritThemForm.fill(data)))
+      case None => Ok(views.didYouInheritThem(didYouInheritThemForm))
+    }
+  }
+
+  val submitDidYouInheritThem = FeatureLockForRTTShares.async { implicit request =>
+    didYouInheritThemForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.didYouInheritThem(errors))),
+      success => {
+        calcConnector.saveFormData(keystoreKeys.inheritedShares, success)
+        if(success.wereInherited) Future.successful(Redirect(routes.GainController.worthWhenInherited()))
+        else Future.successful(Redirect(routes.GainController.acquisitionValue()))
+      }
+    )
+  }
 
   //################# Worth when Inherited Actions ########################
   val worthWhenInherited = FeatureLockForRTTShares.async { implicit request =>

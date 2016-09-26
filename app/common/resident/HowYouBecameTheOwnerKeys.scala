@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package models.resident.properties.gain
+package common.resident
 
-import play.api.libs.json.Json
-
-case class WorthWhenSoldForLessModel(amount: BigDecimal)
-
-object WorthWhenSoldForLessModel {
-  implicit val format = Json.format[WorthWhenSoldForLessModel]
+object HowYouBecameTheOwnerKeys {
+  val inheritedIt = "Inherited"
+  val boughtIt = "Bought"
+  val giftedIt = "Gifted"
 }

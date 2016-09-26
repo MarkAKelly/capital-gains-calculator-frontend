@@ -17,7 +17,7 @@
 package views.resident.shares.gain
 
 import assets.MessageLookup
-import assets.MessageLookup.{sharesDisposalValue => messages}
+import assets.MessageLookup.Resident.Shares.{DisposalValue => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.DisposalValueForm._
 import org.jsoup.Jsoup
@@ -50,16 +50,12 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
       doc.title shouldEqual messages.question
     }
 
-    s"have a back link to the Disposal Date Page with text ${MessageLookup.calcBaseBack}" in {
-      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/disposal-date"
+    s"have a back link to the Sell For Less Page with text ${MessageLookup.calcBaseBack}" in {
+      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/sell-for-less"
     }
 
     s"have the question of the page ${messages.question}" in {
       doc.select("h1").text shouldEqual messages.question
-    }
-
-    s"have the extra text ${messages.helpText}" in {
-      doc.select(".panel.panel-border-wide>p").text shouldBe messages.helpText
     }
 
     "render a form tag with a submit action" in {

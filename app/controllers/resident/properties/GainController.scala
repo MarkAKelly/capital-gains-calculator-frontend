@@ -36,7 +36,7 @@ import forms.resident.properties.ImprovementsForm._
 import forms.resident.properties.SellForLessForm._
 import forms.resident.properties.gain.OwnerBeforeAprilForm._
 import forms.resident.properties.gain.PropertyRecipientForm._
-import forms.resident.properties.gain.WorthWhenSoldForLessForm._
+import forms.resident.WorthWhenSoldForLessForm._
 import forms.resident.properties.WorthWhenGaveAwayForm._
 import forms.resident.properties.HowBecameOwnerForm._
 import forms.resident.WorthWhenInheritedForm._
@@ -46,7 +46,7 @@ import forms.resident.properties.BoughtForLessThanWorthForm._
 import forms.resident.properties.WorthWhenBoughtForm._
 import forms.resident.properties.SellOrGiveAwayForm._
 import play.api.data.Form
-import models.resident.properties.gain.{OwnerBeforeAprilModel, PropertyRecipientModel, WorthWhenGiftedModel, WorthWhenSoldForLessModel}
+import models.resident.properties.gain.{OwnerBeforeAprilModel, PropertyRecipientModel, WorthWhenGiftedModel}
 import models.resident._
 import models.resident.properties._
 import play.api.i18n.Messages

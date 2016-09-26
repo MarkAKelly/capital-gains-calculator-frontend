@@ -116,10 +116,19 @@ object MessageLookup {
 
       }
 
+      object DisposalValue {
+        val question = "How much did you sell the shares for?"
+      }
+
       //############ Owned Before 1982 messages #################//
       object OwnedBeforeEightyTwoMessages {
         val title = "Did you own the shares before 1 April 1982?"
         val errorNoSelect = "Tell us if you owned the shares before 1 April 1982"
+      }
+
+      object DidYouInheritThem {
+        val question = "Did you inherit the shares?"
+        val errorSelect = "Tell us if you inherited the shares"
       }
 
       //############ Sell For Less messages #################//
@@ -131,6 +140,11 @@ object MessageLookup {
       //############ Worth When Inherited messages #################//
       object WorthWhenInherited {
         val question = "What were the shares worth when you inherited them?"
+      }
+
+      //############ Worth When Sold For Less messages #################//
+      object worthWhenSoldForLess {
+        val question = "What were the shares worth when you sold them?"
       }
     }
   }
@@ -458,11 +472,6 @@ object MessageLookup {
   //############ Shares messages ##############//
   object sharesDisposalDate {
     val title = "When did you sell or give away the shares?"
-  }
-
-  object sharesDisposalValue {
-    val question = "How much did you sell the shares for?"
-    val helpText = "Put the market value of the shares instead if you sold them for less than they were worth to help the buyer"
   }
 
   object sharesAcquisitionCosts {
