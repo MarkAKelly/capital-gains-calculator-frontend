@@ -98,21 +98,6 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Fa
         }
       }
 
-      "has additional content that" should {
-
-        s"have a bullet point list title of ${messages.bulletListTitle}" in {
-          doc.select("div.indent p#bullet-list-title").text() shouldEqual messages.bulletListTitle
-        }
-
-        s"have a first bullet point of ${messages.bulletListOne}" in {
-          doc.select("div.indent li#bullet-list-one").text() shouldEqual messages.bulletListOne
-        }
-
-        s"have a second bullet point of ${messages.bulletListTwo}" in {
-          doc.select("div.indent li#bullet-list-two").text() shouldEqual messages.bulletListTwo
-        }
-      }
-
       "has a numeric input field that" should {
 
         lazy val input = doc.body.getElementsByTag("input")

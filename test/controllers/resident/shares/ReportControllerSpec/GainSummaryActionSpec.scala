@@ -61,11 +61,19 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
   "Calling .gainSummaryReport from the ReportController" when {
 
     "a negative total gain is returned" should {
-      lazy val yourAnswersSummaryModel = GainAnswersModel(Dates.constructDate(12, 1, 2016),
-        3000,
-        10,
-        5000,
-        5)
+      lazy val yourAnswersSummaryModel = GainAnswersModel(
+        disposalDate = Dates.constructDate(10, 10, 2018),
+        soldForLessThanWorth = None,
+        disposalValue = 3000,
+        worthWhenSoldForLess = None,
+        disposalCosts = 10,
+        ownedBeforeTaxStartDate = None,
+        worthOnTaxStartDate = None,
+        inheritedTheShares = None,
+        worthWhenInherited = None,
+        acquisitionValue = 5000,
+        acquisitionCosts = 5
+      )
       lazy val target = setupTarget(
         yourAnswersSummaryModel,
         -6000,
@@ -91,11 +99,19 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
     }
 
     "a zero total gain is returned with an invalid tax year" should {
-      lazy val yourAnswersSummaryModel = GainAnswersModel(Dates.constructDate(12, 1, 2016),
-        3000,
-        10,
-        5000,
-        5)
+      lazy val yourAnswersSummaryModel = GainAnswersModel(
+        disposalDate = Dates.constructDate(10, 10, 2018),
+        soldForLessThanWorth = None,
+        disposalValue = 3000,
+        worthWhenSoldForLess = None,
+        disposalCosts = 10,
+        ownedBeforeTaxStartDate = None,
+        worthOnTaxStartDate = None,
+        inheritedTheShares = None,
+        worthWhenInherited = None,
+        acquisitionValue = 5000,
+        acquisitionCosts = 5
+      )
       lazy val target = setupTarget(
         yourAnswersSummaryModel,
         -6000,

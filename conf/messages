@@ -585,7 +585,7 @@ calc.resident.shares.sellForLess.noSelectError = Tell us if you sold the shares 
 calc.resident.shares.worthWhenSoldForLess.question = What were the shares worth when you sold them?
 
 ## Disposal Costs messages
-calc.resident.shares.disposalCosts.question = How much did you pay in costs when you sold or gave away the shares?
+calc.resident.shares.disposalCosts.question = How much did you pay in costs when you sold the shares?
 calc.resident.shares.disposalCosts.helpText = For example, stockbroker fees
 
 ## Owned Before 1982 Messages
