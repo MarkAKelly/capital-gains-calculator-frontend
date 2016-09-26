@@ -23,6 +23,7 @@ import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import play.api.mvc.Result
 import uk.gov.hmrc.play.http.SessionKeys
+
 import scala.concurrent.Future
 import views.html.calculation.{resident => commonViews}
 import views.html.calculation.resident.shares.{gain => views}
@@ -33,9 +34,11 @@ import forms.resident.AcquisitionCostsForm._
 import forms.resident.AcquisitionValueForm._
 import forms.resident.shares.OwnedBeforeEightyTwoForm._
 import forms.resident.shares.SellForLessForm._
+import forms.resident.shares.gain.DidYouInheritThemForm._
 import models.resident._
 import common.{Dates, TaxDates}
 import models.resident.shares.OwnedBeforeEightyTwoModel
+import models.resident.shares.gain.DidYouInheritThemModel
 import play.api.i18n.Messages
 
 object GainController extends GainController {
@@ -190,7 +193,26 @@ trait GainController extends FeatureLock {
   val worthOnMarchEightyTwo = TODO
 
   //################# Did you Inherit the Shares Actions ########################
-  val didYouInheritThem = TODO
+  val didYouInheritThem = FeatureLockForRTTShares.async { implicit request =>
+    calcConnector.fetchAndGetFormData[DidYouInheritThemModel](keystoreKeys.inheritedShares).map {
+      case Some(data) => Ok(views.didYouInheritThem(didYouInheritThemForm.fill(data)))
+      case None => Ok(views.didYouInheritThem(didYouInheritThemForm))
+    }
+  }
+
+  val submitDidYouInheritThem = FeatureLockForRTTShares.async { implicit request =>
+    didYouInheritThemForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.didYouInheritThem(errors))),
+      success => {
+        calcConnector.saveFormData(keystoreKeys.inheritedShares, success)
+        if(success.wereInherited) Future.successful(Redirect(routes.GainController.worthWhenInherited()))
+        else Future.successful(Redirect(routes.GainController.acquisitionValue()))
+      }
+    )
+  }
+
+  //################# Worth When Inherited Actions ########################
+  val worthWhenInherited = TODO
 
   //################# Acquisition Value Actions ########################
   val acquisitionValue = FeatureLockForRTTShares.async { implicit request =>
