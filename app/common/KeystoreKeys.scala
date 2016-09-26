@@ -96,5 +96,6 @@ object KeystoreKeys {
     val currentIncome = "res:share:currentIncome"
     val previousTaxableGains = "res:share:previousTaxableGains"
     val personalAllowance = "res:share:personalAllowance"
+    val worthWhenInherited = "res:share:worthWhenInherited"
   }
 }
