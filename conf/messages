@@ -348,6 +348,11 @@ calc.resident.sellOrGiveAway.sold = Sold it
 calc.resident.properties.worthWhenGaveAway.title = What was the property worth when you gave it away?
 calc.resident.properties.worthWhenGaveAway.help = You can use a valuation from a surveyor or a property website.
 
+## No Tax To Pay messages
+calc.resident.noTaxToPay.title = You have no tax to pay
+calc.resident.noTaxToPay.spouseText = This is because Capital Gains Tax doesn''t apply if you give a property to your spouse or civil partner.
+calc.resident.noTaxToPay.charityText = This is because Capital Gains Tax doesn''t apply if you give a property to a charity.
+
 ## Disposal Value messages
 calc.resident.disposal.value.question = How much did you sell the property for?
 
