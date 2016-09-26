@@ -7,15 +7,15 @@
 @(inheritedSharesForm: Form[InheritedSharesModel])(implicit request: Request[_])
 
 @resident_main_template(title = Messages("calc.resident.shares.inheritedShares.question"),
-backLink = Some(""),
-homeLink = "",
+backLink = Some(controllers.resident.shares.routes.GainController.ownedBeforeEightyTwo().url),
+homeLink = controllers.resident.shares.routes.GainController.disposalDate().url,
 navTitle = Messages("calc.base.resident.shares.home")){
 
 @errorSummary(inheritedSharesForm, "wasInherited")
 
 <h1 class="heading-large">@Messages("calc.resident.shares.inheritedShares.question")</h1>
 
-@form(action = controllers.resident.shares.routes.GainController.inheritedShares) {
+@form(action = controllers.resident.shares.routes.GainController.submitInheritedShares) {
 
 <div id="radio-input" class="form-group">
     @formInputRadioGroup(

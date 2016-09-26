@@ -55,7 +55,7 @@ class InheritedSharesViewSpec extends UnitSpec with WithFakeApplication with Fak
     }
 
     s"have the home link to 'home'" in {
-      doc.select("#homeNavHref").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/"
+      doc.select("#homeNavHref").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/disposal-date"
     }
 
     "have a back button" which {
@@ -71,20 +71,16 @@ class InheritedSharesViewSpec extends UnitSpec with WithFakeApplication with Fak
       }
 
       "has a back link to 'back'" in {
-        backLink.attr("href") shouldBe "back-link"
+        backLink.attr("href") shouldBe "/calculate-your-capital-gains/resident/shares/owned-before-april-first-nineteen-eighty-two"
       }
     }
 
     "render a form tag with a submit action" in {
-      doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/shares/owned-before-april-first-nineteen-eighty-two"
+      doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/shares/did-you-inherit-them"
     }
 
     "has the method of POST" in {
       form.attr("method") shouldBe "POST"
-    }
-
-    "has the form action '/calculate-your-capital-gains/resident/shares/inherited-shares'" in {
-      form.attr("action") shouldBe "/calculate-your-capital-gains/resident/shares/did-you-inherit-them"
     }
 
     "have a legend for the radio inputs" which {
