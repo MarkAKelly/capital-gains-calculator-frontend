@@ -32,6 +32,7 @@ import forms.resident.DisposalCostsForm._
 import forms.resident.DisposalValueForm._
 import forms.resident.AcquisitionCostsForm._
 import forms.resident.AcquisitionValueForm._
+import forms.resident.WorthWhenInheritedForm._
 import forms.resident.shares.OwnedBeforeEightyTwoForm._
 import forms.resident.shares.SellForLessForm._
 import forms.resident.WorthWhenSoldForLessForm._
@@ -227,8 +228,23 @@ trait GainController extends FeatureLock {
     )
   }
 
-  //################# Worth When Inherited Actions ########################
-  val worthWhenInherited = TODO
+  //################# Worth when Inherited Actions ########################
+  val worthWhenInherited = FeatureLockForRTTShares.async { implicit request =>
+    calcConnector.fetchAndGetFormData[WorthWhenInheritedModel](keystoreKeys.worthWhenInherited).map {
+      case Some(data) => Ok(views.worthWhenInherited(worthWhenInheritedForm.fill(data)))
+      case None => Ok(views.worthWhenInherited(worthWhenInheritedForm))
+    }
+  }
+
+  val submitWorthWhenInherited = FeatureLockForRTTShares.async { implicit request =>
+    worthWhenInheritedForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.worthWhenInherited(errors))),
+      success => {
+        calcConnector.saveFormData(keystoreKeys.worthWhenInherited, success)
+        Future.successful(Redirect(routes.GainController.acquisitionCosts()))
+      }
+    )
+  }
 
   //################# Acquisition Value Actions ########################
   val acquisitionValue = FeatureLockForRTTShares.async { implicit request =>

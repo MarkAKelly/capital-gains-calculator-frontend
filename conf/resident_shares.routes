@@ -37,6 +37,10 @@ POST    /did-you-inherit-them             controllers.resident.shares.GainContro
 #Worth When Inherited Routes
 GET     /worth-when-inherited             controllers.resident.shares.GainController.worthWhenInherited
 
+#Worth when Inherited Routes
+GET     /worth-when-inherited             controllers.resident.shares.GainController.worthWhenInherited
+POST    /worth-when-inherited             controllers.resident.shares.GainController.submitWorthWhenInherited
+
 #Acquisition Value or Market Value Routes
 GET     /acquisition-value                controllers.resident.shares.GainController.acquisitionValue
 POST    /acquisition-value                controllers.resident.shares.GainController.submitAcquisitionValue
