@@ -100,7 +100,7 @@ object Validation {
     case _ => false
   }
 
-  val whoDidYouGiveItTooCheck: String => Boolean = {
+  val whoDidYouGiveItToCheck: String => Boolean = {
     case "Spouse" => true
     case "Charity" => true
     case "Other" => true

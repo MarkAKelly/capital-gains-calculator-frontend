@@ -17,7 +17,6 @@
 package controllers.resident.properties
 
 import java.util.UUID
-
 import common.KeystoreKeys.{ResidentShareKeys, ResidentPropertyKeys => keystoreKeys}
 import common.{Dates, TaxDates}
 import config.{AppConfig, ApplicationConfig}
@@ -25,7 +24,6 @@ import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import play.api.mvc.{Action, Result}
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
-
 import scala.concurrent.Future
 import views.html.calculation.{resident => commonViews}
 import views.html.calculation.resident.properties.{gain => views}
