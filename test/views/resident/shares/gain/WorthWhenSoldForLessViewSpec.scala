@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package views.resident.properties.gain
+package views.resident.shares.gain
 
 import assets.MessageLookup
-import assets.MessageLookup.Resident.Properties.{WorthWhenSoldForLess => messages}
+import assets.MessageLookup.Resident.Shares.{worthWhenSoldForLess => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.WorthWhenSoldForLessForm._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import views.html.calculation.resident.properties.{gain => views}
+import views.html.calculation.resident.shares.{gain => views}
 import org.jsoup.Jsoup
 
 class WorthWhenSoldForLessViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "The Property Worth When Sold View when supplied with an empty form" should {
 
-    lazy val view = views.worthWhenSoldForLess(worthWhenSoldForLessForm)(fakeRequest)
+    lazy val view = views.worthWhenSoldForLess(worthWhenSoldForLessForm, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -48,7 +48,7 @@ class WorthWhenSoldForLessViewSpec extends UnitSpec with WithFakeApplication wit
       }
 
       "should link to the Did you sell it for less than it was worth page." in {
-        backLink.attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/sell-for-less"
+        backLink.attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/sell-for-less"
       }
     }
 
@@ -65,16 +65,12 @@ class WorthWhenSoldForLessViewSpec extends UnitSpec with WithFakeApplication wit
       }
     }
 
-    s"have text under the heading equal to ${messages.paragraphText}" in {
-      doc.select("#additionalText").text shouldEqual messages.paragraphText
-    }
-
     "have a form that" should {
 
       lazy val form = doc.select("form")
 
-      "have the action /calculate-your-capital-gains/resident/properties/property-worth-when-sold" in {
-        form.attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/worth-when-sold"
+      "have the action /calculate-your-capital-gains/resident/shares/worth-when-sold-for-less" in {
+        form.attr("action") shouldEqual "/calculate-your-capital-gains/resident/shares/worth-when-sold-for-less"
       }
 
       "have the method POST" in {
@@ -137,7 +133,7 @@ class WorthWhenSoldForLessViewSpec extends UnitSpec with WithFakeApplication wit
   "The Property Worth When Sold View when supplied with a correct form" should {
 
     val form = worthWhenSoldForLessForm.bind(Map("amount" -> "100"))
-    lazy val view = views.worthWhenSoldForLess(form)(fakeRequest)
+    lazy val view = views.worthWhenSoldForLess(form, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display the value of the form in the input" in {
@@ -156,7 +152,7 @@ class WorthWhenSoldForLessViewSpec extends UnitSpec with WithFakeApplication wit
   "The Property Worth When Sold View when supplied with an incorrect form" should {
 
     val form = worthWhenSoldForLessForm.bind(Map("amount" -> "adsa"))
-    lazy val view = views.worthWhenSoldForLess(form)(fakeRequest)
+    lazy val view = views.worthWhenSoldForLess(form, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {

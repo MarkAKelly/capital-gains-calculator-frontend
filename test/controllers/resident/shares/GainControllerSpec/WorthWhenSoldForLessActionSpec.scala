@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 
-package controllers.resident.properties.GainControllerSpec
+package controllers.resident.shares.GainControllerSpec
 
 import assets.MessageLookup
 import controllers.helpers.FakeRequestHelper
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
+import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import org.mockito.Matchers
 import config.AppConfig
-import controllers.resident.properties.GainController
+import controllers.resident.shares.GainController
 import models.resident.WorthWhenSoldForLessModel
 import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
 import org.jsoup.Jsoup
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
@@ -53,7 +54,7 @@ class WorthWhenSoldForLessActionSpec extends UnitSpec with WithFakeApplication w
     }
   }
 
-  "Calling .propertyWorthWhenSold from the GainCalculationController" when {
+  "Calling .sharesWorthWhenSoldForLess from the GainCalculationController" when {
     "there is no keystore data" should {
       lazy val target = setupTarget(None)
       lazy val result = target.worthWhenSoldForLess(fakeRequestWithSession)
@@ -62,8 +63,8 @@ class WorthWhenSoldForLessActionSpec extends UnitSpec with WithFakeApplication w
         status(result) shouldEqual 200
       }
 
-      s"return some html with title of ${MessageLookup.Resident.Properties.WorthWhenSoldForLess.question}" in {
-        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.Resident.Properties.WorthWhenSoldForLess.question
+      s"return some html with title of ${MessageLookup.Resident.Shares.worthWhenSoldForLess.question}" in {
+        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.Resident.Shares.worthWhenSoldForLess.question
       }
     }
 
@@ -75,13 +76,13 @@ class WorthWhenSoldForLessActionSpec extends UnitSpec with WithFakeApplication w
         status(result) shouldEqual 200
       }
 
-      s"return some html with title of ${MessageLookup.Resident.Properties.WorthWhenSoldForLess.question}" in {
-        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.Resident.Properties.WorthWhenSoldForLess.question
+      s"return some html with title of ${MessageLookup.Resident.Shares.worthWhenSoldForLess.question}" in {
+        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.Resident.Shares.worthWhenSoldForLess.question
       }
     }
   }
 
-  "Calling .propertyWorthWhenSold from the GainCalculationController with no session" should {
+  "Calling .sharesWorthWhenSold from the GainCalculationController with no session" should {
 
     lazy val target = setupTarget(None)
     lazy val result = target.worthWhenSoldForLess(fakeRequest)
@@ -90,13 +91,12 @@ class WorthWhenSoldForLessActionSpec extends UnitSpec with WithFakeApplication w
       status(result) shouldBe 303
     }
 
-    "to the session timeout page" in {
-      redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/session-timeout?restartUrl=%2Fcalculate-your-capital-gains" +
-        "%2Fresident%2Fproperties%2F&homeLink=%2Fcalculate-your-capital-gains%2Fresident%2Fproperties%2F")
+    "return you to the session timeout page" in {
+      redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
     }
   }
 
-  "Calling .submitPropertyWorthWhenSold from the GainController" should {
+  "Calling .submitsharesWorthWhenSold from the GainController" should {
     lazy val target = setupTarget(None)
     lazy val request = fakeRequestToPOSTWithSession(("amount", "100"))
     lazy val result = target.submitWorthWhenSoldForLess(request)
@@ -108,12 +108,12 @@ class WorthWhenSoldForLessActionSpec extends UnitSpec with WithFakeApplication w
       }
 
       "to the disposal costs page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/disposal-costs")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/disposal-costs")
       }
     }
   }
 
-  "Calling .submitPropertyWorthWhenSold from the GainController" should {
+  "Calling .submitsharesWorthWhenSold from the GainController" should {
     lazy val target = setupTarget(None)
     lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
     lazy val result = target.submitWorthWhenSoldForLess(request)
@@ -124,8 +124,8 @@ class WorthWhenSoldForLessActionSpec extends UnitSpec with WithFakeApplication w
         status(result) shouldEqual 400
       }
 
-      "stay on the Property Worth When Sold page" in {
-        Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.Resident.Properties.WorthWhenSoldForLess.question
+      "stay on the shares Worth When Sold page" in {
+        Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.Resident.Shares.worthWhenSoldForLess.question
       }
     }
   }

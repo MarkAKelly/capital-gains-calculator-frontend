@@ -125,6 +125,11 @@ object MessageLookup {
         val title = "Did you sell the shares for less than they were worth to help the buyer?"
         val errorSelect = s"Tell us if you sold the shares for less than they were worth to help the buyer?"
       }
+
+      //############ Worth When Sold For Less messages #################//
+      object worthWhenSoldForLess {
+        val question = "What were the shares worth when you sold them?"
+      }
     }
   }
 

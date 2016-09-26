@@ -106,7 +106,7 @@ class SellForLessActionSpec extends UnitSpec with WithFakeApplication with FakeR
       }
 
       "redirect to the worth when sold page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/worth-when-sold")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/worth-when-sold-for-less")
       }
     }
 

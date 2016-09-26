@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package models.resident.properties.gain
+package models.resident
 
 import play.api.libs.json.Json
 
