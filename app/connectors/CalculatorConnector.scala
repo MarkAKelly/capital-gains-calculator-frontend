@@ -203,6 +203,11 @@ trait CalculatorConnector {
       case _ => None
     }
 
+    val whoDidYouGiveItTo = fetchAndGetFormData[resident.properties.gain.PropertyRecipientModel](ResidentPropertyKeys.propertyRecipient).map {
+      case Some(data) => Some(data.option)
+      case _ => None
+    }
+
     val worthWhenGaveAway = fetchAndGetFormData[WorthWhenGaveAwayModel](ResidentPropertyKeys.worthWhenGaveAway).map {
       case Some(data) => Some(data.amount)
       case _ => None
@@ -256,6 +261,7 @@ trait CalculatorConnector {
       disposalValue <- disposalValue
       disposalCosts <- disposalCosts
       worthWhenSoldForLess <- worthWhenSoldForLess
+      whoDidYouGiveItTo <- whoDidYouGiveItTo
       worthWhenGaveAway <- worthWhenGaveAway
       acquisitionValue <- acquisitionValue
       worthWhenInherited <- worthWhenInherited
@@ -273,6 +279,7 @@ trait CalculatorConnector {
       disposalDate,
       disposalValue,
       worthWhenSoldForLess,
+      whoDidYouGiveItTo,
       worthWhenGifted,
       disposalCosts,
       acquisitionValue,

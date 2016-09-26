@@ -30,6 +30,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
         Dates.constructDate(10, 2, 2016),
         Some(BigDecimal(1000)),
         None,
+        whoDidYouGiveItTo = None,
         worthWhenGaveAway = None,
         BigDecimal(0),
         Some(BigDecimal(500)),
