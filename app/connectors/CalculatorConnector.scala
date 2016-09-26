@@ -359,9 +359,7 @@ trait CalculatorConnector {
   def getShareGainAnswers(implicit hc: HeaderCarrier): Future[resident.shares.GainAnswersModel] = {
     val disposalDate = fetchAndGetFormData[resident.DisposalDateModel](ResidentShareKeys.disposalDate).map(formData =>
       constructDate(formData.get.day, formData.get.month, formData.get.year))
-    /////////////////////////////////////////
-    val soldForLessThanWorth = None
-    /////////////////////////////////////////
+    val soldForLessThanWorth = fetchAndGetFormData[SellForLessModel](ResidentShareKeys.sellForLess).map(_.get.sellForLess)
     val disposalValue = fetchAndGetFormData[resident.DisposalValueModel](ResidentShareKeys.disposalValue).map(_.get.amount)
     /////////////////////////////////////////
     val worthWhenSoldForLess = None
@@ -378,7 +376,7 @@ trait CalculatorConnector {
 
     for {
       disposalDate <- disposalDate
-//      soldForLessThanWorth <- soldForLessThanWorth
+      soldForLessThanWorth <- soldForLessThanWorth
       disposalValue <- disposalValue
 //      worthWhenSoldForLess <- worthWhenSoldForLess
       disposalCosts <- disposalCosts

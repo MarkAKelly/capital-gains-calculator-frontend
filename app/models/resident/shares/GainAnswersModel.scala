@@ -19,7 +19,7 @@ package models.resident.shares
 import java.time.LocalDate
 
 case class GainAnswersModel(disposalDate: LocalDate,
-                            soldForLessThanWorth: Option[Boolean],
+                            soldForLessThanWorth: Boolean,
                             disposalValue: BigDecimal,
                             worthWhenSoldForLess: Option[BigDecimal],
                             disposalCosts: BigDecimal,

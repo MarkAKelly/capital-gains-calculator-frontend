@@ -74,7 +74,7 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
     "a 0 gain is returned" should {
       lazy val gainAnswers = GainAnswersModel(
         disposalDate = Dates.constructDate(10, 10, 2018),
-        soldForLessThanWorth = None,
+        soldForLessThanWorth = false,
         disposalValue = 200000,
         worthWhenSoldForLess = None,
         disposalCosts = 10000,
@@ -134,7 +134,7 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
     "a carried forward loss is returned with an invalid tax year" should {
       lazy val yourAnswersSummaryModel = GainAnswersModel(
         disposalDate = Dates.constructDate(10, 10, 2018),
-        soldForLessThanWorth = None,
+        soldForLessThanWorth = false,
         disposalValue = 30000,
         worthWhenSoldForLess = None,
         disposalCosts = 0,

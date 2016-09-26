@@ -85,7 +85,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     "a negative gross gain is returned" should {
       lazy val gainAnswers = GainAnswersModel(
         disposalDate = Dates.constructDate(12, 1, 2016),
-        soldForLessThanWorth = None,
+        soldForLessThanWorth = false,
         disposalValue = 3000,
         worthWhenSoldForLess = None,
         disposalCosts = 10,
@@ -125,7 +125,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     "a zero taxable gain is returned with no other disposals of or brought forward losses" should {
       lazy val gainAnswers = GainAnswersModel(
         disposalDate = Dates.constructDate(12, 1, 2016),
-        soldForLessThanWorth = None,
+        soldForLessThanWorth = false,
         disposalValue = 13000,
         worthWhenSoldForLess = None,
         disposalCosts = 500,
@@ -171,7 +171,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     "a negative taxable gain is returned with no other disposals of but with brought forward losses" should {
       lazy val gainAnswers = GainAnswersModel(
         disposalDate = Dates.constructDate(12, 1, 2016),
-        soldForLessThanWorth = None,
+        soldForLessThanWorth = false,
         disposalValue = 13000,
         worthWhenSoldForLess = None,
         disposalCosts = 500,
@@ -217,7 +217,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     "a negative taxable gain is returned with other disposals" should {
       lazy val gainAnswers = GainAnswersModel(
         disposalDate = Dates.constructDate(12, 1, 2016),
-        soldForLessThanWorth = None,
+        soldForLessThanWorth = false,
         disposalValue = 15000,
         worthWhenSoldForLess = None,
         disposalCosts = 1000,
@@ -265,7 +265,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     "a negative taxable gain is returned with other properties disposed of but an allowable loss of 0" should {
       lazy val gainAnswers = GainAnswersModel(
         disposalDate = Dates.constructDate(12, 1, 2016),
-        soldForLessThanWorth = None,
+        soldForLessThanWorth = false,
         disposalValue = 15000,
         worthWhenSoldForLess = None,
         disposalCosts = 1000,
