@@ -37,18 +37,18 @@ import forms.resident.AcquisitionCostsForm._
 import forms.resident.properties.ImprovementsForm._
 import forms.resident.properties.SellForLessForm._
 import forms.resident.properties.gain.OwnerBeforeAprilForm._
-import play.api.data.Form
-import forms.resident.properties.SellOrGiveAwayForm._
+import forms.resident.properties.gain.PropertyRecipientForm._
 import forms.resident.properties.gain.WorthWhenSoldForLessForm._
-import models.resident.properties.gain.{OwnerBeforeAprilModel, WorthWhenGiftedModel, WorthWhenSoldForLessModel}
 import forms.resident.properties.WorthWhenGaveAwayForm._
 import forms.resident.properties.HowBecameOwnerForm._
 import forms.resident.properties.WorthOnForm._
-import models.resident.properties.{HowBecameOwnerModel, ImprovementsModel, SellOrGiveAwayModel, WorthOnModel, WorthWhenGaveAwayModel}
 import forms.resident.properties.WorthWhenInheritedForm._
 import forms.resident.properties.gain.WorthWhenGiftedForm._
 import forms.resident.properties.BoughtForLessThanWorthForm._
 import forms.resident.properties.WorthWhenBoughtForm._
+import forms.resident.properties.SellOrGiveAwayForm._
+import play.api.data.Form
+import models.resident.properties.gain.{OwnerBeforeAprilModel, WorthWhenSoldForLessModel, WorthWhenGiftedModel, PropertyRecipientModel}
 import models.resident._
 import models.resident.properties._
 import play.api.i18n.Messages
@@ -127,9 +127,31 @@ trait GainController extends FeatureLock {
     )
   }
 
+  val youHaveNoTaxToPay = FeatureLockForRTT.async { implicit request =>
+    TODO.apply(request)
+  }
+
   //################ Who Did You Give It To Actions ######################
   val whoDidYouGiveItTo = FeatureLockForRTT.async { implicit request =>
-    TODO.apply(request)
+
+    calcConnector.fetchAndGetFormData[PropertyRecipientModel](keystoreKeys.propertyRecipient).map {
+      case Some(data) => Ok(views.propertyRecipient(propertyRecipientForm.fill(data)))
+      case _ => Ok(views.propertyRecipient(propertyRecipientForm))
+    }
+  }
+
+  val submitWhoDidYouGiveItTo = FeatureLockForRTT.async { implicit request =>
+    propertyRecipientForm.bindFromRequest.fold(
+    errors => Future.successful(BadRequest(views.propertyRecipient(errors))),
+    success => {
+      calcConnector.saveFormData[PropertyRecipientModel](keystoreKeys.propertyRecipient, success)
+      success match {
+        case PropertyRecipientModel("Spouse") => Future.successful(Redirect(routes.GainController.youHaveNoTaxToPay()))
+        case PropertyRecipientModel("Charity") => Future.successful(Redirect(routes.GainController.youHaveNoTaxToPay()))
+        case PropertyRecipientModel("Other") => Future.successful(Redirect(routes.GainController.worthWhenGaveAway()))
+      }
+    }
+    )
   }
 
   //################ Outside Tax Years Actions ######################

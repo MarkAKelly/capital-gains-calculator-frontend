@@ -54,6 +54,7 @@ object MessageLookup {
 
       object propertiesWorthWhenGaveAway {
         val title = "What was the property worth when you gave it away?"
+        val helpMessage = "You can use a valuation from a surveyor or a property website."
       }
 
       object worthOn {
@@ -472,4 +473,11 @@ object MessageLookup {
     val gift = "Gave it away"
   }
 
+  object whoDidYouGiveItTo {
+    val title = "Who did you give the property to?"
+    val spouse = "Your spouse or a civil partner"
+    val charity = "A charity"
+    val other = "Someone else"
+    val errormandatory = "Please tell us who you gave the property to"
+  }
 }
