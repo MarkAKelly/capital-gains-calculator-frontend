@@ -182,8 +182,6 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Fak
       "return a status of 400" in {
         status(result) shouldBe 400
       }
-
     }
-
   }
 }

@@ -122,8 +122,19 @@
         @summaryTextRowHelper("sellOrGiveAway", Messages("calc.resident.sellOrGiveAway.title"), if (gainAnswers.givenAway) {Messages("calc.resident.sellOrGiveAway.given")}
         else {Messages("calc.resident.sellOrGiveAway.sold")}, None)
 
+        <!-- Given to someone else Block -->
+        @{if(gainAnswers.givenAway)
+            summaryTextRowHelper("whoDidYouGiveItTo", Messages("calc.resident.whoDidYouGiveThePropertyTo.title"), Messages("calc.resident.whoDidYouGiveThePropertyTo.other"), None)
+        }
+
+        @{if(gainAnswers.givenAway)
+            summaryNumericRowHelper("worthWhenGaveAway", Messages("calc.resident.properties.worthWhenGaveAway.title"), gainAnswers.worthWhenGaveAway.get, None)
+        }
+        <!-- ^^^^^^ Given to someone else Block ^^^^^^ -->
+
         @{if(!gainAnswers.givenAway)
-        summaryOptionRowHelper("sellForLess", Messages("calc.resident.properties.sellForLess.title"), gainAnswers.sellForLess.get, None)}
+            summaryOptionRowHelper("sellForLess", Messages("calc.resident.properties.sellForLess.title"), gainAnswers.sellForLess.get, None)
+        }
 
         @{if(!gainAnswers.givenAway && !gainAnswers.sellForLess.get)
             summaryNumericRowHelper("disposalValue", Messages("calc.resident.disposal.value.question"),gainAnswers.disposalValue.get, None)}
@@ -157,7 +168,7 @@
         }
 
         @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Gifted"))
-            summaryNumericRowHelper("worthWhenGifted", Messages("calc.resident.properties.worthWhenGifted.question"),gainAnswers.worthWhenGaveAway.get, None)
+            summaryNumericRowHelper("worthWhenGifted", Messages("calc.resident.properties.worthWhenGifted.question"),gainAnswers.worthWhenGifted.get, None)
         }
 
         @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Inherited"))

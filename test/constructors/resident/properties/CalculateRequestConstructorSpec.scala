@@ -37,6 +37,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           worthWhenGaveAway = None,
           worthWhenSoldForLess = None,
           /* Parameters from this point onward do not effect the result of the method - dummy values used */
+          whoDidYouGiveItTo = None,
           disposalDate = Dates.constructDate(10, 2, 2016),
           worthWhenBoughtForLess = None,
           disposalCosts = BigDecimal(0),
@@ -66,6 +67,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           worthWhenGaveAway = Some(BigDecimal(4000)),
           worthWhenSoldForLess = None,
           /* Parameters from this point onward do not effect the result of the method - dummy values used */
+          whoDidYouGiveItTo = None,
           disposalDate = Dates.constructDate(10, 2, 2016),
           worthWhenBoughtForLess = None,
           disposalCosts = BigDecimal(0),
@@ -95,6 +97,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           worthWhenGaveAway = None,
           worthWhenSoldForLess = Some(3000),
           /* Parameters from this point onward do not effect the result of the method - dummy values used */
+          whoDidYouGiveItTo = None,
           disposalDate = Dates.constructDate(10, 2, 2016),
           worthWhenBoughtForLess = Some(3000),
           disposalCosts = BigDecimal(0),
@@ -135,6 +138,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           worthWhenBoughtForLess = None,
           acquisitionValue = Some(BigDecimal(4000)),
           /* Parameters from this point onward do not effect the result of the method - dummy values used */
+          whoDidYouGiveItTo = None,
           givenAway = false,
           sellForLess = Some(false),
           disposalValue = Some(BigDecimal(5000)),
@@ -169,6 +173,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           worthWhenBoughtForLess = Some(BigDecimal(300)),
           acquisitionValue = None,
           /* Parameters from this point onward do not effect the result of the method - dummy values used */
+          whoDidYouGiveItTo = None,
           givenAway = false,
           sellForLess = Some(false),
           disposalValue = Some(BigDecimal(5000)),
@@ -202,6 +207,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           worthWhenBoughtForLess = None,
           acquisitionValue = None,
           /* Parameters from this point onward do not effect the result of the method - dummy values used */
+          whoDidYouGiveItTo = None,
           givenAway = false,
           sellForLess = Some(false),
           disposalValue = Some(BigDecimal(5000)),
@@ -234,6 +240,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           worthWhenBoughtForLess = None,
           acquisitionValue = None,
           /* Parameters from this point onward do not effect the result of the method - dummy values used */
+          whoDidYouGiveItTo = None,
           givenAway = false,
           sellForLess = Some(false),
           disposalValue = Some(BigDecimal(5000)),
@@ -265,6 +272,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           worthWhenBoughtForLess = None,
           acquisitionValue = None,
           /* Parameters from this point onward do not effect the result of the method - dummy values used */
+          whoDidYouGiveItTo = None,
           givenAway = false,
           sellForLess = Some(false),
           disposalValue = Some(BigDecimal(5000)),
@@ -288,10 +296,12 @@ class CalculateRequestConstructorSpec extends UnitSpec {
         disposalDate = Dates.constructDate(10, 2, 2016),
         disposalValue = Some(BigDecimal(1000)),
         worthWhenSoldForLess = None,
+        whoDidYouGiveItTo = None,
+        worthWhenGaveAway = None,
         disposalCosts = BigDecimal(0),
         acquisitionValue = Some(BigDecimal(500)),
         worthWhenInherited = None,
-        worthWhenGaveAway = None,
+        worthWhenGifted = None,
         worthWhenBoughtForLess = None,
         acquisitionCosts = BigDecimal(100),
         improvements = BigDecimal(10),
@@ -300,8 +310,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
         ownerBeforeAprilNineteenEightyTwo = true,
         worthOnThirtyFirstMarchEightyTwo = Some(BigDecimal(5000)),
         howBecameOwner = Some("Bought"),
-        boughtForLessThanWorth = Some(false),
-        worthWhenGifted = None
+        boughtForLessThanWorth = Some(false)
       )
 
       val result = CalculateRequestConstructor.totalGainRequestString(answers)

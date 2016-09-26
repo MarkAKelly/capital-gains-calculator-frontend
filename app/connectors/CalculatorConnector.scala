@@ -24,14 +24,13 @@ import constructors.nonresident.CalculateRequestConstructor
 import constructors.resident.{shares, properties => propertyConstructor}
 import models.nonresident._
 import models.resident
+import models.resident.properties.gain.WorthWhenGiftedModel
 import models.resident.properties.{ImprovementsModel => _, _}
 import models.resident.{IncomeAnswersModel, SellForLessModel, TaxYearModel, properties}
-import models.resident.properties.gain._
 import play.api.libs.json.Format
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -189,6 +188,7 @@ trait CalculatorConnector {
     )
   }
 
+  //scalastyle:off
   def getPropertyGainAnswers(implicit hc: HeaderCarrier): Future[YourAnswersSummaryModel] = {
     val disposalDate = fetchAndGetFormData[resident.DisposalDateModel](ResidentPropertyKeys.disposalDate).map(formData =>
       constructDate(formData.get.day, formData.get.month, formData.get.year))
@@ -203,18 +203,31 @@ trait CalculatorConnector {
       case _ => None
     }
 
-    val acquisitionValue = fetchAndGetFormData[resident.AcquisitionValueModel](ResidentPropertyKeys.acquisitionValue).map{
-      case Some(data) => Some(data.amount)
+    val whoDidYouGiveItTo = fetchAndGetFormData[resident.properties.gain.PropertyRecipientModel](ResidentPropertyKeys.propertyRecipient).map {
+      case Some(data) => Some(data.option)
       case _ => None
     }
-    val worthWhenInherited = fetchAndGetFormData[WorthWhenInheritedModel](ResidentPropertyKeys.worthWhenInherited).map {
-      case Some(data) => Some(data.amount)
-      case _ => None
-    }
+
     val worthWhenGaveAway = fetchAndGetFormData[WorthWhenGaveAwayModel](ResidentPropertyKeys.worthWhenGaveAway).map {
       case Some(data) => Some(data.amount)
       case _ => None
     }
+
+    val acquisitionValue = fetchAndGetFormData[resident.AcquisitionValueModel](ResidentPropertyKeys.acquisitionValue).map{
+      case Some(data) => Some(data.amount)
+      case _ => None
+    }
+
+    val worthWhenInherited = fetchAndGetFormData[WorthWhenInheritedModel](ResidentPropertyKeys.worthWhenInherited).map {
+      case Some(data) => Some(data.amount)
+      case _ => None
+    }
+
+    val worthWhenGifted = fetchAndGetFormData[WorthWhenGiftedModel](ResidentPropertyKeys.worthWhenGifted).map {
+      case Some(data) => Some(data.amount)
+      case _ => None
+    }
+
     val worthWhenBoughtForLess = fetchAndGetFormData[WorthWhenBoughtModel](ResidentPropertyKeys.worthWhenBought).map {
       case Some(data) => Some(data.amount)
       case _ => None
@@ -224,10 +237,10 @@ trait CalculatorConnector {
     val disposalCosts = fetchAndGetFormData[resident.DisposalCostsModel](ResidentPropertyKeys.disposalCosts).map(_.get.amount)
     val improvements = fetchAndGetFormData[properties.ImprovementsModel](ResidentPropertyKeys.improvements).map(_.get.amount)
     val givenAway = fetchAndGetFormData[properties.SellOrGiveAwayModel](ResidentPropertyKeys.sellOrGiveAway).map(_.get.givenAway)
-    val sellForLess = fetchAndGetFormData[SellForLessModel](ResidentPropertyKeys.sellForLess).map(_ match {
+    val sellForLess = fetchAndGetFormData[SellForLessModel](ResidentPropertyKeys.sellForLess).map {
       case Some(data) => Some(data.sellForLess)
       case _ => None
-    })
+    }
     val ownerBeforeAprilNineteenEightyTwo = fetchAndGetFormData[properties.gain.OwnerBeforeAprilModel](ResidentPropertyKeys.ownerBeforeAprilNineteenEightyTwo)
       .map(_.get.ownedBeforeAprilNineteenEightyTwo)
     val worthOnThirtyFirstMarchEightyTwo = fetchAndGetFormData[properties.WorthOnModel](ResidentPropertyKeys.worthOn).map {
@@ -242,19 +255,17 @@ trait CalculatorConnector {
       case Some(data) => Some(data.boughtForLessThanWorth)
       case None => None
     }
-    val worthWhenGifted = fetchAndGetFormData[WorthWhenGiftedModel](ResidentPropertyKeys.worthWhenGifted).map {
-      case Some(data) => Some(data.amount)
-      case None => None
-    }
 
     for {
       disposalDate <- disposalDate
       disposalValue <- disposalValue
       disposalCosts <- disposalCosts
       worthWhenSoldForLess <- worthWhenSoldForLess
+      whoDidYouGiveItTo <- whoDidYouGiveItTo
+      worthWhenGaveAway <- worthWhenGaveAway
       acquisitionValue <- acquisitionValue
       worthWhenInherited <- worthWhenInherited
-      worthWhenGaveAway <- worthWhenGaveAway
+      worthWhenGifted <- worthWhenGifted
       worthWhenBoughtForLess <- worthWhenBoughtForLess
       acquisitionCosts <- acquisitionCosts
       improvements <- improvements
@@ -264,11 +275,11 @@ trait CalculatorConnector {
       worthOnThirtyFirstMarchEightyTwo <- worthOnThirtyFirstMarchEightyTwo
       howBecameOwner <- howBecameOwner
       boughtForLessThanWorth <- boughtForLessThanWorth
-      worthWhenGifted <- worthWhenGifted
     } yield properties.YourAnswersSummaryModel(
       disposalDate,
       disposalValue,
       worthWhenSoldForLess,
+      whoDidYouGiveItTo,
       worthWhenGaveAway,
       disposalCosts,
       acquisitionValue,
@@ -285,6 +296,7 @@ trait CalculatorConnector {
       boughtForLessThanWorth
     )
   }
+  //scalastyle:on
 
   def getPropertyDeductionAnswers(implicit hc: HeaderCarrier): Future[ChargeableGainAnswers] = {
     val otherPropertiesModel = fetchAndGetFormData[resident.OtherPropertiesModel](ResidentPropertyKeys.otherProperties)
