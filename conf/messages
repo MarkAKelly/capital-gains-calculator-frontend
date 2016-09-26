@@ -576,7 +576,6 @@ calc.resident.shares.disposalDate.question = When did you sell or give away the 
 
 ## Disposal Value messages
 calc.resident.shares.disposalValue.question = How much did you sell the shares for?
-calc.resident.shares.disposalValue.helpText = Put the market value of the shares instead if you sold them for less than they were worth to help the buyer
 
 ## Sell for Less messages
 calc.resident.shares.sellForLess.question = Did you sell the shares for less than they were worth to help the buyer?

@@ -17,7 +17,7 @@
 package views.resident.shares.gain
 
 import assets.MessageLookup
-import assets.MessageLookup.{sharesDisposalValue => messages}
+import assets.MessageLookup.Resident.Shares.{DisposalValue => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.DisposalValueForm._
 import org.jsoup.Jsoup
@@ -56,10 +56,6 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
 
     s"have the question of the page ${messages.question}" in {
       doc.select("h1").text shouldEqual messages.question
-    }
-
-    s"have the extra text ${messages.helpText}" in {
-      doc.select(".panel.panel-border-wide>p").text shouldBe messages.helpText
     }
 
     "render a form tag with a submit action" in {
