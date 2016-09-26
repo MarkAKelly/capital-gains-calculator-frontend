@@ -61,13 +61,16 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
   "Calling .gainSummaryReport from the ReportController" when {
 
     "a negative total gain is returned" should {
-      lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
+      lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(
+        Dates.constructDate(12, 1, 2016),
         Some(3000),
         None,
+        whoDidYouGiveItTo = Some("Other"),
+        worthWhenGaveAway = Some(10000),
         10,
         Some(5000),
         worthWhenInherited = None,
-        worthWhenGaveAway = None,
+        worthWhenGifted = None,
         worthWhenBoughtForLess = None,
         5,
         0,
@@ -107,10 +110,12 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
       lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
         Some(3000),
         Some(500),
+        whoDidYouGiveItTo = None,
+        worthWhenGaveAway = None,
         10,
         Some(5000),
         worthWhenInherited = None,
-        worthWhenGaveAway = None,
+        worthWhenGifted = None,
         worthWhenBoughtForLess = None,
         5,
         0,

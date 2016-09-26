@@ -35,10 +35,12 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       None,
       None,
+      whoDidYouGiveItTo = Some("Other"),
+      worthWhenGaveAway = Some(10000),
       BigDecimal(10000),
       None,
       worthWhenInherited = None,
-      worthWhenGaveAway = None,
+      worthWhenGifted = None,
       worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
@@ -291,6 +293,56 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
         }
       }
 
+      //######################################################################################
+      "has an option output row for who did you give it to" which {
+
+        s"should have the question text '${commonMessages.whoDidYouGiveItTo.title}'" in {
+          doc.select("#whoDidYouGiveItTo-question").text shouldBe commonMessages.whoDidYouGiveItTo.title
+        }
+
+        "should have the value 'Someone else'" in {
+          doc.select("#whoDidYouGiveItTo-option span.bold-medium").text shouldBe "Someone else"
+        }
+
+        s"should have a change link to ${routes.GainController.whoDidYouGiveItTo().url}" in {
+          doc.select("#whoDidYouGiveItTo-option a").attr("href") shouldBe routes.GainController.whoDidYouGiveItTo().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#whoDidYouGiveItTo-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.whoDidYouGiveItTo.title}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#whoDidYouGiveItTo-option a span.visuallyhidden").text shouldBe commonMessages.whoDidYouGiveItTo.title
+        }
+      }
+
+      "has a numeric output row for the Value when you gave it away" which {
+
+        s"should have the question text '${propertiesMessages.propertiesWorthWhenGaveAway.title}'" in {
+          doc.select("#worthWhenGaveAway-question").text shouldBe propertiesMessages.propertiesWorthWhenGaveAway.title
+        }
+
+        "should have the value '£10,000'" in {
+          doc.select("#worthWhenGaveAway-amount span.bold-medium").text shouldBe "£10,000"
+        }
+
+        s"should have a change link to ${routes.GainController.worthWhenGaveAway().url}" in {
+          doc.select("#worthWhenGaveAway-amount a").attr("href") shouldBe routes.GainController.worthWhenGaveAway().url
+        }
+
+        "has the question as part of the link" in {
+          doc.select("#worthWhenGaveAway-amount a").text shouldBe
+            s"${commonMessages.calcBaseChange} ${propertiesMessages.propertiesWorthWhenGaveAway.title}"
+        }
+
+        "has the question component of the link as visuallyhidden" in {
+          doc.select("#worthWhenGaveAway-amount a span.visuallyhidden").text shouldBe
+            propertiesMessages.propertiesWorthWhenGaveAway.title
+        }
+      }
+      //######################################################################################
+
       "has a numeric output row for the Disposal Costs" which {
 
         s"should have the question text '${commonMessages.disposalCosts.title}'" in {
@@ -532,10 +584,12 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       None,
       Some(500),
+      whoDidYouGiveItTo = None,
+      worthWhenGaveAway = None,
       BigDecimal(10000),
       Some(BigDecimal(100000)),
       worthWhenInherited = None,
-      worthWhenGaveAway = None,
+      worthWhenGifted = None,
       worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
@@ -953,10 +1007,12 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       None,
       Some(500),
+      whoDidYouGiveItTo = None,
+      worthWhenGaveAway = None,
       BigDecimal(10000),
       None,
       worthWhenInherited = None,
-      worthWhenGaveAway = None,
+      worthWhenGifted = None,
       worthWhenBoughtForLess = Some(3000),
       BigDecimal(10000),
       BigDecimal(30000),
@@ -1057,10 +1113,12 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       None,
       None,
+      whoDidYouGiveItTo = Some("Other"),
+      worthWhenGaveAway = Some(10000),
       BigDecimal(10000),
       None,
       worthWhenInherited = None,
-      worthWhenGaveAway = None,
+      worthWhenGifted = None,
       worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
@@ -1285,10 +1343,12 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2015),
       None,
       Some(500),
+      whoDidYouGiveItTo = None,
+      worthWhenGaveAway = None,
       BigDecimal(0),
       None,
       worthWhenInherited = Some(3000),
-      worthWhenGaveAway = None,
+      worthWhenGifted = None,
       worthWhenBoughtForLess = None,
       BigDecimal(0),
       BigDecimal(0),
@@ -1435,10 +1495,12 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       None,
       None,
+      whoDidYouGiveItTo = Some("Other"),
+      worthWhenGaveAway = Some(10000),
       BigDecimal(10000),
       None,
       worthWhenInherited = None,
-      worthWhenGaveAway = None,
+      worthWhenGifted = None,
       worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
@@ -1518,10 +1580,12 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
       Some(BigDecimal(200000)),
       None,
+      whoDidYouGiveItTo = None,
+      worthWhenGaveAway = None,
       BigDecimal(10000),
       None,
       worthWhenInherited = None,
-      worthWhenGaveAway = Some(3000),
+      worthWhenGifted = Some(3000),
       worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
@@ -1668,10 +1732,12 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       None,
       None,
+      whoDidYouGiveItTo = Some("Other"),
+      worthWhenGaveAway = Some(10000),
       BigDecimal(10000),
       None,
       worthWhenInherited = None,
-      worthWhenGaveAway = None,
+      worthWhenGifted = None,
       worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),

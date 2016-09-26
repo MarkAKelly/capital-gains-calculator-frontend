@@ -104,7 +104,7 @@ class PropertyRecipientActionSpec extends UnitSpec with WithFakeApplication with
       }
 
       "to the You Have No Tax To Pay page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/you-have-no-tax-to-pay")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/no-tax-to-pay")
       }
     }
   }
@@ -120,7 +120,7 @@ class PropertyRecipientActionSpec extends UnitSpec with WithFakeApplication with
       }
 
       "to the You Have No Tax To Pay page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/you-have-no-tax-to-pay")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/no-tax-to-pay")
       }
     }
   }
