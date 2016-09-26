@@ -17,7 +17,7 @@
 package controllers.resident.properties
 
 import java.util.UUID
-import common.KeystoreKeys.{ResidentShareKeys, ResidentPropertyKeys => keystoreKeys}
+import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import common.{Dates, TaxDates}
 import config.{AppConfig, ApplicationConfig}
 import connectors.CalculatorConnector
@@ -39,14 +39,14 @@ import forms.resident.properties.gain.PropertyRecipientForm._
 import forms.resident.properties.gain.WorthWhenSoldForLessForm._
 import forms.resident.properties.WorthWhenGaveAwayForm._
 import forms.resident.properties.HowBecameOwnerForm._
+import forms.resident.WorthWhenInheritedForm._
 import forms.resident.properties.WorthOnForm._
-import forms.resident.properties.WorthWhenInheritedForm._
 import forms.resident.properties.gain.WorthWhenGiftedForm._
 import forms.resident.properties.BoughtForLessThanWorthForm._
 import forms.resident.properties.WorthWhenBoughtForm._
 import forms.resident.properties.SellOrGiveAwayForm._
 import play.api.data.Form
-import models.resident.properties.gain.{OwnerBeforeAprilModel, WorthWhenSoldForLessModel, WorthWhenGiftedModel, PropertyRecipientModel}
+import models.resident.properties.gain.{OwnerBeforeAprilModel, PropertyRecipientModel, WorthWhenGiftedModel, WorthWhenSoldForLessModel}
 import models.resident._
 import models.resident.properties._
 import play.api.i18n.Messages

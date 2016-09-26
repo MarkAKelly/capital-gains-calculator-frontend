@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package forms.resident.properties
+package forms.resident
 
 import common.Constants
 import common.Transformers._
 import common.Validation._
-import models.resident.properties.WorthWhenInheritedModel
+import models.resident.WorthWhenInheritedModel
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.Messages

@@ -26,7 +26,7 @@ import models.nonresident._
 import models.resident
 import models.resident.properties.gain.WorthWhenGiftedModel
 import models.resident.properties.{ImprovementsModel => _, _}
-import models.resident.{IncomeAnswersModel, SellForLessModel, TaxYearModel, properties}
+import models.resident.{AcquisitionCostsModel => _, AcquisitionValueModel => _, AllowableLossesModel => _, AnnualExemptAmountModel => _, DisposalCostsModel => _, DisposalDateModel => _, DisposalValueModel => _, OtherPropertiesModel => _, _}
 import play.api.libs.json.Format
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.play.config.ServicesConfig
