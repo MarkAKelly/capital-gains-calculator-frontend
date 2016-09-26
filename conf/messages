@@ -468,7 +468,9 @@ calc.resident.properties.privateResidenceReliefValue.gainExceededError = Enter a
 calc.resident.lettingsReliefValue.title = How much Letting Relief are you entitled to?
 calc.resident.lettingsReliefValue.question = How much Letting Relief are you entitled to?
 calc.resident.lettingsReliefValue.additionalContent = We''ve calculated that you''ve made a gain of £{0} on your property. You''ll need this figure to calculate your Letting Relief.
-
+calc.resident.lettingsReliefValue.error.moreThanCappedAmount = The Letting Relief you''ve entered is more than the maximum amount of £{0}
+calc.resident.lettingsReliefValue.error.moreThanPrr = The Letting Relief amount you''ve entered is more than your Private Residence Relief
+calc.resident.lettingsReliefValue.error.moreThanRemainingGain = The Letting Relief you''ve entered is more than your remaining gain of £{0}
 
 ## Reliefs Value messages
 
