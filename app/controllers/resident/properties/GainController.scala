@@ -148,7 +148,24 @@ trait GainController extends FeatureLock {
   }
 
   //################ No Tax to Pay Actions ######################
-  val noTaxToPay = TODO
+  val noTaxToPay = FeatureLockForRTT.async { implicit request =>
+
+    def isGivenToCharity: Future[Boolean] = {
+      calcConnector.fetchAndGetFormData[PropertyRecipientModel](keystoreKeys.propertyRecipient).map {
+        case Some(PropertyRecipientModel("Charity")) => true
+        case _ => false
+      }
+    }
+
+    def result(input: Boolean): Future[Result] = {
+      Future.successful(Ok(views.noTaxToPay(input)))
+    }
+
+    for {
+      givenToCharity <- isGivenToCharity
+      result <- result(givenToCharity)
+    } yield result
+  }
 
   //################ Outside Tax Years Actions ######################
   val outsideTaxYears = FeatureLockForRTT.async { implicit request =>
