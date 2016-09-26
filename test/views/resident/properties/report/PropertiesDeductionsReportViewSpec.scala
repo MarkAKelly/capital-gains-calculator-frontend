@@ -18,9 +18,9 @@ package views.resident.properties.report
 
 import assets.MessageLookup.{summaryPage => messages}
 import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.Resident.{Properties => propertiesMessages}
 import common.Dates
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.properties.routes
 import models.resident._
 import models.resident.properties._
 import org.jsoup.Jsoup
@@ -31,12 +31,22 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
   "Deductions Report view" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
+      None,
+      None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
-      true)
+      true,
+      None,
+      true,
+      Some(BigDecimal(5000)),
+      None,
+      None)
+
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(false)),
       None,
@@ -221,17 +231,6 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         }
       }
 
-      "has a numeric output row for the Disposal Value" which {
-
-        s"should have the question text '${commonMessages.disposalValue.question}'" in {
-          doc.select("#disposalValue-question").text shouldBe commonMessages.disposalValue.question
-        }
-
-        "should have the value '£200,000'" in {
-          doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£200,000"
-        }
-      }
-
       "has a numeric output row for the Disposal Costs" which {
 
         s"should have the question text '${commonMessages.disposalCosts.title}'" in {
@@ -243,14 +242,25 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         }
       }
 
-      "has a numeric output row for the Acquisition Value" which {
+      "has an option output row for owner before april 1982" which {
 
-        s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
-          doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
+        s"should have the question text '${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}'" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-question").text shouldBe commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
         }
 
-        "should have the value '£100,000'" in {
-          doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£100,000"
+        "should have the value 'Yes'" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-option span.bold-medium").text shouldBe "Yes"
+        }
+      }
+
+      "has a numeric output row for the Worth Before April Nineteen Eighty Two" which {
+
+        s"should have the question text '${commonMessages.Resident.Properties.worthOn.question}'" in {
+          doc.select("#worthOn-question").text shouldBe commonMessages.Resident.Properties.worthOn.question
+        }
+
+        "should have the value '£5,000'" in {
+          doc.select("#worthOn-amount span.bold-medium").text shouldBe "£5,000"
         }
       }
 
@@ -267,8 +277,8 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
       "has a numeric output row for the Improvements" which {
 
-        s"should have the question text '${commonMessages.improvementsView.title}'" in {
-          doc.select("#improvements-question").text shouldBe commonMessages.improvementsView.title
+        s"should have the question text '${commonMessages.Resident.Properties.improvementsView.questionBefore}'" in {
+          doc.select("#improvements-question").text shouldBe commonMessages.Resident.Properties.improvementsView.questionBefore
         }
 
         "should have the value '£30,000'" in {
@@ -334,12 +344,23 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
   "Deductions Report view with all options selected" should {
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
+      None,
+      Some(500),
       BigDecimal(10000),
-      BigDecimal(100000),
+      Some(BigDecimal(100000)),
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
-      false)
+      false,
+      Some(true),
+      false,
+      None,
+      Some("Bought"),
+      Some(false)
+    )
+
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
@@ -448,6 +469,17 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         }
       }
 
+      "has an amount output row for worth when sold for less" which {
+
+        s"should have the question text ${propertiesMessages.WorthWhenSoldForLess.question}" in {
+          doc.select("#worthWhenSoldForLess-question").text shouldBe propertiesMessages.WorthWhenSoldForLess.question
+        }
+
+        "should have the value £500" in {
+          doc.select("#worthWhenSoldForLess-amount span.bold-medium").text shouldBe "£500"
+        }
+      }
+
       "has an option output row for sell or give away" which {
 
         s"should have the question text '${commonMessages.propertiesSellOrGiveAway.title}'" in {
@@ -456,6 +488,74 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
 
         "should have the value 'Sold it'" in {
           doc.select("#sellOrGiveAway-option span.bold-medium").text shouldBe "Sold it"
+        }
+      }
+
+      "has an option output row for sell for less" which {
+
+        s"should have the question text '${commonMessages.Resident.Properties.sellForLess.title}'" in {
+          doc.select("#sellForLess-question").text shouldBe commonMessages.Resident.Properties.sellForLess.title
+        }
+
+        "should have the value 'Yes'" in {
+          doc.select("#sellForLess-option span.bold-medium").text shouldBe "Yes"
+        }
+      }
+
+      "has an option output row for owner before april 1982" which {
+
+        s"should have the question text '${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}'" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-question").text shouldBe commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
+        }
+
+        "should have the value 'No'" in {
+          doc.select("#ownerBeforeAprilNineteenEightyTwo-option span.bold-medium").text shouldBe "No"
+
+        }
+      }
+
+      "has an output row for how became owner" which {
+
+        s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
+          doc.select("#howBecameOwner-question").text shouldBe commonMessages.howBecameOwner.title
+        }
+
+        s"should have the value '${commonMessages.howBecameOwner.bought}'" in {
+          doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.bought
+        }
+      }
+
+
+      "has an option output row for bought for less than worth" which {
+
+        s"should have the question text '${commonMessages.boughtForLessThanWorth.title}'" in {
+          doc.select("#boughtForLessThanWorth-question").text shouldBe commonMessages.boughtForLessThanWorth.title
+        }
+
+        "should have the value 'No'" in {
+          doc.select("#boughtForLessThanWorth-option span.bold-medium").text shouldBe "No"
+        }
+      }
+
+      "has a numeric output row for the Acquisition Value" which {
+
+        s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
+          doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
+        }
+
+        "should have the value '£100,000'" in {
+          doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£100,000"
+        }
+      }
+
+      "has a numeric output row for the Improvements" which {
+
+        s"should have the question text '${commonMessages.Resident.Properties.improvementsView.question}'" in {
+          doc.select("#improvements-question").text shouldBe commonMessages.Resident.Properties.improvementsView.question
+        }
+
+        "should have the value '£30,000'" in {
+          doc.select("#improvements-amount span.bold-medium").text shouldBe "£30,000"
         }
       }
 
@@ -615,7 +715,78 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
         "should have the value 'No'" in {
           doc.select("#lettingsReliefValue-amount span.bold-medium").text shouldBe "£6,000"
         }
+      }
+    }
+  }
 
+  "Deductions Report view when property bought for less than worth" should {
+    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
+      None,
+      None,
+      BigDecimal(10000),
+      None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = Some(3000),
+      BigDecimal(10000),
+      BigDecimal(30000),
+      true,
+      Some(false),
+      false,
+      None,
+      Some("Bought"),
+      Some(true)
+    )
+    lazy val deductionAnswers = ChargeableGainAnswers(
+      Some(OtherPropertiesModel(true)),
+      Some(AllowableLossesModel(true)),
+      Some(AllowableLossesValueModel(10000)),
+      Some(LossesBroughtForwardModel(true)),
+      Some(LossesBroughtForwardValueModel(10000)),
+      Some(AnnualExemptAmountModel(1000)),
+      Some(PropertyLivedInModel(true)),
+      Some(PrivateResidenceReliefModel(true)),
+      Some(PrivateResidenceReliefValueModel(1000)),
+      Some(LettingsReliefModel(true)),
+      Some(LettingsReliefValueModel(6000))
+    )
+    lazy val results = ChargeableGainResultModel(BigDecimal(50000),
+      BigDecimal(-11000),
+      BigDecimal(0),
+      BigDecimal(11000),
+      BigDecimal(71000),
+      BigDecimal(1000),
+      BigDecimal(2000),
+      Some(BigDecimal(50000)),
+      Some(BigDecimal(1000)),
+      10000,
+      10000
+    )
+
+    lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
+
+    lazy val view = views.deductionsSummaryReport(gainAnswers, deductionAnswers, results, taxYearModel)(fakeRequestWithSession)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "has an option output row for bought for less than worth" which {
+
+      s"should have the question text '${commonMessages.boughtForLessThanWorth.title}'" in {
+        doc.select("#boughtForLessThanWorth-question").text shouldBe commonMessages.boughtForLessThanWorth.title
+      }
+
+      "should have the value 'Yes'" in {
+        doc.select("#boughtForLessThanWorth-option span.bold-medium").text shouldBe "Yes"
+      }
+    }
+
+    "has an amount output row for bought for less than worth value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenBought.question}'" in {
+        doc.select("#worthWhenBought-question").text shouldBe propertiesMessages.worthWhenBought.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenBought-amount span.bold-medium").text shouldBe "£3,000"
       }
     }
   }
@@ -623,12 +794,23 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
   "Deductions Report view with AEA options selected" which {
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
+      None,
+      None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
-      true)
+      true,
+      None,
+      true,
+      Some(BigDecimal(5000)),
+      None,
+      None
+    )
+
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),
@@ -758,12 +940,23 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
   "Report when supplied with a date above the known tax years" should {
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
-      BigDecimal(200000),
+      Some(BigDecimal(200000)),
+      None,
       BigDecimal(10000),
-      BigDecimal(100000),
+      None,
+      worthWhenInherited = Some(3000),
+      worthWhenGaveAway = None,
+      worthWhenBoughtForLess = None,
       BigDecimal(10000),
       BigDecimal(30000),
-      false)
+      false,
+      Some(false),
+      false,
+      None,
+      Some("Inherited"),
+      None
+    )
+
     lazy val deductionAnswers = ChargeableGainAnswers(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
@@ -795,6 +988,39 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
     lazy val view = views.deductionsSummaryReport(gainAnswers, deductionAnswers, results, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
+    "has a numeric output row for the Disposal Value" which {
+
+      s"should have the question text '${commonMessages.disposalValue.question}'" in {
+        doc.select("#disposalValue-question").text shouldBe commonMessages.disposalValue.question
+      }
+
+      "should have the value '£200,000'" in {
+        doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£200,000"
+      }
+    }
+
+    "has an output row for how became owner" which {
+
+      s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
+        doc.select("#howBecameOwner-question").text shouldBe commonMessages.howBecameOwner.title
+      }
+
+      s"should have the value '${commonMessages.howBecameOwner.inherited}'" in {
+        doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.inherited
+      }
+    }
+
+    "has an amount output row for inherited value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenInherited.question}'" in {
+        doc.select("#worthWhenInherited-question").text shouldBe propertiesMessages.worthWhenInherited.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenInherited-amount span.bold-medium").text shouldBe "£3,000"
+      }
+    }
+
     "has a numeric output row for allowable losses remaining" in {
       doc.select("#allowableLossRemaining").isEmpty shouldBe true
     }
@@ -814,8 +1040,92 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
       }
     }
 
+    "has an option output row for sell for less" which {
+
+      s"should have the question text '${commonMessages.Resident.Properties.sellForLess.title}'" in {
+        doc.select("#sellForLess-question").text shouldBe commonMessages.Resident.Properties.sellForLess.title
+      }
+
+      "should have the value 'No'" in {
+        doc.select("#sellForLess-option span.bold-medium").text shouldBe "No"
+      }
+    }
+
     "does not display the section for what to do next" in {
       doc.select("#whatToDoNext").isEmpty shouldBe true
+    }
+  }
+
+  "Report when supplied with a gifted property" should {
+
+    lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
+      Some(BigDecimal(200000)),
+      None,
+      BigDecimal(10000),
+      None,
+      worthWhenInherited = None,
+      worthWhenGaveAway = Some(3000),
+      worthWhenBoughtForLess = None,
+      BigDecimal(10000),
+      BigDecimal(30000),
+      false,
+      Some(false),
+      false,
+      None,
+      Some("Gifted"),
+      None
+    )
+    lazy val deductionAnswers = ChargeableGainAnswers(
+      Some(OtherPropertiesModel(true)),
+      Some(AllowableLossesModel(true)),
+      Some(AllowableLossesValueModel(10000)),
+      Some(LossesBroughtForwardModel(true)),
+      Some(LossesBroughtForwardValueModel(10000)),
+      Some(AnnualExemptAmountModel(1000)),
+      Some(PropertyLivedInModel(false)),
+      None,
+      None,
+      None,
+      None
+    )
+    lazy val results = ChargeableGainResultModel(BigDecimal(50000),
+      BigDecimal(-11000),
+      BigDecimal(0),
+      BigDecimal(11000),
+      BigDecimal(71000),
+      BigDecimal(0),
+      BigDecimal(2000),
+      Some(BigDecimal(50000)),
+      Some(BigDecimal(0)),
+      10000,
+      10000
+    )
+
+    lazy val taxYearModel = TaxYearModel("2017/18", false, "2015/16")
+
+    lazy val view = views.deductionsSummaryReport(gainAnswers, deductionAnswers, results, taxYearModel)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "has an output row for how became owner" which {
+
+      s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
+        doc.select("#howBecameOwner-question").text shouldBe commonMessages.howBecameOwner.title
+      }
+
+      s"should have the value '${commonMessages.howBecameOwner.gifted}'" in {
+        doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.gifted
+      }
+    }
+
+    "has an amount output row for gifted value" which {
+
+      s"should have the question text '${propertiesMessages.worthWhenGifted.question}'" in {
+        doc.select("#worthWhenGifted-question").text shouldBe propertiesMessages.worthWhenGifted.question
+      }
+
+      "should have the value '£3,000'" in {
+        doc.select("#worthWhenGifted-amount span.bold-medium").text shouldBe "£3,000"
+      }
     }
   }
 }

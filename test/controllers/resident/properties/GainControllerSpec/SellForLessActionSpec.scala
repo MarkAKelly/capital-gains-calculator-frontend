@@ -20,13 +20,13 @@ import config.{AppConfig, ApplicationConfig}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.GainController
-import models.resident.properties.SellForLessModel
 import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import common.KeystoreKeys.{ResidentPropertyKeys => keyStoreKeys}
 import org.mockito.Matchers
-import assets.MessageLookup.{sellForLess => messages}
+import assets.MessageLookup.Resident.Properties.{sellForLess => messages}
+import models.resident.SellForLessModel
 import org.jsoup.Jsoup
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -107,7 +107,7 @@ class SellForLessActionSpec extends UnitSpec with WithFakeApplication with FakeR
       }
 
       "redirect to the worth when sold page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/property-worth-when-sold")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/worth-when-sold")
       }
     }
 

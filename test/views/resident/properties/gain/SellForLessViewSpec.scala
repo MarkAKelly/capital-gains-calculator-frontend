@@ -20,10 +20,10 @@ import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{gain => views}
-import assets.MessageLookup.{sellForLess => messages}
+import assets.MessageLookup.Resident.Properties.{sellForLess => messages}
 import assets.{MessageLookup => commonMessages}
 import forms.resident.properties.SellForLessForm._
-import models.resident.properties.SellForLessModel
+import models.resident.SellForLessModel
 
 class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 

@@ -16,12 +16,13 @@
 
 package controllers.resident.properties.GainControllerSpec
 
-import assets.MessageLookup.{improvementsView => messages}
+import assets.MessageLookup.Resident.Properties.{improvementsView => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import config.AppConfig
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.GainController
+import models.resident.properties.gain.OwnerBeforeAprilModel
 import models.resident.properties.{ImprovementsModel, YourAnswersSummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -40,13 +41,18 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
   def setupTarget(getData: Option[ImprovementsModel],
                   gainAnswers: YourAnswersSummaryModel,
                   totalGain: BigDecimal,
-                  prrEnabled: Boolean = true): GainController = {
+                  prrEnabled: Boolean = true,
+                  ownerBeforeAprilNineteenEightyTwo: Boolean = false): GainController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockConfig = mock[AppConfig]
 
     when(mockCalcConnector.fetchAndGetFormData[ImprovementsModel](Matchers.eq(keystoreKeys.improvements))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.fetchAndGetFormData[OwnerBeforeAprilModel]
+      (Matchers.eq(keystoreKeys.ownerBeforeAprilNineteenEightyTwo))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(OwnerBeforeAprilModel(ownerBeforeAprilNineteenEightyTwo))))
 
     when(mockCalcConnector.getPropertyGainAnswers(Matchers.any()))
       .thenReturn(Future.successful(gainAnswers))
@@ -82,7 +88,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
 
       "display the improvements view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.question
       }
     }
 
@@ -100,7 +106,24 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
 
       "display the Improvements view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.question
+      }
+    }
+
+    "the property was owned before April 1982" should {
+      lazy val target = setupTarget(Some(ImprovementsModel(1000)), summaryModel, BigDecimal(0), ownerBeforeAprilNineteenEightyTwo = true)
+      lazy val result = target.improvements(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return some html" in {
+        contentType(result) shouldBe Some("text/html")
+      }
+
+      "display the Improvements view" in {
+        Jsoup.parse(bodyOf(result)).title shouldBe messages.questionBefore
       }
     }
   }
@@ -173,7 +196,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
       }
 
       "render the Improvements page" in {
-        doc.title() shouldEqual messages.title
+        doc.title() shouldEqual messages.question
       }
     }
   }

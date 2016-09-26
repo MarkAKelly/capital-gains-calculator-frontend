@@ -18,8 +18,8 @@ package models.resident.properties
 
 import play.api.libs.json.Json
 
-case class SellForLessModel (sellForLess: Boolean)
+case class WorthWhenInheritedModel (amount: BigDecimal)
 
-object SellForLessModel {
-  implicit val format = Json.format[SellForLessModel]
+object WorthWhenInheritedModel {
+  implicit val format = Json.format[WorthWhenInheritedModel]
 }

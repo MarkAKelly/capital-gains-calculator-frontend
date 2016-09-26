@@ -65,6 +65,18 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
+  "The URL for GET for the Who Did You Give It To action" should {
+    "be equal to /calculate-your-capital/gains/resident/properties/who-did-you-give-it-to" in {
+      GainController.whoDidYouGiveItTo().url shouldEqual "/calculate-your-capital-gains/resident/properties/who-did-you-give-it-to"
+    }
+  }
+
+  "The URL for POST for the Who Did You Give It To action" should {
+    "be equal to /calculate-your-capital/gains/resident/properties/who-did-you-give-it-to" in {
+      GainController.submitWhoDidYouGiveItTo().url shouldEqual "/calculate-your-capital-gains/resident/properties/who-did-you-give-it-to"
+    }
+  }
+
   "The URL for the GET Worth When Gave Away action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/worth-when-gave-away" in {
       GainController.worthWhenGaveAway().url shouldEqual "/calculate-your-capital-gains/resident/properties/worth-when-gave-away"
@@ -91,13 +103,13 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
 
   "The URL for the property worth when sold Action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/property-worth-when-sold" in {
-      GainController.propertyWorthWhenSold().url shouldEqual "/calculate-your-capital-gains/resident/properties/property-worth-when-sold"
+      GainController.worthWhenSoldForLess().url shouldEqual "/calculate-your-capital-gains/resident/properties/worth-when-sold"
     }
   }
 
   "The URL for the submit property worth when sold Action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/property-worth-when-sold" in {
-      GainController.submitPropertyWorthWhenSold().url shouldEqual "/calculate-your-capital-gains/resident/properties/property-worth-when-sold"
+      GainController.submitWorthWhenSoldForLess().url shouldEqual "/calculate-your-capital-gains/resident/properties/worth-when-sold"
     }
   }
 
@@ -110,6 +122,30 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
   "The URL for the submit acquisition value or market value Action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/acquisition-value" in {
       GainController.submitAcquisitionValue().url shouldEqual "/calculate-your-capital-gains/resident/properties/acquisition-value"
+    }
+  }
+
+  "The URL for the Worth When Inherited Action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/worth-when-inherited" in {
+      GainController.worthWhenInherited().url shouldEqual "/calculate-your-capital-gains/resident/properties/worth-when-inherited"
+    }
+  }
+
+  "The URL for the submit Worth When Inherited Action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/worth-when-inherited" in {
+      GainController.submitWorthWhenInherited().url shouldEqual "/calculate-your-capital-gains/resident/properties/worth-when-inherited"
+    }
+  }
+
+  "The URL for the Worth When Bought Action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/worth-when-bought" in {
+      GainController.worthWhenBought().url shouldEqual "/calculate-your-capital-gains/resident/properties/worth-when-bought"
+    }
+  }
+
+  "The URL for the submit Worth When Bought Action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/worth-when-inherited" in {
+      GainController.submitWorthWhenBought().url shouldEqual "/calculate-your-capital-gains/resident/properties/worth-when-bought"
     }
   }
 
@@ -146,6 +182,18 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
   "The URL for the submit howBecameOwner action" should {
     "be equal to /calculate-your-capital-gains/resident/properties/how-became-owner" in {
       GainController.submitHowBecameOwner().url shouldEqual "/calculate-your-capital-gains/resident/properties/how-became-owner"
+    }
+  }
+
+  "The URL for the boughtForLessThanWorth action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/bought-for-less-than-worth" in {
+      GainController.boughtForLessThanWorth().url shouldEqual "/calculate-your-capital-gains/resident/properties/bought-for-less-than-worth"
+    }
+  }
+
+  "The URL for the submit boughtForLessThanWorth action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/bought-for-less-than-worth" in {
+      GainController.submitBoughtForLessThanWorth().url shouldEqual "/calculate-your-capital-gains/resident/properties/bought-for-less-than-worth"
     }
   }
 

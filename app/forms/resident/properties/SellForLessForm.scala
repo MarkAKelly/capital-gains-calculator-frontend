@@ -20,7 +20,7 @@ import play.api.data.Form
 import play.api.data.Forms._
 import common.Transformers._
 import common.Validation._
-import models.resident.properties.SellForLessModel
+import models.resident.SellForLessModel
 import play.api.i18n.Messages
 
 object SellForLessForm {

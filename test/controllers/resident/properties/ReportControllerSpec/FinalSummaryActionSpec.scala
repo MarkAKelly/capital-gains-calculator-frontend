@@ -82,12 +82,23 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     "a positive taxable gain is returned" should {
       lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
-        30000,
+        Some(30000),
+        None,
         0,
-        10000,
+        Some(10000),
+        worthWhenInherited = None,
+        worthWhenGaveAway = None,
+        worthWhenBoughtForLess = None,
         0,
         0,
-        true)
+        true,
+        Some(false),
+        true,
+        Some(BigDecimal(5000)),
+        Some("Bought"),
+        Some(false)
+      )
+
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
         Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None,
         Some(PropertyLivedInModel(false)), None, None, None, None)
@@ -126,12 +137,23 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
 
     "a positive taxable gain is returned with an invalid tax year and two tax rates" should {
       lazy val yourAnswersSummaryModel = YourAnswersSummaryModel(Dates.constructDate(12, 1, 2016),
-        30000,
+        Some(30000),
+        Some(500),
         0,
-        10000,
+        Some(10000),
+        worthWhenInherited = None,
+        worthWhenGaveAway = None,
+        worthWhenBoughtForLess = None,
         0,
         0,
-        false)
+        false,
+        Some(true),
+        false,
+        None,
+        Some("Bought"),
+        Some(false)
+      )
+
       lazy val chargeableGainAnswers = ChargeableGainAnswers(Some(OtherPropertiesModel(false)),
         Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None,
         Some(PropertyLivedInModel(false)), None, None, None, None)

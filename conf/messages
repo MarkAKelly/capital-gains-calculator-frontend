@@ -223,6 +223,13 @@ calc.privateResidenceRelief.error.errorDecimalPlaces = There are too many number
 calc.privateResidenceRelief.error.maxNumericExceeded = Enter a value for your days claimed that''s
 calc.privateResidenceRelief.error.maxNumericExceeded.OrLess = or less
 
+## Who did you give the property to ##
+calc.resident.whoDidYouGiveThePropertyTo.title = Who did you give the property to?
+calc.resident.whoDidYouGiveThePropertyTo.spouse = Your spouse or a civil partner
+calc.resident.whoDidYouGiveThePropertyTo.charity = A charity
+calc.resident.whoDidYouGiveThePropertyTo.other = Someone else
+calc.resident.whoDidYouGiveThePropertyTo.errormandatory = Please tell us who you gave the property to
+
 
 ## Entrepreneurs Relief ##
 calc.entrepreneursRelief.question = Are you claiming Entrepreneurs'' Relief?
@@ -327,6 +334,10 @@ calc.resident.properties.sellForLess.title = Did you sell the property for less 
 calc.resident.properties.sellForLess.question = Did you sell the property for less than it was worth to help the buyer?
 calc.resident.properties.sellForLess.noSelectError = Tell us if you have ever sold the property for less than its worth
 
+## Buy For Less messages ##
+calc.resident.properties.boughtForLessThanWorth.title = Did you buy the property for less than it was worth because the seller wanted to help you?
+calc.resident.properties.boughtForLessThanWorth.noSelectError = Tell us if you have bought the property for less than its worth
+
 ## Sell Or Give Away messages
 calc.resident.sellOrGiveAway.title = Did you sell the property or give it away?
 calc.resident.sellOrGiveAway.errors.mandatory = Tell us if you sold the property or gave it away
@@ -335,6 +346,7 @@ calc.resident.sellOrGiveAway.sold = Sold it
 
 ##Worth When Gave Away messages
 calc.resident.properties.worthWhenGaveAway.title = What was the property worth when you gave it away?
+calc.resident.properties.worthWhenGaveAway.help = You can use a valuation from a surveyor or a property website.
 
 ## No Tax To Pay messages
 calc.resident.noTaxToPay.title = You have no tax to pay
@@ -342,18 +354,11 @@ calc.resident.noTaxToPay.spouseText = This is because Capital Gains Tax doesn''t
 calc.resident.noTaxToPay.charityText = This is because Capital Gains Tax doesn''t apply if you give a property to a charity.
 
 ## Disposal Value messages
-calc.resident.disposal.value.title = How much did you sell the property for?
 calc.resident.disposal.value.question = How much did you sell the property for?
-calc.resident.disposal.value.bullet.title = Put the market value of the property instead if you:
-calc.resident.disposal.value.bullet.one = gave it away as a gift
-calc.resident.disposal.value.bullet.two = sold it to a relative, business partner or
-calc.resident.disposal.value.bullet.two.link =someone else you''re connected to
-calc.resident.disposal.value.bullet.three = sold it for less than it’s worth to help the buyer
-calc.resident.disposal.value.bullet.end = You can use a valuation from a surveyor or a property website.
 
 ## Property Worth when you sold it messages
-calc.resident.properties.propertyWorthWhenSold.title = What was the property worth when you sold it?
-calc.resident.properties.propertyWorthWhenSold.extraText = You can use a valuation from a surveyor or a property website.
+calc.resident.properties.worthWhenSoldForLess.question = What was the property worth when you sold it?
+calc.resident.properties.worthWhenSoldForLess.extraText = You can use a valuation from a surveyor or a property website.
 
 
 ## Disposal Costs messages
@@ -373,17 +378,25 @@ calc.resident.howBecameOwner.bought = Bought it
 calc.resident.howBecameOwner.gifted = Got it as a gift
 calc.resident.howBecameOwner.inherited= Inherited it
 
+
+##Worth On messages
+calc.resident.properties.worthOn.question = What was the property worth on 31 March 1982?
+
+## Worth When Inherited messages
+calc.resident.properties.worthWhenInherited.question = What was the property worth when you inherited it?
+calc.resident.properties.worthWhenInherited.additionalContent = You can use a valuation from a surveyor or a property website.
+
+## Worth When Bought messages
+calc.resident.properties.worthWhenBought.question = What was the property worth when you bought it?
+calc.resident.properties.worthWhenBought.additionalContent = You can use a valuation from a surveyor or a property website.
+
+## Worth When Gifted messages
+calc.resident.properties.worthWhenGifted.question = What was the property worth when you got it as a gift?
+calc.resident.properties.worthWhenGifted.additionalContent = You can use a valuation from a surveyor or a property website.
+
 ## Acquisition Value messages
 calc.resident.acquisitionValue.title = How much did you pay for the property?
 calc.resident.acquisitionValue.question = How much did you pay for the property?
-calc.resident.acquisitionValue.bullet.title = Put the market value of the property instead if you:
-calc.resident.acquisitionValue.bullet.one = inherited it
-calc.resident.acquisitionValue.bullet.two = got it as a gift
-calc.resident.acquisitionValue.bullet.three = bought it from a relative, business partner or
-calc.resident.acquisitionValue.bullet.three.link = someone else you''re connected to
-calc.resident.acquisitionValue.bullet.four = bought it for less than it’s worth because the seller wanted to help you
-calc.resident.acquisitionValue.bullet.five = became the owner before 1 April 1982
-calc.resident.acquisitionValue.bullet.end = You can use a valuation from a surveyor or a property website.
 
 ## Acquisition Costs messages
 calc.resident.acquisitionCosts.title = How much did you pay in costs when you became the property owner?
@@ -391,12 +404,13 @@ calc.resident.acquisitionCosts.question = How much did you pay in costs when you
 calc.resident.acquisitionCosts.helpText = Costs include stamp duty, agent fees, legal fees and surveys
 
 ## Improvements messages
-calc.resident.improvements.title = How much have you spent on improvements since you became the property owner?
-calc.resident.improvements.label = How much have you spent on improvements since you became the property owner?
-calc.resident.improvements.hint = Improvements are permanent changes that raise the value of a property, like adding extensions or garages. Normal maintenance costs don''t count.
-calc.resident.improvements.helpButton = Show me an example
-calc.resident.improvements.additionalContent.one = Replacing a basic kitchen or bathroom with a luxury version is normally considered an improvement.
-calc.resident.improvements.additionalContent.two = But replacing them with something of a similar standard is normally not an improvement.
+calc.resident.properties.improvements.question = How much have you spent on improvements since you became the property owner?
+calc.resident.properties.improvements.label = How much have you spent on improvements since you became the property owner?
+calc.resident.properties.improvements.questionBefore = How much have you spent on improvements since 31 March 1982?
+calc.resident.properties.improvements.hint = Improvements are permanent changes that raise the value of a property, like adding extensions or garages. Normal maintenance costs don''t count.
+calc.resident.properties.improvements.helpButton = Show me an example
+calc.resident.properties.improvements.additionalContent.one = Replacing a basic kitchen or bathroom with a luxury version is normally considered an improvement.
+calc.resident.properties.improvements.additionalContent.two = But replacing them with something of a similar standard is normally not an improvement.
 
 ## Summary messages
 calc.resident.summary.title = Summary
@@ -449,6 +463,8 @@ calc.resident.privateResidenceReliefValue.question = How much Private Residence 
 calc.resident.privateResidenceReliefValue.help = We''ve calculated that you''ve made a gain of £{0} on your property. You''ll need this figure to calculate your Private Residence Relief.
 calc.resident.privateResidenceReliefValue.link = Find out how much you''re entitled to
 
+calc.resident.properties.privateResidenceReliefValue.gainExceededError = Enter an amount that is less than your gain of £{0}
+
 ## Reliefs messages
 
 ## No PRR Reliefs messages
@@ -457,7 +473,9 @@ calc.resident.privateResidenceReliefValue.link = Find out how much you''re entit
 calc.resident.lettingsReliefValue.title = How much Letting Relief are you entitled to?
 calc.resident.lettingsReliefValue.question = How much Letting Relief are you entitled to?
 calc.resident.lettingsReliefValue.additionalContent = We''ve calculated that you''ve made a gain of £{0} on your property. You''ll need this figure to calculate your Letting Relief.
-
+calc.resident.lettingsReliefValue.error.moreThanCappedAmount = The Letting Relief you''ve entered is more than the maximum amount of £{0}
+calc.resident.lettingsReliefValue.error.moreThanPrr = The Letting Relief amount you''ve entered is more than your Private Residence Relief
+calc.resident.lettingsReliefValue.error.moreThanRemainingGain = The Letting Relief you''ve entered is more than your remaining gain of £{0}
 
 ## Reliefs Value messages
 
@@ -560,9 +578,18 @@ calc.resident.shares.disposalDate.question = When did you sell or give away the 
 calc.resident.shares.disposalValue.question = How much did you sell the shares for?
 calc.resident.shares.disposalValue.helpText = Put the market value of the shares instead if you sold them for less than they were worth to help the buyer
 
+## Sell for Less messages
+calc.resident.shares.sellForLess.question = Did you sell the shares for less than they were worth to help the buyer?
+calc.resident.shares.sellForLess.noSelectError = Tell us if you sold the shares for less than they were worth to help the buyer?
+
 ## Disposal Costs messages
 calc.resident.shares.disposalCosts.question = How much did you pay in costs when you sold or gave away the shares?
 calc.resident.shares.disposalCosts.helpText = For example, stockbroker fees
+
+
+## Owned Before 1982 Messages
+calc.resident.shares.ownedBeforeEightyTwo.title = Did you own the shares before 1 April 1982?
+calc.resident.shares.ownedBeforeEightyTwo.noSelectError = Tell us if you owned the shares before 1 April 1982
 
 ## Acquisition Value messages
 calc.resident.shares.acquisitionValue.question = How much did you pay for the shares?
@@ -571,7 +598,7 @@ calc.resident.shares.acquisitionValue.bulletListOne = inherited them
 calc.resident.shares.acquisitionValue.bulletListTwo = owned them before 1 April 1982
 
 ## Acquisition Costs messages
-calc.resident.shares.acquisitionCosts.title = How much did you pay in costs when you got the shares?
+calc.resident.shares.acquisitionCosts.question = How much did you pay in costs when you got the shares?
 calc.resident.shares.acquisitionCosts.help = Costs include stockbroker fees and Stamp Duty tax
 
 ## Current Income messages

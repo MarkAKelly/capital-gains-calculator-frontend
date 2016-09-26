@@ -115,7 +115,7 @@ class PrivateResidenceReliefValueActionSpec extends UnitSpec with WithFakeApplic
   "Calling .submitPrivateResidenceReliefValue from the GainCalculationController" when {
 
     "a valid form is submitted" should {
-      lazy val target = setupTarget(None, 1)
+      lazy val target = setupTarget(None, 10000)
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
       lazy val result = target.submitPrivateResidenceReliefValue(request)
 

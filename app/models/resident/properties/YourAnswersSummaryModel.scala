@@ -24,12 +24,21 @@ import play.api.libs.json._
 case class YourAnswersSummaryModel
 (
   disposalDate: LocalDate,
-  disposalValue: BigDecimal,
+  disposalValue: Option[BigDecimal],
+  worthWhenSoldForLess: Option[BigDecimal],
   disposalCosts: BigDecimal,
-  acquisitionValue: BigDecimal,
+  acquisitionValue: Option[BigDecimal],
+  worthWhenInherited: Option[BigDecimal],
+  worthWhenGaveAway: Option[BigDecimal],
+  worthWhenBoughtForLess: Option[BigDecimal],
   acquisitionCosts: BigDecimal,
   improvements: BigDecimal,
-  givenAway: Boolean
+  givenAway: Boolean,
+  sellForLess: Option[Boolean],
+  ownerBeforeAprilNineteenEightyTwo: Boolean,
+  worthOnThirtyFirstMarchEightyTwo: Option[BigDecimal],
+  howBecameOwner: Option[String],
+  boughtForLessThanWorth: Option[Boolean]
 )
 
 object YourAnswersSummaryModel {

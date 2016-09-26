@@ -66,6 +66,14 @@ class WorthWhenGaveAwayViewSpec extends UnitSpec with WithFakeApplication with F
       }
     }
 
+    "have a help paragraph" should {
+      lazy val helpText = doc.select("#help")
+
+      s"have the help text ${messages.helpMessage}" in {
+        helpText.text shouldBe messages.helpMessage
+      }
+    }
+
 
     "have a form that" should {
 
