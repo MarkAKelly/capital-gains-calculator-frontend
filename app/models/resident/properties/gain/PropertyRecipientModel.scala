@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-package common
+package models.resident.properties.gain
 
-object Constants {
-  val maxNumeric: BigDecimal = 1000000000
-  val maxLettingsRelief: BigDecimal = 40000
+import play.api.libs.json.Json
+
+case class PropertyRecipientModel(option: String)
+
+object PropertyRecipientModel{
+  implicit val format = Json.format[PropertyRecipientModel]
 }

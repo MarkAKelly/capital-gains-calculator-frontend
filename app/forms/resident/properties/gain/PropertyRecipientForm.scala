@@ -14,9 +14,19 @@
  * limitations under the License.
  */
 
-package common
+package forms.resident.properties.gain
 
-object Constants {
-  val maxNumeric: BigDecimal = 1000000000
-  val maxLettingsRelief: BigDecimal = 40000
+import common.Validation._
+import models.resident.properties.gain.PropertyRecipientModel
+import play.api.data.Forms._
+import play.api.data._
+import play.api.i18n.Messages
+
+object PropertyRecipientForm {
+  val propertyRecipientForm = Form(
+    mapping("propertyRecipient" -> text
+        .verifying(Messages("calc.resident.whoDidYouGiveThePropertyTo.errormandatory"), mandatoryCheck)
+      .verifying(Messages("calc.resident.whoDidYouGiveThePropertyTo.errormandatory"), whoDidYouGiveItToCheck)
+    )(PropertyRecipientModel.apply)(PropertyRecipientModel.unapply)
+  )
 }

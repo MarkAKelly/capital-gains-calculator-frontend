@@ -223,6 +223,13 @@ calc.privateResidenceRelief.error.errorDecimalPlaces = There are too many number
 calc.privateResidenceRelief.error.maxNumericExceeded = Enter a value for your days claimed that''s
 calc.privateResidenceRelief.error.maxNumericExceeded.OrLess = or less
 
+## Who did you give the property to ##
+calc.resident.whoDidYouGiveThePropertyTo.title = Who did you give the property to?
+calc.resident.whoDidYouGiveThePropertyTo.spouse = Your spouse or a civil partner
+calc.resident.whoDidYouGiveThePropertyTo.charity = A charity
+calc.resident.whoDidYouGiveThePropertyTo.other = Someone else
+calc.resident.whoDidYouGiveThePropertyTo.errormandatory = Please tell us who you gave the property to
+
 
 ## Entrepreneurs Relief ##
 calc.entrepreneursRelief.question = Are you claiming Entrepreneurs'' Relief?
@@ -339,6 +346,7 @@ calc.resident.sellOrGiveAway.sold = Sold it
 
 ##Worth When Gave Away messages
 calc.resident.properties.worthWhenGaveAway.title = What was the property worth when you gave it away?
+calc.resident.properties.worthWhenGaveAway.help = You can use a valuation from a surveyor or a property website.
 
 ## Disposal Value messages
 calc.resident.disposal.value.question = How much did you sell the property for?
@@ -460,7 +468,9 @@ calc.resident.properties.privateResidenceReliefValue.gainExceededError = Enter a
 calc.resident.lettingsReliefValue.title = How much Letting Relief are you entitled to?
 calc.resident.lettingsReliefValue.question = How much Letting Relief are you entitled to?
 calc.resident.lettingsReliefValue.additionalContent = We''ve calculated that you''ve made a gain of £{0} on your property. You''ll need this figure to calculate your Letting Relief.
-
+calc.resident.lettingsReliefValue.error.moreThanCappedAmount = The Letting Relief you''ve entered is more than the maximum amount of £{0}
+calc.resident.lettingsReliefValue.error.moreThanPrr = The Letting Relief amount you''ve entered is more than your Private Residence Relief
+calc.resident.lettingsReliefValue.error.moreThanRemainingGain = The Letting Relief you''ve entered is more than your remaining gain of £{0}
 
 ## Reliefs Value messages
 

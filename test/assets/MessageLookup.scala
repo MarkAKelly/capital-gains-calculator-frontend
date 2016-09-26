@@ -16,6 +16,9 @@
 
 package assets
 
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
+import common.Constants
+
 object MessageLookup {
 
   // TO MOVE
@@ -54,6 +57,7 @@ object MessageLookup {
 
       object propertiesWorthWhenGaveAway {
         val title = "What was the property worth when you gave it away?"
+        val helpMessage = "You can use a valuation from a surveyor or a property website."
       }
 
       object worthOn {
@@ -317,6 +321,10 @@ object MessageLookup {
     val question = s"How much Letting Relief are you entitled to?"
     def additionalContent(input: String): String = s"We've calculated that you've made a gain of £$input on your property. " +
       s"You'll need this figure to calculate your Letting Relief."
+    val maxLettingsReliefExceeded = "The Letting Relief you've entered is more than the maximum amount of £" + MoneyPounds(Constants.maxLettingsRelief,0).quantity
+    val lettingsReliefMoreThanPRR = "The Letting Relief amount you've entered is more than your Private Residence Relief"
+    def lettingsReliefMoreThanRemainingGain(input: BigDecimal): String = s"The Letting Relief you've entered is more than your remaining gain of £" + MoneyPounds(input,0).quantity
+    val reducYourLettingsRelief = "Reduce your Letting Relief amount"
   }
 
   //No Prr Reliefs Value messages
@@ -472,4 +480,11 @@ object MessageLookup {
     val gift = "Gave it away"
   }
 
+  object whoDidYouGiveItTo {
+    val title = "Who did you give the property to?"
+    val spouse = "Your spouse or a civil partner"
+    val charity = "A charity"
+    val other = "Someone else"
+    val errormandatory = "Please tell us who you gave the property to"
+  }
 }
