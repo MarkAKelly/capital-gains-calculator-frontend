@@ -228,8 +228,8 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
 
       "has a numeric output row for the Disposal Value" which {
 
-        s"should have the question text '${commonMessages.sharesDisposalValue.question}'" in {
-          doc.select("#disposalValue-question").text shouldBe commonMessages.sharesDisposalValue.question
+        s"should have the question text '${commonMessages.Resident.Shares.DisposalValue.question}'" in {
+          doc.select("#disposalValue-question").text shouldBe commonMessages.Resident.Shares.DisposalValue.question
         }
 
         "should have the value '£200,000'" in {

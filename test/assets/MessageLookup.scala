@@ -114,6 +114,10 @@ object MessageLookup {
 
       }
 
+      object DisposalValue {
+        val question = "How much did you sell the shares for?"
+      }
+
       //############ Owned Before 1982 messages #################//
       object OwnedBeforeEightyTwoMessages {
         val title = "Did you own the shares before 1 April 1982?"
@@ -461,11 +465,6 @@ object MessageLookup {
   //############ Shares messages ##############//
   object sharesDisposalDate {
     val title = "When did you sell or give away the shares?"
-  }
-
-  object sharesDisposalValue {
-    val question = "How much did you sell the shares for?"
-    val helpText = "Put the market value of the shares instead if you sold them for less than they were worth to help the buyer"
   }
 
   object sharesAcquisitionCosts {
