@@ -183,7 +183,7 @@ trait GainController extends FeatureLock {
         calcConnector.saveFormData(keystoreKeys.ownedBeforeEightyTwo, success)
         success.ownedBeforeEightyTwo match {
           case true => Future.successful(Redirect(routes.GainController.worthOnMarchEightyTwo()))
-          case _ => Future.successful(Redirect(routes.GainController.inheritedShares()))
+          case _ => Future.successful(Redirect(routes.GainController.didYouInheritThem()))
         }
       }
     )
@@ -193,14 +193,14 @@ trait GainController extends FeatureLock {
   val worthOnMarchEightyTwo = TODO
 
   //################# Did you Inherit the Shares Actions ########################
-  val inheritedShares = FeatureLockForRTTShares.async { implicit request =>
+  val didYouInheritThem = FeatureLockForRTTShares.async { implicit request =>
     calcConnector.fetchAndGetFormData[InheritedSharesModel](keystoreKeys.inheritedShares).map {
       case Some(data) => Ok(views.inheritedShares(inheritedSharesForm.fill(data)))
       case None => Ok(views.inheritedShares(inheritedSharesForm))
     }
   }
 
-  val submitInheritedShares = FeatureLockForRTTShares.async { implicit request =>
+  val submitDidYouInheritThem = FeatureLockForRTTShares.async { implicit request =>
     inheritedSharesForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.inheritedShares(errors))),
       success => {
