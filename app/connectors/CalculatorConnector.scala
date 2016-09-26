@@ -26,6 +26,7 @@ import models.nonresident._
 import models.resident
 import models.resident.properties.{ImprovementsModel => _, _}
 import models.resident.{IncomeAnswersModel, SellForLessModel, TaxYearModel, properties}
+import models.resident.properties.gain._
 import play.api.libs.json.Format
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -241,6 +242,10 @@ trait CalculatorConnector {
       case Some(data) => Some(data.boughtForLessThanWorth)
       case None => None
     }
+    val worthWhenGifted = fetchAndGetFormData[WorthWhenGiftedModel](ResidentPropertyKeys.worthWhenGifted).map {
+      case Some(data) => Some(data.amount)
+      case None => None
+    }
 
     for {
       disposalDate <- disposalDate
@@ -259,14 +264,16 @@ trait CalculatorConnector {
       worthOnThirtyFirstMarchEightyTwo <- worthOnThirtyFirstMarchEightyTwo
       howBecameOwner <- howBecameOwner
       boughtForLessThanWorth <- boughtForLessThanWorth
+      worthWhenGifted <- worthWhenGifted
     } yield properties.YourAnswersSummaryModel(
       disposalDate,
       disposalValue,
       worthWhenSoldForLess,
+      worthWhenGaveAway,
       disposalCosts,
       acquisitionValue,
       worthWhenInherited,
-      worthWhenGaveAway,
+      worthWhenGifted,
       worthWhenBoughtForLess,
       acquisitionCosts,
       improvements,

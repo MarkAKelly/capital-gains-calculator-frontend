@@ -17,10 +17,25 @@
 package constructors.resident.properties
 
 import common.Dates._
+import common.resident.HowYouBecameTheOwnerKeys._
 import models.resident._
 import models.resident.properties.{ChargeableGainAnswers, YourAnswersSummaryModel}
 
 object CalculateRequestConstructor {
+
+  val determineDisposalValue: YourAnswersSummaryModel => BigDecimal = {
+    case x if x.givenAway => x.worthWhenGaveAway.get
+    case x if x.sellForLess.get => x.worthWhenSoldForLess.get
+    case x => x.disposalValue.get
+  }
+
+  val determineAcquisitionValue: YourAnswersSummaryModel => BigDecimal = {
+    case x if x.ownerBeforeAprilNineteenEightyTwo => x.worthOnThirtyFirstMarchEightyTwo.get
+    case x if x.howBecameOwner.get == inheritedIt => x.worthWhenInherited.get
+    case x if x.howBecameOwner.get == giftedIt => x.worthWhenGifted.get
+    case x if x.howBecameOwner.get == boughtIt =>
+      if (x.sellForLess.get) x.worthWhenSoldForLess.get else x.acquisitionValue.get
+  }
 
   def totalGainRequestString (answers: YourAnswersSummaryModel): String = {
       s"?disposalValue=${answers.disposalValue.get}" +
