@@ -1,8 +1,11 @@
 @import views.html.calculation.resident._
 
-@(forCharity: Boolean, backLink: Option[String], homeLink: String)(implicit request: Request[_])
+@(forCharity: Boolean)(implicit request: Request[_])
 
-@resident_main_template(title = Messages("calc.resident.noTaxToPay.title"), backLink = backLink, homeLink = homeLink, navTitle=Messages("calc.base.resident.properties.home")) {
+@resident_main_template(title = Messages("calc.resident.noTaxToPay.title"),
+                        backLink = Some(controllers.resident.properties.routes.GainController.whoDidYouGiveItTo().url),
+                        homeLink = controllers.resident.properties.routes.PropertiesController.introduction().url,
+                        navTitle=Messages("calc.base.resident.properties.home")) {
 
     <h1 class="heading-large">@Messages("calc.resident.noTaxToPay.title")</h1>
 
