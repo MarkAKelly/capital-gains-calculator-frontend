@@ -210,15 +210,24 @@ class DidYouInheritThemViewSpec extends UnitSpec with WithFakeApplication with F
   }
 
   "Sell for less view with a filled form" which {
-    lazy val view = views.inheritedShares(didYouInheritThemForm.fill(DidYouInheritThemModel(true)))(fakeRequest)
-    lazy val doc = Jsoup.parse(view.body)
 
     "for the option 'Yes'" should {
-
+      lazy val view = views.inheritedShares(didYouInheritThemForm.fill(DidYouInheritThemModel(true)))(fakeRequest)
+      lazy val doc = Jsoup.parse(view.body)
       lazy val YesRadioOption = doc.select(".block-label[for=wereInherited-yes]")
 
       "have the option auto-selected" in {
         YesRadioOption.attr("class") shouldBe "block-label selected"
+      }
+    }
+
+    "for the option 'No'" should {
+      lazy val view = views.inheritedShares(didYouInheritThemForm.fill(DidYouInheritThemModel(false)))(fakeRequest)
+      lazy val doc = Jsoup.parse(view.body)
+      lazy val NoRadioOption = doc.select(".block-label[for=wereInherited-no]")
+
+      "have the option auto-selected" in {
+        NoRadioOption.attr("class") shouldBe "block-label selected"
       }
     }
   }
