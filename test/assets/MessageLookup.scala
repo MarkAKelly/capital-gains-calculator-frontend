@@ -54,6 +54,7 @@ object MessageLookup {
 
       object propertiesWorthWhenGaveAway {
         val title = "What was the property worth when you gave it away?"
+        val helpMessage = "You can use a valuation from a surveyor or a property website."
       }
 
       object worthOn {

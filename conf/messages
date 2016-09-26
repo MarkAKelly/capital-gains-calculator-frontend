@@ -346,6 +346,7 @@ calc.resident.sellOrGiveAway.sold = Sold it
 
 ##Worth When Gave Away messages
 calc.resident.properties.worthWhenGaveAway.title = What was the property worth when you gave it away?
+calc.resident.properties.worthWhenGaveAway.help = You can use a valuation from a surveyor or a property website.
 
 ## Disposal Value messages
 calc.resident.disposal.value.question = How much did you sell the property for?
