@@ -19,8 +19,14 @@ package models.resident.shares
 import java.time.LocalDate
 
 case class GainAnswersModel(disposalDate: LocalDate,
+                            soldForLessThanWorth: Option[Boolean],
                             disposalValue: BigDecimal,
+                            worthWhenSoldForLess: Option[BigDecimal],
                             disposalCosts: BigDecimal,
+                            ownedBeforeTaxStartDate: Option[Boolean],
+                            worthOnTaxStartDate: Option[BigDecimal],
+                            inheritedTheShares: Option[BigDecimal],
+                            worthWhenInherited: Option[BigDecimal],
                             acquisitionValue: BigDecimal,
                             acquisitionCosts: BigDecimal)
 

@@ -29,11 +29,19 @@ import views.html.calculation.resident.shares.{report => views}
 class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Deductions Report view" should {
-    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
-      BigDecimal(10000),
-      BigDecimal(100000),
-      BigDecimal(10000))
+    lazy val gainAnswers = GainAnswersModel(
+      disposalDate = Dates.constructDate(10, 10, 2016),
+      soldForLessThanWorth = None,
+      disposalValue = 200000,
+      worthWhenSoldForLess = None,
+      disposalCosts = 10000,
+      ownedBeforeTaxStartDate = None,
+      worthOnTaxStartDate = None,
+      inheritedTheShares = None,
+      worthWhenInherited = None,
+      acquisitionValue = 100000,
+      acquisitionCosts = 10000
+    )
     lazy val deductionAnswers = DeductionGainAnswersModel(
       Some(OtherPropertiesModel(false)),
       None,
@@ -266,11 +274,19 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
   }
 
   "Deductions Report view with all options selected" should {
-    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
-      BigDecimal(10000),
-      BigDecimal(100000),
-      BigDecimal(10000))
+    lazy val gainAnswers = GainAnswersModel(
+      disposalDate = Dates.constructDate(10, 10, 2016),
+      soldForLessThanWorth = None,
+      disposalValue = 200000,
+      worthWhenSoldForLess = None,
+      disposalCosts = 10000,
+      ownedBeforeTaxStartDate = None,
+      worthOnTaxStartDate = None,
+      inheritedTheShares = None,
+      worthWhenInherited = None,
+      acquisitionValue = 100000,
+      acquisitionCosts = 10000
+    )
     lazy val deductionAnswers = DeductionGainAnswersModel(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(true)),
@@ -478,11 +494,19 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
 
   "Deductions Report view with AEA options selected" which {
 
-    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2016),
-      BigDecimal(200000),
-      BigDecimal(10000),
-      BigDecimal(100000),
-      BigDecimal(10000))
+    lazy val gainAnswers = GainAnswersModel(
+      disposalDate = Dates.constructDate(10, 10, 2016),
+      soldForLessThanWorth = None,
+      disposalValue = 200000,
+      worthWhenSoldForLess = None,
+      disposalCosts = 10000,
+      ownedBeforeTaxStartDate = None,
+      worthOnTaxStartDate = None,
+      inheritedTheShares = None,
+      worthWhenInherited = None,
+      acquisitionValue = 100000,
+      acquisitionCosts = 10000
+    )
     lazy val deductionAnswers = DeductionGainAnswersModel(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),

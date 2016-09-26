@@ -357,22 +357,47 @@ trait CalculatorConnector {
 
   //Rtt share calculation methods
   def getShareGainAnswers(implicit hc: HeaderCarrier): Future[resident.shares.GainAnswersModel] = {
-    val acquisitionValue = fetchAndGetFormData[resident.AcquisitionValueModel](ResidentShareKeys.acquisitionValue).map(_.get.amount)
     val disposalDate = fetchAndGetFormData[resident.DisposalDateModel](ResidentShareKeys.disposalDate).map(formData =>
       constructDate(formData.get.day, formData.get.month, formData.get.year))
+    /////////////////////////////////////////
+    val soldForLessThanWorth = None
+    /////////////////////////////////////////
     val disposalValue = fetchAndGetFormData[resident.DisposalValueModel](ResidentShareKeys.disposalValue).map(_.get.amount)
-    val acquisitionCosts = fetchAndGetFormData[resident.AcquisitionCostsModel](ResidentShareKeys.acquisitionCosts).map(_.get.amount)
+    /////////////////////////////////////////
+    val worthWhenSoldForLess = None
+    /////////////////////////////////////////
     val disposalCosts = fetchAndGetFormData[resident.DisposalCostsModel](ResidentShareKeys.disposalCosts).map(_.get.amount)
+    /////////////////////////////////////////
+    val ownedBeforeTaxStartDate = None
+    val worthOnTaxStartDate = None
+    val inheritedTheShares = None
+    val worthWhenInherited = None
+    /////////////////////////////////////////
+    val acquisitionValue = fetchAndGetFormData[resident.AcquisitionValueModel](ResidentShareKeys.acquisitionValue).map(_.get.amount)
+    val acquisitionCosts = fetchAndGetFormData[resident.AcquisitionCostsModel](ResidentShareKeys.acquisitionCosts).map(_.get.amount)
+
     for {
-      acquisitionValue <- acquisitionValue
       disposalDate <- disposalDate
+//      soldForLessThanWorth <- soldForLessThanWorth
       disposalValue <- disposalValue
-      acquisitionCosts <- acquisitionCosts
+//      worthWhenSoldForLess <- worthWhenSoldForLess
       disposalCosts <- disposalCosts
+//      ownedBeforeTaxStartDate <- ownedBeforeTaxStartDate
+//      worthOnTaxStartDate <- worthOnTaxStartDate
+//      inheritedTheShares <- inheritedTheShares
+//      worthWhenInherited <- worthWhenInherited
+      acquisitionValue <- acquisitionValue
+      acquisitionCosts <- acquisitionCosts
     } yield resident.shares.GainAnswersModel(
       disposalDate,
+      soldForLessThanWorth,
       disposalValue,
+      worthWhenSoldForLess,
       disposalCosts,
+      ownedBeforeTaxStartDate,
+      worthOnTaxStartDate,
+      inheritedTheShares,
+      worthWhenInherited,
       acquisitionValue,
       acquisitionCosts
     )
