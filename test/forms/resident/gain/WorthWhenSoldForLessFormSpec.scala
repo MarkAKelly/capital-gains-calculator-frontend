@@ -17,9 +17,9 @@
 package forms.resident.gain
 
 import assets.MessageLookup.errorMessages
+import forms.resident.WorthWhenSoldForLessForm._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import forms.resident.properties.gain.WorthWhenSoldForLessForm._
-import models.resident.properties.gain.WorthWhenSoldForLessModel
+import models.resident.WorthWhenSoldForLessModel
 
 class WorthWhenSoldForLessFormSpec extends UnitSpec with WithFakeApplication {
 

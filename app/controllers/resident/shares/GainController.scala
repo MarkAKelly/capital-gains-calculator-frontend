@@ -34,7 +34,9 @@ import forms.resident.AcquisitionCostsForm._
 import forms.resident.AcquisitionValueForm._
 import forms.resident.shares.OwnedBeforeEightyTwoForm._
 import forms.resident.shares.SellForLessForm._
+import forms.resident.WorthWhenSoldForLessForm._
 import forms.resident.shares.gain.DidYouInheritThemForm._
+
 import models.resident._
 import common.{Dates, TaxDates}
 import models.resident.shares.OwnedBeforeEightyTwoModel
@@ -100,7 +102,7 @@ trait GainController extends FeatureLock {
       success => {
         calcConnector.saveFormData[SellForLessModel](keystoreKeys.sellForLess, success)
         success.sellForLess match {
-          case true => Future.successful(Redirect(routes.GainController.worthWhenSold()))
+          case true => Future.successful(Redirect(routes.GainController.worthWhenSoldForLess()))
           case _ => Future.successful(Redirect(routes.GainController.disposalValue()))
         }
       }
@@ -108,8 +110,22 @@ trait GainController extends FeatureLock {
   }
 
   //################ Worth When Sold Actions ######################
-  val worthWhenSold = FeatureLockForRTT.async { implicit request =>
-    TODO.apply(request)
+  val worthWhenSoldForLess = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[WorthWhenSoldForLessModel](keystoreKeys.worthWhenSoldForLess).map {
+      case Some(data) => Ok(views.worthWhenSoldForLess(worthWhenSoldForLessForm.fill(data), homeLink))
+      case _ => Ok(views.worthWhenSoldForLess(worthWhenSoldForLessForm, homeLink))
+    }
+  }
+
+  val submitWorthWhenSoldForLess = FeatureLockForRTT.async { implicit request =>
+
+    worthWhenSoldForLessForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.worthWhenSoldForLess(errors, homeLink))),
+      success => {
+        calcConnector.saveFormData(keystoreKeys.worthWhenSoldForLess, success)
+        Future.successful(Redirect(routes.GainController.disposalCosts()))
+      }
+    )
   }
 
 

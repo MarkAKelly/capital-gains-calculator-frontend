@@ -582,6 +582,9 @@ calc.resident.shares.disposalValue.helpText = Put the market value of the shares
 calc.resident.shares.sellForLess.question = Did you sell the shares for less than they were worth to help the buyer?
 calc.resident.shares.sellForLess.noSelectError = Tell us if you sold the shares for less than they were worth to help the buyer?
 
+## Worth When Sold For Less messages
+calc.resident.shares.worthWhenSoldForLess.question = What were the shares worth when you sold them?
+
 ## Disposal Costs messages
 calc.resident.shares.disposalCosts.question = How much did you pay in costs when you sold or gave away the shares?
 calc.resident.shares.disposalCosts.helpText = For example, stockbroker fees
