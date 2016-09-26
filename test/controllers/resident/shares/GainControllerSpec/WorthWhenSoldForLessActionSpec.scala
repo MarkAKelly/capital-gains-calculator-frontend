@@ -54,7 +54,7 @@ class WorthWhenSoldForLessActionSpec extends UnitSpec with WithFakeApplication w
     }
   }
 
-  "Calling .sharesWorthWhenSoldForLess from the GainCalculationController" when {
+  "Calling .worthWhenSoldForLess from the GainCalculationController" when {
     "there is no keystore data" should {
       lazy val target = setupTarget(None)
       lazy val result = target.worthWhenSoldForLess(fakeRequestWithSession)
@@ -82,7 +82,7 @@ class WorthWhenSoldForLessActionSpec extends UnitSpec with WithFakeApplication w
     }
   }
 
-  "Calling .sharesWorthWhenSold from the GainCalculationController with no session" should {
+  "Calling .worthWhenSoldForLess from the GainCalculationController with no session" should {
 
     lazy val target = setupTarget(None)
     lazy val result = target.worthWhenSoldForLess(fakeRequest)
@@ -96,7 +96,7 @@ class WorthWhenSoldForLessActionSpec extends UnitSpec with WithFakeApplication w
     }
   }
 
-  "Calling .submitsharesWorthWhenSold from the GainController" should {
+  "Calling .submitWorthWhenSoldForLess from the GainController" should {
     lazy val target = setupTarget(None)
     lazy val request = fakeRequestToPOSTWithSession(("amount", "100"))
     lazy val result = target.submitWorthWhenSoldForLess(request)
@@ -113,7 +113,7 @@ class WorthWhenSoldForLessActionSpec extends UnitSpec with WithFakeApplication w
     }
   }
 
-  "Calling .submitsharesWorthWhenSold from the GainController" should {
+  "Calling .submitWorthWhenSoldForLess from the GainController" should {
     lazy val target = setupTarget(None)
     lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
     lazy val result = target.submitWorthWhenSoldForLess(request)

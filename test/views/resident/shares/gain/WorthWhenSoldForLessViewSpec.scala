@@ -26,7 +26,7 @@ import org.jsoup.Jsoup
 
 class WorthWhenSoldForLessViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "The Property Worth When Sold View when supplied with an empty form" should {
+  "The Shares Worth When Sold For Less View when supplied with an empty form" should {
 
     lazy val view = views.worthWhenSoldForLess(worthWhenSoldForLessForm, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
@@ -130,7 +130,7 @@ class WorthWhenSoldForLessViewSpec extends UnitSpec with WithFakeApplication wit
     }
   }
 
-  "The Property Worth When Sold View when supplied with a correct form" should {
+  "The Shares Worth When Sold For Less View when supplied with a correct form" should {
 
     val form = worthWhenSoldForLessForm.bind(Map("amount" -> "100"))
     lazy val view = views.worthWhenSoldForLess(form, "home-link")(fakeRequest)
@@ -149,7 +149,7 @@ class WorthWhenSoldForLessViewSpec extends UnitSpec with WithFakeApplication wit
     }
   }
 
-  "The Property Worth When Sold View when supplied with an incorrect form" should {
+  "The Shares Worth When Sold For Less View when supplied with an incorrect form" should {
 
     val form = worthWhenSoldForLessForm.bind(Map("amount" -> "adsa"))
     lazy val view = views.worthWhenSoldForLess(form, "home-link")(fakeRequest)
