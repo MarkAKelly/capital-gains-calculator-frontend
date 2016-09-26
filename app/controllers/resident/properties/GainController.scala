@@ -125,10 +125,6 @@ trait GainController extends FeatureLock {
     )
   }
 
-  val youHaveNoTaxToPay = FeatureLockForRTT.async { implicit request =>
-    TODO.apply(request)
-  }
-
   //################ Who Did You Give It To Actions ######################
   val whoDidYouGiveItTo = FeatureLockForRTT.async { implicit request =>
 
@@ -144,12 +140,31 @@ trait GainController extends FeatureLock {
     success => {
       calcConnector.saveFormData[PropertyRecipientModel](keystoreKeys.propertyRecipient, success)
       success match {
-        case PropertyRecipientModel("Spouse") => Future.successful(Redirect(routes.GainController.youHaveNoTaxToPay()))
-        case PropertyRecipientModel("Charity") => Future.successful(Redirect(routes.GainController.youHaveNoTaxToPay()))
+        case PropertyRecipientModel("Spouse") => Future.successful(Redirect(routes.GainController.noTaxToPay()))
+        case PropertyRecipientModel("Charity") => Future.successful(Redirect(routes.GainController.noTaxToPay()))
         case PropertyRecipientModel("Other") => Future.successful(Redirect(routes.GainController.worthWhenGaveAway()))
       }
+    })
+  }
+
+  //################ No Tax to Pay Actions ######################
+  val noTaxToPay = FeatureLockForRTT.async { implicit request =>
+
+    def isGivenToCharity: Future[Boolean] = {
+      calcConnector.fetchAndGetFormData[PropertyRecipientModel](keystoreKeys.propertyRecipient).map {
+        case Some(PropertyRecipientModel("Charity")) => true
+        case _ => false
+      }
     }
-    )
+
+    def result(input: Boolean): Future[Result] = {
+      Future.successful(Ok(views.noTaxToPay(input)))
+    }
+
+    for {
+      givenToCharity <- isGivenToCharity
+      result <- result(givenToCharity)
+    } yield result
   }
 
   //################ Outside Tax Years Actions ######################

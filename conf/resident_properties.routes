@@ -20,8 +20,8 @@ GET     /sell-for-less                    controllers.resident.properties.GainCo
 GET     /who-did-you-give-it-to           controllers.resident.properties.GainController.whoDidYouGiveItTo
 POST    /who-did-you-give-it-to           controllers.resident.properties.GainController.submitWhoDidYouGiveItTo
 
-#You Have No Tax To Pay
-GET     /you-have-no-tax-to-pay           controllers.resident.properties.GainController.youHaveNoTaxToPay
+#No Tax to Pay Routes
+GET     /no-tax-to-pay                    controllers.resident.properties.GainController.noTaxToPay
 
 #Worth When Gave Away Routes
 GET     /worth-when-gave-away             controllers.resident.properties.GainController.worthWhenGaveAway
