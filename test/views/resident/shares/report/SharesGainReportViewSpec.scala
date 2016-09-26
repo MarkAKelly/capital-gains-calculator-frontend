@@ -31,11 +31,17 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
   "Summary view" should {
 
     val testModel = GainAnswersModel(
-      constructDate(12, 9, 1990),
-      10,
-      20,
-      30,
-      40
+      disposalDate = constructDate(12, 9, 1990),
+      soldForLessThanWorth = None,
+      disposalValue = 10,
+      worthWhenSoldForLess = None,
+      disposalCosts = 20,
+      ownedBeforeTaxStartDate = None,
+      worthOnTaxStartDate = None,
+      inheritedTheShares = None,
+      worthWhenInherited = None,
+      acquisitionValue = 30,
+      acquisitionCosts = 40
     )
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
@@ -180,11 +186,17 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
     lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
 
     val testModel = GainAnswersModel(
-      constructDate(12, 9, 2015),
-      10,
-      20,
-      30,
-      40
+      disposalDate = constructDate(12, 9, 2015),
+      soldForLessThanWorth = None,
+      disposalValue = 10,
+      worthWhenSoldForLess = None,
+      disposalCosts = 20,
+      ownedBeforeTaxStartDate = None,
+      worthOnTaxStartDate = None,
+      inheritedTheShares = None,
+      worthWhenInherited = None,
+      acquisitionValue = 30,
+      acquisitionCosts = 40
     )
     lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)

@@ -31,11 +31,19 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
   "Final Summary view" should {
 
-    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2015),
-      BigDecimal(200000),
-      BigDecimal(10000),
-      BigDecimal(100000),
-      BigDecimal(10000))
+    lazy val gainAnswers = GainAnswersModel(
+      disposalDate = Dates.constructDate(10, 10, 2015),
+      soldForLessThanWorth = None,
+      disposalValue = 200000,
+      worthWhenSoldForLess = None,
+      disposalCosts = 10000,
+      ownedBeforeTaxStartDate = None,
+      worthOnTaxStartDate = None,
+      inheritedTheShares = None,
+      worthWhenInherited = None,
+      acquisitionValue = 100000,
+      acquisitionCosts = 10000
+    )
 
     lazy val deductionAnswers = DeductionGainAnswersModel(
       Some(OtherPropertiesModel(true)),
@@ -326,12 +334,19 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
     lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
 
-    lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2018),
-      BigDecimal(200000),
-      BigDecimal(10000),
-      BigDecimal(100000),
-      BigDecimal(10000))
-
+    lazy val gainAnswers = GainAnswersModel(
+      disposalDate = Dates.constructDate(10, 10, 2018),
+      soldForLessThanWorth = None,
+      disposalValue = 200000,
+      worthWhenSoldForLess = None,
+      disposalCosts = 10000,
+      ownedBeforeTaxStartDate = None,
+      worthOnTaxStartDate = None,
+      inheritedTheShares = None,
+      worthWhenInherited = None,
+      acquisitionValue = 100000,
+      acquisitionCosts = 10000
+    )
     lazy val deductionAnswers = DeductionGainAnswersModel(
       Some(OtherPropertiesModel(true)),
       Some(AllowableLossesModel(false)),

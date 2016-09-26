@@ -72,11 +72,19 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
   "Calling .deductionReport from the ReportController" when {
 
     "a 0 gain is returned" should {
-      lazy val gainAnswers = GainAnswersModel(Dates.constructDate(10, 10, 2018),
-        BigDecimal(200000),
-        BigDecimal(10000),
-        BigDecimal(100000),
-        BigDecimal(10000))
+      lazy val gainAnswers = GainAnswersModel(
+        disposalDate = Dates.constructDate(10, 10, 2018),
+        soldForLessThanWorth = None,
+        disposalValue = 200000,
+        worthWhenSoldForLess = None,
+        disposalCosts = 10000,
+        ownedBeforeTaxStartDate = None,
+        worthOnTaxStartDate = None,
+        inheritedTheShares = None,
+        worthWhenInherited = None,
+        acquisitionValue = 100000,
+        acquisitionCosts = 10000
+      )
       lazy val deductionAnswers = DeductionGainAnswersModel(
         Some(OtherPropertiesModel(true)),
         Some(AllowableLossesModel(true)),
@@ -124,11 +132,19 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
     }
 
     "a carried forward loss is returned with an invalid tax year" should {
-      lazy val yourAnswersSummaryModel = GainAnswersModel(Dates.constructDate(12, 1, 2016),
-        30000,
-        0,
-        10000,
-        0)
+      lazy val yourAnswersSummaryModel = GainAnswersModel(
+        disposalDate = Dates.constructDate(10, 10, 2018),
+        soldForLessThanWorth = None,
+        disposalValue = 30000,
+        worthWhenSoldForLess = None,
+        disposalCosts = 0,
+        ownedBeforeTaxStartDate = None,
+        worthOnTaxStartDate = None,
+        inheritedTheShares = None,
+        worthWhenInherited = None,
+        acquisitionValue = 10000,
+        acquisitionCosts = 0
+      )
       lazy val chargeableGainAnswers = DeductionGainAnswersModel(Some(OtherPropertiesModel(false)),
         Some(AllowableLossesModel(false)), None, Some(LossesBroughtForwardModel(false)), None, None)
       lazy val chargeableGainResultModel = ChargeableGainResultModel(20000, 20000, 11100, 0, 11100, BigDecimal(0), BigDecimal(0), None, None, 0, 0)

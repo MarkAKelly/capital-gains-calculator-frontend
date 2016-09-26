@@ -83,11 +83,19 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
   "Calling .summary from the SummaryController for Shares" when {
 
     "a negative gross gain is returned" should {
-      lazy val gainAnswers = GainAnswersModel(Dates.constructDate(12, 1, 2016),
-        3000,
-        10,
-        5000,
-        5)
+      lazy val gainAnswers = GainAnswersModel(
+        disposalDate = Dates.constructDate(12, 1, 2016),
+        soldForLessThanWorth = None,
+        disposalValue = 3000,
+        worthWhenSoldForLess = None,
+        disposalCosts = 10,
+        ownedBeforeTaxStartDate = None,
+        worthOnTaxStartDate = None,
+        inheritedTheShares = None,
+        worthWhenInherited = None,
+        acquisitionValue = 5000,
+        acquisitionCosts = 5
+      )
       lazy val chargeableGainAnswers = DeductionGainAnswersModel(None, None, None, None, None, None)
       lazy val incomeAnswersModel = IncomeAnswersModel(None, None, None)
       lazy val target = setupTarget(
@@ -115,11 +123,19 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     }
 
     "a zero taxable gain is returned with no other disposals of or brought forward losses" should {
-      lazy val gainAnswers = GainAnswersModel(Dates.constructDate(12, 1, 2016),
-        13000,
-        500,
-        5000,
-        500)
+      lazy val gainAnswers = GainAnswersModel(
+        disposalDate = Dates.constructDate(12, 1, 2016),
+        soldForLessThanWorth = None,
+        disposalValue = 13000,
+        worthWhenSoldForLess = None,
+        disposalCosts = 500,
+        ownedBeforeTaxStartDate = None,
+        worthOnTaxStartDate = None,
+        inheritedTheShares = None,
+        worthWhenInherited = None,
+        acquisitionValue = 5000,
+        acquisitionCosts = 500
+      )
       lazy val chargeableGainAnswers = DeductionGainAnswersModel(Some(OtherPropertiesModel(false)),
         None, None, Some(LossesBroughtForwardModel(false)), None, None)
       lazy val chargeableGainResultModel = ChargeableGainResultModel(7000, 0, 11100, 0, 0, BigDecimal(0), BigDecimal(0), None, None, 0, 0)
@@ -153,11 +169,19 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     }
 
     "a negative taxable gain is returned with no other disposals of but with brought forward losses" should {
-      lazy val gainAnswers = GainAnswersModel(Dates.constructDate(12, 1, 2016),
-        13000,
-        500,
-        5000,
-        500)
+      lazy val gainAnswers = GainAnswersModel(
+        disposalDate = Dates.constructDate(12, 1, 2016),
+        soldForLessThanWorth = None,
+        disposalValue = 13000,
+        worthWhenSoldForLess = None,
+        disposalCosts = 500,
+        ownedBeforeTaxStartDate = None,
+        worthOnTaxStartDate = None,
+        inheritedTheShares = None,
+        worthWhenInherited = None,
+        acquisitionValue = 5000,
+        acquisitionCosts = 500
+      )
       lazy val chargeableGainAnswers = DeductionGainAnswersModel(Some(OtherPropertiesModel(false)), None, None,
         Some(LossesBroughtForwardModel(true)), Some(LossesBroughtForwardValueModel(1000)), None)
       lazy val chargeableGainResultModel = ChargeableGainResultModel(7000, -1000, 11100, 5100, 1000, BigDecimal(0), BigDecimal(0), None, None, 0, 0)
@@ -191,11 +215,19 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     }
 
     "a negative taxable gain is returned with other disposals" should {
-      lazy val gainAnswers = GainAnswersModel(Dates.constructDate(12, 1, 2016),
-        15000,
-        1000,
-        3000,
-        2000)
+      lazy val gainAnswers = GainAnswersModel(
+        disposalDate = Dates.constructDate(12, 1, 2016),
+        soldForLessThanWorth = None,
+        disposalValue = 15000,
+        worthWhenSoldForLess = None,
+        disposalCosts = 1000,
+        ownedBeforeTaxStartDate = None,
+        worthOnTaxStartDate = None,
+        inheritedTheShares = None,
+        worthWhenInherited = None,
+        acquisitionValue = 3000,
+        acquisitionCosts = 2000
+      )
       lazy val chargeableGainAnswers = DeductionGainAnswersModel(Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(true)),
         Some(AllowableLossesValueModel(BigDecimal(1000))), Some(LossesBroughtForwardModel(false)), None, Some(AnnualExemptAmountModel(10000)))
       lazy val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 0, 11100, BigDecimal(0), BigDecimal(0), None, None, 0, 0)
@@ -231,11 +263,19 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     }
 
     "a negative taxable gain is returned with other properties disposed of but an allowable loss of 0" should {
-      lazy val gainAnswers = GainAnswersModel(Dates.constructDate(12, 1, 2016),
-        15000,
-        1000,
-        3000,
-        2000)
+      lazy val gainAnswers = GainAnswersModel(
+        disposalDate = Dates.constructDate(12, 1, 2016),
+        soldForLessThanWorth = None,
+        disposalValue = 15000,
+        worthWhenSoldForLess = None,
+        disposalCosts = 1000,
+        ownedBeforeTaxStartDate = None,
+        worthOnTaxStartDate = None,
+        inheritedTheShares = None,
+        worthWhenInherited = None,
+        acquisitionValue = 3000,
+        acquisitionCosts = 2000
+      )
       lazy val chargeableGainAnswers = DeductionGainAnswersModel(Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(true)),
         Some(AllowableLossesValueModel(BigDecimal(0))), Some(LossesBroughtForwardModel(false)), None, Some(AnnualExemptAmountModel(10000)))
       lazy val chargeableGainResultModel = ChargeableGainResultModel(10000, -1100, 11100, 0, 11100, BigDecimal(0), BigDecimal(0), None, None, 0, 0)

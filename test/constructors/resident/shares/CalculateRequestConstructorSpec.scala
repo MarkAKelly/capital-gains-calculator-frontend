@@ -27,11 +27,19 @@ class CalculateRequestConstructorSpec extends UnitSpec {
   "totalGainRequestString" should {
 
     "return a valid url variable string" in {
-      val answers = GainAnswersModel(Dates.constructDate(10, 2, 2016),
-        BigDecimal(1000),
-        BigDecimal(0),
-        BigDecimal(500),
-        BigDecimal(100))
+      val answers = GainAnswersModel(
+        disposalDate = Dates.constructDate(10, 2, 2016),
+        soldForLessThanWorth = None,
+        disposalValue = 1000,
+        worthWhenSoldForLess = None,
+        disposalCosts = 0,
+        ownedBeforeTaxStartDate = None,
+        worthOnTaxStartDate = None,
+        inheritedTheShares = None,
+        worthWhenInherited = None,
+        acquisitionValue = 500,
+        acquisitionCosts = 100
+      )
       val result = CalculateRequestConstructor.totalGainRequestString(answers)
       result shouldBe s"?disposalValue=1000" +
         s"&disposalCosts=0" +

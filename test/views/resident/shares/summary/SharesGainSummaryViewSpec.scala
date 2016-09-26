@@ -32,11 +32,18 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
   "Summary view" should {
 
     val testModel = GainAnswersModel(
-      constructDate(12, 12, 2019),
-      10,
-      20,
-      30,
-      40
+
+        disposalDate = constructDate(12, 12, 2019),
+        soldForLessThanWorth = None,
+        disposalValue = 10,
+        worthWhenSoldForLess = None,
+        disposalCosts = 20,
+        ownedBeforeTaxStartDate = None,
+        worthOnTaxStartDate = None,
+        inheritedTheShares = None,
+        worthWhenInherited = None,
+        acquisitionValue = 30,
+        acquisitionCosts = 40
     )
 
     lazy val taxYearModel = TaxYearModel("2019/20", false, "2016/17")
@@ -255,11 +262,18 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
     val testModel = GainAnswersModel(
-      constructDate(12, 9, 2015),
-      10,
-      20,
-      30,
-      40
+
+      disposalDate = constructDate(12, 9, 2015),
+      soldForLessThanWorth = None,
+      disposalValue = 10,
+      worthWhenSoldForLess = None,
+      disposalCosts = 20,
+      ownedBeforeTaxStartDate = None,
+      worthOnTaxStartDate = None,
+      inheritedTheShares = None,
+      worthWhenInherited = None,
+      acquisitionValue = 30,
+      acquisitionCosts = 40
     )
     lazy val view = views.gainSummary(testModel, -2000, taxYearModel, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
@@ -320,11 +334,17 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
     val testModel = GainAnswersModel(
-      constructDate(12, 9, 2015),
-      10,
-      20,
-      30,
-      40
+      disposalDate = constructDate(12, 9, 2015),
+      soldForLessThanWorth = None,
+      disposalValue = 10,
+      worthWhenSoldForLess = None,
+      disposalCosts = 20,
+      ownedBeforeTaxStartDate = None,
+      worthOnTaxStartDate = None,
+      inheritedTheShares = None,
+      worthWhenInherited = None,
+      acquisitionValue = 30,
+      acquisitionCosts = 40
     )
     lazy val view = views.gainSummary(testModel, 0, taxYearModel, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
@@ -359,11 +379,17 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
 
     val testModel = GainAnswersModel(
-      constructDate(12,9,2018),
-      10,
-      20,
-      30,
-      40
+      disposalDate = constructDate(12, 9, 2018),
+      soldForLessThanWorth = None,
+      disposalValue = 10,
+      worthWhenSoldForLess = None,
+      disposalCosts = 20,
+      ownedBeforeTaxStartDate = None,
+      worthOnTaxStartDate = None,
+      inheritedTheShares = None,
+      worthWhenInherited = None,
+      acquisitionValue = 30,
+      acquisitionCosts = 40
     )
     lazy val view = views.gainSummary(testModel,-2000, taxYearModel, "home-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
@@ -376,11 +402,17 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
   "Summary view with an out of tax year date" should {
 
     val testModel = GainAnswersModel(
-      constructDate(12, 9, 2013),
-      10,
-      20,
-      30,
-      40
+      disposalDate = constructDate(12, 9, 2013),
+      soldForLessThanWorth = None,
+      disposalValue = 10,
+      worthWhenSoldForLess = None,
+      disposalCosts = 20,
+      ownedBeforeTaxStartDate = None,
+      worthOnTaxStartDate = None,
+      inheritedTheShares = None,
+      worthWhenInherited = None,
+      acquisitionValue = 30,
+      acquisitionCosts = 40
     )
 
     lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
