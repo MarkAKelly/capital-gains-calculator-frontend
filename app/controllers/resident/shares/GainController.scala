@@ -17,11 +17,13 @@
 package controllers.resident.shares
 
 import java.util.UUID
+
 import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import play.api.mvc.Result
-import uk.gov.hmrc.play.http.SessionKeys
+import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
+
 import scala.concurrent.Future
 import views.html.calculation.{resident => commonViews}
 import views.html.calculation.resident.shares.{gain => views}
@@ -88,16 +90,42 @@ trait GainController extends FeatureLock {
   }
 
   //################ Sell for Less Actions ######################
+  private def sellForLessBackLink()(implicit hc: HeaderCarrier): Future[String] = {
+    for {
+      date <- calcConnector.fetchAndGetFormData[DisposalDateModel](keystoreKeys.disposalDate)
+      taxYear <- calcConnector.getTaxYear(s"${date.get.year}-${date.get.month}-${date.get.day}")
+    } yield if (taxYear.get.isValidYear) routes.GainController.disposalDate().url else routes.GainController.outsideTaxYears().url
+  }
+
   val sellForLess = FeatureLockForRTTShares.async { implicit request =>
-      calcConnector.fetchAndGetFormData[SellForLessModel](keystoreKeys.sellForLess).map {
-        case Some(data) => Ok(views.sellForLess(sellForLessForm.fill(data), homeLink))
-        case None => Ok(views.sellForLess(sellForLessForm, homeLink))
+
+    def routeRequest(model: Option[SellForLessModel], backLink: String) = {
+      val view = model match {
+        case Some(data) => views.sellForLess(sellForLessForm.fill(data), homeLink, backLink)
+        case None => views.sellForLess(sellForLessForm, homeLink, backLink)
+      }
+
+      Future.successful(Ok(view))
     }
+
+    val soldForLess = calcConnector.fetchAndGetFormData[SellForLessModel](keystoreKeys.sellForLess)
+
+    for {
+      model <- soldForLess
+      backLink <- sellForLessBackLink()
+      route <- routeRequest(model, backLink)
+    } yield route
+
   }
 
   val submitSellForLess = FeatureLockForRTTShares.async { implicit request =>
     sellForLessForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.sellForLess(errors, homeLink))),
+      errors => {
+        for {
+          backLink <- sellForLessBackLink()
+          response <- Future.successful(BadRequest(views.sellForLess(errors, homeLink, backLink)))
+        } yield response
+      },
       success => {
         calcConnector.saveFormData[SellForLessModel](keystoreKeys.sellForLess, success)
         success.sellForLess match {
