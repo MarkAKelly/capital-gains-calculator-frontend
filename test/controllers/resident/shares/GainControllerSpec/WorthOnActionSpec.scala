@@ -18,7 +18,6 @@ package controllers.resident.shares.GainControllerSpec
 
 import assets.MessageLookup.Resident.Shares.{worthOn => messages}
 import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
-import config.AppConfig
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.shares.{GainController, routes}
@@ -47,7 +46,6 @@ class WorthOnActionSpec extends UnitSpec with WithFakeApplication with FakeReque
 
     new GainController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      val config: AppConfig = mock[AppConfig]
     }
   }
 
