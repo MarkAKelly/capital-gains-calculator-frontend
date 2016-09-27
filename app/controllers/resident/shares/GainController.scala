@@ -35,9 +35,12 @@ import forms.resident.shares.OwnedBeforeEightyTwoForm._
 import forms.resident.shares.SellForLessForm._
 import forms.resident.WorthWhenSoldForLessForm._
 import forms.resident.shares.gain.DidYouInheritThemForm._
+
+import forms.resident.shares.gain.WorthOnForm._
 import models.resident._
 import common.{Dates, TaxDates}
 import models.resident.shares.OwnedBeforeEightyTwoModel
+import models.resident.shares.gain.WorthOnModel
 import models.resident.shares.gain.DidYouInheritThemModel
 import play.api.i18n.Messages
 import play.api.data.Form
@@ -205,9 +208,22 @@ trait GainController extends FeatureLock {
   }
 
   //################# What were they worth on 31 March 1982 Actions ########################
-  val worthOnMarchEightyTwo = TODO
+  val worthOnMarchEightyTwo =  FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[WorthOnModel](keystoreKeys.worthOn).map {
+      case Some(data) => Ok(views.worthOn(worthOnForm.fill(data)))
+      case None => Ok(views.worthOn(worthOnForm))
+    }
+  }
 
-  val submitWorthOnMarchEightyTwo = TODO
+  val submitWorthOnMarchEightyTwo = FeatureLockForRTT.async { implicit request =>
+    worthOnForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.worthOn(errors))),
+      success => {
+        calcConnector.saveFormData[WorthOnModel](keystoreKeys.worthOn, success)
+        Future.successful(Redirect(routes.GainController.acquisitionCosts()))
+      }
+    )
+  }
 
   //################# Did you Inherit the Shares Actions ########################
   val didYouInheritThem = FeatureLockForRTTShares.async { implicit request =>
