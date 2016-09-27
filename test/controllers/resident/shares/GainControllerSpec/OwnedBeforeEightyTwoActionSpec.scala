@@ -105,7 +105,7 @@ class OwnedBeforeEightyTwoActionSpec extends UnitSpec with WithFakeApplication w
       }
 
       "redirect to the worth when sold page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/worth-on-thirty-first-march-nineteen-eighty-two")
+        redirectLocation(result) shouldBe Some(controllers.resident.shares.routes.GainController.worthOnMarchEightyTwo().toString)
       }
     }
 

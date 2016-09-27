@@ -122,9 +122,16 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
 
   /* Shares Worth on 31 March 1982 Routes */
   "The URL for the resident/shares Worth on 31 March 1982 Action" should {
-    "be equal to /calculate-your-capital-gains/resident/shares/worth-on-thirty-first-march-nineteen-eighty-two" in {
+    "be equal to /calculate-your-capital-gains/resident/shares/market-value-on-31-march-1982" in {
       val path = GainController.worthOnMarchEightyTwo().url
-      path shouldEqual "/calculate-your-capital-gains/resident/shares/worth-on-thirty-first-march-nineteen-eighty-two"
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/market-value-on-31-march-1982"
+    }
+  }
+
+  "The URL for the resident/shares submit worth on 31 March 1982 Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/market-value-on-31-march-1982" in {
+      val path = GainController.submitWorthOnMarchEightyTwo().url
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/market-value-on-31-march-1982"
     }
   }
 
