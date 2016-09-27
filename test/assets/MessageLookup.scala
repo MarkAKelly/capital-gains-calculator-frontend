@@ -100,6 +100,8 @@ object MessageLookup {
 
     object Shares {
 
+      val homeText = "Calculate your Capital Gains Tax"
+
       //This object will have some duplication of text from the properties summary as well as duplicating
       //some of the questions for the shares pages however it will still pull form the same messages location
       //this is to encourage making the changes in the tests first in both places and understanding what changing
@@ -133,6 +135,11 @@ object MessageLookup {
       object sellForLess {
         val title = "Did you sell the shares for less than they were worth to help the buyer?"
         val errorSelect = s"Tell us if you sold the shares for less than they were worth to help the buyer."
+      }
+
+      //############ Worth When Inherited messages #################//
+      object WorthWhenInherited {
+        val question = "What were the shares worth when you inherited them?"
       }
 
       //############ Worth When Sold For Less messages #################//

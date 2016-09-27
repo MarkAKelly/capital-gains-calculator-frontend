@@ -143,6 +143,21 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
+  /* Worth when Inherited the Shares Routes */
+  "The URL for the resident/shares Worth When You Inherited Shares GET Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/worth-when-inherited" in {
+      val path = GainController.worthWhenInherited().url
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/worth-when-inherited"
+    }
+  }
+
+  "The URL for the resident/shares Worth When You Inherited Shares POST Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/worth-when-inherited" in {
+      val path = GainController.submitWorthWhenInherited().url
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/worth-when-inherited"
+    }
+  }
+
   /* Acquisition Value routes */
   "The URL for the resident/shares acquisition value Action" should {
     "be equal to /calculate-your-capital-gains/resident/shares/acquisition-value" in {

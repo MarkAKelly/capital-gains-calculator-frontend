@@ -14,68 +14,61 @@
  * limitations under the License.
  */
 
-package views.resident.properties.gain
+package views.resident.shares.gain
 
+import assets.MessageLookup.Resident.Shares.{WorthWhenInherited => Messages}
+import assets.MessageLookup.Resident.{Shares => CommonSharesMessages}
 import controllers.helpers.FakeRequestHelper
+import forms.resident.WorthWhenInheritedForm._
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import views.html.calculation.resident.properties.{gain => views}
-import forms.resident.WorthWhenInheritedForm._
-import assets.MessageLookup.Resident.Properties.{worthWhenInherited => messages}
-import play.api.mvc.Call
+import views.html.calculation.resident.shares.{gain => views}
 
 class WorthWhenInheritedViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "worthWhenInherited view" should {
-    val backLink = Some("back-link")
-    val homeLink = "homeLink"
-    val call = new Call("POST", "postAction")
     val form = worthWhenInheritedForm
-    lazy val view = views.worthWhenInherited(form, backLink, homeLink, call)(fakeRequest)
+    lazy val view = views.worthWhenInherited(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
       doc.charset.toString shouldBe "UTF-8"
     }
 
-    s"have a back link to back-link" in {
-      doc.select("#back-link").attr("href") shouldBe "back-link"
+    s"have a back link to '${controllers.resident.shares.routes.GainController.didYouInheritThem().url}'" in {
+      doc.select("#back-link").attr("href") shouldBe controllers.resident.shares.routes.GainController.didYouInheritThem().url
     }
 
     s"have a nav title of 'navTitle'" in {
-      doc.select("span.header__menu__proposition-name").text() shouldBe assets.MessageLookup.propertiesHomeText
+      doc.select("span.header__menu__proposition-name").text() shouldBe CommonSharesMessages.homeText
     }
 
     s"have a home link to 'homeLink'" in {
-      doc.select("a#homeNavHref").attr("href") shouldBe "homeLink"
+      doc.select("a#homeNavHref").attr("href") shouldBe controllers.resident.shares.routes.GainController.disposalDate().url
     }
 
-    s"have a title of ${messages.question}" in {
-      doc.title() shouldBe messages.question
+    s"have a title of ${Messages.question}" in {
+      doc.title() shouldBe Messages.question
     }
 
-    s"have a question of ${messages.question}" in {
-      doc.select("h1.heading-large").text() shouldBe messages.question
+    s"have a question of ${Messages.question}" in {
+      doc.select("h1.heading-large").text() shouldBe Messages.question
     }
 
     "have a form tag" in {
       doc.select("form").size() shouldBe 1
     }
 
-    "have a form action of 'postAction'" in {
-      doc.select("form").attr("action") shouldBe "postAction"
+    s"have a form action of '${controllers.resident.shares.routes.GainController.submitWorthWhenInherited().url}'" in {
+      doc.select("form").attr("action") shouldBe controllers.resident.shares.routes.GainController.submitWorthWhenInherited().url
     }
 
     "have a form method of 'POST'" in {
       doc.select("form").attr("method") shouldBe "POST"
     }
 
-    "have additional content regarding valuations" in {
-      doc.select("div.resident p").text() shouldBe messages.additionalContent
-    }
-
-    s"have a label for an input with text ${messages.question}" in {
-      doc.select("label > div > span.visuallyhidden").text() shouldEqual messages.question
+    s"have a label for an input with text ${Messages.question}" in {
+      doc.select("label > div > span.visuallyhidden").text() shouldEqual Messages.question
     }
 
     s"have an input field with id amount " in {
@@ -87,12 +80,10 @@ class WorthWhenInheritedViewSpec extends UnitSpec with WithFakeApplication with 
     }
   }
 
-  "Disposal Value View with form without errors" should {
-    val backLink = Some("back-link")
+  "worthWhenInherited View with form without errors" should {
     val homeLink = "homeLink"
-    val call = new Call("POST", "postAction")
     val form = worthWhenInheritedForm.bind(Map("amount" -> "100"))
-    lazy val view = views.worthWhenInherited(form, backLink, homeLink, call)(fakeRequest)
+    lazy val view = views.worthWhenInherited(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display the value of the form" in {
@@ -108,12 +99,9 @@ class WorthWhenInheritedViewSpec extends UnitSpec with WithFakeApplication with 
     }
   }
 
-  "Disposal Value View with form with errors" should {
-    val backLink = Some("back-link")
-    val homeLink = "homeLink"
-    val call = new Call("POST", "postAction")
+  "worthWhenInherited View with form with errors" should {
     val form = worthWhenInheritedForm.bind(Map("amount" -> ""))
-    lazy val view = views.worthWhenInherited(form, backLink, homeLink, call)(fakeRequest)
+    lazy val view = views.worthWhenInherited(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {

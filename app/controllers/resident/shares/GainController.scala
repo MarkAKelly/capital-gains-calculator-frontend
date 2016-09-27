@@ -17,13 +17,11 @@
 package controllers.resident.shares
 
 import java.util.UUID
-
 import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import play.api.mvc.Result
 import uk.gov.hmrc.play.http.SessionKeys
-
 import scala.concurrent.Future
 import views.html.calculation.{resident => commonViews}
 import views.html.calculation.resident.shares.{gain => views}
@@ -32,16 +30,17 @@ import forms.resident.DisposalCostsForm._
 import forms.resident.DisposalValueForm._
 import forms.resident.AcquisitionCostsForm._
 import forms.resident.AcquisitionValueForm._
+import forms.resident.WorthWhenInheritedForm._
 import forms.resident.shares.OwnedBeforeEightyTwoForm._
 import forms.resident.shares.SellForLessForm._
 import forms.resident.WorthWhenSoldForLessForm._
 import forms.resident.shares.gain.DidYouInheritThemForm._
-
 import models.resident._
 import common.{Dates, TaxDates}
 import models.resident.shares.OwnedBeforeEightyTwoModel
 import models.resident.shares.gain.DidYouInheritThemModel
 import play.api.i18n.Messages
+import play.api.data.Form
 
 object GainController extends GainController {
   val calcConnector = CalculatorConnector
@@ -227,8 +226,23 @@ trait GainController extends FeatureLock {
     )
   }
 
-  //################# Worth When Inherited Actions ########################
-  val worthWhenInherited = TODO
+  //################# Worth when Inherited Actions ########################
+  val worthWhenInherited = FeatureLockForRTTShares.async { implicit request =>
+    calcConnector.fetchAndGetFormData[WorthWhenInheritedModel](keystoreKeys.worthWhenInherited).map {
+      case Some(data) => Ok(views.worthWhenInherited(worthWhenInheritedForm.fill(data)))
+      case None => Ok(views.worthWhenInherited(worthWhenInheritedForm))
+    }
+  }
+
+  val submitWorthWhenInherited = FeatureLockForRTTShares.async { implicit request =>
+    worthWhenInheritedForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.worthWhenInherited(errors))),
+      success => {
+        calcConnector.saveFormData(keystoreKeys.worthWhenInherited, success)
+        Future.successful(Redirect(routes.GainController.acquisitionCosts()))
+      }
+    )
+  }
 
   //################# Acquisition Value Actions ########################
   val acquisitionValue = FeatureLockForRTTShares.async { implicit request =>
@@ -249,33 +263,56 @@ trait GainController extends FeatureLock {
   }
 
   //################# Acquisition Costs Actions ########################
-
-  private val acquisitionCostsBackLink = Some(controllers.resident.shares.routes.GainController.acquisitionValue().toString)
+  private def acquisitionCostsBackLink: (OwnedBeforeEightyTwoModel, Option[DidYouInheritThemModel]) => String = {
+      case (x,_) if x.ownedBeforeEightyTwo => routes.GainController.worthOnMarchEightyTwo().url
+      case (_,y) if y.get.wereInherited => routes.GainController.worthWhenInherited().url
+      case (_,_) => routes.GainController.acquisitionValue().url
+  }
 
   val acquisitionCosts = FeatureLockForRTTShares.async { implicit request =>
-    calcConnector.fetchAndGetFormData[AcquisitionCostsModel](keystoreKeys.acquisitionCosts).map {
-      case Some(data) => Ok(views.acquisitionCosts(acquisitionCostsForm.fill(data), acquisitionCostsBackLink, homeLink))
-      case None => Ok(views.acquisitionCosts(acquisitionCostsForm, acquisitionCostsBackLink, homeLink))
+
+    def routeRequest(backLink: String): Future[Result] = {
+      calcConnector.fetchAndGetFormData[AcquisitionCostsModel](keystoreKeys.acquisitionCosts).map {
+        case Some(data) => Ok(views.acquisitionCosts(acquisitionCostsForm.fill(data), Some(backLink), homeLink))
+        case None => Ok(views.acquisitionCosts(acquisitionCostsForm, Some(backLink), homeLink))
+      }
     }
+
+    for {
+      ownedBeforeTax <- calcConnector.fetchAndGetFormData[OwnedBeforeEightyTwoModel](keystoreKeys.ownedBeforeEightyTwo)
+      inheritedShares <- calcConnector.fetchAndGetFormData[DidYouInheritThemModel](keystoreKeys.inheritedShares)
+      route <- routeRequest(acquisitionCostsBackLink(ownedBeforeTax.get, inheritedShares))
+    } yield route
   }
 
   val submitAcquisitionCosts = FeatureLockForRTTShares.async { implicit request =>
 
-    def routeRequest(totalGain: BigDecimal): Future[Result] = {
-      if (totalGain > 0) Future.successful(Redirect(routes.DeductionsController.otherDisposals()))
-      else Future.successful(Redirect(routes.SummaryController.summary()))
+    def errorAction(errors: Form[AcquisitionCostsModel], backLink: String) = {
+      Future.successful(BadRequest(views.acquisitionCosts(errors, Some(backLink), homeLink)))
     }
 
-    acquisitionCostsForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.acquisitionCosts(errors, acquisitionCostsBackLink, homeLink))),
-      success => {
-        for {
-          save <- calcConnector.saveFormData(keystoreKeys.acquisitionCosts, success)
-          answers <- calcConnector.getShareGainAnswers
-          grossGain <- calcConnector.calculateRttShareGrossGain(answers)
-          route <- routeRequest(grossGain)
-        } yield route
+    def successAction(success: AcquisitionCostsModel) = {
+      for {
+        save <- calcConnector.saveFormData(keystoreKeys.acquisitionCosts, success)
+        answers <- calcConnector.getShareGainAnswers
+        grossGain <- calcConnector.calculateRttShareGrossGain(answers)
+      } yield grossGain match {
+        case x if x > 0 => Redirect(routes.DeductionsController.otherDisposals())
+        case _ => Redirect(routes.SummaryController.summary())
       }
-    )
+    }
+
+    def routeRequest(backLink: String): Future[Result] = {
+      acquisitionCostsForm.bindFromRequest.fold(
+        errors => errorAction(errors, backLink),
+        success => successAction(success)
+      )
+    }
+
+    for {
+      ownedBeforeTax <- calcConnector.fetchAndGetFormData[OwnedBeforeEightyTwoModel](keystoreKeys.ownedBeforeEightyTwo)
+      inheritedShares <- calcConnector.fetchAndGetFormData[DidYouInheritThemModel](keystoreKeys.inheritedShares)
+      route <- routeRequest(acquisitionCostsBackLink(ownedBeforeTax.get, inheritedShares))
+    } yield route
   }
 }

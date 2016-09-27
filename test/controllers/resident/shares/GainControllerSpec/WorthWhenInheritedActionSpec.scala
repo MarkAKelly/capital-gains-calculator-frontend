@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package controllers.resident.properties.GainControllerSpec
+package controllers.resident.shares.GainControllerSpec
 
-import common.KeystoreKeys.{ResidentPropertyKeys => keyStoreKeys}
-import config.{AppConfig, ApplicationConfig}
+import assets.MessageLookup.Resident.Shares.{WorthWhenInherited => Messages}
+import common.KeystoreKeys.{ResidentShareKeys => keyStoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.properties.GainController
+import controllers.resident.shares.GainController
+import models.resident.WorthWhenInheritedModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -28,8 +29,6 @@ import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.Resident.Properties.{worthWhenInherited => messages}
-import models.resident.WorthWhenInheritedModel
 
 import scala.concurrent.Future
 
@@ -47,11 +46,10 @@ class WorthWhenInheritedActionSpec extends UnitSpec with WithFakeApplication wit
 
     new GainController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val config: AppConfig = ApplicationConfig
     }
   }
 
-  "Calling .sellOrGiveAway action" when {
+  "Calling .worthWhenInherited action" when {
 
     "request has a valid session" should {
       lazy val target = setupTarget(None)
@@ -62,16 +60,16 @@ class WorthWhenInheritedActionSpec extends UnitSpec with WithFakeApplication wit
         status(result) shouldBe 200
       }
 
-      s"return some html with title of ${messages.question}" in {
-        doc.title shouldEqual messages.question
+      s"return some html with title of ${Messages.question}" in {
+        doc.title shouldEqual Messages.question
       }
 
       "have a back link to how-became-owner" in {
-        doc.body().select("a#back-link").attr("href") shouldBe "/calculate-your-capital-gains/resident/properties/how-became-owner"
+        doc.body().select("a#back-link").attr("href") shouldBe "/calculate-your-capital-gains/resident/shares/did-you-inherit-them"
       }
 
       "have a home link to 'homeLink'" in {
-        doc.select("a#homeNavHref").attr("href") shouldBe "/calculate-your-capital-gains/resident/properties/"
+        doc.select("a#homeNavHref").attr("href") shouldBe "/calculate-your-capital-gains/resident/shares/disposal-date"
       }
 
       "have a method to POST" in {
@@ -79,7 +77,7 @@ class WorthWhenInheritedActionSpec extends UnitSpec with WithFakeApplication wit
       }
 
       "have an action to worth-when-inherited" in {
-        doc.select("form").attr("action") shouldBe "/calculate-your-capital-gains/resident/properties/worth-when-inherited"
+        doc.select("form").attr("action") shouldBe "/calculate-your-capital-gains/resident/shares/worth-when-inherited"
       }
     }
 
@@ -91,8 +89,8 @@ class WorthWhenInheritedActionSpec extends UnitSpec with WithFakeApplication wit
         status(result) shouldBe 200
       }
 
-      s"return some html with title of ${messages.question}" in {
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.question
+      s"return some html with title of ${Messages.question}" in {
+        Jsoup.parse(bodyOf(result)).title shouldEqual Messages.question
       }
     }
 
@@ -121,7 +119,7 @@ class WorthWhenInheritedActionSpec extends UnitSpec with WithFakeApplication wit
       }
 
       "redirect to the acquisition-costs page" in {
-        redirectLocation(result).get should include ("/calculate-your-capital-gains/resident/properties/acquisition-costs")
+        redirectLocation(result).get should include ("/calculate-your-capital-gains/resident/shares/acquisition-costs")
       }
     }
 
@@ -135,7 +133,7 @@ class WorthWhenInheritedActionSpec extends UnitSpec with WithFakeApplication wit
       }
 
       "return to the page" in {
-        doc.title shouldEqual messages.question
+        doc.title shouldEqual Messages.question
       }
 
       "raise an error on the page" in {

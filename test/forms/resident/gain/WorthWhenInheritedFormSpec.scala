@@ -18,9 +18,9 @@ package forms.resident.gain
 
 import controllers.helpers.FakeRequestHelper
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import forms.resident.properties.WorthWhenInheritedForm._
-import models.resident.properties.WorthWhenInheritedModel
 import assets.MessageLookup
+import forms.resident.WorthWhenInheritedForm._
+import models.resident.WorthWhenInheritedModel
 
 class WorthWhenInheritedFormSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
