@@ -67,7 +67,17 @@
 
         <!-- Data Rows-->
         @summaryDateRowHelper("disposalDate",Messages("calc.resident.shares.disposalDate.question"),answers.disposalDate,Some(routes.disposalDate().toString))
-        @summaryNumericRowHelper("disposalValue",Messages("calc.resident.shares.disposalValue.question"),answers.disposalValue,Some(routes.disposalValue().toString))
+        <!-- Shares updated disposal value section -->
+        @summaryOptionRowHelper("soldForLessThanWorth", Messages("calc.resident.shares.sellForLess.question"), answers.soldForLessThanWorth, Some(routes.sellForLess().toString))
+
+        @{if(!answers.soldForLessThanWorth)
+            summaryNumericRowHelper("disposalValue", Messages("calc.resident.shares.disposalValue.question"), answers.disposalValue.get, Some(routes.disposalValue().toString))
+        }
+
+        @{if(answers.soldForLessThanWorth)
+            summaryNumericRowHelper("worthWhenSoldForLess", Messages("calc.resident.shares.worthWhenSoldForLess.question"), answers.worthWhenSoldForLess.get, Some(routes.worthWhenSoldForLess().toString))
+        }
+        <!-- Ends -->
         @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.shares.disposalCosts.question"),answers.disposalCosts,Some(routes.disposalCosts().toString))
         @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.shares.acquisitionValue.question"),answers.acquisitionValue,Some(routes.acquisitionValue().toString))
         @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.shares.acquisitionCosts.question"),answers.acquisitionCosts,Some(routes.acquisitionCosts().toString))

@@ -579,7 +579,7 @@ calc.resident.shares.disposalValue.question = How much did you sell the shares f
 
 ## Sell for Less messages
 calc.resident.shares.sellForLess.question = Did you sell the shares for less than they were worth to help the buyer?
-calc.resident.shares.sellForLess.noSelectError = Tell us if you sold the shares for less than they were worth to help the buyer?
+calc.resident.shares.sellForLess.noSelectError = Tell us if you sold the shares for less than they were worth to help the buyer.
 
 ## Worth When Sold For Less messages
 calc.resident.shares.worthWhenSoldForLess.question = What were the shares worth when you sold them?

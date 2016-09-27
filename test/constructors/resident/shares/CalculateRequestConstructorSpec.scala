@@ -29,8 +29,8 @@ class CalculateRequestConstructorSpec extends UnitSpec {
     "return a valid url variable string" in {
       val answers = GainAnswersModel(
         disposalDate = Dates.constructDate(10, 2, 2016),
-        soldForLessThanWorth = None,
-        disposalValue = 1000,
+        soldForLessThanWorth = false,
+        disposalValue = Some(1000),
         worthWhenSoldForLess = None,
         disposalCosts = 0,
         ownedBeforeTaxStartDate = None,

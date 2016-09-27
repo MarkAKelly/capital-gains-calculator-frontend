@@ -134,7 +134,7 @@ object MessageLookup {
       //############ Sell For Less messages #################//
       object sellForLess {
         val title = "Did you sell the shares for less than they were worth to help the buyer?"
-        val errorSelect = s"Tell us if you sold the shares for less than they were worth to help the buyer?"
+        val errorSelect = s"Tell us if you sold the shares for less than they were worth to help the buyer."
       }
 
       //############ Worth When Inherited messages #################//

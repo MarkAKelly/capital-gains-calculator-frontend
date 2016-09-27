@@ -34,8 +34,8 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     val testModel = GainAnswersModel(
 
         disposalDate = constructDate(12, 12, 2019),
-        soldForLessThanWorth = None,
-        disposalValue = 10,
+        soldForLessThanWorth = false,
+        disposalValue = Some(10),
         worthWhenSoldForLess = None,
         disposalCosts = 20,
         ownedBeforeTaxStartDate = None,
@@ -264,8 +264,8 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     val testModel = GainAnswersModel(
 
       disposalDate = constructDate(12, 9, 2015),
-      soldForLessThanWorth = None,
-      disposalValue = 10,
+      soldForLessThanWorth = false,
+      disposalValue = Some(10),
       worthWhenSoldForLess = None,
       disposalCosts = 20,
       ownedBeforeTaxStartDate = None,
@@ -335,8 +335,8 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
     val testModel = GainAnswersModel(
       disposalDate = constructDate(12, 9, 2015),
-      soldForLessThanWorth = None,
-      disposalValue = 10,
+      soldForLessThanWorth = false,
+      disposalValue = Some(10),
       worthWhenSoldForLess = None,
       disposalCosts = 20,
       ownedBeforeTaxStartDate = None,
@@ -380,8 +380,8 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
     val testModel = GainAnswersModel(
       disposalDate = constructDate(12, 9, 2018),
-      soldForLessThanWorth = None,
-      disposalValue = 10,
+      soldForLessThanWorth = false,
+      disposalValue = Some(10),
       worthWhenSoldForLess = None,
       disposalCosts = 20,
       ownedBeforeTaxStartDate = None,
@@ -399,12 +399,60 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     }
   }
 
+  "Shares Deductions Summary when the shares were sold for less than they were worth." should {
+
+    lazy val gainAnswers = GainAnswersModel(
+      disposalDate = constructDate(10, 10, 2016),
+      soldForLessThanWorth = true,
+      disposalValue = None,
+      worthWhenSoldForLess = Some(200000),
+      disposalCosts = 10000,
+      ownedBeforeTaxStartDate = None,
+      worthOnTaxStartDate = None,
+      inheritedTheShares = None,
+      worthWhenInherited = None,
+      acquisitionValue = 100000,
+      acquisitionCosts = 10000
+    )
+
+    lazy val taxYearModel = TaxYearModel("2017/18", false, "2015/16")
+
+    lazy val backLink = "/calculate-your-capital-gains/resident/shares/annual-exempt-amount"
+    lazy val view = views.gainSummary(gainAnswers, -2000, taxYearModel, "home-link")(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "has an option output row for private residence relief value in" which {
+
+      s"should have the question text '${commonMessages.Resident.Shares.worthWhenSoldForLess.question}'" in {
+        doc.select("#worthWhenSoldForLess-question").text shouldBe commonMessages.Resident.Shares.worthWhenSoldForLess.question
+      }
+
+      "should have the value '£200,000'" in {
+        doc.select("#worthWhenSoldForLess-amount span.bold-medium").text shouldBe "£200,000"
+      }
+
+      s"should have a change link to ${routes.GainController.worthWhenSoldForLess().url}" in {
+        doc.select("#worthWhenSoldForLess-amount a").attr("href") shouldBe routes.GainController.worthWhenSoldForLess().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#worthWhenSoldForLess-amount a").text shouldBe s"${commonMessages.calcBaseChange} " +
+          s"${commonMessages.Resident.Shares.worthWhenSoldForLess.question}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#worthWhenSoldForLess-amount a span.visuallyhidden").text shouldBe
+          commonMessages.Resident.Shares.worthWhenSoldForLess.question
+      }
+    }
+  }
+
   "Summary view with an out of tax year date" should {
 
     val testModel = GainAnswersModel(
       disposalDate = constructDate(12, 9, 2013),
-      soldForLessThanWorth = None,
-      disposalValue = 10,
+      soldForLessThanWorth = false,
+      disposalValue = Some(10),
       worthWhenSoldForLess = None,
       disposalCosts = 20,
       ownedBeforeTaxStartDate = None,
