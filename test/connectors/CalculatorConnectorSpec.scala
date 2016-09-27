@@ -149,8 +149,14 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     when(mockSessionCache.fetchAndGetEntry[resident.DisposalCostsModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.disposalCosts))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(mock[resident.DisposalCostsModel])))
 
+    when(mockSessionCache.fetchAndGetEntry[resident.SellForLessModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.sellForLess))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.SellForLessModel])))
+
     when(mockSessionCache.fetchAndGetEntry[resident.DisposalValueModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.disposalValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(mock[resident.DisposalValueModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.WorthWhenSoldForLessModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.worthWhenSoldForLess))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(mock[resident.WorthWhenSoldForLessModel])))
 
     when(mockSessionCache.fetchAndGetEntry[resident.OtherPropertiesModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.otherProperties))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(mock[resident.OtherPropertiesModel])))

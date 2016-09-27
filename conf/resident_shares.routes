@@ -28,7 +28,8 @@ GET     /owned-before-april-first-nineteen-eighty-two    controllers.resident.sh
 POST    /owned-before-april-first-nineteen-eighty-two    controllers.resident.shares.GainController.submitOwnedBeforeEightyTwo
 
 #Worth on 31 March 1982 Routes
-GET     /worth-on-thirty-first-march-nineteen-eighty-two controllers.resident.shares.GainController.worthOnMarchEightyTwo
+GET     /market-value-on-31-march-1982    controllers.resident.shares.GainController.worthOnMarchEightyTwo
+POST    /market-value-on-31-march-1982    controllers.resident.shares.GainController.submitWorthOnMarchEightyTwo
 
 #Did you Inherit the Shares Routes
 GET     /did-you-inherit-them             controllers.resident.shares.GainController.didYouInheritThem

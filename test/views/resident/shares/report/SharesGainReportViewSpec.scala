@@ -35,8 +35,8 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
 
       val testModel = GainAnswersModel(
         disposalDate = constructDate(12, 9, 1990),
-        soldForLessThanWorth = None,
-        disposalValue = 10,
+        soldForLessThanWorth = false,
+        disposalValue = Some(10),
         worthWhenSoldForLess = None,
         disposalCosts = 20,
         ownedBeforeTaxStartDate = false,
@@ -188,8 +188,8 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
       val testModel = GainAnswersModel(
 
         disposalDate = constructDate(12, 12, 2019),
-        soldForLessThanWorth = None,
-        disposalValue = 10,
+        soldForLessThanWorth = false,
+        disposalValue = Some(10),
         worthWhenSoldForLess = None,
         disposalCosts = 20,
         ownedBeforeTaxStartDate = false,
@@ -264,8 +264,8 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
       val testModel = GainAnswersModel(
 
         disposalDate = constructDate(12, 12, 2019),
-        soldForLessThanWorth = None,
-        disposalValue = 10,
+        soldForLessThanWorth = false,
+        disposalValue = Some(10),
         worthWhenSoldForLess = None,
         disposalCosts = 20,
         ownedBeforeTaxStartDate = true,
@@ -315,14 +315,46 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
     }
   }
 
+  "Summary when shares have been sold for less" should {
+
+    lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
+
+    val testModel = GainAnswersModel(
+      disposalDate = constructDate(12, 9, 2015),
+      soldForLessThanWorth = true,
+      disposalValue = None,
+      worthWhenSoldForLess = Some(10),
+      disposalCosts = 20,
+      ownedBeforeTaxStartDate = false,
+      worthOnTaxStartDate = None,
+      inheritedTheShares = Some(false),
+      worthWhenInherited = None,
+      acquisitionValue = Some(30),
+      acquisitionCosts = 40
+    )
+    lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "has a numeric output row for the Worth of the shares when sold for less" which {
+
+      s"should have the question text '${commonMessages.Resident.Shares.worthWhenSoldForLess.question}'" in {
+        doc.select("#worthWhenSoldForLess-question").text shouldBe commonMessages.Resident.Shares.worthWhenSoldForLess.question
+      }
+
+      "should have the value '£10'" in {
+        doc.select("#worthWhenSoldForLess-amount span.bold-medium").text shouldBe "£10"
+      }
+    }
+  }
+
   "Summary when supplied with a date outside the known tax years and no gain or loss" should {
 
     lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
 
     val testModel = GainAnswersModel(
       disposalDate = constructDate(12, 9, 2015),
-      soldForLessThanWorth = None,
-      disposalValue = 10,
+      soldForLessThanWorth = false,
+      disposalValue = Some(10),
       worthWhenSoldForLess = None,
       disposalCosts = 20,
       ownedBeforeTaxStartDate = false,

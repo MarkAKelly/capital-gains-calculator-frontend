@@ -1,0 +1,24 @@
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import models.resident.shares.gain.WorthOnModel
+@import views.html.helpers._
+@import views.html.calculation.resident.shares.gain._
+
+@(worthOnForm: Form[WorthOnModel])(implicit request: Request[_])
+
+
+@resident_shares_main_template(
+    title = Messages("calc.resident.shares.worthOn.question"),
+    backLink = Some(controllers.resident.shares.routes.GainController.ownedBeforeEightyTwo.toString)) {
+
+    @errorSummary(worthOnForm, "amount")
+
+    <h1 class="heading-large">@Messages("calc.resident.shares.worthOn.question")</h1>
+
+    @form(action = controllers.resident.shares.routes.GainController.submitWorthOnMarchEightyTwo) {
+
+        @formInputMoney(worthOnForm, "amount", Messages("calc.resident.shares.worthOn.question"), hideLabel = true)
+
+        <button id="continue-button" class="button" type="submit">@Messages("calc.base.continue")</button>
+
+    }
+}

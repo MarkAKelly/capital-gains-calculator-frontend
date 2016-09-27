@@ -38,8 +38,8 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
     "acquired after start of tax (1 April 1982) and not inherited" should {
       lazy val gainAnswers = GainAnswersModel(
         disposalDate = Dates.constructDate(10, 10, 2016),
-        soldForLessThanWorth = None,
-        disposalValue = 200000,
+        soldForLessThanWorth = false,
+        disposalValue = Some(200000),
         worthWhenSoldForLess = None,
         disposalCosts = 10000,
         ownedBeforeTaxStartDate = false,
@@ -408,8 +408,8 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
 
       val gainAnswers = GainAnswersModel(
         disposalDate = constructDate(12, 12, 2019),
-        soldForLessThanWorth = None,
-        disposalValue = 10,
+        soldForLessThanWorth = false,
+        disposalValue = Some(10),
         worthWhenSoldForLess = None,
         disposalCosts = 20,
         ownedBeforeTaxStartDate = false,
@@ -502,8 +502,8 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
       val gainAnswers = GainAnswersModel(
 
         disposalDate = constructDate(12, 12, 2019),
-        soldForLessThanWorth = None,
-        disposalValue = 10,
+        soldForLessThanWorth = false,
+        disposalValue = Some(10),
         worthWhenSoldForLess = None,
         disposalCosts = 20,
         ownedBeforeTaxStartDate = true,
@@ -575,8 +575,8 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
   "Shares Deductions Summary view with all options selected" should {
     lazy val gainAnswers = GainAnswersModel(
         disposalDate = Dates.constructDate(10, 10, 2016),
-        soldForLessThanWorth = None,
-        disposalValue = 200000,
+        soldForLessThanWorth = false,
+        disposalValue = Some(200000),
         worthWhenSoldForLess = None,
         disposalCosts = 10000,
         ownedBeforeTaxStartDate = false,
@@ -901,8 +901,8 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
 
     lazy val gainAnswers = GainAnswersModel(
       disposalDate = Dates.constructDate(10, 10, 2016),
-      soldForLessThanWorth = None,
-      disposalValue = 200000,
+      soldForLessThanWorth = false,
+      disposalValue = Some(200000),
       worthWhenSoldForLess = None,
       disposalCosts = 10000,
       ownedBeforeTaxStartDate = false,
@@ -991,8 +991,8 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
 
     lazy val gainAnswers = GainAnswersModel(
       disposalDate = Dates.constructDate(10, 10, 2016),
-      soldForLessThanWorth = None,
-      disposalValue = 200000,
+      soldForLessThanWorth = false,
+      disposalValue = Some(200000),
       worthWhenSoldForLess = None,
       disposalCosts = 0,
       ownedBeforeTaxStartDate = false,
@@ -1073,12 +1073,78 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
     }
   }
 
+  "Shares Deductions Summary when the shares were sold for less than they were worth." should {
+
+    lazy val gainAnswers = GainAnswersModel(
+      disposalDate = Dates.constructDate(10, 10, 2016),
+      soldForLessThanWorth = true,
+      disposalValue = None,
+      worthWhenSoldForLess = Some(200000),
+      disposalCosts = 10000,
+      ownedBeforeTaxStartDate = false,
+      worthOnTaxStartDate = None,
+      inheritedTheShares = Some(false),
+      worthWhenInherited = None,
+      acquisitionValue = Some(100000),
+      acquisitionCosts = 10000)
+    lazy val deductionAnswers = DeductionGainAnswersModel(
+      Some(OtherPropertiesModel(true)),
+      Some(AllowableLossesModel(true)),
+      Some(AllowableLossesValueModel(10000)),
+      Some(LossesBroughtForwardModel(true)),
+      Some(LossesBroughtForwardValueModel(10000)),
+      Some(AnnualExemptAmountModel(1000)))
+    lazy val results = ChargeableGainResultModel(BigDecimal(50000),
+      BigDecimal(-11000),
+      BigDecimal(0),
+      BigDecimal(11000),
+      BigDecimal(71000),
+      BigDecimal(0),
+      BigDecimal(0),
+      None,
+      None,
+      10000,
+      10000
+    )
+
+    lazy val taxYearModel = TaxYearModel("2017/18", false, "2015/16")
+
+    lazy val backLink = "/calculate-your-capital-gains/resident/shares/annual-exempt-amount"
+    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel, homeLink)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "has an option output row for private residence relief value in" which {
+
+      s"should have the question text '${commonMessages.Resident.Shares.worthWhenSoldForLess.question}'" in {
+        doc.select("#worthWhenSoldForLess-question").text shouldBe commonMessages.Resident.Shares.worthWhenSoldForLess.question
+      }
+
+      "should have the value '£200,000'" in {
+        doc.select("#worthWhenSoldForLess-amount span.bold-medium").text shouldBe "£200,000"
+      }
+
+      s"should have a change link to ${routes.GainController.worthWhenSoldForLess().url}" in {
+        doc.select("#worthWhenSoldForLess-amount a").attr("href") shouldBe routes.GainController.worthWhenSoldForLess().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#worthWhenSoldForLess-amount a").text shouldBe s"${commonMessages.calcBaseChange} " +
+          s"${commonMessages.Resident.Shares.worthWhenSoldForLess.question}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#worthWhenSoldForLess-amount a span.visuallyhidden").text shouldBe
+          commonMessages.Resident.Shares.worthWhenSoldForLess.question
+      }
+    }
+  }
+
   "Shares Deductions Summary when supplied with a date above the known tax years" should {
 
     lazy val gainAnswers = GainAnswersModel(
       disposalDate = Dates.constructDate(10, 10, 2018),
-      soldForLessThanWorth = None,
-      disposalValue = 200000,
+      soldForLessThanWorth = false,
+      disposalValue = Some(200000),
       worthWhenSoldForLess = None,
       disposalCosts = 10000,
       ownedBeforeTaxStartDate = false,

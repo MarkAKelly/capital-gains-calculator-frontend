@@ -116,6 +116,10 @@ object MessageLookup {
 
       }
 
+      object worthOn {
+        val question = "What were the shares worth on 31 March 1982?"
+      }
+
       object DisposalValue {
         val question = "How much did you sell the shares for?"
       }
@@ -134,7 +138,7 @@ object MessageLookup {
       //############ Sell For Less messages #################//
       object sellForLess {
         val title = "Did you sell the shares for less than they were worth to help the buyer?"
-        val errorSelect = s"Tell us if you sold the shares for less than they were worth to help the buyer?"
+        val errorSelect = s"Tell us if you sold the shares for less than they were worth to help the buyer."
       }
 
       //############ Worth When Inherited messages #################//

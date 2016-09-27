@@ -39,8 +39,8 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
     "Owned acquired after start of tax (31 March 1982) and not inherited" should {
       lazy val gainAnswers = GainAnswersModel(
         disposalDate = Dates.constructDate(10, 10, 2016),
-        soldForLessThanWorth = None,
-        disposalValue = 200000,
+        soldForLessThanWorth = false,
+        disposalValue = Some(200000),
         worthWhenSoldForLess = None,
         disposalCosts = 10000,
         ownedBeforeTaxStartDate = false,
@@ -457,8 +457,8 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
 
       val gainAnswers = GainAnswersModel(
         disposalDate = constructDate(12, 12, 2019),
-        soldForLessThanWorth = None,
-        disposalValue = 10,
+        soldForLessThanWorth = false,
+        disposalValue = Some(10),
         worthWhenSoldForLess = None,
         disposalCosts = 20,
         ownedBeforeTaxStartDate = false,
@@ -556,8 +556,8 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       val gainAnswers = GainAnswersModel(
 
         disposalDate = constructDate(12, 12, 2019),
-        soldForLessThanWorth = None,
-        disposalValue = 10,
+        soldForLessThanWorth = false,
+        disposalValue = Some(10),
         worthWhenSoldForLess = None,
         disposalCosts = 20,
         ownedBeforeTaxStartDate = true,
@@ -635,8 +635,8 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
 
     lazy val gainAnswers = GainAnswersModel(
       disposalDate = Dates.constructDate(10, 10, 2016),
-      soldForLessThanWorth = None,
-      disposalValue = 200000,
+      soldForLessThanWorth = false,
+      disposalValue = Some(200000),
       worthWhenSoldForLess = None,
       disposalCosts = 10000,
       ownedBeforeTaxStartDate = false,
@@ -823,8 +823,8 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
 
     lazy val gainAnswers = GainAnswersModel(
       disposalDate = Dates.constructDate(10, 10, 2016),
-      soldForLessThanWorth = None,
-      disposalValue = 200000,
+      soldForLessThanWorth = false,
+      disposalValue = Some(200000),
       worthWhenSoldForLess = None,
       disposalCosts = 10000,
       ownedBeforeTaxStartDate = false,
@@ -913,8 +913,8 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
 
     lazy val gainAnswers = GainAnswersModel(
       disposalDate = Dates.constructDate(10, 10, 2015),
-      soldForLessThanWorth = None,
-      disposalValue = 200000,
+      soldForLessThanWorth = false,
+      disposalValue = Some(200000),
       worthWhenSoldForLess = None,
       disposalCosts = 0,
       ownedBeforeTaxStartDate = false,
@@ -991,8 +991,8 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
 
     lazy val gainAnswers = GainAnswersModel(
       disposalDate = Dates.constructDate(10, 10, 2018),
-      soldForLessThanWorth = None,
-      disposalValue = 200000,
+      soldForLessThanWorth = false,
+      disposalValue = Some(200000),
       worthWhenSoldForLess = None,
       disposalCosts = 0,
       ownedBeforeTaxStartDate = false,
@@ -1040,12 +1040,85 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
     }
   }
 
+  "Shares Final Summary when the shares were sold for less than they were worth." should {
+
+    lazy val gainAnswers = GainAnswersModel(
+      disposalDate = Dates.constructDate(10, 10, 2016),
+      soldForLessThanWorth = true,
+      disposalValue = None,
+      worthWhenSoldForLess = Some(200000),
+      disposalCosts = 0,
+      ownedBeforeTaxStartDate = false,
+      worthOnTaxStartDate = None,
+      inheritedTheShares = Some(false),
+      worthWhenInherited = None,
+      acquisitionValue = Some(0),
+      acquisitionCosts = 0
+    )
+
+    lazy val deductionAnswers = DeductionGainAnswersModel(
+      Some(OtherPropertiesModel(true)),
+      Some(AllowableLossesModel(false)),
+      None,
+      Some(LossesBroughtForwardModel(false)),
+      None,
+      Some(AnnualExemptAmountModel(11000))
+    )
+
+    lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
+
+    lazy val results = TotalGainAndTaxOwedModel(
+      50000,
+      20000,
+      0,
+      30000,
+      3600,
+      30000,
+      18,
+      Some(10000),
+      Some(28),
+      None,
+      None,
+      0,
+      0
+    )
+
+    lazy val taxYearModel = TaxYearModel("2016/17", true, "2016/17")
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, "back-link", taxYearModel, "home-link")(fakeRequestWithSession)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "has an option output row for private residence relief value in" which {
+
+      s"should have the question text '${commonMessages.Resident.Shares.worthWhenSoldForLess.question}'" in {
+        doc.select("#worthWhenSoldForLess-question").text shouldBe commonMessages.Resident.Shares.worthWhenSoldForLess.question
+      }
+
+      "should have the value '£200,000'" in {
+        doc.select("#worthWhenSoldForLess-amount span.bold-medium").text shouldBe "£200,000"
+      }
+
+      s"should have a change link to ${routes.GainController.worthWhenSoldForLess().url}" in {
+        doc.select("#worthWhenSoldForLess-amount a").attr("href") shouldBe routes.GainController.worthWhenSoldForLess().url
+      }
+
+      "has the question as part of the link" in {
+        doc.select("#worthWhenSoldForLess-amount a").text shouldBe s"${commonMessages.calcBaseChange} " +
+          s"${commonMessages.Resident.Shares.worthWhenSoldForLess.question}"
+      }
+
+      "has the question component of the link as visuallyhidden" in {
+        doc.select("#worthWhenSoldForLess-amount a span.visuallyhidden").text shouldBe
+          commonMessages.Resident.Shares.worthWhenSoldForLess.question
+      }
+    }
+  }
+
   "Final Summary shares when supplied with a date in 2016/17" should {
 
     lazy val gainAnswers = GainAnswersModel(
       disposalDate = Dates.constructDate(10, 10, 2016),
-      soldForLessThanWorth = None,
-      disposalValue = 200000,
+      soldForLessThanWorth = false,
+      disposalValue = Some(200000),
       worthWhenSoldForLess = None,
       disposalCosts = 0,
       ownedBeforeTaxStartDate = false,

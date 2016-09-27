@@ -76,7 +76,7 @@ class OwnedBeforeEightyTwoViewSpec extends UnitSpec with WithFakeApplication wit
     }
 
     "render a form tag with a submit action" in {
-      doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/shares/owned-before-april-first-nineteen-eighty-two"
+      doc.select("form").attr("action") shouldEqual controllers.resident.shares.routes.GainController.submitOwnedBeforeEightyTwo().toString
     }
 
     "has the method of POST" in {
