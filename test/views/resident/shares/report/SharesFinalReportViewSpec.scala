@@ -533,8 +533,17 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
       "has a numeric output row for the Worth on 31 March 1982 value" which {
 
-        //Tests here for Worth On
+        s"should have the question text '${SharesMessages.worthOn.question}'" in {
+          doc.select("#worthOn-question").text shouldBe SharesMessages.worthOn.question
+        }
 
+        "should have the value '£700'" in {
+          doc.select("#worthOn-amount span.bold-medium").text shouldBe "£700"
+        }
+
+        s"should not have a change link" in {
+          doc.select("#worthOn-option a").isEmpty shouldBe true
+        }
       }
 
       "does not have an option/radiobutton output row for Did You Inherit the Shares" in {

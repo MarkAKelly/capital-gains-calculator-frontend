@@ -118,7 +118,7 @@ navTitle = Messages("calc.base.resident.shares.home")
     @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.shares.disposalCosts.question"),gainAnswers.disposalCosts,Some(gainRoutes.disposalCosts().toString))
     @summaryOptionRowHelper("ownedBeforeTaxStartDate",Messages("calc.resident.shares.ownedBeforeEightyTwo.title"),gainAnswers.ownedBeforeTaxStartDate,Some(gainRoutes.ownedBeforeEightyTwo().url))
     @if(gainAnswers.ownedBeforeTaxStartDate){
-        <!-- Worth On Goes Here -->
+        @summaryNumericRowHelper("worthOn",Messages("calc.resident.shares.worthOn.question"),gainAnswers.worthOnTaxStartDate.get,Some(gainRoutes.worthOnMarchEightyTwo().toString))
     } else {
         @summaryOptionRowHelper("inheritedTheShares",Messages("calc.resident.shares.didYouInheritThem.question"),gainAnswers.inheritedTheShares.get,Some(gainRoutes.didYouInheritThem().url))
         @if(gainAnswers.inheritedTheShares.get){

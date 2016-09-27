@@ -613,7 +613,17 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
 
       "has a numeric output row for the Worth on 31 March 1982 value" which {
 
-        //Tests here for Worth On
+        s"should have the question text '${SharesMessages.worthOn.question}'" in {
+          doc.select("#worthOn-question").text shouldBe SharesMessages.worthOn.question
+        }
+
+        "should have the value '£700'" in {
+          doc.select("#worthOn-amount span.bold-medium").text shouldBe "£700"
+        }
+
+        s"should have a change link to ${routes.GainController.worthOnMarchEightyTwo().url}" in {
+          doc.select("#worthOn-amount a").attr("href") shouldBe routes.GainController.worthOnMarchEightyTwo().url
+        }
 
       }
 
