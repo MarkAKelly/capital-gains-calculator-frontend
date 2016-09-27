@@ -17,315 +17,536 @@
 package views.resident.shares.report
 
 import assets.MessageLookup.{summaryPage => messages}
+import assets.MessageLookup.Resident.{Shares => SharesMessages}
 import assets.{MessageLookup => commonMessages}
 import common.Dates
 import controllers.helpers.FakeRequestHelper
 import models.resident._
 import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, PreviousTaxableGainsModel}
-import models.resident.shares.{GainAnswersModel, DeductionGainAnswersModel}
+import models.resident.shares.{DeductionGainAnswersModel, GainAnswersModel}
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.shares.{report => views}
 
 class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Final Summary view" should {
+  "Final Summary view" when {
 
-    lazy val gainAnswers = GainAnswersModel(
-      disposalDate = Dates.constructDate(10, 10, 2015),
-      soldForLessThanWorth = None,
-      disposalValue = 200000,
-      worthWhenSoldForLess = None,
-      disposalCosts = 10000,
-      ownedBeforeTaxStartDate = None,
-      worthOnTaxStartDate = None,
-      inheritedTheShares = None,
-      worthWhenInherited = None,
-      acquisitionValue = 100000,
-      acquisitionCosts = 10000
-    )
+    "property acquired after start of tax (1 April 1982) and not inherited" should {
 
-    lazy val deductionAnswers = DeductionGainAnswersModel(
-      Some(OtherPropertiesModel(true)),
-      Some(AllowableLossesModel(false)),
-      None,
-      Some(LossesBroughtForwardModel(false)),
-      None,
-      Some(AnnualExemptAmountModel(0)))
+      lazy val gainAnswers = GainAnswersModel(
+        disposalDate = Dates.constructDate(10, 10, 2015),
+        soldForLessThanWorth = None,
+        disposalValue = 200000,
+        worthWhenSoldForLess = None,
+        disposalCosts = 10000,
+        ownedBeforeTaxStartDate = false,
+        worthOnTaxStartDate = None,
+        inheritedTheShares = Some(false),
+        worthWhenInherited = None,
+        acquisitionValue = Some(100000),
+        acquisitionCosts = 10000
+      )
 
-    lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
+      lazy val deductionAnswers = DeductionGainAnswersModel(
+        Some(OtherPropertiesModel(true)),
+        Some(AllowableLossesModel(false)),
+        None,
+        Some(LossesBroughtForwardModel(false)),
+        None,
+        Some(AnnualExemptAmountModel(0)))
 
-    lazy val results = TotalGainAndTaxOwedModel(
-      50000,
-      20000,
-      0,
-      30000,
-      3600,
-      30000,
-      18,
-      Some(10000),
-      Some(28),
-      None,
-      None,
-      0,
-      0
-    )
+      lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
-    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val results = TotalGainAndTaxOwedModel(
+        50000,
+        20000,
+        0,
+        30000,
+        3600,
+        30000,
+        18,
+        Some(10000),
+        Some(28),
+        None,
+        None,
+        0,
+        0
+      )
 
-    lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel)(fakeRequestWithSession)
-    lazy val doc = Jsoup.parse(view.body)
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
-    s"have a title ${messages.title}" in {
-      doc.title() shouldBe messages.title
-    }
+      lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel)(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(view.body)
 
-    "have a page heading" which {
-
-      s"includes a secondary heading with text '${messages.pageHeading}'" in {
-        doc.select("h1 span.pre-heading").text shouldBe messages.pageHeading
+      s"have a title ${messages.title}" in {
+        doc.title() shouldBe messages.title
       }
 
-      "includes an amount of tax due of £3,600.00" in {
-        doc.select("h1").text should include ("£3,600.00")
-      }
-    }
+      "have a page heading" which {
 
-    "have the HMRC logo with the HMRC name" in {
-      doc.select("div.logo span").text shouldBe "HM Revenue & Customs"
-    }
-
-    "does not have a notice summary" in {
-      doc.select("div.notice-wrapper").isEmpty shouldBe true
-    }
-
-    "have a section for the Calculation Details" which {
-
-      "has the class 'summary-section' to underline the heading" in {
-        doc.select("section#calcDetails h2").hasClass("summary-underline") shouldBe true
-      }
-
-      "has a h2 tag" which {
-
-        s"should have the title '${messages.calcDetailsHeadingDate("2015/16")}'" in {
-          doc.select("section#calcDetails h2").text shouldBe messages.calcDetailsHeadingDate("2015/16")
+        s"includes a secondary heading with text '${messages.pageHeading}'" in {
+          doc.select("h1 span.pre-heading").text shouldBe messages.pageHeading
         }
 
-        "has the class 'heading-large'" in {
-          doc.select("section#calcDetails h2").hasClass("heading-large") shouldBe true
+        "includes an amount of tax due of £3,600.00" in {
+          doc.select("h1").text should include("£3,600.00")
         }
       }
 
-      "has a numeric output row for the gain" which {
-
-        "should have the question text 'Total Gain'" in {
-          doc.select("#gain-question").text shouldBe messages.totalGain
-        }
-
-        "should have the value '£50,000'" in {
-          doc.select("#gain-amount").text shouldBe "£50,000"
-        }
+      "have the HMRC logo with the HMRC name" in {
+        doc.select("div.logo span").text shouldBe "HM Revenue & Customs"
       }
 
-      "has a numeric output row for the deductions" which {
+      "does not have a notice summary" in {
+        doc.select("div.notice-wrapper").isEmpty shouldBe true
+      }
 
-        "should have the question text 'Deductions'" in {
-          doc.select("#deductions-question").text shouldBe messages.deductions
+      "have a section for the Calculation Details" which {
+
+        "has the class 'summary-section' to underline the heading" in {
+          doc.select("section#calcDetails h2").hasClass("summary-underline") shouldBe true
         }
 
-        "should have the value '£0'" in {
-          doc.select("#deductions-amount").text should include("£0")
-        }
+        "has a h2 tag" which {
 
-        "has a breakdown that" should {
-
-          "include a value for Allowable Losses of £0" in {
-            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLossesUsed("2015/16")} £0")
+          s"should have the title '${messages.calcDetailsHeadingDate("2015/16")}'" in {
+            doc.select("section#calcDetails h2").text shouldBe messages.calcDetailsHeadingDate("2015/16")
           }
 
-          "include a value for Capital gains tax allowance used of £0" in {
-            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsCapitalGainsTax} £0")
-          }
-
-          "include a value for Loss brought forward of £0" in {
-            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYearUsed("2015/16")} £0")
+          "has the class 'heading-large'" in {
+            doc.select("section#calcDetails h2").hasClass("heading-large") shouldBe true
           }
         }
+
+        "has a numeric output row for the gain" which {
+
+          "should have the question text 'Total Gain'" in {
+            doc.select("#gain-question").text shouldBe messages.totalGain
+          }
+
+          "should have the value '£50,000'" in {
+            doc.select("#gain-amount").text shouldBe "£50,000"
+          }
+        }
+
+        "has a numeric output row for the deductions" which {
+
+          "should have the question text 'Deductions'" in {
+            doc.select("#deductions-question").text shouldBe messages.deductions
+          }
+
+          "should have the value '£0'" in {
+            doc.select("#deductions-amount").text should include("£0")
+          }
+
+          "has a breakdown that" should {
+
+            "include a value for Allowable Losses of £0" in {
+              doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLossesUsed("2015/16")} £0")
+            }
+
+            "include a value for Capital gains tax allowance used of £0" in {
+              doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsCapitalGainsTax} £0")
+            }
+
+            "include a value for Loss brought forward of £0" in {
+              doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYearUsed("2015/16")} £0")
+            }
+          }
+        }
+
+        "has a numeric output row for the chargeable gain" which {
+
+          "should have the question text 'Taxable Gain'" in {
+            doc.select("#chargeableGain-question").text shouldBe messages.chargeableGain
+          }
+
+          "should have the value '£20,000'" in {
+            doc.select("#chargeableGain-amount").text should include("£20,000")
+          }
+        }
+
+        "has a numeric output row and a tax rate" which {
+
+          "should have the question text 'Tax Rate'" in {
+            doc.select("#gainAndRate-question").text shouldBe messages.taxRate
+          }
+
+          "should have the value £30,000" in {
+            doc.select("#firstBand").text should include("£30,000")
+          }
+
+          "should have the tax rate 18%" in {
+            doc.select("#firstBand").text should include("18%")
+          }
+
+          "should have the value £10,000 in the second band" in {
+            doc.select("#secondBand").text should include("£10,000")
+          }
+
+          "should have the tax rate 28% for the first band" in {
+            doc.select("#secondBand").text should include("28%")
+          }
+        }
+
+        "has a numeric output row for the AEA remaining" which {
+
+          "should have the question text 'Capital Gains Tax allowance left for 2015/16" in {
+            doc.select("#aeaRemaining-question").text should include(messages.aeaRemaining("2015/16"))
+          }
+
+          "include a value for Capital gains tax allowance left of £0" in {
+            doc.select("#aeaRemaining-amount").text should include("£0")
+          }
+        }
       }
 
-      "has a numeric output row for the chargeable gain" which {
+      "have a section for Your answers" which {
 
-        "should have the question text 'Taxable Gain'" in {
-          doc.select("#chargeableGain-question").text shouldBe messages.chargeableGain
+        "has the class 'summary-section' to underline the heading" in {
+
+          doc.select("section#yourAnswers h2").hasClass("summary-underline") shouldBe true
+
         }
 
-        "should have the value '£20,000'" in {
-          doc.select("#chargeableGain-amount").text should include("£20,000")
-        }
-      }
+        s"has a h2 tag" which {
 
-      "has a numeric output row and a tax rate" which {
+          s"should have the title '${messages.yourAnswersHeading}'" in {
+            doc.select("section#yourAnswers h2").text shouldBe messages.yourAnswersHeading
+          }
 
-        "should have the question text 'Tax Rate'" in {
-          doc.select("#gainAndRate-question").text shouldBe messages.taxRate
-        }
-
-        "should have the value £30,000" in {
-          doc.select("#firstBand").text should include("£30,000")
+          "has the class 'heading-large'" in {
+            doc.select("section#yourAnswers h2").hasClass("heading-large") shouldBe true
+          }
         }
 
-        "should have the tax rate 18%" in {
-          doc.select("#firstBand").text should include("18%")
+        "has a date output row for the Disposal Date" which {
+
+          s"should have the question text '${commonMessages.disposalDate.title}'" in {
+            doc.select("#disposalDate-question").text shouldBe commonMessages.sharesDisposalDate.title
+          }
+
+          "should have the date '10 October 2015'" in {
+            doc.select("#disposalDate-date span.bold-medium").text shouldBe "10 October 2015"
+          }
         }
 
-        "should have the value £10,000 in the second band" in {
-          doc.select("#secondBand").text should include("£10,000")
+        "has a numeric output row for the Disposal Value" which {
+
+          s"should have the question text '${commonMessages.disposalValue.question}'" in {
+            doc.select("#disposalValue-question").text shouldBe commonMessages.Resident.Shares.DisposalValue.question
+          }
+
+          "should have the value '£200,000'" in {
+            doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£200,000"
+          }
         }
 
-        "should have the tax rate 28% for the first band" in {
-          doc.select("#secondBand").text should include("28%")
+        "has a numeric output row for the Disposal Costs" which {
+
+          s"should have the question text '${commonMessages.disposalCosts.title}'" in {
+            doc.select("#disposalCosts-question").text shouldBe commonMessages.sharesDisposalCosts.title
+          }
+
+          "should have the value '£10,000'" in {
+            doc.select("#disposalCosts-amount span.bold-medium").text shouldBe "£10,000"
+          }
         }
-      }
 
-      "has a numeric output row for the AEA remaining" which {
+        "has an option/radiobutton output row for the Owned Before Start of Tax" which {
 
-        "should have the question text 'Capital Gains Tax allowance left for 2015/16" in {
-          doc.select("#aeaRemaining-question").text should include(messages.aeaRemaining("2015/16"))
+          s"should have the question text '${SharesMessages.OwnedBeforeEightyTwoMessages.title}'" in {
+            doc.select("#ownedBeforeTaxStartDate-question").text shouldBe SharesMessages.OwnedBeforeEightyTwoMessages.title
+          }
+
+          "should have the value 'No'" in {
+            doc.select("#ownedBeforeTaxStartDate-option span.bold-medium").text shouldBe "No"
+          }
+
+          s"should not have a change link" in {
+            doc.select("#ownedBeforeTaxStartDate-option a").isEmpty shouldBe true
+          }
         }
 
-        "include a value for Capital gains tax allowance left of £0" in {
-          doc.select("#aeaRemaining-amount").text should include("£0")
+        "does not have a numeric output row for the Worth on 31 March 1982 value" in {
+          //Tests here for Worth On
+        }
+
+        "has an option/radiobutton output row for Did You Inherit the Shares" which {
+
+          s"should have the question text '${SharesMessages.DidYouInheritThem.question}'" in {
+            doc.select("#inheritedTheShares-question").text shouldBe SharesMessages.DidYouInheritThem.question
+          }
+
+          "should have the value 'No'" in {
+            doc.select("#inheritedTheShares-option span.bold-medium").text shouldBe "No"
+          }
+
+          s"should not have a change link" in {
+            doc.select("#inheritedTheShares-option a").isEmpty shouldBe true
+          }
+        }
+
+        "does not have a numeric output row for the Inherited Value" in {
+          doc.select("#worthWhenInherited-question").isEmpty shouldBe true
+        }
+
+        "has a numeric output row for the Acquisition Value" which {
+
+          s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
+            doc.select("#acquisitionValue-question").text shouldBe commonMessages.sharesAcquisitionValue.title
+          }
+
+          "should have the value '£100,000'" in {
+            doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£100,000"
+          }
+        }
+
+        "has a numeric output row for the Acquisition Costs" which {
+
+          s"should have the question text '${commonMessages.acquisitionCosts.title}'" in {
+            doc.select("#acquisitionCosts-question").text shouldBe commonMessages.sharesAcquisitionCosts.title
+          }
+
+          "should have the value '£10,000'" in {
+            doc.select("#acquisitionCosts-amount span.bold-medium").text shouldBe "£10,000"
+          }
+        }
+
+        "has an option output row for other disposals" which {
+
+          s"should have the question text '${commonMessages.otherProperties.title("2015/16")}'" in {
+            doc.select("#otherDisposals-question").text shouldBe commonMessages.otherProperties.title("2015/16")
+          }
+
+          "should have the value 'Yes'" in {
+            doc.select("#otherDisposals-option span.bold-medium").text shouldBe "Yes"
+          }
+        }
+
+        "has an option output row for brought forward losses" which {
+
+          s"should have the question text '${commonMessages.lossesBroughtForward.title("2015/16")}'" in {
+            doc.select("#broughtForwardLosses-question").text shouldBe commonMessages.lossesBroughtForward.title("2015/16")
+          }
+
+          "should have the value 'No'" in {
+            doc.select("#broughtForwardLosses-option span.bold-medium").text shouldBe "No"
+          }
+        }
+
+        "has an option output row for previous taxable gains" which {
+
+          s"should have the question text '${commonMessages.previousTaxableGains.title("2015/16")}'" in {
+            doc.select("#previousTaxableGains-question").text shouldBe commonMessages.previousTaxableGains.title("2015/16")
+          }
+
+          "should have the value '£1,000'" in {
+            doc.select("#previousTaxableGains-amount span.bold-medium").text shouldBe "£1,000"
+          }
+        }
+
+        "has a numeric output row for current income" which {
+
+          s"should have the question text '${commonMessages.currentIncome.title("2015/16")}'" in {
+            doc.select("#currentIncome-question").text shouldBe commonMessages.currentIncome.title("2015/16")
+          }
+
+          "should have the value '£0'" in {
+            doc.select("#currentIncome-amount span.bold-medium").text shouldBe "£0"
+          }
+        }
+
+        "has a numeric output row for personal allowance" which {
+
+          s"should have the question text '${commonMessages.personalAllowance.question("2015/16")}'" in {
+            doc.select("#personalAllowance-question").text shouldBe commonMessages.personalAllowance.question("2015/16")
+          }
+
+          "should have the value '£0'" in {
+            doc.select("#personalAllowance-amount span.bold-medium").text shouldBe "£0"
+          }
         }
       }
     }
 
-    "have a section for Your answers" which {
+    "acquired after the start of the tax (1 April 1982) and inherited" should {
 
-      "has the class 'summary-section' to underline the heading" in {
+      val gainAnswers = GainAnswersModel(
+        disposalDate = Dates.constructDate(12, 12, 2019),
+        soldForLessThanWorth = None,
+        disposalValue = 10,
+        worthWhenSoldForLess = None,
+        disposalCosts = 20,
+        ownedBeforeTaxStartDate = false,
+        worthOnTaxStartDate = None,
+        inheritedTheShares = Some(true),
+        worthWhenInherited = Some(5000),
+        acquisitionValue = None,
+        acquisitionCosts = 40
+      )
+      lazy val deductionAnswers = DeductionGainAnswersModel(
+        Some(OtherPropertiesModel(true)),
+        Some(AllowableLossesModel(false)),
+        None,
+        Some(LossesBroughtForwardModel(false)),
+        None,
+        Some(AnnualExemptAmountModel(0)))
 
-        doc.select("section#yourAnswers h2").hasClass("summary-underline") shouldBe true
+      lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
 
-      }
+      lazy val results = TotalGainAndTaxOwedModel(
+        50000,
+        20000,
+        0,
+        30000,
+        3600,
+        30000,
+        18,
+        Some(10000),
+        Some(28),
+        None,
+        None,
+        0,
+        0
+      )
 
-      s"has a h2 tag" which {
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel)(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(view.body)
 
-        s"should have the title '${messages.yourAnswersHeading}'" in {
-          doc.select("section#yourAnswers h2").text shouldBe messages.yourAnswersHeading
-        }
+      "has an option/radiobutton output row for the Owned Before Start of Tax" which {
 
-        "has the class 'heading-large'" in {
-          doc.select("section#yourAnswers h2").hasClass("heading-large") shouldBe true
-        }
-      }
-
-      "has a date output row for the Disposal Date" which {
-
-        s"should have the question text '${commonMessages.disposalDate.title}'" in {
-          doc.select("#disposalDate-question").text shouldBe commonMessages.sharesDisposalDate.title
-        }
-
-        "should have the date '10 October 2015'" in {
-          doc.select("#disposalDate-date span.bold-medium").text shouldBe "10 October 2015"
-        }
-      }
-
-      "has a numeric output row for the Disposal Value" which {
-
-        s"should have the question text '${commonMessages.disposalValue.question}'" in {
-          doc.select("#disposalValue-question").text shouldBe commonMessages.Resident.Shares.DisposalValue.question
-        }
-
-        "should have the value '£200,000'" in {
-          doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£200,000"
-        }
-      }
-
-      "has a numeric output row for the Disposal Costs" which {
-
-        s"should have the question text '${commonMessages.disposalCosts.title}'" in {
-          doc.select("#disposalCosts-question").text shouldBe commonMessages.sharesDisposalCosts.title
-        }
-
-        "should have the value '£10,000'" in {
-          doc.select("#disposalCosts-amount span.bold-medium").text shouldBe "£10,000"
-        }
-      }
-
-      "has a numeric output row for the Acquisition Value" which {
-
-        s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
-          doc.select("#acquisitionValue-question").text shouldBe commonMessages.sharesAcquisitionValue.title
-        }
-
-        "should have the value '£100,000'" in {
-          doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£100,000"
-        }
-      }
-
-      "has a numeric output row for the Acquisition Costs" which {
-
-        s"should have the question text '${commonMessages.acquisitionCosts.title}'" in {
-          doc.select("#acquisitionCosts-question").text shouldBe commonMessages.sharesAcquisitionCosts.title
-        }
-
-        "should have the value '£10,000'" in {
-          doc.select("#acquisitionCosts-amount span.bold-medium").text shouldBe "£10,000"
-        }
-      }
-
-      "has an option output row for other disposals" which {
-
-        s"should have the question text '${commonMessages.otherProperties.title("2015/16")}'" in {
-          doc.select("#otherDisposals-question").text shouldBe commonMessages.otherProperties.title("2015/16")
-        }
-
-        "should have the value 'Yes'" in {
-          doc.select("#otherDisposals-option span.bold-medium").text shouldBe "Yes"
-        }
-      }
-
-      "has an option output row for brought forward losses" which {
-
-        s"should have the question text '${commonMessages.lossesBroughtForward.title("2015/16")}'" in {
-          doc.select("#broughtForwardLosses-question").text shouldBe commonMessages.lossesBroughtForward.title("2015/16")
+        s"should have the question text '${SharesMessages.OwnedBeforeEightyTwoMessages.title}'" in {
+          doc.select("#ownedBeforeTaxStartDate-question").text shouldBe SharesMessages.OwnedBeforeEightyTwoMessages.title
         }
 
         "should have the value 'No'" in {
-          doc.select("#broughtForwardLosses-option span.bold-medium").text shouldBe "No"
+          doc.select("#ownedBeforeTaxStartDate-option span.bold-medium").text shouldBe "No"
+        }
+
+        s"should not have a change link" in {
+          doc.select("#ownedBeforeTaxStartDate-option a").isEmpty shouldBe true
         }
       }
 
-      "has an option output row for previous taxable gains" which {
+      "does not have a numeric output row for the Worth on 31 March 1982 value" in {
+        //Tests here for Worth On
+      }
 
-        s"should have the question text '${commonMessages.previousTaxableGains.title("2015/16")}'" in {
-          doc.select("#previousTaxableGains-question").text shouldBe commonMessages.previousTaxableGains.title("2015/16")
+      "has an option/radiobutton output row for Did You Inherit the Shares" which {
+
+        s"should have the question text '${SharesMessages.DidYouInheritThem.question}'" in {
+          doc.select("#inheritedTheShares-question").text shouldBe SharesMessages.DidYouInheritThem.question
         }
 
-        "should have the value '£1,000'" in {
-          doc.select("#previousTaxableGains-amount span.bold-medium").text shouldBe "£1,000"
+        "should have the value 'Yes'" in {
+          doc.select("#inheritedTheShares-option span.bold-medium").text shouldBe "Yes"
+        }
+
+        s"should not have a change link" in {
+          doc.select("#inheritedTheShares-option a").isEmpty shouldBe true
         }
       }
 
-      "has a numeric output row for current income" which {
+      "has a numeric output row for the Inherited Value" which {
 
-        s"should have the question text '${commonMessages.currentIncome.title("2015/16")}'" in {
-          doc.select("#currentIncome-question").text shouldBe commonMessages.currentIncome.title("2015/16")
+        s"should have the question text '${SharesMessages.WorthWhenInherited.question}'" in {
+          doc.select("#worthWhenInherited-question").text shouldBe SharesMessages.WorthWhenInherited.question
         }
 
-        "should have the value '£0'" in {
-          doc.select("#currentIncome-amount span.bold-medium").text shouldBe "£0"
+        "should have the value '5000'" in {
+          doc.select("#worthWhenInherited-amount span.bold-medium").text shouldBe "£5,000"
+        }
+
+        s"should not have a change link" in {
+          doc.select("#worthWhenInherited-amount a").isEmpty shouldBe true
         }
       }
 
-      "has a numeric output row for personal allowance" which {
+      "does not have a numeric output row for the Acquisition Value" in {
+        doc.select("#acquisitionValue-question").isEmpty shouldBe true
+      }
+    }
 
-        s"should have the question text '${commonMessages.personalAllowance.question("2015/16")}'" in {
-          doc.select("#personalAllowance-question").text shouldBe commonMessages.personalAllowance.question("2015/16")
+    "acquired before start of tax (1 April 1982)" should {
+
+      val gainAnswers = GainAnswersModel(
+        disposalDate = Dates.constructDate(12, 12, 2019),
+        soldForLessThanWorth = None,
+        disposalValue = 10,
+        worthWhenSoldForLess = None,
+        disposalCosts = 20,
+        ownedBeforeTaxStartDate = true,
+        worthOnTaxStartDate = Some(700),
+        inheritedTheShares = Some(false),
+        worthWhenInherited = None,
+        acquisitionValue = Some(30),
+        acquisitionCosts = 40
+      )
+
+      lazy val deductionAnswers = DeductionGainAnswersModel(
+        Some(OtherPropertiesModel(true)),
+        Some(AllowableLossesModel(false)),
+        None,
+        Some(LossesBroughtForwardModel(false)),
+        None,
+        Some(AnnualExemptAmountModel(0)))
+
+      lazy val incomeAnswers = IncomeAnswersModel(Some(PreviousTaxableGainsModel(1000)), Some(CurrentIncomeModel(0)), Some(PersonalAllowanceModel(0)))
+
+      lazy val results = TotalGainAndTaxOwedModel(
+        50000,
+        20000,
+        0,
+        30000,
+        3600,
+        30000,
+        18,
+        Some(10000),
+        Some(28),
+        None,
+        None,
+        0,
+        0
+      )
+
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel)(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(view.body)
+
+      "has an option/radiobutton output row for the Owned Before Start of Tax" which {
+
+        s"should have the question text '${SharesMessages.OwnedBeforeEightyTwoMessages.title}'" in {
+          doc.select("#ownedBeforeTaxStartDate-question").text shouldBe SharesMessages.OwnedBeforeEightyTwoMessages.title
         }
 
-        "should have the value '£0'" in {
-          doc.select("#personalAllowance-amount span.bold-medium").text shouldBe "£0"
+        "should have the value 'Yes'" in {
+          doc.select("#ownedBeforeTaxStartDate-option span.bold-medium").text shouldBe "Yes"
         }
+
+        s"should not have a change link" in {
+          doc.select("#ownedBeforeTaxStartDate-option a").isEmpty shouldBe true
+        }
+      }
+
+      "has a numeric output row for the Worth on 31 March 1982 value" which {
+
+        //Tests here for Worth On
+
+      }
+
+      "does not have an option/radiobutton output row for Did You Inherit the Shares" in {
+        doc.select("#inheritedTheShares-question").isEmpty shouldBe true
+      }
+
+      "does not have a numeric output row for the Inherited Value" in {
+        doc.select("#worthWhenInherited-question").isEmpty shouldBe true
+      }
+
+      "does not have a numeric output row for the Acquisition Value" in {
+        doc.select("#acquisitionValue-question").isEmpty shouldBe true
       }
     }
   }
@@ -340,11 +561,11 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
       disposalValue = 200000,
       worthWhenSoldForLess = None,
       disposalCosts = 10000,
-      ownedBeforeTaxStartDate = None,
+      ownedBeforeTaxStartDate = false,
       worthOnTaxStartDate = None,
-      inheritedTheShares = None,
+      inheritedTheShares = Some(false),
       worthWhenInherited = None,
-      acquisitionValue = 100000,
+      acquisitionValue = Some(100000),
       acquisitionCosts = 10000
     )
     lazy val deductionAnswers = DeductionGainAnswersModel(

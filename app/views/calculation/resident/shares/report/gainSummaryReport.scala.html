@@ -59,7 +59,17 @@
         @summaryDateRowHelper("disposalDate",Messages("calc.resident.shares.disposalDate.question"),answers.disposalDate,None)
         @summaryNumericRowHelper("disposalValue",Messages("calc.resident.shares.disposalValue.question"),answers.disposalValue,None)
         @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.shares.disposalCosts.question"),answers.disposalCosts,None)
-        @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.shares.acquisitionValue.question"),answers.acquisitionValue,None)
+        @summaryOptionRowHelper("ownedBeforeTaxStartDate",Messages("calc.resident.shares.ownedBeforeEightyTwo.title"),answers.ownedBeforeTaxStartDate,None)
+        @if(answers.ownedBeforeTaxStartDate){
+            <!-- Worth On Goes Here -->
+        } else {
+            @summaryOptionRowHelper("inheritedTheShares",Messages("calc.resident.shares.didYouInheritThem.question"),answers.inheritedTheShares.get,None)
+            @if(answers.inheritedTheShares.get){
+                @summaryNumericRowHelper("worthWhenInherited",Messages("calc.resident.shares.worthWhenInherited.question"),answers.worthWhenInherited.get,None)
+            } else {
+                @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.shares.acquisitionValue.question"),answers.acquisitionValue.get,None)
+            }
+        }
         @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.shares.acquisitionCosts.question"),answers.acquisitionCosts,None)
     </section>
 </div>

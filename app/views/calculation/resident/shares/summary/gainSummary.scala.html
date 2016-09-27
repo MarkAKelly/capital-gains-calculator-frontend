@@ -69,7 +69,17 @@
         @summaryDateRowHelper("disposalDate",Messages("calc.resident.shares.disposalDate.question"),answers.disposalDate,Some(routes.disposalDate().toString))
         @summaryNumericRowHelper("disposalValue",Messages("calc.resident.shares.disposalValue.question"),answers.disposalValue,Some(routes.disposalValue().toString))
         @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.shares.disposalCosts.question"),answers.disposalCosts,Some(routes.disposalCosts().toString))
-        @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.shares.acquisitionValue.question"),answers.acquisitionValue,Some(routes.acquisitionValue().toString))
+        @summaryOptionRowHelper("ownedBeforeTaxStartDate",Messages("calc.resident.shares.ownedBeforeEightyTwo.title"),answers.ownedBeforeTaxStartDate,Some(routes.ownedBeforeEightyTwo().url))
+        @if(answers.ownedBeforeTaxStartDate){
+            <!-- Worth On Goes Here -->
+        } else {
+            @summaryOptionRowHelper("inheritedTheShares",Messages("calc.resident.shares.didYouInheritThem.question"),answers.inheritedTheShares.get,Some(routes.didYouInheritThem().url))
+            @if(answers.inheritedTheShares.get){
+                @summaryNumericRowHelper("worthWhenInherited",Messages("calc.resident.shares.worthWhenInherited.question"),answers.worthWhenInherited.get,Some(routes.worthWhenInherited().url))
+            } else {
+                @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.shares.acquisitionValue.question"),answers.acquisitionValue.get,Some(routes.acquisitionValue().url))
+            }
+        }
         @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.shares.acquisitionCosts.question"),answers.acquisitionCosts,Some(routes.acquisitionCosts().toString))
     </section>
 

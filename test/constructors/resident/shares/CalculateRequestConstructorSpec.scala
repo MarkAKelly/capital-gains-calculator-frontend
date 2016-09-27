@@ -33,11 +33,11 @@ class CalculateRequestConstructorSpec extends UnitSpec {
         disposalValue = 1000,
         worthWhenSoldForLess = None,
         disposalCosts = 0,
-        ownedBeforeTaxStartDate = None,
+        ownedBeforeTaxStartDate = false,
         worthOnTaxStartDate = None,
-        inheritedTheShares = None,
+        inheritedTheShares = Some(false),
         worthWhenInherited = None,
-        acquisitionValue = 500,
+        acquisitionValue = Some(500),
         acquisitionCosts = 100
       )
       val result = CalculateRequestConstructor.totalGainRequestString(answers)

@@ -106,7 +106,17 @@ navTitle = Messages("calc.base.resident.shares.home")
     @summaryDateRowHelper("disposalDate",Messages("calc.resident.shares.disposalDate.question"),gainAnswers.disposalDate,Some(gainRoutes.disposalDate().toString))
     @summaryNumericRowHelper("disposalValue",Messages("calc.resident.shares.disposalValue.question"),gainAnswers.disposalValue,Some(gainRoutes.disposalValue().toString))
     @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.shares.disposalCosts.question"),gainAnswers.disposalCosts,Some(gainRoutes.disposalCosts().toString))
-    @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.shares.acquisitionValue.question"),gainAnswers.acquisitionValue,Some(gainRoutes.acquisitionValue().toString))
+    @summaryOptionRowHelper("ownedBeforeTaxStartDate",Messages("calc.resident.shares.ownedBeforeEightyTwo.title"),gainAnswers.ownedBeforeTaxStartDate,Some(gainRoutes.ownedBeforeEightyTwo().url))
+    @if(gainAnswers.ownedBeforeTaxStartDate){
+        <!-- Worth On Goes Here -->
+    } else {
+        @summaryOptionRowHelper("inheritedTheShares",Messages("calc.resident.shares.didYouInheritThem.question"),gainAnswers.inheritedTheShares.get,Some(gainRoutes.didYouInheritThem().url))
+        @if(gainAnswers.inheritedTheShares.get){
+            @summaryNumericRowHelper("worthWhenInherited",Messages("calc.resident.shares.worthWhenInherited.question"),gainAnswers.worthWhenInherited.get,Some(gainRoutes.worthWhenInherited().url))
+        } else {
+            @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.shares.acquisitionValue.question"),gainAnswers.acquisitionValue.get,Some(gainRoutes.acquisitionValue().url))
+        }
+    }
     @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.shares.acquisitionCosts.question"),gainAnswers.acquisitionCosts,Some(gainRoutes.acquisitionCosts().toString))
     @summaryOptionRowHelper("otherDisposals",Messages("calc.resident.otherProperties.title", taxYear.taxYearSupplied),deductionAnswers.otherPropertiesModel.get.hasOtherProperties,Some(deductionRoutes.otherDisposals().toString))
     @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties)

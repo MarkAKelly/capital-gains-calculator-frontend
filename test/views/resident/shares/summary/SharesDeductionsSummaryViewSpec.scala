@@ -16,9 +16,11 @@
 
 package views.resident.shares.summary
 
+import assets.MessageLookup.Resident.{Shares => SharesMessages}
 import assets.MessageLookup.{summaryPage => messages}
 import assets.{MessageLookup => commonMessages}
 import common.Dates
+import common.Dates._
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.shares.routes
 import models.resident._
@@ -31,335 +33,541 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
 
   lazy val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
 
-  "Shares Deductions Summary view" should {
-    lazy val gainAnswers = GainAnswersModel(
-      disposalDate = Dates.constructDate(10, 10, 2016),
-      soldForLessThanWorth = None,
-      disposalValue = 200000,
-      worthWhenSoldForLess = None,
-      disposalCosts = 10000,
-      ownedBeforeTaxStartDate = None,
-      worthOnTaxStartDate = None,
-      inheritedTheShares = None,
-      worthWhenInherited = None,
-      acquisitionValue = 100000,
-      acquisitionCosts = 10000)
-    lazy val deductionAnswers = DeductionGainAnswersModel(
-      Some(OtherPropertiesModel(false)),
-      None,
-      None,
-      Some(LossesBroughtForwardModel(false)),
-      None,
-      None)
-    lazy val results = ChargeableGainResultModel(BigDecimal(50000),
-      BigDecimal(38900),
-      BigDecimal(11100),
-      BigDecimal(0),
-      BigDecimal(11100),
-      BigDecimal(0),
-      BigDecimal(0),
-      None,
-      None,
-      0,
-      0
-    )
-    lazy val backLink = "/calculate-your-capital-gains/resident/shares/losses-brought-forward"
+  "Shares Deductions Summary view" when {
 
-    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+    "acquired after start of tax (1 April 1982) and not inherited" should {
+      lazy val gainAnswers = GainAnswersModel(
+        disposalDate = Dates.constructDate(10, 10, 2016),
+        soldForLessThanWorth = None,
+        disposalValue = 200000,
+        worthWhenSoldForLess = None,
+        disposalCosts = 10000,
+        ownedBeforeTaxStartDate = false,
+        worthOnTaxStartDate = None,
+        inheritedTheShares = Some(false),
+        worthWhenInherited = None,
+        acquisitionValue = Some(100000),
+        acquisitionCosts = 10000)
+      lazy val deductionAnswers = DeductionGainAnswersModel(
+        Some(OtherPropertiesModel(false)),
+        None,
+        None,
+        Some(LossesBroughtForwardModel(false)),
+        None,
+        None)
+      lazy val results = ChargeableGainResultModel(BigDecimal(50000),
+        BigDecimal(38900),
+        BigDecimal(11100),
+        BigDecimal(0),
+        BigDecimal(11100),
+        BigDecimal(0),
+        BigDecimal(0),
+        None,
+        None,
+        0,
+        0
+      )
+      lazy val backLink = "/calculate-your-capital-gains/resident/shares/losses-brought-forward"
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(view.body)
 
-    lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
-    lazy val doc = Jsoup.parse(view.body)
-
-    "have a charset of UTF-8" in {
-      doc.charset().toString shouldBe "UTF-8"
-    }
-
-    s"have a title ${messages.title}" in {
-      doc.title() shouldBe messages.title
-    }
-
-    s"have a back button" which {
-
-      lazy val backLink = doc.getElementById("back-link")
-
-      "has the id 'back-link'" in {
-        backLink.attr("id") shouldBe "back-link"
+      "have a charset of UTF-8" in {
+        doc.charset().toString shouldBe "UTF-8"
       }
 
-      s"has the text '${commonMessages.calcBaseBack}'" in {
-        backLink.text shouldBe commonMessages.calcBaseBack
+      s"have a title ${messages.title}" in {
+        doc.title() shouldBe messages.title
       }
 
-      s"has a link to '${routes.DeductionsController.lossesBroughtForward().toString()}'" in {
-        backLink.attr("href") shouldBe routes.DeductionsController.lossesBroughtForward().toString
-      }
+      s"have a back button" which {
 
-    }
+        lazy val backLink = doc.getElementById("back-link")
 
-    s"have a page heading" which {
-
-      s"includes a secondary heading with text '${messages.pageHeading}'" in {
-        doc.select("h1 span.pre-heading").text shouldBe messages.pageHeading
-      }
-
-      "includes an amount of tax due of £0.00" in {
-        doc.select("h1").text should include ("£0.00")
-      }
-    }
-
-    "does not have a notice summary" in {
-      doc.select("div.notice-wrapper").isEmpty() shouldBe true
-    }
-
-    s"have a section for the Calculation details" which {
-
-      "has the class 'summary-section' to underline the heading" in {
-
-        doc.select("section#calcDetails h2").hasClass("summary-underline") shouldBe true
-
-      }
-
-      s"has a h2 tag" which {
-
-        s"should have the title '${messages.calcDetailsHeadingDate("2015/16")}'" in {
-          doc.select("section#calcDetails h2").text shouldBe messages.calcDetailsHeadingDate("2015/16")
+        "has the id 'back-link'" in {
+          backLink.attr("id") shouldBe "back-link"
         }
 
-        "has the class 'heading-large'" in {
-          doc.select("section#calcDetails h2").hasClass("heading-large") shouldBe true
+        s"has the text '${commonMessages.calcBaseBack}'" in {
+          backLink.text shouldBe commonMessages.calcBaseBack
+        }
+
+        s"has a link to '${routes.DeductionsController.lossesBroughtForward().toString()}'" in {
+          backLink.attr("href") shouldBe routes.DeductionsController.lossesBroughtForward().toString
+        }
+
+      }
+
+      s"have a page heading" which {
+
+        s"includes a secondary heading with text '${messages.pageHeading}'" in {
+          doc.select("h1 span.pre-heading").text shouldBe messages.pageHeading
+        }
+
+        "includes an amount of tax due of £0.00" in {
+          doc.select("h1").text should include("£0.00")
         }
       }
 
-      "has a numeric output row for the gain" which {
-
-        "should have the question text 'Total Gain'" in {
-          doc.select("#gain-question").text shouldBe messages.totalGain
-        }
-
-        "should have the value '£50,000'" in {
-          doc.select("#gain-amount").text shouldBe "£50,000"
-        }
+      "does not have a notice summary" in {
+        doc.select("div.notice-wrapper").isEmpty() shouldBe true
       }
 
-      "has a numeric output row for the deductions" which {
+      s"have a section for the Calculation details" which {
 
-        "should have the question text 'Deductions'" in {
-          doc.select("#deductions-question").text shouldBe messages.deductions
+        "has the class 'summary-section' to underline the heading" in {
+
+          doc.select("section#calcDetails h2").hasClass("summary-underline") shouldBe true
+
         }
 
-        "should have the value '£11,100'" in {
-          doc.select("#deductions-amount span.bold-medium").text should include("£11,100")
-        }
+        s"has a h2 tag" which {
 
-        "has a breakdown that" should {
-
-          "include a value for Allowable Losses of £0" in {
-            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLossesUsed("2015/16")} £0")
+          s"should have the title '${messages.calcDetailsHeadingDate("2015/16")}'" in {
+            doc.select("section#calcDetails h2").text shouldBe messages.calcDetailsHeadingDate("2015/16")
           }
 
-          "include a value for Capital gains tax allowance used of £11,100" in {
-            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsCapitalGainsTax} £11,100")
-          }
-
-          "include a value for Loss brought forward of £0" in {
-            doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYearUsed("2015/16")} £0")
+          "has the class 'heading-large'" in {
+            doc.select("section#calcDetails h2").hasClass("heading-large") shouldBe true
           }
         }
-      }
 
-      "has no numeric output row for allowable losses remaining" in {
-        doc.select("#allowableLossRemaining").isEmpty shouldBe true
-      }
+        "has a numeric output row for the gain" which {
 
-      "has no numeric output row for brought forward losses remaining" in {
-        doc.select("#broughtForwardLossRemaining").isEmpty shouldBe true
-      }
+          "should have the question text 'Total Gain'" in {
+            doc.select("#gain-question").text shouldBe messages.totalGain
+          }
 
-      "has a numeric output row for the AEA remaining" which {
-
-        "should have the question text 'Capital Gains Tax allowance left for 2015/16" in {
-          doc.select("#aeaRemaining-question").text should include(messages.aeaRemaining("2015/16"))
+          "should have the value '£50,000'" in {
+            doc.select("#gain-amount").text shouldBe "£50,000"
+          }
         }
 
-        "include a value for Capital gains tax allowance left of £0" in {
-          doc.select("#aeaRemaining-amount span.bold-medium").text should include("£0")
+        "has a numeric output row for the deductions" which {
+
+          "should have the question text 'Deductions'" in {
+            doc.select("#deductions-question").text shouldBe messages.deductions
+          }
+
+          "should have the value '£11,100'" in {
+            doc.select("#deductions-amount span.bold-medium").text should include("£11,100")
+          }
+
+          "has a breakdown that" should {
+
+            "include a value for Allowable Losses of £0" in {
+              doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsAllowableLossesUsed("2015/16")} £0")
+            }
+
+            "include a value for Capital gains tax allowance used of £11,100" in {
+              doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsCapitalGainsTax} £11,100")
+            }
+
+            "include a value for Loss brought forward of £0" in {
+              doc.select("#deductions-amount").text should include(s"${messages.deductionsDetailsLossBeforeYearUsed("2015/16")} £0")
+            }
+          }
         }
 
-        "not include the additional help text for AEA" in {
-          doc.select("#aeaRemaining-amount div span").isEmpty shouldBe true
+        "has no numeric output row for allowable losses remaining" in {
+          doc.select("#allowableLossRemaining").isEmpty shouldBe true
+        }
+
+        "has no numeric output row for brought forward losses remaining" in {
+          doc.select("#broughtForwardLossRemaining").isEmpty shouldBe true
+        }
+
+        "has a numeric output row for the AEA remaining" which {
+
+          "should have the question text 'Capital Gains Tax allowance left for 2015/16" in {
+            doc.select("#aeaRemaining-question").text should include(messages.aeaRemaining("2015/16"))
+          }
+
+          "include a value for Capital gains tax allowance left of £0" in {
+            doc.select("#aeaRemaining-amount span.bold-medium").text should include("£0")
+          }
+
+          "not include the additional help text for AEA" in {
+            doc.select("#aeaRemaining-amount div span").isEmpty shouldBe true
+          }
+        }
+      }
+
+      s"have a section for Your answers" which {
+
+        "has the class 'summary-section' to underline the heading" in {
+
+          doc.select("section#yourAnswers h2").hasClass("summary-underline") shouldBe true
+
+        }
+
+        s"has a h2 tag" which {
+
+          s"should have the title '${messages.yourAnswersHeading}'" in {
+            doc.select("section#yourAnswers h2").text shouldBe messages.yourAnswersHeading
+          }
+
+          "has the class 'heading-large'" in {
+            doc.select("section#yourAnswers h2").hasClass("heading-large") shouldBe true
+          }
+        }
+
+        "has a date output row for the Disposal Date" which {
+
+          s"should have the question text '${commonMessages.sharesDisposalDate.title}'" in {
+            doc.select("#disposalDate-question").text shouldBe commonMessages.sharesDisposalDate.title
+          }
+
+          "should have the value '10 October 2016'" in {
+            doc.select("#disposalDate-date span.bold-medium").text shouldBe "10 October 2016"
+          }
+
+          s"should have a change link to ${routes.GainController.disposalDate().url}" in {
+            doc.select("#disposalDate-date a").attr("href") shouldBe routes.GainController.disposalDate().url
+          }
+
+          "has the question as part of the link" in {
+            doc.select("#disposalDate-date a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.sharesDisposalDate.title}"
+          }
+
+          "has the question component of the link is visuallyhidden" in {
+            doc.select("#disposalDate-date a span.visuallyhidden").text shouldBe commonMessages.sharesDisposalDate.title
+          }
+        }
+
+        "has a numeric output row for the Disposal Value" which {
+
+          s"should have the question text '${commonMessages.Resident.Shares.DisposalValue.question}'" in {
+            doc.select("#disposalValue-question").text shouldBe commonMessages.Resident.Shares.DisposalValue.question
+          }
+
+          "should have the value '£200,000'" in {
+            doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£200,000"
+          }
+
+          s"should have a change link to ${routes.GainController.disposalValue().url}" in {
+            doc.select("#disposalValue-amount a").attr("href") shouldBe routes.GainController.disposalValue().url
+          }
+
+        }
+
+        "has a numeric output row for the Disposal Costs" which {
+
+          s"should have the question text '${commonMessages.sharesDisposalCosts.title}'" in {
+            doc.select("#disposalCosts-question").text shouldBe commonMessages.sharesDisposalCosts.title
+          }
+
+          "should have the value '£10,000'" in {
+            doc.select("#disposalCosts-amount span.bold-medium").text shouldBe "£10,000"
+          }
+
+          s"should have a change link to ${routes.GainController.disposalCosts().url}" in {
+            doc.select("#disposalCosts-amount a").attr("href") shouldBe routes.GainController.disposalCosts().url
+          }
+
+        }
+
+        "has an option/radiobutton output row for the Owned Before Start of Tax" which {
+
+          s"should have the question text '${SharesMessages.OwnedBeforeEightyTwoMessages.title}'" in {
+            doc.select("#ownedBeforeTaxStartDate-question").text shouldBe SharesMessages.OwnedBeforeEightyTwoMessages.title
+          }
+
+          "should have the value 'No'" in {
+            doc.select("#ownedBeforeTaxStartDate-option span.bold-medium").text shouldBe "No"
+          }
+
+          s"should have a change link to ${routes.GainController.ownedBeforeEightyTwo().url}" in {
+            doc.select("#ownedBeforeTaxStartDate-option a").attr("href") shouldBe routes.GainController.ownedBeforeEightyTwo().url
+          }
+        }
+
+        "does not have a numeric output row for the Worth on 31 March 1982 value" in {
+          //Tests here for Worth On
+        }
+
+        "has an option/radiobutton output row for Did You Inherit the Shares" which {
+
+          s"should have the question text '${SharesMessages.DidYouInheritThem.question}'" in {
+            doc.select("#inheritedTheShares-question").text shouldBe SharesMessages.DidYouInheritThem.question
+          }
+
+          "should have the value 'No'" in {
+            doc.select("#inheritedTheShares-option span.bold-medium").text shouldBe "No"
+          }
+
+          s"should have a change link to ${routes.GainController.didYouInheritThem().url}" in {
+            doc.select("#inheritedTheShares-option a").attr("href") shouldBe routes.GainController.didYouInheritThem().url
+          }
+        }
+
+        "does not have a numeric output row for the Inherited Value" in {
+          doc.select("#worthWhenInherited-question").isEmpty shouldBe true
+        }
+
+        "has a numeric output row for the Acquisition Value" which {
+
+          s"should have the question text '${commonMessages.sharesAcquisitionValue.title}'" in {
+            doc.select("#acquisitionValue-question").text shouldBe commonMessages.sharesAcquisitionValue.title
+          }
+
+          "should have the value '£100,000'" in {
+            doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£100,000"
+          }
+
+          s"should have a change link to ${routes.GainController.acquisitionValue().url}" in {
+            doc.select("#acquisitionValue-amount a").attr("href") shouldBe routes.GainController.acquisitionValue().url
+          }
+
+        }
+
+        "has a numeric output row for the Acquisition Costs" which {
+
+          s"should have the question text '${commonMessages.sharesAcquisitionCosts.title}'" in {
+            doc.select("#acquisitionCosts-question").text shouldBe commonMessages.sharesAcquisitionCosts.title
+          }
+
+          "should have the value '£10,000'" in {
+            doc.select("#acquisitionCosts-amount span.bold-medium").text shouldBe "£10,000"
+          }
+
+          s"should have a change link to ${routes.GainController.acquisitionCosts().url}" in {
+            doc.select("#acquisitionCosts-amount a").attr("href") shouldBe routes.GainController.acquisitionCosts().url
+          }
+
+        }
+
+        "has an option output row for other disposals" which {
+
+          s"should have the question text '${commonMessages.otherProperties.title("2015/16")}'" in {
+            doc.select("#otherDisposals-question").text shouldBe commonMessages.otherProperties.title("2015/16")
+          }
+
+          "should have the value 'No'" in {
+            doc.select("#otherDisposals-option span.bold-medium").text shouldBe "No"
+          }
+
+          s"should have a change link to ${routes.DeductionsController.otherDisposals().url}" in {
+            doc.select("#otherDisposals-option a").attr("href") shouldBe routes.DeductionsController.otherDisposals().url
+          }
+
+          "has the question as part of the link" in {
+            doc.select("#otherDisposals-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.otherProperties.title("2015/16")}"
+          }
+
+          "has the question component of the link as visuallyhidden" in {
+            doc.select("#otherDisposals-option a span.visuallyhidden").text shouldBe commonMessages.otherProperties.title("2015/16")
+          }
+        }
+
+        "has an option output row for brought forward losses" which {
+
+          s"should have the question text '${commonMessages.lossesBroughtForward.title("2015/16")}'" in {
+            doc.select("#broughtForwardLosses-question").text shouldBe commonMessages.lossesBroughtForward.title("2015/16")
+          }
+
+          "should have the value 'No'" in {
+            doc.select("#broughtForwardLosses-option span.bold-medium").text shouldBe "No"
+          }
+
+          s"should have a change link to ${routes.DeductionsController.lossesBroughtForward().url}" in {
+            doc.select("#broughtForwardLosses-option a").attr("href") shouldBe routes.DeductionsController.lossesBroughtForward().url
+          }
+
+          "has the question as part of the link" in {
+            doc.select("#broughtForwardLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.lossesBroughtForward.question("2015/16")}"
+          }
+
+          "has the question component of the link as visuallyhidden" in {
+            doc.select("#broughtForwardLosses-option a span.visuallyhidden").text shouldBe commonMessages.lossesBroughtForward.question("2015/16")
+          }
+        }
+      }
+
+      "display the save as PDF Button" which {
+
+        "should render only one button" in {
+          doc.select("a.save-pdf-button").size() shouldEqual 1
+        }
+
+        "with the class save-pdf-button" in {
+          doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
+        }
+
+        s"with an href to ${controllers.resident.shares.routes.ReportController.deductionsReport().toString}" in {
+          doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/deductions-report"
+        }
+
+        s"have the text ${messages.saveAsPdf}" in {
+          doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
         }
       }
     }
 
-    s"have a section for Your answers" which {
+    "acquired after start of tax (1 April 1982) and inherited" should {
 
-      "has the class 'summary-section' to underline the heading" in {
+      val gainAnswers = GainAnswersModel(
+        disposalDate = constructDate(12, 12, 2019),
+        soldForLessThanWorth = None,
+        disposalValue = 10,
+        worthWhenSoldForLess = None,
+        disposalCosts = 20,
+        ownedBeforeTaxStartDate = false,
+        worthOnTaxStartDate = None,
+        inheritedTheShares = Some(true),
+        worthWhenInherited = Some(5000),
+        acquisitionValue = None,
+        acquisitionCosts = 40
+      )
+      lazy val deductionAnswers = DeductionGainAnswersModel(
+        Some(OtherPropertiesModel(false)),
+        None,
+        None,
+        Some(LossesBroughtForwardModel(false)),
+        None,
+        None)
+      lazy val results = ChargeableGainResultModel(BigDecimal(50000),
+        BigDecimal(38900),
+        BigDecimal(11100),
+        BigDecimal(0),
+        BigDecimal(11100),
+        BigDecimal(0),
+        BigDecimal(0),
+        None,
+        None,
+        0,
+        0
+      )
+      lazy val backLink = "/calculate-your-capital-gains/resident/shares/losses-brought-forward"
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(view.body)
 
-        doc.select("section#yourAnswers h2").hasClass("summary-underline") shouldBe true
+      "has an option/radiobutton output row for the Owned Before Start of Tax" which {
 
-      }
-
-      s"has a h2 tag" which {
-
-        s"should have the title '${messages.yourAnswersHeading}'" in {
-          doc.select("section#yourAnswers h2").text shouldBe messages.yourAnswersHeading
-        }
-
-        "has the class 'heading-large'" in {
-          doc.select("section#yourAnswers h2").hasClass("heading-large") shouldBe true
-        }
-      }
-
-      "has a date output row for the Disposal Date" which {
-
-        s"should have the question text '${commonMessages.sharesDisposalDate.title}'" in {
-          doc.select("#disposalDate-question").text shouldBe commonMessages.sharesDisposalDate.title
-        }
-
-        "should have the value '10 October 2016'" in {
-          doc.select("#disposalDate-date span.bold-medium").text shouldBe "10 October 2016"
-        }
-
-        s"should have a change link to ${routes.GainController.disposalDate().url}" in {
-          doc.select("#disposalDate-date a").attr("href") shouldBe routes.GainController.disposalDate().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#disposalDate-date a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.sharesDisposalDate.title}"
-        }
-
-        "has the question component of the link is visuallyhidden" in {
-          doc.select("#disposalDate-date a span.visuallyhidden").text shouldBe commonMessages.sharesDisposalDate.title
-        }
-      }
-
-      "has a numeric output row for the Disposal Value" which {
-
-        s"should have the question text '${commonMessages.Resident.Shares.DisposalValue.question}'" in {
-          doc.select("#disposalValue-question").text shouldBe commonMessages.Resident.Shares.DisposalValue.question
-        }
-
-        "should have the value '£200,000'" in {
-          doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£200,000"
-        }
-
-        s"should have a change link to ${routes.GainController.disposalValue().url}" in {
-          doc.select("#disposalValue-amount a").attr("href") shouldBe routes.GainController.disposalValue().url
-        }
-
-      }
-
-      "has a numeric output row for the Disposal Costs" which {
-
-        s"should have the question text '${commonMessages.sharesDisposalCosts.title}'" in {
-          doc.select("#disposalCosts-question").text shouldBe commonMessages.sharesDisposalCosts.title
-        }
-
-        "should have the value '£10,000'" in {
-          doc.select("#disposalCosts-amount span.bold-medium").text shouldBe "£10,000"
-        }
-
-        s"should have a change link to ${routes.GainController.disposalCosts().url}" in {
-          doc.select("#disposalCosts-amount a").attr("href") shouldBe routes.GainController.disposalCosts().url
-        }
-
-      }
-
-      "has a numeric output row for the Acquisition Value" which {
-
-        s"should have the question text '${commonMessages.sharesAcquisitionValue.title}'" in {
-          doc.select("#acquisitionValue-question").text shouldBe commonMessages.sharesAcquisitionValue.title
-        }
-
-        "should have the value '£100,000'" in {
-          doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£100,000"
-        }
-
-        s"should have a change link to ${routes.GainController.acquisitionValue().url}" in {
-          doc.select("#acquisitionValue-amount a").attr("href") shouldBe routes.GainController.acquisitionValue().url
-        }
-
-      }
-
-      "has a numeric output row for the Acquisition Costs" which {
-
-        s"should have the question text '${commonMessages.sharesAcquisitionCosts.title}'" in {
-          doc.select("#acquisitionCosts-question").text shouldBe commonMessages.sharesAcquisitionCosts.title
-        }
-
-        "should have the value '£10,000'" in {
-          doc.select("#acquisitionCosts-amount span.bold-medium").text shouldBe "£10,000"
-        }
-
-        s"should have a change link to ${routes.GainController.acquisitionCosts().url}" in {
-          doc.select("#acquisitionCosts-amount a").attr("href") shouldBe routes.GainController.acquisitionCosts().url
-        }
-
-      }
-
-      "has an option output row for other disposals" which {
-
-        s"should have the question text '${commonMessages.otherProperties.title("2015/16")}'" in {
-          doc.select("#otherDisposals-question").text shouldBe commonMessages.otherProperties.title("2015/16")
+        s"should have the question text '${SharesMessages.OwnedBeforeEightyTwoMessages.title}'" in {
+          doc.select("#ownedBeforeTaxStartDate-question").text shouldBe SharesMessages.OwnedBeforeEightyTwoMessages.title
         }
 
         "should have the value 'No'" in {
-          doc.select("#otherDisposals-option span.bold-medium").text shouldBe "No"
+          doc.select("#ownedBeforeTaxStartDate-option span.bold-medium").text shouldBe "No"
         }
 
-        s"should have a change link to ${routes.DeductionsController.otherDisposals().url}" in {
-          doc.select("#otherDisposals-option a").attr("href") shouldBe routes.DeductionsController.otherDisposals().url
-        }
-
-        "has the question as part of the link" in {
-          doc.select("#otherDisposals-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.otherProperties.title("2015/16")}"
-        }
-
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#otherDisposals-option a span.visuallyhidden").text shouldBe commonMessages.otherProperties.title("2015/16")
+        s"should have a change link to ${routes.GainController.ownedBeforeEightyTwo().url}" in {
+          doc.select("#ownedBeforeTaxStartDate-option a").attr("href") shouldBe routes.GainController.ownedBeforeEightyTwo().url
         }
       }
 
-      "has an option output row for brought forward losses" which {
+      "does not have a numeric output row for the Worth on 31 March 1982 value" in {
+        //Tests here for Worth On
+      }
 
-        s"should have the question text '${commonMessages.lossesBroughtForward.title("2015/16")}'" in {
-          doc.select("#broughtForwardLosses-question").text shouldBe commonMessages.lossesBroughtForward.title("2015/16")
+      "has an option/radiobutton output row for Did You Inherit the Shares" which {
+
+        s"should have the question text '${SharesMessages.DidYouInheritThem.question}'" in {
+          doc.select("#inheritedTheShares-question").text shouldBe SharesMessages.DidYouInheritThem.question
         }
 
-        "should have the value 'No'" in {
-          doc.select("#broughtForwardLosses-option span.bold-medium").text shouldBe "No"
+        "should have the value 'Yes'" in {
+          doc.select("#inheritedTheShares-option span.bold-medium").text shouldBe "Yes"
         }
 
-        s"should have a change link to ${routes.DeductionsController.lossesBroughtForward().url}" in {
-          doc.select("#broughtForwardLosses-option a").attr("href") shouldBe routes.DeductionsController.lossesBroughtForward().url
+        s"should have a change link to ${routes.GainController.didYouInheritThem().url}" in {
+          doc.select("#inheritedTheShares-option a").attr("href") shouldBe routes.GainController.didYouInheritThem().url
+        }
+      }
+
+      "has a numeric output row for the Inherited Value" which {
+
+        s"should have the question text '${SharesMessages.WorthWhenInherited.question}'" in {
+          doc.select("#worthWhenInherited-question").text shouldBe SharesMessages.WorthWhenInherited.question
         }
 
-        "has the question as part of the link" in {
-          doc.select("#broughtForwardLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.lossesBroughtForward.question("2015/16")}"
+        "should have the value '5000'" in {
+          doc.select("#worthWhenInherited-amount span.bold-medium").text shouldBe "£5,000"
         }
 
-        "has the question component of the link as visuallyhidden" in {
-          doc.select("#broughtForwardLosses-option a span.visuallyhidden").text shouldBe commonMessages.lossesBroughtForward.question("2015/16")
+        s"should have a change link to ${routes.GainController.worthWhenInherited().url}" in {
+          doc.select("#worthWhenInherited-amount a").attr("href") shouldBe routes.GainController.worthWhenInherited().url
         }
+      }
+
+      "does not have a numeric output row for the Acquisition Value" in {
+        doc.select("#acquisitionValue-question").isEmpty shouldBe true
       }
     }
 
-    "display the save as PDF Button" which {
+    "acquired before start of tax (1 April 1982)" should {
 
-      "should render only one button" in {
-        doc.select("a.save-pdf-button").size() shouldEqual 1
+      val gainAnswers = GainAnswersModel(
+
+        disposalDate = constructDate(12, 12, 2019),
+        soldForLessThanWorth = None,
+        disposalValue = 10,
+        worthWhenSoldForLess = None,
+        disposalCosts = 20,
+        ownedBeforeTaxStartDate = true,
+        worthOnTaxStartDate = Some(700),
+        inheritedTheShares = Some(false),
+        worthWhenInherited = None,
+        acquisitionValue = Some(30),
+        acquisitionCosts = 40
+      )
+      lazy val deductionAnswers = DeductionGainAnswersModel(
+        Some(OtherPropertiesModel(false)),
+        None,
+        None,
+        Some(LossesBroughtForwardModel(false)),
+        None,
+        None)
+      lazy val results = ChargeableGainResultModel(BigDecimal(50000),
+        BigDecimal(38900),
+        BigDecimal(11100),
+        BigDecimal(0),
+        BigDecimal(11100),
+        BigDecimal(0),
+        BigDecimal(0),
+        None,
+        None,
+        0,
+        0
+      )
+      lazy val backLink = "/calculate-your-capital-gains/resident/shares/losses-brought-forward"
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val view = views.deductionsSummary(gainAnswers, deductionAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(view.body)
+
+      "has an option/radiobutton output row for the Owned Before Start of Tax" which {
+
+        s"should have the question text '${SharesMessages.OwnedBeforeEightyTwoMessages.title}'" in {
+          doc.select("#ownedBeforeTaxStartDate-question").text shouldBe SharesMessages.OwnedBeforeEightyTwoMessages.title
+        }
+
+        "should have the value 'Yes'" in {
+          doc.select("#ownedBeforeTaxStartDate-option span.bold-medium").text shouldBe "Yes"
+        }
+
+        s"should have a change link to ${routes.GainController.ownedBeforeEightyTwo().url}" in {
+          doc.select("#ownedBeforeTaxStartDate-option a").attr("href") shouldBe routes.GainController.ownedBeforeEightyTwo().url
+        }
       }
 
-      "with the class save-pdf-button" in {
-        doc.select("a.button").hasClass("save-pdf-button") shouldEqual true
+      "has a numeric output row for the Worth on 31 March 1982 value" which {
+
+        //Tests here for Worth On
+
       }
 
-      s"with an href to ${controllers.resident.shares.routes.ReportController.deductionsReport().toString}" in {
-        doc.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/deductions-report"
+      "does not have an option/radiobutton output row for Did You Inherit the Shares" in {
+        doc.select("#inheritedTheShares-question").isEmpty shouldBe true
       }
 
-      s"have the text ${messages.saveAsPdf}" in {
-        doc.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
+      "does not have a numeric output row for the Inherited Value" in {
+        doc.select("#worthWhenInherited-question").isEmpty shouldBe true
+      }
+
+      "does not have a numeric output row for the Acquisition Value" in {
+        doc.select("#acquisitionValue-question").isEmpty shouldBe true
       }
     }
   }
@@ -371,11 +579,11 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
         disposalValue = 200000,
         worthWhenSoldForLess = None,
         disposalCosts = 10000,
-        ownedBeforeTaxStartDate = None,
+        ownedBeforeTaxStartDate = false,
         worthOnTaxStartDate = None,
-        inheritedTheShares = None,
+        inheritedTheShares = Some(false),
         worthWhenInherited = None,
-        acquisitionValue = 100000,
+        acquisitionValue = Some(100000),
         acquisitionCosts = 10000)
     lazy val deductionAnswers = DeductionGainAnswersModel(
       Some(OtherPropertiesModel(true)),
@@ -697,11 +905,11 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
       disposalValue = 200000,
       worthWhenSoldForLess = None,
       disposalCosts = 10000,
-      ownedBeforeTaxStartDate = None,
+      ownedBeforeTaxStartDate = false,
       worthOnTaxStartDate = None,
-      inheritedTheShares = None,
+      inheritedTheShares = Some(false),
       worthWhenInherited = None,
-      acquisitionValue = 100000,
+      acquisitionValue = Some(100000),
       acquisitionCosts = 10000)
     lazy val deductionAnswers = DeductionGainAnswersModel(
       Some(OtherPropertiesModel(true)),
@@ -779,9 +987,7 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
     }
   }
 
-
   "Shares Deductions Summary when supplied with a date within the known tax years and no gain or loss" should {
-
 
     lazy val gainAnswers = GainAnswersModel(
       disposalDate = Dates.constructDate(10, 10, 2016),
@@ -789,11 +995,11 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
       disposalValue = 200000,
       worthWhenSoldForLess = None,
       disposalCosts = 0,
-      ownedBeforeTaxStartDate = None,
+      ownedBeforeTaxStartDate = false,
       worthOnTaxStartDate = None,
-      inheritedTheShares = None,
+      inheritedTheShares = Some(false),
       worthWhenInherited = None,
-      acquisitionValue = 100000,
+      acquisitionValue = Some(100000),
       acquisitionCosts = 0)
     lazy val deductionAnswers = DeductionGainAnswersModel(
       Some(OtherPropertiesModel(true)),
@@ -875,11 +1081,11 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
       disposalValue = 200000,
       worthWhenSoldForLess = None,
       disposalCosts = 10000,
-      ownedBeforeTaxStartDate = None,
+      ownedBeforeTaxStartDate = false,
       worthOnTaxStartDate = None,
-      inheritedTheShares = None,
+      inheritedTheShares = Some(false),
       worthWhenInherited = None,
-      acquisitionValue = 100000,
+      acquisitionValue = Some(100000),
       acquisitionCosts = 10000)
     lazy val deductionAnswers = DeductionGainAnswersModel(
       Some(OtherPropertiesModel(true)),
