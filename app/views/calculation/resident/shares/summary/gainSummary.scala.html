@@ -75,7 +75,7 @@
         }
 
         @{if(answers.soldForLessThanWorth)
-            summaryNumericRowHelper("worthWhenSold", Messages("calc.resident.shares.worthWhenSoldForLess.question"), answers.worthWhenSoldForLess.get, Some(routes.worthWhenSoldForLess().toString))
+            summaryNumericRowHelper("worthWhenSoldForLess", Messages("calc.resident.shares.worthWhenSoldForLess.question"), answers.worthWhenSoldForLess.get, Some(routes.worthWhenSoldForLess().toString))
         }
         <!-- Ends -->
         @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.shares.disposalCosts.question"),answers.disposalCosts,Some(routes.disposalCosts().toString))
