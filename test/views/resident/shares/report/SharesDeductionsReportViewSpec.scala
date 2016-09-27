@@ -31,8 +31,8 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
   "Deductions Report view" should {
     lazy val gainAnswers = GainAnswersModel(
       disposalDate = Dates.constructDate(10, 10, 2016),
-      soldForLessThanWorth = None,
-      disposalValue = 200000,
+      soldForLessThanWorth = false,
+      disposalValue = Some(200000),
       worthWhenSoldForLess = None,
       disposalCosts = 10000,
       ownedBeforeTaxStartDate = None,
@@ -276,8 +276,8 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
   "Deductions Report view with all options selected" should {
     lazy val gainAnswers = GainAnswersModel(
       disposalDate = Dates.constructDate(10, 10, 2016),
-      soldForLessThanWorth = None,
-      disposalValue = 200000,
+      soldForLessThanWorth = false,
+      disposalValue = Some(200000),
       worthWhenSoldForLess = None,
       disposalCosts = 10000,
       ownedBeforeTaxStartDate = None,
@@ -496,8 +496,8 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
 
     lazy val gainAnswers = GainAnswersModel(
       disposalDate = Dates.constructDate(10, 10, 2016),
-      soldForLessThanWorth = None,
-      disposalValue = 200000,
+      soldForLessThanWorth = false,
+      disposalValue = Some(200000),
       worthWhenSoldForLess = None,
       disposalCosts = 10000,
       ownedBeforeTaxStartDate = None,

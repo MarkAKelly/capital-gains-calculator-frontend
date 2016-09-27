@@ -32,8 +32,8 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
 
     val testModel = GainAnswersModel(
       disposalDate = constructDate(12, 9, 1990),
-      soldForLessThanWorth = None,
-      disposalValue = 10,
+      soldForLessThanWorth = false,
+      disposalValue = Some(10),
       worthWhenSoldForLess = None,
       disposalCosts = 20,
       ownedBeforeTaxStartDate = None,
@@ -187,8 +187,8 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
 
     val testModel = GainAnswersModel(
       disposalDate = constructDate(12, 9, 2015),
-      soldForLessThanWorth = None,
-      disposalValue = 10,
+      soldForLessThanWorth = false,
+      disposalValue = Some(10),
       worthWhenSoldForLess = None,
       disposalCosts = 20,
       ownedBeforeTaxStartDate = None,

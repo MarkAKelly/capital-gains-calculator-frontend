@@ -34,8 +34,8 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
   "Shares Deductions Summary view" should {
     lazy val gainAnswers = GainAnswersModel(
       disposalDate = Dates.constructDate(10, 10, 2016),
-      soldForLessThanWorth = None,
-      disposalValue = 200000,
+      soldForLessThanWorth = false,
+      disposalValue = Some(200000),
       worthWhenSoldForLess = None,
       disposalCosts = 10000,
       ownedBeforeTaxStartDate = None,
@@ -367,8 +367,8 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
   "Shares Deductions Summary view with all options selected" should {
     lazy val gainAnswers = GainAnswersModel(
         disposalDate = Dates.constructDate(10, 10, 2016),
-        soldForLessThanWorth = None,
-        disposalValue = 200000,
+        soldForLessThanWorth = false,
+        disposalValue = Some(200000),
         worthWhenSoldForLess = None,
         disposalCosts = 10000,
         ownedBeforeTaxStartDate = None,
@@ -693,8 +693,8 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
 
     lazy val gainAnswers = GainAnswersModel(
       disposalDate = Dates.constructDate(10, 10, 2016),
-      soldForLessThanWorth = None,
-      disposalValue = 200000,
+      soldForLessThanWorth = false,
+      disposalValue = Some(200000),
       worthWhenSoldForLess = None,
       disposalCosts = 10000,
       ownedBeforeTaxStartDate = None,
@@ -785,8 +785,8 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
 
     lazy val gainAnswers = GainAnswersModel(
       disposalDate = Dates.constructDate(10, 10, 2016),
-      soldForLessThanWorth = None,
-      disposalValue = 200000,
+      soldForLessThanWorth = false,
+      disposalValue = Some(200000),
       worthWhenSoldForLess = None,
       disposalCosts = 0,
       ownedBeforeTaxStartDate = None,
@@ -871,8 +871,8 @@ class SharesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplication 
 
     lazy val gainAnswers = GainAnswersModel(
       disposalDate = Dates.constructDate(10, 10, 2018),
-      soldForLessThanWorth = None,
-      disposalValue = 200000,
+      soldForLessThanWorth = false,
+      disposalValue = Some(200000),
       worthWhenSoldForLess = None,
       disposalCosts = 10000,
       ownedBeforeTaxStartDate = None,

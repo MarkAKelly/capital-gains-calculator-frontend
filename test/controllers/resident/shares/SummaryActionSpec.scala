@@ -86,7 +86,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       lazy val gainAnswers = GainAnswersModel(
         disposalDate = Dates.constructDate(12, 1, 2016),
         soldForLessThanWorth = false,
-        disposalValue = 3000,
+        disposalValue = Some(3000),
         worthWhenSoldForLess = None,
         disposalCosts = 10,
         ownedBeforeTaxStartDate = None,
@@ -126,7 +126,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       lazy val gainAnswers = GainAnswersModel(
         disposalDate = Dates.constructDate(12, 1, 2016),
         soldForLessThanWorth = false,
-        disposalValue = 13000,
+        disposalValue = Some(13000),
         worthWhenSoldForLess = None,
         disposalCosts = 500,
         ownedBeforeTaxStartDate = None,
@@ -172,7 +172,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       lazy val gainAnswers = GainAnswersModel(
         disposalDate = Dates.constructDate(12, 1, 2016),
         soldForLessThanWorth = false,
-        disposalValue = 13000,
+        disposalValue = Some(13000),
         worthWhenSoldForLess = None,
         disposalCosts = 500,
         ownedBeforeTaxStartDate = None,
@@ -218,7 +218,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       lazy val gainAnswers = GainAnswersModel(
         disposalDate = Dates.constructDate(12, 1, 2016),
         soldForLessThanWorth = false,
-        disposalValue = 15000,
+        disposalValue = Some(15000),
         worthWhenSoldForLess = None,
         disposalCosts = 1000,
         ownedBeforeTaxStartDate = None,
@@ -266,7 +266,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
       lazy val gainAnswers = GainAnswersModel(
         disposalDate = Dates.constructDate(12, 1, 2016),
         soldForLessThanWorth = false,
-        disposalValue = 15000,
+        disposalValue = Some(15000),
         worthWhenSoldForLess = None,
         disposalCosts = 1000,
         ownedBeforeTaxStartDate = None,

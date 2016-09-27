@@ -84,7 +84,7 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
       lazy val yourAnswersSummaryModel = GainAnswersModel(
         disposalDate = Dates.constructDate(10, 10, 2018),
         soldForLessThanWorth = false,
-        disposalValue = 30000,
+        disposalValue = Some(30000),
         worthWhenSoldForLess = None,
         disposalCosts = 0,
         ownedBeforeTaxStartDate = None,
@@ -131,7 +131,7 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
       lazy val yourAnswersSummaryModel = GainAnswersModel(
         disposalDate = Dates.constructDate(10, 10, 2018),
         soldForLessThanWorth = false,
-        disposalValue = 30000,
+        disposalValue = Some(30000),
         worthWhenSoldForLess = None,
         disposalCosts = 0,
         ownedBeforeTaxStartDate = None,

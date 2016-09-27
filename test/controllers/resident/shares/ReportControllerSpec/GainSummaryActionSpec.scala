@@ -64,7 +64,7 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
       lazy val yourAnswersSummaryModel = GainAnswersModel(
         disposalDate = Dates.constructDate(10, 10, 2018),
         soldForLessThanWorth = false,
-        disposalValue = 3000,
+        disposalValue = Some(3000),
         worthWhenSoldForLess = None,
         disposalCosts = 10,
         ownedBeforeTaxStartDate = None,
@@ -102,7 +102,7 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
       lazy val yourAnswersSummaryModel = GainAnswersModel(
         disposalDate = Dates.constructDate(10, 10, 2018),
         soldForLessThanWorth = false,
-        disposalValue = 3000,
+        disposalValue = Some(3000),
         worthWhenSoldForLess = None,
         disposalCosts = 10,
         ownedBeforeTaxStartDate = None,

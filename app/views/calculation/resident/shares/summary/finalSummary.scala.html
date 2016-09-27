@@ -104,7 +104,17 @@ navTitle = Messages("calc.base.resident.shares.home")
 
     <!-- Data Rows-->
     @summaryDateRowHelper("disposalDate",Messages("calc.resident.shares.disposalDate.question"),gainAnswers.disposalDate,Some(gainRoutes.disposalDate().toString))
-    @summaryNumericRowHelper("disposalValue",Messages("calc.resident.shares.disposalValue.question"),gainAnswers.disposalValue,Some(gainRoutes.disposalValue().toString))
+    <!-- Shares updated disposal value section -->
+    @summaryOptionRowHelper("soldForLessThanWorth", Messages("calc.resident.shares.sellForLess.question"), gainAnswers.soldForLessThanWorth, Some(gainRoutes.sellForLess().toString))
+
+    @{if(!gainAnswers.soldForLessThanWorth)
+        summaryNumericRowHelper("disposalValue", Messages("calc.resident.shares.disposalValue.question"), gainAnswers.disposalValue.get, Some(gainRoutes.disposalValue().toString))
+    }
+
+    @{if(gainAnswers.soldForLessThanWorth)
+        summaryNumericRowHelper("worthWhenSold", Messages("calc.resident.shares.worthWhenSoldForLess.question"), gainAnswers.worthWhenSoldForLess.get, Some(gainRoutes.worthWhenSoldForLess().toString))
+    }
+    <!-- Ends -->
     @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.shares.disposalCosts.question"),gainAnswers.disposalCosts,Some(gainRoutes.disposalCosts().toString))
     @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.shares.acquisitionValue.question"),gainAnswers.acquisitionValue,Some(gainRoutes.acquisitionValue().toString))
     @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.shares.acquisitionCosts.question"),gainAnswers.acquisitionCosts,Some(gainRoutes.acquisitionCosts().toString))

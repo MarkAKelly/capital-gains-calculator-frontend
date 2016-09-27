@@ -33,8 +33,8 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
     lazy val gainAnswers = GainAnswersModel(
       disposalDate = Dates.constructDate(10, 10, 2015),
-      soldForLessThanWorth = None,
-      disposalValue = 200000,
+      soldForLessThanWorth = false,
+      disposalValue = Some(200000),
       worthWhenSoldForLess = None,
       disposalCosts = 10000,
       ownedBeforeTaxStartDate = None,
@@ -336,8 +336,8 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
     lazy val gainAnswers = GainAnswersModel(
       disposalDate = Dates.constructDate(10, 10, 2018),
-      soldForLessThanWorth = None,
-      disposalValue = 200000,
+      soldForLessThanWorth = false,
+      disposalValue = Some(200000),
       worthWhenSoldForLess = None,
       disposalCosts = 10000,
       ownedBeforeTaxStartDate = None,

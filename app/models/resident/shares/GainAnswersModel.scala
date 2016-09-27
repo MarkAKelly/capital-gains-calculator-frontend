@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 case class GainAnswersModel(disposalDate: LocalDate,
                             soldForLessThanWorth: Boolean,
-                            disposalValue: BigDecimal,
+                            disposalValue: Option[BigDecimal],
                             worthWhenSoldForLess: Option[BigDecimal],
                             disposalCosts: BigDecimal,
                             ownedBeforeTaxStartDate: Option[Boolean],

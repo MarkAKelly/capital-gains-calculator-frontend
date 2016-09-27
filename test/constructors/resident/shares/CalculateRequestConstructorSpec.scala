@@ -30,7 +30,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
       val answers = GainAnswersModel(
         disposalDate = Dates.constructDate(10, 2, 2016),
         soldForLessThanWorth = false,
-        disposalValue = 1000,
+        disposalValue = Some(1000),
         worthWhenSoldForLess = None,
         disposalCosts = 0,
         ownedBeforeTaxStartDate = None,

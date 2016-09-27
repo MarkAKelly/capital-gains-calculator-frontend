@@ -34,8 +34,8 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     val testModel = GainAnswersModel(
 
         disposalDate = constructDate(12, 12, 2019),
-        soldForLessThanWorth = None,
-        disposalValue = 10,
+        soldForLessThanWorth = false,
+        disposalValue = Some(10),
         worthWhenSoldForLess = None,
         disposalCosts = 20,
         ownedBeforeTaxStartDate = None,
@@ -264,8 +264,8 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     val testModel = GainAnswersModel(
 
       disposalDate = constructDate(12, 9, 2015),
-      soldForLessThanWorth = None,
-      disposalValue = 10,
+      soldForLessThanWorth = false,
+      disposalValue = Some(10),
       worthWhenSoldForLess = None,
       disposalCosts = 20,
       ownedBeforeTaxStartDate = None,
@@ -335,8 +335,8 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
     val testModel = GainAnswersModel(
       disposalDate = constructDate(12, 9, 2015),
-      soldForLessThanWorth = None,
-      disposalValue = 10,
+      soldForLessThanWorth = false,
+      disposalValue = Some(10),
       worthWhenSoldForLess = None,
       disposalCosts = 20,
       ownedBeforeTaxStartDate = None,
@@ -380,8 +380,8 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
     val testModel = GainAnswersModel(
       disposalDate = constructDate(12, 9, 2018),
-      soldForLessThanWorth = None,
-      disposalValue = 10,
+      soldForLessThanWorth = false,
+      disposalValue = Some(10),
       worthWhenSoldForLess = None,
       disposalCosts = 20,
       ownedBeforeTaxStartDate = None,
@@ -403,8 +403,8 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
     val testModel = GainAnswersModel(
       disposalDate = constructDate(12, 9, 2013),
-      soldForLessThanWorth = None,
-      disposalValue = 10,
+      soldForLessThanWorth = false,
+      disposalValue = Some(10),
       worthWhenSoldForLess = None,
       disposalCosts = 20,
       ownedBeforeTaxStartDate = None,

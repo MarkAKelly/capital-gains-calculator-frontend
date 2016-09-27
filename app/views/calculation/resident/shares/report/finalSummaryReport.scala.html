@@ -80,7 +80,17 @@
 
         <!-- Data Rows-->
         @summaryDateRowHelper("disposalDate",Messages("calc.resident.shares.disposalDate.question"),gainAnswers.disposalDate,None)
-        @summaryNumericRowHelper("disposalValue",Messages("calc.resident.shares.disposalValue.question"),gainAnswers.disposalValue,None)
+        <!-- Shares updated disposal value section -->
+        @summaryOptionRowHelper("soldForLessThanWorth", Messages("calc.resident.shares.sellForLess.question"), gainAnswers.soldForLessThanWorth, None)
+
+        @{if(!gainAnswers.soldForLessThanWorth)
+            summaryNumericRowHelper("disposalValue", Messages("calc.resident.shares.disposalValue.question"), gainAnswers.disposalValue.get, None)
+        }
+
+        @{if(gainAnswers.soldForLessThanWorth)
+            summaryNumericRowHelper("worthWhenSold", Messages("calc.resident.shares.worthWhenSoldForLess.question"), gainAnswers.worthWhenSoldForLess.get, None)
+        }
+        <!-- Ends -->
         @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.shares.disposalCosts.question"),gainAnswers.disposalCosts,None)
         @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.shares.acquisitionValue.question"),gainAnswers.acquisitionValue,None)
         @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.shares.acquisitionCosts.question"),gainAnswers.acquisitionCosts,None)
