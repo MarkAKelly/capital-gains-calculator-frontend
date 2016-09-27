@@ -87,11 +87,11 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
         disposalValue = Some(30000),
         worthWhenSoldForLess = None,
         disposalCosts = 0,
-        ownedBeforeTaxStartDate = None,
+        ownedBeforeTaxStartDate = false,
         worthOnTaxStartDate = None,
-        inheritedTheShares = None,
+        inheritedTheShares = Some(false),
         worthWhenInherited = None,
-        acquisitionValue = 10000,
+        acquisitionValue = Some(10000),
         acquisitionCosts = 0
       )
       lazy val chargeableGainAnswers = DeductionGainAnswersModel(Some(OtherPropertiesModel(false)),
@@ -134,11 +134,11 @@ class FinalSummaryActionSpec extends UnitSpec with WithFakeApplication with Fake
         disposalValue = Some(30000),
         worthWhenSoldForLess = None,
         disposalCosts = 0,
-        ownedBeforeTaxStartDate = None,
+        ownedBeforeTaxStartDate = false,
         worthOnTaxStartDate = None,
-        inheritedTheShares = None,
+        inheritedTheShares = Some(false),
         worthWhenInherited = None,
-        acquisitionValue = 10000,
+        acquisitionValue = Some(10000),
         acquisitionCosts = 0
       )
       lazy val chargeableGainAnswers = DeductionGainAnswersModel(Some(OtherPropertiesModel(false)),

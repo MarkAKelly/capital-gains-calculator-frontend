@@ -78,11 +78,11 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
         disposalValue = Some(200000),
         worthWhenSoldForLess = None,
         disposalCosts = 10000,
-        ownedBeforeTaxStartDate = None,
+        ownedBeforeTaxStartDate = false,
         worthOnTaxStartDate = None,
-        inheritedTheShares = None,
+        inheritedTheShares = Some(false),
         worthWhenInherited = None,
-        acquisitionValue = 100000,
+        acquisitionValue = Some(100000),
         acquisitionCosts = 10000
       )
       lazy val deductionAnswers = DeductionGainAnswersModel(
@@ -138,11 +138,11 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
         disposalValue = Some(30000),
         worthWhenSoldForLess = None,
         disposalCosts = 0,
-        ownedBeforeTaxStartDate = None,
+        ownedBeforeTaxStartDate = false,
         worthOnTaxStartDate = None,
-        inheritedTheShares = None,
+        inheritedTheShares = Some(false),
         worthWhenInherited = None,
-        acquisitionValue = 10000,
+        acquisitionValue = Some(10000),
         acquisitionCosts = 0
       )
       lazy val chargeableGainAnswers = DeductionGainAnswersModel(Some(OtherPropertiesModel(false)),

@@ -31,6 +31,7 @@ import play.api.libs.json.Format
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -356,6 +357,7 @@ trait CalculatorConnector {
   }
 
   //Rtt share calculation methods
+  //scalastyle:off
   def getShareGainAnswers(implicit hc: HeaderCarrier): Future[resident.shares.GainAnswersModel] = {
     val disposalDate = fetchAndGetFormData[resident.DisposalDateModel](ResidentShareKeys.disposalDate).map(formData =>
       constructDate(formData.get.day, formData.get.month, formData.get.year))
@@ -368,15 +370,24 @@ trait CalculatorConnector {
       case Some(data) => Some(data.amount)
       case _ => None
     }
-    /////////////////////////////////////////
     val disposalCosts = fetchAndGetFormData[resident.DisposalCostsModel](ResidentShareKeys.disposalCosts).map(_.get.amount)
-    /////////////////////////////////////////
-    val ownedBeforeTaxStartDate = None
-    val worthOnTaxStartDate = None
-    val inheritedTheShares = None
-    val worthWhenInherited = None
-    /////////////////////////////////////////
-    val acquisitionValue = fetchAndGetFormData[resident.AcquisitionValueModel](ResidentShareKeys.acquisitionValue).map(_.get.amount)
+    val ownedBeforeTaxStartDate = fetchAndGetFormData[resident.shares.OwnedBeforeEightyTwoModel](ResidentShareKeys.ownedBeforeEightyTwo).map(_.get.ownedBeforeEightyTwo)
+    val worthOnTaxStartDate = fetchAndGetFormData[resident.shares.gain.WorthOnModel](ResidentShareKeys.worthOn).map {
+      case Some(data) => Some(data.amount)
+      case _ => None
+    }
+    val inheritedTheShares = fetchAndGetFormData[resident.shares.gain.DidYouInheritThemModel](ResidentShareKeys.inheritedShares).map {
+      case Some(data) => Some(data.wereInherited)
+      case _ => None
+    }
+    val worthWhenInherited = fetchAndGetFormData[resident.WorthWhenInheritedModel](ResidentShareKeys.worthWhenInherited).map {
+      case Some(data) => Some(data.amount)
+      case _ => None
+    }
+    val acquisitionValue = fetchAndGetFormData[resident.AcquisitionValueModel](ResidentShareKeys.acquisitionValue).map {
+      case Some(data) => Some(data.amount)
+      case _ => None
+    }
     val acquisitionCosts = fetchAndGetFormData[resident.AcquisitionCostsModel](ResidentShareKeys.acquisitionCosts).map(_.get.amount)
 
     for {
@@ -385,10 +396,10 @@ trait CalculatorConnector {
       disposalValue <- disposalValue
       worthWhenSoldForLess <- worthWhenSoldForLess
       disposalCosts <- disposalCosts
-//      ownedBeforeTaxStartDate <- ownedBeforeTaxStartDate
-//      worthOnTaxStartDate <- worthOnTaxStartDate
-//      inheritedTheShares <- inheritedTheShares
-//      worthWhenInherited <- worthWhenInherited
+      ownedBeforeTaxStartDate <- ownedBeforeTaxStartDate
+      worthOnTaxStartDate <- worthOnTaxStartDate
+      inheritedTheShares <- inheritedTheShares
+      worthWhenInherited <- worthWhenInherited
       acquisitionValue <- acquisitionValue
       acquisitionCosts <- acquisitionCosts
     } yield resident.shares.GainAnswersModel(
@@ -405,6 +416,7 @@ trait CalculatorConnector {
       acquisitionCosts
     )
   }
+  //scalastyle:on
 
   def getShareDeductionAnswers(implicit hc: HeaderCarrier): Future[resident.shares.DeductionGainAnswersModel] = {
     val otherPropertiesModel = fetchAndGetFormData[resident.OtherPropertiesModel](ResidentShareKeys.otherProperties)

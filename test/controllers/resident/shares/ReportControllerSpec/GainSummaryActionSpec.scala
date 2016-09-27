@@ -67,11 +67,11 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
         disposalValue = Some(3000),
         worthWhenSoldForLess = None,
         disposalCosts = 10,
-        ownedBeforeTaxStartDate = None,
+        ownedBeforeTaxStartDate = false,
         worthOnTaxStartDate = None,
-        inheritedTheShares = None,
+        inheritedTheShares = Some(false),
         worthWhenInherited = None,
-        acquisitionValue = 5000,
+        acquisitionValue = Some(5000),
         acquisitionCosts = 5
       )
       lazy val target = setupTarget(
@@ -105,11 +105,11 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
         disposalValue = Some(3000),
         worthWhenSoldForLess = None,
         disposalCosts = 10,
-        ownedBeforeTaxStartDate = None,
+        ownedBeforeTaxStartDate = false,
         worthOnTaxStartDate = None,
-        inheritedTheShares = None,
+        inheritedTheShares = Some(false),
         worthWhenInherited = None,
-        acquisitionValue = 5000,
+        acquisitionValue = Some(5000),
         acquisitionCosts = 5
       )
       lazy val target = setupTarget(

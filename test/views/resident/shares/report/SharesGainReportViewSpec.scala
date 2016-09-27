@@ -16,6 +16,7 @@
 
 package views.resident.shares.report
 
+import assets.MessageLookup.Resident.{Shares => SharesMessages}
 import assets.MessageLookup.{summaryPage => messages}
 import assets.{MessageLookup => commonMessages}
 import common.Dates._
@@ -28,155 +29,297 @@ import views.html.calculation.resident.shares.{report => views}
 
 class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper{
 
-  "Summary view" should {
+  "Summary view" when {
 
-    val testModel = GainAnswersModel(
-      disposalDate = constructDate(12, 9, 1990),
-      soldForLessThanWorth = false,
-      disposalValue = Some(10),
-      worthWhenSoldForLess = None,
-      disposalCosts = 20,
-      ownedBeforeTaxStartDate = None,
-      worthOnTaxStartDate = None,
-      inheritedTheShares = None,
-      worthWhenInherited = None,
-      acquisitionValue = 30,
-      acquisitionCosts = 40
-    )
+    "property acquired after start of tax (1 April 1982) and not inherited" should {
 
-    lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      val testModel = GainAnswersModel(
+        disposalDate = constructDate(12, 9, 1990),
+        soldForLessThanWorth = false,
+        disposalValue = Some(10),
+        worthWhenSoldForLess = None,
+        disposalCosts = 20,
+        ownedBeforeTaxStartDate = false,
+        worthOnTaxStartDate = None,
+        inheritedTheShares = Some(false),
+        worthWhenInherited = None,
+        acquisitionValue = Some(30),
+        acquisitionCosts = 40
+      )
 
-    lazy val view = views.gainSummaryReport(testModel, -2000, taxYearModel)(fakeRequest)
-    lazy val doc = Jsoup.parse(view.body)
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val view = views.gainSummaryReport(testModel, -2000, taxYearModel)(fakeRequest)
+      lazy val doc = Jsoup.parse(view.body)
 
-    s"have a title ${messages.title}" in {
-      doc.title() shouldBe messages.title
+      s"have a title ${messages.title}" in {
+        doc.title() shouldBe messages.title
+      }
+
+      s"have a page heading" which {
+
+        s"includes a secondary heading with text '${messages.pageHeading}'" in {
+          doc.select("h1 span.pre-heading").text shouldBe messages.pageHeading
+        }
+
+        "includes an amount of tax due of £0.00" in {
+          doc.select("h1").text should include("£0.00")
+        }
+      }
+
+      "have the hmrc logo with the hmrc name" in {
+        doc.select("div.logo span").text shouldBe "HM Revenue & Customs"
+      }
+
+      "does not have a notice summary" in {
+        doc.select("div.notice-wrapper").isEmpty shouldBe true
+      }
+
+      s"have a section for the Calculation details" which {
+
+        "has the class 'summary-section' to underline the heading" in {
+
+          doc.select("section#calcDetails h2").hasClass("summary-underline") shouldBe true
+
+        }
+
+        s"has a h2 tag" which {
+
+          s"should have the title '${messages.calcDetailsHeadingDate("2015/16")}'" in {
+            doc.select("section#calcDetails h2").text shouldBe messages.calcDetailsHeadingDate("2015/16")
+          }
+
+          "has the class 'heading-large'" in {
+            doc.select("section#calcDetails h2").hasClass("heading-large") shouldBe true
+          }
+        }
+
+        "has a numeric output row for the gain" which {
+
+          "should have the question text 'Loss'" in {
+            doc.select("#gain-question").text shouldBe messages.totalLoss
+          }
+
+          "should have the value '£2,000'" in {
+            doc.select("#gain-amount").text shouldBe "£2,000"
+          }
+        }
+      }
+
+      s"have a section for Your answers" which {
+
+        "has the class 'summary-section' to underline the heading" in {
+
+          doc.select("section#yourAnswers h2").hasClass("summary-underline") shouldBe true
+
+        }
+
+        s"has a h2 tag" which {
+
+          s"should have the title '${messages.yourAnswersHeading}'" in {
+            doc.select("section#yourAnswers h2").text shouldBe messages.yourAnswersHeading
+          }
+
+          "has the class 'heading-large'" in {
+            doc.select("section#yourAnswers h2").hasClass("heading-large") shouldBe true
+          }
+        }
+
+        "has a date output row for the Disposal Date" which {
+
+          s"should have the question text '${commonMessages.sharesDisposalDate.title}'" in {
+            doc.select("#disposalDate-question").text shouldBe commonMessages.sharesDisposalDate.title
+          }
+
+          "should have the value '12 September 1990'" in {
+            doc.select("#disposalDate-date span.bold-medium").text shouldBe "12 September 1990"
+          }
+        }
+
+        "has a numeric output row for the Disposal Value" which {
+
+          s"should have the question text '${commonMessages.Resident.Shares.DisposalValue.question}'" in {
+            doc.select("#disposalValue-question").text shouldBe commonMessages.Resident.Shares.DisposalValue.question
+          }
+
+          "should have the value '£10'" in {
+            doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£10"
+          }
+        }
+
+        "has a numeric output row for the Disposal Costs" which {
+
+          s"should have the question text '${commonMessages.sharesDisposalCosts.title}'" in {
+            doc.select("#disposalCosts-question").text shouldBe commonMessages.sharesDisposalCosts.title
+          }
+
+          "should have the value '£20'" in {
+            doc.select("#disposalCosts-amount span.bold-medium").text shouldBe "£20"
+          }
+
+        }
+
+        "has a numeric output row for the Acquisition Value" which {
+
+          s"should have the question text '${commonMessages.sharesAcquisitionValue.title}'" in {
+            doc.select("#acquisitionValue-question").text shouldBe commonMessages.sharesAcquisitionValue.title
+          }
+
+          "should have the value '£30'" in {
+            doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£30"
+          }
+
+        }
+
+        "has a numeric output row for the Acquisition Costs" which {
+
+          s"should have the question text '${commonMessages.sharesAcquisitionCosts.title}'" in {
+            doc.select("#acquisitionCosts-question").text shouldBe commonMessages.sharesAcquisitionCosts.title
+          }
+
+          "should have the value '£40'" in {
+            doc.select("#acquisitionCosts-amount span.bold-medium").text shouldBe "£40"
+          }
+        }
+      }
     }
 
-    s"have a page heading" which {
+    "property acquired after the start of the tax (1 April 1982) and inherited" should {
 
-      s"includes a secondary heading with text '${messages.pageHeading}'" in {
-        doc.select("h1 span.pre-heading").text shouldBe messages.pageHeading
+      val testModel = GainAnswersModel(
+
+        disposalDate = constructDate(12, 12, 2019),
+        soldForLessThanWorth = false,
+        disposalValue = Some(10),
+        worthWhenSoldForLess = None,
+        disposalCosts = 20,
+        ownedBeforeTaxStartDate = false,
+        worthOnTaxStartDate = None,
+        inheritedTheShares = Some(true),
+        worthWhenInherited = Some(5000),
+        acquisitionValue = None,
+        acquisitionCosts = 40
+      )
+
+
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val view = views.gainSummaryReport(testModel, -2000, taxYearModel)(fakeRequest)
+      lazy val doc = Jsoup.parse(view.body)
+
+      "has an option/radiobutton output row for the Owned Before Start of Tax" which {
+
+        s"should have the question text '${SharesMessages.OwnedBeforeEightyTwoMessages.title}'" in {
+          doc.select("#ownedBeforeTaxStartDate-question").text shouldBe SharesMessages.OwnedBeforeEightyTwoMessages.title
+        }
+
+        "should have the value 'No'" in {
+          doc.select("#ownedBeforeTaxStartDate-option span.bold-medium").text shouldBe "No"
+        }
+
+        s"should not have a change link" in {
+          doc.select("#ownedBeforeTaxStartDate-option a").isEmpty shouldBe true
+        }
       }
 
-      "includes an amount of tax due of £0.00" in {
-        doc.select("h1").text should include("£0.00")
+      "does not have a numeric output row for the Worth on 31 March 1982 value" in {
+        //Tests here for Worth On
+      }
+
+      "has an option/radiobutton output row for Did You Inherit the Shares" which {
+
+        s"should have the question text '${SharesMessages.DidYouInheritThem.question}'" in {
+          doc.select("#inheritedTheShares-question").text shouldBe SharesMessages.DidYouInheritThem.question
+        }
+
+        "should have the value 'Yes'" in {
+          doc.select("#inheritedTheShares-option span.bold-medium").text shouldBe "Yes"
+        }
+
+        s"should not have a change link" in {
+          doc.select("#inheritedTheShares-option a").isEmpty shouldBe true
+        }
+      }
+
+      "has a numeric output row for the Inherited Value" which {
+
+        s"should have the question text '${SharesMessages.WorthWhenInherited.question}'" in {
+          doc.select("#worthWhenInherited-question").text shouldBe SharesMessages.WorthWhenInherited.question
+        }
+
+        "should have the value '5000'" in {
+          doc.select("#worthWhenInherited-amount span.bold-medium").text shouldBe "£5,000"
+        }
+
+        s"should not have a change link" in {
+          doc.select("#worthWhenInherited-amount a").isEmpty shouldBe true
+        }
+      }
+
+      "does not have a numeric output row for the Acquisition Value" in {
+        doc.select("#acquisitionValue-question").isEmpty shouldBe true
       }
     }
 
-    "have the hmrc logo with the hmrc name" in {
-      doc.select("div.logo span").text shouldBe "HM Revenue & Customs"
-    }
+    "property acquired before start of tax (1 April 1982)" should {
 
-    "does not have a notice summary" in {
-      doc.select("div.notice-wrapper").isEmpty shouldBe true
-    }
+      val testModel = GainAnswersModel(
 
-    s"have a section for the Calculation details" which {
+        disposalDate = constructDate(12, 12, 2019),
+        soldForLessThanWorth = false,
+        disposalValue = Some(10),
+        worthWhenSoldForLess = None,
+        disposalCosts = 20,
+        ownedBeforeTaxStartDate = true,
+        worthOnTaxStartDate = Some(700),
+        inheritedTheShares = Some(false),
+        worthWhenInherited = None,
+        acquisitionValue = Some(30),
+        acquisitionCosts = 40
+      )
 
-      "has the class 'summary-section' to underline the heading" in {
+      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+      lazy val view = views.gainSummaryReport(testModel, -2000, taxYearModel)(fakeRequest)
+      lazy val doc = Jsoup.parse(view.body)
 
-        doc.select("section#calcDetails h2").hasClass("summary-underline") shouldBe true
+      "has an option/radiobutton output row for the Owned Before Start of Tax" which {
 
-      }
-
-      s"has a h2 tag" which {
-
-        s"should have the title '${messages.calcDetailsHeadingDate("2015/16")}'" in {
-          doc.select("section#calcDetails h2").text shouldBe messages.calcDetailsHeadingDate("2015/16")
+        s"should have the question text '${SharesMessages.OwnedBeforeEightyTwoMessages.title}'" in {
+          doc.select("#ownedBeforeTaxStartDate-question").text shouldBe SharesMessages.OwnedBeforeEightyTwoMessages.title
         }
 
-        "has the class 'heading-large'" in {
-          doc.select("section#calcDetails h2").hasClass("heading-large") shouldBe true
-        }
-      }
-
-      "has a numeric output row for the gain" which {
-
-        "should have the question text 'Loss'" in {
-          doc.select("#gain-question").text shouldBe messages.totalLoss
+        "should have the value 'Yes'" in {
+          doc.select("#ownedBeforeTaxStartDate-option span.bold-medium").text shouldBe "Yes"
         }
 
-        "should have the value '£2,000'" in {
-          doc.select("#gain-amount").text shouldBe "£2,000"
-        }
-      }
-    }
-
-    s"have a section for Your answers" which {
-
-      "has the class 'summary-section' to underline the heading" in {
-
-        doc.select("section#yourAnswers h2").hasClass("summary-underline") shouldBe true
-
-      }
-
-      s"has a h2 tag" which {
-
-        s"should have the title '${messages.yourAnswersHeading}'" in {
-          doc.select("section#yourAnswers h2").text shouldBe messages.yourAnswersHeading
-        }
-
-        "has the class 'heading-large'" in {
-          doc.select("section#yourAnswers h2").hasClass("heading-large") shouldBe true
+        s"should not have a change link" in {
+          doc.select("#ownedBeforeTaxStartDate-option a").isEmpty shouldBe true
         }
       }
 
-      "has a date output row for the Disposal Date" which {
+      "has a numeric output row for the Worth on 31 March 1982 value" which {
 
-        s"should have the question text '${commonMessages.sharesDisposalDate.title}'" in {
-          doc.select("#disposalDate-question").text shouldBe commonMessages.sharesDisposalDate.title
+        s"should have the question text '${SharesMessages.worthOn.question}'" in {
+          doc.select("#worthOn-question").text shouldBe SharesMessages.worthOn.question
         }
 
-        "should have the value '12 September 1990'" in {
-          doc.select("#disposalDate-date span.bold-medium").text shouldBe "12 September 1990"
-        }
-      }
-
-      "has a numeric output row for the Disposal Value" which {
-
-        s"should have the question text '${commonMessages.Resident.Shares.DisposalValue.question}'" in {
-          doc.select("#disposalValue-question").text shouldBe commonMessages.Resident.Shares.DisposalValue.question
+        "should have the value '£700'" in {
+          doc.select("#worthOn-amount span.bold-medium").text shouldBe "£700"
         }
 
-        "should have the value '£10'" in {
-          doc.select("#disposalValue-amount span.bold-medium").text shouldBe "£10"
+        s"should not have a change link" in {
+          doc.select("#worthOn-option a").isEmpty shouldBe true
         }
       }
 
-      "has a numeric output row for the Disposal Costs" which {
-
-        s"should have the question text '${commonMessages.sharesDisposalCosts.title}'" in {
-          doc.select("#disposalCosts-question").text shouldBe commonMessages.sharesDisposalCosts.title
-        }
-
-        "should have the value '£20'" in {
-          doc.select("#disposalCosts-amount span.bold-medium").text shouldBe "£20"
-        }
-
+      "does not have an option/radiobutton output row for Did You Inherit the Shares" in {
+        doc.select("#inheritedTheShares-question").isEmpty shouldBe true
       }
 
-      "has a numeric output row for the Acquisition Value" which {
-
-        s"should have the question text '${commonMessages.sharesAcquisitionValue.title}'" in {
-          doc.select("#acquisitionValue-question").text shouldBe commonMessages.sharesAcquisitionValue.title
-        }
-
-        "should have the value '£30'" in {
-          doc.select("#acquisitionValue-amount span.bold-medium").text shouldBe "£30"
-        }
-
+      "does not have a numeric output row for the Inherited Value" in {
+        doc.select("#worthWhenInherited-question").isEmpty shouldBe true
       }
 
-      "has a numeric output row for the Acquisition Costs" which {
-
-        s"should have the question text '${commonMessages.sharesAcquisitionCosts.title}'" in {
-          doc.select("#acquisitionCosts-question").text shouldBe commonMessages.sharesAcquisitionCosts.title
-        }
-
-        "should have the value '£40'" in {
-          doc.select("#acquisitionCosts-amount span.bold-medium").text shouldBe "£40"
-        }
+      "does not have a numeric output row for the Acquisition Value" in {
+        doc.select("#acquisitionValue-question").isEmpty shouldBe true
       }
     }
   }
@@ -191,11 +334,11 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
       disposalValue = None,
       worthWhenSoldForLess = Some(10),
       disposalCosts = 20,
-      ownedBeforeTaxStartDate = None,
+      ownedBeforeTaxStartDate = false,
       worthOnTaxStartDate = None,
-      inheritedTheShares = None,
+      inheritedTheShares = Some(false),
       worthWhenInherited = None,
-      acquisitionValue = 30,
+      acquisitionValue = Some(30),
       acquisitionCosts = 40
     )
     lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)
@@ -223,11 +366,11 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
       disposalValue = Some(10),
       worthWhenSoldForLess = None,
       disposalCosts = 20,
-      ownedBeforeTaxStartDate = None,
+      ownedBeforeTaxStartDate = false,
       worthOnTaxStartDate = None,
-      inheritedTheShares = None,
+      inheritedTheShares = Some(false),
       worthWhenInherited = None,
-      acquisitionValue = 30,
+      acquisitionValue = Some(30),
       acquisitionCosts = 40
     )
     lazy val view = views.gainSummaryReport(testModel, 0, taxYearModel)(fakeRequest)

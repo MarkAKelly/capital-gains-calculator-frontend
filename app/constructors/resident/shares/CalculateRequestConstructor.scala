@@ -25,7 +25,7 @@ object CalculateRequestConstructor {
   def totalGainRequestString (answers: GainAnswersModel): String = {
     s"?disposalValue=${answers.disposalValue.get}" +
       s"&disposalCosts=${answers.disposalCosts}" +
-      s"&acquisitionValue=${answers.acquisitionValue}" +
+      s"&acquisitionValue=${answers.acquisitionValue.get}" + //temporary change until updated calc call is put in place
       s"&acquisitionCosts=${answers.acquisitionCosts}" +
       s"&disposalDate=${answers.disposalDate.format(requestFormatter)}"
   }

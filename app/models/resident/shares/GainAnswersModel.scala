@@ -23,11 +23,11 @@ case class GainAnswersModel(disposalDate: LocalDate,
                             disposalValue: Option[BigDecimal],
                             worthWhenSoldForLess: Option[BigDecimal],
                             disposalCosts: BigDecimal,
-                            ownedBeforeTaxStartDate: Option[Boolean],
+                            ownedBeforeTaxStartDate: Boolean,
                             worthOnTaxStartDate: Option[BigDecimal],
-                            inheritedTheShares: Option[BigDecimal],
+                            inheritedTheShares: Option[Boolean],
                             worthWhenInherited: Option[BigDecimal],
-                            acquisitionValue: BigDecimal,
+                            acquisitionValue: Option[BigDecimal],
                             acquisitionCosts: BigDecimal)
 
 

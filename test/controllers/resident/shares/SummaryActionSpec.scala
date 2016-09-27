@@ -89,11 +89,11 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         disposalValue = Some(3000),
         worthWhenSoldForLess = None,
         disposalCosts = 10,
-        ownedBeforeTaxStartDate = None,
+        ownedBeforeTaxStartDate = false,
         worthOnTaxStartDate = None,
-        inheritedTheShares = None,
+        inheritedTheShares = Some(false),
         worthWhenInherited = None,
-        acquisitionValue = 5000,
+        acquisitionValue = Some(5000),
         acquisitionCosts = 5
       )
       lazy val chargeableGainAnswers = DeductionGainAnswersModel(None, None, None, None, None, None)
@@ -129,11 +129,11 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         disposalValue = Some(13000),
         worthWhenSoldForLess = None,
         disposalCosts = 500,
-        ownedBeforeTaxStartDate = None,
+        ownedBeforeTaxStartDate = false,
         worthOnTaxStartDate = None,
-        inheritedTheShares = None,
+        inheritedTheShares = Some(false),
         worthWhenInherited = None,
-        acquisitionValue = 5000,
+        acquisitionValue = Some(5000),
         acquisitionCosts = 500
       )
       lazy val chargeableGainAnswers = DeductionGainAnswersModel(Some(OtherPropertiesModel(false)),
@@ -175,11 +175,11 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         disposalValue = Some(13000),
         worthWhenSoldForLess = None,
         disposalCosts = 500,
-        ownedBeforeTaxStartDate = None,
+        ownedBeforeTaxStartDate = false,
         worthOnTaxStartDate = None,
-        inheritedTheShares = None,
+        inheritedTheShares = Some(false),
         worthWhenInherited = None,
-        acquisitionValue = 5000,
+        acquisitionValue = Some(5000),
         acquisitionCosts = 500
       )
       lazy val chargeableGainAnswers = DeductionGainAnswersModel(Some(OtherPropertiesModel(false)), None, None,
@@ -221,11 +221,11 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         disposalValue = Some(15000),
         worthWhenSoldForLess = None,
         disposalCosts = 1000,
-        ownedBeforeTaxStartDate = None,
+        ownedBeforeTaxStartDate = false,
         worthOnTaxStartDate = None,
-        inheritedTheShares = None,
+        inheritedTheShares = Some(false),
         worthWhenInherited = None,
-        acquisitionValue = 3000,
+        acquisitionValue = Some(3000),
         acquisitionCosts = 2000
       )
       lazy val chargeableGainAnswers = DeductionGainAnswersModel(Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(true)),
@@ -269,11 +269,11 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with FakeReque
         disposalValue = Some(15000),
         worthWhenSoldForLess = None,
         disposalCosts = 1000,
-        ownedBeforeTaxStartDate = None,
+        ownedBeforeTaxStartDate = false,
         worthOnTaxStartDate = None,
-        inheritedTheShares = None,
+        inheritedTheShares = Some(false),
         worthWhenInherited = None,
-        acquisitionValue = 3000,
+        acquisitionValue = Some(3000),
         acquisitionCosts = 2000
       )
       lazy val chargeableGainAnswers = DeductionGainAnswersModel(Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(true)),
