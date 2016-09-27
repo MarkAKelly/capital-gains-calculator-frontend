@@ -22,7 +22,9 @@ import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.shares.GainController
 import models.resident.AcquisitionCostsModel
+import models.resident.shares.OwnedBeforeEightyTwoModel
 import models.resident.shares.GainAnswersModel
+import models.resident.shares.gain.DidYouInheritThemModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -37,12 +39,24 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
 
   val gainAnswersModel = mock[GainAnswersModel]
 
-  def setupTarget(getData: Option[AcquisitionCostsModel], gainAnswers: GainAnswersModel, totalGain: BigDecimal): GainController = {
+  def setupTarget(
+                   acquisitionCostsData: Option[AcquisitionCostsModel],
+                   ownedBeforeStartOfTaxData: Option[OwnedBeforeEightyTwoModel],
+                   inheritedThemData: Option[DidYouInheritThemModel],
+                   gainAnswers: GainAnswersModel,
+                   totalGain: BigDecimal
+                 ): GainController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
     when(mockCalcConnector.fetchAndGetFormData[AcquisitionCostsModel](Matchers.eq(keystoreKeys.acquisitionCosts))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(getData))
+      .thenReturn(Future.successful(acquisitionCostsData))
+
+    when(mockCalcConnector.fetchAndGetFormData[OwnedBeforeEightyTwoModel](Matchers.eq(keystoreKeys.ownedBeforeEightyTwo))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(ownedBeforeStartOfTaxData))
+
+    when(mockCalcConnector.fetchAndGetFormData[DidYouInheritThemModel](Matchers.eq(keystoreKeys.inheritedShares))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(inheritedThemData))
 
     when(mockCalcConnector.getShareGainAnswers(Matchers.any()))
       .thenReturn(Future.successful(gainAnswers))
@@ -62,7 +76,13 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
 
     "there is no keystore data" should {
 
-      lazy val target = setupTarget(None, gainAnswersModel, BigDecimal(0))
+      lazy val target = setupTarget(
+        acquisitionCostsData = None,
+        ownedBeforeStartOfTaxData = Some(OwnedBeforeEightyTwoModel(false)),
+        inheritedThemData = Some(DidYouInheritThemModel(false)),
+        gainAnswersModel,
+        BigDecimal(0)
+      )
       lazy val result = target.acquisitionCosts(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -80,7 +100,13 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
 
     "there is some keystore data" should {
 
-      lazy val target = setupTarget(Some(AcquisitionCostsModel(1000)), gainAnswersModel, BigDecimal(0))
+      lazy val target = setupTarget(
+        acquisitionCostsData = Some(AcquisitionCostsModel(1000)),
+        ownedBeforeStartOfTaxData = Some(OwnedBeforeEightyTwoModel(false)),
+        inheritedThemData = Some(DidYouInheritThemModel(false)),
+        gainAnswersModel,
+        BigDecimal(0)
+      )
       lazy val result = target.acquisitionCosts(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -93,6 +119,69 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
 
       "display the Acquisition Costs view" in {
         Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+      }
+    }
+
+    "testing the back links" when {
+
+      "the property was owned before the tax came in (1 April 1982)" should {
+
+        lazy val target = setupTarget(
+          acquisitionCostsData = None,
+          ownedBeforeStartOfTaxData = Some(OwnedBeforeEightyTwoModel(true)),
+          inheritedThemData = None,
+          gainAnswersModel,
+          BigDecimal(0)
+        )
+        lazy val result = target.acquisitionCosts(fakeRequestWithSession)
+
+        "return a status of 200" in {
+          status(result) shouldBe 200
+        }
+
+        s"have a back-link to '${controllers.resident.shares.routes.GainController.worthOnMarchEightyTwo().url}'" in {
+          status(result) shouldBe 200
+        }
+      }
+
+      "the property was acquired after the tax came in (1 April 1982) and it was inherited" should {
+
+        lazy val target = setupTarget(
+          acquisitionCostsData = None,
+          ownedBeforeStartOfTaxData = Some(OwnedBeforeEightyTwoModel(false)),
+          inheritedThemData = Some(DidYouInheritThemModel(true)),
+          gainAnswersModel,
+          BigDecimal(0)
+        )
+        lazy val result = target.acquisitionCosts(fakeRequestWithSession)
+
+        "return a status of 200" in {
+          status(result) shouldBe 200
+        }
+
+        s"have a back-link to '${controllers.resident.shares.routes.GainController.worthWhenInherited().url}'" in {
+          status(result) shouldBe 200
+        }
+      }
+
+      "the property was acquired after the tax came in (1 April 1982) and it was not inherited" should {
+
+        lazy val target = setupTarget(
+          acquisitionCostsData = None,
+          ownedBeforeStartOfTaxData = Some(OwnedBeforeEightyTwoModel(false)),
+          inheritedThemData = Some(DidYouInheritThemModel(false)),
+          gainAnswersModel,
+          BigDecimal(0)
+        )
+        lazy val result = target.acquisitionCosts(fakeRequestWithSession)
+
+        "return a status of 200" in {
+          status(result) shouldBe 200
+        }
+
+        s"have a back-link to '${controllers.resident.shares.routes.GainController.acquisitionValue().url}'" in {
+          status(result) shouldBe 200
+        }
       }
     }
   }
@@ -113,7 +202,13 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
   "Calling .submitAcquisitionCosts from the shares GainCalculationController" when {
 
     "a valid form is submitted that results in a zero gain" should {
-      lazy val target = setupTarget(None, gainAnswersModel, BigDecimal(0))
+      lazy val target = setupTarget(
+        acquisitionCostsData = None,
+        ownedBeforeStartOfTaxData = Some(OwnedBeforeEightyTwoModel(false)),
+        inheritedThemData = Some(DidYouInheritThemModel(false)),
+        gainAnswersModel,
+        BigDecimal(0)
+      )
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
       lazy val result = target.submitAcquisitionCosts(request)
 
@@ -127,7 +222,13 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
     }
 
     "a valid form is submitted that results in a loss" should {
-      lazy val target = setupTarget(None, gainAnswersModel, BigDecimal(-1500))
+      lazy val target = setupTarget(
+        acquisitionCostsData = None,
+        ownedBeforeStartOfTaxData = Some(OwnedBeforeEightyTwoModel(false)),
+        inheritedThemData = Some(DidYouInheritThemModel(false)),
+        gainAnswersModel,
+        BigDecimal(-1500)
+      )
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
       lazy val result = target.submitAcquisitionCosts(request)
 
@@ -141,7 +242,13 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
     }
 
     "a valid form is submitted that results in a gain" should {
-      lazy val target = setupTarget(None, gainAnswersModel, BigDecimal(1000))
+      lazy val target = setupTarget(
+        acquisitionCostsData = None,
+        ownedBeforeStartOfTaxData = Some(OwnedBeforeEightyTwoModel(false)),
+        inheritedThemData = Some(DidYouInheritThemModel(false)),
+        gainAnswersModel,
+        BigDecimal(1000)
+      )
       lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
       lazy val result = target.submitAcquisitionCosts(request)
 
@@ -155,7 +262,13 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
     }
 
     "an invalid form is submitted" should {
-      lazy val target = setupTarget(None, gainAnswersModel, BigDecimal(0))
+      lazy val target = setupTarget(
+        acquisitionCostsData = None,
+        ownedBeforeStartOfTaxData = Some(OwnedBeforeEightyTwoModel(false)),
+        inheritedThemData = Some(DidYouInheritThemModel(false)),
+        gainAnswersModel,
+        BigDecimal(0)
+      )
       lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
       lazy val result = target.submitAcquisitionCosts(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
