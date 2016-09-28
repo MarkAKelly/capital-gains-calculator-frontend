@@ -23,11 +23,16 @@ import models.resident.shares.{DeductionGainAnswersModel, GainAnswersModel}
 object CalculateRequestConstructor {
 
   def totalGainRequestString (answers: GainAnswersModel): String = {
-    s"?disposalValue=${answers.disposalValue.get}" +
+    s"?disposalValue=${determineDisposalValueToUse(answers)}" +
       s"&disposalCosts=${answers.disposalCosts}" +
       s"&acquisitionValue=${answers.acquisitionValue.get}" + //temporary change until updated calc call is put in place
       s"&acquisitionCosts=${answers.acquisitionCosts}" +
       s"&disposalDate=${answers.disposalDate.format(requestFormatter)}"
+  }
+
+  def determineDisposalValueToUse (answers: GainAnswersModel): BigDecimal = {
+    if (answers.soldForLessThanWorth) answers.worthWhenSoldForLess.get
+    else answers.disposalValue.get
   }
 
   def chargeableGainRequestString (answers: DeductionGainAnswersModel, maxAEA: BigDecimal): String = {

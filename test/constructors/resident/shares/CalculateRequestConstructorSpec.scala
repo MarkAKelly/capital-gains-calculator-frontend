@@ -16,6 +16,8 @@
 
 package constructors.resident.shares
 
+import java.time.LocalDate
+
 import common.Dates
 import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, PreviousTaxableGainsModel}
 import models.resident.{AllowableLossesValueModel, AnnualExemptAmountModel, _}
@@ -190,6 +192,25 @@ class CalculateRequestConstructorSpec extends UnitSpec {
         val result = CalculateRequestConstructor.incomeAnswersRequestString(deductionGainAnswersModel, incomeGainAnswersModel)
         result shouldBe "&previousTaxableGain=2000&previousIncome=1000&personalAllowance=10600"
       }
+    }
+  }
+
+  "Calling determineDisposalValueToUse" should {
+
+    "return a value from the disposal value if not sold for less" in {
+      val answers = GainAnswersModel(LocalDate.parse("2015-05-05"),
+        false, Some(1500), Some(2500), 0, false, None, None, None, None, 0)
+      val result = CalculateRequestConstructor.determineDisposalValueToUse(answers)
+
+      result shouldBe 1500
+    }
+
+    "return a value from the worth when sold for less value if sold for less" in {
+      val answers = GainAnswersModel(LocalDate.parse("2015-05-05"),
+        true, Some(1500), Some(2500), 0, false, None, None, None, None, 0)
+      val result = CalculateRequestConstructor.determineDisposalValueToUse(answers)
+
+      result shouldBe 2500
     }
   }
 }
