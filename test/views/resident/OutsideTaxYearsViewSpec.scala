@@ -28,9 +28,9 @@ class OutsideTaxYearsViewSpec extends UnitSpec with WithFakeApplication with Fak
 
   "Outside tax years views" when {
 
-    "using a disposal date before 2015/16" should {
+    "using a disposal date before 2015/16 with properties" should {
       lazy val taxYear = TaxYearModel("2014/15", false, "2015/16")
-      lazy val view = views.outsideTaxYear(taxYear, false, "back-link", "home-link", "continue-link", "navTitle")(fakeRequestWithSession)
+      lazy val view = views.outsideTaxYear(taxYear, false, true, "back-link", "home-link", "continue-link", "navTitle")(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(view.body)
 
       "have charset UTF-8" in {
@@ -76,7 +76,7 @@ class OutsideTaxYearsViewSpec extends UnitSpec with WithFakeApplication with Fak
 
     "using a disposal date after 2016/17" should {
       lazy val taxYear = TaxYearModel("2017/18", false, "2016/17")
-      lazy val view = views.outsideTaxYear(taxYear, true, "back-link", "home-link", "continue-link", "navTitle")(fakeRequestWithSession)
+      lazy val view = views.outsideTaxYear(taxYear, true, true, "back-link", "home-link", "continue-link", "navTitle")(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(view.body)
 
       "have charset UTF-8" in {
@@ -121,6 +121,16 @@ class OutsideTaxYearsViewSpec extends UnitSpec with WithFakeApplication with Fak
         s"have an href to 'continue-link'" in {
           button.attr("href") shouldBe "continue-link"
         }
+      }
+    }
+
+    "using a disposal date before 2015/16 with shares" should {
+      lazy val taxYear = TaxYearModel("2014/15", false, "2015/16")
+      lazy val view = views.outsideTaxYear(taxYear, false, false, "back-link", "home-link", "continue-link", "navTitle")(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(view.body)
+
+      s"have a message of ${messages.sharesTooEarly}" in {
+        doc.select("p.lede").text() shouldBe messages.sharesTooEarly
       }
     }
   }

@@ -176,6 +176,7 @@ trait GainController extends FeatureLock {
       Ok(commonViews.outsideTaxYear(
         taxYear = taxYear.get,
         isAfterApril15 = TaxDates.dateAfterStart(Dates.constructDate(disposalDate.get.day, disposalDate.get.month, disposalDate.get.year)),
+        true,
         navBackLink = routes.GainController.disposalDate().url,
         navHomeLink = homeLink,
         continueUrl = routes.GainController.sellOrGiveAway().url,
