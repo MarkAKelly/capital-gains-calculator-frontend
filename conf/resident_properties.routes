@@ -13,9 +13,6 @@ GET     /outside-tax-years                controllers.resident.properties.GainCo
 GET     /sell-or-give-away                controllers.resident.properties.GainController.sellOrGiveAway
 POST    /sell-or-give-away                controllers.resident.properties.GainController.submitSellOrGiveAway
 
-#Sell for Less Routes
-GET     /sell-for-less                    controllers.resident.properties.GainController.sellForLess
-
 #Who Did You Give It To Routes
 GET     /who-did-you-give-it-to           controllers.resident.properties.GainController.whoDidYouGiveItTo
 POST    /who-did-you-give-it-to           controllers.resident.properties.GainController.submitWhoDidYouGiveItTo
@@ -57,7 +54,7 @@ POST    /how-became-owner                 controllers.resident.properties.GainCo
 
 #Worth On Routes
 GET     /market-value-on-31-march-1982    controllers.resident.properties.GainController.worthOn
-POST    /market-value-on-31-march-1982                         controllers.resident.properties.GainController.submitWorthOn
+POST    /market-value-on-31-march-1982    controllers.resident.properties.GainController.submitWorthOn
 
 #Bought For Less Than Worth Routes
 GET     /bought-for-less-than-worth       controllers.resident.properties.GainController.boughtForLessThanWorth
