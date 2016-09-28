@@ -25,7 +25,7 @@ object CalculateRequestConstructor {
   def totalGainRequestString (answers: GainAnswersModel): String = {
     s"?disposalValue=${determineDisposalValueToUse(answers)}" +
       s"&disposalCosts=${answers.disposalCosts}" +
-      s"&acquisitionValue=${answers.acquisitionValue.get}" + //temporary change until updated calc call is put in place
+      s"&acquisitionValue=${determineAcquisitionValueToUse(answers)}" +
       s"&acquisitionCosts=${answers.acquisitionCosts}" +
       s"&disposalDate=${answers.disposalDate.format(requestFormatter)}"
   }
@@ -33,6 +33,12 @@ object CalculateRequestConstructor {
   def determineDisposalValueToUse (answers: GainAnswersModel): BigDecimal = {
     if (answers.soldForLessThanWorth) answers.worthWhenSoldForLess.get
     else answers.disposalValue.get
+  }
+
+  def determineAcquisitionValueToUse (answers: GainAnswersModel): BigDecimal = {
+    if (answers.ownedBeforeTaxStartDate) answers.worthOnTaxStartDate.get
+    else if (answers.inheritedTheShares.get) answers.worthWhenInherited.get
+    else answers.acquisitionValue.get
   }
 
   def chargeableGainRequestString (answers: DeductionGainAnswersModel, maxAEA: BigDecimal): String = {

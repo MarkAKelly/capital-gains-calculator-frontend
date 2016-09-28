@@ -213,4 +213,31 @@ class CalculateRequestConstructorSpec extends UnitSpec {
       result shouldBe 2500
     }
   }
+
+  "Calling determineAcquisitionValueToUse" should {
+
+    "return a value from the worth on value if owned before tax start" in {
+      val answers = GainAnswersModel(LocalDate.parse("2015-05-05"),
+        true, None, None, 0, true, Some(1500), None, Some(2500), Some(3500), 0)
+      val result = CalculateRequestConstructor.determineAcquisitionValueToUse(answers)
+
+      result shouldBe 1500
+    }
+
+    "return a value from the worth when inherited value if inherited" in {
+      val answers = GainAnswersModel(LocalDate.parse("2015-05-05"),
+        true, None, None, 0, false, Some(1500), Some(true), Some(2500), Some(3500), 0)
+      val result = CalculateRequestConstructor.determineAcquisitionValueToUse(answers)
+
+      result shouldBe 2500
+    }
+
+    "return a value from the acquisition value if not inherited and owned after tax start" in {
+      val answers = GainAnswersModel(LocalDate.parse("2015-05-05"),
+        true, None, None, 0, false, Some(1500), Some(false), Some(2500), Some(3500), 0)
+      val result = CalculateRequestConstructor.determineAcquisitionValueToUse(answers)
+
+      result shouldBe 3500
+    }
+  }
 }
