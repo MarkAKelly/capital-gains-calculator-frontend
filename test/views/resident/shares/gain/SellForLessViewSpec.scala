@@ -29,7 +29,7 @@ class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeReq
 
   "Sell for less view with an empty form" should {
 
-    lazy val view = views.sellForLess(sellForLessForm, "home-link")(fakeRequest)
+    lazy val view = views.sellForLess(sellForLessForm, "home-link", "back-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
     lazy val form = doc.getElementsByTag("form")
 
@@ -71,7 +71,7 @@ class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       }
 
       "has a back link to 'back'" in {
-        backLink.attr("href") shouldBe controllers.resident.shares.routes.GainController.disposalDate().url
+        backLink.attr("href") shouldBe "back-link"
       }
     }
 
@@ -210,7 +210,7 @@ class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeReq
   }
 
   "Sell for less view with a filled form" which {
-    lazy val view = views.sellForLess(sellForLessForm.fill(SellForLessModel(true)), "home-link")(fakeRequest)
+    lazy val view = views.sellForLess(sellForLessForm.fill(SellForLessModel(true)), "home-link", "back-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "for the option 'Yes'" should {
@@ -226,7 +226,7 @@ class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeReq
   "Sell for less view with form errors" should {
 
     lazy val form = sellForLessForm.bind(Map("sellForLess" -> ""))
-    lazy val view = views.sellForLess(form, "home")(fakeRequest)
+    lazy val view = views.sellForLess(form, "home-link", "back-link")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have an error summary" which {

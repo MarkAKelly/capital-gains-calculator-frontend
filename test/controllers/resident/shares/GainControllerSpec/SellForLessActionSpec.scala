@@ -18,11 +18,10 @@ package controllers.resident.shares.GainControllerSpec
 
 import assets.MessageLookup.Resident.Shares.{sellForLess => messages}
 import common.KeystoreKeys.{ResidentShareKeys => keyStoreKeys}
-import config.{AppConfig, ApplicationConfig}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.shares.GainController
-import models.resident.SellForLessModel
+import controllers.resident.shares.{GainController, routes}
+import models.resident.{DisposalDateModel, SellForLessModel, TaxYearModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -35,12 +34,18 @@ import scala.concurrent.Future
 
 class SellForLessActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  def setupTarget(getData: Option[SellForLessModel]): GainController= {
+  def setupTarget(getData: Option[SellForLessModel], knownTaxYear: Boolean = true): GainController= {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
+    when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(TaxYearModel("year", knownTaxYear, "year"))))
+
     when(mockCalcConnector.fetchAndGetFormData[SellForLessModel](Matchers.eq(keyStoreKeys.sellForLess))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(keyStoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(DisposalDateModel(1, 1, 1))))
 
     when(mockCalcConnector.saveFormData[SellForLessModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
@@ -64,6 +69,24 @@ class SellForLessActionSpec extends UnitSpec with WithFakeApplication with FakeR
       s"return some html with title of ${messages.title}" in {
         contentType(result) shouldBe Some("text/html")
         Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+      }
+    }
+
+    "in a known tax year" should {
+      lazy val target = setupTarget(None)
+      lazy val result = target.sellForLess(fakeRequestWithSession)
+
+      "have a back link to the disposal date page" in {
+        Jsoup.parse(bodyOf(result)).getElementById("back-link").attr("href") shouldEqual routes.GainController.disposalDate().url
+      }
+    }
+
+    "outside a known tax year" should {
+      lazy val target = setupTarget(None, false)
+      lazy val result = target.sellForLess(fakeRequestWithSession)
+
+      "have a back link to the outside tax years page" in {
+        Jsoup.parse(bodyOf(result)).getElementById("back-link").attr("href") shouldEqual routes.GainController.outsideTaxYears().url
       }
     }
 

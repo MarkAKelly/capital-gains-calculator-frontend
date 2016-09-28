@@ -66,6 +66,10 @@ class OutsideTaxYearsActionSpec extends UnitSpec with WithFakeApplication with F
       s"have a back link to '${controllers.resident.shares.routes.GainController.disposalDate().url}'" in {
         Jsoup.parse(bodyOf(result)).getElementById("back-link").attr("href") shouldBe controllers.resident.shares.routes.GainController.disposalDate().url
       }
+
+      s"have a continue link to '${controllers.resident.shares.routes.GainController.sellForLess().url}'" in {
+        Jsoup.parse(bodyOf(result)).getElementById("continue-button").attr("href") shouldBe controllers.resident.shares.routes.GainController.sellForLess().url
+      }
     }
 
     "there is no valid session" should {
