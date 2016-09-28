@@ -21,6 +21,7 @@ import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.AcquisitionValueForm._
 import org.jsoup.Jsoup
+import reactivemongo.api.BSONSerializationPack.Document
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{gain => views}
 
@@ -29,7 +30,7 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Fa
   "Acquisition Value view" should {
 
     lazy val view = views.acquisitionValue(acquisitionValueForm)(fakeRequest)
-    lazy val doc = Jsoup.parse(view.body)
+    lazy val doc= Jsoup.parse(view.body)
 
     "have charset UTF-8" in {
       doc.charset().toString shouldBe "UTF-8"

@@ -249,12 +249,13 @@ object MessageLookup {
   }
 
   //############ Bought For Less Than Worth messages #################//
-  object boughtForLessThanWorth {
+  object boughtForLessThanWorth extends baseGainPageMessages {
     val title = "Did you buy the property for less than it was worth because the seller wanted to help you?"
+    val pageHeading = ""
   }
 
   //Acquisition Value messages
-  object acquisitionValue {
+  object acquisitionValue extends baseGainPageMessages {
     val title = "How much did you pay for the property?"
     val pageHeading = "How much did you pay for the property?"
   }
