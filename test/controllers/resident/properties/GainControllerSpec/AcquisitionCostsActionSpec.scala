@@ -23,6 +23,8 @@ import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.GainController
 import models.resident.AcquisitionCostsModel
+import models.resident.properties.{BoughtForLessThanWorthModel, HowBecameOwnerModel}
+import models.resident.properties.gain.OwnerBeforeAprilModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -35,12 +37,25 @@ import scala.concurrent.Future
 
 class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  def setupTarget(getData: Option[AcquisitionCostsModel]): GainController = {
+  def setupTarget(getData: Option[AcquisitionCostsModel],
+                  ownerBefore: Option[OwnerBeforeAprilModel] = None,
+                  howBecameOwner: Option[HowBecameOwnerModel] = None,
+                  boughtForLess: Option[BoughtForLessThanWorthModel] = None
+                 ): GainController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
     when(mockCalcConnector.fetchAndGetFormData[AcquisitionCostsModel](Matchers.eq(keystoreKeys.acquisitionCosts))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.fetchAndGetFormData[OwnerBeforeAprilModel](Matchers.eq(keystoreKeys.ownerBeforeAprilNineteenEightyTwo))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(ownerBefore))
+
+    when(mockCalcConnector.fetchAndGetFormData[HowBecameOwnerModel](Matchers.eq(keystoreKeys.howBecameOwner))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(howBecameOwner))
+
+    when(mockCalcConnector.fetchAndGetFormData[BoughtForLessThanWorthModel](Matchers.eq(keystoreKeys.boughtForLessThanWorth))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(boughtForLess))
 
     when(mockCalcConnector.saveFormData[AcquisitionCostsModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
@@ -86,6 +101,56 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
 
       "display the Acquisition Costs view" in {
         Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+      }
+    }
+
+    "the origin page was worthOn" should {
+      lazy val target = setupTarget(None, Some(OwnerBeforeAprilModel(true)))
+      lazy val result = target.acquisitionCosts(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "have a link to worthOn" in {
+        doc.select("a#back-link").attr("href") shouldBe controllers.resident.properties.routes.GainController.worthOn().url
+      }
+    }
+
+    "the origin page was worthWhenInherited" should {
+      lazy val target = setupTarget(None, Some(OwnerBeforeAprilModel(false)), Some(HowBecameOwnerModel("Inherited")))
+      lazy val result = target.acquisitionCosts(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "have a link to worthWhenInherited" in {
+        doc.select("a#back-link").attr("href") shouldBe controllers.resident.properties.routes.GainController.worthWhenInherited().url
+      }
+    }
+
+    "the origin page was worthWhenGifted" should {
+      lazy val target = setupTarget(None, Some(OwnerBeforeAprilModel(false)), Some(HowBecameOwnerModel("Gifted")))
+      lazy val result = target.acquisitionCosts(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "have a link to worthWhenGifted" in {
+        doc.select("a#back-link").attr("href") shouldBe controllers.resident.properties.routes.GainController.worthWhenGifted().url
+      }
+    }
+
+    "the origin page was worthWhenBought" should {
+      lazy val target = setupTarget(None, Some(OwnerBeforeAprilModel(false)), Some(HowBecameOwnerModel("Bought")), Some(BoughtForLessThanWorthModel(true)))
+      lazy val result = target.acquisitionCosts(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "have a link to worthWhenBought" in {
+        doc.select("a#back-link").attr("href") shouldBe controllers.resident.properties.routes.GainController.worthWhenBought().url
+      }
+    }
+
+    "the origin page was acquisitionValue" should {
+      lazy val target = setupTarget(None, Some(OwnerBeforeAprilModel(false)), Some(HowBecameOwnerModel("Bought")), Some(BoughtForLessThanWorthModel(false)))
+      lazy val result = target.acquisitionCosts(fakeRequestWithSession)
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "have a link to worthWhenBought" in {
+        doc.select("a#back-link").attr("href") shouldBe controllers.resident.properties.routes.GainController.acquisitionValue().url
       }
     }
   }

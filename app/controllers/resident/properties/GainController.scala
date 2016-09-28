@@ -515,16 +515,51 @@ trait GainController extends FeatureLock {
   }
 
   //################# Acquisition Costs Actions ########################
-  val acquisitionCosts = FeatureLockForRTT.async { implicit request =>
-    calcConnector.fetchAndGetFormData[AcquisitionCostsModel](keystoreKeys.acquisitionCosts).map {
-      case Some(data) => Ok(views.acquisitionCosts(acquisitionCostsForm.fill(data)))
-      case None => Ok(views.acquisitionCosts(acquisitionCostsForm))
+
+  private def acquisitionCostsBackLink()(implicit hc: HeaderCarrier): Future[Option[String]] = {
+    val ownerOn = calcConnector.fetchAndGetFormData[OwnerBeforeAprilModel](keystoreKeys.ownerBeforeAprilNineteenEightyTwo)
+    val howBecameOwner = calcConnector.fetchAndGetFormData[HowBecameOwnerModel](keystoreKeys.howBecameOwner)
+    val boughtForLess = calcConnector.fetchAndGetFormData[BoughtForLessThanWorthModel](keystoreKeys.boughtForLessThanWorth)
+
+    def determineBackLink(ownerOn: Option[OwnerBeforeAprilModel],
+                          howBecameOwner: Option[HowBecameOwnerModel],
+                          boughtForLess: Option[BoughtForLessThanWorthModel]): Future[Option[String]] = {
+      Future.successful((ownerOn, howBecameOwner, boughtForLess) match {
+        case (Some(OwnerBeforeAprilModel(true)), _, _) => Some(controllers.resident.properties.routes.GainController.worthOn().url)
+        case (_, Some(HowBecameOwnerModel("Inherited")), _) => Some(controllers.resident.properties.routes.GainController.worthWhenInherited().url)
+        case (_, Some(HowBecameOwnerModel("Gifted")), _) => Some(controllers.resident.properties.routes.GainController.worthWhenGifted().url)
+        case (_, _, Some(BoughtForLessThanWorthModel(true))) => Some(controllers.resident.properties.routes.GainController.worthWhenBought().url)
+        case _ => Some(controllers.resident.properties.routes.GainController.acquisitionValue().url)
+      })
     }
+
+    for {
+      ownerOn <- ownerOn
+      howBecameOwner <- howBecameOwner
+      boughtForLess <- boughtForLess
+      backLink <- determineBackLink(ownerOn, howBecameOwner, boughtForLess)
+    } yield backLink
+  }
+
+  private def createAcquisitionCostsForm()(implicit hc: HeaderCarrier): Future[Form[AcquisitionCostsModel]] = {
+    calcConnector.fetchAndGetFormData[AcquisitionCostsModel](keystoreKeys.acquisitionCosts).map {
+      case Some(data) => acquisitionCostsForm.fill(data)
+      case None => acquisitionCostsForm
+    }
+  }
+
+  val acquisitionCosts = FeatureLockForRTT.async { implicit request =>
+    for {
+      backLink <- acquisitionCostsBackLink
+      form <- createAcquisitionCostsForm()
+    } yield Ok(views.acquisitionCosts(form, backLink))
   }
 
   val submitAcquisitionCosts = FeatureLockForRTT.async { implicit request =>
     acquisitionCostsForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.acquisitionCosts(errors))),
+      errors => for {
+        backLink <- acquisitionCostsBackLink
+      } yield BadRequest(views.acquisitionCosts(errors, backLink)),
       success => {
         calcConnector.saveFormData(keystoreKeys.acquisitionCosts, success)
         Future.successful(Redirect(routes.GainController.improvements()))}
