@@ -28,7 +28,7 @@ class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with Fa
 
   "Acquisition Costs view" should {
 
-    lazy val view = views.acquisitionCosts(acquisitionCostsForm)(fakeRequest)
+    lazy val view = views.acquisitionCosts(acquisitionCostsForm, Some("back-link"))(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -51,8 +51,8 @@ class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with Fa
         backLink.hasClass("back-link") shouldBe true
       }
 
-      "have a link to Acquisition Value" in {
-        backLink.attr("href") shouldBe controllers.resident.properties.routes.GainController.acquisitionValue().toString
+      "have a link to back-link" in {
+        backLink.attr("href") shouldBe "back-link"
       }
     }
 
@@ -152,7 +152,7 @@ class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with Fa
     "is due to mandatory field error" should {
 
       val form = acquisitionCostsForm.bind(Map("amount" -> ""))
-      lazy val view = views.acquisitionCosts(form)(fakeRequest)
+      lazy val view = views.acquisitionCosts(form, Some("back-link"))(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
 
       "display an error summary message for the amount" in {
