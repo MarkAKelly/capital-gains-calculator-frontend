@@ -18,8 +18,8 @@ package models.resident.properties.gain
 
 import play.api.libs.json.Json
 
-case class OwnerBeforeAprilModel (ownedBeforeAprilNineteenEightyTwo: Boolean)
+case class OwnerBeforeLegislationStartModel(ownedBeforeLegislationStart: Boolean)
 
-object OwnerBeforeAprilModel {
-  implicit val format = Json.format[OwnerBeforeAprilModel]
+object OwnerBeforeLegislationStartModel {
+  implicit val format = Json.format[OwnerBeforeLegislationStartModel]
 }

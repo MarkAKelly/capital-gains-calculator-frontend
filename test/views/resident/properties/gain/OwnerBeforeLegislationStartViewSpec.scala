@@ -18,19 +18,19 @@ package views.resident.properties.gain
 
 import controllers.helpers.FakeRequestHelper
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import forms.resident.properties.gain.OwnerBeforeAprilForm._
-import models.resident.properties.gain.OwnerBeforeAprilModel
+import forms.resident.properties.gain.OwnerBeforeLegislationStartForm._
+import models.resident.properties.gain.OwnerBeforeLegislationStartModel
 import views.html.calculation.resident.properties.{gain => views}
-import assets.MessageLookup.Resident.Properties.{ownerBeforeAprilNineteenEightyTwo => messages}
+import assets.MessageLookup.Resident.Properties.{OwnerBeforeLegislationStart => messages}
 import assets.{MessageLookup => commonMessages}
 import org.jsoup.Jsoup
 
-class OwnerBeforeAprilViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class OwnerBeforeLegislationStartViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "The Owner Before April view" should {
 
 
-    lazy val view = views.ownerBeforeApril(ownerBeforeAprilForm)(fakeRequest)
+    lazy val view = views.ownerBeforeLegislationStart(ownerBeforeLegislationStartForm)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
     lazy val form = doc.getElementsByTag("form")
 
@@ -73,7 +73,7 @@ class OwnerBeforeAprilViewSpec extends UnitSpec with WithFakeApplication with Fa
     }
 
     "render a form tag with a submit action" in {
-      doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/owner-before-april"
+      doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/owner-before-legislation-start"
     }
 
     "has the method of POST" in {
@@ -98,17 +98,17 @@ class OwnerBeforeAprilViewSpec extends UnitSpec with WithFakeApplication with Fa
       "are surrounded in a fieldset" which {
 
         "has the class form-group" in {
-          doc.select("#ownedBeforeAprilNineteenEightyTwo").hasClass("form-group") shouldEqual true
+          doc.select("#ownerBeforeLegislationStart").hasClass("form-group") shouldEqual true
         }
 
         "has the class inline" in {
-          doc.select("#ownedBeforeAprilNineteenEightyTwo").hasClass("inline") shouldEqual true
+          doc.select("#ownerBeforeLegislationStart").hasClass("inline") shouldEqual true
         }
       }
 
       "for the option 'Yes'" should {
 
-        lazy val YesRadioOption = doc.select(".block-label[for=ownedBeforeAprilNineteenEightyTwo-yes]")
+        lazy val YesRadioOption = doc.select(".block-label[for=ownerBeforeLegislationStart-yes]")
 
         "have a label with class 'block-label'" in {
           YesRadioOption.hasClass("block-label") shouldEqual true
@@ -216,7 +216,7 @@ class OwnerBeforeAprilViewSpec extends UnitSpec with WithFakeApplication with Fa
   "ownedBeforeAprilNineteenEightyTwo view with a filled form" which {
 
     "for the option 'Yes'" should {
-      lazy val view = views.ownerBeforeApril(ownerBeforeAprilForm.fill(OwnerBeforeAprilModel(true)))(fakeRequest)
+      lazy val view = views.ownerBeforeLegislationStart(ownerBeforeLegislationStartForm.fill(OwnerBeforeLegislationStartModel(true)))(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
       lazy val YesRadioOption = doc.select(".block-label[for=ownedBeforeAprilNineteenEightyTwo-yes]")
 
@@ -226,7 +226,7 @@ class OwnerBeforeAprilViewSpec extends UnitSpec with WithFakeApplication with Fa
     }
 
     "for the option 'No'" should {
-      lazy val view = views.ownerBeforeApril(ownerBeforeAprilForm.fill(OwnerBeforeAprilModel(false)))(fakeRequest)
+      lazy val view = views.ownerBeforeLegislationStart(ownerBeforeLegislationStartForm.fill(OwnerBeforeLegislationStartModel(false)))(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
       lazy val NoRadioOption = doc.select(".block-label[for=ownedBeforeAprilNineteenEightyTwo-no]")
 
@@ -238,8 +238,8 @@ class OwnerBeforeAprilViewSpec extends UnitSpec with WithFakeApplication with Fa
 
   "ownedBeforeAprilNineteenEightyTwo view with form errors" should {
 
-    lazy val form = ownerBeforeAprilForm.bind(Map("ownedBeforeAprilNineteenEightyTwo" -> ""))
-    lazy val view = views.ownerBeforeApril(form)(fakeRequest)
+    lazy val form = ownerBeforeLegislationStartForm.bind(Map("ownedBeforeAprilNineteenEightyTwo" -> ""))
+    lazy val view = views.ownerBeforeLegislationStart(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have an error summary" which {

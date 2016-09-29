@@ -161,15 +161,15 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
-  "The URL for the ownedBeforeAprilNineteenEightyTwo action" should {
-    "be equal to /calculate-your-capital-gains/resident/properties/disposal-costs" in {
-      GainController.ownerBeforeAprilNineteenEightyTwo().url shouldEqual "/calculate-your-capital-gains/resident/properties/owner-before-april"
+  "The URL for the ownerBeforeLegislationStart action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/owner-before-legislation-start" in {
+      GainController.ownerBeforeLegislationStart().url shouldEqual "/calculate-your-capital-gains/resident/properties/owner-before-legislation-start"
     }
   }
 
-  "The URL for the submit ownedBeforeAprilNineteenEightyTwo action" should {
-    "be equal to /calculate-your-capital-gains/resident/properties/owned-before" in {
-      GainController.submitOwnerBeforeAprilNineteenEightyTwo().url shouldEqual "/calculate-your-capital-gains/resident/properties/owner-before-april"
+  "The URL for the submit ownerBeforeLegislationStart action" should {
+    "be equal to /calculate-your-capital-gains/resident/properties/owner-before-legislation-start" in {
+      GainController.submitOwnerBeforeLegislationStart().url shouldEqual "/calculate-your-capital-gains/resident/properties/owner-before-legislation-start"
     }
   }
 

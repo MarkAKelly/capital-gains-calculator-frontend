@@ -17,16 +17,16 @@
 package forms.resident.properties.gain
 
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import models.resident.properties.gain.OwnerBeforeAprilModel
-import forms.resident.properties.gain.OwnerBeforeAprilForm._
-import assets.MessageLookup.Resident.Properties.{ownerBeforeAprilNineteenEightyTwo => messages}
+import models.resident.properties.gain.OwnerBeforeLegislationStartModel
+import forms.resident.properties.gain.OwnerBeforeLegislationStartForm._
+import assets.MessageLookup.Resident.Properties.{OwnerBeforeLegislationStart => messages}
 
-class OwnerBeforeAprilFormSpec  extends UnitSpec with WithFakeApplication {
+class OwnerBeforeLegislationStartFormSpec  extends UnitSpec with WithFakeApplication {
 
   "Creating a form without a model" should {
 
     "create an empty form" in {
-      lazy val form = ownerBeforeAprilForm
+      lazy val form = ownerBeforeLegislationStartForm
       form.data.isEmpty shouldEqual true
     }
   }
@@ -34,35 +34,35 @@ class OwnerBeforeAprilFormSpec  extends UnitSpec with WithFakeApplication {
   "Creating a form using a valid model" should {
 
     "return a form with the answer of Yes" in {
-      lazy val model = OwnerBeforeAprilModel(true)
-      lazy val form = ownerBeforeAprilForm.fill(model)
-      form.data.get("ownedBeforeAprilNineteenEightyTwo") shouldEqual Some("Yes")
+      lazy val model = OwnerBeforeLegislationStartModel(true)
+      lazy val form = ownerBeforeLegislationStartForm.fill(model)
+      form.data.get("ownerBeforeLegislationStart") shouldEqual Some("Yes")
     }
 
     "return a form with the answer of No" in {
-      lazy val model = OwnerBeforeAprilModel(false)
-      lazy val form = ownerBeforeAprilForm.fill(model)
-      form.data.get("ownedBeforeAprilNineteenEightyTwo") shouldEqual Some("No")
+      lazy val model = OwnerBeforeLegislationStartModel(false)
+      lazy val form = ownerBeforeLegislationStartForm.fill(model)
+      form.data.get("ownerBeforeLegislationStart") shouldEqual Some("No")
     }
   }
 
   "Creating a form using a valid map" should {
 
     "return a form with a value of Yes" in {
-      lazy val form = ownerBeforeAprilForm.bind(Map(("ownedBeforeAprilNineteenEightyTwo", "Yes")))
-      form.value shouldEqual Some(OwnerBeforeAprilModel(true))
+      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownerBeforeLegislationStart", "Yes")))
+      form.value shouldEqual Some(OwnerBeforeLegislationStartModel(true))
     }
 
     "return a form with a value of No" in {
-      lazy val form = ownerBeforeAprilForm.bind(Map(("ownedBeforeAprilNineteenEightyTwo", "No")))
-      form.value shouldEqual Some(OwnerBeforeAprilModel(false))
+      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownerBeforeLegislationStart", "No")))
+      form.value shouldEqual Some(OwnerBeforeLegislationStartModel(false))
     }
   }
 
   "Creating a form using an invalid map" when {
 
     "supplied with no data" should {
-      lazy val form = ownerBeforeAprilForm.bind(Map(("ownedBeforeAprilNineteenEightyTwo", "")))
+      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownerBeforeLegislationStart", "")))
 
       "return a form with errors" in {
         form.hasErrors shouldEqual true
@@ -73,12 +73,12 @@ class OwnerBeforeAprilFormSpec  extends UnitSpec with WithFakeApplication {
       }
 
       s"return an error with message ${messages.errorSelectAnOption}" in {
-        form.error("ownedBeforeAprilNineteenEightyTwo").get.message shouldEqual messages.errorSelectAnOption
+        form.error("ownerBeforeLegislationStart").get.message shouldEqual messages.errorSelectAnOption
       }
     }
 
     "supplied with invalid data" should {
-      lazy val form = ownerBeforeAprilForm.bind(Map(("ownedBeforeAprilNineteenEightyTwo", "a")))
+      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownerBeforeLegislationStart", "a")))
 
       "return a form with errors" in {
         form.hasErrors shouldEqual true
@@ -89,7 +89,7 @@ class OwnerBeforeAprilFormSpec  extends UnitSpec with WithFakeApplication {
       }
 
       s"return an error with message ${messages.errorSelectAnOption}" in {
-        form.error("ownedBeforeAprilNineteenEightyTwo").get.message shouldEqual messages.errorSelectAnOption
+        form.error("ownerBeforeLegislationStart").get.message shouldEqual messages.errorSelectAnOption
       }
     }
   }

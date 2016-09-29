@@ -45,7 +45,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           worthWhenInherited = None,
           acquisitionCosts = BigDecimal(100),
           improvements = BigDecimal(10),
-          ownerBeforeAprilNineteenEightyTwo = true,
+          ownerBeforeLegislationStart = true,
           worthOnThirtyFirstMarchEightyTwo = Some(BigDecimal(5000)),
           howBecameOwner = Some(boughtIt),
           boughtForLessThanWorth = Some(false),
@@ -75,7 +75,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           worthWhenInherited = None,
           acquisitionCosts = BigDecimal(100),
           improvements = BigDecimal(10),
-          ownerBeforeAprilNineteenEightyTwo = true,
+          ownerBeforeLegislationStart = true,
           worthOnThirtyFirstMarchEightyTwo = Some(BigDecimal(5000)),
           howBecameOwner = Some(boughtIt),
           boughtForLessThanWorth = Some(false),
@@ -105,7 +105,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           worthWhenInherited = None,
           acquisitionCosts = BigDecimal(100),
           improvements = BigDecimal(10),
-          ownerBeforeAprilNineteenEightyTwo = true,
+          ownerBeforeLegislationStart = true,
           worthOnThirtyFirstMarchEightyTwo = Some(BigDecimal(5000)),
           howBecameOwner = Some(boughtIt),
           boughtForLessThanWorth = Some(false),
@@ -129,7 +129,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
       "return £4000 as the acquisition value" in {
 
         val answers = YourAnswersSummaryModel(
-          ownerBeforeAprilNineteenEightyTwo = false,
+          ownerBeforeLegislationStart = false,
           howBecameOwner = Some(boughtIt),
           boughtForLessThanWorth = Some(false),
           worthOnThirtyFirstMarchEightyTwo = None,
@@ -164,7 +164,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
       "return £300 as the acquisition value" in {
 
         val answers = YourAnswersSummaryModel(
-          ownerBeforeAprilNineteenEightyTwo = false,
+          ownerBeforeLegislationStart = false,
           howBecameOwner = Some(boughtIt),
           boughtForLessThanWorth = Some(true),
           worthOnThirtyFirstMarchEightyTwo = None,
@@ -198,7 +198,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
       "return £290 as the acquisition value" in {
 
         val answers = YourAnswersSummaryModel(
-          ownerBeforeAprilNineteenEightyTwo = false,
+          ownerBeforeLegislationStart = false,
           howBecameOwner = Some(giftedIt),
           boughtForLessThanWorth = None,
           worthOnThirtyFirstMarchEightyTwo = None,
@@ -231,7 +231,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
       "return £230 as the acquisition value" in {
 
         val answers = YourAnswersSummaryModel(
-          ownerBeforeAprilNineteenEightyTwo = false,
+          ownerBeforeLegislationStart = false,
           howBecameOwner = Some(inheritedIt),
           boughtForLessThanWorth = None,
           worthOnThirtyFirstMarchEightyTwo = None,
@@ -263,7 +263,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
       "return £29 as the acquisition value" in {
 
         val answers = YourAnswersSummaryModel(
-          ownerBeforeAprilNineteenEightyTwo = true,
+          ownerBeforeLegislationStart = true,
           howBecameOwner = None,
           boughtForLessThanWorth = None,
           worthOnThirtyFirstMarchEightyTwo = Some(BigDecimal(29)),
@@ -310,7 +310,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
           improvements = BigDecimal(10),
           givenAway = true,
           sellForLess = None,
-          ownerBeforeAprilNineteenEightyTwo = false,
+          ownerBeforeLegislationStart = false,
           worthOnThirtyFirstMarchEightyTwo = None,
           howBecameOwner = Some(giftedIt),
           boughtForLessThanWorth = Some(true)

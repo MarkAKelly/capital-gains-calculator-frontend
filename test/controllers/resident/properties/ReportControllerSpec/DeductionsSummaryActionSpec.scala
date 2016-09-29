@@ -87,7 +87,7 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
         improvements = 30000,
         givenAway = true,
         sellForLess = Some(false),
-        ownerBeforeAprilNineteenEightyTwo = true,
+        ownerBeforeLegislationStart = true,
         worthOnThirtyFirstMarchEightyTwo = Some(5000),
         howBecameOwner = Some("Bought"),
         boughtForLessThanWorth = Some(false)
@@ -161,7 +161,7 @@ class DeductionsSummaryActionSpec extends UnitSpec with WithFakeApplication with
         improvements = 0,
         givenAway = false,
         sellForLess = Some(false),
-        ownerBeforeAprilNineteenEightyTwo = false,
+        ownerBeforeLegislationStart = false,
         worthOnThirtyFirstMarchEightyTwo =  None,
         howBecameOwner = Some("Bought"),
         boughtForLessThanWorth = Some(false)

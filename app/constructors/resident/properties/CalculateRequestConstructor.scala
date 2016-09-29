@@ -30,7 +30,7 @@ object CalculateRequestConstructor {
   }
 
   val determineAcquisitionValueToUse: YourAnswersSummaryModel => BigDecimal = {
-    case x if x.ownerBeforeAprilNineteenEightyTwo => x.worthOnThirtyFirstMarchEightyTwo.get
+    case x if x.ownerBeforeLegislationStart => x.worthOnThirtyFirstMarchEightyTwo.get
     case x if x.howBecameOwner.get == inheritedIt => x.worthWhenInherited.get
     case x if x.howBecameOwner.get == giftedIt => x.worthWhenGifted.get
     case x if x.boughtForLessThanWorth.get => x.worthWhenBoughtForLess.get

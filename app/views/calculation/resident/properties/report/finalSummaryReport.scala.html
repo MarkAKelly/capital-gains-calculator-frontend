@@ -110,33 +110,33 @@
 
         @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.disposalCosts.title"),gainAnswers.disposalCosts,None)
 
-        @summaryOptionRowHelper("ownerBeforeAprilNineteenEightyTwo", Messages("calc.resident.properties.ownerBeforeApril.title"),
-        gainAnswers.ownerBeforeAprilNineteenEightyTwo, None)
+        @summaryOptionRowHelper("ownerBeforeLegislationStart", Messages("calc.resident.properties.ownerBeforeLegislationStart.title"),
+        gainAnswers.ownerBeforeLegislationStart, None)
 
-        @{if (gainAnswers.ownerBeforeAprilNineteenEightyTwo)
+        @{if (gainAnswers.ownerBeforeLegislationStart)
         summaryNumericRowHelper("worthOn",Messages("calc.resident.properties.worthOn.question"),gainAnswers.worthOnThirtyFirstMarchEightyTwo.get,None)}
 
-        @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo)
+        @{if (!gainAnswers.ownerBeforeLegislationStart)
         summaryTextRowHelper("howBecameOwner", Messages("calc.resident.howBecameOwner.title"),
         Messages(s"calc.resident.howBecameOwner.${gainAnswers.howBecameOwner.get.toLowerCase}"), None)}
 
-        @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Bought"))
+        @{if (!gainAnswers.ownerBeforeLegislationStart && gainAnswers.howBecameOwner.get.equals("Bought"))
         summaryOptionRowHelper("boughtForLessThanWorth", Messages("calc.resident.properties.boughtForLessThanWorth.title"),
         gainAnswers.boughtForLessThanWorth.get, None)}
 
-        @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Bought") && !gainAnswers.boughtForLessThanWorth.get)
+        @{if (!gainAnswers.ownerBeforeLegislationStart && gainAnswers.howBecameOwner.get.equals("Bought") && !gainAnswers.boughtForLessThanWorth.get)
         summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),gainAnswers.acquisitionValue.get,None)}
 
         <!--- --->
-        @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Bought") && gainAnswers.boughtForLessThanWorth.get)
+        @{if (!gainAnswers.ownerBeforeLegislationStart && gainAnswers.howBecameOwner.get.equals("Bought") && gainAnswers.boughtForLessThanWorth.get)
             summaryNumericRowHelper("worthWhenBought", Messages("calc.resident.properties.worthWhenBought.question"),gainAnswers.worthWhenBoughtForLess.get, None)
         }
 
-        @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Gifted"))
+        @{if (!gainAnswers.ownerBeforeLegislationStart && gainAnswers.howBecameOwner.get.equals("Gifted"))
             summaryNumericRowHelper("worthWhenGifted", Messages("calc.resident.properties.worthWhenGifted.question"),gainAnswers.worthWhenGifted.get, None)
         }
 
-        @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Inherited"))
+        @{if (!gainAnswers.ownerBeforeLegislationStart && gainAnswers.howBecameOwner.get.equals("Inherited"))
             summaryNumericRowHelper("worthWhenInherited", Messages("calc.resident.properties.worthWhenInherited.question"),gainAnswers.worthWhenInherited.get, None)
         }
         <!--- --->
@@ -144,7 +144,7 @@
         @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),gainAnswers.acquisitionCosts,None)
 
         @summaryNumericRowHelper("improvements",
-        if(gainAnswers.ownerBeforeAprilNineteenEightyTwo) Messages("calc.resident.properties.improvements.questionBefore")
+        if(gainAnswers.ownerBeforeLegislationStart) Messages("calc.resident.properties.improvements.questionBefore")
         else Messages("calc.resident.properties.improvements.question"),
         gainAnswers.improvements, None)
 

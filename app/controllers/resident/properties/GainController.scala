@@ -34,7 +34,7 @@ import forms.resident.AcquisitionValueForm._
 import forms.resident.AcquisitionCostsForm._
 import forms.resident.properties.ImprovementsForm._
 import forms.resident.properties.SellForLessForm._
-import forms.resident.properties.gain.OwnerBeforeAprilForm._
+import forms.resident.properties.gain.OwnerBeforeLegislationStartForm._
 import forms.resident.properties.gain.PropertyRecipientForm._
 import forms.resident.WorthWhenSoldForLessForm._
 import forms.resident.properties.WorthWhenGaveAwayForm._
@@ -46,7 +46,7 @@ import forms.resident.properties.BoughtForLessThanWorthForm._
 import forms.resident.properties.WorthWhenBoughtForm._
 import forms.resident.properties.SellOrGiveAwayForm._
 import play.api.data.Form
-import models.resident.properties.gain.{OwnerBeforeAprilModel, PropertyRecipientModel, WorthWhenGiftedModel}
+import models.resident.properties.gain.{OwnerBeforeLegislationStartModel, PropertyRecipientModel, WorthWhenGiftedModel}
 import models.resident._
 import models.resident.properties._
 import play.api.i18n.Messages
@@ -309,7 +309,7 @@ trait GainController extends FeatureLock {
         errors => Future.successful(BadRequest(views.disposalCosts(errors,backLink))),
         success => {
           calcConnector.saveFormData(keystoreKeys.disposalCosts, success)
-          Future.successful(Redirect(routes.GainController.ownerBeforeAprilNineteenEightyTwo()))}
+          Future.successful(Redirect(routes.GainController.ownerBeforeLegislationStart()))}
       )
     }
 
@@ -328,23 +328,23 @@ trait GainController extends FeatureLock {
     }
   }
 
-  val submitOwnerBeforeAprilNineteenEightyTwo = FeatureLockForRTT.async { implicit request =>
+  val submitOwnerBeforeLegislationStart = FeatureLockForRTT.async { implicit request =>
 
-    def errorAction(errors: Form[OwnerBeforeAprilModel]) = Future.successful(BadRequest(views.ownerBeforeApril(errors)))
+    def errorAction(errors: Form[OwnerBeforeLegislationStartModel]) = Future.successful(BadRequest(views.ownerBeforeLegislationStart(errors)))
 
-    def routeRequest(model: OwnerBeforeAprilModel) = {
-      if (model.ownedBeforeAprilNineteenEightyTwo) Future.successful(Redirect(routes.GainController.worthOn()))
+    def routeRequest(model: OwnerBeforeLegislationStartModel) = {
+      if (model.ownedBeforeLegislationStart) Future.successful(Redirect(routes.GainController.worthOn()))
       else Future.successful(Redirect(routes.GainController.howBecameOwner()))
     }
 
-    def successAction(model: OwnerBeforeAprilModel) = {
+    def successAction(model: OwnerBeforeLegislationStartModel) = {
       for {
-        save <- calcConnector.saveFormData(keystoreKeys.ownerBeforeAprilNineteenEightyTwo, model)
+        save <- calcConnector.saveFormData(keystoreKeys.ownerBeforeLegislationStart, model)
         route <- routeRequest(model)
       } yield route
     }
 
-    ownerBeforeAprilForm.bindFromRequest().fold(errorAction, successAction)
+    ownerBeforeLegislationStartForm.bindFromRequest().fold(errorAction, successAction)
   }
 
   //################# Property Worth on 31/03/1982 Actions ########################
@@ -368,7 +368,7 @@ trait GainController extends FeatureLock {
 
   //################# How Became Owner Actions ########################
   val howBecameOwner = FeatureLockForRTT.async { implicit request =>
-    val backLink = Some(controllers.resident.properties.routes.GainController.ownerBeforeAprilNineteenEightyTwo().url)
+    val backLink = Some(controllers.resident.properties.routes.GainController.ownerBeforeLegislationStart().url)
     val postAction = controllers.resident.properties.routes.GainController.submitHowBecameOwner()
 
     calcConnector.fetchAndGetFormData[HowBecameOwnerModel](keystoreKeys.howBecameOwner).map {
@@ -378,7 +378,7 @@ trait GainController extends FeatureLock {
   }
 
   val submitHowBecameOwner = FeatureLockForRTT.async { implicit request =>
-    val backLink = Some(controllers.resident.properties.routes.GainController.ownerBeforeAprilNineteenEightyTwo().url)
+    val backLink = Some(controllers.resident.properties.routes.GainController.ownerBeforeLegislationStart().url)
     val postAction = controllers.resident.properties.routes.GainController.submitHowBecameOwner()
 
     howBecameOwnerForm.bindFromRequest.fold(
@@ -517,15 +517,15 @@ trait GainController extends FeatureLock {
   //################# Acquisition Costs Actions ########################
 
   private def acquisitionCostsBackLink()(implicit hc: HeaderCarrier): Future[Option[String]] = {
-    val ownerOn = calcConnector.fetchAndGetFormData[OwnerBeforeAprilModel](keystoreKeys.ownerBeforeAprilNineteenEightyTwo)
+    val ownerOn = calcConnector.fetchAndGetFormData[OwnerBeforeLegislationStartModel](keystoreKeys.ownerBeforeLegislationStart)
     val howBecameOwner = calcConnector.fetchAndGetFormData[HowBecameOwnerModel](keystoreKeys.howBecameOwner)
     val boughtForLess = calcConnector.fetchAndGetFormData[BoughtForLessThanWorthModel](keystoreKeys.boughtForLessThanWorth)
 
-    def determineBackLink(ownerOn: Option[OwnerBeforeAprilModel],
+    def determineBackLink(ownerOn: Option[OwnerBeforeLegislationStartModel],
                           howBecameOwner: Option[HowBecameOwnerModel],
                           boughtForLess: Option[BoughtForLessThanWorthModel]): Future[Option[String]] = {
       Future.successful((ownerOn, howBecameOwner, boughtForLess) match {
-        case (Some(OwnerBeforeAprilModel(true)), _, _) => Some(controllers.resident.properties.routes.GainController.worthOn().url)
+        case (Some(OwnerBeforeLegislationStartModel(true)), _, _) => Some(controllers.resident.properties.routes.GainController.worthOn().url)
         case (_, Some(HowBecameOwnerModel("Inherited")), _) => Some(controllers.resident.properties.routes.GainController.worthWhenInherited().url)
         case (_, Some(HowBecameOwnerModel("Gifted")), _) => Some(controllers.resident.properties.routes.GainController.worthWhenGifted().url)
         case (_, _, Some(BoughtForLessThanWorthModel(true))) => Some(controllers.resident.properties.routes.GainController.worthWhenBought().url)
@@ -568,8 +568,8 @@ trait GainController extends FeatureLock {
 
   //################# Improvements Actions ########################
   private def getOwnerBeforeAprilNineteenEightyTwo()(implicit hc: HeaderCarrier): Future[Boolean] = {
-    calcConnector.fetchAndGetFormData[OwnerBeforeAprilModel](keystoreKeys.ownerBeforeAprilNineteenEightyTwo)
-      .map(_.get.ownedBeforeAprilNineteenEightyTwo)
+    calcConnector.fetchAndGetFormData[OwnerBeforeLegislationStartModel](keystoreKeys.ownerBeforeLegislationStart)
+      .map(_.get.ownedBeforeLegislationStart)
   }
 
   private def getImprovementsForm()(implicit hc: HeaderCarrier): Future[Form[ImprovementsModel]] = {

@@ -20,17 +20,17 @@ import play.api.data.Form
 import play.api.data.Forms._
 import common.Transformers._
 import common.Validation._
-import models.resident.properties.gain.OwnerBeforeAprilModel
+import models.resident.properties.gain.OwnerBeforeLegislationStartModel
 import play.api.i18n.Messages
 
-object OwnerBeforeAprilForm {
+object OwnerBeforeLegislationStartForm {
 
-  val ownerBeforeAprilForm = Form(
+  val ownerBeforeLegislationStartForm = Form(
     mapping(
-      "ownedBeforeAprilNineteenEightyTwo" -> text
-        .verifying(Messages("calc.resident.properties.ownerBeforeApril.noSelectError"), mandatoryCheck)
-        .verifying(Messages("calc.resident.properties.ownerBeforeApril.noSelectError"), yesNoCheck)
+      "ownedBeforeLegislationStart" -> text
+        .verifying(Messages("calc.resident.properties.ownerBeforeLegislationStart.noSelectError"), mandatoryCheck)
+        .verifying(Messages("calc.resident.properties.ownerBeforeLegislationStart.noSelectError"), yesNoCheck)
         .transform(stringToBoolean, booleanToString)
-    )(OwnerBeforeAprilModel.apply)(OwnerBeforeAprilModel.unapply)
+    )(OwnerBeforeLegislationStartModel.apply)(OwnerBeforeLegislationStartModel.unapply)
   )
 }

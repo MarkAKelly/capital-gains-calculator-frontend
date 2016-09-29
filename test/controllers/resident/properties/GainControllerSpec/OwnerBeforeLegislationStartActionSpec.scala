@@ -16,13 +16,13 @@
 
 package controllers.resident.properties.GainControllerSpec
 
-import  assets.MessageLookup.Resident.Properties.{ownerBeforeAprilNineteenEightyTwo => messages}
+import  assets.MessageLookup.Resident.Properties.{OwnerBeforeLegislationStart => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keyStoreKeys}
 import config.{AppConfig, ApplicationConfig}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.GainController
-import models.resident.properties.gain.OwnerBeforeAprilModel
+import models.resident.properties.gain.OwnerBeforeLegislationStartModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -33,17 +33,17 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
-class OwnerBeforeAprilActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
+class OwnerBeforeLegislationStartActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  def setupTarget(getData: Option[OwnerBeforeAprilModel]): GainController = {
+  def setupTarget(getData: Option[OwnerBeforeLegislationStartModel]): GainController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[OwnerBeforeAprilModel](Matchers.eq(
-      keyStoreKeys.ownerBeforeAprilNineteenEightyTwo))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[OwnerBeforeLegislationStartModel](Matchers.eq(
+      keyStoreKeys.ownerBeforeLegislationStart))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
-    when(mockCalcConnector.saveFormData[OwnerBeforeAprilModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.saveFormData[OwnerBeforeLegislationStartModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
 
     new GainController {
@@ -52,12 +52,12 @@ class OwnerBeforeAprilActionSpec extends UnitSpec with WithFakeApplication with 
     }
   }
 
-  "Calling .ownerBeforeAprilNineteenEightyTwo from the resident GainController" when {
+  "Calling .ownerBeforeLegislationStart from the resident GainController" when {
 
     "request has a valid session and no keystore value" should {
 
       lazy val target = setupTarget(None)
-      lazy val result = target.ownerBeforeAprilNineteenEightyTwo(fakeRequestWithSession)
+      lazy val result = target.ownerBeforeLegislationStart(fakeRequestWithSession)
 
       "return a status of 200" in {
         status(result) shouldBe 200
@@ -71,8 +71,8 @@ class OwnerBeforeAprilActionSpec extends UnitSpec with WithFakeApplication with 
 
     "request has a valid session and some keystore value" should {
 
-      lazy val target = setupTarget(Some(OwnerBeforeAprilModel(true)))
-      lazy val result = target.ownerBeforeAprilNineteenEightyTwo(fakeRequestWithSession)
+      lazy val target = setupTarget(Some(OwnerBeforeLegislationStartModel(true)))
+      lazy val result = target.ownerBeforeLegislationStart(fakeRequestWithSession)
 
       "return a status of 200" in {
         status(result) shouldBe 200
@@ -83,7 +83,7 @@ class OwnerBeforeAprilActionSpec extends UnitSpec with WithFakeApplication with 
     "request has an invalid session" should {
 
       lazy val target = setupTarget(None)
-      lazy val result = target.ownerBeforeAprilNineteenEightyTwo(fakeRequest)
+      lazy val result = target.ownerBeforeLegislationStart(fakeRequest)
 
       "return a status of 303" in {
         status(result) shouldBe 303
@@ -100,8 +100,8 @@ class OwnerBeforeAprilActionSpec extends UnitSpec with WithFakeApplication with 
     "a valid form with the answer 'Yes' is submitted" should {
 
       lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("ownedBeforeAprilNineteenEightyTwo", "Yes"))
-      lazy val result = target.submitOwnerBeforeAprilNineteenEightyTwo(request)
+      lazy val request = fakeRequestToPOSTWithSession(("ownedBeforeLegislationStart", "Yes"))
+      lazy val result = target.submitOwnerBeforeLegislationStart(request)
 
       "return a status of 303" in {
         status(result) shouldBe 303
@@ -115,8 +115,8 @@ class OwnerBeforeAprilActionSpec extends UnitSpec with WithFakeApplication with 
     "a valid form with the answer 'No' is submitted" should {
 
       lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("ownedBeforeAprilNineteenEightyTwo", "No"))
-      lazy val result = target.submitOwnerBeforeAprilNineteenEightyTwo(request)
+      lazy val request = fakeRequestToPOSTWithSession(("ownedBeforeLegislationStart", "No"))
+      lazy val result = target.submitOwnerBeforeLegislationStart(request)
 
       "return a status of 303" in {
         status(result) shouldBe 303
@@ -130,8 +130,8 @@ class OwnerBeforeAprilActionSpec extends UnitSpec with WithFakeApplication with 
     "an invalid form with the answer '' is submitted" should {
 
       lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("ownedBeforeAprilNineteenEightyTwo", ""))
-      lazy val result = target.submitOwnerBeforeAprilNineteenEightyTwo(request)
+      lazy val request = fakeRequestToPOSTWithSession(("ownedBeforeLegislationStart", ""))
+      lazy val result = target.submitOwnerBeforeLegislationStart(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a status of 400" in {

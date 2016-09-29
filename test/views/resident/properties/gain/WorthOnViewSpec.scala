@@ -37,7 +37,7 @@ class WorthOnViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
 
   "Worth when gave away View" should {
 
-    lazy val backLink = Some(controllers.resident.properties.routes.GainController.ownerBeforeAprilNineteenEightyTwo().toString())
+    lazy val backLink = Some(controllers.resident.properties.routes.GainController.ownerBeforeLegislationStart().toString())
     lazy val view = views.worthOn(worthOnForm)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
@@ -140,7 +140,7 @@ class WorthOnViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
   "Worth When Gave Away View with form without errors" should {
 
     val form = worthOnForm.bind(Map("amount" -> "100"))
-    lazy val backLink = Some(controllers.resident.properties.routes.GainController.ownerBeforeAprilNineteenEightyTwo().toString())
+    lazy val backLink = Some(controllers.resident.properties.routes.GainController.ownerBeforeLegislationStart().toString())
     lazy val view = views.worthOn(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
@@ -160,7 +160,7 @@ class WorthOnViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
   "Worth When Gave Away View with form with errors" should {
 
     val form = worthOnForm.bind(Map("amount" -> ""))
-    lazy val backLink = Some(controllers.resident.properties.routes.GainController.ownerBeforeAprilNineteenEightyTwo().toString())
+    lazy val backLink = Some(controllers.resident.properties.routes.GainController.ownerBeforeLegislationStart().toString())
     lazy val view = views.worthOn(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 

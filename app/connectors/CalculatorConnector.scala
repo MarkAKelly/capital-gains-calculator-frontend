@@ -242,8 +242,8 @@ trait CalculatorConnector {
       case Some(data) => Some(data.sellForLess)
       case _ => None
     }
-    val ownerBeforeAprilNineteenEightyTwo = fetchAndGetFormData[properties.gain.OwnerBeforeAprilModel](ResidentPropertyKeys.ownerBeforeAprilNineteenEightyTwo)
-      .map(_.get.ownedBeforeAprilNineteenEightyTwo)
+    val ownerBeforeAprilNineteenEightyTwo = fetchAndGetFormData[properties.gain.OwnerBeforeLegislationStartModel](ResidentPropertyKeys.ownerBeforeLegislationStart)
+      .map(_.get.ownedBeforeLegislationStart)
     val worthOnThirtyFirstMarchEightyTwo = fetchAndGetFormData[properties.WorthOnModel](ResidentPropertyKeys.worthOn).map {
       case Some(data) => Some(data.amount)
       case _ => None
