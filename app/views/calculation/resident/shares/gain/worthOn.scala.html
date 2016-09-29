@@ -8,7 +8,7 @@
 
 @resident_shares_main_template(
     title = Messages("calc.resident.shares.worthOn.question"),
-    backLink = Some(controllers.resident.shares.routes.GainController.ownedBeforeEightyTwo.toString)) {
+    backLink = Some(controllers.resident.shares.routes.GainController.ownerBeforeLegislationStart.toString)) {
 
     @errorSummary(worthOnForm, "amount")
 

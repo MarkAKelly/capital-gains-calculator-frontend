@@ -40,7 +40,7 @@ class WorthOnViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
     }
 
     s"have a back link to the owner before April 1982 page" in {
-      doc.select("#back-link").attr("href") shouldEqual controllers.resident.shares.routes.GainController.ownedBeforeEightyTwo().toString
+      doc.select("#back-link").attr("href") shouldEqual controllers.resident.shares.routes.GainController.ownerBeforeLegislationStart().toString
     }
 
     "have a heading that" should {

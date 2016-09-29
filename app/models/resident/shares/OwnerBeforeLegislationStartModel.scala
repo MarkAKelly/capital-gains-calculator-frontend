@@ -18,8 +18,8 @@ package models.resident.shares
 
 import play.api.libs.json.Json
 
-case class OwnedBeforeEightyTwoModel (ownedBeforeEightyTwo: Boolean)
+case class OwnerBeforeLegislationStartModel(ownerBeforeLegislationStart: Boolean)
 
-object OwnedBeforeEightyTwoModel {
-  implicit val format = Json.format[OwnedBeforeEightyTwoModel]
+object OwnerBeforeLegislationStartModel {
+  implicit val format = Json.format[OwnerBeforeLegislationStartModel]
 }

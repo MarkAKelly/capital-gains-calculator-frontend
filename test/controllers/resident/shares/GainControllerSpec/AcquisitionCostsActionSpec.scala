@@ -22,7 +22,7 @@ import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.shares.GainController
 import models.resident.AcquisitionCostsModel
-import models.resident.shares.OwnedBeforeEightyTwoModel
+import models.resident.shares.OwnerBeforeLegislationStartModel
 import models.resident.shares.GainAnswersModel
 import models.resident.shares.gain.DidYouInheritThemModel
 import org.jsoup.Jsoup
@@ -41,7 +41,7 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
 
   def setupTarget(
                    acquisitionCostsData: Option[AcquisitionCostsModel],
-                   ownedBeforeStartOfTaxData: Option[OwnedBeforeEightyTwoModel],
+                   ownedBeforeStartOfTaxData: Option[OwnerBeforeLegislationStartModel],
                    inheritedThemData: Option[DidYouInheritThemModel],
                    gainAnswers: GainAnswersModel,
                    totalGain: BigDecimal
@@ -52,7 +52,7 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
     when(mockCalcConnector.fetchAndGetFormData[AcquisitionCostsModel](Matchers.eq(keystoreKeys.acquisitionCosts))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(acquisitionCostsData))
 
-    when(mockCalcConnector.fetchAndGetFormData[OwnedBeforeEightyTwoModel](Matchers.eq(keystoreKeys.ownedBeforeEightyTwo))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[OwnerBeforeLegislationStartModel](Matchers.eq(keystoreKeys.ownerBeforeLegislationStart))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(ownedBeforeStartOfTaxData))
 
     when(mockCalcConnector.fetchAndGetFormData[DidYouInheritThemModel](Matchers.eq(keystoreKeys.inheritedShares))(Matchers.any(), Matchers.any()))
@@ -78,7 +78,7 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
 
       lazy val target = setupTarget(
         acquisitionCostsData = None,
-        ownedBeforeStartOfTaxData = Some(OwnedBeforeEightyTwoModel(false)),
+        ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
         inheritedThemData = Some(DidYouInheritThemModel(false)),
         gainAnswersModel,
         BigDecimal(0)
@@ -102,7 +102,7 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
 
       lazy val target = setupTarget(
         acquisitionCostsData = Some(AcquisitionCostsModel(1000)),
-        ownedBeforeStartOfTaxData = Some(OwnedBeforeEightyTwoModel(false)),
+        ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
         inheritedThemData = Some(DidYouInheritThemModel(false)),
         gainAnswersModel,
         BigDecimal(0)
@@ -128,7 +128,7 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
 
         lazy val target = setupTarget(
           acquisitionCostsData = None,
-          ownedBeforeStartOfTaxData = Some(OwnedBeforeEightyTwoModel(true)),
+          ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(true)),
           inheritedThemData = None,
           gainAnswersModel,
           BigDecimal(0)
@@ -148,7 +148,7 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
 
         lazy val target = setupTarget(
           acquisitionCostsData = None,
-          ownedBeforeStartOfTaxData = Some(OwnedBeforeEightyTwoModel(false)),
+          ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
           inheritedThemData = Some(DidYouInheritThemModel(true)),
           gainAnswersModel,
           BigDecimal(0)
@@ -168,7 +168,7 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
 
         lazy val target = setupTarget(
           acquisitionCostsData = None,
-          ownedBeforeStartOfTaxData = Some(OwnedBeforeEightyTwoModel(false)),
+          ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
           inheritedThemData = Some(DidYouInheritThemModel(false)),
           gainAnswersModel,
           BigDecimal(0)
@@ -204,7 +204,7 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
     "a valid form is submitted that results in a zero gain" should {
       lazy val target = setupTarget(
         acquisitionCostsData = None,
-        ownedBeforeStartOfTaxData = Some(OwnedBeforeEightyTwoModel(false)),
+        ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
         inheritedThemData = Some(DidYouInheritThemModel(false)),
         gainAnswersModel,
         BigDecimal(0)
@@ -224,7 +224,7 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
     "a valid form is submitted that results in a loss" should {
       lazy val target = setupTarget(
         acquisitionCostsData = None,
-        ownedBeforeStartOfTaxData = Some(OwnedBeforeEightyTwoModel(false)),
+        ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
         inheritedThemData = Some(DidYouInheritThemModel(false)),
         gainAnswersModel,
         BigDecimal(-1500)
@@ -244,7 +244,7 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
     "a valid form is submitted that results in a gain" should {
       lazy val target = setupTarget(
         acquisitionCostsData = None,
-        ownedBeforeStartOfTaxData = Some(OwnedBeforeEightyTwoModel(false)),
+        ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
         inheritedThemData = Some(DidYouInheritThemModel(false)),
         gainAnswersModel,
         BigDecimal(1000)
@@ -264,7 +264,7 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
     "an invalid form is submitted" should {
       lazy val target = setupTarget(
         acquisitionCostsData = None,
-        ownedBeforeStartOfTaxData = Some(OwnedBeforeEightyTwoModel(false)),
+        ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
         inheritedThemData = Some(DidYouInheritThemModel(false)),
         gainAnswersModel,
         BigDecimal(0)

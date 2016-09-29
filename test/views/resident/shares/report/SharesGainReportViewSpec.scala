@@ -39,7 +39,7 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
         disposalValue = Some(10),
         worthWhenSoldForLess = None,
         disposalCosts = 20,
-        ownedBeforeTaxStartDate = false,
+        ownerBeforeLegislationStart = false,
         worthOnTaxStartDate = None,
         inheritedTheShares = Some(false),
         worthWhenInherited = None,
@@ -192,7 +192,7 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
         disposalValue = Some(10),
         worthWhenSoldForLess = None,
         disposalCosts = 20,
-        ownedBeforeTaxStartDate = false,
+        ownerBeforeLegislationStart = false,
         worthOnTaxStartDate = None,
         inheritedTheShares = Some(true),
         worthWhenInherited = Some(5000),
@@ -207,16 +207,16 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
 
       "has an option/radiobutton output row for the Owned Before Start of Tax" which {
 
-        s"should have the question text '${SharesMessages.OwnedBeforeEightyTwoMessages.title}'" in {
-          doc.select("#ownedBeforeTaxStartDate-question").text shouldBe SharesMessages.OwnedBeforeEightyTwoMessages.title
+        s"should have the question text '${SharesMessages.OwnerBeforeLegislationStart.title}'" in {
+          doc.select("#ownerBeforeLegislationStart-question").text shouldBe SharesMessages.OwnerBeforeLegislationStart.title
         }
 
         "should have the value 'No'" in {
-          doc.select("#ownedBeforeTaxStartDate-option span.bold-medium").text shouldBe "No"
+          doc.select("#ownerBeforeLegislationStart-option span.bold-medium").text shouldBe "No"
         }
 
         s"should not have a change link" in {
-          doc.select("#ownedBeforeTaxStartDate-option a").isEmpty shouldBe true
+          doc.select("#ownerBeforeLegislationStart-option a").isEmpty shouldBe true
         }
       }
 
@@ -268,7 +268,7 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
         disposalValue = Some(10),
         worthWhenSoldForLess = None,
         disposalCosts = 20,
-        ownedBeforeTaxStartDate = true,
+        ownerBeforeLegislationStart = true,
         worthOnTaxStartDate = Some(700),
         inheritedTheShares = Some(false),
         worthWhenInherited = None,
@@ -282,16 +282,16 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
 
       "has an option/radiobutton output row for the Owned Before Start of Tax" which {
 
-        s"should have the question text '${SharesMessages.OwnedBeforeEightyTwoMessages.title}'" in {
-          doc.select("#ownedBeforeTaxStartDate-question").text shouldBe SharesMessages.OwnedBeforeEightyTwoMessages.title
+        s"should have the question text '${SharesMessages.OwnerBeforeLegislationStart.title}'" in {
+          doc.select("#ownerBeforeLegislationStart-question").text shouldBe SharesMessages.OwnerBeforeLegislationStart.title
         }
 
         "should have the value 'Yes'" in {
-          doc.select("#ownedBeforeTaxStartDate-option span.bold-medium").text shouldBe "Yes"
+          doc.select("#ownerBeforeLegislationStart-option span.bold-medium").text shouldBe "Yes"
         }
 
         s"should not have a change link" in {
-          doc.select("#ownedBeforeTaxStartDate-option a").isEmpty shouldBe true
+          doc.select("#ownerBeforeLegislationStart-option a").isEmpty shouldBe true
         }
       }
 
@@ -334,7 +334,7 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
       disposalValue = None,
       worthWhenSoldForLess = Some(10),
       disposalCosts = 20,
-      ownedBeforeTaxStartDate = false,
+      ownerBeforeLegislationStart = false,
       worthOnTaxStartDate = None,
       inheritedTheShares = Some(false),
       worthWhenInherited = None,
@@ -366,7 +366,7 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
       disposalValue = Some(10),
       worthWhenSoldForLess = None,
       disposalCosts = 20,
-      ownedBeforeTaxStartDate = false,
+      ownerBeforeLegislationStart = false,
       worthOnTaxStartDate = None,
       inheritedTheShares = Some(false),
       worthWhenInherited = None,

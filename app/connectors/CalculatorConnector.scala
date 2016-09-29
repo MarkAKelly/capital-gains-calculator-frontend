@@ -371,7 +371,7 @@ trait CalculatorConnector {
       case _ => None
     }
     val disposalCosts = fetchAndGetFormData[resident.DisposalCostsModel](ResidentShareKeys.disposalCosts).map(_.get.amount)
-    val ownedBeforeTaxStartDate = fetchAndGetFormData[resident.shares.OwnedBeforeEightyTwoModel](ResidentShareKeys.ownedBeforeEightyTwo).map(_.get.ownedBeforeEightyTwo)
+    val ownedBeforeTaxStartDate = fetchAndGetFormData[resident.shares.OwnerBeforeLegislationStartModel](ResidentShareKeys.ownerBeforeLegislationStart).map(_.get.ownerBeforeLegislationStart)
     val worthOnTaxStartDate = fetchAndGetFormData[resident.shares.gain.WorthOnModel](ResidentShareKeys.worthOn).map {
       case Some(data) => Some(data.amount)
       case _ => None

@@ -85,7 +85,7 @@ object KeystoreKeys {
     val worthWhenSoldForLess = "res:share:worthWhenSoldForLess"
     val disposalValue = "res:share:disposalValue"
     val disposalCosts = "res:share:disposalCosts"
-    val ownedBeforeEightyTwo = "res:share:ownedBeforeEightyTwo"
+    val ownerBeforeLegislationStart = "res:share:ownerBeforeLegislationStart"
     val worthOn = "res:share:worthOn"
     val acquisitionValue = "res:share:acquisitionValue"
     val acquisitionCosts = "res:share:acquisitionCosts"

@@ -105,18 +105,18 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
-  /* Shares Owned before 1 April 1982 Routes */
-  "The URL for the resident/shares owned before 1982 Action" should {
-    "be equal to /calculate-your-capital-gains/resident/shares/owned-before-april-first-nineteen-eighty-two" in {
-      val path = GainController.ownedBeforeEightyTwo().url
-      path shouldEqual "/calculate-your-capital-gains/resident/shares/owned-before-april-first-nineteen-eighty-two"
+  /* Shares Owner Before Legislation Start Routes */
+  "The URL for the resident/shares owner before legislation start Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/owner-before-legislation-start" in {
+      val path = GainController.ownerBeforeLegislationStart().url
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/owner-before-legislation-start"
     }
   }
 
-  "The URL for the resident/shares submit owned before 1982 Action" should {
-    "be equal to /calculate-your-capital-gains/resident/shares/owned-before-april-first-nineteen-eighty-two" in {
-      val path = GainController.submitOwnedBeforeEightyTwo().url
-      path shouldEqual "/calculate-your-capital-gains/resident/shares/owned-before-april-first-nineteen-eighty-two"
+  "The URL for the resident/shares submit owner before legislation start Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/owner-before-legislation-start" in {
+      val path = GainController.submitOwnerBeforeLegislationStart().url
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/owner-before-legislation-start"
     }
   }
 
