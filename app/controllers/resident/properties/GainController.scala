@@ -321,10 +321,10 @@ trait GainController extends FeatureLock {
   }
 
   //################# Owner Before April Eighty Two Actions ########################
-  val ownerBeforeAprilNineteenEightyTwo = FeatureLockForRTT.async { implicit request =>
-    calcConnector.fetchAndGetFormData[OwnerBeforeAprilModel](keystoreKeys.ownerBeforeAprilNineteenEightyTwo).map {
-      case Some(data) => Ok(views.ownerBeforeApril(ownerBeforeAprilForm.fill(data)))
-      case None => Ok(views.ownerBeforeApril(ownerBeforeAprilForm))
+  val ownerBeforeLegislationStart = FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[OwnerBeforeLegislationStartModel](keystoreKeys.ownerBeforeLegislationStart).map {
+      case Some(data) => Ok(views.ownerBeforeLegislationStart(ownerBeforeLegislationStartForm.fill(data)))
+      case None => Ok(views.ownerBeforeLegislationStart(ownerBeforeLegislationStartForm))
     }
   }
 

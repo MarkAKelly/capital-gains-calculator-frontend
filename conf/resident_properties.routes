@@ -45,8 +45,8 @@ GET     /disposal-costs                   controllers.resident.properties.GainCo
 POST    /disposal-costs                   controllers.resident.properties.GainController.submitDisposalCosts
 
 #Owner Before April Nineteen Eighty Two Routes
-GET     /owner-before-april               controllers.resident.properties.GainController.ownerBeforeAprilNineteenEightyTwo
-POST    /owner-before-april               controllers.resident.properties.GainController.submitOwnerBeforeAprilNineteenEightyTwo
+GET     /owner-before-legislation-start   controllers.resident.properties.GainController.ownerBeforeLegislationStart
+POST    /owner-before-legislation-start   controllers.resident.properties.GainController.submitOwnerBeforeLegislationStart
 
 #How Became Owner Routes
 GET     /how-became-owner                 controllers.resident.properties.GainController.howBecameOwner
