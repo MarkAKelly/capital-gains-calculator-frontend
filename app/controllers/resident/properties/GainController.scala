@@ -43,7 +43,7 @@ import forms.resident.WorthWhenInheritedForm._
 import forms.resident.properties.ValueBeforeLegislationStartForm._
 import forms.resident.properties.gain.WorthWhenGiftedForm._
 import forms.resident.properties.BoughtForLessThanWorthForm._
-import forms.resident.properties.WorthWhenBoughtForm._
+import forms.resident.properties.WorthWhenBoughtForLessForm._
 import forms.resident.properties.SellOrGiveAwayForm._
 import play.api.data.Form
 import models.resident.properties.gain.{OwnerBeforeLegislationStartModel, PropertyRecipientModel, WorthWhenGiftedModel}
@@ -320,7 +320,7 @@ trait GainController extends FeatureLock {
     } yield route
   }
 
-  //################# Owner Before April Eighty Two Actions ########################
+  //################# Owner Before Legislation Start Actions ########################
   val ownerBeforeLegislationStart = FeatureLockForRTT.async { implicit request =>
     calcConnector.fetchAndGetFormData[OwnerBeforeLegislationStartModel](keystoreKeys.ownerBeforeLegislationStart).map {
       case Some(data) => Ok(views.ownerBeforeLegislationStart(ownerBeforeLegislationStartForm.fill(data)))
@@ -347,7 +347,7 @@ trait GainController extends FeatureLock {
     ownerBeforeLegislationStartForm.bindFromRequest().fold(errorAction, successAction)
   }
 
-  //################# Property Worth on 31/03/1982 Actions ########################
+  //################# Value Before Legislation Start Actions ########################
 
   val valueBeforeLegislationStart = FeatureLockForRTT.async { implicit request =>
     calcConnector.fetchAndGetFormData[ValueBeforeLegislationStartModel](keystoreKeys.valueBeforeLegislationStart).map {
@@ -414,7 +414,7 @@ trait GainController extends FeatureLock {
     )))
 
     def routeRequest(model: BoughtForLessThanWorthModel) = {
-      if (model.boughtForLessThanWorth) Future.successful(Redirect(routes.GainController.worthWhenBought()))
+      if (model.boughtForLessThanWorth) Future.successful(Redirect(routes.GainController.worthWhenBoughtForLess()))
       else Future.successful(Redirect(routes.GainController.acquisitionValue()))
     }
 
@@ -477,20 +477,20 @@ trait GainController extends FeatureLock {
     )
   }
 
-  //################# Worth When Bought Actions ########################
+  //################# Worth When Bought For Less Actions ########################
 
-  val worthWhenBought = FeatureLockForRTT.async {implicit request =>
-    calcConnector.fetchAndGetFormData[WorthWhenBoughtModel](keystoreKeys.worthWhenBought).map {
-      case Some(data) => Ok(views.worthWhenBought(worthWhenBoughtForm.fill(data)))
-      case _ => Ok(views.worthWhenBought(worthWhenBoughtForm))
+  val worthWhenBoughtForLess = FeatureLockForRTT.async {implicit request =>
+    calcConnector.fetchAndGetFormData[WorthWhenBoughtForLessModel](keystoreKeys.worthWhenBoughtForLess).map {
+      case Some(data) => Ok(views.worthWhenBoughtForLess(worthWhenBoughtForLessForm.fill(data)))
+      case _ => Ok(views.worthWhenBoughtForLess(worthWhenBoughtForLessForm))
     }
   }
 
-  val submitWorthWhenBought = FeatureLockForRTT.async { implicit request =>
-    worthWhenBoughtForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.worthWhenBought(errors))),
+  val submitWorthWhenBoughtForLess = FeatureLockForRTT.async { implicit request =>
+    worthWhenBoughtForLessForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.worthWhenBoughtForLess(errors))),
       success => {
-        calcConnector.saveFormData(keystoreKeys.worthWhenBought, success)
+        calcConnector.saveFormData(keystoreKeys.worthWhenBoughtForLess, success)
         Future.successful(Redirect(routes.GainController.acquisitionCosts()))
       }
     )
@@ -528,7 +528,7 @@ trait GainController extends FeatureLock {
         case (Some(OwnerBeforeLegislationStartModel(true)), _, _) => Some(controllers.resident.properties.routes.GainController.valueBeforeLegislationStart().url)
         case (_, Some(HowBecameOwnerModel("Inherited")), _) => Some(controllers.resident.properties.routes.GainController.worthWhenInherited().url)
         case (_, Some(HowBecameOwnerModel("Gifted")), _) => Some(controllers.resident.properties.routes.GainController.worthWhenGifted().url)
-        case (_, _, Some(BoughtForLessThanWorthModel(true))) => Some(controllers.resident.properties.routes.GainController.worthWhenBought().url)
+        case (_, _, Some(BoughtForLessThanWorthModel(true))) => Some(controllers.resident.properties.routes.GainController.worthWhenBoughtForLess().url)
         case _ => Some(controllers.resident.properties.routes.GainController.acquisitionValue().url)
       })
     }

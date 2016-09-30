@@ -104,12 +104,12 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
       }
     }
 
-    "the origin page was worthOn" should {
+    "the origin page was valueBeforeLegislationStart" should {
       lazy val target = setupTarget(None, Some(OwnerBeforeLegislationStartModel(true)))
       lazy val result = target.acquisitionCosts(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
-      "have a link to worthOn" in {
+      "have a link to valueBeforeLegislationStart" in {
         doc.select("a#back-link").attr("href") shouldBe controllers.resident.properties.routes.GainController.valueBeforeLegislationStart().url
       }
     }
@@ -134,13 +134,13 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
       }
     }
 
-    "the origin page was worthWhenBought" should {
+    "the origin page was worthWhenBoughtForLess" should {
       lazy val target = setupTarget(None, Some(OwnerBeforeLegislationStartModel(false)), Some(HowBecameOwnerModel("Bought")), Some(BoughtForLessThanWorthModel(true)))
       lazy val result = target.acquisitionCosts(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
-      "have a link to worthWhenBought" in {
-        doc.select("a#back-link").attr("href") shouldBe controllers.resident.properties.routes.GainController.worthWhenBought().url
+      "have a link to worthWhenBoughtForLess" in {
+        doc.select("a#back-link").attr("href") shouldBe controllers.resident.properties.routes.GainController.worthWhenBoughtForLess().url
       }
     }
 
@@ -149,7 +149,7 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
       lazy val result = target.acquisitionCosts(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
-      "have a link to worthWhenBought" in {
+      "have a link to worthWhenBoughtForLess" in {
         doc.select("a#back-link").attr("href") shouldBe controllers.resident.properties.routes.GainController.acquisitionValue().url
       }
     }

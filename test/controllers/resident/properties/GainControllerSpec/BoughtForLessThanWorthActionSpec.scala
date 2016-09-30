@@ -107,7 +107,7 @@ class BoughtForLessThanWorthActionSpec extends UnitSpec with WithFakeApplication
       }
 
       "redirect to the worth when sold page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/worth-when-bought")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/worth-when-bought-for-less")
       }
     }
 

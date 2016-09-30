@@ -732,12 +732,12 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
     "has an amount output row for bought for less than worth value" which {
 
-      s"should have the question text '${propertiesMessages.worthWhenBought.question}'" in {
-        doc.select("#worthWhenBought-question").text shouldBe propertiesMessages.worthWhenBought.question
+      s"should have the question text '${propertiesMessages.WorthWhenBoughtForLess.question}'" in {
+        doc.select("#worthWhenBoughtForLess-question").text shouldBe propertiesMessages.WorthWhenBoughtForLess.question
       }
 
       "should have the value '£3,000'" in {
-        doc.select("#worthWhenBought-amount span.bold-medium").text shouldBe "£3,000"
+        doc.select("#worthWhenBoughtForLess-amount span.bold-medium").text shouldBe "£3,000"
       }
     }
   }

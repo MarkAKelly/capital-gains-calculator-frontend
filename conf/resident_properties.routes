@@ -24,9 +24,9 @@ GET     /no-tax-to-pay                    controllers.resident.properties.GainCo
 GET     /worth-when-gave-away             controllers.resident.properties.GainController.worthWhenGaveAway
 POST    /worth-when-gave-away             controllers.resident.properties.GainController.submitWorthWhenGaveAway
 
-#Worth When Bought Routes
-GET     /worth-when-bought                controllers.resident.properties.GainController.worthWhenBought
-POST    /worth-when-bought                controllers.resident.properties.GainController.submitWorthWhenBought
+#Worth When Bought For Less Routes
+GET     /worth-when-bought-for-less       controllers.resident.properties.GainController.worthWhenBoughtForLess
+POST    /worth-when-bought-for-less       controllers.resident.properties.GainController.submitWorthWhenBoughtForLess
 
 #Disposal Value or Market Value Routes
 GET     /disposal-value                   controllers.resident.properties.GainController.disposalValue
@@ -44,7 +44,7 @@ POST    /worth-when-sold                  controllers.resident.properties.GainCo
 GET     /disposal-costs                   controllers.resident.properties.GainController.disposalCosts
 POST    /disposal-costs                   controllers.resident.properties.GainController.submitDisposalCosts
 
-#Owner Before April Nineteen Eighty Two Routes
+#Owner Before Legislation Start Routes
 GET     /owner-before-legislation-start   controllers.resident.properties.GainController.ownerBeforeLegislationStart
 POST    /owner-before-legislation-start   controllers.resident.properties.GainController.submitOwnerBeforeLegislationStart
 
@@ -52,7 +52,7 @@ POST    /owner-before-legislation-start   controllers.resident.properties.GainCo
 GET     /how-became-owner                 controllers.resident.properties.GainController.howBecameOwner
 POST    /how-became-owner                 controllers.resident.properties.GainController.submitHowBecameOwner
 
-#Worth On Routes
+#Value Before Legislation Start Routes
 GET     /value-before-legislation-start   controllers.resident.properties.GainController.valueBeforeLegislationStart
 POST    /value-before-legislation-start   controllers.resident.properties.GainController.submitValueBeforeLegislationStart
 

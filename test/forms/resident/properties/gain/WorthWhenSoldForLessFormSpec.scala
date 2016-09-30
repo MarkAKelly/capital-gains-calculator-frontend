@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package forms.resident.gain
+package forms.resident.properties.gain
 
 import assets.MessageLookup.errorMessages
 import forms.resident.WorthWhenSoldForLessForm._
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import models.resident.WorthWhenSoldForLessModel
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class WorthWhenSoldForLessFormSpec extends UnitSpec with WithFakeApplication {
 

@@ -21,7 +21,7 @@ import config.{AppConfig, ApplicationConfig}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.GainController
-import models.resident.properties.WorthWhenBoughtModel
+import models.resident.properties.WorthWhenBoughtForLessModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -29,20 +29,20 @@ import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.Resident.Properties.{worthWhenBought => messages}
+import assets.MessageLookup.Resident.Properties.{WorthWhenBoughtForLess => messages}
 
 import scala.concurrent.Future
 
-class WorthWhenBoughtActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
+class WorthWhenBoughtForLessActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  def setupTarget(getData: Option[WorthWhenBoughtModel]): GainController= {
+  def setupTarget(getData: Option[WorthWhenBoughtForLessModel]): GainController= {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[WorthWhenBoughtModel](Matchers.eq(keyStoreKeys.worthWhenBought))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[WorthWhenBoughtForLessModel](Matchers.eq(keyStoreKeys.worthWhenBoughtForLess))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
-    when(mockCalcConnector.saveFormData[WorthWhenBoughtModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.saveFormData[WorthWhenBoughtForLessModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
 
     new GainController {
@@ -55,7 +55,7 @@ class WorthWhenBoughtActionSpec extends UnitSpec with WithFakeApplication with F
 
     "request has a valid session" should {
       lazy val target = setupTarget(None)
-      lazy val result = target.worthWhenBought(fakeRequestWithSession)
+      lazy val result = target.worthWhenBoughtForLess(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a status of 200" in {
@@ -68,8 +68,8 @@ class WorthWhenBoughtActionSpec extends UnitSpec with WithFakeApplication with F
     }
 
     "request has a valid session with existing data" should {
-      lazy val target = setupTarget(Some(WorthWhenBoughtModel(100)))
-      lazy val result = target.worthWhenBought(fakeRequestWithSession)
+      lazy val target = setupTarget(Some(WorthWhenBoughtForLessModel(100)))
+      lazy val result = target.worthWhenBoughtForLess(fakeRequestWithSession)
 
       "return a status of 200" in {
         status(result) shouldBe 200
@@ -82,7 +82,7 @@ class WorthWhenBoughtActionSpec extends UnitSpec with WithFakeApplication with F
 
     "request has an invalid session" should {
       lazy val target = setupTarget(None)
-      lazy val result = target.worthWhenBought(fakeRequest)
+      lazy val result = target.worthWhenBoughtForLess(fakeRequest)
 
       "return a status of 303" in {
         status(result) shouldBe 303
@@ -98,7 +98,7 @@ class WorthWhenBoughtActionSpec extends UnitSpec with WithFakeApplication with F
 
     "a valid form with the answer '100' is submitted" should {
       lazy val target = setupTarget(None)
-      lazy val result = target.submitWorthWhenBought(fakeRequestToPOSTWithSession(("amount", "100")))
+      lazy val result = target.submitWorthWhenBoughtForLess(fakeRequestToPOSTWithSession(("amount", "100")))
 
       "return a status of 303" in {
         status(result) shouldBe 303
@@ -111,7 +111,7 @@ class WorthWhenBoughtActionSpec extends UnitSpec with WithFakeApplication with F
 
     "an invalid form with no answer is submitted" should {
       lazy val target = setupTarget(None)
-      lazy val result = target.submitWorthWhenBought(fakeRequestToPOSTWithSession(("amount", "")))
+      lazy val result = target.submitWorthWhenBoughtForLess(fakeRequestToPOSTWithSession(("amount", "")))
       lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a status of 400" in {

@@ -1223,24 +1223,24 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
 
     "has a numeric output row for the bought for less than worth value" which {
 
-      s"should have the question text '${propertiesMessages.worthWhenBought.question}'" in {
-        doc.select("#worthWhenBought-question").text shouldBe propertiesMessages.worthWhenBought.question
+      s"should have the question text '${propertiesMessages.WorthWhenBoughtForLess.question}'" in {
+        doc.select("#worthWhenBoughtForLess-question").text shouldBe propertiesMessages.WorthWhenBoughtForLess.question
       }
 
       "should have the value '£3,000'" in {
-        doc.select("#worthWhenBought-amount span.bold-medium").text shouldBe "£3,000"
+        doc.select("#worthWhenBoughtForLess-amount span.bold-medium").text shouldBe "£3,000"
       }
 
-      s"should have a change link to ${routes.GainController.worthWhenBought().url}" in {
-        doc.select("#worthWhenBought-amount a").attr("href") shouldBe routes.GainController.worthWhenBought().url
+      s"should have a change link to ${routes.GainController.worthWhenBoughtForLess().url}" in {
+        doc.select("#worthWhenBoughtForLess-amount a").attr("href") shouldBe routes.GainController.worthWhenBoughtForLess().url
       }
 
       "has the question as part of the link" in {
-        doc.select("#worthWhenBought-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${propertiesMessages.worthWhenBought.question}"
+        doc.select("#worthWhenBoughtForLess-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${propertiesMessages.WorthWhenBoughtForLess.question}"
       }
 
       "has the question component of the link as visuallyhidden" in {
-        doc.select("#worthWhenBought-amount a span.visuallyhidden").text shouldBe propertiesMessages.worthWhenBought.question
+        doc.select("#worthWhenBoughtForLess-amount a span.visuallyhidden").text shouldBe propertiesMessages.WorthWhenBoughtForLess.question
       }
     }
   }

@@ -97,7 +97,7 @@
         }
         <!--- --->
         @{if (!answers.ownerBeforeLegislationStart && answers.howBecameOwner.get.equals("Bought") && answers.boughtForLessThanWorth.get)
-            summaryNumericRowHelper("worthWhenBought", Messages("calc.resident.properties.worthWhenBought.question"), answers.worthWhenBoughtForLess.get, None)
+            summaryNumericRowHelper("worthWhenBoughtForLess", Messages("calc.resident.properties.worthWhenBoughtForLess.question"), answers.worthWhenBoughtForLess.get, None)
         }
 
         @{if (!answers.ownerBeforeLegislationStart && answers.howBecameOwner.get.equals("Gifted"))
