@@ -104,8 +104,8 @@ class OwnerBeforeLegislationStartActionSpec extends UnitSpec with WithFakeApplic
         status(result) shouldBe 303
       }
 
-      "redirect to the worth when sold page" in {
-        redirectLocation(result) shouldBe Some(controllers.resident.shares.routes.GainController.worthOnMarchEightyTwo().toString)
+      "redirect to the valueBeforeLegislationStart page" in {
+        redirectLocation(result) shouldBe Some(controllers.resident.shares.routes.GainController.valueBeforeLegislationStart().toString)
       }
     }
 

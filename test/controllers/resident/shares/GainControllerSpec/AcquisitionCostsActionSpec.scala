@@ -139,7 +139,7 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
           status(result) shouldBe 200
         }
 
-        s"have a back-link to '${controllers.resident.shares.routes.GainController.worthOnMarchEightyTwo().url}'" in {
+        s"have a back-link to '${controllers.resident.shares.routes.GainController.valueBeforeLegislationStart().url}'" in {
           status(result) shouldBe 200
         }
       }

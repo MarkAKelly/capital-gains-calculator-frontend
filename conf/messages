@@ -590,7 +590,7 @@ calc.resident.shares.disposalCosts.question = How much did you pay in costs when
 calc.resident.shares.disposalCosts.helpText = For example, stockbroker fees
 
 ## Worth On messages
-calc.resident.shares.worthOn.question = What were the shares worth on 31 March 1982?
+calc.resident.shares.valueBeforeLegislationStart.question = What were the shares worth on 31 March 1982?
 
 ## Owner Before Legislation Start Messages
 calc.resident.shares.ownerBeforeLegislationStart.title = Did you own the shares before 1 April 1982?

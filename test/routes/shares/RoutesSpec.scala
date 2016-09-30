@@ -120,18 +120,18 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
-  /* Shares Worth on 31 March 1982 Routes */
-  "The URL for the resident/shares Worth on 31 March 1982 Action" should {
-    "be equal to /calculate-your-capital-gains/resident/shares/market-value-on-31-march-1982" in {
-      val path = GainController.worthOnMarchEightyTwo().url
-      path shouldEqual "/calculate-your-capital-gains/resident/shares/market-value-on-31-march-1982"
+  /* Shares Value Before Legislation Start Routes */
+  "The URL for the resident/shares value before legislation start Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/value-before-legislation-start" in {
+      val path = GainController.valueBeforeLegislationStart().url
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/value-before-legislation-start"
     }
   }
 
-  "The URL for the resident/shares submit worth on 31 March 1982 Action" should {
-    "be equal to /calculate-your-capital-gains/resident/shares/market-value-on-31-march-1982" in {
-      val path = GainController.submitWorthOnMarchEightyTwo().url
-      path shouldEqual "/calculate-your-capital-gains/resident/shares/market-value-on-31-march-1982"
+  "The URL for the resident/shares submit value before legislation start Action" should {
+    "be equal to /calculate-your-capital-gains/resident/shares/value-before-legislation-start" in {
+      val path = GainController.submitValueBeforeLegislationStart().url
+      path shouldEqual "/calculate-your-capital-gains/resident/shares/value-before-legislation-start"
     }
   }
 

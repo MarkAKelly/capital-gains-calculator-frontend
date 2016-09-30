@@ -27,9 +27,9 @@ POST    /disposal-costs                   controllers.resident.shares.GainContro
 GET     /owner-before-legislation-start    controllers.resident.shares.GainController.ownerBeforeLegislationStart
 POST    /owner-before-legislation-start    controllers.resident.shares.GainController.submitOwnerBeforeLegislationStart
 
-#Worth on 31 March 1982 Routes
-GET     /market-value-on-31-march-1982    controllers.resident.shares.GainController.worthOnMarchEightyTwo
-POST    /market-value-on-31-march-1982    controllers.resident.shares.GainController.submitWorthOnMarchEightyTwo
+#Value Before Legislation Start Routes
+GET     /value-before-legislation-start    controllers.resident.shares.GainController.valueBeforeLegislationStart
+POST    /value-before-legislation-start    controllers.resident.shares.GainController.submitValueBeforeLegislationStart
 
 #Did you Inherit the Shares Routes
 GET     /did-you-inherit-them             controllers.resident.shares.GainController.didYouInheritThem

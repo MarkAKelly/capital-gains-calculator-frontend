@@ -44,7 +44,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
         worthWhenSoldForLess = None,
         disposalCosts = 10000,
         ownerBeforeLegislationStart = false,
-        worthOnTaxStartDate = None,
+        valueBeforeLegislationStart = None,
         inheritedTheShares = Some(false),
         worthWhenInherited = None,
         acquisitionValue = Some(100000),
@@ -462,7 +462,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
         worthWhenSoldForLess = None,
         disposalCosts = 20,
         ownerBeforeLegislationStart = false,
-        worthOnTaxStartDate = None,
+        valueBeforeLegislationStart = None,
         inheritedTheShares = Some(true),
         worthWhenInherited = Some(5000),
         acquisitionValue = None,
@@ -561,7 +561,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
         worthWhenSoldForLess = None,
         disposalCosts = 20,
         ownerBeforeLegislationStart = true,
-        worthOnTaxStartDate = Some(700),
+        valueBeforeLegislationStart = Some(700),
         inheritedTheShares = Some(false),
         worthWhenInherited = None,
         acquisitionValue = Some(30),
@@ -613,16 +613,16 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
 
       "has a numeric output row for the Worth on 31 March 1982 value" which {
 
-        s"should have the question text '${SharesMessages.worthOn.question}'" in {
-          doc.select("#worthOn-question").text shouldBe SharesMessages.worthOn.question
+        s"should have the question text '${SharesMessages.valueBeforeLegislationStart.question}'" in {
+          doc.select("#valueBeforeLegislationStart-question").text shouldBe SharesMessages.valueBeforeLegislationStart.question
         }
 
         "should have the value '£700'" in {
-          doc.select("#worthOn-amount span.bold-medium").text shouldBe "£700"
+          doc.select("#valueBeforeLegislationStart-amount span.bold-medium").text shouldBe "£700"
         }
 
-        s"should have a change link to ${routes.GainController.worthOnMarchEightyTwo().url}" in {
-          doc.select("#worthOn-amount a").attr("href") shouldBe routes.GainController.worthOnMarchEightyTwo().url
+        s"should have a change link to ${routes.GainController.valueBeforeLegislationStart().url}" in {
+          doc.select("#valueBeforeLegislationStart-amount a").attr("href") shouldBe routes.GainController.valueBeforeLegislationStart().url
         }
 
       }
@@ -650,7 +650,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       worthWhenSoldForLess = None,
       disposalCosts = 10000,
       ownerBeforeLegislationStart = false,
-      worthOnTaxStartDate = None,
+      valueBeforeLegislationStart = None,
       inheritedTheShares = Some(false),
       worthWhenInherited = None,
       acquisitionValue = Some(100000),
@@ -838,7 +838,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       worthWhenSoldForLess = None,
       disposalCosts = 10000,
       ownerBeforeLegislationStart = false,
-      worthOnTaxStartDate = None,
+      valueBeforeLegislationStart = None,
       inheritedTheShares = Some(false),
       worthWhenInherited = None,
       acquisitionValue = Some(100000),
@@ -928,7 +928,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       worthWhenSoldForLess = None,
       disposalCosts = 0,
       ownerBeforeLegislationStart = false,
-      worthOnTaxStartDate = None,
+      valueBeforeLegislationStart = None,
       inheritedTheShares = Some(false),
       worthWhenInherited = None,
       acquisitionValue = Some(0),
@@ -1006,7 +1006,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       worthWhenSoldForLess = None,
       disposalCosts = 0,
       ownerBeforeLegislationStart = false,
-      worthOnTaxStartDate = None,
+      valueBeforeLegislationStart = None,
       inheritedTheShares = Some(false),
       worthWhenInherited = None,
       acquisitionValue = Some(0),
@@ -1059,7 +1059,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       worthWhenSoldForLess = Some(200000),
       disposalCosts = 0,
       ownerBeforeLegislationStart = false,
-      worthOnTaxStartDate = None,
+      valueBeforeLegislationStart = None,
       inheritedTheShares = Some(false),
       worthWhenInherited = None,
       acquisitionValue = Some(0),
@@ -1132,7 +1132,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       worthWhenSoldForLess = None,
       disposalCosts = 0,
       ownerBeforeLegislationStart = false,
-      worthOnTaxStartDate = None,
+      valueBeforeLegislationStart = None,
       inheritedTheShares = Some(false),
       worthWhenInherited = None,
       acquisitionValue = Some(0),

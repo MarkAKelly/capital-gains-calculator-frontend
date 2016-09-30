@@ -19,15 +19,15 @@ package forms.resident.shares.gain
 import common.Constants
 import common.Transformers._
 import common.Validation._
-import models.resident.shares.gain.WorthOnModel
+import models.resident.shares.gain.ValueBeforeLegislationStartModel
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-object WorthOnForm {
+object ValueBeforeLegislationStartForm {
 
-  val worthOnForm = Form(
+  val valueBeforeLegislationStartForm = Form(
     mapping(
       "amount" -> text
         .verifying(Messages("calc.common.error.mandatoryAmount"), mandatoryCheck)
@@ -36,6 +36,6 @@ object WorthOnForm {
         .verifying(Messages("calc.common.error.maxAmountExceeded", MoneyPounds(Constants.maxNumeric, 0).quantity), maxCheck)
         .verifying(Messages("calc.common.error.minimumAmount"), isPositive)
         .verifying(Messages("calc.common.error.invalidAmount"), decimalPlacesCheck)
-    )(WorthOnModel.apply)(WorthOnModel.unapply)
+    )(ValueBeforeLegislationStartModel.apply)(ValueBeforeLegislationStartModel.unapply)
   )
 }

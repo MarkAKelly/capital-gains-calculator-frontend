@@ -41,7 +41,7 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
         worthWhenSoldForLess = None,
         disposalCosts = 10000,
         ownerBeforeLegislationStart = false,
-        worthOnTaxStartDate = None,
+        valueBeforeLegislationStart = None,
         inheritedTheShares = Some(false),
         worthWhenInherited = None,
         acquisitionValue = Some(100000),
@@ -380,7 +380,7 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
         worthWhenSoldForLess = None,
         disposalCosts = 20,
         ownerBeforeLegislationStart = false,
-        worthOnTaxStartDate = None,
+        valueBeforeLegislationStart = None,
         inheritedTheShares = Some(true),
         worthWhenInherited = Some(5000),
         acquisitionValue = None,
@@ -479,7 +479,7 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
         worthWhenSoldForLess = None,
         disposalCosts = 20,
         ownerBeforeLegislationStart = true,
-        worthOnTaxStartDate = Some(700),
+        valueBeforeLegislationStart = Some(700),
         inheritedTheShares = Some(false),
         worthWhenInherited = None,
         acquisitionValue = Some(30),
@@ -533,16 +533,16 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
       "has a numeric output row for the Worth on 31 March 1982 value" which {
 
-        s"should have the question text '${SharesMessages.worthOn.question}'" in {
-          doc.select("#worthOn-question").text shouldBe SharesMessages.worthOn.question
+        s"should have the question text '${SharesMessages.valueBeforeLegislationStart.question}'" in {
+          doc.select("#valueBeforeLegislationStart-question").text shouldBe SharesMessages.valueBeforeLegislationStart.question
         }
 
         "should have the value '£700'" in {
-          doc.select("#worthOn-amount span.bold-medium").text shouldBe "£700"
+          doc.select("#valueBeforeLegislationStart-amount span.bold-medium").text shouldBe "£700"
         }
 
         s"should not have a change link" in {
-          doc.select("#worthOn-option a").isEmpty shouldBe true
+          doc.select("#valueBeforeLegislationStart-option a").isEmpty shouldBe true
         }
       }
 
@@ -571,7 +571,7 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
       worthWhenSoldForLess = Some(10),
       disposalCosts = 20,
       ownerBeforeLegislationStart = false,
-      worthOnTaxStartDate = None,
+      valueBeforeLegislationStart = None,
       inheritedTheShares = Some(false),
       worthWhenInherited = None,
       acquisitionValue = Some(30),
@@ -603,7 +603,7 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
       worthWhenSoldForLess = None,
       disposalCosts = 10000,
       ownerBeforeLegislationStart = false,
-      worthOnTaxStartDate = None,
+      valueBeforeLegislationStart = None,
       inheritedTheShares = Some(false),
       worthWhenInherited = None,
       acquisitionValue = Some(100000),

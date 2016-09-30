@@ -16,16 +16,16 @@
 
 package views.resident.shares.report
 
+import assets.MessageLookup.Resident.{Shares => SharesMessages}
 import assets.MessageLookup.{summaryPage => messages}
 import assets.{MessageLookup => commonMessages}
-import assets.MessageLookup.Resident.{Shares => SharesMessages}
 import common.Dates
 import controllers.helpers.FakeRequestHelper
 import models.resident._
 import models.resident.shares.{DeductionGainAnswersModel, GainAnswersModel}
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import views.html.calculation.resident.shares.{summary, report => views}
+import views.html.calculation.resident.shares.{report => views}
 
 class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
@@ -39,7 +39,7 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
         worthWhenSoldForLess = None,
         disposalCosts = 10000,
         ownerBeforeLegislationStart = false,
-        worthOnTaxStartDate = None,
+        valueBeforeLegislationStart = None,
         inheritedTheShares = Some(false),
         worthWhenInherited = None,
         acquisitionValue = Some(100000),
@@ -324,7 +324,7 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
         worthWhenSoldForLess = None,
         disposalCosts = 20,
         ownerBeforeLegislationStart = false,
-        worthOnTaxStartDate = None,
+        valueBeforeLegislationStart = None,
         inheritedTheShares = Some(true),
         worthWhenInherited = Some(5000),
         acquisitionValue = None,
@@ -418,7 +418,7 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
         worthWhenSoldForLess = None,
         disposalCosts = 20,
         ownerBeforeLegislationStart = true,
-        worthOnTaxStartDate = Some(700),
+        valueBeforeLegislationStart = Some(700),
         inheritedTheShares = Some(false),
         worthWhenInherited = None,
         acquisitionValue = Some(30),
@@ -466,16 +466,16 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
 
       "has a numeric output row for the Worth on 31 March 1982 value" which {
 
-        s"should have the question text '${SharesMessages.worthOn.question}'" in {
-          doc.select("#worthOn-question").text shouldBe SharesMessages.worthOn.question
+        s"should have the question text '${SharesMessages.valueBeforeLegislationStart.question}'" in {
+          doc.select("#valueBeforeLegislationStart-question").text shouldBe SharesMessages.valueBeforeLegislationStart.question
         }
 
         "should have the value '£700'" in {
-          doc.select("#worthOn-amount span.bold-medium").text shouldBe "£700"
+          doc.select("#valueBeforeLegislationStart-amount span.bold-medium").text shouldBe "£700"
         }
 
         s"should not have a change link" in {
-          doc.select("#worthOn-option a").isEmpty shouldBe true
+          doc.select("#valueBeforeLegislationStart-option a").isEmpty shouldBe true
         }
       }
 
@@ -501,7 +501,7 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
       worthWhenSoldForLess = None,
       disposalCosts = 10000,
       ownerBeforeLegislationStart = false,
-      worthOnTaxStartDate = None,
+      valueBeforeLegislationStart = None,
       inheritedTheShares = Some(false),
       worthWhenInherited = None,
       acquisitionValue = Some(100000),
@@ -723,7 +723,7 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
       worthWhenSoldForLess = Some(10),
       disposalCosts = 20,
       ownerBeforeLegislationStart = false,
-      worthOnTaxStartDate = None,
+      valueBeforeLegislationStart = None,
       inheritedTheShares = Some(false),
       worthWhenInherited = None,
       acquisitionValue = Some(30),
@@ -753,7 +753,7 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
       worthWhenSoldForLess = None,
       disposalCosts = 10000,
       ownerBeforeLegislationStart = false,
-      worthOnTaxStartDate = None,
+      valueBeforeLegislationStart = None,
       inheritedTheShares = Some(false),
       worthWhenInherited = None,
       acquisitionValue = Some(100000),

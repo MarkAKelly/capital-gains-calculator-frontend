@@ -116,7 +116,7 @@ object MessageLookup {
 
       }
 
-      object worthOn {
+      object valueBeforeLegislationStart {
         val question = "What were the shares worth on 31 March 1982?"
       }
 

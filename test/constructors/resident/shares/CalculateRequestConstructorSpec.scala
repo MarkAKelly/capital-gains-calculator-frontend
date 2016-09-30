@@ -36,7 +36,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
         worthWhenSoldForLess = None,
         disposalCosts = 0,
         ownerBeforeLegislationStart = false,
-        worthOnTaxStartDate = None,
+        valueBeforeLegislationStart = None,
         inheritedTheShares = Some(false),
         worthWhenInherited = None,
         acquisitionValue = Some(500),

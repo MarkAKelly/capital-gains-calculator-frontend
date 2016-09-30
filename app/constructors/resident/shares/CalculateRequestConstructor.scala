@@ -36,7 +36,7 @@ object CalculateRequestConstructor {
   }
 
   def determineAcquisitionValueToUse (answers: GainAnswersModel): BigDecimal = {
-    if (answers.ownerBeforeLegislationStart) answers.worthOnTaxStartDate.get
+    if (answers.ownerBeforeLegislationStart) answers.valueBeforeLegislationStart.get
     else if (answers.inheritedTheShares.get) answers.worthWhenInherited.get
     else answers.acquisitionValue.get
   }
