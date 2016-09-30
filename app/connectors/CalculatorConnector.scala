@@ -371,12 +371,12 @@ trait CalculatorConnector {
       case _ => None
     }
     val disposalCosts = fetchAndGetFormData[resident.DisposalCostsModel](ResidentShareKeys.disposalCosts).map(_.get.amount)
-    val ownedBeforeTaxStartDate = fetchAndGetFormData[resident.shares.OwnedBeforeEightyTwoModel](ResidentShareKeys.ownedBeforeEightyTwo).map(_.get.ownedBeforeEightyTwo)
-    val worthOnTaxStartDate = fetchAndGetFormData[resident.shares.gain.WorthOnModel](ResidentShareKeys.worthOn).map {
+    val ownedBeforeTaxStartDate = fetchAndGetFormData[resident.shares.OwnerBeforeLegislationStartModel](ResidentShareKeys.ownerBeforeLegislationStart).map(_.get.ownerBeforeLegislationStart)
+    val valueBeforeLegislationStart = fetchAndGetFormData[resident.shares.gain.ValueBeforeLegislationStartModel](ResidentShareKeys.valueBeforeLegislationStart).map {
       case Some(data) => Some(data.amount)
       case _ => None
     }
-    val inheritedTheShares = fetchAndGetFormData[resident.shares.gain.DidYouInheritThemModel](ResidentShareKeys.inheritedShares).map {
+    val inheritedTheShares = fetchAndGetFormData[resident.shares.gain.DidYouInheritThemModel](ResidentShareKeys.didYouInheritThem).map {
       case Some(data) => Some(data.wereInherited)
       case _ => None
     }
@@ -397,7 +397,7 @@ trait CalculatorConnector {
       worthWhenSoldForLess <- worthWhenSoldForLess
       disposalCosts <- disposalCosts
       ownedBeforeTaxStartDate <- ownedBeforeTaxStartDate
-      worthOnTaxStartDate <- worthOnTaxStartDate
+      valueBeforeLegislationStart <- valueBeforeLegislationStart
       inheritedTheShares <- inheritedTheShares
       worthWhenInherited <- worthWhenInherited
       acquisitionValue <- acquisitionValue
@@ -409,7 +409,7 @@ trait CalculatorConnector {
       worthWhenSoldForLess,
       disposalCosts,
       ownedBeforeTaxStartDate,
-      worthOnTaxStartDate,
+      valueBeforeLegislationStart,
       inheritedTheShares,
       worthWhenInherited,
       acquisitionValue,

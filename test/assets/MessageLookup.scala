@@ -116,7 +116,7 @@ object MessageLookup {
 
       }
 
-      object worthOn {
+      object valueBeforeLegislationStart {
         val question = "What were the shares worth on 31 March 1982?"
       }
 
@@ -124,8 +124,8 @@ object MessageLookup {
         val question = "How much did you sell the shares for?"
       }
 
-      //############ Owned Before 1982 messages #################//
-      object OwnedBeforeEightyTwoMessages {
+      //############ Owner Before Legislation Start messages #################//
+      object OwnerBeforeLegislationStart {
         val title = "Did you own the shares before 1 April 1982?"
         val errorNoSelect = "Tell us if you owned the shares before 1 April 1982"
       }

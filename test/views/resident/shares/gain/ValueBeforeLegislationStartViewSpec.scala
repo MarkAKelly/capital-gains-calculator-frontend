@@ -17,18 +17,18 @@
 package views.resident.shares.gain
 
 import assets.MessageLookup
-import assets.MessageLookup.Resident.Shares.{worthOn => messages}
+import assets.MessageLookup.Resident.Shares.{valueBeforeLegislationStart => messages}
 import controllers.helpers.FakeRequestHelper
-import forms.resident.shares.gain.WorthOnForm._
+import forms.resident.shares.gain.ValueBeforeLegislationStartForm._
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.shares.{gain => views}
 
-class WorthOnViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class ValueBeforeLegislationStartViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Worth On View" should {
+  "ValueBeforeLegislationStart View" should {
 
-    lazy val view = views.worthOn(worthOnForm)(fakeRequest)
+    lazy val view = views.valueBeforeLegislationStart(valueBeforeLegislationStartForm)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have charset UTF-8" in {
@@ -40,7 +40,7 @@ class WorthOnViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
     }
 
     s"have a back link to the owner before April 1982 page" in {
-      doc.select("#back-link").attr("href") shouldEqual controllers.resident.shares.routes.GainController.ownedBeforeEightyTwo().toString
+      doc.select("#back-link").attr("href") shouldEqual controllers.resident.shares.routes.GainController.ownerBeforeLegislationStart().toString
     }
 
     "have a heading that" should {
@@ -62,7 +62,7 @@ class WorthOnViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
       lazy val form = doc.select("form")
 
       "have the the correct action" in {
-        form.attr("action") shouldEqual controllers.resident.shares.routes.GainController.submitWorthOnMarchEightyTwo().toString
+        form.attr("action") shouldEqual controllers.resident.shares.routes.GainController.submitValueBeforeLegislationStart().toString
       }
 
       "have the method POST" in {
@@ -122,10 +122,10 @@ class WorthOnViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
     }
   }
 
-  "Worth On View with form without errors" should {
+  "ValueBeforeLegislationStart View with form without errors" should {
 
-    val form = worthOnForm.bind(Map("amount" -> "100"))
-    lazy val view = views.worthOn(form)(fakeRequest)
+    val form = valueBeforeLegislationStartForm.bind(Map("amount" -> "100"))
+    lazy val view = views.valueBeforeLegislationStart(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display the value of the form" in {
@@ -141,10 +141,10 @@ class WorthOnViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
     }
   }
 
-  "Worth When Gave Away View with form with errors" should {
+  "ValueBeforeLegislationStart View with form with errors" should {
 
-    val form = worthOnForm.bind(Map("amount" -> ""))
-    lazy val view = views.worthOn(form)(fakeRequest)
+    val form = valueBeforeLegislationStartForm.bind(Map("amount" -> ""))
+    lazy val view = views.valueBeforeLegislationStart(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {

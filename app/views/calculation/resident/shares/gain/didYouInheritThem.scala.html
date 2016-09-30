@@ -7,7 +7,7 @@
 @(didYouInheritThemForm: Form[DidYouInheritThemModel])(implicit request: Request[_])
 
 @resident_main_template(title = Messages("calc.resident.shares.didYouInheritThem.question"),
-backLink = Some(controllers.resident.shares.routes.GainController.ownedBeforeEightyTwo().url),
+backLink = Some(controllers.resident.shares.routes.GainController.ownerBeforeLegislationStart().url),
 homeLink = controllers.resident.shares.routes.GainController.disposalDate().url,
 navTitle = Messages("calc.base.resident.shares.home")){
 
@@ -30,7 +30,7 @@ navTitle = Messages("calc.base.resident.shares.home")){
     )
 </div>
 
-<input type="hidden" name="inheritedShares" value="" />
+<input type="hidden" name="wereInherited" value="" />
 <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
 }
 

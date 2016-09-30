@@ -16,36 +16,36 @@
 
 package forms.resident.shares
 
-import assets.MessageLookup.Resident.Shares.{OwnedBeforeEightyTwoMessages => Messages}
-import forms.resident.shares.OwnedBeforeEightyTwoForm._
-import models.resident.shares.OwnedBeforeEightyTwoModel
+import assets.MessageLookup.Resident.Shares.{OwnerBeforeLegislationStart => Messages}
+import forms.resident.shares.OwnerBeforeLegislationStartForm._
+import models.resident.shares.OwnerBeforeLegislationStartModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class OwnerBeforeEightyTwoFormSpec extends UnitSpec with WithFakeApplication {
+class OwnerBeforeLegislationStartFormSpec extends UnitSpec with WithFakeApplication {
 
-  "Creating the OwnedBeforeEightyTwo form from valid inputs" should {
+  "Creating the OwnerBeforeLegislationStart form from valid inputs" should {
 
     "return a populated form using .fill" in {
-      val model = OwnedBeforeEightyTwoModel(true)
-      val form = ownedBeforeEightyTwoForm.fill(model)
-      form.value.get shouldBe OwnedBeforeEightyTwoModel(true)
+      val model = OwnerBeforeLegislationStartModel(true)
+      val form = ownerBeforeLegislationStartForm.fill(model)
+      form.value.get shouldBe OwnerBeforeLegislationStartModel(true)
     }
 
     "return a populated form using .bind with an answer of Yes" in {
-      val form = ownedBeforeEightyTwoForm.bind(Map(("ownedBeforeEightyTwo", "Yes")))
-      form.value.get shouldBe OwnedBeforeEightyTwoModel(true)
+      val form = ownerBeforeLegislationStartForm.bind(Map(("ownerBeforeLegislationStart", "Yes")))
+      form.value.get shouldBe OwnerBeforeLegislationStartModel(true)
     }
 
     "return a populated form using .bind with an answer of No" in {
-      val form = ownedBeforeEightyTwoForm.bind(Map(("ownedBeforeEightyTwo", "No")))
-      form.value.get shouldBe OwnedBeforeEightyTwoModel(false)
+      val form = ownerBeforeLegislationStartForm.bind(Map(("ownerBeforeLegislationStart", "No")))
+      form.value.get shouldBe OwnerBeforeLegislationStartModel(false)
     }
   }
 
-  "Creating the OwnedBeforeEightyTwo form from invalid inputs" when {
+  "Creating the OwnerBeforeLegislationStart form from invalid inputs" when {
 
     "supplied with no selection" should {
-      lazy val form = ownedBeforeEightyTwoForm.bind(Map(("ownedBeforeEightyTwo", "")))
+      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownerBeforeLegislationStart", "")))
 
       "return a form with errors" in {
         form.hasErrors shouldBe true
@@ -56,13 +56,13 @@ class OwnerBeforeEightyTwoFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       s"return a form with the error message ${Messages.errorNoSelect}" in {
-        form.error("ownedBeforeEightyTwo").get.message shouldBe Messages.errorNoSelect
+        form.error("ownerBeforeLegislationStart").get.message shouldBe Messages.errorNoSelect
       }
 
     }
 
     "supplied with an incorrect selection" should {
-      lazy val form = ownedBeforeEightyTwoForm.bind(Map(("ownedBeforeEightyTwo", "true")))
+      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownerBeforeLegislationStart", "true")))
 
       "return a form with errors" in {
         form.hasErrors shouldBe true
@@ -73,7 +73,7 @@ class OwnerBeforeEightyTwoFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       s"return a form with the error message ${Messages.errorNoSelect}" in {
-        form.error("ownedBeforeEightyTwo").get.message shouldBe Messages.errorNoSelect
+        form.error("ownerBeforeLegislationStart").get.message shouldBe Messages.errorNoSelect
       }
     }
   }

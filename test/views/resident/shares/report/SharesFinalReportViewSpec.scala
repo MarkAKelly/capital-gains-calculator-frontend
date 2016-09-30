@@ -40,8 +40,8 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
         disposalValue = Some(200000),
         worthWhenSoldForLess = None,
         disposalCosts = 10000,
-        ownedBeforeTaxStartDate = false,
-        worthOnTaxStartDate = None,
+        ownerBeforeLegislationStart = false,
+        valueBeforeLegislationStart = None,
         inheritedTheShares = Some(false),
         worthWhenInherited = None,
         acquisitionValue = Some(100000),
@@ -256,16 +256,16 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
         "has an option/radiobutton output row for the Owned Before Start of Tax" which {
 
-          s"should have the question text '${SharesMessages.OwnedBeforeEightyTwoMessages.title}'" in {
-            doc.select("#ownedBeforeTaxStartDate-question").text shouldBe SharesMessages.OwnedBeforeEightyTwoMessages.title
+          s"should have the question text '${SharesMessages.OwnerBeforeLegislationStart.title}'" in {
+            doc.select("#ownerBeforeLegislationStart-question").text shouldBe SharesMessages.OwnerBeforeLegislationStart.title
           }
 
           "should have the value 'No'" in {
-            doc.select("#ownedBeforeTaxStartDate-option span.bold-medium").text shouldBe "No"
+            doc.select("#ownerBeforeLegislationStart-option span.bold-medium").text shouldBe "No"
           }
 
           s"should not have a change link" in {
-            doc.select("#ownedBeforeTaxStartDate-option a").isEmpty shouldBe true
+            doc.select("#ownerBeforeLegislationStart-option a").isEmpty shouldBe true
           }
         }
 
@@ -379,8 +379,8 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
         disposalValue = Some(10),
         worthWhenSoldForLess = None,
         disposalCosts = 20,
-        ownedBeforeTaxStartDate = false,
-        worthOnTaxStartDate = None,
+        ownerBeforeLegislationStart = false,
+        valueBeforeLegislationStart = None,
         inheritedTheShares = Some(true),
         worthWhenInherited = Some(5000),
         acquisitionValue = None,
@@ -418,16 +418,16 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
       "has an option/radiobutton output row for the Owned Before Start of Tax" which {
 
-        s"should have the question text '${SharesMessages.OwnedBeforeEightyTwoMessages.title}'" in {
-          doc.select("#ownedBeforeTaxStartDate-question").text shouldBe SharesMessages.OwnedBeforeEightyTwoMessages.title
+        s"should have the question text '${SharesMessages.OwnerBeforeLegislationStart.title}'" in {
+          doc.select("#ownerBeforeLegislationStart-question").text shouldBe SharesMessages.OwnerBeforeLegislationStart.title
         }
 
         "should have the value 'No'" in {
-          doc.select("#ownedBeforeTaxStartDate-option span.bold-medium").text shouldBe "No"
+          doc.select("#ownerBeforeLegislationStart-option span.bold-medium").text shouldBe "No"
         }
 
         s"should not have a change link" in {
-          doc.select("#ownedBeforeTaxStartDate-option a").isEmpty shouldBe true
+          doc.select("#ownerBeforeLegislationStart-option a").isEmpty shouldBe true
         }
       }
 
@@ -478,8 +478,8 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
         disposalValue = Some(10),
         worthWhenSoldForLess = None,
         disposalCosts = 20,
-        ownedBeforeTaxStartDate = true,
-        worthOnTaxStartDate = Some(700),
+        ownerBeforeLegislationStart = true,
+        valueBeforeLegislationStart = Some(700),
         inheritedTheShares = Some(false),
         worthWhenInherited = None,
         acquisitionValue = Some(30),
@@ -518,31 +518,31 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
       "has an option/radiobutton output row for the Owned Before Start of Tax" which {
 
-        s"should have the question text '${SharesMessages.OwnedBeforeEightyTwoMessages.title}'" in {
-          doc.select("#ownedBeforeTaxStartDate-question").text shouldBe SharesMessages.OwnedBeforeEightyTwoMessages.title
+        s"should have the question text '${SharesMessages.OwnerBeforeLegislationStart.title}'" in {
+          doc.select("#ownerBeforeLegislationStart-question").text shouldBe SharesMessages.OwnerBeforeLegislationStart.title
         }
 
         "should have the value 'Yes'" in {
-          doc.select("#ownedBeforeTaxStartDate-option span.bold-medium").text shouldBe "Yes"
+          doc.select("#ownerBeforeLegislationStart-option span.bold-medium").text shouldBe "Yes"
         }
 
         s"should not have a change link" in {
-          doc.select("#ownedBeforeTaxStartDate-option a").isEmpty shouldBe true
+          doc.select("#ownerBeforeLegislationStart-option a").isEmpty shouldBe true
         }
       }
 
       "has a numeric output row for the Worth on 31 March 1982 value" which {
 
-        s"should have the question text '${SharesMessages.worthOn.question}'" in {
-          doc.select("#worthOn-question").text shouldBe SharesMessages.worthOn.question
+        s"should have the question text '${SharesMessages.valueBeforeLegislationStart.question}'" in {
+          doc.select("#valueBeforeLegislationStart-question").text shouldBe SharesMessages.valueBeforeLegislationStart.question
         }
 
         "should have the value '£700'" in {
-          doc.select("#worthOn-amount span.bold-medium").text shouldBe "£700"
+          doc.select("#valueBeforeLegislationStart-amount span.bold-medium").text shouldBe "£700"
         }
 
         s"should not have a change link" in {
-          doc.select("#worthOn-option a").isEmpty shouldBe true
+          doc.select("#valueBeforeLegislationStart-option a").isEmpty shouldBe true
         }
       }
 
@@ -570,8 +570,8 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
       disposalValue = None,
       worthWhenSoldForLess = Some(10),
       disposalCosts = 20,
-      ownedBeforeTaxStartDate = false,
-      worthOnTaxStartDate = None,
+      ownerBeforeLegislationStart = false,
+      valueBeforeLegislationStart = None,
       inheritedTheShares = Some(false),
       worthWhenInherited = None,
       acquisitionValue = Some(30),
@@ -602,8 +602,8 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
       disposalValue = Some(200000),
       worthWhenSoldForLess = None,
       disposalCosts = 10000,
-      ownedBeforeTaxStartDate = false,
-      worthOnTaxStartDate = None,
+      ownerBeforeLegislationStart = false,
+      valueBeforeLegislationStart = None,
       inheritedTheShares = Some(false),
       worthWhenInherited = None,
       acquisitionValue = Some(100000),

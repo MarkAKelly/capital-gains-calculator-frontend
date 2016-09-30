@@ -33,16 +33,15 @@ import forms.resident.DisposalValueForm._
 import forms.resident.AcquisitionCostsForm._
 import forms.resident.AcquisitionValueForm._
 import forms.resident.WorthWhenInheritedForm._
-import forms.resident.shares.OwnedBeforeEightyTwoForm._
+import forms.resident.shares.OwnerBeforeLegislationStartForm._
 import forms.resident.shares.SellForLessForm._
 import forms.resident.WorthWhenSoldForLessForm._
 import forms.resident.shares.gain.DidYouInheritThemForm._
-
-import forms.resident.shares.gain.WorthOnForm._
+import forms.resident.shares.gain.ValueBeforeLegislationStartForm._
 import models.resident._
 import common.{Dates, TaxDates}
-import models.resident.shares.OwnedBeforeEightyTwoModel
-import models.resident.shares.gain.WorthOnModel
+import models.resident.shares.OwnerBeforeLegislationStartModel
+import models.resident.shares.gain.ValueBeforeLegislationStartModel
 import models.resident.shares.gain.DidYouInheritThemModel
 import play.api.i18n.Messages
 import play.api.data.Form
@@ -208,28 +207,28 @@ trait GainController extends FeatureLock {
       errors => Future.successful(BadRequest(views.disposalCosts(errors, homeLink))),
       success => {
         calcConnector.saveFormData(keystoreKeys.disposalCosts, success)
-        Future.successful(Redirect(routes.GainController.ownedBeforeEightyTwo()))}
+        Future.successful(Redirect(routes.GainController.ownerBeforeLegislationStart()))}
     )
   }
 
 
   //################# Owned Before 1982 Actions ########################
-  private val ownedBeforeEightyTwoBackLink = Some(controllers.resident.shares.routes.GainController.disposalCosts().url)
+  private val ownerBeforeLegislationStartBackLink = Some(controllers.resident.shares.routes.GainController.disposalCosts().url)
 
-  val ownedBeforeEightyTwo = FeatureLockForRTTShares.async { implicit request =>
-    calcConnector.fetchAndGetFormData[OwnedBeforeEightyTwoModel](keystoreKeys.ownedBeforeEightyTwo).map {
-      case Some(data) => Ok(views.ownedBeforeEightyTwo(ownedBeforeEightyTwoForm.fill(data), homeLink, ownedBeforeEightyTwoBackLink))
-      case None => Ok(views.ownedBeforeEightyTwo(ownedBeforeEightyTwoForm, homeLink, ownedBeforeEightyTwoBackLink))
+  val ownerBeforeLegislationStart = FeatureLockForRTTShares.async { implicit request =>
+    calcConnector.fetchAndGetFormData[OwnerBeforeLegislationStartModel](keystoreKeys.ownerBeforeLegislationStart).map {
+      case Some(data) => Ok(views.ownerBeforeLegislationStart(ownerBeforeLegislationStartForm.fill(data), homeLink, ownerBeforeLegislationStartBackLink))
+      case None => Ok(views.ownerBeforeLegislationStart(ownerBeforeLegislationStartForm, homeLink, ownerBeforeLegislationStartBackLink))
     }
   }
 
-  val submitOwnedBeforeEightyTwo = FeatureLockForRTTShares.async { implicit request =>
-    ownedBeforeEightyTwoForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.ownedBeforeEightyTwo(errors, homeLink, ownedBeforeEightyTwoBackLink))),
+  val submitOwnerBeforeLegislationStart = FeatureLockForRTTShares.async { implicit request =>
+    ownerBeforeLegislationStartForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.ownerBeforeLegislationStart(errors, homeLink, ownerBeforeLegislationStartBackLink))),
       success => {
-        calcConnector.saveFormData(keystoreKeys.ownedBeforeEightyTwo, success)
-        success.ownedBeforeEightyTwo match {
-          case true => Future.successful(Redirect(routes.GainController.worthOnMarchEightyTwo()))
+        calcConnector.saveFormData(keystoreKeys.ownerBeforeLegislationStart, success)
+        success.ownerBeforeLegislationStart match {
+          case true => Future.successful(Redirect(routes.GainController.valueBeforeLegislationStart()))
           case _ => Future.successful(Redirect(routes.GainController.didYouInheritThem()))
         }
       }
@@ -237,18 +236,18 @@ trait GainController extends FeatureLock {
   }
 
   //################# What were they worth on 31 March 1982 Actions ########################
-  val worthOnMarchEightyTwo =  FeatureLockForRTT.async { implicit request =>
-    calcConnector.fetchAndGetFormData[WorthOnModel](keystoreKeys.worthOn).map {
-      case Some(data) => Ok(views.worthOn(worthOnForm.fill(data)))
-      case None => Ok(views.worthOn(worthOnForm))
+  val valueBeforeLegislationStart =  FeatureLockForRTT.async { implicit request =>
+    calcConnector.fetchAndGetFormData[ValueBeforeLegislationStartModel](keystoreKeys.valueBeforeLegislationStart).map {
+      case Some(data) => Ok(views.valueBeforeLegislationStart(valueBeforeLegislationStartForm.fill(data)))
+      case None => Ok(views.valueBeforeLegislationStart(valueBeforeLegislationStartForm))
     }
   }
 
-  val submitWorthOnMarchEightyTwo = FeatureLockForRTT.async { implicit request =>
-    worthOnForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.worthOn(errors))),
+  val submitValueBeforeLegislationStart = FeatureLockForRTT.async { implicit request =>
+    valueBeforeLegislationStartForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(views.valueBeforeLegislationStart(errors))),
       success => {
-        calcConnector.saveFormData[WorthOnModel](keystoreKeys.worthOn, success)
+        calcConnector.saveFormData[ValueBeforeLegislationStartModel](keystoreKeys.valueBeforeLegislationStart, success)
         Future.successful(Redirect(routes.GainController.acquisitionCosts()))
       }
     )
@@ -256,7 +255,7 @@ trait GainController extends FeatureLock {
 
   //################# Did you Inherit the Shares Actions ########################
   val didYouInheritThem = FeatureLockForRTTShares.async { implicit request =>
-    calcConnector.fetchAndGetFormData[DidYouInheritThemModel](keystoreKeys.inheritedShares).map {
+    calcConnector.fetchAndGetFormData[DidYouInheritThemModel](keystoreKeys.didYouInheritThem).map {
       case Some(data) => Ok(views.didYouInheritThem(didYouInheritThemForm.fill(data)))
       case None => Ok(views.didYouInheritThem(didYouInheritThemForm))
     }
@@ -266,7 +265,7 @@ trait GainController extends FeatureLock {
     didYouInheritThemForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.didYouInheritThem(errors))),
       success => {
-        calcConnector.saveFormData(keystoreKeys.inheritedShares, success)
+        calcConnector.saveFormData(keystoreKeys.didYouInheritThem, success)
         if(success.wereInherited) Future.successful(Redirect(routes.GainController.worthWhenInherited()))
         else Future.successful(Redirect(routes.GainController.acquisitionValue()))
       }
@@ -310,8 +309,8 @@ trait GainController extends FeatureLock {
   }
 
   //################# Acquisition Costs Actions ########################
-  private def acquisitionCostsBackLink: (OwnedBeforeEightyTwoModel, Option[DidYouInheritThemModel]) => String = {
-      case (x,_) if x.ownedBeforeEightyTwo => routes.GainController.worthOnMarchEightyTwo().url
+  private def acquisitionCostsBackLink: (OwnerBeforeLegislationStartModel, Option[DidYouInheritThemModel]) => String = {
+      case (x,_) if x.ownerBeforeLegislationStart => routes.GainController.valueBeforeLegislationStart().url
       case (_,y) if y.get.wereInherited => routes.GainController.worthWhenInherited().url
       case (_,_) => routes.GainController.acquisitionValue().url
   }
@@ -326,9 +325,9 @@ trait GainController extends FeatureLock {
     }
 
     for {
-      ownedBeforeTax <- calcConnector.fetchAndGetFormData[OwnedBeforeEightyTwoModel](keystoreKeys.ownedBeforeEightyTwo)
-      inheritedShares <- calcConnector.fetchAndGetFormData[DidYouInheritThemModel](keystoreKeys.inheritedShares)
-      route <- routeRequest(acquisitionCostsBackLink(ownedBeforeTax.get, inheritedShares))
+      ownedBeforeTax <- calcConnector.fetchAndGetFormData[OwnerBeforeLegislationStartModel](keystoreKeys.ownerBeforeLegislationStart)
+      didYouInheritThem <- calcConnector.fetchAndGetFormData[DidYouInheritThemModel](keystoreKeys.didYouInheritThem)
+      route <- routeRequest(acquisitionCostsBackLink(ownedBeforeTax.get, didYouInheritThem))
     } yield route
   }
 
@@ -357,9 +356,9 @@ trait GainController extends FeatureLock {
     }
 
     for {
-      ownedBeforeTax <- calcConnector.fetchAndGetFormData[OwnedBeforeEightyTwoModel](keystoreKeys.ownedBeforeEightyTwo)
-      inheritedShares <- calcConnector.fetchAndGetFormData[DidYouInheritThemModel](keystoreKeys.inheritedShares)
-      route <- routeRequest(acquisitionCostsBackLink(ownedBeforeTax.get, inheritedShares))
+      ownedBeforeTax <- calcConnector.fetchAndGetFormData[OwnerBeforeLegislationStartModel](keystoreKeys.ownerBeforeLegislationStart)
+      didYouInheritThem <- calcConnector.fetchAndGetFormData[DidYouInheritThemModel](keystoreKeys.didYouInheritThem)
+      route <- routeRequest(acquisitionCostsBackLink(ownedBeforeTax.get, didYouInheritThem))
     } yield route
   }
 }

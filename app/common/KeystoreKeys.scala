@@ -85,8 +85,8 @@ object KeystoreKeys {
     val worthWhenSoldForLess = "res:share:worthWhenSoldForLess"
     val disposalValue = "res:share:disposalValue"
     val disposalCosts = "res:share:disposalCosts"
-    val ownedBeforeEightyTwo = "res:share:ownedBeforeEightyTwo"
-    val worthOn = "res:share:worthOn"
+    val ownerBeforeLegislationStart = "res:share:ownerBeforeLegislationStart"
+    val valueBeforeLegislationStart = "res:share:valueBeforeLegislationStart"
     val acquisitionValue = "res:share:acquisitionValue"
     val acquisitionCosts = "res:share:acquisitionCosts"
     val otherProperties = "res:share:otherProperties"
@@ -99,6 +99,6 @@ object KeystoreKeys {
     val previousTaxableGains = "res:share:previousTaxableGains"
     val personalAllowance = "res:share:personalAllowance"
     val worthWhenInherited = "res:share:worthWhenInherited"
-    val inheritedShares = "res:share:inheritedShares"
+    val didYouInheritThem = "res:share:didYouInheritThem"
   }
 }

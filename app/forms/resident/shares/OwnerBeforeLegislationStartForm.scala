@@ -18,19 +18,19 @@ package forms.resident.shares
 
 import common.Transformers._
 import common.Validation._
-import models.resident.shares.OwnedBeforeEightyTwoModel
+import models.resident.shares.OwnerBeforeLegislationStartModel
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.Messages
 
-object OwnedBeforeEightyTwoForm {
+object OwnerBeforeLegislationStartForm {
 
-  val ownedBeforeEightyTwoForm = Form(
+  val ownerBeforeLegislationStartForm = Form(
     mapping(
-      "ownedBeforeEightyTwo" -> text
-        .verifying(Messages("calc.resident.shares.ownedBeforeEightyTwo.noSelectError"), mandatoryCheck)
-        .verifying(Messages("calc.resident.shares.ownedBeforeEightyTwo.noSelectError"), yesNoCheck)
+      "ownerBeforeLegislationStart" -> text
+        .verifying(Messages("calc.resident.shares.ownerBeforeLegislationStart.noSelectError"), mandatoryCheck)
+        .verifying(Messages("calc.resident.shares.ownerBeforeLegislationStart.noSelectError"), yesNoCheck)
         .transform(stringToBoolean, booleanToString)
-    )(OwnedBeforeEightyTwoModel.apply)(OwnedBeforeEightyTwoModel.unapply)
+    )(OwnerBeforeLegislationStartModel.apply)(OwnerBeforeLegislationStartModel.unapply)
   )
 }

@@ -71,7 +71,7 @@ class DidYouInheritThemViewSpec extends UnitSpec with WithFakeApplication with F
       }
 
       "has a back link to 'back'" in {
-        backLink.attr("href") shouldBe "/calculate-your-capital-gains/resident/shares/owned-before-april-first-nineteen-eighty-two"
+        backLink.attr("href") shouldBe "/calculate-your-capital-gains/resident/shares/owner-before-legislation-start"
       }
     }
 
@@ -126,7 +126,7 @@ class DidYouInheritThemViewSpec extends UnitSpec with WithFakeApplication with F
 
           lazy val optionLabel = doc.select("#wereInherited-yes")
 
-          "have the id 'inheritedShares-Yes'" in {
+          "have the id 'wereInherited-Yes'" in {
             optionLabel.attr("id") shouldEqual "wereInherited-yes"
           }
 

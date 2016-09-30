@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package models.resident.shares
+package models.resident.shares.gain
 
 import play.api.libs.json.Json
 
-case class OwnedBeforeEightyTwoModel (ownedBeforeEightyTwo: Boolean)
+case class ValueBeforeLegislationStartModel(amount: BigDecimal)
 
-object OwnedBeforeEightyTwoModel {
-  implicit val format = Json.format[OwnedBeforeEightyTwoModel]
+object ValueBeforeLegislationStartModel {
+  implicit val format = Json.format[ValueBeforeLegislationStartModel]
 }
