@@ -16,21 +16,17 @@
 
 package forms.resident.properties.gain
 
-import play.api.data.Form
-import play.api.data.Forms._
-import common.Transformers._
 import common.Validation._
-import models.resident.properties.gain.OwnerBeforeAprilModel
+import models.resident.properties.gain.WhoDidYouGiveItToModel
+import play.api.data.Forms._
+import play.api.data._
 import play.api.i18n.Messages
 
-object OwnerBeforeAprilForm {
-
-  val ownerBeforeAprilForm = Form(
-    mapping(
-      "ownedBeforeAprilNineteenEightyTwo" -> text
-        .verifying(Messages("calc.resident.properties.ownerBeforeApril.noSelectError"), mandatoryCheck)
-        .verifying(Messages("calc.resident.properties.ownerBeforeApril.noSelectError"), yesNoCheck)
-        .transform(stringToBoolean, booleanToString)
-    )(OwnerBeforeAprilModel.apply)(OwnerBeforeAprilModel.unapply)
+object WhoDidYouGiveItToForm {
+  val whoDidYouGiveItToForm = Form(
+    mapping("whoDidYouGiveItTo" -> text
+        .verifying(Messages("calc.resident.whoDidYouGiveThePropertyTo.errormandatory"), mandatoryCheck)
+      .verifying(Messages("calc.resident.whoDidYouGiveThePropertyTo.errormandatory"), whoDidYouGiveItToCheck)
+    )(WhoDidYouGiveItToModel.apply)(WhoDidYouGiveItToModel.unapply)
   )
 }

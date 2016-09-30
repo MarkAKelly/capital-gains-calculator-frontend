@@ -18,19 +18,19 @@ package views.resident.properties.gain
 
 import controllers.helpers.FakeRequestHelper
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import forms.resident.properties.gain.OwnerBeforeAprilForm._
-import models.resident.properties.gain.OwnerBeforeAprilModel
+import forms.resident.properties.gain.OwnerBeforeLegislationStartForm._
+import models.resident.properties.gain.OwnerBeforeLegislationStartModel
 import views.html.calculation.resident.properties.{gain => views}
-import assets.MessageLookup.Resident.Properties.{ownerBeforeAprilNineteenEightyTwo => messages}
+import assets.MessageLookup.Resident.Properties.{OwnerBeforeLegislationStart => messages}
 import assets.{MessageLookup => commonMessages}
 import org.jsoup.Jsoup
 
-class OwnerBeforeAprilViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class OwnerBeforeLegislationStartViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "The Owner Before April view" should {
+  "The Owner Before Legislation Start view" should {
 
 
-    lazy val view = views.ownerBeforeApril(ownerBeforeAprilForm)(fakeRequest)
+    lazy val view = views.ownerBeforeLegislationStart(ownerBeforeLegislationStartForm)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
     lazy val form = doc.getElementsByTag("form")
 
@@ -73,7 +73,7 @@ class OwnerBeforeAprilViewSpec extends UnitSpec with WithFakeApplication with Fa
     }
 
     "render a form tag with a submit action" in {
-      doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/owner-before-april"
+      doc.select("form").attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/owner-before-legislation-start"
     }
 
     "has the method of POST" in {
@@ -98,17 +98,17 @@ class OwnerBeforeAprilViewSpec extends UnitSpec with WithFakeApplication with Fa
       "are surrounded in a fieldset" which {
 
         "has the class form-group" in {
-          doc.select("#ownedBeforeAprilNineteenEightyTwo").hasClass("form-group") shouldEqual true
+          doc.select("#ownedBeforeLegislationStart").hasClass("form-group") shouldEqual true
         }
 
         "has the class inline" in {
-          doc.select("#ownedBeforeAprilNineteenEightyTwo").hasClass("inline") shouldEqual true
+          doc.select("#ownedBeforeLegislationStart").hasClass("inline") shouldEqual true
         }
       }
 
       "for the option 'Yes'" should {
 
-        lazy val YesRadioOption = doc.select(".block-label[for=ownedBeforeAprilNineteenEightyTwo-yes]")
+        lazy val YesRadioOption = doc.select(".block-label[for=ownedBeforeLegislationStart-yes]")
 
         "have a label with class 'block-label'" in {
           YesRadioOption.hasClass("block-label") shouldEqual true
@@ -118,8 +118,8 @@ class OwnerBeforeAprilViewSpec extends UnitSpec with WithFakeApplication with Fa
           YesRadioOption.hasAttr("for") shouldEqual true
         }
 
-        "the for attribute has the value ownedBeforeAprilNineteenEightyTwo-Yes" in {
-          YesRadioOption.attr("for") shouldEqual "ownedBeforeAprilNineteenEightyTwo-yes"
+        "the for attribute has the value ownedBeforeLegislationStart-Yes" in {
+          YesRadioOption.attr("for") shouldEqual "ownedBeforeLegislationStart-yes"
         }
 
         "have the text 'Yes'" in {
@@ -128,10 +128,10 @@ class OwnerBeforeAprilViewSpec extends UnitSpec with WithFakeApplication with Fa
 
         "have an input under the label that" should {
 
-          lazy val optionLabel = doc.select("#ownedBeforeAprilNineteenEightyTwo-yes")
+          lazy val optionLabel = doc.select("#ownedBeforeLegislationStart-yes")
 
-          "have the id 'ownedBeforeAprilNineteenEightyTwo-Yes'" in {
-            optionLabel.attr("id") shouldEqual "ownedBeforeAprilNineteenEightyTwo-yes"
+          "have the id 'ownedBeforeLegislationStart-Yes'" in {
+            optionLabel.attr("id") shouldEqual "ownedBeforeLegislationStart-yes"
           }
 
           "have the value 'Yes'" in {
@@ -146,7 +146,7 @@ class OwnerBeforeAprilViewSpec extends UnitSpec with WithFakeApplication with Fa
 
       "for the option 'No'" should {
 
-        lazy val NoRadioOption = doc.select(".block-label[for=ownedBeforeAprilNineteenEightyTwo-no]")
+        lazy val NoRadioOption = doc.select(".block-label[for=ownedBeforeLegislationStart-no]")
 
         "have a label with class 'block-label'" in {
           NoRadioOption.hasClass("block-label") shouldEqual true
@@ -156,8 +156,8 @@ class OwnerBeforeAprilViewSpec extends UnitSpec with WithFakeApplication with Fa
           NoRadioOption.hasAttr("for") shouldEqual true
         }
 
-        "the for attribute has the value ownedBeforeAprilNineteenEightyTwo-No" in {
-          NoRadioOption.attr("for") shouldEqual "ownedBeforeAprilNineteenEightyTwo-no"
+        "the for attribute has the value ownedBeforeLegislationStart-No" in {
+          NoRadioOption.attr("for") shouldEqual "ownedBeforeLegislationStart-no"
         }
 
         "have the text 'No'" in {
@@ -166,10 +166,10 @@ class OwnerBeforeAprilViewSpec extends UnitSpec with WithFakeApplication with Fa
 
         "have an input under the label that" should {
 
-          lazy val optionLabel = doc.select("#ownedBeforeAprilNineteenEightyTwo-no")
+          lazy val optionLabel = doc.select("#ownedBeforeLegislationStart-no")
 
           "have the id 'livedInProperty-No'" in {
-            optionLabel.attr("id") shouldEqual "ownedBeforeAprilNineteenEightyTwo-no"
+            optionLabel.attr("id") shouldEqual "ownedBeforeLegislationStart-no"
           }
 
           "have the value 'No'" in {
@@ -213,12 +213,12 @@ class OwnerBeforeAprilViewSpec extends UnitSpec with WithFakeApplication with Fa
     }
   }
 
-  "ownedBeforeAprilNineteenEightyTwo view with a filled form" which {
+  "ownedBeforeLegislationStart view with a filled form" which {
 
     "for the option 'Yes'" should {
-      lazy val view = views.ownerBeforeApril(ownerBeforeAprilForm.fill(OwnerBeforeAprilModel(true)))(fakeRequest)
+      lazy val view = views.ownerBeforeLegislationStart(ownerBeforeLegislationStartForm.fill(OwnerBeforeLegislationStartModel(true)))(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
-      lazy val YesRadioOption = doc.select(".block-label[for=ownedBeforeAprilNineteenEightyTwo-yes]")
+      lazy val YesRadioOption = doc.select(".block-label[for=ownedBeforeLegislationStart-yes]")
 
       "have the option auto-selected" in {
         YesRadioOption.attr("class") shouldBe "block-label selected"
@@ -226,9 +226,9 @@ class OwnerBeforeAprilViewSpec extends UnitSpec with WithFakeApplication with Fa
     }
 
     "for the option 'No'" should {
-      lazy val view = views.ownerBeforeApril(ownerBeforeAprilForm.fill(OwnerBeforeAprilModel(false)))(fakeRequest)
+      lazy val view = views.ownerBeforeLegislationStart(ownerBeforeLegislationStartForm.fill(OwnerBeforeLegislationStartModel(false)))(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
-      lazy val NoRadioOption = doc.select(".block-label[for=ownedBeforeAprilNineteenEightyTwo-no]")
+      lazy val NoRadioOption = doc.select(".block-label[for=ownedBeforeLegislationStart-no]")
 
       "have the option auto-selected" in {
         NoRadioOption.attr("class") shouldBe "block-label selected"
@@ -236,15 +236,15 @@ class OwnerBeforeAprilViewSpec extends UnitSpec with WithFakeApplication with Fa
     }
   }
 
-  "ownedBeforeAprilNineteenEightyTwo view with form errors" should {
+  "ownedBeforeLegislationStart view with form errors" should {
 
-    lazy val form = ownerBeforeAprilForm.bind(Map("ownedBeforeAprilNineteenEightyTwo" -> ""))
-    lazy val view = views.ownerBeforeApril(form)(fakeRequest)
+    lazy val form = ownerBeforeLegislationStartForm.bind(Map("ownedBeforeLegislationStart" -> ""))
+    lazy val view = views.ownerBeforeLegislationStart(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have an error summary" which {
       "display an error summary message for the page" in {
-        doc.body.select("#ownedBeforeAprilNineteenEightyTwo-error-summary").size shouldBe 1
+        doc.body.select("#ownedBeforeLegislationStart-error-summary").size shouldBe 1
       }
 
       "display an error message for the input" in {

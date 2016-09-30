@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package models.resident.properties
+package models.resident.properties.gain
 
 import play.api.libs.json.Json
 
-case class WorthOnModel(amount: BigDecimal)
+case class OwnerBeforeLegislationStartModel(ownedBeforeLegislationStart: Boolean)
 
-object WorthOnModel {
-  implicit val format = Json.format[WorthOnModel]
+object OwnerBeforeLegislationStartModel {
+  implicit val format = Json.format[OwnerBeforeLegislationStartModel]
 }

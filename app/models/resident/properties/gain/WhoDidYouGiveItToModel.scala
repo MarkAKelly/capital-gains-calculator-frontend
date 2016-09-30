@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package models.resident.properties
+package models.resident.properties.gain
 
 import play.api.libs.json.Json
 
-case class WorthWhenBoughtModel(amount: BigDecimal)
+case class WhoDidYouGiveItToModel(option: String)
 
-object WorthWhenBoughtModel {
-  implicit val format = Json.format[WorthWhenBoughtModel]
+object WhoDidYouGiveItToModel{
+  implicit val format = Json.format[WhoDidYouGiveItToModel]
 }

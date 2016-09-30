@@ -19,14 +19,14 @@ package forms.resident.properties
 import assets.MessageLookup.errorMessages
 import assets.MessageLookup.whoDidYouGiveItTo
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import forms.resident.properties.gain.PropertyRecipientForm._
-import models.resident.properties.gain.PropertyRecipientModel
+import forms.resident.properties.gain.WhoDidYouGiveItToForm._
+import models.resident.properties.gain.WhoDidYouGiveItToModel
 
-class PropertyRecipientFormSpec extends UnitSpec with WithFakeApplication {
+class WhoDidYouGiveItToFormSpec extends UnitSpec with WithFakeApplication {
   "Creating the form from an empty model" should {
 
     "create an empty form when the model is empty" in {
-      lazy val form = propertyRecipientForm
+      lazy val form = whoDidYouGiveItToForm
       form.data.isEmpty shouldBe true
     }
   }
@@ -34,21 +34,20 @@ class PropertyRecipientFormSpec extends UnitSpec with WithFakeApplication {
   "Creating a form using a valid model" should {
 
     "return a form with the data specified in the model" in {
-      lazy val form = propertyRecipientForm.fill(PropertyRecipientModel("Charity"))
-      form.data("propertyRecipient") shouldBe "Charity"
+      lazy val form = whoDidYouGiveItToForm.fill(WhoDidYouGiveItToModel("Charity"))
+      form.data("whoDidYouGiveItTo") shouldBe "Charity"
     }
 
     "return a form with the data specified from the map" in {
-      lazy val form = propertyRecipientForm.bind(Map("propertyRecipient" -> "Charity"))
-      form.data("propertyRecipient") shouldBe "Charity"
+      lazy val form = whoDidYouGiveItToForm.bind(Map("whoDidYouGiveItTo" -> "Charity"))
+      form.data("whoDidYouGiveItTo") shouldBe "Charity"
     }
   }
 
   "Creating a form using an invalid post" when {
-    "supplied with no data for property recipient" should {
+    "supplied with no data for who did you give it to" should {
 
-      lazy val map = Map(("propertyRecipient" -> ""))
-      lazy val form = propertyRecipientForm.bind(map)
+      lazy val form = whoDidYouGiveItToForm.bind(Map("whoDidYouGiveItTo" -> ""))
 
       "raise a form error" in {
         form.hasErrors shouldBe true
@@ -59,15 +58,14 @@ class PropertyRecipientFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       s"error with message '${whoDidYouGiveItTo.errormandatory}" in {
-        form.error("propertyRecipient").get.message shouldBe whoDidYouGiveItTo.errormandatory
+        form.error("whoDidYouGiveItTo").get.message shouldBe whoDidYouGiveItTo.errormandatory
       }
     }
 
   }
 
-  "supplied with an invalid option for property recipient" should {
-    lazy val map = Map(("propertyRecipient" -> "Blah"))
-    lazy val form = propertyRecipientForm.bind(map)
+  "supplied with an invalid option for who did you give it to" should {
+    lazy val form = whoDidYouGiveItToForm.bind(Map("whoDidYouGiveItTo" -> "Blah"))
 
     "raise a form error" in {
       form.hasErrors shouldBe true
@@ -78,41 +76,34 @@ class PropertyRecipientFormSpec extends UnitSpec with WithFakeApplication {
     }
 
     s"error with message '${whoDidYouGiveItTo.errormandatory}" in {
-    form.error("propertyRecipient").get.message shouldBe whoDidYouGiveItTo.errormandatory
+    form.error("whoDidYouGiveItTo").get.message shouldBe whoDidYouGiveItTo.errormandatory
     }
 
    "throw an error when supplied with incorrect mappings" in {
-     lazy val map = Map(("propertyRecipient", "Something"))
-     lazy val form = propertyRecipientForm.bind(map)
+     lazy val form = whoDidYouGiveItToForm.bind(Map(("whoDidYouGiveItTo", "Something")))
 
      form.hasErrors shouldBe true
    }
-
-
 }
 
     "throw an error when supplied with an empty value" in {
-      lazy val map = Map(("propertyRecipient", ""))
-      lazy val form = propertyRecipientForm.bind(map)
+      lazy val form = whoDidYouGiveItToForm.bind(Map(("whoDidYouGiveItTo", "")))
 
       form.hasErrors shouldBe true
     }
 
     "not throw an error when supplied with correct/valid mapping for Spouse option" in {
-      lazy val map = Map(("propertyRecipient", "Spouse"))
-      lazy val form = propertyRecipientForm.bind(map)
+      lazy val form = whoDidYouGiveItToForm.bind(Map(("whoDidYouGiveItTo", "Spouse")))
       form.hasErrors shouldBe false
     }
 
     "not throwing an error when supplied with the correct/valid mappings for Charity option" in {
-      lazy val map = Map(("propertyRecipient", "Charity"))
-      lazy val form = propertyRecipientForm.bind(map)
+      lazy val form = whoDidYouGiveItToForm.bind(Map(("whoDidYouGiveItTo", "Charity")))
       form.hasErrors shouldBe false
     }
 
     "not throwing an error when supplied with the correct/valid mappings for Other option" in {
-      lazy val map = Map(("propertyRecipient", "Other"))
-      lazy val form = propertyRecipientForm.bind(map)
+      lazy val form = whoDidYouGiveItToForm.bind(Map(("whoDidYouGiveItTo", "Other")))
 
       form.hasErrors shouldBe false
     }

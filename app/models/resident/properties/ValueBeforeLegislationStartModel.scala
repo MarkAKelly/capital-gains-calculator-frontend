@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package models.resident.properties.gain
+package models.resident.properties
 
 import play.api.libs.json.Json
 
-case class OwnerBeforeAprilModel (ownedBeforeAprilNineteenEightyTwo: Boolean)
+case class ValueBeforeLegislationStartModel(amount: BigDecimal)
 
-object OwnerBeforeAprilModel {
-  implicit val format = Json.format[OwnerBeforeAprilModel]
+object ValueBeforeLegislationStartModel {
+  implicit val format = Json.format[ValueBeforeLegislationStartModel]
 }

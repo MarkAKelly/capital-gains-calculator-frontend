@@ -151,34 +151,34 @@ articleLayout = false
 
     @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.disposalCosts.title"),gainAnswers.disposalCosts,Some(gainRoutes.disposalCosts().toString))
 
-    @summaryOptionRowHelper("ownerBeforeAprilNineteenEightyTwo", Messages("calc.resident.properties.ownerBeforeApril.title"),
-    gainAnswers.ownerBeforeAprilNineteenEightyTwo, Some(gainRoutes.ownerBeforeAprilNineteenEightyTwo().toString))
+    @summaryOptionRowHelper("ownerBeforeLegislationStart", Messages("calc.resident.properties.ownedBeforeLegislationStart.title"),
+    gainAnswers.ownerBeforeLegislationStart, Some(gainRoutes.ownerBeforeLegislationStart().toString))
 
-    @{if (gainAnswers.ownerBeforeAprilNineteenEightyTwo)
-    summaryNumericRowHelper("worthOn",Messages("calc.resident.properties.worthOn.question"),gainAnswers.worthOnThirtyFirstMarchEightyTwo.get,Some(gainRoutes.worthOn().toString))}
+    @{if (gainAnswers.ownerBeforeLegislationStart)
+    summaryNumericRowHelper("valueBeforeLegislationStart",Messages("calc.resident.properties.valueBeforeLegislationStart.question"),gainAnswers.valueBeforeLegislationStart.get,Some(gainRoutes.valueBeforeLegislationStart().toString))}
 
-    @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo)
+    @{if (!gainAnswers.ownerBeforeLegislationStart)
     summaryTextRowHelper("howBecameOwner", Messages("calc.resident.howBecameOwner.title"), Messages(s"calc.resident.howBecameOwner.${gainAnswers.howBecameOwner.get.toLowerCase}"),
     Some(gainRoutes.howBecameOwner().toString))}
 
-    @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Bought"))
+    @{if (!gainAnswers.ownerBeforeLegislationStart && gainAnswers.howBecameOwner.get.equals("Bought"))
     summaryOptionRowHelper("boughtForLessThanWorth", Messages("calc.resident.properties.boughtForLessThanWorth.title"),
     gainAnswers.boughtForLessThanWorth.get, Some(gainRoutes.boughtForLessThanWorth().toString))}
 
-    @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Bought") && !gainAnswers.boughtForLessThanWorth.get)
+    @{if (!gainAnswers.ownerBeforeLegislationStart && gainAnswers.howBecameOwner.get.equals("Bought") && !gainAnswers.boughtForLessThanWorth.get)
         summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),gainAnswers.acquisitionValue.get,Some(gainRoutes.acquisitionValue().toString))
     }
 
     <!--- --->
-    @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Bought") && gainAnswers.boughtForLessThanWorth.get)
-        summaryNumericRowHelper("worthWhenBought", Messages("calc.resident.properties.worthWhenBought.question"), gainAnswers.worthWhenBoughtForLess.get, Some(gainRoutes.worthWhenBought().toString))
+    @{if (!gainAnswers.ownerBeforeLegislationStart && gainAnswers.howBecameOwner.get.equals("Bought") && gainAnswers.boughtForLessThanWorth.get)
+        summaryNumericRowHelper("worthWhenBoughtForLess", Messages("calc.resident.properties.worthWhenBoughtForLess.question"), gainAnswers.worthWhenBoughtForLess.get, Some(gainRoutes.worthWhenBoughtForLess().toString))
     }
 
-    @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Gifted"))
+    @{if (!gainAnswers.ownerBeforeLegislationStart && gainAnswers.howBecameOwner.get.equals("Gifted"))
         summaryNumericRowHelper("worthWhenGifted", Messages("calc.resident.properties.worthWhenGifted.question"), gainAnswers.worthWhenGifted.get, Some(gainRoutes.worthWhenGifted().toString))
     }
 
-    @{if (!gainAnswers.ownerBeforeAprilNineteenEightyTwo && gainAnswers.howBecameOwner.get.equals("Inherited"))
+    @{if (!gainAnswers.ownerBeforeLegislationStart && gainAnswers.howBecameOwner.get.equals("Inherited"))
         summaryNumericRowHelper("worthWhenInherited", Messages("calc.resident.properties.worthWhenInherited.question"), gainAnswers.worthWhenInherited.get, Some(gainRoutes.worthWhenInherited().toString))
     }
     <!--- --->
@@ -186,7 +186,7 @@ articleLayout = false
     @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),gainAnswers.acquisitionCosts,Some(gainRoutes.acquisitionCosts().toString))
 
     @summaryNumericRowHelper("improvements",
-    if(gainAnswers.ownerBeforeAprilNineteenEightyTwo) Messages("calc.resident.properties.improvements.questionBefore")
+    if(gainAnswers.ownerBeforeLegislationStart) Messages("calc.resident.properties.improvements.questionBefore")
     else Messages("calc.resident.properties.improvements.question"),
     gainAnswers.improvements,Some(gainRoutes.improvements().toString))
 

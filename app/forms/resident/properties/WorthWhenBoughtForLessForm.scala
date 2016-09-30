@@ -19,15 +19,15 @@ package forms.resident.properties
 import common.Constants
 import common.Validation._
 import common.Transformers._
-import models.resident.properties.WorthWhenBoughtModel
+import models.resident.properties.WorthWhenBoughtForLessModel
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-object WorthWhenBoughtForm {
+object WorthWhenBoughtForLessForm {
 
-  val worthWhenBoughtForm = Form(
+  val worthWhenBoughtForLessForm = Form(
     mapping(
       "amount" -> text
         .verifying(Messages("calc.common.error.mandatoryAmount"), mandatoryCheck)
@@ -36,7 +36,7 @@ object WorthWhenBoughtForm {
         .verifying(Messages("calc.common.error.maxAmountExceeded", MoneyPounds(Constants.maxNumeric, 0).quantity), maxCheck)
         .verifying(Messages("calc.common.error.minimumAmount"), isPositive)
         .verifying(Messages("calc.common.error.invalidAmount"), decimalPlacesCheck)
-    )(WorthWhenBoughtModel.apply)(WorthWhenBoughtModel.unapply)
+    )(WorthWhenBoughtForLessModel.apply)(WorthWhenBoughtForLessModel.unapply)
   )
 }
 

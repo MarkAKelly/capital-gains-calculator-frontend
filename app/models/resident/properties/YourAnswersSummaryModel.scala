@@ -37,8 +37,8 @@ case class YourAnswersSummaryModel
   improvements: BigDecimal,
   givenAway: Boolean,
   sellForLess: Option[Boolean],
-  ownerBeforeAprilNineteenEightyTwo: Boolean,
-  worthOnThirtyFirstMarchEightyTwo: Option[BigDecimal],
+  ownerBeforeLegislationStart: Boolean,
+  valueBeforeLegislationStart: Option[BigDecimal],
   howBecameOwner: Option[String],
   boughtForLessThanWorth: Option[Boolean]
 )

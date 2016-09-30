@@ -19,15 +19,15 @@ package views.resident.properties.gain
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{gain => views}
 import controllers.helpers.FakeRequestHelper
-import forms.resident.properties.gain.PropertyRecipientForm._
+import forms.resident.properties.gain.WhoDidYouGiveItToForm._
 import org.jsoup.Jsoup
 import assets.MessageLookup.{whoDidYouGiveItTo => messages}
 import assets.{MessageLookup => commonMessages}
 
-class PropertyRecipientViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class WhoDidYouGiveItToViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
   "Property Recipient view" should {
 
-  lazy val view = views.propertyRecipient(propertyRecipientForm)(fakeRequest)
+  lazy val view = views.whoDidYouGiveItTo(whoDidYouGiveItToForm)(fakeRequest)
   lazy val doc = Jsoup.parse(view.body)
 
   "have a charset of UTF-8" in {
@@ -45,7 +45,7 @@ class PropertyRecipientViewSpec extends UnitSpec with WithFakeApplication with F
         backLink.text shouldBe commonMessages.calcBaseBack
       }
 
-      "have the back-linl class" in {
+      "have the back-link class" in {
         backLink.hasClass("back-link") shouldBe true
       }
 
@@ -79,15 +79,15 @@ class PropertyRecipientViewSpec extends UnitSpec with WithFakeApplication with F
 
     "have additional content that" should {
       s"have a label for the Your Spouse or Civil Partner option" in {
-        doc.select("label:nth-of-type(1)").text() shouldEqual (messages.spouse)
+        doc.select("label:nth-of-type(1)").text() shouldEqual messages.spouse
       }
 
       s"have a label for the A Charity option" in {
-        doc.select("label:nth-of-type(2)").text() shouldEqual (messages.charity)
+        doc.select("label:nth-of-type(2)").text() shouldEqual messages.charity
       }
 
       s"have a label for the Someone Else option" in {
-        doc.select("label:nth-of-type(3)").text() shouldEqual (messages.other)
+        doc.select("label:nth-of-type(3)").text() shouldEqual messages.other
       }
     }
 
@@ -108,9 +108,9 @@ class PropertyRecipientViewSpec extends UnitSpec with WithFakeApplication with F
     }
   }
 
-  "PropertyRecipientView with form with errors" should {
-    val form = propertyRecipientForm.bind(Map("propertyRecipient" -> ""))
-    lazy val view = views.propertyRecipient(form)(fakeRequest)
+  "WhoDidYouGiveItToView with form with errors" should {
+    val form = whoDidYouGiveItToForm.bind(Map("whoDidYouGiveItTo" -> ""))
+    lazy val view = views.whoDidYouGiveItTo(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message regarding incorrect value being inputted" in {

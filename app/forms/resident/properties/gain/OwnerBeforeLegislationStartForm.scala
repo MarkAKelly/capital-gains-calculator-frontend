@@ -16,17 +16,21 @@
 
 package forms.resident.properties.gain
 
-import common.Validation._
-import models.resident.properties.gain.PropertyRecipientModel
+import play.api.data.Form
 import play.api.data.Forms._
-import play.api.data._
+import common.Transformers._
+import common.Validation._
+import models.resident.properties.gain.OwnerBeforeLegislationStartModel
 import play.api.i18n.Messages
 
-object PropertyRecipientForm {
-  val propertyRecipientForm = Form(
-    mapping("propertyRecipient" -> text
-        .verifying(Messages("calc.resident.whoDidYouGiveThePropertyTo.errormandatory"), mandatoryCheck)
-      .verifying(Messages("calc.resident.whoDidYouGiveThePropertyTo.errormandatory"), whoDidYouGiveItToCheck)
-    )(PropertyRecipientModel.apply)(PropertyRecipientModel.unapply)
+object OwnerBeforeLegislationStartForm {
+
+  val ownerBeforeLegislationStartForm = Form(
+    mapping(
+      "ownedBeforeLegislationStart" -> text
+        .verifying(Messages("calc.resident.properties.ownedBeforeLegislationStart.noSelectError"), mandatoryCheck)
+        .verifying(Messages("calc.resident.properties.ownedBeforeLegislationStart.noSelectError"), yesNoCheck)
+        .transform(stringToBoolean, booleanToString)
+    )(OwnerBeforeLegislationStartModel.apply)(OwnerBeforeLegislationStartModel.unapply)
   )
 }

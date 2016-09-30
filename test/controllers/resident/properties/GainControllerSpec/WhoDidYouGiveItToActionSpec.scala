@@ -19,7 +19,7 @@ package controllers.resident.properties.GainControllerSpec
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.GainController
-import models.resident.properties.gain.PropertyRecipientModel
+import models.resident.properties.gain.WhoDidYouGiveItToModel
 import org.mockito.Matchers
 import org.scalatest.mock.MockitoSugar
 
@@ -34,14 +34,14 @@ import org.jsoup.Jsoup
 import play.api.test.Helpers._
 
 
-class PropertyRecipientActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar{
+class WhoDidYouGiveItToActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar{
 
-  def setupTarget(getData: Option[PropertyRecipientModel]) : GainController = {
+  def setupTarget(getData: Option[WhoDidYouGiveItToModel]) : GainController = {
     val mockCalcConnector = mock[CalculatorConnector]
-    when(mockCalcConnector.fetchAndGetFormData[PropertyRecipientModel](Matchers.eq(keystoreKeys.propertyRecipient))(Matchers.any(), Matchers.any())).
+    when(mockCalcConnector.fetchAndGetFormData[WhoDidYouGiveItToModel](Matchers.eq(keystoreKeys.whoDidYouGiveItTo))(Matchers.any(), Matchers.any())).
       thenReturn(Future.successful(getData))
 
-    when(mockCalcConnector.saveFormData[PropertyRecipientModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.saveFormData[WhoDidYouGiveItToModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(mock[CacheMap]))
 
     new GainController {
@@ -65,7 +65,7 @@ class PropertyRecipientActionSpec extends UnitSpec with WithFakeApplication with
     }
 
     "there is keystore data" should {
-      lazy val target = setupTarget(Some(PropertyRecipientModel("Charity")))
+      lazy val target = setupTarget(Some(WhoDidYouGiveItToModel("Charity")))
       lazy val result = target.whoDidYouGiveItTo(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -95,7 +95,7 @@ class PropertyRecipientActionSpec extends UnitSpec with WithFakeApplication with
 
   "Calling .submitWhoDidYouGiveItTo from the GainController with a Charity value" should {
     lazy val target = setupTarget(None)
-    lazy val request = fakeRequestToPOSTWithSession(("propertyRecipient","Charity"))
+    lazy val request = fakeRequestToPOSTWithSession(("whoDidYouGiveItTo","Charity"))
     lazy val result = target.submitWhoDidYouGiveItTo(request)
 
     "when supplied with a valid form" which {
@@ -111,7 +111,7 @@ class PropertyRecipientActionSpec extends UnitSpec with WithFakeApplication with
 
   "Calling .submitWhoDidYouGiveItTo from the GainController with a Spouse value" should {
     lazy val target = setupTarget(None)
-    lazy val request = fakeRequestToPOSTWithSession(("propertyRecipient", "Spouse"))
+    lazy val request = fakeRequestToPOSTWithSession(("whoDidYouGiveItTo", "Spouse"))
     lazy val result = target.submitWhoDidYouGiveItTo(request)
 
     "when supplied with a valid form" which {
@@ -127,7 +127,7 @@ class PropertyRecipientActionSpec extends UnitSpec with WithFakeApplication with
 
   "Calling .submitWhoDidYouGiveItTo from the GainController with a Someone Else value" should {
     lazy val target = setupTarget(None)
-    lazy val request = fakeRequestToPOSTWithSession(("propertyRecipient", "Other"))
+    lazy val request = fakeRequestToPOSTWithSession(("whoDidYouGiveItTo", "Other"))
     lazy val result = target.submitWhoDidYouGiveItTo(request)
 
     "when supplied with a valid form" which{
@@ -143,7 +143,7 @@ class PropertyRecipientActionSpec extends UnitSpec with WithFakeApplication with
 
   "Calling .submitWhoDidYouGiveIt to from the GainController with an invalid value/bad request" should {
     lazy val target = setupTarget(None)
-    lazy val request = fakeRequestToPOSTWithSession(("propertyRecipient", "blah"))
+    lazy val request = fakeRequestToPOSTWithSession(("whoDidYouGiveItTo", "blah"))
     lazy val result = target.submitWhoDidYouGiveItTo(request)
 
     "when supplied with an invalid form" which {

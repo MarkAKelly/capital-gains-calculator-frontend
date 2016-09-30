@@ -46,7 +46,7 @@ object KeystoreKeys {
     val disposalValue = "res:property:disposalValue"
     val worthWhenSoldForLess = "res:property:worthWhenSoldForLess"
     val disposalCosts = "res:property:disposalCosts"
-    val ownerBeforeAprilNineteenEightyTwo = "res:property:ownerBeforeAprilNineteenEightyTwo"
+    val ownerBeforeLegislationStart = "res:property:ownerBeforeLegislationStart"
     val howBecameOwner = "res:property:howBecameOwner"
     val acquisitionValue = "res:property:acquisitionValue"
     val acquisitionCosts = "res:property:acquisitionCosts"
@@ -71,12 +71,12 @@ object KeystoreKeys {
     val boughtForLessThanWorth = "res:property:boughtForLessThanWorth"
     val sellForLess = "res:property:sellForLess"
     val sellOrGiveAway = "res:property:sellOrGiveAway"
-    val worthWhenBought = "res:property:worthWhenBought"
+    val worthWhenBoughtForLess = "res:property:worthWhenBoughtForLess"
     val worthWhenInherited = "res:property:worthWhenInherited"
     val worthWhenGaveAway = "res:property:worthWhenGaveAway"
     val worthWhenGifted = "res:property:worthWhenGifted"
-    val worthOn = "res:property:worthOn"
-    val propertyRecipient = "res:property:propertyRecipient"
+    val valueBeforeLegislationStart = "res:property:valueBeforeLegislationStart"
+    val whoDidYouGiveItTo = "res:property:whoDidYouGiveItTo"
   }
 
   object ResidentShareKeys {

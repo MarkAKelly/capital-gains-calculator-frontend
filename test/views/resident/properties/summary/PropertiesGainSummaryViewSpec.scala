@@ -264,51 +264,51 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
       "has an option output row for owner before april 1982" which {
 
-        s"should have the question text '${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}'" in {
-          doc.select("#ownerBeforeAprilNineteenEightyTwo-question").text shouldBe commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
+        s"should have the question text '${commonMessages.Resident.Properties.OwnerBeforeLegislationStart.title}'" in {
+          doc.select("#ownerBeforeLegislationStart-question").text shouldBe commonMessages.Resident.Properties.OwnerBeforeLegislationStart.title
         }
 
         "should have the value 'Yes'" in {
-          doc.select("#ownerBeforeAprilNineteenEightyTwo-option span.bold-medium").text shouldBe "Yes"
+          doc.select("#ownerBeforeLegislationStart-option span.bold-medium").text shouldBe "Yes"
         }
 
-        s"should have a change link to ${routes.GainController.ownerBeforeAprilNineteenEightyTwo().url}" in {
-          doc.select("#ownerBeforeAprilNineteenEightyTwo-option a").attr("href") shouldBe routes.GainController.ownerBeforeAprilNineteenEightyTwo().url
+        s"should have a change link to ${routes.GainController.ownerBeforeLegislationStart().url}" in {
+          doc.select("#ownerBeforeLegislationStart-option a").attr("href") shouldBe routes.GainController.ownerBeforeLegislationStart().url
         }
 
         "has the question as part of the link" in {
-          doc.select("#ownerBeforeAprilNineteenEightyTwo-option a").text shouldBe
-            s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}"
+          doc.select("#ownerBeforeLegislationStart-option a").text shouldBe
+            s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.OwnerBeforeLegislationStart.title}"
         }
 
         "has the question component of the link as visuallyhidden" in {
-          doc.select("#ownerBeforeAprilNineteenEightyTwo-option a span.visuallyhidden").text shouldBe
-            commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
+          doc.select("#ownerBeforeLegislationStart-option a span.visuallyhidden").text shouldBe
+            commonMessages.Resident.Properties.OwnerBeforeLegislationStart.title
         }
       }
 
-      "has a numeric output row for the Worth Before April Nineteen Eighty Two" which {
+      "has a numeric output row for the Value Before Legislation Start" which {
 
-        s"should have the question text '${commonMessages.Resident.Properties.worthOn.question}'" in {
-          doc.select("#worthOn-question").text shouldBe commonMessages.Resident.Properties.worthOn.question
+        s"should have the question text '${commonMessages.Resident.Properties.ValueBeforeLegislationStart.question}'" in {
+          doc.select("#valueBeforeLegislationStart-question").text shouldBe commonMessages.Resident.Properties.ValueBeforeLegislationStart.question
         }
 
         "should have the value '£5,000'" in {
-          doc.select("#worthOn-amount span.bold-medium").text shouldBe "£5,000"
+          doc.select("#valueBeforeLegislationStart-amount span.bold-medium").text shouldBe "£5,000"
         }
 
-        s"should have a change link to ${routes.GainController.worthOn().url}" in {
-          doc.select("#worthOn-amount a").attr("href") shouldBe routes.GainController.worthOn().url
+        s"should have a change link to ${routes.GainController.valueBeforeLegislationStart().url}" in {
+          doc.select("#valueBeforeLegislationStart-amount a").attr("href") shouldBe routes.GainController.valueBeforeLegislationStart().url
         }
 
         "has the question as part of the link" in {
-          doc.select("#worthOn-amount a").text shouldBe
-            s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.worthOn.question}"
+          doc.select("#valueBeforeLegislationStart-amount a").text shouldBe
+            s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.ValueBeforeLegislationStart.question}"
         }
 
         "has the question component of the link as visuallyhidden" in {
-          doc.select("#worthOn-amount a span.visuallyhidden").text shouldBe
-            commonMessages.Resident.Properties.worthOn.question
+          doc.select("#valueBeforeLegislationStart-amount a span.visuallyhidden").text shouldBe
+            commonMessages.Resident.Properties.ValueBeforeLegislationStart.question
         }
       }
 
@@ -480,26 +480,26 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     "has an option output row for owner before april 1982" which {
 
-      s"should have the question text '${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}'" in {
-        doc.select("#ownerBeforeAprilNineteenEightyTwo-question").text shouldBe commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
+      s"should have the question text '${commonMessages.Resident.Properties.OwnerBeforeLegislationStart.title}'" in {
+        doc.select("#ownerBeforeLegislationStart-question").text shouldBe commonMessages.Resident.Properties.OwnerBeforeLegislationStart.title
       }
 
       "should have the value 'No'" in {
-        doc.select("#ownerBeforeAprilNineteenEightyTwo-option span.bold-medium").text shouldBe "No"
+        doc.select("#ownerBeforeLegislationStart-option span.bold-medium").text shouldBe "No"
       }
 
-      s"should have a change link to ${routes.GainController.ownerBeforeAprilNineteenEightyTwo().url}" in {
-        doc.select("#ownerBeforeAprilNineteenEightyTwo-option a").attr("href") shouldBe routes.GainController.ownerBeforeAprilNineteenEightyTwo().url
+      s"should have a change link to ${routes.GainController.ownerBeforeLegislationStart().url}" in {
+        doc.select("#ownerBeforeLegislationStart-option a").attr("href") shouldBe routes.GainController.ownerBeforeLegislationStart().url
       }
 
       "has the question as part of the link" in {
-        doc.select("#ownerBeforeAprilNineteenEightyTwo-option a").text shouldBe
-          s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}"
+        doc.select("#ownerBeforeLegislationStart-option a").text shouldBe
+          s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.OwnerBeforeLegislationStart.title}"
       }
 
       "has the question component of the link as visuallyhidden" in {
-        doc.select("#ownerBeforeAprilNineteenEightyTwo-option a span.visuallyhidden").text shouldBe
-          commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
+        doc.select("#ownerBeforeLegislationStart-option a span.visuallyhidden").text shouldBe
+          commonMessages.Resident.Properties.OwnerBeforeLegislationStart.title
       }
     }
 
@@ -670,24 +670,24 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     "has a numeric output row for the bought for less than worth value" which {
 
-      s"should have the question text '${propertiesMessages.worthWhenBought.question}'" in {
-        doc.select("#worthWhenBought-question").text shouldBe propertiesMessages.worthWhenBought.question
+      s"should have the question text '${propertiesMessages.WorthWhenBoughtForLess.question}'" in {
+        doc.select("#worthWhenBoughtForLess-question").text shouldBe propertiesMessages.WorthWhenBoughtForLess.question
       }
 
       "should have the value '£3,000'" in {
-        doc.select("#worthWhenBought-amount span.bold-medium").text shouldBe "£3,000"
+        doc.select("#worthWhenBoughtForLess-amount span.bold-medium").text shouldBe "£3,000"
       }
 
-      s"should have a change link to ${routes.GainController.worthWhenBought().url}" in {
-        doc.select("#worthWhenBought-amount a").attr("href") shouldBe routes.GainController.worthWhenBought().url
+      s"should have a change link to ${routes.GainController.worthWhenBoughtForLess().url}" in {
+        doc.select("#worthWhenBoughtForLess-amount a").attr("href") shouldBe routes.GainController.worthWhenBoughtForLess().url
       }
 
       "has the question as part of the link" in {
-        doc.select("#worthWhenBought-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${propertiesMessages.worthWhenBought.question}"
+        doc.select("#worthWhenBoughtForLess-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${propertiesMessages.WorthWhenBoughtForLess.question}"
       }
 
       "has the question component of the link as visuallyhidden" in {
-        doc.select("#worthWhenBought-amount a span.visuallyhidden").text shouldBe propertiesMessages.worthWhenBought.question
+        doc.select("#worthWhenBoughtForLess-amount a span.visuallyhidden").text shouldBe propertiesMessages.WorthWhenBoughtForLess.question
       }
     }
   }

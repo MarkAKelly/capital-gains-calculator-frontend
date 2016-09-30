@@ -18,14 +18,14 @@ package forms.resident.properties.gain
 
 import assets.MessageLookup.errorMessages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import models.resident.properties.WorthOnModel
-import forms.resident.properties.WorthOnForm._
+import models.resident.properties.ValueBeforeLegislationStartModel
+import forms.resident.properties.ValueBeforeLegislationStartForm._
 
-class WorthOnFormSpec extends UnitSpec with WithFakeApplication {
+class ValueBeforeLegislationStartFormSpec extends UnitSpec with WithFakeApplication {
 
   "Creating a form using an empty model" should {
 
-    lazy val form = worthOnForm
+    lazy val form = valueBeforeLegislationStartForm
 
     "return an empty string for amount" in {
       form.data.isEmpty shouldBe true
@@ -35,8 +35,8 @@ class WorthOnFormSpec extends UnitSpec with WithFakeApplication {
   "Creating a form using a valid model" should {
 
     "return a form with the data specified in the model" in {
-      val model = WorthOnModel(1)
-      val form = worthOnForm.fill(model)
+      val model = ValueBeforeLegislationStartModel(1)
+      val form = valueBeforeLegislationStartForm.fill(model)
       form.data("amount") shouldBe "1"
     }
 
@@ -46,7 +46,7 @@ class WorthOnFormSpec extends UnitSpec with WithFakeApplication {
 
     "supplied with no data for amount" should {
 
-      lazy val form = worthOnForm.bind(Map("amount" -> ""))
+      lazy val form = valueBeforeLegislationStartForm.bind(Map("amount" -> ""))
 
       "raise form error" in {
         form.hasErrors shouldBe true
@@ -63,7 +63,7 @@ class WorthOnFormSpec extends UnitSpec with WithFakeApplication {
 
     "supplied with empty space for amount" should {
 
-      lazy val form = worthOnForm.bind(Map("amount" -> "  "))
+      lazy val form = valueBeforeLegislationStartForm.bind(Map("amount" -> "  "))
 
       "raise form error" in {
         form.hasErrors shouldBe true
@@ -81,7 +81,7 @@ class WorthOnFormSpec extends UnitSpec with WithFakeApplication {
 
     "supplied with non numeric input for amount" should {
 
-      lazy val form = worthOnForm.bind(Map("amount" -> "a"))
+      lazy val form = valueBeforeLegislationStartForm.bind(Map("amount" -> "a"))
 
       "raise form error" in {
         form.hasErrors shouldBe true
@@ -98,7 +98,7 @@ class WorthOnFormSpec extends UnitSpec with WithFakeApplication {
 
     "supplied with an amount with 3 numbers after the decimal" should {
 
-      lazy val form = worthOnForm.bind(Map("amount" -> "1.000"))
+      lazy val form = valueBeforeLegislationStartForm.bind(Map("amount" -> "1.000"))
 
       "raise form error" in {
         form.hasErrors shouldBe true
@@ -115,7 +115,7 @@ class WorthOnFormSpec extends UnitSpec with WithFakeApplication {
 
     "supplied with an amount that's greater than the max" should {
 
-      lazy val form = worthOnForm.bind(Map("amount" -> "1000000000.01"))
+      lazy val form = valueBeforeLegislationStartForm.bind(Map("amount" -> "1000000000.01"))
 
       "raise form error" in {
         form.hasErrors shouldBe true
@@ -132,7 +132,7 @@ class WorthOnFormSpec extends UnitSpec with WithFakeApplication {
 
     "supplied with an amount that's less than the zero" should {
 
-      lazy val form = worthOnForm.bind(Map("amount" -> "-0.01"))
+      lazy val form = valueBeforeLegislationStartForm.bind(Map("amount" -> "-0.01"))
 
       "raise form error" in {
         form.hasErrors shouldBe true
@@ -152,10 +152,10 @@ class WorthOnFormSpec extends UnitSpec with WithFakeApplication {
 
     "supplied with valid amount" should {
 
-      lazy val form = worthOnForm.bind(Map("amount" -> "1"))
+      lazy val form = valueBeforeLegislationStartForm.bind(Map("amount" -> "1"))
 
       "build a model with the correct amount" in {
-        form.value.get shouldBe WorthOnModel(BigDecimal(1))
+        form.value.get shouldBe ValueBeforeLegislationStartModel(BigDecimal(1))
       }
 
       "not raise form error" in {
@@ -165,28 +165,28 @@ class WorthOnFormSpec extends UnitSpec with WithFakeApplication {
 
     "supplied with an amount with 1 number after the decimal" should {
       "not raise form error" in {
-        val form = worthOnForm.bind(Map("amount" -> "1.1"))
+        val form = valueBeforeLegislationStartForm.bind(Map("amount" -> "1.1"))
         form.hasErrors shouldBe false
       }
     }
 
     "supplied with an amount with 2 numbers after the decimal" should {
       "not raise form error" in {
-        val form = worthOnForm.bind(Map("amount" -> "1.11"))
+        val form = valueBeforeLegislationStartForm.bind(Map("amount" -> "1.11"))
         form.hasErrors shouldBe false
       }
     }
 
     "supplied with an amount that's equal to the max" should {
       "not raise form error" in {
-        val form = worthOnForm.bind(Map("amount" -> "1000000000"))
+        val form = valueBeforeLegislationStartForm.bind(Map("amount" -> "1000000000"))
         form.hasErrors shouldBe false
       }
     }
 
     "supplied with an amount that's equal to the min" should {
       "not raise form error" in {
-        val form = worthOnForm.bind(Map("amount" -> "0"))
+        val form = valueBeforeLegislationStartForm.bind(Map("amount" -> "0"))
         form.hasErrors shouldBe false
       }
     }

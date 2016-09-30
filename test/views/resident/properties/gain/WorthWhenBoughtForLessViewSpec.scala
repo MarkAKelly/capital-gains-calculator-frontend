@@ -20,14 +20,14 @@ import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{gain => views}
-import forms.resident.properties.WorthWhenBoughtForm._
-import assets.MessageLookup.Resident.Properties.{worthWhenBought => messages}
+import forms.resident.properties.WorthWhenBoughtForLessForm._
+import assets.MessageLookup.Resident.Properties.{WorthWhenBoughtForLess => messages}
 
-class WorthWhenBoughtViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class WorthWhenBoughtForLessViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "worthWhenBought view" should {
-    val form = worthWhenBoughtForm
-    lazy val view = views.worthWhenBought(form)(fakeRequest)
+    val form = worthWhenBoughtForLessForm
+    lazy val view = views.worthWhenBoughtForLess(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -59,7 +59,7 @@ class WorthWhenBoughtViewSpec extends UnitSpec with WithFakeApplication with Fak
     }
 
     "have a form action of 'postAction'" in {
-      doc.select("form").attr("action") shouldBe "/calculate-your-capital-gains/resident/properties/worth-when-bought"
+      doc.select("form").attr("action") shouldBe "/calculate-your-capital-gains/resident/properties/worth-when-bought-for-less"
     }
 
     "have a form method of 'POST'" in {
@@ -88,8 +88,8 @@ class WorthWhenBoughtViewSpec extends UnitSpec with WithFakeApplication with Fak
   }
 
   "Disposal Value View with form without errors" should {
-    val form = worthWhenBoughtForm.bind(Map("amount" -> "100"))
-    lazy val view = views.worthWhenBought(form)(fakeRequest)
+    val form = worthWhenBoughtForLessForm.bind(Map("amount" -> "100"))
+    lazy val view = views.worthWhenBoughtForLess(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display the value of the form" in {
@@ -106,8 +106,8 @@ class WorthWhenBoughtViewSpec extends UnitSpec with WithFakeApplication with Fak
   }
 
   "Disposal Value View with form with errors" should {
-    val form = worthWhenBoughtForm.bind(Map("amount" -> ""))
-    lazy val view = views.worthWhenBought(form)(fakeRequest)
+    val form = worthWhenBoughtForLessForm.bind(Map("amount" -> ""))
+    lazy val view = views.worthWhenBoughtForLess(form)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "display an error summary message for the amount" in {

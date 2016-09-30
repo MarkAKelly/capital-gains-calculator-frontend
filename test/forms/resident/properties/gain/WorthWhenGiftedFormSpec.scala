@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package forms.resident.gain
+package forms.resident.properties.gain
 
-import controllers.helpers.FakeRequestHelper
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import forms.resident.properties.WorthWhenBoughtForm._
-import models.resident.properties.WorthWhenBoughtModel
 import assets.MessageLookup
+import controllers.helpers.FakeRequestHelper
+import forms.resident.properties.gain.WorthWhenGiftedForm._
+import models.resident.properties.gain.WorthWhenGiftedModel
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class WorthWhenBoughtFormSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class WorthWhenGiftedFormSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Creating a form using an empty model" should {
-    lazy val form = worthWhenBoughtForm
+    lazy val form = worthWhenGiftedForm
 
     "return an empty string for amount" in {
       form.data.isEmpty shouldBe true
@@ -33,8 +33,8 @@ class WorthWhenBoughtFormSpec extends UnitSpec with WithFakeApplication with Fak
   }
 
   "Creating a form using a valid model" should {
-    lazy val model = WorthWhenBoughtModel(1)
-    lazy val form = worthWhenBoughtForm.fill(model)
+    lazy val model = WorthWhenGiftedModel(1)
+    lazy val form = worthWhenGiftedForm.fill(model)
 
     "return a form with the data specified in the model" in {
       form.data("amount") shouldBe "1"
@@ -44,10 +44,10 @@ class WorthWhenBoughtFormSpec extends UnitSpec with WithFakeApplication with Fak
   "Creating a form using a valid post" when {
 
     "supplied with a valid amount" should {
-      lazy val form = worthWhenBoughtForm.bind(Map("amount" -> "1"))
+      lazy val form = worthWhenGiftedForm.bind(Map("amount" -> "1"))
 
       "build a model with the correct amount" in {
-        form.value.get shouldBe WorthWhenBoughtModel(BigDecimal(1))
+        form.value.get shouldBe WorthWhenGiftedModel(BigDecimal(1))
       }
 
       "not raise form error" in {
@@ -60,7 +60,7 @@ class WorthWhenBoughtFormSpec extends UnitSpec with WithFakeApplication with Fak
 
     "supplied with no data for amount" should {
 
-      lazy val form = worthWhenBoughtForm.bind(Map("amount" -> ""))
+      lazy val form = worthWhenGiftedForm.bind(Map("amount" -> ""))
 
       "raise a form error" in {
         form.hasErrors shouldBe true
@@ -77,7 +77,7 @@ class WorthWhenBoughtFormSpec extends UnitSpec with WithFakeApplication with Fak
 
     "supplied with empty space for amount" should {
 
-      lazy val form = worthWhenBoughtForm.bind(Map("amount" -> "  "))
+      lazy val form = worthWhenGiftedForm.bind(Map("amount" -> "  "))
 
       "raise a form error" in {
         form.hasErrors shouldBe true
@@ -94,7 +94,7 @@ class WorthWhenBoughtFormSpec extends UnitSpec with WithFakeApplication with Fak
 
     "supplied with non numeric input for amount" should {
 
-      lazy val form = worthWhenBoughtForm.bind(Map("amount" -> "a"))
+      lazy val form = worthWhenGiftedForm.bind(Map("amount" -> "a"))
 
       "raise a form error" in {
         form.hasErrors shouldBe true
@@ -111,7 +111,7 @@ class WorthWhenBoughtFormSpec extends UnitSpec with WithFakeApplication with Fak
 
     "supplied with an amount with 3 numbers after the decimal" should {
 
-      lazy val form = worthWhenBoughtForm.bind(Map("amount" -> "1.000"))
+      lazy val form = worthWhenGiftedForm.bind(Map("amount" -> "1.000"))
 
       "raise a form error" in {
         form.hasErrors shouldBe true
@@ -128,7 +128,7 @@ class WorthWhenBoughtFormSpec extends UnitSpec with WithFakeApplication with Fak
 
     "supplied with an amount that's greater than the max" should {
 
-      lazy val form = worthWhenBoughtForm.bind(Map("amount" -> "1000000000.01"))
+      lazy val form = worthWhenGiftedForm.bind(Map("amount" -> "1000000000.01"))
 
       "raise a form error" in {
         form.hasErrors shouldBe true
@@ -145,7 +145,7 @@ class WorthWhenBoughtFormSpec extends UnitSpec with WithFakeApplication with Fak
 
     "supplied with an amount that's less than the zero" should {
 
-      lazy val form = worthWhenBoughtForm.bind(Map("amount" -> "-0.01"))
+      lazy val form = worthWhenGiftedForm.bind(Map("amount" -> "-0.01"))
 
       "raise a form error" in {
         form.hasErrors shouldBe true

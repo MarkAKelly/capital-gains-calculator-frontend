@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package models.resident.properties.gain
+package models.resident.properties
 
 import play.api.libs.json.Json
 
-case class PropertyRecipientModel(option: String)
+case class WorthWhenBoughtForLessModel(amount: BigDecimal)
 
-object PropertyRecipientModel{
-  implicit val format = Json.format[PropertyRecipientModel]
+object WorthWhenBoughtForLessModel {
+  implicit val format = Json.format[WorthWhenBoughtForLessModel]
 }
