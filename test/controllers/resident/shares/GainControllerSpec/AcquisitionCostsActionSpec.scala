@@ -55,7 +55,7 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
     when(mockCalcConnector.fetchAndGetFormData[OwnerBeforeLegislationStartModel](Matchers.eq(keystoreKeys.ownerBeforeLegislationStart))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(ownedBeforeStartOfTaxData))
 
-    when(mockCalcConnector.fetchAndGetFormData[DidYouInheritThemModel](Matchers.eq(keystoreKeys.inheritedShares))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[DidYouInheritThemModel](Matchers.eq(keystoreKeys.didYouInheritThem))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(inheritedThemData))
 
     when(mockCalcConnector.getShareGainAnswers(Matchers.any()))

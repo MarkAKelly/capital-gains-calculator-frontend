@@ -126,7 +126,7 @@ class DidYouInheritThemViewSpec extends UnitSpec with WithFakeApplication with F
 
           lazy val optionLabel = doc.select("#wereInherited-yes")
 
-          "have the id 'inheritedShares-Yes'" in {
+          "have the id 'wereInherited-Yes'" in {
             optionLabel.attr("id") shouldEqual "wereInherited-yes"
           }
 

@@ -376,7 +376,7 @@ trait CalculatorConnector {
       case Some(data) => Some(data.amount)
       case _ => None
     }
-    val inheritedTheShares = fetchAndGetFormData[resident.shares.gain.DidYouInheritThemModel](ResidentShareKeys.inheritedShares).map {
+    val inheritedTheShares = fetchAndGetFormData[resident.shares.gain.DidYouInheritThemModel](ResidentShareKeys.didYouInheritThem).map {
       case Some(data) => Some(data.wereInherited)
       case _ => None
     }

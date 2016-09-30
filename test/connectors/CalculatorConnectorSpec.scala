@@ -185,7 +185,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     when(mockSessionCache.fetchAndGetEntry[resident.shares.OwnerBeforeLegislationStartModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.ownerBeforeLegislationStart))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(mock[resident.shares.OwnerBeforeLegislationStartModel])))
 
-    when(mockSessionCache.fetchAndGetEntry[resident.shares.gain.DidYouInheritThemModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.inheritedShares))(Matchers.any(), Matchers.any()))
+    when(mockSessionCache.fetchAndGetEntry[resident.shares.gain.DidYouInheritThemModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.didYouInheritThem))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(mock[resident.shares.gain.DidYouInheritThemModel])))
 
     when(mockSessionCache.fetchAndGetEntry[resident.WorthWhenInheritedModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.worthWhenInherited))(Matchers.any(), Matchers.any()))

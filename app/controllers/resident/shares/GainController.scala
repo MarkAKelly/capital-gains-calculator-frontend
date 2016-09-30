@@ -256,7 +256,7 @@ trait GainController extends FeatureLock {
 
   //################# Did you Inherit the Shares Actions ########################
   val didYouInheritThem = FeatureLockForRTTShares.async { implicit request =>
-    calcConnector.fetchAndGetFormData[DidYouInheritThemModel](keystoreKeys.inheritedShares).map {
+    calcConnector.fetchAndGetFormData[DidYouInheritThemModel](keystoreKeys.didYouInheritThem).map {
       case Some(data) => Ok(views.didYouInheritThem(didYouInheritThemForm.fill(data)))
       case None => Ok(views.didYouInheritThem(didYouInheritThemForm))
     }
@@ -266,7 +266,7 @@ trait GainController extends FeatureLock {
     didYouInheritThemForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.didYouInheritThem(errors))),
       success => {
-        calcConnector.saveFormData(keystoreKeys.inheritedShares, success)
+        calcConnector.saveFormData(keystoreKeys.didYouInheritThem, success)
         if(success.wereInherited) Future.successful(Redirect(routes.GainController.worthWhenInherited()))
         else Future.successful(Redirect(routes.GainController.acquisitionValue()))
       }
@@ -327,8 +327,8 @@ trait GainController extends FeatureLock {
 
     for {
       ownedBeforeTax <- calcConnector.fetchAndGetFormData[OwnerBeforeLegislationStartModel](keystoreKeys.ownerBeforeLegislationStart)
-      inheritedShares <- calcConnector.fetchAndGetFormData[DidYouInheritThemModel](keystoreKeys.inheritedShares)
-      route <- routeRequest(acquisitionCostsBackLink(ownedBeforeTax.get, inheritedShares))
+      didYouInheritThem <- calcConnector.fetchAndGetFormData[DidYouInheritThemModel](keystoreKeys.didYouInheritThem)
+      route <- routeRequest(acquisitionCostsBackLink(ownedBeforeTax.get, didYouInheritThem))
     } yield route
   }
 
@@ -358,8 +358,8 @@ trait GainController extends FeatureLock {
 
     for {
       ownedBeforeTax <- calcConnector.fetchAndGetFormData[OwnerBeforeLegislationStartModel](keystoreKeys.ownerBeforeLegislationStart)
-      inheritedShares <- calcConnector.fetchAndGetFormData[DidYouInheritThemModel](keystoreKeys.inheritedShares)
-      route <- routeRequest(acquisitionCostsBackLink(ownedBeforeTax.get, inheritedShares))
+      didYouInheritThem <- calcConnector.fetchAndGetFormData[DidYouInheritThemModel](keystoreKeys.didYouInheritThem)
+      route <- routeRequest(acquisitionCostsBackLink(ownedBeforeTax.get, didYouInheritThem))
     } yield route
   }
 }
