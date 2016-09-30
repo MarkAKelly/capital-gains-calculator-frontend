@@ -35,9 +35,6 @@ POST    /market-value-on-31-march-1982    controllers.resident.shares.GainContro
 GET     /did-you-inherit-them             controllers.resident.shares.GainController.didYouInheritThem
 POST    /did-you-inherit-them             controllers.resident.shares.GainController.submitDidYouInheritThem
 
-#Worth When Inherited Routes
-GET     /worth-when-inherited             controllers.resident.shares.GainController.worthWhenInherited
-
 #Worth when Inherited Routes
 GET     /worth-when-inherited             controllers.resident.shares.GainController.worthWhenInherited
 POST    /worth-when-inherited             controllers.resident.shares.GainController.submitWorthWhenInherited
