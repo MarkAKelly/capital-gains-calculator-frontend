@@ -35,7 +35,7 @@ import forms.resident.AcquisitionCostsForm._
 import forms.resident.properties.ImprovementsForm._
 import forms.resident.properties.SellForLessForm._
 import forms.resident.properties.gain.OwnerBeforeLegislationStartForm._
-import forms.resident.properties.gain.PropertyRecipientForm._
+import forms.resident.properties.gain.WhoDidYouGiveItToForm._
 import forms.resident.WorthWhenSoldForLessForm._
 import forms.resident.properties.WorthWhenGaveAwayForm._
 import forms.resident.properties.HowBecameOwnerForm._
@@ -46,7 +46,7 @@ import forms.resident.properties.BoughtForLessThanWorthForm._
 import forms.resident.properties.WorthWhenBoughtForLessForm._
 import forms.resident.properties.SellOrGiveAwayForm._
 import play.api.data.Form
-import models.resident.properties.gain.{OwnerBeforeLegislationStartModel, PropertyRecipientModel, WorthWhenGiftedModel}
+import models.resident.properties.gain.{OwnerBeforeLegislationStartModel, WhoDidYouGiveItToModel, WorthWhenGiftedModel}
 import models.resident._
 import models.resident.properties._
 import play.api.i18n.Messages
@@ -128,21 +128,21 @@ trait GainController extends FeatureLock {
   //################ Who Did You Give It To Actions ######################
   val whoDidYouGiveItTo = FeatureLockForRTT.async { implicit request =>
 
-    calcConnector.fetchAndGetFormData[PropertyRecipientModel](keystoreKeys.propertyRecipient).map {
-      case Some(data) => Ok(views.propertyRecipient(propertyRecipientForm.fill(data)))
-      case _ => Ok(views.propertyRecipient(propertyRecipientForm))
+    calcConnector.fetchAndGetFormData[WhoDidYouGiveItToModel](keystoreKeys.whoDidYouGiveItTo).map {
+      case Some(data) => Ok(views.whoDidYouGiveItTo(whoDidYouGiveItToForm.fill(data)))
+      case _ => Ok(views.whoDidYouGiveItTo(whoDidYouGiveItToForm))
     }
   }
 
   val submitWhoDidYouGiveItTo = FeatureLockForRTT.async { implicit request =>
-    propertyRecipientForm.bindFromRequest.fold(
-    errors => Future.successful(BadRequest(views.propertyRecipient(errors))),
+    whoDidYouGiveItToForm.bindFromRequest.fold(
+    errors => Future.successful(BadRequest(views.whoDidYouGiveItTo(errors))),
     success => {
-      calcConnector.saveFormData[PropertyRecipientModel](keystoreKeys.propertyRecipient, success)
+      calcConnector.saveFormData[WhoDidYouGiveItToModel](keystoreKeys.whoDidYouGiveItTo, success)
       success match {
-        case PropertyRecipientModel("Spouse") => Future.successful(Redirect(routes.GainController.noTaxToPay()))
-        case PropertyRecipientModel("Charity") => Future.successful(Redirect(routes.GainController.noTaxToPay()))
-        case PropertyRecipientModel("Other") => Future.successful(Redirect(routes.GainController.worthWhenGaveAway()))
+        case WhoDidYouGiveItToModel("Spouse") => Future.successful(Redirect(routes.GainController.noTaxToPay()))
+        case WhoDidYouGiveItToModel("Charity") => Future.successful(Redirect(routes.GainController.noTaxToPay()))
+        case WhoDidYouGiveItToModel("Other") => Future.successful(Redirect(routes.GainController.worthWhenGaveAway()))
       }
     })
   }
@@ -151,8 +151,8 @@ trait GainController extends FeatureLock {
   val noTaxToPay = FeatureLockForRTT.async { implicit request =>
 
     def isGivenToCharity: Future[Boolean] = {
-      calcConnector.fetchAndGetFormData[PropertyRecipientModel](keystoreKeys.propertyRecipient).map {
-        case Some(PropertyRecipientModel("Charity")) => true
+      calcConnector.fetchAndGetFormData[WhoDidYouGiveItToModel](keystoreKeys.whoDidYouGiveItTo).map {
+        case Some(WhoDidYouGiveItToModel("Charity")) => true
         case _ => false
       }
     }

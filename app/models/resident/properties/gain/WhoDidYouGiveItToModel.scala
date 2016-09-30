@@ -18,8 +18,8 @@ package models.resident.properties.gain
 
 import play.api.libs.json.Json
 
-case class PropertyRecipientModel(option: String)
+case class WhoDidYouGiveItToModel(option: String)
 
-object PropertyRecipientModel{
-  implicit val format = Json.format[PropertyRecipientModel]
+object WhoDidYouGiveItToModel{
+  implicit val format = Json.format[WhoDidYouGiveItToModel]
 }

@@ -204,7 +204,7 @@ trait CalculatorConnector {
       case _ => None
     }
 
-    val whoDidYouGiveItTo = fetchAndGetFormData[resident.properties.gain.PropertyRecipientModel](ResidentPropertyKeys.propertyRecipient).map {
+    val whoDidYouGiveItTo = fetchAndGetFormData[resident.properties.gain.WhoDidYouGiveItToModel](ResidentPropertyKeys.whoDidYouGiveItTo).map {
       case Some(data) => Some(data.option)
       case _ => None
     }
@@ -242,7 +242,7 @@ trait CalculatorConnector {
       case Some(data) => Some(data.sellForLess)
       case _ => None
     }
-    val ownerBeforeAprilNineteenEightyTwo = fetchAndGetFormData[properties.gain.OwnerBeforeLegislationStartModel](ResidentPropertyKeys.ownerBeforeLegislationStart)
+    val ownerBeforeLegislationStart = fetchAndGetFormData[properties.gain.OwnerBeforeLegislationStartModel](ResidentPropertyKeys.ownerBeforeLegislationStart)
       .map(_.get.ownedBeforeLegislationStart)
     val valueBeforeLegislationStart = fetchAndGetFormData[properties.ValueBeforeLegislationStartModel](ResidentPropertyKeys.valueBeforeLegislationStart).map {
       case Some(data) => Some(data.amount)
@@ -272,7 +272,7 @@ trait CalculatorConnector {
       improvements <- improvements
       givenAway <- givenAway
       sellForLess <- sellForLess
-      ownerBeforeAprilNineteenEightyTwo <- ownerBeforeAprilNineteenEightyTwo
+      ownerBeforeLegislationStart <- ownerBeforeLegislationStart
       valueBeforeLegislationStart <- valueBeforeLegislationStart
       howBecameOwner <- howBecameOwner
       boughtForLessThanWorth <- boughtForLessThanWorth
@@ -291,7 +291,7 @@ trait CalculatorConnector {
       improvements,
       givenAway,
       sellForLess,
-      ownerBeforeAprilNineteenEightyTwo,
+      ownerBeforeLegislationStart,
       valueBeforeLegislationStart,
       howBecameOwner,
       boughtForLessThanWorth

@@ -17,16 +17,16 @@
 package forms.resident.properties.gain
 
 import common.Validation._
-import models.resident.properties.gain.PropertyRecipientModel
+import models.resident.properties.gain.WhoDidYouGiveItToModel
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.Messages
 
-object PropertyRecipientForm {
-  val propertyRecipientForm = Form(
-    mapping("propertyRecipient" -> text
+object WhoDidYouGiveItToForm {
+  val whoDidYouGiveItToForm = Form(
+    mapping("whoDidYouGiveItTo" -> text
         .verifying(Messages("calc.resident.whoDidYouGiveThePropertyTo.errormandatory"), mandatoryCheck)
       .verifying(Messages("calc.resident.whoDidYouGiveThePropertyTo.errormandatory"), whoDidYouGiveItToCheck)
-    )(PropertyRecipientModel.apply)(PropertyRecipientModel.unapply)
+    )(WhoDidYouGiveItToModel.apply)(WhoDidYouGiveItToModel.unapply)
   )
 }

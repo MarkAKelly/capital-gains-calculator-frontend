@@ -26,7 +26,7 @@ import org.mockito.Mockito._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{noTaxToPay => messages}
 import common.KeystoreKeys.ResidentPropertyKeys
-import models.resident.properties.gain.PropertyRecipientModel
+import models.resident.properties.gain.WhoDidYouGiveItToModel
 import org.jsoup.Jsoup
 import play.api.test.Helpers._
 
@@ -38,8 +38,8 @@ class NoTaxToPayActionSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[PropertyRecipientModel](Matchers.eq(ResidentPropertyKeys.propertyRecipient))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(PropertyRecipientModel(givenTo))))
+    when(mockCalcConnector.fetchAndGetFormData[WhoDidYouGiveItToModel](Matchers.eq(ResidentPropertyKeys.whoDidYouGiveItTo))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(WhoDidYouGiveItToModel(givenTo))))
 
     new GainController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
