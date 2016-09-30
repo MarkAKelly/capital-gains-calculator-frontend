@@ -261,7 +261,7 @@ trait GainController extends FeatureLock {
     )
   }
 
-  //################ Property Worth When Sold Actions ######################
+  //################ Property Worth When Sold For Less Actions ######################
   val worthWhenSoldForLess = FeatureLockForRTT.async { implicit request =>
     calcConnector.fetchAndGetFormData[WorthWhenSoldForLessModel](keystoreKeys.worthWhenSoldForLess).map {
       case Some(data) => Ok(views.worthWhenSoldForLess(worthWhenSoldForLessForm.fill(data)))

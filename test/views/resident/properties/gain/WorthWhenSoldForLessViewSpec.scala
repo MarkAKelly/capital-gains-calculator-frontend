@@ -74,7 +74,7 @@ class WorthWhenSoldForLessViewSpec extends UnitSpec with WithFakeApplication wit
       lazy val form = doc.select("form")
 
       "have the action /calculate-your-capital-gains/resident/properties/property-worth-when-sold" in {
-        form.attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/worth-when-sold"
+        form.attr("action") shouldEqual "/calculate-your-capital-gains/resident/properties/worth-when-sold-for-less"
       }
 
       "have the method POST" in {
