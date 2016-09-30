@@ -108,7 +108,7 @@ class OwnerBeforeLegislationStartActionSpec extends UnitSpec with WithFakeApplic
       }
 
       "redirect to the worth on 31/03/1982 sold page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/market-value-on-31-march-1982")
+        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/value-before-legislation-start")
       }
     }
 

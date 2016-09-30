@@ -368,28 +368,28 @@ class PropertiesDeductionsSummaryViewSpec extends UnitSpec with WithFakeApplicat
         }
       }
 
-      "has a numeric output row for the Worth Before April Nineteen Eighty Two" which {
+      "has a numeric output row for the Value Before Legislation Start" which {
 
-        s"should have the question text '${commonMessages.Resident.Properties.worthOn.question}'" in {
-          doc.select("#worthOn-question").text shouldBe commonMessages.Resident.Properties.worthOn.question
+        s"should have the question text '${commonMessages.Resident.Properties.ValueBeforeLegislationStart.question}'" in {
+          doc.select("#valueBeforeLegislationStart-question").text shouldBe commonMessages.Resident.Properties.ValueBeforeLegislationStart.question
         }
 
         "should have the value '£5,000'" in {
-          doc.select("#worthOn-amount span.bold-medium").text shouldBe "£5,000"
+          doc.select("#valueBeforeLegislationStart-amount span.bold-medium").text shouldBe "£5,000"
         }
 
-        s"should have a change link to ${routes.GainController.worthOn.url}" in {
-          doc.select("#worthOn-amount a").attr("href") shouldBe routes.GainController.worthOn.url
+        s"should have a change link to ${routes.GainController.valueBeforeLegislationStart.url}" in {
+          doc.select("#valueBeforeLegislationStart-amount a").attr("href") shouldBe routes.GainController.valueBeforeLegislationStart().url
         }
 
         "has the question as part of the link" in {
-          doc.select("#worthOn-amount a").text shouldBe
-            s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.worthOn.question}"
+          doc.select("#valueBeforeLegislationStart-amount a").text shouldBe
+            s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.ValueBeforeLegislationStart.question}"
         }
 
         "has the question component of the link as visuallyhidden" in {
-          doc.select("#worthOn-amount a span.visuallyhidden").text shouldBe
-            commonMessages.Resident.Properties.worthOn.question
+          doc.select("#valueBeforeLegislationStart-amount a span.visuallyhidden").text shouldBe
+            commonMessages.Resident.Properties.ValueBeforeLegislationStart.question
         }
       }
 

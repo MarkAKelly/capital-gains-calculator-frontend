@@ -110,7 +110,7 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
       lazy val doc = Jsoup.parse(bodyOf(result))
 
       "have a link to worthOn" in {
-        doc.select("a#back-link").attr("href") shouldBe controllers.resident.properties.routes.GainController.worthOn().url
+        doc.select("a#back-link").attr("href") shouldBe controllers.resident.properties.routes.GainController.valueBeforeLegislationStart().url
       }
     }
 

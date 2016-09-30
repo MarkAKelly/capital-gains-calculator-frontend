@@ -22,7 +22,7 @@ import config.AppConfig
 import connectors.CalculatorConnector
 import controllers.resident.properties.GainController
 import controllers.helpers.FakeRequestHelper
-import models.resident.properties.WorthOnModel
+import models.resident.properties.ValueBeforeLegislationStartModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import play.api.test.Helpers._
@@ -33,16 +33,16 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 
 import scala.concurrent.Future
 
-class WorthOnActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
+class ValueBeforeLegislationStartActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  def setupTarget(getData: Option[WorthOnModel]): GainController = {
+  def setupTarget(getData: Option[ValueBeforeLegislationStartModel]): GainController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[WorthOnModel](Matchers.eq(keystoreKeys.worthOn))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[ValueBeforeLegislationStartModel](Matchers.eq(keystoreKeys.valueBeforeLegislationStart))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
-    when(mockCalcConnector.saveFormData[WorthOnModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.saveFormData[ValueBeforeLegislationStartModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
 
     new GainController {
@@ -54,7 +54,7 @@ class WorthOnActionSpec extends UnitSpec with WithFakeApplication with FakeReque
   "Calling .WorthOn from the GainCalculationController" when {
     "there is no keystore data" should {
       lazy val target = setupTarget(None)
-      lazy val result = target.worthOn(fakeRequestWithSession)
+      lazy val result = target.valueBeforeLegislationStart(fakeRequestWithSession)
 
       "return a status of 200" in {
         status(result) shouldEqual 200
@@ -62,8 +62,8 @@ class WorthOnActionSpec extends UnitSpec with WithFakeApplication with FakeReque
     }
 
     "there is keystore data" should {
-      lazy val target = setupTarget(Some(WorthOnModel(100)))
-      lazy val result = target.worthOn(fakeRequestWithSession)
+      lazy val target = setupTarget(Some(ValueBeforeLegislationStartModel(100)))
+      lazy val result = target.valueBeforeLegislationStart(fakeRequestWithSession)
 
       "return a status of 200" in {
         status(result) shouldEqual 200
@@ -74,22 +74,22 @@ class WorthOnActionSpec extends UnitSpec with WithFakeApplication with FakeReque
   "Calling .worthOn from the GainCalculationController" should {
 
     lazy val target = setupTarget(None)
-    lazy val result = target.worthOn(fakeRequestWithSession)
+    lazy val result = target.valueBeforeLegislationStart(fakeRequestWithSession)
 
     "return a status of 200" in {
       status(result) shouldBe 200
     }
 
-    s"return some html with title of ${MessageLookup.Resident.Properties.worthOn.question}" in {
+    s"return some html with title of ${MessageLookup.Resident.Properties.ValueBeforeLegislationStart.question}" in {
       contentType(result) shouldBe Some("text/html")
-      Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.Resident.Properties.worthOn.question
+      Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.Resident.Properties.ValueBeforeLegislationStart.question
     }
   }
 
   "Calling .worthOn from the GainCalculationController with no session" should {
 
     lazy val target = setupTarget(None)
-    lazy val result = target.worthOn(fakeRequest)
+    lazy val result = target.valueBeforeLegislationStart(fakeRequest)
 
     "return a status of 303" in {
       status(result) shouldBe 303
@@ -99,7 +99,7 @@ class WorthOnActionSpec extends UnitSpec with WithFakeApplication with FakeReque
   "Calling .submitWorthOn from the GainController" should {
     lazy val target = setupTarget(None)
     lazy val request = fakeRequestToPOSTWithSession(("amount", "100"))
-    lazy val result = target.submitWorthOn(request)
+    lazy val result = target.submitValueBeforeLegislationStart(request)
 
     "re-direct to the acquisition Costs page with a status of 303" in {
       status(result) shouldEqual 303
@@ -113,14 +113,14 @@ class WorthOnActionSpec extends UnitSpec with WithFakeApplication with FakeReque
   "Calling .submitWorthOn from the GainController" should {
     lazy val target = setupTarget(None)
     lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
-    lazy val result = target.submitWorthOn(request)
+    lazy val result = target.submitValueBeforeLegislationStart(request)
 
     "render with a status of 400" in {
       status(result) shouldEqual 400
     }
 
     "render the worth when gave away page when supplied with an invalid form" in {
-      Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.Resident.Properties.worthOn.question
+      Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.Resident.Properties.ValueBeforeLegislationStart.question
     }
   }
 }

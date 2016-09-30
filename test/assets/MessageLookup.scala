@@ -60,7 +60,7 @@ object MessageLookup {
         val helpMessage = "You can use a valuation from a surveyor or a property website."
       }
 
-      object worthOn {
+      object ValueBeforeLegislationStart {
         val question = "What was the property worth on 31 March 1982?"
       }
 

@@ -18,8 +18,8 @@ package models.resident.properties
 
 import play.api.libs.json.Json
 
-case class WorthOnModel(amount: BigDecimal)
+case class ValueBeforeLegislationStartModel(amount: BigDecimal)
 
-object WorthOnModel {
-  implicit val format = Json.format[WorthOnModel]
+object ValueBeforeLegislationStartModel {
+  implicit val format = Json.format[ValueBeforeLegislationStartModel]
 }

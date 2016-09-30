@@ -192,7 +192,7 @@ articleLayout = false
     gainAnswers.ownerBeforeLegislationStart, Some(gainRoutes.ownerBeforeLegislationStart().toString))
 
     @{if (gainAnswers.ownerBeforeLegislationStart)
-    summaryNumericRowHelper("worthOn",Messages("calc.resident.properties.worthOn.question"),gainAnswers.worthOnThirtyFirstMarchEightyTwo.get,Some(gainRoutes.worthOn().toString))}
+    summaryNumericRowHelper("valueBeforeLegislationStart",Messages("calc.resident.properties.valueBeforeLegislationStart.question"),gainAnswers.valueBeforeLegislationStart.get,Some(gainRoutes.valueBeforeLegislationStart().toString))}
 
     @{if (!gainAnswers.ownerBeforeLegislationStart)
     summaryTextRowHelper("howBecameOwner", Messages("calc.resident.howBecameOwner.title"), Messages(s"calc.resident.howBecameOwner.${gainAnswers.howBecameOwner.get.toLowerCase}"),

@@ -91,7 +91,7 @@
         @summaryOptionRowHelper("ownerBeforeLegislationStart", Messages("calc.resident.properties.ownedBeforeLegislationStart.title"),
         answers.ownerBeforeLegislationStart, Some(routes.ownerBeforeLegislationStart().toString))
         @{if (answers.ownerBeforeLegislationStart)
-        summaryNumericRowHelper("worthOn",Messages("calc.resident.properties.worthOn.question"),answers.worthOnThirtyFirstMarchEightyTwo.get,Some(routes.worthOn().toString))}
+        summaryNumericRowHelper("valueBeforeLegislationStart",Messages("calc.resident.properties.valueBeforeLegislationStart.question"),answers.valueBeforeLegislationStart.get,Some(routes.valueBeforeLegislationStart().toString))}
         @{if (!answers.ownerBeforeLegislationStart)
         summaryTextRowHelper("howBecameOwner", Messages("calc.resident.howBecameOwner.title"), Messages(s"calc.resident.howBecameOwner.${answers.howBecameOwner.get.toLowerCase}"),
         Some(routes.howBecameOwner().toString))}

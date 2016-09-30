@@ -244,7 +244,7 @@ trait CalculatorConnector {
     }
     val ownerBeforeAprilNineteenEightyTwo = fetchAndGetFormData[properties.gain.OwnerBeforeLegislationStartModel](ResidentPropertyKeys.ownerBeforeLegislationStart)
       .map(_.get.ownedBeforeLegislationStart)
-    val worthOnThirtyFirstMarchEightyTwo = fetchAndGetFormData[properties.WorthOnModel](ResidentPropertyKeys.worthOn).map {
+    val valueBeforeLegislationStart = fetchAndGetFormData[properties.ValueBeforeLegislationStartModel](ResidentPropertyKeys.valueBeforeLegislationStart).map {
       case Some(data) => Some(data.amount)
       case _ => None
     }
@@ -273,7 +273,7 @@ trait CalculatorConnector {
       givenAway <- givenAway
       sellForLess <- sellForLess
       ownerBeforeAprilNineteenEightyTwo <- ownerBeforeAprilNineteenEightyTwo
-      worthOnThirtyFirstMarchEightyTwo <- worthOnThirtyFirstMarchEightyTwo
+      valueBeforeLegislationStart <- valueBeforeLegislationStart
       howBecameOwner <- howBecameOwner
       boughtForLessThanWorth <- boughtForLessThanWorth
     } yield properties.YourAnswersSummaryModel(
@@ -292,7 +292,7 @@ trait CalculatorConnector {
       givenAway,
       sellForLess,
       ownerBeforeAprilNineteenEightyTwo,
-      worthOnThirtyFirstMarchEightyTwo,
+      valueBeforeLegislationStart,
       howBecameOwner,
       boughtForLessThanWorth
     )
