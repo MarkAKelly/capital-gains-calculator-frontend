@@ -50,7 +50,7 @@ class WorthOnViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
     }
 
     s"have a back link to the owner before April 1982 with text ${MessageLookup.calcBaseBack}" in {
-      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/owner-before-april"
+      doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/owner-before-legislation-start"
     }
 
     "have a H1 tag that" should {

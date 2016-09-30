@@ -36,25 +36,25 @@ class OwnerBeforeLegislationStartFormSpec  extends UnitSpec with WithFakeApplica
     "return a form with the answer of Yes" in {
       lazy val model = OwnerBeforeLegislationStartModel(true)
       lazy val form = ownerBeforeLegislationStartForm.fill(model)
-      form.data.get("ownerBeforeLegislationStart") shouldEqual Some("Yes")
+      form.data.get("ownedBeforeLegislationStart") shouldEqual Some("Yes")
     }
 
     "return a form with the answer of No" in {
       lazy val model = OwnerBeforeLegislationStartModel(false)
       lazy val form = ownerBeforeLegislationStartForm.fill(model)
-      form.data.get("ownerBeforeLegislationStart") shouldEqual Some("No")
+      form.data.get("ownedBeforeLegislationStart") shouldEqual Some("No")
     }
   }
 
   "Creating a form using a valid map" should {
 
     "return a form with a value of Yes" in {
-      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownerBeforeLegislationStart", "Yes")))
+      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownedBeforeLegislationStart", "Yes")))
       form.value shouldEqual Some(OwnerBeforeLegislationStartModel(true))
     }
 
     "return a form with a value of No" in {
-      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownerBeforeLegislationStart", "No")))
+      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownedBeforeLegislationStart", "No")))
       form.value shouldEqual Some(OwnerBeforeLegislationStartModel(false))
     }
   }
@@ -62,7 +62,7 @@ class OwnerBeforeLegislationStartFormSpec  extends UnitSpec with WithFakeApplica
   "Creating a form using an invalid map" when {
 
     "supplied with no data" should {
-      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownerBeforeLegislationStart", "")))
+      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownedBeforeLegislationStart", "")))
 
       "return a form with errors" in {
         form.hasErrors shouldEqual true
@@ -73,12 +73,12 @@ class OwnerBeforeLegislationStartFormSpec  extends UnitSpec with WithFakeApplica
       }
 
       s"return an error with message ${messages.errorSelectAnOption}" in {
-        form.error("ownerBeforeLegislationStart").get.message shouldEqual messages.errorSelectAnOption
+        form.error("ownedBeforeLegislationStart").get.message shouldEqual messages.errorSelectAnOption
       }
     }
 
     "supplied with invalid data" should {
-      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownerBeforeLegislationStart", "a")))
+      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownedBeforeLegislationStart", "a")))
 
       "return a form with errors" in {
         form.hasErrors shouldEqual true
@@ -89,7 +89,7 @@ class OwnerBeforeLegislationStartFormSpec  extends UnitSpec with WithFakeApplica
       }
 
       s"return an error with message ${messages.errorSelectAnOption}" in {
-        form.error("ownerBeforeLegislationStart").get.message shouldEqual messages.errorSelectAnOption
+        form.error("ownedBeforeLegislationStart").get.message shouldEqual messages.errorSelectAnOption
       }
     }
   }
