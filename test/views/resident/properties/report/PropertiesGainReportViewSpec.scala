@@ -188,23 +188,23 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
 
       "has an option output row for owner before april 1982" which {
 
-        s"should have the question text '${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}'" in {
-          doc.select("#ownerBeforeAprilNineteenEightyTwo-question").text shouldBe commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
+        s"should have the question text '${commonMessages.Resident.Properties.OwnerBeforeLegislationStart.title}'" in {
+          doc.select("#ownerBeforeLegislationStart-question").text shouldBe commonMessages.Resident.Properties.OwnerBeforeLegislationStart.title
         }
 
         "should have the value 'Yes'" in {
-          doc.select("#ownerBeforeAprilNineteenEightyTwo-option span.bold-medium").text shouldBe "Yes"
+          doc.select("#ownerBeforeLegislationStart-option span.bold-medium").text shouldBe "Yes"
         }
       }
 
-      "has a numeric output row for the Worth Before April Nineteen Eighty Two" which {
+      "has a numeric output row for the Value Before Legislation Start" which {
 
-        s"should have the question text '${commonMessages.Resident.Properties.worthOn.question}'" in {
-          doc.select("#worthOn-question").text shouldBe commonMessages.Resident.Properties.worthOn.question
+        s"should have the question text '${commonMessages.Resident.Properties.ValueBeforeLegislationStart.question}'" in {
+          doc.select("#valueBeforeLegislationStart-question").text shouldBe commonMessages.Resident.Properties.ValueBeforeLegislationStart.question
         }
 
         "should have the value '£5,000'" in {
-          doc.select("#worthOn-amount span.bold-medium").text shouldBe "£5,000"
+          doc.select("#valueBeforeLegislationStart-amount span.bold-medium").text shouldBe "£5,000"
         }
       }
 
@@ -311,12 +311,12 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
 
     "has an option output row for owner before april 1982" which {
 
-      s"should have the question text '${commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title}'" in {
-        doc.select("#ownerBeforeAprilNineteenEightyTwo-question").text shouldBe commonMessages.Resident.Properties.ownerBeforeAprilNineteenEightyTwo.title
+      s"should have the question text '${commonMessages.Resident.Properties.OwnerBeforeLegislationStart.title}'" in {
+        doc.select("#ownerBeforeLegislationStart-question").text shouldBe commonMessages.Resident.Properties.OwnerBeforeLegislationStart.title
       }
 
       "should have the value 'No'" in {
-        doc.select("#ownerBeforeAprilNineteenEightyTwo-option span.bold-medium").text shouldBe "No"
+        doc.select("#ownerBeforeLegislationStart-option span.bold-medium").text shouldBe "No"
       }
     }
 
@@ -405,12 +405,12 @@ class PropertiesGainReportViewSpec extends UnitSpec with WithFakeApplication wit
 
     "has an amount output row for bought for less than worth value" which {
 
-      s"should have the question text '${propertiesMessages.worthWhenBought.question}'" in {
-        doc.select("#worthWhenBought-question").text shouldBe propertiesMessages.worthWhenBought.question
+      s"should have the question text '${propertiesMessages.WorthWhenBoughtForLess.question}'" in {
+        doc.select("#worthWhenBoughtForLess-question").text shouldBe propertiesMessages.WorthWhenBoughtForLess.question
       }
 
       "should have the value '£3,000'" in {
-        doc.select("#worthWhenBought-amount span.bold-medium").text shouldBe "£3,000"
+        doc.select("#worthWhenBoughtForLess-amount span.bold-medium").text shouldBe "£3,000"
       }
     }
   }

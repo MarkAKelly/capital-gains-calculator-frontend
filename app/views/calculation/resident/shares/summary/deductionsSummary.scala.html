@@ -153,9 +153,9 @@ navTitle = Messages("calc.base.resident.shares.home")
     }
     <!-- Ends -->
     @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.shares.disposalCosts.question"),gainAnswers.disposalCosts,Some(gainRoutes.disposalCosts().toString))
-    @summaryOptionRowHelper("ownedBeforeTaxStartDate",Messages("calc.resident.shares.ownedBeforeEightyTwo.title"),gainAnswers.ownedBeforeTaxStartDate,Some(gainRoutes.ownedBeforeEightyTwo().url))
-    @if(gainAnswers.ownedBeforeTaxStartDate){
-        @summaryNumericRowHelper("worthOn",Messages("calc.resident.shares.worthOn.question"),gainAnswers.worthOnTaxStartDate.get,Some(gainRoutes.worthOnMarchEightyTwo().toString))
+    @summaryOptionRowHelper("ownerBeforeLegislationStart",Messages("calc.resident.shares.ownerBeforeLegislationStart.title"),gainAnswers.ownerBeforeLegislationStart,Some(gainRoutes.ownerBeforeLegislationStart().url))
+    @if(gainAnswers.ownerBeforeLegislationStart){
+        @summaryNumericRowHelper("valueBeforeLegislationStart",Messages("calc.resident.shares.valueBeforeLegislationStart.question"),gainAnswers.valueBeforeLegislationStart.get,Some(gainRoutes.valueBeforeLegislationStart().toString))
     } else {
         @summaryOptionRowHelper("inheritedTheShares",Messages("calc.resident.shares.didYouInheritThem.question"),gainAnswers.inheritedTheShares.get,Some(gainRoutes.didYouInheritThem().url))
         @if(gainAnswers.inheritedTheShares.get){

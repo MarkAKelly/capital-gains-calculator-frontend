@@ -69,9 +69,9 @@
         }
         <!-- Ends -->
         @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.shares.disposalCosts.question"),answers.disposalCosts,None)
-        @summaryOptionRowHelper("ownedBeforeTaxStartDate",Messages("calc.resident.shares.ownedBeforeEightyTwo.title"),answers.ownedBeforeTaxStartDate,None)
-        @if(answers.ownedBeforeTaxStartDate){
-            @summaryNumericRowHelper("worthOn",Messages("calc.resident.shares.worthOn.question"),answers.worthOnTaxStartDate.get,None)
+        @summaryOptionRowHelper("ownerBeforeLegislationStart",Messages("calc.resident.shares.ownerBeforeLegislationStart.title"),answers.ownerBeforeLegislationStart,None)
+        @if(answers.ownerBeforeLegislationStart){
+            @summaryNumericRowHelper("valueBeforeLegislationStart",Messages("calc.resident.shares.valueBeforeLegislationStart.question"),answers.valueBeforeLegislationStart.get,None)
         } else {
             @summaryOptionRowHelper("inheritedTheShares",Messages("calc.resident.shares.didYouInheritThem.question"),answers.inheritedTheShares.get,None)
             @if(answers.inheritedTheShares.get){

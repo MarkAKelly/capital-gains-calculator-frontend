@@ -22,7 +22,7 @@ import config.AppConfig
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.GainController
-import models.resident.properties.gain.OwnerBeforeAprilModel
+import models.resident.properties.gain.OwnerBeforeLegislationStartModel
 import models.resident.properties.{ImprovementsModel, YourAnswersSummaryModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -50,9 +50,9 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Fake
     when(mockCalcConnector.fetchAndGetFormData[ImprovementsModel](Matchers.eq(keystoreKeys.improvements))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
-    when(mockCalcConnector.fetchAndGetFormData[OwnerBeforeAprilModel]
-      (Matchers.eq(keystoreKeys.ownerBeforeAprilNineteenEightyTwo))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(OwnerBeforeAprilModel(ownerBeforeAprilNineteenEightyTwo))))
+    when(mockCalcConnector.fetchAndGetFormData[OwnerBeforeLegislationStartModel]
+      (Matchers.eq(keystoreKeys.ownerBeforeLegislationStart))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(OwnerBeforeLegislationStartModel(ownerBeforeAprilNineteenEightyTwo))))
 
     when(mockCalcConnector.getPropertyGainAnswers(Matchers.any()))
       .thenReturn(Future.successful(gainAnswers))

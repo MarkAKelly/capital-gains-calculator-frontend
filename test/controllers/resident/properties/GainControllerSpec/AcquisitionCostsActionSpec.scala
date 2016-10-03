@@ -24,7 +24,7 @@ import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.GainController
 import models.resident.AcquisitionCostsModel
 import models.resident.properties.{BoughtForLessThanWorthModel, HowBecameOwnerModel}
-import models.resident.properties.gain.OwnerBeforeAprilModel
+import models.resident.properties.gain.OwnerBeforeLegislationStartModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -38,7 +38,7 @@ import scala.concurrent.Future
 class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
   def setupTarget(getData: Option[AcquisitionCostsModel],
-                  ownerBefore: Option[OwnerBeforeAprilModel] = None,
+                  ownerBefore: Option[OwnerBeforeLegislationStartModel] = None,
                   howBecameOwner: Option[HowBecameOwnerModel] = None,
                   boughtForLess: Option[BoughtForLessThanWorthModel] = None
                  ): GainController = {
@@ -48,7 +48,7 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
     when(mockCalcConnector.fetchAndGetFormData[AcquisitionCostsModel](Matchers.eq(keystoreKeys.acquisitionCosts))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
-    when(mockCalcConnector.fetchAndGetFormData[OwnerBeforeAprilModel](Matchers.eq(keystoreKeys.ownerBeforeAprilNineteenEightyTwo))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[OwnerBeforeLegislationStartModel](Matchers.eq(keystoreKeys.ownerBeforeLegislationStart))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(ownerBefore))
 
     when(mockCalcConnector.fetchAndGetFormData[HowBecameOwnerModel](Matchers.eq(keystoreKeys.howBecameOwner))(Matchers.any(), Matchers.any()))
@@ -104,18 +104,18 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
       }
     }
 
-    "the origin page was worthOn" should {
-      lazy val target = setupTarget(None, Some(OwnerBeforeAprilModel(true)))
+    "the origin page was valueBeforeLegislationStart" should {
+      lazy val target = setupTarget(None, Some(OwnerBeforeLegislationStartModel(true)))
       lazy val result = target.acquisitionCosts(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
-      "have a link to worthOn" in {
-        doc.select("a#back-link").attr("href") shouldBe controllers.resident.properties.routes.GainController.worthOn().url
+      "have a link to valueBeforeLegislationStart" in {
+        doc.select("a#back-link").attr("href") shouldBe controllers.resident.properties.routes.GainController.valueBeforeLegislationStart().url
       }
     }
 
     "the origin page was worthWhenInherited" should {
-      lazy val target = setupTarget(None, Some(OwnerBeforeAprilModel(false)), Some(HowBecameOwnerModel("Inherited")))
+      lazy val target = setupTarget(None, Some(OwnerBeforeLegislationStartModel(false)), Some(HowBecameOwnerModel("Inherited")))
       lazy val result = target.acquisitionCosts(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
@@ -125,7 +125,7 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
     }
 
     "the origin page was worthWhenGifted" should {
-      lazy val target = setupTarget(None, Some(OwnerBeforeAprilModel(false)), Some(HowBecameOwnerModel("Gifted")))
+      lazy val target = setupTarget(None, Some(OwnerBeforeLegislationStartModel(false)), Some(HowBecameOwnerModel("Gifted")))
       lazy val result = target.acquisitionCosts(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
@@ -134,22 +134,22 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
       }
     }
 
-    "the origin page was worthWhenBought" should {
-      lazy val target = setupTarget(None, Some(OwnerBeforeAprilModel(false)), Some(HowBecameOwnerModel("Bought")), Some(BoughtForLessThanWorthModel(true)))
+    "the origin page was worthWhenBoughtForLess" should {
+      lazy val target = setupTarget(None, Some(OwnerBeforeLegislationStartModel(false)), Some(HowBecameOwnerModel("Bought")), Some(BoughtForLessThanWorthModel(true)))
       lazy val result = target.acquisitionCosts(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
-      "have a link to worthWhenBought" in {
-        doc.select("a#back-link").attr("href") shouldBe controllers.resident.properties.routes.GainController.worthWhenBought().url
+      "have a link to worthWhenBoughtForLess" in {
+        doc.select("a#back-link").attr("href") shouldBe controllers.resident.properties.routes.GainController.worthWhenBoughtForLess().url
       }
     }
 
     "the origin page was acquisitionValue" should {
-      lazy val target = setupTarget(None, Some(OwnerBeforeAprilModel(false)), Some(HowBecameOwnerModel("Bought")), Some(BoughtForLessThanWorthModel(false)))
+      lazy val target = setupTarget(None, Some(OwnerBeforeLegislationStartModel(false)), Some(HowBecameOwnerModel("Bought")), Some(BoughtForLessThanWorthModel(false)))
       lazy val result = target.acquisitionCosts(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
-      "have a link to worthWhenBought" in {
+      "have a link to worthWhenBoughtForLess" in {
         doc.select("a#back-link").attr("href") shouldBe controllers.resident.properties.routes.GainController.acquisitionValue().url
       }
     }

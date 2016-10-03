@@ -38,7 +38,7 @@ class InheritedSharesActionSpec extends UnitSpec with WithFakeApplication with F
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[DidYouInheritThemModel](Matchers.eq(keyStoreKeys.inheritedShares))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[DidYouInheritThemModel](Matchers.eq(keyStoreKeys.didYouInheritThem))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
     when(mockCalcConnector.saveFormData[DidYouInheritThemModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
@@ -49,7 +49,7 @@ class InheritedSharesActionSpec extends UnitSpec with WithFakeApplication with F
     }
   }
 
-  "Calling .inheritedShares from the resident GainController" when {
+  "Calling .didYouInheritThem from the resident GainController" when {
 
     "request has a valid session and no keystore value" should {
 
