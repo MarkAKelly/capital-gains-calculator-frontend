@@ -139,11 +139,11 @@ object CalculateRequestConstructor {
   }
 
   def rebasedValue(value: BigDecimal): String = {
-    s"&rebasedValue=$value"
+    s"&initialValueAmt=$value"
   }
 
   def revaluationCost(rebasedCostsModel: RebasedCostsModel): String = {
-    s"&revaluationCost=${
+    s"&initialCostsAmt=${
       if (rebasedCostsModel.hasRebasedCosts.equals("Yes")) rebasedCostsModel.rebasedCosts.get
       else 0
     }"
@@ -181,7 +181,7 @@ object CalculateRequestConstructor {
     (input.acquisitionDateModel, input.privateResidenceReliefModel) match {
       case (AcquisitionDateModel("Yes", day, month, year), Some(PrivateResidenceReliefModel("Yes", claimed, after)))
         if dateAfter18Months(input.disposalDateModel.day, input.disposalDateModel.month, input.disposalDateModel.year) && after.isDefined =>
-        s"&daysClaimedAfter=${after.get}"
+        s"&daysClaimed=${after.get}"
 
       case _ => ""
     }
@@ -191,7 +191,7 @@ object CalculateRequestConstructor {
     (input.rebasedValueModel, input.privateResidenceReliefModel) match {
       case (Some(RebasedValueModel("Yes", rebasedValue)), Some(PrivateResidenceReliefModel("Yes", claimed, after)))
         if dateAfter18Months(input.disposalDateModel.day, input.disposalDateModel.month, input.disposalDateModel.year) && after.isDefined =>
-        s"&daysClaimedAfter=${after.get}"
+        s"&daysClaimed=${after.get}"
       case _ => ""
     }
   }"
@@ -203,9 +203,9 @@ object CalculateRequestConstructor {
     }
   }"
 
-  def acquisition(input: SummaryModel): String = s"&acquisitionValueAmt=${
+  def acquisition(input: SummaryModel): String = s"&initialValueAmt=${
     input.acquisitionValueModel.acquisitionValueAmt
-  }&acquisitionCostsAmt=${
+  }&initialCostsAmt=${
     input.acquisitionCostsModel.acquisitionCostsAmt
   }"
 }
