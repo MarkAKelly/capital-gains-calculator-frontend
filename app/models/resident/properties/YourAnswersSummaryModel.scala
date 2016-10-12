@@ -21,8 +21,7 @@ import common.Dates._
 
 import play.api.libs.json._
 
-case class YourAnswersSummaryModel
-(
+case class YourAnswersSummaryModel(
   disposalDate: LocalDate,
   disposalValue: Option[BigDecimal],
   worthWhenSoldForLess: Option[BigDecimal],
@@ -40,8 +39,16 @@ case class YourAnswersSummaryModel
   ownerBeforeLegislationStart: Boolean,
   valueBeforeLegislationStart: Option[BigDecimal],
   howBecameOwner: Option[String],
-  boughtForLessThanWorth: Option[Boolean]
-)
+  boughtForLessThanWorth: Option[Boolean]) {
+
+  val displayWorthWhenSold = !givenAway && !sellForLess.get
+  val displayWorthWhenSoldForLess = !givenAway && sellForLess.get
+  val displayBoughtForLessThanWorth = !ownerBeforeLegislationStart && howBecameOwner.get.equals("Bought")
+  val displayWorthWhenBought = !ownerBeforeLegislationStart && howBecameOwner.get.equals("Bought") && !boughtForLessThanWorth.get
+  val displayWorthWhenBoughtForLess = !ownerBeforeLegislationStart && howBecameOwner.get.equals("Bought") && boughtForLessThanWorth.get
+  val displayWorthWhenGifted = !ownerBeforeLegislationStart && howBecameOwner.get.equals("Gifted")
+  val displayWorthWhenInherited = !ownerBeforeLegislationStart && howBecameOwner.get.equals("Inherited")
+}
 
 object YourAnswersSummaryModel {
 
