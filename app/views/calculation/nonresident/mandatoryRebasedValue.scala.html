@@ -9,7 +9,7 @@
     <p>@Messages("calc.rebasedValue.helpHidden.contentTwo")</p>
 }
 
-@main_template(Messages("calc.rebasedValue.questionTwo")) {
+@main_template(Messages("calc.nonResident.rebasedValue.question")) {
 
     <a id="back-link" class="back-link" href="@controllers.nonresident.routes.AcquisitionValueController.acquisitionValue">@Messages("calc.base.back")</a>
 
@@ -21,7 +21,7 @@
 
         <input class="visuallyhidden" id="hasRebasedValue" name="hasRebasedValue" value="Yes">
 
-        @formInputMoney(rebasedValueForm, "rebasedValueAmt", Messages("calc.rebasedValue.questionTwo"), helpText = Some(Messages("calc.nonResident.rebasedValue.inputHelpText")), hideLabel = true)
+        @formInputMoney(rebasedValueForm, "rebasedValueAmt", Messages("calc.nonResident.rebasedValue.question"), helpText = Some(Messages("calc.nonResident.rebasedValue.inputHelpText")), hideLabel = true)
 
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
 

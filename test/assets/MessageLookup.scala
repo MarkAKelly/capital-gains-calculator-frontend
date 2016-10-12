@@ -48,7 +48,7 @@ object MessageLookup {
     }
 
     object RebasedValue {
-      val question = "What was the value of the property?"
+      val question = "What was the property worth on 5 April 2015?"
       val inputHelpText = "You can use a valuation from a surveyor or a property website."
     }
 
