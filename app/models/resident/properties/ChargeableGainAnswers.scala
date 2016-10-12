@@ -17,6 +17,7 @@
 package models.resident.properties
 
 import models.resident._
+import constructors.resident.properties.CalculateRequestConstructor._
 
 case class ChargeableGainAnswers (otherPropertiesModel: Option[OtherPropertiesModel],
                                   allowableLossesModel: Option[AllowableLossesModel],
@@ -28,5 +29,22 @@ case class ChargeableGainAnswers (otherPropertiesModel: Option[OtherPropertiesMo
                                   privateResidenceReliefModel: Option[PrivateResidenceReliefModel],
                                   privateResidenceReliefValueModel: Option[PrivateResidenceReliefValueModel],
                                   lettingsReliefModel: Option[LettingsReliefModel],
-                                  lettingsReliefValueModel: Option[LettingsReliefValueModel]
-                                 )
+                                  lettingsReliefValueModel: Option[LettingsReliefValueModel]) {
+
+  val displayPRRValueAndLettingsRelief = (propertyLivedInModel, privateResidenceReliefModel) match {
+    case (Some(PropertyLivedInModel(true)), Some(PrivateResidenceReliefModel(true))) => true
+    case _ => false
+  }
+
+  val displayLettingsReliefValue = (displayPRRValueAndLettingsRelief, lettingsReliefModel) match {
+    case (true, Some(LettingsReliefModel(true))) => true
+    case _ => false
+  }
+
+  val displayAllowableLossesValue = (otherPropertiesModel, allowableLossesModel) match {
+    case (Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(true))) => true
+    case _ => false
+  }
+
+  val displayAnnualExemptAmount = isUsingAnnualExemptAmount(otherPropertiesModel, allowableLossesModel, allowableLossesValueModel)
+}

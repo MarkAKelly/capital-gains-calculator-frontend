@@ -44,8 +44,8 @@ case class YourAnswersSummaryModel(
   val displayWorthWhenSold = !givenAway && !sellForLess.get
   val displayWorthWhenSoldForLess = !givenAway && sellForLess.get
   val displayBoughtForLessThanWorth = !ownerBeforeLegislationStart && howBecameOwner.get.equals("Bought")
-  val displayWorthWhenBought = !ownerBeforeLegislationStart && howBecameOwner.get.equals("Bought") && !boughtForLessThanWorth.get
-  val displayWorthWhenBoughtForLess = !ownerBeforeLegislationStart && howBecameOwner.get.equals("Bought") && boughtForLessThanWorth.get
+  val displayWorthWhenBought = displayBoughtForLessThanWorth && !boughtForLessThanWorth.get
+  val displayWorthWhenBoughtForLess = displayBoughtForLessThanWorth && boughtForLessThanWorth.get
   val displayWorthWhenGifted = !ownerBeforeLegislationStart && howBecameOwner.get.equals("Gifted")
   val displayWorthWhenInherited = !ownerBeforeLegislationStart && howBecameOwner.get.equals("Inherited")
 }
