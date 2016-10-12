@@ -19,6 +19,7 @@ package models.resident.properties
 import models.resident._
 import constructors.resident.properties.CalculateRequestConstructor._
 
+
 case class ChargeableGainAnswers (otherPropertiesModel: Option[OtherPropertiesModel],
                                   allowableLossesModel: Option[AllowableLossesModel],
                                   allowableLossesValueModel: Option[AllowableLossesValueModel],
@@ -47,4 +48,9 @@ case class ChargeableGainAnswers (otherPropertiesModel: Option[OtherPropertiesMo
   }
 
   val displayAnnualExemptAmount = isUsingAnnualExemptAmount(otherPropertiesModel, allowableLossesModel, allowableLossesValueModel)
+
+  val displayPreviousTaxableGains = (displayAnnualExemptAmount, annualExemptAmountModel) match {
+    case (true, Some(AnnualExemptAmountModel(value))) if value == 0  => true
+    case _ => false
+  }
 }

@@ -16,7 +16,7 @@
 
 package models.resident.properties
 
-import models.resident.{AllowableLossesModel, AllowableLossesValueModel, OtherPropertiesModel, PrivateResidenceReliefModel}
+import models.resident._
 import uk.gov.hmrc.play.test.UnitSpec
 
 class ChargeableGainAnswersSpec extends UnitSpec {
@@ -56,6 +56,12 @@ class ChargeableGainAnswersSpec extends UnitSpec {
 
     "return a result of false for displayAnnualExemptAmount" in {
       val result = model.displayAnnualExemptAmount
+
+      result shouldBe false
+    }
+
+    "return a result of false for displayPreviousTaxableGains" in {
+      val result = model.displayPreviousTaxableGains
 
       result shouldBe false
     }
@@ -99,16 +105,22 @@ class ChargeableGainAnswersSpec extends UnitSpec {
 
       result shouldBe true
     }
+
+    "return a result of false for displayPreviousTaxableGains" in {
+      val result = model.displayPreviousTaxableGains
+
+      result shouldBe false
+    }
   }
 
-  "Creating a model for a property where PRR is claimed but not lettings relief and allowable losses have been claimed with a non-zero value" should {
+  "Creating a model for a property where PRR is claimed but not lettings relief with non-zero allowable losses and non-zero AEA" should {
     val model = ChargeableGainAnswers(
       otherPropertiesModel = Some(OtherPropertiesModel(true)),
       allowableLossesModel = Some(AllowableLossesModel(true)),
       allowableLossesValueModel = Some(AllowableLossesValueModel(1000)),
       broughtForwardModel = None,
       broughtForwardValueModel = None,
-      annualExemptAmountModel = None,
+      annualExemptAmountModel = Some(AnnualExemptAmountModel(50.0)),
       propertyLivedInModel = Some(PropertyLivedInModel(true)),
       privateResidenceReliefModel = Some(PrivateResidenceReliefModel(true)),
       privateResidenceReliefValueModel = None,
@@ -139,16 +151,22 @@ class ChargeableGainAnswersSpec extends UnitSpec {
 
       result shouldBe false
     }
+
+    "return a result of false for displayPreviousTaxableGains" in {
+      val result = model.displayPreviousTaxableGains
+
+      result shouldBe false
+    }
   }
 
-  "Creating a model for a property where PRR is claimed with lettings relief and allowable losses have been claimed with a zero value" should {
+  "Creating a model for a property where PRR is claimed with lettings relief and zero allowable losses with zero remaining AEA" should {
     val model = ChargeableGainAnswers(
       otherPropertiesModel = Some(OtherPropertiesModel(true)),
       allowableLossesModel = Some(AllowableLossesModel(true)),
       allowableLossesValueModel = Some(AllowableLossesValueModel(0)),
       broughtForwardModel = None,
       broughtForwardValueModel = None,
-      annualExemptAmountModel = None,
+      annualExemptAmountModel = Some(AnnualExemptAmountModel(0)),
       propertyLivedInModel = Some(PropertyLivedInModel(true)),
       privateResidenceReliefModel = Some(PrivateResidenceReliefModel(true)),
       privateResidenceReliefValueModel = None,
@@ -176,6 +194,12 @@ class ChargeableGainAnswersSpec extends UnitSpec {
 
     "return a result of true for displayAnnualExemptAmount" in {
       val result = model.displayAnnualExemptAmount
+
+      result shouldBe true
+    }
+
+    "return a result of true for displayPreviousTaxableGains" in {
+      val result = model.displayPreviousTaxableGains
 
       result shouldBe true
     }
