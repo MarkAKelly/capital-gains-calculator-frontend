@@ -118,7 +118,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
   def mockResidentFetchAndGetFormData(): Unit = {
 
     when(mockSessionCache.fetchAndGetEntry[resident.OtherPropertiesModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.otherProperties))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(mock[resident.OtherPropertiesModel])))
+      .thenReturn(Future.successful(Some(resident.OtherPropertiesModel(false))))
 
     when(mockSessionCache.fetchAndGetEntry[resident.AllowableLossesModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.allowableLosses))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(mock[resident.AllowableLossesModel])))
@@ -134,6 +134,9 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
 
     when(mockSessionCache.fetchAndGetEntry[resident.AnnualExemptAmountModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.annualExemptAmount))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(mock[resident.AnnualExemptAmountModel])))
+
+    when(mockSessionCache.fetchAndGetEntry[resident.properties.PropertyLivedInModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.propertyLivedIn))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(resident.properties.PropertyLivedInModel(false))))
   }
 
   def mockResidentSharesFetchAndGetFormData(): Unit = {
@@ -370,6 +373,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
 
     "return a valid ChargeableGainAnswersModel" in {
       val hc = mock[HeaderCarrier]
+      mockResidentFetchAndGetFormData()
       lazy val result = TargetCalculatorConnector.getPropertyDeductionAnswers(hc)
       await(result).isInstanceOf[ChargeableGainAnswers] shouldBe true
     }
