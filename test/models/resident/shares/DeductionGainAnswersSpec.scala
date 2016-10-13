@@ -16,10 +16,11 @@
 
 package models.resident.shares
 
+import common.Dates._
 import models.resident._
 import uk.gov.hmrc.play.test.UnitSpec
 
-class ChargeableGainAnswersSpec extends UnitSpec {
+class DeductionGainAnswersSpec extends UnitSpec {
 
   "Creating a model for a property that has not been lived in and no other properties have been disposed of" should {
     val model = DeductionGainAnswersModel(
@@ -38,7 +39,7 @@ class ChargeableGainAnswersSpec extends UnitSpec {
     }
 
     "return a result of false for displayAnnualExemptAmount" in {
-      val result = model.displayAnnualExemptAmount
+      val result = model.displayLossesBroughtForward
 
       result shouldBe false
     }
@@ -67,7 +68,7 @@ class ChargeableGainAnswersSpec extends UnitSpec {
     }
 
     "return a result of true for displayAnnualExemptAmount" in {
-      val result = model.displayAnnualExemptAmount
+      val result = model.displayLossesBroughtForward
 
       result shouldBe true
     }
@@ -96,7 +97,7 @@ class ChargeableGainAnswersSpec extends UnitSpec {
     }
 
     "return a result of false for displayAnnualExemptAmount" in {
-      val result = model.displayAnnualExemptAmount
+      val result = model.displayLossesBroughtForward
 
       result shouldBe false
     }
@@ -125,13 +126,57 @@ class ChargeableGainAnswersSpec extends UnitSpec {
     }
 
     "return a result of true for displayAnnualExemptAmount" in {
-      val result = model.displayAnnualExemptAmount
+      val result = model.displayLossesBroughtForward
 
       result shouldBe true
     }
 
     "return a result of true for displayPreviousTaxableGains" in {
       val result = model.displayPreviousTaxableGains
+
+      result shouldBe true
+    }
+  }
+
+  "Creating a Gain model for shares to display worth when bought" should {
+    val model = GainAnswersModel(
+      disposalDate = constructDate(12, 9, 2015),
+      soldForLessThanWorth = false,
+      disposalValue = Some(10),
+      worthWhenSoldForLess = None,
+      disposalCosts = 20,
+      ownerBeforeLegislationStart = false,
+      valueBeforeLegislationStart = None,
+      inheritedTheShares = Some(false),
+      worthWhenInherited = None,
+      acquisitionValue = Some(30),
+      acquisitionCosts = 40
+    )
+
+    "return a result of true for displayWorthWhenBought" in {
+      val result = model.displayWorthWhenBought
+
+      result shouldBe true
+    }
+  }
+
+  "Creating a Gain model for shares to display worth when inherited" should {
+    val model = GainAnswersModel(
+      disposalDate = constructDate(12, 9, 2015),
+      soldForLessThanWorth = false,
+      disposalValue = Some(10),
+      worthWhenSoldForLess = None,
+      disposalCosts = 20,
+      ownerBeforeLegislationStart = false,
+      valueBeforeLegislationStart = None,
+      inheritedTheShares = Some(true),
+      worthWhenInherited = Some(100000),
+      acquisitionValue = Some(30),
+      acquisitionCosts = 40
+    )
+
+    "return a result of true for displayWorthWhenInherited" in {
+      val result = model.displayWorthWhenInherited
 
       result shouldBe true
     }

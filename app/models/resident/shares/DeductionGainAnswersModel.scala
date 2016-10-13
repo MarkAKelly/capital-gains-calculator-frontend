@@ -31,9 +31,9 @@ case class DeductionGainAnswersModel(otherPropertiesModel: Option[OtherPropertie
     case _ => false
   }
 
-  val displayAnnualExemptAmount = isUsingAnnualExemptAmount(otherPropertiesModel, allowableLossesModel, allowableLossesValueModel)
+  val displayLossesBroughtForward = isUsingAnnualExemptAmount(otherPropertiesModel, allowableLossesModel, allowableLossesValueModel)
 
-  val displayPreviousTaxableGains = (displayAnnualExemptAmount, annualExemptAmountModel) match {
+  val displayPreviousTaxableGains = (displayLossesBroughtForward, annualExemptAmountModel) match {
     case (true, Some(AnnualExemptAmountModel(value))) if value == 0  => true
     case _ => false
   }
