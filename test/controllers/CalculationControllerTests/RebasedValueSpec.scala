@@ -36,8 +36,10 @@ import controllers.nonresident.{RebasedValueController, routes}
 import models.nonresident.{AcquisitionDateModel, RebasedValueModel}
 import play.api.mvc.Result
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
+import assets.MessageLookup.NonResident._
+import controllers.helpers.FakeRequestHelper
 
-class RebasedValueSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class RebasedValueSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
   implicit val hc = new HeaderCarrier()
 
@@ -68,11 +70,15 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
     lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/rebased-value").withSession(SessionKeys.sessionId -> "12345")
 
-    "not supplied with a pre-existing stored model" should {
+    "not supplied with a pre-existing stored model and no acquisition date (optional rebased value view)" should {
 
       val target = setupTarget(None, None, Some(AcquisitionDateModel("No", None, None, None)))
       lazy val result = target.rebasedValue(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
+
+      s"route to the rebased value view with the question ${Messages("calc.rebasedValue.question")}" in {
+        document.getElementsByTag("legend").text should include(Messages("calc.rebasedValue.question"))
+      }
 
       "return a 200" in {
         status(result) shouldBe 200
@@ -87,10 +93,6 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
         "Have the title 'Calculate your Non-resident Capital Gains Tax" in {
           document.getElementsByTag("h1").text shouldBe Messages("calc.base.pageHeading")
-        }
-
-        s"Have the question ${Messages("calc.rebasedValue.question")}" in {
-          document.getElementsByTag("legend").text should include(Messages("calc.rebasedValue.question"))
         }
 
         s"have help text with the wording${Messages("calc.rebasedValue.helpText")}" in {
@@ -113,6 +115,10 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with MockitoSug
           document.getElementById("rebasedValueAmt").parent.text should include(Messages("calc.rebasedValue.questionTwo"))
         }
 
+        s"contain a hidden component with the help text with the wording${Messages("calc.rebasedValue.helpTextTwo")}" in {
+          document.getElementsByClass("form-hint").text should include(Messages("calc.rebasedValue.helpTextTwo"))
+        }
+
         s"have a 'Back' link to ${routes.AcquisitionValueController.acquisitionValue()}" in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
           document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionValueController.acquisitionValue().toString()
@@ -128,9 +134,20 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with MockitoSug
       }
     }
 
+    "not supplied with a pre-existing stored model and an acquisition date before 6/4/2015" should {
+
+      val target = setupTarget(None, None, Some(AcquisitionDateModel("Yes", Some(5), Some(4), Some(2015))))
+      lazy val result = target.rebasedValue(fakeRequest)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      s"route to the mandatory rebased value view with the question ${Messages("calc.nonResident.rebasedValue.question")}" in {
+        document.title shouldEqual RebasedValue.question
+      }
+    }
+
     "supplied with a pre-existing model with 'Yes' checked and value already entered" should {
 
-      val target = setupTarget(Some(RebasedValueModel("Yes", Some(10000))), None, Some(AcquisitionDateModel("Yes", Some(9), Some(9), Some(2013))))
+      val target = setupTarget(Some(RebasedValueModel("Yes", Some(10000))), None, Some(AcquisitionDateModel("No", None, None, None)))
       lazy val result = target.rebasedValue(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -168,7 +185,7 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with MockitoSug
   }
 
   //POST Tests
-  "In CalculationController calling the .submitRebasedValue action " when {
+  "In CalculationController calling the .submitRebasedValue action with no acquisition date" when {
 
     def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
       "/calculate-your-capital-gains/non-resident/rebased-value")
@@ -186,93 +203,126 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with MockitoSug
       target.submitRebasedValue(fakeRequest)
     }
 
-    "submitting a valid form with 'Yes' and a value of 12045" should {
+    "with no acquisition date" should {
 
-      lazy val result = executeTargetWithMockData("Yes", "12045")
+      "submitting a valid form with 'Yes' and a value of 12045" should {
 
-      "return a 303" in {
-        status(result) shouldBe 303
+        lazy val result = executeTargetWithMockData("Yes", "12045")
+
+        "return a 303" in {
+          status(result) shouldBe 303
+        }
+      }
+
+      "submitting a valid form with 'No' and no value" should {
+
+        lazy val result = executeTargetWithMockData("No", "")
+
+        "return a 303" in {
+          status(result) shouldBe 303
+        }
+      }
+
+      "submitting an invalid form with 'Yes' and a value of 'fhu39awd8'" should {
+
+        lazy val result = executeTargetWithMockData("Yes", "fhu39awd8")
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        "return a 400" in {
+          status(result) shouldBe 400
+        }
+
+        "return HTML that displays the error message " in {
+          document.select("div#hidden span.error-notification").text shouldEqual Messages("error.real")
+        }
+      }
+
+      "submitting an invalid form with 'Yes' and a value of '-200'" should {
+
+        lazy val result = executeTargetWithMockData("Yes", "-200")
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        "return a 400" in {
+          status(result) shouldBe 400
+        }
+
+        "return HTML that displays the error message " in {
+          document.select("div#hidden span.error-notification").text shouldEqual Messages("calc.rebasedValue.errorNegative")
+        }
+      }
+
+      "submitting an invalid form with 'Yes' and an empty value" should {
+
+        lazy val result = executeTargetWithMockData("Yes", "")
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        "return a 400" in {
+          status(result) shouldBe 400
+        }
+
+        "return HTML that displays the error message " in {
+          document.select("div#hidden span.error-notification").text shouldEqual Messages("calc.rebasedValue.error.no.value.supplied")
+        }
+      }
+
+      "submitting an invalid form with 'Yes' and a value of 1.111" should {
+
+        lazy val result = executeTargetWithMockData("Yes", "1.111")
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        "return a 400" in {
+          status(result) shouldBe 400
+        }
+
+        "return HTML that displays the error message " in {
+          document.select("div#hidden span.error-notification").text shouldEqual Messages("calc.rebasedValue.errorDecimalPlaces")
+        }
+      }
+
+      "submitting a value which exceeds the maximum numeric" should {
+
+        lazy val result = executeTargetWithMockData("Yes", (Constants.maxNumeric + 0.01).toString)
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        "return a 400" in {
+          status(result) shouldBe 400
+        }
+
+        s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
+          document.getElementsByClass("error-notification").text should
+            include(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
+              " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+        }
       }
     }
 
-    "submitting a valid form with 'No' and no value" should {
+    "with an acquisition date before 6/4/2015 (mandatory rebased value view)" should {
 
-      lazy val result = executeTargetWithMockData("No", "")
+        lazy val target = setupTarget(None, None, Some(AcquisitionDateModel("Yes", Some(5), Some(4), Some(2015))))
 
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-    }
+      "submitting a valid form" should {
 
-    "submitting an invalid form with 'Yes' and a value of 'fhu39awd8'" should {
+        lazy val request = fakeRequestToPOSTWithSession(("hasRebasedValue", "Yes"), ("rebasedValueAmt", "100"))
+        lazy val result = target.submitRebasedValue(request)
 
-      lazy val result = executeTargetWithMockData("Yes", "fhu39awd8")
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
+        "return a 303" in {
+          status(result) shouldBe 303
+        }
       }
 
-      "return HTML that displays the error message " in {
-        document.select("div#hidden span.error-notification").text shouldEqual Messages("error.real")
-      }
-    }
+      "submitting an invalid form" should {
 
-    "submitting an invalid form with 'Yes' and a value of '-200'" should {
+        lazy val request = fakeRequestToPOSTWithSession(("hasRebasedValue", "Yes"), ("rebasedValueAmt", ""))
+        lazy val result = target.submitRebasedValue(request)
 
-      lazy val result = executeTargetWithMockData("Yes", "-200")
-      lazy val document = Jsoup.parse(bodyOf(result))
+        "return a 400" in {
+          status(result) shouldBe 400
+        }
 
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      "return HTML that displays the error message " in {
-        document.select("div#hidden span.error-notification").text shouldEqual Messages("calc.rebasedValue.errorNegative")
-      }
-    }
-
-    "submitting an invalid form with 'Yes' and an empty value" should {
-
-      lazy val result = executeTargetWithMockData("Yes", "")
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      "return HTML that displays the error message " in {
-        document.select("div#hidden span.error-notification").text shouldEqual Messages("calc.rebasedValue.error.no.value.supplied")
-      }
-    }
-
-    "submitting an invalid form with 'Yes' and a value of 1.111" should {
-
-      lazy val result = executeTargetWithMockData("Yes", "1.111")
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      "return HTML that displays the error message " in {
-        document.select("div#hidden span.error-notification").text shouldEqual Messages("calc.rebasedValue.errorDecimalPlaces")
-      }
-    }
-
-    "submitting a value which exceeds the maximum numeric" should {
-
-      lazy val result = executeTargetWithMockData("Yes", (Constants.maxNumeric + 0.01).toString)
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
-        document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
-            " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+        "return a error message" in {
+          lazy val document = Jsoup.parse(bodyOf(result))
+          document.getElementById("rebasedValueAmt-error-summary").text shouldEqual RebasedValue.errorNoValue
+        }
       }
     }
   }

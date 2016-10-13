@@ -16,12 +16,15 @@
 
 package controllers.nonresident
 
-import common.KeystoreKeys
+import common.{KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.RebasedValueForm._
 import models.nonresident.{AcquisitionDateModel, RebasedValueModel}
+import play.api.data.Form
+import play.api.mvc.Result
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation
 
 import scala.concurrent.Future
@@ -36,26 +39,60 @@ trait RebasedValueController extends FrontendController with ValidActiveSession 
   override val homeLink = controllers.nonresident.routes.CustomerTypeController.customerType().url
   val calcConnector: CalculatorConnector
 
+  private def routeToMandatory(data: AcquisitionDateModel): Boolean = data.hasAcquisitionDate match {
+    case "Yes" if !TaxDates.dateAfterStart(data.day.getOrElse(0), data.month.getOrElse(0), data.year.getOrElse(0)) => true
+    case _ => false
+  }
+
+  private def fetchAcquisitionDate(implicit headerCarrier: HeaderCarrier): Future[Option[AcquisitionDateModel]] = {
+    calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate)
+  }
+
+  private def fetchRebasedValue(implicit headerCarrier: HeaderCarrier): Future[Option[RebasedValueModel]] = {
+    calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue)
+  }
+
   val rebasedValue = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap(acquisitionDateModel =>
-      calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).map {
-        case Some(data) => Ok(calculation.nonresident.rebasedValue(rebasedValueForm.fill(data), acquisitionDateModel.get.hasAcquisitionDate))
-        case None => Ok(calculation.nonresident.rebasedValue(rebasedValueForm, acquisitionDateModel.get.hasAcquisitionDate))
-      })
+    def routeRequest(acquisitionDate: AcquisitionDateModel, rebasedValue: Option[RebasedValueModel]): Future[Result] =
+      (routeToMandatory(acquisitionDate), rebasedValue) match {
+        case (true, Some(data)) => Future.successful(Ok(calculation.nonresident.mandatoryRebasedValue(rebasedValueForm.fill(data))))
+        case (false, Some(data)) => Future.successful(Ok(calculation.nonresident.rebasedValue(rebasedValueForm.fill(data), acquisitionDate.hasAcquisitionDate)))
+        case (true, None) => Future.successful(Ok(calculation.nonresident.mandatoryRebasedValue(rebasedValueForm)))
+        case (false, None) => Future.successful(Ok(calculation.nonresident.rebasedValue(rebasedValueForm, acquisitionDate.hasAcquisitionDate)))
+    }
+
+    for {
+      acquisitionDate <- fetchAcquisitionDate(hc)
+      rebasedVal <- fetchRebasedValue(hc)
+      route <- routeRequest(acquisitionDate.get, rebasedVal)
+    } yield route
   }
 
   val submitRebasedValue = ValidateSession.async { implicit request =>
-    rebasedValueForm.bindFromRequest.fold(
-      errors => calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap(acquisitionDateModel =>
-        Future.successful(BadRequest(calculation.nonresident.rebasedValue(errors, acquisitionDateModel.get.hasAcquisitionDate)))),
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.rebasedValue, success)
-        success.hasRebasedValue match {
-          case "Yes" => Future.successful(Redirect(routes.RebasedCostsController.rebasedCosts()))
-          case "No" => Future.successful(Redirect(routes.ImprovementsController.improvements()))
-        }
-      }
-    )
-  }
 
+    def errorAction(errors: Form[RebasedValueModel], acquisitionDate: AcquisitionDateModel) =
+      routeToMandatory(acquisitionDate) match {
+        case true => Future.successful(BadRequest(calculation.nonresident.mandatoryRebasedValue(errors)))
+        case false => Future.successful(BadRequest(calculation.nonresident.rebasedValue(errors, acquisitionDate.hasAcquisitionDate)))
+      }
+
+    def successAction(model: RebasedValueModel) = {
+      calcConnector.saveFormData(KeystoreKeys.rebasedValue, model)
+      model.hasRebasedValue match {
+        case "Yes" => Future.successful(Redirect(routes.RebasedCostsController.rebasedCosts()))
+        case "No" => Future.successful(Redirect(routes.ImprovementsController.improvements()))
+      }
+    }
+
+    def routeRequest(acquisitionDate: AcquisitionDateModel): Future[Result] = {
+      rebasedValueForm.bindFromRequest.fold(
+        errors => errorAction(errors, acquisitionDate),
+        success => successAction(success)
+      )
+    }
+    for {
+      acquisitionDate <- fetchAcquisitionDate(hc)
+      route <- routeRequest(acquisitionDate.get)
+    } yield route
+  }
 }

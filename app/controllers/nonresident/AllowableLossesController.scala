@@ -72,6 +72,9 @@ trait AllowableLossesController extends FrontendController with ValidActiveSessi
           calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
             case Some(data) if data.hasAcquisitionDate == "Yes" && !TaxDates.dateAfterStart(data.day.get, data.month.get, data.year.get) =>
               Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
+            case Some(data) if data.hasAcquisitionDate == "Yes" =>
+              calcConnector.saveFormData(KeystoreKeys.calculationElection, CalculationElectionModel("flat"))
+              Future.successful(Redirect(routes.OtherReliefsController.otherReliefs()))
             case _ =>
               calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
                 case Some(rebasedData) if rebasedData.hasRebasedValue == "Yes" =>

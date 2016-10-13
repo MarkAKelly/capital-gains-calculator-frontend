@@ -26,7 +26,8 @@
                 formInputMoney(
                         rebasedValueForm,
                         "rebasedValueAmt",
-                        Messages("calc.rebasedValue.questionTwo")
+                        Messages("calc.rebasedValue.questionTwo"),
+                        Some(Messages("calc.rebasedValue.helpTextTwo"))
                 ),
                 if (hasAcquisitionDate.equals("No")) {Some(Messages("calc.rebasedValue.helpText"))}
                 else{None}

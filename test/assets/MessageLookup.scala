@@ -41,6 +41,20 @@ object MessageLookup {
   // the message lookup and add the non-resident messages.  Any new added pages should be added
   // to the right place in this object.
 
+  object NonResident {
+
+    object Common {
+      val pageHeading = "Calculate your non-resident Capital Gains Tax"
+    }
+
+    object RebasedValue {
+      val question = "What was the property worth on 5 April 2015?"
+      val inputHelpText = "You can use a valuation from a surveyor or a property website."
+      val errorNoValue = "Enter a value for your property on 5 April 2015"
+    }
+
+  }
+
   object Resident {
 
     object Properties {
