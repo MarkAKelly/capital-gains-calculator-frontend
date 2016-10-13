@@ -16,6 +16,7 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup.{summaryPage => messages}
 import common.DefaultRoutes._
 import common.{KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
@@ -441,6 +442,25 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
           "have a link to 'Start again'" in {
             document.select("#startAgain").text shouldEqual Messages("calc.summary.startAgain")
+          }
+
+          "display the save as PDF Button" which {
+
+            "should render only one button" in {
+              document.select("a.save-pdf-button").size() shouldEqual 1
+            }
+
+            "with the class save-pdf-button" in {
+              document.select("a.button").hasClass("save-pdf-button") shouldEqual true
+            }
+
+            s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport().toString}" in {
+              document.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/non-resident/summary-report"
+            }
+
+            s"have the text ${messages.saveAsPdf}" in {
+              document.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
+            }
           }
         }
       }

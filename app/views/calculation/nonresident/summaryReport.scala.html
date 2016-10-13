@@ -4,11 +4,12 @@
 @import models.nonresident._
 @import models.resident._
 @import models.SummaryDataItemModel
-@import constructors.nonresident.SummaryConstructor._
+@import constructors.nonresident.SummaryConstructor
+@import constructors.nonresident.SummaryReportConstructor
 @import controllers.nonresident.routes.{ReportController => routes}
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-@(summary: SummaryModel, result: CalculationResultModel, taxYear: TaxYearModel)(implicit request: Request[_])
+@(summary: SummaryModel, result: CalculationResultModel, taxYear: TaxYearModel, electionType: String)(implicit request: Request[_])
 
 <!DOCTYPE html>
 <html>
@@ -23,7 +24,7 @@
 <div class="pdf">
     <div class="header-container">
         <h1 class="heading-xlarge">
-            <span class="pre-heading">@Messages("calc.summary.pageHeading")</span>
+            <span class="pre-heading">@Messages("calc.summary.secondaryHeading")</span>
             <b>&pound;@MoneyPounds(result.taxOwed).quantity</b>
         </h1>
         <div class="logo">
@@ -35,10 +36,54 @@
     <div class="notice-wrapper">
         <div class="notice">
             <strong class="bold-small">
-                {Messages("calc.base.summary.dateWarning", taxYear.calculationTaxYear)}
+                {Messages("calc.resident.summary.dateWarning", taxYear.calculationTaxYear)}
             </strong>
         </div>
     </div>
     }
     }
+
+    <!-- Calculation Details Section -->
+    <section id="calcDetails">
+        <!-- Header -->
+        @summarySectionHeaderHelper(Messages("calc.summary.calculation.details.title"))
+
+        <!-- Data Rows -->
+        @if(result.totalGain > 0 && result.taxableGain > 0){
+            @summaryTextRowHelper("calculationElection", Messages("calc.summary.calculation.details.calculationElection"),
+                electionType)
+            @summaryNumericRowHelper("totalGain", Messages("calc.summary.calculation.details.totalGain"), result.totalGain)
+            @summaryNumericRowHelper("usedAEA", Messages("calc.summary.calculation.details.usedAEA"), result.usedAnnualExemptAmount)
+            @summaryNumericRowHelper("taxableGain", Messages("calc.summary.calculation.details.taxableGain"), result.taxableGain)
+        }
+        @if(result.taxableGain >= 0){
+            @summaryTextRowHelper("calculationElection", Messages("calc.summary.calculation.details.calculationElection"),
+                electionType)
+            @summaryNumericRowHelper("totalGain", Messages("calc.summary.calculation.details.totalGain"), result.totalGain)
+            @summaryNumericRowHelper("usedAEA", Messages("calc.summary.calculation.details.usedAEA"), result.usedAnnualExemptAmount)
+            @summaryNumericRowHelper("taxableGain", Messages("calc.summary.calculation.details.taxableGain"), result.taxableGain)
+        }
+
+
+    </section>
+
+    <section id="calcDetailsTry">
+
+        <!-- Header -->
+        @summarySectionHeaderHelper(Messages("calc.summary.calculation.details.title"))
+        @SummaryReportConstructor.calculationDetails(result, summary)
+
+    </section>
+
+
+    @SummaryReportConstructor.personalDetails(result, summary)
+
+    @SummaryReportConstructor.acquisitionDetails(result, summary)
+
+    @SummaryReportConstructor.propertyDetails(result, summary)
+
+    @SummaryReportConstructor.saleDetails(result, summary)
+
+    @SummaryReportConstructor.deductions(result, summary)
+
 </div>

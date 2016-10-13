@@ -21,6 +21,7 @@ import java.time.LocalDate
 import common.Dates._
 import common.KeystoreKeys
 import connectors.CalculatorConnector
+import constructors.nonresident.SummaryConstructor
 import controllers.predicates.ValidActiveSession
 import it.innove.play.pdf.PdfGenerator
 import models.nonresident.{CalculationResultModel, DisposalDateModel, SummaryModel}
@@ -68,7 +69,8 @@ trait ReportController extends FrontendController with ValidActiveSession {
       taxYear <- getTaxYear(summary.disposalDateModel)
 
     } yield {
-      PdfGenerator.ok(summaryView(summary, result.get, taxYear.get), host).toScala
+      PdfGenerator.ok(summaryView(summary, result.get, taxYear.get, SummaryConstructor.calcTypeMessage(summary.calculationElectionModel.calculationType)),
+        host).toScala
         .withHeaders("Content-Disposition" ->s"""attachment; filename="${Messages("calc.summary.title")}.pdf"""")
     }
   }
