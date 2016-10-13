@@ -64,6 +64,13 @@ class ReportSpec extends UnitSpec with WithFakeApplication with FakeRequestHelpe
     }
   }
 
+  "ReportController" should {
+    "use the correct calculator connector" in {
+      ReportController.calcConnector shouldBe CalculatorConnector
+    }
+  }
+
+
   "Calling .summaryReport from the ReportController" when {
 
     "a 0 gain is returned by flat" should {
@@ -98,33 +105,241 @@ class ReportSpec extends UnitSpec with WithFakeApplication with FakeRequestHelpe
 
     "a 0 gain is returned by rebased" should {
 
+      lazy val taxYear = TaxYearModel("2016-12-12", true, "16")
+
+      lazy val target = setupTarget(
+        sumModelRebased,
+        Some(calcModelZeroTotal),
+        Some(taxYear)
+      )
+
+      lazy val result = target.summaryReport(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return a pdf" in {
+        contentType(result) shouldBe Some("application/pdf")
+      }
+
+      "return a pdf as an attachment" in {
+        header("Content-Disposition", result).get should include("attachment")
+      }
+
+      "return the pdf with a filename of 'Summary'" in {
+        header("Content-Disposition", result).get should include(s"""filename="${messages.title}.pdf"""")
+      }
+
     }
 
     "a 0 gain is returned by time apportioned" should {
+
+      lazy val taxYear = TaxYearModel("2016-12-12", true, "16")
+
+      lazy val target = setupTarget(
+        sumModelTA,
+        Some(calcModelZeroTotal),
+        Some(taxYear)
+      )
+
+      lazy val result = target.summaryReport(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return a pdf" in {
+        contentType(result) shouldBe Some("application/pdf")
+      }
+
+      "return a pdf as an attachment" in {
+        header("Content-Disposition", result).get should include("attachment")
+      }
+
+      "return the pdf with a filename of 'Summary'" in {
+        header("Content-Disposition", result).get should include(s"""filename="${messages.title}.pdf"""")
+      }
 
     }
 
     "a loss is returned by flat " should {
 
+      lazy val taxYear = TaxYearModel("2016-12-12", true, "16")
+
+      lazy val target = setupTarget(
+        sumModelFlat,
+        Some(calcModelLoss),
+        Some(taxYear)
+      )
+
+      lazy val result = target.summaryReport(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return a pdf" in {
+        contentType(result) shouldBe Some("application/pdf")
+      }
+
+      "return a pdf as an attachment" in {
+        header("Content-Disposition", result).get should include("attachment")
+      }
+
+      "return the pdf with a filename of 'Summary'" in {
+        header("Content-Disposition", result).get should include(s"""filename="${messages.title}.pdf"""")
+      }
+
     }
 
     "a loss is returned by rebased " should {
+
+      lazy val taxYear = TaxYearModel("2016-12-12", true, "16")
+
+      lazy val target = setupTarget(
+        sumModelRebased,
+        Some(calcModelLoss),
+        Some(taxYear)
+      )
+
+      lazy val result = target.summaryReport(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return a pdf" in {
+        contentType(result) shouldBe Some("application/pdf")
+      }
+
+      "return a pdf as an attachment" in {
+        header("Content-Disposition", result).get should include("attachment")
+      }
+
+      "return the pdf with a filename of 'Summary'" in {
+        header("Content-Disposition", result).get should include(s"""filename="${messages.title}.pdf"""")
+      }
 
     }
 
     "a loss is returned by apportioned" should {
 
+      lazy val taxYear = TaxYearModel("2016-12-12", true, "16")
+
+      lazy val target = setupTarget(
+        sumModelTA,
+        Some(calcModelLoss),
+        Some(taxYear)
+      )
+
+      lazy val result = target.summaryReport(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return a pdf" in {
+        contentType(result) shouldBe Some("application/pdf")
+      }
+
+      "return a pdf as an attachment" in {
+        header("Content-Disposition", result).get should include("attachment")
+      }
+
+      "return the pdf with a filename of 'Summary'" in {
+        header("Content-Disposition", result).get should include(s"""filename="${messages.title}.pdf"""")
+      }
+
     }
 
     "a gain is returned by flat" should {
+
+      lazy val taxYear = TaxYearModel("2016-12-12", true, "16")
+
+      lazy val target = setupTarget(
+        sumModelFlat,
+        Some(calcModelTwoRates),
+        Some(taxYear)
+      )
+
+      lazy val result = target.summaryReport(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return a pdf" in {
+        contentType(result) shouldBe Some("application/pdf")
+      }
+
+      "return a pdf as an attachment" in {
+        header("Content-Disposition", result).get should include("attachment")
+      }
+
+      "return the pdf with a filename of 'Summary'" in {
+        header("Content-Disposition", result).get should include(s"""filename="${messages.title}.pdf"""")
+      }
 
     }
 
     "a gain is returned by rebased" should {
 
+      lazy val taxYear = TaxYearModel("2016-12-12", true, "16")
+
+      lazy val target = setupTarget(
+        sumModelRebased,
+        Some(calcModelTwoRates),
+        Some(taxYear)
+      )
+
+      lazy val result = target.summaryReport(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return a pdf" in {
+        contentType(result) shouldBe Some("application/pdf")
+      }
+
+      "return a pdf as an attachment" in {
+        header("Content-Disposition", result).get should include("attachment")
+      }
+
+      "return the pdf with a filename of 'Summary'" in {
+        header("Content-Disposition", result).get should include(s"""filename="${messages.title}.pdf"""")
+      }
+
     }
 
     "a gain is returned by apportioned" should {
+
+      lazy val taxYear = TaxYearModel("2016-12-12", true, "16")
+
+      lazy val target = setupTarget(
+        sumModelTA,
+        Some(calcModelTwoRates),
+        Some(taxYear)
+      )
+
+      lazy val result = target.summaryReport(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return a pdf" in {
+        contentType(result) shouldBe Some("application/pdf")
+      }
+
+      "return a pdf as an attachment" in {
+        header("Content-Disposition", result).get should include("attachment")
+      }
+
+      "return the pdf with a filename of 'Summary'" in {
+        header("Content-Disposition", result).get should include(s"""filename="${messages.title}.pdf"""")
+      }
 
     }
 
