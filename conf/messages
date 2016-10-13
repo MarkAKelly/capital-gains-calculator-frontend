@@ -151,6 +151,7 @@ calc.acquisitionValue.bullet.five = became the owner before 1 April 1982
 calc.rebasedValue.question = Do you know how much the property was worth on 5 April 2015?
 calc.rebasedValue.questionTwo = What was the value of the property?
 calc.rebasedValue.helpText = Only tell us if you owned the property on that date
+calc.rebasedValue.helpTextTwo = You can use a valuation from a surveyor or a property website.
 calc.nonResident.rebasedValue.question = What was the property worth on 5 April 2015?
 calc.nonResident.rebasedValue.inputHelpText = You can use a valuation from a surveyor or a property website.
 calc.rebasedValue.errorNegative = Enter a positive value for your property on 5 April 2015
