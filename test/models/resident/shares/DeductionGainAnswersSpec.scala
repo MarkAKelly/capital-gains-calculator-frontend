@@ -39,7 +39,7 @@ class DeductionGainAnswersSpec extends UnitSpec {
     }
 
     "return a result of false for displayAnnualExemptAmount" in {
-      val result = model.displayLossesBroughtForward
+      val result = model.displayAnnualExemptAmount
 
       result shouldBe false
     }
@@ -68,7 +68,7 @@ class DeductionGainAnswersSpec extends UnitSpec {
     }
 
     "return a result of true for displayAnnualExemptAmount" in {
-      val result = model.displayLossesBroughtForward
+      val result = model.displayAnnualExemptAmount
 
       result shouldBe true
     }
@@ -97,7 +97,7 @@ class DeductionGainAnswersSpec extends UnitSpec {
     }
 
     "return a result of false for displayAnnualExemptAmount" in {
-      val result = model.displayLossesBroughtForward
+      val result = model.displayAnnualExemptAmount
 
       result shouldBe false
     }
@@ -126,7 +126,7 @@ class DeductionGainAnswersSpec extends UnitSpec {
     }
 
     "return a result of true for displayAnnualExemptAmount" in {
-      val result = model.displayLossesBroughtForward
+      val result = model.displayAnnualExemptAmount
 
       result shouldBe true
     }
