@@ -109,7 +109,6 @@
             summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),answers.acquisitionValue.get,Some(routes.acquisitionValue().toString))
         }
 
-        <!--- --->
         @{if (answers.displayWorthWhenBoughtForLess)
             summaryNumericRowHelper("worthWhenBoughtForLess", Messages("calc.resident.properties.worthWhenBoughtForLess.question"),answers.worthWhenBoughtForLess.get, Some(routes.worthWhenBoughtForLess().toString))
         }
@@ -121,7 +120,6 @@
         @{if (answers.displayWorthWhenInherited)
             summaryNumericRowHelper("worthWhenInherited", Messages("calc.resident.properties.worthWhenInherited.question"),answers.worthWhenInherited.get, Some(routes.worthWhenInherited().toString))
         }
-        <!--- --->
 
         @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.acquisitionCosts.title"),answers.acquisitionCosts,Some(routes.acquisitionCosts().toString))
         @summaryNumericRowHelper("improvements",
