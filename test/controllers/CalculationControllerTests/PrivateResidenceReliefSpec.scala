@@ -254,7 +254,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
           Some(PrivateResidenceReliefModel("Yes", Some(23), Some(45))),
           None,
           Some(DisposalDateModel(6, 10, 2016)),
-          Some(AcquisitionDateModel("Yes", Some(5), Some(6), Some(2015))),
+          Some(AcquisitionDateModel("Yes", Some(5), Some(6), Some(2014))),
           Some(RebasedValueModel("Yes", Some(200)))
         )
         lazy val result = target.privateResidenceRelief(fakeRequest)
