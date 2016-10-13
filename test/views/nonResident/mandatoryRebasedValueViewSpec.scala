@@ -110,7 +110,7 @@ class mandatoryRebasedValueViewSpec extends UnitSpec with WithFakeApplication wi
     "have an input for the amount" which {
 
       s"has a label with text ${messages.question}" in {
-        doc.select("label > div > span.visuallyhidden").text() shouldEqual messages.question
+        doc.body.select("label > div > span").text shouldEqual messages.question
       }
 
       s"should be of tag type input" in {
