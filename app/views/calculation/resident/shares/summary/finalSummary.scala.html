@@ -14,7 +14,7 @@
 
 @(gainAnswers: GainAnswersModel, deductionAnswers: DeductionGainAnswersModel,
     incomeAnswers: IncomeAnswersModel, result: TotalGainAndTaxOwedModel,
-    backUrl: String, taxYear: TaxYearModel, navHomeLink: String)(implicit request: Request[_])
+    backUrl: String, taxYear: TaxYearModel, navHomeLink: String, isCurrentTaxYear: Boolean)(implicit request: Request[_])
 
 @resident_main_template(
 title = Messages("calc.resident.summary.title"),
@@ -141,9 +141,9 @@ navTitle = Messages("calc.base.resident.shares.home")
     }
     @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties && deductionAnswers.annualExemptAmountModel.isDefined && deductionAnswers.annualExemptAmountModel.get.amount == 0)
         summaryNumericRowHelper("previousTaxableGains", Messages("calc.resident.previousTaxableGains.title", taxYear.taxYearSupplied), incomeAnswers.previousTaxableGainsModel.get.amount, Some(incomeRoutes.previousTaxableGains().toString))}
-    @summaryNumericRowHelper("currentIncome",if(taxYear.taxYearSupplied == "2016/17"){Messages("calc.resident.currentIncome.questionCurrentYear")}else{Messages("calc.resident.currentIncome.question", taxYear.taxYearSupplied)},incomeAnswers.currentIncomeModel.get.amount,Some(incomeRoutes.currentIncome().toString))
+    @summaryNumericRowHelper("currentIncome",if(isCurrentTaxYear){Messages("calc.resident.currentIncome.questionCurrentYear")}else{Messages("calc.resident.currentIncome.question", taxYear.taxYearSupplied)},incomeAnswers.currentIncomeModel.get.amount,Some(incomeRoutes.currentIncome().toString))
     @summaryNumericRowHelper("personalAllowance",
-    {if(taxYear.taxYearSupplied == "2016/17") {Messages("calc.resident.personalAllowance.currentYearQuestion")}
+    {if(isCurrentTaxYear) {Messages("calc.resident.personalAllowance.currentYearQuestion")}
     else {Messages("calc.resident.personalAllowance.question", taxYear.taxYearSupplied)}},
     incomeAnswers.personalAllowanceModel.get.amount,Some(incomeRoutes.personalAllowance().toString))
 
