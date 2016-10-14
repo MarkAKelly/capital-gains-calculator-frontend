@@ -19,6 +19,7 @@ package common
 import uk.gov.hmrc.play.test.UnitSpec
 import java.time.LocalDate
 import common.Dates.formatter
+import play.api.libs.concurrent.Execution.Implicits._
 
 class DatesSpec extends UnitSpec {
 
@@ -47,6 +48,14 @@ class DatesSpec extends UnitSpec {
   "Calling getYear" should {
     "return an integer value of the year" in {
       Dates.getYear(LocalDate.parse("12/12/2014", formatter)) shouldEqual 2014
+    }
+  }
+
+  "Calling getCurrent Tax Year" should {
+    "return the current tax year in the form YYYY/YY" in {
+      for {
+        date <- Dates.getCurrentTaxYear
+      } yield date.length shouldEqual 7
     }
   }
 }

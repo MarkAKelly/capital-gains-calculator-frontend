@@ -29,8 +29,6 @@ import scala.concurrent.Future
 
 object Dates {
 
-  val calcConnector = CalculatorConnector
-
   val taxYearEnd = "04-05"
   val formatter = DateTimeFormatter.ofPattern("d/M/uuuu").withResolverStyle(ResolverStyle.STRICT)
   val requestFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd").withResolverStyle(ResolverStyle.STRICT)
