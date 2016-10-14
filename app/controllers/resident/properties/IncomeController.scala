@@ -28,6 +28,7 @@ import forms.resident.income.PersonalAllowanceForm._
 import forms.resident.income.CurrentIncomeForm._
 import models.resident._
 import models.resident.income._
+import org.joda.time.DateTime
 import play.api.mvc.Result
 import uk.gov.hmrc.play.http.HeaderCarrier
 import play.api.data.Form
@@ -88,6 +89,8 @@ trait IncomeController extends FeatureLock {
   def formatDisposalDate(disposalDateModel: DisposalDateModel): Future[String] = {
     Future.successful(s"${disposalDateModel.year}-${disposalDateModel.month}-${disposalDateModel.day}")
   }
+
+  val getCurrentTaxYear: String = DateTime.now()
 
   override val homeLink = controllers.resident.properties.routes.PropertiesController.introduction().url
   override val sessionTimeoutUrl = homeLink
