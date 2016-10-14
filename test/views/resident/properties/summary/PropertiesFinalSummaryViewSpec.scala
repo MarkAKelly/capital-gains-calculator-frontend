@@ -1399,18 +1399,6 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
     lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
-    "display the what to do next section" in {
-      doc.select("#whatToDoNext").hasText shouldEqual true
-    }
-
-    s"display the title ${messages.whatToDoNextTitle}" in {
-      doc.select("#whatToDoNextTitle").text shouldEqual messages.whatToDoNextTitle
-    }
-
-    s"display the text ${messages.whatToDoNextTextTwo}" in {
-      doc.select("#whatToDoNextText").text shouldEqual s"${messages.whatToDoNextTextTwo} ${commonMessages.calcBaseExternalLink}"
-    }
-
     "has an output row for how became owner" which {
 
       s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
@@ -1451,13 +1439,29 @@ class PropertiesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication w
       }
     }
 
+    "display the what to do next section" in {
+      doc.select("#whatToDoNext").hasText shouldEqual true
+    }
+
+    s"display the title ${messages.whatToDoNextTitle}" in {
+      doc.select("#whatToDoNextTitle").text shouldEqual messages.whatToDoNextTitle
+    }
+
+    s"display the text ${messages.whatToDoNextPropertiesLiabilityMessage}" in {
+      doc.select("#whatToDoNextText").text shouldEqual s"${messages.whatToDoNextPropertiesLiabilityMessage} ${commonMessages.calcBaseExternalLink}."
+    }
+
+    s"display the additional text ${messages.whatToDoNextLiabilityAdditionalMessage}" in {
+      doc.select("#whatToDoNext p").text shouldEqual messages.whatToDoNextLiabilityAdditionalMessage
+    }
+
     "have a link" which {
 
       "should have a href attribute" in {
         doc.select("#whatToDoNextLink").hasAttr("href") shouldEqual true
       }
 
-      "should link to the what-you-pay-on-it govuk page" in {
+      "should link to the work-out-need-to-pay govuk page" in {
         doc.select("#whatToDoNextLink").attr("href") shouldEqual "https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax"
       }
 
