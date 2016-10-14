@@ -43,47 +43,68 @@
     }
     }
 
-    <!-- Calculation Details Section -->
     <section id="calcDetails">
-        <!-- Header -->
-        @summarySectionHeaderHelper(Messages("calc.summary.calculation.details.title"))
-
-        <!-- Data Rows -->
-        @if(result.totalGain > 0 && result.taxableGain > 0){
-            @summaryTextRowHelper("calculationElection", Messages("calc.summary.calculation.details.calculationElection"),
-                electionType)
-            @summaryNumericRowHelper("totalGain", Messages("calc.summary.calculation.details.totalGain"), result.totalGain)
-            @summaryNumericRowHelper("usedAEA", Messages("calc.summary.calculation.details.usedAEA"), result.usedAnnualExemptAmount)
-            @summaryNumericRowHelper("taxableGain", Messages("calc.summary.calculation.details.taxableGain"), result.taxableGain)
-        }
-        @if(result.taxableGain >= 0){
-            @summaryTextRowHelper("calculationElection", Messages("calc.summary.calculation.details.calculationElection"),
-                electionType)
-            @summaryNumericRowHelper("totalGain", Messages("calc.summary.calculation.details.totalGain"), result.totalGain)
-            @summaryNumericRowHelper("usedAEA", Messages("calc.summary.calculation.details.usedAEA"), result.usedAnnualExemptAmount)
-            @summaryNumericRowHelper("taxableGain", Messages("calc.summary.calculation.details.taxableGain"), result.taxableGain)
-        }
-
-
-    </section>
-
-    <section id="calcDetailsTry">
 
         <!-- Header -->
         @summarySectionHeaderHelper(Messages("calc.summary.calculation.details.title"))
+
+        <!-- Body -->
         @SummaryReportConstructor.calculationDetails(result, summary)
 
     </section>
 
+    <section id="personalDetails">
+        <!-- Header -->
+        @summarySectionHeaderHelper(Messages("calc.summary.personal.details.title"))
 
-    @SummaryReportConstructor.personalDetails(result, summary)
+        <!-- Body -->
+        @SummaryReportConstructor.personalDetails(result, summary)
+    </section>
 
-    @SummaryReportConstructor.acquisitionDetails(result, summary)
+    <section id="acquisitionDetails">
+        <!-- Header -->
+        @summarySectionHeaderHelper(Messages("calc.summary.personal.details.title"))
 
-    @SummaryReportConstructor.propertyDetails(result, summary)
+        <!-- Body -->
+        @SummaryReportConstructor.acquisitionDetails(result, summary)
+    </section>
 
-    @SummaryReportConstructor.saleDetails(result, summary)
+    <section id="propertyDetails">
+        <!-- Header -->
+        @summarySectionHeaderHelper(Messages("calc.summary.personal.details.title"))
 
-    @SummaryReportConstructor.deductions(result, summary)
+        <!-- Body -->
+        @SummaryReportConstructor.propertyDetails(result, summary)
+    </section>
+
+    <section id="saleDetails">
+        <!-- Header -->
+        @summarySectionHeaderHelper(Messages("calc.summary.personal.details.title"))
+
+        <!-- Body -->
+        @SummaryReportConstructor.saleDetails(result, summary)
+    </section>
+
+    <section id="deductions">
+        <!-- Header -->
+        @summarySectionHeaderHelper(Messages("calc.summary.personal.details.title"))
+
+        <!-- Body -->
+        @SummaryReportConstructor.deductions(result, summary)
+    </section>
+
+    @*
+    *  What to do next
+    *@
+    <div id="whatToDoNext" class="form-group">
+        <h2 class="heading-medium">@Messages("calc.summary.next.fullMessage")</h2>
+        <p>@Messages("calc.summary.link.message")</p>
+        <p>
+            <a class="external-link" rel="external" href="https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-uk-residential-property"
+               target="_blank" data-journey-click="nav:calc:kana-nrcgt">
+                <span>https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-uk-residential-property</span>
+            </a>
+        </p>
+    </div>
 
 </div>

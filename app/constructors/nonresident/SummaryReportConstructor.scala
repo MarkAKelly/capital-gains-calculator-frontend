@@ -25,7 +25,7 @@ import models.nonresident.{CalculationResultModel, PrivateResidenceReliefModel, 
 import org.apache.commons.lang3.text.WordUtils
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
-import views.html.helpers.summaryPageSection
+import views.html.helpers.summaryReportPageSection
 
 object SummaryReportConstructor {
 
@@ -45,8 +45,7 @@ object SummaryReportConstructor {
     }
   }
 
-  def calculationDetails(result: CalculationResultModel, summary: SummaryModel) = summaryPageSection("calcDetails",
-    Messages("calc.summary.calculation.details.title"),
+  def calculationDetails(result: CalculationResultModel, summary: SummaryModel) = summaryReportPageSection("calculationDetails",
     (result.totalGain, result.taxableGain) match {
       case (totalGain, taxableGain) if isGreaterThanZero(totalGain) && isGreaterThanZero(taxableGain) => Array(
         SummaryDataItemModel(
@@ -159,7 +158,7 @@ object SummaryReportConstructor {
   )
 
   def personalDetails(result: CalculationResultModel, summary: SummaryModel) = {
-    summaryPageSection("personalDetails", Messages("calc.summary.personal.details.title"),
+    summaryReportPageSection("personalDetails",
       summary.customerTypeModel.customerType match {
         case CustomerTypeKeys.trustee => summary.otherPropertiesModel.otherProperties match {
           case "Yes" => Array(
@@ -338,7 +337,7 @@ object SummaryReportConstructor {
   }
 
   def acquisitionDetails(result: CalculationResultModel, summary: SummaryModel) = {
-    summaryPageSection("purchaseDetails", Messages("calc.summary.purchase.details.title"),
+    summaryReportPageSection("purchaseDetails",
       summary.calculationElectionModel.calculationType match {
         case "rebased" => summary.acquisitionDateModel.hasAcquisitionDate match {
           case "Yes" => Array(
@@ -426,7 +425,7 @@ object SummaryReportConstructor {
   }
 
   def propertyDetails(result: CalculationResultModel, summary: SummaryModel) = {
-    summaryPageSection("propertyDetails", Messages("calc.summary.property.details.title"),
+    summaryReportPageSection("propertyDetails",
       summary.improvementsModel.isClaimingImprovements match {
         case "Yes" => summary.calculationElectionModel.calculationType match {
           case "rebased" => Array(
@@ -470,7 +469,7 @@ object SummaryReportConstructor {
   }
 
   def saleDetails(result: CalculationResultModel, summary: SummaryModel) = {
-    summaryPageSection("saleDetails", Messages("calc.summary.sale.details.title"),
+    summaryReportPageSection("saleDetails",
       Array(
         SummaryDataItemModel(
           Messages("calc.disposalDate.question"),
@@ -492,7 +491,7 @@ object SummaryReportConstructor {
   }
 
   def deductions(result: CalculationResultModel, summary: SummaryModel) = {
-    summaryPageSection("deductions", Messages("calc.summary.deductions.title"),
+    summaryReportPageSection("deductions",
       summary.calculationElectionModel.calculationType match {
         case "flat" => Array(
           SummaryDataItemModel(

@@ -30,7 +30,7 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
 
     lazy val taxYear = TaxYearModel("2016-12-12", true, "2016")
 
-    lazy val view = summaryReport(sumModelFlat, calcModelZeroTotal, taxYear)(fakeRequestWithSession)
+    lazy val view = summaryReport(sumModelFlat, calcModelZeroTotal, taxYear, sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -39,8 +39,8 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
 
     s"have a page heading" which {
 
-      s"includes a secondary heading with text '${messages.pageHeading}'" in {
-        doc.select("h1 span.pre-heading").text shouldBe messages.pageHeading
+      s"includes a secondary heading with text '${messages.secondaryHeading}'" in {
+        doc.select("h1 span.pre-heading").text shouldBe messages.secondaryHeading
       }
 
       "include an amount of tax due of £0.00" in {
@@ -62,8 +62,8 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
 
       s"has a h2 tag" which {
 
-        s"should have the title '${messages.calcDetailsHeadingDate("2015/16")}'" in {
-          doc.select("section#calcDetails h2").text shouldBe messages.calcDetailsHeadingDate("2015/16")
+        s"should have the title '${messages.calcDetailsHeading}'" in {
+          doc.select("section#calcDetails h2").text shouldBe messages.calcDetailsHeading
         }
 
         "has the class 'heading-large'" in {
