@@ -20,13 +20,23 @@ import java.time._
 import java.time.format.{DateTimeFormatter, ResolverStyle}
 import java.time.temporal.ChronoUnit
 
+import connectors.CalculatorConnector
+import models.resident.TaxYearModel
+import org.joda.time.DateTime
+import uk.gov.hmrc.play.http.HeaderCarrier
+
+import scala.concurrent.Future
+
 object Dates {
 
+  val calcConnector = CalculatorConnector
+
+  val taxYearEnd = "04-05"
   val formatter = DateTimeFormatter.ofPattern("d/M/uuuu").withResolverStyle(ResolverStyle.STRICT)
   val requestFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd").withResolverStyle(ResolverStyle.STRICT)
   val datePageFormatNoZero = DateTimeFormatter.ofPattern("d MMMM uuuu").withResolverStyle(ResolverStyle.STRICT)
 
-  def constructDate (day: Int, month: Int, year: Int): LocalDate = LocalDate.parse(s"$day/$month/$year", formatter)
+  def constructDate(day: Int, month: Int, year: Int): LocalDate = LocalDate.parse(s"$day/$month/$year", formatter)
 
   def dateMinusMonths(date: Option[LocalDate], months: Int): String = date.fold("") {
     a => a.minus(months, ChronoUnit.MONTHS).format(datePageFormatNoZero)
@@ -37,5 +47,22 @@ object Dates {
   def getMonth(date: LocalDate): Int = date.getMonthValue
 
   def getYear(date: LocalDate): Int = date.getYear
+
+  def taxYearToString(input: Int): String = {
+    val startYear = input - 1
+    val endYear = input.toString.takeRight(2)
+    s"$startYear/$endYear"
+  }
+
+  def getCurrentTaxYear: Future[String] = {
+    val now = DateTime.now()
+    val year = now.getYear
+    if (now.isAfter(DateTime.parse(s"${year.toString}-$taxYearEnd"))) {
+      Future.successful(taxYearToString(year + 1))
+    }
+    else {
+      Future.successful(taxYearToString(year))
+    }
+  }
 }
 
