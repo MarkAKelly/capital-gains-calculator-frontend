@@ -90,15 +90,15 @@ trait ReportController extends FeatureLock {
       deductionAnswers <- calcConnector.getPropertyDeductionAnswers
       chargeableGain <- calcConnector.calculateRttPropertyChargeableGain(answers, deductionAnswers, maxAEA.get)
       incomeAnswers <- calcConnector.getPropertyIncomeAnswers
-//      currentTaxYear <- Dates.getCurrentTaxYear
+      currentTaxYear <- Dates.getCurrentTaxYear
       totalGain <- calcConnector.calculateRttPropertyTotalGainAndTax(answers, deductionAnswers, maxAEA.get, incomeAnswers)
     } yield {
       PdfGenerator.ok(views.finalSummaryReport(answers,
         deductionAnswers,
         incomeAnswers,
         totalGain.get,
-        taxYear.get),
-//        taxYear.get == currentTaxYear),
+        taxYear.get,
+        taxYear.get.taxYearSupplied == currentTaxYear),
         host).toScala.withHeaders("Content-Disposition" -> s"""attachment; filename="${Messages("calc.resident.summary.title")}.pdf"""")
     }
   }

@@ -21,7 +21,7 @@ import common.Dates
 import controllers.helpers.FakeRequestHelper
 import models.resident.income.{CurrentIncomeModel, PersonalAllowanceModel, PreviousTaxableGainsModel}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.{MessageLookup => commonMessages}
+import assets.{DateAsset, MessageLookup => commonMessages}
 import assets.MessageLookup.{summaryPage => messages}
 import models.resident._
 import models.resident.properties._
@@ -86,7 +86,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
-    lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel)(fakeRequestWithSession)
+    lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel, false)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     s"have a title ${messages.title}" in {
@@ -430,7 +430,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
   "Final Summary when supplied with a date above the known tax years" should {
 
-    lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
+    lazy val taxYearModel = TaxYearModel(DateAsset.getYearAfterCurrentTaxYear, false, Dates.getCurrentTaxYear)
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       None,
@@ -484,7 +484,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       0
     )
 
-    lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel)(fakeRequestWithSession)
+    lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel, false)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "has a numeric output row for the deductions" which {
@@ -654,15 +654,15 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
         doc.select("div.notice-wrapper").isEmpty shouldBe false
       }
 
-      s"have the text ${messages.noticeWarning("2016/17")}" in {
-        doc.select("strong.bold-small").text shouldBe messages.noticeWarning("2016/17")
+      s"have the text ${messages.noticeWarning(Dates.getCurrentTaxYear)}" in {
+        doc.select("strong.bold-small").text shouldBe messages.noticeWarning(Dates.getCurrentTaxYear)
       }
     }
   }
 
   "Final Summary when property bought for less than worth" should {
 
-    lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
+    lazy val taxYearModel = TaxYearModel(DateAsset.getYearAfterCurrentTaxYear, false, Dates.getCurrentTaxYear)
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       None,
@@ -716,7 +716,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       0
     )
 
-    lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel)(fakeRequestWithSession)
+    lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel, false)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "has an option output row for bought for less than worth" which {
@@ -745,7 +745,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
   "Final Summary when supplied with an inherited property" which {
 
-    lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
+    lazy val taxYearModel = TaxYearModel(DateAsset.getYearAfterCurrentTaxYear, false, Dates.getCurrentTaxYear)
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       Some(BigDecimal(200000)),
@@ -800,7 +800,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       0
     )
 
-    lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel)(fakeRequestWithSession)
+    lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel, false)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "has a numeric output row for the Disposal Value" which {
@@ -838,7 +838,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
   }
 
   "Final Summary when supplied with a gifted property" which {
-    lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
+    lazy val taxYearModel = TaxYearModel(DateAsset.getYearAfterCurrentTaxYear, false, Dates.getCurrentTaxYear)
 
     lazy val gainAnswers = YourAnswersSummaryModel(Dates.constructDate(10, 10, 2018),
       Some(BigDecimal(200000)),
@@ -892,7 +892,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
       0
     )
 
-    lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel)(fakeRequestWithSession)
+    lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel, false)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "has an output row for how became owner" which {
@@ -976,7 +976,7 @@ class PropertiesFinalReportViewSpec extends UnitSpec with WithFakeApplication wi
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
-      lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel)(fakeRequestWithSession)
+      lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel, false)(fakeRequestWithSession)
 
 
     lazy val doc = Jsoup.parse(view.body)
