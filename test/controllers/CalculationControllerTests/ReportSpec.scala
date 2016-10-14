@@ -108,7 +108,7 @@ class ReportSpec extends UnitSpec with WithFakeApplication with FakeRequestHelpe
       lazy val taxYear = TaxYearModel("2016-12-12", true, "16")
 
       lazy val target = setupTarget(
-        sumModelRebased,
+        summaryIndividualRebased,
         Some(calcModelZeroTotal),
         Some(taxYear)
       )
@@ -198,7 +198,7 @@ class ReportSpec extends UnitSpec with WithFakeApplication with FakeRequestHelpe
       lazy val taxYear = TaxYearModel("2016-12-12", true, "16")
 
       lazy val target = setupTarget(
-        sumModelRebased,
+        summaryIndividualRebased,
         Some(calcModelLoss),
         Some(taxYear)
       )
@@ -288,7 +288,7 @@ class ReportSpec extends UnitSpec with WithFakeApplication with FakeRequestHelpe
       lazy val taxYear = TaxYearModel("2016-12-12", true, "16")
 
       lazy val target = setupTarget(
-        sumModelRebased,
+        summaryIndividualRebased,
         Some(calcModelTwoRates),
         Some(taxYear)
       )
