@@ -11,7 +11,7 @@
 @import controllers.resident.shares.routes.{IncomeController => incomeRoutes}
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-@(gainAnswers: GainAnswersModel, deductionAnswers: DeductionGainAnswersModel, incomeAnswers: IncomeAnswersModel, result: TotalGainAndTaxOwedModel, taxYear: TaxYearModel)(implicit request: Request[_])
+@(gainAnswers: GainAnswersModel, deductionAnswers: DeductionGainAnswersModel, incomeAnswers: IncomeAnswersModel, result: TotalGainAndTaxOwedModel, taxYear: TaxYearModel, isCurrentTaxYear: Boolean)(implicit request: Request[_])
 
 <!DOCTYPE html>
 <html>
@@ -138,13 +138,13 @@
         summaryNumericRowHelper("previousTaxableGains", Messages("calc.resident.previousTaxableGains.title", taxYear.taxYearSupplied),
         incomeAnswers.previousTaxableGainsModel.get.amount, None)}
 
-        @summaryNumericRowHelper("currentIncome",if(taxYear.taxYearSupplied ==
-        "2016/17"){Messages("calc.resident.currentIncome.questionCurrentYear")}else{Messages("calc.resident.currentIncome.question",
-        taxYear.taxYearSupplied)},incomeAnswers.currentIncomeModel.get.amount,None)
+        @summaryNumericRowHelper("currentIncome",if(isCurrentTaxYear) {
+        Messages("calc.resident.currentIncome.questionCurrentYear")}else{Messages("calc.resident.currentIncome.question", taxYear.taxYearSupplied)
+        },incomeAnswers.currentIncomeModel.get.amount, None)
 
-        @summaryNumericRowHelper("personalAllowance",
-        {if(taxYear.taxYearSupplied == "2016/17") {Messages("calc.resident.personalAllowance.currentYearQuestion")}
-        else {Messages("calc.resident.personalAllowance.question", taxYear.taxYearSupplied)}},
+        @summaryNumericRowHelper("personalAllowance", {if(isCurrentTaxYear) {Messages("calc.resident.personalAllowance.currentYearQuestion")}
+        else {Messages("calc.resident.personalAllowance.question", taxYear.taxYearSupplied)}
+        },
         incomeAnswers.personalAllowanceModel.get.amount,None)
     </section>
 </div>

@@ -59,7 +59,7 @@ trait PrivateResidenceReliefController extends FrontendController with ValidActi
   def displayBetweenQuestion(disposalDate: Option[LocalDate], acquisitionDate: Option[LocalDate], hasRebasedValue: Boolean): Boolean =
     (disposalDate, acquisitionDate) match {
       case (Some(dDate), Some(aDate)) if TaxDates.dateAfterOctober(dDate) && !TaxDates.dateAfterStart(aDate) => true
-      case (Some(dDate), aDateOption) if TaxDates.dateAfterOctober(dDate) && hasRebasedValue => true
+      case (Some(dDate), None) if TaxDates.dateAfterOctober(dDate) && hasRebasedValue => true
       case _ => false
     }
 

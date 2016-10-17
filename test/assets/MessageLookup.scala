@@ -41,6 +41,20 @@ object MessageLookup {
   // the message lookup and add the non-resident messages.  Any new added pages should be added
   // to the right place in this object.
 
+  object NonResident {
+
+    object Common {
+      val pageHeading = "Calculate your non-resident Capital Gains Tax"
+    }
+
+    object RebasedValue {
+      val question = "What was the property worth on 5 April 2015?"
+      val inputHelpText = "You can use a valuation from a surveyor or a property website."
+      val errorNoValue = "Enter a value for your property on 5 April 2015"
+    }
+
+  }
+
   object Resident {
 
     object Properties {
@@ -297,6 +311,9 @@ object MessageLookup {
     val whatToDoNextNoLossLinkProperties = "tell HMRC about the property"
     val whatToDoNextNoLossLinkShares = "tell HMRC about the shares"
     val whatToDoNextLossRemaining = "so that you might need to pay less tax in the future"
+    val whatToDoNextSharesLiabilityMessage = "You can tell HMRC about the shares and pay your tax using our online service"
+    val whatToDoNextPropertiesLiabilityMessage = "You can tell HMRC about the property and pay your tax using our online service"
+    val whatToDoNextLiabilityAdditionalMessage = "You can use the figures on this page to help you do this."
     def aeaRemaining(taxYear: String): String = s"Capital Gains Tax allowance left for $taxYear"
     val saveAsPdf = "Save as PDF"
     def remainingAllowableLoss(taxYear: String): String = s"Remaining loss from $taxYear tax year"

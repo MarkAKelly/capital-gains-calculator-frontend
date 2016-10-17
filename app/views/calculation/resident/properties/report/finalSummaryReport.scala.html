@@ -12,7 +12,7 @@
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 @import config.ApplicationConfig
 
-@(gainAnswers: YourAnswersSummaryModel, deductionAnswers: ChargeableGainAnswers, incomeAnswers: IncomeAnswersModel, result: TotalGainAndTaxOwedModel, taxYear: TaxYearModel)(implicit request: Request[_])
+@(gainAnswers: YourAnswersSummaryModel, deductionAnswers: ChargeableGainAnswers, incomeAnswers: IncomeAnswersModel, result: TotalGainAndTaxOwedModel, taxYear: TaxYearModel, isCurrentTaxYear: Boolean)(implicit request: Request[_])
 
 <!DOCTYPE html>
 <html>
@@ -194,12 +194,12 @@
                 incomeAnswers.previousTaxableGainsModel.get.amount, None)}
 
         @summaryNumericRowHelper("currentIncome",
-            if(taxYear.taxYearSupplied == "2016/17"){Messages("calc.resident.currentIncome.questionCurrentYear")}
+            if(isCurrentTaxYear){Messages("calc.resident.currentIncome.questionCurrentYear")}
             else{Messages("calc.resident.currentIncome.question",taxYear.taxYearSupplied)},
             incomeAnswers.currentIncomeModel.get.amount,None)
 
         @summaryNumericRowHelper("personalAllowance",
-            {if(taxYear.taxYearSupplied == "2016/17") {Messages("calc.resident.personalAllowance.currentYearQuestion")}
+            {if(isCurrentTaxYear) {Messages("calc.resident.personalAllowance.currentYearQuestion")}
             else {Messages("calc.resident.personalAllowance.question", taxYear.taxYearSupplied)}},
             incomeAnswers.personalAllowanceModel.get.amount,None)
     </section>
