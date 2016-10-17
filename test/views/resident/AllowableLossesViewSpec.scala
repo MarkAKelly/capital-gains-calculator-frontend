@@ -16,7 +16,7 @@
 
 package views.resident
 
-import assets.MessageLookup.{allowableLosses => messages}
+import assets.MessageLookup.{AllowableLosses => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.AllowableLossesForm.allowableLossesForm
 import models.resident.TaxYearModel

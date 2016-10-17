@@ -59,7 +59,7 @@ class PrivateResidenceReliefValueFormSpec extends UnitSpec with WithFakeApplicat
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.errorMessages.mandatoryAmount
+        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.mandatoryAmount
       }
     }
 
@@ -76,7 +76,7 @@ class PrivateResidenceReliefValueFormSpec extends UnitSpec with WithFakeApplicat
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.errorMessages.mandatoryAmount
+        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.mandatoryAmount
       }
     }
 
@@ -93,7 +93,7 @@ class PrivateResidenceReliefValueFormSpec extends UnitSpec with WithFakeApplicat
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.errorMessages.invalidAmount
+        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.invalidAmount
       }
     }
 
@@ -110,7 +110,7 @@ class PrivateResidenceReliefValueFormSpec extends UnitSpec with WithFakeApplicat
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.errorMessages.invalidAmount
+        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.invalidAmount
       }
     }
 
@@ -127,7 +127,7 @@ class PrivateResidenceReliefValueFormSpec extends UnitSpec with WithFakeApplicat
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.privateResidenceReliefValue.error("50,000")
+        form.error("amount").get.message shouldBe MessageLookup.PrivateResidenceReliefValue.error("50,000")
       }
     }
 
@@ -144,7 +144,7 @@ class PrivateResidenceReliefValueFormSpec extends UnitSpec with WithFakeApplicat
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.errorMessages.minimumAmount
+        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.minimumAmount
       }
     }
   }

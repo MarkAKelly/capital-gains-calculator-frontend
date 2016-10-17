@@ -20,7 +20,7 @@ import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{gain => views}
-import assets.MessageLookup.{howBecameOwner => messages}
+import assets.MessageLookup.{HowBecameOwner => messages}
 import play.api.mvc.Call
 import forms.resident.properties.HowBecameOwnerForm._
 

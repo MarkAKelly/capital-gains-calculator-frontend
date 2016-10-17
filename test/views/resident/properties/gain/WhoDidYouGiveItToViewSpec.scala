@@ -21,7 +21,7 @@ import views.html.calculation.resident.properties.{gain => views}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.properties.gain.WhoDidYouGiveItToForm._
 import org.jsoup.Jsoup
-import assets.MessageLookup.{whoDidYouGiveItTo => messages}
+import assets.MessageLookup.{WhoDidYouGiveItTo => messages}
 import assets.{MessageLookup => commonMessages}
 
 class WhoDidYouGiveItToViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {

@@ -16,7 +16,7 @@
 
 package views.resident
 
-import assets.MessageLookup.{annualExemptAmount => messages}
+import assets.MessageLookup.{AnnualExemptAmount => messages}
 import assets.{MessageLookup => commonMessages}
 import common.resident.JourneyKeys
 import controllers.helpers.FakeRequestHelper
@@ -180,11 +180,11 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
       lazy val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
       lazy val view = views.annualExemptAmount(form, backLink, postAction, homeLink, JourneyKeys.properties, "navTitle")(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
-      s"output an error summary with message '${commonMessages.errorMessages.mandatoryAmount}'" in {
-        doc.body.getElementById("amount-error-summary").text should include(commonMessages.errorMessages.mandatoryAmount)
+      s"output an error summary with message '${commonMessages.ErrorMessages.mandatoryAmount}'" in {
+        doc.body.getElementById("amount-error-summary").text should include(commonMessages.ErrorMessages.mandatoryAmount)
       }
-      s"have the input error message '${commonMessages.errorMessages.invalidAmount}'" in {
-        doc.body.getElementsByClass("error-notification").text should include (commonMessages.errorMessages.mandatoryAmount)
+      s"have the input error message '${commonMessages.ErrorMessages.invalidAmount}'" in {
+        doc.body.getElementsByClass("error-notification").text should include (commonMessages.ErrorMessages.mandatoryAmount)
       }
     }
   }

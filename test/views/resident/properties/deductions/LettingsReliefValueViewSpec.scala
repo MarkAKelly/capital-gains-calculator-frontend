@@ -17,7 +17,7 @@
 package views.resident.properties.deductions
 
 import assets.MessageLookup
-import assets.MessageLookup.{lettingsReliefValue => messages}
+import assets.MessageLookup.{LettingsReliefValue => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.properties.LettingsReliefValueForm._
 import org.jsoup.Jsoup

@@ -71,7 +71,7 @@ class WorthWhenBoughtForLessFormSpec extends UnitSpec with WithFakeApplication w
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.errorMessages.mandatoryAmount
+        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.mandatoryAmount
       }
     }
 
@@ -88,7 +88,7 @@ class WorthWhenBoughtForLessFormSpec extends UnitSpec with WithFakeApplication w
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.errorMessages.mandatoryAmount
+        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.mandatoryAmount
       }
     }
 
@@ -105,7 +105,7 @@ class WorthWhenBoughtForLessFormSpec extends UnitSpec with WithFakeApplication w
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.errorMessages.invalidAmount
+        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.invalidAmount
       }
     }
 
@@ -122,7 +122,7 @@ class WorthWhenBoughtForLessFormSpec extends UnitSpec with WithFakeApplication w
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.errorMessages.invalidAmount
+        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.invalidAmount
       }
     }
 
@@ -139,7 +139,7 @@ class WorthWhenBoughtForLessFormSpec extends UnitSpec with WithFakeApplication w
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.errorMessages.maximumAmount
+        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.maximumAmount
       }
     }
 
@@ -156,7 +156,7 @@ class WorthWhenBoughtForLessFormSpec extends UnitSpec with WithFakeApplication w
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.errorMessages.minimumAmount
+        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.minimumAmount
       }
     }
   }

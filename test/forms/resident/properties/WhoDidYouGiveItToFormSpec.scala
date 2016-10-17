@@ -16,8 +16,8 @@
 
 package forms.resident.properties
 
-import assets.MessageLookup.errorMessages
-import assets.MessageLookup.whoDidYouGiveItTo
+import assets.MessageLookup.ErrorMessages
+import assets.MessageLookup.WhoDidYouGiveItTo
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import forms.resident.properties.gain.WhoDidYouGiveItToForm._
 import models.resident.properties.gain.WhoDidYouGiveItToModel
@@ -57,8 +57,8 @@ class WhoDidYouGiveItToFormSpec extends UnitSpec with WithFakeApplication {
         form.errors.length shouldBe 1
       }
 
-      s"error with message '${whoDidYouGiveItTo.errormandatory}" in {
-        form.error("whoDidYouGiveItTo").get.message shouldBe whoDidYouGiveItTo.errormandatory
+      s"error with message '${WhoDidYouGiveItTo.errormandatory}" in {
+        form.error("whoDidYouGiveItTo").get.message shouldBe WhoDidYouGiveItTo.errormandatory
       }
     }
 
@@ -75,8 +75,8 @@ class WhoDidYouGiveItToFormSpec extends UnitSpec with WithFakeApplication {
       form.errors.length shouldBe 1
     }
 
-    s"error with message '${whoDidYouGiveItTo.errormandatory}" in {
-    form.error("whoDidYouGiveItTo").get.message shouldBe whoDidYouGiveItTo.errormandatory
+    s"error with message '${WhoDidYouGiveItTo.errormandatory}" in {
+    form.error("whoDidYouGiveItTo").get.message shouldBe WhoDidYouGiveItTo.errormandatory
     }
 
    "throw an error when supplied with incorrect mappings" in {

@@ -25,7 +25,7 @@ import org.mockito.Matchers
 import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
 import play.api.test.Helpers._
-import assets.MessageLookup.{personalAllowance => messages}
+import assets.MessageLookup.{PersonalAllowance => messages}
 import models.resident.{DisposalDateModel, TaxYearModel}
 import models.resident.income.PersonalAllowanceModel
 import uk.gov.hmrc.http.cache.client.CacheMap

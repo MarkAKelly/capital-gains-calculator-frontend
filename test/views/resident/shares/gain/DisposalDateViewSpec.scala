@@ -16,8 +16,8 @@
 
 package views.resident.shares.gain
 
-import assets.MessageLookup.{sharesDisposalDate => messages}
-import assets.MessageLookup.{disposalDate => commonMessages}
+import assets.MessageLookup.{SharesDisposalDate => messages}
+import assets.MessageLookup.{DisposalDate => commonMessages}
 import assets.MessageLookup._
 import controllers.helpers.FakeRequestHelper
 import forms.resident.DisposalDateForm._

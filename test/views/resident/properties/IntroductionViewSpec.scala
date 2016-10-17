@@ -16,7 +16,7 @@
 
 package views.resident.properties
 
-import assets.MessageLookup.{introductionView => messages}
+import assets.MessageLookup.{IntroductionView => messages}
 import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.routes.{GainController => routes}

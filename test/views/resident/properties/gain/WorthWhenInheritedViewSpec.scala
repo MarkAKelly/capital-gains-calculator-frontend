@@ -21,7 +21,7 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{gain => views}
 import forms.resident.WorthWhenInheritedForm._
-import assets.MessageLookup.Resident.Properties.{worthWhenInherited => messages}
+import assets.MessageLookup.Resident.Properties.{WorthWhenInherited => messages}
 import play.api.mvc.Call
 
 class WorthWhenInheritedViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {

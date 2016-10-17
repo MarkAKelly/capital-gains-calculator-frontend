@@ -17,8 +17,8 @@
 package views.resident.shares.deductions
 
 import assets.MessageLookup._
-import assets.MessageLookup.{otherProperties => commonMessages}
-import assets.MessageLookup.{sharesOtherDisposals => messages}
+import assets.MessageLookup.{OtherProperties => commonMessages}
+import assets.MessageLookup.{SharesOtherDisposals => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.OtherPropertiesForm._
 import models.resident.TaxYearModel

@@ -19,7 +19,7 @@ package forms.resident
 import forms.resident.properties.BoughtForLessThanWorthForm._
 import models.resident.properties.BoughtForLessThanWorthModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.{boughtForLessThanWorth => messages}
+import assets.MessageLookup.{BoughtForLessThanWorth => messages}
 
 class BoughtForLessThanWorthFormSpec extends UnitSpec with WithFakeApplication {
 

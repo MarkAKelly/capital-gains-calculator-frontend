@@ -17,7 +17,7 @@
 package views.resident.shares.report
 
 import assets.MessageLookup.Resident.{Shares => SharesMessages}
-import assets.MessageLookup.{summaryPage => messages}
+import assets.MessageLookup.{SummaryPage => messages}
 import assets.{MessageLookup => commonMessages}
 import common.Dates
 import controllers.helpers.FakeRequestHelper
@@ -195,8 +195,8 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
 
         "has a date output row for the Disposal Date" which {
 
-          s"should have the question text '${commonMessages.sharesDisposalDate.title}'" in {
-            doc.select("#disposalDate-question").text shouldBe commonMessages.sharesDisposalDate.title
+          s"should have the question text '${commonMessages.SharesDisposalDate.title}'" in {
+            doc.select("#disposalDate-question").text shouldBe commonMessages.SharesDisposalDate.title
           }
 
           "should have the value '10 October 2016'" in {
@@ -217,8 +217,8 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
 
         "has a numeric output row for the Disposal Costs" which {
 
-          s"should have the question text '${commonMessages.sharesDisposalCosts.title}'" in {
-            doc.select("#disposalCosts-question").text shouldBe commonMessages.sharesDisposalCosts.title
+          s"should have the question text '${commonMessages.SharesDisposalCosts.title}'" in {
+            doc.select("#disposalCosts-question").text shouldBe commonMessages.SharesDisposalCosts.title
           }
 
           "should have the value '£10,000'" in {
@@ -266,8 +266,8 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
 
         "has a numeric output row for the Acquisition Value" which {
 
-          s"should have the question text '${commonMessages.sharesAcquisitionValue.title}'" in {
-            doc.select("#acquisitionValue-question").text shouldBe commonMessages.sharesAcquisitionValue.title
+          s"should have the question text '${commonMessages.SharesAcquisitionValue.title}'" in {
+            doc.select("#acquisitionValue-question").text shouldBe commonMessages.SharesAcquisitionValue.title
           }
 
           "should have the value '£100,000'" in {
@@ -277,8 +277,8 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
 
         "has a numeric output row for the Acquisition Costs" which {
 
-          s"should have the question text '${commonMessages.sharesAcquisitionCosts.title}'" in {
-            doc.select("#acquisitionCosts-question").text shouldBe commonMessages.sharesAcquisitionCosts.title
+          s"should have the question text '${commonMessages.SharesAcquisitionCosts.title}'" in {
+            doc.select("#acquisitionCosts-question").text shouldBe commonMessages.SharesAcquisitionCosts.title
           }
 
           "should have the value '£10,000'" in {
@@ -288,8 +288,8 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
 
         "has an option output row for other disposals" which {
 
-          s"should have the question text '${commonMessages.otherProperties.title("2015/16")}'" in {
-            doc.select("#otherProperties-question").text shouldBe commonMessages.otherProperties.title("2015/16")
+          s"should have the question text '${commonMessages.OtherProperties.title("2015/16")}'" in {
+            doc.select("#otherProperties-question").text shouldBe commonMessages.OtherProperties.title("2015/16")
           }
 
           "should have the value 'No'" in {
@@ -299,8 +299,8 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
 
         "has an option output row for brought forward losses" which {
 
-          s"should have the question text '${commonMessages.lossesBroughtForward.title("2015/16")}'" in {
-            doc.select("#broughtForwardLosses-question").text shouldBe commonMessages.lossesBroughtForward.title("2015/16")
+          s"should have the question text '${commonMessages.LossesBroughtForward.title("2015/16")}'" in {
+            doc.select("#broughtForwardLosses-question").text shouldBe commonMessages.LossesBroughtForward.title("2015/16")
           }
 
           "should have the value 'No'" in {
@@ -466,8 +466,8 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
 
       "has a numeric output row for the Worth on 31 March 1982 value" which {
 
-        s"should have the question text '${SharesMessages.valueBeforeLegislationStart.question}'" in {
-          doc.select("#valueBeforeLegislationStart-question").text shouldBe SharesMessages.valueBeforeLegislationStart.question
+        s"should have the question text '${SharesMessages.ValueBeforeLegislationStart.question}'" in {
+          doc.select("#valueBeforeLegislationStart-question").text shouldBe SharesMessages.ValueBeforeLegislationStart.question
         }
 
         "should have the value '£700'" in {
@@ -653,8 +653,8 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
 
       "has an option output row for other properties" which {
 
-        s"should have the question text '${commonMessages.otherProperties.title("2013/14")}'" in {
-          doc.select("#otherProperties-question").text shouldBe commonMessages.otherProperties.title("2013/14")
+        s"should have the question text '${commonMessages.OtherProperties.title("2013/14")}'" in {
+          doc.select("#otherProperties-question").text shouldBe commonMessages.OtherProperties.title("2013/14")
         }
 
         "should have the value 'Yes'" in {
@@ -664,8 +664,8 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
 
       "has an option output row for allowable losses" which {
 
-        s"should have the question text '${commonMessages.allowableLosses.title("2013/14")}'" in {
-          doc.select("#allowableLosses-question").text shouldBe commonMessages.allowableLosses.title("2013/14")
+        s"should have the question text '${commonMessages.AllowableLosses.title("2013/14")}'" in {
+          doc.select("#allowableLosses-question").text shouldBe commonMessages.AllowableLosses.title("2013/14")
         }
 
         "should have the value 'Yes'" in {
@@ -675,8 +675,8 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
 
       "has a numeric output row for allowable losses value" which {
 
-        s"should have the question text '${commonMessages.allowableLossesValue.title("2013/14")}'" in {
-          doc.select("#allowableLossesValue-question").text shouldBe commonMessages.allowableLossesValue.title("2013/14")
+        s"should have the question text '${commonMessages.AllowableLossesValue.title("2013/14")}'" in {
+          doc.select("#allowableLossesValue-question").text shouldBe commonMessages.AllowableLossesValue.title("2013/14")
         }
 
         "should have the value '£10,000'" in {
@@ -686,8 +686,8 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
 
       "has an option output row for brought forward losses" which {
 
-        s"should have the question text '${commonMessages.lossesBroughtForward.title("2013/14")}'" in {
-          doc.select("#broughtForwardLosses-question").text shouldBe commonMessages.lossesBroughtForward.title("2013/14")
+        s"should have the question text '${commonMessages.LossesBroughtForward.title("2013/14")}'" in {
+          doc.select("#broughtForwardLosses-question").text shouldBe commonMessages.LossesBroughtForward.title("2013/14")
         }
 
         "should have the value 'Yes'" in {
@@ -697,8 +697,8 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
 
       "has a numeric output row for brought forward losses value" which {
 
-        s"should have the question text '${commonMessages.lossesBroughtForwardValue.title("2013/14")}'" in {
-          doc.select("#broughtForwardLossesValue-question").text shouldBe commonMessages.lossesBroughtForwardValue.title("2013/14")
+        s"should have the question text '${commonMessages.LossesBroughtForwardValue.title("2013/14")}'" in {
+          doc.select("#broughtForwardLossesValue-question").text shouldBe commonMessages.LossesBroughtForwardValue.title("2013/14")
         }
 
         "should have the value '£10,000'" in {
@@ -734,8 +734,8 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
 
     "has a numeric output row for the Worth of the shares when sold for less" which {
 
-      s"should have the question text '${commonMessages.Resident.Shares.worthWhenSoldForLess.question}'" in {
-        doc.select("#worthWhenSoldForLess-question").text shouldBe commonMessages.Resident.Shares.worthWhenSoldForLess.question
+      s"should have the question text '${commonMessages.Resident.Shares.WorthWhenSoldForLess.question}'" in {
+        doc.select("#worthWhenSoldForLess-question").text shouldBe commonMessages.Resident.Shares.WorthWhenSoldForLess.question
       }
 
       "should have the value '£10'" in {
@@ -820,8 +820,8 @@ class SharesDeductionsReportViewSpec extends UnitSpec with WithFakeApplication w
 
     "has a numeric output row for AEA value" should {
 
-      s"should have the question text '${commonMessages.annualExemptAmount.title}'" in {
-        doc.select("#annualExemptAmount-question").text shouldBe commonMessages.annualExemptAmount.title
+      s"should have the question text '${commonMessages.AnnualExemptAmount.title}'" in {
+        doc.select("#annualExemptAmount-question").text shouldBe commonMessages.AnnualExemptAmount.title
       }
 
       "should have the value '£1,000'" in {

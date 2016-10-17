@@ -16,7 +16,7 @@
 
 package views.resident
 
-import assets.MessageLookup.{lossesBroughtForwardValue => messages}
+import assets.MessageLookup.{LossesBroughtForwardValue => messages}
 import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.LossesBroughtForwardValueForm._

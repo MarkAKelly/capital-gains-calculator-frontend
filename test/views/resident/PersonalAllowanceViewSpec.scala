@@ -16,7 +16,7 @@
 
 package views.resident
 
-import assets.MessageLookup.{personalAllowance => messages}
+import assets.MessageLookup.{PersonalAllowance => messages}
 import assets.{MessageLookup => commonMessages}
 import common.resident.JourneyKeys
 import controllers.helpers.FakeRequestHelper

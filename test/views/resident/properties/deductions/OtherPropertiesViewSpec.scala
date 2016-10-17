@@ -16,7 +16,7 @@
 
 package views.resident.properties.deductions
 
-import assets.MessageLookup.{otherProperties => messages, _}
+import assets.MessageLookup.{OtherProperties => messages, _}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.OtherPropertiesForm._
 import models.resident.TaxYearModel

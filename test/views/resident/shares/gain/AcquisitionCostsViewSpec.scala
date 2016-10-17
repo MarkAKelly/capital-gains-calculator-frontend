@@ -16,7 +16,7 @@
 
 package views.resident.shares.gain
 
-import assets.MessageLookup.{sharesAcquisitionCosts => messages}
+import assets.MessageLookup.{SharesAcquisitionCosts => messages}
 import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.AcquisitionCostsForm._
