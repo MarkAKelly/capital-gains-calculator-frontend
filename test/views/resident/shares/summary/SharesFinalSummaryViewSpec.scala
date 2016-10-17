@@ -973,8 +973,12 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       doc.select("#whatToDoNextTitle").text shouldEqual messages.whatToDoNextTitle
     }
 
-    s"display the text ${messages.whatToDoNextTextTwo}" in {
-      doc.select("#whatToDoNextText").text shouldEqual s"${messages.whatToDoNextTextTwoShares} ${commonMessages.calcBaseExternalLink}"
+    s"display the text ${messages.whatToDoNextSharesLiabilityMessage}" in {
+      doc.select("#whatToDoNextText").text shouldEqual s"${messages.whatToDoNextSharesLiabilityMessage} ${commonMessages.calcBaseExternalLink}."
+    }
+
+    s"display the additional text ${messages.whatToDoNextLiabilityAdditionalMessage}" in {
+      doc.select("#whatToDoNext p").text shouldEqual messages.whatToDoNextLiabilityAdditionalMessage
     }
 
     "have a link" which {
@@ -984,7 +988,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "should link to the work-out-need-to-pay govuk page" in {
-        doc.select("#whatToDoNextLink").attr("href") shouldEqual "https://www.gov.uk/capital-gains-tax/work-out-need-to-pay"
+        doc.select("#whatToDoNextLink").attr("href") shouldEqual "https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax"
       }
 
       "have the externalLink attribute" in {
