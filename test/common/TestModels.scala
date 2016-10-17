@@ -22,7 +22,7 @@ import models.nonresident._
 
 object TestModels {
 
-  val workingModel = SummaryModel(
+  val businessScenarioOneModel = SummaryModel(
     CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(0)),

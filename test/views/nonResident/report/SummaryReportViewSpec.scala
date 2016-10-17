@@ -35,7 +35,7 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
 
         lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
 
-        lazy val view = summaryReport(workingModel, calcModelTwoRates, taxYear,
+        lazy val view = summaryReport(businessScenarioOneModel, calcModelTwoRates, taxYear,
           sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
         lazy val document = Jsoup.parse(view.body)
 
