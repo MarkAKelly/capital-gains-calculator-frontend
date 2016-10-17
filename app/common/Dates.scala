@@ -20,11 +20,6 @@ import java.time._
 import java.time.format.{DateTimeFormatter, ResolverStyle}
 import java.time.temporal.ChronoUnit
 
-import connectors.CalculatorConnector
-import models.resident.TaxYearModel
-import org.joda.time.DateTime
-import uk.gov.hmrc.play.http.HeaderCarrier
-
 import scala.concurrent.Future
 
 object Dates {
@@ -53,9 +48,9 @@ object Dates {
   }
 
   def getCurrentTaxYear: Future[String] = {
-    val now = DateTime.now()
+    val now = LocalDate.now()
     val year = now.getYear
-    if (now.isAfter(DateTime.parse(s"${year.toString}-$taxYearEnd"))) {
+    if (now.isAfter(LocalDate.parse(s"${year.toString}-$taxYearEnd"))) {
       Future.successful(taxYearToString(year + 1))
     }
     else {
