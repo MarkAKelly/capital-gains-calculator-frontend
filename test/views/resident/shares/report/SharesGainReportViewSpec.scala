@@ -17,7 +17,7 @@
 package views.resident.shares.report
 
 import assets.MessageLookup.Resident.{Shares => SharesMessages}
-import assets.MessageLookup.{summaryPage => messages}
+import assets.MessageLookup.{SummaryPage => messages}
 import assets.{MessageLookup => commonMessages}
 import common.Dates._
 import controllers.helpers.FakeRequestHelper
@@ -126,8 +126,8 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
 
         "has a date output row for the Disposal Date" which {
 
-          s"should have the question text '${commonMessages.sharesDisposalDate.title}'" in {
-            doc.select("#disposalDate-question").text shouldBe commonMessages.sharesDisposalDate.title
+          s"should have the question text '${commonMessages.SharesDisposalDate.title}'" in {
+            doc.select("#disposalDate-question").text shouldBe commonMessages.SharesDisposalDate.title
           }
 
           "should have the value '12 September 1990'" in {
@@ -148,8 +148,8 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
 
         "has a numeric output row for the Disposal Costs" which {
 
-          s"should have the question text '${commonMessages.sharesDisposalCosts.title}'" in {
-            doc.select("#disposalCosts-question").text shouldBe commonMessages.sharesDisposalCosts.title
+          s"should have the question text '${commonMessages.SharesDisposalCosts.title}'" in {
+            doc.select("#disposalCosts-question").text shouldBe commonMessages.SharesDisposalCosts.title
           }
 
           "should have the value '£20'" in {
@@ -160,8 +160,8 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
 
         "has a numeric output row for the Acquisition Value" which {
 
-          s"should have the question text '${commonMessages.sharesAcquisitionValue.title}'" in {
-            doc.select("#acquisitionValue-question").text shouldBe commonMessages.sharesAcquisitionValue.title
+          s"should have the question text '${commonMessages.SharesAcquisitionValue.title}'" in {
+            doc.select("#acquisitionValue-question").text shouldBe commonMessages.SharesAcquisitionValue.title
           }
 
           "should have the value '£30'" in {
@@ -172,8 +172,8 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
 
         "has a numeric output row for the Acquisition Costs" which {
 
-          s"should have the question text '${commonMessages.sharesAcquisitionCosts.title}'" in {
-            doc.select("#acquisitionCosts-question").text shouldBe commonMessages.sharesAcquisitionCosts.title
+          s"should have the question text '${commonMessages.SharesAcquisitionCosts.title}'" in {
+            doc.select("#acquisitionCosts-question").text shouldBe commonMessages.SharesAcquisitionCosts.title
           }
 
           "should have the value '£40'" in {
@@ -297,8 +297,8 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
 
       "has a numeric output row for the Worth on 31 March 1982 value" which {
 
-        s"should have the question text '${SharesMessages.valueBeforeLegislationStart.question}'" in {
-          doc.select("#valueBeforeLegislationStart-question").text shouldBe SharesMessages.valueBeforeLegislationStart.question
+        s"should have the question text '${SharesMessages.ValueBeforeLegislationStart.question}'" in {
+          doc.select("#valueBeforeLegislationStart-question").text shouldBe SharesMessages.ValueBeforeLegislationStart.question
         }
 
         "should have the value '£700'" in {
@@ -346,8 +346,8 @@ class SharesGainReportViewSpec extends UnitSpec with WithFakeApplication with Fa
 
     "has a numeric output row for the Worth of the shares when sold for less" which {
 
-      s"should have the question text '${commonMessages.Resident.Shares.worthWhenSoldForLess.question}'" in {
-        doc.select("#worthWhenSoldForLess-question").text shouldBe commonMessages.Resident.Shares.worthWhenSoldForLess.question
+      s"should have the question text '${commonMessages.Resident.Shares.WorthWhenSoldForLess.question}'" in {
+        doc.select("#worthWhenSoldForLess-question").text shouldBe commonMessages.Resident.Shares.WorthWhenSoldForLess.question
       }
 
       "should have the value '£10'" in {

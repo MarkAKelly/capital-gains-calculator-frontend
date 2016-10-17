@@ -16,7 +16,7 @@
 
 package views.resident.shares.report
 
-import assets.MessageLookup.{summaryPage => messages}
+import assets.MessageLookup.{SummaryPage => messages}
 import assets.MessageLookup.Resident.{Shares => SharesMessages}
 import assets.{MessageLookup => commonMessages}
 import common.Dates
@@ -223,8 +223,8 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
         "has a date output row for the Disposal Date" which {
 
-          s"should have the question text '${commonMessages.disposalDate.title}'" in {
-            doc.select("#disposalDate-question").text shouldBe commonMessages.sharesDisposalDate.title
+          s"should have the question text '${commonMessages.DisposalDate.title}'" in {
+            doc.select("#disposalDate-question").text shouldBe commonMessages.SharesDisposalDate.title
           }
 
           "should have the date '10 October 2015'" in {
@@ -234,7 +234,7 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
         "has a numeric output row for the Disposal Value" which {
 
-          s"should have the question text '${commonMessages.disposalValue.question}'" in {
+          s"should have the question text '${commonMessages.DisposalValue.question}'" in {
             doc.select("#disposalValue-question").text shouldBe commonMessages.Resident.Shares.DisposalValue.question
           }
 
@@ -245,8 +245,8 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
         "has a numeric output row for the Disposal Costs" which {
 
-          s"should have the question text '${commonMessages.disposalCosts.title}'" in {
-            doc.select("#disposalCosts-question").text shouldBe commonMessages.sharesDisposalCosts.title
+          s"should have the question text '${commonMessages.DisposalCosts.title}'" in {
+            doc.select("#disposalCosts-question").text shouldBe commonMessages.SharesDisposalCosts.title
           }
 
           "should have the value '£10,000'" in {
@@ -294,8 +294,8 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
         "has a numeric output row for the Acquisition Value" which {
 
-          s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
-            doc.select("#acquisitionValue-question").text shouldBe commonMessages.sharesAcquisitionValue.title
+          s"should have the question text '${commonMessages.AcquisitionValue.title}'" in {
+            doc.select("#acquisitionValue-question").text shouldBe commonMessages.SharesAcquisitionValue.title
           }
 
           "should have the value '£100,000'" in {
@@ -305,8 +305,8 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
         "has a numeric output row for the Acquisition Costs" which {
 
-          s"should have the question text '${commonMessages.acquisitionCosts.title}'" in {
-            doc.select("#acquisitionCosts-question").text shouldBe commonMessages.sharesAcquisitionCosts.title
+          s"should have the question text '${commonMessages.AcquisitionCosts.title}'" in {
+            doc.select("#acquisitionCosts-question").text shouldBe commonMessages.SharesAcquisitionCosts.title
           }
 
           "should have the value '£10,000'" in {
@@ -316,8 +316,8 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
         "has an option output row for other disposals" which {
 
-          s"should have the question text '${commonMessages.otherProperties.title("2015/16")}'" in {
-            doc.select("#otherDisposals-question").text shouldBe commonMessages.otherProperties.title("2015/16")
+          s"should have the question text '${commonMessages.OtherProperties.title("2015/16")}'" in {
+            doc.select("#otherDisposals-question").text shouldBe commonMessages.OtherProperties.title("2015/16")
           }
 
           "should have the value 'Yes'" in {
@@ -327,8 +327,8 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
         "has an option output row for brought forward losses" which {
 
-          s"should have the question text '${commonMessages.lossesBroughtForward.title("2015/16")}'" in {
-            doc.select("#broughtForwardLosses-question").text shouldBe commonMessages.lossesBroughtForward.title("2015/16")
+          s"should have the question text '${commonMessages.LossesBroughtForward.title("2015/16")}'" in {
+            doc.select("#broughtForwardLosses-question").text shouldBe commonMessages.LossesBroughtForward.title("2015/16")
           }
 
           "should have the value 'No'" in {
@@ -338,8 +338,8 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
         "has an option output row for previous taxable gains" which {
 
-          s"should have the question text '${commonMessages.previousTaxableGains.title("2015/16")}'" in {
-            doc.select("#previousTaxableGains-question").text shouldBe commonMessages.previousTaxableGains.title("2015/16")
+          s"should have the question text '${commonMessages.PreviousTaxableGains.title("2015/16")}'" in {
+            doc.select("#previousTaxableGains-question").text shouldBe commonMessages.PreviousTaxableGains.title("2015/16")
           }
 
           "should have the value '£1,000'" in {
@@ -349,8 +349,8 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
         "has a numeric output row for current income" which {
 
-          s"should have the question text '${commonMessages.currentIncome.title("2015/16")}'" in {
-            doc.select("#currentIncome-question").text shouldBe commonMessages.currentIncome.title("2015/16")
+          s"should have the question text '${commonMessages.CurrentIncome.title("2015/16")}'" in {
+            doc.select("#currentIncome-question").text shouldBe commonMessages.CurrentIncome.title("2015/16")
           }
 
           "should have the value '£0'" in {
@@ -360,8 +360,8 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
         "has a numeric output row for personal allowance" which {
 
-          s"should have the question text '${commonMessages.personalAllowance.question("2015/16")}'" in {
-            doc.select("#personalAllowance-question").text shouldBe commonMessages.personalAllowance.question("2015/16")
+          s"should have the question text '${commonMessages.PersonalAllowance.question("2015/16")}'" in {
+            doc.select("#personalAllowance-question").text shouldBe commonMessages.PersonalAllowance.question("2015/16")
           }
 
           "should have the value '£0'" in {
@@ -533,8 +533,8 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
       "has a numeric output row for the Worth on 31 March 1982 value" which {
 
-        s"should have the question text '${SharesMessages.valueBeforeLegislationStart.question}'" in {
-          doc.select("#valueBeforeLegislationStart-question").text shouldBe SharesMessages.valueBeforeLegislationStart.question
+        s"should have the question text '${SharesMessages.ValueBeforeLegislationStart.question}'" in {
+          doc.select("#valueBeforeLegislationStart-question").text shouldBe SharesMessages.ValueBeforeLegislationStart.question
         }
 
         "should have the value '£700'" in {
@@ -582,8 +582,8 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
     "has a numeric output row for the Worth of the shares when sold for less" which {
 
-      s"should have the question text '${commonMessages.Resident.Shares.worthWhenSoldForLess.question}'" in {
-        doc.select("#worthWhenSoldForLess-question").text shouldBe commonMessages.Resident.Shares.worthWhenSoldForLess.question
+      s"should have the question text '${commonMessages.Resident.Shares.WorthWhenSoldForLess.question}'" in {
+        doc.select("#worthWhenSoldForLess-question").text shouldBe commonMessages.Resident.Shares.WorthWhenSoldForLess.question
       }
 
       "should have the value '£10'" in {

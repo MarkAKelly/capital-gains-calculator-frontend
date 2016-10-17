@@ -17,7 +17,7 @@
 package views.resident.properties.gain
 
 import assets.MessageLookup
-import assets.MessageLookup.Resident.Properties.{propertiesWorthWhenGaveAway => messages}
+import assets.MessageLookup.Resident.Properties.{PropertiesWorthWhenGaveAway => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.properties.WorthWhenGaveAwayForm._
 import org.jsoup.Jsoup

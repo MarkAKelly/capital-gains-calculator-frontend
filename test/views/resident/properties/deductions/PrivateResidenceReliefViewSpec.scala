@@ -18,7 +18,7 @@ package views.resident.properties.deductions
 
 import controllers.helpers.FakeRequestHelper
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.{privateResidenceRelief => messages}
+import assets.MessageLookup.{PrivateResidenceRelief => messages}
 import assets.{MessageLookup => commonMessages}
 import forms.resident.properties.PrivateResidenceReliefForm._
 import org.jsoup.Jsoup

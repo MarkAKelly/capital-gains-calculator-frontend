@@ -17,7 +17,7 @@
 package views.resident.shares.gain
 
 import assets.MessageLookup
-import assets.MessageLookup.Resident.Shares.{valueBeforeLegislationStart => messages}
+import assets.MessageLookup.Resident.Shares.{ValueBeforeLegislationStart => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.shares.gain.ValueBeforeLegislationStartForm._
 import org.jsoup.Jsoup

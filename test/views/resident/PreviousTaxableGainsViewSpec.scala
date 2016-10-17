@@ -16,7 +16,7 @@
 
 package views.resident
 
-import assets.MessageLookup.{previousTaxableGains => messages}
+import assets.MessageLookup.{PreviousTaxableGains => messages}
 import assets.{MessageLookup => commonMessages}
 import common.resident.JourneyKeys
 import controllers.helpers.FakeRequestHelper

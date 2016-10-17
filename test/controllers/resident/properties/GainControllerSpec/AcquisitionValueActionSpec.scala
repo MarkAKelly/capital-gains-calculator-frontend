@@ -21,7 +21,7 @@ import controllers.resident.properties.GainController
 import org.jsoup.Jsoup
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.{acquisitionValue => messages}
+import assets.MessageLookup.{AcquisitionValue => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import config.AppConfig
 import connectors.CalculatorConnector

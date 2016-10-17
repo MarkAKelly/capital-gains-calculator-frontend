@@ -16,7 +16,7 @@
 
 package views.resident.shares.gain
 
-import assets.MessageLookup.{sharesDisposalCosts => messages}
+import assets.MessageLookup.{SharesDisposalCosts => messages}
 import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.DisposalCostsForm._

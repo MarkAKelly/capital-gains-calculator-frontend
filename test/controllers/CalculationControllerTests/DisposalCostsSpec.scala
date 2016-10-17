@@ -233,7 +233,7 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
       }
 
       "display the error message 'Enter a number without commas, for example 10000.00'" in {
-        document.select("div label span.error-notification").text shouldEqual MessageLookup.errorMessages.numericPlayErrorOverride
+        document.select("div label span.error-notification").text shouldEqual MessageLookup.ErrorMessages.numericPlayErrorOverride
       }
     }
 

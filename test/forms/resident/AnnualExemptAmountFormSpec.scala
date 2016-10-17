@@ -42,8 +42,8 @@ class AnnualExemptAmountFormSpec extends UnitSpec with WithFakeApplication with 
       "raise form error" in {
         form.hasErrors shouldBe true
       }
-      s"error with message '${errorMessages.mandatoryAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.mandatoryAmount
+      s"error with message '${ErrorMessages.mandatoryAmount}'" in {
+        form.error("amount").get.message shouldBe ErrorMessages.mandatoryAmount
       }
     }
     "supplied with a non-numeric value for amount" should {
@@ -51,8 +51,8 @@ class AnnualExemptAmountFormSpec extends UnitSpec with WithFakeApplication with 
       "raise a form error" in {
         form.hasErrors shouldBe true
       }
-      s"error with message '${errorMessages.invalidAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.invalidAmount
+      s"error with message '${ErrorMessages.invalidAmount}'" in {
+        form.error("amount").get.message shouldBe ErrorMessages.invalidAmount
       }
     }
     "supplied with an amount that is too big" should {
@@ -61,8 +61,8 @@ class AnnualExemptAmountFormSpec extends UnitSpec with WithFakeApplication with 
       "return a form with errors" in {
         form.hasErrors shouldBe true
       }
-      s"return a form with the error message ${errorMessages.maximumAmount}" in {
-        form.error("amount").get.message shouldBe errorMessages.maximumAmount
+      s"return a form with the error message ${ErrorMessages.maximumAmount}" in {
+        form.error("amount").get.message shouldBe ErrorMessages.maximumAmount
       }
     }
     "supplied with a negative amount" should {
@@ -71,8 +71,8 @@ class AnnualExemptAmountFormSpec extends UnitSpec with WithFakeApplication with 
       "raise form error" in {
         form.hasErrors shouldBe true
       }
-      s"error with message '${errorMessages.minimumAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.minimumAmount
+      s"error with message '${ErrorMessages.minimumAmount}'" in {
+        form.error("amount").get.message shouldBe ErrorMessages.minimumAmount
       }
     }
     "supplied with an amount that has too many decimal places" should {
@@ -81,8 +81,8 @@ class AnnualExemptAmountFormSpec extends UnitSpec with WithFakeApplication with 
       "raise form error" in {
         form.hasErrors shouldBe true
       }
-      s"error with message '${errorMessages.invalidAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.invalidAmount
+      s"error with message '${ErrorMessages.invalidAmount}'" in {
+        form.error("amount").get.message shouldBe ErrorMessages.invalidAmount
       }
     }
     "supplied with an amount that is larger than the maximum AEA" should {
@@ -91,8 +91,8 @@ class AnnualExemptAmountFormSpec extends UnitSpec with WithFakeApplication with 
       "raise form error" in {
         form.hasErrors shouldBe true
       }
-      s"error with message '${errorMessages.maximumLimit(MoneyPounds(limit, 0).quantity)}'" in {
-        form.error("amount").get.message shouldBe errorMessages.maximumLimit(MoneyPounds(limit, 0).quantity)
+      s"error with message '${ErrorMessages.maximumLimit(MoneyPounds(limit, 0).quantity)}'" in {
+        form.error("amount").get.message shouldBe ErrorMessages.maximumLimit(MoneyPounds(limit, 0).quantity)
       }
     }
 

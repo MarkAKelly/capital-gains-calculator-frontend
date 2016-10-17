@@ -17,7 +17,7 @@
 package views.resident.properties.deductions
 
 import assets.{MessageLookup => commonMessages}
-import assets.MessageLookup.{privateResidenceReliefValue => messages}
+import assets.MessageLookup.{PrivateResidenceReliefValue => messages}
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.DeductionsController
 import forms.resident.properties.PrivateResidenceReliefValueForm._

@@ -16,7 +16,7 @@
 
 package views.resident.properties.income
 
-import assets.MessageLookup.{currentIncome => messages}
+import assets.MessageLookup.{CurrentIncome => messages}
 import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.income.CurrentIncomeForm._

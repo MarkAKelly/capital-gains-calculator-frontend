@@ -183,7 +183,7 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
         }
 
         "fail with message 'Enter a number without commas, for example 10000.00'" in {
-          document.getElementsByClass("error-notification").text should include (MessageLookup.errorMessages.numericPlayErrorOverride)
+          document.getElementsByClass("error-notification").text should include (MessageLookup.ErrorMessages.numericPlayErrorOverride)
         }
       }
     }

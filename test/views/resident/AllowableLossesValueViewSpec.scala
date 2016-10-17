@@ -16,7 +16,7 @@
 
 package views.resident
 
-import assets.MessageLookup.{allowableLossesValue => messages}
+import assets.MessageLookup.{AllowableLossesValue => messages}
 import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.AllowableLossesValueForm._
@@ -160,16 +160,16 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
       doc.body.getElementsByAttributeValueContaining("id", "amount-error-summary").isEmpty shouldBe false
     }
 
-    s"contain an error summary message of ${commonMessages.errorMessages.mandatoryAmount}" in {
-      doc.body.getElementById("amount-error-summary").text should include(commonMessages.errorMessages.mandatoryAmount)
+    s"contain an error summary message of ${commonMessages.ErrorMessages.mandatoryAmount}" in {
+      doc.body.getElementById("amount-error-summary").text should include(commonMessages.ErrorMessages.mandatoryAmount)
     }
 
     "output an error notification" in {
       doc.body.getElementsByAttributeValueContaining("class", "error-notification").isEmpty shouldBe false
     }
 
-    s"contain an error notification message of ${commonMessages.errorMessages.mandatoryAmount}" in {
-      doc.body.getElementsByClass("error-notification").text should include(commonMessages.errorMessages.mandatoryAmount)
+    s"contain an error notification message of ${commonMessages.ErrorMessages.mandatoryAmount}" in {
+      doc.body.getElementsByClass("error-notification").text should include(commonMessages.ErrorMessages.mandatoryAmount)
     }
   }
 }

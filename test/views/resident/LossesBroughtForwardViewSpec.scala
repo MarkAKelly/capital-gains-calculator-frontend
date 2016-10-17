@@ -17,7 +17,7 @@
 package views.resident
 
 import assets.MessageLookup
-import assets.MessageLookup.{lossesBroughtForward => messages}
+import assets.MessageLookup.{LossesBroughtForward => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.LossesBroughtForwardForm._
 import models.resident.TaxYearModel

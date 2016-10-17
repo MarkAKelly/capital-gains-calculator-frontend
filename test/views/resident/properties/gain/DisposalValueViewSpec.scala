@@ -17,7 +17,7 @@
 package views.resident.properties.gain
 
 import assets.MessageLookup
-import assets.MessageLookup.{disposalValue => messages}
+import assets.MessageLookup.{DisposalValue => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.DisposalValueForm._
 import org.jsoup.Jsoup

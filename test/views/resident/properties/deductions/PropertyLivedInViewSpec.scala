@@ -20,7 +20,7 @@ import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{deductions => views}
-import assets.MessageLookup.{propertyLivedIn => messages}
+import assets.MessageLookup.{PropertyLivedIn => messages}
 import assets.{MessageLookup => commonMessages}
 import forms.resident.properties.PropertyLivedInForm._
 import models.resident.properties.PropertyLivedInModel

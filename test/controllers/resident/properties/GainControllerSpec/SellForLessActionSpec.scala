@@ -25,7 +25,7 @@ import org.mockito.Mockito._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import common.KeystoreKeys.{ResidentPropertyKeys => keyStoreKeys}
 import org.mockito.Matchers
-import assets.MessageLookup.Resident.Properties.{sellForLess => messages}
+import assets.MessageLookup.Resident.Properties.{SellForLess => messages}
 import models.resident.SellForLessModel
 import org.jsoup.Jsoup
 import play.api.test.Helpers._

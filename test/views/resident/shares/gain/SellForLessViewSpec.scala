@@ -16,7 +16,7 @@
 
 package views.resident.shares.gain
 
-import assets.MessageLookup.Resident.Shares.{sellForLess => messages}
+import assets.MessageLookup.Resident.Shares.{SellForLess => messages}
 import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.shares.SellForLessForm._

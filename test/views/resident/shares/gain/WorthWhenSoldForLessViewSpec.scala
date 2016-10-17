@@ -17,7 +17,7 @@
 package views.resident.shares.gain
 
 import assets.MessageLookup
-import assets.MessageLookup.Resident.Shares.{worthWhenSoldForLess => messages}
+import assets.MessageLookup.Resident.Shares.{WorthWhenSoldForLess => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.WorthWhenSoldForLessForm._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}

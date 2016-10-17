@@ -48,8 +48,8 @@ class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication with F
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${errorMessages.mandatoryAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.mandatoryAmount
+      s"error with message '${ErrorMessages.mandatoryAmount}'" in {
+        form.error("amount").get.message shouldBe ErrorMessages.mandatoryAmount
       }
     }
 
@@ -61,8 +61,8 @@ class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication with F
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${errorMessages.invalidAmountNoDecimal}'" in {
-        form.error("amount").get.message shouldBe errorMessages.invalidAmountNoDecimal
+      s"error with message '${ErrorMessages.invalidAmountNoDecimal}'" in {
+        form.error("amount").get.message shouldBe ErrorMessages.invalidAmountNoDecimal
       }
     }
 
@@ -75,8 +75,8 @@ class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication with F
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${errorMessages.minimumAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.minimumAmount
+      s"error with message '${ErrorMessages.minimumAmount}'" in {
+        form.error("amount").get.message shouldBe ErrorMessages.minimumAmount
       }
     }
 
@@ -89,8 +89,8 @@ class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication with F
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${errorMessages.invalidAmountNoDecimal}'" in {
-        form.error("amount").get.message shouldBe errorMessages.invalidAmountNoDecimal
+      s"error with message '${ErrorMessages.invalidAmountNoDecimal}'" in {
+        form.error("amount").get.message shouldBe ErrorMessages.invalidAmountNoDecimal
       }
     }
 
@@ -100,8 +100,8 @@ class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication with F
             "raise form error" in {
               form.hasErrors shouldBe true
             }
-           s"error with message '${errorMessages.maximumLimit(MoneyPounds(limit, 0).quantity)}'" in {
-                form.error("amount").get.message shouldBe errorMessages.maximumLimit(MoneyPounds(limit, 0).quantity)
+           s"error with message '${ErrorMessages.maximumLimit(MoneyPounds(limit, 0).quantity)}'" in {
+                form.error("amount").get.message shouldBe ErrorMessages.maximumLimit(MoneyPounds(limit, 0).quantity)
            }
           }
   }

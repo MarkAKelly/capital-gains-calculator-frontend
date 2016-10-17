@@ -16,7 +16,7 @@
 
 package views.resident
 
-import assets.MessageLookup.{outsideTaxYears => messages}
+import assets.MessageLookup.{OutsideTaxYears => messages}
 import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import models.resident.TaxYearModel

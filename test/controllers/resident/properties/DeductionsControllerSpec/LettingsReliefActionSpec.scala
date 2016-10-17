@@ -16,7 +16,7 @@
 
 package controllers.resident.properties.DeductionsControllerSpec
 
-import assets.MessageLookup.{lettingsRelief => messages}
+import assets.MessageLookup.{LettingsRelief => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import config.AppConfig
 import connectors.CalculatorConnector

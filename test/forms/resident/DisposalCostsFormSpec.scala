@@ -19,7 +19,7 @@ package forms.resident
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import models.resident.DisposalCostsModel
 import forms.resident.DisposalCostsForm._
-import assets.MessageLookup.errorMessages
+import assets.MessageLookup.ErrorMessages
 import controllers.helpers.FakeRequestHelper
 
 class DisposalCostsFormSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
@@ -53,8 +53,8 @@ class DisposalCostsFormSpec extends UnitSpec with WithFakeApplication with FakeR
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${errorMessages.mandatoryAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.mandatoryAmount
+      s"error with message '${ErrorMessages.mandatoryAmount}'" in {
+        form.error("amount").get.message shouldBe ErrorMessages.mandatoryAmount
       }
     }
 
@@ -66,8 +66,8 @@ class DisposalCostsFormSpec extends UnitSpec with WithFakeApplication with FakeR
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${errorMessages.invalidAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.invalidAmount
+      s"error with message '${ErrorMessages.invalidAmount}'" in {
+        form.error("amount").get.message shouldBe ErrorMessages.invalidAmount
       }
     }
 
@@ -79,8 +79,8 @@ class DisposalCostsFormSpec extends UnitSpec with WithFakeApplication with FakeR
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${errorMessages.maximumAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.maximumAmount
+      s"error with message '${ErrorMessages.maximumAmount}'" in {
+        form.error("amount").get.message shouldBe ErrorMessages.maximumAmount
       }
     }
 
@@ -92,8 +92,8 @@ class DisposalCostsFormSpec extends UnitSpec with WithFakeApplication with FakeR
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${errorMessages.minimumAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.minimumAmount
+      s"error with message '${ErrorMessages.minimumAmount}'" in {
+        form.error("amount").get.message shouldBe ErrorMessages.minimumAmount
       }
     }
 
@@ -105,8 +105,8 @@ class DisposalCostsFormSpec extends UnitSpec with WithFakeApplication with FakeR
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${errorMessages.invalidAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.invalidAmount
+      s"error with message '${ErrorMessages.invalidAmount}'" in {
+        form.error("amount").get.message shouldBe ErrorMessages.invalidAmount
       }
     }
   }

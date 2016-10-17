@@ -16,7 +16,7 @@
 
 package views.resident.properties.gain
 
-import assets.MessageLookup.{acquisitionCosts => messages}
+import assets.MessageLookup.{AcquisitionCosts => messages}
 import assets.{MessageLookup => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.AcquisitionCostsForm._

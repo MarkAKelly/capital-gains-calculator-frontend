@@ -80,9 +80,9 @@ class WorthWhenGaveAwayActionSpec extends UnitSpec with WithFakeApplication with
       status(result) shouldBe 200
     }
 
-    s"return some html with title of ${MessageLookup.Resident.Properties.propertiesWorthWhenGaveAway.title}" in {
+    s"return some html with title of ${MessageLookup.Resident.Properties.PropertiesWorthWhenGaveAway.title}" in {
       contentType(result) shouldBe Some("text/html")
-      Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.Resident.Properties.propertiesWorthWhenGaveAway.title
+      Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.Resident.Properties.PropertiesWorthWhenGaveAway.title
     }
   }
 
@@ -120,7 +120,7 @@ class WorthWhenGaveAwayActionSpec extends UnitSpec with WithFakeApplication with
     }
 
     "render the worth when gave away page when supplied with an invalid form" in {
-      Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.Resident.Properties.propertiesWorthWhenGaveAway.title
+      Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.Resident.Properties.PropertiesWorthWhenGaveAway.title
     }
   }
 }

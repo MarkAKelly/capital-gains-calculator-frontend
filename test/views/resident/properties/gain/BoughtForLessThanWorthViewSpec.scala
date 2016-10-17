@@ -20,7 +20,7 @@ import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{gain => views}
-import assets.MessageLookup.{boughtForLessThanWorth => messages}
+import assets.MessageLookup.{BoughtForLessThanWorth => messages}
 import assets.{MessageLookup => commonMessages}
 import forms.resident.properties.BoughtForLessThanWorthForm._
 import models.resident.properties.BoughtForLessThanWorthModel

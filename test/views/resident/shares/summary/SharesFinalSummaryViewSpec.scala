@@ -17,7 +17,7 @@
 package views.resident.shares.summary
 
 import assets.MessageLookup.Resident.{Shares => SharesMessages}
-import assets.MessageLookup.{summaryPage => messages}
+import assets.MessageLookup.{SummaryPage => messages}
 import common.Dates
 import controllers.helpers.FakeRequestHelper
 import models.resident._
@@ -360,8 +360,8 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
 
         "has an option output row for other disposals" which {
 
-          s"should have the question text '${commonMessages.otherProperties.title("2015/16")}'" in {
-            doc.select("#otherDisposals-question").text shouldBe commonMessages.otherProperties.title("2015/16")
+          s"should have the question text '${commonMessages.OtherProperties.title("2015/16")}'" in {
+            doc.select("#otherDisposals-question").text shouldBe commonMessages.OtherProperties.title("2015/16")
           }
 
           "should have the value 'No'" in {
@@ -373,18 +373,18 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
           }
 
           "has the question as part of the link" in {
-            doc.select("#otherDisposals-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.otherProperties.title("2015/16")}"
+            doc.select("#otherDisposals-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.OtherProperties.title("2015/16")}"
           }
 
           "has the question component of the link as visuallyhidden" in {
-            doc.select("#otherDisposals-option a span.visuallyhidden").text shouldBe commonMessages.otherProperties.title("2015/16")
+            doc.select("#otherDisposals-option a span.visuallyhidden").text shouldBe commonMessages.OtherProperties.title("2015/16")
           }
         }
 
         "has an option output row for brought forward losses" which {
 
-          s"should have the question text '${commonMessages.lossesBroughtForward.title("2015/16")}'" in {
-            doc.select("#broughtForwardLosses-question").text shouldBe commonMessages.lossesBroughtForward.title("2015/16")
+          s"should have the question text '${commonMessages.LossesBroughtForward.title("2015/16")}'" in {
+            doc.select("#broughtForwardLosses-question").text shouldBe commonMessages.LossesBroughtForward.title("2015/16")
           }
 
           "should have the value 'No'" in {
@@ -396,17 +396,17 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
           }
 
           "has the question as part of the link" in {
-            doc.select("#broughtForwardLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.lossesBroughtForward.question("2015/16")}"
+            doc.select("#broughtForwardLosses-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.LossesBroughtForward.question("2015/16")}"
           }
 
           "has the question component of the link as visuallyhidden" in {
-            doc.select("#broughtForwardLosses-option a span.visuallyhidden").text shouldBe commonMessages.lossesBroughtForward.question("2015/16")
+            doc.select("#broughtForwardLosses-option a span.visuallyhidden").text shouldBe commonMessages.LossesBroughtForward.question("2015/16")
           }
         }
         "has a numeric output row for current income" which {
 
-          s"should have the question text '${commonMessages.currentIncome.title("2015/16")}'" in {
-            doc.select("#currentIncome-question").text shouldBe commonMessages.currentIncome.title("2015/16")
+          s"should have the question text '${commonMessages.CurrentIncome.title("2015/16")}'" in {
+            doc.select("#currentIncome-question").text shouldBe commonMessages.CurrentIncome.title("2015/16")
           }
 
           "should have the value '£0'" in {
@@ -419,8 +419,8 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
         }
         "has a numeric output row for personal allowance" which {
 
-          s"should have the question text '${commonMessages.personalAllowance.question("2015/16")}'" in {
-            doc.select("#personalAllowance-question").text shouldBe commonMessages.personalAllowance.question("2015/16")
+          s"should have the question text '${commonMessages.PersonalAllowance.question("2015/16")}'" in {
+            doc.select("#personalAllowance-question").text shouldBe commonMessages.PersonalAllowance.question("2015/16")
           }
 
           "should have the value '£0'" in {
@@ -613,8 +613,8 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
 
       "has a numeric output row for the Worth on 31 March 1982 value" which {
 
-        s"should have the question text '${SharesMessages.valueBeforeLegislationStart.question}'" in {
-          doc.select("#valueBeforeLegislationStart-question").text shouldBe SharesMessages.valueBeforeLegislationStart.question
+        s"should have the question text '${SharesMessages.ValueBeforeLegislationStart.question}'" in {
+          doc.select("#valueBeforeLegislationStart-question").text shouldBe SharesMessages.ValueBeforeLegislationStart.question
         }
 
         "should have the value '£700'" in {
@@ -767,8 +767,8 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
 
     "has an option output row for previous taxable gains" which {
 
-      s"should have the question text '${commonMessages.previousTaxableGains.title("2013/14")}'" in {
-        doc.select("#previousTaxableGains-question").text shouldBe commonMessages.previousTaxableGains.title("2013/14")
+      s"should have the question text '${commonMessages.PreviousTaxableGains.title("2013/14")}'" in {
+        doc.select("#previousTaxableGains-question").text shouldBe commonMessages.PreviousTaxableGains.title("2013/14")
       }
 
       "should have the value '£1,000'" in {
@@ -782,8 +782,8 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
 
     "has an option output row for current income" which {
 
-      s"should have the question text '${commonMessages.currentIncome.title("2013/14")}'" in {
-        doc.select("#currentIncome-question").text shouldBe commonMessages.currentIncome.title("2013/14")
+      s"should have the question text '${commonMessages.CurrentIncome.title("2013/14")}'" in {
+        doc.select("#currentIncome-question").text shouldBe commonMessages.CurrentIncome.title("2013/14")
       }
 
       "should have the value '£0'" in {
@@ -796,8 +796,8 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
     }
     "has an option output row for personal allowance" which {
 
-      s"should have the question text '${commonMessages.personalAllowance.question("2013/14")}'" in {
-        doc.select("#personalAllowance-question").text shouldBe commonMessages.personalAllowance.question("2013/14")
+      s"should have the question text '${commonMessages.PersonalAllowance.question("2013/14")}'" in {
+        doc.select("#personalAllowance-question").text shouldBe commonMessages.PersonalAllowance.question("2013/14")
       }
 
       "should have the value '£0'" in {
@@ -1099,8 +1099,8 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
 
     "has an option output row for private residence relief value in" which {
 
-      s"should have the question text '${commonMessages.Resident.Shares.worthWhenSoldForLess.question}'" in {
-        doc.select("#worthWhenSoldForLess-question").text shouldBe commonMessages.Resident.Shares.worthWhenSoldForLess.question
+      s"should have the question text '${commonMessages.Resident.Shares.WorthWhenSoldForLess.question}'" in {
+        doc.select("#worthWhenSoldForLess-question").text shouldBe commonMessages.Resident.Shares.WorthWhenSoldForLess.question
       }
 
       "should have the value '£200,000'" in {
@@ -1113,12 +1113,12 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
 
       "has the question as part of the link" in {
         doc.select("#worthWhenSoldForLess-amount a").text shouldBe s"${commonMessages.calcBaseChange} " +
-          s"${commonMessages.Resident.Shares.worthWhenSoldForLess.question}"
+          s"${commonMessages.Resident.Shares.WorthWhenSoldForLess.question}"
       }
 
       "has the question component of the link as visuallyhidden" in {
         doc.select("#worthWhenSoldForLess-amount a span.visuallyhidden").text shouldBe
-          commonMessages.Resident.Shares.worthWhenSoldForLess.question
+          commonMessages.Resident.Shares.WorthWhenSoldForLess.question
       }
     }
   }
@@ -1173,8 +1173,8 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
 
     "has an option output row for current income" which {
 
-      s"should have the question text '${commonMessages.currentIncome.currentYearTitle}'" in {
-        doc.select("#currentIncome-question").text shouldBe commonMessages.currentIncome.currentYearTitle
+      s"should have the question text '${commonMessages.CurrentIncome.currentYearTitle}'" in {
+        doc.select("#currentIncome-question").text shouldBe commonMessages.CurrentIncome.currentYearTitle
       }
     }
   }
