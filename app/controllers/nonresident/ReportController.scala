@@ -72,6 +72,7 @@ trait ReportController extends FrontendController with ValidActiveSession {
       PdfGenerator.ok(summaryView(summary, result.get, taxYear.get, SummaryConstructor.calcTypeMessage(summary.calculationElectionModel.calculationType)),
         host).toScala
         .withHeaders("Content-Disposition" ->s"""attachment; filename="${Messages("calc.summary.title")}.pdf"""")
+//      Ok(summaryView(summary, result.get, taxYear.get, SummaryConstructor.calcTypeMessage(summary.calculationElectionModel.calculationType)))
     }
   }
 }

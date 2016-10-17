@@ -27,900 +27,593 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-    "In CalculationController calling the .summary action" when {
-      lazy val taxYear = TaxYearModel("2017-1-1", true, "2016")
+  "In CalculationController calling the .summary action" when {
 
-      lazy val view = summaryReport(summaryIndividualFlatWithAEA, calcModelTwoRates, taxYear, sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
-      lazy val document = Jsoup.parse(view.body)
+    "individual is chosen with a flat calculation" when {
 
-      //      "Testing the back links for all user types" when {
-      //
-      //        "Acquisition Date is > 5 April 2015" should {
-      //          val target = setupTarget(
-      //            TestModels.summaryIndividualFlatWithAEA,
-      //            TestModels.calcModelTwoRates,
-      //            Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-      //            None
-      //          )
-      //          lazy val result = target.summary()(fakeRequest)
-      //          lazy val document = Jsoup.parse(bodyOf(result))
-      //
-      //          s"have a 'Back' link to ${routes.OtherReliefsController.otherReliefs().url}" in {
-      //            document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-      //            document.body.getElementById("back-link").attr("href") shouldEqual routes.OtherReliefsController.otherReliefs().url
-      //          }
-      //        }
-      //
-      //        "Acquisition Date is not supplied and no rebased value has been supplied" should {
-      //          val target = setupTarget(
-      //            TestModels.summaryIndividualFlatWithAEA,
-      //            TestModels.calcModelTwoRates,
-      //            Some(AcquisitionDateModel("No", None,None,None)),
-      //            Some(RebasedValueModel("No", None))
-      //          )
-      //          lazy val result = target.summary()(fakeRequest)
-      //          lazy val document = Jsoup.parse(bodyOf(result))
-      //
-      //          s"have a 'Back' link to ${routes.OtherReliefsController.otherReliefs().url}" in {
-      //            document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-      //            document.body.getElementById("back-link").attr("href") shouldEqual routes.OtherReliefsController.otherReliefs().url
-      //          }
-      //        }
-      //
-      //        "Acquisition Date is not supplied and rebased value is supplied" should {
-      //          val target = setupTarget(
-      //            TestModels.summaryIndividualFlatWithAEA,
-      //            TestModels.calcModelTwoRates,
-      //            Some(AcquisitionDateModel("No", None,None,None)),
-      //            Some(RebasedValueModel("Yes", Some(500)))
-      //          )
-      //          lazy val result = target.summary()(fakeRequest)
-      //          lazy val document = Jsoup.parse(bodyOf(result))
-      //
-      //          s"have a 'Back' link to ${routes.CalculationElectionController.calculationElection().url}" in {
-      //            document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-      //            document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationElectionController.calculationElection().url
-      //          }
-      //        }
-      //
-      //        "Acquisition Date <= 5 April 2015" should {
-      //          val target = setupTarget(
-      //            TestModels.summaryIndividualFlatWithAEA,
-      //            TestModels.calcModelTwoRates,
-      //            Some(AcquisitionDateModel("Yes", Some(1),Some(1),Some(2014))),
-      //            Some(RebasedValueModel("Yes", Some(500)))
-      //          )
-      //          lazy val result = target.summary()(fakeRequest)
-      //          lazy val document = Jsoup.parse(bodyOf(result))
-      //
-      //          s"have a 'Back' link to ${routes.CalculationElectionController.calculationElection().url}" in {
-      //            document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-      //            document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationElectionController.calculationElection().url
-      //          }
-      //        }
-      //
-      //        "Acquisition Date Model is not supplied" should {
-      //          val target = setupTarget(
-      //            TestModels.summaryIndividualFlatWithAEA,
-      //            TestModels.calcModelTwoRates,
-      //            None,
-      //            Some(RebasedValueModel("Yes", Some(500)))
-      //          )
-      //          lazy val result = target.summary()(fakeRequest)
-      //          lazy val document = Jsoup.parse(bodyOf(result))
-      //
-      //          s"have a 'Back' link to ${missingDataRoute} " in {
-      //            document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-      //            document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
-      //          }
-      //        }
-      //
-      //        "Acquisition Date Model is supplied with no date but Rebased Value Model is not" should {
-      //          val target = setupTarget(
-      //            TestModels.summaryIndividualFlatWithAEA,
-      //            TestModels.calcModelTwoRates,
-      //            Some(AcquisitionDateModel("No", None,None,None)),
-      //            None
-      //          )
-      //          lazy val result = target.summary()(fakeRequest)
-      //          lazy val document = Jsoup.parse(bodyOf(result))
-      //
-      //          s"have a 'Back' link to ${missingDataRoute} " in {
-      //            document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-      //            document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
-      //          }
-      //        }
-      //      }
+      "return some HTML that" should {
 
-      "individual is chosen with a flat calculation" when {
+        lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
 
-        "the user has provided a value for the AEA" should {
-          //          val target = setupTarget(
-          //            TestModels.summaryIndividualFlatWithAEA,
-          //            TestModels.calcModelTwoRates,
-          //            Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-          //            None
-          //          )
-          //          lazy val result = target.summary()(fakeRequest)
-          //          lazy val document = Jsoup.parse(bodyOf(result))
-          //
-          //          "return a 200" in {
-          //            status(result) shouldBe 200
-          //          }
+        lazy val view = summaryReport(workingModel, calcModelTwoRates, taxYear,
+          sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+        lazy val document = Jsoup.parse(view.body)
 
-          "return some HTML that" should {
+        "have the correct sub-heading 'You owe'" in {
+          document.select("h1 span").text shouldEqual Messages("calc.summary.secondaryHeading")
+        }
 
-            "have the correct sub-heading 'You owe'" in {
-              document.select("h1 span").text shouldEqual Messages("calc.summary.secondaryHeading")
-            }
+        "have a result amount currently set to £8,000.00" in {
+          document.select("h1 b").text shouldEqual "£8,000.00"
+        }
 
-            "have a result amount currently set to £8,000.00" in {
-              document.select("h1 b").text shouldEqual "£8,000.00"
-            }
+        "have a 'Calculation details' section that" should {
 
-            "have a 'Calculation details' section that" should {
+          "include the section heading 'Calculation details" in {
+            document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.title"))
+          }
 
-              "include the section heading 'Calculation details" in {
-                document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.title"))
-              }
+          "include 'What would you like to base your tax on?'" in {
+            document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.calculationElection"))
+          }
 
-//              "include 'What would you like to base your tax on?'" in {
-//                document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.calculationElection"))
-//              }
+          "have an election description of 'How much of your total gain you've made since 5 April 2015'" in {
+            document.body().getElementById("calculationDetails(0)").text() shouldBe Messages("calc.summary.calculation.details.rebasedCalculation")
+          }
 
-//              "have an election description of 'How much of your total gain you've made since 5 April 2015'" in {
-//                document.body().getElementById("calcDetails(0)").text() shouldBe Messages("calc.summary.calculation.details.flatCalculation")
-//              }
+          "include 'Your total gain'" in {
+            document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.totalGain"))
+          }
 
-//              "include 'Your total gain'" in {
-//                document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.totalGain"))
-//              }
+          "have a total gain equal to £40,000.00" in {
+            document.body().getElementById("calculationDetails(1)").text() shouldBe "£40,000"
+          }
 
-//              "have a total gain equal to £40,000.00" in {
-//                document.body().getElementById("calcDetails(1)").text() shouldBe "£40,000"
-//              }
+          "include 'Capital Gains Tax allowance used" in {
+            document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.usedAEA"))
+          }
 
-//              "include 'Capital Gains Tax allowance used" in {
-//                document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.usedAEA"))
-//              }
+          "have a used AEA value equal to £0" in {
+            document.body().getElementById("calculationDetails(2)").text() shouldBe "£0"
+          }
 
-//              "have a used AEA value equal to £0" in {
-//                document.body().getElementById("calcDetails(2)").text() shouldBe "£0"
-//              }
+          "include 'Your taxable gain'" in {
+            document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.taxableGain"))
+          }
 
-//              "include 'Your taxable gain'" in {
-//                document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.taxableGain"))
-//              }
+          "have a taxable gain equal to £40,000" in {
+            document.body().getElementById("calculationDetails(3)").text() shouldBe "£40,000"
+          }
 
-//              "have a taxable gain equal to £40,000" in {
-//                document.body().getElementById("calcDetails(3)").text() shouldBe "£40,000"
-//              }
+          "include 'Your tax rate'" in {
+            document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.taxRate"))
+          }
 
-//              "include 'Your tax rate'" in {
-//                document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.taxRate"))
-//              }
+          "have a combined tax rate of £32,000 and £8,000" in {
+            document.body().getElementById("calculationDetails(4)").text() shouldBe "£32,000 at 18% £8,000 at 28%"
+          }
 
-//              "have a combined tax rate of £32,000 and £8,000" in {
-//                document.body().getElementById("calcDetails(4)").text() shouldBe "£32,000 at 18% £8,000 at 28%"
-//              }
+        }
 
-            }
+        "have a 'Personal details' section that" should {
 
-            "have a 'Personal details' section that" should {
+          "include the section heading 'Personal details" in {
+            document.select("#personalDetails").text should include(Messages("calc.summary.personal.details.title"))
+          }
 
-              "include the section heading 'Personal details" in {
-                document.select("#personalDetails").text should include(Messages("calc.summary.personal.details.title"))
-              }
+          "include the question 'Who owned the property?'" in {
+            document.select("#personalDetails").text should include(Messages("calc.customerType.question"))
+          }
 
-              "include the question 'Who owned the property?'" in {
-                document.select("#personalDetails").text should include(Messages("calc.customerType.question"))
-              }
+          "have an 'individual' owner and link to the customer-type page" in {
+            document.body().getElementById("personalDetails(0)").text() shouldBe "Individual"
+          }
 
-              "have an 'individual' owner and link to the customer-type page" in {
-                document.body().getElementById("personalDetails(0)").text() shouldBe "Individual"
-                //                document.body().getElementById("personalDetails(0)").attr("href") shouldEqual routes.CustomerTypeController.customerType().toString()
-              }
+          "include the question 'What’s your total income for this tax year?'" in {
+            document.select("#personalDetails").text should include(Messages("calc.currentIncome.question"))
+          }
 
-              "include the question 'What’s your total income for this tax year?'" in {
-                document.select("#personalDetails").text should include(Messages("calc.currentIncome.question"))
-              }
-
-              "have an total income of £1,000 and link to the current-income screen" in {
-                document.body().getElementById("personalDetails(1)").text() shouldBe "£1,000.00"
-                //                document.body().getElementById("personalDetails(1)").attr("href") shouldEqual routes.CurrentIncomeController.currentIncome().toString()
-              }
-
-              "include the question 'What's your Personal Allowance for this tax year?'" in {
-                document.select("#personalDetails").text should include(Messages("calc.personalAllowance.question"))
-              }
-
-              "have a personal allowance of £9,000 that has a link to the personal allowance page." in {
-                document.body().getElementById("personalDetails(2)").text() shouldBe "£9,000.00"
-                //                document.body().getElementById("personalDetails(2)").attr("href") shouldEqual routes.PersonalAllowanceController.personalAllowance().toString()
-              }
-
-              "include the question 'What was the total taxable gain of your previous Capital Gains in the tax year you stopped owning the property?'" in {
-                document.select("#personalDetails").text should include(Messages("calc.otherProperties.questionTwo"))
-              }
-
-              "have a total taxable gain of prior disposals of £9,600 and link to the other-properties page" in {
-                document.body().getElementById("personalDetails(3)").text() shouldBe "£9,600.00"
-                //                document.body().getElementById("personalDetails(3)").attr("href") shouldEqual routes.OtherPropertiesController.otherProperties().toString()
-              }
-
-              "include the question 'How much of your Capital Gains Tax allowance have you got left'" in {
-                document.select("#personalDetails").text should include(Messages("calc.annualExemptAmount.question"))
-              }
-
-              "have a remaining CGT Allowance of £1,500 and link to the allowance page" in {
-                document.body().getElementById("personalDetails(4)").text() shouldBe "£1,500.00"
-                //                document.body().getElementById("personalDetails(4)").attr("href") shouldEqual routes.AnnualExemptAmountController.annualExemptAmount().toString()
-              }
-            }
-
-            "have a 'Purchase details' section that" should {
-
-              "include the section heading 'Purchase details" in {
-                document.select("#acquisitionDetails").text should include(Messages("calc.summary.purchase.details.title"))
-              }
-
-              "include the question for whether the acquisition date is provided" in {
-                document.select("#purchaseDetails").text should include(Messages("calc.acquisitionDate.question"))
-              }
-
-              "have an answer to the question for providing an acquisition date of 'No'" in {
-                document.body().getElementById("purchaseDetails(0)").text() shouldBe Messages("No")
-                //                document.body().getElementById("purchaseDetails(0)").attr("href") shouldEqual routes.AcquisitionDateController.acquisitionDate().toString()
-
-              }
-
-              "include the question 'How much did you pay for the property?'" in {
-                document.select("#purchaseDetails").text should include(Messages("calc.acquisitionValue.question"))
-              }
-
-              "have an acquisition value of £100,000 and link to the acquisition value page" in {
-                document.body().getElementById("purchaseDetails(1)").text() shouldBe "£100,000.00"
-                //                document.body().getElementById("purchaseDetails(1)").attr("href") shouldEqual routes.AcquisitionValueController.acquisitionValue().toString()
-              }
-
-              "include the question 'How much did you pay in costs when you became the property owner?'" in {
-                document.select("#purchaseDetails").text should include(Messages("calc.acquisitionCosts.question"))
-              }
-
-              "have a acquisition costs of £0 and link to the acquisition-costs page" in {
-                document.body().getElementById("purchaseDetails(2)").text() shouldBe "£0.00"
-                //                document.body().getElementById("purchaseDetails(2)").attr("href") shouldEqual routes.AcquisitionCostsController.acquisitionCosts().toString()
-              }
-            }
-
-            "have a 'Property details' section that" should {
-
-              "include the section heading 'Property details" in {
-                document.select("#propertyDetails").text should include(Messages("calc.summary.property.details.title"))
-              }
-
-              "include the question 'Did you make any improvements to the property?'" in {
-                document.select("#propertyDetails").text should include(Messages("calc.improvements.question"))
-              }
-
-              "the answer to the improvements question should be No and should link to the improvements page" in {
-                document.body.getElementById("propertyDetails(0)").text shouldBe "No"
-                //                document.body().getElementById("propertyDetails(0)").attr("href") shouldEqual routes.ImprovementsController.improvements().toString()
-              }
-            }
-
-            "have a 'Sale details' section that" should {
-
-              "include the section heading 'Sale details" in {
-                document.select("#saleDetails").text should include(Messages("calc.summary.saleDetails.details.title"))
-              }
-
-              "include the question 'When did you sign the contract that made someone else the owner?'" in {
-                document.select("#saleDetails").text should include(Messages("calc.disposalDate.question"))
-              }
-
-              "the date of disposal should be '10 October 2010 and link to the disposal-date page" in {
-                document.body().getElementById("saleDetails(0)").text shouldBe "10 October 2010"
-                //                document.body().getElementById("saleDetails(0)").attr("href") shouldEqual routes.DisposalDateController.disposalDate().toString()
-              }
-
-              "include the question 'How much did you sell or give away the property for?'" in {
-                document.select("#saleDetails").text should include(Messages("calc.disposalValue.question"))
-              }
-
-              "the value of the sale should be £150,000 and link to the disposal-value page" in {
-                document.body().getElementById("saleDetails(1)").text shouldBe "£150,000.00"
-                //                document.body().getElementById("saleDetails(1)").attr("href") shouldEqual routes.DisposalValueController.disposalValue().toString()
-              }
-
-              "include the question 'How much did you pay in costs when you stopped being the property owner?'" in {
-                document.select("#saleDetails").text should include(Messages("calc.disposalCosts.question"))
-              }
-
-              "the value of the costs should be £0 and link to the disposal costs page" in {
-                document.body().getElementById("saleDetails(2)").text shouldBe "£0.00"
-                //                document.body().getElementById("saleDetails(2)").attr("href") shouldEqual routes.DisposalCostsController.disposalCosts().toString()
-              }
-            }
-
-            "have a 'Deductions details' section that" should {
-
-              "include the section heading 'Deductions" in {
-                document.select("#deductions").text should include(Messages("calc.summary.deductions.details.title"))
-              }
-
-              "include the question 'Whats the total value of your allowable losses?'" in {
-                document.select("#deductions").text should include(Messages("calc.allowableLosses.question.two"))
-              }
-
-              "the value of allowable losses should be £0 and link to the allowable-losses page" in {
-                document.body().getElementById("deductions(1)").text shouldBe "£0.00"
-                //                document.body().getElementById("deductions(1)").attr("href") shouldEqual routes.AllowableLossesController.allowableLosses().toString()
-              }
-
-              "include the question 'How much extra tax relief are you claiming?'" in {
-                document.select("#deductions").text should include(Messages("calc.otherReliefs.questionTwo"))
-              }
-
-              "the answer to question should be No and link to the other-reliefs page" in {
-                document.body().getElementById("deductions(2)").text shouldBe "No"
-                //                document.body().getElementById("deductions(2)").attr("href") shouldEqual routes.OtherReliefsController.otherReliefs().toString()
-              }
-
-              "include the question 'Do you want to add other tax relief?'" in {
-                document.select("#deductions").text should include(Messages("calc.privateResidenceRelief.question"))
-              }
-
-              "the PRR claimed question's answer should be 'No' and be a link to the PRR page" in {
-                document.body().getElementById("deductions(0)").text shouldBe "No"
-                //                document.body().getElementById("deductions(0)").attr("href") shouldEqual
-                //                  routes.PrivateResidenceReliefController.privateResidenceRelief().toString()
-              }
-
-            }
+          "have an total income of £0 and link to the current-income screen" in {
+            document.body().getElementById("personalDetails(1)").text() shouldBe "£0.00"
           }
         }
 
-        //        "the user has provided no value for the AEA and elected Flat calc" should {
-        //          val target = setupTarget(
-        //            TestModels.summaryIndividualFlatWithoutAEA,
-        //            TestModels.calcModelOneRate,
-        //            Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        //            None
-        //          )
-        //          lazy val result = target.summary()(fakeRequest)
-        //          lazy val document = Jsoup.parse(bodyOf(result))
-        //
-        //          "have the answer for Previous Disposals (Other Properties) of 'No'" in {
-        //            document.body().getElementById("personalDetails(3)").text() shouldBe "No"
-        //          }
-        //
-        //          "the answer to the improvements question should be Yes" in {
-        //            document.body.getElementById("propertyDetails(0)").text shouldBe "Yes"
-        //          }
-        //
-        //          "the value of the improvements should be £8,000" in {
-        //            document.body.getElementById("propertyDetails(1)").text shouldBe "£8,000.00"
-        //          }
-        //
-        //          "the value of the disposal costs should be £600" in {
-        //            document.body().getElementById("saleDetails(2)").text shouldBe "£600.00"
-        //          }
-        //
-        //          "include the question for whether the acquisition date is provided" in {
-        //            document.select("#purchaseDetails").text should include(Messages("calc.acquisitionDate.question"))
-        //          }
-        //
-        //          "have an answer to the question for providing an acquisition date of 'No'" in {
-        //            document.body().getElementById("purchaseDetails(0)").text() shouldBe Messages("No")
-        //          }
-        //
-        //          "have a acquisition costs of £300" in {
-        //            document.body().getElementById("purchaseDetails(2)").text() shouldBe "£300.00"
-        //          }
-        //
-        //          "the value of allowable losses should be £50,000" in {
-        //            document.body().getElementById("deductions(1)").text shouldBe "£50,000.00"
-        //          }
-        //
-        //          "the value of other reliefs should be £999" in {
-        //            document.body().getElementById("deductions(2)").text shouldBe "£999.00"
-        //          }
-        //
-        //          "have a base tax rate of 20%" in {
-        //            document.body().getElementById("calcDetails(4)").text() shouldBe "20%"
-        //          }
-        //        }
-        //
-        //        "the user has £0 current income, with no other properties" should {
-        //          val target = setupTarget(
-        //            TestModels.summaryIndividualFlatNoIncomeOtherPropNo,
-        //            TestModels.calcModelOneRate,
-        //            Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        //            None
-        //          )
-        //          lazy val result = target.summary()(fakeRequest)
-        //          lazy val document = Jsoup.parse(bodyOf(result))
-        //
-        //          "Element 3 of the personalDetails array should be 'No' for Other Properties no Personal Allowance" in {
-        //            document.body().getElementById("personalDetails(2)").text() shouldBe "No"
-        //          }
-        //        }
-        //
-        //        "the user has £0 current income, with other properties" should {
-        //          val target = setupTarget(
-        //            TestModels.summaryIndividualFlatNoIncomeOtherPropYes,
-        //            TestModels.calcModelOneRate,
-        //            Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        //            None
-        //          )
-        //          lazy val result = target.summary()(fakeRequest)
-        //          lazy val document = Jsoup.parse(bodyOf(result))
-        //
-        //          "Element 3 of the personalDetails array should be £0.00 for Other Properties Gain not Personal Allowance" in {
-        //            document.body().getElementById("personalDetails(2)").text() shouldBe "£0.00"
-        //          }
-        //        }
-        //
-        //
-        //        "users calculation results in a loss" should {
-        //          val target = setupTarget(
-        //            TestModels.summaryIndividualFlatLoss,
-        //            TestModels.calcModelLoss,
-        //            Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        //            None
-        //          )
-        //          lazy val result = target.summary()(fakeRequest)
-        //          lazy val document = Jsoup.parse(bodyOf(result))
-        //
-        //          s"have ${Messages("calc.summary.calculation.details.totalLoss")} output" in {
-        //            document.body.getElementById("calcDetails").text() should include (Messages("calc.summary.calculation.details.totalLoss"))
-        //          }
-        //
-        //          s"have £10,000.00 loss" in {
-        //            document.body.getElementById("calcDetails(1)").text() shouldBe "£10,000"
-        //          }
-        //        }
-        //      }
-        //
-        //      "regular trustee is chosen with a time apportioned calculation" when {
-        //
-        //        "the user has provided a value for the AEA" should {
-        //          val target = setupTarget(
-        //            TestModels.summaryTrusteeTAWithAEA,
-        //            TestModels.calcModelOneRate,
-        //            Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        //            None
-        //          )
-        //          lazy val result = target.summary()(fakeRequest)
-        //          lazy val document = Jsoup.parse(bodyOf(result))
-        //
-        //          "have an election description of time apportionment method" in {
-        //            document.body().getElementById("calcDetails(0)").text() shouldBe Messages("calc.summary.calculation.details.timeCalculation")
-        //          }
-        //
-        //          "have an acquisition date of '9 September 1990'" in{
-        //            document.body().getElementById("purchaseDetails(0)").text() shouldBe "9 September 1999"
-        //          }
-        //
-        //          "have a 'trustee' owner" in {
-        //            document.body().getElementById("personalDetails(0)").text() shouldBe "Trustee"
-        //          }
-        //
-        //          "have an answer of 'No to the disabled trustee question" in {
-        //            document.body().getElementById("personalDetails(1)").text() shouldBe "No"
-        //          }
-        //
-        //          "have the answer for Previous Disposals (Other Properties) of 'Yes'" in {
-        //            document.body.getElementById("personalDetails(2)").text() shouldBe "Yes"
-        //          }
-        //
-        //          "have a remaining CGT Allowance of £1,500" in {
-        //            document.body().getElementById("personalDetails(3)").text() shouldBe "£1,500.00"
-        //          }
-        //
-        //          "have a base tax rate of 20%" in {
-        //            document.body().getElementById("calcDetails(4)").text() shouldBe "20%"
-        //          }
-        //        }
-        //
-        //        "the user has provided no value for the AEA" should {
-        //          val target = setupTarget(
-        //            TestModels.summaryTrusteeTAWithoutAEA,
-        //            TestModels.calcModelTwoRates,
-        //            Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        //            None
-        //          )
-        //          lazy val result = target.summary()(fakeRequest)
-        //          lazy val document = Jsoup.parse(bodyOf(result))
-        //
-        //          "have an answer of 'No to the disabled trustee question" in {
-        //            document.getElementById("personalDetails(1)").text() shouldBe "No"
-        //          }
-        //
-        //          "have the answer for Previous Disposals (Other Properties) of 'No'" in {
-        //            document.body().getElementById("personalDetails(2)").text() shouldBe "No"
-        //          }
-        //        }
-        //      }
-        //
-        //      "disabled trustee is chosen with a time apportioned calculation" when {
-        //
-        //        "the user has provided a value for the AEA" should {
-        //          val target = setupTarget(
-        //            TestModels.summaryDisabledTrusteeTAWithAEA,
-        //            TestModels.calcModelTwoRates,
-        //            Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        //            None
-        //          )
-        //          lazy val result = target.summary()(fakeRequest)
-        //          lazy val document = Jsoup.parse(bodyOf(result))
-        //
-        //          "have an answer of 'Yes' to the disabled trustee question" in {
-        //            document.body().getElementById("personalDetails(1)").text() shouldBe "Yes"
-        //          }
-        //
-        //          "have a remaining CGT Allowance of £1,500" in {
-        //            document.body().getElementById("personalDetails(3)").text() shouldBe "£1,500.00"
-        //          }
-        //        }
-        //
-        //        "the user has provided no value for the AEA" should {
-        //          val target = setupTarget(
-        //            TestModels.summaryDisabledTrusteeTAWithoutAEA,
-        //            TestModels.calcModelTwoRates,
-        //            Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        //            None
-        //          )
-        //          lazy val result = target.summary()(fakeRequest)
-        //          lazy val document = Jsoup.parse(bodyOf(result))
-        //
-        //          "have an answer of 'Yes' to the disabled trustee question" in {
-        //            document.body().getElementById("personalDetails(1)").text() shouldBe "Yes"
-        //          }
-        //
-        //          "have the answer for Previous Disposals (Other Properties) of 'No'" in {
-        //            document.body().getElementById("personalDetails(2)").text() shouldBe "No"
-        //          }
-        //        }
-        //      }
-        //
-        //      "personal representative is chosen with a flat calculation" when {
-        //
-        //        "the user has provided a value for the AEA" should {
-        //          val target = setupTarget(
-        //            TestModels.summaryRepresentativeFlatWithAEA,
-        //            TestModels.calcModelTwoRates,
-        //            Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        //            None
-        //          )
-        //          lazy val result = target.summary()(fakeRequest)
-        //          lazy val document = Jsoup.parse(bodyOf(result))
-        //
-        //          "have a 'Personal Representative' owner" in {
-        //            document.body().getElementById("personalDetails(0)").text() shouldBe "Personal Representative"
-        //          }
-        //
-        //          "have the answer for Previous Disposals (Other Properties) of 'Yes' " in {
-        //            document.body.getElementById("personalDetails(1)").text() shouldBe "Yes"
-        //          }
-        //
-        //          "have a remaining CGT Allowance of £1,500" in {
-        //            document.body().getElementById("personalDetails(2)").text() shouldBe "£1,500.00"
-        //          }
-        //        }
-        //
-        //        "the user has provided no value for the AEA" should {
-        //          val target = setupTarget(
-        //            TestModels.summaryRepresentativeFlatWithoutAEA,
-        //            TestModels.calcModelTwoRates,
-        //            Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        //            None
-        //          )
-        //          lazy val result = target.summary()(fakeRequest)
-        //          lazy val document = Jsoup.parse(bodyOf(result))
-        //
-        //          "have a 'Personal Representative' owner" in {
-        //            document.body().getElementById("personalDetails(0)").text() shouldBe "Personal Representative"
-        //          }
-        //
-        //          "have the answer for Previous Disposals (Other Properties) of 'No'" in {
-        //            document.body().getElementById("personalDetails(1)").text() shouldBe "No"
-        //          }
-        //        }
-        //
-        //      }
-        //
-        //      "individual is chosen with a rebased calculation" when {
-        //
-        //        "user provides no acquisition date and has two tax rates" should {
-        //          val target = setupTarget(
-        //            TestModels.summaryIndividualRebased,
-        //            TestModels.calcModelTwoRates,
-        //            Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        //            None
-        //          )
-        //          lazy val result = target.summary()(fakeRequest)
-        //          lazy val document = Jsoup.parse(bodyOf(result))
-        //
-        //          "have an election description of 'How much of your total gain you've made since 5 April 2015'" in {
-        //            document.body().getElementById("calcDetails(0)").text() shouldBe Messages("calc.summary.calculation.details.rebasedCalculation")
-        //          }
-        //
-        //          "include the question for the rebased value" in {
-        //            document.select("#purchaseDetails").text should include(Messages("calc.rebasedValue.questionTwo"))
-        //          }
-        //
-        //          "have a value for the rebased value" in {
-        //            document.body.getElementById("purchaseDetails(1)").text() shouldBe "£150,000.00"
-        //          }
-        //
-        //          "include the question for the rebased costs" in {
-        //            document.select("#purchaseDetails").text should include(Messages("calc.rebasedCosts.questionTwo"))
-        //          }
-        //
-        //          "have a value for the rebased costs" in {
-        //            document.body.getElementById("purchaseDetails(2)").text() shouldBe "£1,000.00"
-        //          }
-        //
-        //          "include the question for the improvements after" in {
-        //            document.select("#propertyDetails").text should include(Messages("calc.improvements.questionFour"))
-        //          }
-        //
-        //          "have a value for the improvements after" in {
-        //            document.body.getElementById("propertyDetails(1)").text() shouldBe "£3,000.00"
-        //          }
-        //
-        //          "have a value for the other reliefs rebased" in {
-        //            document.body.getElementById("deductions(2)").text() shouldBe "£777.00"
-        //            document.body().getElementById("deductions(2)").attr("href") shouldEqual routes.OtherReliefsRebasedController.otherReliefsRebased().toString()
-        //          }
-        //
-        //        }
-        //
-        //        "user provides no acquisition date and has one tax rate" should {
-        //          val target = setupTarget(
-        //            TestModels.summaryIndividualRebasedNoAcqDate,
-        //            TestModels.calcModelOneRate,
-        //            Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        //            None
-        //          )
-        //          lazy val result = target.summary()(fakeRequest)
-        //          lazy val document = Jsoup.parse(bodyOf(result))
-        //
-        //          "have an election description of 'How much of your total gain you've made since 5 April 2015'" in {
-        //            document.body().getElementById("calcDetails(0)").text() shouldBe Messages("calc.summary.calculation.details.rebasedCalculation")
-        //          }
-        //
-        //          "include the question for whether the acquisition date is provided" in {
-        //            document.select("#purchaseDetails").text should include(Messages("calc.acquisitionDate.question"))
-        //          }
-        //
-        //          "have an answer to the question for providing an acquisition date of 'No'" in {
-        //            document.body().getElementById("purchaseDetails(0)").text() shouldBe Messages("No")
-        //          }
-        //
-        //          "the value of allowable losses should be £0" in {
-        //            document.body().getElementById("deductions(1)").text shouldBe "£0.00"
-        //          }
-        //
-        //          "the value of other reliefs should be £0" in {
-        //            document.body().getElementById("deductions(2)").text shouldBe "£0.00"
-        //          }
-        //        }
-        //
-        //        "user provides acquisition date and no rebased costs" should {
-        //          val target = setupTarget(
-        //            TestModels.summaryIndividualRebasedNoRebasedCosts,
-        //            TestModels.calcModelOneRate,
-        //            Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        //            None
-        //          )
-        //          lazy val result = target.summary()(fakeRequest)
-        //          lazy val document = Jsoup.parse(bodyOf(result))
-        //
-        //          "have no value for the rebased costs" in {
-        //            document.body.getElementById("purchaseDetails(2)").text() shouldBe "£0.00"
-        //          }
-        //        }
-        //
-        //        "user provides no acquisition date and no rebased costs" should {
-        //          val target = setupTarget(
-        //            TestModels.summaryIndividualRebasedNoAcqDateOrRebasedCosts,
-        //            TestModels.calcModelOneRate,
-        //            Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        //            None
-        //          )
-        //          lazy val result = target.summary()(fakeRequest)
-        //          lazy val document = Jsoup.parse(bodyOf(result))
-        //
-        //          "have no value for the rebased costs" in {
-        //            document.body.getElementById("purchaseDetails(2)").text() shouldBe "£0.00"
-        //          }
-        //        }
-        //      }
-        //
-        //      "only an upper rate result is returned" should {
-        //        val target = setupTarget(TestModels.summaryIndividualFlatWithAEA, TestModels.calcModelUpperRate, None, None)
-        //        lazy val result = target.summary()(fakeRequest)
-        //        lazy val document = Jsoup.parse(bodyOf(result))
-        //
-        //        "return a value of 28% for the tax rate" in {
-        //          document.body.getElementById("calcDetails(4)").text() shouldBe "28%"
-        //        }
-        //      }
-        //
-        //      "a negative taxable gain is returned" should {
-        //        val target = setupTarget(TestModels.summaryIndividualFlatWithAEA, TestModels.calcModelNegativeTaxable, None, None)
-        //        lazy val result = target.summary()(fakeRequest)
-        //        lazy val document = Jsoup.parse(bodyOf(result))
-        //
-        //        "include 'Loss carried forward'" in {
-        //          document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.lossCarriedForward"))
-        //        }
-        //
-        //        "return a value of £10,000 for loss carried forward" in {
-        //          document.body.getElementById("calcDetails(3)").text() shouldBe "£10,000"
-        //        }
-        //      }
-        //
-        //      "a zero taxable gain is returned" should {
-        //        val target = setupTarget(TestModels.summaryIndividualFlatWithAEA, TestModels.calcModelZeroTaxable, None, None)
-        //        lazy val result = target.summary()(fakeRequest)
-        //        lazy val document = Jsoup.parse(bodyOf(result))
-        //
-        //        "return a value of £0 for taxable gain" in {
-        //          document.body.getElementById("calcDetails(3)").text() shouldBe "£0"
-        //        }
-        //      }
-        //
-        //      "a total gain of zero is returned" should {
-        //        val target = setupTarget(TestModels.summaryIndividualFlatWithAEA, TestModels.calcModelZeroTotal, None, None)
-        //        lazy val result = target.summary()(fakeRequest)
-        //        lazy val document = Jsoup.parse(bodyOf(result))
-        //
-        //        "return a value of £0 for total gain" in {
-        //          document.body.getElementById("calcDetails(1)").text() shouldBe "£0"
-        //        }
-        //      }
-        //
-        //      "a value with some PRR is returned" should {
-        //        val target = setupTarget(TestModels.summaryIndividualFlatWithAEA, TestModels.calcModelSomePRR, None, None)
-        //        lazy val result = target.summary()(fakeRequest)
-        //        lazy val document = Jsoup.parse(bodyOf(result))
-        //
-        //        "return a value of £10,000 for the simple PRR" in {
-        //          document.body.getElementById("deductions(0)").text() shouldBe "£10,000.00"
-        //        }
-        //      }
-        //
-        //      "a value with PRR claimed but no value" should {
-        //        val target = setupTarget(TestModels.summaryIndividualWithAllOptions, TestModels.calcModelOneRate, None, None)
-        //        lazy val result = target.summary()(fakeRequest)
-        //        lazy val document = Jsoup.parse(bodyOf(result))
-        //
-        //        "return a value of £0 for the simple PRR" in {
-        //          document.body.getElementById("deductions(0)").text() shouldBe "£0.00"
-        //        }
-        //      }
-        //    }
-        //
-        //    "calling the .restart action" should {
-        //      lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/restart").withSession(SessionKeys.sessionId -> "12345")
-        //      val target = setupTarget(
-        //        TestModels.summaryIndividualFlatWithAEA,
-        //        TestModels.calcModelTwoRates,
-        //        Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        //        None
-        //      )
-        //      lazy val result = target.restart()(fakeRequest)
-        //
-        //      "return a 303" in {
-        //        status(result) shouldBe 303
-        //      }
-        //    }
-        //
-        //  }
+        "have a 'Purchase details' section that" should {
+
+          "include the section heading 'Purchase details" in {
+            document.select("#acquisitionDetails").text should include(Messages("calc.summary.purchase.details.title"))
+          }
+
+          "include the question for whether the acquisition date is provided" in {
+            document.select("#acquisitionDetails").text should include(Messages("calc.acquisitionDate.questionTwo"))
+          }
+
+          "have an answer to the question for providing an acquisition date of 'Yes and 16/10/2005'" in {
+            document.body().getElementById("purchaseDetails(0)").text() shouldBe Messages("16 October 2005")
+
+          }
+
+          "include the question 'How much did you pay for the property?'" in {
+            document.select("#acquisitionDetails").text should include(Messages("calc.rebasedValue.questionTwo"))
+          }
+
+          "have an acquisition value of £100,000 and link to the acquisition value page" in {
+            document.body().getElementById("purchaseDetails(1)").text() shouldBe "£1,000,000.00"
+          }
+
+          "have a acquisition costs of £0 and link to the acquisition-costs page" in {
+            document.body().getElementById("purchaseDetails(2)").text() shouldBe "£0.00"
+          }
+        }
+
+        "have a 'Property details' section that" should {
+
+          "include the section heading 'Property details" in {
+            document.select("#propertyDetails").text should include(Messages("calc.summary.property.details.title"))
+          }
+
+          "include the question 'Did you make any improvements to the property?'" in {
+            document.select("#propertyDetails").text should include(Messages("calc.improvements.question"))
+          }
+
+          "the answer to the improvements question should be No and should link to the improvements page" in {
+            document.body.getElementById("propertyDetails(0)").text shouldBe "No"
+          }
+        }
+
+        "have a 'Sale details' section that" should {
+
+          "include the section heading 'Sale details" in {
+            document.select("#saleDetails").text should include(Messages("calc.summary.sale.details.title"))
+          }
+
+          "include the question 'When did you sign the contract that made someone else the owner?'" in {
+            document.select("#saleDetails").text should include(Messages("calc.disposalDate.question"))
+          }
+
+          "the date of disposal should be '2 January 2017'" in {
+            document.body().getElementById("saleDetails(0)").text shouldBe "2 January 2017"
+          }
+
+          "include the question 'How much did you sell or give away the property for?'" in {
+            document.select("#saleDetails").text should include(Messages("calc.disposalValue.question"))
+          }
+
+          "the value of the sale should be £1,250,000" in {
+            document.body().getElementById("saleDetails(1)").text shouldBe "£1,250,000.00"
+          }
+
+          "include the question 'How much did you pay in costs when you stopped being the property owner?'" in {
+            document.select("#saleDetails").text should include(Messages("calc.disposalCosts.question"))
+          }
+
+          "the value of the costs should be £15,000.00" in {
+            document.body().getElementById("saleDetails(2)").text shouldBe "£15,000.00"
+          }
+        }
+
+        "have a 'Deductions details' section that" should {
+
+          "include the section heading 'Deductions" in {
+            document.select("#deductions").text should include(Messages("calc.summary.deductions.title"))
+          }
+
+          "include the question 'Whats the total value of your allowable losses?'" in {
+            document.select("#deductions").text should include(Messages("calc.allowableLosses.question.two"))
+          }
+
+          "the value of allowable losses should be £0" in {
+            document.body().getElementById("deductions(1)").text shouldBe "£0.00"
+          }
+
+          "include the question 'How much extra tax relief are you claiming?'" in {
+            document.select("#deductions").text should include(Messages("calc.otherReliefs.question"))
+          }
+
+          "the answer to question should be £0.00" in {
+            document.body().getElementById("deductions(2)").text shouldBe "£0.00"
+          }
+
+          "the PRR claimed question's answer should be '£0.00'" in {
+            document.body().getElementById("deductions(0)").text shouldBe "£0.00"
+          }
+
+        }
+      }
+
+      "the user has provided no value for the AEA and elected Flat calc" should {
+
+        lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
+
+        lazy val view = summaryReport(summaryIndividualFlatWithoutAEA, calcModelOneRate, taxYear,
+          sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+        lazy val document = Jsoup.parse(view.body)
+
+        "have the answer for Previous Disposals (Other Properties) of 'No'" in {
+          document.body().getElementById("personalDetails(3)").text() shouldBe "No"
+        }
+
+        "the answer to the improvements question should be Yes" in {
+          document.body.getElementById("propertyDetails(0)").text shouldBe "Yes"
+        }
+
+        "the value of the improvements should be £8,000" in {
+          document.body.getElementById("propertyDetails(1)").text shouldBe "£8,000.00"
+        }
+
+        "the value of the disposal costs should be £600" in {
+          document.body().getElementById("saleDetails(2)").text shouldBe "£600.00"
+        }
+
+        "include the question for whether the acquisition date is provided" in {
+          document.select("#purchaseDetails").text should include(Messages("calc.acquisitionDate.question"))
+        }
+
+        "have an answer to the question for providing an acquisition date of 'No'" in {
+          document.body().getElementById("purchaseDetails(0)").text() shouldBe Messages("No")
+        }
+
+        "have a acquisition costs of £300" in {
+          document.body().getElementById("purchaseDetails(2)").text() shouldBe "£300.00"
+        }
+
+        "the value of allowable losses should be £50,000" in {
+          document.body().getElementById("deductions(1)").text shouldBe "£50,000.00"
+        }
+
+        "the value of other reliefs should be £999" in {
+          document.body().getElementById("deductions(2)").text shouldBe "£999.00"
+        }
+
+        "have a base tax rate of 20%" in {
+          document.body().getElementById("calculationDetails(4)").text() shouldBe "20%"
+        }
+      }
+
+      "the user has £0 current income, with no other properties" should {
+        lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
+
+        lazy val view = summaryReport(summaryIndividualFlatNoIncomeOtherPropNo, calcModelOneRate, taxYear,
+          sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+        lazy val document = Jsoup.parse(view.body)
+
+        "Element 3 of the personalDetails array should be 'No' for Other Properties no Personal Allowance" in {
+          document.body().getElementById("personalDetails(2)").text() shouldBe "No"
+        }
+      }
+
+      "the user has £0 current income, with other properties" should {
+        lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
+
+        lazy val view = summaryReport(summaryIndividualFlatNoIncomeOtherPropYes, calcModelOneRate, taxYear,
+          sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+        lazy val document = Jsoup.parse(view.body)
+
+        "Element 3 of the personalDetails array should be £0.00 for Other Properties Gain not Personal Allowance" in {
+          document.body().getElementById("personalDetails(2)").text() shouldBe "£0.00"
+        }
+      }
 
 
-        //  "Summary Report view" should {
-        //
-        //    lazy val taxYear = TaxYearModel("2016-12-12", true, "2016")
-        //
-        //    lazy val view = summaryReport(sumModelFlat, calcModelZeroTotal, taxYear, sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
-        //    lazy val doc = Jsoup.parse(view.body)
-        //
-        //    "have a charset of UTF-8" in {
-        //      doc.charset().toString shouldBe "UTF-8"
-        //    }
-        //
-        //    s"have a page heading" which {
-        //
-        //      s"includes a secondary heading with text '${messages.secondaryHeading}'" in {
-        //        doc.select("h1 span.pre-heading").text shouldBe messages.secondaryHeading
-        //      }
-        //
-        //      "include an amount of tax due of £0.00" in {
-        //        doc.select("h1").text should include("£0.00")
-        //      }
-        //    }
-        //
-        //    "does not have a notice summary" in {
-        //      doc.select("div.notice-wrapper").isEmpty shouldBe true
-        //    }
-        //
-        //    s"have a section for the Calculation details" which {
-        //
-        //      "has the class 'summary-section' to underline the heading" in {
-        //
-        //        doc.select("section#calcDetails h2").hasClass("summary-underline") shouldBe true
-        //
-        //      }
-        //
-        //      s"has a h2 tag" which {
-        //
-        //        s"should have the title '${messages.calcDetailsHeading}'" in {
-        //          doc.select("section#calcDetails h2").text shouldBe messages.calcDetailsHeading
-        //        }
-        //
-        //        "has the class 'heading-large'" in {
-        //          doc.select("section#calcDetails h2").hasClass("heading-large") shouldBe true
-        //        }
-        //      }
-        //    }
-        //
-        //    "have a 'Calculation details' section that" should {
-        //
-        //      "include the section heading 'Calculation details" in {
-        //        doc.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.title"))
-        //      }
-        //
-        //      "include 'What would you like to base your tax on?'" in {
-        //        doc.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.calculationElection"))
-        //      }
-        //
-        //      "have an election description of 'How much of your total gain you've made since 5 April 2015'" in {
-        //        doc.body().getElementById("calcDetails(0)").text() shouldBe Messages("calc.summary.calculation.details.flatCalculation")
-        //      }
-        //
-        //      "include 'Your total gain'" in {
-        //        doc.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.totalGain"))
-        //      }
-        //
-        //      "have a total gain equal to £40,000.00" in {
-        //        doc.body().getElementById("calcDetails(1)").text() shouldBe "£40,000"
-        //      }
-        //
-        //      "include 'Capital Gains Tax allowance used" in {
-        //        doc.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.usedAEA"))
-        //      }
-        //
-        //      "have a used AEA value equal to £0" in {
-        //        doc.body().getElementById("calcDetails(2)").text() shouldBe "£0"
-        //      }
-        //
-        //      "include 'Your taxable gain'" in {
-        //        doc.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.taxableGain"))
-        //      }
-        //
-        //      "have a taxable gain equal to £40,000" in {
-        //        doc.body().getElementById("calcDetails(3)").text() shouldBe "£40,000"
-        //      }
-        //
-        //      "include 'Your tax rate'" in {
-        //        doc.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.taxRate"))
-        //      }
-        //
-        //      "have a combined tax rate of £32,000 and £8,000" in {
-        //        doc.body().getElementById("calcDetails(4)").text() shouldBe "£32,000 at 18% £8,000 at 28%"
-        //      }
-        //
-        //    }
-        //
-        //
-        //  }
+      "users calculation results in a loss" should {
+        lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
+
+        lazy val view = summaryReport(summaryIndividualFlatLoss, calcModelLoss, taxYear,
+          sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+        lazy val document = Jsoup.parse(view.body)
+
+        s"have ${Messages("calc.summary.calculation.details.totalLoss")} output" in {
+          document.body.getElementById("calcDetails").text() should include(Messages("calc.summary.calculation.details.totalLoss"))
+        }
+
+        s"have £10,000.00 loss" in {
+          document.body.getElementById("calculationDetails(1)").text() shouldBe "£10,000"
+        }
+      }
+
+
+      "regular trustee is chosen with a time apportioned calculation" when {
+
+        "the user has provided a value for the AEA" should {
+
+          lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
+
+          lazy val view = summaryReport(summaryTrusteeTAWithAEA, calcModelOneRate, taxYear,
+            sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+          lazy val document = Jsoup.parse(view.body)
+
+          "have an election description of time apportionment method" in {
+            document.body().getElementById("calculationDetails(0)").text() shouldBe Messages("calc.summary.calculation.details.timeCalculation")
+          }
+
+          "have an acquisition date of '9 September 1990'" in {
+            document.body().getElementById("purchaseDetails(0)").text() shouldBe "9 September 1999"
+          }
+
+          "have a 'trustee' owner" in {
+            document.body().getElementById("personalDetails(0)").text() shouldBe "Trustee"
+          }
+
+          "have an answer of 'No to the disabled trustee question" in {
+            document.body().getElementById("personalDetails(1)").text() shouldBe "No"
+          }
+
+          "have the answer for Previous Disposals (Other Properties) of 'Yes'" in {
+            document.body.getElementById("personalDetails(2)").text() shouldBe "Yes"
+          }
+
+          "have a remaining CGT Allowance of £1,500" in {
+            document.body().getElementById("personalDetails(3)").text() shouldBe "£1,500.00"
+          }
+
+          "have a base tax rate of 20%" in {
+            document.body().getElementById("calculationDetails(4)").text() shouldBe "20%"
+          }
+        }
+
+        "the user has provided no value for the AEA" should {
+          lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
+
+          lazy val view = summaryReport(summaryTrusteeTAWithoutAEA, calcModelTwoRates, taxYear,
+            sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+          lazy val document = Jsoup.parse(view.body)
+
+          "have an answer of 'No to the disabled trustee question" in {
+            document.getElementById("personalDetails(1)").text() shouldBe "No"
+          }
+
+          "have the answer for Previous Disposals (Other Properties) of 'No'" in {
+            document.body().getElementById("personalDetails(2)").text() shouldBe "No"
+          }
+        }
+      }
+
+      "disabled trustee is chosen with a time apportioned calculation" when {
+
+        "the user has provided a value for the AEA" should {
+          lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
+
+          lazy val view = summaryReport(summaryDisabledTrusteeTAWithAEA, calcModelTwoRates, taxYear,
+            sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+          lazy val document = Jsoup.parse(view.body)
+
+          "have an answer of 'Yes' to the disabled trustee question" in {
+            document.body().getElementById("personalDetails(1)").text() shouldBe "Yes"
+          }
+
+          "have a remaining CGT Allowance of £1,500" in {
+            document.body().getElementById("personalDetails(3)").text() shouldBe "£1,500.00"
+          }
+        }
+
+        "the user has provided no value for the AEA" should {
+          lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
+
+          lazy val view = summaryReport(summaryDisabledTrusteeTAWithoutAEA, calcModelTwoRates, taxYear,
+            sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+          lazy val document = Jsoup.parse(view.body)
+
+          "have an answer of 'Yes' to the disabled trustee question" in {
+            document.body().getElementById("personalDetails(1)").text() shouldBe "Yes"
+          }
+
+          "have the answer for Previous Disposals (Other Properties) of 'No'" in {
+            document.body().getElementById("personalDetails(2)").text() shouldBe "No"
+          }
+        }
+      }
+
+      "personal representative is chosen with a flat calculation" when {
+
+        "the user has provided a value for the AEA" should {
+          lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
+
+          lazy val view = summaryReport(summaryRepresentativeFlatWithAEA, calcModelTwoRates, taxYear,
+            sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+          lazy val document = Jsoup.parse(view.body)
+
+          "have a 'Personal Representative' owner" in {
+            document.body().getElementById("personalDetails(0)").text() shouldBe "Personal Representative"
+          }
+
+          "have the answer for Previous Disposals (Other Properties) of 'Yes' " in {
+            document.body.getElementById("personalDetails(1)").text() shouldBe "Yes"
+          }
+
+          "have a remaining CGT Allowance of £1,500" in {
+            document.body().getElementById("personalDetails(2)").text() shouldBe "£1,500.00"
+          }
+        }
+
+        "the user has provided no value for the AEA" should {
+          lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
+
+          lazy val view = summaryReport(summaryRepresentativeFlatWithoutAEA, calcModelTwoRates, taxYear,
+            sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+          lazy val document = Jsoup.parse(view.body)
+
+          "have a 'Personal Representative' owner" in {
+            document.body().getElementById("personalDetails(0)").text() shouldBe "Personal Representative"
+          }
+
+          "have the answer for Previous Disposals (Other Properties) of 'No'" in {
+            document.body().getElementById("personalDetails(1)").text() shouldBe "No"
+          }
+        }
 
       }
 
+      "individual is chosen with a rebased calculation" when {
+
+        "user provides no acquisition date and has two tax rates" should {
+          lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
+
+          lazy val view = summaryReport(summaryIndividualRebased, calcModelTwoRates, taxYear,
+            sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+          lazy val document = Jsoup.parse(view.body)
+
+          "have an election description of 'How much of your total gain you've made since 5 April 2015'" in {
+            document.body().getElementById("calculationDetails(0)").text() shouldBe Messages("calc.summary.calculation.details.rebasedCalculation")
+          }
+
+          "include the question for the rebased value" in {
+            document.select("#purchaseDetails").text should include(Messages("calc.rebasedValue.questionTwo"))
+          }
+
+          "have a value for the rebased value" in {
+            document.body.getElementById("purchaseDetails(1)").text() shouldBe "£150,000.00"
+          }
+
+          "include the question for the rebased costs" in {
+            document.select("#purchaseDetails").text should include(Messages("calc.rebasedCosts.questionTwo"))
+          }
+
+          "have a value for the rebased costs" in {
+            document.body.getElementById("purchaseDetails(2)").text() shouldBe "£1,000.00"
+          }
+
+          "include the question for the improvements after" in {
+            document.select("#propertyDetails").text should include(Messages("calc.improvements.questionFour"))
+          }
+
+          "have a value for the improvements after" in {
+            document.body.getElementById("propertyDetails(1)").text() shouldBe "£3,000.00"
+          }
+
+          "have a value for the other reliefs rebased" in {
+            document.body.getElementById("deductions(2)").text() shouldBe "£777.00"
+          }
+
+        }
+
+        "user provides no acquisition date and has one tax rate" should {
+          lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
+
+          lazy val view = summaryReport(summaryIndividualRebasedNoAcqDate, calcModelOneRate, taxYear,
+            sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+          lazy val document = Jsoup.parse(view.body)
+
+          "have an election description of 'How much of your total gain you've made since 5 April 2015'" in {
+            document.body().getElementById("calculationDetails(0)").text() shouldBe Messages("calc.summary.calculation.details.rebasedCalculation")
+          }
+
+          "include the question for whether the acquisition date is provided" in {
+            document.select("#purchaseDetails").text should include(Messages("calc.acquisitionDate.question"))
+          }
+
+          "have an answer to the question for providing an acquisition date of 'No'" in {
+            document.body().getElementById("purchaseDetails(0)").text() shouldBe Messages("No")
+          }
+
+          "the value of allowable losses should be £0" in {
+            document.body().getElementById("deductions(1)").text shouldBe "£0.00"
+          }
+
+          "the value of other reliefs should be £0" in {
+            document.body().getElementById("deductions(2)").text shouldBe "£0.00"
+          }
+        }
+
+        "user provides acquisition date and no rebased costs" should {
+          lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
+
+          lazy val view = summaryReport(summaryIndividualRebasedNoRebasedCosts, calcModelOneRate, taxYear,
+            sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+          lazy val document = Jsoup.parse(view.body)
+
+          "have no value for the rebased costs" in {
+            document.body.getElementById("purchaseDetails(2)").text() shouldBe "£0.00"
+          }
+        }
+
+        "user provides no acquisition date and no rebased costs" should {
+          lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
+
+          lazy val view = summaryReport(summaryIndividualRebasedNoAcqDateOrRebasedCosts, calcModelOneRate, taxYear,
+            sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+          lazy val document = Jsoup.parse(view.body)
+
+          "have no value for the rebased costs" in {
+            document.body.getElementById("purchaseDetails(2)").text() shouldBe "£0.00"
+          }
+        }
+      }
+
+      "only an upper rate result is returned" should {
+        lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
+
+        lazy val view = summaryReport(summaryIndividualFlatWithAEA, calcModelUpperRate, taxYear,
+          sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+        lazy val document = Jsoup.parse(view.body)
+
+        "return a value of 28% for the tax rate" in {
+          document.body.getElementById("calculationDetails(4)").text() shouldBe "28%"
+        }
+      }
+
+      "a negative taxable gain is returned" should {
+        lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
+
+        lazy val view = summaryReport(summaryIndividualFlatWithAEA, calcModelNegativeTaxable, taxYear,
+          sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+        lazy val document = Jsoup.parse(view.body)
+
+        "include 'Loss carried forward'" in {
+          document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.lossCarriedForward"))
+        }
+
+        "return a value of £10,000 for loss carried forward" in {
+          document.body.getElementById("calculationDetails(3)").text() shouldBe "£10,000"
+        }
+      }
+
+      "a zero taxable gain is returned" should {
+        lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
+
+        lazy val view = summaryReport(summaryIndividualFlatWithAEA, calcModelZeroTaxable, taxYear,
+          sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+        lazy val document = Jsoup.parse(view.body)
+
+        "return a value of £0 for taxable gain" in {
+          document.body.getElementById("calculationDetails(3)").text() shouldBe "£0"
+        }
+      }
+
+      "a total gain of zero is returned" should {
+        lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
+
+        lazy val view = summaryReport(summaryIndividualFlatWithAEA, calcModelZeroTotal, taxYear,
+          sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+        lazy val document = Jsoup.parse(view.body)
+
+        "return a value of £0 for total gain" in {
+          document.body.getElementById("calculationDetails(1)").text() shouldBe "£0"
+        }
+      }
+
+      "a value with some PRR is returned" should {
+        lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
+
+        lazy val view = summaryReport(summaryIndividualFlatWithAEA, calcModelSomePRR, taxYear,
+          sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+        lazy val document = Jsoup.parse(view.body)
+
+        "return a value of £10,000 for the simple PRR" in {
+          document.body.getElementById("deductions(0)").text() shouldBe "£10,000.00"
+        }
+      }
+
+      "a value with PRR claimed but no value" should {
+        lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
+
+        lazy val view = summaryReport(summaryIndividualWithAllOptions, calcModelOneRate, taxYear,
+          sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+        lazy val document = Jsoup.parse(view.body)
+
+        "return a value of £0 for the simple PRR" in {
+          document.body.getElementById("deductions(0)").text() shouldBe "£0.00"
+        }
+      }
     }
+  }
 }
