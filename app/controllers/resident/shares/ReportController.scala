@@ -18,6 +18,8 @@ package controllers.resident.shares
 
 import common.Dates._
 import java.time.LocalDate
+
+import common.Dates
 import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import it.innove.play.pdf.PdfGenerator
@@ -88,13 +90,16 @@ trait ReportController extends FeatureLock {
       deductionAnswers <- calcConnector.getShareDeductionAnswers
       chargeableGain <- calcConnector.calculateRttShareChargeableGain(answers, deductionAnswers, maxAEA.get)
       incomeAnswers <- calcConnector.getShareIncomeAnswers
+      currentTaxYear <- Dates.getCurrentTaxYear
       totalGain <- calcConnector.calculateRttShareTotalGainAndTax(answers, deductionAnswers, maxAEA.get, incomeAnswers)
     } yield {
       PdfGenerator.ok(views.finalSummaryReport(answers,
         deductionAnswers,
         incomeAnswers,
         totalGain.get,
-        taxYear.get),
+        taxYear.get,
+        taxYear.get.taxYearSupplied == currentTaxYear
+      ),
         host).toScala.withHeaders("Content-Disposition" -> s"""attachment; filename="${Messages("calc.resident.summary.title")}.pdf"""")
     }
   }

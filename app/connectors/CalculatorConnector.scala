@@ -99,7 +99,7 @@ trait CalculatorConnector {
   }
 
   def getTaxYear(taxYear: String)(implicit hc: HeaderCarrier): Future[Option[TaxYearModel]] = {
-    http.GET[Option[TaxYearModel]](s"$serviceUrl/capital-gains-calculator/tax-year?disposalDate=$taxYear")
+    http.GET[Option[TaxYearModel]](s"$serviceUrl/capital-gains-calculator/tax-year?date=$taxYear")
   }
 
   def clearKeystore(implicit hc: HeaderCarrier):Future[HttpResponse] = {

@@ -16,7 +16,7 @@
 
 package controllers.resident.shares
 
-import common.TaxDates
+import common.{Dates, TaxDates}
 import views.html.calculation.{resident => commonViews}
 import views.html.calculation.resident.shares.{income => views}
 import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
@@ -176,10 +176,13 @@ trait IncomeController extends FeatureLock {
 
   val currentIncome = FeatureLockForRTTShares.async { implicit request =>
 
-    def routeRequest(backUrl: String, taxYear: TaxYearModel): Future[Result] = {
+    def routeRequest(backUrl: String, taxYear: TaxYearModel, currentTaxYear: String): Future[Result] = {
+
+      val inCurrentTaxYear = taxYear.taxYearSupplied == currentTaxYear
+
       calcConnector.fetchAndGetFormData[CurrentIncomeModel](keystoreKeys.currentIncome).map {
-        case Some(data) => Ok(views.currentIncome(currentIncomeForm.fill(data), backUrl, taxYear))
-        case None => Ok(views.currentIncome(currentIncomeForm, backUrl, taxYear))
+        case Some(data) => Ok(views.currentIncome(currentIncomeForm.fill(data), backUrl, taxYear, inCurrentTaxYear))
+        case None => Ok(views.currentIncome(currentIncomeForm, backUrl, taxYear, inCurrentTaxYear))
       }
     }
 
@@ -188,15 +191,19 @@ trait IncomeController extends FeatureLock {
       disposalDate <- getDisposalDate
       disposalDateString <- formatDisposalDate(disposalDate.get)
       taxYear <- calcConnector.getTaxYear(disposalDateString)
-      finalResult <- routeRequest(backUrl, taxYear.get)
+      currentTaxYear <- Dates.getCurrentTaxYear
+      finalResult <- routeRequest(backUrl, taxYear.get, currentTaxYear)
     } yield finalResult
   }
 
   val submitCurrentIncome = FeatureLockForRTTShares.async { implicit request =>
 
-    def routeRequest(taxYearModel: TaxYearModel): Future[Result] = {
+    def routeRequest(taxYearModel: TaxYearModel, currentTaxYear: String): Future[Result] = {
+
+      val inCurrentTaxYear = taxYearModel.taxYearSupplied == currentTaxYear
+
       currentIncomeForm.bindFromRequest.fold(
-        errors => buildCurrentIncomeBackUrl.flatMap(url => Future.successful(BadRequest(views.currentIncome(errors, url, taxYearModel)))),
+        errors => buildCurrentIncomeBackUrl.flatMap(url => Future.successful(BadRequest(views.currentIncome(errors, url, taxYearModel, inCurrentTaxYear)))),
         success => {
           calcConnector.saveFormData[CurrentIncomeModel](keystoreKeys.currentIncome, success)
           Future.successful(Redirect(routes.IncomeController.personalAllowance()))
@@ -207,7 +214,8 @@ trait IncomeController extends FeatureLock {
       disposalDate <- getDisposalDate
       disposalDateString <- formatDisposalDate(disposalDate.get)
       taxYear <- calcConnector.getTaxYear(disposalDateString)
-      route <- routeRequest(taxYear.get)
+      currentTaxYear <- Dates.getCurrentTaxYear
+      route <- routeRequest(taxYear.get, currentTaxYear)
     } yield route
   }
 
@@ -233,9 +241,10 @@ trait IncomeController extends FeatureLock {
       }
     }
 
-    def routeRequest(taxYearModel: TaxYearModel, standardPA: BigDecimal, formData: Form[PersonalAllowanceModel]): Future[Result] = {
+    def routeRequest(taxYearModel: TaxYearModel, standardPA: BigDecimal, formData: Form[PersonalAllowanceModel], currentTaxYear: String):
+    Future[Result] = {
       Future.successful(Ok(commonViews.personalAllowance(formData, taxYearModel, standardPA, homeLink,
-        postActionPersonalAllowance, backLinkPersonalAllowance, JourneyKeys.shares, navTitle)))
+        postActionPersonalAllowance, backLinkPersonalAllowance, JourneyKeys.shares, navTitle, currentTaxYear)))
     }
     for {
       disposalDate <- getDisposalDate
@@ -244,7 +253,8 @@ trait IncomeController extends FeatureLock {
       year <- taxYearValue(taxYear.get.calculationTaxYear)
       standardPA <- getStandardPA(year, hc)
       formData <- fetchStoredPersonalAllowance()
-      route <- routeRequest(taxYear.get, standardPA.get, formData)
+      currentTaxYear <- Dates.getCurrentTaxYear
+      route <- routeRequest(taxYear.get, standardPA.get, formData, currentTaxYear)
     } yield route
   }
 
@@ -255,10 +265,10 @@ trait IncomeController extends FeatureLock {
     }
 
 
-    def routeRequest(maxPA: BigDecimal, standardPA: BigDecimal, taxYearModel: TaxYearModel): Future[Result] = {
+    def routeRequest(maxPA: BigDecimal, standardPA: BigDecimal, taxYearModel: TaxYearModel, currentTaxYear: String): Future[Result] = {
       personalAllowanceForm(maxPA).bindFromRequest.fold(
         errors => Future.successful(BadRequest(commonViews.personalAllowance(errors, taxYearModel, standardPA, homeLink,
-          postActionPersonalAllowance, backLinkPersonalAllowance, JourneyKeys.shares, navTitle))),
+          postActionPersonalAllowance, backLinkPersonalAllowance, JourneyKeys.shares, navTitle, currentTaxYear))),
         success => {
           calcConnector.saveFormData(keystoreKeys.personalAllowance, success)
           Future.successful(Redirect(routes.SummaryController.summary()))
@@ -273,7 +283,8 @@ trait IncomeController extends FeatureLock {
       year <- taxYearValue(taxYear.get.calculationTaxYear)
       standardPA <- getStandardPA(year, hc)
       maxPA <- getMaxPA(year)
-      route <- routeRequest(maxPA.get, standardPA.get, taxYear.get)
+      currentTaxYear <- Dates.getCurrentTaxYear
+      route <- routeRequest(maxPA.get, standardPA.get, taxYear.get, currentTaxYear)
     } yield route
   }
 }

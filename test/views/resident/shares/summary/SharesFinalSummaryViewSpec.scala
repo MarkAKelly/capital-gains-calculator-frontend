@@ -24,7 +24,7 @@ import models.resident._
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.shares.{summary => views}
-import assets.{MessageLookup => commonMessages}
+import assets.{DateAsset, MessageLookup => commonMessages}
 import assets.MessageLookup.Resident.Shares.{SharesSummaryMessages => sharesSummaryMessages}
 import common.Dates._
 import controllers.resident.shares.routes
@@ -75,7 +75,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
       lazy val backLink = "/calculate-your-capital-gains/resident/shares/personal-allowance"
       lazy val homeLink = "home-link"
-      lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
+      lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink, false)(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(view.body)
 
       "have a charset of UTF-8" in {
@@ -494,7 +494,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
       lazy val backLink = "/calculate-your-capital-gains/resident/shares/personal-allowance"
       lazy val homeLink = "home-link"
-      lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
+      lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink, false)(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(view.body)
 
       "has an option/radiobutton output row for the Owned Before Start of Tax" which {
@@ -593,7 +593,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
       lazy val backLink = "/calculate-your-capital-gains/resident/shares/personal-allowance"
       lazy val homeLink = "home-link"
-      lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
+      lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink, false)(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(view.body)
 
       "has an option/radiobutton output row for the Owned Before Start of Tax" which {
@@ -681,7 +681,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
     lazy val taxYearModel = TaxYearModel("2013/14", false, "2015/16")
     lazy val backLink = "/calculate-your-capital-gains/resident/shares/personal-allowance"
     lazy val homeLink = "home-link"
-    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink, false)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -869,7 +869,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
     lazy val backLink = "/calculate-your-capital-gains/resident/shares/personal-allowance"
     lazy val homeLink = "home-link"
-    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink, false)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a charset of UTF-8" in {
@@ -962,7 +962,7 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
     lazy val backLink = "/calculate-your-capital-gains/resident/shares/personal-allowance"
     lazy val homeLink = "home-link"
-    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink, false)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "display the what to do next section" in {
@@ -1043,10 +1043,10 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       0
     )
 
-    lazy val taxYearModel = TaxYearModel("2016/17", false, "2018/19")
+    lazy val taxYearModel = TaxYearModel(Dates.getCurrentTaxYear, false, DateAsset.getYearAfterCurrentTaxYear)
     lazy val backLink = "/calculate-your-capital-gains/resident/shares/personal-allowance"
     lazy val homeLink = "home-link"
-    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink, false)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "does not display the what to do next content" in {
@@ -1097,8 +1097,8 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       0
     )
 
-    lazy val taxYearModel = TaxYearModel("2016/17", true, "2016/17")
-    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, "back-link", taxYearModel, "home-link")(fakeRequestWithSession)
+    lazy val taxYearModel = TaxYearModel(Dates.getCurrentTaxYear, true, Dates.getCurrentTaxYear)
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, "back-link", taxYearModel, "home-link", true)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "has an option output row for private residence relief value in" which {
@@ -1169,10 +1169,10 @@ class SharesFinalSummaryViewSpec extends UnitSpec with WithFakeApplication with 
       0
     )
 
-    lazy val taxYearModel = TaxYearModel("2016/17", true, "2016/17")
+    lazy val taxYearModel = TaxYearModel(Dates.getCurrentTaxYear, true, Dates.getCurrentTaxYear)
     lazy val backLink = "/calculate-your-capital-gains/resident/shares/personal-allowance"
     lazy val homeLink = "home-link"
-    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink)(fakeRequestWithSession)
+    lazy val view = views.finalSummary(gainAnswers, deductionAnswers, incomeAnswers, results, backLink, taxYearModel, homeLink, true)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "has an option output row for current income" which {

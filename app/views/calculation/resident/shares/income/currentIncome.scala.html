@@ -4,7 +4,7 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
 
-@(currentIncomeForm: Form[CurrentIncomeModel], backUrl: String, taxYear: TaxYearModel)(implicit request: Request[_])
+@(currentIncomeForm: Form[CurrentIncomeModel], backUrl: String, taxYear: TaxYearModel, inCurrentTaxYear: Boolean)(implicit request: Request[_])
 
 @sidebar = {
 <a id="incomeTaxLink" class="external-link" rel="external" href="https://www.gov.uk/income-tax"
@@ -15,7 +15,7 @@
 }
 
 @title = {
-    @{if(taxYear.taxYearSupplied == "2016/17") {
+    @{if(inCurrentTaxYear) {
         Messages("calc.resident.currentIncome.questionCurrentYear")
     } else {
         Messages("calc.resident.currentIncome.question", taxYear.taxYearSupplied)
@@ -32,14 +32,14 @@
 
 
     <h1 class="heading-large">
-        @if(taxYear.taxYearSupplied == "2016/17"){@Messages("calc.resident.currentIncome.questionCurrentYear")
+        @if(inCurrentTaxYear){@Messages("calc.resident.currentIncome.questionCurrentYear")
         } else {@Messages("calc.resident.currentIncome.question", taxYear.taxYearSupplied)}
     </h1>
 
     @form(action = controllers.resident.shares.routes.IncomeController.submitCurrentIncome){
 
         @formInputMoney(currentIncomeForm, "amount",
-                        if(taxYear.taxYearSupplied == "2016/17") {Messages("calc.resident.currentIncome.questionCurrentYear")
+                        if(inCurrentTaxYear) {Messages("calc.resident.currentIncome.questionCurrentYear")
                         } else {Messages("calc.resident.currentIncome.question", taxYear.taxYearSupplied)},
                         Some(Messages("calc.resident.shares.currentIncome.helpText")),
                         hideLabel = true)
