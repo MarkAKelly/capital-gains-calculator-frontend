@@ -25,6 +25,12 @@ object MessageLookup {
 
 
   //Base messages
+
+  object Common {
+    val yes = "Yes"
+    val no = "No"
+  }
+
   val calcBaseBack = "Back"
   val calcBaseContinue = "Continue"
   val calcBaseExternalLink = "(opens in a new window)"
@@ -53,6 +59,18 @@ object MessageLookup {
       val errorNoValue = "Enter a value for your property on 5 April 2015"
     }
 
+    object AllowableLosses {
+      val yesNoQuestion = "Are you claiming any allowable losses from the 2016/2017 tax year?"
+      val inputQuestion = "What's the total value of your allowable losses?"
+      val helpTextTitle = "What are allowable losses?"
+      val helpTextLead = "They're losses you've made on UK properties that:"
+      val helpTextBulletOne = "are covered by Capital Gains Tax"
+      val helpTextBulletTwo = "you've declared to HMRC within 4 years of making the loss"
+      val helpTextBulletThree = "you haven't already used in an allowable losses claim"
+      val errorCompulsoryValue = "Enter the value of your allowable losses"
+      val errorMinimumAmount = "Enter a positive number for your allowable losses"
+      val errorTooManyDecimals = "There are too many numbers after the decimal point in your allowable losses"
+    }
   }
 
   object Resident {
