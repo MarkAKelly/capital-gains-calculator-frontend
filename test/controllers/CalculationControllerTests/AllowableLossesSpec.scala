@@ -68,15 +68,14 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
 
   "In CalculationController calling the .submitAllowableLosses action" when {
     def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
-      "/calculate-your-capital-gains/non-resident/allowance")
+      "/calculate-your-capital-gains/non-resident/allowable-losses")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 
-    def executeTargetWithMockData(
-                                   answer: String,
-                                   amount: String,
-                                   acquisitionDate: AcquisitionDateModel,
-                                   rebasedData: Option[RebasedValueModel] = None): Future[Result] = {
+    def executeTargetWithMockData(answer: String,
+                                  amount: String,
+                                  acquisitionDate: AcquisitionDateModel,
+                                  rebasedData: Option[RebasedValueModel] = None): Future[Result] = {
 
       lazy val fakeRequest = buildRequest(("isClaimingAllowableLosses", answer), ("allowableLossesAmt", amount))
 
@@ -95,6 +94,10 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
       "return a 303" in {
         status(result) shouldBe 303
       }
+
+      "redirect to the brought forward losses page" in {
+        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsController.otherReliefs()}")
+      }
     }
 
     "submitting a valid form with 'Yes' and an amount with two decimal places with an acquisition date after the tax start date" should {
@@ -102,6 +105,10 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
 
       "return a 303" in {
         status(result) shouldBe 303
+      }
+
+      "redirect to the brought forward losses page" in {
+        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsController.otherReliefs()}")
       }
     }
 
@@ -111,6 +118,10 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
       "return a 303" in {
         status(result) shouldBe 303
       }
+
+      "redirect to the brought forward losses page" in {
+        redirectLocation(result) shouldBe Some(s"${routes.CalculationElectionController.calculationElection()}")
+      }
     }
 
     "submitting a valid form with 'No' and a negative amount with no returned acquisition date model" should {
@@ -119,37 +130,9 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
       "return a 303" in {
         status(result) shouldBe 303
       }
-    }
 
-    "submitting an invalid form with no selection and a null amount" should {
-      lazy val result = executeTargetWithMockData("", "", AcquisitionDateModel("No", None, None, None))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-    }
-
-    "submitting an invalid form with 'Yes' selection and a null amount" should {
-      lazy val result = executeTargetWithMockData("Yes", "", AcquisitionDateModel("No", None, None, None))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-    }
-
-    "submitting an invalid form with 'Yes' selection and an amount with three decimal places" should {
-      lazy val result = executeTargetWithMockData("Yes", "1000.111", AcquisitionDateModel("No", None, None, None))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-    }
-
-    "submitting an invalid form with 'Yes' selection and a negative amount" should {
-      lazy val result = executeTargetWithMockData("Yes", "-1000", AcquisitionDateModel("No", None, None, None))
-
-      "return a 400" in {
-        status(result) shouldBe 400
+      "redirect to the brought forward losses page" in {
+        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsController.otherReliefs()}")
       }
     }
 
@@ -216,21 +199,6 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
 
       s"redirect to ${routes.OtherReliefsController.otherReliefs()}" in {
         redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsController.otherReliefs()}")
-      }
-    }
-
-    "submitting a value which exceeds the maximum numeric" should {
-      lazy val result = executeTargetWithMockData("Yes", (Constants.maxNumeric + 0.01).toString , AcquisitionDateModel("No", None, None, None))
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
-        document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
-            " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
       }
     }
   }
