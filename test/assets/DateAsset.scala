@@ -16,17 +16,17 @@
 
 package assets
 
+import java.time.LocalDate
 import common.Dates
-import org.joda.time.DateTime
 
 import scala.concurrent.Future
 
 object DateAsset {
 
   def getYearAfterCurrentTaxYear: Future[String] = {
-    val now = DateTime.now()
+    val now = LocalDate.now()
     val year = now.getYear
-    if (now.isAfter(DateTime.parse(s"${year.toString}-${Dates.taxYearEnd}"))) {
+    if (now.isAfter(LocalDate.parse(s"${year.toString}-${Dates.taxYearEnd}"))) {
       Future.successful(Dates.taxYearToString(year + 2))
     }
     else {
