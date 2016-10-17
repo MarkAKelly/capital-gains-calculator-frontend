@@ -154,6 +154,10 @@ class AllowableLossesViewSpec extends UnitSpec with WithFakeApplication with Moc
     }
 
     "supplied with a number that is less than the minimum" should {
+
+      //Just a note how this is working here;
+      //The map is only binding the value for the amount but the isClaimingAllowableLosses is not supplied so it is the isClaiming
+      //field that is raising the error.
       lazy val view = views.allowableLosses(allowableLossesForm.bind(Map(("allowableLossesAmt", ""))), "back-link")(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
