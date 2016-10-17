@@ -67,6 +67,7 @@ object MessageLookup {
       val helpTextBulletOne = "are covered by Capital Gains Tax"
       val helpTextBulletTwo = "you've declared to HMRC within 4 years of making the loss"
       val helpTextBulletThree = "you haven't already used in an allowable losses claim"
+
       val errorCompulsoryValue = "Enter the value of your allowable losses"
       val errorMinimumAmount = "Enter a positive number for your allowable losses"
       val errorTooManyDecimals = "There are too many numbers after the decimal point in your allowable losses"
