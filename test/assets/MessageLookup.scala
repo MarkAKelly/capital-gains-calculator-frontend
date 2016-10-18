@@ -149,7 +149,13 @@ object MessageLookup {
     }
 
     object PersonalAllowance {
-
+      val title = "In the tax year when you stopped owning the property, what was your UK Personal Allowance?"
+      val linkOne = "Income Tax rates and Personal Allowances"
+      val linkTwo = "Tax on your UK income if you live abroad"
+      val errorNegative = "Enter a positive number for your Personal Allowance"
+      val errorDecimalPlaces = "Enter a whole number for your Personal Allowance"
+      val errorMaxLimit = "Enter a Personal Allowance that's £"
+      val errorMaxLimitEnd = "or Less"
     }
 
     object PrivateResidenceRelief {

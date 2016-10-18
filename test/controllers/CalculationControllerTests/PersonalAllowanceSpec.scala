@@ -16,6 +16,7 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup
 import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -82,20 +83,20 @@ class PersonalAllowanceSpec extends UnitSpec with WithFakeApplication with Mocki
         }
 
         "have the title In the tax year when you stopped owning the property, what was your UK Personal Allowance?" in {
-          document.title shouldEqual Messages("calc.personalAllowance.question")
+          document.title shouldEqual MessageLookup.NonResident.PersonalAllowance.title
         }
 
         "have the heading Calculate your tax (non-residents) " in {
-          document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
+          document.body.getElementsByTag("h1").text shouldEqual MessageLookup.NonResident.Common.pageHeading
         }
 
         s"have a 'Back' link to ${routes.CurrentIncomeController.currentIncome()}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           document.body.getElementById("back-link").attr("href") shouldEqual routes.CurrentIncomeController.currentIncome().toString()
         }
 
         "have the question 'In the tax year when you stopped owning the property, what was your UK Personal Allowance?' as the label of the input" in {
-          document.body.getElementsByTag("label").text should include(Messages("calc.personalAllowance.question"))
+          document.body.getElementsByTag("label").text should include(MessageLookup.NonResident.PersonalAllowance.title)
         }
 
         "display an input box for the Personal Allowance" in {
@@ -107,15 +108,15 @@ class PersonalAllowanceSpec extends UnitSpec with WithFakeApplication with Mocki
         }
 
         "display a 'Continue' button " in {
-          document.body.getElementById("continue-button").text shouldEqual Messages("calc.base.continue")
+          document.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
         }
 
         "should contain a Read more sidebar with a link to personal allowances and taxation abroad" in {
-          document.select("aside h2").text shouldBe Messages("calc.common.readMore")
+          document.select("aside h2").text shouldBe MessageLookup.readMore
           document.select("aside a").first().attr("href") shouldBe "https://www.gov.uk/income-tax-rates/current-rates-and-allowances"
-          document.select("aside a").first.text shouldBe s"${Messages("calc.personalAllowance.linkOne")} ${Messages("calc.base.externalLink")}"
+          document.select("aside a").first.text shouldBe s"${MessageLookup.NonResident.PersonalAllowance.linkOne} ${MessageLookup.calcBaseExternalLink}"
           document.select("aside a").last().attr("href") shouldBe "https://www.gov.uk/tax-uk-income-live-abroad/personal-allowance"
-          document.select("aside a").last.text shouldBe s"${Messages("calc.personalAllowance.linkTwo")} ${Messages("calc.base.externalLink")}"
+          document.select("aside a").last.text shouldBe s"${MessageLookup.NonResident.PersonalAllowance.linkTwo} ${MessageLookup.calcBaseExternalLink}"
         }
       }
     }
@@ -202,8 +203,8 @@ class PersonalAllowanceSpec extends UnitSpec with WithFakeApplication with Mocki
           status(result) shouldBe 400
         }
 
-        s"fail with message ${Messages("calc.personalAllowance.errorDecimalPlaces")}" in {
-          document.getElementsByClass("error-notification").text should include(Messages("calc.personalAllowance.errorDecimalPlaces"))
+        s"fail with message ${MessageLookup.NonResident.PersonalAllowance.errorDecimalPlaces}" in {
+          document.getElementsByClass("error-notification").text should include(MessageLookup.NonResident.PersonalAllowance.errorDecimalPlaces)
         }
       }
 
@@ -216,8 +217,8 @@ class PersonalAllowanceSpec extends UnitSpec with WithFakeApplication with Mocki
           status(result) shouldBe 400
         }
 
-        s"fail with message ${Messages("calc.personalAllowance.errorMaxLimit")}" in {
-          document.getElementsByClass("error-notification").text should include(Messages("calc.personalAllowance.errorMaxLimit"))
+        s"fail with message ${MessageLookup.NonResident.PersonalAllowance.errorMaxLimit}" in {
+          document.getElementsByClass("error-notification").text should include(MessageLookup.NonResident.PersonalAllowance.errorMaxLimit)
         }
       }
 
@@ -230,9 +231,9 @@ class PersonalAllowanceSpec extends UnitSpec with WithFakeApplication with Mocki
           status(result) shouldBe 400
         }
 
-        s"fail with message ${Messages("calc.personalAllowance.errorMaxLimit")}" in {
-          document.getElementsByClass("error-notification").text should include(Messages("calc.personalAllowance.errorMaxLimit"))
-          document.getElementsByClass("error-notification").text should include(Messages("calc.personalAllowance.errorDecimalPlaces"))
+        s"fail with message ${MessageLookup.NonResident.PersonalAllowance.errorMaxLimit}" in {
+          document.getElementsByClass("error-notification").text should include(MessageLookup.NonResident.PersonalAllowance.errorMaxLimit)
+          document.getElementsByClass("error-notification").text should include(MessageLookup.NonResident.PersonalAllowance.errorDecimalPlaces)
         }
       }
     }

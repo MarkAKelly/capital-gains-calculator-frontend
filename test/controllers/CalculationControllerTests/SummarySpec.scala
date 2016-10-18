@@ -279,7 +279,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question 'What's your Personal Allowance for this tax year?'" in {
-              document.select("#personalDetails").text should include(Messages("calc.personalAllowance.question"))
+              document.select("#personalDetails").text should include(MessageLookup.NonResident.PersonalAllowance.title)
             }
 
             "have a personal allowance of £9,000 that has a link to the personal allowance page." in {
