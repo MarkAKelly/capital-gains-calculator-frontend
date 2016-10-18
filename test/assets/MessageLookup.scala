@@ -45,6 +45,12 @@ object MessageLookup {
 
     object Common {
       val pageHeading = "Calculate your non-resident Capital Gains Tax"
+      val yes = "Yes"
+      val no = "No"
+      val day = "Day"
+      val month = "Month"
+      val year = "Year"
+      val errorInvalidDate = "Enter a real date"
     }
 
     object AcquisitionCosts {
@@ -56,7 +62,8 @@ object MessageLookup {
     }
 
     object AcquisitionDate {
-
+      val question = "Do you know the date you signed the contract that made you the owner?"
+      val questionTwo = "What was the date you signed the contract that made you the owner?"
     }
 
     object AcquisitionValue {
