@@ -30,7 +30,8 @@ import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-
+import assets.MessageLookup.{NonResident => messages}
+import assets.MessageLookup
 import scala.concurrent.Future
 
 class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
@@ -85,7 +86,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.OtherReliefsController.otherReliefs().url}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           document.body.getElementById("back-link").attr("href") shouldEqual routes.OtherReliefsController.otherReliefs().url
         }
       }
@@ -101,7 +102,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.OtherReliefsController.otherReliefs().url}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           document.body.getElementById("back-link").attr("href") shouldEqual routes.OtherReliefsController.otherReliefs().url
         }
       }
@@ -405,8 +406,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.body().getElementById("deductions(1)").attr("href") shouldEqual routes.AllowableLossesController.allowableLosses().toString()
             }
 
-            "include the question 'How much extra tax relief are you claiming?'" in {
-              document.select("#deductions").text should include(Messages("calc.otherReliefs.questionTwo"))
+            s"include the question '${messages.PrivateResidenceRelief.question}'" in {
+              document.select("#deductions").text should include(messages.PrivateResidenceRelief.question)
             }
 
             "the answer to question should be No and link to the other-reliefs page" in {
@@ -415,7 +416,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question 'Do you want to add other tax relief?'" in {
-              document.select("#deductions").text should include(Messages("calc.privateResidenceRelief.question"))
+              document.select("#deductions").text should include(messages.OtherReliefs.question)
             }
 
             "the PRR claimed question's answer should be 'No' and be a link to the PRR page" in {
