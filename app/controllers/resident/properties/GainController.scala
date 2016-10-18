@@ -17,6 +17,7 @@
 package controllers.resident.properties
 
 import java.util.UUID
+
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import common.{Dates, TaxDates}
 import config.{AppConfig, ApplicationConfig}
@@ -24,6 +25,7 @@ import connectors.CalculatorConnector
 import controllers.predicates.FeatureLock
 import play.api.mvc.{Action, Result}
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
+
 import scala.concurrent.Future
 import views.html.calculation.{resident => commonViews}
 import views.html.calculation.resident.properties.{gain => views}
@@ -50,16 +52,19 @@ import models.resident.properties.gain.{OwnerBeforeLegislationStartModel, WhoDid
 import models.resident._
 import models.resident.properties._
 import play.api.i18n.Messages
+import services.AuditService
 
 object GainController extends GainController {
   val calcConnector = CalculatorConnector
   val config = ApplicationConfig
+  val audit = AuditService
 }
 
 trait GainController extends FeatureLock {
 
   val calcConnector: CalculatorConnector
   val config: AppConfig
+  val audit: AuditService
 
   val navTitle = Messages("calc.base.resident.properties.home")
   override val homeLink = controllers.resident.properties.routes.PropertiesController.introduction().url
@@ -67,6 +72,8 @@ trait GainController extends FeatureLock {
 
   //################# Disposal Date Actions ####################
   val disposalDate = FeatureLockForRTT.asyncNoTimeout { implicit request =>
+    audit.sendEvent("scooby-doo", Map("friend" -> "Shaggy", "nephew" -> "scrappy"))
+
     if (request.session.get(SessionKeys.sessionId).isEmpty) {
       val sessionId = UUID.randomUUID.toString
       Future.successful(Ok(views.disposalDate(disposalDateForm)).withSession(request.session + (SessionKeys.sessionId -> s"session-$sessionId")))
