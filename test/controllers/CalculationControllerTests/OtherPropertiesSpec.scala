@@ -16,6 +16,7 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup
 import common.DefaultRoutes._
 import common.nonresident.CustomerTypeKeys
 import common.{Constants, KeystoreKeys}
@@ -25,7 +26,6 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.CalculationElectionConstructor
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -95,51 +95,53 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
           }
 
           "have the title 'Did you sell or give away any other properties in that tax year?'" in {
-            document.title shouldEqual Messages("calc.otherProperties.question")
+            document.title shouldEqual MessageLookup.NonResident.OtherProperties.title
           }
 
           "have the heading Calculate your tax (non-residents) " in {
-            document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
+            document.body.getElementsByTag("h1").text shouldEqual MessageLookup.NonResident.Common.pageHeading
           }
 
           s"have a 'Back' link to ${routes.PersonalAllowanceController.personalAllowance().url}" in {
-            document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+            document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
             document.body.getElementById("back-link").attr("href") shouldEqual routes.PersonalAllowanceController.personalAllowance().url
           }
 
-          s"have the question '${Messages("calc.otherProperties.question")}' as the legend of the input" in {
-            document.body.getElementsByTag("legend").text should include (Messages("calc.otherProperties.question"))
+          s"have the question '${MessageLookup.NonResident.OtherProperties.title}' as the legend of the input" in {
+            document.body.getElementsByTag("legend").text should include (MessageLookup.NonResident.OtherProperties.title)
           }
 
           "include a read more section that" should {
 
-            s"include a link to https://www.gov.uk/capital-gains-tax with text '${Messages("calc.otherProperties.link.one")}'" in {
-              document.body.getElementById("helpLink1").text shouldEqual s"${Messages("calc.otherProperties.link.one")} ${Messages("calc.base.externalLink")}"
+            s"include a link to https://www.gov.uk/capital-gains-tax with text '${MessageLookup.NonResident.OtherProperties.linkOne}'" in {
+              document.body.getElementById("helpLink1").text shouldEqual s"${MessageLookup.NonResident.OtherProperties.linkOne} " +
+                s"${MessageLookup.calcBaseExternalLink}"
               document.body.getElementById("helpLink1").attr("href") shouldEqual "https://www.gov.uk/capital-gains-tax"
             }
 
-            s"include a link to https://www.gov.uk/income-tax-rates/previous-tax-years with text '${Messages("calc.otherProperties.link.two")}'" in {
-              document.body.getElementById("helpLink2").text shouldEqual s"${Messages("calc.otherProperties.link.two")} ${Messages("calc.base.externalLink")}"
+            s"include a link to https://www.gov.uk/income-tax-rates/previous-tax-years with text '${MessageLookup.NonResident.OtherProperties.linkTwo}'" in {
+              document.body.getElementById("helpLink2").text shouldEqual s"${MessageLookup.NonResident.OtherProperties.linkTwo} " +
+                s"${MessageLookup.calcBaseExternalLink}"
               document.body.getElementById("helpLink2").attr("href") shouldEqual "https://www.gov.uk/income-tax-rates/previous-tax-years"
             }
 
           }
 
           "display a radio button with the option `Yes`" in {
-            document.body.getElementById("otherProperties-yes").parent.text shouldEqual Messages("calc.base.yes")
+            document.body.getElementById("otherProperties-yes").parent.text shouldEqual MessageLookup.calcBaseYes
           }
 
           "display a radio button with the option `No`" in {
-            document.body.getElementById("otherProperties-no").parent.text shouldEqual Messages("calc.base.no")
+            document.body.getElementById("otherProperties-no").parent.text shouldEqual MessageLookup.calcBaseNo
           }
 
           "have a hidden monetary input with question 'What was your taxable gain?'" in {
             document.body.getElementById("otherPropertiesAmt").tagName shouldEqual "input"
-            document.select("label[for=otherPropertiesAmt]").text should include(Messages("calc.otherProperties.questionTwo"))
+            document.select("label[for=otherPropertiesAmt]").text should include(MessageLookup.NonResident.OtherProperties.questionTwo)
           }
 
           "display a 'Continue' button " in {
-            document.body.getElementById("continue-button").text shouldEqual Messages("calc.base.continue")
+            document.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
           }
         }
       }
@@ -151,7 +153,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.CurrentIncomeController.currentIncome().url}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           document.body.getElementById("back-link").attr("href") shouldEqual routes.CurrentIncomeController.currentIncome().url
         }
       }
@@ -163,7 +165,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.DisabledTrusteeController.disabledTrustee().url}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           document.body.getElementById("back-link").attr("href") shouldEqual routes.DisabledTrusteeController.disabledTrustee().url
         }
       }
@@ -175,7 +177,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.CustomerTypeController.customerType().url}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           document.body.getElementById("back-link").attr("href") shouldEqual routes.CustomerTypeController.customerType().url
         }
       }
@@ -186,7 +188,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to $missingDataRoute " in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
         }
       }
@@ -352,8 +354,8 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
           status(result) shouldBe 400
         }
 
-        s"fail with message ${Messages("calc.otherProperties.errorDecimalPlaces")}" in {
-          document.getElementsByClass("error-notification").text should include(Messages("calc.otherProperties.errorDecimalPlaces"))
+        s"fail with message ${MessageLookup.NonResident.OtherProperties.errorDecimalPlaces}" in {
+          document.getElementsByClass("error-notification").text should include(MessageLookup.NonResident.OtherProperties.errorDecimalPlaces)
         }
       }
 
@@ -366,8 +368,8 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
           status(result) shouldBe 400
         }
 
-        s"fail with message ${Messages("calc.otherProperties.errorNegative")}" in {
-          document.getElementsByClass("error-notification").text should include(Messages("calc.otherProperties.errorNegative"))
+        s"fail with message ${MessageLookup.NonResident.OtherProperties.errorNegative}" in {
+          document.getElementsByClass("error-notification").text should include(MessageLookup.NonResident.OtherProperties.errorNegative)
         }
       }
 
@@ -380,10 +382,10 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
           status(result) shouldBe 400
         }
 
-        s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
+        s"fail with message ${MessageLookup.maxNumericExceededStart}" in {
           document.getElementsByClass("error-notification").text should
-            include(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
-              " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+            include((MessageLookup.maxNumericExceededStart) + MoneyPounds(Constants.maxNumeric, 0).quantity +
+              " " + MessageLookup.maxNumericExceededEnd)
         }
       }
     }

@@ -16,6 +16,7 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup
 import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -77,11 +78,11 @@ class DisabledTrusteeSpec extends UnitSpec with WithFakeApplication with Mockito
         }
 
         "have the title Are you a trustee for someone who’s vulnerable?" in {
-          document.title shouldEqual Messages("calc.disabledTrustee.question")
+          document.title shouldEqual MessageLookup.NonResident.DisabledTrustee.title
         }
 
         "have the heading Calculate your tax (non-residents) " in {
-          document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
+          document.body.getElementsByTag("h1").text shouldEqual MessageLookup.NonResident.Common.pageHeading
         }
 
         s"have a 'Back' link to ${routes.CustomerTypeController.customerType()}" in {
@@ -90,27 +91,27 @@ class DisabledTrusteeSpec extends UnitSpec with WithFakeApplication with Mockito
         }
 
         "have the question 'When did you sign the contract that made someone else the owner?' as the legend of the input" in {
-          document.body.getElementsByTag("legend").text shouldEqual Messages("calc.disabledTrustee.question")
+          document.body.getElementsByTag("legend").text shouldEqual MessageLookup.NonResident.DisabledTrustee.title
         }
 
         "display a radio button with the option 'Yes'" in {
-          document.body.getElementById("isVulnerable-yes").parent.text shouldEqual Messages("calc.base.yes")
+          document.body.getElementById("isVulnerable-yes").parent.text shouldEqual MessageLookup.calcBaseYes
         }
         "display a radio button with the option 'No'" in {
-          document.body.getElementById("isVulnerable-no").parent.text shouldEqual Messages("calc.base.no")
+          document.body.getElementById("isVulnerable-no").parent.text shouldEqual MessageLookup.calcBaseNo
         }
 
         "should contain a Read more sidebar" in {
-          document.select("aside h2").text shouldBe Messages("calc.common.readMore")
+          document.select("aside h2").text shouldBe MessageLookup.readMore
         }
 
         "should contain a Read more link to 'Trusts and Capital Gains Tax'" in {
-          document.select("aside a").first().text should include ("Trusts and Capital Gains Tax")
+          document.select("aside a").first().text should include (MessageLookup.NonResident.DisabledTrustee.linkOne)
           document.select("aside a").first().attr("href") shouldBe "https://www.gov.uk/trusts-taxes/trusts-and-capital-gains-tax"
         }
 
         "display a 'Continue' button " in {
-          document.body.getElementById("continue-button").text shouldEqual Messages("calc.base.continue")
+          document.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
         }
       }
     }
