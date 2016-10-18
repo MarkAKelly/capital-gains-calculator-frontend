@@ -31,10 +31,13 @@ object MessageLookup {
   val calcBaseChange = "change"
   val undefinedMessage = "Undefined message"
   val propertiesHomeText = "Calculate your Capital Gains Tax"
+  val calcBaseYes = "Yes"
+  val calcBaseNo = "No"
 
   //Common messages
   val maxNumericExceededStart = "Enter an amount that's £"
   val maxNumericExceededEnd = "or less"
+  val readMore = "Read more"
 
   //########################################################################################
   //These nested objects have been created in anticipation of the Tech-Debt to refactor
@@ -88,7 +91,9 @@ object MessageLookup {
     }
 
     object DisabledTrustee {
-
+      val title = "Are you a trustee for someone who's vulnerable?"
+      val helpText = "A person's vulnerable if they're disabled, or if they're under 18 and their parents have died"
+      val linkOne = "Trusts and Capital Gains Tax"
     }
 
     object DisposalCosts {
