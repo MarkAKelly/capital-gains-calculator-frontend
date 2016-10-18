@@ -31,7 +31,8 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
-
+import assets.MessageLookup
+import assets.MessageLookup.NonResident.{AcquisitionValue => messages, Common}
 import scala.concurrent.Future
 import controllers.nonresident.{AcquisitionValueController, routes}
 import models.nonresident.{AcquisitionDateModel, AcquisitionValueModel}
@@ -89,36 +90,36 @@ class AcquisitionValueSpec extends UnitSpec with WithFakeApplication with Mockit
         }
 
         "have the title 'How much did you pay for the property?'" in {
-          document.title shouldEqual Messages("calc.acquisitionValue.question")
+          document.title shouldEqual messages.question
         }
 
         "have the heading Calculate your tax (non-residents) " in {
-          document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
+          document.body.getElementsByTag("h1").text shouldEqual Common.pageHeading
         }
 
         s"have a 'Back' link to ${routes.AcquisitionDateController.acquisitionDate()}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionDateController.acquisitionDate().toString()
         }
 
         "have the question 'How much did you pay for the property?'" in {
-          document.body.getElementsByTag("label").text should include (Messages("calc.acquisitionValue.question"))
+          document.body.getElementsByTag("label").text should include (messages.question)
         }
 
         "have the bullet list content title and content" in {
-          document.select("p#bullet-list-title").text shouldEqual "Put the market value of the property instead if you:"
+          document.select("p#bullet-list-title").text shouldEqual messages.bulletTitle
         }
 
         "Have the bullet content" in {
-          document.select("ul li").text should include(Messages("calc.acquisitionValue.bullet.one"))
-          document.select("ul li").text should include(Messages("calc.acquisitionValue.bullet.two"))
-          document.select("ul li").text should include(Messages("calc.acquisitionValue.bullet.three"))
-          document.select("ul li").text should include(Messages("calc.acquisitionValue.bullet.four"))
-          document.select("ul li").text should include(Messages("calc.acquisitionValue.bullet.five"))
+          document.select("ul li").text should include(messages.bulletOne)
+          document.select("ul li").text should include(messages.bulletTwo)
+          document.select("ul li").text should include(messages.bulletThree)
+          document.select("ul li").text should include(messages.bulletFour)
+          document.select("ul li").text should include(messages.bulletFive)
         }
         "have a link with a hidden external link field" in {
-          document.select("ul li a#lossesLink").text should include(Messages("calc.acquisitionValue.bullet.three.link"))
-          document.select("span#opensInANewTab").text shouldEqual Messages("calc.base.externalLink")
+          document.select("ul li a#lossesLink").text should include(messages.bulletLink)
+          document.select("span#opensInANewTab").text shouldEqual MessageLookup.calcBaseExternalLink
         }
         "display an input box for the Acquisition Value" in {
           document.body.getElementById("acquisitionValue").tagName shouldEqual "input"
@@ -127,7 +128,7 @@ class AcquisitionValueSpec extends UnitSpec with WithFakeApplication with Mockit
           document.getElementById("acquisitionValue").attr("value") shouldEqual ""
         }
         "display a 'Continue' button " in {
-          document.body.getElementById("continue-button").text shouldEqual Messages("calc.base.continue")
+          document.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
         }
       }
     }
@@ -217,9 +218,14 @@ class AcquisitionValueSpec extends UnitSpec with WithFakeApplication with Mockit
     "submitting an invalid form with a negative value" should {
 
       lazy val result = executeTargetWithMockData("-1000", None)
+      lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {
         status(result) shouldBe 400
+      }
+
+      s"fail with message ${messages.errorNegative}" in {
+        document.getElementsByClass("error-notification").text should include (messages.errorNegative)
       }
     }
 
@@ -232,8 +238,8 @@ class AcquisitionValueSpec extends UnitSpec with WithFakeApplication with Mockit
         status(result) shouldBe 400
       }
 
-      s"fail with message ${Messages("calc.acquisitionValue.errorDecimalPlaces")}" in {
-        document.getElementsByClass("error-notification").text should include (Messages("calc.acquisitionValue.errorDecimalPlaces"))
+      s"fail with message ${messages.errorDecimalPlaces}" in {
+        document.getElementsByClass("error-notification").text should include (messages.errorDecimalPlaces)
       }
     }
 
@@ -246,10 +252,9 @@ class AcquisitionValueSpec extends UnitSpec with WithFakeApplication with Mockit
         status(result) shouldBe 400
       }
 
-      s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
+      s"fail with message ${messages.errorMaximum(MoneyPounds(Constants.maxNumeric, 0).quantity)}" in {
         document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
-            " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+          include (messages.errorMaximum(MoneyPounds(Constants.maxNumeric, 0).quantity))
       }
     }
   }

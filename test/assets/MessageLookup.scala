@@ -67,7 +67,17 @@ object MessageLookup {
     }
 
     object AcquisitionValue {
-
+      val question = "How much did you pay for the property?"
+      val bulletTitle = "Put the market value of the property instead if you:"
+      val bulletOne = "inherited it"
+      val bulletTwo = "got it as a gift"
+      val bulletThree = "bought it from a relative, business partner or someone else you're connected to"
+      val bulletFour = "bought it for less than it's worth because the seller wanted to help you"
+      val bulletFive = "became the owner before 1 April 1982"
+      val bulletLink = "someone else you're connected to"
+      val errorNegative = "Enter a positive number for the amount you paid"
+      val errorDecimalPlaces = "The amount you paid has too many numbers after the decimal point"
+      def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
     object AllowableLosses {
