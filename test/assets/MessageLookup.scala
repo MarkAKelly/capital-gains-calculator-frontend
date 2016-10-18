@@ -117,7 +117,15 @@ object MessageLookup {
     }
 
     object OtherProperties {
-
+      val title = "In the tax year when you stopped owning the property, did you sell or give away any other UK residential properties?"
+      val questionTwo = "What was your taxable gain?"
+      val questionTwoHelpTextStart = "How to"
+      val questionTwoHelpTextLinkText = "work out your total taxable gains"
+      val errorNegative = "Enter a positive number for your taxable gain"
+      val errorDecimalPlaces = "Your taxable gain has too many numbers after the decimal point"
+      val errorQuestion = "Enter a value for your taxable gain"
+      val linkOne = "Capital Gains Tax"
+      val linkTwo = "Previous tax years"
     }
 
     object OtherReliefs {

@@ -288,7 +288,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question 'What was the total taxable gain of your previous Capital Gains in the tax year you stopped owning the property?'" in {
-              document.select("#personalDetails").text should include(Messages("calc.otherProperties.questionTwo"))
+              document.select("#personalDetails").text should include(MessageLookup.NonResident.OtherProperties.questionTwo)
             }
 
             "have a total taxable gain of prior disposals of £9,600 and link to the other-properties page" in {
