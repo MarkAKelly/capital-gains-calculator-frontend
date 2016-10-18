@@ -144,6 +144,18 @@ class AllowableLossesFormSpec extends UnitSpec with WithFakeApplication {
         form.error("").get.message shouldBe MessageLookup.errorMessages.maximumAmount
       }
     }
+
+    "supplied with valid isClaiming (no) but an invalid amount" should {
+      lazy val form = allowableLossesForm.bind(Map(("isClaimingAllowableLosses", "No"), ("allowableLossesAmt", "51237216356172352134")))
+
+      "return a form with errors" in {
+        form.hasErrors shouldBe false
+      }
+
+      "return 1 error" in {
+        form.errors.size shouldBe 0
+      }
+    }
   }
 
 }

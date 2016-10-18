@@ -16,10 +16,13 @@
 
 package controllers.CalculationControllerTests
 
-import common.KeystoreKeys
+import assets.MessageLookup.NonResident.{AllowableLosses => messages}
+import common.{Constants, KeystoreKeys}
 import connectors.CalculatorConnector
+import controllers.helpers.FakeRequestHelper
 import controllers.nonresident.{AllowableLossesController, routes}
 import models.nonresident.{AcquisitionDateModel, AllowableLossesModel, RebasedValueModel}
+import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -33,7 +36,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
-class AllowableLossesSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class AllowableLossesSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
   implicit val hc = new HeaderCarrier()
 
@@ -60,6 +63,36 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
 
     new AllowableLossesController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
+    }
+  }
+
+  "In CalculationController calling the .allowableLosses action" when {
+
+    "no prior data is supplied" should {
+
+      lazy val controller = setupTarget(None, None, None, None)
+      lazy val result = controller.allowableLosses(fakeRequestWithSession)
+
+      "return a 200" in {
+        status(result) shouldBe 200
+      }
+
+      "with the allowable losses page title" in {
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.yesNoQuestion
+      }
+    }
+
+    "an allowable loss has already been entered" should {
+      lazy val controller = setupTarget(None, None, None, None)
+      lazy val result = controller.allowableLosses(fakeRequestWithSession)
+
+      "return a 200" in {
+        status(result) shouldBe 200
+      }
+
+      "with the allowable losses page title" in {
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.yesNoQuestion
+      }
     }
   }
 
@@ -196,6 +229,14 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
 
       s"redirect to ${routes.OtherReliefsController.otherReliefs()}" in {
         redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsController.otherReliefs()}")
+      }
+    }
+
+    "submitting a value which exceeds the maximum numeric" should {
+      lazy val result = executeTargetWithMockData("Yes", (Constants.maxNumeric + 0.01).toString, AcquisitionDateModel("No", None, None, None))
+
+      "return a 400" in {
+        status(result) shouldBe 400
       }
     }
   }

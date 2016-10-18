@@ -16,6 +16,7 @@
 
 package views.nonResident
 
+import assets.MessageLookup
 import assets.MessageLookup.NonResident.{AllowableLosses => messages}
 import assets.MessageLookup.{Common => commonMessages}
 import assets.MessageLookup.NonResident.{Common => commonNRMessages}
@@ -30,7 +31,7 @@ import controllers.helpers.FakeRequestHelper
 
 class AllowableLossesViewSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
-  "In CalculationController calling the .allowableLosses action " when {
+  "The allowable losses view" when {
 
     "not supplied with a pre-existing stored value" should {
       lazy val view = views.allowableLosses(allowableLossesForm, "back-link")(fakeRequest)
@@ -41,7 +42,7 @@ class AllowableLossesViewSpec extends UnitSpec with WithFakeApplication with Moc
         "have a back link" which {
 
           "should have the text" in {
-            document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+            document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           }
 
           s"should have a route too 'back-link'" in {
@@ -50,7 +51,7 @@ class AllowableLossesViewSpec extends UnitSpec with WithFakeApplication with Moc
         }
 
         "have the title 'Are you claiming any allowable losses?'" in {
-          document.title shouldEqual Messages("calc.allowableLosses.question.one")
+          document.title shouldEqual messages.yesNoQuestion
         }
 
         s"have the heading ${commonNRMessages.pageHeading}'" in {
@@ -114,7 +115,7 @@ class AllowableLossesViewSpec extends UnitSpec with WithFakeApplication with Moc
         }
 
         "has a Continue button" in {
-          document.body.getElementById("continue-button").text shouldEqual Messages("calc.base.continue")
+          document.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
         }
       }
     }
