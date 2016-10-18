@@ -16,6 +16,7 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup
 import common.DefaultRoutes._
 import common.{KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
@@ -260,7 +261,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question 'Who owned the property?'" in {
-              document.select("#personalDetails").text should include(Messages("calc.customerType.question"))
+              document.select("#personalDetails").text should include(MessageLookup.NonResident.CustomerType.title)
             }
 
             "have an 'individual' owner and link to the customer-type page" in {

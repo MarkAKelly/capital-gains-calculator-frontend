@@ -76,7 +76,10 @@ object MessageLookup {
     }
 
     object CustomerType {
-
+      val title = "Who owned the property?"
+      val individual = "I owned it"
+      val trustee = "I was a trustee"
+      val personalRep = "I was the executor of an estate"
     }
 
     object DisabledTrustee {
