@@ -112,6 +112,12 @@ object MessageLookup {
     }
 
     object OtherReliefs {
+      val question = "Do you want to add other tax relief?"
+      val help = "For example, lettings relief"
+      val inputQuestion = "How much extra tax relief are you claiming?"
+      val totalGain = "Total gain"
+      val taxableGain = "Taxable gain"
+      def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
 
       object Flat {
 
