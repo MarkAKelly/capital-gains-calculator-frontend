@@ -16,6 +16,7 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup
 import common.DefaultRoutes._
 import common.{KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
@@ -260,7 +261,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question 'Who owned the property?'" in {
-              document.select("#personalDetails").text should include(Messages("calc.customerType.question"))
+              document.select("#personalDetails").text should include(MessageLookup.NonResident.CustomerType.title)
             }
 
             "have an 'individual' owner and link to the customer-type page" in {
@@ -269,7 +270,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question 'What’s your total income for this tax year?'" in {
-              document.select("#personalDetails").text should include(Messages("calc.currentIncome.question"))
+              document.select("#personalDetails").text should include(MessageLookup.NonResident.CurrentIncome.title)
             }
 
             "have an total income of £1,000 and link to the current-income screen" in {
@@ -278,7 +279,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question 'What's your Personal Allowance for this tax year?'" in {
-              document.select("#personalDetails").text should include(Messages("calc.personalAllowance.question"))
+              document.select("#personalDetails").text should include(MessageLookup.NonResident.PersonalAllowance.title)
             }
 
             "have a personal allowance of £9,000 that has a link to the personal allowance page." in {
@@ -287,7 +288,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question 'What was the total taxable gain of your previous Capital Gains in the tax year you stopped owning the property?'" in {
-              document.select("#personalDetails").text should include(Messages("calc.otherProperties.questionTwo"))
+              document.select("#personalDetails").text should include(MessageLookup.NonResident.OtherProperties.questionTwo)
             }
 
             "have a total taxable gain of prior disposals of £9,600 and link to the other-properties page" in {
@@ -296,7 +297,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question 'How much of your Capital Gains Tax allowance have you got left'" in {
-              document.select("#personalDetails").text should include(Messages("calc.annualExemptAmount.question"))
+              document.select("#personalDetails").text should include(MessageLookup.NonResident.AnnualExemptAmount.title)
             }
 
             "have a remaining CGT Allowance of £1,500 and link to the allowance page" in {

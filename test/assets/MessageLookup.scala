@@ -31,10 +31,13 @@ object MessageLookup {
   val calcBaseChange = "change"
   val undefinedMessage = "Undefined message"
   val propertiesHomeText = "Calculate your Capital Gains Tax"
+  val calcBaseYes = "Yes"
+  val calcBaseNo = "No"
 
   //Common messages
   val maxNumericExceededStart = "Enter an amount that's £"
   val maxNumericExceededEnd = "or less"
+  val readMore = "Read more"
 
   //########################################################################################
   //These nested objects have been created in anticipation of the Tech-Debt to refactor
@@ -64,7 +67,12 @@ object MessageLookup {
     }
 
     object AnnualExemptAmount {
-
+      val title = "How much of your Capital Gains Tax allowance have you got left?"
+      val link = "Capital Gains Tax allowances"
+      val errorMaxStart = "Enter a Capital Gains Tax allowance that's £"
+      val errorMaxEnd = "or less"
+      val errorNegative = "Enter a positive number for your allowance"
+      val errorDecimalPlaces = "Your allowance has too many numbers after the decimal point"
     }
 
     object CalculationElection {
@@ -72,15 +80,25 @@ object MessageLookup {
     }
 
     object CurrentIncome {
-
+      val title = "In the tax year when you stopped owning the property, what was your total UK income?"
+      val linkOne = "Income Tax"
+      val linkTwo = "Previous tax years"
+      val helpText = "You can give an estimate if this was in the current tax year"
+      val errorNegative = "Enter a positive number for your current income"
+      val errorDecimalPlace = "Your current income has too many numbers after the decimal point"
     }
 
     object CustomerType {
-
+      val title = "Who owned the property?"
+      val individual = "I owned it"
+      val trustee = "I was a trustee"
+      val personalRep = "I was the executor of an estate"
     }
 
     object DisabledTrustee {
-
+      val title = "Are you a trustee for someone who's vulnerable?"
+      val helpText = "A person's vulnerable if they're disabled, or if they're under 18 and their parents have died"
+      val linkOne = "Trusts and Capital Gains Tax"
     }
 
     object DisposalCosts {
@@ -104,7 +122,15 @@ object MessageLookup {
     }
 
     object OtherProperties {
-
+      val title = "In the tax year when you stopped owning the property, did you sell or give away any other UK residential properties?"
+      val questionTwo = "What was your taxable gain?"
+      val questionTwoHelpTextStart = "How to"
+      val questionTwoHelpTextLinkText = "work out your total taxable gains"
+      val errorNegative = "Enter a positive number for your taxable gain"
+      val errorDecimalPlaces = "Your taxable gain has too many numbers after the decimal point"
+      val errorQuestion = "Enter a value for your taxable gain"
+      val linkOne = "Capital Gains Tax"
+      val linkTwo = "Previous tax years"
     }
 
     object OtherReliefs {
@@ -123,7 +149,13 @@ object MessageLookup {
     }
 
     object PersonalAllowance {
-
+      val title = "In the tax year when you stopped owning the property, what was your UK Personal Allowance?"
+      val linkOne = "Income Tax rates and Personal Allowances"
+      val linkTwo = "Tax on your UK income if you live abroad"
+      val errorNegative = "Enter a positive number for your Personal Allowance"
+      val errorDecimalPlaces = "Enter a whole number for your Personal Allowance"
+      val errorMaxLimit = "Enter a Personal Allowance that's £"
+      val errorMaxLimitEnd = "or Less"
     }
 
     object PrivateResidenceRelief {
