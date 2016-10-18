@@ -16,6 +16,7 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup.{NonResident => questionMessages}
 import common.DefaultRoutes._
 import common.{KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
@@ -381,7 +382,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question 'How much did you pay in costs when you stopped being the property owner?'" in {
-              document.select("#saleDetails").text should include(Messages("calc.disposalCosts.question"))
+              document.select("#saleDetails").text should include(questionMessages.DisposalCosts.question)
             }
 
             "the value of the costs should be £0 and link to the disposal costs page" in {

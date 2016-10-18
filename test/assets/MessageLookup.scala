@@ -85,6 +85,10 @@ object MessageLookup {
 
     object DisposalCosts {
 
+      val question = "How much did you pay in costs when you stopped being the property owner?"
+      val errorNegativeNumber = "Enter a positive number for your selling costs"
+      val errorDecimalPlaces = "There are too many numbers after the decimal point in your selling costs"
+
     }
 
     object DisposalDate {
