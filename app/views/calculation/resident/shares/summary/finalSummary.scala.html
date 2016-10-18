@@ -14,7 +14,7 @@
 
 @(gainAnswers: GainAnswersModel, deductionAnswers: DeductionGainAnswersModel,
     incomeAnswers: IncomeAnswersModel, result: TotalGainAndTaxOwedModel,
-    backUrl: String, taxYear: TaxYearModel, navHomeLink: String)(implicit request: Request[_])
+    backUrl: String, taxYear: TaxYearModel, navHomeLink: String, isCurrentTaxYear: Boolean)(implicit request: Request[_])
 
 @resident_main_template(
 title = Messages("calc.resident.summary.title"),
@@ -141,9 +141,9 @@ navTitle = Messages("calc.base.resident.shares.home")
     }
     @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties && deductionAnswers.annualExemptAmountModel.isDefined && deductionAnswers.annualExemptAmountModel.get.amount == 0)
         summaryNumericRowHelper("previousTaxableGains", Messages("calc.resident.previousTaxableGains.title", taxYear.taxYearSupplied), incomeAnswers.previousTaxableGainsModel.get.amount, Some(incomeRoutes.previousTaxableGains().toString))}
-    @summaryNumericRowHelper("currentIncome",if(taxYear.taxYearSupplied == "2016/17"){Messages("calc.resident.currentIncome.questionCurrentYear")}else{Messages("calc.resident.currentIncome.question", taxYear.taxYearSupplied)},incomeAnswers.currentIncomeModel.get.amount,Some(incomeRoutes.currentIncome().toString))
+    @summaryNumericRowHelper("currentIncome",if(isCurrentTaxYear){Messages("calc.resident.currentIncome.questionCurrentYear")}else{Messages("calc.resident.currentIncome.question", taxYear.taxYearSupplied)},incomeAnswers.currentIncomeModel.get.amount,Some(incomeRoutes.currentIncome().toString))
     @summaryNumericRowHelper("personalAllowance",
-    {if(taxYear.taxYearSupplied == "2016/17") {Messages("calc.resident.personalAllowance.currentYearQuestion")}
+    {if(isCurrentTaxYear) {Messages("calc.resident.personalAllowance.currentYearQuestion")}
     else {Messages("calc.resident.personalAllowance.question", taxYear.taxYearSupplied)}},
     incomeAnswers.personalAllowanceModel.get.amount,Some(incomeRoutes.personalAllowance().toString))
 
@@ -153,13 +153,14 @@ navTitle = Messages("calc.base.resident.shares.home")
 
 <section id="whatToDoNext" class="summary-underline summary-overline">
     <h2 id="whatToDoNextTitle" class="bold-medium">@Messages("calc.resident.summary.whatNext")</h2>
-    <div id="whatToDoNextText" class="font-medium what-to-do-next-text">@Messages("calc.resident.summary.whatNext.youNeedTo") <a id="whatToDoNextLink"
+    <div id="whatToDoNextText" class="font-medium what-to-do-next-text">@Messages("calc.resident.summary.whatNext.shares.liabilityMessage") <a id="whatToDoNextLink"
                                                                                                                                  class="external-link"
                                                                                                                                  rel="external"
-                                                                                                                                 href="https://www.gov.uk/capital-gains-tax/work-out-need-to-pay"
+                                                                                                                                 href="https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax"
                                                                                                                                  target="_blank"
-                                                                                                                                 data-journey-click="help:govUK:rtt-shares-whatToDoNext">@Messages("calc.resident.summary.whatNext.sharesLinkTwo")<span id="opensInANewTab"> @Messages("calc.base.externalLink")</span></a>
+                                                                                                                                 data-journey-click="help:govUK:rtt-shares-whatToDoNext">@Messages("calc.resident.summary.whatNext.liabilityLink")<span id="opensInANewTab"> @Messages("calc.base.externalLink")</span></a>.
     </div>
+    <p class="font-medium">@Messages("calc.resident.summary.whatNext.liabilityMessageTwo")</p>
 
 </section>
 

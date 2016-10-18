@@ -18,7 +18,7 @@ package views.resident.shares.report
 
 import assets.MessageLookup.{SummaryPage => messages}
 import assets.MessageLookup.Resident.{Shares => SharesMessages}
-import assets.{MessageLookup => commonMessages}
+import assets.{DateAsset, MessageLookup => commonMessages}
 import common.Dates
 import controllers.helpers.FakeRequestHelper
 import models.resident._
@@ -76,7 +76,7 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
       lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
 
-      lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel)(fakeRequestWithSession)
+      lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel, false)(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(view.body)
 
       s"have a title ${messages.title}" in {
@@ -413,7 +413,7 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
       )
 
       lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
-      lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel)(fakeRequestWithSession)
+      lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel, false)(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(view.body)
 
       "has an option/radiobutton output row for the Owned Before Start of Tax" which {
@@ -513,7 +513,7 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
       )
 
       lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
-      lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel)(fakeRequestWithSession)
+      lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel, false)(fakeRequestWithSession)
       lazy val doc = Jsoup.parse(view.body)
 
       "has an option/radiobutton output row for the Owned Before Start of Tax" which {
@@ -560,9 +560,9 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
     }
   }
 
-  "Summary when shares have been sold for less" should {
+  "Summary when shares have been sold for less in the year after the current" should {
 
-    lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
+    lazy val taxYearModel = TaxYearModel(DateAsset.getYearAfterCurrentTaxYear, false, Dates.getCurrentTaxYear)
 
     val testModel = GainAnswersModel(
       disposalDate = Dates.constructDate(12, 9, 2015),
@@ -594,7 +594,7 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
 
   "Final Summary when supplied with a date above the known tax years" should {
 
-    lazy val taxYearModel = TaxYearModel("2018/19", false, "2016/17")
+    lazy val taxYearModel = TaxYearModel(DateAsset.getYearAfterCurrentTaxYear, false, Dates.getCurrentTaxYear)
 
     lazy val gainAnswers = GainAnswersModel(
       disposalDate = Dates.constructDate(10, 10, 2018),
@@ -635,15 +635,15 @@ class SharesFinalReportViewSpec extends UnitSpec with WithFakeApplication with F
       0
     )
 
-    lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel)(fakeRequestWithSession)
+    lazy val view = views.finalSummaryReport(gainAnswers, deductionAnswers, incomeAnswers, results, taxYearModel, false)(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 
     "have the class notice-wrapper" in {
       doc.select("div.notice-wrapper").isEmpty shouldBe false
     }
 
-    s"have the text ${messages.noticeWarning("2016/17")}" in {
-      doc.select("strong.bold-small").text shouldBe messages.noticeWarning("2016/17")
+    s"have the text ${messages.noticeWarning(Dates.getCurrentTaxYear)}" in {
+      doc.select("strong.bold-small").text shouldBe messages.noticeWarning(Dates.getCurrentTaxYear)
     }
   }
 }

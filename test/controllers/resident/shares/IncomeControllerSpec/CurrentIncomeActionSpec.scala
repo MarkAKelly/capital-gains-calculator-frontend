@@ -17,6 +17,7 @@
 package controllers.resident.shares.IncomeControllerSpec
 
 import assets.MessageLookup.{CurrentIncome => messages}
+import common.Dates
 import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
@@ -97,7 +98,8 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
 
       "supplied with no pre-existing stored data for 2016/17" should {
 
-        lazy val target = setupTarget(None, disposalDate = Some(DisposalDateModel(10, 10, 2016)), taxYear = Some(TaxYearModel("2016/17", true, "2016/17")))
+        lazy val target = setupTarget(None, disposalDate = Some(DisposalDateModel(10, 10, 2016)), taxYear =
+          Some(TaxYearModel(Dates.getCurrentTaxYear, true, Dates.getCurrentTaxYear)))
         lazy val result = target.currentIncome(fakeRequestWithSession)
 
         "return a status of 200" in {

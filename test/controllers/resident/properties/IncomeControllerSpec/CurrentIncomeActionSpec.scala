@@ -17,6 +17,7 @@
 package controllers.resident.properties.IncomeControllerSpec
 
 import assets.MessageLookup.{CurrentIncome => messages}
+import common.Dates
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
@@ -95,9 +96,10 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
         Jsoup.parse(bodyOf(result)).title shouldBe messages.title("2015/16")
       }
 
-      "supplied with no pre-existing stored data for 2016/17" should {
+      "supplied with no pre-existing stored data for the Current tax year" should {
 
-        lazy val target = setupTarget(None, disposalDate = Some(DisposalDateModel(10, 10, 2016)), taxYear = Some(TaxYearModel("2016/17", true, "2016/17")))
+        lazy val target = setupTarget(None, disposalDate = Some(DisposalDateModel(10, 10, 2016)), taxYear =
+          Some(TaxYearModel(Dates.getCurrentTaxYear, true, Dates.getCurrentTaxYear)))
         lazy val result = target.currentIncome(fakeRequestWithSession)
 
         "return a status of 200" in {
