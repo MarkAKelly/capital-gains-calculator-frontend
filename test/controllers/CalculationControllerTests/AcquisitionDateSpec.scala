@@ -24,7 +24,6 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.CalculationElectionConstructor
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -257,7 +256,7 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
         status(result) shouldBe 400
       }
 
-      s"should error with message ${Messages("calc.common.date.error.invalidDate")}" in {
+      s"should error with message ${Common.errorInvalidDate}" in {
         document.select(".error-notification").text should include (Common.errorInvalidDate)
       }
     }
@@ -271,7 +270,7 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
         status(result) shouldBe 400
       }
 
-      s"should error with message ${Messages("calc.common.date.error.lessThan1")}" in {
+      s"should error with message ${Common.errorInvalidDate}" in {
         document.select(".error-notification").text should include (Common.errorInvalidDate)
       }
     }
@@ -285,7 +284,7 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
         status(result) shouldBe 400
       }
 
-      s"should error with message ${Messages("calc.common.date.error.greaterThan31")}" in {
+      s"should error with message ${Common.errorInvalidDate}" in {
         document.select(".error-notification").text should include (Common.errorInvalidDate)
       }
     }
@@ -299,7 +298,7 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
         status(result) shouldBe 400
       }
 
-      s"should error with message ${Messages("calc.common.date.error.greaterThan12")}" in {
+      s"should error with message ${Common.errorInvalidDate}" in {
         document.select(".error-notification").text should include (Common.errorInvalidDate)
       }
     }
@@ -313,7 +312,7 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
         status(result) shouldBe 400
       }
 
-      s"should error with message ${Messages("calc.common.date.error.lessThan1")}" in {
+      s"should error with message ${Common.errorInvalidDate}" in {
         document.select(".error-notification").text should include (Common.errorInvalidDate)
       }
     }

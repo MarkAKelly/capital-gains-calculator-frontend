@@ -51,6 +51,7 @@ object MessageLookup {
       val month = "Month"
       val year = "Year"
       val errorInvalidDate = "Enter a real date"
+      val errorRealNumber = "Enter a number without commas, for example 10000.00"
     }
 
     object AcquisitionCosts {
@@ -152,7 +153,12 @@ object MessageLookup {
     }
 
     object RebasedCosts {
-
+      val question = "Did you pay for the valuation?"
+      val questionTwo = "How much did it cost to get the property valued?"
+      val errorNegative = "Enter a positive number for your costs"
+      val errorNoValue = "Enter the value for your costs"
+      val errorDecimalPlaces = "There are too many numbers after the decimal point in your costs"
+      def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
     object RebasedValue {
