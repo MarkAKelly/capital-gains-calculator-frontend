@@ -24,7 +24,6 @@ import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
-import play.api.i18n.Messages
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Result}
 import play.api.test.FakeRequest
@@ -33,7 +32,8 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
-
+import assets.MessageLookup
+import assets.MessageLookup.NonResident.{Common, OtherReliefs => messages}
 import scala.concurrent.Future
 
 class OtherReliefsFlatSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
@@ -104,25 +104,25 @@ class OtherReliefsFlatSpec extends UnitSpec with WithFakeApplication with Mockit
           }
 
           "have the title 'How much extra tax relief are you claiming?'" in {
-            document.title shouldEqual Messages("calc.otherReliefs.question")
+            document.title shouldEqual messages.inputQuestion
           }
 
           "have the heading Calculate your tax (non-residents) " in {
-            document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
+            document.body.getElementsByTag("h1").text shouldEqual Common.pageHeading
           }
 
           s"have a 'Back' link to ${controllers.nonresident.routes.CalculationElectionController.calculationElection().url}" in {
-            document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+            document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
             document.body.getElementById("back-link").attr("href") shouldEqual
               controllers.nonresident.routes.CalculationElectionController.calculationElection().url
           }
 
           "have the question 'How much extra tax relief are you claiming?' as the legend of the input" in {
-            document.body.getElementsByTag("label").text should include(Messages("calc.otherReliefs.question"))
+            document.body.getElementsByTag("label").text should include(messages.inputQuestion)
           }
 
           "have the help text 'For example, lettings relief'" in {
-            document.body.getElementsByClass("form-hint").text should include(Messages("calc.otherReliefs.help"))
+            document.body.getElementsByClass("form-hint").text should include(messages.help)
           }
 
           "have a value for your gain" in {
@@ -134,15 +134,15 @@ class OtherReliefsFlatSpec extends UnitSpec with WithFakeApplication with Mockit
           }
 
           "display an 'Add relief' button " in {
-            document.body.getElementById("add-relief-button").text shouldEqual Messages("calc.otherReliefs.button.addRelief")
+            document.body.getElementById("add-relief-button").text shouldEqual messages.addRelief
           }
 
           "include helptext for 'Total gain'" in {
-            document.body.getElementById("totalGain").text should include(Messages("calc.otherReliefs.totalGain"))
+            document.body.getElementById("totalGain").text should include(messages.totalGain)
           }
 
           "include helptext for 'Taxable gain'" in {
-            document.body.getElementById("taxableGain").text should include(Messages("calc.otherReliefs.taxableGain"))
+            document.body.getElementById("taxableGain").text should include(messages.taxableGain)
           }
         }
       }
@@ -177,7 +177,7 @@ class OtherReliefsFlatSpec extends UnitSpec with WithFakeApplication with Mockit
         }
 
         "have a value for your loss" in {
-          document.getElementById("totalGain").text() shouldBe "Total loss £10,000"
+          document.getElementById("totalGain").text() shouldBe messages.totalLoss("£10,000")
         }
       }
     }
@@ -274,10 +274,9 @@ class OtherReliefsFlatSpec extends UnitSpec with WithFakeApplication with Mockit
         status(result) shouldBe 400
       }
 
-      s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
+      s"fail with message ${messages.errorMaximum(MoneyPounds(Constants.maxNumeric,0).quantity)}" in {
         document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric,0).quantity +
-            " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+          include (messages.errorMaximum(MoneyPounds(Constants.maxNumeric,0).quantity))
       }
     }
   }

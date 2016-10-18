@@ -117,6 +117,8 @@ object MessageLookup {
       val inputQuestion = "How much extra tax relief are you claiming?"
       val totalGain = "Total gain"
       val taxableGain = "Taxable gain"
+      val addRelief = "Add relief"
+      def totalLoss(value: String): String = s"Total loss $value"
       def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
 
       object Flat {
