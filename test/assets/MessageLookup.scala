@@ -36,6 +36,11 @@ object MessageLookup {
   val maxNumericExceededStart = "Enter an amount that's £"
   val maxNumericExceededEnd = "or less"
 
+  object Common {
+    val day = "Day"
+    val month = "Month"
+    val year = "Year"
+  }
   //########################################################################################
   //These nested objects have been created in anticipation of the Tech-Debt to refactor
   // the message lookup and add the non-resident messages.  Any new added pages should be added
@@ -45,6 +50,7 @@ object MessageLookup {
 
     object Common {
       val pageHeading = "Calculate your non-resident Capital Gains Tax"
+      val errorDate = "Enter a real date"
     }
 
     object AcquisitionCosts {
@@ -92,6 +98,9 @@ object MessageLookup {
     }
 
     object DisposalDate {
+
+      val question = "When did you sign the contract that made someone else the owner?"
+      val errorDateAfter = "This can't be before the date you became the owner"
 
     }
 
@@ -145,6 +154,8 @@ object MessageLookup {
     }
 
     object Summary {
+
+      val saleDetailsTitle = "Sale details"
 
     }
 

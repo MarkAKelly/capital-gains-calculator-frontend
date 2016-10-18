@@ -95,7 +95,7 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
         }
 
         s"have a 'Back' link to ${routes.AcquisitionCostsController.acquisitionCosts()}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionCostsController.acquisitionCosts().toString()
         }
 

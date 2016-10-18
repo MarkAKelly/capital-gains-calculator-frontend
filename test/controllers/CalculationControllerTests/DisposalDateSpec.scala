@@ -16,6 +16,10 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup
+import assets.MessageLookup.{Common => commonMessages}
+import assets.MessageLookup.NonResident.{DisposalDate => messages}
+import assets.MessageLookup.NonResident.{Common => commonNRMessages}
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import play.api.libs.json.Json
@@ -84,30 +88,30 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         }
 
         "have the title 'When did you sign the contract that made someone else the owner?'" in {
-          document.title shouldEqual Messages("calc.disposalDate.question")
+          document.title shouldEqual messages.question
         }
 
         "have the heading Calculate your tax (non-residents) " in {
-          document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
+          document.body.getElementsByTag("h1").text shouldEqual commonNRMessages.pageHeading
         }
 
         s"have a 'Back' link to ${routes.ImprovementsController.improvements()}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           document.body.getElementById("back-link").attr("href") shouldEqual routes.ImprovementsController.improvements().toString()
         }
 
         s"have the question '${Messages("calc.disposalDate.question")}'" in {
-          document.body.getElementsByTag("fieldset").text should include (Messages("calc.disposalDate.question"))
+          document.body.getElementsByTag("fieldset").text should include(messages.question)
         }
 
-        "display three input boxes with labels Day, Month and Year respectively" in {
-          document.select("label[for=disposalDateDay]").text shouldEqual Messages("calc.common.date.fields.day")
-          document.select("label[for=disposalDateMonth]").text shouldEqual Messages("calc.common.date.fields.month")
-          document.select("label[for=disposalDateYear]").text shouldEqual Messages("calc.common.date.fields.year")
+        s"display three input boxes with labels ${commonMessages.day}, ${commonMessages.month} and ${commonMessages.year} respectively" in {
+          document.select("label[for=disposalDateDay]").text shouldEqual commonMessages.day
+          document.select("label[for=disposalDateMonth]").text shouldEqual commonMessages.month
+          document.select("label[for=disposalDateYear]").text shouldEqual commonMessages.year
         }
 
         "display a 'Continue' button " in {
-          document.body.getElementById("continue-button").text shouldEqual Messages("calc.base.continue")
+          document.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
         }
       }
     }
@@ -194,8 +198,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"should error with message '${Messages("calc.disposalDate.error.disposalDateAfterAcquisition")}'" in {
-        document.select(".error-notification").text should include (Messages("calc.disposalDate.error.disposalDateAfterAcquisition"))
+      s"should error with message '${messages.errorDateAfter}'" in {
+        document.select(".error-notification").text should include (messages.errorDateAfter)
       }
     }
 
@@ -208,8 +212,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"should error with message '${Messages("calc.common.date.error.invalidDate")}'" in {
-        document.select(".error-notification").text should include (Messages("calc.common.date.error.invalidDate"))
+      s"should error with message '${commonNRMessages.errorDate}'" in {
+        document.select(".error-notification").text should include (commonNRMessages.errorDate)
       }
     }
 
@@ -222,8 +226,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"should error with message '${Messages("calc.common.date.error.day.lessThan1")}'" in {
-        document.select(".error-notification").text should include (Messages("calc.common.date.error.invalidDate"))
+      s"should error with message '${commonNRMessages.errorDate}'" in {
+        document.select(".error-notification").text should include (commonNRMessages.errorDate)
       }
     }
 
@@ -236,8 +240,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"should error with message '${Messages("calc.common.date.error.day.greaterThan31")}'" in {
-        document.select(".error-notification").text should include (Messages("calc.common.date.error.invalidDate"))
+      s"should error with message '${commonNRMessages.errorDate}'" in {
+        document.select(".error-notification").text should include (commonNRMessages.errorDate)
       }
     }
 
@@ -250,8 +254,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"should error with message '${Messages("calc.common.date.error.month.greaterThan12")}'" in {
-        document.select(".error-notification").text should include (Messages("calc.common.date.error.invalidDate"))
+      s"should error with message '${commonNRMessages.errorDate}'" in {
+        document.select(".error-notification").text should include (commonNRMessages.errorDate)
       }
     }
 
@@ -264,8 +268,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"should error with message '${Messages("calc.common.date.error.month.lessThan1")}'" in {
-        document.select(".error-notification").text should include (Messages("calc.common.date.error.invalidDate"))
+      s"should error with message '${commonNRMessages.errorDate}'" in {
+        document.select(".error-notification").text should include (commonNRMessages.errorDate)
       }
     }
 
@@ -278,8 +282,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      "should error with message 'calc.common.date.error.invalidDate'" in {
-        document.select(".error-notification").text should include (Messages("calc.common.date.error.invalidDate"))
+      s"should error with message ${commonNRMessages.errorDate}" in {
+        document.select(".error-notification").text should include (commonNRMessages.errorDate)
       }
     }
 
@@ -292,8 +296,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      "should error with message 'calc.common.date.error.invalidDate'" in {
-        document.select(".error-notification").text should include (Messages("calc.common.date.error.invalidDate"))
+      s"should error with message ${commonNRMessages.errorDate}" in {
+        document.select(".error-notification").text should include (commonNRMessages.errorDate)
       }
     }
 
@@ -306,8 +310,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      "should error with message 'calc.common.date.error.invalidDate'" in {
-        document.select(".error-notification").text should include (Messages("calc.common.date.error.invalidDate"))
+      s"should error with message ${commonNRMessages.errorDate}" in {
+        document.select(".error-notification").text should include (commonNRMessages.errorDate)
       }
     }
   }
