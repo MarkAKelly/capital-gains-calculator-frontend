@@ -154,7 +154,7 @@ object MessageLookup {
 
     object RebasedCosts {
       val question = "Did you pay for the valuation?"
-      val questionTwo = "How much did it cost to get the property valued?"
+      val inputQuestion = "How much did it cost to get the property valued?"
       val errorNegative = "Enter a positive number for your costs"
       val errorNoValue = "Enter the value for your costs"
       val errorDecimalPlaces = "There are too many numbers after the decimal point in your costs"
@@ -162,9 +162,16 @@ object MessageLookup {
     }
 
     object RebasedValue {
-      val question = "What was the property worth on 5 April 2015?"
+      val question = "Do you know how much the property was worth on 5 April 2015?"
+      val questionHelpText = "Only tell us if you owned the property on that date"
+      val inputQuestion = "What was the value of the property?"
+      val inputQuestionMandatory = "What was the property worth on 5 April 2015?"
       val inputHelpText = "You can use a valuation from a surveyor or a property website."
+      val additionalContentTitle = "Why we're asking for this"
       val errorNoValue = "Enter a value for your property on 5 April 2015"
+      val errorNegative = "Enter a positive value for your property on 5 April 2015"
+      val errorDecimalPlaces = "The value for your property on 5 April 2015 has too many numbers after the decimal point"
+      def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
     object Summary {
