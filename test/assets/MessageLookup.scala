@@ -120,18 +120,6 @@ object MessageLookup {
       val addRelief = "Add relief"
       def totalLoss(value: String): String = s"Total loss $value"
       def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
-
-      object Flat {
-
-      }
-
-      object Rebased {
-
-      }
-
-      object TimeApportioned {
-
-      }
     }
 
     object PersonalAllowance {
