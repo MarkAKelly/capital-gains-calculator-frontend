@@ -28,6 +28,11 @@ case class GainAnswersModel(disposalDate: LocalDate,
                             inheritedTheShares: Option[Boolean],
                             worthWhenInherited: Option[BigDecimal],
                             acquisitionValue: Option[BigDecimal],
-                            acquisitionCosts: BigDecimal)
+                            acquisitionCosts: BigDecimal){
+
+  val displayWorthWhenBought = !ownerBeforeLegislationStart && !inheritedTheShares.get
+  val displayWorthWhenInherited = !ownerBeforeLegislationStart && inheritedTheShares.get
+
+}
 
 

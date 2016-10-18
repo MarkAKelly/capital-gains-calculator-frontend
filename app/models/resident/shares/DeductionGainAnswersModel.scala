@@ -17,10 +17,24 @@
 package models.resident.shares
 
 import models.resident._
+import constructors.resident.shares.CalculateRequestConstructor._
 
 case class DeductionGainAnswersModel(otherPropertiesModel: Option[OtherPropertiesModel],
                                      allowableLossesModel: Option[AllowableLossesModel],
                                      allowableLossesValueModel: Option[AllowableLossesValueModel],
                                      broughtForwardModel: Option[LossesBroughtForwardModel],
                                      broughtForwardValueModel: Option[LossesBroughtForwardValueModel],
-                                     annualExemptAmountModel: Option[AnnualExemptAmountModel])
+                                     annualExemptAmountModel: Option[AnnualExemptAmountModel]){
+
+  val displayAllowableLossesValue = (otherPropertiesModel, allowableLossesModel) match {
+    case (Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(true))) => true
+    case _ => false
+  }
+
+  val displayAnnualExemptAmount = isUsingAnnualExemptAmount(otherPropertiesModel, allowableLossesModel, allowableLossesValueModel)
+
+  val displayPreviousTaxableGains = (displayAnnualExemptAmount, annualExemptAmountModel) match {
+    case (true, Some(AnnualExemptAmountModel(value))) if value == 0  => true
+    case _ => false
+  }
+}

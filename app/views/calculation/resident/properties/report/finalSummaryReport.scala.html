@@ -100,11 +100,11 @@
         @{if(!gainAnswers.givenAway)
         summaryOptionRowHelper("sellForLess", Messages("calc.resident.properties.sellForLess.title"), gainAnswers.sellForLess.get, None)}
 
-        @{if(!gainAnswers.givenAway && !gainAnswers.sellForLess.get)
+        @{if(gainAnswers.displayWorthWhenSold)
             summaryNumericRowHelper("disposalValue", Messages("calc.resident.disposal.value.question"), gainAnswers.disposalValue.get, None)
         }
 
-        @{if(!gainAnswers.givenAway && gainAnswers.sellForLess.get)
+        @{if(gainAnswers.displayWorthWhenSoldForLess)
             summaryNumericRowHelper("worthWhenSoldForLess", Messages("calc.resident.properties.worthWhenSoldForLess.question"), gainAnswers.worthWhenSoldForLess.get, None)
         }
 
@@ -120,23 +120,23 @@
         summaryTextRowHelper("howBecameOwner", Messages("calc.resident.howBecameOwner.title"),
         Messages(s"calc.resident.howBecameOwner.${gainAnswers.howBecameOwner.get.toLowerCase}"), None)}
 
-        @{if (!gainAnswers.ownerBeforeLegislationStart && gainAnswers.howBecameOwner.get.equals("Bought"))
+        @{if (gainAnswers.displayBoughtForLessThanWorth)
         summaryOptionRowHelper("boughtForLessThanWorth", Messages("calc.resident.properties.boughtForLessThanWorth.title"),
         gainAnswers.boughtForLessThanWorth.get, None)}
 
-        @{if (!gainAnswers.ownerBeforeLegislationStart && gainAnswers.howBecameOwner.get.equals("Bought") && !gainAnswers.boughtForLessThanWorth.get)
+        @{if (gainAnswers.displayWorthWhenBought)
         summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.acquisitionValue.title"),gainAnswers.acquisitionValue.get,None)}
 
         <!--- --->
-        @{if (!gainAnswers.ownerBeforeLegislationStart && gainAnswers.howBecameOwner.get.equals("Bought") && gainAnswers.boughtForLessThanWorth.get)
+        @{if (gainAnswers.displayWorthWhenBoughtForLess)
             summaryNumericRowHelper("worthWhenBoughtForLess", Messages("calc.resident.properties.worthWhenBoughtForLess.question"),gainAnswers.worthWhenBoughtForLess.get, None)
         }
 
-        @{if (!gainAnswers.ownerBeforeLegislationStart && gainAnswers.howBecameOwner.get.equals("Gifted"))
+        @{if (gainAnswers.displayWorthWhenGifted)
             summaryNumericRowHelper("worthWhenGifted", Messages("calc.resident.properties.worthWhenGifted.question"),gainAnswers.worthWhenGifted.get, None)
         }
 
-        @{if (!gainAnswers.ownerBeforeLegislationStart && gainAnswers.howBecameOwner.get.equals("Inherited"))
+        @{if (gainAnswers.displayWorthWhenInherited)
             summaryNumericRowHelper("worthWhenInherited", Messages("calc.resident.properties.worthWhenInherited.question"),gainAnswers.worthWhenInherited.get, None)
         }
         <!--- --->
@@ -155,16 +155,15 @@
             summaryOptionRowHelper("privateResidenceRelief", Messages("calc.resident.properties.privateResidenceRelief.title"),
                 deductionAnswers.privateResidenceReliefModel.get.isClaiming, None)}
 
-        @{if(deductionAnswers.propertyLivedInModel.get.livedInProperty && deductionAnswers.privateResidenceReliefModel.get.isClaiming)
+        @{if(deductionAnswers.displayPRRValueAndLettingsRelief)
             summaryNumericRowHelper("privateResidenceReliefValue", Messages("calc.resident.privateResidenceReliefValue.title"),
                 deductionAnswers.privateResidenceReliefValueModel.get.amount, None)}
 
-        @{if(deductionAnswers.propertyLivedInModel.get.livedInProperty && deductionAnswers.privateResidenceReliefModel.get.isClaiming)
+        @{if(deductionAnswers.displayPRRValueAndLettingsRelief)
             summaryOptionRowHelper("lettingsRelief", Messages("calc.resident.lettingsRelief.title"),
                 deductionAnswers.lettingsReliefModel.get.isClaiming, None)}
 
-        @{if(deductionAnswers.propertyLivedInModel.get.livedInProperty && deductionAnswers.privateResidenceReliefModel.get.isClaiming
-            && deductionAnswers.lettingsReliefModel.get.isClaiming)
+        @{if(deductionAnswers.displayLettingsReliefValue)
             summaryNumericRowHelper("lettingsReliefValue", Messages("calc.resident.lettingsReliefValue.title"),
                 deductionAnswers.lettingsReliefValueModel.get.amount, None)}
 
@@ -175,7 +174,7 @@
             summaryOptionRowHelper("allowableLosses",Messages("calc.resident.allowableLosses.title",
                 taxYear.taxYearSupplied),deductionAnswers.allowableLossesModel.get.isClaiming,None)}
 
-        @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties && deductionAnswers.allowableLossesModel.get.isClaiming)
+        @{if (deductionAnswers.displayAllowableLossesValue)
             summaryNumericRowHelper("allowableLossesValue",Messages("calc.resident.allowableLossesValue.title",
                 taxYear.taxYearSupplied),deductionAnswers.allowableLossesValueModel.get.amount,None)}
 
@@ -186,12 +185,11 @@
             summaryNumericRowHelper("broughtForwardLossesValue",Messages("calc.resident.lossesBroughtForwardValue.title",
                 taxYear.taxYearSupplied),deductionAnswers.broughtForwardValueModel.get.amount,None)}
 
-        @{if (isUsingAnnualExemptAmount(deductionAnswers.otherPropertiesModel, deductionAnswers.allowableLossesModel, deductionAnswers.allowableLossesValueModel))
+        @{if (deductionAnswers.displayAnnualExemptAmount)
             summaryNumericRowHelper("annualExemptAmount",Messages("calc.resident.annualExemptAmount.title"),
                 deductionAnswers.annualExemptAmountModel.get.amount,None)}
 
-        @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties &&
-            deductionAnswers.annualExemptAmountModel.isDefined && deductionAnswers.annualExemptAmountModel.get.amount == 0)
+        @{if (deductionAnswers.displayPreviousTaxableGains)
             summaryNumericRowHelper("previousTaxableGains", Messages("calc.resident.previousTaxableGains.title", taxYear.taxYearSupplied),
                 incomeAnswers.previousTaxableGainsModel.get.amount, None)}
 

@@ -82,14 +82,18 @@
         @summaryOptionRowHelper("ownerBeforeLegislationStart",Messages("calc.resident.shares.ownerBeforeLegislationStart.title"),answers.ownerBeforeLegislationStart,Some(routes.ownerBeforeLegislationStart().url))
         @if(answers.ownerBeforeLegislationStart){
             @summaryNumericRowHelper("valueBeforeLegislationStart",Messages("calc.resident.shares.valueBeforeLegislationStart.question"),answers.valueBeforeLegislationStart.get,Some(routes.valueBeforeLegislationStart().toString))
-        } else {
-            @summaryOptionRowHelper("inheritedTheShares",Messages("calc.resident.shares.didYouInheritThem.question"),answers.inheritedTheShares.get,Some(routes.didYouInheritThem().url))
-            @if(answers.inheritedTheShares.get){
-                @summaryNumericRowHelper("worthWhenInherited",Messages("calc.resident.shares.worthWhenInherited.question"),answers.worthWhenInherited.get,Some(routes.worthWhenInherited().url))
-            } else {
-                @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.shares.acquisitionValue.question"),answers.acquisitionValue.get,Some(routes.acquisitionValue().url))
-            }
         }
+        @if(!answers.ownerBeforeLegislationStart) {
+            @summaryOptionRowHelper("inheritedTheShares",Messages("calc.resident.shares.didYouInheritThem.question"),answers.inheritedTheShares.get,Some(routes.didYouInheritThem().url))
+        }
+
+        @if(answers.displayWorthWhenInherited){
+            @summaryNumericRowHelper("worthWhenInherited",Messages("calc.resident.shares.worthWhenInherited.question"),answers.worthWhenInherited.get,Some(routes.worthWhenInherited().url))
+        }
+        @if(answers.displayWorthWhenBought){
+            @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.shares.acquisitionValue.question"),answers.acquisitionValue.get,Some(routes.acquisitionValue().url))
+        }
+
         @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.shares.acquisitionCosts.question"),answers.acquisitionCosts,Some(routes.acquisitionCosts().toString))
     </section>
 
