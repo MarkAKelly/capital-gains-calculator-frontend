@@ -32,6 +32,9 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
+import assets.MessageLookup.NonResident.{Improvements, Common}
+import assets.MessageLookup
+
 import scala.concurrent.Future
 import controllers.nonresident.{ImprovementsController, routes}
 import models.nonresident.{AcquisitionDateModel, ImprovementsModel, RebasedValueModel}
@@ -91,20 +94,20 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
             charset(result) shouldBe Some("utf-8")
           }
 
-          "have the title 'Who owned the property?'" in {
-            document.title shouldEqual Messages("calc.improvements.question")
+          "have the title 'Did you make any improvements to the property?'" in {
+            document.title shouldEqual Improvements.question
           }
 
           "have the heading Calculate your tax (non-residents)" in {
-            document.body.getElementsByTag("H1").text shouldEqual Messages("calc.base.pageHeading")
+            document.body.getElementsByTag("H1").text shouldEqual Common.pageHeading
           }
 
           "display the correct wording for radio option `yes`" in {
-            document.body.getElementById("isClaimingImprovements-yes").parent.text shouldEqual Messages("calc.base.yes")
+            document.body.getElementById("isClaimingImprovements-yes").parent.text shouldEqual Common.yes
           }
 
           "display the correct wording for radio option `no`" in {
-            document.body.getElementById("isClaimingImprovements-no").parent.text shouldEqual Messages("calc.base.no")
+            document.body.getElementById("isClaimingImprovements-no").parent.text shouldEqual Common.no
           }
 
           "contain a hidden component with an input box" in {
@@ -112,7 +115,7 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
           }
 
           s"have a 'Back' link to ${routes.AcquisitionValueController.acquisitionValue().url} " in {
-            document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+            document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
             document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionValueController.acquisitionValue().url
           }
         }
@@ -131,7 +134,7 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.RebasedCostsController.rebasedCosts().url} " in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           document.body.getElementById("back-link").attr("href") shouldEqual routes.RebasedCostsController.rebasedCosts().url
         }
       }
@@ -150,7 +153,7 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.RebasedValueController.rebasedValue().url} " in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           document.body.getElementById("back-link").attr("href") shouldEqual routes.RebasedValueController.rebasedValue().url
         }
       }
@@ -166,7 +169,7 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to $missingDataRoute " in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
         }
       }
@@ -183,7 +186,7 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to $missingDataRoute " in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
         }
       }

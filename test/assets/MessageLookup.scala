@@ -159,6 +159,16 @@ object MessageLookup {
     }
 
     object Improvements {
+      val help = "Improvements are permanent changes that raise the value of a property, like adding extensions or garages"
+
+      val question = "Did you make any improvements to the property?"
+      val questionTwo = "How much did the improvements cost?"
+      val questionThree = "How much did you spend on improvements before 6 April 2015?"
+      val questionFour = "How much have you spent on improvements since 6 April 2015?"
+
+      val noValueSuppliedError = "Enter the value of your improvements"
+      val negativeValueError = "Enter a positive number for the cost of your improvements"
+      val excessDecimalPlacesError = "The cost of your improvements has too many numbers after the decimal point"
 
     }
 
