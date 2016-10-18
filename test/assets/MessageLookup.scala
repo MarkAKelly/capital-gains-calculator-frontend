@@ -67,7 +67,12 @@ object MessageLookup {
     }
 
     object AnnualExemptAmount {
-
+      val title = "How much of your Capital Gains Tax allowance have you got left?"
+      val link = "Capital Gains Tax allowances"
+      val errorMaxStart = "Enter a Capital Gains Tax allowance that's £"
+      val errorMaxEnd = "or less"
+      val errorNegative = "Enter a positive number for your allowance"
+      val errorDecimalPlaces = "Your allowance has too many numbers after the decimal point"
     }
 
     object CalculationElection {

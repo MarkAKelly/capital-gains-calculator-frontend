@@ -297,7 +297,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question 'How much of your Capital Gains Tax allowance have you got left'" in {
-              document.select("#personalDetails").text should include(Messages("calc.annualExemptAmount.question"))
+              document.select("#personalDetails").text should include(MessageLookup.NonResident.AnnualExemptAmount.title)
             }
 
             "have a remaining CGT Allowance of £1,500 and link to the allowance page" in {
