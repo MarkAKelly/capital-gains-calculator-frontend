@@ -48,7 +48,11 @@ object MessageLookup {
     }
 
     object AcquisitionCosts {
-
+      val question = "How much did you pay in costs when you became the property owner?"
+      val helpText = "Costs include agent fees, legal fees and surveys"
+      val errorNegative = "Enter a positive number for your costs"
+      val errorDecimalPlaces = "There are too many numbers after the decimal point in your costs"
+      def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
     object AcquisitionDate {
