@@ -45,6 +45,10 @@ object MessageLookup {
 
     object Common {
       val pageHeading = "Calculate your non-resident Capital Gains Tax"
+      val readMore = "Read more"
+      val yes = "Yes"
+      val no = "No"
+      val errorReal = "Enter a number without commas, for example 10000.00"
     }
 
     object AcquisitionCosts {
@@ -127,7 +131,15 @@ object MessageLookup {
     }
 
     object PrivateResidenceRelief {
-
+      val question = "Are you claiming Private Residence Relief?"
+      val helpLink = "Private Residence Relief"
+      val questionBefore = "How many days before"
+      val questionEnd = "are you claiming relief for?"
+      val questionBetween = "How many days between 5 April 2015 and"
+      val errorNoValue = "Enter the value for your days claimed"
+      val errorNegative = "Enter a positive number for your days claimed"
+      val errorDecimalPlaces = "There are too many numbers after the decimal point in your days claimed"
+      def errorMaximum(value: String): String = s"Enter a value for your days claimed that's $value or less"
     }
 
     object RebasedCosts {
