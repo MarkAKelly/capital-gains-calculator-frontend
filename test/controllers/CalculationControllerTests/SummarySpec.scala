@@ -32,6 +32,8 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{NonResident => messages}
 import assets.MessageLookup
+import assets.MessageLookup.NonResident.Improvements
+
 import scala.concurrent.Future
 
 class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
@@ -347,7 +349,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question 'Did you make any improvements to the property?'" in {
-              document.select("#propertyDetails").text should include(Messages("calc.improvements.question"))
+              document.select("#propertyDetails").text should include(Improvements.question)
             }
 
             "the answer to the improvements question should be No and should link to the improvements page" in {
