@@ -16,6 +16,7 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup
 import common.Constants
 import connectors.CalculatorConnector
 import controllers.nonresident.{CurrentIncomeController, routes}
@@ -79,24 +80,24 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
         }
 
         "have the title 'In the tax year when you stopped owning the property, what was your total UK income?'" in {
-          document.title shouldEqual Messages("calc.currentIncome.question")
+          document.title shouldEqual MessageLookup.NonResident.CurrentIncome.title
         }
 
         "have the heading Calculate your tax (non-residents) " in {
-          document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
+          document.body.getElementsByTag("h1").text shouldEqual MessageLookup.NonResident.Common.pageHeading
         }
 
         s"have a 'Back' link to ${routes.CustomerTypeController.customerType()}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           document.body.getElementById("back-link").attr("href") shouldEqual routes.CustomerTypeController.customerType().toString()
         }
 
         "have the question 'In the tax year when you stopped owning the property, what was your total UK income?' as the label of the input" in {
-          document.body.getElementsByTag("label").text.contains(Messages("calc.currentIncome.question")) shouldBe true
+          document.body.getElementsByTag("label").text.contains(MessageLookup.NonResident.CurrentIncome.title) shouldBe true
         }
 
         "have the help text 'You can give an estimate if this was in the current tax year' as the form-hint of the input" in {
-          document.body.getElementsByClass("form-hint").text shouldEqual Messages("calc.currentIncome.helpText")
+          document.body.getElementsByClass("form-hint").text shouldEqual MessageLookup.NonResident.CurrentIncome.helpText
         }
 
         "display an input box for the Current Income Amount" in {
@@ -108,13 +109,13 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
         }
 
         "display a 'Continue' button " in {
-          document.body.getElementById("continue-button").text shouldEqual Messages("calc.base.continue")
+          document.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
         }
 
         "should contain a Read more sidebar with a link to CGT allowances" in {
           document.select("aside h2").text shouldBe Messages("calc.common.readMore")
-          document.select("aside a").first.text shouldBe s"${Messages("calc.currentIncome.link.one")} ${Messages("calc.base.externalLink")}"
-          document.select("aside a").last.text shouldBe s"${Messages("calc.currentIncome.link.two")} ${Messages("calc.base.externalLink")}"
+          document.select("aside a").first.text shouldBe s"${MessageLookup.NonResident.CurrentIncome.linkOne} ${MessageLookup.calcBaseExternalLink}"
+          document.select("aside a").last.text shouldBe s"${MessageLookup.NonResident.CurrentIncome.linkTwo} ${MessageLookup.calcBaseExternalLink}"
         }
       }
     }
@@ -230,8 +231,8 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
         status(result) shouldBe 400
       }
 
-      s"fail with message ${Messages("calc.currentIncome.errorDecimalPlaces")}" in {
-        document.getElementsByClass("error-notification").text should include (Messages("calc.currentIncome.errorDecimalPlaces"))
+      s"fail with message ${MessageLookup.NonResident.CurrentIncome.errorDecimalPlace}" in {
+        document.getElementsByClass("error-notification").text should include (MessageLookup.NonResident.CurrentIncome.errorDecimalPlace)
       }
     }
 
@@ -244,10 +245,11 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
         status(result) shouldBe 400
       }
 
-      s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
+
+      s"fail with message ${MessageLookup.maxNumericExceededStart}" in {
         document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
-            " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+          include (MessageLookup.maxNumericExceededStart + MoneyPounds(Constants.maxNumeric, 0).quantity +
+            " " + MessageLookup.maxNumericExceededEnd)
       }
     }
   }

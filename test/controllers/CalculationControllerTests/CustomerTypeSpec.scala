@@ -16,6 +16,7 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup
 import common.nonresident.CustomerTypeKeys
 import connectors.CalculatorConnector
 import play.api.libs.json.Json
@@ -82,19 +83,19 @@ class CustomerTypeSpec extends UnitSpec with WithFakeApplication with MockitoSug
         }
 
         "have the title 'Who owned the property?'" in {
-          document.title shouldEqual Messages("calc.customerType.question")
+          document.title shouldEqual MessageLookup.NonResident.CustomerType.title
         }
 
         "have the heading Calculate your tax (non-residents) " in {
-          document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
+          document.body.getElementsByTag("h1").text shouldEqual MessageLookup.NonResident.Common.pageHeading
         }
 
         "have the question 'Who owned the property?' as the legend of the input" in {
-          document.body.getElementsByTag("legend").text shouldEqual Messages("calc.customerType.question")
+          document.body.getElementsByTag("legend").text shouldEqual MessageLookup.NonResident.CustomerType.title
         }
 
         "display a radio button with the option `individual`" in {
-          document.body.getElementById("customerType-individual").parent.text shouldEqual Messages("calc.customerType.individual")
+          document.body.getElementById("customerType-individual").parent.text shouldEqual MessageLookup.NonResident.CustomerType.individual
         }
 
         "have the radio option `individual` not selected by default" in {
@@ -102,15 +103,15 @@ class CustomerTypeSpec extends UnitSpec with WithFakeApplication with MockitoSug
         }
 
         "display a radio button with the option `trustee`" in {
-          document.body.getElementById("customerType-trustee").parent.text shouldEqual Messages("calc.customerType.trustee")
+          document.body.getElementById("customerType-trustee").parent.text shouldEqual MessageLookup.NonResident.CustomerType.trustee
         }
 
         "display a radio button with the option `personal representative`" in {
-          document.body.getElementById("customerType-personalrep").parent.text shouldEqual Messages("calc.customerType.personalRep")
+          document.body.getElementById("customerType-personalrep").parent.text shouldEqual MessageLookup.NonResident.CustomerType.personalRep
         }
 
         "display a 'Continue' button " in {
-          document.body.getElementById("continue-button").text shouldEqual Messages("calc.base.continue")
+          document.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
         }
       }
     }
