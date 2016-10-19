@@ -31,10 +31,13 @@ object MessageLookup {
   val calcBaseChange = "change"
   val undefinedMessage = "Undefined message"
   val propertiesHomeText = "Calculate your Capital Gains Tax"
+  val calcBaseYes = "Yes"
+  val calcBaseNo = "No"
 
   //Common messages
   val maxNumericExceededStart = "Enter an amount that's £"
   val maxNumericExceededEnd = "or less"
+  val readMore = "Read more"
 
   //########################################################################################
   //These nested objects have been created in anticipation of the Tech-Debt to refactor
@@ -49,18 +52,38 @@ object MessageLookup {
       val yes = "Yes"
       val no = "No"
       val errorReal = "Enter a number without commas, for example 10000.00"
+      val day = "Day"
+      val month = "Month"
+      val year = "Year"
+      val errorInvalidDate = "Enter a real date"
+      val errorRealNumber = "Enter a number without commas, for example 10000.00"
     }
 
     object AcquisitionCosts {
-
+      val question = "How much did you pay in costs when you became the property owner?"
+      val helpText = "Costs include agent fees, legal fees and surveys"
+      val errorNegative = "Enter a positive number for your costs"
+      val errorDecimalPlaces = "There are too many numbers after the decimal point in your costs"
+      def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
     object AcquisitionDate {
-
+      val question = "Do you know the date you signed the contract that made you the owner?"
+      val questionTwo = "What was the date you signed the contract that made you the owner?"
     }
 
     object AcquisitionValue {
-
+      val question = "How much did you pay for the property?"
+      val bulletTitle = "Put the market value of the property instead if you:"
+      val bulletOne = "inherited it"
+      val bulletTwo = "got it as a gift"
+      val bulletThree = "bought it from a relative, business partner or someone else you're connected to"
+      val bulletFour = "bought it for less than it's worth because the seller wanted to help you"
+      val bulletFive = "became the owner before 1 April 1982"
+      val bulletLink = "someone else you're connected to"
+      val errorNegative = "Enter a positive number for the amount you paid"
+      val errorDecimalPlaces = "The amount you paid has too many numbers after the decimal point"
+      def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
     object AllowableLosses {
@@ -68,7 +91,12 @@ object MessageLookup {
     }
 
     object AnnualExemptAmount {
-
+      val title = "How much of your Capital Gains Tax allowance have you got left?"
+      val link = "Capital Gains Tax allowances"
+      val errorMaxStart = "Enter a Capital Gains Tax allowance that's £"
+      val errorMaxEnd = "or less"
+      val errorNegative = "Enter a positive number for your allowance"
+      val errorDecimalPlaces = "Your allowance has too many numbers after the decimal point"
     }
 
     object CalculationElection {
@@ -76,15 +104,25 @@ object MessageLookup {
     }
 
     object CurrentIncome {
-
+      val title = "In the tax year when you stopped owning the property, what was your total UK income?"
+      val linkOne = "Income Tax"
+      val linkTwo = "Previous tax years"
+      val helpText = "You can give an estimate if this was in the current tax year"
+      val errorNegative = "Enter a positive number for your current income"
+      val errorDecimalPlace = "Your current income has too many numbers after the decimal point"
     }
 
     object CustomerType {
-
+      val title = "Who owned the property?"
+      val individual = "I owned it"
+      val trustee = "I was a trustee"
+      val personalRep = "I was the executor of an estate"
     }
 
     object DisabledTrustee {
-
+      val title = "Are you a trustee for someone who's vulnerable?"
+      val helpText = "A person's vulnerable if they're disabled, or if they're under 18 and their parents have died"
+      val linkOne = "Trusts and Capital Gains Tax"
     }
 
     object DisposalCosts {
@@ -108,7 +146,15 @@ object MessageLookup {
     }
 
     object OtherProperties {
-
+      val title = "In the tax year when you stopped owning the property, did you sell or give away any other UK residential properties?"
+      val questionTwo = "What was your taxable gain?"
+      val questionTwoHelpTextStart = "How to"
+      val questionTwoHelpTextLinkText = "work out your total taxable gains"
+      val errorNegative = "Enter a positive number for your taxable gain"
+      val errorDecimalPlaces = "Your taxable gain has too many numbers after the decimal point"
+      val errorQuestion = "Enter a value for your taxable gain"
+      val linkOne = "Capital Gains Tax"
+      val linkTwo = "Previous tax years"
     }
 
     object OtherReliefs {
@@ -123,7 +169,13 @@ object MessageLookup {
     }
 
     object PersonalAllowance {
-
+      val title = "In the tax year when you stopped owning the property, what was your UK Personal Allowance?"
+      val linkOne = "Income Tax rates and Personal Allowances"
+      val linkTwo = "Tax on your UK income if you live abroad"
+      val errorNegative = "Enter a positive number for your Personal Allowance"
+      val errorDecimalPlaces = "Enter a whole number for your Personal Allowance"
+      val errorMaxLimit = "Enter a Personal Allowance that's £"
+      val errorMaxLimitEnd = "or Less"
     }
 
     object PrivateResidenceRelief {
@@ -139,13 +191,25 @@ object MessageLookup {
     }
 
     object RebasedCosts {
-
+      val question = "Did you pay for the valuation?"
+      val inputQuestion = "How much did it cost to get the property valued?"
+      val errorNegative = "Enter a positive number for your costs"
+      val errorNoValue = "Enter the value for your costs"
+      val errorDecimalPlaces = "There are too many numbers after the decimal point in your costs"
+      def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
     object RebasedValue {
-      val question = "What was the property worth on 5 April 2015?"
+      val question = "Do you know how much the property was worth on 5 April 2015?"
+      val questionHelpText = "Only tell us if you owned the property on that date"
+      val inputQuestion = "What was the value of the property?"
+      val inputQuestionMandatory = "What was the property worth on 5 April 2015?"
       val inputHelpText = "You can use a valuation from a surveyor or a property website."
+      val additionalContentTitle = "Why we're asking for this"
       val errorNoValue = "Enter a value for your property on 5 April 2015"
+      val errorNegative = "Enter a positive value for your property on 5 April 2015"
+      val errorDecimalPlaces = "The value for your property on 5 April 2015 has too many numbers after the decimal point"
+      def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
     object Summary {

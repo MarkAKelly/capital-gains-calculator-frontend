@@ -16,6 +16,7 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup
 import common.KeystoreKeys
 import common.nonresident.CustomerTypeKeys
 import connectors.CalculatorConnector
@@ -100,20 +101,20 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
         }
 
         "have the title 'How much of your Capital Gains Tax allowance have you got left?'" in {
-          document.title shouldEqual Messages("calc.annualExemptAmount.question")
+          document.title shouldEqual MessageLookup.NonResident.AnnualExemptAmount.title
         }
 
         "have the heading Calculate your tax (non-residents) " in {
-          document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
+          document.body.getElementsByTag("h1").text shouldEqual MessageLookup.NonResident.Common.pageHeading
         }
 
         s"have a 'Back' link to ${routes.OtherPropertiesController.otherProperties()}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           document.body.getElementById("back-link").attr("href") shouldEqual routes.OtherPropertiesController.otherProperties().toString()
         }
 
         "have the question 'How much of your Capital Gains Tax allowance have you got left?' as the legend of the input" in {
-          document.body.getElementsByTag("label").text should include(Messages("calc.annualExemptAmount.question"))
+          document.body.getElementsByTag("label").text should include(MessageLookup.NonResident.AnnualExemptAmount.title)
         }
 
         "display an input box for the Annual Exempt Amount" in {
@@ -125,12 +126,12 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
         }
 
         "display a 'Continue' button " in {
-          document.body.getElementById("continue-button").text shouldEqual Messages("calc.base.continue")
+          document.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
         }
 
         "should contain a Read more sidebar with a link to CGT allowances" in {
-          document.select("aside h2").text shouldBe Messages("calc.common.readMore")
-          document.select("aside a").text shouldBe s"${Messages("calc.annualExemptAmount.link.one")} ${Messages("calc.base.externalLink")}"
+          document.select("aside h2").text shouldBe MessageLookup.readMore
+          document.select("aside a").text shouldBe s"${MessageLookup.NonResident.AnnualExemptAmount.link} ${MessageLookup.calcBaseExternalLink}"
         }
       }
     }
@@ -259,7 +260,7 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
       }
 
       s"fail with message ${Messages("calc.annualExemptAmount.errorDecimalPlaces")}" in {
-        document.getElementsByClass("error-notification").text should include(Messages("calc.annualExemptAmount.errorDecimalPlaces"))
+        document.getElementsByClass("error-notification").text should include(MessageLookup.NonResident.AnnualExemptAmount.errorDecimalPlaces)
       }
     }
   }

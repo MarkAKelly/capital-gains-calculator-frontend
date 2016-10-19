@@ -261,7 +261,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question 'Who owned the property?'" in {
-              document.select("#personalDetails").text should include(Messages("calc.customerType.question"))
+              document.select("#personalDetails").text should include(MessageLookup.NonResident.CustomerType.title)
             }
 
             "have an 'individual' owner and link to the customer-type page" in {
@@ -270,7 +270,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question 'What’s your total income for this tax year?'" in {
-              document.select("#personalDetails").text should include(Messages("calc.currentIncome.question"))
+              document.select("#personalDetails").text should include(MessageLookup.NonResident.CurrentIncome.title)
             }
 
             "have an total income of £1,000 and link to the current-income screen" in {
@@ -279,7 +279,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question 'What's your Personal Allowance for this tax year?'" in {
-              document.select("#personalDetails").text should include(Messages("calc.personalAllowance.question"))
+              document.select("#personalDetails").text should include(MessageLookup.NonResident.PersonalAllowance.title)
             }
 
             "have a personal allowance of £9,000 that has a link to the personal allowance page." in {
@@ -288,7 +288,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question 'What was the total taxable gain of your previous Capital Gains in the tax year you stopped owning the property?'" in {
-              document.select("#personalDetails").text should include(Messages("calc.otherProperties.questionTwo"))
+              document.select("#personalDetails").text should include(MessageLookup.NonResident.OtherProperties.questionTwo)
             }
 
             "have a total taxable gain of prior disposals of £9,600 and link to the other-properties page" in {
@@ -297,7 +297,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question 'How much of your Capital Gains Tax allowance have you got left'" in {
-              document.select("#personalDetails").text should include(Messages("calc.annualExemptAmount.question"))
+              document.select("#personalDetails").text should include(MessageLookup.NonResident.AnnualExemptAmount.title)
             }
 
             "have a remaining CGT Allowance of £1,500 and link to the allowance page" in {
@@ -313,7 +313,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question for whether the acquisition date is provided" in {
-              document.select("#purchaseDetails").text should include(Messages("calc.acquisitionDate.question"))
+              document.select("#purchaseDetails").text should include(messages.AcquisitionDate.question)
             }
 
             "have an answer to the question for providing an acquisition date of 'No'" in {
@@ -323,7 +323,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question 'How much did you pay for the property?'" in {
-              document.select("#purchaseDetails").text should include(Messages("calc.acquisitionValue.question"))
+              document.select("#purchaseDetails").text should include(messages.AcquisitionValue.question)
             }
 
             "have an acquisition value of £100,000 and link to the acquisition value page" in {
@@ -332,7 +332,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question 'How much did you pay in costs when you became the property owner?'" in {
-              document.select("#purchaseDetails").text should include(Messages("calc.acquisitionCosts.question"))
+              document.select("#purchaseDetails").text should include(messages.AcquisitionCosts.question)
             }
 
             "have a acquisition costs of £0 and link to the acquisition-costs page" in {
@@ -473,7 +473,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "include the question for whether the acquisition date is provided" in {
-          document.select("#purchaseDetails").text should include(Messages("calc.acquisitionDate.question"))
+          document.select("#purchaseDetails").text should include(messages.AcquisitionDate.question)
         }
 
         "have an answer to the question for providing an acquisition date of 'No'" in {
@@ -713,7 +713,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "include the question for the rebased value" in {
-          document.select("#purchaseDetails").text should include(Messages("calc.rebasedValue.questionTwo"))
+          document.select("#purchaseDetails").text should include(messages.RebasedValue.inputQuestion)
         }
 
         "have a value for the rebased value" in {
@@ -721,7 +721,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "include the question for the rebased costs" in {
-          document.select("#purchaseDetails").text should include(Messages("calc.rebasedCosts.questionTwo"))
+          document.select("#purchaseDetails").text should include(messages.RebasedCosts.inputQuestion)
         }
 
         "have a value for the rebased costs" in {
@@ -758,7 +758,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "include the question for whether the acquisition date is provided" in {
-          document.select("#purchaseDetails").text should include(Messages("calc.acquisitionDate.question"))
+          document.select("#purchaseDetails").text should include(messages.AcquisitionDate.question)
         }
 
         "have an answer to the question for providing an acquisition date of 'No'" in {
