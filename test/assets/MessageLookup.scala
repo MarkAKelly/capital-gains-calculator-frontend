@@ -39,6 +39,11 @@ object MessageLookup {
   val maxNumericExceededEnd = "or less"
   val readMore = "Read more"
 
+  object Common {
+    val day = "Day"
+    val month = "Month"
+    val year = "Year"
+  }
   //########################################################################################
   //These nested objects have been created in anticipation of the Tech-Debt to refactor
   // the message lookup and add the non-resident messages.  Any new added pages should be added
@@ -127,13 +132,29 @@ object MessageLookup {
 
     object DisposalCosts {
 
+      val question = "How much did you pay in costs when you stopped being the property owner?"
+      val errorNegativeNumber = "Enter a positive number for your selling costs"
+      val errorDecimalPlaces = "There are too many numbers after the decimal point in your selling costs"
+
     }
 
     object DisposalDate {
 
+      val question = "When did you sign the contract that made someone else the owner?"
+      val errorDateAfter = "This can't be before the date you became the owner"
+
     }
 
     object DisposalValue {
+
+      val question = "How much did you sell or give away the property for?"
+      val errorNegativeNumber = "Enter a positive number for the amount you sold the property for"
+      val errorDecimalPlaces = "The amount you sold the property for has too many numbers after the decimal point"
+      val bulletIntro = "Put the market value of the property instead if you:"
+      val bulletOne = "gave it away as a gift"
+      val bulletTwo = "sold it to a relative, business partner or"
+      val bulletTwoLink = "someone else you're connected to"
+      val bulletThree = "sold it for less than it's worth to help the buyer"
 
     }
 
@@ -213,6 +234,8 @@ object MessageLookup {
     }
 
     object Summary {
+
+      val saleDetailsTitle = "Sale details"
 
     }
 
