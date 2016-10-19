@@ -24,7 +24,6 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.CalculationElectionConstructor
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -32,7 +31,8 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
-
+import assets.MessageLookup
+import assets.MessageLookup.NonResident.{AcquisitionDate => messages, Common}
 import scala.concurrent.Future
 import controllers.nonresident.{AcquisitionDateController, routes}
 import models.nonresident.{AcquisitionDateModel, OtherPropertiesModel}
@@ -89,29 +89,29 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
             charset(result) shouldBe Some("utf-8")
           }
 
-          s"have the title '${Messages("calc.acquisitionDate.question")}'" in {
-            document.title shouldEqual Messages("calc.acquisitionDate.question")
+          s"have the title '${messages.question}'" in {
+            document.title shouldEqual messages.question
           }
 
           "have the heading Calculate your tax (non-residents) " in {
-            document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
+            document.body.getElementsByTag("h1").text shouldEqual Common.pageHeading
           }
 
           s"have a 'Back' link to ${routes.OtherPropertiesController.otherProperties().url} " in {
-            document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+            document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
             document.body.getElementById("back-link").attr("href") shouldEqual routes.OtherPropertiesController.otherProperties().url
           }
 
-          s"have the question '${Messages("calc.acquisitionDate.question")}" in {
-            document.body.getElementsByTag("legend").text should include(Messages("calc.acquisitionDate.question"))
+          s"have the question '${messages.question}" in {
+            document.body.getElementsByTag("legend").text should include(messages.question)
           }
 
           "display the correct wording for radio option `yes`" in {
-            document.body.getElementById("hasAcquisitionDate-yes").parent.text shouldEqual Messages("calc.base.yes")
+            document.body.getElementById("hasAcquisitionDate-yes").parent.text shouldEqual Common.yes
           }
 
           "display the correct wording for radio option `no`" in {
-            document.body.getElementById("hasAcquisitionDate-no").parent.text shouldEqual Messages("calc.base.no")
+            document.body.getElementById("hasAcquisitionDate-no").parent.text shouldEqual Common.no
           }
 
           "contain a hidden component with an input box" in {
@@ -119,13 +119,13 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
           }
 
           "display three input boxes with labels Day, Month and Year respectively" in {
-            document.select("label[for=acquisitionDateDay]").text shouldEqual Messages("calc.common.date.fields.day")
-            document.select("label[for=acquisitionDateMonth]").text shouldEqual Messages("calc.common.date.fields.month")
-            document.select("label[for=acquisitionDateYear]").text shouldEqual Messages("calc.common.date.fields.year")
+            document.select("label[for=acquisitionDateDay]").text shouldEqual Common.day
+            document.select("label[for=acquisitionDateMonth]").text shouldEqual Common.month
+            document.select("label[for=acquisitionDateYear]").text shouldEqual Common.year
           }
 
           "display a 'Continue' button " in {
-            document.body.getElementById("continue-button").text shouldEqual Messages("calc.base.continue")
+            document.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
           }
         }
       }
@@ -137,7 +137,7 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.AnnualExemptAmountController.annualExemptAmount().url} " in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           document.body.getElementById("back-link").attr("href") shouldEqual routes.AnnualExemptAmountController.annualExemptAmount().url
         }
       }
@@ -149,7 +149,7 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.OtherPropertiesController.otherProperties().url} " in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           document.body.getElementById("back-link").attr("href") shouldEqual routes.OtherPropertiesController.otherProperties().url
         }
       }
@@ -161,7 +161,7 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to $missingDataRoute " in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
         }
       }
@@ -256,8 +256,8 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
         status(result) shouldBe 400
       }
 
-      s"should error with message ${Messages("calc.common.date.error.invalidDate")}" in {
-        document.select(".error-notification").text should include (Messages("calc.common.date.error.invalidDate"))
+      s"should error with message ${Common.errorInvalidDate}" in {
+        document.select(".error-notification").text should include (Common.errorInvalidDate)
       }
     }
 
@@ -270,8 +270,8 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
         status(result) shouldBe 400
       }
 
-      s"should error with message ${Messages("calc.common.date.error.lessThan1")}" in {
-        document.select(".error-notification").text should include (Messages("calc.common.date.error.invalidDate"))
+      s"should error with message ${Common.errorInvalidDate}" in {
+        document.select(".error-notification").text should include (Common.errorInvalidDate)
       }
     }
 
@@ -284,8 +284,8 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
         status(result) shouldBe 400
       }
 
-      s"should error with message ${Messages("calc.common.date.error.greaterThan31")}" in {
-        document.select(".error-notification").text should include (Messages("calc.common.date.error.invalidDate"))
+      s"should error with message ${Common.errorInvalidDate}" in {
+        document.select(".error-notification").text should include (Common.errorInvalidDate)
       }
     }
 
@@ -298,8 +298,8 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
         status(result) shouldBe 400
       }
 
-      s"should error with message ${Messages("calc.common.date.error.greaterThan12")}" in {
-        document.select(".error-notification").text should include (Messages("calc.common.date.error.invalidDate"))
+      s"should error with message ${Common.errorInvalidDate}" in {
+        document.select(".error-notification").text should include (Common.errorInvalidDate)
       }
     }
 
@@ -312,8 +312,8 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
         status(result) shouldBe 400
       }
 
-      s"should error with message ${Messages("calc.common.date.error.lessThan1")}" in {
-        document.select(".error-notification").text should include (Messages("calc.common.date.error.invalidDate"))
+      s"should error with message ${Common.errorInvalidDate}" in {
+        document.select(".error-notification").text should include (Common.errorInvalidDate)
       }
     }
 
@@ -327,7 +327,7 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
       }
 
       "should error with message 'calc.common.date.error.invalidDate'" in {
-        document.select(".error-notification").text should include (Messages("calc.common.date.error.invalidDate"))
+        document.select(".error-notification").text should include (Common.errorInvalidDate)
       }
     }
 
@@ -341,7 +341,7 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
       }
 
       "should error with message 'calc.common.date.error.invalidDate'" in {
-        document.select(".error-notification").text should include (Messages("calc.common.date.error.invalidDate"))
+        document.select(".error-notification").text should include (Common.errorInvalidDate)
       }
     }
 
@@ -355,7 +355,7 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
       }
 
       "should error with message 'calc.common.date.error.invalidDate'" in {
-        document.select(".error-notification").text should include (Messages("calc.common.date.error.invalidDate"))
+        document.select(".error-notification").text should include (Common.errorInvalidDate)
       }
     }
   }

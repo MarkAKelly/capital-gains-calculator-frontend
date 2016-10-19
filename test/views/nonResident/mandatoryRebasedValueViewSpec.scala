@@ -39,8 +39,8 @@ class mandatoryRebasedValueViewSpec extends UnitSpec with WithFakeApplication wi
       doc.charset.toString shouldBe "UTF-8"
     }
 
-    s"have a title ${messages.question}" in {
-      doc.title shouldBe messages.question
+    s"have a title ${messages.inputQuestionMandatory}" in {
+      doc.title shouldBe messages.inputQuestionMandatory
     }
 
     "have a H1 tag that" should {
@@ -109,8 +109,8 @@ class mandatoryRebasedValueViewSpec extends UnitSpec with WithFakeApplication wi
 
     "have an input for the amount" which {
 
-      s"has a label with text ${messages.question}" in {
-        doc.body.select("label > div > span").text shouldEqual messages.question
+      s"has a label with text ${messages.inputQuestionMandatory}" in {
+        doc.body.select("label > div > span").text shouldEqual messages.inputQuestionMandatory
       }
 
       s"should be of tag type input" in {
