@@ -16,6 +16,10 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup
+import assets.MessageLookup.{Common => commonMessages}
+import assets.MessageLookup.NonResident.{DisposalValue => messages}
+import assets.MessageLookup.NonResident.{Common => commonNRMessages}
 import common.Constants
 import connectors.CalculatorConnector
 import play.api.libs.json.Json
@@ -79,36 +83,36 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
           charset(result) shouldBe Some("utf-8")
         }
 
-        "have the title 'How much did you sell or give away the property for?'" in {
-          document.title shouldEqual Messages("calc.disposalValue.question")
+        s"have the title ${messages.question}" in {
+          document.title shouldEqual messages.question
         }
 
-        "have the heading Calculate your Non-resident Capital Gains Tax " in {
-          document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
+        s"have the heading ${commonNRMessages.pageHeading}" in {
+          document.body.getElementsByTag("h1").text shouldEqual commonNRMessages.pageHeading
         }
 
         s"have a 'Back' link to ${routes.DisposalDateController.disposalDate()}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalDateController.disposalDate().toString()
         }
 
-        "have the question 'How much did you sell or give away the property for?' as the legend of the input" in {
-          document.body.getElementsByTag("label").text should include (Messages("calc.disposalValue.question"))
+        s"have the question ${messages.question} as the legend of the input" in {
+          document.body.getElementsByTag("label").text should include (messages.question)
         }
 
         "have the bullet list content title and content" in {
-          document.select("p#bullet-list-title").text shouldEqual "Put the market value of the property instead if you:"
+          document.select("p#bullet-list-title").text shouldEqual messages.bulletIntro
         }
 
         "Have the bullet content" in {
-          document.select("ul li").text should include(Messages("calc.disposalValue.bullet.one"))
-          document.select("ul li").text should include(Messages("calc.disposalValue.bullet.two"))
-          document.select("ul li").text should include(Messages("calc.disposalValue.bullet.three"))
+          document.select("ul li").text should include(messages.bulletOne)
+          document.select("ul li").text should include(messages.bulletTwo)
+          document.select("ul li").text should include(messages.bulletThree)
         }
 
         "have a link with a hidden external link field" in {
-          document.select("ul li a#lossesLink").text should include(Messages("calc.disposalValue.bullet.two.link"))
-          document.select("span#opensInANewWindow").text shouldEqual Messages("calc.base.externalLink")
+          document.select("ul li a#lossesLink").text should include(messages.bulletTwoLink)
+          document.select("span#opensInANewWindow").text shouldEqual MessageLookup.calcBaseExternalLink
         }
 
         "display an input box for the Annual Exempt Amount" in {
@@ -116,7 +120,7 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
         }
 
         "display a 'Continue' button " in {
-          document.body.getElementById("continue-button").text shouldEqual Messages("calc.base.continue")
+          document.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
         }
       }
     }
@@ -199,8 +203,8 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
         status(result) shouldBe 400
       }
 
-      s"fail with message ${Messages("calc.disposalValue.errorDecimalPlaces")}" in {
-        document.getElementsByClass("error-notification").text should include (Messages("calc.disposalValue.errorDecimalPlaces"))
+      s"fail with message ${messages.errorDecimalPlaces}" in {
+        document.getElementsByClass("error-notification").text should include (messages.errorDecimalPlaces)
       }
     }
 
@@ -213,10 +217,10 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
         status(result) shouldBe 400
       }
 
-      s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
+      s"fail with message ${MessageLookup.maxNumericExceededStart} ${MoneyPounds(Constants.maxNumeric, 0).quantity} ${MessageLookup.maxNumericExceededEnd}" in {
         document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
-            " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+          include (MessageLookup.maxNumericExceededStart + MoneyPounds(Constants.maxNumeric, 0).quantity +
+            " " + MessageLookup.maxNumericExceededEnd)
       }
     }
   }

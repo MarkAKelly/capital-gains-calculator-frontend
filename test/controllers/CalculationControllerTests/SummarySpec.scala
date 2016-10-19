@@ -16,11 +16,11 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup.{NonResident => questionMessages}
 import assets.MessageLookup
 import common.DefaultRoutes._
 import common.{KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
-import constructors.nonresident.CalculationElectionConstructor
 import controllers.nonresident.{SummaryController, routes}
 import models.nonresident.{AcquisitionDateModel, CalculationResultModel, RebasedValueModel, SummaryModel}
 import org.jsoup.Jsoup
@@ -45,7 +45,6 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
                  ): SummaryController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
-    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[RebasedValueModel](Matchers.eq(KeystoreKeys.rebasedValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(rebasedValueData))
@@ -149,7 +148,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${missingDataRoute} " in {
+        s"have a 'Back' link to $missingDataRoute " in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
           document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
         }
@@ -165,7 +164,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${missingDataRoute} " in {
+        s"have a 'Back' link to $missingDataRoute " in {
           document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
           document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
         }
@@ -359,12 +358,12 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
           "have a 'Sale details' section that" should {
 
-            "include the section heading 'Sale details" in {
-              document.select("#saleDetails").text should include(Messages("calc.summary.sale.details.title"))
+            s"include the section heading ${questionMessages.Summary.saleDetailsTitle}" in {
+              document.select("#saleDetails").text should include(questionMessages.Summary.saleDetailsTitle)
             }
 
-            "include the question 'When did you sign the contract that made someone else the owner?'" in {
-              document.select("#saleDetails").text should include(Messages("calc.disposalDate.question"))
+            s"include the question ${questionMessages.DisposalDate.question}" in {
+              document.select("#saleDetails").text should include(questionMessages.DisposalDate.question)
             }
 
             "the date of disposal should be '10 October 2010 and link to the disposal-date page" in {
@@ -381,8 +380,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.body().getElementById("saleDetails(1)").attr("href") shouldEqual routes.DisposalValueController.disposalValue().toString()
             }
 
-            "include the question 'How much did you pay in costs when you stopped being the property owner?'" in {
-              document.select("#saleDetails").text should include(Messages("calc.disposalCosts.question"))
+            s"include the question ${questionMessages.DisposalCosts.question}" in {
+              document.select("#saleDetails").text should include(questionMessages.DisposalCosts.question)
             }
 
             "the value of the costs should be £0 and link to the disposal costs page" in {

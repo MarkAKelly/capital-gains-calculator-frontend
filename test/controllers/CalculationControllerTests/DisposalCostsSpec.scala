@@ -17,6 +17,8 @@
 package controllers.CalculationControllerTests
 
 import assets.MessageLookup
+import assets.MessageLookup.NonResident.{DisposalCosts => messages}
+import assets.MessageLookup.NonResident.{Common => commonMessages}
 import common.{Constants, KeystoreKeys}
 import connectors.CalculatorConnector
 import play.api.libs.json.Json
@@ -88,23 +90,23 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
           charset(result) shouldBe Some("utf-8")
         }
 
-        "have the title 'How much did you pay in costs when you stopped being the property owner?'" in {
-          document.getElementsByTag("title").text shouldBe Messages("calc.disposalCosts.question")
+        s"have the title ${messages.question}" in {
+          document.getElementsByTag("title").text shouldBe messages.question
         }
 
         s"have a 'Back' link to ${routes.AcquisitionCostsController.acquisitionCosts()}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionCostsController.acquisitionCosts().toString()
         }
 
-        "have the heading 'Calculate your tax (non-residents)'" in {
-          document.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
+        s"have the heading ${commonMessages.pageHeading}" in {
+          document.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
         }
 
         "have a monetary field that" should {
 
           "have the title 'How much did you pay in costs when you became the property owner?'" in {
-            document.select("label[for=disposalCosts]").text should include(Messages("calc.disposalCosts.question"))
+            document.select("label[for=disposalCosts]").text should include(messages.question)
           }
 
           "have an input box for the disposal costs" in {
@@ -119,7 +121,7 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
           }
 
           "have the text 'Continue'" in {
-            document.getElementById("continue-button").text shouldEqual Messages("calc.base.continue")
+            document.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
           }
         }
       }
@@ -246,8 +248,8 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
         status(result) shouldBe 400
       }
 
-      "display the error message 'Disposal costs can't be negative'" in {
-        document.select("div label span.error-notification").text shouldEqual Messages("calc.disposalCosts.errorNegativeNumber")
+      s"display the error message ${messages.errorNegativeNumber}" in {
+        document.select("div label span.error-notification").text shouldEqual messages.errorNegativeNumber
       }
     }
 
@@ -260,8 +262,8 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
         status(result) shouldBe 400
       }
 
-      "display the error message 'The costs have too many decimal places'" in {
-        document.select("div label span.error-notification").text shouldEqual Messages("calc.disposalCosts.errorDecimalPlaces")
+      s"display the error message ${messages.errorDecimalPlaces}" in {
+        document.select("div label span.error-notification").text shouldEqual messages.errorDecimalPlaces
       }
     }
 
@@ -274,9 +276,9 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
         status(result) shouldBe 400
       }
 
-      "display the error message 'Disposal costs cannot be negative' and 'The costs have too many decimal places'" in {
-        document.select("div label span.error-notification").text shouldEqual (Messages("calc.disposalCosts.errorNegativeNumber") +
-          " " + Messages("calc.disposalCosts.errorDecimalPlaces"))
+      s"display the error message ${messages.errorNegativeNumber} and ${messages.errorDecimalPlaces}" in {
+        document.select("div label span.error-notification").text shouldEqual (messages.errorNegativeNumber +
+          " " + messages.errorDecimalPlaces)
       }
     }
 
@@ -289,10 +291,10 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
         status(result) shouldBe 400
       }
 
-      s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
+      s"fail with message ${MessageLookup.maxNumericExceededStart} ${MoneyPounds(Constants.maxNumeric, 0).quantity} ${MessageLookup.maxNumericExceededEnd}" in {
         document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
-            " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+          include (MessageLookup.maxNumericExceededStart + MoneyPounds(Constants.maxNumeric, 0).quantity +
+            " " + MessageLookup.maxNumericExceededEnd)
       }
     }
   }
