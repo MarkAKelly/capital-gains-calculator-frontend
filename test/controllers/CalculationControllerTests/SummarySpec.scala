@@ -16,8 +16,7 @@
 
 package controllers.CalculationControllerTests
 
-import assets.MessageLookup.{NonResident => questionMessages}
-import assets.MessageLookup
+
 import common.DefaultRoutes._
 import common.{KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
@@ -32,6 +31,7 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{NonResident => messages}
+import assets.MessageLookup
 import scala.concurrent.Future
 
 class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
@@ -85,7 +85,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.OtherReliefsController.otherReliefs().url}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           document.body.getElementById("back-link").attr("href") shouldEqual routes.OtherReliefsController.otherReliefs().url
         }
       }
@@ -101,7 +101,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.OtherReliefsController.otherReliefs().url}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
           document.body.getElementById("back-link").attr("href") shouldEqual routes.OtherReliefsController.otherReliefs().url
         }
       }
@@ -358,12 +358,12 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
           "have a 'Sale details' section that" should {
 
-            s"include the section heading ${questionMessages.Summary.saleDetailsTitle}" in {
-              document.select("#saleDetails").text should include(questionMessages.Summary.saleDetailsTitle)
+            s"include the section heading ${messages.Summary.saleDetailsTitle}" in {
+              document.select("#saleDetails").text should include(messages.Summary.saleDetailsTitle)
             }
 
-            s"include the question ${questionMessages.DisposalDate.question}" in {
-              document.select("#saleDetails").text should include(questionMessages.DisposalDate.question)
+            s"include the question ${messages.DisposalDate.question}" in {
+              document.select("#saleDetails").text should include(messages.DisposalDate.question)
             }
 
             "the date of disposal should be '10 October 2010 and link to the disposal-date page" in {
@@ -380,8 +380,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.body().getElementById("saleDetails(1)").attr("href") shouldEqual routes.DisposalValueController.disposalValue().toString()
             }
 
-            s"include the question ${questionMessages.DisposalCosts.question}" in {
-              document.select("#saleDetails").text should include(questionMessages.DisposalCosts.question)
+            s"include the question ${messages.DisposalCosts.question}" in {
+              document.select("#saleDetails").text should include(messages.DisposalCosts.question)
             }
 
             "the value of the costs should be £0 and link to the disposal costs page" in {
@@ -405,8 +405,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.body().getElementById("deductions(1)").attr("href") shouldEqual routes.AllowableLossesController.allowableLosses().toString()
             }
 
-            "include the question 'How much extra tax relief are you claiming?'" in {
-              document.select("#deductions").text should include(Messages("calc.otherReliefs.questionTwo"))
+            s"include the question '${messages.PrivateResidenceRelief.question}'" in {
+              document.select("#deductions").text should include(messages.PrivateResidenceRelief.question)
             }
 
             "the answer to question should be No and link to the other-reliefs page" in {
@@ -415,7 +415,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question 'Do you want to add other tax relief?'" in {
-              document.select("#deductions").text should include(Messages("calc.privateResidenceRelief.question"))
+              document.select("#deductions").text should include(messages.OtherReliefs.question)
             }
 
             "the PRR claimed question's answer should be 'No' and be a link to the PRR page" in {
