@@ -212,8 +212,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"should error with message '${commonNRMessages.errorDate}'" in {
-        document.select(".error-notification").text should include (commonNRMessages.errorDate)
+      s"should error with message '${commonNRMessages.errorInvalidDate}'" in {
+        document.select(".error-notification").text should include (commonNRMessages.errorInvalidDate)
       }
     }
 
@@ -226,8 +226,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"should error with message '${commonNRMessages.errorDate}'" in {
-        document.select(".error-notification").text should include (commonNRMessages.errorDate)
+      s"should error with message '${commonNRMessages.errorInvalidDate}'" in {
+        document.select(".error-notification").text should include (commonNRMessages.errorInvalidDate)
       }
     }
 
@@ -240,8 +240,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"should error with message '${commonNRMessages.errorDate}'" in {
-        document.select(".error-notification").text should include (commonNRMessages.errorDate)
+      s"should error with message '${commonNRMessages.errorInvalidDate}'" in {
+        document.select(".error-notification").text should include (commonNRMessages.errorInvalidDate)
       }
     }
 
@@ -254,8 +254,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"should error with message '${commonNRMessages.errorDate}'" in {
-        document.select(".error-notification").text should include (commonNRMessages.errorDate)
+      s"should error with message '${commonNRMessages.errorInvalidDate}'" in {
+        document.select(".error-notification").text should include (commonNRMessages.errorInvalidDate)
       }
     }
 
@@ -268,8 +268,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"should error with message '${commonNRMessages.errorDate}'" in {
-        document.select(".error-notification").text should include (commonNRMessages.errorDate)
+      s"should error with message '${commonNRMessages.errorInvalidDate}'" in {
+        document.select(".error-notification").text should include (commonNRMessages.errorInvalidDate)
       }
     }
 
@@ -282,8 +282,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"should error with message ${commonNRMessages.errorDate}" in {
-        document.select(".error-notification").text should include (commonNRMessages.errorDate)
+      s"should error with message ${commonNRMessages.errorInvalidDate}" in {
+        document.select(".error-notification").text should include (commonNRMessages.errorInvalidDate)
       }
     }
 
@@ -296,8 +296,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"should error with message ${commonNRMessages.errorDate}" in {
-        document.select(".error-notification").text should include (commonNRMessages.errorDate)
+      s"should error with message ${commonNRMessages.errorInvalidDate}" in {
+        document.select(".error-notification").text should include (commonNRMessages.errorInvalidDate)
       }
     }
 
@@ -310,8 +310,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"should error with message ${commonNRMessages.errorDate}" in {
-        document.select(".error-notification").text should include (commonNRMessages.errorDate)
+      s"should error with message ${commonNRMessages.errorInvalidDate}" in {
+        document.select(".error-notification").text should include (commonNRMessages.errorInvalidDate)
       }
     }
   }

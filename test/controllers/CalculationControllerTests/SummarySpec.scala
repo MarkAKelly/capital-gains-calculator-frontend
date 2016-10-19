@@ -31,7 +31,7 @@ import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-
+import assets.MessageLookup.{NonResident => messages}
 import scala.concurrent.Future
 
 class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
@@ -312,7 +312,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question for whether the acquisition date is provided" in {
-              document.select("#purchaseDetails").text should include(Messages("calc.acquisitionDate.question"))
+              document.select("#purchaseDetails").text should include(messages.AcquisitionDate.question)
             }
 
             "have an answer to the question for providing an acquisition date of 'No'" in {
@@ -322,7 +322,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question 'How much did you pay for the property?'" in {
-              document.select("#purchaseDetails").text should include(Messages("calc.acquisitionValue.question"))
+              document.select("#purchaseDetails").text should include(messages.AcquisitionValue.question)
             }
 
             "have an acquisition value of £100,000 and link to the acquisition value page" in {
@@ -331,7 +331,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
 
             "include the question 'How much did you pay in costs when you became the property owner?'" in {
-              document.select("#purchaseDetails").text should include(Messages("calc.acquisitionCosts.question"))
+              document.select("#purchaseDetails").text should include(messages.AcquisitionCosts.question)
             }
 
             "have a acquisition costs of £0 and link to the acquisition-costs page" in {
@@ -472,7 +472,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "include the question for whether the acquisition date is provided" in {
-          document.select("#purchaseDetails").text should include(Messages("calc.acquisitionDate.question"))
+          document.select("#purchaseDetails").text should include(messages.AcquisitionDate.question)
         }
 
         "have an answer to the question for providing an acquisition date of 'No'" in {
@@ -712,7 +712,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "include the question for the rebased value" in {
-          document.select("#purchaseDetails").text should include(Messages("calc.rebasedValue.questionTwo"))
+          document.select("#purchaseDetails").text should include(messages.RebasedValue.inputQuestion)
         }
 
         "have a value for the rebased value" in {
@@ -720,7 +720,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "include the question for the rebased costs" in {
-          document.select("#purchaseDetails").text should include(Messages("calc.rebasedCosts.questionTwo"))
+          document.select("#purchaseDetails").text should include(messages.RebasedCosts.inputQuestion)
         }
 
         "have a value for the rebased costs" in {
@@ -757,7 +757,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "include the question for whether the acquisition date is provided" in {
-          document.select("#purchaseDetails").text should include(Messages("calc.acquisitionDate.question"))
+          document.select("#purchaseDetails").text should include(messages.AcquisitionDate.question)
         }
 
         "have an answer to the question for providing an acquisition date of 'No'" in {
