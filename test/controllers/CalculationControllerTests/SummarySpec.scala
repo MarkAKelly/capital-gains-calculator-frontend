@@ -454,8 +454,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.select("a.button").hasClass("save-pdf-button") shouldEqual true
             }
 
-            s"with an href to ${controllers.resident.properties.routes.ReportController.gainSummaryReport().toString}" in {
-              document.select("a.save-pdf-button").attr("href") shouldEqual "/calculate-your-capital-gains/non-resident/summary-report"
+            s"with an href to ${controllers.nonresident.routes.ReportController.summaryReport().url}" in {
+              document.select("a.save-pdf-button").attr("href") shouldEqual controllers.nonresident.routes.ReportController.summaryReport().url
             }
 
             s"have the text ${messages.saveAsPdf}" in {

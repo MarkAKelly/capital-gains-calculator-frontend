@@ -44,8 +44,6 @@ object TestModels {
     OtherReliefsModel(None, None),
     OtherReliefsModel(None, None),
     Some(PrivateResidenceReliefModel("Yes", Some(2847), Some(0)))
-
-
   )
 
   val sumModelFlat = SummaryModel(
