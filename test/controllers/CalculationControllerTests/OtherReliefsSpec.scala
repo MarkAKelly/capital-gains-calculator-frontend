@@ -32,7 +32,7 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
-import assets.MessageLookup.{NonResident, NonResident => commonMessages}
+import assets.MessageLookup.{NonResident => commonMessages}
 import assets.MessageLookup.NonResident.{OtherReliefs => messages}
 
 import scala.concurrent.Future

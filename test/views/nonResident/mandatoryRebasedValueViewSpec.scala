@@ -23,7 +23,7 @@ import views.html.calculation.{nonresident => views}
 import forms.nonresident.RebasedValueForm._
 import org.jsoup.Jsoup
 import assets.MessageLookup.NonResident.{RebasedValue => messages}
-import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{NonResident => commonMessages}
 
 class mandatoryRebasedValueViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
@@ -47,8 +47,8 @@ class mandatoryRebasedValueViewSpec extends UnitSpec with WithFakeApplication wi
 
       lazy val h1Tag = doc.select("h1")
 
-      s"have the page heading '${commonMessages.NonResident.Common.pageHeading}'" in {
-        h1Tag.text shouldBe commonMessages.NonResident.Common.pageHeading
+      s"have the page heading '${commonMessages.pageHeading}'" in {
+        h1Tag.text shouldBe commonMessages.pageHeading
       }
 
       "have the heading-large class" in {
@@ -65,7 +65,7 @@ class mandatoryRebasedValueViewSpec extends UnitSpec with WithFakeApplication wi
       lazy val backLink = doc.select("a#back-link")
 
       "has the correct back link text" in {
-        backLink.text shouldBe commonMessages.calcBaseBack
+        backLink.text shouldBe commonMessages.back
       }
 
       "has the back-link class" in {
@@ -142,8 +142,8 @@ class mandatoryRebasedValueViewSpec extends UnitSpec with WithFakeApplication wi
         button.attr("id") shouldEqual "continue-button"
       }
 
-      s"has the text ${commonMessages.calcBaseContinue}" in {
-        button.text shouldEqual s"${commonMessages.calcBaseContinue}"
+      s"has the text ${commonMessages.continue}" in {
+        button.text shouldEqual s"${commonMessages.continue}"
       }
     }
   }

@@ -16,7 +16,7 @@
 
 package forms.resident
 
-import assets.MessageLookup.ErrorMessages
+import assets.MessageLookup.{Resident => messages}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import models.resident.AcquisitionCostsModel
 import forms.resident.AcquisitionCostsForm._
@@ -52,8 +52,8 @@ class AcquisitionCostsFormSpec extends UnitSpec with WithFakeApplication with Fa
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${ErrorMessages.mandatoryAmount}'" in {
-        form.error("amount").get.message shouldBe ErrorMessages.mandatoryAmount
+      s"error with message '${messages.mandatoryAmount}'" in {
+        form.error("amount").get.message shouldBe messages.mandatoryAmount
       }
     }
 
@@ -65,8 +65,8 @@ class AcquisitionCostsFormSpec extends UnitSpec with WithFakeApplication with Fa
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${ErrorMessages.invalidAmount}'" in {
-        form.error("amount").get.message shouldBe ErrorMessages.invalidAmount
+      s"error with message '${messages.invalidAmount}'" in {
+        form.error("amount").get.message shouldBe messages.invalidAmount
       }
     }
 
@@ -77,8 +77,8 @@ class AcquisitionCostsFormSpec extends UnitSpec with WithFakeApplication with Fa
         form.hasErrors shouldBe true
       }
 
-      s"return a form with the error message ${ErrorMessages.maximumAmount}" in {
-        form.error("amount").get.message shouldBe ErrorMessages.maximumAmount
+      s"return a form with the error message ${messages.maximumAmount}" in {
+        form.error("amount").get.message shouldBe messages.maximumAmount
       }
     }
 
@@ -90,8 +90,8 @@ class AcquisitionCostsFormSpec extends UnitSpec with WithFakeApplication with Fa
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${ErrorMessages.minimumAmount}'" in {
-        form.error("amount").get.message shouldBe ErrorMessages.minimumAmount
+      s"error with message '${messages.minimumAmount}'" in {
+        form.error("amount").get.message shouldBe messages.minimumAmount
       }
     }
 
@@ -103,8 +103,8 @@ class AcquisitionCostsFormSpec extends UnitSpec with WithFakeApplication with Fa
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${ErrorMessages.invalidAmount}'" in {
-        form.error("amount").get.message shouldBe ErrorMessages.invalidAmount
+      s"error with message '${messages.invalidAmount}'" in {
+        form.error("amount").get.message shouldBe messages.invalidAmount
       }
     }
   }

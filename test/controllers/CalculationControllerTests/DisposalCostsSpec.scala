@@ -17,7 +17,7 @@
 package controllers.CalculationControllerTests
 
 import assets.MessageLookup.NonResident.{DisposalCosts => messages}
-import assets.MessageLookup.{NonResident, NonResident => commonMessages}
+import assets.MessageLookup.{NonResident => commonMessages}
 import common.{Constants, KeystoreKeys}
 import connectors.CalculatorConnector
 import play.api.libs.json.Json

@@ -16,7 +16,7 @@
 
 package controllers.CalculationControllerTests
 
-import assets.MessageLookup.{NonResident, NonResident => commonMessages}
+import assets.MessageLookup.{NonResident => commonMessages}
 import assets.MessageLookup.NonResident.{PersonalAllowance => messages}
 import connectors.CalculatorConnector
 import play.api.libs.json.Json

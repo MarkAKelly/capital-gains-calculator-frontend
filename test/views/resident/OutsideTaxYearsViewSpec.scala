@@ -17,7 +17,7 @@
 package views.resident
 
 import assets.MessageLookup.{OutsideTaxYears => messages}
-import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{Resident => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import models.resident.TaxYearModel
 import org.jsoup.Jsoup
@@ -99,7 +99,7 @@ class OutsideTaxYearsViewSpec extends UnitSpec with WithFakeApplication with Fak
         lazy val backLink = doc.select("a#back-link")
 
         "have the correct back link text" in {
-          backLink.text shouldBe commonMessages.calcBaseBack
+          backLink.text shouldBe commonMessages.back
         }
 
         "have the back-link class" in {
@@ -115,7 +115,7 @@ class OutsideTaxYearsViewSpec extends UnitSpec with WithFakeApplication with Fak
         lazy val button = doc.select("a#continue-button")
 
         "have the correct text 'Continue'" in {
-          button.text() shouldBe commonMessages.calcBaseContinue
+          button.text() shouldBe commonMessages.continue
         }
 
         s"have an href to 'continue-link'" in {

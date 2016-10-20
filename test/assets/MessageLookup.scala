@@ -105,7 +105,7 @@ object MessageLookup {
       val moreInfoFirstP = "We can work out your tax in a number of ways. Before we give you a final total you have a choice about what to base it on."
       val moreInfoSecondP = "Because the options take different things into account they'll usually give you different totals. " +
         "Some totals may be much larger than others."
-      val moreInfoThirdP = "Unless you want to add more tax reliefs, the total you choose is the amount of tax you''ll pay."
+      val moreInfoThirdP = "Unless you want to add more tax reliefs, the total you choose is the amount of tax you'll pay."
       val legend = "Tax you'll owe"
       val basedOn = "Based on"
       val linkOne = "Different ways of working out Capital Gains Tax"
@@ -281,7 +281,7 @@ object MessageLookup {
       val propertyDetailsTitle = "Property details"
       val saleDetailsTitle = "Sale details"
       val deductionsTitle = "Deductions"
-      val whatToDoNextText = "You need to"
+      val whatToDoNextText = "What to do next"
       val whatToDoNextLink = "tell HMRC about the property"
       val startAgain = "Start again"
       val calculationElection = "What would you like to base your tax on?"
@@ -294,9 +294,10 @@ object MessageLookup {
     }
   }
 
-  object Resident extends Common{
+  object Resident extends Common {
 
     val homeText = "Calculate your Capital Gains Tax"
+    val errorInvalidDate = "Enter a real date"
 
     object Properties {
 

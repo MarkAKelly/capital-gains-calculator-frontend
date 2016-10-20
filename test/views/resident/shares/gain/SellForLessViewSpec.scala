@@ -17,7 +17,7 @@
 package views.resident.shares.gain
 
 import assets.MessageLookup.Resident.Shares.{SellForLess => messages}
-import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{Resident => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.shares.SellForLessForm._
 import models.resident.SellForLessModel
@@ -63,7 +63,7 @@ class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeReq
       lazy val backLink = doc.select("a#back-link")
 
       "has the correct back link text" in {
-        backLink.text shouldBe commonMessages.calcBaseBack
+        backLink.text shouldBe commonMessages.back
       }
 
       "has the back-link class" in {
@@ -203,8 +203,8 @@ class SellForLessViewSpec extends UnitSpec with WithFakeApplication with FakeReq
         button.attr("id") shouldEqual "continue-button"
       }
 
-      s"has the text ${commonMessages.calcBaseContinue}" in {
-        button.text shouldEqual s"${commonMessages.calcBaseContinue}"
+      s"has the text ${commonMessages.continue}" in {
+        button.text shouldEqual s"${commonMessages.continue}"
       }
     }
   }

@@ -18,6 +18,7 @@ package views.resident.shares.gain
 
 import assets.MessageLookup.Resident.Shares.{WorthWhenInherited => Messages}
 import assets.MessageLookup.Resident.{Shares => CommonSharesMessages}
+import assets.MessageLookup.{Resident => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.WorthWhenInheritedForm._
 import org.jsoup.Jsoup
@@ -40,7 +41,7 @@ class WorthWhenInheritedViewSpec extends UnitSpec with WithFakeApplication with 
     }
 
     s"have a nav title of 'navTitle'" in {
-      doc.select("span.header__menu__proposition-name").text() shouldBe CommonSharesMessages.homeText
+      doc.select("span.header__menu__proposition-name").text() shouldBe commonMessages.homeText
     }
 
     s"have a home link to 'homeLink'" in {
@@ -76,7 +77,7 @@ class WorthWhenInheritedViewSpec extends UnitSpec with WithFakeApplication with 
     }
 
     "have a continue button " in {
-      doc.select("#continue-button").text shouldBe assets.MessageLookup.calcBaseContinue
+      doc.select("#continue-button").text shouldBe commonMessages.continue
     }
   }
 

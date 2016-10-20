@@ -18,6 +18,7 @@ package views.resident.shares.gain
 
 import assets.MessageLookup
 import assets.MessageLookup.Resident.Shares.{ValueBeforeLegislationStart => messages}
+import assets.MessageLookup.{Resident => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.shares.gain.ValueBeforeLegislationStartForm._
 import org.jsoup.Jsoup
@@ -115,8 +116,8 @@ class ValueBeforeLegislationStartViewSpec extends UnitSpec with WithFakeApplicat
           button.hasClass("button") shouldEqual true
         }
 
-        s"has the text ${MessageLookup.calcBaseContinue}" in {
-          button.text() shouldEqual MessageLookup.calcBaseContinue
+        s"has the text ${commonMessages.continue}" in {
+          button.text() shouldEqual commonMessages.continue
         }
       }
     }

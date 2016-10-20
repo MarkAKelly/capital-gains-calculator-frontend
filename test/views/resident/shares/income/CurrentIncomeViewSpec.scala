@@ -17,7 +17,7 @@
 package views.resident.shares.income
 
 import assets.MessageLookup.{CurrentIncome => messages}
-import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{Resident => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.income.CurrentIncomeForm._
 import models.resident.TaxYearModel
@@ -47,7 +47,7 @@ class CurrentIncomeViewSpec extends UnitSpec with WithFakeApplication with FakeR
       lazy val backLink = doc.select("a#back-link")
 
       "has the correct back link text" in {
-        backLink.text shouldBe commonMessages.calcBaseBack
+        backLink.text shouldBe commonMessages.back
       }
 
       "has the back-link class" in {
@@ -118,8 +118,8 @@ class CurrentIncomeViewSpec extends UnitSpec with WithFakeApplication with FakeR
 
         lazy val continueButton = doc.select("button#continue-button")
 
-        s"have the button text '${commonMessages.calcBaseContinue}'" in {
-          continueButton.text shouldBe commonMessages.calcBaseContinue
+        s"have the button text '${commonMessages.continue}'" in {
+          continueButton.text shouldBe commonMessages.continue
         }
 
         "be of type submit" in {
@@ -143,8 +143,8 @@ class CurrentIncomeViewSpec extends UnitSpec with WithFakeApplication with FakeR
           sidebar.text() should include(messages.linkText)
         }
 
-        s"have a span with the text ${commonMessages.calcBaseExternalLink}" in {
-          sidebar.select("span").text() shouldEqual commonMessages.calcBaseExternalLink
+        s"have a span with the text ${commonMessages.externalLink}" in {
+          sidebar.select("span").text() shouldEqual commonMessages.externalLink
         }
 
         "has the properties to open a link in a new tab" which {
@@ -206,7 +206,7 @@ class CurrentIncomeViewSpec extends UnitSpec with WithFakeApplication with FakeR
         lazy val backLink = doc.select("a#back-link")
 
         "has the correct back link text" in {
-          backLink.text shouldBe commonMessages.calcBaseBack
+          backLink.text shouldBe commonMessages.back
         }
 
         "has the back-link class" in {

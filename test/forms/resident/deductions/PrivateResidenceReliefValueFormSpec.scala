@@ -17,6 +17,7 @@
 package forms.resident.deductions
 
 import assets.MessageLookup
+import assets.MessageLookup.{Resident => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.properties.PrivateResidenceReliefValueForm._
 import models.resident.properties.PrivateResidenceReliefValueModel
@@ -59,7 +60,7 @@ class PrivateResidenceReliefValueFormSpec extends UnitSpec with WithFakeApplicat
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.mandatoryAmount
+        form.error("amount").get.message shouldBe messages.mandatoryAmount
       }
     }
 
@@ -76,7 +77,7 @@ class PrivateResidenceReliefValueFormSpec extends UnitSpec with WithFakeApplicat
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.mandatoryAmount
+        form.error("amount").get.message shouldBe messages.mandatoryAmount
       }
     }
 
@@ -93,7 +94,7 @@ class PrivateResidenceReliefValueFormSpec extends UnitSpec with WithFakeApplicat
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.invalidAmount
+        form.error("amount").get.message shouldBe messages.invalidAmount
       }
     }
 
@@ -110,7 +111,7 @@ class PrivateResidenceReliefValueFormSpec extends UnitSpec with WithFakeApplicat
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.invalidAmount
+        form.error("amount").get.message shouldBe messages.invalidAmount
       }
     }
 
@@ -144,7 +145,7 @@ class PrivateResidenceReliefValueFormSpec extends UnitSpec with WithFakeApplicat
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.minimumAmount
+        form.error("amount").get.message shouldBe messages.minimumAmount
       }
     }
   }

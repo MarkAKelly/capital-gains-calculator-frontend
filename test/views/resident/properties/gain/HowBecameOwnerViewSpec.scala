@@ -21,6 +21,7 @@ import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{gain => views}
 import assets.MessageLookup.{HowBecameOwner => messages}
+import assets.MessageLookup.{Resident => commonMessages}
 import play.api.mvc.Call
 import forms.resident.properties.HowBecameOwnerForm._
 
@@ -38,7 +39,7 @@ class HowBecameOwnerViewSpec extends UnitSpec with WithFakeApplication with Fake
     }
 
     "have a navTitle for properties" in {
-      doc.select("span.header__menu__proposition-name").text() shouldBe assets.MessageLookup.propertiesHomeText
+      doc.select("span.header__menu__proposition-name").text() shouldBe commonMessages.homeText
     }
 
     "have a back link to back-link" in {
@@ -94,7 +95,7 @@ class HowBecameOwnerViewSpec extends UnitSpec with WithFakeApplication with Fake
     }
 
     "have a continue button " in {
-      doc.select("#continue-button").text shouldBe assets.MessageLookup.calcBaseContinue
+      doc.select("#continue-button").text shouldBe commonMessages.continue
     }
 
   }

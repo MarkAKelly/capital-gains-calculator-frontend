@@ -16,10 +16,9 @@
 
 package views.resident.properties.deductions
 
-import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{Resident => commonMessages}
 import assets.MessageLookup.{PrivateResidenceReliefValue => messages}
 import controllers.helpers.FakeRequestHelper
-import controllers.resident.properties.DeductionsController
 import forms.resident.properties.PrivateResidenceReliefValueForm._
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -42,8 +41,8 @@ class PrivateResidenceReliefValueViewSpec extends UnitSpec with WithFakeApplicat
     }
 
     s"have a back link to Private Residence Relief" which {
-      s"has the text ${commonMessages.calcBaseBack}" in {
-        doc.select("#back-link").text shouldEqual commonMessages.calcBaseBack
+      s"has the text ${commonMessages.back}" in {
+        doc.select("#back-link").text shouldEqual commonMessages.back
       }
 
       s"has a link to /calculate-your-capital-gains/resident/properties/private-residence-relief" in {
@@ -69,7 +68,7 @@ class PrivateResidenceReliefValueViewSpec extends UnitSpec with WithFakeApplicat
 
     s"have a help link" which {
       s"has the text ${messages.link}" in {
-        doc.select("#privateResidenceReliefLink").text shouldEqual (messages.link + " " + commonMessages.calcBaseExternalLink)
+        doc.select("#privateResidenceReliefLink").text shouldEqual (messages.link + " " + commonMessages.externalLink)
       }
     }
 
@@ -86,7 +85,7 @@ class PrivateResidenceReliefValueViewSpec extends UnitSpec with WithFakeApplicat
     }
 
     "have continue button " in {
-      doc.body.getElementById("continue-button").text shouldEqual commonMessages.calcBaseContinue
+      doc.body.getElementById("continue-button").text shouldEqual commonMessages.continue
     }
   }
 

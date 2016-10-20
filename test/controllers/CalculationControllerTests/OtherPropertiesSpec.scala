@@ -16,7 +16,7 @@
 
 package controllers.CalculationControllerTests
 
-import assets.MessageLookup.{NonResident, NonResident => commonMessages}
+import assets.MessageLookup.{NonResident => commonMessages}
 import assets.MessageLookup.NonResident.{OtherProperties => messages}
 import common.DefaultRoutes._
 import common.nonresident.CustomerTypeKeys

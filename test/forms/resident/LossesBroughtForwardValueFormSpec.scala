@@ -16,7 +16,7 @@
 
 package forms.resident
 
-import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{Resident => messages}
 import controllers.helpers.FakeRequestHelper
 import models.resident.LossesBroughtForwardValueModel
 import forms.resident.LossesBroughtForwardValueForm._
@@ -51,8 +51,8 @@ class LossesBroughtForwardValueFormSpec extends UnitSpec with WithFakeApplicatio
         form.hasErrors shouldBe true
       }
 
-      s"have an error with message '${commonMessages.ErrorMessages.mandatoryAmount}'" in {
-        form.error("amount").get.message shouldBe commonMessages.ErrorMessages.mandatoryAmount
+      s"have an error with message '${messages.mandatoryAmount}'" in {
+        form.error("amount").get.message shouldBe messages.mandatoryAmount
       }
     }
 
@@ -64,8 +64,8 @@ class LossesBroughtForwardValueFormSpec extends UnitSpec with WithFakeApplicatio
         form.hasErrors shouldBe true
       }
 
-      s"have an error with message '${commonMessages.ErrorMessages.invalidAmount}'" in {
-        form.error("amount").get.message shouldBe commonMessages.ErrorMessages.invalidAmount
+      s"have an error with message '${messages.invalidAmount}'" in {
+        form.error("amount").get.message shouldBe messages.invalidAmount
       }
     }
 
@@ -77,8 +77,8 @@ class LossesBroughtForwardValueFormSpec extends UnitSpec with WithFakeApplicatio
         form.hasErrors shouldBe true
       }
 
-      s"have an error with message '${commonMessages.ErrorMessages.maximumAmount}'" in {
-        form.error("amount").get.message shouldBe commonMessages.ErrorMessages.maximumAmount
+      s"have an error with message '${messages.maximumAmount}'" in {
+        form.error("amount").get.message shouldBe messages.maximumAmount
       }
     }
 
@@ -90,8 +90,8 @@ class LossesBroughtForwardValueFormSpec extends UnitSpec with WithFakeApplicatio
         form.hasErrors shouldBe true
       }
 
-      s"have an error with message '${commonMessages.ErrorMessages.minimumAmount}'" in {
-        form.error("amount").get.message shouldBe commonMessages.ErrorMessages.minimumAmount
+      s"have an error with message '${messages.minimumAmount}'" in {
+        form.error("amount").get.message shouldBe messages.minimumAmount
       }
     }
 
@@ -103,8 +103,8 @@ class LossesBroughtForwardValueFormSpec extends UnitSpec with WithFakeApplicatio
         form.hasErrors shouldBe true
       }
 
-      s"have an error with message '${commonMessages.ErrorMessages.invalidAmount}'" in {
-        form.error("amount").get.message shouldBe commonMessages.ErrorMessages.invalidAmount
+      s"have an error with message '${messages.invalidAmount}'" in {
+        form.error("amount").get.message shouldBe messages.invalidAmount
       }
     }
   }
