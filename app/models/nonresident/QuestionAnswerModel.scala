@@ -16,4 +16,4 @@
 
 package models.nonresident
 
-case class QuestionAnswerModel[T](data: T, question: String, link: Option[String])
+case class QuestionAnswerModel[+T](id: String, data: T, question: String, link: Option[String])
