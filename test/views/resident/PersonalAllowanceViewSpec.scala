@@ -16,8 +16,9 @@
 
 package views.resident
 
-import assets.MessageLookup.{personalAllowance => messages}
-import assets.{DateAsset, MessageLookup => commonMessages}
+import assets.MessageLookup.{Resident => commonMessages}
+import assets.MessageLookup.{PersonalAllowance => messages}
+import assets.DateAsset
 import common.Dates
 import common.resident.JourneyKeys
 import controllers.helpers.FakeRequestHelper
@@ -55,7 +56,7 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
       "have a back button that" should {
         lazy val backLink = doc.select("a#back-link")
         "have the correct back link text" in {
-          backLink.text shouldBe commonMessages.calcBaseBack
+          backLink.text shouldBe commonMessages.back
         }
 
         "have the back-link class" in {
@@ -131,8 +132,8 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with F
 
       "have a continue button that" should {
         lazy val continueButton = doc.select("button#continue-button")
-        s"have the button text '${commonMessages.calcBaseContinue}'" in {
-          continueButton.text shouldBe commonMessages.calcBaseContinue
+        s"have the button text '${commonMessages.continue}'" in {
+          continueButton.text shouldBe commonMessages.continue
         }
         "be of type submit" in {
           continueButton.attr("type") shouldBe "submit"

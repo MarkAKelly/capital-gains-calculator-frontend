@@ -26,7 +26,7 @@ import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.{howBecameOwner => messages}
+import assets.MessageLookup.{HowBecameOwner => messages}
 import org.jsoup.Jsoup
 import play.api.test.Helpers._
 

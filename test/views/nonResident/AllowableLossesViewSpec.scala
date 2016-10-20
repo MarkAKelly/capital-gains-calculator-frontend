@@ -18,12 +18,9 @@ package views.nonResident
 
 import assets.MessageLookup
 import assets.MessageLookup.NonResident.{AllowableLosses => messages}
-import assets.MessageLookup.{Common => commonMessages}
-import assets.MessageLookup.NonResident.{Common => commonNRMessages}
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup.Jsoup
-import play.api.i18n.Messages
 import views.html.calculation.{nonresident => views}
 import forms.nonresident.AllowableLossesForm._
 import models.nonresident.AllowableLossesModel
@@ -42,7 +39,7 @@ class AllowableLossesViewSpec extends UnitSpec with WithFakeApplication with Moc
         "have a back link" which {
 
           "should have the text" in {
-            document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
+            document.body.getElementById("back-link").text shouldEqual MessageLookup.NonResident.back
           }
 
           s"should have a route too 'back-link'" in {
@@ -54,18 +51,18 @@ class AllowableLossesViewSpec extends UnitSpec with WithFakeApplication with Moc
           document.title shouldEqual messages.yesNoQuestion
         }
 
-        s"have the heading ${commonNRMessages.pageHeading}'" in {
-          document.body.getElementsByTag("H1").text shouldEqual commonNRMessages.pageHeading
+        s"have the heading ${MessageLookup.NonResident.pageHeading}'" in {
+          document.body.getElementsByTag("H1").text shouldEqual MessageLookup.NonResident.pageHeading
         }
 
         "have a yes no helper" which {
 
           "has a label with yes" in {
-            document.body.getElementById("isClaimingAllowableLosses-yes").parent.text shouldBe commonMessages.yes
+            document.body.getElementById("isClaimingAllowableLosses-yes").parent.text shouldBe MessageLookup.NonResident.yes
           }
 
           "has a label with no" in {
-            document.body.getElementById("isClaimingAllowableLosses-no").parent.text shouldBe commonMessages.no
+            document.body.getElementById("isClaimingAllowableLosses-no").parent.text shouldBe MessageLookup.NonResident.no
           }
 
           s"has the question ${messages.yesNoQuestion}" in {
@@ -115,7 +112,7 @@ class AllowableLossesViewSpec extends UnitSpec with WithFakeApplication with Moc
         }
 
         "has a Continue button" in {
-          document.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
+          document.body.getElementById("continue-button").text shouldEqual MessageLookup.NonResident.continue
         }
       }
     }

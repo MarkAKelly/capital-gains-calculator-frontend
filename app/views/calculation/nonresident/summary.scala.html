@@ -61,5 +61,11 @@
         *@
         <a id="startAgain" class="bold-medium" href="@controllers.nonresident.routes.SummaryController.restart" data-journey-click="nav:calc:restart">@Messages("calc.summary.startAgain")</a>
 
+        @*
+        * Save as PDF
+        *@
+        <a type="submit" class="button save-pdf-button" href="@controllers.nonresident.routes.ReportController.summaryReport.toString"
+           data-journey-click="nr-summary:pdf:save">@Messages("calc.resident.summary.saveAsPdf")</a>
+
     </div>
 }

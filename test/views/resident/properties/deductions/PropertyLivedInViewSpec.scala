@@ -20,8 +20,8 @@ import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{deductions => views}
-import assets.MessageLookup.{propertyLivedIn => messages}
-import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{PropertyLivedIn => messages}
+import assets.MessageLookup.{Resident => commonMessages}
 import forms.resident.properties.PropertyLivedInForm._
 import models.resident.properties.PropertyLivedInModel
 
@@ -62,7 +62,7 @@ class PropertyLivedInViewSpec extends UnitSpec with WithFakeApplication with Fak
       lazy val backLink = doc.select("a#back-link")
 
       "has the correct back link text" in {
-        backLink.text shouldBe commonMessages.calcBaseBack
+        backLink.text shouldBe commonMessages.back
       }
 
       "has the back-link class" in {
@@ -194,8 +194,8 @@ class PropertyLivedInViewSpec extends UnitSpec with WithFakeApplication with Fak
         button.attr("id") shouldEqual "continue-button"
       }
 
-      s"has the text ${commonMessages.calcBaseContinue}" in {
-        button.text shouldEqual s"${commonMessages.calcBaseContinue}"
+      s"has the text ${commonMessages.continue}" in {
+        button.text shouldEqual s"${commonMessages.continue}"
       }
     }
   }

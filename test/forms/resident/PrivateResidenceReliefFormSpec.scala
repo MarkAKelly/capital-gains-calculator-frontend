@@ -16,7 +16,7 @@
 
 package forms.resident
 
-import assets.MessageLookup.{privateResidenceRelief => messages}
+import assets.MessageLookup.{PrivateResidenceRelief => messages}
 import forms.resident.properties.PrivateResidenceReliefForm._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 

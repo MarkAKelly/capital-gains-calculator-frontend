@@ -16,8 +16,8 @@
 
 package views.resident
 
-import assets.MessageLookup.{allowableLossesValue => messages}
-import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{AllowableLossesValue => messages}
+import assets.MessageLookup.{Resident => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.AllowableLossesValueForm._
 import models.resident.TaxYearModel
@@ -56,7 +56,7 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
       lazy val backLink = doc.select("a#back-link")
 
       "has the correct back link text" in {
-        backLink.text shouldBe commonMessages.calcBaseBack
+        backLink.text shouldBe commonMessages.back
       }
 
       "has the back-link class" in {
@@ -133,8 +133,8 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
 
       lazy val continueButton = doc.select("button#continue-button")
 
-      s"have the button text '${commonMessages.calcBaseContinue}'" in {
-        continueButton.text shouldBe commonMessages.calcBaseContinue
+      s"have the button text '${commonMessages.continue}'" in {
+        continueButton.text shouldBe commonMessages.continue
       }
 
       "be of type submit" in {
@@ -160,16 +160,16 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
       doc.body.getElementsByAttributeValueContaining("id", "amount-error-summary").isEmpty shouldBe false
     }
 
-    s"contain an error summary message of ${commonMessages.errorMessages.mandatoryAmount}" in {
-      doc.body.getElementById("amount-error-summary").text should include(commonMessages.errorMessages.mandatoryAmount)
+    s"contain an error summary message of ${commonMessages.mandatoryAmount}" in {
+      doc.body.getElementById("amount-error-summary").text should include(commonMessages.mandatoryAmount)
     }
 
     "output an error notification" in {
       doc.body.getElementsByAttributeValueContaining("class", "error-notification").isEmpty shouldBe false
     }
 
-    s"contain an error notification message of ${commonMessages.errorMessages.mandatoryAmount}" in {
-      doc.body.getElementsByClass("error-notification").text should include(commonMessages.errorMessages.mandatoryAmount)
+    s"contain an error notification message of ${commonMessages.mandatoryAmount}" in {
+      doc.body.getElementsByClass("error-notification").text should include(commonMessages.mandatoryAmount)
     }
   }
 }

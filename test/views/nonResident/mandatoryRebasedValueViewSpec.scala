@@ -23,7 +23,7 @@ import views.html.calculation.{nonresident => views}
 import forms.nonresident.RebasedValueForm._
 import org.jsoup.Jsoup
 import assets.MessageLookup.NonResident.{RebasedValue => messages}
-import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{NonResident => commonMessages}
 
 class mandatoryRebasedValueViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
@@ -39,16 +39,16 @@ class mandatoryRebasedValueViewSpec extends UnitSpec with WithFakeApplication wi
       doc.charset.toString shouldBe "UTF-8"
     }
 
-    s"have a title ${messages.question}" in {
-      doc.title shouldBe messages.question
+    s"have a title ${messages.inputQuestionMandatory}" in {
+      doc.title shouldBe messages.inputQuestionMandatory
     }
 
     "have a H1 tag that" should {
 
       lazy val h1Tag = doc.select("h1")
 
-      s"have the page heading '${commonMessages.NonResident.Common.pageHeading}'" in {
-        h1Tag.text shouldBe commonMessages.NonResident.Common.pageHeading
+      s"have the page heading '${commonMessages.pageHeading}'" in {
+        h1Tag.text shouldBe commonMessages.pageHeading
       }
 
       "have the heading-large class" in {
@@ -65,7 +65,7 @@ class mandatoryRebasedValueViewSpec extends UnitSpec with WithFakeApplication wi
       lazy val backLink = doc.select("a#back-link")
 
       "has the correct back link text" in {
-        backLink.text shouldBe commonMessages.calcBaseBack
+        backLink.text shouldBe commonMessages.back
       }
 
       "has the back-link class" in {
@@ -109,8 +109,8 @@ class mandatoryRebasedValueViewSpec extends UnitSpec with WithFakeApplication wi
 
     "have an input for the amount" which {
 
-      s"has a label with text ${messages.question}" in {
-        doc.body.select("label > div > span").text shouldEqual messages.question
+      s"has a label with text ${messages.inputQuestionMandatory}" in {
+        doc.body.select("label > div > span").text shouldEqual messages.inputQuestionMandatory
       }
 
       s"should be of tag type input" in {
@@ -142,8 +142,8 @@ class mandatoryRebasedValueViewSpec extends UnitSpec with WithFakeApplication wi
         button.attr("id") shouldEqual "continue-button"
       }
 
-      s"has the text ${commonMessages.calcBaseContinue}" in {
-        button.text shouldEqual s"${commonMessages.calcBaseContinue}"
+      s"has the text ${commonMessages.continue}" in {
+        button.text shouldEqual s"${commonMessages.continue}"
       }
     }
   }

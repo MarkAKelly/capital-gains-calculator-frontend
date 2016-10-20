@@ -23,7 +23,6 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -31,6 +30,9 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
+
+import assets.MessageLookup.NonResident.{Improvements => messages}
+import assets.MessageLookup.{NonResident => commonMessages}
 
 import scala.concurrent.Future
 import controllers.nonresident.{ImprovementsController, routes}
@@ -91,20 +93,20 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
             charset(result) shouldBe Some("utf-8")
           }
 
-          "have the title 'Who owned the property?'" in {
-            document.title shouldEqual Messages("calc.improvements.question")
+          s"have the title ${messages.question}" in {
+            document.title shouldEqual messages.question
           }
 
-          "have the heading Calculate your tax (non-residents)" in {
-            document.body.getElementsByTag("H1").text shouldEqual Messages("calc.base.pageHeading")
+          s"have the heading ${commonMessages.pageHeading}" in {
+            document.body.getElementsByTag("H1").text shouldEqual commonMessages.pageHeading
           }
 
-          "display the correct wording for radio option `yes`" in {
-            document.body.getElementById("isClaimingImprovements-yes").parent.text shouldEqual Messages("calc.base.yes")
+          s"display the correct wording for radio option ${commonMessages.yes}" in {
+            document.body.getElementById("isClaimingImprovements-yes").parent.text shouldEqual commonMessages.yes
           }
 
-          "display the correct wording for radio option `no`" in {
-            document.body.getElementById("isClaimingImprovements-no").parent.text shouldEqual Messages("calc.base.no")
+          s"display the correct wording for radio option ${commonMessages.no}" in {
+            document.body.getElementById("isClaimingImprovements-no").parent.text shouldEqual commonMessages.no
           }
 
           "contain a hidden component with an input box" in {
@@ -112,7 +114,7 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
           }
 
           s"have a 'Back' link to ${routes.AcquisitionValueController.acquisitionValue().url} " in {
-            document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+            document.body.getElementById("back-link").text shouldEqual commonMessages.back
             document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionValueController.acquisitionValue().url
           }
         }
@@ -131,7 +133,7 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.RebasedCostsController.rebasedCosts().url} " in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.RebasedCostsController.rebasedCosts().url
         }
       }
@@ -150,7 +152,7 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.RebasedValueController.rebasedValue().url} " in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.RebasedValueController.rebasedValue().url
         }
       }
@@ -166,7 +168,7 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to $missingDataRoute " in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
         }
       }
@@ -183,7 +185,7 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to $missingDataRoute " in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
         }
       }
@@ -310,8 +312,8 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      "return HTML that displays the error message " in {
-        document.select("div#hidden span.error-notification").text shouldEqual Messages("error.real")
+      s"return HTML that displays the error message ${commonMessages.errorRealNumber}" in {
+        document.select("div#hidden span.error-notification").text shouldEqual commonMessages.errorRealNumber
       }
     }
 
@@ -324,8 +326,8 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      "return HTML that displays the error message " in {
-        document.select("div#hidden span.error-notification").text shouldEqual Messages("calc.improvements.errorNegative")
+      s"return HTML that displays the error message ${messages.negativeValueError}" in {
+        document.select("div#hidden span.error-notification").text shouldEqual messages.negativeValueError
       }
     }
 
@@ -339,8 +341,8 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      "return HTML that displays the error message " in {
-        document.select("div#hidden span.error-notification").text shouldEqual Messages("calc.improvements.error.no.value.supplied")
+      s"return HTML that displays the error message ${messages.noValueSuppliedError}" in {
+        document.select("div#hidden span.error-notification").text shouldEqual messages.noValueSuppliedError
       }
     }
 
@@ -353,8 +355,8 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      "return HTML that displays the error message " in {
-        document.select("div#hidden span.error-notification").text shouldEqual Messages("calc.improvements.errorDecimalPlaces")
+      s"return HTML that displays the error message ${messages.excessDecimalPlacesError}" in {
+        document.select("div#hidden span.error-notification").text shouldEqual messages.excessDecimalPlacesError
       }
     }
 
@@ -367,10 +369,9 @@ class ImprovementsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
+      s"fail with message ${commonMessages.maximumLimit(MoneyPounds(Constants.maxNumeric, 0).quantity)}" in {
         document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
-            " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+          include (commonMessages.maximumLimit(MoneyPounds(Constants.maxNumeric, 0).quantity))
       }
     }
   }

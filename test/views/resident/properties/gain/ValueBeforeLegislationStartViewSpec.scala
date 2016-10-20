@@ -16,14 +16,13 @@
 
 package views.resident.properties.gain
 
-import assets.MessageLookup
+import assets.MessageLookup.{Resident => commonMessages}
 import assets.MessageLookup.Resident.Properties.{ValueBeforeLegislationStart => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.properties.ValueBeforeLegislationStartForm._
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{gain => views}
-import controllers.resident.properties.routes
 
 class ValueBeforeLegislationStartViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
@@ -49,7 +48,7 @@ class ValueBeforeLegislationStartViewSpec extends UnitSpec with WithFakeApplicat
       doc.title shouldEqual messages.question
     }
 
-    s"have a back link to the owner before April 1982 with text ${MessageLookup.calcBaseBack}" in {
+    s"have a back link to the owner before April 1982 with text ${commonMessages.back}" in {
       doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/owner-before-legislation-start"
     }
 
@@ -125,17 +124,12 @@ class ValueBeforeLegislationStartViewSpec extends UnitSpec with WithFakeApplicat
           button.hasClass("button") shouldEqual true
         }
 
-        s"has the text ${MessageLookup.calcBaseContinue}" in {
-          button.text() shouldEqual MessageLookup.calcBaseContinue
+        s"has the text ${commonMessages.continue}" in {
+          button.text() shouldEqual commonMessages.continue
         }
       }
     }
-
-
-
   }
-
-
 
   "Worth When Gave Away View with form without errors" should {
 

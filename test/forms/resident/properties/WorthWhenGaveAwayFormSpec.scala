@@ -16,7 +16,7 @@
 
 package forms.resident.properties
 
-import assets.MessageLookup.errorMessages
+import assets.MessageLookup.{Resident => messages}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import models.resident.properties.WorthWhenGaveAwayModel
 import forms.resident.properties.WorthWhenGaveAwayForm._
@@ -57,7 +57,7 @@ class WorthWhenGaveAwayFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe errorMessages.mandatoryAmount
+        form.error("amount").get.message shouldBe messages.mandatoryAmount
       }
     }
 
@@ -75,7 +75,7 @@ class WorthWhenGaveAwayFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe errorMessages.mandatoryAmount
+        form.error("amount").get.message shouldBe messages.mandatoryAmount
       }
     }
 
@@ -92,7 +92,7 @@ class WorthWhenGaveAwayFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe errorMessages.invalidAmount
+        form.error("amount").get.message shouldBe messages.invalidAmount
       }
     }
 
@@ -109,7 +109,7 @@ class WorthWhenGaveAwayFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe errorMessages.invalidAmount
+        form.error("amount").get.message shouldBe messages.invalidAmount
       }
     }
 
@@ -126,7 +126,7 @@ class WorthWhenGaveAwayFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe errorMessages.maximumAmount
+        form.error("amount").get.message shouldBe messages.maximumAmount
       }
     }
 
@@ -143,7 +143,7 @@ class WorthWhenGaveAwayFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe errorMessages.minimumAmount
+        form.error("amount").get.message shouldBe messages.minimumAmount
       }
     }
   }

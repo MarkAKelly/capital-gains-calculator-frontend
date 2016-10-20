@@ -20,7 +20,8 @@ import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{gain => views}
-import assets.MessageLookup.{propertiesSellOrGiveAway => messages}
+import assets.MessageLookup.{PropertiesSellOrGiveAway => messages}
+import assets.MessageLookup.{Resident => commonMessages}
 import play.api.mvc.Call
 import forms.resident.properties.SellOrGiveAwayForm._
 
@@ -43,7 +44,7 @@ class SellOrGiveAwayViewSpec extends UnitSpec with WithFakeApplication with Fake
     }
 
     s"have a nav title of 'navTitle'" in {
-      doc.select("span.header__menu__proposition-name").text() shouldBe assets.MessageLookup.propertiesHomeText
+      doc.select("span.header__menu__proposition-name").text() shouldBe commonMessages.homeText
     }
 
     s"have a home link to 'homeLink'" in {
@@ -87,7 +88,7 @@ class SellOrGiveAwayViewSpec extends UnitSpec with WithFakeApplication with Fake
     }
 
     "have a continue button " in {
-      doc.select("#continue-button").text shouldBe assets.MessageLookup.calcBaseContinue
+      doc.select("#continue-button").text shouldBe commonMessages.continue
     }
   }
 

@@ -16,7 +16,7 @@
 
 package controllers.resident.shares.DeductionsControllerSpec
 
-import assets.MessageLookup.{annualExemptAmount => messages}
+import assets.MessageLookup.{AnnualExemptAmount => messages}
 import common.KeystoreKeys
 import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector

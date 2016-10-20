@@ -20,7 +20,7 @@ import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.GainController
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.test.Helpers._
-import assets.MessageLookup.{outsideTaxYears => messages}
+import assets.MessageLookup.{OutsideTaxYears => messages}
 import config.AppConfig
 import connectors.CalculatorConnector
 import models.resident.{DisposalDateModel, TaxYearModel}

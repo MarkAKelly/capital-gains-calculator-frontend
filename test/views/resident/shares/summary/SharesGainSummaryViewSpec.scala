@@ -16,8 +16,9 @@
 
 package views.resident.shares.summary
 
-import assets.MessageLookup.{summaryPage => messages}
-import assets.{MessageLookup => commonMessages}
+import assets.{MessageLookup => pages}
+import assets.MessageLookup.{SummaryPage => messages}
+import assets.MessageLookup.{Resident => commonMessages}
 import assets.MessageLookup.Resident.{Shares => SharesMessages}
 import common.Dates._
 import controllers.helpers.FakeRequestHelper
@@ -68,8 +69,8 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
           backLink.attr("id") shouldBe "back-link"
         }
 
-        s"has the text '${commonMessages.calcBaseBack}'" in {
-          backLink.text shouldBe commonMessages.calcBaseBack
+        s"has the text '${commonMessages.back}'" in {
+          backLink.text shouldBe commonMessages.back
         }
 
         s"has the url ${controllers.resident.shares.routes.GainController.acquisitionCosts().toString}" in {
@@ -148,8 +149,8 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
         "has a date output row for the Disposal Date" which {
 
-          s"should have the question text '${commonMessages.sharesDisposalDate.title}'" in {
-            doc.select("#disposalDate-question").text shouldBe commonMessages.sharesDisposalDate.title
+          s"should have the question text '${pages.SharesDisposalDate.title}'" in {
+            doc.select("#disposalDate-question").text shouldBe pages.SharesDisposalDate.title
           }
 
           "should have the value '12 December 2019'" in {
@@ -161,18 +162,18 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
           }
 
           "has the question as part of the link" in {
-            doc.select("#disposalDate-date a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.sharesDisposalDate.title}"
+            doc.select("#disposalDate-date a").text shouldBe s"${commonMessages.change} ${pages.SharesDisposalDate.title}"
           }
 
           "has the question component of the link is visuallyhidden" in {
-            doc.select("#disposalDate-date a span.visuallyhidden").text shouldBe commonMessages.sharesDisposalDate.title
+            doc.select("#disposalDate-date a span.visuallyhidden").text shouldBe pages.SharesDisposalDate.title
           }
         }
 
         "has a numeric output row for the Disposal Value" which {
 
-          s"should have the question text '${commonMessages.Resident.Shares.DisposalValue.question}'" in {
-            doc.select("#disposalValue-question").text shouldBe commonMessages.Resident.Shares.DisposalValue.question
+          s"should have the question text '${SharesMessages.DisposalValue.question}'" in {
+            doc.select("#disposalValue-question").text shouldBe SharesMessages.DisposalValue.question
           }
 
           "should have the value '£10'" in {
@@ -187,8 +188,8 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
         "has a numeric output row for the Disposal Costs" which {
 
-          s"should have the question text '${commonMessages.sharesDisposalCosts.title}'" in {
-            doc.select("#disposalCosts-question").text shouldBe commonMessages.sharesDisposalCosts.title
+          s"should have the question text '${pages.SharesDisposalCosts.title}'" in {
+            doc.select("#disposalCosts-question").text shouldBe pages.SharesDisposalCosts.title
           }
 
           "should have the value '£20'" in {
@@ -241,8 +242,8 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
         "has a numeric output row for the Acquisition Value" which {
 
-          s"should have the question text '${commonMessages.sharesAcquisitionValue.title}'" in {
-            doc.select("#acquisitionValue-question").text shouldBe commonMessages.sharesAcquisitionValue.title
+          s"should have the question text '${pages.SharesAcquisitionValue.title}'" in {
+            doc.select("#acquisitionValue-question").text shouldBe pages.SharesAcquisitionValue.title
           }
 
           "should have the value '£30'" in {
@@ -257,8 +258,8 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
         "has a numeric output row for the Acquisition Costs" which {
 
-          s"should have the question text '${commonMessages.sharesAcquisitionCosts.title}'" in {
-            doc.select("#acquisitionCosts-question").text shouldBe commonMessages.sharesAcquisitionCosts.title
+          s"should have the question text '${pages.SharesAcquisitionCosts.title}'" in {
+            doc.select("#acquisitionCosts-question").text shouldBe pages.SharesAcquisitionCosts.title
           }
 
           "should have the value '£40'" in {
@@ -409,8 +410,8 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
       "has a numeric output row for the Worth on 31 March 1982 value" which {
 
-        s"should have the question text '${SharesMessages.valueBeforeLegislationStart.question}'" in {
-          doc.select("#valueBeforeLegislationStart-question").text shouldBe SharesMessages.valueBeforeLegislationStart.question
+        s"should have the question text '${SharesMessages.ValueBeforeLegislationStart.question}'" in {
+          doc.select("#valueBeforeLegislationStart-question").text shouldBe SharesMessages.ValueBeforeLegislationStart.question
         }
 
         "should have the value '£700'" in {
@@ -467,7 +468,7 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     }
 
     s"display the text ${messages.whatToDoNextText}" in {
-      doc.select("#whatToDoNextText").text shouldEqual s"${messages.whatNextYouCan}${messages.whatNextLink}${commonMessages.calcBaseExternalLink} ${messages.whatNextText}"
+      doc.select("#whatToDoNextText").text shouldEqual s"${messages.whatNextYouCan}${messages.whatNextLink}${commonMessages.externalLink} ${messages.whatNextText}"
     }
 
     "have a link" which {
@@ -485,7 +486,7 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       }
 
       "has a visually hidden span with the text opens in a new tab" in {
-        doc.select("span#opensInANewTab").text shouldEqual commonMessages.calcBaseExternalLink
+        doc.select("span#opensInANewTab").text shouldEqual commonMessages.externalLink
       }
     }
 
@@ -538,10 +539,10 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
     }
 
     s"display the text ${messages.whatToDoNextText}" in {
-      doc.select("div#whatToDoNextNoLossText").text shouldBe s"${messages.whatToDoNextNoLossText} ${messages.whatToDoNextNoLossLinkShares} ${commonMessages.calcBaseExternalLink}."
+      doc.select("div#whatToDoNextNoLossText").text shouldBe s"${messages.whatToDoNextNoLossText} ${messages.whatToDoNextNoLossLinkShares} ${commonMessages.externalLink}."
     }
 
-    s"have the link text ${messages.whatToDoNextNoLossLinkShares}${commonMessages.calcBaseExternalLink}" in {
+    s"have the link text ${messages.whatToDoNextNoLossLinkShares}${commonMessages.externalLink}" in {
       doc.select("div#whatToDoNextNoLossText a").text should include(s"${messages.whatToDoNextNoLossLinkShares}")
     }
 
@@ -549,8 +550,8 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       doc.select("div#whatToDoNextNoLossText a").attr("href") shouldBe "https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax"
     }
 
-    s"have the visually hidden text ${commonMessages.calcBaseExternalLink}" in {
-      doc.select("div#whatToDoNextNoLossText span#opensInANewTab2").text shouldBe s"${commonMessages.calcBaseExternalLink}"
+    s"have the visually hidden text ${commonMessages.externalLink}" in {
+      doc.select("div#whatToDoNextNoLossText span#opensInANewTab2").text shouldBe s"${commonMessages.externalLink}"
     }
   }
 
@@ -603,8 +604,8 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
 
     "has an option output row for private residence relief value in" which {
 
-      s"should have the question text '${commonMessages.Resident.Shares.worthWhenSoldForLess.question}'" in {
-        doc.select("#worthWhenSoldForLess-question").text shouldBe commonMessages.Resident.Shares.worthWhenSoldForLess.question
+      s"should have the question text '${SharesMessages.WorthWhenSoldForLess.question}'" in {
+        doc.select("#worthWhenSoldForLess-question").text shouldBe SharesMessages.WorthWhenSoldForLess.question
       }
 
       "should have the value '£200,000'" in {
@@ -616,13 +617,13 @@ class SharesGainSummaryViewSpec extends UnitSpec with WithFakeApplication with F
       }
 
       "has the question as part of the link" in {
-        doc.select("#worthWhenSoldForLess-amount a").text shouldBe s"${commonMessages.calcBaseChange} " +
-          s"${commonMessages.Resident.Shares.worthWhenSoldForLess.question}"
+        doc.select("#worthWhenSoldForLess-amount a").text shouldBe s"${commonMessages.change} " +
+          s"${SharesMessages.WorthWhenSoldForLess.question}"
       }
 
       "has the question component of the link as visuallyhidden" in {
         doc.select("#worthWhenSoldForLess-amount a span.visuallyhidden").text shouldBe
-          commonMessages.Resident.Shares.worthWhenSoldForLess.question
+          SharesMessages.WorthWhenSoldForLess.question
       }
     }
   }

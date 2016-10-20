@@ -22,7 +22,6 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -30,7 +29,8 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
-
+import assets.MessageLookup.{NonResident => commonMessages}
+import assets.MessageLookup.NonResident.{RebasedCosts => messages}
 import scala.concurrent.Future
 import controllers.nonresident.{RebasedCostsController, routes}
 import models.nonresident.RebasedCostsModel
@@ -79,20 +79,20 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
           charset(result) shouldBe Some("utf-8")
         }
 
-        "have the title 'Calculate your Non-resident Capital Gains Tax" in {
-          document.getElementsByTag("h1").text shouldBe Messages("calc.base.pageHeading")
+        s"have the title '${commonMessages.pageHeading}" in {
+          document.getElementsByTag("h1").text shouldBe commonMessages.pageHeading
         }
 
-        "have the question 'Did you pay for the valuation?" in {
-          document.getElementsByTag("legend").text shouldBe "Did you pay for the valuation?"
+        s"have the question '${messages.question}" in {
+          document.getElementsByTag("legend").text shouldBe messages.question
         }
 
         "display the correct wording for radio option `yes`" in {
-          document.body.getElementById("hasRebasedCosts-yes").parent.text shouldEqual Messages("calc.base.yes")
+          document.body.getElementById("hasRebasedCosts-yes").parent.text shouldEqual commonMessages.yes
         }
 
         "display the correct wording for radio option `no`" in {
-          document.body.getElementById("hasRebasedCosts-no").parent.text shouldEqual Messages("calc.base.no")
+          document.body.getElementById("hasRebasedCosts-no").parent.text shouldEqual commonMessages.no
         }
 
         "contain a hidden component with an input box" in {
@@ -100,7 +100,7 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         }
 
         s"have a 'Back' link to ${routes.RebasedValueController.rebasedValue()}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.RebasedValueController.rebasedValue().toString()
         }
 
@@ -177,7 +177,7 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
       }
 
       "return HTML that displays the error message " in {
-        document.select("div#hidden span.error-notification").text shouldEqual Messages("error.real")
+        document.select("div#hidden span.error-notification").text shouldEqual commonMessages.errorRealNumber
       }
     }
 
@@ -191,7 +191,7 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
       }
 
       "return HTML that displays the error message " in {
-        document.select("div#hidden span.error-notification").text shouldEqual Messages("calc.rebasedCosts.errorNegative")
+        document.select("div#hidden span.error-notification").text shouldEqual messages.errorNegative
       }
     }
 
@@ -205,7 +205,7 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
       }
 
       "return HTML that displays the error message " in {
-        document.select("div#hidden span.error-notification").text shouldEqual Messages("calc.rebasedCosts.error.no.value.supplied")
+        document.select("div#hidden span.error-notification").text shouldEqual messages.errorNoValue
       }
     }
 
@@ -219,7 +219,7 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
       }
 
       "return HTML that displays the error message " in {
-        document.select("div#hidden span.error-notification").text shouldEqual Messages("calc.rebasedCosts.errorDecimalPlaces")
+        document.select("div#hidden span.error-notification").text shouldEqual messages.errorDecimalPlaces
       }
     }
 
@@ -232,10 +232,9 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
+      s"fail with message ${messages.errorMaximum(MoneyPounds(Constants.maxNumeric, 0).quantity)}" in {
         document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
-            " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+          include (messages.errorMaximum(MoneyPounds(Constants.maxNumeric, 0).quantity))
       }
     }
   }

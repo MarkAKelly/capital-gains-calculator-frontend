@@ -17,7 +17,7 @@
 package views.resident.shares.gain
 
 import assets.MessageLookup.Resident.Shares.{OwnerBeforeLegislationStart => Messages}
-import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{Resident => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.shares.OwnerBeforeLegislationStartForm._
 import models.resident.shares.OwnerBeforeLegislationStartModel
@@ -63,7 +63,7 @@ class OwnerBeforeLegislationStartViewSpec extends UnitSpec with WithFakeApplicat
       lazy val backLink = doc.select("a#back-link")
 
       "has the correct back link text" in {
-        backLink.text shouldBe commonMessages.calcBaseBack
+        backLink.text shouldBe commonMessages.back
       }
 
       "has the back-link class" in {
@@ -203,8 +203,8 @@ class OwnerBeforeLegislationStartViewSpec extends UnitSpec with WithFakeApplicat
         button.attr("id") shouldEqual "continue-button"
       }
 
-      s"has the text ${commonMessages.calcBaseContinue}" in {
-        button.text shouldEqual s"${commonMessages.calcBaseContinue}"
+      s"has the text ${commonMessages.continue}" in {
+        button.text shouldEqual s"${commonMessages.continue}"
       }
     }
   }

@@ -24,7 +24,6 @@ import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
-import play.api.i18n.Messages
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Result}
 import play.api.test.FakeRequest
@@ -33,6 +32,8 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
+import assets.MessageLookup.{NonResident => commonMessages}
+import assets.MessageLookup.NonResident.{OtherReliefs => messages}
 
 import scala.concurrent.Future
 
@@ -103,48 +104,48 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
             charset(result) shouldBe Some("utf-8")
           }
 
-          "have the title 'Do you want to add other tax relief?'" in {
-            document.title shouldEqual Messages("calc.otherReliefs.questionTwo")
+          s"have the title '${messages.question}'" in {
+            document.title shouldEqual messages.question
           }
 
-          "have the heading Calculate your tax (non-residents) " in {
-            document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
+          s"have the heading ${commonMessages.pageHeading}" in {
+            document.body.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
           }
 
           s"have a 'Back' link to ${routes.AllowableLossesController.allowableLosses().url}" in {
-            document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+            document.body.getElementById("back-link").text shouldEqual commonMessages.back
             document.body.getElementById("back-link").attr("href") shouldEqual routes.AllowableLossesController.allowableLosses().url
           }
 
-          "have a yes no helper with hidden content and question 'Do you want to add other tax relief?'" in {
-            document.body.getElementById("isClaimingOtherReliefs-yes").parent.text shouldBe Messages("calc.base.yes")
-            document.body.getElementById("isClaimingOtherReliefs-no").parent.text shouldBe Messages("calc.base.no")
-            document.body.getElementsByTag("legend").text shouldBe Messages("calc.otherReliefs.questionTwo")
+          s"have a yes no helper with hidden content and question '${messages.question}'" in {
+            document.body.getElementById("isClaimingOtherReliefs-yes").parent.text shouldBe commonMessages.yes
+            document.body.getElementById("isClaimingOtherReliefs-no").parent.text shouldBe commonMessages.no
+            document.body.getElementsByTag("legend").text shouldBe messages.question
           }
 
-          "have the help text 'For example, lettings relief'" in {
-            document.body.getElementsByClass("form-hint").text should include(Messages("calc.otherReliefs.help"))
+          s"have the help text 'F${messages.help}'" in {
+            document.body.getElementsByClass("form-hint").text should include(messages.help)
           }
 
           "have a value for your gain" in {
             document.getElementById("totalGain").text() shouldBe "Total gain £40,000"
           }
 
-          "display an input box for the Other Tax Reliefs with question 'How much extra tax relief are you claiming?" in {
+          s"display an input box for the Other Tax Reliefs with question '${messages.inputQuestion}'" in {
             document.body.getElementById("otherReliefs").tagName() shouldEqual "input"
-            document.select("label[for=otherReliefs]").text should include(Messages("calc.otherReliefs.question"))
+            document.select("label[for=otherReliefs]").text should include(messages.inputQuestion)
           }
 
           "display a 'Continue' button " in {
-            document.body.getElementById("continue-button").text shouldEqual Messages("calc.base.continue")
+            document.body.getElementById("continue-button").text shouldEqual commonMessages.continue
           }
 
-          "include helptext for 'Total gain'" in {
-            document.body.getElementById("totalGain").text should include(Messages("calc.otherReliefs.totalGain"))
+          s"include helptext for '${messages.totalGain}'" in {
+            document.body.getElementById("totalGain").text should include(messages.totalGain)
           }
 
-          "include helptext for 'Taxable gain'" in {
-            document.body.getElementById("taxableGain").text should include(Messages("calc.otherReliefs.taxableGain"))
+          s"include helptext for '${messages.taxableGain}'" in {
+            document.body.getElementById("taxableGain").text should include(messages.taxableGain)
           }
         }
       }
@@ -280,10 +281,9 @@ class OtherReliefsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
+      s"fail with message ${messages.errorMaximum(MoneyPounds(Constants.maxNumeric, 0).quantity)}" in {
         document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
-            " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+          include (messages.errorMaximum(MoneyPounds(Constants.maxNumeric, 0).quantity))
       }
     }
   }

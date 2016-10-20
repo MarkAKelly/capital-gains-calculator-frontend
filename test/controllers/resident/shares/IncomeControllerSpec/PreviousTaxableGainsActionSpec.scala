@@ -21,7 +21,7 @@ import controllers.resident.shares.IncomeController
 import org.jsoup.Jsoup
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.{previousTaxableGains => messages}
+import assets.MessageLookup.{PreviousTaxableGains => messages}
 import common.KeystoreKeys.{ResidentShareKeys => keystore}
 import connectors.CalculatorConnector
 import models.resident._
