@@ -16,24 +16,44 @@
 
 package constructors.nonresident
 
-import models.nonresident.{CustomerTypeModel, SummaryModel}
+import common.KeystoreKeys
+import models.nonresident.{QuestionAnswerModel, SummaryModel}
+import play.api.i18n.Messages
 
 object PersonalDetailsConstructor {
 
-  def getCustomerType(summaryModel: SummaryModel): String = {
-    summaryModel.customerTypeModel.customerType
+  def getCustomerTypeAnswer(summaryModel: SummaryModel): QuestionAnswerModel[String] = {
+    QuestionAnswerModel(KeystoreKeys.customerType, summaryModel.customerTypeModel.customerType,
+      Messages("calc.customerType.question"), Some(controllers.nonresident.routes.CustomerTypeController.customerType().url))
   }
 
-  def getCurrentIncome(summaryModel: SummaryModel): String = {
-    summaryModel.currentIncomeModel.get.currentIncome.toString
-    }
+  //Customer type needs to be individual
+  def getCurrentIncomeAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] = summaryModel.customerTypeModel.customerType match {
+    case "individual" => Some(QuestionAnswerModel(KeystoreKeys.currentIncome, summaryModel.currentIncomeModel.get.currentIncome,
+      Messages("calc.currentIncome.question"), Some(controllers.nonresident.routes.CurrentIncomeController.currentIncome().url)))
+    case _ => None
+  }
 
-  def getPersonalAllowance(summaryModel: SummaryModel): String = {""}
+  //Customer type needs to be individual
+  def getPersonalAllowanceAnswer(summaryModel: SummaryModel): Option[BigDecimal] = summaryModel.personalAllowanceModel.isEmpty match {
+    case true => None
+    case false => Some(summaryModel.personalAllowanceModel.get.personalAllowanceAmt)
+  }
 
-  def getDisabledTrustees(summaryModel: SummaryModel): String = {""}
+  //Customer type needs to be trustee
+  def getDisabledTrusteesAnswer(summaryModel: SummaryModel): Option[String] = summaryModel.disabledTrusteeModel.isEmpty match {
+    case true => None
+    case false => Some(summaryModel.disabledTrusteeModel.get.isVulnerable)
+  }
 
-  def getOtherProperties(summaryModel: SummaryModel): String = {""}
+  def getOtherPropertiesAnswer(summaryModel: SummaryModel): BigDecimal = {
+    summaryModel.otherPropertiesModel.otherPropertiesAmt.get
+  }
 
-  def getAEA(summaryModel: SummaryModel): String = {""}
+  //Only if otherProperties is yes and taxable gain is 0
+  def getAEAAnswer(summaryModel: SummaryModel): Option[BigDecimal] = summaryModel.annualExemptAmountModel.isEmpty match {
+    case true => None
+    case false => Some(summaryModel.annualExemptAmountModel.get.annualExemptAmount)
+  }
 
 }

@@ -16,13 +16,15 @@
 
 package constructors.nonresident
 
+import common.KeystoreKeys
 import common.nonresident.CustomerTypeKeys
+import models.SummaryDataItemModel
 import models.nonresident._
 import uk.gov.hmrc.play.test.UnitSpec
 
 class PersonalDetailsConstructorSpec extends UnitSpec {
 
-  val summaryWithAllValuesModel = SummaryModel(
+  val summaryWithAllOptionValuesModel = SummaryModel(
     CustomerTypeModel(CustomerTypeKeys.individual),
     Some(DisabledTrusteeModel("Yes")),
     Some(CurrentIncomeModel(30000.0)),
@@ -46,4 +48,97 @@ class PersonalDetailsConstructorSpec extends UnitSpec {
     Some(PrivateResidenceReliefModel("Yes", Some(2500.0), Some(0.0)))
   )
 
+  val summaryWithNoOptionValuesModel = SummaryModel(
+    CustomerTypeModel(CustomerTypeKeys.individual),
+    None,
+    None,
+    None,
+    OtherPropertiesModel("No", None),
+    None,
+    AcquisitionDateModel("No", None, None, None),
+    AcquisitionValueModel(300000.0),
+    None,
+    None,
+    ImprovementsModel("No", None),
+    DisposalDateModel(5, 9, 2016),
+    DisposalValueModel(5000),
+    AcquisitionCostsModel(250000.0),
+    DisposalCostsModel(5000.0),
+    AllowableLossesModel("No", None),
+    CalculationElectionModel("flat"),
+    OtherReliefsModel(None, None),
+    OtherReliefsModel(None, None),
+    OtherReliefsModel(None, None),
+    None
+  )
+
+  "Calling PersonalDetailsConstructor" should {
+
+    "when using the summaryWithAllOptionsValuesModel" should {
+
+//      ".getPurchaseDetailsItem will return a Sequence[DataItems]" in{
+//        PersonalDetailsConstructor.getPurchaseDetailsItem(summaryWithAllOptionValuesModel) shouldBe
+//          Seq(QuestionAnswerModel(common.KeystoreKeys.customerType, CustomerTypeKeys.individual))
+//      }
+
+      ".getCustomerTypeAnswer with a customer type of individual will return an id of " +
+         s"${KeystoreKeys.customerType}"in {
+        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).id shouldBe
+          KeystoreKeys.customerType
+      }
+
+//      ".getCustomerTypeAnswer with a customer type of individual will return a question of " in {
+//        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).id shouldBe
+//          KeystoreKeys.customerType
+//      }
+//
+//      ".getCustomerTypeAnswer with a customer type of individual will return an id of nr:customerType " in {
+//        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).id shouldBe
+//          KeystoreKeys.customerType
+//      }
+//
+//      ".getCustomerTypeAnswer with a customer type of individual will return an id of nr:customerType " in {
+//        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).id shouldBe
+//          KeystoreKeys.customerType
+//      }
+
+//      ".getCurrentIncomeAnswer with an income of 30000.0 will return 30000.0" in {
+//        PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryWithAllOptionValuesModel) shouldBe Some(30000.0)
+//      }
+//
+//      ".getPersonalAllowanceAnswer with a personal allowance of 11000.0" in {
+//        PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryWithAllOptionValuesModel) shouldBe Some(11000.0)
+//      }
+//
+//      ".getDisabledTrusteeAnswer with a disabled trustee will return Yes" in {
+//        PersonalDetailsConstructor.getDisabledTrusteesAnswer(summaryWithAllOptionValuesModel) shouldBe Some("Yes")
+//      }
+//
+//      ".getOtherPropertiesAnswer with another property and a value of 250000.0" in {
+//        PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithAllOptionValuesModel) shouldBe 250000.0
+//      }
+//
+//      ".getAEAAnswer with a an annual exempt amount of 10000.0" in {
+//        PersonalDetailsConstructor.getAEAAnswer(summaryWithAllOptionValuesModel) shouldBe Some(10000.0)
+//      }
+//    }
+//
+//    "when using the summaryWithNoOptionsValuesModel" should {
+//      ".getCurrentIncomeAnswer with a value of None will return None" in {
+//        PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryWithNoOptionValuesModel) shouldBe None
+//      }
+//
+//      ".getPersonaAllowanceAnswer with a value of None will return None" in {
+//        PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryWithNoOptionValuesModel) shouldBe None
+//      }
+//
+//      ".getDisabledTrusteeAnswer with a value of None will return None" in {
+//        PersonalDetailsConstructor.getDisabledTrusteesAnswer(summaryWithNoOptionValuesModel) shouldBe None
+//      }
+//
+//      ".getAnnualExemptAmount with a value of None will return None" in {
+//        PersonalDetailsConstructor.getAEAAnswer(summaryWithNoOptionValuesModel) shouldBe None
+//      }
+    }
+  }
 }
