@@ -107,7 +107,6 @@ class PropertiesDeductionsReportViewSpec extends UnitSpec with WithFakeApplicati
     s"have a section for the Calculation details" which {
 
       "has the class 'summary-section' to underline the heading" in {
-
         doc.select("section#calcDetails h2").hasClass("summary-underline") shouldBe true
 
       }

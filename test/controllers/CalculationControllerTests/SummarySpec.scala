@@ -16,7 +16,6 @@
 
 package controllers.CalculationControllerTests
 
-
 import common.DefaultRoutes._
 import common.{KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
@@ -444,6 +443,25 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
           s"have a link to '${messages.startAgain}'" in {
             document.select("#startAgain").text shouldEqual messages.startAgain
+          }
+
+          "display the save as PDF Button" which {
+
+            "should render only one button" in {
+              document.select("a.save-pdf-button").size() shouldEqual 1
+            }
+
+            "with the class save-pdf-button" in {
+              document.select("a.button").hasClass("save-pdf-button") shouldEqual true
+            }
+
+            s"with an href to ${controllers.nonresident.routes.ReportController.summaryReport().url}" in {
+              document.select("a.save-pdf-button").attr("href") shouldEqual controllers.nonresident.routes.ReportController.summaryReport().url
+            }
+
+            s"have the text ${messages.saveAsPdf}" in {
+              document.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
+            }
           }
         }
       }

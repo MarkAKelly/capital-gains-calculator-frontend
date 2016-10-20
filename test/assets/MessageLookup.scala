@@ -285,6 +285,7 @@ object MessageLookup {
       val rebasedCalculation = "How much you've gained on the property since 5 April 2015"
       val lossesCarriedForward = "Loss carried forward"
       val taxYearWarning = "Your total might be less accurate because you didn't sell or give away your property in this tax year"
+      val saveAsPdf = "Save as PDF"
     }
 
     object AllowableLosses {
@@ -523,6 +524,7 @@ object MessageLookup {
   object SummaryPage {
     val title = "Summary"
     val pageHeading = "Tax owed"
+    val secondaryHeading = "You owe"
     val calcDetailsHeading = "Calculation details"
     def calcDetailsHeadingDate(input: String): String = s"Calculation details for $input tax year"
     val aeaHelp = "You can use this to reduce your tax if you sell something else that's covered by Capital Gains Tax in the same tax year."
