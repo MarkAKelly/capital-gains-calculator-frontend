@@ -1,0 +1,110 @@
+@import common.Dates
+@import views.html.helpers._
+@import views.html.helpers.resident._
+@import models.nonresident._
+@import models.resident._
+@import models.SummaryDataItemModel
+@import constructors.nonresident.SummaryConstructor
+@import constructors.nonresident.SummaryReportConstructor
+@import controllers.nonresident.routes.{ReportController => routes}
+@import uk.gov.hmrc.play.views.helpers.MoneyPounds
+
+@(summary: SummaryModel, result: CalculationResultModel, taxYear: TaxYearModel, electionType: String)(implicit request: Request[_])
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="/calculate-your-capital-gains/assets/stylesheets/cgt.css">
+    <title>@Messages("calc.summary.title")</title>
+</head>
+
+<div class="pdf">
+    <div class="header-container">
+        <h1 class="heading-xlarge">
+            <span class="pre-heading">@Messages("calc.summary.secondaryHeading")</span>
+            <b>&pound;@MoneyPounds(result.taxOwed).quantity</b>
+        </h1>
+        <div class="logo">
+            <span class="organisation-logo organisation-logo-medium">HM Revenue &amp; Customs</span>
+        </div>
+    </div>
+
+    @{if (!taxYear.isValidYear) {
+    <div class="notice-wrapper">
+        <div class="notice">
+            <strong class="bold-small">
+                {Messages("calc.resident.summary.dateWarning", taxYear.calculationTaxYear)}
+            </strong>
+        </div>
+    </div>
+    }
+    }
+
+    <section id="calcDetails">
+
+        <!-- Header -->
+        @summarySectionHeaderHelper(Messages("calc.summary.calculation.details.title"))
+
+        <!-- Body -->
+        @SummaryReportConstructor.calculationDetails(result, summary)
+
+    </section>
+
+    <section id="personalDetails">
+        <!-- Header -->
+        @summarySectionHeaderHelper(Messages("calc.summary.personal.details.title"))
+
+        <!-- Body -->
+        @SummaryReportConstructor.personalDetails(result, summary)
+    </section>
+
+    <section id="acquisitionDetails">
+        <!-- Header -->
+        @summarySectionHeaderHelper(Messages("calc.summary.purchase.details.title"))
+
+        <!-- Body -->
+        @SummaryReportConstructor.acquisitionDetails(result, summary)
+    </section>
+
+    <section id="propertyDetails">
+        <!-- Header -->
+        @summarySectionHeaderHelper(Messages("calc.summary.property.details.title"))
+
+        <!-- Body -->
+        @SummaryReportConstructor.propertyDetails(result, summary)
+    </section>
+
+    <section id="saleDetails">
+        <!-- Header -->
+        @summarySectionHeaderHelper(Messages("calc.summary.sale.details.title"))
+
+        <!-- Body -->
+        @SummaryReportConstructor.saleDetails(result, summary)
+    </section>
+
+    <section id="deductions">
+        <!-- Header -->
+        @summarySectionHeaderHelper(Messages("calc.summary.deductions.title"))
+
+        <!-- Body -->
+        @SummaryReportConstructor.deductions(result, summary)
+    </section>
+
+    @*
+    *  What to do next
+    *@
+    <div id="whatToDoNext" class="form-group">
+        <h2 class="heading-medium">@Messages("calc.summary.next.fullMessage")</h2>
+        <p>@Messages("calc.summary.link.message")</p>
+        <p>
+            <a class="external-link" rel="external" href="https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-uk-residential-property"
+               target="_blank" data-journey-click="nav:calc:kana-nrcgt">
+                <span>https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-uk-residential-property</span>
+            </a>
+        </p>
+    </div>
+
+</div>
