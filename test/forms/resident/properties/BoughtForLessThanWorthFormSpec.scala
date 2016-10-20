@@ -19,7 +19,6 @@ package forms.resident
 import forms.resident.properties.BoughtForLessThanWorthForm._
 import models.resident.properties.BoughtForLessThanWorthModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.{boughtForLessThanWorth => messages}
 
 class BoughtForLessThanWorthFormSpec extends UnitSpec with WithFakeApplication {
 
@@ -57,7 +56,6 @@ class BoughtForLessThanWorthFormSpec extends UnitSpec with WithFakeApplication {
       "raise 1 form error" in {
         form.errors.length shouldBe 1
       }
-
     }
 
     "supplied with an incorrect selection" should {

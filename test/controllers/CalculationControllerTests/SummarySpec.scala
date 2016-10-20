@@ -19,7 +19,6 @@ package controllers.CalculationControllerTests
 import common.DefaultRoutes._
 import common.{KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
-import constructors.nonresident.CalculationElectionConstructor
 import controllers.nonresident.{SummaryController, routes}
 import models.nonresident.{AcquisitionDateModel, CalculationResultModel, RebasedValueModel, SummaryModel}
 import org.jsoup.Jsoup
@@ -30,6 +29,8 @@ import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import assets.MessageLookup.{NonResident => commonMessages}
+import assets.MessageLookup.NonResident.{Summary => messages}
 
 import scala.concurrent.Future
 
@@ -44,7 +45,6 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
                  ): SummaryController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
-    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[RebasedValueModel](Matchers.eq(KeystoreKeys.rebasedValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(rebasedValueData))
@@ -85,7 +85,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.OtherReliefsController.otherReliefs().url}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.OtherReliefsController.otherReliefs().url
         }
       }
@@ -101,7 +101,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.OtherReliefsController.otherReliefs().url}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.OtherReliefsController.otherReliefs().url
         }
       }
@@ -117,7 +117,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.CalculationElectionController.calculationElection().url}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationElectionController.calculationElection().url
         }
       }
@@ -133,7 +133,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.CalculationElectionController.calculationElection().url}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationElectionController.calculationElection().url
         }
       }
@@ -148,8 +148,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${missingDataRoute} " in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+        s"have a 'Back' link to $missingDataRoute " in {
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
         }
       }
@@ -164,8 +164,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${missingDataRoute} " in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+        s"have a 'Back' link to $missingDataRoute " in {
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
         }
       }
@@ -189,16 +189,16 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
         "return some HTML that" should {
 
-          "should have the title 'Summary'" in {
-            document.getElementsByTag("title").text shouldEqual Messages("calc.summary.title")
+          s"should have the title '${messages.title}'" in {
+            document.getElementsByTag("title").text shouldEqual messages.title
           }
 
           "have a back button" in {
-            document.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+            document.getElementById("back-link").text shouldEqual commonMessages.back
           }
 
-          "have the correct sub-heading 'You owe'" in {
-            document.select("h1 span").text shouldEqual Messages("calc.summary.secondaryHeading")
+          s"have the correct sub-heading '${messages.secondaryHeading}'" in {
+            document.select("h1 span").text shouldEqual messages.secondaryHeading
           }
 
           "have a result amount currently set to £8,000.00" in {
@@ -207,44 +207,44 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
           "have a 'Calculation details' section that" should {
 
-            "include the section heading 'Calculation details" in {
-              document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.title"))
+            s"include the section heading '${messages.calculationDetailsTitle}" in {
+              document.select("#calcDetails").text should include(messages.calculationDetailsTitle)
             }
 
-            "include 'What would you like to base your tax on?'" in {
-              document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.calculationElection"))
+            s"include '${messages.calculationElection}'" in {
+              document.select("#calcDetails").text should include(messages.calculationElection)
             }
 
-            "have an election description of 'How much of your total gain you've made since 5 April 2015'" in {
-              document.body().getElementById("calcDetails(0)").text() shouldBe Messages("calc.summary.calculation.details.flatCalculation")
+            s"have an election description of '${messages.flatCalculation}'" in {
+              document.body().getElementById("calcDetails(0)").text() shouldBe messages.flatCalculation
             }
 
-            "include 'Your total gain'" in {
-              document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.totalGain"))
+            s"include '${messages.totalGain}'" in {
+              document.select("#calcDetails").text should include(messages.totalGain)
             }
 
             "have a total gain equal to £40,000.00" in {
               document.body().getElementById("calcDetails(1)").text() shouldBe "£40,000"
             }
 
-            "include 'Capital Gains Tax allowance used" in {
-              document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.usedAEA"))
+            s"include '${messages.usedAEA}'" in {
+              document.select("#calcDetails").text should include(messages.usedAEA)
             }
 
             "have a used AEA value equal to £0" in {
               document.body().getElementById("calcDetails(2)").text() shouldBe "£0"
             }
 
-            "include 'Your taxable gain'" in {
-              document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.taxableGain"))
+            s"include '${messages.taxableGain}'" in {
+              document.select("#calcDetails").text should include(messages.taxableGain)
             }
 
             "have a taxable gain equal to £40,000" in {
               document.body().getElementById("calcDetails(3)").text() shouldBe "£40,000"
             }
 
-            "include 'Your tax rate'" in {
-              document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.taxRate"))
+            s"include '${messages.taxRate}'" in {
+              document.select("#calcDetails").text should include(messages.taxRate)
             }
 
             "have a combined tax rate of £32,000 and £8,000" in {
@@ -255,12 +255,12 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
           "have a 'Personal details' section that" should {
 
-            "include the section heading 'Personal details" in {
-              document.select("#personalDetails").text should include(Messages("calc.summary.personal.details.title"))
+            s"include the section heading '${messages.personalDetailsTitle}'" in {
+              document.select("#personalDetails").text should include(messages.personalDetailsTitle)
             }
 
-            "include the question 'Who owned the property?'" in {
-              document.select("#personalDetails").text should include(Messages("calc.customerType.question"))
+            s"include the question '${commonMessages.CustomerType.question}'" in {
+              document.select("#personalDetails").text should include(commonMessages.CustomerType.question)
             }
 
             "have an 'individual' owner and link to the customer-type page" in {
@@ -268,8 +268,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.body().getElementById("personalDetails(0)").attr("href") shouldEqual routes.CustomerTypeController.customerType().toString()
             }
 
-            "include the question 'What’s your total income for this tax year?'" in {
-              document.select("#personalDetails").text should include(Messages("calc.currentIncome.question"))
+            s"include the question '${commonMessages.CurrentIncome.question}'" in {
+              document.select("#personalDetails").text should include(commonMessages.CurrentIncome.question)
             }
 
             "have an total income of £1,000 and link to the current-income screen" in {
@@ -277,8 +277,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.body().getElementById("personalDetails(1)").attr("href") shouldEqual routes.CurrentIncomeController.currentIncome().toString()
             }
 
-            "include the question 'What's your Personal Allowance for this tax year?'" in {
-              document.select("#personalDetails").text should include(Messages("calc.personalAllowance.question"))
+            s"include the question '${commonMessages.PersonalAllowance.question}'" in {
+              document.select("#personalDetails").text should include(commonMessages.PersonalAllowance.question)
             }
 
             "have a personal allowance of £9,000 that has a link to the personal allowance page." in {
@@ -286,8 +286,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.body().getElementById("personalDetails(2)").attr("href") shouldEqual routes.PersonalAllowanceController.personalAllowance().toString()
             }
 
-            "include the question 'What was the total taxable gain of your previous Capital Gains in the tax year you stopped owning the property?'" in {
-              document.select("#personalDetails").text should include(Messages("calc.otherProperties.questionTwo"))
+            s"include the question '${commonMessages.OtherProperties.questionTwo}'" in {
+              document.select("#personalDetails").text should include(commonMessages.OtherProperties.questionTwo)
             }
 
             "have a total taxable gain of prior disposals of £9,600 and link to the other-properties page" in {
@@ -295,8 +295,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.body().getElementById("personalDetails(3)").attr("href") shouldEqual routes.OtherPropertiesController.otherProperties().toString()
             }
 
-            "include the question 'How much of your Capital Gains Tax allowance have you got left'" in {
-              document.select("#personalDetails").text should include(Messages("calc.annualExemptAmount.question"))
+            s"include the question '${commonMessages.AnnualExemptAmount.question}'" in {
+              document.select("#personalDetails").text should include(commonMessages.AnnualExemptAmount.question)
             }
 
             "have a remaining CGT Allowance of £1,500 and link to the allowance page" in {
@@ -307,12 +307,12 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
           "have a 'Purchase details' section that" should {
 
-            "include the section heading 'Purchase details" in {
-              document.select("#purchaseDetails").text should include(Messages("calc.summary.purchase.details.title"))
+            s"include the section heading '${messages.purchaseDetailsTitle}" in {
+              document.select("#purchaseDetails").text should include(messages.purchaseDetailsTitle)
             }
 
             "include the question for whether the acquisition date is provided" in {
-              document.select("#purchaseDetails").text should include(Messages("calc.acquisitionDate.question"))
+              document.select("#purchaseDetails").text should include(commonMessages.AcquisitionDate.question)
             }
 
             "have an answer to the question for providing an acquisition date of 'No'" in {
@@ -321,8 +321,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
             }
 
-            "include the question 'How much did you pay for the property?'" in {
-              document.select("#purchaseDetails").text should include(Messages("calc.acquisitionValue.question"))
+            s"include the question '${commonMessages.AcquisitionValue.question}'" in {
+              document.select("#purchaseDetails").text should include(commonMessages.AcquisitionValue.question)
             }
 
             "have an acquisition value of £100,000 and link to the acquisition value page" in {
@@ -330,8 +330,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.body().getElementById("purchaseDetails(1)").attr("href") shouldEqual routes.AcquisitionValueController.acquisitionValue().toString()
             }
 
-            "include the question 'How much did you pay in costs when you became the property owner?'" in {
-              document.select("#purchaseDetails").text should include(Messages("calc.acquisitionCosts.question"))
+            s"include the question '${commonMessages.AcquisitionCosts.question}'" in {
+              document.select("#purchaseDetails").text should include(commonMessages.AcquisitionCosts.question)
             }
 
             "have a acquisition costs of £0 and link to the acquisition-costs page" in {
@@ -346,8 +346,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.select("#propertyDetails").text should include(Messages("calc.summary.property.details.title"))
             }
 
-            "include the question 'Did you make any improvements to the property?'" in {
-              document.select("#propertyDetails").text should include(Messages("calc.improvements.question"))
+            s"include the question '${commonMessages.Improvements.question}'" in {
+              document.select("#propertyDetails").text should include(commonMessages.Improvements.question)
             }
 
             "the answer to the improvements question should be No and should link to the improvements page" in {
@@ -358,12 +358,12 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
           "have a 'Sale details' section that" should {
 
-            "include the section heading 'Sale details" in {
-              document.select("#saleDetails").text should include(Messages("calc.summary.sale.details.title"))
+            s"include the section heading ${messages.saleDetailsTitle}" in {
+              document.select("#saleDetails").text should include(messages.saleDetailsTitle)
             }
 
-            "include the question 'When did you sign the contract that made someone else the owner?'" in {
-              document.select("#saleDetails").text should include(Messages("calc.disposalDate.question"))
+            s"include the question ${commonMessages.DisposalDate.question}" in {
+              document.select("#saleDetails").text should include(commonMessages.DisposalDate.question)
             }
 
             "the date of disposal should be '10 October 2010 and link to the disposal-date page" in {
@@ -371,8 +371,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.body().getElementById("saleDetails(0)").attr("href") shouldEqual routes.DisposalDateController.disposalDate().toString()
             }
 
-            "include the question 'How much did you sell or give away the property for?'" in {
-              document.select("#saleDetails").text should include(Messages("calc.disposalValue.question"))
+            s"include the question '${commonMessages.DisposalValue.question}'" in {
+              document.select("#saleDetails").text should include(commonMessages.DisposalValue.question)
             }
 
             "the value of the sale should be £150,000 and link to the disposal-value page" in {
@@ -380,8 +380,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.body().getElementById("saleDetails(1)").attr("href") shouldEqual routes.DisposalValueController.disposalValue().toString()
             }
 
-            "include the question 'How much did you pay in costs when you stopped being the property owner?'" in {
-              document.select("#saleDetails").text should include(Messages("calc.disposalCosts.question"))
+            s"include the question ${commonMessages.DisposalCosts.question}" in {
+              document.select("#saleDetails").text should include(commonMessages.DisposalCosts.question)
             }
 
             "the value of the costs should be £0 and link to the disposal costs page" in {
@@ -392,12 +392,14 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
           "have a 'Deductions details' section that" should {
 
-            "include the section heading 'Deductions" in {
-              document.select("#deductions").text should include(Messages("calc.summary.deductions.title"))
+            s"include the section heading '${messages.deductionsTitle}" in {
+              document.select("#deductions").text should include(messages.deductionsTitle)
             }
 
-            "include the question 'Whats the total value of your allowable losses?'" in {
+            s"include the question '${Messages("calc.allowableLosses.question.two")}'" in {
+              ////////////////////////////////////////////////////////////////////////////////////////////////////////
               document.select("#deductions").text should include(Messages("calc.allowableLosses.question.two"))
+              ////////////////////////////////////////////////////////////////////////////////////////////////////////
             }
 
             "the value of allowable losses should be £0 and link to the allowable-losses page" in {
@@ -405,8 +407,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.body().getElementById("deductions(1)").attr("href") shouldEqual routes.AllowableLossesController.allowableLosses().toString()
             }
 
-            "include the question 'How much extra tax relief are you claiming?'" in {
-              document.select("#deductions").text should include(Messages("calc.otherReliefs.questionTwo"))
+            s"include the question '${commonMessages.PrivateResidenceRelief.question}'" in {
+              document.select("#deductions").text should include(commonMessages.PrivateResidenceRelief.question)
             }
 
             "the answer to question should be No and link to the other-reliefs page" in {
@@ -414,8 +416,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
               document.body().getElementById("deductions(2)").attr("href") shouldEqual routes.OtherReliefsController.otherReliefs().toString()
             }
 
-            "include the question 'Do you want to add other tax relief?'" in {
-              document.select("#deductions").text should include(Messages("calc.privateResidenceRelief.question"))
+            s"include the question '${commonMessages.OtherReliefs.question}'" in {
+              document.select("#deductions").text should include(commonMessages.OtherReliefs.question)
             }
 
             "the PRR claimed question's answer should be 'No' and be a link to the PRR page" in {
@@ -428,8 +430,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
           "have a 'What to do next' section that" should {
 
-            "have the heading 'What to do next'" in {
-              document.select("#whatToDoNext H2").text shouldEqual Messages("calc.common.next.actions.heading")
+            s"have the heading '${messages.whatToDoNextText}'" in {
+              document.select("#whatToDoNext H2").text shouldEqual messages.whatToDoNextText
             }
 
             "include the text 'You need to tell HMRC about the property'" in {
@@ -439,8 +441,27 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
             }
           }
 
-          "have a link to 'Start again'" in {
-            document.select("#startAgain").text shouldEqual Messages("calc.summary.startAgain")
+          s"have a link to '${messages.startAgain}'" in {
+            document.select("#startAgain").text shouldEqual messages.startAgain
+          }
+
+          "display the save as PDF Button" which {
+
+            "should render only one button" in {
+              document.select("a.save-pdf-button").size() shouldEqual 1
+            }
+
+            "with the class save-pdf-button" in {
+              document.select("a.button").hasClass("save-pdf-button") shouldEqual true
+            }
+
+            s"with an href to ${controllers.nonresident.routes.ReportController.summaryReport().url}" in {
+              document.select("a.save-pdf-button").attr("href") shouldEqual controllers.nonresident.routes.ReportController.summaryReport().url
+            }
+
+            s"have the text ${messages.saveAsPdf}" in {
+              document.select("a.save-pdf-button").text shouldEqual messages.saveAsPdf
+            }
           }
         }
       }
@@ -472,11 +493,11 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "include the question for whether the acquisition date is provided" in {
-          document.select("#purchaseDetails").text should include(Messages("calc.acquisitionDate.question"))
+          document.select("#purchaseDetails").text should include(commonMessages.AcquisitionDate.question)
         }
 
         "have an answer to the question for providing an acquisition date of 'No'" in {
-          document.body().getElementById("purchaseDetails(0)").text() shouldBe Messages("No")
+          document.body().getElementById("purchaseDetails(0)").text() shouldBe commonMessages.no
         }
 
         "have a acquisition costs of £300" in {
@@ -507,7 +528,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val document = Jsoup.parse(bodyOf(result))
 
         "Element 3 of the personalDetails array should be 'No' for Other Properties no Personal Allowance" in {
-          document.body().getElementById("personalDetails(2)").text() shouldBe "No"
+          document.body().getElementById("personalDetails(2)").text() shouldBe commonMessages.no
         }
       }
 
@@ -537,8 +558,8 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have ${Messages("calc.summary.calculation.details.totalLoss")} output" in {
-          document.body.getElementById("calcDetails").text() should include (Messages("calc.summary.calculation.details.totalLoss"))
+        s"have ${messages.totalLoss} output" in {
+          document.body.getElementById("calcDetails").text() should include (messages.totalLoss)
         }
 
         s"have £10,000.00 loss" in {
@@ -560,7 +581,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val document = Jsoup.parse(bodyOf(result))
 
         "have an election description of time apportionment method" in {
-          document.body().getElementById("calcDetails(0)").text() shouldBe Messages("calc.summary.calculation.details.timeCalculation")
+          document.body().getElementById("calcDetails(0)").text() shouldBe messages.timeCalculation
         }
 
         "have an acquisition date of '9 September 1990'" in{
@@ -572,11 +593,12 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "have an answer of 'No to the disabled trustee question" in {
-          document.body().getElementById("personalDetails(1)").text() shouldBe "No"
+          document.body().getElementById("personalDetails(1)").text() shouldBe commonMessages.no
         }
 
         "have the answer for Previous Disposals (Other Properties) of 'Yes'" in {
-          document.body.getElementById("personalDetails(2)").text() shouldBe "Yes"
+          document.body.getElementById("personalDetails(2)").text() shouldBe commonMessages.yes
+
         }
 
         "have a remaining CGT Allowance of £1,500" in {
@@ -599,11 +621,11 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val document = Jsoup.parse(bodyOf(result))
 
         "have an answer of 'No to the disabled trustee question" in {
-         document.getElementById("personalDetails(1)").text() shouldBe "No"
+         document.getElementById("personalDetails(1)").text() shouldBe commonMessages.no
         }
 
         "have the answer for Previous Disposals (Other Properties) of 'No'" in {
-          document.body().getElementById("personalDetails(2)").text() shouldBe "No"
+          document.body().getElementById("personalDetails(2)").text() shouldBe commonMessages.no
         }
       }
     }
@@ -621,7 +643,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val document = Jsoup.parse(bodyOf(result))
 
         "have an answer of 'Yes' to the disabled trustee question" in {
-          document.body().getElementById("personalDetails(1)").text() shouldBe "Yes"
+          document.body().getElementById("personalDetails(1)").text() shouldBe commonMessages.yes
         }
 
         "have a remaining CGT Allowance of £1,500" in {
@@ -640,11 +662,11 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val document = Jsoup.parse(bodyOf(result))
 
         "have an answer of 'Yes' to the disabled trustee question" in {
-          document.body().getElementById("personalDetails(1)").text() shouldBe "Yes"
+          document.body().getElementById("personalDetails(1)").text() shouldBe commonMessages.yes
         }
 
         "have the answer for Previous Disposals (Other Properties) of 'No'" in {
-          document.body().getElementById("personalDetails(2)").text() shouldBe "No"
+          document.body().getElementById("personalDetails(2)").text() shouldBe commonMessages.no
         }
       }
     }
@@ -666,7 +688,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "have the answer for Previous Disposals (Other Properties) of 'Yes' " in {
-          document.body.getElementById("personalDetails(1)").text() shouldBe "Yes"
+          document.body.getElementById("personalDetails(1)").text() shouldBe commonMessages.yes
         }
 
         "have a remaining CGT Allowance of £1,500" in {
@@ -689,7 +711,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "have the answer for Previous Disposals (Other Properties) of 'No'" in {
-          document.body().getElementById("personalDetails(1)").text() shouldBe "No"
+          document.body().getElementById("personalDetails(1)").text() shouldBe commonMessages.no
         }
       }
 
@@ -712,7 +734,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "include the question for the rebased value" in {
-          document.select("#purchaseDetails").text should include(Messages("calc.rebasedValue.questionTwo"))
+          document.select("#purchaseDetails").text should include(commonMessages.RebasedValue.inputQuestion)
         }
 
         "have a value for the rebased value" in {
@@ -720,7 +742,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "include the question for the rebased costs" in {
-          document.select("#purchaseDetails").text should include(Messages("calc.rebasedCosts.questionTwo"))
+          document.select("#purchaseDetails").text should include(commonMessages.RebasedCosts.inputQuestion)
         }
 
         "have a value for the rebased costs" in {
@@ -728,7 +750,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         }
 
         "include the question for the improvements after" in {
-          document.select("#propertyDetails").text should include(Messages("calc.improvements.questionFour"))
+          document.select("#propertyDetails").text should include(commonMessages.Improvements.questionFour)
         }
 
         "have a value for the improvements after" in {
@@ -752,16 +774,16 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
         lazy val result = target.summary()(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        "have an election description of 'How much of your total gain you've made since 5 April 2015'" in {
-          document.body().getElementById("calcDetails(0)").text() shouldBe Messages("calc.summary.calculation.details.rebasedCalculation")
+        s"have an election description of '${messages.rebasedCalculation}'" in {
+          document.body().getElementById("calcDetails(0)").text() shouldBe messages.rebasedCalculation
         }
 
         "include the question for whether the acquisition date is provided" in {
-          document.select("#purchaseDetails").text should include(Messages("calc.acquisitionDate.question"))
+          document.select("#purchaseDetails").text should include(commonMessages.AcquisitionDate.question)
         }
 
         "have an answer to the question for providing an acquisition date of 'No'" in {
-          document.body().getElementById("purchaseDetails(0)").text() shouldBe Messages("No")
+          document.body().getElementById("purchaseDetails(0)").text() shouldBe commonMessages.no
         }
 
         "the value of allowable losses should be £0" in {
@@ -820,7 +842,7 @@ class SummarySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "include 'Loss carried forward'" in {
-        document.select("#calcDetails").text should include(Messages("calc.summary.calculation.details.lossCarriedForward"))
+        document.select("#calcDetails").text should include(messages.lossesCarriedForward)
       }
 
       "return a value of £10,000 for loss carried forward" in {

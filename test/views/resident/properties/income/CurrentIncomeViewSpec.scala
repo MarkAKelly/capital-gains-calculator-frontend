@@ -16,8 +16,8 @@
 
 package views.resident.properties.income
 
-import assets.MessageLookup.{currentIncome => messages}
-import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{CurrentIncome => messages}
+import assets.MessageLookup.{Resident => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.income.CurrentIncomeForm._
 import models.resident.TaxYearModel
@@ -41,7 +41,7 @@ class CurrentIncomeViewSpec extends UnitSpec with WithFakeApplication with FakeR
       doc.title() shouldBe messages.title("2015/16")
     }
 
-    s"have a back link with text ${commonMessages.calcBaseBack}" in {
+    s"have a back link with text ${commonMessages.back}" in {
       doc.select("#back-link").text() shouldEqual "Back"
     }
 
@@ -104,8 +104,8 @@ class CurrentIncomeViewSpec extends UnitSpec with WithFakeApplication with FakeR
 
         lazy val continueButton = doc.select("button#continue-button")
 
-        s"have the button text '${commonMessages.calcBaseContinue}'" in {
-          continueButton.text shouldBe commonMessages.calcBaseContinue
+        s"have the button text '${commonMessages.continue}'" in {
+          continueButton.text shouldBe commonMessages.continue
         }
 
         "be of type submit" in {
@@ -129,8 +129,8 @@ class CurrentIncomeViewSpec extends UnitSpec with WithFakeApplication with FakeR
           sidebar.text() should include(messages.linkText)
         }
 
-        s"have a span with the text ${commonMessages.calcBaseExternalLink}" in {
-          sidebar.select("span").text() shouldEqual commonMessages.calcBaseExternalLink
+        s"have a span with the text ${commonMessages.externalLink}" in {
+          sidebar.select("span").text() shouldEqual commonMessages.externalLink
         }
 
         "has the properties to open a link in a new tab" which {

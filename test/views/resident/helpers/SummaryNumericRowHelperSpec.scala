@@ -19,7 +19,7 @@ package views.resident.helpers
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.helpers.resident.summaryNumericRowHelper
-import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{Resident => commonMessages}
 
 class SummaryNumericRowHelperSpec extends UnitSpec with WithFakeApplication {
 
@@ -113,7 +113,7 @@ class SummaryNumericRowHelperSpec extends UnitSpec with WithFakeApplication {
         }
 
         "has the text 'change'" in {
-          link.text shouldBe commonMessages.calcBaseChange + " testQ"
+          link.text shouldBe commonMessages.change + " testQ"
         }
         "has the id testID-change-link" in {
           link.attr("id") shouldBe "testID-change-link"

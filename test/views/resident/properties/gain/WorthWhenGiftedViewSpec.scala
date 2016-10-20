@@ -16,12 +16,13 @@
 
 package views.resident.properties.gain
 
+import assets.MessageLookup.{Resident => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{gain => views}
 import forms.resident.properties.gain.WorthWhenGiftedForm._
-import assets.MessageLookup.Resident.Properties.{worthWhenGifted => messages}
+import assets.MessageLookup.Resident.Properties.{WorthWhenGifted => messages}
 import play.api.mvc.Call
 
 class WorthWhenGiftedViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
@@ -43,7 +44,7 @@ class WorthWhenGiftedViewSpec extends UnitSpec with WithFakeApplication with Fak
     }
 
     s"have a nav title of 'navTitle'" in {
-      doc.select("span.header__menu__proposition-name").text() shouldBe assets.MessageLookup.propertiesHomeText
+      doc.select("span.header__menu__proposition-name").text() shouldBe commonMessages.homeText
     }
 
     s"have a home link to 'homeLink'" in {
@@ -83,7 +84,7 @@ class WorthWhenGiftedViewSpec extends UnitSpec with WithFakeApplication with Fak
     }
 
     "have a continue button " in {
-      doc.select("#continue-button").text shouldBe assets.MessageLookup.calcBaseContinue
+      doc.select("#continue-button").text shouldBe commonMessages.continue
     }
   }
 

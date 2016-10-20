@@ -59,8 +59,8 @@ class WhoDidYouGiveItToActionSpec extends UnitSpec with WithFakeApplication with
         status(result) shouldEqual 200
       }
 
-      s"return some html with title of ${MessageLookup.whoDidYouGiveItTo.title}" in {
-        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.whoDidYouGiveItTo.title
+      s"return some html with title of ${MessageLookup.WhoDidYouGiveItTo.title}" in {
+        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.WhoDidYouGiveItTo.title
       }
     }
 
@@ -72,8 +72,8 @@ class WhoDidYouGiveItToActionSpec extends UnitSpec with WithFakeApplication with
         status(result) shouldEqual 200
       }
 
-      s"return some html with title of ${MessageLookup.whoDidYouGiveItTo.title}" in {
-        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.whoDidYouGiveItTo.title
+      s"return some html with title of ${MessageLookup.WhoDidYouGiveItTo.title}" in {
+        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.WhoDidYouGiveItTo.title
       }
     }
   }
@@ -150,8 +150,8 @@ class WhoDidYouGiveItToActionSpec extends UnitSpec with WithFakeApplication with
       "will generate a 400 error" in {
         status(result) shouldEqual 400
       }
-      s"and lead to the current page reloading and return some HTML with title of ${MessageLookup.whoDidYouGiveItTo.title} " in {
-        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.whoDidYouGiveItTo.title
+      s"and lead to the current page reloading and return some HTML with title of ${MessageLookup.WhoDidYouGiveItTo.title} " in {
+        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.WhoDidYouGiveItTo.title
 
       }
     }

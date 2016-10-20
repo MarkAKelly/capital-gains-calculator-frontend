@@ -20,8 +20,8 @@ import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{gain => views}
-import assets.MessageLookup.{boughtForLessThanWorth => messages}
-import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{BoughtForLessThanWorth => messages}
+import assets.MessageLookup.{Resident => commonMessages}
 import forms.resident.properties.BoughtForLessThanWorthForm._
 import models.resident.properties.BoughtForLessThanWorthModel
 
@@ -63,7 +63,7 @@ class BoughtForLessThanWorthViewSpec extends UnitSpec with WithFakeApplication w
       lazy val backLink = doc.select("a#back-link")
 
       "has the correct back link text" in {
-        backLink.text shouldBe commonMessages.calcBaseBack
+        backLink.text shouldBe commonMessages.back
       }
 
       "has the back-link class" in {
@@ -203,8 +203,8 @@ class BoughtForLessThanWorthViewSpec extends UnitSpec with WithFakeApplication w
         button.attr("id") shouldEqual "continue-button"
       }
 
-      s"has the text ${commonMessages.calcBaseContinue}" in {
-        button.text shouldEqual s"${commonMessages.calcBaseContinue}"
+      s"has the text ${commonMessages.continue}" in {
+        button.text shouldEqual s"${commonMessages.continue}"
       }
     }
   }

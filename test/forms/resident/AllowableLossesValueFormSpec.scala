@@ -19,7 +19,7 @@ package forms.resident
 import models.resident.AllowableLossesValueModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import forms.resident.AllowableLossesValueForm._
-import assets.MessageLookup._
+import assets.MessageLookup.{Resident => messages}
 
 class AllowableLossesValueFormSpec extends UnitSpec with WithFakeApplication {
 
@@ -45,8 +45,8 @@ class AllowableLossesValueFormSpec extends UnitSpec with WithFakeApplication {
         form.hasErrors shouldBe true
       }
 
-      s"return a form with the error message '${errorMessages.mandatoryAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.mandatoryAmount
+      s"return a form with the error message '${messages.mandatoryAmount}'" in {
+        form.error("amount").get.message shouldBe messages.mandatoryAmount
       }
     }
 
@@ -57,8 +57,8 @@ class AllowableLossesValueFormSpec extends UnitSpec with WithFakeApplication {
         form.hasErrors shouldBe true
       }
 
-      s"return a form with the error message '${errorMessages.invalidAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.invalidAmount
+      s"return a form with the error message '${messages.invalidAmount}'" in {
+        form.error("amount").get.message shouldBe messages.invalidAmount
       }
     }
 
@@ -69,8 +69,8 @@ class AllowableLossesValueFormSpec extends UnitSpec with WithFakeApplication {
         form.hasErrors shouldBe true
       }
 
-      s"return a form with the error message '${errorMessages.maximumAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.maximumAmount
+      s"return a form with the error message '${messages.maximumAmount}'" in {
+        form.error("amount").get.message shouldBe messages.maximumAmount
       }
     }
 
@@ -81,8 +81,8 @@ class AllowableLossesValueFormSpec extends UnitSpec with WithFakeApplication {
         form.hasErrors shouldBe true
       }
 
-      s"return a form with the error message '${errorMessages.minimumAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.minimumAmount
+      s"return a form with the error message '${messages.minimumAmount}'" in {
+        form.error("amount").get.message shouldBe messages.minimumAmount
       }
     }
 
@@ -93,8 +93,8 @@ class AllowableLossesValueFormSpec extends UnitSpec with WithFakeApplication {
         form.hasErrors shouldBe true
       }
 
-      s"return a form with the error message '${errorMessages.invalidAmount}'" in {
-        form.error("amount").get.message shouldBe errorMessages.invalidAmount
+      s"return a form with the error message '${messages.invalidAmount}'" in {
+        form.error("amount").get.message shouldBe messages.invalidAmount
       }
     }
   }

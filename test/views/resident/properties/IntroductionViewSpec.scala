@@ -16,8 +16,8 @@
 
 package views.resident.properties
 
-import assets.MessageLookup.{introductionView => messages}
-import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{IntroductionView => messages}
+import assets.MessageLookup.{Resident => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.routes.{GainController => routes}
 import org.jsoup.Jsoup
@@ -65,11 +65,11 @@ class IntroductionViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       lazy val hyperlink = doc.select("a:nth-of-type(2)")
 
       "have the correct text" in {
-        hyperlink.text.trim shouldBe commonMessages.calcBaseContinue
+        hyperlink.text.trim shouldBe commonMessages.continue
       }
 
       "take the user to disposal date page" in {
-        hyperlink.attr("href") shouldBe routes.disposalDate.toString
+        hyperlink.attr("href") shouldBe routes.disposalDate().toString
       }
 
       "have the id continue-button" in {

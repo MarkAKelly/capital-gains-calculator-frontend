@@ -16,7 +16,8 @@
 
 package views.resident.properties.deductions
 
-import assets.MessageLookup.{otherProperties => messages, _}
+import assets.MessageLookup.{Resident => commonMessages}
+import assets.MessageLookup.{OtherProperties => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.OtherPropertiesForm._
 import models.resident.TaxYearModel
@@ -70,7 +71,7 @@ class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with Fak
       }
 
       "have a continue button " in {
-        doc.body.getElementById("continue-button").text shouldEqual calcBaseContinue
+        doc.body.getElementById("continue-button").text shouldEqual commonMessages.continue
       }
 
       "have a back button that" should {
@@ -78,7 +79,7 @@ class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with Fak
         lazy val backLink = doc.select("a#back-link")
 
         "have the correct back link text" in {
-          backLink.text shouldBe calcBaseBack
+          backLink.text shouldBe commonMessages.back
         }
 
         "have the correct back link class" in {

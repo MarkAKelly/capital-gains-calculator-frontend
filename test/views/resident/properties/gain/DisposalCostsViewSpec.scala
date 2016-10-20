@@ -16,8 +16,8 @@
 
 package views.resident.properties.gain
 
-import assets.MessageLookup.{disposalCosts => messages}
-import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{DisposalCosts => messages}
+import assets.MessageLookup.{Resident => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.DisposalCostsForm._
 import org.jsoup.Jsoup
@@ -44,7 +44,7 @@ class DisposalCostsViewSpec extends UnitSpec with WithFakeApplication with FakeR
       lazy val backLink = doc.select("a#back-link")
 
       "have the correct back link text" in {
-        backLink.text shouldBe commonMessages.calcBaseBack
+        backLink.text shouldBe commonMessages.back
       }
 
       "have the back-link class" in {
@@ -128,8 +128,8 @@ class DisposalCostsViewSpec extends UnitSpec with WithFakeApplication with FakeR
 
       lazy val continueButton = doc.select("button#continue-button")
 
-      s"have the button text '${commonMessages.calcBaseContinue}'" in {
-        continueButton.text shouldBe commonMessages.calcBaseContinue
+      s"have the button text '${commonMessages.continue}'" in {
+        continueButton.text shouldBe commonMessages.continue
       }
 
       "be of type submit" in {

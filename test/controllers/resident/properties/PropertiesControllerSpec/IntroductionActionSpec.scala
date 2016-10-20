@@ -16,7 +16,7 @@
 
 package controllers.resident.properties.PropertiesControllerSpec
 
-import assets.MessageLookup.{introductionView => messages}
+import assets.MessageLookup.{IntroductionView => messages}
 import controllers.helpers.FakeRequestHelper
 import controllers.resident.properties.PropertiesController
 import org.jsoup.Jsoup

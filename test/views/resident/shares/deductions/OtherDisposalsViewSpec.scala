@@ -16,9 +16,9 @@
 
 package views.resident.shares.deductions
 
-import assets.MessageLookup._
-import assets.MessageLookup.{otherProperties => commonMessages}
-import assets.MessageLookup.{sharesOtherDisposals => messages}
+import assets.MessageLookup.{Resident => commonMessages}
+import assets.MessageLookup.{OtherProperties => viewMessages}
+import assets.MessageLookup.{SharesOtherDisposals => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.OtherPropertiesForm._
 import models.resident.TaxYearModel
@@ -43,12 +43,12 @@ class OtherDisposalsViewSpec extends UnitSpec with WithFakeApplication with Fake
         doc.getElementById("homeNavHref").attr("href") shouldEqual "home-link"
       }
 
-      s"have a title of ${commonMessages.title("2015/16")}" in {
-        doc.title() shouldBe commonMessages.title("2015/16")
+      s"have a title of ${viewMessages.title("2015/16")}" in {
+        doc.title() shouldBe viewMessages.title("2015/16")
       }
 
-      s"have a question of ${commonMessages.pageHeading("2015/16")}" in {
-        doc.select("h1").text shouldBe commonMessages.pageHeading("2015/16")
+      s"have a question of ${viewMessages.pageHeading("2015/16")}" in {
+        doc.select("h1").text shouldBe viewMessages.pageHeading("2015/16")
       }
 
       "have an input field with id hasOtherProperties-yes" in {
@@ -59,16 +59,16 @@ class OtherDisposalsViewSpec extends UnitSpec with WithFakeApplication with Fake
         doc.body.getElementById("hasOtherProperties-no").tagName() shouldEqual "input"
       }
 
-      s"have the help text ${commonMessages.help}" in {
-        doc.body.select("span.form-hint p").text shouldBe commonMessages.help
+      s"have the help text ${viewMessages.help}" in {
+        doc.body.select("span.form-hint p").text shouldBe viewMessages.help
       }
 
       s"have the help text ${messages.helpOne}" in {
         doc.body.select("ul.list-bullet li").get(0).text shouldBe messages.helpOne
       }
 
-      s"have the help text ${commonMessages.helpTwo}" in {
-        doc.body.select("ul.list-bullet li").get(1).text shouldBe commonMessages.helpTwo
+      s"have the help text ${viewMessages.helpTwo}" in {
+        doc.body.select("ul.list-bullet li").get(1).text shouldBe viewMessages.helpTwo
       }
 
       s"have the help text ${messages.helpThree}" in {
@@ -76,7 +76,7 @@ class OtherDisposalsViewSpec extends UnitSpec with WithFakeApplication with Fake
       }
 
       "have a continue button " in {
-        doc.body.getElementById("continue-button").text shouldEqual calcBaseContinue
+        doc.body.getElementById("continue-button").text shouldEqual commonMessages.continue
       }
 
       "have a back button that" should {
@@ -84,7 +84,7 @@ class OtherDisposalsViewSpec extends UnitSpec with WithFakeApplication with Fake
         lazy val backLink = doc.select("a#back-link")
 
         "have the correct back link text" in {
-          backLink.text shouldBe calcBaseBack
+          backLink.text shouldBe commonMessages.back
         }
 
         "have the correct back link class" in {
@@ -108,8 +108,8 @@ class OtherDisposalsViewSpec extends UnitSpec with WithFakeApplication with Fake
           form.attr("method") shouldBe "POST"
         }
 
-        s"have a legend for an input with text ${commonMessages.pageHeading("2015/16")}" in {
-          doc.select("legend.visuallyhidden").text() shouldEqual commonMessages.pageHeading("2015/16")
+        s"have a legend for an input with text ${viewMessages.pageHeading("2015/16")}" in {
+          doc.select("legend.visuallyhidden").text() shouldEqual viewMessages.pageHeading("2015/16")
         }
       }
     }
@@ -144,12 +144,12 @@ class OtherDisposalsViewSpec extends UnitSpec with WithFakeApplication with Fake
       lazy val view = views.otherDisposals(otherPropertiesForm, TaxYearModel("2013/14", false, "2015/16"), "home-link")(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
 
-      s"have a title of ${commonMessages.title("2013/14")}" in {
-        doc.title() shouldBe commonMessages.title("2013/14")
+      s"have a title of ${viewMessages.title("2013/14")}" in {
+        doc.title() shouldBe viewMessages.title("2013/14")
       }
 
-      s"have a question of ${commonMessages.pageHeading("2013/14")}" in {
-        doc.select("h1").text shouldBe commonMessages.pageHeading("2013/14")
+      s"have a question of ${viewMessages.pageHeading("2013/14")}" in {
+        doc.select("h1").text shouldBe viewMessages.pageHeading("2013/14")
       }
     }
   }

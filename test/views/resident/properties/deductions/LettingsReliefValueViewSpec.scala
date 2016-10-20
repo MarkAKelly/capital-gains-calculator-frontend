@@ -16,8 +16,8 @@
 
 package views.resident.properties.deductions
 
-import assets.MessageLookup
-import assets.MessageLookup.{lettingsReliefValue => messages}
+import assets.MessageLookup.{Resident => commonMessages}
+import assets.MessageLookup.{LettingsReliefValue => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.properties.LettingsReliefValueForm._
 import org.jsoup.Jsoup
@@ -40,7 +40,7 @@ class LettingsReliefValueViewSpec extends UnitSpec with WithFakeApplication with
       doc.title shouldBe messages.title
     }
 
-    s"have a back link to the Reliefs Page with text ${MessageLookup.calcBaseBack}" in {
+    s"have a back link to the Reliefs Page with text ${commonMessages.back}" in {
       doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/lettings-relief"
     }
 
@@ -73,7 +73,7 @@ class LettingsReliefValueViewSpec extends UnitSpec with WithFakeApplication with
     }
 
     "have continue button " in {
-      doc.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
+      doc.body.getElementById("continue-button").text shouldEqual commonMessages.continue
     }
   }
 

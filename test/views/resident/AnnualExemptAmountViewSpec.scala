@@ -16,8 +16,8 @@
 
 package views.resident
 
-import assets.MessageLookup.{annualExemptAmount => messages}
-import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{AnnualExemptAmount => messages}
+import assets.MessageLookup.{Resident => commonMessages}
 import common.resident.JourneyKeys
 import controllers.helpers.FakeRequestHelper
 import forms.resident.AnnualExemptAmountForm._
@@ -56,7 +56,7 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
     "have a back button that" should {
       lazy val backLink = doc.select("a#back-link")
       "have the correct back link text" in {
-        backLink.text shouldBe commonMessages.calcBaseBack
+        backLink.text shouldBe commonMessages.back
       }
       "have the back-link class" in {
         backLink.hasClass("back-link") shouldBe true
@@ -123,8 +123,8 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
     }
     "have a continue button that" should {
       lazy val continueButton = doc.select("button#continue-button")
-      s"have the button text '${commonMessages.calcBaseContinue}'" in {
-        continueButton.text shouldBe commonMessages.calcBaseContinue
+      s"have the button text '${commonMessages.continue}'" in {
+        continueButton.text shouldBe commonMessages.continue
       }
       "be of type submit" in {
         continueButton.attr("type") shouldBe "submit"
@@ -161,7 +161,7 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
     "have a back button that" should {
       lazy val backLink = doc.select("a#back-link")
       "have the correct back link text" in {
-        backLink.text shouldBe commonMessages.calcBaseBack
+        backLink.text shouldBe commonMessages.back
       }
       "have the back-link class" in {
         backLink.hasClass("back-link") shouldBe true
@@ -180,11 +180,11 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
       lazy val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
       lazy val view = views.annualExemptAmount(form, backLink, postAction, homeLink, JourneyKeys.properties, "navTitle")(fakeRequest)
       lazy val doc = Jsoup.parse(view.body)
-      s"output an error summary with message '${commonMessages.errorMessages.mandatoryAmount}'" in {
-        doc.body.getElementById("amount-error-summary").text should include(commonMessages.errorMessages.mandatoryAmount)
+      s"output an error summary with message '${commonMessages.mandatoryAmount}'" in {
+        doc.body.getElementById("amount-error-summary").text should include(commonMessages.mandatoryAmount)
       }
-      s"have the input error message '${commonMessages.errorMessages.invalidAmount}'" in {
-        doc.body.getElementsByClass("error-notification").text should include (commonMessages.errorMessages.mandatoryAmount)
+      s"have the input error message '${commonMessages.invalidAmount}'" in {
+        doc.body.getElementsByClass("error-notification").text should include (commonMessages.mandatoryAmount)
       }
     }
   }

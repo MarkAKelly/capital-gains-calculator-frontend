@@ -19,7 +19,7 @@ package forms.resident.deductions
 import forms.resident.properties.PropertyLivedInForm._
 import models.resident.properties.PropertyLivedInModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.{propertyLivedIn => messages}
+import assets.MessageLookup.{PropertyLivedIn => messages}
 
 class PropertyLivedInFormSpec extends UnitSpec with WithFakeApplication {
 

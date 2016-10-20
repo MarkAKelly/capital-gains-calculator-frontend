@@ -16,8 +16,8 @@
 
 package views.resident.properties.gain
 
-import assets.MessageLookup
-import assets.MessageLookup.Resident.Properties.{propertiesWorthWhenGaveAway => messages}
+import assets.MessageLookup.{Resident => commonMessages}
+import assets.MessageLookup.Resident.Properties.{PropertiesWorthWhenGaveAway => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.properties.WorthWhenGaveAwayForm._
 import org.jsoup.Jsoup
@@ -49,7 +49,7 @@ class WorthWhenGaveAwayViewSpec extends UnitSpec with WithFakeApplication with F
       doc.title shouldEqual messages.title
     }
 
-    s"have a back link to the Who did you give it to Page with text ${MessageLookup.calcBaseBack}" in {
+    s"have a back link to the Who did you give it to Page with text ${commonMessages.back}" in {
       doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/who-did-you-give-it-to"
     }
 
@@ -133,17 +133,12 @@ class WorthWhenGaveAwayViewSpec extends UnitSpec with WithFakeApplication with F
           button.hasClass("button") shouldEqual true
         }
 
-        s"has the text ${MessageLookup.calcBaseContinue}" in {
-          button.text() shouldEqual MessageLookup.calcBaseContinue
+        s"has the text ${commonMessages.continue}" in {
+          button.text() shouldEqual commonMessages.continue
         }
       }
     }
-
-
-
   }
-
-
 
   "Worth When Gave Away View with form without errors" should {
 
