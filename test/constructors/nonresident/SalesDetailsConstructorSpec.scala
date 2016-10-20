@@ -63,7 +63,7 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       }
 
       "have the question for disposal date" in {
-        result.question shouldBe "" //TODO
+        result.question shouldBe messages.DisposalDate.question
       }
 
       "have a link to the disposal date page" in {
@@ -96,7 +96,7 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       }
 
       "have the question for disposal value" in {
-        result.question shouldBe "" //TODO
+        result.question shouldBe messages.DisposalValue.question
       }
 
       "have a link to the disposal value page" in {
@@ -129,7 +129,7 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       }
 
       "have the question for disposal costs" in {
-        result.question shouldBe "" //TODO
+        result.question shouldBe messages.DisposalCosts.question
       }
 
       "have a link to the disposal costs page" in {
