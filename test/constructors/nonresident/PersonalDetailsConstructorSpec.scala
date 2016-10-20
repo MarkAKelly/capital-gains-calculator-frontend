@@ -22,15 +22,28 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 class PersonalDetailsConstructorSpec extends UnitSpec {
 
-//  val summaryModel = SummaryModel(
-//    CustomerTypeModel(CustomerTypeKeys.individual),
-//    DisabledTrusteeModel("Yes"),
-//    CurrentIncomeModel(30000.0),
-//    PersonalAllowanceModel(11000.0),
-//    OtherPropertiesModel("Yes", 250000.0),
-//    AnnualExemptAmountModel("Yes", 10000.0),
-//    AcquisitionDateModel("Yes", Some(4), Some(9), Some(2016)),
-//    AcquisitionValueModel()
-//  )
+  val summaryWithAllValuesModel = SummaryModel(
+    CustomerTypeModel(CustomerTypeKeys.individual),
+    Some(DisabledTrusteeModel("Yes")),
+    Some(CurrentIncomeModel(30000.0)),
+    Some(PersonalAllowanceModel(11000.0)),
+    OtherPropertiesModel("Yes", Some(250000.0)),
+    Some(AnnualExemptAmountModel(10000.0)),
+    AcquisitionDateModel("Yes", Some(4), Some(9), Some(2016)),
+    AcquisitionValueModel(300000.0),
+    Some(RebasedValueModel("Yes", Some(350000.0))),
+    Some(RebasedCostsModel("Yes", Some(4000.0))),
+    ImprovementsModel("Yes", Some(2000.0)),
+    DisposalDateModel(5, 9, 2016),
+    DisposalValueModel(5000),
+    AcquisitionCostsModel(250000.0),
+    DisposalCostsModel(5000.0),
+    AllowableLossesModel("Yes", Some(20000.0)),
+    CalculationElectionModel("flat"),
+    OtherReliefsModel(Some("Yes"), Some(100.0)),
+    OtherReliefsModel(Some("Yes"), Some(100.0)),
+    OtherReliefsModel(Some("Yes"), Some(100.0)),
+    Some(PrivateResidenceReliefModel("Yes", Some(2500.0), Some(0.0)))
+  )
 
 }
