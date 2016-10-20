@@ -28,7 +28,7 @@ import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.Resident.Properties.{worthWhenInherited => messages}
+import assets.MessageLookup.Resident.Properties.{WorthWhenInherited => messages}
 import models.resident.WorthWhenInheritedModel
 
 import scala.concurrent.Future

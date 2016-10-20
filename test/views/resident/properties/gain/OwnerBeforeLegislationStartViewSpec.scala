@@ -22,7 +22,7 @@ import forms.resident.properties.gain.OwnerBeforeLegislationStartForm._
 import models.resident.properties.gain.OwnerBeforeLegislationStartModel
 import views.html.calculation.resident.properties.{gain => views}
 import assets.MessageLookup.Resident.Properties.{OwnerBeforeLegislationStart => messages}
-import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{Resident => commonMessages}
 import org.jsoup.Jsoup
 
 class OwnerBeforeLegislationStartViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
@@ -60,7 +60,7 @@ class OwnerBeforeLegislationStartViewSpec extends UnitSpec with WithFakeApplicat
       lazy val backLink = doc.select("a#back-link")
 
       "has the correct back link text" in {
-        backLink.text shouldBe commonMessages.calcBaseBack
+        backLink.text shouldBe commonMessages.back
       }
 
       "has the back-link class" in {
@@ -207,8 +207,8 @@ class OwnerBeforeLegislationStartViewSpec extends UnitSpec with WithFakeApplicat
         button.attr("id") shouldEqual "continue-button"
       }
 
-      s"has the text ${commonMessages.calcBaseContinue}" in {
-        button.text shouldEqual s"${commonMessages.calcBaseContinue}"
+      s"has the text ${commonMessages.continue}" in {
+        button.text shouldEqual s"${commonMessages.continue}"
       }
     }
   }

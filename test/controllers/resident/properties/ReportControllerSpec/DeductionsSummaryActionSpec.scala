@@ -27,7 +27,7 @@ import org.scalatest.mock.MockitoSugar
 import play.api.mvc.RequestHeader
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.{summaryPage => messages}
+import assets.MessageLookup.{SummaryPage => messages}
 import models.resident.properties._
 
 import scala.concurrent.Future

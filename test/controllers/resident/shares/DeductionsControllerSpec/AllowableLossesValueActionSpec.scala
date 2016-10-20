@@ -20,7 +20,7 @@ import controllers.helpers.FakeRequestHelper
 import controllers.resident.shares.DeductionsController
 import org.jsoup.Jsoup
 import play.api.test.Helpers._
-import assets.MessageLookup.{allowableLossesValue => messages}
+import assets.MessageLookup.{AllowableLossesValue => messages}
 import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import models.resident.{TaxYearModel, AllowableLossesValueModel, DisposalDateModel}

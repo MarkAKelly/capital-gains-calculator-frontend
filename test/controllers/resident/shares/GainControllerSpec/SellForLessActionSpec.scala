@@ -16,7 +16,7 @@
 
 package controllers.resident.shares.GainControllerSpec
 
-import assets.MessageLookup.Resident.Shares.{sellForLess => messages}
+import assets.MessageLookup.Resident.Shares.{SellForLess => messages}
 import common.KeystoreKeys.{ResidentShareKeys => keyStoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper

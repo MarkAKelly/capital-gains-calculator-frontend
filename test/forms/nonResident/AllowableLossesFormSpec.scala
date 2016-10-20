@@ -140,8 +140,8 @@ class AllowableLossesFormSpec extends UnitSpec with WithFakeApplication {
         form.errors.size shouldBe 1
       }
 
-      s"return an error with message ${MessageLookup.errorMessages.maximumAmount}" in {
-        form.error("").get.message shouldBe MessageLookup.errorMessages.maximumAmount
+      s"return an error with message ${MessageLookup.NonResident.maximumAmount}" in {
+        form.error("").get.message shouldBe MessageLookup.NonResident.maximumAmount
       }
     }
 

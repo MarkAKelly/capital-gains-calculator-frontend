@@ -16,8 +16,8 @@
 
 package views.resident
 
-import assets.MessageLookup.{previousTaxableGains => messages}
-import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{PreviousTaxableGains => messages}
+import assets.MessageLookup.{Resident => commonMessages}
 import common.resident.JourneyKeys
 import controllers.helpers.FakeRequestHelper
 import forms.resident.income.PreviousTaxableGainsForm.previousTaxableGainsForm
@@ -97,7 +97,7 @@ class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication wit
       }
 
       s"has a visually hidden external link message" in {
-        link.select("span#opensInANewTab").text() shouldBe commonMessages.calcBaseExternalLink
+        link.select("span#opensInANewTab").text() shouldBe commonMessages.externalLink
       }
 
       "links to https://www.gov.uk/capital-gains-tax/work-out-need-to-pay" in {

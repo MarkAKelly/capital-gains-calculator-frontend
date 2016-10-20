@@ -22,7 +22,6 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -30,7 +29,8 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
-
+import assets.MessageLookup.{NonResident => commonMessages}
+import assets.MessageLookup.NonResident.{RebasedValue => messages}
 import scala.concurrent.Future
 import controllers.nonresident.{RebasedValueController, routes}
 import models.nonresident.{AcquisitionDateModel, RebasedValueModel}
@@ -76,8 +76,8 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with FakeReques
       lazy val result = target.rebasedValue(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
 
-      s"route to the rebased value view with the question ${Messages("calc.rebasedValue.question")}" in {
-        document.getElementsByTag("legend").text should include(Messages("calc.rebasedValue.question"))
+      s"route to the rebased value view with the question ${messages.question}" in {
+        document.getElementsByTag("legend").text should include(messages.question)
       }
 
       "return a 200" in {
@@ -91,36 +91,36 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with FakeReques
           charset(result) shouldBe Some("utf-8")
         }
 
-        "Have the title 'Calculate your Non-resident Capital Gains Tax" in {
-          document.getElementsByTag("h1").text shouldBe Messages("calc.base.pageHeading")
+        s"Have the title '${commonMessages.pageHeading}" in {
+          document.getElementsByTag("h1").text shouldBe commonMessages.pageHeading
         }
 
-        s"have help text with the wording${Messages("calc.rebasedValue.helpText")}" in {
-          document.getElementsByClass("form-hint").text should include(Messages("calc.rebasedValue.helpText"))
+        s"have help text with the wording${messages.questionHelpText}" in {
+          document.getElementsByClass("form-hint").text should include(messages.questionHelpText)
         }
 
         "display the correct wording for radio option `yes`" in {
-          document.body.getElementById("hasRebasedValue-yes").parent.text shouldEqual Messages("calc.base.yes")
+          document.body.getElementById("hasRebasedValue-yes").parent.text shouldEqual commonMessages.yes
         }
 
         "display the correct wording for radio option `no`" in {
-          document.body.getElementById("hasRebasedValue-no").parent.text shouldEqual Messages("calc.base.no")
+          document.body.getElementById("hasRebasedValue-no").parent.text shouldEqual commonMessages.no
         }
 
         "contain a hidden component with an input box" in {
           document.body.getElementById("hidden").html should include("input")
         }
 
-        s"contain a hidden component with the question ${Messages("calc.rebasedValue.questionTwo")}" in {
-          document.getElementById("rebasedValueAmt").parent.text should include(Messages("calc.rebasedValue.questionTwo"))
+        s"contain a hidden component with the question ${messages.inputQuestion}" in {
+          document.getElementById("rebasedValueAmt").parent.text should include(messages.inputQuestion)
         }
 
-        s"contain a hidden component with the help text with the wording${Messages("calc.rebasedValue.helpTextTwo")}" in {
-          document.getElementsByClass("form-hint").text should include(Messages("calc.rebasedValue.helpTextTwo"))
+        s"contain a hidden component with the help text with the wording${messages.inputHelpText}" in {
+          document.getElementsByClass("form-hint").text should include(messages.inputHelpText)
         }
 
         s"have a 'Back' link to ${routes.AcquisitionValueController.acquisitionValue()}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionValueController.acquisitionValue().toString()
         }
 
@@ -128,8 +128,8 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with FakeReques
           document.getElementById("continue-button").tagName() shouldBe "button"
         }
 
-        s"Have a hidden help section with title ${Messages("calc.rebasedValue.helpHidden.title")}" in {
-          document.getElementsByClass("summary").text shouldEqual Messages("calc.rebasedValue.helpHidden.title")
+        s"Have a hidden help section with title ${messages.additionalContentTitle}" in {
+          document.getElementsByClass("summary").text shouldEqual messages.additionalContentTitle
         }
       }
     }
@@ -140,8 +140,8 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with FakeReques
       lazy val result = target.rebasedValue(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
 
-      s"route to the mandatory rebased value view with the question ${Messages("calc.nonResident.rebasedValue.question")}" in {
-        document.title shouldEqual RebasedValue.question
+      s"route to the mandatory rebased value view with the question ${messages.question}" in {
+        document.title shouldEqual messages.inputQuestionMandatory
       }
     }
 
@@ -233,7 +233,7 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with FakeReques
         }
 
         "return HTML that displays the error message " in {
-          document.select("div#hidden span.error-notification").text shouldEqual Messages("error.real")
+          document.select("div#hidden span.error-notification").text shouldEqual commonMessages.errorRealNumber
         }
       }
 
@@ -247,7 +247,7 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with FakeReques
         }
 
         "return HTML that displays the error message " in {
-          document.select("div#hidden span.error-notification").text shouldEqual Messages("calc.rebasedValue.errorNegative")
+          document.select("div#hidden span.error-notification").text shouldEqual messages.errorNegative
         }
       }
 
@@ -261,7 +261,7 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with FakeReques
         }
 
         "return HTML that displays the error message " in {
-          document.select("div#hidden span.error-notification").text shouldEqual Messages("calc.rebasedValue.error.no.value.supplied")
+          document.select("div#hidden span.error-notification").text shouldEqual messages.errorNoValue
         }
       }
 
@@ -275,7 +275,7 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with FakeReques
         }
 
         "return HTML that displays the error message " in {
-          document.select("div#hidden span.error-notification").text shouldEqual Messages("calc.rebasedValue.errorDecimalPlaces")
+          document.select("div#hidden span.error-notification").text shouldEqual messages.errorDecimalPlaces
         }
       }
 
@@ -288,10 +288,9 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with FakeReques
           status(result) shouldBe 400
         }
 
-        s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
+        s"fail with message ${messages.errorMaximum(MoneyPounds(Constants.maxNumeric, 0).quantity)}" in {
           document.getElementsByClass("error-notification").text should
-            include(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
-              " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+            include(messages.errorMaximum(MoneyPounds(Constants.maxNumeric, 0).quantity))
         }
       }
     }

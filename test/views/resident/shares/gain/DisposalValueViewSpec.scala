@@ -18,6 +18,7 @@ package views.resident.shares.gain
 
 import assets.MessageLookup
 import assets.MessageLookup.Resident.Shares.{DisposalValue => messages}
+import assets.MessageLookup.{Resident => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.DisposalValueForm._
 import org.jsoup.Jsoup
@@ -50,7 +51,7 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
       doc.title shouldEqual messages.question
     }
 
-    s"have a back link to the Sell For Less Page with text ${MessageLookup.calcBaseBack}" in {
+    s"have a back link to the Sell For Less Page with text ${commonMessages.back}" in {
       doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/sell-for-less"
     }
 
@@ -71,7 +72,7 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with FakeR
     }
 
     "have continue button " in {
-      doc.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
+      doc.body.getElementById("continue-button").text shouldEqual commonMessages.continue
     }
   }
 

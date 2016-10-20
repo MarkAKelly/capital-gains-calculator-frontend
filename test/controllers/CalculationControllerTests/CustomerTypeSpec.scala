@@ -16,6 +16,9 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup.{NonResident => commonMessages}
+import assets.MessageLookup.NonResident.{CustomerType => messages}
+
 import common.nonresident.CustomerTypeKeys
 import connectors.CalculatorConnector
 import play.api.libs.json.Json
@@ -23,7 +26,6 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.CalculationElectionConstructor
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -81,36 +83,36 @@ class CustomerTypeSpec extends UnitSpec with WithFakeApplication with MockitoSug
           charset(result) shouldBe Some("utf-8")
         }
 
-        "have the title 'Who owned the property?'" in {
-          document.title shouldEqual Messages("calc.customerType.question")
+        s"have the title ${messages.question}" in {
+          document.title shouldEqual messages.question
         }
 
-        "have the heading Calculate your tax (non-residents) " in {
-          document.body.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
+        s"have the heading ${commonMessages.pageHeading}" in {
+          document.body.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
         }
 
-        "have the question 'Who owned the property?' as the legend of the input" in {
-          document.body.getElementsByTag("legend").text shouldEqual Messages("calc.customerType.question")
+        s"have the question ${messages.question} as the legend of the input" in {
+          document.body.getElementsByTag("legend").text shouldEqual messages.question
         }
 
-        "display a radio button with the option `individual`" in {
-          document.body.getElementById("customerType-individual").parent.text shouldEqual Messages("calc.customerType.individual")
+        s"display a radio button with the option ${messages.individual}" in {
+          document.body.getElementById("customerType-individual").parent.text shouldEqual messages.individual
         }
 
         "have the radio option `individual` not selected by default" in {
           document.body.getElementById("customerType-individual").parent.classNames().contains("selected") shouldBe false
         }
 
-        "display a radio button with the option `trustee`" in {
-          document.body.getElementById("customerType-trustee").parent.text shouldEqual Messages("calc.customerType.trustee")
+        s"display a radio button with the option ${messages.trustee}" in {
+          document.body.getElementById("customerType-trustee").parent.text shouldEqual messages.trustee
         }
 
-        "display a radio button with the option `personal representative`" in {
-          document.body.getElementById("customerType-personalrep").parent.text shouldEqual Messages("calc.customerType.personalRep")
+        s"display a radio button with the option ${messages.personalRep}" in {
+          document.body.getElementById("customerType-personalrep").parent.text shouldEqual messages.personalRep
         }
 
         "display a 'Continue' button " in {
-          document.body.getElementById("continue-button").text shouldEqual Messages("calc.base.continue")
+          document.body.getElementById("continue-button").text shouldEqual commonMessages.continue
         }
       }
     }
@@ -197,6 +199,9 @@ class CustomerTypeSpec extends UnitSpec with WithFakeApplication with MockitoSug
       "link to the radio field set in Error Summary" in {
         document.getElementById("customerType-error-summary").attr("href") should include("#customerType")
       }
+      //############################################################################
+      //Need to test the message that is returned and that only on error is rendered
+      //############################################################################s
     }
 
     "submitting an invalid form with incorrect content" should {
@@ -206,6 +211,9 @@ class CustomerTypeSpec extends UnitSpec with WithFakeApplication with MockitoSug
       "return a 400" in {
         status(result) shouldBe 400
       }
+      //############################################################################
+      //Need to test the message that is returned and that only on error is rendered
+      //############################################################################
     }
   }
 }

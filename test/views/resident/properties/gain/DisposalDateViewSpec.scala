@@ -16,7 +16,8 @@
 
 package views.resident.properties.gain
 
-import assets.MessageLookup.{disposalDate => messages, _}
+import assets.MessageLookup.{DisposalDate => messages}
+import assets.MessageLookup.{Resident => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.DisposalDateForm._
 import models.resident.DisposalDateModel
@@ -60,11 +61,11 @@ class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     }
 
     "have a button with the text 'Continue'" in {
-      doc.body.getElementById("continue-button").text shouldBe calcBaseContinue
+      doc.body.getElementById("continue-button").text shouldBe commonMessages.continue
     }
 
     "have a back link" in {
-      doc.body.getElementById("back-link").text shouldBe assets.MessageLookup.calcBaseBack
+      doc.body.getElementById("back-link").text shouldBe commonMessages.back
     }
 
     "have a back link to the introduction page" in {

@@ -16,7 +16,7 @@
 
 package controllers.resident.shares.IncomeControllerSpec
 
-import assets.MessageLookup.{currentIncome => messages}
+import assets.MessageLookup.{CurrentIncome => messages}
 import common.Dates
 import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector

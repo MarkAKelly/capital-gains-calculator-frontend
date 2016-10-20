@@ -27,7 +27,7 @@ import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.{propertiesSellOrGiveAway => messages}
+import assets.MessageLookup.{PropertiesSellOrGiveAway => messages}
 import uk.gov.hmrc.http.cache.client.CacheMap
 
 import scala.concurrent.Future

@@ -16,6 +16,8 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup.NonResident.{NoCapitalGainsTax => messages}
+import assets.MessageLookup.{NonResident => commonMessages}
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.nonresident.NoCapitalGainsTaxController
@@ -24,7 +26,6 @@ import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
-import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
@@ -70,29 +71,27 @@ class NoCapitalGainsTaxSpec extends UnitSpec with WithFakeApplication with Mocki
           charset(result) shouldBe Some("utf-8")
         }
 
-        "have the title 'You have no tax to pay'" in {
-          document.title shouldEqual Messages("nocgt.invaliddate.title")
+        s"have the title ${messages.title}" in {
+          document.title shouldEqual messages.title
         }
 
-        "have the heading 'You have no tax to pay'" in {
-          document.body.getElementsByTag("h1").text shouldEqual Messages("nocgt.invaliddate.title")
+        s"have the heading '${messages.title}'" in {
+          document.body.getElementsByTag("h1").text shouldEqual messages.title
         }
-        "Contain the content " +
-          "'This is because Capital Gains Tax for non-residents only applies to properties which were sold or given away after 5 April 2015.'" in {
-          document.body.select("article p").text should include("This is because Capital Gains Tax for non-residents " +
-            "only applies to properties which were sold or given away after 5 April 2015.")
+        s"Contain the content '${messages.paragraphOne}'" in {
+          document.body.select("article p").text should include(messages.paragraphOne)
         }
-        "Contain the content 'You've told us that you sold or gave away the property on'" in {
-          document.body.select("article p").text should include("You've told us that you sold or gave away the property on")
+        s"Contain the content '${messages.paragraphTwo}'" in {
+          document.body.select("article p").text should include(messages.paragraphTwo)
         }
 
         "should contain a Read more sidebar with a link to CGT allowances" in {
-          document.select("aside h2").text shouldBe Messages("calc.common.readMore")
-          document.select("aside a").first.text shouldBe s"${Messages("nocgt.sidebar.linkone")} ${Messages("calc.base.externalLink")}"
+          document.select("aside h2").text shouldBe commonMessages.readMore
+          document.select("aside a").first.text shouldBe s"${messages.link} ${commonMessages.externalLink}"
         }
 
         "should contain a change link to the disposal date page" in {
-          document.select("a#change-link").text shouldBe Messages("nocgt.content.change")
+          document.select("a#change-link").text shouldBe messages.change
         }
 
         "should display a date of 1 January 2015" in {

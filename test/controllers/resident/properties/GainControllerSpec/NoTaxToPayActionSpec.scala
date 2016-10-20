@@ -24,7 +24,7 @@ import org.mockito.Matchers
 import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.{noTaxToPay => messages}
+import assets.MessageLookup.{NoTaxToPay => messages}
 import common.KeystoreKeys.ResidentPropertyKeys
 import models.resident.properties.gain.WhoDidYouGiveItToModel
 import org.jsoup.Jsoup

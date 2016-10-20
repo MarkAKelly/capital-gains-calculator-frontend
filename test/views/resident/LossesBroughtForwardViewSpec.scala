@@ -16,8 +16,8 @@
 
 package views.resident
 
-import assets.MessageLookup
-import assets.MessageLookup.{lossesBroughtForward => messages}
+import assets.MessageLookup.{Resident => commonMessages}
+import assets.MessageLookup.{LossesBroughtForward => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.LossesBroughtForwardForm._
 import models.resident.TaxYearModel
@@ -87,8 +87,8 @@ class LossesBroughtForwardViewSpec extends UnitSpec with WithFakeApplication wit
       element.text shouldBe messages.helpInfoPoint3
     }
 
-    s"have a back link with text ${MessageLookup.calcBaseBack}" in {
-      doc.select("#back-link").text shouldEqual MessageLookup.calcBaseBack
+    s"have a back link with text ${commonMessages.back}" in {
+      doc.select("#back-link").text shouldEqual commonMessages.back
     }
 
     s"have the question of the page ${messages.question("2015/16")}" in {
@@ -112,7 +112,7 @@ class LossesBroughtForwardViewSpec extends UnitSpec with WithFakeApplication wit
     }
 
     "have a continue button " in {
-      doc.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
+      doc.body.getElementById("continue-button").text shouldEqual commonMessages.continue
     }
   }
 

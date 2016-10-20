@@ -16,8 +16,8 @@
 
 package views.resident.properties.deductions
 
-import assets.MessageLookup
-import assets.MessageLookup.{lettingsRelief => messages}
+import assets.MessageLookup.{Resident => commonMessages}
+import assets.MessageLookup.{LettingsRelief => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.properties.LettingsReliefForm._
 import org.jsoup.Jsoup
@@ -41,8 +41,8 @@ class LettingsReliefViewSpec extends UnitSpec with WithFakeApplication with Fake
 
     "have a back link" which {
 
-      s"has text ${MessageLookup.calcBaseBack}" in {
-        doc.select("#back-link").text shouldEqual MessageLookup.calcBaseBack
+      s"has text ${commonMessages.back}" in {
+        doc.select("#back-link").text shouldEqual commonMessages.back
       }
 
       "has a link to 'back-link'" in {
@@ -98,8 +98,8 @@ class LettingsReliefViewSpec extends UnitSpec with WithFakeApplication with Fake
         link.attr("target") shouldEqual "_blank"
       }
 
-      s"and also has the text ${MessageLookup.calcBaseExternalLink}" in {
-        link.text() should include(MessageLookup.calcBaseExternalLink)
+      s"and also has the text ${commonMessages.externalLink}" in {
+        link.text() should include(commonMessages.externalLink)
       }
     }
 
@@ -115,8 +115,8 @@ class LettingsReliefViewSpec extends UnitSpec with WithFakeApplication with Fake
 
       lazy val button = doc.body.getElementById("continue-button")
 
-      s"have the text ${MessageLookup.calcBaseContinue}" in {
-        button.text shouldEqual MessageLookup.calcBaseContinue
+      s"have the text ${commonMessages.continue}" in {
+        button.text shouldEqual commonMessages.continue
       }
 
       "be of type submit" in {

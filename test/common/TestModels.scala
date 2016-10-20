@@ -22,6 +22,30 @@ import models.nonresident._
 
 object TestModels {
 
+  val businessScenarioOneModel = SummaryModel(
+    CustomerTypeModel(CustomerTypeKeys.individual),
+    None,
+    Some(CurrentIncomeModel(0)),
+    None,
+    OtherPropertiesModel("No", None),
+    None,
+    AcquisitionDateModel("Yes", Some(16), Some(10), Some(2005)),
+    AcquisitionValueModel(750000),
+    Some(RebasedValueModel("Yes", Some(1000000))),
+    Some(RebasedCostsModel("No", None)),
+    ImprovementsModel("No", None),
+    DisposalDateModel(2, 1, 2017),
+    DisposalValueModel(1250000),
+    AcquisitionCostsModel(10000),
+    DisposalCostsModel(15000),
+    AllowableLossesModel("No", None),
+    CalculationElectionModel("rebased"),
+    OtherReliefsModel(Some("No)"), None),
+    OtherReliefsModel(None, None),
+    OtherReliefsModel(None, None),
+    Some(PrivateResidenceReliefModel("Yes", Some(2847), Some(0)))
+  )
+
   val sumModelFlat = SummaryModel(
     CustomerTypeModel(CustomerTypeKeys.individual),
     None,

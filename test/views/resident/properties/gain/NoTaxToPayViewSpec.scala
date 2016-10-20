@@ -20,7 +20,8 @@ import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.properties.{gain => views}
-import assets.MessageLookup.{noTaxToPay => messages}
+import assets.MessageLookup.{NoTaxToPay => messages}
+import assets.MessageLookup.{Resident => commonMessages}
 
 class NoTaxToPayViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
@@ -45,7 +46,7 @@ class NoTaxToPayViewSpec extends UnitSpec with WithFakeApplication with FakeRequ
     }
 
     "have a navTitle for resident properties" in {
-      doc.body().select("span.header__menu__proposition-name").text() shouldBe assets.MessageLookup.propertiesHomeText
+      doc.body().select("span.header__menu__proposition-name").text() shouldBe commonMessages.homeText
     }
 
     s"have a header of ${messages.title}" in {

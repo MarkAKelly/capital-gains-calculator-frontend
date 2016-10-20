@@ -16,7 +16,6 @@
 
 package controllers.CalculationControllerTests
 
-import assets.MessageLookup
 import common.Constants
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
@@ -26,7 +25,6 @@ import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
-import play.api.i18n.Messages
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Result}
 import play.api.test.FakeRequest
@@ -34,6 +32,8 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import assets.MessageLookup.{NonResident => commonMessages}
+import assets.MessageLookup.NonResident.{AcquisitionCosts => messages}
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 import scala.concurrent.Future
@@ -80,26 +80,26 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
         }
 
         "have the title 'How much did you pay in costs when you became the property owner'" in {
-          document.getElementsByTag("title").text shouldEqual Messages("calc.acquisitionCosts.question")
+          document.getElementsByTag("title").text shouldEqual messages.question
         }
 
         s"have a 'Back' link to ${routes.DisposalValueController.disposalValue()}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalValueController.disposalValue().toString()
         }
 
         "have the page heading 'Calculate your tax (non-residents)'" in {
-          document.getElementsByTag("h1").text shouldEqual Messages("calc.base.pageHeading")
+          document.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
         }
 
         "have a monetary field that" should {
 
           "have the title 'How much did you pay in costs when you became the property owner?'" in {
-            document.select("label[for=acquisitionCosts]").text should include (Messages("calc.acquisitionCosts.question"))
+            document.select("label[for=acquisitionCosts]").text should include (messages.question)
           }
 
           "have the help text 'Costs include agent fees, legal fees and surveys'" in {
-            document.select("span.form-hint").text shouldEqual Messages("calc.acquisitionCosts.helpText")
+            document.select("span.form-hint").text shouldEqual messages.helpText
           }
 
           "have an input box for the acquisition costs" in {
@@ -114,7 +114,7 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
           }
 
           "have the text 'Continue'" in {
-            document.getElementById("continue-button").text shouldEqual Messages("calc.base.continue")
+            document.getElementById("continue-button").text shouldEqual commonMessages.continue
           }
         }
       }
@@ -182,8 +182,8 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
           status(result) shouldBe 400
         }
 
-        "fail with message 'Enter a number without commas, for example 10000.00'" in {
-          document.getElementsByClass("error-notification").text should include (MessageLookup.errorMessages.numericPlayErrorOverride)
+        s"fail with message ${commonMessages.numericPlayErrorOverride}" in {
+          document.getElementsByClass("error-notification").text should include (commonMessages.numericPlayErrorOverride)
         }
       }
     }
@@ -198,8 +198,8 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
           status(result) shouldBe 400
         }
 
-        s"fail with message ${Messages("calc.acquisitionCosts.errorNegative")}" in {
-          document.getElementsByClass("error-notification").text should include (Messages("calc.acquisitionCosts.errorNegative"))
+        s"fail with message ${messages.errorNegative}" in {
+          document.getElementsByClass("error-notification").text should include (messages.errorNegative)
         }
 
         "display a visible Error Summary field" in {
@@ -219,8 +219,8 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
           status(result) shouldBe 400
         }
 
-        s"fail with message ${Messages("calc.acquisitionCosts.errorDecimalPlaces")}" in {
-          document.getElementsByClass("error-notification").text should include(Messages("calc.acquisitionCosts.errorDecimalPlaces"))
+        s"fail with message ${messages.errorDecimalPlaces}" in {
+          document.getElementsByClass("error-notification").text should include(messages.errorDecimalPlaces)
         }
 
         "display a visible Error Summary field" in {
@@ -240,10 +240,9 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
           status(result) shouldBe 400
         }
 
-        s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
+        s"fail with message ${messages.errorMaximum(MoneyPounds(Constants.maxNumeric, 0).quantity)}" in {
           document.getElementsByClass("error-notification").text should
-            include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
-              " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
+            include (messages.errorMaximum(MoneyPounds(Constants.maxNumeric, 0).quantity))
         }
 
         "display a visible Error Summary field" in {

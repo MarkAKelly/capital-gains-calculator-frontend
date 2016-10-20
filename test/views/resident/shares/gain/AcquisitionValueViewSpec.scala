@@ -16,8 +16,8 @@
 
 package views.resident.shares.gain
 
-import assets.MessageLookup.{sharesAcquisitionValue => messages}
-import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{SharesAcquisitionValue => messages}
+import assets.MessageLookup.{Resident => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.AcquisitionValueForm._
 import org.jsoup.Jsoup
@@ -48,7 +48,7 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Fa
       lazy val backLink = doc.select("a#back-link")
 
       "have the correct back link text" in {
-        backLink.text shouldBe commonMessages.calcBaseBack
+        backLink.text shouldBe commonMessages.back
       }
 
       "have the back-link class" in {
@@ -123,8 +123,8 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Fa
 
         lazy val continueButton = doc.select("button#continue-button")
 
-        s"have the button text '${commonMessages.calcBaseContinue}'" in {
-          continueButton.text shouldBe commonMessages.calcBaseContinue
+        s"have the button text '${commonMessages.continue}'" in {
+          continueButton.text shouldBe commonMessages.continue
         }
 
         "be of type submit" in {

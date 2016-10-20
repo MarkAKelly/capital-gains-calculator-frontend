@@ -32,6 +32,10 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
+import common.nonresident.CalculationType
+import assets.MessageLookup.{NonResident => commonMessages}
+import assets.MessageLookup.NonResident.{CalculationElection => messages}
+
 import scala.concurrent.Future
 import controllers.nonresident.{CalculationElectionController, routes}
 import models.nonresident.{CalculationElectionModel, CalculationResultModel, OtherReliefsModel, SummaryModel}
@@ -62,11 +66,11 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
     when(mockCalcElectionConstructor.generateElection(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(),
       Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any()))
       .thenReturn(Seq(
-        ("flat", "8000.00", "flat calculation", None, routes.OtherReliefsController.otherReliefs().toString(), flatReliefs),
-        ("time", "8000.00", "time apportioned calculation",
-          Some(Messages("calc.calculationElection.message.timeDate")), routes.OtherReliefsTAController.otherReliefsTA().toString(), timeReliefs),
-        ("rebased", "10000.00", "time apportioned calculation",
-          Some(Messages("calc.calculationElection.message.timeDate")), routes.OtherReliefsTAController.otherReliefsTA().toString(), rebasedReliefs)
+        (s"${CalculationType.flat}", "8000.00", "flat calculation", None, routes.OtherReliefsController.otherReliefs().toString(), flatReliefs),
+        (s"${CalculationType.timeApportioned}", "8000.00", "time apportioned calculation",
+          Some(messages.taxStartDate), routes.OtherReliefsTAController.otherReliefsTA().toString(), timeReliefs),
+        (s"${CalculationType.rebased}", "10000.00", "rebased calculation",
+          Some(messages.taxStartDate), routes.OtherReliefsTAController.otherReliefsTA().toString(), rebasedReliefs)
       ))
     when(mockCalcConnector.calculateFlat(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(calc))
@@ -114,12 +118,12 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
           charset(result) shouldBe Some("utf-8")
         }
 
-        s"have the title '${Messages("calc.calculationElection.question")}'" in {
-          document.title shouldEqual Messages("calc.calculationElection.question")
+        s"have the title '${messages.question}'" in {
+          document.title shouldEqual messages.question
         }
 
-        s"have the heading '${Messages("calc.base.pageHeading")}'" in {
-          document.body.getElementsByTag("h1").text shouldEqual Messages("calc.calculationElection.pageHeading")
+        s"have the heading '${messages.heading}'" in {
+          document.body.getElementsByTag("h1").text shouldEqual messages.heading
         }
 
         s"have the class 'heading-xlarge' on the H1 tag" in {
@@ -129,49 +133,49 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
         s"have a 'Read more' section that" should {
 
           "have a link to 'https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-calculating-taxable-gain-or-loss'" +
-            s"with text '${Messages("calc.calculationElection.link.one")}'" in {
+            s"with text '${messages.linkOne}'" in {
               document.body.getElementById("helpLink1").text shouldEqual
-                s"${Messages("calc.calculationElection.link.one")} ${Messages("calc.base.externalLink")}"
+                s"${messages.linkOne} ${commonMessages.externalLink}"
               document.body.getElementById("helpLink1").attr("href") shouldEqual
                 "https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-calculating-taxable-gain-or-loss"
           }
         }
 
         s"have a 'Back' link to ${routes.AllowableLossesController.allowableLosses()}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.AllowableLossesController.allowableLosses().toString()
         }
 
-        s"have the paragraph '${Messages("calc.calculationElection.paragraph.one")}'" in {
-          document.body.getElementsByTag("p").text should include (Messages("calc.calculationElection.paragraph.one"))
+        s"have a H2 sub-heading with text '${messages.moreInformation}'" in {
+          document.body.getElementsByTag("h2").text should include (messages.moreInformation)
         }
 
-        s"have a H2 sub-heading with text '${Messages("calc.calculationElection.h2")}'" in {
-          document.body.getElementsByTag("h2").text should include (Messages("calc.calculationElection.h2"))
+        s"have the paragraph '${messages.moreInfoFirstP}'" in {
+          document.body.getElementsByTag("p").text should include (messages.moreInfoFirstP)
         }
 
-        s"have the paragraph '${Messages("calc.calculationElection.paragraph.two")}'" in {
-          document.body.getElementsByTag("p").text should include (Messages("calc.calculationElection.paragraph.two"))
+        s"have the paragraph '${messages.moreInfoSecondP}'" in {
+          document.body.getElementsByTag("p").text should include (messages.moreInfoSecondP)
         }
 
-        s"have the paragraph '${Messages("calc.calculationElection.paragraph.three")}'" in {
-          document.body.getElementsByTag("p").text should include (Messages("calc.calculationElection.paragraph.three"))
+        s"have the paragraph '${messages.moreInfoThirdP}'" in {
+          document.body.getElementsByTag("p").text should include (messages.moreInfoThirdP)
         }
 
         "have a calculationElectionHelper for the option of a flat calculation rendered on the page" in {
-          document.body.getElementById("calculationElection-flat").attr("value") shouldEqual "flat"
+          document.body.getElementById("calculationElection-flat").attr("value") shouldEqual CalculationType.flat
           document.body.getElementById("flat-para").text shouldEqual ("Based on " + "flat calculation")
         }
 
         "display a 'Continue' button " in {
-          document.body.getElementById("continue-button").text shouldEqual Messages("calc.base.continue")
+          document.body.getElementById("continue-button").text shouldEqual commonMessages.continue
         }
 
-        s"display a concertina information box with '${Messages("calc.calculationElection.whyMoreDetails.one")} " +
+        s"display a concertina information box with '${messages.whyMore} " +
           s"${Messages("calc.calculationElection.whyMoreDetails.two")}' as the content" in {
-          document.select("summary span.summary").text shouldEqual Messages("calc.calculationElection.message.whyMore")
-          document.select("div#details-content-0 p").text should include (Messages("calc.calculationElection.whyMoreDetails.one"))
-          document.select("div#details-content-0 p").text should include ( Messages("calc.calculationElection.whyMoreDetails.one"))
+          document.select("summary span.summary").text shouldEqual messages.whyMore
+          document.select("div#details-content-0 p").text should include (messages.whyMoreDetailsOne)
+          document.select("div#details-content-0 p").text should include (messages.whyMoreDetailsTwo)
         }
 
         "have no pre-selected option" in {
@@ -303,16 +307,16 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
           document.body.getElementById("calculationElection-flat").parent.classNames().contains("selected") shouldBe true
         }
 
-        s"have the button text '${Messages("calc.calculationElection.otherRelief")}' under flat calc details" in {
-          document.body.select("#flat-button").text shouldEqual Messages("calc.calculationElection.otherRelief")
+        s"have the button text '${messages.otherTaxRelief}' under flat calc details" in {
+          document.body.select("#flat-button").text shouldEqual messages.otherTaxRelief
         }
 
-        s"have the button text '${Messages("calc.calculationElection.otherRelief")}' under time calc details" in {
-          document.body.select("#time-button").text shouldEqual Messages("calc.calculationElection.otherRelief")
+        s"have the button text '${messages.otherTaxRelief}' under time calc details" in {
+          document.body.select("#time-button").text shouldEqual messages.otherTaxRelief
         }
 
-        s"have the button text '${Messages("calc.calculationElection.otherRelief")}' under rebased calc details" in {
-          document.body.select("#rebased-button").text shouldEqual Messages("calc.calculationElection.otherRelief")
+        s"have the button text '${messages.otherTaxRelief}' under rebased calc details" in {
+          document.body.select("#rebased-button").text shouldEqual messages.otherTaxRelief
         }
       }
     }
@@ -340,7 +344,8 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
 
     "submitting form via Other Reliefs Flat button" should {
 
-      lazy val result = executeTargetWithMockData("flat", Some(TestModels.calcModelOneRate), TestModels.summaryTrusteeTAWithoutAEA, "flat")
+      lazy val result = executeTargetWithMockData(CalculationType.flat, Some(TestModels.calcModelOneRate),
+        TestModels.summaryTrusteeTAWithoutAEA, CalculationType.flat)
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -353,7 +358,8 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
 
     "submitting form via Other Reliefs Time Apportioned button" should {
 
-      lazy val result = executeTargetWithMockData("flat", Some(TestModels.calcModelOneRate), TestModels.summaryTrusteeTAWithoutAEA, "time")
+      lazy val result = executeTargetWithMockData(CalculationType.flat, Some(TestModels.calcModelOneRate),
+        TestModels.summaryTrusteeTAWithoutAEA, CalculationType.timeApportioned)
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -366,7 +372,8 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
 
     "submitting form via Other Reliefs Rebased button" should {
 
-      lazy val result = executeTargetWithMockData("flat", Some(TestModels.calcModelOneRate), TestModels.summaryTrusteeTAWithoutAEA, "rebased")
+      lazy val result = executeTargetWithMockData(CalculationType.flat, Some(TestModels.calcModelOneRate),
+        TestModels.summaryTrusteeTAWithoutAEA, CalculationType.rebased)
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -379,7 +386,7 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
 
     "submitting a valid form with 'flat' selected" should {
 
-      lazy val result = executeTargetWithMockData("flat", Some(TestModels.calcModelOneRate), TestModels.summaryTrusteeTAWithoutAEA, "continue")
+      lazy val result = executeTargetWithMockData(CalculationType.flat, Some(TestModels.calcModelOneRate), TestModels.summaryTrusteeTAWithoutAEA, "continue")
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -392,7 +399,8 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
 
     "submitting a valid form with 'time' selected" should {
 
-      lazy val result = executeTargetWithMockData("time", Some(TestModels.calcModelOneRate), TestModels.summaryIndividualAcqDateAfter, "continue")
+      lazy val result = executeTargetWithMockData(CalculationType.timeApportioned, Some(TestModels.calcModelOneRate),
+        TestModels.summaryIndividualAcqDateAfter, "continue")
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -401,7 +409,8 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
 
     "submitting a valid form with 'rebased' selected" should {
 
-      lazy val result = executeTargetWithMockData("rebased", Some(TestModels.calcModelOneRate), TestModels.summaryIndividualFlatWithAEA, "continue")
+      lazy val result = executeTargetWithMockData(CalculationType.rebased, Some(TestModels.calcModelOneRate),
+        TestModels.summaryIndividualFlatWithAEA, "continue")
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -424,6 +433,10 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
       "link to the invalid input box in Error Summary" in {
         document.getElementById("calculationElection-error-summary").attr("href") should include ("#calculationElection")
       }
+
+      //############################################################################
+      //Need to test the message that is returned and that only on error is rendered
+      //############################################################################
     }
 
     "submitting a form with completely unrelated 'ew1234qwer'" should  {
@@ -434,6 +447,10 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
       "return a 400" in {
         status(result) shouldBe 400
       }
+
+      //############################################################################
+      //Need to test the message that is returned and that only on error is rendered
+      //############################################################################
     }
 
     "submitting an invalid form with an acquisition date after the tax start date" should {
@@ -442,6 +459,9 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
       "return a 400" in {
         status(result) shouldBe 400
       }
+      //############################################################################
+      //Need to test the message that is returned and that only on error is rendered
+      //############################################################################
     }
 
     "submitting an invalid form with no acquisition date" should {
@@ -450,6 +470,10 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
       "return a 400" in {
         status(result) shouldBe 400
       }
+
+      //############################################################################
+      //Need to test the message that is returned and that only on error is rendered
+      //############################################################################
     }
 
     "submitting an invalid form with none rebased value" should {
@@ -458,6 +482,10 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
       "return a 400" in {
         status(result) shouldBe 400
       }
+
+      //############################################################################
+      //Need to test the message that is returned and that only on error is rendered
+      //############################################################################
     }
 
     "submitting an invalid form with a rebased value and no acquisition date" should {
@@ -466,6 +494,10 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
       "return a 400" in {
         status(result) shouldBe 400
       }
+
+      //############################################################################
+      //Need to test the message that is returned and that only on error is rendered
+      //############################################################################
     }
 
     "submitting an invalid form with a rebased value and an acquisition date after tax start" should {
@@ -474,6 +506,10 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
       "return a 400" in {
         status(result) shouldBe 400
       }
+
+      //############################################################################
+      //Need to test the message that is returned and that only on error is rendered
+      //############################################################################
     }
   }
 }

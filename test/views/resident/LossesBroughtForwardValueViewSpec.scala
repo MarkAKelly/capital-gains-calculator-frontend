@@ -16,8 +16,8 @@
 
 package views.resident
 
-import assets.MessageLookup.{lossesBroughtForwardValue => messages}
-import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{LossesBroughtForwardValue => messages}
+import assets.MessageLookup.{Resident => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.LossesBroughtForwardValueForm._
 import models.resident.TaxYearModel
@@ -58,7 +58,7 @@ class LossesBroughtForwardValueViewSpec extends UnitSpec with WithFakeApplicatio
         lazy val backLink = doc.select("a#back-link")
 
         "have the correct back link text" in {
-          backLink.text shouldBe commonMessages.calcBaseBack
+          backLink.text shouldBe commonMessages.back
         }
 
         "have the back-link class" in {
@@ -132,8 +132,8 @@ class LossesBroughtForwardValueViewSpec extends UnitSpec with WithFakeApplicatio
 
           lazy val continueButton = doc.select("button#continue-button")
 
-          s"have the button text '${commonMessages.calcBaseContinue}'" in {
-            continueButton.text shouldBe commonMessages.calcBaseContinue
+          s"have the button text '${commonMessages.continue}'" in {
+            continueButton.text shouldBe commonMessages.continue
           }
 
           "be of type submit" in {
