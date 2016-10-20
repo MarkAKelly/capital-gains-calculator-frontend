@@ -24,6 +24,14 @@ import play.api.i18n.Messages
 
 object SalesDetailsConstructor {
 
+  def salesDetailsRows(answers: SummaryModel): Seq[QuestionAnswerModel[Any]] = {
+    val disposalDate = disposalDateRow(answers)
+    val disposalValue = disposalValueRow(answers)
+    val disposalCosts = disposalCostsRow(answers)
+
+    Seq(disposalDate, disposalValue, disposalCosts)
+  }
+
   def disposalDateRow(answers: SummaryModel): QuestionAnswerModel[LocalDate] = {
     val dateModel = answers.disposalDateModel
     val date = LocalDate.parse(s"${dateModel.year}-${dateModel.month}-${dateModel.day}")
@@ -32,5 +40,19 @@ object SalesDetailsConstructor {
       date,
       Messages("calc.disposalDate.question"),
       Some(controllers.nonresident.routes.DisposalDateController.disposalDate().url))
+  }
+
+  def disposalValueRow(answers: SummaryModel): QuestionAnswerModel[BigDecimal] = {
+    QuestionAnswerModel[BigDecimal](keys.disposalValue,
+      answers.disposalValueModel.disposalValue,
+      Messages("calc.disposalValue.question"),
+      Some(controllers.nonresident.routes.DisposalValueController.disposalValue().url))
+  }
+
+  def disposalCostsRow(answers: SummaryModel): QuestionAnswerModel[BigDecimal] = {
+    QuestionAnswerModel[BigDecimal](keys.disposalCosts,
+      answers.disposalCostsModel.disposalCosts,
+      Messages("calc.disposalCosts.question"),
+      Some(controllers.nonresident.routes.DisposalCostsController.disposalCosts().url))
   }
 }
