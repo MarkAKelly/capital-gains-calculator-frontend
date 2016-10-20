@@ -56,9 +56,10 @@ object CalculateRequestConstructor {
   def isUsingAnnualExemptAmount (otherPropertiesModel: Option[OtherPropertiesModel],
                                  allowableLossesModel: Option[AllowableLossesModel],
                                  allowableLossesValueModel: Option[AllowableLossesValueModel]): Boolean = {
-    (otherPropertiesModel.get.hasOtherProperties, allowableLossesModel) match {
-      case (true, Some(AllowableLossesModel(true))) if allowableLossesValueModel.get.amount == 0 => true
-      case (true, Some(AllowableLossesModel(false))) => true
+    (otherPropertiesModel, allowableLossesModel, allowableLossesValueModel) match {
+      case (Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(true)), Some(AllowableLossesValueModel(data)))
+        if data == 0 => true
+      case (Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(false)), _) => true
       case _ => false
     }
   }

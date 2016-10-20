@@ -16,15 +16,16 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup.NonResident.{AllowableLosses => messages}
 import common.{Constants, KeystoreKeys}
 import connectors.CalculatorConnector
+import controllers.helpers.FakeRequestHelper
 import controllers.nonresident.{AllowableLossesController, routes}
 import models.nonresident.{AcquisitionDateModel, AllowableLossesModel, RebasedValueModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
-import play.api.i18n.Messages
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Result}
 import play.api.test.FakeRequest
@@ -32,11 +33,10 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 import scala.concurrent.Future
 
-class AllowableLossesSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class AllowableLossesSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
   implicit val hc = new HeaderCarrier()
 
@@ -66,106 +66,46 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
     }
   }
 
-  "In CalculationController calling the .allowableLosses action " when {
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/allowable-losses").withSession(SessionKeys.sessionId -> "12345")
+  "In CalculationController calling the .allowableLosses action" when {
 
-    "not supplied with a pre-existing stored value" should {
-      val target = setupTarget(None, None, None)
-      lazy val result = target.allowableLosses(fakeRequest)
-      lazy val document = Jsoup.parse(bodyOf(result))
+    "no prior data is supplied" should {
+
+      lazy val controller = setupTarget(None, None, None, None)
+      lazy val result = controller.allowableLosses(fakeRequestWithSession)
 
       "return a 200" in {
         status(result) shouldBe 200
       }
 
-      "return some HTML that" should {
-
-        "contain some text and use the character set utf-8" in {
-          contentType(result) shouldBe Some("text/html")
-          charset(result) shouldBe Some("utf-8")
-        }
-
-        s"have a 'Back' link to ${routes.PrivateResidenceReliefController.privateResidenceRelief()}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalCostsController.disposalCosts().toString()
-        }
-
-        "have the title 'Are you claiming any allowable losses?'" in {
-          document.title shouldEqual Messages("calc.allowableLosses.question.one")
-        }
-
-        "have the heading 'Calculate your tax (non-residents)'" in {
-          document.body.getElementsByTag("H1").text shouldEqual Messages("calc.base.pageHeading")
-        }
-
-        "have a yes no helper with hidden content and question 'Are you claiming any allowable losses?'" in {
-          document.body.getElementById("isClaimingAllowableLosses-yes").parent.text shouldBe Messages("calc.base.yes")
-          document.body.getElementById("isClaimingAllowableLosses-no").parent.text shouldBe Messages("calc.base.no")
-          document.body.getElementsByTag("legend").text shouldBe Messages("calc.allowableLosses.question.one")
-        }
-
-        "have a hidden monetary input with question 'Whats the total value of your allowable losses?'" in {
-          document.body.getElementById("allowableLossesAmt").tagName shouldEqual "input"
-          document.select("label[for=allowableLossesAmt]").text should include(Messages("calc.allowableLosses.question.two"))
-        }
-
-        "have no value auto-filled into the input box" in {
-          document.getElementById("allowableLossesAmt").attr("value") shouldBe empty
-        }
-
-        "have a hidden help text section with summary 'What are allowable losses?' and correct content" in {
-          document.select("div#allowableLossesHiddenHelp").text should
-            include(Messages("calc.allowableLosses.helpText.title"))
-          include(Messages("calc.allowableLosses.helpText.paragraph.one"))
-          include(Messages("calc.allowableLosses.helpText.bullet.one"))
-          include(Messages("calc.allowableLosses.helpText.bullet.two"))
-          include(Messages("calc.allowableLosses.helpText.bullet.three"))
-        }
-
-        "has a Continue button" in {
-          document.body.getElementById("continue-button").text shouldEqual Messages("calc.base.continue")
-        }
+      "with the allowable losses page title" in {
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.yesNoQuestion
       }
     }
-    "supplied with a pre-existing stored model" should {
-      val testAllowableLossesModel = AllowableLossesModel("Yes", Some(9999.54))
-      val target = setupTarget(Some(testAllowableLossesModel), None, None)
-      lazy val result = target.allowableLosses(fakeRequest)
-      lazy val document = Jsoup.parse(bodyOf(result))
+
+    "an allowable loss has already been entered" should {
+      lazy val controller = setupTarget(None, None, None, None)
+      lazy val result = controller.allowableLosses(fakeRequestWithSession)
 
       "return a 200" in {
         status(result) shouldBe 200
       }
 
-      "return some HTML that" should {
-
-        "contain some text and use the character set utf-8" in {
-          contentType(result) shouldBe Some("text/html")
-          charset(result) shouldBe Some("utf-8")
-        }
-
-        "have the 'Yes' Radio option selected" in {
-          document.getElementById("isClaimingAllowableLosses-yes").parent.classNames().contains("selected") shouldBe true
-        }
-
-        "have the value 9999.54 auto-filled into the input box" in {
-          document.getElementById("allowableLossesAmt").attr("value") shouldEqual "9999.54"
-        }
+      "with the allowable losses page title" in {
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.yesNoQuestion
       }
     }
   }
 
   "In CalculationController calling the .submitAllowableLosses action" when {
     def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
-      "/calculate-your-capital-gains/non-resident/allowance")
+      "/calculate-your-capital-gains/non-resident/allowable-losses")
       .withSession(SessionKeys.sessionId -> "12345")
       .withFormUrlEncodedBody(body: _*)
 
-    def executeTargetWithMockData(
-                                   answer: String,
-                                   amount: String,
-                                   acquisitionDate: AcquisitionDateModel,
-                                   rebasedData: Option[RebasedValueModel] = None): Future[Result] = {
+    def executeTargetWithMockData(answer: String,
+                                  amount: String,
+                                  acquisitionDate: AcquisitionDateModel,
+                                  rebasedData: Option[RebasedValueModel] = None): Future[Result] = {
 
       lazy val fakeRequest = buildRequest(("isClaimingAllowableLosses", answer), ("allowableLossesAmt", amount))
 
@@ -184,6 +124,10 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
       "return a 303" in {
         status(result) shouldBe 303
       }
+
+      "redirect to the brought forward losses page" in {
+        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsController.otherReliefs()}")
+      }
     }
 
     "submitting a valid form with 'Yes' and an amount with two decimal places with an acquisition date after the tax start date" should {
@@ -191,6 +135,10 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
 
       "return a 303" in {
         status(result) shouldBe 303
+      }
+
+      "redirect to the brought forward losses page" in {
+        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsController.otherReliefs()}")
       }
     }
 
@@ -200,6 +148,10 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
       "return a 303" in {
         status(result) shouldBe 303
       }
+
+      "redirect to the brought forward losses page" in {
+        redirectLocation(result) shouldBe Some(s"${routes.CalculationElectionController.calculationElection()}")
+      }
     }
 
     "submitting a valid form with 'No' and a negative amount with no returned acquisition date model" should {
@@ -208,37 +160,9 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
       "return a 303" in {
         status(result) shouldBe 303
       }
-    }
 
-    "submitting an invalid form with no selection and a null amount" should {
-      lazy val result = executeTargetWithMockData("", "", AcquisitionDateModel("No", None, None, None))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-    }
-
-    "submitting an invalid form with 'Yes' selection and a null amount" should {
-      lazy val result = executeTargetWithMockData("Yes", "", AcquisitionDateModel("No", None, None, None))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-    }
-
-    "submitting an invalid form with 'Yes' selection and an amount with three decimal places" should {
-      lazy val result = executeTargetWithMockData("Yes", "1000.111", AcquisitionDateModel("No", None, None, None))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-    }
-
-    "submitting an invalid form with 'Yes' selection and a negative amount" should {
-      lazy val result = executeTargetWithMockData("Yes", "-1000", AcquisitionDateModel("No", None, None, None))
-
-      "return a 400" in {
-        status(result) shouldBe 400
+      "redirect to the brought forward losses page" in {
+        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsController.otherReliefs()}")
       }
     }
 
@@ -309,17 +233,10 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with Mockito
     }
 
     "submitting a value which exceeds the maximum numeric" should {
-      lazy val result = executeTargetWithMockData("Yes", (Constants.maxNumeric + 0.01).toString , AcquisitionDateModel("No", None, None, None))
-      lazy val document = Jsoup.parse(bodyOf(result))
+      lazy val result = executeTargetWithMockData("Yes", (Constants.maxNumeric + 0.01).toString, AcquisitionDateModel("No", None, None, None))
 
       "return a 400" in {
         status(result) shouldBe 400
-      }
-
-      s"fail with message ${Messages("calc.common.error.maxNumericExceeded")}" in {
-        document.getElementsByClass("error-notification").text should
-          include (Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
-            " " + Messages("calc.common.error.maxNumericExceeded.OrLess"))
       }
     }
   }

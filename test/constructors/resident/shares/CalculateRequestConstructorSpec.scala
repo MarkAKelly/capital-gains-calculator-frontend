@@ -199,7 +199,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
 
     "return a value from the disposal value if not sold for less" in {
       val answers = GainAnswersModel(LocalDate.parse("2015-05-05"),
-        false, Some(1500), Some(2500), 0, false, None, None, None, None, 0)
+        soldForLessThanWorth = false, Some(1500), Some(2500), 0, ownerBeforeLegislationStart = false, None, Some(false), None, None, 0)
       val result = CalculateRequestConstructor.determineDisposalValueToUse(answers)
 
       result shouldBe 1500
@@ -207,7 +207,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
 
     "return a value from the worth when sold for less value if sold for less" in {
       val answers = GainAnswersModel(LocalDate.parse("2015-05-05"),
-        true, Some(1500), Some(2500), 0, false, None, None, None, None, 0)
+        soldForLessThanWorth = true, Some(1500), Some(2500), 0, ownerBeforeLegislationStart = false, None, Some(false), None, None, 0)
       val result = CalculateRequestConstructor.determineDisposalValueToUse(answers)
 
       result shouldBe 2500

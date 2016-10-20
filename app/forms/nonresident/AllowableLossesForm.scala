@@ -18,7 +18,6 @@ package forms.nonresident
 
 import common.Constants
 import common.Validation._
-import models._
 import models.nonresident.AllowableLossesModel
 import play.api.data.Forms._
 import play.api.data._
@@ -57,7 +56,9 @@ object AllowableLossesForm {
 
   val allowableLossesForm = Form(
     mapping(
-      "isClaimingAllowableLosses" -> nonEmptyText,
+      "isClaimingAllowableLosses" -> text
+        .verifying(Messages("error.required"), mandatoryCheck)
+        .verifying(Messages("error.required"), yesNoCheck),
       "allowableLossesAmt" -> optional(bigDecimal)
     )(AllowableLossesModel.apply)(AllowableLossesModel.unapply)
       .verifying(Messages("calc.allowableLosses.errorQuestion"),

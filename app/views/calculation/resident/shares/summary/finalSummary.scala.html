@@ -116,32 +116,46 @@ navTitle = Messages("calc.base.resident.shares.home")
     }
     <!-- Ends -->
     @summaryNumericRowHelper("disposalCosts",Messages("calc.resident.shares.disposalCosts.question"),gainAnswers.disposalCosts,Some(gainRoutes.disposalCosts().toString))
+
     @summaryOptionRowHelper("ownerBeforeLegislationStart",Messages("calc.resident.shares.ownerBeforeLegislationStart.title"),gainAnswers.ownerBeforeLegislationStart,Some(gainRoutes.ownerBeforeLegislationStart().url))
+
     @if(gainAnswers.ownerBeforeLegislationStart){
         @summaryNumericRowHelper("valueBeforeLegislationStart",Messages("calc.resident.shares.valueBeforeLegislationStart.question"),gainAnswers.valueBeforeLegislationStart.get,Some(gainRoutes.valueBeforeLegislationStart().toString))
-    } else {
-        @summaryOptionRowHelper("inheritedTheShares",Messages("calc.resident.shares.didYouInheritThem.question"),gainAnswers.inheritedTheShares.get,Some(gainRoutes.didYouInheritThem().url))
-        @if(gainAnswers.inheritedTheShares.get){
-            @summaryNumericRowHelper("worthWhenInherited",Messages("calc.resident.shares.worthWhenInherited.question"),gainAnswers.worthWhenInherited.get,Some(gainRoutes.worthWhenInherited().url))
-        } else {
-            @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.shares.acquisitionValue.question"),gainAnswers.acquisitionValue.get,Some(gainRoutes.acquisitionValue().url))
-        }
     }
+    @if(!gainAnswers.ownerBeforeLegislationStart) {
+        @summaryOptionRowHelper("inheritedTheShares",Messages("calc.resident.shares.didYouInheritThem.question"),gainAnswers.inheritedTheShares.get,Some(gainRoutes.didYouInheritThem().url))
+    }
+    @if(gainAnswers.displayWorthWhenInherited){
+        @summaryNumericRowHelper("worthWhenInherited",Messages("calc.resident.shares.worthWhenInherited.question"),gainAnswers.worthWhenInherited.get,Some(gainRoutes.worthWhenInherited().url))
+    }
+    @if(gainAnswers.displayWorthWhenBought) {
+        @summaryNumericRowHelper("acquisitionValue",Messages("calc.resident.shares.acquisitionValue.question"),gainAnswers.acquisitionValue.get,Some(gainRoutes.acquisitionValue().url))
+    }
+
     @summaryNumericRowHelper("acquisitionCosts",Messages("calc.resident.shares.acquisitionCosts.question"),gainAnswers.acquisitionCosts,Some(gainRoutes.acquisitionCosts().toString))
+
     @summaryOptionRowHelper("otherDisposals",Messages("calc.resident.otherProperties.title", taxYear.taxYearSupplied),deductionAnswers.otherPropertiesModel.get.hasOtherProperties,Some(deductionRoutes.otherDisposals().toString))
+
     @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties)
     summaryOptionRowHelper("allowableLosses",Messages("calc.resident.allowableLosses.title", taxYear.taxYearSupplied),deductionAnswers.allowableLossesModel.get.isClaiming,Some(deductionRoutes.allowableLosses().toString))}
-    @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties && deductionAnswers.allowableLossesModel.get.isClaiming)
+
+    @{if (deductionAnswers.displayAllowableLossesValue)
     summaryNumericRowHelper("allowableLossesValue",Messages("calc.resident.allowableLossesValue.title", taxYear.taxYearSupplied),deductionAnswers.allowableLossesValueModel.get.amount,Some(deductionRoutes.allowableLossesValue().toString))}
+
     @summaryOptionRowHelper("broughtForwardLosses",Messages("calc.resident.lossesBroughtForward.title", taxYear.taxYearSupplied),deductionAnswers.broughtForwardModel.get.option, Some(deductionRoutes.lossesBroughtForward().toString))
+
     @{if (deductionAnswers.broughtForwardModel.get.option)
         summaryNumericRowHelper("broughtForwardLossesValue",Messages("calc.resident.lossesBroughtForwardValue.title", taxYear.taxYearSupplied),deductionAnswers.broughtForwardValueModel.get.amount,Some(deductionRoutes.lossesBroughtForwardValue().toString))}
-    @{if (isUsingAnnualExemptAmount(deductionAnswers.otherPropertiesModel, deductionAnswers.allowableLossesModel, deductionAnswers.allowableLossesValueModel))
+
+    @{if (deductionAnswers.displayAnnualExemptAmount)
         summaryNumericRowHelper("annualExemptAmount",Messages("calc.resident.annualExemptAmount.title"),deductionAnswers.annualExemptAmountModel.get.amount,Some(deductionRoutes.annualExemptAmount().toString))
     }
-    @{if (deductionAnswers.otherPropertiesModel.get.hasOtherProperties && deductionAnswers.annualExemptAmountModel.isDefined && deductionAnswers.annualExemptAmountModel.get.amount == 0)
+
+    @{if (deductionAnswers.displayPreviousTaxableGains)
         summaryNumericRowHelper("previousTaxableGains", Messages("calc.resident.previousTaxableGains.title", taxYear.taxYearSupplied), incomeAnswers.previousTaxableGainsModel.get.amount, Some(incomeRoutes.previousTaxableGains().toString))}
+
     @summaryNumericRowHelper("currentIncome",if(isCurrentTaxYear){Messages("calc.resident.currentIncome.questionCurrentYear")}else{Messages("calc.resident.currentIncome.question", taxYear.taxYearSupplied)},incomeAnswers.currentIncomeModel.get.amount,Some(incomeRoutes.currentIncome().toString))
+
     @summaryNumericRowHelper("personalAllowance",
     {if(isCurrentTaxYear) {Messages("calc.resident.personalAllowance.currentYearQuestion")}
     else {Messages("calc.resident.personalAllowance.question", taxYear.taxYearSupplied)}},

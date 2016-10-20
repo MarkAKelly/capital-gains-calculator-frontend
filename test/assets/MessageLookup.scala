@@ -27,7 +27,6 @@ object MessageLookup {
 
     val externalLink = "(opens in a new window)"
     val change = "change"
-
     val back = "Back"
     val continue = "Continue"
     val yes = "Yes"
@@ -83,10 +82,6 @@ object MessageLookup {
       val errorDecimalPlaces = "The amount you paid has too many numbers after the decimal point"
 
       def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
-    }
-
-    object AllowableLosses {
-
     }
 
     object AnnualExemptAmount {
@@ -290,7 +285,20 @@ object MessageLookup {
       val rebasedCalculation = "How much you've gained on the property since 5 April 2015"
       val lossesCarriedForward = "Loss carried forward"
       val taxYearWarning = "Your total might be less accurate because you didn't sell or give away your property in this tax year"
+    }
 
+    object AllowableLosses {
+      val yesNoQuestion = "Are you claiming any allowable losses from the 2016/2017 tax year?"
+      val inputQuestion = "What's the total value of your allowable losses?"
+      val helpTextTitle = "What are allowable losses?"
+      val helpTextLead = "They're losses you've made on UK properties that:"
+      val helpTextBulletOne = "are covered by Capital Gains Tax"
+      val helpTextBulletTwo = "you've declared to HMRC within 4 years of making the loss"
+      val helpTextBulletThree = "you haven't already used in an allowable losses claim"
+
+      val errorCompulsoryValue = "Enter the value of your allowable losses"
+      val errorMinimumAmount = "Enter a positive number for your allowable losses"
+      val errorTooManyDecimals = "There are too many numbers after the decimal point in your allowable losses"
     }
   }
 
