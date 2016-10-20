@@ -24,7 +24,6 @@ import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
-import play.api.i18n.Messages
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsFormUrlEncoded, Result}
 import play.api.test.FakeRequest
@@ -33,6 +32,9 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
+
+import assets.MessageLookup.{NonResident => commonMessages}
+import assets.MessageLookup.NonResident.{PrivateResidenceRelief => messages}
 
 import scala.concurrent.Future
 
@@ -95,22 +97,22 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
         }
 
         s"have a 'Back' link to ${routes.DisposalCostsController.disposalCosts()}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalCostsController.disposalCosts().toString()
         }
 
-        "have the title 'calc.privateResidenceRelief.question'" in {
-          document.title shouldEqual Messages("calc.privateResidenceRelief.question")
+        s"have the title '${messages.question}'" in {
+          document.title shouldEqual messages.question
         }
 
-        "have the heading 'Calculate your tax (non-residents)'" in {
-          document.body.getElementsByTag("H1").text shouldEqual Messages("calc.base.pageHeading")
+        s"have the heading '${commonMessages.pageHeading}'" in {
+          document.body.getElementsByTag("H1").text shouldEqual commonMessages.pageHeading
         }
 
-        "have a yes no helper with hidden content and question 'calc.privateResidenceRelief.question'" in {
-          document.body.getElementById("isClaimingPRR-yes").parent.text shouldBe Messages("calc.base.yes")
-          document.body.getElementById("isClaimingPRR-no").parent.text shouldBe Messages("calc.base.no")
-          document.body.getElementsByTag("legend").text shouldBe Messages("calc.privateResidenceRelief.question")
+        s"have a yes no helper with hidden content and question '${messages.question}'" in {
+          document.body.getElementById("isClaimingPRR-yes").parent.text shouldBe commonMessages.yes
+          document.body.getElementById("isClaimingPRR-no").parent.text shouldBe commonMessages.no
+          document.body.getElementsByTag("legend").text shouldBe messages.question
         }
 
         "Not show the Days Between question" in {
@@ -122,9 +124,9 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
         }
 
         "should contain a Read more sidebar with a link to private residence relief" in {
-          document.select("aside h2").text shouldBe Messages("calc.common.readMore")
+          document.select("aside h2").text shouldBe commonMessages.readMore
           document.select("aside a").first().attr("href") shouldBe "https://www.gov.uk/tax-sell-home/private-residence-relief"
-          document.select("aside a").first.text shouldBe s"${Messages("calc.privateResidenceRelief.helpLink")} ${Messages("calc.base.externalLink")}"
+          document.select("aside a").first.text shouldBe s"${messages.helpLink} ${commonMessages.externalLink}"
         }
       }
     }
@@ -154,10 +156,10 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
             document.body.getElementById("isClaimingPRR-yes").attr("checked") shouldEqual "checked"
           }
 
-          "have an input with question 'How many days between 5 April 2015 and {x} are you claiming relief for'" in {
+          s"have an input with question '${messages.questionBetween} {x} ${messages.questionEnd}'" in {
             document.body.getElementById("daysClaimedAfter").tagName shouldEqual "input"
-            document.select("label[for=daysClaimedAfter]").text should include(Messages("calc.privateResidenceRelief.questionBetween.partOne"))
-            document.select("label[for=daysClaimedAfter]").text should include(Messages("calc.privateResidenceRelief.questionBetween.partTwo"))
+            document.select("label[for=daysClaimedAfter]").text should include(messages.questionBetween)
+            document.select("label[for=daysClaimedAfter]").text should include(messages.questionEnd)
           }
 
           "have 45 days in the input field for days claimed after" in {
@@ -196,8 +198,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
           "have an input with question 'How many days between 5 April 2015 and {x} are you claiming relief for'" in {
             document.body.getElementById("daysClaimedAfter").tagName shouldEqual "input"
-            document.select("label[for=daysClaimedAfter]").text should include(Messages("calc.privateResidenceRelief.questionBetween.partOne"))
-            document.select("label[for=daysClaimedAfter]").text should include(Messages("calc.privateResidenceRelief.questionBetween.partTwo"))
+            document.select("label[for=daysClaimedAfter]").text should include(messages.questionBetween)
+            document.select("label[for=daysClaimedAfter]").text should include(messages.questionEnd)
           }
 
           "have 45 days in the input field for days claimed after" in {
@@ -272,8 +274,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
           "have an input with question 'How many days between 5 April 2015 and {x} are you claiming relief for'" in {
             document.body.getElementById("daysClaimedAfter").tagName shouldEqual "input"
-            document.select("label[for=daysClaimedAfter]").text should include(Messages("calc.privateResidenceRelief.questionBetween.partOne"))
-            document.select("label[for=daysClaimedAfter]").text should include(Messages("calc.privateResidenceRelief.questionBetween.partTwo"))
+            document.select("label[for=daysClaimedAfter]").text should include(messages.questionBetween)
+            document.select("label[for=daysClaimedAfter]").text should include(messages.questionEnd)
           }
 
           "have 45 days in the input field for days claimed after" in {
@@ -282,8 +284,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
           "have an input with question 'How many days before 5 April 2015 are you claiming relief for'" in {
             document.body.getElementById("daysClaimed").tagName shouldEqual "input"
-            document.select("label[for=daysClaimed]").text should include(Messages("calc.privateResidenceRelief.questionBefore.partOne"))
-            document.select("label[for=daysClaimed]").text should include(Messages("calc.privateResidenceRelief.questionBefore.partTwo"))
+            document.select("label[for=daysClaimed]").text should include(messages.questionBefore)
+            document.select("label[for=daysClaimed]").text should include(messages.questionEnd)
           }
 
           "have 23 days in the input field for days claimed" in {
@@ -319,8 +321,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
           "have an input with question 'How many days between 5 April 2015 and {x} are you claiming relief for'" in {
             document.body.getElementById("daysClaimedAfter").tagName shouldEqual "input"
-            document.select("label[for=daysClaimedAfter]").text should include(Messages("calc.privateResidenceRelief.questionBetween.partOne"))
-            document.select("label[for=daysClaimedAfter]").text should include(Messages("calc.privateResidenceRelief.questionBetween.partTwo"))
+            document.select("label[for=daysClaimedAfter]").text should include(messages.questionBetween)
+            document.select("label[for=daysClaimedAfter]").text should include(messages.questionEnd)
           }
 
           "have 45 days in the input field for days claimed after" in {
@@ -329,8 +331,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
           "have an input with question 'How many days before 5 April 2015 are you claiming relief for'" in {
             document.body.getElementById("daysClaimed").tagName shouldEqual "input"
-            document.select("label[for=daysClaimed]").text should include(Messages("calc.privateResidenceRelief.questionBefore.partOne"))
-            document.select("label[for=daysClaimed]").text should include(Messages("calc.privateResidenceRelief.questionBefore.partTwo"))
+            document.select("label[for=daysClaimed]").text should include(messages.questionBefore)
+            document.select("label[for=daysClaimed]").text should include(messages.questionEnd)
           }
 
           "have 23 days in the input field for days claimed" in {
@@ -366,8 +368,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
           "have an input with question 'How many days before 5 April 2015 are you claiming relief for'" in {
             document.body.getElementById("daysClaimed").tagName shouldEqual "input"
-            document.select("label[for=daysClaimed]").text should include(Messages("calc.privateResidenceRelief.questionBefore.partOne"))
-            document.select("label[for=daysClaimed]").text should include(Messages("calc.privateResidenceRelief.questionBefore.partTwo"))
+            document.select("label[for=daysClaimed]").text should include(messages.questionBefore)
+            document.select("label[for=daysClaimed]").text should include(messages.questionEnd)
           }
 
           "have 23 days in the input field for days claimed" in {
@@ -395,7 +397,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.DisposalCostsController.disposalCosts()}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalCostsController.disposalCosts().toString()
         }
 
@@ -531,8 +533,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
             "have an input with question 'How many days before 5 April 2015 are you claiming relief for'" in {
               document.body.getElementById("daysClaimed").tagName shouldEqual "input"
-              document.select("label[for=daysClaimed]").text should include(Messages("calc.privateResidenceRelief.questionBefore.partOne"))
-              document.select("label[for=daysClaimed]").text should include(Messages("calc.privateResidenceRelief.questionBefore.partTwo"))
+              document.select("label[for=daysClaimed]").text should include(messages.questionBefore)
+              document.select("label[for=daysClaimed]").text should include(messages.questionEnd)
             }
 
             "have 23 days in the input field for days claimed" in {
@@ -571,8 +573,8 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
             "have an input with question 'How many days before 5 April 2015 are you claiming relief for'" in {
               document.body.getElementById("daysClaimed").tagName shouldEqual "input"
-              document.select("label[for=daysClaimed]").text should include(Messages("calc.privateResidenceRelief.questionBefore.partOne"))
-              document.select("label[for=daysClaimed]").text should include(Messages("calc.privateResidenceRelief.questionBefore.partTwo"))
+              document.select("label[for=daysClaimed]").text should include(messages.questionBefore)
+              document.select("label[for=daysClaimed]").text should include(messages.questionEnd)
             }
 
             "have 23 days in the input field for days claimed" in {
@@ -735,7 +737,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "return HTML that displays the error message " in {
-        document.select("span.error-notification").text shouldEqual Messages("calc.privateResidenceRelief.error.noValueProvided")
+        document.select("span.error-notification").text shouldEqual messages.errorNoValue
       }
     }
 
@@ -748,7 +750,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "return HTML that displays the error message " in {
-        document.select("span.error-notification").text shouldEqual Messages("calc.privateResidenceRelief.error.noValueProvided")
+        document.select("span.error-notification").text shouldEqual messages.errorNoValue
       }
     }
 
@@ -761,7 +763,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "return HTML that displays the error message " in {
-        document.select("span.error-notification").text shouldEqual Messages("calc.privateResidenceRelief.error.errorNegative")
+        document.select("span.error-notification").text shouldEqual messages.errorNegative
       }
     }
 
@@ -774,7 +776,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "return HTML that displays the error message " in {
-        document.select("span.error-notification").text shouldEqual Messages("calc.privateResidenceRelief.error.errorDecimalPlaces")
+        document.select("span.error-notification").text shouldEqual messages.errorDecimalPlaces
       }
     }
 
@@ -787,7 +789,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "return HTML that displays the error message " in {
-        document.select("span.error-notification").text shouldEqual Messages("error.real")
+        document.select("span.error-notification").text shouldEqual commonMessages.errorRealNumber
       }
     }
 
@@ -800,8 +802,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "return HTML that displays the error message " in {
-        document.select("span.error-notification").text shouldEqual Messages("calc.privateResidenceRelief.error.maxNumericExceeded") +
-          " " + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.privateResidenceRelief.error.maxNumericExceeded.OrLess")
+        document.select("span.error-notification").text shouldEqual messages.errorMaximum(MoneyPounds(Constants.maxNumeric, 0).quantity)
       }
     }
 
@@ -814,8 +815,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "return HTML that displays the error message " in {
-        document.select("span.error-notification").text shouldEqual Messages("calc.privateResidenceRelief.error.maxNumericExceeded") +
-          " " + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.privateResidenceRelief.error.maxNumericExceeded.OrLess")
+        document.select("span.error-notification").text shouldEqual messages.errorMaximum(MoneyPounds(Constants.maxNumeric, 0).quantity)
       }
     }
   }

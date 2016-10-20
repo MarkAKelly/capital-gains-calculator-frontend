@@ -355,4 +355,12 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
       path shouldEqual "/calculate-your-capital-gains/non-resident/restart"
     }
   }
+
+  /* Report route*/
+  "The URL for the save as pdf Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/summary-report" in {
+      val path = controllers.nonresident.routes.ReportController.summaryReport().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/summary-report"
+    }
+  }
 }

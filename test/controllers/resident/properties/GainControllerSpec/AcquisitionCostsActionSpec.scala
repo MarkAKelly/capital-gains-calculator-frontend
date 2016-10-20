@@ -16,7 +16,7 @@
 
 package controllers.resident.properties.GainControllerSpec
 
-import assets.MessageLookup.{acquisitionCosts => messages}
+import assets.MessageLookup.{AcquisitionCosts => messages}
 import common.KeystoreKeys.{ResidentPropertyKeys => keystoreKeys}
 import config.AppConfig
 import connectors.CalculatorConnector

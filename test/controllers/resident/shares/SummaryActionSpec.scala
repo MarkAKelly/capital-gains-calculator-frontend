@@ -16,7 +16,7 @@
 
 package controllers.resident.shares
 
-import assets.MessageLookup.{summaryPage => messages}
+import assets.MessageLookup.{SummaryPage => messages}
 import common.Dates
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper

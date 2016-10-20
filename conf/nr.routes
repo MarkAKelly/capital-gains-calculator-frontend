@@ -91,6 +91,8 @@ GET         /other-reliefs-rebased              controllers.nonresident.OtherRel
 POST        /other-reliefs-rebased              controllers.nonresident.OtherReliefsRebasedController.submitOtherReliefsRebased
 ########################################################
 
+#Report screen route
+GET         /summary-report                     controllers.nonresident.ReportController.summaryReport
 
 #Summary screen route
 ########################################################

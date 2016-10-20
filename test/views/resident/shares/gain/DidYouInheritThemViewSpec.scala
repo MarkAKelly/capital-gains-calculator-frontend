@@ -22,7 +22,7 @@ import models.resident.shares.gain.DidYouInheritThemModel
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.resident.shares.{gain => views}
-import assets.MessageLookup
+import assets.MessageLookup.{Resident => commonMessages}
 import assets.MessageLookup.Resident.Shares.{DidYouInheritThem => messages}
 
 class DidYouInheritThemViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
@@ -63,7 +63,7 @@ class DidYouInheritThemViewSpec extends UnitSpec with WithFakeApplication with F
       lazy val backLink = doc.select("a#back-link")
 
       "has the correct back link text" in {
-        backLink.text shouldBe MessageLookup.calcBaseBack
+        backLink.text shouldBe commonMessages.back
       }
 
       "has the back-link class" in {
@@ -203,8 +203,8 @@ class DidYouInheritThemViewSpec extends UnitSpec with WithFakeApplication with F
         button.attr("id") shouldEqual "continue-button"
       }
 
-      s"has the text ${MessageLookup.calcBaseContinue}" in {
-        button.text shouldEqual s"${MessageLookup.calcBaseContinue}"
+      s"has the text ${commonMessages.continue}" in {
+        button.text shouldEqual s"${commonMessages.continue}"
       }
     }
   }

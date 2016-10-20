@@ -63,8 +63,8 @@ class WorthWhenSoldForLessActionSpec extends UnitSpec with WithFakeApplication w
         status(result) shouldEqual 200
       }
 
-      s"return some html with title of ${MessageLookup.Resident.Shares.worthWhenSoldForLess.question}" in {
-        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.Resident.Shares.worthWhenSoldForLess.question
+      s"return some html with title of ${MessageLookup.Resident.Shares.WorthWhenSoldForLess.question}" in {
+        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.Resident.Shares.WorthWhenSoldForLess.question
       }
     }
 
@@ -76,8 +76,8 @@ class WorthWhenSoldForLessActionSpec extends UnitSpec with WithFakeApplication w
         status(result) shouldEqual 200
       }
 
-      s"return some html with title of ${MessageLookup.Resident.Shares.worthWhenSoldForLess.question}" in {
-        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.Resident.Shares.worthWhenSoldForLess.question
+      s"return some html with title of ${MessageLookup.Resident.Shares.WorthWhenSoldForLess.question}" in {
+        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.Resident.Shares.WorthWhenSoldForLess.question
       }
     }
   }
@@ -125,7 +125,7 @@ class WorthWhenSoldForLessActionSpec extends UnitSpec with WithFakeApplication w
       }
 
       "stay on the shares Worth When Sold page" in {
-        Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.Resident.Shares.worthWhenSoldForLess.question
+        Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.Resident.Shares.WorthWhenSoldForLess.question
       }
     }
   }

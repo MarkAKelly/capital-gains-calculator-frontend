@@ -80,9 +80,9 @@ class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with Fak
       status(result) shouldBe 200
     }
 
-    s"return some html with title of ${MessageLookup.disposalValue.question}" in {
+    s"return some html with title of ${MessageLookup.DisposalValue.question}" in {
       contentType(result) shouldBe Some("text/html")
-      Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.disposalValue.question
+      Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.DisposalValue.question
     }
   }
 
@@ -114,7 +114,7 @@ class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with Fak
 
     "render the disposal value page when supplied with an invalid form" in {
       status(result) shouldEqual 400
-      Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.disposalValue.question
+      Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.DisposalValue.question
     }
   }
 }

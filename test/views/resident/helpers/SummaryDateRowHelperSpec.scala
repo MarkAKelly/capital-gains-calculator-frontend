@@ -19,7 +19,7 @@ package views.resident.helpers
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.helpers.resident.summaryDateRowHelper
-import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{Resident => commonMessages}
 import common.Dates._
 
 class SummaryDateRowHelperSpec extends UnitSpec with WithFakeApplication {
@@ -110,7 +110,7 @@ class SummaryDateRowHelperSpec extends UnitSpec with WithFakeApplication {
         }
 
         "has the text 'change'" in {
-          link.text shouldBe commonMessages.calcBaseChange + " testQ"
+          link.text shouldBe commonMessages.change + " testQ"
         }
 
         "has the question visually hidden as part of the link" in {

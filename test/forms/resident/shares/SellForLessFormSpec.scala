@@ -16,7 +16,7 @@
 
 package forms.resident.shares
 
-import assets.MessageLookup.Resident.Shares.{sellForLess => Messages}
+import assets.MessageLookup.Resident.Shares.{SellForLess => Messages}
 import forms.resident.shares.SellForLessForm._
 import models.resident.SellForLessModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}

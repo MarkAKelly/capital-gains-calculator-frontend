@@ -16,7 +16,7 @@
 
 package forms.resident.income
 
-import assets.MessageLookup.errorMessages
+import assets.MessageLookup.{Resident => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.income.PreviousTaxableGainsForm._
 import models.resident.income.PreviousTaxableGainsModel
@@ -58,7 +58,7 @@ class PreviousTaxableGainsFormSpec extends UnitSpec with WithFakeApplication wit
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe errorMessages.mandatoryAmount
+        form.error("amount").get.message shouldBe messages.mandatoryAmount
       }
     }
 
@@ -76,7 +76,7 @@ class PreviousTaxableGainsFormSpec extends UnitSpec with WithFakeApplication wit
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe errorMessages.mandatoryAmount
+        form.error("amount").get.message shouldBe messages.mandatoryAmount
       }
     }
 
@@ -93,7 +93,7 @@ class PreviousTaxableGainsFormSpec extends UnitSpec with WithFakeApplication wit
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe errorMessages.invalidAmount
+        form.error("amount").get.message shouldBe messages.invalidAmount
       }
     }
 
@@ -110,7 +110,7 @@ class PreviousTaxableGainsFormSpec extends UnitSpec with WithFakeApplication wit
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe errorMessages.invalidAmount
+        form.error("amount").get.message shouldBe messages.invalidAmount
       }
     }
 
@@ -127,7 +127,7 @@ class PreviousTaxableGainsFormSpec extends UnitSpec with WithFakeApplication wit
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe errorMessages.maximumAmount
+        form.error("amount").get.message shouldBe messages.maximumAmount
       }
     }
 
@@ -144,7 +144,7 @@ class PreviousTaxableGainsFormSpec extends UnitSpec with WithFakeApplication wit
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe errorMessages.minimumAmount
+        form.error("amount").get.message shouldBe messages.minimumAmount
       }
     }
   }

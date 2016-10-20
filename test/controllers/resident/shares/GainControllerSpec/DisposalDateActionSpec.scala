@@ -21,7 +21,7 @@ import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.{sharesDisposalDate => messages}
+import assets.MessageLookup.{SharesDisposalDate => messages}
 import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
 import models.resident.{DisposalDateModel, TaxYearModel}

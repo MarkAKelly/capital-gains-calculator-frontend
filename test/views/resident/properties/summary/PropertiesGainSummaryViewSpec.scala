@@ -16,7 +16,8 @@
 
 package views.resident.properties.summary
 
-import assets.MessageLookup.{summaryPage => messages}
+import assets.MessageLookup.{SummaryPage => messages}
+import assets.MessageLookup.{Resident => residentMessages}
 import assets.{MessageLookup => commonMessages}
 import assets.MessageLookup.Resident.{Properties => propertiesMessages}
 import common.Dates._
@@ -75,8 +76,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
         backLink.attr("id") shouldBe "back-link"
       }
 
-      s"has the text '${commonMessages.calcBaseBack}'" in {
-        backLink.text shouldBe commonMessages.calcBaseBack
+      s"has the text '${residentMessages.back}'" in {
+        backLink.text shouldBe residentMessages.back
       }
 
       s"has a link to '${routes.GainController.improvements().toString()}'" in {
@@ -152,8 +153,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
       "has a date output row for the Disposal Date" which {
 
-        s"should have the question text '${commonMessages.disposalDate.question}'" in {
-          doc.select("#disposalDate-question").text shouldBe commonMessages.disposalDate.question
+        s"should have the question text '${commonMessages.DisposalDate.question}'" in {
+          doc.select("#disposalDate-question").text shouldBe commonMessages.DisposalDate.question
         }
 
         "should have the value '12 September 1990'" in {
@@ -165,18 +166,18 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
         }
 
         "has the question as part of the link" in {
-          doc.select("#disposalDate-date a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.disposalDate.question}"
+          doc.select("#disposalDate-date a").text shouldBe s"${residentMessages.change} ${commonMessages.DisposalDate.question}"
         }
 
         "has the question component of the link is visuallyhidden" in {
-          doc.select("#disposalDate-date a span.visuallyhidden").text shouldBe commonMessages.disposalDate.question
+          doc.select("#disposalDate-date a span.visuallyhidden").text shouldBe commonMessages.DisposalDate.question
         }
       }
 
       "has an option output row for sell or give away" which {
 
-        s"should have the question text '${commonMessages.propertiesSellOrGiveAway.title}'" in {
-          doc.select("#sellOrGiveAway-question").text shouldBe commonMessages.propertiesSellOrGiveAway.title
+        s"should have the question text '${commonMessages.PropertiesSellOrGiveAway.title}'" in {
+          doc.select("#sellOrGiveAway-question").text shouldBe commonMessages.PropertiesSellOrGiveAway.title
         }
 
         "should have the value 'Gave it away'" in {
@@ -188,19 +189,19 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
         }
 
         "has the question as part of the link" in {
-          doc.select("#sellOrGiveAway-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.propertiesSellOrGiveAway.title}"
+          doc.select("#sellOrGiveAway-option a").text shouldBe s"${residentMessages.change} ${commonMessages.PropertiesSellOrGiveAway.title}"
         }
 
         "has the question component of the link as visuallyhidden" in {
-          doc.select("#sellOrGiveAway-option a span.visuallyhidden").text shouldBe commonMessages.propertiesSellOrGiveAway.title
+          doc.select("#sellOrGiveAway-option a span.visuallyhidden").text shouldBe commonMessages.PropertiesSellOrGiveAway.title
         }
       }
 
       //######################################################################################
       "has an option output row for who did you give it to" which {
 
-        s"should have the question text '${commonMessages.whoDidYouGiveItTo.title}'" in {
-          doc.select("#whoDidYouGiveItTo-question").text shouldBe commonMessages.whoDidYouGiveItTo.title
+        s"should have the question text '${commonMessages.WhoDidYouGiveItTo.title}'" in {
+          doc.select("#whoDidYouGiveItTo-question").text shouldBe commonMessages.WhoDidYouGiveItTo.title
         }
 
         "should have the value 'Someone else'" in {
@@ -212,18 +213,18 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
         }
 
         "has the question as part of the link" in {
-          doc.select("#whoDidYouGiveItTo-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.whoDidYouGiveItTo.title}"
+          doc.select("#whoDidYouGiveItTo-option a").text shouldBe s"${residentMessages.change} ${commonMessages.WhoDidYouGiveItTo.title}"
         }
 
         "has the question component of the link as visuallyhidden" in {
-          doc.select("#whoDidYouGiveItTo-option a span.visuallyhidden").text shouldBe commonMessages.whoDidYouGiveItTo.title
+          doc.select("#whoDidYouGiveItTo-option a span.visuallyhidden").text shouldBe commonMessages.WhoDidYouGiveItTo.title
         }
       }
 
       "has a numeric output row for the Value when you gave it away" which {
 
-        s"should have the question text '${propertiesMessages.propertiesWorthWhenGaveAway.title}'" in {
-          doc.select("#worthWhenGaveAway-question").text shouldBe propertiesMessages.propertiesWorthWhenGaveAway.title
+        s"should have the question text '${propertiesMessages.PropertiesWorthWhenGaveAway.title}'" in {
+          doc.select("#worthWhenGaveAway-question").text shouldBe propertiesMessages.PropertiesWorthWhenGaveAway.title
         }
 
         "should have the value '£10,000'" in {
@@ -236,20 +237,20 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
         "has the question as part of the link" in {
           doc.select("#worthWhenGaveAway-amount a").text shouldBe
-            s"${commonMessages.calcBaseChange} ${propertiesMessages.propertiesWorthWhenGaveAway.title}"
+            s"${residentMessages.change} ${propertiesMessages.PropertiesWorthWhenGaveAway.title}"
         }
 
         "has the question component of the link as visuallyhidden" in {
           doc.select("#worthWhenGaveAway-amount a span.visuallyhidden").text shouldBe
-            propertiesMessages.propertiesWorthWhenGaveAway.title
+            propertiesMessages.PropertiesWorthWhenGaveAway.title
         }
       }
       //######################################################################################
 
       "has a numeric output row for the Disposal Costs" which {
 
-        s"should have the question text '${commonMessages.disposalCosts.title}'" in {
-          doc.select("#disposalCosts-question").text shouldBe commonMessages.disposalCosts.title
+        s"should have the question text '${commonMessages.DisposalCosts.title}'" in {
+          doc.select("#disposalCosts-question").text shouldBe commonMessages.DisposalCosts.title
         }
 
         "should have the value '£20'" in {
@@ -264,8 +265,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
       "has an option output row for owner before april 1982" which {
 
-        s"should have the question text '${commonMessages.Resident.Properties.OwnerBeforeLegislationStart.title}'" in {
-          doc.select("#ownerBeforeLegislationStart-question").text shouldBe commonMessages.Resident.Properties.OwnerBeforeLegislationStart.title
+        s"should have the question text '${propertiesMessages.OwnerBeforeLegislationStart.title}'" in {
+          doc.select("#ownerBeforeLegislationStart-question").text shouldBe propertiesMessages.OwnerBeforeLegislationStart.title
         }
 
         "should have the value 'Yes'" in {
@@ -278,19 +279,19 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
         "has the question as part of the link" in {
           doc.select("#ownerBeforeLegislationStart-option a").text shouldBe
-            s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.OwnerBeforeLegislationStart.title}"
+            s"${residentMessages.change} ${propertiesMessages.OwnerBeforeLegislationStart.title}"
         }
 
         "has the question component of the link as visuallyhidden" in {
           doc.select("#ownerBeforeLegislationStart-option a span.visuallyhidden").text shouldBe
-            commonMessages.Resident.Properties.OwnerBeforeLegislationStart.title
+            propertiesMessages.OwnerBeforeLegislationStart.title
         }
       }
 
       "has a numeric output row for the Value Before Legislation Start" which {
 
-        s"should have the question text '${commonMessages.Resident.Properties.ValueBeforeLegislationStart.question}'" in {
-          doc.select("#valueBeforeLegislationStart-question").text shouldBe commonMessages.Resident.Properties.ValueBeforeLegislationStart.question
+        s"should have the question text '${propertiesMessages.ValueBeforeLegislationStart.question}'" in {
+          doc.select("#valueBeforeLegislationStart-question").text shouldBe propertiesMessages.ValueBeforeLegislationStart.question
         }
 
         "should have the value '£5,000'" in {
@@ -303,19 +304,19 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
         "has the question as part of the link" in {
           doc.select("#valueBeforeLegislationStart-amount a").text shouldBe
-            s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.ValueBeforeLegislationStart.question}"
+            s"${residentMessages.change} ${propertiesMessages.ValueBeforeLegislationStart.question}"
         }
 
         "has the question component of the link as visuallyhidden" in {
           doc.select("#valueBeforeLegislationStart-amount a span.visuallyhidden").text shouldBe
-            commonMessages.Resident.Properties.ValueBeforeLegislationStart.question
+            propertiesMessages.ValueBeforeLegislationStart.question
         }
       }
 
       "has a numeric output row for the Acquisition Costs" which {
 
-        s"should have the question text '${commonMessages.acquisitionCosts.title}'" in {
-          doc.select("#acquisitionCosts-question").text shouldBe commonMessages.acquisitionCosts.title
+        s"should have the question text '${commonMessages.AcquisitionCosts.title}'" in {
+          doc.select("#acquisitionCosts-question").text shouldBe commonMessages.AcquisitionCosts.title
         }
 
         "should have the value '£40'" in {
@@ -330,8 +331,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
       "has a numeric output row for the Improvements" which {
 
-        s"should have the question text '${commonMessages.Resident.Properties.improvementsView.questionBefore}'" in {
-          doc.select("#improvements-question").text shouldBe commonMessages.Resident.Properties.improvementsView.questionBefore
+        s"should have the question text '${propertiesMessages.ImprovementsView.questionBefore}'" in {
+          doc.select("#improvements-question").text shouldBe propertiesMessages.ImprovementsView.questionBefore
         }
 
         "should have the value '£50'" in {
@@ -406,13 +407,13 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     s"display the text ${messages.whatToDoNextText}" in {
       doc.select("#whatToDoNextText").text shouldEqual
-        s"${messages.whatNextYouCan}${messages.whatNextLink}${commonMessages.calcBaseExternalLink} ${messages.whatNextText}"
+        s"${messages.whatNextYouCan}${messages.whatNextLink}${residentMessages.externalLink} ${messages.whatNextText}"
     }
 
     "has an option output row for sell or give away" which {
 
-      s"should have the question text '${commonMessages.propertiesSellOrGiveAway.title}'" in {
-        doc.select("#sellOrGiveAway-question").text shouldBe commonMessages.propertiesSellOrGiveAway.title
+      s"should have the question text '${commonMessages.PropertiesSellOrGiveAway.title}'" in {
+        doc.select("#sellOrGiveAway-question").text shouldBe commonMessages.PropertiesSellOrGiveAway.title
       }
 
       "should have the value 'Sold it'" in {
@@ -424,18 +425,18 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       }
 
       "has the question as part of the link" in {
-        doc.select("#sellOrGiveAway-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.propertiesSellOrGiveAway.title}"
+        doc.select("#sellOrGiveAway-option a").text shouldBe s"${residentMessages.change} ${commonMessages.PropertiesSellOrGiveAway.title}"
       }
 
       "has the question component of the link as visuallyhidden" in {
-        doc.select("#sellOrGiveAway-option a span.visuallyhidden").text shouldBe commonMessages.propertiesSellOrGiveAway.title
+        doc.select("#sellOrGiveAway-option a span.visuallyhidden").text shouldBe commonMessages.PropertiesSellOrGiveAway.title
       }
     }
 
     "has an option output row for sell for less" which {
 
-      s"should have the question text '${commonMessages.Resident.Properties.sellForLess.title}'" in {
-        doc.select("#sellForLess-question").text shouldBe commonMessages.Resident.Properties.sellForLess.title
+      s"should have the question text '${propertiesMessages.SellForLess.title}'" in {
+        doc.select("#sellForLess-question").text shouldBe propertiesMessages.SellForLess.title
       }
 
       "should have the value 'Yes'" in {
@@ -447,11 +448,11 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       }
 
       "has the question as part of the link" in {
-        doc.select("#sellForLess-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.sellForLess.title}"
+        doc.select("#sellForLess-option a").text shouldBe s"${residentMessages.change} ${propertiesMessages.SellForLess.title}"
       }
 
       "has the question component of the link as visuallyhidden" in {
-        doc.select("#sellForLess-option a span.visuallyhidden").text shouldBe commonMessages.Resident.Properties.sellForLess.title
+        doc.select("#sellForLess-option a span.visuallyhidden").text shouldBe propertiesMessages.SellForLess.title
       }
     }
 
@@ -470,7 +471,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       }
 
       "has the question as part of the link" in {
-        doc.select("#worthWhenSoldForLess-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${propertiesMessages.WorthWhenSoldForLess.question}"
+        doc.select("#worthWhenSoldForLess-amount a").text shouldBe s"${residentMessages.change} ${propertiesMessages.WorthWhenSoldForLess.question}"
       }
 
       "has the question component of the link as visuallyhidden" in {
@@ -480,8 +481,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     "has an option output row for owner before april 1982" which {
 
-      s"should have the question text '${commonMessages.Resident.Properties.OwnerBeforeLegislationStart.title}'" in {
-        doc.select("#ownerBeforeLegislationStart-question").text shouldBe commonMessages.Resident.Properties.OwnerBeforeLegislationStart.title
+      s"should have the question text '${propertiesMessages.OwnerBeforeLegislationStart.title}'" in {
+        doc.select("#ownerBeforeLegislationStart-question").text shouldBe propertiesMessages.OwnerBeforeLegislationStart.title
       }
 
       "should have the value 'No'" in {
@@ -494,23 +495,23 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
       "has the question as part of the link" in {
         doc.select("#ownerBeforeLegislationStart-option a").text shouldBe
-          s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.OwnerBeforeLegislationStart.title}"
+          s"${residentMessages.change} ${propertiesMessages.OwnerBeforeLegislationStart.title}"
       }
 
       "has the question component of the link as visuallyhidden" in {
         doc.select("#ownerBeforeLegislationStart-option a span.visuallyhidden").text shouldBe
-          commonMessages.Resident.Properties.OwnerBeforeLegislationStart.title
+          propertiesMessages.OwnerBeforeLegislationStart.title
       }
     }
 
     "has an output row for how became owner" which {
 
-      s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
-        doc.select("#howBecameOwner-question").text shouldBe commonMessages.howBecameOwner.title
+      s"should have the question text '${commonMessages.HowBecameOwner.title}'" in {
+        doc.select("#howBecameOwner-question").text shouldBe commonMessages.HowBecameOwner.title
       }
 
-      s"should have the value '${commonMessages.howBecameOwner.bought}'" in {
-        doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.bought
+      s"should have the value '${commonMessages.HowBecameOwner.bought}'" in {
+        doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.HowBecameOwner.bought
       }
 
       s"should have a change link to ${routes.GainController.howBecameOwner().url}" in {
@@ -519,20 +520,20 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
       "has the question as part of the link" in {
         doc.select("#howBecameOwner-option a").text shouldBe
-          s"${commonMessages.calcBaseChange} ${commonMessages.howBecameOwner.title}"
+          s"${residentMessages.change} ${commonMessages.HowBecameOwner.title}"
       }
 
       "has the question component of the link as visuallyhidden" in {
         doc.select("#howBecameOwner-option a span.visuallyhidden").text shouldBe
-          commonMessages.howBecameOwner.title
+          commonMessages.HowBecameOwner.title
       }
     }
 
 
     "has an option output row for bought for less than worth" which {
 
-      s"should have the question text '${commonMessages.boughtForLessThanWorth.title}'" in {
-        doc.select("#boughtForLessThanWorth-question").text shouldBe commonMessages.boughtForLessThanWorth.title
+      s"should have the question text '${commonMessages.BoughtForLessThanWorth.title}'" in {
+        doc.select("#boughtForLessThanWorth-question").text shouldBe commonMessages.BoughtForLessThanWorth.title
       }
 
       "should have the value 'No'" in {
@@ -544,18 +545,18 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       }
 
       "has the question as part of the link" in {
-        doc.select("#boughtForLessThanWorth-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.boughtForLessThanWorth.title}"
+        doc.select("#boughtForLessThanWorth-option a").text shouldBe s"${residentMessages.change} ${commonMessages.BoughtForLessThanWorth.title}"
       }
 
       "has the question component of the link as visuallyhidden" in {
-        doc.select("#boughtForLessThanWorth-option a span.visuallyhidden").text shouldBe commonMessages.boughtForLessThanWorth.title
+        doc.select("#boughtForLessThanWorth-option a span.visuallyhidden").text shouldBe commonMessages.BoughtForLessThanWorth.title
       }
     }
 
     "has a numeric output row for the Acquisition Value" which {
 
-      s"should have the question text '${commonMessages.acquisitionValue.title}'" in {
-        doc.select("#acquisitionValue-question").text shouldBe commonMessages.acquisitionValue.title
+      s"should have the question text '${commonMessages.AcquisitionValue.title}'" in {
+        doc.select("#acquisitionValue-question").text shouldBe commonMessages.AcquisitionValue.title
       }
 
       "should have the value '£30'" in {
@@ -570,8 +571,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     "has a numeric output row for the Improvements" which {
 
-      s"should have the question text '${commonMessages.Resident.Properties.improvementsView.question}'" in {
-        doc.select("#improvements-question").text shouldBe commonMessages.Resident.Properties.improvementsView.question
+      s"should have the question text '${propertiesMessages.ImprovementsView.question}'" in {
+        doc.select("#improvements-question").text shouldBe propertiesMessages.ImprovementsView.question
       }
 
       "should have the value '£30,000'" in {
@@ -598,7 +599,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       }
 
       "has a visually hidden span with the text opens in a new tab" in {
-        doc.select("span#opensInANewTab").text shouldEqual commonMessages.calcBaseExternalLink
+        doc.select("span#opensInANewTab").text shouldEqual residentMessages.externalLink
       }
     }
 
@@ -647,8 +648,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     "has an option output row for bought for less than worth" which {
 
-      s"should have the question text '${commonMessages.boughtForLessThanWorth.title}'" in {
-        doc.select("#boughtForLessThanWorth-question").text shouldBe commonMessages.boughtForLessThanWorth.title
+      s"should have the question text '${commonMessages.BoughtForLessThanWorth.title}'" in {
+        doc.select("#boughtForLessThanWorth-question").text shouldBe commonMessages.BoughtForLessThanWorth.title
       }
 
       "should have the value 'Yes'" in {
@@ -660,11 +661,11 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       }
 
       "has the question as part of the link" in {
-        doc.select("#boughtForLessThanWorth-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.boughtForLessThanWorth.title}"
+        doc.select("#boughtForLessThanWorth-option a").text shouldBe s"${residentMessages.change} ${commonMessages.BoughtForLessThanWorth.title}"
       }
 
       "has the question component of the link as visuallyhidden" in {
-        doc.select("#boughtForLessThanWorth-option a span.visuallyhidden").text shouldBe commonMessages.boughtForLessThanWorth.title
+        doc.select("#boughtForLessThanWorth-option a span.visuallyhidden").text shouldBe commonMessages.BoughtForLessThanWorth.title
       }
     }
 
@@ -683,7 +684,7 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       }
 
       "has the question as part of the link" in {
-        doc.select("#worthWhenBoughtForLess-amount a").text shouldBe s"${commonMessages.calcBaseChange} ${propertiesMessages.WorthWhenBoughtForLess.question}"
+        doc.select("#worthWhenBoughtForLess-amount a").text shouldBe s"${residentMessages.change} ${propertiesMessages.WorthWhenBoughtForLess.question}"
       }
 
       "has the question component of the link as visuallyhidden" in {
@@ -729,10 +730,10 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     s"display the text ${messages.whatToDoNextText}" in {
       doc.select("div#whatToDoNextNoLossText").text shouldBe
-        s"${messages.whatToDoNextNoLossText} ${messages.whatToDoNextNoLossLinkProperties} ${commonMessages.calcBaseExternalLink}."
+        s"${messages.whatToDoNextNoLossText} ${messages.whatToDoNextNoLossLinkProperties} ${residentMessages.externalLink}."
     }
 
-    s"have the link text ${messages.whatToDoNextNoLossLinkProperties}${commonMessages.calcBaseExternalLink}" in {
+    s"have the link text ${messages.whatToDoNextNoLossLinkProperties}${residentMessages.externalLink}" in {
       doc.select("div#whatToDoNextNoLossText a").text should include(s"${messages.whatToDoNextNoLossLinkProperties}")
     }
 
@@ -740,8 +741,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       doc.select("div#whatToDoNextNoLossText a").attr("href") shouldBe "https://www.gov.uk/capital-gains-tax/report-and-pay-capital-gains-tax"
     }
 
-    s"have the visually hidden text ${commonMessages.calcBaseExternalLink}" in {
-      doc.select("div#whatToDoNextNoLossText span#opensInANewTab2").text shouldBe s"${commonMessages.calcBaseExternalLink}"
+    s"have the visually hidden text ${residentMessages.externalLink}" in {
+      doc.select("div#whatToDoNextNoLossText span#opensInANewTab2").text shouldBe s"${residentMessages.externalLink}"
     }
 
     "display the save as PDF Button" which {
@@ -797,8 +798,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     "has a numeric output row for the Disposal Value" which {
 
-      s"should have the question text '${commonMessages.disposalValue.question}'" in {
-        doc.select("#disposalValue-question").text shouldBe commonMessages.disposalValue.question
+      s"should have the question text '${commonMessages.DisposalValue.question}'" in {
+        doc.select("#disposalValue-question").text shouldBe commonMessages.DisposalValue.question
       }
 
       "should have the value '£10'" in {
@@ -813,12 +814,12 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     "has an output row for how became owner" which {
 
-      s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
-        doc.select("#howBecameOwner-question").text shouldBe commonMessages.howBecameOwner.title
+      s"should have the question text '${commonMessages.HowBecameOwner.title}'" in {
+        doc.select("#howBecameOwner-question").text shouldBe commonMessages.HowBecameOwner.title
       }
 
-      s"should have the value '${commonMessages.howBecameOwner.inherited}'" in {
-        doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.inherited
+      s"should have the value '${commonMessages.HowBecameOwner.inherited}'" in {
+        doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.HowBecameOwner.inherited
       }
 
       s"should have a change link to ${routes.GainController.howBecameOwner().url}" in {
@@ -827,19 +828,19 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
       "has the question as part of the link" in {
         doc.select("#howBecameOwner-option a").text shouldBe
-          s"${commonMessages.calcBaseChange} ${commonMessages.howBecameOwner.title}"
+          s"${residentMessages.change} ${commonMessages.HowBecameOwner.title}"
       }
 
       "has the question component of the link as visuallyhidden" in {
         doc.select("#howBecameOwner-option a span.visuallyhidden").text shouldBe
-          commonMessages.howBecameOwner.title
+          commonMessages.HowBecameOwner.title
       }
     }
 
     "has a numeric output row for the inherited value" which {
 
-      s"should have the question text '${propertiesMessages.worthWhenInherited.question}'" in {
-        doc.select("#worthWhenInherited-question").text shouldBe propertiesMessages.worthWhenInherited.question
+      s"should have the question text '${propertiesMessages.WorthWhenInherited.question}'" in {
+        doc.select("#worthWhenInherited-question").text shouldBe propertiesMessages.WorthWhenInherited.question
       }
 
       "should have the value '£3,000'" in {
@@ -905,8 +906,8 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     "has an option output row for sell for less" which {
 
-      s"should have the question text '${commonMessages.Resident.Properties.sellForLess.title}'" in {
-        doc.select("#sellForLess-question").text shouldBe commonMessages.Resident.Properties.sellForLess.title
+      s"should have the question text '${propertiesMessages.SellForLess.title}'" in {
+        doc.select("#sellForLess-question").text shouldBe propertiesMessages.SellForLess.title
       }
 
       "should have the value 'No'" in {
@@ -918,11 +919,11 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
       }
 
       "has the question as part of the link" in {
-        doc.select("#sellForLess-option a").text shouldBe s"${commonMessages.calcBaseChange} ${commonMessages.Resident.Properties.sellForLess.title}"
+        doc.select("#sellForLess-option a").text shouldBe s"${residentMessages.change} ${propertiesMessages.SellForLess.title}"
       }
 
       "has the question component of the link as visuallyhidden" in {
-        doc.select("#sellForLess-option a span.visuallyhidden").text shouldBe commonMessages.Resident.Properties.sellForLess.title
+        doc.select("#sellForLess-option a span.visuallyhidden").text shouldBe propertiesMessages.SellForLess.title
       }
     }
 
@@ -975,12 +976,12 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
     "has an output row for how became owner" which {
 
-      s"should have the question text '${commonMessages.howBecameOwner.title}'" in {
-        doc.select("#howBecameOwner-question").text shouldBe commonMessages.howBecameOwner.title
+      s"should have the question text '${commonMessages.HowBecameOwner.title}'" in {
+        doc.select("#howBecameOwner-question").text shouldBe commonMessages.HowBecameOwner.title
       }
 
-      s"should have the value '${commonMessages.howBecameOwner.gifted}'" in {
-        doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.howBecameOwner.gifted
+      s"should have the value '${commonMessages.HowBecameOwner.gifted}'" in {
+        doc.select("#howBecameOwner-option span.bold-medium").text shouldBe commonMessages.HowBecameOwner.gifted
       }
 
       s"should have a change link to ${routes.GainController.howBecameOwner().url}" in {
@@ -989,19 +990,19 @@ class PropertiesGainSummaryViewSpec extends UnitSpec with WithFakeApplication wi
 
       "has the question as part of the link" in {
         doc.select("#howBecameOwner-option a").text shouldBe
-          s"${commonMessages.calcBaseChange} ${commonMessages.howBecameOwner.title}"
+          s"${residentMessages.change} ${commonMessages.HowBecameOwner.title}"
       }
 
       "has the question component of the link as visuallyhidden" in {
         doc.select("#howBecameOwner-option a span.visuallyhidden").text shouldBe
-          commonMessages.howBecameOwner.title
+          commonMessages.HowBecameOwner.title
       }
     }
 
     "has a numeric output row for the gifted value" which {
 
-      s"should have the question text '${propertiesMessages.worthWhenGifted.question}'" in {
-        doc.select("#worthWhenGifted-question").text shouldBe propertiesMessages.worthWhenGifted.question
+      s"should have the question text '${propertiesMessages.WorthWhenGifted.question}'" in {
+        doc.select("#worthWhenGifted-question").text shouldBe propertiesMessages.WorthWhenGifted.question
       }
 
       "should have the value '£3,000'" in {

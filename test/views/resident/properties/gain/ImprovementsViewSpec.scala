@@ -16,7 +16,7 @@
 
 package views.resident.properties.gain
 
-import assets.MessageLookup.Resident.Properties.{improvementsView => messages}
+import assets.MessageLookup.Resident.Properties.{ImprovementsView => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.properties.ImprovementsForm._
 import org.jsoup.Jsoup
