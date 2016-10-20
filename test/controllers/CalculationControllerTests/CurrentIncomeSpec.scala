@@ -16,7 +16,9 @@
 
 package controllers.CalculationControllerTests
 
-import assets.MessageLookup
+import assets.MessageLookup.{NonResident => commonMessages}
+import assets.MessageLookup.NonResident.{CurrentIncome => messages}
+
 import common.Constants
 import connectors.CalculatorConnector
 import controllers.nonresident.{CurrentIncomeController, routes}
@@ -79,25 +81,25 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
           charset(result) shouldBe Some("utf-8")
         }
 
-        "have the title 'In the tax year when you stopped owning the property, what was your total UK income?'" in {
-          document.title shouldEqual MessageLookup.NonResident.CurrentIncome.title
+        s"have the title ${messages.question}" in {
+          document.title shouldEqual messages.question
         }
 
-        "have the heading Calculate your tax (non-residents) " in {
-          document.body.getElementsByTag("h1").text shouldEqual MessageLookup.NonResident.Common.pageHeading
+        s"have the heading ${commonMessages.pageHeading}" in {
+          document.body.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
         }
 
         s"have a 'Back' link to ${routes.CustomerTypeController.customerType()}" in {
-          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.CustomerTypeController.customerType().toString()
         }
 
-        "have the question 'In the tax year when you stopped owning the property, what was your total UK income?' as the label of the input" in {
-          document.body.getElementsByTag("label").text.contains(MessageLookup.NonResident.CurrentIncome.title) shouldBe true
+        s"have the question '${messages.question}' as the label of the input" in {
+          document.body.getElementsByTag("label").text.contains(messages.question) shouldBe true
         }
 
-        "have the help text 'You can give an estimate if this was in the current tax year' as the form-hint of the input" in {
-          document.body.getElementsByClass("form-hint").text shouldEqual MessageLookup.NonResident.CurrentIncome.helpText
+        s"have the help text '${messages.helpText}' as the form-hint of the input" in {
+          document.body.getElementsByClass("form-hint").text shouldEqual messages.helpText
         }
 
         "display an input box for the Current Income Amount" in {
@@ -109,13 +111,13 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
         }
 
         "display a 'Continue' button " in {
-          document.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
+          document.body.getElementById("continue-button").text shouldEqual commonMessages.continue
         }
 
         "should contain a Read more sidebar with a link to CGT allowances" in {
-          document.select("aside h2").text shouldBe Messages("calc.common.readMore")
-          document.select("aside a").first.text shouldBe s"${MessageLookup.NonResident.CurrentIncome.linkOne} ${MessageLookup.calcBaseExternalLink}"
-          document.select("aside a").last.text shouldBe s"${MessageLookup.NonResident.CurrentIncome.linkTwo} ${MessageLookup.calcBaseExternalLink}"
+          document.select("aside h2").text shouldBe commonMessages.readMore
+          document.select("aside a").first.text shouldBe s"${messages.linkOne} ${commonMessages.externalLink}"
+          document.select("aside a").last.text shouldBe s"${messages.linkTwo} ${commonMessages.externalLink}"
         }
       }
     }
@@ -211,6 +213,10 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
       "return a 400" in {
         status(result) shouldBe 400
       }
+
+      //############################################################################
+      //Need to test the message that is returned and that only on error is rendered
+      //############################################################################
     }
 
     "submitting an invalid form with a negative value" should {
@@ -220,6 +226,10 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
       "return a 400" in {
         status(result) shouldBe 400
       }
+
+      //############################################################################
+      //Need to test the message that is returned and that only on error is rendered
+      //############################################################################
     }
 
     "submitting an invalid form with value 1.111" should {
@@ -231,8 +241,9 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
         status(result) shouldBe 400
       }
 
-      s"fail with message ${MessageLookup.NonResident.CurrentIncome.errorDecimalPlace}" in {
-        document.getElementsByClass("error-notification").text should include (MessageLookup.NonResident.CurrentIncome.errorDecimalPlace)
+      s"fail with message ${messages.errorDecimalPlace}" in {
+        //With the changes to the forms this should definitley be a shouldBe or shouldEqual not include..
+        document.getElementsByClass("error-notification").text should include (messages.errorDecimalPlace)
       }
     }
 
@@ -246,10 +257,9 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
       }
 
 
-      s"fail with message ${MessageLookup.maxNumericExceededStart}" in {
+      s"fail with message ${commonMessages.maximumLimit(MoneyPounds(Constants.maxNumeric, 0).quantity)}" in {
         document.getElementsByClass("error-notification").text should
-          include (MessageLookup.maxNumericExceededStart + MoneyPounds(Constants.maxNumeric, 0).quantity +
-            " " + MessageLookup.maxNumericExceededEnd)
+          include (commonMessages.maximumLimit(MoneyPounds(Constants.maxNumeric, 0).quantity))
       }
     }
   }

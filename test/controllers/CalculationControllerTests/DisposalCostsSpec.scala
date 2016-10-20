@@ -16,16 +16,14 @@
 
 package controllers.CalculationControllerTests
 
-import assets.MessageLookup
 import assets.MessageLookup.NonResident.{DisposalCosts => messages}
-import assets.MessageLookup.NonResident.{Common => commonMessages}
+import assets.MessageLookup.{NonResident, NonResident => commonMessages}
 import common.{Constants, KeystoreKeys}
 import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -95,7 +93,7 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
         }
 
         s"have a 'Back' link to ${routes.AcquisitionCostsController.acquisitionCosts()}" in {
-          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionCostsController.acquisitionCosts().toString()
         }
 
@@ -121,7 +119,7 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
           }
 
           "have the text 'Continue'" in {
-            document.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
+            document.getElementById("continue-button").text shouldEqual commonMessages.continue
           }
         }
       }
@@ -235,7 +233,7 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
       }
 
       "display the error message 'Enter a number without commas, for example 10000.00'" in {
-        document.select("div label span.error-notification").text shouldEqual MessageLookup.ErrorMessages.numericPlayErrorOverride
+        document.select("div label span.error-notification").text shouldEqual commonMessages.numericPlayErrorOverride
       }
     }
 
@@ -291,10 +289,9 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
         status(result) shouldBe 400
       }
 
-      s"fail with message ${MessageLookup.maxNumericExceededStart} ${MoneyPounds(Constants.maxNumeric, 0).quantity} ${MessageLookup.maxNumericExceededEnd}" in {
+      s"fail with message ${commonMessages.maximumLimit(MoneyPounds(Constants.maxNumeric, 0).quantity)}" in {
         document.getElementsByClass("error-notification").text should
-          include (MessageLookup.maxNumericExceededStart + MoneyPounds(Constants.maxNumeric, 0).quantity +
-            " " + MessageLookup.maxNumericExceededEnd)
+          include (commonMessages.maximumLimit(MoneyPounds(Constants.maxNumeric, 0).quantity))
       }
     }
   }

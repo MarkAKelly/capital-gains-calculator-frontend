@@ -29,8 +29,8 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
-import assets.MessageLookup
-import assets.MessageLookup.NonResident.{Common, RebasedCosts => messages}
+import assets.MessageLookup.{NonResident => commonMessages}
+import assets.MessageLookup.NonResident.{RebasedCosts => messages}
 import scala.concurrent.Future
 import controllers.nonresident.{RebasedCostsController, routes}
 import models.nonresident.RebasedCostsModel
@@ -79,8 +79,8 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
           charset(result) shouldBe Some("utf-8")
         }
 
-        "have the title 'Calculate your Non-resident Capital Gains Tax" in {
-          document.getElementsByTag("h1").text shouldBe Common.pageHeading
+        s"have the title '${commonMessages.pageHeading}" in {
+          document.getElementsByTag("h1").text shouldBe commonMessages.pageHeading
         }
 
         s"have the question '${messages.question}" in {
@@ -88,11 +88,11 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         }
 
         "display the correct wording for radio option `yes`" in {
-          document.body.getElementById("hasRebasedCosts-yes").parent.text shouldEqual Common.yes
+          document.body.getElementById("hasRebasedCosts-yes").parent.text shouldEqual commonMessages.yes
         }
 
         "display the correct wording for radio option `no`" in {
-          document.body.getElementById("hasRebasedCosts-no").parent.text shouldEqual Common.no
+          document.body.getElementById("hasRebasedCosts-no").parent.text shouldEqual commonMessages.no
         }
 
         "contain a hidden component with an input box" in {
@@ -100,7 +100,7 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
         }
 
         s"have a 'Back' link to ${routes.RebasedValueController.rebasedValue()}" in {
-          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.RebasedValueController.rebasedValue().toString()
         }
 
@@ -177,7 +177,7 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
       }
 
       "return HTML that displays the error message " in {
-        document.select("div#hidden span.error-notification").text shouldEqual Common.errorRealNumber
+        document.select("div#hidden span.error-notification").text shouldEqual commonMessages.errorRealNumber
       }
     }
 

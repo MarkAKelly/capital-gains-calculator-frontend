@@ -29,8 +29,8 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
-import assets.MessageLookup
-import assets.MessageLookup.NonResident.{Common, RebasedValue => messages}
+import assets.MessageLookup.{NonResident => commonMessages}
+import assets.MessageLookup.NonResident.{RebasedValue => messages}
 import scala.concurrent.Future
 import controllers.nonresident.{RebasedValueController, routes}
 import models.nonresident.{AcquisitionDateModel, RebasedValueModel}
@@ -91,8 +91,8 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with FakeReques
           charset(result) shouldBe Some("utf-8")
         }
 
-        "Have the title 'Calculate your Non-resident Capital Gains Tax" in {
-          document.getElementsByTag("h1").text shouldBe Common.pageHeading
+        s"Have the title '${commonMessages.pageHeading}" in {
+          document.getElementsByTag("h1").text shouldBe commonMessages.pageHeading
         }
 
         s"have help text with the wording${messages.questionHelpText}" in {
@@ -100,11 +100,11 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with FakeReques
         }
 
         "display the correct wording for radio option `yes`" in {
-          document.body.getElementById("hasRebasedValue-yes").parent.text shouldEqual Common.yes
+          document.body.getElementById("hasRebasedValue-yes").parent.text shouldEqual commonMessages.yes
         }
 
         "display the correct wording for radio option `no`" in {
-          document.body.getElementById("hasRebasedValue-no").parent.text shouldEqual Common.no
+          document.body.getElementById("hasRebasedValue-no").parent.text shouldEqual commonMessages.no
         }
 
         "contain a hidden component with an input box" in {
@@ -120,7 +120,7 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with FakeReques
         }
 
         s"have a 'Back' link to ${routes.AcquisitionValueController.acquisitionValue()}" in {
-          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionValueController.acquisitionValue().toString()
         }
 
@@ -233,7 +233,7 @@ class RebasedValueSpec extends UnitSpec with WithFakeApplication with FakeReques
         }
 
         "return HTML that displays the error message " in {
-          document.select("div#hidden span.error-notification").text shouldEqual Common.errorRealNumber
+          document.select("div#hidden span.error-notification").text shouldEqual commonMessages.errorRealNumber
         }
       }
 

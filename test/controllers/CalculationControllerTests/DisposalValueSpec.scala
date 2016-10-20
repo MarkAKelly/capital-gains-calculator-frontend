@@ -16,17 +16,15 @@
 
 package controllers.CalculationControllerTests
 
-import assets.MessageLookup
-import assets.MessageLookup.{Common => commonMessages}
+import assets.MessageLookup.{NonResident => commonMessages}
 import assets.MessageLookup.NonResident.{DisposalValue => messages}
-import assets.MessageLookup.NonResident.{Common => commonNRMessages}
+
 import common.Constants
 import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -87,12 +85,12 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
           document.title shouldEqual messages.question
         }
 
-        s"have the heading ${commonNRMessages.pageHeading}" in {
-          document.body.getElementsByTag("h1").text shouldEqual commonNRMessages.pageHeading
+        s"have the heading ${commonMessages.pageHeading}" in {
+          document.body.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
         }
 
         s"have a 'Back' link to ${routes.DisposalDateController.disposalDate()}" in {
-          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalDateController.disposalDate().toString()
         }
 
@@ -112,7 +110,7 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
         "have a link with a hidden external link field" in {
           document.select("ul li a#lossesLink").text should include(messages.bulletTwoLink)
-          document.select("span#opensInANewWindow").text shouldEqual MessageLookup.calcBaseExternalLink
+          document.select("span#opensInANewWindow").text shouldEqual commonMessages.externalLink
         }
 
         "display an input box for the Annual Exempt Amount" in {
@@ -120,7 +118,7 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
         }
 
         "display a 'Continue' button " in {
-          document.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
+          document.body.getElementById("continue-button").text shouldEqual commonMessages.continue
         }
       }
     }
@@ -217,10 +215,9 @@ class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSu
         status(result) shouldBe 400
       }
 
-      s"fail with message ${MessageLookup.maxNumericExceededStart} ${MoneyPounds(Constants.maxNumeric, 0).quantity} ${MessageLookup.maxNumericExceededEnd}" in {
+      s"fail with message ${commonMessages.maximumLimit(MoneyPounds(Constants.maxNumeric, 0).quantity)}" in {
         document.getElementsByClass("error-notification").text should
-          include (MessageLookup.maxNumericExceededStart + MoneyPounds(Constants.maxNumeric, 0).quantity +
-            " " + MessageLookup.maxNumericExceededEnd)
+          include (commonMessages.maximumLimit(MoneyPounds(Constants.maxNumeric, 0).quantity))
       }
     }
   }

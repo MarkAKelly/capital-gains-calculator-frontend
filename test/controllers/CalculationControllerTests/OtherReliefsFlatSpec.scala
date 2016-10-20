@@ -32,8 +32,9 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
-import assets.MessageLookup
-import assets.MessageLookup.NonResident.{Common, OtherReliefs => messages}
+import assets.MessageLookup.{NonResident, NonResident => commonMessages}
+import assets.MessageLookup.NonResident.{OtherReliefs => messages}
+
 import scala.concurrent.Future
 
 class OtherReliefsFlatSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
@@ -103,25 +104,25 @@ class OtherReliefsFlatSpec extends UnitSpec with WithFakeApplication with Mockit
             charset(result) shouldBe Some("utf-8")
           }
 
-          "have the title 'How much extra tax relief are you claiming?'" in {
+          s"have the title '${messages.inputQuestion}'" in {
             document.title shouldEqual messages.inputQuestion
           }
 
-          "have the heading Calculate your tax (non-residents) " in {
-            document.body.getElementsByTag("h1").text shouldEqual Common.pageHeading
+          s"have the heading ${commonMessages.pageHeading}" in {
+            document.body.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
           }
 
           s"have a 'Back' link to ${controllers.nonresident.routes.CalculationElectionController.calculationElection().url}" in {
-            document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
+            document.body.getElementById("back-link").text shouldEqual commonMessages.back
             document.body.getElementById("back-link").attr("href") shouldEqual
               controllers.nonresident.routes.CalculationElectionController.calculationElection().url
           }
 
-          "have the question 'How much extra tax relief are you claiming?' as the legend of the input" in {
+          s"have the question '${messages.inputQuestion}' as the legend of the input" in {
             document.body.getElementsByTag("label").text should include(messages.inputQuestion)
           }
 
-          "have the help text 'For example, lettings relief'" in {
+          s"have the help text '${messages.help}'" in {
             document.body.getElementsByClass("form-hint").text should include(messages.help)
           }
 
@@ -133,15 +134,15 @@ class OtherReliefsFlatSpec extends UnitSpec with WithFakeApplication with Mockit
             document.body.getElementById("otherReliefs").tagName() shouldEqual "input"
           }
 
-          "display an 'Add relief' button " in {
+          s"display an '${messages.addRelief}' button " in {
             document.body.getElementById("add-relief-button").text shouldEqual messages.addRelief
           }
 
-          "include helptext for 'Total gain'" in {
+          s"include helptext for '${messages.totalGain}'" in {
             document.body.getElementById("totalGain").text should include(messages.totalGain)
           }
 
-          "include helptext for 'Taxable gain'" in {
+          s"include helptext for '${messages.taxableGain}'" in {
             document.body.getElementById("taxableGain").text should include(messages.taxableGain)
           }
         }
