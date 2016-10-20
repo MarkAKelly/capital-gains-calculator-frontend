@@ -16,13 +16,14 @@
 
 package constructors.nonresident
 
+import assets.MessageLookup
 import common.KeystoreKeys
 import common.nonresident.CustomerTypeKeys
 import models.SummaryDataItemModel
 import models.nonresident._
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class PersonalDetailsConstructorSpec extends UnitSpec {
+class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
   val summaryWithAllOptionValuesModel = SummaryModel(
     CustomerTypeModel(CustomerTypeKeys.individual),
@@ -87,20 +88,23 @@ class PersonalDetailsConstructorSpec extends UnitSpec {
           KeystoreKeys.customerType
       }
 
-//      ".getCustomerTypeAnswer with a customer type of individual will return a question of " in {
-//        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).id shouldBe
-//          KeystoreKeys.customerType
-//      }
-//
-//      ".getCustomerTypeAnswer with a customer type of individual will return an id of nr:customerType " in {
-//        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).id shouldBe
-//          KeystoreKeys.customerType
-//      }
-//
-//      ".getCustomerTypeAnswer with a customer type of individual will return an id of nr:customerType " in {
-//        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).id shouldBe
-//          KeystoreKeys.customerType
-//      }
+      ".getCustomerTypeAnswer with a customer type of individual will return a question of " +
+        s"${MessageLookup.NonResident.CustomerType.question}" in{
+        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).question shouldBe
+          MessageLookup.NonResident.CustomerType.question
+      }
+
+      ".getCustomerTypeAnswer with a customer type of individual will return data of " +
+        s"${CustomerTypeKeys.individual}" in {
+        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).data shouldBe
+          CustomerTypeKeys.individual
+      }
+
+      ".getCustomerTypeAnswer with a customer type of individual will a link of " +
+         s"${controllers.nonresident.routes.CustomerTypeController.customerType().url}" in {
+        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).link shouldBe
+          Some(controllers.nonresident.routes.CustomerTypeController.customerType().url)
+      }
 
 //      ".getCurrentIncomeAnswer with an income of 30000.0 will return 30000.0" in {
 //        PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryWithAllOptionValuesModel) shouldBe Some(30000.0)
