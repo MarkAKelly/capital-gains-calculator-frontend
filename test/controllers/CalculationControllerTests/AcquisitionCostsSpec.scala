@@ -32,7 +32,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup
+import assets.MessageLookup.{NonResident => commonMessages}
 import assets.MessageLookup.NonResident.{AcquisitionCosts => messages}
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
@@ -84,12 +84,12 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
         }
 
         s"have a 'Back' link to ${routes.DisposalValueController.disposalValue()}" in {
-          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalValueController.disposalValue().toString()
         }
 
         "have the page heading 'Calculate your tax (non-residents)'" in {
-          document.getElementsByTag("h1").text shouldEqual MessageLookup.NonResident.Common.pageHeading
+          document.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
         }
 
         "have a monetary field that" should {
@@ -114,7 +114,7 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
           }
 
           "have the text 'Continue'" in {
-            document.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
+            document.getElementById("continue-button").text shouldEqual commonMessages.continue
           }
         }
       }
@@ -182,8 +182,8 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
           status(result) shouldBe 400
         }
 
-        s"fail with message ${MessageLookup.ErrorMessages.numericPlayErrorOverride}" in {
-          document.getElementsByClass("error-notification").text should include (MessageLookup.ErrorMessages.numericPlayErrorOverride)
+        s"fail with message ${commonMessages.numericPlayErrorOverride}" in {
+          document.getElementsByClass("error-notification").text should include (commonMessages.numericPlayErrorOverride)
         }
       }
     }

@@ -16,7 +16,7 @@
 
 package forms.resident
 
-import assets.MessageLookup._
+import assets.MessageLookup.{Resident => messages}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import forms.resident.income.PersonalAllowanceForm._
 import controllers.helpers.FakeRequestHelper
@@ -48,8 +48,8 @@ class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication with F
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${ErrorMessages.mandatoryAmount}'" in {
-        form.error("amount").get.message shouldBe ErrorMessages.mandatoryAmount
+      s"error with message '${messages.mandatoryAmount}'" in {
+        form.error("amount").get.message shouldBe messages.mandatoryAmount
       }
     }
 
@@ -61,8 +61,8 @@ class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication with F
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${ErrorMessages.invalidAmountNoDecimal}'" in {
-        form.error("amount").get.message shouldBe ErrorMessages.invalidAmountNoDecimal
+      s"error with message '${messages.invalidAmountNoDecimal}'" in {
+        form.error("amount").get.message shouldBe messages.invalidAmountNoDecimal
       }
     }
 
@@ -75,8 +75,8 @@ class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication with F
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${ErrorMessages.minimumAmount}'" in {
-        form.error("amount").get.message shouldBe ErrorMessages.minimumAmount
+      s"error with message '${messages.minimumAmount}'" in {
+        form.error("amount").get.message shouldBe messages.minimumAmount
       }
     }
 
@@ -89,8 +89,8 @@ class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication with F
         form.hasErrors shouldBe true
       }
 
-      s"error with message '${ErrorMessages.invalidAmountNoDecimal}'" in {
-        form.error("amount").get.message shouldBe ErrorMessages.invalidAmountNoDecimal
+      s"error with message '${messages.invalidAmountNoDecimal}'" in {
+        form.error("amount").get.message shouldBe messages.invalidAmountNoDecimal
       }
     }
 
@@ -100,8 +100,8 @@ class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication with F
             "raise form error" in {
               form.hasErrors shouldBe true
             }
-           s"error with message '${ErrorMessages.maximumLimit(MoneyPounds(limit, 0).quantity)}'" in {
-                form.error("amount").get.message shouldBe ErrorMessages.maximumLimit(MoneyPounds(limit, 0).quantity)
+           s"error with message '${messages.maximumLimit(MoneyPounds(limit, 0).quantity)}'" in {
+                form.error("amount").get.message shouldBe messages.maximumLimit(MoneyPounds(limit, 0).quantity)
            }
           }
   }

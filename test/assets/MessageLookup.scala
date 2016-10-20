@@ -23,52 +23,45 @@ object MessageLookup {
 
   // TO MOVE
 
+  trait Common {
 
-  //Base messages
-  val calcBaseBack = "Back"
-  val calcBaseContinue = "Continue"
-  val calcBaseExternalLink = "(opens in a new window)"
-  val calcBaseChange = "change"
-  val undefinedMessage = "Undefined message"
-  val propertiesHomeText = "Calculate your Capital Gains Tax"
-  val calcBaseYes = "Yes"
-  val calcBaseNo = "No"
+    val externalLink = "(opens in a new window)"
+    val change = "change"
 
-  //Common messages
-  val maxNumericExceededStart = "Enter an amount that's £"
-  val maxNumericExceededEnd = "or less"
-  val readMore = "Read more"
-
-  object Common {
+    val back = "Back"
+    val continue = "Continue"
+    val yes = "Yes"
+    val no = "No"
     val day = "Day"
     val month = "Month"
     val year = "Year"
+
+    val readMore = "Read more"
+
+    val mandatoryAmount = "Enter an amount"
+    val minimumAmount = "Enter an amount that's £0 or more"
+    val maximumAmount = "Enter an amount that's £1,000,000,000 or less"
+
+    def maximumLimit(limit: String): String = s"Enter an amount that's £$limit or less"
+
+    val invalidAmount = "Enter an amount in the correct format e.g. 10000.00"
+    val invalidAmountNoDecimal = "Enter an amount in the correct format e.g. 10000"
+    val numericPlayErrorOverride = "Enter a number without commas, for example 10000.00"
+
   }
-  //########################################################################################
-  //These nested objects have been created in anticipation of the Tech-Debt to refactor
-  // the message lookup and add the non-resident messages.  Any new added pages should be added
-  // to the right place in this object.
 
-  object NonResident {
+  object NonResident extends Common {
 
-    object Common {
-      val pageHeading = "Calculate your non-resident Capital Gains Tax"
-      val readMore = "Read more"
-      val yes = "Yes"
-      val no = "No"
-      val errorReal = "Enter a number without commas, for example 10000.00"
-      val day = "Day"
-      val month = "Month"
-      val year = "Year"
-      val errorInvalidDate = "Enter a real date"
-      val errorRealNumber = "Enter a number without commas, for example 10000.00"
-    }
+    val pageHeading = "Calculate your non-resident Capital Gains Tax"
+    val errorInvalidDate = "Enter a real date"
+    val errorRealNumber = "Enter a number without commas, for example 10000.00"
 
     object AcquisitionCosts {
       val question = "How much did you pay in costs when you became the property owner?"
       val helpText = "Costs include agent fees, legal fees and surveys"
       val errorNegative = "Enter a positive number for your costs"
       val errorDecimalPlaces = "There are too many numbers after the decimal point in your costs"
+
       def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
@@ -88,6 +81,7 @@ object MessageLookup {
       val bulletLink = "someone else you're connected to"
       val errorNegative = "Enter a positive number for the amount you paid"
       val errorDecimalPlaces = "The amount you paid has too many numbers after the decimal point"
+
       def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
@@ -96,7 +90,7 @@ object MessageLookup {
     }
 
     object AnnualExemptAmount {
-      val title = "How much of your Capital Gains Tax allowance have you got left?"
+      val question = "How much of your Capital Gains Tax allowance have you got left?"
       val link = "Capital Gains Tax allowances"
       val errorMaxStart = "Enter a Capital Gains Tax allowance that's £"
       val errorMaxEnd = "or less"
@@ -105,11 +99,29 @@ object MessageLookup {
     }
 
     object CalculationElection {
-
+      val heading = "Working out your total"
+      val question = "Which method of calculation would you like?"
+      val moreInformation = "How this affects your tax"
+      val moreInfoFirstP = "We can work out your tax in a number of ways. Before we give you a final total you have a choice about what to base it on."
+      val moreInfoSecondP = "Because the options take different things into account they'll usually give you different totals. " +
+        "Some totals may be much larger than others."
+      val moreInfoThirdP = "Unless you want to add more tax reliefs, the total you choose is the amount of tax you'll pay."
+      val legend = "Tax you'll owe"
+      val basedOn = "Based on"
+      val linkOne = "Different ways of working out Capital Gains Tax"
+      val otherTaxRelief = "Add other tax relief"
+      val someOtherTaxRelief = "Other tax relief"
+      val timeApportioned = "Working out your total gain, then taxing you on the percentage of it you've made since"
+      val rebased = "How much you've gained on the property since"
+      val taxStartDate = "5 April 2015"
+      val flat = "How much you've gained on the property since you became the owner"
+      val whyMore = "Why you might choose a higher total"
+      val whyMoreDetailsOne = "You might pick a higher total if you're planning to add more tax reliefs."
+      val whyMoreDetailsTwo = "Higher totals sometimes qualify for larger reliefs, which can reduce the amount you owe."
     }
 
     object CurrentIncome {
-      val title = "In the tax year when you stopped owning the property, what was your total UK income?"
+      val question = "In the tax year when you stopped owning the property, what was your total UK income?"
       val linkOne = "Income Tax"
       val linkTwo = "Previous tax years"
       val helpText = "You can give an estimate if this was in the current tax year"
@@ -118,14 +130,14 @@ object MessageLookup {
     }
 
     object CustomerType {
-      val title = "Who owned the property?"
+      val question = "Who owned the property?"
       val individual = "I owned it"
       val trustee = "I was a trustee"
       val personalRep = "I was the executor of an estate"
     }
 
     object DisabledTrustee {
-      val title = "Are you a trustee for someone who's vulnerable?"
+      val question = "Are you a trustee for someone who's vulnerable?"
       val helpText = "A person's vulnerable if they're disabled, or if they're under 18 and their parents have died"
       val linkOne = "Trusts and Capital Gains Tax"
     }
@@ -174,10 +186,16 @@ object MessageLookup {
 
     object NoCapitalGainsTax {
 
+      val title = "You have no tax to pay"
+      val paragraphOne = "This is because Capital Gains Tax for non-residents only applies to properties which were sold or given away after 5 April 2015."
+      val paragraphTwo = "You've told us that you sold or gave away the property on"
+      val change = "Change"
+      val link = "Capital Gains Tax for non-residents"
+
     }
 
     object OtherProperties {
-      val title = "In the tax year when you stopped owning the property, did you sell or give away any other UK residential properties?"
+      val question = "In the tax year when you stopped owning the property, did you sell or give away any other UK residential properties?"
       val questionTwo = "What was your taxable gain?"
       val questionTwoHelpTextStart = "How to"
       val questionTwoHelpTextLinkText = "work out your total taxable gains"
@@ -195,12 +213,14 @@ object MessageLookup {
       val totalGain = "Total gain"
       val taxableGain = "Taxable gain"
       val addRelief = "Add relief"
+
       def totalLoss(value: String): String = s"Total loss $value"
+
       def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
     object PersonalAllowance {
-      val title = "In the tax year when you stopped owning the property, what was your UK Personal Allowance?"
+      val question = "In the tax year when you stopped owning the property, what was your UK Personal Allowance?"
       val linkOne = "Income Tax rates and Personal Allowances"
       val linkTwo = "Tax on your UK income if you live abroad"
       val errorNegative = "Enter a positive number for your Personal Allowance"
@@ -218,6 +238,7 @@ object MessageLookup {
       val errorNoValue = "Enter the value for your days claimed"
       val errorNegative = "Enter a positive number for your days claimed"
       val errorDecimalPlaces = "There are too many numbers after the decimal point in your days claimed"
+
       def errorMaximum(value: String): String = s"Enter a value for your days claimed that's $value or less"
     }
 
@@ -227,6 +248,7 @@ object MessageLookup {
       val errorNegative = "Enter a positive number for your costs"
       val errorNoValue = "Enter the value for your costs"
       val errorDecimalPlaces = "There are too many numbers after the decimal point in your costs"
+
       def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
@@ -240,18 +262,42 @@ object MessageLookup {
       val errorNoValue = "Enter a value for your property on 5 April 2015"
       val errorNegative = "Enter a positive value for your property on 5 April 2015"
       val errorDecimalPlaces = "The value for your property on 5 April 2015 has too many numbers after the decimal point"
+
       def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
     object Summary {
 
+      val title = "Summary"
+      val secondaryHeading = "You owe"
+      val calculationDetailsTitle = "Calculation details"
+      val totalGain = "Your total gain"
+      val totalLoss = "Loss"
+      val usedAEA = "Capital Gains Tax allowance used"
+      val taxableGain = "Your taxable gain"
+      val taxRate = "Your tax rate"
+      val personalDetailsTitle = "Personal details"
+      val purchaseDetailsTitle = "Purchase details"
+      val propertyDetailsTitle = "Property details"
       val saleDetailsTitle = "Sale details"
+      val deductionsTitle = "Deductions"
+      val whatToDoNextText = "What to do next"
+      val whatToDoNextLink = "tell HMRC about the property"
+      val startAgain = "Start again"
+      val calculationElection = "What would you like to base your tax on?"
+      val timeCalculation = "The percentage of your total gain you've made since"
+      val flatCalculation = "How much you've gained on the property since you became the owner"
+      val rebasedCalculation = "How much you've gained on the property since 5 April 2015"
+      val lossesCarriedForward = "Loss carried forward"
+      val taxYearWarning = "Your total might be less accurate because you didn't sell or give away your property in this tax year"
 
     }
-
   }
 
-  object Resident {
+  object Resident extends Common {
+
+    val homeText = "Calculate your Capital Gains Tax"
+    val errorInvalidDate = "Enter a real date"
 
     object Properties {
 
@@ -293,7 +339,8 @@ object MessageLookup {
         val question = "How much have you spent on improvements since you became the property owner?"
         val label = "How much have you spent on improvements since you became the property owner?"
         val questionBefore = "How much have you spent on improvements since 31 March 1982?"
-        val hint = "Improvements are permanent changes that raise the value of a property, like adding extensions or garages. Normal maintenance costs don't count."
+        val hint = "Improvements are permanent changes that raise the value of a property, like adding " +
+          "extensions or garages. Normal maintenance costs don't count."
         val improvementsHelpButton = "Show me an example"
         val improvementsAdditionalContentOne = "Replacing a basic kitchen or bathroom with a luxury version is normally considered an improvement."
         val improvementsAdditionalContentTwo = "But replacing them with something of a similar standard is normally not an improvement."
@@ -305,8 +352,6 @@ object MessageLookup {
     }
 
     object Shares {
-
-      val homeText = "Calculate your Capital Gains Tax"
 
       //This object will have some duplication of text from the properties summary as well as duplicating
       //some of the questions for the shares pages however it will still pull form the same messages location
@@ -361,16 +406,6 @@ object MessageLookup {
 
 
   //########################################################################################
-
-  object ErrorMessages {
-    val mandatoryAmount = "Enter an amount"
-    val minimumAmount = "Enter an amount that's £0 or more"
-    val maximumAmount = "Enter an amount that's £1,000,000,000 or less"
-    def maximumLimit(limit: String): String = s"Enter an amount that's £$limit or less"
-    val invalidAmount = "Enter an amount in the correct format e.g. 10000.00"
-    val invalidAmountNoDecimal = "Enter an amount in the correct format e.g. 10000"
-    val numericPlayErrorOverride = "Enter a number without commas, for example 10000.00"
-  }
 
   object IntroductionView {
     val title = "Work out how much Capital Gains Tax you owe"

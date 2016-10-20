@@ -16,7 +16,7 @@
 
 package forms.resident.shares.gain
 
-import assets.MessageLookup.ErrorMessages
+import assets.MessageLookup.{Resident => messages}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import models.resident.shares.gain.ValueBeforeLegislationStartModel
 import forms.resident.shares.gain.ValueBeforeLegislationStartForm._
@@ -58,7 +58,7 @@ class ValueBeforeLegislationStartFormSpec extends UnitSpec with WithFakeApplicat
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe ErrorMessages.mandatoryAmount
+        form.error("amount").get.message shouldBe messages.mandatoryAmount
       }
     }
 
@@ -76,7 +76,7 @@ class ValueBeforeLegislationStartFormSpec extends UnitSpec with WithFakeApplicat
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe ErrorMessages.mandatoryAmount
+        form.error("amount").get.message shouldBe messages.mandatoryAmount
       }
     }
 
@@ -93,7 +93,7 @@ class ValueBeforeLegislationStartFormSpec extends UnitSpec with WithFakeApplicat
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe ErrorMessages.invalidAmount
+        form.error("amount").get.message shouldBe messages.invalidAmount
       }
     }
 
@@ -110,7 +110,7 @@ class ValueBeforeLegislationStartFormSpec extends UnitSpec with WithFakeApplicat
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe ErrorMessages.invalidAmount
+        form.error("amount").get.message shouldBe messages.invalidAmount
       }
     }
 
@@ -127,7 +127,7 @@ class ValueBeforeLegislationStartFormSpec extends UnitSpec with WithFakeApplicat
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe ErrorMessages.maximumAmount
+        form.error("amount").get.message shouldBe messages.maximumAmount
       }
     }
 
@@ -144,7 +144,7 @@ class ValueBeforeLegislationStartFormSpec extends UnitSpec with WithFakeApplicat
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe ErrorMessages.minimumAmount
+        form.error("amount").get.message shouldBe messages.minimumAmount
       }
     }
   }

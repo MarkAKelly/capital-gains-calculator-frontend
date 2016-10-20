@@ -16,7 +16,8 @@
 
 package controllers.CalculationControllerTests
 
-import assets.MessageLookup
+import assets.MessageLookup.{NonResident => commonMessages}
+import assets.MessageLookup.NonResident.{AnnualExemptAmount => messages}
 import common.KeystoreKeys
 import common.nonresident.CustomerTypeKeys
 import connectors.CalculatorConnector
@@ -25,7 +26,6 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.CalculationElectionConstructor
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -101,20 +101,20 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
         }
 
         "have the title 'How much of your Capital Gains Tax allowance have you got left?'" in {
-          document.title shouldEqual MessageLookup.NonResident.AnnualExemptAmount.title
+          document.title shouldEqual messages.question
         }
 
         "have the heading Calculate your tax (non-residents) " in {
-          document.body.getElementsByTag("h1").text shouldEqual MessageLookup.NonResident.Common.pageHeading
+          document.body.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
         }
 
         s"have a 'Back' link to ${routes.OtherPropertiesController.otherProperties()}" in {
-          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.OtherPropertiesController.otherProperties().toString()
         }
 
-        "have the question 'How much of your Capital Gains Tax allowance have you got left?' as the legend of the input" in {
-          document.body.getElementsByTag("label").text should include(MessageLookup.NonResident.AnnualExemptAmount.title)
+        s"have the question '${messages.question}' as the legend of the input" in {
+          document.body.getElementsByTag("label").text should include(messages.question)
         }
 
         "display an input box for the Annual Exempt Amount" in {
@@ -126,12 +126,12 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
         }
 
         "display a 'Continue' button " in {
-          document.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
+          document.body.getElementById("continue-button").text shouldEqual commonMessages.continue
         }
 
         "should contain a Read more sidebar with a link to CGT allowances" in {
-          document.select("aside h2").text shouldBe MessageLookup.readMore
-          document.select("aside a").text shouldBe s"${MessageLookup.NonResident.AnnualExemptAmount.link} ${MessageLookup.calcBaseExternalLink}"
+          document.select("aside h2").text shouldBe commonMessages.readMore
+          document.select("aside a").text shouldBe s"${messages.link} ${commonMessages.externalLink}"
         }
       }
     }
@@ -194,6 +194,10 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
       "return a 400" in {
         status(result) shouldBe 400
       }
+
+      //############################################################################
+      //Need to test the message that is returned and that only on error is rendered
+      //############################################################################
     }
 
     "submitting an valid form below the maximum value for a non-vulnerable trustee" should {
@@ -221,6 +225,11 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
       "return a 400" in {
         status(result) shouldBe 400
       }
+
+      //############################################################################
+      //Need to test the message that is returned and that only on error is rendered
+      //############################################################################
+
     }
 
     "submitting an invalid form above the maximum value for a vulnerable trustee" should {
@@ -230,6 +239,10 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
       "return a 400" in {
         status(result) shouldBe 400
       }
+
+      //############################################################################
+      //Need to test the message that is returned and that only on error is rendered
+      //############################################################################
     }
 
     "submitting an invalid form above the maximum value for a non-Trustee customer type" should {
@@ -239,6 +252,10 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
       "return a 400" in {
         status(result) shouldBe 400
       }
+
+      //############################################################################
+      //Need to test the message that is returned and that only on error is rendered
+      //############################################################################
     }
 
     "submitting an invalid form below the minimum" should {
@@ -248,6 +265,10 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
       "return a 400" in {
         status(result) shouldBe 400
       }
+
+      //############################################################################
+      //Need to test the message that is returned and that only on error is rendered
+      //############################################################################
     }
 
     "submitting an invalid form with value 1.111" should {
@@ -259,8 +280,8 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 400
       }
 
-      s"fail with message ${Messages("calc.annualExemptAmount.errorDecimalPlaces")}" in {
-        document.getElementsByClass("error-notification").text should include(MessageLookup.NonResident.AnnualExemptAmount.errorDecimalPlaces)
+      s"fail with message ${messages.errorDecimalPlaces}" in {
+        document.getElementsByClass("error-notification").text should include(messages.errorDecimalPlaces)
       }
     }
   }

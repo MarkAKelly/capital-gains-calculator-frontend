@@ -16,7 +16,7 @@
 
 package forms.resident.properties.gain
 
-import assets.MessageLookup
+import assets.MessageLookup.{Resident => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.properties.gain.WorthWhenGiftedForm._
 import models.resident.properties.gain.WorthWhenGiftedModel
@@ -71,7 +71,7 @@ class WorthWhenGiftedFormSpec extends UnitSpec with WithFakeApplication with Fak
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.mandatoryAmount
+        form.error("amount").get.message shouldBe messages.mandatoryAmount
       }
     }
 
@@ -88,7 +88,7 @@ class WorthWhenGiftedFormSpec extends UnitSpec with WithFakeApplication with Fak
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.mandatoryAmount
+        form.error("amount").get.message shouldBe messages.mandatoryAmount
       }
     }
 
@@ -105,7 +105,7 @@ class WorthWhenGiftedFormSpec extends UnitSpec with WithFakeApplication with Fak
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.invalidAmount
+        form.error("amount").get.message shouldBe messages.invalidAmount
       }
     }
 
@@ -122,7 +122,7 @@ class WorthWhenGiftedFormSpec extends UnitSpec with WithFakeApplication with Fak
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.invalidAmount
+        form.error("amount").get.message shouldBe messages.invalidAmount
       }
     }
 
@@ -139,7 +139,7 @@ class WorthWhenGiftedFormSpec extends UnitSpec with WithFakeApplication with Fak
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.maximumAmount
+        form.error("amount").get.message shouldBe messages.maximumAmount
       }
     }
 
@@ -156,7 +156,7 @@ class WorthWhenGiftedFormSpec extends UnitSpec with WithFakeApplication with Fak
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.minimumAmount
+        form.error("amount").get.message shouldBe messages.minimumAmount
       }
     }
   }

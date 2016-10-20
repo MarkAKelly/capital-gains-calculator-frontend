@@ -16,7 +16,8 @@
 
 package controllers.CalculationControllerTests
 
-import assets.MessageLookup
+import assets.MessageLookup.{NonResident => commonMessages}
+import assets.MessageLookup.NonResident.{OtherProperties => messages}
 import common.DefaultRoutes._
 import common.nonresident.CustomerTypeKeys
 import common.{Constants, KeystoreKeys}
@@ -94,54 +95,52 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
             charset(result) shouldBe Some("utf-8")
           }
 
-          "have the title 'Did you sell or give away any other properties in that tax year?'" in {
-            document.title shouldEqual MessageLookup.NonResident.OtherProperties.title
+          s"have the title '${messages.question}'" in {
+            document.title shouldEqual messages.question
           }
 
           "have the heading Calculate your tax (non-residents) " in {
-            document.body.getElementsByTag("h1").text shouldEqual MessageLookup.NonResident.Common.pageHeading
+            document.body.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
           }
 
           s"have a 'Back' link to ${routes.PersonalAllowanceController.personalAllowance().url}" in {
-            document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
+            document.body.getElementById("back-link").text shouldEqual commonMessages.back
             document.body.getElementById("back-link").attr("href") shouldEqual routes.PersonalAllowanceController.personalAllowance().url
           }
 
-          s"have the question '${MessageLookup.NonResident.OtherProperties.title}' as the legend of the input" in {
-            document.body.getElementsByTag("legend").text should include (MessageLookup.NonResident.OtherProperties.title)
+          s"have the question '${messages.question}' as the legend of the input" in {
+            document.body.getElementsByTag("legend").text should include (messages.question)
           }
 
           "include a read more section that" should {
 
-            s"include a link to https://www.gov.uk/capital-gains-tax with text '${MessageLookup.NonResident.OtherProperties.linkOne}'" in {
-              document.body.getElementById("helpLink1").text shouldEqual s"${MessageLookup.NonResident.OtherProperties.linkOne} " +
-                s"${MessageLookup.calcBaseExternalLink}"
+            s"include a link to https://www.gov.uk/capital-gains-tax with text '${messages.linkOne}'" in {
+              document.body.getElementById("helpLink1").text shouldEqual s"${messages.linkOne} ${commonMessages.externalLink}"
               document.body.getElementById("helpLink1").attr("href") shouldEqual "https://www.gov.uk/capital-gains-tax"
             }
 
-            s"include a link to https://www.gov.uk/income-tax-rates/previous-tax-years with text '${MessageLookup.NonResident.OtherProperties.linkTwo}'" in {
-              document.body.getElementById("helpLink2").text shouldEqual s"${MessageLookup.NonResident.OtherProperties.linkTwo} " +
-                s"${MessageLookup.calcBaseExternalLink}"
+            s"include a link to https://www.gov.uk/income-tax-rates/previous-tax-years with text '${messages.linkTwo}'" in {
+              document.body.getElementById("helpLink2").text shouldEqual s"${messages.linkTwo} ${commonMessages.externalLink}"
               document.body.getElementById("helpLink2").attr("href") shouldEqual "https://www.gov.uk/income-tax-rates/previous-tax-years"
             }
 
           }
 
-          "display a radio button with the option `Yes`" in {
-            document.body.getElementById("otherProperties-yes").parent.text shouldEqual MessageLookup.calcBaseYes
+          s"display a radio button with the option `${commonMessages.yes}`" in {
+            document.body.getElementById("otherProperties-yes").parent.text shouldEqual commonMessages.yes
           }
 
-          "display a radio button with the option `No`" in {
-            document.body.getElementById("otherProperties-no").parent.text shouldEqual MessageLookup.calcBaseNo
+          s"display a radio button with the option `${commonMessages.no}`" in {
+            document.body.getElementById("otherProperties-no").parent.text shouldEqual commonMessages.no
           }
 
-          "have a hidden monetary input with question 'What was your taxable gain?'" in {
+          s"have a hidden monetary input with question '${messages.questionTwo}'" in {
             document.body.getElementById("otherPropertiesAmt").tagName shouldEqual "input"
-            document.select("label[for=otherPropertiesAmt]").text should include(MessageLookup.NonResident.OtherProperties.questionTwo)
+            document.select("label[for=otherPropertiesAmt]").text should include(messages.questionTwo)
           }
 
           "display a 'Continue' button " in {
-            document.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
+            document.body.getElementById("continue-button").text shouldEqual commonMessages.continue
           }
         }
       }
@@ -153,7 +152,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.CurrentIncomeController.currentIncome().url}" in {
-          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.CurrentIncomeController.currentIncome().url
         }
       }
@@ -165,7 +164,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.DisabledTrusteeController.disabledTrustee().url}" in {
-          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.DisabledTrusteeController.disabledTrustee().url
         }
       }
@@ -177,7 +176,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.CustomerTypeController.customerType().url}" in {
-          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.CustomerTypeController.customerType().url
         }
       }
@@ -188,7 +187,7 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to $missingDataRoute " in {
-          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
         }
       }
@@ -354,8 +353,8 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
           status(result) shouldBe 400
         }
 
-        s"fail with message ${MessageLookup.NonResident.OtherProperties.errorDecimalPlaces}" in {
-          document.getElementsByClass("error-notification").text should include(MessageLookup.NonResident.OtherProperties.errorDecimalPlaces)
+        s"fail with message ${messages.errorDecimalPlaces}" in {
+          document.getElementsByClass("error-notification").text should include(messages.errorDecimalPlaces)
         }
       }
 
@@ -368,8 +367,8 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
           status(result) shouldBe 400
         }
 
-        s"fail with message ${MessageLookup.NonResident.OtherProperties.errorNegative}" in {
-          document.getElementsByClass("error-notification").text should include(MessageLookup.NonResident.OtherProperties.errorNegative)
+        s"fail with message ${messages.errorNegative}" in {
+          document.getElementsByClass("error-notification").text should include(messages.errorNegative)
         }
       }
 
@@ -382,10 +381,9 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
           status(result) shouldBe 400
         }
 
-        s"fail with message ${MessageLookup.maxNumericExceededStart}" in {
+        s"fail with message ${commonMessages.maximumLimit(MoneyPounds(Constants.maxNumeric, 0).quantity)}" in {
           document.getElementsByClass("error-notification").text should
-            include((MessageLookup.maxNumericExceededStart) + MoneyPounds(Constants.maxNumeric, 0).quantity +
-              " " + MessageLookup.maxNumericExceededEnd)
+            include(commonMessages.maximumLimit(MoneyPounds(Constants.maxNumeric, 0).quantity))
         }
       }
     }

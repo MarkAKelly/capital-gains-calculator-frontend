@@ -32,8 +32,8 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
-import assets.MessageLookup
-import assets.MessageLookup.NonResident.{Common, OtherReliefs => messages}
+import assets.MessageLookup.{NonResident => commonMessages}
+import assets.MessageLookup.NonResident.{OtherReliefs => messages}
 import scala.concurrent.Future
 
 class OtherReliefsRebasedSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
@@ -84,24 +84,24 @@ class OtherReliefsRebasedSpec extends UnitSpec with WithFakeApplication with Moc
         charset(result) shouldBe Some("utf-8")
       }
 
-      "have the title 'How much extra tax relief are you claiming?'" in {
+      s"have the title '${messages.inputQuestion}'" in {
         document.title shouldEqual messages.inputQuestion
       }
 
-      "have the heading Calculate your tax (non-residents) " in {
-        document.body.getElementsByTag("h1").text shouldEqual Common.pageHeading
+      s"have the heading ${commonMessages.pageHeading}" in {
+        document.body.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
       }
 
       s"have a 'Back' link to ${routes.CalculationElectionController.calculationElection()}" in {
-        document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
+        document.body.getElementById("back-link").text shouldEqual commonMessages.back
         document.body.getElementById("back-link").attr("href") shouldEqual routes.CalculationElectionController.calculationElection().toString()
       }
 
-      "have the question 'How much extra tax relief are you claiming?' as the legend of the input" in {
+      s"have the question '${messages.inputQuestion}' as the legend of the input" in {
         document.body.getElementsByTag("label").text should include(messages.inputQuestion)
       }
 
-      "have the help text 'For example, lettings relief'" in {
+      s"have the help text '${messages.help}'" in {
         document.body.getElementsByClass("form-hint").text should include(messages.help)
       }
 

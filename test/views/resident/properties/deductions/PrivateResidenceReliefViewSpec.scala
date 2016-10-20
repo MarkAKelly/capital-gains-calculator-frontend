@@ -19,7 +19,7 @@ package views.resident.properties.deductions
 import controllers.helpers.FakeRequestHelper
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{PrivateResidenceRelief => messages}
-import assets.{MessageLookup => commonMessages}
+import assets.MessageLookup.{Resident => commonMessages}
 import forms.resident.properties.PrivateResidenceReliefForm._
 import org.jsoup.Jsoup
 import views.html.calculation.resident.properties.{deductions => views}
@@ -50,7 +50,7 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
 
     "have a back link" which {
 
-      s"should have text ${commonMessages.calcBaseBack}" in {
+      s"should have text ${commonMessages.back}" in {
         doc.select("#back-link").text() shouldEqual "Back"
       }
 
@@ -75,8 +75,8 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
         helptext.text() should include(messages.helpTextLink)
       }
 
-      s"have an internal span with the text ${commonMessages.calcBaseExternalLink}" in {
-        helptext.select("a#privateResidenceReliefLink span").text() shouldEqual commonMessages.calcBaseExternalLink
+      s"have an internal span with the text ${commonMessages.externalLink}" in {
+        helptext.select("a#privateResidenceReliefLink span").text() shouldEqual commonMessages.externalLink
       }
 
       "have the address https://www.gov.uk/government/publications/" +
@@ -201,8 +201,8 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
 
         lazy val continueButton = doc.select("button#continue-button")
 
-        s"have the button text '${commonMessages.calcBaseContinue}'" in {
-          continueButton.text shouldBe commonMessages.calcBaseContinue
+        s"have the button text '${commonMessages.continue}'" in {
+          continueButton.text shouldBe commonMessages.continue
         }
 
         "be of type submit" in {

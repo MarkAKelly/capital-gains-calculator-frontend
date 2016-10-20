@@ -16,13 +16,13 @@
 
 package controllers.CalculationControllerTests
 
-import assets.MessageLookup
+import assets.MessageLookup.{NonResident => commonMessages}
+import assets.MessageLookup.NonResident.{DisabledTrustee => messages}
 import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -77,41 +77,41 @@ class DisabledTrusteeSpec extends UnitSpec with WithFakeApplication with Mockito
           charset(result) shouldBe Some("utf-8")
         }
 
-        "have the title Are you a trustee for someone who’s vulnerable?" in {
-          document.title shouldEqual MessageLookup.NonResident.DisabledTrustee.title
+        s"have the title ${messages.question}" in {
+          document.title shouldEqual messages.question
         }
 
-        "have the heading Calculate your tax (non-residents) " in {
-          document.body.getElementsByTag("h1").text shouldEqual MessageLookup.NonResident.Common.pageHeading
+        s"have the heading ${commonMessages.pageHeading}" in {
+          document.body.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
         }
 
         s"have a 'Back' link to ${routes.CustomerTypeController.customerType()}" in {
-          document.body.getElementById("back-link").text shouldEqual Messages("calc.base.back")
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.CustomerTypeController.customerType().toString()
         }
 
-        "have the question 'When did you sign the contract that made someone else the owner?' as the legend of the input" in {
-          document.body.getElementsByTag("legend").text shouldEqual MessageLookup.NonResident.DisabledTrustee.title
+        s"have the question '${messages.question}' as the legend of the input" in {
+          document.body.getElementsByTag("legend").text shouldEqual messages.question
         }
 
-        "display a radio button with the option 'Yes'" in {
-          document.body.getElementById("isVulnerable-yes").parent.text shouldEqual MessageLookup.calcBaseYes
+        s"display a radio button with the option '${commonMessages.yes}'" in {
+          document.body.getElementById("isVulnerable-yes").parent.text shouldEqual commonMessages.yes
         }
-        "display a radio button with the option 'No'" in {
-          document.body.getElementById("isVulnerable-no").parent.text shouldEqual MessageLookup.calcBaseNo
+        s"display a radio button with the option '${commonMessages.no}'" in {
+          document.body.getElementById("isVulnerable-no").parent.text shouldEqual commonMessages.no
         }
 
         "should contain a Read more sidebar" in {
-          document.select("aside h2").text shouldBe MessageLookup.readMore
+          document.select("aside h2").text shouldBe commonMessages.readMore
         }
 
         "should contain a Read more link to 'Trusts and Capital Gains Tax'" in {
-          document.select("aside a").first().text should include (MessageLookup.NonResident.DisabledTrustee.linkOne)
+          document.select("aside a").first().text should include(messages.linkOne)
           document.select("aside a").first().attr("href") shouldBe "https://www.gov.uk/trusts-taxes/trusts-and-capital-gains-tax"
         }
 
         "display a 'Continue' button " in {
-          document.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
+          document.body.getElementById("continue-button").text shouldEqual commonMessages.continue
         }
       }
     }
@@ -195,6 +195,10 @@ class DisabledTrusteeSpec extends UnitSpec with WithFakeApplication with Mockito
       "display a visible Error Summary field" in {
         document.getElementById("error-summary-display").hasClass("error-summary--show")
       }
+
+      //############################################################################
+      //Need to test the message that is returned and that only on error is rendered
+      //############################################################################
     }
   }
 }

@@ -16,7 +16,7 @@
 
 package forms.resident
 
-import assets.MessageLookup
+import assets.MessageLookup.{Resident => messages}
 import assets.MessageLookup.{LettingsReliefValue => Messages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.properties.LettingsReliefValueForm._
@@ -60,7 +60,7 @@ class LettingsReliefValueFormSpec extends UnitSpec with WithFakeApplication with
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.mandatoryAmount
+        form.error("amount").get.message shouldBe messages.mandatoryAmount
       }
     }
 
@@ -77,7 +77,7 @@ class LettingsReliefValueFormSpec extends UnitSpec with WithFakeApplication with
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.mandatoryAmount
+        form.error("amount").get.message shouldBe messages.mandatoryAmount
       }
     }
 
@@ -94,7 +94,7 @@ class LettingsReliefValueFormSpec extends UnitSpec with WithFakeApplication with
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.invalidAmount
+        form.error("amount").get.message shouldBe messages.invalidAmount
       }
     }
 
@@ -111,7 +111,7 @@ class LettingsReliefValueFormSpec extends UnitSpec with WithFakeApplication with
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.invalidAmount
+        form.error("amount").get.message shouldBe messages.invalidAmount
       }
     }
 
@@ -179,7 +179,7 @@ class LettingsReliefValueFormSpec extends UnitSpec with WithFakeApplication with
       }
 
       "associate the correct error message to the error" in {
-        form.error("amount").get.message shouldBe MessageLookup.ErrorMessages.minimumAmount
+        form.error("amount").get.message shouldBe messages.minimumAmount
       }
     }
   }

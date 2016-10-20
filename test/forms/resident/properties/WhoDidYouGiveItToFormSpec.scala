@@ -16,7 +16,6 @@
 
 package forms.resident.properties
 
-import assets.MessageLookup.ErrorMessages
 import assets.MessageLookup.WhoDidYouGiveItTo
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import forms.resident.properties.gain.WhoDidYouGiveItToForm._

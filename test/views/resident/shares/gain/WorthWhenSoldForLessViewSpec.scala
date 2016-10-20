@@ -18,6 +18,7 @@ package views.resident.shares.gain
 
 import assets.MessageLookup
 import assets.MessageLookup.Resident.Shares.{WorthWhenSoldForLess => messages}
+import assets.MessageLookup.{Resident => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.resident.WorthWhenSoldForLessForm._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -43,8 +44,8 @@ class WorthWhenSoldForLessViewSpec extends UnitSpec with WithFakeApplication wit
 
       lazy val backLink = doc.select("#back-link")
 
-      s"should have the text ${MessageLookup.calcBaseBack}" in {
-        backLink.text shouldEqual MessageLookup.calcBaseBack
+      s"should have the text ${commonMessages.back}" in {
+        backLink.text shouldEqual commonMessages.back
       }
 
       "should link to the Did you sell it for less than it was worth page." in {
@@ -123,8 +124,8 @@ class WorthWhenSoldForLessViewSpec extends UnitSpec with WithFakeApplication wit
           button.hasClass("button") shouldEqual true
         }
 
-        s"has the text ${MessageLookup.calcBaseContinue}" in {
-          button.text() shouldEqual MessageLookup.calcBaseContinue
+        s"has the text ${commonMessages.continue}" in {
+          button.text() shouldEqual commonMessages.continue
         }
       }
     }

@@ -16,7 +16,7 @@
 
 package forms.resident.properties.gain
 
-import assets.MessageLookup.ErrorMessages
+import assets.MessageLookup.{Resident => messages}
 import forms.resident.WorthWhenSoldForLessForm._
 import models.resident.WorthWhenSoldForLessModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -59,8 +59,8 @@ class WorthWhenSoldForLessFormSpec extends UnitSpec with WithFakeApplication {
         form.errors.length shouldEqual 1
       }
 
-      s"error with message '${ErrorMessages.mandatoryAmount}'" in {
-        form.error("amount").get.message shouldBe ErrorMessages.mandatoryAmount
+      s"error with message '${messages.mandatoryAmount}'" in {
+        form.error("amount").get.message shouldBe messages.mandatoryAmount
       }
     }
 
@@ -76,8 +76,8 @@ class WorthWhenSoldForLessFormSpec extends UnitSpec with WithFakeApplication {
         form.errors.length shouldEqual 1
       }
 
-      s"error with message '${ErrorMessages.invalidAmount}'" in {
-        form.error("amount").get.message shouldBe ErrorMessages.invalidAmount
+      s"error with message '${messages.invalidAmount}'" in {
+        form.error("amount").get.message shouldBe messages.invalidAmount
       }
     }
 
@@ -92,8 +92,8 @@ class WorthWhenSoldForLessFormSpec extends UnitSpec with WithFakeApplication {
         form.errors.length shouldEqual 1
       }
 
-      s"return a form with the error message ${ErrorMessages.maximumAmount}" in {
-        form.error("amount").get.message shouldBe ErrorMessages.maximumAmount
+      s"return a form with the error message ${messages.maximumAmount}" in {
+        form.error("amount").get.message shouldBe messages.maximumAmount
       }
     }
 
@@ -109,8 +109,8 @@ class WorthWhenSoldForLessFormSpec extends UnitSpec with WithFakeApplication {
         form.errors.length shouldEqual 1
       }
 
-      s"error with message '${ErrorMessages.minimumAmount}'" in {
-        form.error("amount").get.message shouldBe ErrorMessages.minimumAmount
+      s"error with message '${messages.minimumAmount}'" in {
+        form.error("amount").get.message shouldBe messages.minimumAmount
       }
     }
 
@@ -126,8 +126,8 @@ class WorthWhenSoldForLessFormSpec extends UnitSpec with WithFakeApplication {
         form.errors.length shouldEqual 1
       }
 
-      s"error with message '${ErrorMessages.invalidAmount}'" in {
-        form.error("amount").get.message shouldBe ErrorMessages.invalidAmount
+      s"error with message '${messages.invalidAmount}'" in {
+        form.error("amount").get.message shouldBe messages.invalidAmount
       }
     }
   }

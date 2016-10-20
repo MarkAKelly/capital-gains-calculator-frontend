@@ -32,8 +32,9 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
-import assets.MessageLookup
-import assets.MessageLookup.NonResident.{Common, PrivateResidenceRelief => messages}
+
+import assets.MessageLookup.{NonResident => commonMessages}
+import assets.MessageLookup.NonResident.{PrivateResidenceRelief => messages}
 
 import scala.concurrent.Future
 
@@ -96,7 +97,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
         }
 
         s"have a 'Back' link to ${routes.DisposalCostsController.disposalCosts()}" in {
-          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalCostsController.disposalCosts().toString()
         }
 
@@ -104,13 +105,13 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
           document.title shouldEqual messages.question
         }
 
-        s"have the heading '${Common.pageHeading}'" in {
-          document.body.getElementsByTag("H1").text shouldEqual Common.pageHeading
+        s"have the heading '${commonMessages.pageHeading}'" in {
+          document.body.getElementsByTag("H1").text shouldEqual commonMessages.pageHeading
         }
 
-        "have a yes no helper with hidden content and question 'calc.privateResidenceRelief.question'" in {
-          document.body.getElementById("isClaimingPRR-yes").parent.text shouldBe Common.yes
-          document.body.getElementById("isClaimingPRR-no").parent.text shouldBe Common.no
+        s"have a yes no helper with hidden content and question '${messages.question}'" in {
+          document.body.getElementById("isClaimingPRR-yes").parent.text shouldBe commonMessages.yes
+          document.body.getElementById("isClaimingPRR-no").parent.text shouldBe commonMessages.no
           document.body.getElementsByTag("legend").text shouldBe messages.question
         }
 
@@ -123,9 +124,9 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
         }
 
         "should contain a Read more sidebar with a link to private residence relief" in {
-          document.select("aside h2").text shouldBe Common.readMore
+          document.select("aside h2").text shouldBe commonMessages.readMore
           document.select("aside a").first().attr("href") shouldBe "https://www.gov.uk/tax-sell-home/private-residence-relief"
-          document.select("aside a").first.text shouldBe s"${messages.helpLink} ${MessageLookup.calcBaseExternalLink}"
+          document.select("aside a").first.text shouldBe s"${messages.helpLink} ${commonMessages.externalLink}"
         }
       }
     }
@@ -396,7 +397,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.DisposalCostsController.disposalCosts()}" in {
-          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalCostsController.disposalCosts().toString()
         }
 
@@ -788,7 +789,7 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "return HTML that displays the error message " in {
-        document.select("span.error-notification").text shouldEqual Common.errorReal
+        document.select("span.error-notification").text shouldEqual commonMessages.errorRealNumber
       }
     }
 

@@ -16,10 +16,9 @@
 
 package controllers.CalculationControllerTests
 
-import assets.MessageLookup
-import assets.MessageLookup.{Common => commonMessages}
+import assets.MessageLookup.{NonResident => commonMessages}
 import assets.MessageLookup.NonResident.{DisposalDate => messages}
-import assets.MessageLookup.NonResident.{Common => commonNRMessages}
+
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import play.api.libs.json.Json
@@ -92,11 +91,11 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         }
 
         "have the heading Calculate your tax (non-residents) " in {
-          document.body.getElementsByTag("h1").text shouldEqual commonNRMessages.pageHeading
+          document.body.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
         }
 
         s"have a 'Back' link to ${routes.ImprovementsController.improvements()}" in {
-          document.body.getElementById("back-link").text shouldEqual MessageLookup.calcBaseBack
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.ImprovementsController.improvements().toString()
         }
 
@@ -111,7 +110,7 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         }
 
         "display a 'Continue' button " in {
-          document.body.getElementById("continue-button").text shouldEqual MessageLookup.calcBaseContinue
+          document.body.getElementById("continue-button").text shouldEqual commonMessages.continue
         }
       }
     }
@@ -212,8 +211,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"should error with message '${commonNRMessages.errorInvalidDate}'" in {
-        document.select(".error-notification").text should include (commonNRMessages.errorInvalidDate)
+      s"should error with message '${commonMessages.errorInvalidDate}'" in {
+        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
       }
     }
 
@@ -226,8 +225,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"should error with message '${commonNRMessages.errorInvalidDate}'" in {
-        document.select(".error-notification").text should include (commonNRMessages.errorInvalidDate)
+      s"should error with message '${commonMessages.errorInvalidDate}'" in {
+        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
       }
     }
 
@@ -240,8 +239,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"should error with message '${commonNRMessages.errorInvalidDate}'" in {
-        document.select(".error-notification").text should include (commonNRMessages.errorInvalidDate)
+      s"should error with message '${commonMessages.errorInvalidDate}'" in {
+        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
       }
     }
 
@@ -254,8 +253,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"should error with message '${commonNRMessages.errorInvalidDate}'" in {
-        document.select(".error-notification").text should include (commonNRMessages.errorInvalidDate)
+      s"should error with message '${commonMessages.errorInvalidDate}'" in {
+        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
       }
     }
 
@@ -268,8 +267,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"should error with message '${commonNRMessages.errorInvalidDate}'" in {
-        document.select(".error-notification").text should include (commonNRMessages.errorInvalidDate)
+      s"should error with message '${commonMessages.errorInvalidDate}'" in {
+        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
       }
     }
 
@@ -282,8 +281,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"should error with message ${commonNRMessages.errorInvalidDate}" in {
-        document.select(".error-notification").text should include (commonNRMessages.errorInvalidDate)
+      s"should error with message ${commonMessages.errorInvalidDate}" in {
+        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
       }
     }
 
@@ -296,8 +295,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"should error with message ${commonNRMessages.errorInvalidDate}" in {
-        document.select(".error-notification").text should include (commonNRMessages.errorInvalidDate)
+      s"should error with message ${commonMessages.errorInvalidDate}" in {
+        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
       }
     }
 
@@ -310,8 +309,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"should error with message ${commonNRMessages.errorInvalidDate}" in {
-        document.select(".error-notification").text should include (commonNRMessages.errorInvalidDate)
+      s"should error with message ${commonMessages.errorInvalidDate}" in {
+        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
       }
     }
   }
