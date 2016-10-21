@@ -32,10 +32,6 @@ class QuestionAnswersRowNoLinkViewSpec extends UnitSpec {
       val result = questionAnswerRowNoLink(model)
       val doc = Jsoup.parse(result.body)
 
-      "have a surrounding div with a class of 'grid-layout grid-layout--stacked form-group'" in {
-        doc.select("div#id").attr("class") shouldBe "grid-layout grid-layout--stacked form-group"
-      }
-
       "have a div for the question with an id of 'id-question' which" which {
 
         "has a class of 'grid-layout__column grid-layout__column--1-3'" in {

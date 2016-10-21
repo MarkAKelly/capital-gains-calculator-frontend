@@ -1,0 +1,19 @@
+@import models.nonresident.QuestionAnswerModel
+@import views.html.helpers.nonresident.questionAnswerRow
+
+@(sectionID: String, sectionTitle: String, rows: Seq[QuestionAnswerModel[Any]])
+
+        <section id=@sectionID class="summary-section">
+            <div class="grid-layout grid-layout--stacked form-group">
+                <div class="grid-layout__column grid-layout__column--1-3">
+                    <span class="heading-large">@sectionTitle</span>
+                </div>
+                @{questionAnswerRow(rows.head)}
+            </div>
+            @for(row <- rows.tail) {
+                <div class="grid-layout grid-layout--stacked form-group">
+                    <div class="grid-layout__column grid-layout__column--1-3"></div>
+                    @questionAnswerRow(row)
+                </div>
+            }
+        </section>
