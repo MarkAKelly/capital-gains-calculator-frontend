@@ -19,18 +19,18 @@ package views.helpers.nonresident
 import models.nonresident.QuestionAnswerModel
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.UnitSpec
-import views.html.helpers.nonresident.summarySection
+import views.html.helpers.nonresident.summarySectionNoLink
 
-class summarySectionViewSpec extends UnitSpec {
+class SummarySectionNoLinkViewSpec extends UnitSpec {
 
   "Creating a summary section" when {
     val firstItem = QuestionAnswerModel[String]("firstID", "firstData", "firstQuestion", Some("first-link"))
-    val secondItem = QuestionAnswerModel[BigDecimal]("secondID", BigDecimal(2), "secondQuestion", Some("second-link"))
+    val secondItem = QuestionAnswerModel[BigDecimal]("secondID", BigDecimal(2), "secondQuestion", None)
     val thirdItem = QuestionAnswerModel[Int]("thirdID", 2, "thirdQuestion", Some("third-link"))
 
     "passing in a sequence of one item" should {
       val sequence = Seq(firstItem)
-      val result = summarySection("sectionID", "sectionTitle", sequence)
+      val result = summarySectionNoLink("sectionID", "sectionTitle", sequence)
       val doc = Jsoup.parse(result.body)
 
       "contain a section with the ID 'sectionID' and the class 'summary-section'" in {
@@ -63,7 +63,7 @@ class summarySectionViewSpec extends UnitSpec {
 
     "passing in a sequence of two items" should {
       val sequence = Seq(firstItem, secondItem)
-      val result = summarySection("sectionID-two", "sectionTitle-two", sequence)
+      val result = summarySectionNoLink("sectionID-two", "sectionTitle-two", sequence)
       val doc = Jsoup.parse(result.body)
 
       "contain a section with the ID 'sectionID-two' and the class 'summary-section'" in {
@@ -100,7 +100,7 @@ class summarySectionViewSpec extends UnitSpec {
 
     "passing in a sequence of three items" should {
       val sequence = Seq(firstItem, secondItem, thirdItem)
-      val result = summarySection("sectionID", "sectionTitle", sequence)
+      val result = summarySectionNoLink("sectionID", "sectionTitle", sequence)
       val doc = Jsoup.parse(result.body)
 
       "contain three divs for the three summaryRow" in {
@@ -113,6 +113,16 @@ class summarySectionViewSpec extends UnitSpec {
 
       "contains the question and answer for three rows" in {
         doc.select("div.form-group > div").size shouldBe 9
+      }
+    }
+
+    "passing in an empty sequence" should {
+      val sequence = Seq()
+      val result = summarySectionNoLink("sectionID", "sectionTitle", sequence)
+      val doc = Jsoup.parse(result.body)
+
+      "not have any content" in {
+        doc.body().children().isEmpty() shouldBe true
       }
     }
   }
