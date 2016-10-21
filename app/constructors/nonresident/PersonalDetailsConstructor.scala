@@ -35,9 +35,10 @@ object PersonalDetailsConstructor {
   }
 
   //Customer type needs to be individual
-  def getPersonalAllowanceAnswer(summaryModel: SummaryModel): Option[BigDecimal] = summaryModel.personalAllowanceModel.isEmpty match {
-    case true => None
-    case false => Some(summaryModel.personalAllowanceModel.get.personalAllowanceAmt)
+  def getPersonalAllowanceAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] = summaryModel.customerTypeModel.customerType match {
+    case "individual" => Some(QuestionAnswerModel(KeystoreKeys.personalAllowance, summaryModel.personalAllowanceModel.get.personalAllowanceAmt,
+      Messages("calc.personalAllowance.question"), Some(controllers.nonresident.routes.PersonalAllowanceController.personalAllowance().url)))
+    case _ => None
   }
 
   //Customer type needs to be trustee

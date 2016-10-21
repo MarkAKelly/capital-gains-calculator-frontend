@@ -50,7 +50,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
   )
 
   val summaryWithNoOptionValuesModel = SummaryModel(
-    CustomerTypeModel(CustomerTypeKeys.individual),
+    CustomerTypeModel(CustomerTypeKeys.trustee),
     None,
     None,
     None,
@@ -73,23 +73,23 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
     None
   )
 
-  "Calling PersonalDetailsConstructor" should {
+  "Calling PersonalDetailsConstructor" when {
 
-    "when using the summaryWithAllOptionsValuesModel" should {
+    "using the summaryWithAllOptionsValuesModel" should {
 
-//      ".getPurchaseDetailsItem will return a Sequence[DataItems]" in{
-//        PersonalDetailsConstructor.getPurchaseDetailsItem(summaryWithAllOptionValuesModel) shouldBe
-//          Seq(QuestionAnswerModel(common.KeystoreKeys.customerType, CustomerTypeKeys.individual))
-//      }
+      //      ".getPurchaseDetailsItem will return a Sequence[DataItems]" in{
+      //        PersonalDetailsConstructor.getPurchaseDetailsItem(summaryWithAllOptionValuesModel) shouldBe
+      //          Seq(QuestionAnswerModel(common.KeystoreKeys.customerType, CustomerTypeKeys.individual))
+      //      }
 
       ".getCustomerTypeAnswer with a customer type of individual will return an id of " +
-         s"${KeystoreKeys.customerType}"in {
+        s"${KeystoreKeys.customerType}" in {
         PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).id shouldBe
           KeystoreKeys.customerType
       }
 
       ".getCustomerTypeAnswer with a customer type of individual will return a question of " +
-        s"${MessageLookup.NonResident.CustomerType.question}" in{
+        s"${MessageLookup.NonResident.CustomerType.question}" in {
         PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).question shouldBe
           MessageLookup.NonResident.CustomerType.question
       }
@@ -101,15 +101,76 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       }
 
       ".getCustomerTypeAnswer with a customer type of individual will a link of " +
-         s"${controllers.nonresident.routes.CustomerTypeController.customerType().url}" in {
+        s"${controllers.nonresident.routes.CustomerTypeController.customerType().url}" in {
         PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).link shouldBe
           Some(controllers.nonresident.routes.CustomerTypeController.customerType().url)
       }
 
-//      ".getCurrentIncomeAnswer with an income of 30000.0 will return 30000.0" in {
-//        PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryWithAllOptionValuesModel) shouldBe Some(30000.0)
-//      }
-//
+      ".getCurrentIncomeAnswer with an income of 30000.0 will return and id of " +
+        s"${KeystoreKeys.currentIncome}" in {
+        PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryWithAllOptionValuesModel).get.id shouldBe
+          KeystoreKeys.currentIncome
+      }
+
+      ".getCurrentIncomeAnswer with an income of 30000.0 will return a question of " +
+        s"${MessageLookup.NonResident.CurrentIncome.question}" in {
+        PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryWithAllOptionValuesModel).get.question shouldBe
+          MessageLookup.NonResident.CurrentIncome.question
+      }
+
+      ".getCurrentIncomeAnswer with an income of 30000.0 will return data of 30000.0" in {
+        PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryWithAllOptionValuesModel).get.data shouldBe 30000.0
+      }
+
+      ".getCurrentIncomeAnswer with an income of 30000.0 will return a link of " +
+        s"${controllers.nonresident.routes.CurrentIncomeController.currentIncome().url}" in {
+        PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryWithAllOptionValuesModel).get.link shouldBe
+          Some(controllers.nonresident.routes.CurrentIncomeController.currentIncome().url)
+      }
+
+      ".getPersonalAllowanceAnswer with an allowance of 11000.0 will return an id of " +
+        s"${KeystoreKeys.personalAllowance}" in {
+        PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryWithAllOptionValuesModel).get.id shouldBe
+          KeystoreKeys.personalAllowance
+      }
+
+      ".getPersonalAllowanceAnswer with an allowance of 11000.0 will return data of 11000.0 " in {
+        PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryWithAllOptionValuesModel).get.data shouldBe 11000.0
+      }
+
+      ".getPersonalAllowanceAnswer with an allowance of 11000.0 will return a question of " +
+        s"${MessageLookup.NonResident.PersonalAllowance.question}" in {
+        PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryWithAllOptionValuesModel).get.question shouldBe
+          MessageLookup.NonResident.PersonalAllowance.question
+      }
+
+      ".getPersonalAllowanceAnswer with an allowance of 11000.0 will return an id of " +
+        s"${controllers.nonresident.routes.PersonalAllowanceController.personalAllowance().url}" in {
+        PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryWithAllOptionValuesModel).get.link shouldBe
+          Some(controllers.nonresident.routes.PersonalAllowanceController.personalAllowance().url)
+      }
+
+    }
+
+    "when using the summaryWithNoOptionsValuesModel" should {
+
+      ".getCustomerTypeAnswer with a customer type of trustee will return data of " +
+        s"${CustomerTypeKeys.trustee}" in {
+        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithNoOptionValuesModel).data shouldBe
+          CustomerTypeKeys.trustee
+      }
+
+      ".getCurrentIncomeAnswer with a customer type of trustee will return a None" in {
+        PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryWithNoOptionValuesModel) shouldBe None
+      }
+
+      ".getPersonalAllowanceAnswer with a customer type of trustee will return a None" in {
+        PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryWithNoOptionValuesModel) shouldBe None
+      }
+
+    }
+
+
 //      ".getPersonalAllowanceAnswer with a personal allowance of 11000.0" in {
 //        PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryWithAllOptionValuesModel) shouldBe Some(11000.0)
 //      }
@@ -125,7 +186,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 //      ".getAEAAnswer with a an annual exempt amount of 10000.0" in {
 //        PersonalDetailsConstructor.getAEAAnswer(summaryWithAllOptionValuesModel) shouldBe Some(10000.0)
 //      }
-//    }
+
 //
 //    "when using the summaryWithNoOptionsValuesModel" should {
 //      ".getCurrentIncomeAnswer with a value of None will return None" in {
@@ -144,5 +205,5 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 //        PersonalDetailsConstructor.getAEAAnswer(summaryWithNoOptionValuesModel) shouldBe None
 //      }
     }
-  }
+
 }
