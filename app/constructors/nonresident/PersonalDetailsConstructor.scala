@@ -42,9 +42,10 @@ object PersonalDetailsConstructor {
   }
 
   //Customer type needs to be trustee
-  def getDisabledTrusteesAnswer(summaryModel: SummaryModel): Option[String] = summaryModel.disabledTrusteeModel.isEmpty match {
-    case true => None
-    case false => Some(summaryModel.disabledTrusteeModel.get.isVulnerable)
+  def getDisabledTrusteeAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[String]] = summaryModel.customerTypeModel.customerType match {
+    case "trustee" => Some(QuestionAnswerModel(KeystoreKeys.disabledTrustee, summaryModel.disabledTrusteeModel.get.isVulnerable,
+      Messages("calc.disabledTrustee.question"), Some(controllers.nonresident.routes.DisabledTrusteeController.disabledTrustee().url)))
+    case _ => None
   }
 
   def getOtherPropertiesAnswer(summaryModel: SummaryModel): BigDecimal = {

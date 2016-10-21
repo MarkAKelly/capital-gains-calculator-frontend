@@ -27,7 +27,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
   val summaryWithAllOptionValuesModel = SummaryModel(
     CustomerTypeModel(CustomerTypeKeys.individual),
-    Some(DisabledTrusteeModel("Yes")),
+    None,
     Some(CurrentIncomeModel(30000.0)),
     Some(PersonalAllowanceModel(11000.0)),
     OtherPropertiesModel("Yes", Some(250000.0)),
@@ -51,7 +51,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
   val summaryWithNoOptionValuesModel = SummaryModel(
     CustomerTypeModel(CustomerTypeKeys.trustee),
-    None,
+    Some(DisabledTrusteeModel("Yes")),
     None,
     None,
     OtherPropertiesModel("No", None),
@@ -150,6 +150,9 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
           Some(controllers.nonresident.routes.PersonalAllowanceController.personalAllowance().url)
       }
 
+      ".getDisabledTrusteeAnswer with a customer type of individual will return a None" in {
+        PersonalDetailsConstructor.getDisabledTrusteeAnswer(summaryWithAllOptionValuesModel) shouldBe None
+      }
     }
 
     "when using the summaryWithNoOptionsValuesModel" should {
@@ -168,13 +171,29 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryWithNoOptionValuesModel) shouldBe None
       }
 
+      ".getDisabledTrusteeAnswer with an answer of yes will return an id of " +
+        s"${KeystoreKeys.disabledTrustee}" in {
+        PersonalDetailsConstructor.getDisabledTrusteeAnswer(summaryWithNoOptionValuesModel).get.id shouldBe
+          KeystoreKeys.disabledTrustee
+      }
+
+      ".getDisabledTrusteeAnswer with an answer of yes will return data of 11000.0 " in {
+        PersonalDetailsConstructor.getDisabledTrusteeAnswer(summaryWithNoOptionValuesModel).get.data shouldBe "Yes"
+      }
+
+      ".getDisabledTrusteeAnswer with an answer of yes will return a question of " +
+        s"${MessageLookup.NonResident.DisabledTrustee.question}" in {
+        PersonalDetailsConstructor.getDisabledTrusteeAnswer(summaryWithNoOptionValuesModel).get.question shouldBe
+          MessageLookup.NonResident.DisabledTrustee.question
+      }
+
+      ".getDisabledTrusteeAnswer with an answer of yes will return an id of " +
+        s"${controllers.nonresident.routes.DisabledTrusteeController.disabledTrustee().url}" in {
+        PersonalDetailsConstructor.getDisabledTrusteeAnswer(summaryWithNoOptionValuesModel).get.link shouldBe
+          Some(controllers.nonresident.routes.DisabledTrusteeController.disabledTrustee().url)
+      }
     }
 
-
-//      ".getPersonalAllowanceAnswer with a personal allowance of 11000.0" in {
-//        PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryWithAllOptionValuesModel) shouldBe Some(11000.0)
-//      }
-//
 //      ".getDisabledTrusteeAnswer with a disabled trustee will return Yes" in {
 //        PersonalDetailsConstructor.getDisabledTrusteesAnswer(summaryWithAllOptionValuesModel) shouldBe Some("Yes")
 //      }
@@ -189,14 +208,6 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
 //
 //    "when using the summaryWithNoOptionsValuesModel" should {
-//      ".getCurrentIncomeAnswer with a value of None will return None" in {
-//        PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryWithNoOptionValuesModel) shouldBe None
-//      }
-//
-//      ".getPersonaAllowanceAnswer with a value of None will return None" in {
-//        PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryWithNoOptionValuesModel) shouldBe None
-//      }
-//
 //      ".getDisabledTrusteeAnswer with a value of None will return None" in {
 //        PersonalDetailsConstructor.getDisabledTrusteesAnswer(summaryWithNoOptionValuesModel) shouldBe None
 //      }
