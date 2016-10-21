@@ -19,7 +19,6 @@ package constructors.nonresident
 import assets.MessageLookup
 import common.KeystoreKeys
 import common.nonresident.CustomerTypeKeys
-import models.SummaryDataItemModel
 import models.nonresident._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
@@ -49,12 +48,60 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
     Some(PrivateResidenceReliefModel("Yes", Some(2500.0), Some(0.0)))
   )
 
-  val summaryWithNoOptionValuesModel = SummaryModel(
+  val summaryWithTrusteeValuesModel = SummaryModel(
     CustomerTypeModel(CustomerTypeKeys.trustee),
     Some(DisabledTrusteeModel("Yes")),
     None,
     None,
-    OtherPropertiesModel("No", None),
+    OtherPropertiesModel("Yes", Some(0)),
+    Some(AnnualExemptAmountModel(10000.0)),
+    AcquisitionDateModel("No", None, None, None),
+    AcquisitionValueModel(300000.0),
+    None,
+    None,
+    ImprovementsModel("No", None),
+    DisposalDateModel(5, 9, 2016),
+    DisposalValueModel(5000),
+    AcquisitionCostsModel(250000.0),
+    DisposalCostsModel(5000.0),
+    AllowableLossesModel("No", None),
+    CalculationElectionModel("flat"),
+    OtherReliefsModel(None, None),
+    OtherReliefsModel(None, None),
+    OtherReliefsModel(None, None),
+    None
+  )
+
+  val summaryNoOptionsIndividualModel = SummaryModel(
+    CustomerTypeModel(CustomerTypeKeys.individual),
+    None,
+    None,
+    None,
+    OtherPropertiesModel("Yes", None),
+    None,
+    AcquisitionDateModel("No", None, None, None),
+    AcquisitionValueModel(300000.0),
+    None,
+    None,
+    ImprovementsModel("No", None),
+    DisposalDateModel(5, 9, 2016),
+    DisposalValueModel(5000),
+    AcquisitionCostsModel(250000.0),
+    DisposalCostsModel(5000.0),
+    AllowableLossesModel("No", None),
+    CalculationElectionModel("flat"),
+    OtherReliefsModel(None, None),
+    OtherReliefsModel(None, None),
+    OtherReliefsModel(None, None),
+    None
+  )
+
+  val summaryNoOptionsTrusteeModel = SummaryModel(
+    CustomerTypeModel(CustomerTypeKeys.trustee),
+    None,
+    None,
+    None,
+    OtherPropertiesModel("Yes", Some(0)),
     None,
     AcquisitionDateModel("No", None, None, None),
     AcquisitionValueModel(300000.0),
@@ -77,32 +124,67 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
     "using the summaryWithAllOptionsValuesModel" should {
 
-      //      ".getPurchaseDetailsItem will return a Sequence[DataItems]" in{
-      //        PersonalDetailsConstructor.getPurchaseDetailsItem(summaryWithAllOptionValuesModel) shouldBe
-      //          Seq(QuestionAnswerModel(common.KeystoreKeys.customerType, CustomerTypeKeys.individual))
-      //      }
+      ".getPurchaseDetailsItem will return a Sequence[QuestionAnswerModel[Any]] with size 5" in{
+        PersonalDetailsConstructor.getPersonalDetailsSection(summaryWithAllOptionValuesModel).size shouldBe 5
+      }
+
+      ".getPurchaseDetailsItem will return a Sequence[QuestionAnswerModel[Any]] will contain a PersonalDetails.getCustomerType item" in {
+        PersonalDetailsConstructor.getPersonalDetailsSection(summaryWithAllOptionValuesModel)
+          .count(_.equals(PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).get)) shouldBe 1
+      }
+
+      ".getPurchaseDetailsItem will return a Sequence[QuestionAnswerModel[Any]] will contain a PersonalDetails.getCurrentIncomeAnswer item" in {
+        PersonalDetailsConstructor.getPersonalDetailsSection(summaryWithAllOptionValuesModel)
+          .count(_.equals(PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryWithAllOptionValuesModel).get)) shouldBe 1
+      }
+
+      ".getPurchaseDetailsItem will return a Sequence[QuestionAnswerModel[Any]] will contain a PersonalDetails.getPersonalAllowanceAnswer item" in {
+        PersonalDetailsConstructor.getPersonalDetailsSection(summaryWithAllOptionValuesModel)
+          .count(_.equals(PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryWithAllOptionValuesModel).get)) shouldBe 1
+      }
+
+      ".getPurchaseDetailsItem will return a Sequence[QuestionAnswerModel[Any]] will contain a PersonalDetails.getOtherPropertiesAnswer item" in {
+        PersonalDetailsConstructor.getPersonalDetailsSection(summaryWithAllOptionValuesModel)
+          .count(_.equals(PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithAllOptionValuesModel).get)) shouldBe 1
+      }
+
+      ".getPurchaseDetailsItem will return a Sequence[QuestionAnswerModel[Any]] will contain a PersonalDetails.getOtherPropertiesAmountAnswer item" in {
+        PersonalDetailsConstructor.getPersonalDetailsSection(summaryWithAllOptionValuesModel)
+          .count(_.equals(PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryWithAllOptionValuesModel).get)) shouldBe 1
+      }
+
+      ".getPurchaseDetailsItem will return a Sequence[QuestionAnswerModel[Any]] will not contain anything other than " +
+      "PersonalDetails.getCustomerTypeAnswer item, PersonalDetails.getCurrentIncomeAnswer item, PersonalDetails.getPersonalAllowanceAnswer item, " +
+      "PersonalDetails.getOtherPropertiesAnswer item, PersonalDetails.getOtherPropertiesAnswer item" in {
+        PersonalDetailsConstructor.getPersonalDetailsSection(summaryWithAllOptionValuesModel)
+          .filterNot(_.id == PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).get.id)
+          .filterNot(_.id == PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryWithAllOptionValuesModel).get.id)
+          .filterNot(_.id == PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryWithAllOptionValuesModel).get.id)
+          .filterNot(_.id == PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithAllOptionValuesModel).get.id)
+          .filterNot(_.id == PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryWithAllOptionValuesModel).get.id).size shouldBe 0
+      }
 
       ".getCustomerTypeAnswer with a customer type of individual will return an id of " +
         s"${KeystoreKeys.customerType}" in {
-        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).id shouldBe
+        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).get.id shouldBe
           KeystoreKeys.customerType
       }
 
       ".getCustomerTypeAnswer with a customer type of individual will return a question of " +
         s"${MessageLookup.NonResident.CustomerType.question}" in {
-        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).question shouldBe
+        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).get.question shouldBe
           MessageLookup.NonResident.CustomerType.question
       }
 
       ".getCustomerTypeAnswer with a customer type of individual will return data of " +
         s"${CustomerTypeKeys.individual}" in {
-        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).data shouldBe
+        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).get.data shouldBe
           CustomerTypeKeys.individual
       }
 
       ".getCustomerTypeAnswer with a customer type of individual will a link of " +
         s"${controllers.nonresident.routes.CustomerTypeController.customerType().url}" in {
-        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).link shouldBe
+        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).get.link shouldBe
           Some(controllers.nonresident.routes.CustomerTypeController.customerType().url)
       }
 
@@ -153,68 +235,148 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       ".getDisabledTrusteeAnswer with a customer type of individual will return a None" in {
         PersonalDetailsConstructor.getDisabledTrusteeAnswer(summaryWithAllOptionValuesModel) shouldBe None
       }
+
+      ".getOtherPropertiesAnswer with a value of Yes and 250000.0 should return Yes" in {
+        PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithAllOptionValuesModel).get.data shouldBe "Yes"
+      }
+
+      ".getOtherPropertiesAnswer with a value of Yes and 250000.0 should return an ID of" +
+        s"${KeystoreKeys.otherProperties} " in {
+        PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithAllOptionValuesModel).get.id shouldBe
+          KeystoreKeys.otherProperties
+      }
+
+      ".getOtherPropertiesAnswers with a value of yes and 250000.0 should return a URL of" +
+        s"${controllers.nonresident.routes.OtherPropertiesController.otherProperties().url}" in {
+        PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithAllOptionValuesModel).get.link shouldBe
+          Some(controllers.nonresident.routes.OtherPropertiesController.otherProperties().url)
+      }
+
+      ".getOtherPropertiesAnswers with a value of yes and 250000.0 should return a question of" +
+        s"${MessageLookup.NonResident.OtherProperties.question} " in {
+        PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithAllOptionValuesModel).get.question shouldBe
+          MessageLookup.NonResident.OtherProperties.question
+      }
+
+      ".getOtherPropertiesAmountAnswer with a value of Yes and 250000.0 should return Yes" in {
+        PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryWithAllOptionValuesModel).get.data shouldBe 250000.0
+      }
+
+      ".getOtherPropertiesAmountAnswer with a value of Yes and 250000.0 should return an ID of" +
+        s"${KeystoreKeys.otherProperties} + Amount" in {
+        PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryWithAllOptionValuesModel).get.id shouldBe
+          KeystoreKeys.otherProperties + "Amount"
+      }
+
+      ".getOtherPropertiesAmountAnswer with a value of yes and 250000.0 should return a URL of" +
+        s"${controllers.nonresident.routes.OtherPropertiesController.otherProperties().url}" in {
+        PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryWithAllOptionValuesModel).get.link shouldBe
+          Some(controllers.nonresident.routes.OtherPropertiesController.otherProperties().url)
+      }
+
+      ".getOtherPropertiesAmountAnswer with a value of yes and 250000.0 should return a question of" +
+        s"${MessageLookup.NonResident.OtherProperties.questionTwo} " in {
+        PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryWithAllOptionValuesModel).get.question shouldBe
+          MessageLookup.NonResident.OtherProperties.questionTwo
+      }
+
+      ".getAnnualExemptAmountAnswer with otherProperties is a yes and taxable gain is above 0 will return None" in {
+        PersonalDetailsConstructor.getAnnualExemptAmountAnswer(summaryWithAllOptionValuesModel) shouldBe None
+      }
     }
 
-    "when using the summaryWithNoOptionsValuesModel" should {
+    "when using the summaryWithTrusteeValuesModel" should {
 
       ".getCustomerTypeAnswer with a customer type of trustee will return data of " +
         s"${CustomerTypeKeys.trustee}" in {
-        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithNoOptionValuesModel).data shouldBe
+        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithTrusteeValuesModel).get.data shouldBe
           CustomerTypeKeys.trustee
       }
 
       ".getCurrentIncomeAnswer with a customer type of trustee will return a None" in {
-        PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryWithNoOptionValuesModel) shouldBe None
+        PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryWithTrusteeValuesModel) shouldBe None
       }
 
       ".getPersonalAllowanceAnswer with a customer type of trustee will return a None" in {
-        PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryWithNoOptionValuesModel) shouldBe None
+        PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryWithTrusteeValuesModel) shouldBe None
       }
 
       ".getDisabledTrusteeAnswer with an answer of yes will return an id of " +
         s"${KeystoreKeys.disabledTrustee}" in {
-        PersonalDetailsConstructor.getDisabledTrusteeAnswer(summaryWithNoOptionValuesModel).get.id shouldBe
+        PersonalDetailsConstructor.getDisabledTrusteeAnswer(summaryWithTrusteeValuesModel).get.id shouldBe
           KeystoreKeys.disabledTrustee
       }
 
       ".getDisabledTrusteeAnswer with an answer of yes will return data of 11000.0 " in {
-        PersonalDetailsConstructor.getDisabledTrusteeAnswer(summaryWithNoOptionValuesModel).get.data shouldBe "Yes"
+        PersonalDetailsConstructor.getDisabledTrusteeAnswer(summaryWithTrusteeValuesModel).get.data shouldBe "Yes"
       }
 
       ".getDisabledTrusteeAnswer with an answer of yes will return a question of " +
         s"${MessageLookup.NonResident.DisabledTrustee.question}" in {
-        PersonalDetailsConstructor.getDisabledTrusteeAnswer(summaryWithNoOptionValuesModel).get.question shouldBe
+        PersonalDetailsConstructor.getDisabledTrusteeAnswer(summaryWithTrusteeValuesModel).get.question shouldBe
           MessageLookup.NonResident.DisabledTrustee.question
       }
 
       ".getDisabledTrusteeAnswer with an answer of yes will return an id of " +
         s"${controllers.nonresident.routes.DisabledTrusteeController.disabledTrustee().url}" in {
-        PersonalDetailsConstructor.getDisabledTrusteeAnswer(summaryWithNoOptionValuesModel).get.link shouldBe
+        PersonalDetailsConstructor.getDisabledTrusteeAnswer(summaryWithTrusteeValuesModel).get.link shouldBe
           Some(controllers.nonresident.routes.DisabledTrusteeController.disabledTrustee().url)
+      }
+
+      ".getOtherPropertiesAnswer with a customer type of trustee will return data of Yes" in {
+        PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithTrusteeValuesModel).get.data shouldBe "Yes"
+      }
+
+      ".getOtherPropertiesAmountAnswer with a customer type of trustee will return None" in {
+        PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryWithTrusteeValuesModel) shouldBe None
+      }
+
+      ".getAnnualExemptAmountAnswer with otherProperties is a yes and and no taxable gain" should {
+
+        s"return a valid id of ${KeystoreKeys.annualExemptAmount}" in {
+          PersonalDetailsConstructor.getAnnualExemptAmountAnswer(summaryWithTrusteeValuesModel).get.id shouldBe
+            KeystoreKeys.annualExemptAmount
+        }
+
+        s"return a valid data of 10000.0" in {
+          PersonalDetailsConstructor.getAnnualExemptAmountAnswer(summaryWithTrusteeValuesModel).get.data shouldBe 10000.0
+        }
+
+        s"return a valid question of ${MessageLookup.NonResident.AnnualExemptAmount.question}" in {
+          PersonalDetailsConstructor.getAnnualExemptAmountAnswer(summaryWithTrusteeValuesModel).get.question shouldBe
+            MessageLookup.NonResident.AnnualExemptAmount.question
+        }
+
+        s"return a valid link of ${controllers.nonresident.routes.AnnualExemptAmountController.annualExemptAmount().url}" in {
+          PersonalDetailsConstructor.getAnnualExemptAmountAnswer(summaryWithTrusteeValuesModel).get.link shouldBe
+            Some(controllers.nonresident.routes.AnnualExemptAmountController.annualExemptAmount().url)
+        }
+
       }
     }
 
-//      ".getDisabledTrusteeAnswer with a disabled trustee will return Yes" in {
-//        PersonalDetailsConstructor.getDisabledTrusteesAnswer(summaryWithAllOptionValuesModel) shouldBe Some("Yes")
-//      }
-//
-//      ".getOtherPropertiesAnswer with another property and a value of 250000.0" in {
-//        PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithAllOptionValuesModel) shouldBe 250000.0
-//      }
-//
-//      ".getAEAAnswer with a an annual exempt amount of 10000.0" in {
-//        PersonalDetailsConstructor.getAEAAnswer(summaryWithAllOptionValuesModel) shouldBe Some(10000.0)
-//      }
+    "when using the summaryNoOptionsIndividualModel" should {
 
-//
-//    "when using the summaryWithNoOptionsValuesModel" should {
-//      ".getDisabledTrusteeAnswer with a value of None will return None" in {
-//        PersonalDetailsConstructor.getDisabledTrusteesAnswer(summaryWithNoOptionValuesModel) shouldBe None
-//      }
-//
-//      ".getAnnualExemptAmount with a value of None will return None" in {
-//        PersonalDetailsConstructor.getAEAAnswer(summaryWithNoOptionValuesModel) shouldBe None
-//      }
+      ".getCurrentIncomeAnswer with an individual but no CurrentIncomeAnswerModel will return None" in {
+        PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryNoOptionsIndividualModel) shouldBe None
+      }
+
+      ".getPersonalAllowanceAnswer with an individual but no PersonalAllowanceModel will return None" in {
+        PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryNoOptionsIndividualModel) shouldBe None
+      }
+
+      ".getPersonalAllowanceAnswer with an trustee but no DisabledTrusteeModel will return None" in {
+        PersonalDetailsConstructor.getDisabledTrusteeAnswer(summaryNoOptionsTrusteeModel) shouldBe None
+      }
+
+      ".getOtherPropertiesAmountAnswer with a OtherPropertiesModel but with no Amount value will return None" in {
+        PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryNoOptionsIndividualModel) shouldBe None
+      }
+
+      ".getAnnualExemptAmountAnswer with a otherProperties but no taxable gain will return None" in {
+        PersonalDetailsConstructor.getAnnualExemptAmountAnswer(summaryNoOptionsIndividualModel) shouldBe None
+      }
+
     }
-
+  }
 }

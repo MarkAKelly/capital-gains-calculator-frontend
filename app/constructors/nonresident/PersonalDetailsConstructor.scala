@@ -17,45 +17,115 @@
 package constructors.nonresident
 
 import common.KeystoreKeys
+import common.nonresident.CustomerTypeKeys
 import models.nonresident.{QuestionAnswerModel, SummaryModel}
 import play.api.i18n.Messages
 
+import scala.math.BigDecimal
+
 object PersonalDetailsConstructor {
 
-  def getCustomerTypeAnswer(summaryModel: SummaryModel): QuestionAnswerModel[String] = {
-    QuestionAnswerModel(KeystoreKeys.customerType, summaryModel.customerTypeModel.customerType,
-      Messages("calc.customerType.question"), Some(controllers.nonresident.routes.CustomerTypeController.customerType().url))
+  def getPersonalDetailsSection(summaryModel: SummaryModel) : Seq[QuestionAnswerModel[Any]] = {
+
+    val customerTypeData = getCustomerTypeAnswer(summaryModel)
+    val currentIncomeData = getCurrentIncomeAnswer(summaryModel)
+    val personalAllowanceData = getPersonalAllowanceAnswer(summaryModel)
+    val disabledTrusteeData = getDisabledTrusteeAnswer(summaryModel)
+    val otherPropertiesData = getOtherPropertiesAnswer(summaryModel)
+    val otherPropertiesAmountData = getOtherPropertiesAmountAnswer(summaryModel)
+    val annualExemptAmountData = getAnnualExemptAmountAnswer(summaryModel)
+
+    val items = Seq(
+      customerTypeData,
+      currentIncomeData,
+      personalAllowanceData,
+      disabledTrusteeData,
+      otherPropertiesData,
+      otherPropertiesAmountData,
+      annualExemptAmountData
+    )
+
+    items.flatten
+  }
+
+  def getCustomerTypeAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[String]] = {
+    Some(QuestionAnswerModel(
+      KeystoreKeys.customerType,
+      summaryModel.customerTypeModel.customerType,
+      Messages("calc.customerType.question"),
+      Some(controllers.nonresident.routes.CustomerTypeController.customerType().url)
+    ))
   }
 
   //Customer type needs to be individual
-  def getCurrentIncomeAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] = summaryModel.customerTypeModel.customerType match {
-    case "individual" => Some(QuestionAnswerModel(KeystoreKeys.currentIncome, summaryModel.currentIncomeModel.get.currentIncome,
-      Messages("calc.currentIncome.question"), Some(controllers.nonresident.routes.CurrentIncomeController.currentIncome().url)))
+  def getCurrentIncomeAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] =
+    (summaryModel.customerTypeModel.customerType, summaryModel.currentIncomeModel) match {
+    case (CustomerTypeKeys.individual, Some(currentIncomeModel)) =>
+      Some(QuestionAnswerModel(
+        KeystoreKeys.currentIncome,
+        currentIncomeModel.currentIncome,
+        Messages("calc.currentIncome.question"),
+        Some(controllers.nonresident.routes.CurrentIncomeController.currentIncome().url))
+      )
     case _ => None
   }
 
   //Customer type needs to be individual
-  def getPersonalAllowanceAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] = summaryModel.customerTypeModel.customerType match {
-    case "individual" => Some(QuestionAnswerModel(KeystoreKeys.personalAllowance, summaryModel.personalAllowanceModel.get.personalAllowanceAmt,
-      Messages("calc.personalAllowance.question"), Some(controllers.nonresident.routes.PersonalAllowanceController.personalAllowance().url)))
+  def getPersonalAllowanceAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] =
+    (summaryModel.customerTypeModel.customerType, summaryModel.personalAllowanceModel)  match {
+    case (CustomerTypeKeys.individual, Some(personalAllowanceModel)) =>
+      Some(QuestionAnswerModel(
+        KeystoreKeys.personalAllowance,
+        personalAllowanceModel.personalAllowanceAmt,
+        Messages("calc.personalAllowance.question"),
+        Some(controllers.nonresident.routes.PersonalAllowanceController.personalAllowance().url))
+      )
     case _ => None
   }
 
   //Customer type needs to be trustee
-  def getDisabledTrusteeAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[String]] = summaryModel.customerTypeModel.customerType match {
-    case "trustee" => Some(QuestionAnswerModel(KeystoreKeys.disabledTrustee, summaryModel.disabledTrusteeModel.get.isVulnerable,
-      Messages("calc.disabledTrustee.question"), Some(controllers.nonresident.routes.DisabledTrusteeController.disabledTrustee().url)))
+  def getDisabledTrusteeAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[String]] =
+    (summaryModel.customerTypeModel.customerType, summaryModel.disabledTrusteeModel)  match {
+    case (CustomerTypeKeys.trustee, Some(disabledTrusteeModel)) => Some(QuestionAnswerModel(
+      KeystoreKeys.disabledTrustee,
+      disabledTrusteeModel.isVulnerable,
+      Messages("calc.disabledTrustee.question"),
+      Some(controllers.nonresident.routes.DisabledTrusteeController.disabledTrustee().url)))
     case _ => None
   }
 
-  def getOtherPropertiesAnswer(summaryModel: SummaryModel): BigDecimal = {
-    summaryModel.otherPropertiesModel.otherPropertiesAmt.get
+  def getOtherPropertiesAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[String]] = {
+    Some(QuestionAnswerModel(
+      KeystoreKeys.otherProperties,
+      summaryModel.otherPropertiesModel.otherProperties,
+      Messages("calc.otherProperties.question"),
+      Some(controllers.nonresident.routes.OtherPropertiesController.otherProperties().url)
+    ))
+  }
+
+  def getOtherPropertiesAmountAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] =
+    (summaryModel.otherPropertiesModel.otherProperties,
+      summaryModel.otherPropertiesModel.otherPropertiesAmt,
+      summaryModel.customerTypeModel.customerType) match {
+    case ("Yes", Some(otherPropertiesAmount), CustomerTypeKeys.individual) => Some(QuestionAnswerModel(
+      KeystoreKeys.otherProperties + "Amount",
+      otherPropertiesAmount,
+      Messages("calc.otherProperties.questionTwo"),
+      Some(controllers.nonresident.routes.OtherPropertiesController.otherProperties().url)))
+    case _ => None
   }
 
   //Only if otherProperties is yes and taxable gain is 0
-  def getAEAAnswer(summaryModel: SummaryModel): Option[BigDecimal] = summaryModel.annualExemptAmountModel.isEmpty match {
-    case true => None
-    case false => Some(summaryModel.annualExemptAmountModel.get.annualExemptAmount)
+  def getAnnualExemptAmountAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] =
+    (summaryModel.otherPropertiesModel.otherProperties, summaryModel.otherPropertiesModel.otherPropertiesAmt) match {
+      case ("Yes", Some(x)) if x == BigDecimal(0) =>
+        Some(QuestionAnswerModel(
+          KeystoreKeys.annualExemptAmount,
+          summaryModel.annualExemptAmountModel.get.annualExemptAmount,
+          Messages("calc.annualExemptAmount.question"),
+          Some(controllers.nonresident.routes.AnnualExemptAmountController.annualExemptAmount().url))
+        )
+      case _ => None
   }
 
 }
