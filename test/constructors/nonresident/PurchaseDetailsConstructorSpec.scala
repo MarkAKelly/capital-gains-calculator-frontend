@@ -16,8 +16,12 @@
 
 package constructors.nonresident
 
+import java.text.DateFormat
+import java.time.{LocalDate, LocalTime}
+
 import common.nonresident.CustomerTypeKeys
 import models.nonresident._
+import common.KeystoreKeys
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import constructors.nonresident.PurchaseDetailsConstructor
 
@@ -54,37 +58,92 @@ object PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
 
     "using the summaryWithAllOptionsValuesModel" should {
       ".getPurchaseDetailsSection will return a Sequence[QuestionAnswerModel[Any]] with size 5" in {
-        PurchaseDetailsConstructor.getPurchaseDetailsSection(summaryWithAllOptionValuesModel).size shouldBe 5
+        PurchaseDetailsConstructor
+          .getPurchaseDetailsSection(summaryWithAllOptionValuesModel).size shouldBe 5
       }
 
       ".getPurchaseDetailsSection will return a Sequence[QuestionAnswerModel[Any]] that will contain an acquisitionDateData item" in {
-        PurchaseDetailsConstructor.getPurchaseDetailsSection(summaryWithAllOptionValuesModel)
-          .count(_.equals(PurchaseDetailsConstructor.getAcquisitionDateAnswer(summaryWithAllOptionValuesModel))) shouldBe 1
+        PurchaseDetailsConstructor
+          .getPurchaseDetailsSection(summaryWithAllOptionValuesModel)
+          .count(_.equals(PurchaseDetailsConstructor
+            .getAcquisitionDateAnswer(summaryWithAllOptionValuesModel))) shouldBe 1
       }
 
       ".getPurchaseDetailsSection will return a Sequence[QuestionAnswersModel[Any]] that will contain an acquisitionCostData item" in {
-        PurchaseDetailsConstructor.getPurchaseDetailsSection(summaryWithAllOptionValuesModel)
-          .count(_.equals(PurchaseDetailsConstructor.getAcquisitionCostsAnswer(summaryWithAllOptionValuesModel))) shouldBe 1
+        PurchaseDetailsConstructor
+          .getPurchaseDetailsSection(summaryWithAllOptionValuesModel)
+          .count(_.equals(PurchaseDetailsConstructor
+            .getAcquisitionCostsAnswer(summaryWithAllOptionValuesModel))) shouldBe 1
       }
 
       ".getPurchaseDetailsSection will return a Sequence[QuestionAnswersModel[Any]] that will contain an acquisitionValueData item" in {
-        PurchaseDetailsConstructor.getPurchaseDetailsSection(summaryWithAllOptionValuesModel)
-          .count(_.equals(PurchaseDetailsConstructor.getAcquisitionDateAnswer(summaryWithAllOptionValuesModel))) shouldBe 1
+        PurchaseDetailsConstructor
+          .getPurchaseDetailsSection(summaryWithAllOptionValuesModel)
+          .count(_.equals(PurchaseDetailsConstructor
+            .getAcquisitionDateAnswer(summaryWithAllOptionValuesModel))) shouldBe 1
       }
 
       ".getPurchaseDetailsSection will return a Sequence[QuestionAnswersModel[Any]] that will contain a rebasedValueData item" in {
-        PurchaseDetailsConstructor.getPurchaseDetailsSection(summaryWithAllOptionValuesModel)
-          .count(_.equals(PurchaseDetailsConstructor.getRebasedValueAnswer(summaryWithAllOptionValuesModel))) shouldBe 1
+        PurchaseDetailsConstructor
+          .getPurchaseDetailsSection(summaryWithAllOptionValuesModel)
+          .count(_.equals(PurchaseDetailsConstructor
+            .getRebasedValueAnswer(summaryWithAllOptionValuesModel))) shouldBe 1
       }
 
       ".getPurchaseDetailsSection will return a Sequence[QuestionAnswersModel[Any]] that will contain a rebasedCostsData item" in {
-        PurchaseDetailsConstructor.getPurchaseDetailsSection(summaryWithAllOptionValuesModel)
-          .count(_.equals(PurchaseDetailsConstructor.getRebasedCostsAnswer(summaryWithAllOptionValuesModel))) shouldBe 1
+        PurchaseDetailsConstructor
+          .getPurchaseDetailsSection(summaryWithAllOptionValuesModel)
+          .count(_.equals(PurchaseDetailsConstructor
+            .getRebasedCostsAnswer(summaryWithAllOptionValuesModel))) shouldBe 1
       }
 
       ".getAcquisitionDateAnswer will return a date of 4/9/16" in {
-        
+        val obtainedDate: LocalDate = PurchaseDetailsConstructor.getAcquisitionDateAnswer(summaryWithAllOptionValuesModel).get.data
+        val stringConversion = obtainedDate.getDayOfMonth + "/" + obtainedDate.getMonth +
+          "/" + obtainedDate.getYear
+        PurchaseDetailsConstructor.getAcquisitionDateAnswer(summaryWithAllOptionValuesModel) shouldBe stringConversion
       }
+
+      ".getAcquisitionValueAnswer will return  a value of 300000.0" in {
+        val obtainedValue = PurchaseDetailsConstructor
+          .getAcquisitionValueAnswer((summaryWithAllOptionValuesModel)).get.data
+        obtainedValue shouldBe 3000.0
+      }
+
+      ".getAcquisitionCostsAnswer will return a value of 25000.0" in {
+        val obtainedValue = PurchaseDetailsConstructor
+          .getAcquisitionCostsAnswer((summaryWithAllOptionValuesModel)).get.data
+        obtainedValue shouldBe 25000.0
+      }
+
+      ".getRebasedValueAnswer will return a value of 350000.0" in {
+        val obtainedValue = PurchaseDetailsConstructor
+          .getRebasedValueAnswer((summaryWithAllOptionValuesModel)).get.data
+        obtainedValue shouldBe 35000.0
+      }
+
+      ".getRebasedCostsAnswer will return a value of 4000.0" in {
+        val obtainedValue = PurchaseDetailsConstructor
+          .getRebasedCostsAnswer((summaryWithAllOptionValuesModel)).get.data
+        obtainedValue shouldBe 4000.0
+      }
+
+      ".getAcquisitionDateAnswer will return a value of 4/9/16" in {
+        val obtainedDate = PurchaseDetailsConstructor
+          .getAcquisitionDateAnswer(summaryWithAllOptionValuesModel).get.data
+        val stringConversion = obtainedDate.getDayOfMonth + "/" + obtainedDate.getMonth +
+          "/" + obtainedDate.getYear
+
+        stringConversion shouldBe "4/9/16"
+      }
+
+      ".getAcquisitionDateAnswer will return an id of " + s"${KeystoreKeys.acquisitionDate}" in {
+        val obtainedKey = PurchaseDetailsConstructor
+          .getAcquisitionDateAnswer(summaryWithAllOptionValuesModel).get.id
+        obtainedKey shouldBe KeystoreKeys.acquisitionDate
+      }
+
+      //test URL
     }
   }
 }
