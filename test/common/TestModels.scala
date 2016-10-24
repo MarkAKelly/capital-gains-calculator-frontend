@@ -40,7 +40,7 @@ object TestModels {
     DisposalCostsModel(15000),
     AllowableLossesModel("No", None),
     CalculationElectionModel("rebased"),
-    OtherReliefsModel(Some("No)"), None),
+    OtherReliefsModel(Some("No"), None),
     OtherReliefsModel(None, None),
     OtherReliefsModel(None, None),
     Some(PrivateResidenceReliefModel("Yes", Some(2847), Some(0)))
@@ -64,7 +64,7 @@ object TestModels {
     DisposalCostsModel(0),
     AllowableLossesModel("No", None),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(Some("No)"), None),
+    OtherReliefsModel(Some("No"), None),
     OtherReliefsModel(None, None),
     OtherReliefsModel(None, None),
     None

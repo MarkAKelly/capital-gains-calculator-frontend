@@ -18,7 +18,7 @@ package constructors.nonresident
 
 import common.TestModels
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.NonResident.{PrivateResidenceRelief => messages}
+import assets.MessageLookup.{NonResident => messages}
 
 class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
@@ -41,7 +41,7 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
       }
 
       "have the question for private residence relief" in {
-        result.get.question shouldBe messages.question
+        result.get.question shouldBe messages.PrivateResidenceRelief.question
       }
 
       "have a link to the private residence relief page" in {
@@ -55,6 +55,39 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
 
       "return a None" in {
         result.isEmpty shouldBe true
+      }
+    }
+  }
+
+  "Calling allowableLossesRow" when {
+
+    "provided with a summary that contains a value for allowable losses" should {
+      val model = TestModels.summaryIndividualFlatWithoutAEA
+      lazy val result = DeductionDetailsConstructor.allowableLossesRow(model)
+
+      "have an id of nr:allowableLosses" in {
+        result.get.id shouldBe "nr:allowableLosses"
+      }
+
+      "have the data for 50000" in {
+        result.get.data shouldBe BigDecimal(50000)
+      }
+
+      "have the question for allowableLosses" in {
+        result.get.question shouldBe messages.AllowableLosses.inputQuestion
+      }
+
+      "have a link to the allowable losses page" in {
+        result.get.link shouldBe Some(controllers.nonresident.routes.AllowableLossesController.allowableLosses().url)
+      }
+    }
+
+    "provided with a summary that contains no value for allowable losses" should {
+      val model = TestModels.sumModelFlat
+      lazy val result = DeductionDetailsConstructor.allowableLossesRow(model)
+
+      "have the data for 0" in {
+        result.get.data shouldBe BigDecimal(0)
       }
     }
   }
