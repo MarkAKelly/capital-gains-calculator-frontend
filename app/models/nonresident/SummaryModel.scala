@@ -48,4 +48,11 @@ case class SummaryModel(
     case CalculationType.timeApportioned if otherReliefsModelTA.otherReliefs.getOrElse(BigDecimal(0)) > 0 => CalculationType.timeApportioned
     case _ => "none"
   }
+
+  //TODO These are mock values to be wired later on to the constructor
+  //Cannot use deductionsDetailsRows here as it is dependant on the results being present, must be created by controller instead
+  val personalDetailsRows: Seq[QuestionAnswerModel[Any]] = Seq(QuestionAnswerModel("personal", "name", "question", Some("")))
+  val salesDetailsRows: Seq[QuestionAnswerModel[Any]] = Seq(QuestionAnswerModel("sales", 1000, "question", Some("")))
+  val purchaseDetailsRows: Seq[QuestionAnswerModel[Any]] = Seq(QuestionAnswerModel("purchase", 500, "question", Some("")))
+  val propertyDetailsRows: Seq[QuestionAnswerModel[Any]] = Seq(QuestionAnswerModel("property", 100, "question", Some("")))
 }
