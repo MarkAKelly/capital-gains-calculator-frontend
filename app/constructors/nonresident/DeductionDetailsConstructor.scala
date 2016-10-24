@@ -24,6 +24,20 @@ import play.api.i18n.Messages
 
 object DeductionDetailsConstructor {
 
+  def deductionDetailsRows(answers: SummaryModel, results: CalculationResultModel): Seq[QuestionAnswerModel[Any]] = {
+    val privateResidenceRelief = privateResidenceReliefRow(results)
+    val allowableLosses = allowableLossesRow(answers)
+    val otherReliefsFlatQuestion = otherReliefsFlatQuestionRow(answers)
+    val otherReliefsFlatValue = otherReliefsFlatValueRow(answers)
+    val otherReliefsTAValue = otherReliefsTAValueRow(answers)
+    val otherReliefsRebasedValue = otherReliefsRebasedValueRow(answers)
+
+    val sequence = Seq(privateResidenceRelief, allowableLosses, otherReliefsFlatQuestion,
+      otherReliefsFlatValue, otherReliefsTAValue, otherReliefsRebasedValue)
+
+    sequence.flatten
+  }
+
   def privateResidenceReliefRow(results: CalculationResultModel): Option[QuestionAnswerModel[BigDecimal]] = {
     if (results.simplePRR.isDefined) {
       Some(QuestionAnswerModel(keys.privateResidenceRelief,
@@ -94,6 +108,22 @@ object DeductionDetailsConstructor {
           BigDecimal(0),
           Messages("calc.otherReliefs.question"),
           Some(routes.OtherReliefsTAController.otherReliefsTA().toString())))
+      case _ => None
+    }
+  }
+
+  def otherReliefsRebasedValueRow(answers: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] = {
+    (answers.calculationElectionModel.calculationType, answers.otherReliefsModelRebased.otherReliefs) match {
+      case (calculationKeys.rebased, Some(value)) =>
+        Some(QuestionAnswerModel(keys.otherReliefsRebased,
+          value,
+          Messages("calc.otherReliefs.question"),
+          Some(routes.OtherReliefsRebasedController.otherReliefsRebased().toString())))
+      case (calculationKeys.rebased, _) =>
+        Some(QuestionAnswerModel(keys.otherReliefsRebased,
+          BigDecimal(0),
+          Messages("calc.otherReliefs.question"),
+          Some(routes.OtherReliefsRebasedController.otherReliefsRebased().toString())))
       case _ => None
     }
   }

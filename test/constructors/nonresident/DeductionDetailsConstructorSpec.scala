@@ -22,6 +22,77 @@ import assets.MessageLookup.{NonResident => messages}
 
 class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
+  "Calling deductionDetailsRows" when {
+
+    "provided with a summary with only a flat calculation and no other reliefs or prr" should {
+      val model = TestModels.sumModelFlat
+      val calculation = TestModels.calcModelOneRate
+      lazy val result = DeductionDetailsConstructor.deductionDetailsRows(model, calculation)
+
+      "return a sequence of size 2" in {
+        result.size shouldBe 2
+      }
+
+      "contain a value for allowable losses" in {
+        result.contains(DeductionDetailsConstructor.allowableLossesRow(model).get) shouldBe true
+      }
+
+      "contain a value for other reliefs flat question" in {
+        result.contains(DeductionDetailsConstructor.otherReliefsFlatQuestionRow(model).get) shouldBe true
+      }
+    }
+
+    "provided with a summary with a flat calculation with other reliefs and prr" should {
+      val model = TestModels.summaryIndividualFlatWithoutAEA
+      val calculation = TestModels.calcModelSomePRR
+      lazy val result = DeductionDetailsConstructor.deductionDetailsRows(model, calculation)
+
+      "return a sequence of size 3" in {
+        result.size shouldBe 3
+      }
+
+      "contain a value for allowable losses" in {
+        result.contains(DeductionDetailsConstructor.allowableLossesRow(model).get) shouldBe true
+      }
+
+      "contain a value for prr" in {
+        result.contains(DeductionDetailsConstructor.privateResidenceReliefRow(calculation).get) shouldBe true
+      }
+
+      "contain a value for other reliefs flat value" in {
+        result.contains(DeductionDetailsConstructor.otherReliefsFlatValueRow(model).get) shouldBe true
+      }
+    }
+
+    "provided with a summary with a rebased calculation" should {
+      val model = TestModels.sumModelRebased
+      val calculation = TestModels.calcModelOneRate
+      lazy val result = DeductionDetailsConstructor.deductionDetailsRows(model, calculation)
+
+      "return a sequence of size 2" in {
+        result.size shouldBe 2
+      }
+
+      "contain a value for other reliefs flat value" in {
+        result.contains(DeductionDetailsConstructor.otherReliefsRebasedValueRow(model).get) shouldBe true
+      }
+    }
+
+    "provided with a summary with a time apportioned calculation" should {
+      val model = TestModels.sumModelTA
+      val calculation = TestModels.calcModelOneRate
+      lazy val result = DeductionDetailsConstructor.deductionDetailsRows(model, calculation)
+
+      "return a sequence of size 2" in {
+        result.size shouldBe 2
+      }
+
+      "contain a value for other reliefs flat value" in {
+        result.contains(DeductionDetailsConstructor.otherReliefsTAValueRow(model).get) shouldBe true
+      }
+    }
+  }
+
   "Calling privateResidenceReliefRow" when {
 
     "provided a result with simple PRR" should {
@@ -275,6 +346,56 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
     "provided with a summary with a non time-apportioned calculation" should {
       val model = TestModels.sumModelFlat
       lazy val result = DeductionDetailsConstructor.otherReliefsTAValueRow(model)
+
+      "return a None" in {
+        result.isEmpty shouldBe true
+      }
+    }
+  }
+
+  "Calling otherReliefsRebasedValueRow" when {
+
+    "provided with a summary with a relief value given" should {
+      val model = TestModels.sumModelRebased
+      lazy val result = DeductionDetailsConstructor.otherReliefsRebasedValueRow(model)
+
+      "return a Some" in {
+        result.isDefined shouldBe true
+      }
+
+      "have an id of nr:otherReliefsRebased" in {
+        result.get.id shouldBe "nr:otherReliefsRebased"
+      }
+
+      "have the data for 500" in {
+        result.get.data shouldBe BigDecimal(500)
+      }
+
+      "have the question for otherReliefs" in {
+        result.get.question shouldBe messages.OtherReliefs.inputQuestion
+      }
+
+      "have a link to the other reliefs page" in {
+        result.get.link shouldBe Some(controllers.nonresident.routes.OtherReliefsRebasedController.otherReliefsRebased().url)
+      }
+    }
+
+    "provided with a summary with no relief value given" should {
+      val model = TestModels.summaryIndividualRebasedNoAcqDate
+      lazy val result = DeductionDetailsConstructor.otherReliefsRebasedValueRow(model)
+
+      "return a Some" in {
+        result.isDefined shouldBe true
+      }
+
+      "have the data for 0" in {
+        result.get.data shouldBe BigDecimal(0)
+      }
+    }
+
+    "provided with a summary with a non time-apportioned calculation" should {
+      val model = TestModels.sumModelFlat
+      lazy val result = DeductionDetailsConstructor.otherReliefsRebasedValueRow(model)
 
       "return a None" in {
         result.isEmpty shouldBe true
