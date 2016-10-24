@@ -176,4 +176,59 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
       }
     }
   }
+
+  "Calling otherReliefsFlatQuestionRow" when {
+
+    "provided with a summary that contains an answer of 'No' to claiming other reliefs" should {
+      val model = TestModels.sumModelFlat
+      lazy val result = DeductionDetailsConstructor.otherReliefsFlatQuestionRow(model)
+
+      "return a Some" in {
+        result.isDefined shouldBe true
+      }
+
+      "have an id of nr:otherReliefsFlat" in {
+        result.get.id shouldBe "nr:otherReliefsFlat-question"
+      }
+
+      "have the data for 'No'" in {
+        result.get.data shouldBe "No"
+      }
+
+      "have the question for otherReliefs" in {
+        result.get.question shouldBe messages.OtherReliefs.question
+      }
+
+      "have a link to the other reliefs page" in {
+        result.get.link shouldBe Some(controllers.nonresident.routes.OtherReliefsController.otherReliefs().url)
+      }
+    }
+
+    "provided with a summary that contains an answer of 'Yes' to claiming other reliefs" should {
+      val model = TestModels.summaryIndividualFlatWithoutAEA
+      lazy val result = DeductionDetailsConstructor.otherReliefsFlatQuestionRow(model)
+
+      "return a None" in {
+        result.isEmpty shouldBe true
+      }
+    }
+
+    "provided with a summary that contains no answer to claiming other reliefs" should {
+      val model = TestModels.summaryIndividualImprovementsNoRebasedModel
+      lazy val result = DeductionDetailsConstructor.otherReliefsFlatQuestionRow(model)
+
+      "return a None" in {
+        result.isEmpty shouldBe true
+      }
+    }
+
+    "provided with a summary for a non-individual" should {
+      val model = TestModels.summaryTrusteeTAWithAEA
+      lazy val result = DeductionDetailsConstructor.otherReliefsFlatQuestionRow(model)
+
+      "return a None" in {
+        result.isEmpty shouldBe true
+      }
+    }
+  }
 }

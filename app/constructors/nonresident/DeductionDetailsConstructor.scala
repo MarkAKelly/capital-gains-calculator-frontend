@@ -69,4 +69,16 @@ object DeductionDetailsConstructor {
       case _ => None
     }
   }
+
+  def otherReliefsFlatQuestionRow(answers: SummaryModel): Option[QuestionAnswerModel[String]] = {
+    (answers.calculationElectionModel.calculationType, answers.otherReliefsModelFlat) match {
+      case (calculationKeys.flat, OtherReliefsModel(Some("No"), _)) =>
+        Some(QuestionAnswerModel(s"${keys.otherReliefsFlat}-question",
+          "No",
+          Messages("calc.otherReliefs.questionTwo"),
+          Some(routes.OtherReliefsController.otherReliefs().toString())
+        ))
+      case _ => None
+    }
+  }
 }
