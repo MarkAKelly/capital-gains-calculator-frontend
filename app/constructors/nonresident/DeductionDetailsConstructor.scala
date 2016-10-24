@@ -81,4 +81,20 @@ object DeductionDetailsConstructor {
       case _ => None
     }
   }
+
+  def otherReliefsTAValueRow(answers: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] = {
+    (answers.calculationElectionModel.calculationType, answers.otherReliefsModelTA.otherReliefs) match {
+      case (calculationKeys.timeApportioned, Some(value)) =>
+        Some(QuestionAnswerModel(keys.otherReliefsTA,
+          value,
+          Messages("calc.otherReliefs.question"),
+          Some(routes.OtherReliefsTAController.otherReliefsTA().toString())))
+      case (calculationKeys.timeApportioned, _) =>
+        Some(QuestionAnswerModel(keys.otherReliefsTA,
+          BigDecimal(0),
+          Messages("calc.otherReliefs.question"),
+          Some(routes.OtherReliefsTAController.otherReliefsTA().toString())))
+      case _ => None
+    }
+  }
 }

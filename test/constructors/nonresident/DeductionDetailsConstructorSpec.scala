@@ -187,7 +187,7 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
         result.isDefined shouldBe true
       }
 
-      "have an id of nr:otherReliefsFlat" in {
+      "have an id of nr:otherReliefsFlat-question" in {
         result.get.id shouldBe "nr:otherReliefsFlat-question"
       }
 
@@ -225,6 +225,56 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
     "provided with a summary for a non-individual" should {
       val model = TestModels.summaryTrusteeTAWithAEA
       lazy val result = DeductionDetailsConstructor.otherReliefsFlatQuestionRow(model)
+
+      "return a None" in {
+        result.isEmpty shouldBe true
+      }
+    }
+  }
+
+  "Calling otherReliefsTAValueRow" when {
+
+    "provided with a summary with a relief value given" should {
+      val model = TestModels.sumModelTA
+      lazy val result = DeductionDetailsConstructor.otherReliefsTAValueRow(model)
+
+      "return a Some" in {
+        result.isDefined shouldBe true
+      }
+
+      "have an id of nr:otherReliefsTA" in {
+        result.get.id shouldBe "nr:otherReliefsTA"
+      }
+
+      "have the data for 1000" in {
+        result.get.data shouldBe BigDecimal(1000)
+      }
+
+      "have the question for otherReliefs" in {
+        result.get.question shouldBe messages.OtherReliefs.inputQuestion
+      }
+
+      "have a link to the other reliefs page" in {
+        result.get.link shouldBe Some(controllers.nonresident.routes.OtherReliefsTAController.otherReliefsTA().url)
+      }
+    }
+
+    "provided with a summary with no relief value given" should {
+      val model = TestModels.summaryTrusteeTAWithAEA
+      lazy val result = DeductionDetailsConstructor.otherReliefsTAValueRow(model)
+
+      "return a Some" in {
+        result.isDefined shouldBe true
+      }
+
+      "have the data for 0" in {
+        result.get.data shouldBe BigDecimal(0)
+      }
+    }
+
+    "provided with a summary with a non time-apportioned calculation" should {
+      val model = TestModels.sumModelFlat
+      lazy val result = DeductionDetailsConstructor.otherReliefsTAValueRow(model)
 
       "return a None" in {
         result.isEmpty shouldBe true
