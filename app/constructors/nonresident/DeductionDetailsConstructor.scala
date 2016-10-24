@@ -16,8 +16,9 @@
 
 package constructors.nonresident
 
-import models.nonresident.{AllowableLossesModel, CalculationResultModel, QuestionAnswerModel, SummaryModel}
+import models.nonresident._
 import common.{KeystoreKeys => keys}
+import common.nonresident.{CalculationType => calculationKeys}
 import controllers.nonresident.routes
 import play.api.i18n.Messages
 
@@ -41,5 +42,31 @@ object DeductionDetailsConstructor {
       },
       Messages("calc.allowableLosses.question.two"),
       Some(routes.AllowableLossesController.allowableLosses().toString())))
+  }
+
+  def otherReliefsFlatValueRow(answers: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] = {
+    (answers.calculationElectionModel.calculationType, answers.otherReliefsModelFlat) match {
+      case (calculationKeys.flat, OtherReliefsModel(Some("Yes"), Some(value))) =>
+        Some(QuestionAnswerModel(keys.otherReliefsFlat,
+          value,
+          Messages("calc.otherReliefs.question"),
+          Some(routes.OtherReliefsController.otherReliefs().toString())))
+      case (calculationKeys.flat, OtherReliefsModel(Some("Yes"), None)) =>
+        Some(QuestionAnswerModel(keys.otherReliefsFlat,
+          BigDecimal(0),
+          Messages("calc.otherReliefs.question"),
+          Some(routes.OtherReliefsController.otherReliefs().toString())))
+      case (calculationKeys.flat, OtherReliefsModel(None, Some(value))) =>
+        Some(QuestionAnswerModel(keys.otherReliefsFlat,
+          value,
+          Messages("calc.otherReliefs.question"),
+          Some(routes.OtherReliefsFlatController.otherReliefsFlat().toString())))
+      case (calculationKeys.flat, OtherReliefsModel(None, None)) =>
+        Some(QuestionAnswerModel(keys.otherReliefsFlat,
+          BigDecimal(0),
+          Messages("calc.otherReliefs.question"),
+          Some(routes.OtherReliefsFlatController.otherReliefsFlat().toString())))
+      case _ => None
+    }
   }
 }

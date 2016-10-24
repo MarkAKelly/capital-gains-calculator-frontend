@@ -849,4 +849,52 @@ object TestModels {
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
+  val summaryOtherReliefsFlatYesNoValue = SummaryModel (
+    CustomerTypeModel(CustomerTypeKeys.individual),
+    None,
+    Some(CurrentIncomeModel(1000)),
+    Some(PersonalAllowanceModel(9000)),
+    OtherPropertiesModel("No", None),
+    None,
+    AcquisitionDateModel("No", None, None, None),
+    AcquisitionValueModel(100000),
+    Some(RebasedValueModel("No", None)),
+    None,
+    ImprovementsModel("Yes", Some(8000)),
+    DisposalDateModel(10, 10, 2010),
+    DisposalValueModel(150000),
+    AcquisitionCostsModel(300),
+    DisposalCostsModel(600),
+    AllowableLossesModel("Yes", Some(50000)),
+    CalculationElectionModel("flat"),
+    OtherReliefsModel(Some("Yes"), None),
+    OtherReliefsModel(None, Some(888)),
+    OtherReliefsModel(None, Some(777)),
+    None
+  )
+
+  val summaryOtherReliefsFlatWithNoValue = SummaryModel (
+    CustomerTypeModel(CustomerTypeKeys.individual),
+    None,
+    Some(CurrentIncomeModel(1000)),
+    Some(PersonalAllowanceModel(9000)),
+    OtherPropertiesModel("No", None),
+    None,
+    AcquisitionDateModel("No", None, None, None),
+    AcquisitionValueModel(100000),
+    Some(RebasedValueModel("No", None)),
+    None,
+    ImprovementsModel("Yes", Some(8000)),
+    DisposalDateModel(10, 10, 2010),
+    DisposalValueModel(150000),
+    AcquisitionCostsModel(300),
+    DisposalCostsModel(600),
+    AllowableLossesModel("Yes", Some(50000)),
+    CalculationElectionModel("flat"),
+    OtherReliefsModel(None, None),
+    OtherReliefsModel(None, Some(888)),
+    OtherReliefsModel(None, Some(777)),
+    None
+  )
+
 }
