@@ -56,6 +56,35 @@ object PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
       ".getPurchaseDetailsSection will return a Sequence[QuestionAnswerModel[Any]] with size 5" in {
         PurchaseDetailsConstructor.getPurchaseDetailsSection(summaryWithAllOptionValuesModel).size shouldBe 5
       }
+
+      ".getPurchaseDetailsSection will return a Sequence[QuestionAnswerModel[Any]] that will contain an acquisitionDateData item" in {
+        PurchaseDetailsConstructor.getPurchaseDetailsSection(summaryWithAllOptionValuesModel)
+          .count(_.equals(PurchaseDetailsConstructor.getAcquisitionDateAnswer(summaryWithAllOptionValuesModel))) shouldBe 1
+      }
+
+      ".getPurchaseDetailsSection will return a Sequence[QuestionAnswersModel[Any]] that will contain an acquisitionCostData item" in {
+        PurchaseDetailsConstructor.getPurchaseDetailsSection(summaryWithAllOptionValuesModel)
+          .count(_.equals(PurchaseDetailsConstructor.getAcquisitionCostsAnswer(summaryWithAllOptionValuesModel))) shouldBe 1
+      }
+
+      ".getPurchaseDetailsSection will return a Sequence[QuestionAnswersModel[Any]] that will contain an acquisitionValueData item" in {
+        PurchaseDetailsConstructor.getPurchaseDetailsSection(summaryWithAllOptionValuesModel)
+          .count(_.equals(PurchaseDetailsConstructor.getAcquisitionDateAnswer(summaryWithAllOptionValuesModel))) shouldBe 1
+      }
+
+      ".getPurchaseDetailsSection will return a Sequence[QuestionAnswersModel[Any]] that will contain a rebasedValueData item" in {
+        PurchaseDetailsConstructor.getPurchaseDetailsSection(summaryWithAllOptionValuesModel)
+          .count(_.equals(PurchaseDetailsConstructor.getRebasedValueAnswer(summaryWithAllOptionValuesModel))) shouldBe 1
+      }
+
+      ".getPurchaseDetailsSection will return a Sequence[QuestionAnswersModel[Any]] that will contain a rebasedCostsData item" in {
+        PurchaseDetailsConstructor.getPurchaseDetailsSection(summaryWithAllOptionValuesModel)
+          .count(_.equals(PurchaseDetailsConstructor.getRebasedCostsAnswer(summaryWithAllOptionValuesModel))) shouldBe 1
+      }
+
+      ".getAcquisitionDateAnswer will return a date of 4/9/16" in {
+        
+      }
     }
   }
 }

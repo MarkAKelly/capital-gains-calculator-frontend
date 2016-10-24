@@ -25,11 +25,6 @@ import play.api.i18n.Messages
 
 object PurchaseDetailsConstructor {
 
-  /*def getPurchaseDetailsSection(summaryModel: SummaryModel): Seq[QuestionAnswerModel[Any]] = {
-
-    val acquisitionDate = getA
-  }*/
-
   def getPurchaseDetailsSection(summaryModel: SummaryModel): Seq[QuestionAnswerModel[Any]] = {
 
     val acquisitionDateData = getAcquisitionDateAnswer(summaryModel)
