@@ -19,7 +19,7 @@ package constructors.nonresident
 import java.time.LocalDate
 
 import models.nonresident.{QuestionAnswerModel, SummaryModel}
-import common.{KeystoreKeys => keys}
+import common.{Dates, KeystoreKeys => keys}
 import play.api.i18n.Messages
 
 object SalesDetailsConstructor {
@@ -34,7 +34,7 @@ object SalesDetailsConstructor {
 
   def disposalDateRow(answers: SummaryModel): QuestionAnswerModel[LocalDate] = {
     val dateModel = answers.disposalDateModel
-    val date = LocalDate.parse(s"${dateModel.year}-${dateModel.month}-${dateModel.day}")
+    val date = Dates.constructDate(dateModel.day, dateModel.month, dateModel.year)
 
     QuestionAnswerModel[LocalDate](keys.disposalDate,
       date,

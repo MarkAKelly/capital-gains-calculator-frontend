@@ -1,5 +1,6 @@
 @import common.Dates
 @import constructors.nonresident.SummaryConstructor
+@import views.html.helpers.nonresident._
 @import models.nonresident._
 @import uk.gov.hmrc.play.views.helpers._
 @import views.html.helpers._
@@ -25,17 +26,17 @@
 
     <div class=font-medium" data-metrics="summary:calc-election:@summary.calculationElectionModel.calculationType">
 
-    @SummaryConstructor.calculationDetails(result, summary)
+    @summarySectionNoLink("calculationDetails",Messages("calc.summary.calculation.details.title"),result.calculationDetailsRows)
 
-    @SummaryConstructor.personalDetails(result, summary)
+    @summarySection("personalDetails", Messages("calc.summary.personal.details.title"), summary.personalDetailsRows)
 
-    @SummaryConstructor.acquisitionDetails(result, summary)
+    @summarySection("purchaseDetails", Messages("calc.summary.purchase.details.title"), summary.purchaseDetailsRows)
 
-    @SummaryConstructor.propertyDetails(result, summary)
+    @summarySection("propertyDetails", Messages("calc.summary.property.details.title"), summary.propertyDetailsRows)
 
-    @SummaryConstructor.saleDetails(result, summary)
+    @summarySection("saleDetails", Messages("calc.summary.sale.details.title"), summary.saleDetailsRows)
 
-    @SummaryConstructor.deductions(result, summary)
+    @summarySection("deductionsDetails", Messages("calc.summary.deductions.title"), summary.deductionsDetailsRows(result))
 
     </div>
 

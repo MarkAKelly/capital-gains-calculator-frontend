@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.nonResident.report
+package views.nonResident
 
 import assets.MessageLookup.{SummaryPage => messages}
 import common.TestModels._
@@ -22,8 +22,8 @@ import controllers.helpers.FakeRequestHelper
 import models.resident.TaxYearModel
 import org.jsoup.Jsoup
 import play.api.i18n.Messages
-import views.html.calculation.nonresident.summaryReport
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import views.html.calculation.nonresident.summaryReport
 
 class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 

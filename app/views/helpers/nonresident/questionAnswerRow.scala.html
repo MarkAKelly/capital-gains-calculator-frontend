@@ -13,7 +13,7 @@
             @{questionAnswer.data match {
             case string: String => string
             case int: Int => int.toString
-            case bigDecimal: BigDecimal => s"£${MoneyPounds(bigDecimal, 0).quantity}"
+            case bigDecimal: BigDecimal => s"£${MoneyPounds(bigDecimal).quantity}"
             case date: LocalDate => datePageFormatNoZero.format(date)
             case _ => ""
             }}

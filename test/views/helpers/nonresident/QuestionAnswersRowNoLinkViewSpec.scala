@@ -83,7 +83,7 @@ class QuestionAnswersRowNoLinkViewSpec extends UnitSpec {
       val doc = Jsoup.parse(result.body)
 
       "have the answer '£1,000'" in {
-        doc.select("div#id-answer span").text() shouldBe "£1,000"
+        doc.select("div#id-answer span").text() shouldBe "£1,000.53"
       }
     }
 

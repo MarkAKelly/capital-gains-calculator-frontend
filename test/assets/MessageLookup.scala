@@ -277,6 +277,7 @@ object MessageLookup {
       val saleDetailsTitle = "Sale details"
       val deductionsTitle = "Deductions"
       val whatToDoNextText = "What to do next"
+      val whatToDoNextContent = "You need to"
       val whatToDoNextLink = "tell HMRC about the property"
       val startAgain = "Start again"
       val calculationElection = "What would you like to base your tax on?"
