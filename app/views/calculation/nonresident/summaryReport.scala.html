@@ -1,5 +1,6 @@
 @import common.Dates
 @import views.html.helpers._
+@import views.html.helpers.nonresident._
 @import views.html.helpers.resident._
 @import models.nonresident._
 @import models.resident._
@@ -21,7 +22,7 @@
     <title>@Messages("calc.summary.title")</title>
 </head>
 
-<div class="pdf">
+<div class="pdf pdf-non-resident">
     <div class="header-container">
         <h1 class="heading-xlarge">
             <span class="pre-heading">@Messages("calc.summary.secondaryHeading")</span>
@@ -46,51 +47,51 @@
     <section id="calcDetails">
 
         <!-- Header -->
-        @summarySectionHeaderHelper(Messages("calc.summary.calculation.details.title"))
+        @summarySectionNoLink("calculationDetails", Messages("calc.summary.calculation.details.title"), result.calculationDetailsRows)
 
         <!-- Body -->
-        @SummaryReportConstructor.calculationDetails(result, summary)
+        <!--@SummaryReportConstructor.calculationDetails(result, summary)-->
 
     </section>
 
     <section id="personalDetails">
         <!-- Header -->
-        @summarySectionHeaderHelper(Messages("calc.summary.personal.details.title"))
+        @summarySectionNoLink("personalDetails", Messages("calc.summary.personal.details.title"), summary.personalDetailsRows)
 
         <!-- Body -->
-        @SummaryReportConstructor.personalDetails(result, summary)
+        <!--@SummaryReportConstructor.personalDetails(result, summary)-->
     </section>
 
     <section id="acquisitionDetails">
         <!-- Header -->
-        @summarySectionHeaderHelper(Messages("calc.summary.purchase.details.title"))
+        @summarySectionNoLink("acquisitionDetails", Messages("calc.summary.purchase.details.title"), summary.purchaseDetailsRows)
 
         <!-- Body -->
-        @SummaryReportConstructor.acquisitionDetails(result, summary)
+        <!--@SummaryReportConstructor.acquisitionDetails(result, summary)-->
     </section>
 
     <section id="propertyDetails">
         <!-- Header -->
-        @summarySectionHeaderHelper(Messages("calc.summary.property.details.title"))
+        @summarySectionNoLink("propertyDetails", Messages("calc.summary.property.details.title"), summary.propertyDetailsRows)
 
         <!-- Body -->
-        @SummaryReportConstructor.propertyDetails(result, summary)
+        <!--@SummaryReportConstructor.propertyDetails(result, summary)-->
     </section>
 
     <section id="saleDetails">
         <!-- Header -->
-        @summarySectionHeaderHelper(Messages("calc.summary.sale.details.title"))
+        @summarySectionNoLink("saleDetails", Messages("calc.summary.sale.details.title"), summary.saleDetailsRows)
 
         <!-- Body -->
-        @SummaryReportConstructor.saleDetails(result, summary)
+        <!--@SummaryReportConstructor.saleDetails(result, summary)-->
     </section>
 
     <section id="deductions">
         <!-- Header -->
-        @summarySectionHeaderHelper(Messages("calc.summary.deductions.title"))
+        @summarySectionNoLink("deductions", Messages("calc.summary.deductions.title"), summary.deductionsDetailsRows(result))
 
         <!-- Body -->
-        @SummaryReportConstructor.deductions(result, summary)
+        <!--@SummaryReportConstructor.deductions(result, summary)-->
     </section>
 
     @*
