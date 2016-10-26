@@ -91,7 +91,7 @@ class QuestionAnswersRowViewSpec extends UnitSpec {
       val doc = Jsoup.parse(result.body)
 
       "have the answer '£1,000'" in {
-        doc.select("div#id-answer a").text() shouldBe "£1,000"
+        doc.select("div#id-answer a").text() shouldBe "£1,000.53"
       }
     }
 

@@ -30,7 +30,7 @@ case class CalculationResultModel(taxOwed: BigDecimal,
   val taxableGain: BigDecimal = baseTaxGain + upperTaxGain.getOrElse(0)
 
   //TODO This is a mock value to be wired later on to the constructor
-  val calculationDetailsRow: Seq[QuestionAnswerModel[Any]] = Seq(QuestionAnswerModel("calculation", 200, "question", None))
+  val calculationDetailsRows: Seq[QuestionAnswerModel[Any]] = Seq(QuestionAnswerModel("calculation", BigDecimal(200), "question", None))
 }
 
 object CalculationResultModel {
