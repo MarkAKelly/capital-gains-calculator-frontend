@@ -124,44 +124,33 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
     "using the summaryWithAllOptionsValuesModel" should {
 
-      ".getPurchaseDetailsItem will return a Sequence[QuestionAnswerModel[Any]] with size 5" in{
+      ".getPersonalDetailsItem will return a Sequence[QuestionAnswerModel[Any]] with size 5" in{
         PersonalDetailsConstructor.getPersonalDetailsSection(summaryWithAllOptionValuesModel).size shouldBe 5
       }
 
-      ".getPurchaseDetailsItem will return a Sequence[QuestionAnswerModel[Any]] will contain a PersonalDetails.getCustomerType item" in {
+      ".getPersonalDetailsItem will return a Sequence[QuestionAnswerModel[Any]] will contain a PersonalDetails.getCustomerType item" in {
         PersonalDetailsConstructor.getPersonalDetailsSection(summaryWithAllOptionValuesModel)
           .count(_.equals(PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).get)) shouldBe 1
       }
 
-      ".getPurchaseDetailsItem will return a Sequence[QuestionAnswerModel[Any]] will contain a PersonalDetails.getCurrentIncomeAnswer item" in {
+      ".getPersonalDetailsItem will return a Sequence[QuestionAnswerModel[Any]] will contain a PersonalDetails.getCurrentIncomeAnswer item" in {
         PersonalDetailsConstructor.getPersonalDetailsSection(summaryWithAllOptionValuesModel)
           .count(_.equals(PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryWithAllOptionValuesModel).get)) shouldBe 1
       }
 
-      ".getPurchaseDetailsItem will return a Sequence[QuestionAnswerModel[Any]] will contain a PersonalDetails.getPersonalAllowanceAnswer item" in {
+      ".getPersonalDetailsItem will return a Sequence[QuestionAnswerModel[Any]] will contain a PersonalDetails.getPersonalAllowanceAnswer item" in {
         PersonalDetailsConstructor.getPersonalDetailsSection(summaryWithAllOptionValuesModel)
           .count(_.equals(PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryWithAllOptionValuesModel).get)) shouldBe 1
       }
 
-      ".getPurchaseDetailsItem will return a Sequence[QuestionAnswerModel[Any]] will contain a PersonalDetails.getOtherPropertiesAnswer item" in {
+      ".getPersonalDetailsItem will return a Sequence[QuestionAnswerModel[Any]] will contain a PersonalDetails.getOtherPropertiesAnswer item" in {
         PersonalDetailsConstructor.getPersonalDetailsSection(summaryWithAllOptionValuesModel)
           .count(_.equals(PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithAllOptionValuesModel).get)) shouldBe 1
       }
 
-      ".getPurchaseDetailsItem will return a Sequence[QuestionAnswerModel[Any]] will contain a PersonalDetails.getOtherPropertiesAmountAnswer item" in {
+      ".getPersonalDetailsItem will return a Sequence[QuestionAnswerModel[Any]] will contain a PersonalDetails.getOtherPropertiesAmountAnswer item" in {
         PersonalDetailsConstructor.getPersonalDetailsSection(summaryWithAllOptionValuesModel)
           .count(_.equals(PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryWithAllOptionValuesModel).get)) shouldBe 1
-      }
-
-      ".getPurchaseDetailsItem will return a Sequence[QuestionAnswerModel[Any]] will not contain anything other than " +
-      "PersonalDetails.getCustomerTypeAnswer item, PersonalDetails.getCurrentIncomeAnswer item, PersonalDetails.getPersonalAllowanceAnswer item, " +
-      "PersonalDetails.getOtherPropertiesAnswer item, PersonalDetails.getOtherPropertiesAnswer item" in {
-        PersonalDetailsConstructor.getPersonalDetailsSection(summaryWithAllOptionValuesModel)
-          .filterNot(_.id == PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).get.id)
-          .filterNot(_.id == PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryWithAllOptionValuesModel).get.id)
-          .filterNot(_.id == PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryWithAllOptionValuesModel).get.id)
-          .filterNot(_.id == PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithAllOptionValuesModel).get.id)
-          .filterNot(_.id == PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryWithAllOptionValuesModel).get.id).size shouldBe 0
       }
 
       ".getCustomerTypeAnswer with a customer type of individual will return an id of " +
@@ -325,10 +314,6 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
       ".getOtherPropertiesAnswer with a customer type of trustee will return data of Yes" in {
         PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithTrusteeValuesModel).get.data shouldBe "Yes"
-      }
-
-      ".getOtherPropertiesAmountAnswer with a customer type of trustee will return None" in {
-        PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryWithTrusteeValuesModel) shouldBe None
       }
 
       ".getAnnualExemptAmountAnswer with otherProperties is a yes and and no taxable gain" should {

@@ -18,7 +18,7 @@ package constructors.nonresident
 
 import common.KeystoreKeys
 import common.nonresident.CustomerTypeKeys
-import models.nonresident.{QuestionAnswerModel, SummaryModel}
+import models.nonresident.{OtherPropertiesModel, QuestionAnswerModel, SummaryModel}
 import play.api.i18n.Messages
 
 import scala.math.BigDecimal
@@ -104,10 +104,8 @@ object PersonalDetailsConstructor {
   }
 
   def getOtherPropertiesAmountAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] =
-    (summaryModel.otherPropertiesModel.otherProperties,
-      summaryModel.otherPropertiesModel.otherPropertiesAmt,
-      summaryModel.customerTypeModel.customerType) match {
-    case ("Yes", Some(otherPropertiesAmount), CustomerTypeKeys.individual) => Some(QuestionAnswerModel(
+    summaryModel.otherPropertiesModel match {
+    case (OtherPropertiesModel("Yes", Some(otherPropertiesAmount))) => Some(QuestionAnswerModel(
       KeystoreKeys.otherProperties + "Amount",
       otherPropertiesAmount,
       Messages("calc.otherProperties.questionTwo"),
@@ -117,8 +115,8 @@ object PersonalDetailsConstructor {
 
   //Only if otherProperties is yes and taxable gain is 0
   def getAnnualExemptAmountAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] =
-    (summaryModel.otherPropertiesModel.otherProperties, summaryModel.otherPropertiesModel.otherPropertiesAmt) match {
-      case ("Yes", Some(x)) if x == BigDecimal(0) =>
+    summaryModel.otherPropertiesModel match {
+      case (OtherPropertiesModel("Yes", Some(x))) if x == BigDecimal(0) =>
         Some(QuestionAnswerModel(
           KeystoreKeys.annualExemptAmount,
           summaryModel.annualExemptAmountModel.get.annualExemptAmount,
