@@ -47,6 +47,8 @@ object MessageLookup {
     val invalidAmountNoDecimal = "Enter an amount in the correct format e.g. 10000"
     val numericPlayErrorOverride = "Enter a number without commas, for example 10000.00"
 
+    val whatToDoNextTextTwo = "You need to tell HMRC about the property"
+    val whatToDoNextFurtherDetails = "Further details on how to tell HMRC about this property can be found at"
   }
 
   object NonResident extends Common {
@@ -543,7 +545,6 @@ object MessageLookup {
     val whatNextYouCan = "You can "
     val whatNextLink = "tell us about this loss "
     val whatNextText = "so that you might need to pay less tax in the future."
-    val whatToDoNextTextTwo = "You need to tell HMRC about the property"
     val whatToDoNextTextTwoShares = "You need to tell HMRC about the shares"
     val whatToDoNextNoLossText = "Find out whether you need to"
     val whatToDoNextNoLossLinkProperties = "tell HMRC about the property"
