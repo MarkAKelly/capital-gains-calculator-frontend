@@ -151,4 +151,220 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
     }
 
   }
+
+  "Calling totalGain" when {
+
+    "the gain is zero" should {
+
+      lazy val model = TestModels.calcModelZeroTotal
+      lazy val result = target.totalGain(model)
+
+      "return some total gain details" in {
+        result should not be None
+      }
+
+      "return correct ID for the total gain details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe "calcDetails:totalGain"
+        }
+      }
+
+      "return correct question for the total gain details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.totalGain
+        }
+      }
+
+      "return correct answer for the total gain details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe model.totalGain
+        }
+      }
+
+      "return a link for the total gain details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link shouldBe None
+        }
+      }
+    }
+
+    "the gain is greater than zero" should {
+
+      lazy val model = TestModels.calcModelOneRate
+      lazy val result = target.totalGain(model)
+
+      "return some total gain details" in {
+        result should not be None
+      }
+
+      "return correct ID for the total gain details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe "calcDetails:totalGain"
+        }
+      }
+
+      "return correct question for the total gain details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.totalGain
+        }
+      }
+
+      "return correct answer for the total gain details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe model.totalGain
+        }
+      }
+
+      "return a link for the total gain details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link shouldBe None
+        }
+      }
+    }
+
+    "the total gain is less than zero" should {
+
+      lazy val model = TestModels.calcModelLoss
+      lazy val result = target.totalGain(model)
+
+      "return no total gain details" in {
+        result shouldBe None
+      }
+    }
+  }
+
+  "Calling totalLoss" when {
+
+    "the gain is zero" should {
+
+      lazy val model = TestModels.calcModelZeroTotal
+      lazy val result = target.totalLoss(model)
+
+      "return no total loss details" in {
+        result shouldBe None
+      }
+    }
+
+    "the gain is greater than zero" should {
+
+      lazy val model = TestModels.calcModelOneRate
+      lazy val result = target.totalLoss(model)
+
+      "return no total loss details" in {
+        result shouldBe None
+      }
+    }
+
+    "the total gain is less than zero" should {
+
+      lazy val model = TestModels.calcModelLoss
+      lazy val result = target.totalLoss(model)
+
+      "return some total loss details" in {
+        result should not be None
+      }
+
+      "return correct ID for the total loss details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe "calcDetails:totalLoss"
+        }
+      }
+
+      "return correct question for the total loss details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.totalLoss
+        }
+      }
+
+      "return correct answer for the total loss details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe model.totalGain.abs
+        }
+      }
+
+      "return a link for the total loss details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link shouldBe None
+        }
+      }
+    }
+
+  }
+//
+//  "Calling usedAEA" when {
+//
+//    /*
+//          if isGreaterThanZero(totalGain) && isGreaterThanZero(taxableGain)
+//          None
+//
+//          if !isPositive(taxableGain)
+//          None
+//
+//          if !isPositive(totalGain)
+//          None
+//
+//          if isGreaterThanZero(totalGain) && isPositive(taxableGain) && !isGreaterThanZero(taxableGain)
+//          None
+//
+//    */
+//
+//  }
+//
+//
+//  "Calling taxableGain" when {
+//
+//    /*
+//          if isGreaterThanZero(totalGain) && isGreaterThanZero(taxableGain)
+//          None
+//
+//          if !isPositive(taxableGain)
+//          None
+//
+//          if !isPositive(totalGain)
+//          None
+//
+//          if isGreaterThanZero(totalGain) && isPositive(taxableGain) && !isGreaterThanZero(taxableGain)
+//          None
+//
+//    */
+//
+//  }
+//
+//  "Calling taxableRate" when {
+//
+//    /*
+//          if isGreaterThanZero(totalGain) && isGreaterThanZero(taxableGain)
+//          None
+//
+//          if !isPositive(taxableGain)
+//          None
+//
+//          if !isPositive(totalGain)
+//          None
+//
+//          if isGreaterThanZero(totalGain) && isPositive(taxableGain) && !isGreaterThanZero(taxableGain)
+//          None
+//
+//    */
+//
+//  }
+//
+//  "Calling lossCarriedForward" when {
+//
+//    /*
+//          if isGreaterThanZero(totalGain) && isGreaterThanZero(taxableGain)
+//          None
+//
+//          if !isPositive(taxableGain)
+//          None
+//
+//          if !isPositive(totalGain)
+//          None
+//
+//          if isGreaterThanZero(totalGain) && isPositive(taxableGain) && !isGreaterThanZero(taxableGain)
+//          None
+//
+//    */
+//
+//  }
 }

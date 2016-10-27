@@ -23,10 +23,36 @@ import play.api.i18n.Messages
 
 object CalculationDetailsConstructor {
 
+  def totalLoss(model: CalculationResultModel): Option[QuestionAnswerModel[BigDecimal]] = {
+    if (model.totalGain >= BigDecimal(0)) None
+    else {
+      val id = "calcDetails:totalLoss"
+
+      val question = Messages("calc.summary.calculation.details.totalLoss")
+
+      val answer = model.totalGain.abs
+
+      Some(QuestionAnswerModel(id, answer, question, None))
+    }
+  }
+
+  def totalGain(model: CalculationResultModel): Option[QuestionAnswerModel[BigDecimal]] = {
+    if (model.totalGain < BigDecimal(0)) None
+    else {
+      val id = "calcDetails:totalGain"
+
+      val question = Messages("calc.summary.calculation.details.totalGain")
+
+      val answer = model.totalGain
+
+      Some(QuestionAnswerModel(id, answer, question, None))
+    }
+  }
+
   def buildSection(calculationResult: CalculationResultModel, userResponses: SummaryModel): Seq[QuestionAnswerModel[Any]] = {
     Seq(calculationElection(userResponses)).flatten
   }
-  
+
   def calculationElection(model: SummaryModel): Option[QuestionAnswerModel[String]] = {
 
     val id = KeystoreKeys.calculationElection
