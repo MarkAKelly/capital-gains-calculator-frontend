@@ -19,31 +19,25 @@ package controllers.CalculationControllerTests
 import common.DefaultRoutes._
 import common.KeystoreKeys
 import connectors.CalculatorConnector
-import play.api.libs.json.Json
-import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.CalculationElectionConstructor
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.mvc.AnyContentAsFormUrlEncoded
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
-import assets.MessageLookup.{NonResident => commonMessages}
 import assets.MessageLookup.NonResident.{AcquisitionDate => messages}
+import controllers.helpers.FakeRequestHelper
 import scala.concurrent.Future
 import controllers.nonresident.{AcquisitionDateController, routes}
 import models.nonresident.{AcquisitionDateModel, OtherPropertiesModel}
-import play.api.mvc.Result
 
-class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
   implicit val hc = new HeaderCarrier()
 
   def setupTarget(getData: Option[AcquisitionDateModel],
-                  postData: Option[AcquisitionDateModel],
                   otherPropertiesData: Option[OtherPropertiesModel]
                  ): AcquisitionDateController = {
 
@@ -56,26 +50,20 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
     when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.eq(KeystoreKeys.otherProperties))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(otherPropertiesData))
 
-    lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(AcquisitionDateModel("",None,None,None)))))
-    when(mockCalcConnector.saveFormData[AcquisitionDateModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
-    .thenReturn(Future.successful(data))
-
     new AcquisitionDateController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
       override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
   }
 
-  "In CalculationController calling the .acquisitionDate action " should {
+  "Calling the .acquisitionDate action " should {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/customer-type").withSession(SessionKeys.sessionId -> "12345")
-    
     "not supplied with a pre-existing model" should {
 
       "when Previous Taxable Gains is 'No'" should {
 
-        val target = setupTarget(None, None, Some(OtherPropertiesModel("No", None)))
-        lazy val result = target.acquisitionDate(fakeRequest)
+        val target = setupTarget(None, Some(OtherPropertiesModel("No", None)))
+        lazy val result = target.acquisitionDate(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))
 
         "return a 200" in {
@@ -84,84 +72,45 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
 
         "return some HTML that" should {
 
-          "contain some text and use the character set utf-8" in {
-            contentType(result) shouldBe Some("text/html")
-            charset(result) shouldBe Some("utf-8")
-          }
-
-          s"have the title '${messages.question}'" in {
-            document.title shouldEqual messages.question
-          }
-
-          s"have the heading ${commonMessages.pageHeading}" in {
-            document.body.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
+          s"have load the acquisition date page ${messages.question}" in {
+            document.title() shouldBe messages.question
           }
 
           s"have a 'Back' link to ${routes.OtherPropertiesController.otherProperties().url} " in {
-            document.body.getElementById("back-link").text shouldEqual commonMessages.back
             document.body.getElementById("back-link").attr("href") shouldEqual routes.OtherPropertiesController.otherProperties().url
-          }
-
-          s"have the question '${messages.question}" in {
-            document.body.getElementsByTag("legend").text should include(messages.question)
-          }
-
-          "display the correct wording for radio option `yes`" in {
-            document.body.getElementById("hasAcquisitionDate-yes").parent.text shouldEqual commonMessages.yes
-          }
-
-          "display the correct wording for radio option `no`" in {
-            document.body.getElementById("hasAcquisitionDate-no").parent.text shouldEqual commonMessages.no
-          }
-
-          "contain a hidden component with an input box" in {
-            document.body.getElementById("hidden").html should include("input")
-          }
-
-          "display three input boxes with labels Day, Month and Year respectively" in {
-            document.select("label[for=acquisitionDateDay]").text shouldEqual commonMessages.day
-            document.select("label[for=acquisitionDateMonth]").text shouldEqual commonMessages.month
-            document.select("label[for=acquisitionDateYear]").text shouldEqual commonMessages.year
-          }
-
-          "display a 'Continue' button " in {
-            document.body.getElementById("continue-button").text shouldEqual commonMessages.continue
           }
         }
       }
 
       "when Previous Taxable Gains is 'Yes' and amount is 0.00" should {
 
-        val target = setupTarget(None, None, Some(OtherPropertiesModel("Yes", Some(0))))
-        lazy val result = target.acquisitionDate(fakeRequest)
+        val target = setupTarget(None, Some(OtherPropertiesModel("Yes", Some(0))))
+        lazy val result = target.acquisitionDate(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.AnnualExemptAmountController.annualExemptAmount().url} " in {
-          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.AnnualExemptAmountController.annualExemptAmount().url
         }
       }
 
       "when Previous Taxable Gains is 'Yes' and amount is > 0.00" should {
 
-        val target = setupTarget(None, None, Some(OtherPropertiesModel("Yes", Some(0.01))))
-        lazy val result = target.acquisitionDate(fakeRequest)
+        val target = setupTarget(None, Some(OtherPropertiesModel("Yes", Some(0.01))))
+        lazy val result = target.acquisitionDate(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to ${routes.OtherPropertiesController.otherProperties().url} " in {
-          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.OtherPropertiesController.otherProperties().url
         }
       }
 
       "when there is no Previous Taxable Gains model" should {
 
-        val target = setupTarget(None, None, None)
-        lazy val result = target.acquisitionDate(fakeRequest)
+        val target = setupTarget(None, None)
+        lazy val result = target.acquisitionDate(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))
 
         s"have a 'Back' link to $missingDataRoute " in {
-          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
         }
       }
@@ -170,194 +119,62 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
     "supplied with a model already filled with data" should {
 
       val testAcquisitionDateModel = new AcquisitionDateModel("Yes", Some(10), Some(12), Some(2016))
-      val target = setupTarget(Some(testAcquisitionDateModel), None, Some(OtherPropertiesModel("No",None)))
-      lazy val result = target.acquisitionDate(fakeRequest)
+      val target = setupTarget(Some(testAcquisitionDateModel), Some(OtherPropertiesModel("No",None)))
+      lazy val result = target.acquisitionDate(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
         status(result) shouldBe 200
       }
 
-      "return some HTML that" should {
+      s"have load the acquisition date page ${messages.question}" in {
+        document.title() shouldBe messages.question
+      }
+    }
 
-        "have the radio option `Yes` selected if `Yes` is supplied in the model" in {
-          document.body.getElementById("hasAcquisitionDate-yes").parent.classNames().contains("selected") shouldBe true
-        }
+    "no valid session is present" should {
+      val target = setupTarget(None, Some(OtherPropertiesModel("No", None)))
+      lazy val result = target.acquisitionDate(fakeRequest)
 
-        "have the date 10, 12, 2016 pre-populated" in {
-          document.body.getElementById("acquisitionDateDay").attr("value") shouldEqual testAcquisitionDateModel.day.get.toString
-          document.body.getElementById("acquisitionDateMonth").attr("value") shouldEqual testAcquisitionDateModel.month.get.toString
-          document.body.getElementById("acquisitionDateYear").attr("value") shouldEqual testAcquisitionDateModel.year.get.toString
-        }
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect the user to the session timeout page" in {
+        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
       }
     }
   }
 
-  "In CalculationController calling the submitAcquisitionDate action" when {
+  "Calling the submitAcquisitionDate action" when {
 
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST", "/calculate-your-capital-gains/acquisition-date")
-      .withSession(SessionKeys.sessionId -> "12345")
-      .withFormUrlEncodedBody(body: _*)
-
-    def executeTargetWithMockData
-    (
-      hasAcquisitionDate: String,
-      day: Option[Int] = None,
-      month: Option[Int] = None,
-      year: Option[Int] = None
-    ): Future[Result] = {
-      lazy val fakeRequest = buildRequest(
-        ("hasAcquisitionDate", hasAcquisitionDate),
-        ("acquisitionDateDay", day.getOrElse("").toString),
-        ("acquisitionDateMonth", month.getOrElse("").toString),
-        ("acquisitionDateYear", year.getOrElse("").toString))
-      val mockData = new AcquisitionDateModel("Yes",day,month,year)
-      val target = setupTarget(None, Some(mockData), Some(OtherPropertiesModel("No",None)))
-      target.submitAcquisitionDate(fakeRequest)
-    }
-
-    "submitting a valid form" should {
-
-      lazy val result = executeTargetWithMockData("Yes",Some(10),Some(2),Some(2015))
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-    }
-
-    "submitting a valid form with 'No' and no date value" should {
-
-      lazy val result = executeTargetWithMockData("No")
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-    }
-
-    "submitting a valid leap year date 29/02/2016" should {
-
-      lazy val result = executeTargetWithMockData("Yes",Some(29),Some(2),Some(2016))
+    "supplied with a valid model" should {
+      val target = setupTarget(None, Some(OtherPropertiesModel("No", None)))
+      lazy val request = fakeRequestToPOSTWithSession(("hasAcquisitionDate", "No"))
+      lazy val result = target.submitAcquisitionDate(request)
 
       "return a 303" in {
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.AcquisitionValueController.acquisitionValue()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.AcquisitionValueController.acquisitionValue()}")
+      s"redirect to ${controllers.nonresident.routes.AcquisitionValueController.acquisitionValue().url}" in {
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.AcquisitionValueController.acquisitionValue().url
       }
     }
 
-    "submitting an invalid leap year date 29/02/2017" should {
-
-      lazy val result = executeTargetWithMockData("Yes",Some(29),Some(2),Some(2017))
+    "supplied with an invalid model" should {
+      val target = setupTarget(None, Some(OtherPropertiesModel("No", None)))
+      lazy val request = fakeRequestToPOSTWithSession(("hasAcquisitionDate", "Yes"))
+      lazy val result = target.submitAcquisitionDate(request)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {
         status(result) shouldBe 400
       }
 
-      s"should error with message ${commonMessages.errorInvalidDate}" in {
-        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
-      }
-    }
-
-    "submitting a day less than 1" should {
-
-      lazy val result = executeTargetWithMockData("Yes",Some(0),Some(2),Some(2017))
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"should error with message ${commonMessages.errorInvalidDate}" in {
-        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
-      }
-    }
-
-    "submitting a day greater than 31" should {
-
-      lazy val result = executeTargetWithMockData("Yes",Some(32),Some(2),Some(2017))
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"should error with message ${commonMessages.errorInvalidDate}" in {
-        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
-      }
-    }
-
-    "submitting a month greater than 12" should {
-
-      lazy val result = executeTargetWithMockData("Yes",Some(31),Some(13),Some(2017))
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"should error with message ${commonMessages.errorInvalidDate}" in {
-        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
-      }
-    }
-
-    "submitting a month less than 1" should {
-
-      lazy val result = executeTargetWithMockData("Yes",Some(31),Some(0),Some(2017))
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"should error with message ${commonMessages.errorInvalidDate}" in {
-        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
-      }
-    }
-
-    "submitting a day with no value" should {
-
-      lazy val result = executeTargetWithMockData("Yes",None,Some(0),Some(2017))
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"should error with message ${commonMessages.errorInvalidDate}" in {
-        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
-      }
-    }
-
-    "submitting a month with no value" should {
-
-      lazy val result = executeTargetWithMockData("Yes",Some(31),None,Some(2017))
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"should error with message ${commonMessages.errorInvalidDate}" in {
-        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
-      }
-    }
-
-    "submitting a year with no value" should {
-
-      lazy val result = executeTargetWithMockData("Yes",Some(31),Some(1),None)
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"should error with message ${commonMessages.errorInvalidDate}" in {
-        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
+      "return to the Acquisition Date page" in {
+        document.title shouldBe messages.question
       }
     }
   }
-
 }

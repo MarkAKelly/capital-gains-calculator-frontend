@@ -26,7 +26,9 @@ object AcquisitionDateForm {
 
   val acquisitionDateForm = Form(
     mapping(
-      "hasAcquisitionDate" -> nonEmptyText,
+      "hasAcquisitionDate" -> text
+        .verifying(Messages("calc.common.error.fieldRequired"), mandatoryCheck)
+        .verifying(Messages("calc.common.error.fieldRequired"), yesNoCheck),
       "acquisitionDateDay" -> optional(number),
       "acquisitionDateMonth" -> optional(number),
       "acquisitionDateYear" -> optional(number)
