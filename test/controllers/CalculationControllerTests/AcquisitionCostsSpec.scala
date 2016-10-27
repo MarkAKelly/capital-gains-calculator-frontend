@@ -34,11 +34,12 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{NonResident => commonMessages}
 import assets.MessageLookup.NonResident.{AcquisitionCosts => messages}
+import controllers.helpers.FakeRequestHelper
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 import scala.concurrent.Future
 
-class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
   implicit val hc = new HeaderCarrier()
   def setupTarget(getData: Option[AcquisitionCostsModel], postData: Option[AcquisitionCostsModel]): AcquisitionCostsController = {
@@ -61,199 +62,80 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
 
   "In CalculationController calling the .acquisitionCosts action " should {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/acquisition-costs").withSession(SessionKeys.sessionId -> "12345")
+//    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/acquisition-costs").withSession(SessionKeys.sessionId -> "12345")
 
     "not supplied with a pre-existing stored model" should {
       val target = setupTarget(None, None)
-      lazy val result = target.acquisitionCosts(fakeRequest)
+      lazy val result = target.acquisitionCosts(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
         status(result) shouldBe 200
       }
 
-      "return some HTML that" should {
-
-        "contain some text and use the character set utf-8" in {
-          contentType(result) shouldBe Some("text/html")
-          charset(result) shouldBe Some("utf-8")
-        }
-
-        "have the title 'How much did you pay in costs when you became the property owner'" in {
-          document.getElementsByTag("title").text shouldEqual messages.question
-        }
-
-        s"have a 'Back' link to ${routes.DisposalValueController.disposalValue()}" in {
-          document.body.getElementById("back-link").text shouldEqual commonMessages.back
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalValueController.disposalValue().toString()
-        }
-
-        "have the page heading 'Calculate your tax (non-residents)'" in {
-          document.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
-        }
-
-        "have a monetary field that" should {
-
-          "have the title 'How much did you pay in costs when you became the property owner?'" in {
-            document.select("label[for=acquisitionCosts]").text should include (messages.question)
-          }
-
-          "have the help text 'Costs include agent fees, legal fees and surveys'" in {
-            document.select("span.form-hint").text shouldEqual messages.helpText
-          }
-
-          "have an input box for the acquisition costs" in {
-            document.getElementById("acquisitionCosts").tagName shouldBe "input"
-          }
-        }
-
-        "have a continue button that" should {
-
-          "be a button element" in {
-            document.getElementById("continue-button").tagName shouldBe "button"
-          }
-
-          "have the text 'Continue'" in {
-            document.getElementById("continue-button").text shouldEqual commonMessages.continue
-          }
-        }
+      "load the acquisitionCosts page" in {
+        document.title shouldBe messages.question
       }
     }
 
     "supplied with a pre-existing stored model" should {
       val testAcquisitionCostsModel = new AcquisitionCostsModel(1000)
       val target = setupTarget(Some(testAcquisitionCostsModel), None)
-      lazy val result = target.acquisitionCosts(fakeRequest)
+      lazy val result = target.acquisitionCosts(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
         status(result) shouldBe 200
       }
 
-      "return some HTML that" should {
-        "have the value 1000 auto-filled into the input box" in {
-            document.getElementById("acquisitionCosts").attr("value") shouldEqual "1000"
-        }
+      "load the acquisitionCosts page" in {
+        document.title shouldBe messages.question
+      }
+    }
+
+    "without a valid session" should {
+      val target = setupTarget(None, None)
+      lazy val result = target.acquisitionCosts(fakeRequest)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the session timeout page" in {
+        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
       }
     }
   }
 
-  "In CalculationController calling the .submitAcquisitionCosts action" when {
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
-      "/calculate-your-capital-gains/non-resident/acquisition-date")
-      .withSession(SessionKeys.sessionId -> "12345")
-      .withFormUrlEncodedBody(body: _*)
+  "Calling the .submitAcquisitionCosts action" when {
 
-    def executeTargetWithMockData
-    (
-      acquisitionCosts: String = ""
-    ): Future[Result] = {
-      lazy val fakeRequest = buildRequest(
-        ("acquisitionCosts", acquisitionCosts))
+    "supplied with a valid form" should {
+      val target = setupTarget(None, None)
+      lazy val request = fakeRequestToPOSTWithSession(("acquisitionCosts", "1000"))
+      lazy val result = target.submitAcquisitionCosts(request)
 
-      val numeric = "(0-9*)".r
-      val mockData = acquisitionCosts match {
-        case numeric(money) => new AcquisitionCostsModel(BigDecimal(money))
-        case _ => new AcquisitionCostsModel(0)
-      }
-      val target = setupTarget(None, Some(mockData))
-      target.submitAcquisitionCosts(fakeRequest)
-    }
-
-    "submitting a valid form" should {
-
-      "with value 1000" should {
-        lazy val result = executeTargetWithMockData("1000")
-
-        "return a 303" in {
-          status(result) shouldBe 303
-        }
-
-        s"redirect to ${routes.DisposalCostsController.disposalCosts()}" in {
-          redirectLocation(result) shouldBe Some(s"${routes.DisposalCostsController.disposalCosts()}")
-        }
+      "return a 303" in {
+        status(result) shouldBe 303
       }
 
-      "with no value" should {
-        lazy val result = executeTargetWithMockData("")
-        lazy val document = Jsoup.parse(bodyOf(result))
-
-        "return a 400" in {
-          status(result) shouldBe 400
-        }
-
-        s"fail with message ${commonMessages.numericPlayErrorOverride}" in {
-          document.getElementsByClass("error-notification").text should include (commonMessages.numericPlayErrorOverride)
-        }
+      s"redirect to '${controllers.nonresident.routes.DisposalCostsController.disposalCosts().url}'" in {
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.DisposalCostsController.disposalCosts().url
       }
     }
 
-    "submitting an invalid form" should {
+    "supplied with an invalid form" should {
+      val target = setupTarget(None, None)
+      lazy val request = fakeRequestToPOSTWithSession(("acquisitionCosts", "a"))
+      lazy val result = target.submitAcquisitionCosts(request)
+      lazy val document = Jsoup.parse(bodyOf(result))
 
-      "with value -1" should {
-        lazy val result = executeTargetWithMockData("-1")
-        lazy val document = Jsoup.parse(bodyOf(result))
-
-        "return a 400" in {
-          status(result) shouldBe 400
-        }
-
-        s"fail with message ${messages.errorNegative}" in {
-          document.getElementsByClass("error-notification").text should include (messages.errorNegative)
-        }
-
-        "display a visible Error Summary field" in {
-          document.getElementById("error-summary-display").hasClass("error-summary--show")
-        }
-
-        "link to the invalid input box in Error Summary" in {
-          document.getElementById("acquisitionCosts-error-summary").attr("href") should include ("#acquisitionCosts")
-        }
+      "return a 400" in {
+        status(result) shouldBe 400
       }
 
-      "with value 1.111" should {
-        lazy val result = executeTargetWithMockData("1.111")
-        lazy val document = Jsoup.parse(bodyOf(result))
-
-        "return a 400" in {
-          status(result) shouldBe 400
-        }
-
-        s"fail with message ${messages.errorDecimalPlaces}" in {
-          document.getElementsByClass("error-notification").text should include(messages.errorDecimalPlaces)
-        }
-
-        "display a visible Error Summary field" in {
-          document.getElementById("error-summary-display").hasClass("error-summary--show")
-        }
-
-        "link to the invalid input box in Error Summary" in {
-          document.getElementById("acquisitionCosts-error-summary").attr("href") should include ("#acquisitionCosts")
-        }
-      }
-
-      "submitting a value which exceeds the maximum numeric" should {
-        lazy val result = executeTargetWithMockData((Constants.maxNumeric + 0.01).toString)
-        lazy val document = Jsoup.parse(bodyOf(result))
-
-        "return a 400" in {
-          status(result) shouldBe 400
-        }
-
-        s"fail with message ${messages.errorMaximum(MoneyPounds(Constants.maxNumeric, 0).quantity)}" in {
-          document.getElementsByClass("error-notification").text should
-            include (messages.errorMaximum(MoneyPounds(Constants.maxNumeric, 0).quantity))
-        }
-
-        "display a visible Error Summary field" in {
-          document.getElementById("error-summary-display").hasClass("error-summary--show")
-        }
-
-        "link to the invalid input box in Error Summary" in {
-          document.getElementById("acquisitionCosts-error-summary").attr("href") should include ("#acquisitionCosts")
-        }
+      "return to the acquisition costs page" in {
+        document.title shouldBe messages.question
       }
     }
   }
-
 }
