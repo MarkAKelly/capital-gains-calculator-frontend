@@ -16,43 +16,32 @@
 
 package controllers.CalculationControllerTests
 
-import common.Constants
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
-import controllers.nonresident.{AcquisitionCostsController, routes}
+import controllers.nonresident.AcquisitionCostsController
 import models.nonresident.AcquisitionCostsModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
-import play.api.libs.json.Json
-import play.api.mvc.{AnyContentAsFormUrlEncoded, Result}
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.cache.client.CacheMap
-import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.{NonResident => commonMessages}
 import assets.MessageLookup.NonResident.{AcquisitionCosts => messages}
 import controllers.helpers.FakeRequestHelper
-import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 import scala.concurrent.Future
 
 class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
   implicit val hc = new HeaderCarrier()
-  def setupTarget(getData: Option[AcquisitionCostsModel], postData: Option[AcquisitionCostsModel]): AcquisitionCostsController = {
+  def setupTarget(getData: Option[AcquisitionCostsModel]): AcquisitionCostsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[AcquisitionCostsModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
-
-    lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(AcquisitionCostsModel(0)))))
-    when(mockCalcConnector.saveFormData[AcquisitionCostsModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(data))
 
     new AcquisitionCostsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -62,10 +51,8 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
 
   "In CalculationController calling the .acquisitionCosts action " should {
 
-//    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/acquisition-costs").withSession(SessionKeys.sessionId -> "12345")
-
     "not supplied with a pre-existing stored model" should {
-      val target = setupTarget(None, None)
+      val target = setupTarget(None)
       lazy val result = target.acquisitionCosts(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -80,7 +67,7 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "supplied with a pre-existing stored model" should {
       val testAcquisitionCostsModel = new AcquisitionCostsModel(1000)
-      val target = setupTarget(Some(testAcquisitionCostsModel), None)
+      val target = setupTarget(Some(testAcquisitionCostsModel))
       lazy val result = target.acquisitionCosts(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -94,7 +81,7 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
     }
 
     "without a valid session" should {
-      val target = setupTarget(None, None)
+      val target = setupTarget(None)
       lazy val result = target.acquisitionCosts(fakeRequest)
 
       "return a 303" in {
@@ -110,7 +97,7 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
   "Calling the .submitAcquisitionCosts action" when {
 
     "supplied with a valid form" should {
-      val target = setupTarget(None, None)
+      val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("acquisitionCosts", "1000"))
       lazy val result = target.submitAcquisitionCosts(request)
 
@@ -124,7 +111,7 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
     }
 
     "supplied with an invalid form" should {
-      val target = setupTarget(None, None)
+      val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("acquisitionCosts", "a"))
       lazy val result = target.submitAcquisitionCosts(request)
       lazy val document = Jsoup.parse(bodyOf(result))
