@@ -40,6 +40,7 @@ object MessageLookup {
     val mandatoryAmount = "Enter an amount"
     val minimumAmount = "Enter an amount that's £0 or more"
     val maximumAmount = "Enter an amount that's £1,000,000,000 or less"
+    val errorRequired = "This field is required"
 
     def maximumLimit(limit: String): String = s"Enter an amount that's £$limit or less"
 
