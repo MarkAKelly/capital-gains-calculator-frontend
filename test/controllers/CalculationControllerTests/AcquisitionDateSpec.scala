@@ -19,26 +19,19 @@ package controllers.CalculationControllerTests
 import common.DefaultRoutes._
 import common.KeystoreKeys
 import connectors.CalculatorConnector
-import play.api.libs.json.Json
-import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.CalculationElectionConstructor
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.mvc.AnyContentAsFormUrlEncoded
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
-import assets.MessageLookup.{NonResident => commonMessages}
 import assets.MessageLookup.NonResident.{AcquisitionDate => messages}
 import controllers.helpers.FakeRequestHelper
-
 import scala.concurrent.Future
 import controllers.nonresident.{AcquisitionDateController, routes}
 import models.nonresident.{AcquisitionDateModel, OtherPropertiesModel}
-import play.api.mvc.Result
 
 class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
