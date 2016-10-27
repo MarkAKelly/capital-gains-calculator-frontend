@@ -55,8 +55,8 @@ class SummarySectionNoLinkViewSpec extends UnitSpec {
           doc.select("div.form-group > div").size shouldBe 3
         }
 
-        "should have internal divs for title, question and answer with class 'grid-layout__column grid-layout__column--1-3'" in {
-          doc.select("div.form-group > div").attr("class") shouldBe "grid-layout__column grid-layout__column--1-3"
+        "should have internal divs for title, question and answer with class 'grid-layout__column grid-layout__column--1-3 pdf-header'" in {
+          doc.select("div.form-group > div").attr("class") shouldBe "grid-layout__column grid-layout__column--1-3 pdf-header"
         }
       }
     }
@@ -92,8 +92,8 @@ class SummarySectionNoLinkViewSpec extends UnitSpec {
           doc.select("div.form-group > div").size shouldBe 6
         }
 
-        "should have internal divs for title, question and answer with class 'grid-layout__column grid-layout__column--1-3'" in {
-          doc.select("div.form-group > div").attr("class") shouldBe "grid-layout__column grid-layout__column--1-3"
+        "should have internal divs for title, question and answer with class 'grid-layout__column grid-layout__column--1-3 pdf-header'" in {
+          doc.select("div.form-group > div").attr("class") shouldBe "grid-layout__column grid-layout__column--1-3 pdf-header"
         }
       }
     }
