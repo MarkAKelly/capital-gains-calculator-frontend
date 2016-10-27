@@ -53,7 +53,7 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
       }
 
       "have a 'Calculation details' section that" in {
-        document.select("#calcDetails span.heading-large").text should include(nrMessages.Summary.calculationDetailsTitle)
+        document.select("#calculationDetails span.heading-large").text should include(nrMessages.Summary.calculationDetailsTitle)
       }
 
       "have a 'Personal details' section that" in {
@@ -89,7 +89,7 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
         }
 
         "have the text 'Further details on how to tell HMRC about this property can be found at'" in {
-          whatToDoNext.select("p").text shouldBe nrMessages.whatToDoNextFurtherDetails
+          whatToDoNext.select("p").text should include (nrMessages.whatToDoNextFurtherDetails)
         }
 
         "have the correct link" in {
