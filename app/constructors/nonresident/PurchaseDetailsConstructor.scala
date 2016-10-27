@@ -17,7 +17,7 @@
 package constructors.nonresident
 
 import java.time.LocalDate
-
+import common.nonresident.CalculationType
 import common.{Dates, KeystoreKeys}
 import models.nonresident.{QuestionAnswerModel, SummaryModel}
 import play.api.i18n.Messages
@@ -44,36 +44,42 @@ object PurchaseDetailsConstructor {
   }
 
   def getAcquisitionDateAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[LocalDate]] = {
-    Some(QuestionAnswerModel(
-      KeystoreKeys.acquisitionDate,
-      Dates.constructDate(summaryModel.acquisitionDateModel.day.get,
-        summaryModel.acquisitionDateModel.month.get, summaryModel.acquisitionDateModel.year.get),
-      Messages("calc.acquisitionDate.questionTwo"),
-      Some(controllers.nonresident.AcquisitionDateController.acquisitionDate().toString())
-    ))
+      Some(QuestionAnswerModel(
+        KeystoreKeys.acquisitionDate,
+        Dates.constructDate(summaryModel.acquisitionDateModel.day.get,
+          summaryModel.acquisitionDateModel.month.get, summaryModel.acquisitionDateModel.year.get),
+        Messages("calc.acquisitionDate.questionTwo"),
+        Some(controllers.nonresident.AcquisitionDateController.acquisitionDate().toString())
+      ))
   }
 
   def getAcquisitionValueAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] =  {
-    Some(QuestionAnswerModel(
-      KeystoreKeys.acquisitionValue,
-      summaryModel.acquisitionValueModel.acquisitionValueAmt,
-      Messages("calc.acquisitionValue.question"),
-      Some(controllers.nonresident.AcquisitionValueController.acquisitionValue().toString())
-    ))
+    if (summaryModel.calculationElectionModel.calculationType.equals(CalculationType.flat))
+      Some(QuestionAnswerModel(
+        KeystoreKeys.acquisitionValue,
+        summaryModel.acquisitionValueModel.acquisitionValueAmt,
+        Messages("calc.acquisitionValue.question"),
+        Some(controllers.nonresident.AcquisitionValueController.acquisitionValue().toString())
+      ))
+    else
+      None
   }
 
   def getAcquisitionCostsAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] = {
-    Some(QuestionAnswerModel(
-      KeystoreKeys.acquisitionCosts,
-      summaryModel.acquisitionCostsModel.acquisitionCostsAmt,
-      Messages("calc.acquisitionCosts.question"),
-      Some(controllers.nonresident.AcquisitionCostsController.acquisitionCosts.toString())
-    ))
+    if (summaryModel.calculationElectionModel.calculationType.equals(CalculationType.flat))
+      Some(QuestionAnswerModel(
+        KeystoreKeys.acquisitionCosts,
+        summaryModel.acquisitionCostsModel.acquisitionCostsAmt,
+        Messages("calc.acquisitionCosts.question"),
+        Some(controllers.nonresident.AcquisitionCostsController.acquisitionCosts.toString())
+      ))
+    else
+      None
   }
 
   def getRebasedValueAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[Option[BigDecimal]]] =
-    (summaryModel.rebasedValueModel) match {
-    case(Some(rebasedValueModel)) =>
+    (summaryModel.rebasedValueModel, summaryModel.calculationElectionModel.calculationType) match {
+    case(Some(rebasedValueModel), CalculationType.rebased) =>
       Some(QuestionAnswerModel(
         KeystoreKeys.rebasedValue,
         rebasedValueModel.rebasedValueAmt,
@@ -84,8 +90,8 @@ object PurchaseDetailsConstructor {
   }
 
   def getRebasedCostsAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[Option[BigDecimal]]] =
-    (summaryModel.rebasedCostsModel) match {
-      case(Some(rebasedCostsModel))  =>
+    (summaryModel.rebasedCostsModel, summaryModel.calculationElectionModel.calculationType) match {
+      case(Some(rebasedCostsModel), CalculationType.rebased)  =>
         Some(QuestionAnswerModel(
         KeystoreKeys.rebasedCosts,
           rebasedCostsModel.rebasedCosts,

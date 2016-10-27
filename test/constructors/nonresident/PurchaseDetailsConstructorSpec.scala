@@ -16,21 +16,19 @@
 
 package constructors.nonresident
 
-import java.text.DateFormat
-import java.time.{LocalDate, LocalTime}
+import java.time.LocalDate
 
 import common.nonresident.CustomerTypeKeys
 import models.nonresident._
 import common.KeystoreKeys
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import constructors.nonresident.PurchaseDetailsConstructor
 
 /**
   * Created by emma on 24/10/16.
   */
-object PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
+class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
-  val summaryWithAllOptionValuesModel = SummaryModel(
+  lazy val summaryFlatOptionValuesModel = SummaryModel(
     CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     Some(CurrentIncomeModel(30000.0)),
@@ -54,24 +52,24 @@ object PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
     Some(PrivateResidenceReliefModel("Yes", Some(2500.0), Some(0.0)))
   )
 
-  val summaryNoOptionsModel = SummaryModel(
+  lazy val summaryRebasedOptionsModel = SummaryModel(
     CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     None,
     None,
     OtherPropertiesModel("Yes", None),
     None,
-    AcquisitionDateModel("No", None, None, None),
+    AcquisitionDateModel("Yes", Some(4), Some(9), Some(2016)),
     AcquisitionValueModel(300000.0),
-    None,
-    None,
+    Some(RebasedValueModel("Yes", Some(350000.0))),
+    Some(RebasedCostsModel("Yes", Some(4000.0))),
     ImprovementsModel("No", None),
     DisposalDateModel(5, 9, 2016),
     DisposalValueModel(5000),
     AcquisitionCostsModel(250000.0),
     DisposalCostsModel(5000.0),
     AllowableLossesModel("No", None),
-    CalculationElectionModel("flat"),
+    CalculationElectionModel("rebased"),
     OtherReliefsModel(None, None),
     OtherReliefsModel(None, None),
     OtherReliefsModel(None, None),
@@ -81,200 +79,186 @@ object PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
   "Calling the PurchaseDetailsConstructor" when {
 
     "using the summaryWithAllOptionsValuesModel" should {
-      ".getPurchaseDetailsSection will return a Sequence[QuestionAnswerModel[Any]] with size 5" in {
+      ".getPurchaseDetailsSection with a flat election type model" +
+        " will return a Sequence[QuestionAnswerModel[Any]] with size 3" in {
         PurchaseDetailsConstructor
-          .getPurchaseDetailsSection(summaryWithAllOptionValuesModel).size shouldBe 5
+          .getPurchaseDetailsSection(summaryFlatOptionValuesModel).size shouldBe 3
       }
 
       ".getPurchaseDetailsSection will return a Sequence[QuestionAnswerModel[Any]] that will contain an acquisitionDateData item" in {
         PurchaseDetailsConstructor
-          .getPurchaseDetailsSection(summaryWithAllOptionValuesModel)
-          .count(_.equals(PurchaseDetailsConstructor
-            .getAcquisitionDateAnswer(summaryWithAllOptionValuesModel))) shouldBe 1
+          .getPurchaseDetailsSection(summaryFlatOptionValuesModel)
+          .contains(PurchaseDetailsConstructor
+            .getAcquisitionDateAnswer(summaryFlatOptionValuesModel).get) shouldBe true
       }
 
       ".getPurchaseDetailsSection will return a Sequence[QuestionAnswersModel[Any]] that will contain an acquisitionCostData item" in {
         PurchaseDetailsConstructor
-          .getPurchaseDetailsSection(summaryWithAllOptionValuesModel)
-          .count(_.equals(PurchaseDetailsConstructor
-            .getAcquisitionCostsAnswer(summaryWithAllOptionValuesModel))) shouldBe 1
+          .getPurchaseDetailsSection(summaryFlatOptionValuesModel)
+          .contains(PurchaseDetailsConstructor
+            .getAcquisitionCostsAnswer(summaryFlatOptionValuesModel).get) shouldBe true
       }
 
       ".getPurchaseDetailsSection will return a Sequence[QuestionAnswersModel[Any]] that will contain an acquisitionValueData item" in {
         PurchaseDetailsConstructor
-          .getPurchaseDetailsSection(summaryWithAllOptionValuesModel)
-          .count(_.equals(PurchaseDetailsConstructor
-            .getAcquisitionDateAnswer(summaryWithAllOptionValuesModel))) shouldBe 1
+          .getPurchaseDetailsSection(summaryFlatOptionValuesModel)
+          .contains(PurchaseDetailsConstructor
+            .getAcquisitionDateAnswer(summaryFlatOptionValuesModel).get) shouldBe true
       }
 
-      ".getPurchaseDetailsSection will return a Sequence[QuestionAnswersModel[Any]] that will contain a rebasedValueData item" in {
-        PurchaseDetailsConstructor
-          .getPurchaseDetailsSection(summaryWithAllOptionValuesModel)
-          .count(_.equals(PurchaseDetailsConstructor
-            .getRebasedValueAnswer(summaryWithAllOptionValuesModel))) shouldBe 1
-      }
 
-      ".getPurchaseDetailsSection will return a Sequence[QuestionAnswersModel[Any]] that will contain a rebasedCostsData item" in {
-        PurchaseDetailsConstructor
-          .getPurchaseDetailsSection(summaryWithAllOptionValuesModel)
-          .count(_.equals(PurchaseDetailsConstructor
-            .getRebasedCostsAnswer(summaryWithAllOptionValuesModel))) shouldBe 1
-      }
+      /** ***/
 
       ".getAcquisitionDateAnswer will return a date of 4/9/16" in {
-        val obtainedDate: LocalDate = PurchaseDetailsConstructor.getAcquisitionDateAnswer(summaryWithAllOptionValuesModel).get.data
-        val stringConversion = obtainedDate.getDayOfMonth + "/" + obtainedDate.getMonth +
+        val obtainedDate: LocalDate = PurchaseDetailsConstructor.getAcquisitionDateAnswer(summaryFlatOptionValuesModel).get.data
+        val stringConversion = obtainedDate.getDayOfMonth() + "/" + obtainedDate.getMonthValue() +
           "/" + obtainedDate.getYear
-        PurchaseDetailsConstructor.getAcquisitionDateAnswer(summaryWithAllOptionValuesModel) shouldBe stringConversion
-      }
-
-      ".getAcquisitionValueAnswer will return  a value of 300000.0" in {
-        val obtainedValue = PurchaseDetailsConstructor
-          .getAcquisitionValueAnswer((summaryWithAllOptionValuesModel)).get.data
-        obtainedValue shouldBe 3000.0
-      }
-
-      ".getAcquisitionCostsAnswer will return a value of 25000.0" in {
-        val obtainedValue = PurchaseDetailsConstructor
-          .getAcquisitionCostsAnswer((summaryWithAllOptionValuesModel)).get.data
-        obtainedValue shouldBe 25000.0
-      }
-
-      ".getRebasedValueAnswer will return a value of 350000.0" in {
-        val obtainedValue = PurchaseDetailsConstructor
-          .getRebasedValueAnswer((summaryWithAllOptionValuesModel)).get.data
-        obtainedValue shouldBe 35000.0
-      }
-
-      ".getRebasedCostsAnswer will return a value of 4000.0" in {
-        val obtainedValue = PurchaseDetailsConstructor
-          .getRebasedCostsAnswer((summaryWithAllOptionValuesModel)).get.data
-        obtainedValue shouldBe 4000.0
-      }
-
-      ".getAcquisitionDateAnswer will return a value of 4/9/16" in {
-        val obtainedDate = PurchaseDetailsConstructor
-          .getAcquisitionDateAnswer(summaryWithAllOptionValuesModel).get.data
-        val stringConversion = obtainedDate.getDayOfMonth + "/" + obtainedDate.getMonth +
-          "/" + obtainedDate.getYear
-
-        stringConversion shouldBe "4/9/16"
+        stringConversion shouldBe "4/9/2016"
       }
 
       ".getAcquisitionDateAnswer will return an id of " + s"${KeystoreKeys.acquisitionDate}" in {
         val obtainedKey = PurchaseDetailsConstructor
-          .getAcquisitionDateAnswer(summaryWithAllOptionValuesModel).get.id
+          .getAcquisitionDateAnswer(summaryFlatOptionValuesModel).get.id
         obtainedKey shouldBe KeystoreKeys.acquisitionDate
       }
-
-      ".getAcquisitionDateAnswer will return a url of " +
-        s"${constructors.nonresident.PurchaseDetailsConstructor
-          .getAcquisitionDateAnswer(summaryWithAllOptionValuesModel).toString}" in {
-        val obtainedUrl = constructors.nonresident.PurchaseDetailsConstructor
-          .getAcquisitionDateAnswer(summaryWithAllOptionValuesModel).toString
-        obtainedUrl shouldBe constructors.nonresident.PurchaseDetailsConstructor
-          .getAcquisitionDateAnswer(summaryWithAllOptionValuesModel).toString
+      ".getAcquisitionDateAnswer will return a url of + " in {
+        val correctURL = controllers.nonresident.AcquisitionDateController.acquisitionDate.toString()
+        val obtainedURL = PurchaseDetailsConstructor.getAcquisitionDateAnswer(summaryFlatOptionValuesModel).get.link.get
+        obtainedURL shouldBe correctURL
       }
 
-      ".getAcquisitionValueAnswer will return a value of 30000.0" in {
+      /** ***/
+
+      ".getAcquisitionValueAnswer will return  a value of 300000.0" in {
         val obtainedValue = PurchaseDetailsConstructor
-          .getAcquisitionValueAnswer(summaryWithAllOptionValuesModel).get.data
-        obtainedValue shouldBe 30000.0
+          .getAcquisitionValueAnswer((summaryFlatOptionValuesModel)).get.data
+        obtainedValue shouldBe 300000.0
       }
 
       ".getAcquisitionValue will return an id of " + s"${KeystoreKeys.acquisitionValue}" in {
         val obtainedKey = PurchaseDetailsConstructor
-          .getAcquisitionValueAnswer(summaryWithAllOptionValuesModel).get.id
+          .getAcquisitionValueAnswer(summaryFlatOptionValuesModel).get.id
         obtainedKey shouldBe KeystoreKeys.acquisitionValue
       }
 
       ".getAcquisitionValueAnswer will return a url of " +
-        s"${constructors.nonresident.PurchaseDetailsConstructor
-          .getAcquisitionValueAnswer(summaryWithAllOptionValuesModel).toString}" in {
+        s"${
+          controllers.nonresident.AcquisitionValueController.acquisitionValue.toString
+        }" in {
+        val correctUrl = controllers.nonresident.AcquisitionValueController.acquisitionValue.toString
         val obtainedUrl = constructors.nonresident.PurchaseDetailsConstructor
-          .getAcquisitionValueAnswer(summaryWithAllOptionValuesModel).toString
-        obtainedUrl shouldBe constructors.nonresident.PurchaseDetailsConstructor
-          .getAcquisitionValueAnswer(summaryWithAllOptionValuesModel).toString
+          .getAcquisitionValueAnswer(summaryFlatOptionValuesModel).get.link.get.toString
+        obtainedUrl shouldBe correctUrl
       }
 
+      /** ***/
 
       ".getAcquisitionCostsAnswer will return a value of 250000.0" in {
         val obtainedValue = PurchaseDetailsConstructor
-          .getAcquisitionCostsAnswer(summaryWithAllOptionValuesModel).get.data
+          .getAcquisitionCostsAnswer((summaryFlatOptionValuesModel)).get.data
         obtainedValue shouldBe 250000.0
       }
 
       ".getAcquisitionCostsAnswer will return an id of " + s"${KeystoreKeys.acquisitionCosts}" in {
         val obtainedKey = PurchaseDetailsConstructor
-          .getAcquisitionCostsAnswer(summaryWithAllOptionValuesModel).get.id
+          .getAcquisitionCostsAnswer(summaryFlatOptionValuesModel).get.id
         obtainedKey shouldBe KeystoreKeys.acquisitionCosts
       }
 
       ".getAcquisitionCostsAnswer will return a url of " +
-        s"${constructors.nonresident.PurchaseDetailsConstructor
-          .getAcquisitionValueAnswer(summaryWithAllOptionValuesModel).toString}" in {
+        s"${
+          constructors.nonresident.PurchaseDetailsConstructor
+            .getAcquisitionValueAnswer(summaryFlatOptionValuesModel).toString
+        }" in {
         val obtainedUrl = constructors.nonresident.PurchaseDetailsConstructor
-          .getAcquisitionCostsAnswer(summaryWithAllOptionValuesModel).toString
-        obtainedUrl shouldBe constructors.nonresident.PurchaseDetailsConstructor
-          .getAcquisitionCostsAnswer(summaryWithAllOptionValuesModel).toString
+          .getAcquisitionCostsAnswer(summaryFlatOptionValuesModel).get.link.get.toString
+        val correctUrl = controllers.nonresident.AcquisitionCostsController.acquisitionCosts.toString()
+        obtainedUrl shouldBe correctUrl
       }
 
-      ".getRebasedValue will return a value of 350000.0" in {
+      /** ***/
+
+      ".getRebasedValueAnswer will return a value of None" in {
         val obtainedValue = PurchaseDetailsConstructor
-          .getRebasedValueAnswer(summaryWithAllOptionValuesModel).get.data
-        obtainedValue shouldBe 350000.0
+          .getRebasedValueAnswer((summaryFlatOptionValuesModel))
+        obtainedValue shouldBe None
       }
 
-      ".getRebasedValue will return an id of " + s"${KeystoreKeys.rebasedValue}" in {
-        val obtainedKey = PurchaseDetailsConstructor
-          .getRebasedValueAnswer(summaryWithAllOptionValuesModel).get.id
-        obtainedKey shouldBe KeystoreKeys.rebasedValue
-      }
+      /** ***/
 
-      ".getRebasedValueAnswer will return a url of " +
-        s"${constructors.nonresident.PurchaseDetailsConstructor
-          .getAcquisitionValueAnswer(summaryWithAllOptionValuesModel).toString}" in {
-        val obtainedUrl = constructors.nonresident.PurchaseDetailsConstructor
-          .getRebasedValueAnswer(summaryWithAllOptionValuesModel).toString
-        obtainedUrl shouldBe constructors.nonresident.PurchaseDetailsConstructor
-          .getRebasedValueAnswer(summaryWithAllOptionValuesModel).toString
-      }
-
-      ".getRebasedCostsAnswer will return a value of 250000.0" in {
+      ".getRebasedCostsAnswer will return a value of None" in {
         val obtainedValue = PurchaseDetailsConstructor
-          .getRebasedCostsAnswer(summaryWithAllOptionValuesModel).get.data
-        obtainedValue shouldBe 250000.0
-      }
-
-      ".getRebasedCostsAnswer will return an id of " + s"${KeystoreKeys.rebasedCosts}" in {
-        val obtainedKey = PurchaseDetailsConstructor
-          .getRebasedValueAnswer(summaryWithAllOptionValuesModel).get.id
-        obtainedKey shouldBe KeystoreKeys.rebasedCosts
-      }
-
-      ".getRebasedCostsAnswer will return a url of " +
-        s"${constructors.nonresident.PurchaseDetailsConstructor
-          .getRebasedCostsAnswer(summaryWithAllOptionValuesModel).toString}" in {
-        val obtainedUrl = constructors.nonresident.PurchaseDetailsConstructor
-          .getRebasedCostsAnswer(summaryWithAllOptionValuesModel).toString
-        obtainedUrl shouldBe constructors.nonresident.PurchaseDetailsConstructor
-          .getRebasedCostsAnswer(summaryWithAllOptionValuesModel).toString
+          .getRebasedCostsAnswer((summaryFlatOptionValuesModel))
+        obtainedValue shouldBe None
       }
     }
 
-    "using the summaryNoOptionsModel" should {
-      ".getRebasedValueAnswer will return data of None" in {
-        val obtainedData = PurchaseDetailsConstructor
-          .getRebasedValueAnswer(summaryNoOptionsModel)
-        obtainedData shouldBe None
+    "using the summaryRebasedOptionsModel" should {
+
+      "using the summaryWithAllOptionsValuesModel" should {
+        ".getPurchaseDetailsSection with a rebased election type model" +
+          " will return a Sequence[QuestionAnswerModel[Any]] with size 3.0" in {
+          PurchaseDetailsConstructor
+            .getPurchaseDetailsSection(summaryRebasedOptionsModel).size shouldBe 3
+        }
+
+        ".getRebasedValueAnswer will return data of Some(35000)" in {
+          val obtainedData = PurchaseDetailsConstructor
+            .getRebasedValueAnswer(summaryRebasedOptionsModel).get.data
+          obtainedData shouldBe Some(350000)
+        }
+
+        ".getRebasedValueAnswer will return an id of " + s"${KeystoreKeys.rebasedValue}" in {
+          val obtainedKey = PurchaseDetailsConstructor
+            .getRebasedValueAnswer(summaryRebasedOptionsModel).get.id
+          obtainedKey shouldBe KeystoreKeys.rebasedValue
+        }
+
+        ".getRebasedValueAnswer will return a URL of " + s"${}" in {
+          val obtainedUrl = PurchaseDetailsConstructor.getRebasedValueAnswer(summaryRebasedOptionsModel)
+            .get.link.get.toString
+          val correctUrl = controllers.nonresident.RebasedValueController.rebasedValue.toString()
+          obtainedUrl shouldBe correctUrl
+        }
+
+        ".getRebasedCostsAnswer will return data of Some(4000)" in {
+          val obtainedData = PurchaseDetailsConstructor
+            .getRebasedCostsAnswer(summaryRebasedOptionsModel).get.data
+          obtainedData shouldBe Some(4000)
+        }
+
+        ".getRebasedCostsAnswer will return an id of " + s"${KeystoreKeys.rebasedCosts}" in {
+          val obtainedKey = PurchaseDetailsConstructor
+            .getRebasedCostsAnswer(summaryRebasedOptionsModel).get.id
+          obtainedKey shouldBe KeystoreKeys.rebasedCosts
+        }
+
+        ".getRebasedCostsAnswer will return a URL of " +
+          s"${
+            constructors.nonresident.PurchaseDetailsConstructor
+              .getRebasedCostsAnswer(summaryRebasedOptionsModel).toString
+          }" in {
+          val obtainedUrl = constructors.nonresident.PurchaseDetailsConstructor
+            .getRebasedCostsAnswer(summaryRebasedOptionsModel).get.link.get.toString
+          val correctUrl = controllers.nonresident.RebasedCostsController.rebasedCosts.toString()
+          obtainedUrl shouldBe correctUrl
+        }
+
+        ".getAcquisitionCostsAnswer will return a value of None" in {
+          val obtainedValue = PurchaseDetailsConstructor
+            .getAcquisitionCostsAnswer((summaryRebasedOptionsModel))
+          obtainedValue shouldBe None
+        }
+
+        ".getAcquisitionValueAnswer will return a value of None" in {
+          val obtainedValue = PurchaseDetailsConstructor
+            .getAcquisitionValueAnswer((summaryRebasedOptionsModel))
+          obtainedValue shouldBe None
+        }
+
+
       }
 
-      ".getRebasedCostsAnswer will return data of None" in {
-        val obtainedData = PurchaseDetailsConstructor
-          .getRebasedCostsAnswer(summaryNoOptionsModel)
-        obtainedData shouldBe None
-      }
     }
-
   }
 }
