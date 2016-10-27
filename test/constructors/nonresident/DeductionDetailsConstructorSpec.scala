@@ -259,7 +259,7 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
       }
 
       "have an id of nr:otherReliefsFlat" in {
-        result.get.id shouldBe "nr:otherReliefsFlat"
+        result.get.id shouldBe "nr:otherReliefsFlat-claimed"
       }
 
       "have the data for 'No'" in {
