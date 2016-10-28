@@ -16,36 +16,30 @@
 
 package controllers.CalculationControllerTests
 
-import assets.MessageLookup.{NonResident => commonMessages}
 import assets.MessageLookup.NonResident.{AnnualExemptAmount => messages}
 import common.KeystoreKeys
 import common.nonresident.CustomerTypeKeys
 import connectors.CalculatorConnector
-import play.api.libs.json.Json
-import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.CalculationElectionConstructor
+import controllers.helpers.FakeRequestHelper
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.mvc.AnyContentAsFormUrlEncoded
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.nonresident.{AnnualExemptAmountController, routes}
+import controllers.nonresident.AnnualExemptAmountController
 import models.nonresident.{AnnualExemptAmountModel, CustomerTypeModel, DisabledTrusteeModel}
-import play.api.mvc.Result
 
-class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
   implicit val hc = new HeaderCarrier()
 
   def setupTarget(
                    getData: Option[AnnualExemptAmountModel],
-                   postData: Option[AnnualExemptAmountModel],
                    customerType: String = CustomerTypeKeys.individual,
                    disabledTrustee: String = ""
                  ): AnnualExemptAmountController = {
@@ -68,10 +62,6 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
     when(mockCalcConnector.getPartialAEA(Matchers.anyInt())(Matchers.any()))
       .thenReturn(Some(BigDecimal(5550)))
 
-    lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(AnnualExemptAmountModel(0)))))
-    when(mockCalcConnector.saveFormData[AnnualExemptAmountModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(data))
-
     new AnnualExemptAmountController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
       override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
@@ -79,209 +69,107 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
   }
 
   // GET Tests
-  "Calling the CalculationController.annualExemptAmount action" when {
-
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/allowance").withSession(SessionKeys.sessionId -> "12345")
+  "Calling the .annualExemptAmount action" when {
 
     "not supplied with a pre-existing stored model" should {
-
-      val target = setupTarget(None, None)
-      lazy val result = target.annualExemptAmount(fakeRequest)
+      val target = setupTarget(None)
+      lazy val result = target.annualExemptAmount(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
         status(result) shouldBe 200
       }
 
-      "return some HTML that" should {
-
-        "contain some text and use the character set utf-8" in {
-          contentType(result) shouldBe Some("text/html")
-          charset(result) shouldBe Some("utf-8")
-        }
-
-        "have the title 'How much of your Capital Gains Tax allowance have you got left?'" in {
-          document.title shouldEqual messages.question
-        }
-
-        "have the heading Calculate your tax (non-residents) " in {
-          document.body.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
-        }
-
-        s"have a 'Back' link to ${routes.OtherPropertiesController.otherProperties()}" in {
-          document.body.getElementById("back-link").text shouldEqual commonMessages.back
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.OtherPropertiesController.otherProperties().toString()
-        }
-
-        s"have the question '${messages.question}' as the legend of the input" in {
-          document.body.getElementsByTag("label").text should include(messages.question)
-        }
-
-        "display an input box for the Annual Exempt Amount" in {
-          document.body.getElementById("annualExemptAmount").tagName() shouldEqual "input"
-        }
-
-        "have no value auto-filled into the input box" in {
-          document.getElementById("annualExemptAmount").attr("value") shouldBe empty
-        }
-
-        "display a 'Continue' button " in {
-          document.body.getElementById("continue-button").text shouldEqual commonMessages.continue
-        }
-
-        "should contain a Read more sidebar with a link to CGT allowances" in {
-          document.select("aside h2").text shouldBe commonMessages.readMore
-          document.select("aside a").text shouldBe s"${messages.link} ${commonMessages.externalLink}"
-        }
+      "have the title 'How much of your Capital Gains Tax allowance have you got left?'" in {
+        document.title shouldEqual messages.question
       }
     }
 
     "supplied with a pre-existing stored model" should {
-
-      val target = setupTarget(Some(AnnualExemptAmountModel(1000)), None)
-      lazy val result = target.annualExemptAmount(fakeRequest)
+      val target = setupTarget(Some(AnnualExemptAmountModel(1000)))
+      lazy val result = target.annualExemptAmount(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
         status(result) shouldBe 200
       }
 
-      "return some HTML that" should {
+      "have the title 'How much of your Capital Gains Tax allowance have you got left?'" in {
+        document.title shouldEqual messages.question
+      }
+    }
 
-        "contain some text and use the character set utf-8" in {
-          contentType(result) shouldBe Some("text/html")
-          charset(result) shouldBe Some("utf-8")
-        }
+    "not supplied with a valid session" should {
+      val target = setupTarget(None)
+      lazy val result = target.annualExemptAmount(fakeRequest)
 
-        "have the value 1000 auto-filled into the input box" in {
-          document.getElementById("annualExemptAmount").attr("value") shouldEqual "1000"
-        }
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the session timeout page" in {
+        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
       }
     }
   }
 
   // POST Tests
-  "In CalculationController calling the .submitAnnualExemptAmount action" when {
+  "Calling the .submitAnnualExemptAmount action" when {
 
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
-      "/calculate-your-capital-gains/non-resident/allowance")
-      .withSession(SessionKeys.sessionId -> "12345")
-      .withFormUrlEncodedBody(body: _*)
-
-    def executeTargetWithMockData(amount: String, customerType: String, disabledTrustee: String): Future[Result] = {
-      lazy val fakeRequest = buildRequest(("annualExemptAmount", amount))
-      val mockData = amount match {
-        case "" => AnnualExemptAmountModel(0)
-        case _ => AnnualExemptAmountModel(BigDecimal(amount))
-      }
-      val target = setupTarget(None, Some(mockData), customerType, disabledTrustee)
-      target.submitAnnualExemptAmount(fakeRequest)
-    }
-
-    "submitting a valid form" should {
-
-      lazy val result = executeTargetWithMockData("1000", CustomerTypeKeys.individual, "")
+    "submitting a valid form for a non-trustee" should {
+      val target = setupTarget(None)
+      lazy val request = fakeRequestToPOSTWithSession(("annualExemptAmount", "1000"))
+      lazy val result = target.submitAnnualExemptAmount(request)
 
       "return a 303" in {
         status(result) shouldBe 303
       }
-    }
 
-    "submitting an invalid form with no value" should {
-
-      lazy val result = executeTargetWithMockData("", CustomerTypeKeys.individual, "")
-
-      "return a 400" in {
-        status(result) shouldBe 400
+      "should redirect to the Acquisition Date page" in {
+        redirectLocation(result) shouldBe Some(controllers.nonresident.routes.AcquisitionDateController.acquisitionDate().url)
       }
-
-      //############################################################################
-      //Need to test the message that is returned and that only on error is rendered
-      //############################################################################
     }
 
-    "submitting an valid form below the maximum value for a non-vulnerable trustee" should {
-
-      lazy val result = executeTargetWithMockData("5550", CustomerTypeKeys.trustee, "No")
+    "submitting a valid form for a non-vulnerable trustee" should {
+      val target = setupTarget(None, CustomerTypeKeys.trustee, "No")
+      lazy val request = fakeRequestToPOSTWithSession(("annualExemptAmount", "1000"))
+      lazy val result = target.submitAnnualExemptAmount(request)
 
       "return a 303" in {
         status(result) shouldBe 303
       }
+
+      "should redirect to the Acquisition Date page" in {
+        redirectLocation(result) shouldBe Some(controllers.nonresident.routes.AcquisitionDateController.acquisitionDate().url)
+      }
     }
 
-    "submitting an valid form when no customer type selected (impossible - for coverage only)" should {
-
-      lazy val result = executeTargetWithMockData("1", "", "No")
+    "submitting a valid form for a vulnerable trustee" should {
+      val target = setupTarget(None, CustomerTypeKeys.trustee, "Yes")
+      lazy val request = fakeRequestToPOSTWithSession(("annualExemptAmount", "1000"))
+      lazy val result = target.submitAnnualExemptAmount(request)
 
       "return a 303" in {
         status(result) shouldBe 303
       }
-    }
 
-    "submitting a value above the maximum amount for a non-vulnerable trustee" should {
-
-      lazy val result = executeTargetWithMockData("5550.01", CustomerTypeKeys.trustee, "No") //failing
-
-      "return a 400" in {
-        status(result) shouldBe 400
+      "should redirect to the Acquisition Date page" in {
+        redirectLocation(result) shouldBe Some(controllers.nonresident.routes.AcquisitionDateController.acquisitionDate().url)
       }
-
-      //############################################################################
-      //Need to test the message that is returned and that only on error is rendered
-      //############################################################################
-
     }
 
-    "submitting an invalid form above the maximum value for a vulnerable trustee" should {
-
-      lazy val result = executeTargetWithMockData("11100.01", CustomerTypeKeys.trustee, "Yes")
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      //############################################################################
-      //Need to test the message that is returned and that only on error is rendered
-      //############################################################################
-    }
-
-    "submitting an invalid form above the maximum value for a non-Trustee customer type" should {
-
-      lazy val result = executeTargetWithMockData("11100.01", CustomerTypeKeys.individual, "")
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      //############################################################################
-      //Need to test the message that is returned and that only on error is rendered
-      //############################################################################
-    }
-
-    "submitting an invalid form below the minimum" should {
-
-      lazy val result = executeTargetWithMockData("-1000", CustomerTypeKeys.individual, "")
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      //############################################################################
-      //Need to test the message that is returned and that only on error is rendered
-      //############################################################################
-    }
-
-    "submitting an invalid form with value 1.111" should {
-
-      lazy val result = executeTargetWithMockData("1.111", CustomerTypeKeys.individual, "")
+    "submitting an invalid form" should {
+      val target = setupTarget(None, CustomerTypeKeys.trustee, "Yes")
+      lazy val request = fakeRequestToPOSTWithSession(("annualExemptAmount", "1000000"))
+      lazy val result = target.submitAnnualExemptAmount(request)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {
         status(result) shouldBe 400
       }
 
-      s"fail with message ${messages.errorDecimalPlaces}" in {
-        document.getElementsByClass("error-notification").text should include(messages.errorDecimalPlaces)
+      "return to the Annual Exempt Amount page" in {
+        document.title shouldBe messages.question
       }
     }
   }
