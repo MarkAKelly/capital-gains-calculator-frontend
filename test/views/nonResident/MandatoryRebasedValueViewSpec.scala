@@ -25,7 +25,7 @@ import org.jsoup.Jsoup
 import assets.MessageLookup.NonResident.{RebasedValue => messages}
 import assets.MessageLookup.{NonResident => commonMessages}
 
-class mandatoryRebasedValueViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+class MandatoryRebasedValueViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
 
 
