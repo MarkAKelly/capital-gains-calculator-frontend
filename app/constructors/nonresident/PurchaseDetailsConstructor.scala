@@ -54,8 +54,7 @@ object PurchaseDetailsConstructor {
   }
 
   def getAcquisitionValueAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] =  {
-    if (summaryModel.calculationElectionModel.calculationType.equals(CalculationType.flat) ||
-      !(summaryModel.calculationElectionModel.calculationType.equals(CalculationType.rebased)))
+    if (!(summaryModel.calculationElectionModel.calculationType.equals(CalculationType.rebased)))
       Some(QuestionAnswerModel(
         KeystoreKeys.acquisitionValue,
         summaryModel.acquisitionValueModel.acquisitionValueAmt,
