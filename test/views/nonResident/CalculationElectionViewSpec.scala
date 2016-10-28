@@ -26,6 +26,12 @@ import views.html.calculation.{nonresident => views}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.NonResident.{CalculationElection => messages}
 import assets.MessageLookup.{NonResident => commonMessages}
+import models.nonresident.{CalculationElectionModel, CalculationResultModel, SummaryModel}
+import play.api.mvc.{AnyContentAsFormUrlEncoded, Result}
+import play.api.test.FakeRequest
+import uk.gov.hmrc.play.http.SessionKeys
+
+import scala.concurrent.Future
 
 
 
@@ -138,6 +144,16 @@ class CalculationElectionViewSpec extends UnitSpec with WithFakeApplication with
 
     "have no pre-selected option" in {
       doc.body.getElementById("calculationElection-flat").parent.classNames().contains("selected") shouldBe false
+    }
+
+    "supplied with errors" should {
+      lazy val form = calculationElectionForm.bind(Map("calculationElection" -> "a"))
+      lazy val view = views.calculationElection(form, summaryModel, seq)(fakeRequest)
+      lazy val document = Jsoup.parse(view.body)
+
+      "have an error summary" in {
+        document.select("#error-summary-display").size() shouldBe 1
+      }
     }
   }
 

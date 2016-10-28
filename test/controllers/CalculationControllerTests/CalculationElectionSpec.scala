@@ -110,127 +110,11 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
       "return a 200" in {
         status(result) shouldBe 200
       }
-
-      "return some HTML that" should {
-
-        "contain some text and use the character set UTF-8" in {
-          contentType(result) shouldBe Some("text/html")
-          charset(result) shouldBe Some("utf-8")
-        }
-
-        s"have the title '${messages.question}'" in {
-          document.title shouldEqual messages.question
-        }
-
-        s"have the heading '${messages.heading}'" in {
-          document.body.getElementsByTag("h1").text shouldEqual messages.heading
-        }
-
-        s"have the class 'heading-xlarge' on the H1 tag" in {
-          document.body.getElementsByTag("h1").hasClass("heading-xlarge") shouldBe true
-        }
-
-        s"have a 'Read more' section that" should {
-
-          "have a link to 'https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-calculating-taxable-gain-or-loss'" +
-            s"with text '${messages.linkOne}'" in {
-              document.body.getElementById("helpLink1").text shouldEqual
-                s"${messages.linkOne} ${commonMessages.externalLink}"
-              document.body.getElementById("helpLink1").attr("href") shouldEqual
-                "https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-calculating-taxable-gain-or-loss"
-          }
-        }
-
-        s"have a 'Back' link to ${routes.AllowableLossesController.allowableLosses()}" in {
-          document.body.getElementById("back-link").text shouldEqual commonMessages.back
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.AllowableLossesController.allowableLosses().toString()
-        }
-
-        s"have a H2 sub-heading with text '${messages.moreInformation}'" in {
-          document.body.getElementsByTag("h2").text should include (messages.moreInformation)
-        }
-
-        s"have the paragraph '${messages.moreInfoFirstP}'" in {
-          document.body.getElementsByTag("p").text should include (messages.moreInfoFirstP)
-        }
-
-        s"have the paragraph '${messages.moreInfoSecondP}'" in {
-          document.body.getElementsByTag("p").text should include (messages.moreInfoSecondP)
-        }
-
-        s"have the paragraph '${messages.moreInfoThirdP}'" in {
-          document.body.getElementsByTag("p").text should include (messages.moreInfoThirdP)
-        }
-
-        "have a calculationElectionHelper for the option of a flat calculation rendered on the page" in {
-          document.body.getElementById("calculationElection-flat").attr("value") shouldEqual CalculationType.flat
-          document.body.getElementById("flat-para").text shouldEqual ("Based on " + "flat calculation")
-        }
-
-        "display a 'Continue' button " in {
-          document.body.getElementById("continue-button").text shouldEqual commonMessages.continue
-        }
-
-        s"display a concertina information box with '${messages.whyMore} " +
-          s"${Messages("calc.calculationElection.whyMoreDetails.two")}' as the content" in {
-          document.select("summary span.summary").text shouldEqual messages.whyMore
-          document.select("div#details-content-0 p").text should include (messages.whyMoreDetailsOne)
-          document.select("div#details-content-0 p").text should include (messages.whyMoreDetailsTwo)
-        }
-
-        "have no pre-selected option" in {
-          document.body.getElementById("calculationElection-flat").parent.classNames().contains("selected") shouldBe false
-        }
-      }
     }
 
     "supplied with no pre-existing data and no acquisition date" should {
 
       val target = setupTarget(None, None, TestModels.summaryIndividualFlatWithAEA)
-      lazy val result = target.calculationElection(fakeRequest)
-
-      "return a 200" in {
-        status(result) shouldBe 200
-      }
-
-    }
-
-    "supplied with no pre-existing data and an acquisition date after tax start date" should {
-
-      val target = setupTarget(None, None, TestModels.summaryIndividualRebasedAcqDateAfter)
-      lazy val result = target.calculationElection(fakeRequest)
-
-      "return a 200" in {
-        status(result) shouldBe 200
-      }
-
-    }
-
-    "supplied with no pre-existing data and an acquisition date before tax start date" should {
-
-      val target = setupTarget(None, None, TestModels.summaryIndividualRebased)
-      lazy val result = target.calculationElection(fakeRequest)
-
-      "return a 200" in {
-        status(result) shouldBe 200
-      }
-
-    }
-
-    "supplied with no pre-existing data and a None rebased value" should {
-
-      val target = setupTarget(None, None, TestModels.summaryIndividualImprovementsNoRebasedModel)
-      lazy val result = target.calculationElection(fakeRequest)
-
-      "return a 200" in {
-        status(result) shouldBe 200
-      }
-
-    }
-
-    "supplied with no pre-existing data and a rebased value with no acquisition date" should {
-
-      val target = setupTarget(None, None, TestModels.summaryIndividualRebasedNoAcqDate)
       lazy val result = target.calculationElection(fakeRequest)
 
       "return a 200" in {
@@ -256,30 +140,6 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
       "return a 200" in {
         status(result) shouldBe 200
       }
-
-      "return some HTML that" should {
-
-        "contain some text and use the character set utf-8" in {
-          contentType(result) shouldBe Some("text/html")
-          charset(result) shouldBe Some("utf-8")
-        }
-
-        "have the stored value of flat calculation selected" in {
-          document.body.getElementById("calculationElection-flat").parent.classNames().contains("selected") shouldBe true
-        }
-
-        "have the button text '£500.00' under flat calc details" in {
-          document.body.select("#flat-button").text shouldEqual "£500.00"
-        }
-
-        "have the button text '£600.00' under time calc details" in {
-          document.body.select("#time-button").text shouldEqual "£600.00"
-        }
-
-        s"have the button text '£500.00' under rebased calc details" in {
-          document.body.select("#rebased-button").text shouldEqual "£700.00"
-        }
-      }
     }
 
     "supplied with pre-existing data and no values for flat, time and rebased reliefs" should {
@@ -294,30 +154,6 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
 
       "return a 200" in {
         status(result) shouldBe 200
-      }
-
-      "return some HTML that" should {
-
-        "contain some text and use the character set utf-8" in {
-          contentType(result) shouldBe Some("text/html")
-          charset(result) shouldBe Some("utf-8")
-        }
-
-        "have the stored value of flat calculation selected" in {
-          document.body.getElementById("calculationElection-flat").parent.classNames().contains("selected") shouldBe true
-        }
-
-        s"have the button text '${messages.otherTaxRelief}' under flat calc details" in {
-          document.body.select("#flat-button").text shouldEqual messages.otherTaxRelief
-        }
-
-        s"have the button text '${messages.otherTaxRelief}' under time calc details" in {
-          document.body.select("#time-button").text shouldEqual messages.otherTaxRelief
-        }
-
-        s"have the button text '${messages.otherTaxRelief}' under rebased calc details" in {
-          document.body.select("#rebased-button").text shouldEqual messages.otherTaxRelief
-        }
       }
     }
   }
@@ -426,17 +262,7 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
         status(result) shouldBe 400
       }
 
-      "display a visible Error Summary field" in {
-        document.getElementById("error-summary-display").hasClass("error-summary--show")
-      }
 
-      "link to the invalid input box in Error Summary" in {
-        document.getElementById("calculationElection-error-summary").attr("href") should include ("#calculationElection")
-      }
-
-      //############################################################################
-      //Need to test the message that is returned and that only on error is rendered
-      //############################################################################
     }
 
     "submitting a form with completely unrelated 'ew1234qwer'" should  {
@@ -447,69 +273,25 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
       "return a 400" in {
         status(result) shouldBe 400
       }
+    }
+  }
 
-      //############################################################################
-      //Need to test the message that is returned and that only on error is rendered
-      //############################################################################
+  "CalculationElectionController" should {
+
+    val mockCalcConnector = mock[CalculatorConnector]
+    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
+
+    object TestController extends CalculationElectionController{
+      override val calcConnector: CalculatorConnector = mockCalcConnector
+      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
 
-    "submitting an invalid form with an acquisition date after the tax start date" should {
-      lazy val result = executeTargetWithMockData("", Some(TestModels.calcModelOneRate), TestModels.summaryIndividualAcqDateAfter, "continue")
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-      //############################################################################
-      //Need to test the message that is returned and that only on error is rendered
-      //############################################################################
+    "use the correct keystore connector" in {
+      CalculationElectionController.calcConnector shouldBe CalculatorConnector
     }
 
-    "submitting an invalid form with no acquisition date" should {
-      lazy val result = executeTargetWithMockData("", Some(TestModels.calcModelOneRate), TestModels.summaryIndividualFlatWithoutAEA, "continue")
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      //############################################################################
-      //Need to test the message that is returned and that only on error is rendered
-      //############################################################################
-    }
-
-    "submitting an invalid form with none rebased value" should {
-      lazy val result = executeTargetWithMockData("", Some(TestModels.calcModelOneRate), TestModels.summaryIndividualImprovementsNoRebasedModel, "continue")
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      //############################################################################
-      //Need to test the message that is returned and that only on error is rendered
-      //############################################################################
-    }
-
-    "submitting an invalid form with a rebased value and no acquisition date" should {
-      lazy val result = executeTargetWithMockData("", Some(TestModels.calcModelOneRate), TestModels.summaryIndividualRebasedNoAcqDateOrRebasedCosts, "continue")
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      //############################################################################
-      //Need to test the message that is returned and that only on error is rendered
-      //############################################################################
-    }
-
-    "submitting an invalid form with a rebased value and an acquisition date after tax start" should {
-      lazy val result = executeTargetWithMockData("", Some(TestModels.calcModelOneRate), TestModels.summaryIndividualRebasedAcqDateAfter, "continue")
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      //############################################################################
-      //Need to test the message that is returned and that only on error is rendered
-      //############################################################################
-    }
+//    "when calling getOtherReliefsFlat method" should {
+//      TestController.getOtherReliefsFlat(hc)
+//    }
   }
 }
