@@ -49,7 +49,7 @@ object PurchaseDetailsConstructor {
         Dates.constructDate(summaryModel.acquisitionDateModel.day.get,
           summaryModel.acquisitionDateModel.month.get, summaryModel.acquisitionDateModel.year.get),
         Messages("calc.acquisitionDate.questionTwo"),
-        Some(controllers.nonresident.AcquisitionDateController.acquisitionDate().toString())
+        Some(controllers.nonresident.routes.AcquisitionDateController.acquisitionDate().url)
       ))
   }
 
@@ -60,7 +60,7 @@ object PurchaseDetailsConstructor {
         KeystoreKeys.acquisitionValue,
         summaryModel.acquisitionValueModel.acquisitionValueAmt,
         Messages("calc.acquisitionValue.question"),
-        Some(controllers.nonresident.AcquisitionValueController.acquisitionValue().toString())
+        Some(controllers.nonresident.routes.AcquisitionValueController.acquisitionValue().url)
       ))
     else
       None
@@ -72,7 +72,7 @@ object PurchaseDetailsConstructor {
         KeystoreKeys.acquisitionCosts,
         summaryModel.acquisitionCostsModel.acquisitionCostsAmt,
         Messages("calc.acquisitionCosts.question"),
-        Some(controllers.nonresident.AcquisitionCostsController.acquisitionCosts.toString())
+        Some(controllers.nonresident.routes.AcquisitionCostsController.acquisitionCosts.url)
       ))
     else
       None
@@ -85,7 +85,7 @@ object PurchaseDetailsConstructor {
         KeystoreKeys.rebasedValue,
         rebasedValueModel.rebasedValueAmt,
         Messages("calc.rebasedValue.questionTwo"),
-        Some(controllers.nonresident.RebasedValueController.rebasedValue.toString())
+        Some(controllers.nonresident.routes.RebasedValueController.rebasedValue.url)
       ))
     case _ => None
   }
@@ -97,7 +97,7 @@ object PurchaseDetailsConstructor {
         KeystoreKeys.rebasedCosts,
           rebasedCostsModel.rebasedCosts,
           Messages("calc.rebasedCosts.questionTwo"),
-          Some(controllers.nonresident.RebasedCostsController.rebasedCosts.toString())
+          Some(controllers.nonresident.routes.RebasedCostsController.rebasedCosts.url)
     ))
         case _ => None
     }
