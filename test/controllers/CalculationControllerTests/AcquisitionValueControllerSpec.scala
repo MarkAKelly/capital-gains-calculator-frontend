@@ -38,7 +38,7 @@ import models.nonresident.{AcquisitionDateModel, AcquisitionValueModel}
 import play.api.mvc.Result
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-class AcquisitionValueSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class AcquisitionValueControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
   implicit val hc = new HeaderCarrier()
 
