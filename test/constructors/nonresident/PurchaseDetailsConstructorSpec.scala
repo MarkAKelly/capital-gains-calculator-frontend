@@ -120,32 +120,30 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
           lazy val obtainedKey = target.get.id
           obtainedKey shouldBe KeystoreKeys.acquisitionDate
         }
-        "will return a url of " +
-          s"${target.get.link.get}" in {
-          lazy val correctURL = controllers.nonresident.routes.AcquisitionDateController.acquisitionDate.url
-          lazy val obtainedURL = target.get.link.get.toString
+        "will return a url of " in {
+          lazy val correctURL = controllers.nonresident.routes.AcquisitionDateController.acquisitionDate().url
+          lazy val obtainedURL = target.get.link.get
+
           obtainedURL shouldBe correctURL
         }
 
-        "will return a message of " + s"${MessageLookup.NonResident.AcquisitionDate.questionTwo}" in {
-          lazy val obtainedMessage = target.get.question
-          lazy val expectedMessage = MessageLookup.NonResident.AcquisitionDate.questionTwo
-          obtainedMessage shouldBe expectedMessage
+        s"will return a message of ${MessageLookup.NonResident.AcquisitionDate.questionTwo}" in {
+          target.get.question shouldBe MessageLookup.NonResident.AcquisitionDate.questionTwo
         }
       }
 
       ".getAcquisitionValueAnswer" should {
 
         lazy val target = PurchaseDetailsConstructor
-          .getAcquisitionValueAnswer((summaryFlatOptionValuesModel))
+          .getAcquisitionValueAnswer(summaryFlatOptionValuesModel).get
 
         "will return a data item with a lazy value of 300000.0" in {
-          lazy val obtainedValue = target.get.data
+          lazy val obtainedValue = target.data
           obtainedValue shouldBe 300000.0
         }
 
         "will return an id of " + s"${KeystoreKeys.acquisitionValue}" in {
-          lazy val obtainedKey = target.get.id
+          lazy val obtainedKey = target.id
           obtainedKey shouldBe KeystoreKeys.acquisitionValue
         }
 
@@ -154,14 +152,12 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
             controllers.nonresident.routes.AcquisitionValueController.acquisitionValue.toString
           }" in {
           lazy val correctUrl = controllers.nonresident.routes.AcquisitionValueController.acquisitionValue.url
-          lazy val obtainedUrl = target.get.link.get.toString
+          lazy val obtainedUrl = target.link.get.toString
           obtainedUrl shouldBe correctUrl
         }
 
-        "will return a message of " + s"${MessageLookup.NonResident.AcquisitionValue.question}" in {
-          lazy val obtainedMessage = target.get.question
-          lazy val expectedMessage = MessageLookup.NonResident.AcquisitionValue.question
-          obtainedMessage shouldBe expectedMessage
+        s"will return a message of ${MessageLookup.NonResident.AcquisitionValue.question}"in {
+            target.question shouldBe MessageLookup.NonResident.AcquisitionValue.question
         }
       }
 
@@ -182,14 +178,14 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
         "will return a url of " +
           s"${
-            target.get.link.get
+            controllers.nonresident.routes.AcquisitionCostsController.acquisitionCosts.url
           }" in {
           lazy val obtainedUrl = target.get.link.get
           lazy val correctUrl = controllers.nonresident.routes.AcquisitionCostsController.acquisitionCosts.url
           obtainedUrl shouldBe correctUrl
         }
 
-        "will return a message of " + s"${MessageLookup.NonResident.AcquisitionCosts.question}" in {
+        "will return a message of "  in {
           lazy val obtainedMessage = target.get.question
           lazy val expectedMessage = MessageLookup.NonResident.AcquisitionCosts.question
           print(obtainedMessage + " : " + expectedMessage)
@@ -292,7 +288,7 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
           obtainedUrl shouldBe correctUrl
         }
 
-        "return a message of " in {
+        s"return a message of ${MessageLookup.NonResident.RebasedCosts.inputQuestion}" in {
           lazy val obtainedMessage = target.get.question
           lazy val expectedMessage = MessageLookup.NonResident.RebasedCosts.inputQuestion
           obtainedMessage shouldBe expectedMessage
