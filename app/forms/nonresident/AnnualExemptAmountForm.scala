@@ -16,8 +16,8 @@
 
 package forms.nonresident
 
+import common.Transformers._
 import common.Validation._
-import models._
 import models.nonresident.AnnualExemptAmountModel
 import play.api.data.Forms._
 import play.api.data._
@@ -29,9 +29,12 @@ object AnnualExemptAmountForm {
   def errorMaxMessage(maxAEA: BigDecimal): String =
     Messages("calc.annualExemptAmount.errorMax") + MoneyPounds(maxAEA, 0).quantity + " " + Messages("calc.annualExemptAmount.errorMaxEnd")
 
-  def annualExemptAmountForm (maxAEA: BigDecimal = BigDecimal(0)): Form[AnnualExemptAmountModel] = Form(
+  def annualExemptAmountForm(maxAEA: BigDecimal = BigDecimal(0)): Form[AnnualExemptAmountModel] = Form(
     mapping(
-      "annualExemptAmount" -> bigDecimal
+      "annualExemptAmount" -> text
+        .verifying(Messages("error.real"), mandatoryCheck)
+        .verifying(Messages("error.real"), bigDecimalCheck)
+        .transform(stringToBigDecimal, bigDecimalToString)
         .verifying(errorMaxMessage(maxAEA), _ <= maxAEA)
         .verifying(Messages("calc.annualExemptAmount.errorNegative"), annualExemptAmount => isPositive(annualExemptAmount))
         .verifying(Messages("calc.annualExemptAmount.errorDecimalPlaces"), annualExemptAmount => decimalPlacesCheck(annualExemptAmount))
