@@ -39,7 +39,7 @@ import controllers.nonresident.CustomerTypeController
 import models.nonresident.CustomerTypeModel
 import play.api.mvc.Result
 
-class CustomerTypeSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class CustomerTypeActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
   implicit val hc = new HeaderCarrier()
 
@@ -70,50 +70,9 @@ class CustomerTypeSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
       val target = setupTarget(None, None)
       lazy val result = target.customerType(fakeRequest)
-      lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
         status(result) shouldBe 200
-      }
-
-      "return some HTML that" should {
-
-        "contain some text and use the character set utf-8" in {
-          contentType(result) shouldBe Some("text/html")
-          charset(result) shouldBe Some("utf-8")
-        }
-
-        s"have the title ${messages.question}" in {
-          document.title shouldEqual messages.question
-        }
-
-        s"have the heading ${commonMessages.pageHeading}" in {
-          document.body.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
-        }
-
-        s"have the question ${messages.question} as the legend of the input" in {
-          document.body.getElementsByTag("legend").text shouldEqual messages.question
-        }
-
-        s"display a radio button with the option ${messages.individual}" in {
-          document.body.getElementById("customerType-individual").parent.text shouldEqual messages.individual
-        }
-
-        "have the radio option `individual` not selected by default" in {
-          document.body.getElementById("customerType-individual").parent.classNames().contains("selected") shouldBe false
-        }
-
-        s"display a radio button with the option ${messages.trustee}" in {
-          document.body.getElementById("customerType-trustee").parent.text shouldEqual messages.trustee
-        }
-
-        s"display a radio button with the option ${messages.personalRep}" in {
-          document.body.getElementById("customerType-personalrep").parent.text shouldEqual messages.personalRep
-        }
-
-        "display a 'Continue' button " in {
-          document.body.getElementById("continue-button").text shouldEqual commonMessages.continue
-        }
       }
     }
 
@@ -128,11 +87,6 @@ class CustomerTypeSpec extends UnitSpec with WithFakeApplication with MockitoSug
       }
 
       "return some HTML that" should {
-
-        "contain some text and use the character set utf-8" in {
-          contentType(result) shouldBe Some("text/html")
-          charset(result) shouldBe Some("utf-8")
-        }
 
         "have the radio option `individual` selected by default" in {
           document.body.getElementById("customerType-individual").parent.classNames().contains("selected") shouldBe true
@@ -163,6 +117,10 @@ class CustomerTypeSpec extends UnitSpec with WithFakeApplication with MockitoSug
       "return a 303" in {
         status(result) shouldBe 303
       }
+
+      "redirect to the current income page" in {
+        redirectLocation(result) shouldEqual Some("/calculate-your-capital-gains/non-resident/current-income")
+      }
     }
 
     "submitting a valid form with 'trustee'" should {
@@ -172,6 +130,10 @@ class CustomerTypeSpec extends UnitSpec with WithFakeApplication with MockitoSug
       "return a 303" in {
         status(result) shouldBe 303
       }
+
+      "redirect to the current income page" in {
+        redirectLocation(result) shouldEqual Some("/calculate-your-capital-gains/non-resident/disabled-trustee")
+      }
     }
 
     "submitting a valid form with 'personalRep'" should {
@@ -180,6 +142,10 @@ class CustomerTypeSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
       "return a 303" in {
         status(result) shouldBe 303
+      }
+
+      "redirect to the current income page" in {
+        redirectLocation(result) shouldEqual Some("/calculate-your-capital-gains/non-resident/other-properties")
       }
     }
 
@@ -192,28 +158,31 @@ class CustomerTypeSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      "display a visible Error Summary field" in {
-        document.getElementById("error-summary-display").hasClass("error-summary--show")
+      "raise an error on the page" in {
+        document.body.select("#customerType-error-summary").size shouldBe 1
       }
 
-      "link to the radio field set in Error Summary" in {
-        document.getElementById("customerType-error-summary").attr("href") should include("#customerType")
+      "render the customer type page" in {
+        document.title shouldEqual messages.question
       }
-      //############################################################################
-      //Need to test the message that is returned and that only on error is rendered
-      //############################################################################s
     }
 
     "submitting an invalid form with incorrect content" should {
 
       lazy val result = executeTargetWithMockData("invalid-user")
+      lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {
         status(result) shouldBe 400
       }
-      //############################################################################
-      //Need to test the message that is returned and that only on error is rendered
-      //############################################################################
+
+      "raise an error on the page" in {
+        document.body.select("#customerType-error-summary").size shouldBe 1
+      }
+
+      "render the customer type page" in {
+        document.title shouldEqual messages.question
+      }
     }
   }
 }

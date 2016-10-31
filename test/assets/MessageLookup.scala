@@ -132,6 +132,7 @@ object MessageLookup {
       val individual = "I owned it"
       val trustee = "I was a trustee"
       val personalRep = "I was the executor of an estate"
+      val errorInvalid = "Invalid customer type"
     }
 
     object DisabledTrustee {
