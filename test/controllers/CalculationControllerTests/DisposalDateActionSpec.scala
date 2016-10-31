@@ -16,7 +16,6 @@
 
 package controllers.CalculationControllerTests
 
-import assets.MessageLookup.{NonResident => commonMessages}
 import assets.MessageLookup.NonResident.{DisposalDate => messages}
 
 import common.KeystoreKeys
