@@ -79,40 +79,6 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
       "return a 200" in {
         status(result) shouldBe 200
       }
-
-      "return some HTML that" should {
-
-        "contain some text and use the character set utf-8" in {
-          charset(result) shouldBe Some("utf-8")
-        }
-
-        "have the title 'When did you sign the contract that made someone else the owner?'" in {
-          document.title shouldEqual messages.question
-        }
-
-        "have the heading Calculate your tax (non-residents) " in {
-          document.body.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
-        }
-
-        s"have a 'Back' link to ${routes.ImprovementsController.improvements()}" in {
-          document.body.getElementById("back-link").text shouldEqual commonMessages.back
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.ImprovementsController.improvements().toString()
-        }
-
-        s"have the question '${Messages("calc.disposalDate.question")}'" in {
-          document.body.getElementsByTag("fieldset").text should include(messages.question)
-        }
-
-        s"display three input boxes with labels ${commonMessages.day}, ${commonMessages.month} and ${commonMessages.year} respectively" in {
-          document.select("label[for=disposalDateDay]").text shouldEqual commonMessages.day
-          document.select("label[for=disposalDateMonth]").text shouldEqual commonMessages.month
-          document.select("label[for=disposalDateYear]").text shouldEqual commonMessages.year
-        }
-
-        "display a 'Continue' button " in {
-          document.body.getElementById("continue-button").text shouldEqual commonMessages.continue
-        }
-      }
     }
 
     "supplied with a model already filled with data" should {
