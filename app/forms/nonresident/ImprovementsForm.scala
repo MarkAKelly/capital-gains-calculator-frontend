@@ -17,6 +17,7 @@
 package forms.nonresident
 
 import common.Constants
+import common.Transformers._
 import common.Validation._
 import models.nonresident.ImprovementsModel
 import play.api.data.Forms._
@@ -66,7 +67,9 @@ object ImprovementsForm {
 
   val improvementsForm = Form(
     mapping(
-      "isClaimingImprovements" -> text,
+      "isClaimingImprovements" -> text
+        .verifying(Messages("error.required"), mandatoryCheck)
+        .verifying(Messages("error.required"), yesNoCheck),
       "improvementsAmt" -> optional(bigDecimal),
       "improvementsAmtAfter" -> optional(bigDecimal)
     )(ImprovementsModel.apply)(ImprovementsModel.unapply)
