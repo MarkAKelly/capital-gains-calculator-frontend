@@ -136,7 +136,7 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
       }
     }
 
-    "submitting an invalid form with no data" should {
+    "submitting an invalid form with negative data" should {
       val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("currentIncome", "-10"))
       lazy val result = target.submitCurrentIncome(request)
