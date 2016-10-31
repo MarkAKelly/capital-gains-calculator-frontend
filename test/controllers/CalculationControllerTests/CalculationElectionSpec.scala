@@ -277,21 +277,8 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
   }
 
   "CalculationElectionController" should {
-
-    val mockCalcConnector = mock[CalculatorConnector]
-    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
-
-    object TestController extends CalculationElectionController{
-      override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
-    }
-
     "use the correct keystore connector" in {
       CalculationElectionController.calcConnector shouldBe CalculatorConnector
     }
-
-//    "when calling getOtherReliefsFlat method" should {
-//      TestController.getOtherReliefsFlat(hc)
-//    }
   }
 }
