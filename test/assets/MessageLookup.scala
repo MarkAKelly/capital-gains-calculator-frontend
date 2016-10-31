@@ -161,12 +161,14 @@ object MessageLookup {
       val question = "How much did you sell or give away the property for?"
       val errorNegativeNumber = "Enter a positive number for the amount you sold the property for"
       val errorDecimalPlaces = "The amount you sold the property for has too many numbers after the decimal point"
+      val errorNegative = "Enter a positive number for the amount you sold the property for"
       val bulletIntro = "Put the market value of the property instead if you:"
       val bulletOne = "gave it away as a gift"
       val bulletTwo = "sold it to a relative, business partner or"
       val bulletTwoLink = "someone else you're connected to"
       val bulletThree = "sold it for less than it's worth to help the buyer"
 
+      def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
     object Improvements {
