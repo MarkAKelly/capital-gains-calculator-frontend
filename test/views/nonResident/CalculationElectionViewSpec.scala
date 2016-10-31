@@ -47,10 +47,6 @@ class CalculationElectionViewSpec extends UnitSpec with WithFakeApplication with
     lazy val view = views.calculationElection(form, summaryModel, seq)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
-    "have a charset of UTF-8" in {
-      doc.charset.toString shouldBe "UTF-8"
-    }
-
     "have a h1 tag that" should {
 
       s"have the question of ${messages.heading}" in {
@@ -135,11 +131,16 @@ class CalculationElectionViewSpec extends UnitSpec with WithFakeApplication with
       doc.body.getElementById("continue-button").text shouldEqual commonMessages.continue
     }
 
-    s"display a concertina information box with '${messages.whyMore} " +
-      s"${Messages("calc.calculationElection.whyMoreDetails.two")}' as the content" in {
+    s"display a concertina information box with '${messages.whyMore} " in {
       doc.select("summary span.summary").text shouldEqual messages.whyMore
+    }
+
+    s"display a concertina information box with '${messages.whyMoreDetailsOne} " in {
       doc.select("div#details-content-0 p").text should include (messages.whyMoreDetailsOne)
-      doc.select("div#details-content-0 p").text should include (messages.whyMoreDetailsTwo)
+    }
+
+    s"display a concertina information box with '${messages.whyMoreDetailsTwo} " in {
+      doc.select("div#details-content-0 p").text should include(messages.whyMoreDetailsTwo)
     }
 
     "have no pre-selected option" in {

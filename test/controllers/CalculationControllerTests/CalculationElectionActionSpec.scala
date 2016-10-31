@@ -41,7 +41,7 @@ import controllers.nonresident.{CalculationElectionController, routes}
 import models.nonresident.{CalculationElectionModel, CalculationResultModel, OtherReliefsModel, SummaryModel}
 import play.api.mvc.Result
 
-class CalculationElectionSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
   implicit val hc = new HeaderCarrier()
 
@@ -241,6 +241,10 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
       "return a 303" in {
         status(result) shouldBe 303
       }
+
+      "redirect to the summary page" in {
+        redirectLocation(result) shouldBe Some(s"${routes.SummaryController.summary()}")
+      }
     }
 
     "submitting a valid form with 'rebased' selected" should {
@@ -250,6 +254,10 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
 
       "return a 303" in {
         status(result) shouldBe 303
+      }
+
+      "redirect to the summary page" in {
+          redirectLocation(result) shouldBe Some(s"${routes.SummaryController.summary()}")
       }
     }
 
@@ -262,6 +270,10 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
         status(result) shouldBe 400
       }
 
+      "should return to the the calculation election page" in {
+        document.title shouldBe messages.question
+      }
+
 
     }
 
@@ -269,9 +281,14 @@ class CalculationElectionSpec extends UnitSpec with WithFakeApplication with Moc
 
       lazy val result = executeTargetWithMockData("ew1234qwer", Some(TestModels.calcModelOneRate),
         TestModels.summaryIndividualImprovementsNoRebasedModel, "continue")
+      lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {
         status(result) shouldBe 400
+      }
+
+      "should return to the the calculation election page" in {
+        document.title shouldBe messages.question
       }
     }
   }
