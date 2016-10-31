@@ -17,9 +17,9 @@
 package controllers.CalculationControllerTests
 
 import assets.MessageLookup.NonResident.{DisposalDate => messages}
-
 import common.KeystoreKeys
 import connectors.CalculatorConnector
+import controllers.helpers.FakeRequestHelper
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
 import org.mockito.Matchers
@@ -37,26 +37,21 @@ import controllers.nonresident.{DisposalDateController, routes}
 import models.nonresident.{AcquisitionDateModel, DisposalDateModel}
 import play.api.mvc.Result
 
-class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
   implicit val hc = new HeaderCarrier()
 
   def setupTarget(getData: Option[DisposalDateModel],
-                  postData: Option[DisposalDateModel],
-                  acquisitionData: Option[AcquisitionDateModel] = None
+                   acquisitionData: Option[AcquisitionDateModel] = None
                  ): DisposalDateController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
     when(mockCalcConnector.fetchAndGetFormData[AcquisitionDateModel](Matchers.eq(KeystoreKeys.acquisitionDate))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(acquisitionData))
-
-    lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(DisposalDateModel(1, 1, 1)))))
-    when(mockCalcConnector.saveFormData[DisposalDateModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(data))
 
     new DisposalDateController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -66,12 +61,10 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Mock
   // GET Tests
   "Calling the CalculationController.disposalDate" when {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/disposal-date").withSession(SessionKeys.sessionId -> "12345")
-
     "not supplied with a pre-existing stored model" should {
 
-      val target = setupTarget(None, None)
-      lazy val result = target.disposalDate(fakeRequest)
+      val target = setupTarget(None)
+      lazy val result = target.disposalDate(fakeRequestWithSession)
 
       "return a 200" in {
         status(result) shouldBe 200
@@ -82,28 +75,11 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Mock
   // POST Tests
   "In CalculationController calling the .submitDisposalDate action" when {
 
-    val numeric = "([0-9]+)".r
-
-    def getIntOrDefault(input: String): Int = input match {
-      case numeric(number) => number.toInt
-      case _ => 0
-    }
-
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
-      "/calculate-your-capital-gains/non-resident/disposal-date")
-      .withSession(SessionKeys.sessionId -> "12345")
-      .withFormUrlEncodedBody(body: _*)
-
-    def executeTargetWithMockData(day: String, month: String, year: String, acquisitionDateData: Option[AcquisitionDateModel] = None): Future[Result] = {
-      lazy val fakeRequest = buildRequest(("disposalDateDay", day), ("disposalDateMonth", month), ("disposalDateYear", year))
-      val mockData = new DisposalDateModel(getIntOrDefault(day), getIntOrDefault(month), getIntOrDefault(year))
-      val target = setupTarget(None, Some(mockData), acquisitionDateData)
-      target.submitDisposalDate(fakeRequest)
-    }
-
     "submitting a valid date 31/01/2016" should {
 
-      lazy val result = executeTargetWithMockData("31", "1", "2016")
+      lazy val target = setupTarget(None, Some(AcquisitionDateModel("Yes", Some(1), Some(4), Some(2010))))
+      lazy val request = fakeRequestToPOSTWithSession(("disposalDateDay", "31"), ("disposalDateMonth", "1"), ("disposalDateYear", "2016"))
+      lazy val result = target.submitDisposalDate(request)
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -116,7 +92,9 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Mock
 
     "submitting a valid leap year date 29/02/2016" should {
 
-      lazy val result = executeTargetWithMockData("29", "2", "2016")
+      lazy val target = setupTarget(None, Some(AcquisitionDateModel("Yes", Some(1), Some(4), Some(2010))))
+      lazy val request = fakeRequestToPOSTWithSession(("disposalDateDay", "29"), ("disposalDateMonth", "2"), ("disposalDateYear", "2016"))
+      lazy val result = target.submitDisposalDate(request)
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -129,7 +107,9 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Mock
 
     "submitting a disposal date of 22/02/1990 which is before acquisition date 22/01/2000" should {
 
-      lazy val result = executeTargetWithMockData("22", "2", "1990", Some(AcquisitionDateModel("Yes",Some(22),Some(1),Some(2000))))
+      lazy val target = setupTarget(None, Some(AcquisitionDateModel("Yes", Some(22), Some(1), Some(2000))))
+      lazy val request = fakeRequestToPOSTWithSession(("disposalDateDay", "22"), ("disposalDateMonth", "2"), ("disposalDateYear", "1990"))
+      lazy val result = target.submitDisposalDate(request)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {
