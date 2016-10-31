@@ -123,6 +123,8 @@ object MessageLookup {
       val helpText = "You can give an estimate if this was in the current tax year"
       val errorNegative = "Enter a positive number for your current income"
       val errorDecimalPlace = "Your current income has too many numbers after the decimal point"
+
+      def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
     object CustomerType {
