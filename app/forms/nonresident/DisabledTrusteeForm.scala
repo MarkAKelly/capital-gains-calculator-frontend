@@ -16,15 +16,19 @@
 
 package forms.nonresident
 
+import common.Validation._
 import models._
 import models.nonresident.DisabledTrusteeModel
 import play.api.data.Forms._
 import play.api.data._
+import play.api.i18n.Messages
 
 object DisabledTrusteeForm {
   val disabledTrusteeForm = Form(
     mapping(
-      "isVulnerable" -> nonEmptyText
+      "isVulnerable" -> text
+        .verifying(Messages("error.real"), mandatoryCheck)
+        .verifying(Messages("error.real"), yesNoCheck)
     )(DisabledTrusteeModel.apply)(DisabledTrusteeModel.unapply)
   )
 }
