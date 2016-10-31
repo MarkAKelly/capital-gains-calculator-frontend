@@ -38,7 +38,7 @@ import models.nonresident.{AcquisitionDateModel, DisposalCostsModel, RebasedValu
 import play.api.mvc.Result
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
   implicit val hc = new HeaderCarrier()
 
@@ -82,46 +82,8 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
         status(result) shouldBe 200
       }
 
-      "return some HTML that" should {
-
-        "contain some text and use the character set utf-8" in {
-          charset(result) shouldBe Some("utf-8")
-        }
-
-        s"have the title ${messages.question}" in {
-          document.getElementsByTag("title").text shouldBe messages.question
-        }
-
-        s"have a 'Back' link to ${routes.AcquisitionCostsController.acquisitionCosts()}" in {
-          document.body.getElementById("back-link").text shouldEqual commonMessages.back
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionCostsController.acquisitionCosts().toString()
-        }
-
-        s"have the heading ${commonMessages.pageHeading}" in {
-          document.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
-        }
-
-        "have a monetary field that" should {
-
-          "have the title 'How much did you pay in costs when you became the property owner?'" in {
-            document.select("label[for=disposalCosts]").text should include(messages.question)
-          }
-
-          "have an input box for the disposal costs" in {
-            document.getElementById("disposalCosts").tagName shouldBe "input"
-          }
-        }
-
-        "have a continue button that" should {
-
-          "be a button element" in {
-            document.getElementById("continue-button").tagName shouldBe "button"
-          }
-
-          "have the text 'Continue'" in {
-            document.getElementById("continue-button").text shouldEqual commonMessages.continue
-          }
-        }
+      s"have the title ${messages.question}" in {
+        document.getElementsByTag("title").text shouldBe messages.question
       }
     }
 
@@ -135,16 +97,8 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
         status(result) shouldBe 200
       }
 
-      "return some HTML that" should {
-
-        "contain some text and use the character set utf-8" in {
-          contentType(result) shouldBe Some("text/html")
-          charset(result) shouldBe Some("utf-8")
-        }
-
-        "have the value 1000 auto-filled into the input box" in {
-          document.getElementById("disposalCosts").attr("value") shouldEqual "1000"
-        }
+      s"have the title ${messages.question}" in {
+        document.getElementsByTag("title").text shouldBe messages.question
       }
     }
   }
@@ -232,8 +186,8 @@ class DisposalCostsSpec extends UnitSpec with WithFakeApplication with MockitoSu
         status(result) shouldBe 400
       }
 
-      "display the error message 'Enter a number without commas, for example 10000.00'" in {
-        document.select("div label span.error-notification").text shouldEqual commonMessages.numericPlayErrorOverride
+      s"display the error message '${commonMessages.errorRealNumber}'" in {
+        document.select("div label span.error-notification").text shouldEqual commonMessages.errorRealNumber
       }
     }
 
