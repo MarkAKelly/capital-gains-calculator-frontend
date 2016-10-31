@@ -27,8 +27,8 @@ object DisabledTrusteeForm {
   val disabledTrusteeForm = Form(
     mapping(
       "isVulnerable" -> text
-        .verifying(Messages("error.real"), mandatoryCheck)
-        .verifying(Messages("error.real"), yesNoCheck)
+        .verifying(Messages("error.required"), mandatoryCheck)
+        .verifying(Messages("error.required"), yesNoCheck)
     )(DisabledTrusteeModel.apply)(DisabledTrusteeModel.unapply)
   )
 }
