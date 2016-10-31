@@ -38,7 +38,7 @@ import controllers.nonresident.{DisposalDateController, routes}
 import models.nonresident.{AcquisitionDateModel, DisposalDateModel}
 import play.api.mvc.Result
 
-class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
   implicit val hc = new HeaderCarrier()
 
@@ -137,120 +137,8 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
         status(result) shouldBe 400
       }
 
-      s"should error with message '${messages.errorDateAfter}'" in {
-        document.select(".error-notification").text should include (messages.errorDateAfter)
-      }
-    }
-
-    "submitting an invalid leap year date 29/02/2017" should {
-
-      lazy val result = executeTargetWithMockData("29", "2", "2017")
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"should error with message '${commonMessages.errorInvalidDate}'" in {
-        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
-      }
-    }
-
-    "submitting a day less than 1" should {
-
-      lazy val result = executeTargetWithMockData("0", "2", "2017")
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"should error with message '${commonMessages.errorInvalidDate}'" in {
-        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
-      }
-    }
-
-    "submitting a day greater than 31" should {
-
-      lazy val result = executeTargetWithMockData("32", "2", "2017")
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"should error with message '${commonMessages.errorInvalidDate}'" in {
-        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
-      }
-    }
-
-    "submitting a month greater than 12" should {
-
-      lazy val result = executeTargetWithMockData("31", "13", "2017")
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"should error with message '${commonMessages.errorInvalidDate}'" in {
-        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
-      }
-    }
-
-    "submitting a month less than 1" should {
-
-      lazy val result = executeTargetWithMockData("31", "0", "2017")
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"should error with message '${commonMessages.errorInvalidDate}'" in {
-        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
-      }
-    }
-
-    "submitting a day with no value" should {
-
-      lazy val result = executeTargetWithMockData("", "12", "2017")
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"should error with message ${commonMessages.errorInvalidDate}" in {
-        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
-      }
-    }
-
-    "submitting a month with no value" should {
-
-      lazy val result = executeTargetWithMockData("31", "", "2017")
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"should error with message ${commonMessages.errorInvalidDate}" in {
-        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
-      }
-    }
-
-    "submitting a year with no value" should {
-
-      lazy val result = executeTargetWithMockData("31", "12", "")
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"should error with message ${commonMessages.errorInvalidDate}" in {
-        document.select(".error-notification").text should include (commonMessages.errorInvalidDate)
+      "should return to the disposal date page" in {
+        document.title shouldEqual messages.question
       }
     }
   }
