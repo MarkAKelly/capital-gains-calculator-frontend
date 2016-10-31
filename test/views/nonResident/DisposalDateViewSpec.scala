@@ -28,9 +28,6 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.nonresident.disposalDate
 
-/**
-  * Created by david on 31/10/16.
-  */
 class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "The Disposal Date View" should {

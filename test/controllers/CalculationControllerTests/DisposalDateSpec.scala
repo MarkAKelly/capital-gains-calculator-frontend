@@ -25,7 +25,6 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -74,34 +73,9 @@ class DisposalDateSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
       val target = setupTarget(None, None)
       lazy val result = target.disposalDate(fakeRequest)
-      lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
         status(result) shouldBe 200
-      }
-    }
-
-    "supplied with a model already filled with data" should {
-
-      val target = setupTarget(Some(DisposalDateModel(10, 12, 2016)), None)
-      lazy val result = target.disposalDate(fakeRequest)
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 200" in {
-        status(result) shouldBe 200
-      }
-
-      "return some HTML that" should {
-        "contain some text and use the character set utf-8" in {
-          contentType(result) shouldBe Some("text/html")
-          charset(result) shouldBe Some("utf-8")
-        }
-
-        "be pre-populated with the date 10, 12, 2016" in {
-          document.body.getElementById("disposalDateDay").attr("value") shouldEqual "10"
-          document.body.getElementById("disposalDateMonth").attr("value") shouldEqual "12"
-          document.body.getElementById("disposalDateYear").attr("value") shouldEqual "2016"
-        }
       }
     }
   }
