@@ -16,40 +16,30 @@
 
 package controllers.CalculationControllerTests
 
-import assets.MessageLookup.{NonResident => commonMessages}
 import assets.MessageLookup.NonResident.{DisabledTrustee => messages}
 import connectors.CalculatorConnector
-import play.api.libs.json.Json
-import uk.gov.hmrc.http.cache.client.CacheMap
+import controllers.helpers.FakeRequestHelper
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.mvc.AnyContentAsFormUrlEncoded
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
-
 import scala.concurrent.Future
-import controllers.nonresident.{DisabledTrusteeController, routes}
+import controllers.nonresident.DisabledTrusteeController
 import models.nonresident.DisabledTrusteeModel
-import play.api.mvc.Result
 
-class DisabledTrusteeSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class DisabledTrusteeSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget(getData: Option[DisabledTrusteeModel], postData: Option[DisabledTrusteeModel]): DisabledTrusteeController = {
+  def setupTarget(getData: Option[DisabledTrusteeModel]): DisabledTrusteeController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
     when(mockCalcConnector.fetchAndGetFormData[DisabledTrusteeModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
-
-    lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(DisabledTrusteeModel("")))))
-    when(mockCalcConnector.saveFormData[DisabledTrusteeModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(data))
 
     new DisabledTrusteeController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -59,93 +49,44 @@ class DisabledTrusteeSpec extends UnitSpec with WithFakeApplication with Mockito
   // GET Tests
   "Calling the CalculationController.disabledTrustee" when {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/disabled-trustee").withSession(SessionKeys.sessionId -> "12345")
-
     "not supplied with a pre-existing stored model" should {
-
-      val target = setupTarget(None, None)
-      lazy val result = target.disabledTrustee(fakeRequest)
+      val target = setupTarget(None)
+      lazy val result = target.disabledTrustee(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
         status(result) shouldBe 200
       }
 
-      "return some HTML that" should {
-        "contain some text and use the character set utf-8" in {
-          contentType(result) shouldBe Some("text/html")
-          charset(result) shouldBe Some("utf-8")
-        }
-
-        s"have the title ${messages.question}" in {
-          document.title shouldEqual messages.question
-        }
-
-        s"have the heading ${commonMessages.pageHeading}" in {
-          document.body.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
-        }
-
-        s"have a 'Back' link to ${routes.CustomerTypeController.customerType()}" in {
-          document.body.getElementById("back-link").text shouldEqual commonMessages.back
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CustomerTypeController.customerType().toString()
-        }
-
-        s"have the question '${messages.question}' as the legend of the input" in {
-          document.body.getElementsByTag("legend").text shouldEqual messages.question
-        }
-
-        s"display a radio button with the option '${commonMessages.yes}'" in {
-          document.body.getElementById("isVulnerable-yes").parent.text shouldEqual commonMessages.yes
-        }
-        s"display a radio button with the option '${commonMessages.no}'" in {
-          document.body.getElementById("isVulnerable-no").parent.text shouldEqual commonMessages.no
-        }
-
-        "should contain a Read more sidebar" in {
-          document.select("aside h2").text shouldBe commonMessages.readMore
-        }
-
-        "should contain a Read more link to 'Trusts and Capital Gains Tax'" in {
-          document.select("aside a").first().text should include(messages.linkOne)
-          document.select("aside a").first().attr("href") shouldBe "https://www.gov.uk/trusts-taxes/trusts-and-capital-gains-tax"
-        }
-
-        "display a 'Continue' button " in {
-          document.body.getElementById("continue-button").text shouldEqual commonMessages.continue
-        }
+      "have the title 'How much of your Capital Gains Tax allowance have you got left?'" in {
+        document.title shouldEqual messages.question
       }
     }
 
     "supplied with a pre-existing stored model" should {
+      val target = setupTarget(Some(DisabledTrusteeModel("Yes")))
+      lazy val result = target.disabledTrustee(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
-        val target = setupTarget(Some(DisabledTrusteeModel("Yes")), None)
-        lazy val result = target.disabledTrustee(fakeRequest)
         status(result) shouldBe 200
       }
 
-      "return some HTML that" should {
+      "have the title 'How much of your Capital Gains Tax allowance have you got left?'" in {
+        document.title shouldEqual messages.question
+      }
+    }
 
-        "contain some text and use the character set utf-8" in {
-          val target = setupTarget(Some(DisabledTrusteeModel("Yes")), None)
-          lazy val result = target.disabledTrustee(fakeRequest)
-          contentType(result) shouldBe Some("text/html")
-          charset(result) shouldBe Some("utf-8")
-        }
+    "not supplied with a valid session" should {
+      val target = setupTarget(None)
+      lazy val result = target.disabledTrustee(fakeRequest)
 
-        "have the radio option `Yes` selected if `Yes` is supplied in the model" in {
-          val target = setupTarget(Some(DisabledTrusteeModel("Yes")), None)
-          lazy val result = target.disabledTrustee(fakeRequest)
-          lazy val document = Jsoup.parse(bodyOf(result))
-          document.body.getElementById("isVulnerable-yes").parent.classNames().contains("selected") shouldBe true
-        }
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
 
-        "have the radio option `No` selected if `No` is supplied in the model" in {
-          val target = setupTarget(Some(DisabledTrusteeModel("No")), None)
-          lazy val result = target.disabledTrustee(fakeRequest)
-          lazy val document = Jsoup.parse(bodyOf(result))
-          document.body.getElementById("isVulnerable-no").parent.classNames().contains("selected") shouldBe true
-        }
+      "redirect to the session timeout page" in {
+        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
       }
     }
   }
@@ -153,52 +94,33 @@ class DisabledTrusteeSpec extends UnitSpec with WithFakeApplication with Mockito
   // POST Tests
   "In CalculationController calling the .submitDisabledTrustee action" when {
 
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
-      "/calculate-your-capital-gains/non-resident/disabled-trustee")
-      .withSession(SessionKeys.sessionId -> "12345")
-      .withFormUrlEncodedBody(body: _*)
-
-    def executeTargetWithMockData(data: String): Future[Result] = {
-      lazy val fakeRequest = buildRequest(("isVulnerable", data))
-      val mockData = new DisabledTrusteeModel(data)
-      val target = setupTarget(None, Some(mockData))
-      target.submitDisabledTrustee(fakeRequest)
-    }
-
-    "submitting a valid form with 'Yes'" should {
-
-      lazy val result = executeTargetWithMockData("Yes")
+    "submitting a valid form" should {
+      val target = setupTarget(None)
+      lazy val request = fakeRequestToPOSTWithSession(("isVulnerable", "Yes"))
+      lazy val result = target.submitDisabledTrustee(request)
 
       "return a 303" in {
         status(result) shouldBe 303
       }
-    }
 
-    "submitting a valid form with 'No'" should {
-
-      lazy val result = executeTargetWithMockData("No")
-
-      "return a 303" in {
-        status(result) shouldBe 303
+      "redirect to the Other Properties page" in {
+        redirectLocation(result) shouldBe Some(controllers.nonresident.routes.OtherPropertiesController.otherProperties().url)
       }
     }
 
-    "submitting an invalid form with no content" should {
-
-      lazy val result = executeTargetWithMockData("")
+    "submitting an invalid form" should {
+      val target = setupTarget(None)
+      lazy val request = fakeRequestToPOSTWithSession(("isVulnerable", "a"))
+      lazy val result = target.submitDisabledTrustee(request)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {
         status(result) shouldBe 400
       }
 
-      "display a visible Error Summary field" in {
-        document.getElementById("error-summary-display").hasClass("error-summary--show")
+      "return to the Disabled Trustee page" in {
+        document.title shouldEqual messages.question
       }
-
-      //############################################################################
-      //Need to test the message that is returned and that only on error is rendered
-      //############################################################################
     }
   }
 }
