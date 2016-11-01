@@ -20,8 +20,33 @@ import common.KeystoreKeys
 import controllers.nonresident.routes
 import models.nonresident.{CalculationResultModel, QuestionAnswerModel, SummaryModel}
 import play.api.i18n.Messages
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object CalculationDetailsConstructor {
+  def taxableRate(model: CalculationResultModel): Option[QuestionAnswerModel[String]] = {
+
+    val lowerRates = if (model.baseTaxGain > BigDecimal(0)) {
+      s"£${MoneyPounds(model.baseTaxGain, 0).quantity} at ${model.baseTaxRate}%"
+    } else ""
+
+    val higherRates = model.upperTaxGain.fold("") { gain =>
+      s"£${MoneyPounds(gain, 0).quantity} at ${model.upperTaxRate.get}%"
+    }
+
+    val rates = Seq(lowerRates, higherRates).filter(_.nonEmpty)
+
+    if (rates.nonEmpty) {
+      val id = "calcDetails:taxableRate"
+
+      val question = Messages("calc.summary.calculation.details.taxRate")
+
+      val answer = rates.mkString("\n")
+
+      Some(QuestionAnswerModel(id, answer, question, None))
+    }
+    else None
+  }
+
   def taxableGain(model: CalculationResultModel): Option[QuestionAnswerModel[BigDecimal]] = {
     if (model.totalGain > BigDecimal(0)) {
       val id = "calcDetails:taxableGain"

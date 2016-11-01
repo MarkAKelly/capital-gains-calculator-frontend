@@ -19,6 +19,7 @@ package constructors.nonresident
 import common.{KeystoreKeys, TestModels}
 import assets.MessageLookup.NonResident.{Summary => messages}
 import controllers.nonresident.routes
+import models.nonresident.CalculationResultModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
@@ -28,7 +29,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
   "Calling calculationElection" when {
 
     "the calculation type is a flat calc" should {
-      lazy val model = TestModels.sumModelFlat
+      val model = TestModels.sumModelFlat
       lazy val result = target.calculationElection(model)
 
       "return some details for the calculation election" in {
@@ -69,7 +70,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
     }
 
     "the calculation type is a rebased calc" should {
-      lazy val model = TestModels.sumModelRebased
+      val model = TestModels.sumModelRebased
       lazy val result = target.calculationElection(model)
 
       "return some details for the calculation election" in {
@@ -110,7 +111,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
     }
 
     "the calculation type is a time apportioned calc" should {
-      lazy val model = TestModels.sumModelTA
+      val model = TestModels.sumModelTA
       lazy val result = target.calculationElection(model)
 
       "return some details for the calculation election" in {
@@ -156,7 +157,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
 
     "the gain is zero" should {
 
-      lazy val model = TestModels.calcModelZeroTotal
+      val model = TestModels.calcModelZeroTotal
       lazy val result = target.totalGain(model)
 
       "return some total gain details" in {
@@ -190,7 +191,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
 
     "the gain is greater than zero" should {
 
-      lazy val model = TestModels.calcModelOneRate
+      val model = TestModels.calcModelOneRate
       lazy val result = target.totalGain(model)
 
       "return some total gain details" in {
@@ -224,7 +225,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
 
     "the total gain is less than zero" should {
 
-      lazy val model = TestModels.calcModelLoss
+      val model = TestModels.calcModelLoss
       lazy val result = target.totalGain(model)
 
       "return no total gain details" in {
@@ -237,7 +238,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
 
     "the gain is zero" should {
 
-      lazy val model = TestModels.calcModelZeroTotal
+      val model = TestModels.calcModelZeroTotal
       lazy val result = target.totalLoss(model)
 
       "return no total loss details" in {
@@ -247,7 +248,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
 
     "the gain is greater than zero" should {
 
-      lazy val model = TestModels.calcModelOneRate
+      val model = TestModels.calcModelOneRate
       lazy val result = target.totalLoss(model)
 
       "return no total loss details" in {
@@ -257,7 +258,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
 
     "the total gain is less than zero" should {
 
-      lazy val model = TestModels.calcModelLoss
+      val model = TestModels.calcModelLoss
       lazy val result = target.totalLoss(model)
 
       "return some total loss details" in {
@@ -294,7 +295,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
   "Calling usedAEA" when {
 
     "the total gain is greater than zero" should {
-      lazy val model = TestModels.calcModelOneRate
+      val model = TestModels.calcModelOneRate
       lazy val result = target.usedAea(model)
 
       "return some AEA details" in {
@@ -327,7 +328,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
     }
 
     "the total gain is less than zero" should {
-      lazy val model = TestModels.calcModelLoss
+      val model = TestModels.calcModelLoss
       lazy val result = target.usedAea(model)
 
       "return some AEA details" in {
@@ -336,7 +337,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
     }
 
     "the total gain is zero" should {
-      lazy val model = TestModels.calcModelZeroTotal
+      val model = TestModels.calcModelZeroTotal
       lazy val result = target.usedAea(model)
 
       "return some AEA details" in {
@@ -348,7 +349,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
   "Calling taxableGain" when {
 
     "the total gain is greater than zero" should {
-      lazy val model = TestModels.calcModelOneRate
+      val model = TestModels.calcModelOneRate
       lazy val result = target.taxableGain(model)
 
       "return some taxable gain details" in {
@@ -381,7 +382,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
     }
 
     "the total gain is less than zero" should {
-      lazy val model = TestModels.calcModelLoss
+      val model = TestModels.calcModelLoss
       lazy val result = target.taxableGain(model)
 
       "return some taxable gain details" in {
@@ -390,7 +391,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
     }
 
     "the total gain is zero" should {
-      lazy val model = TestModels.calcModelZeroTotal
+      val model = TestModels.calcModelZeroTotal
       lazy val result = target.taxableGain(model)
 
       "return some taxable gain details" in {
@@ -398,25 +399,142 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
     }
   }
-//
-//  "Calling taxableRate" when {
-//
-//    /*
-//          if isGreaterThanZero(totalGain) && isGreaterThanZero(taxableGain)
-//          None
-//
-//          if !isPositive(taxableGain)
-//          None
-//
-//          if !isPositive(totalGain)
-//          None
-//
-//          if isGreaterThanZero(totalGain) && isPositive(taxableGain) && !isGreaterThanZero(taxableGain)
-//          None
-//
-//    */
-//
-//  }
+
+  "Calling taxableRate" when {
+
+    "base gain is zero and upper gain is not present" should {
+      val model = TestModels.calcModelLoss
+      lazy val result = target.taxableRate(model)
+
+      "return no taxable rate details" in {
+        result shouldBe None
+      }
+    }
+
+    "base gain is greater than zero and upper gain is not present" should {
+      val model = CalculationResultModel(
+        taxOwed = 8000,
+        totalGain = 40000,
+        baseTaxGain = 32000,
+        baseTaxRate = 20,
+        usedAnnualExemptAmount = 8000,
+        upperTaxGain = None,
+        upperTaxRate = None,
+        simplePRR = None)
+      lazy val result = target.taxableRate(model)
+
+      "return some taxable gain details" in {
+        result should not be None
+      }
+
+      "return correct ID for the taxable rate details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe "calcDetails:taxableRate"
+        }
+      }
+
+      "return correct question for the taxable rate details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.taxRate
+        }
+      }
+
+      "return correct answer for the taxable rate details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe "£32,000 at 20%"
+        }
+      }
+
+      "not return a link for the taxable rate details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link shouldBe None
+        }
+      }
+    }
+
+    "base gain is zero and upper gain has a value" should {
+      val model = CalculationResultModel(
+        taxOwed = 8000,
+        totalGain = 40000,
+        baseTaxGain = 0,
+        baseTaxRate = 0,
+        usedAnnualExemptAmount = 8000,
+        upperTaxGain = Some(32000),
+        upperTaxRate = Some(50),
+        simplePRR = None)
+      lazy val result = target.taxableRate(model)
+
+      "return some taxable gain details" in {
+        result should not be None
+      }
+
+      "return correct ID for the taxable rate details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe "calcDetails:taxableRate"
+        }
+      }
+
+      "return correct question for the taxable rate details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.taxRate
+        }
+      }
+
+      "return correct answer for the taxable rate details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe "£32,000 at 50%"
+        }
+      }
+
+      "not return a link for the taxable rate details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link shouldBe None
+        }
+      }
+    }
+
+
+    "base gain is greater than zero and upper gain has a value" should {
+      val model = CalculationResultModel(
+        taxOwed = 8000,
+        totalGain = 40000,
+        baseTaxGain = 10000,
+        baseTaxRate = 18,
+        usedAnnualExemptAmount = 8000,
+        upperTaxGain = Some(32000),
+        upperTaxRate = Some(50),
+        simplePRR = None)
+      lazy val result = target.taxableRate(model)
+
+      "return some taxable gain details" in {
+        result should not be None
+      }
+
+      "return correct ID for the taxable rate details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe "calcDetails:taxableRate"
+        }
+      }
+
+      "return correct question for the taxable rate details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.taxRate
+        }
+      }
+
+      "return correct answer for the taxable rate details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe "£10,000 at 18%\n£32,000 at 50%"
+        }
+      }
+
+      "not return a link for the taxable rate details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link shouldBe None
+        }
+      }
+    }
+  }
 //
 //  "Calling lossCarriedForward" when {
 //
