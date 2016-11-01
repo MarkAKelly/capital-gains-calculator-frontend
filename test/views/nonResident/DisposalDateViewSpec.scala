@@ -32,7 +32,7 @@ class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
   "The Disposal Date View" should {
 
-    "return some HTML that" which {
+    "return some HTML" which {
 
       lazy val acquisitionDate = LocalDate.of(2010, 3, 1)
       lazy val view = disposalDate(disposalDateForm(Some(acquisitionDate)))(fakeRequest)
@@ -66,21 +66,28 @@ class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         document.body.getElementsByTag("fieldset").text should include(messages.question)
       }
 
-      s"display three input boxes with labels that" should {
-        s"have the text ${commonMessages.day}" in {
-          document.select("label[for=disposalDateDay]").text shouldEqual commonMessages.day
-        }
-        s"have the text ${commonMessages.month}" in {
-          document.select("label[for=disposalDateMonth]").text shouldEqual commonMessages.month
-        }
-
-        s"have the text ${commonMessages.year}" in {
-          document.select("label[for=disposalDateYear]").text shouldEqual commonMessages.year
-        }
+      "have inputs using the id acquisitionDate" in {
+        document.body().select("input[type=number]").attr("id") should include ("disposalDate")
       }
 
-      "display a 'Continue' button " in {
-        document.body.getElementById("continue-button").text shouldEqual commonMessages.continue
+      "have a button" which {
+        lazy val button = document.select("button")
+
+        "has the class 'button'" in {
+          button.attr("class") shouldBe "button"
+        }
+
+        "has the type 'submit'" in {
+          button.attr("type") shouldBe "submit"
+        }
+
+        "has the id 'continue-button'" in {
+          button.attr("id") shouldBe "continue-button"
+        }
+
+        "has the text 'Continue'" in {
+          button.text shouldEqual commonMessages.continue
+        }
       }
     }
 

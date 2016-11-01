@@ -20,14 +20,10 @@ import assets.MessageLookup.NonResident.{DisposalDate => messages}
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
-import play.api.libs.json.Json
-import uk.gov.hmrc.http.cache.client.CacheMap
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.mvc.AnyContentAsFormUrlEncoded
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
@@ -35,7 +31,6 @@ import org.scalatest.mock.MockitoSugar
 import scala.concurrent.Future
 import controllers.nonresident.{DisposalDateController, routes}
 import models.nonresident.{AcquisitionDateModel, DisposalDateModel}
-import play.api.mvc.Result
 
 class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
@@ -61,13 +56,46 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Mock
   // GET Tests
   "Calling the CalculationController.disposalDate" when {
 
+    "no session is active" should {
+      lazy val target = setupTarget(None)
+      lazy val result = target.disposalDate(fakeRequest)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      s"redirect to ${controllers.TimeoutController.timeout("restart", "home")}" in {
+        redirectLocation(result).get should include("/calculate-your-capital-gains/session-timeout")
+      }
+    }
+
     "not supplied with a pre-existing stored model" should {
 
-      val target = setupTarget(None)
+      lazy val target = setupTarget(None)
       lazy val result = target.disposalDate(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
         status(result) shouldBe 200
+      }
+
+      "should return to the disposal date page" in {
+        document.title shouldEqual messages.question
+      }
+    }
+
+    "supplied with a pre-existing stored model" should {
+
+      lazy val target = setupTarget(Some(DisposalDateModel(1, 3, 2016)))
+      lazy val result = target.disposalDate(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 200" in {
+        status(result) shouldBe 200
+      }
+
+      "should return to the disposal date page" in {
+        document.title shouldEqual messages.question
       }
     }
   }
@@ -102,6 +130,21 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Mock
 
       s"redirect to ${routes.DisposalValueController.disposalValue()}" in {
         redirectLocation(result) shouldBe Some(s"${routes.DisposalValueController.disposalValue()}")
+      }
+    }
+
+    "submitting a valid date of 20/02/2014 before the tax start date" should {
+
+      lazy val target = setupTarget(None, Some(AcquisitionDateModel("Yes", Some(1), Some(4), Some(2010))))
+      lazy val request = fakeRequestToPOSTWithSession(("disposalDateDay", "20"), ("disposalDateMonth", "2"), ("disposalDateYear", "2014"))
+      lazy val result = target.submitDisposalDate(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      s"redirect to ${routes.NoCapitalGainsTaxController.noCapitalGainsTax()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.NoCapitalGainsTaxController.noCapitalGainsTax()}")
       }
     }
 
