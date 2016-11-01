@@ -17,7 +17,6 @@
 package controllers.CalculationControllerTests
 
 import assets.MessageLookup.NonResident.{NoCapitalGainsTax => messages}
-import assets.MessageLookup.{NonResident => commonMessages}
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
@@ -27,9 +26,8 @@ import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
@@ -70,14 +68,13 @@ class NoCapitalGainsTaxActionSpec extends UnitSpec with WithFakeApplication with
     "called with an invalid session" should {
       val target = setupTarget(Some(DisposalDateModel(2, 4, 2013)))
       lazy val result = target.noCapitalGainsTax(fakeRequest)
-      lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 303" in {
         status(result) shouldBe 303
       }
 
       "redirect to the session timeout page" in {
-        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+        redirectLocation(result).get should include("/calculate-your-capital-gains/session-timeout")
       }
     }
   }
