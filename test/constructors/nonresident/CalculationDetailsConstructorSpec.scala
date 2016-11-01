@@ -535,23 +535,70 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
     }
   }
-//
-//  "Calling lossCarriedForward" when {
-//
-//    /*
-//          if isGreaterThanZero(totalGain) && isGreaterThanZero(taxableGain)
-//          None
-//
-//          if !isPositive(taxableGain)
-//          None
-//
-//          if !isPositive(totalGain)
-//          None
-//
-//          if isGreaterThanZero(totalGain) && isPositive(taxableGain) && !isGreaterThanZero(taxableGain)
-//          None
-//
-//    */
-//
-//  }
+
+  "Calling lossToCarryForward" when {
+
+    "the taxable gain is zero" should {
+
+      val model = TestModels.calcModelZeroTotal
+      lazy val result = target.lossToCarryForward(model)
+
+      "return no loss to carry forward details" in {
+        result shouldBe None
+      }
+    }
+
+    "the taxable gain is greater than zero" should {
+
+      val model = TestModels.calcModelOneRate
+      lazy val result = target.lossToCarryForward(model)
+
+      "return no loss to carry forward details" in {
+        result shouldBe None
+      }
+    }
+
+    "the taxable gain is less than zero" should {
+
+      val model = CalculationResultModel(
+        taxOwed = 0,
+        totalGain = 0,
+        baseTaxGain = -55,
+        baseTaxRate = 20,
+        usedAnnualExemptAmount = 0,
+        upperTaxGain = Some(BigDecimal(-55)),
+        upperTaxRate = Some(50),
+        simplePRR = None)
+      lazy val result = target.lossToCarryForward(model)
+
+      "return some loss to carry forward details" in {
+        result should not be None
+      }
+
+      "return correct ID for the loss to carry forward details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe "calcDetails:lossToCarryForward"
+        }
+      }
+
+      "return correct question for the loss to carry forward details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.lossesCarriedForward
+        }
+      }
+
+      "return correct answer for the loss to carry forward details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe model.taxableGain.abs
+        }
+      }
+
+      "not return a link for the loss to carry forward details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link shouldBe None
+        }
+      }
+    }
+
+  }
 }

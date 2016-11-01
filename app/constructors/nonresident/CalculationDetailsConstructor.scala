@@ -23,6 +23,19 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object CalculationDetailsConstructor {
+  def lossToCarryForward(model: CalculationResultModel): Option[QuestionAnswerModel[BigDecimal]] = {
+    if (model.taxableGain < BigDecimal(0)) {
+      val id = "calcDetails:lossToCarryForward"
+
+      val question = Messages("calc.summary.calculation.details.lossCarriedForward")
+
+      val answer = model.taxableGain.abs
+
+      Some(QuestionAnswerModel(id, answer, question, None))
+    }
+    else None
+  }
+
   def taxableRate(model: CalculationResultModel): Option[QuestionAnswerModel[String]] = {
 
     val lowerRates = if (model.baseTaxGain > BigDecimal(0)) {
