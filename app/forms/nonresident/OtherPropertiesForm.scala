@@ -17,6 +17,7 @@
 package forms.nonresident
 
 import common.Constants
+import common.Transformers._
 import common.Validation._
 import models.nonresident.OtherPropertiesModel
 import play.api.data.Forms._
@@ -59,9 +60,11 @@ object OtherPropertiesForm {
       "otherProperties" -> text
         .verifying(Messages("calc.common.error.fieldRequired"), mandatoryCheck)
         .verifying(Messages("calc.common.error.fieldRequired"), yesNoCheck),
-      "otherPropertiesAmt" -> optional(bigDecimal)
-    )(OtherPropertiesModel.apply)(OtherPropertiesModel.unapply).verifying(Messages("calc.otherProperties.errorQuestion"),
-      otherPropertiesForm => validate(otherPropertiesForm, showHiddenQuestion))
+      "otherPropertiesAmt" -> optional(text)
+        .transform[Option[BigDecimal]](optionalStringToOptionalBigDecimal, optionalBigDecimalToOptionalString)
+    )(OtherPropertiesModel.apply)(OtherPropertiesModel.unapply)
+      .verifying(Messages("calc.otherProperties.errorQuestion"),
+        otherPropertiesForm => validate(otherPropertiesForm, showHiddenQuestion))
       .verifying(Messages("calc.otherProperties.errorNegative"),
         otherPropertiesForm => validateMinimum(otherPropertiesForm, showHiddenQuestion))
       .verifying(Messages("calc.otherProperties.errorDecimalPlaces"),

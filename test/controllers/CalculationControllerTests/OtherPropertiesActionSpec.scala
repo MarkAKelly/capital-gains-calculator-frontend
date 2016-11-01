@@ -86,6 +86,13 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
           status(result) shouldBe 200
         }
 
+        "display the other properties page" in {
+          document.title shouldEqual messages.question
+        }
+
+        s"has a 'Back' link to ${routes.PersonalAllowanceController.personalAllowance().url}" in {
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.PersonalAllowanceController.personalAllowance().url
+        }
       }
 
       "for a Customer Type of Individual with no Current Income" should {
@@ -94,8 +101,15 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
         lazy val result = target.otherProperties(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
+        "return a 200" in {
+          status(result) shouldBe 200
+        }
+
+        "display the other properties page" in {
+          document.title shouldEqual messages.question
+        }
+
         s"have a 'Back' link to ${routes.CurrentIncomeController.currentIncome().url}" in {
-          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.CurrentIncomeController.currentIncome().url
         }
       }
@@ -106,8 +120,15 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
         lazy val result = target.otherProperties(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
+        "return a 200" in {
+          status(result) shouldBe 200
+        }
+
+        "display the other properties page" in {
+          document.title shouldEqual messages.question
+        }
+
         s"have a 'Back' link to ${routes.DisabledTrusteeController.disabledTrustee().url}" in {
-          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.DisabledTrusteeController.disabledTrustee().url
         }
       }
@@ -118,8 +139,15 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
         lazy val result = target.otherProperties(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
+        "return a 200" in {
+          status(result) shouldBe 200
+        }
+
+        "display the other properties page" in {
+          document.title shouldEqual messages.question
+        }
+
         s"have a 'Back' link to ${routes.CustomerTypeController.customerType().url}" in {
-          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual routes.CustomerTypeController.customerType().url
         }
       }
@@ -129,8 +157,15 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
         lazy val result = target.otherProperties(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
+        "return a 200" in {
+          status(result) shouldBe 200
+        }
+
+        "display the other properties page" in {
+          document.title shouldEqual messages.question
+        }
+
         s"have a 'Back' link to $missingDataRoute " in {
-          document.body.getElementById("back-link").text shouldEqual commonMessages.back
           document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
         }
       }

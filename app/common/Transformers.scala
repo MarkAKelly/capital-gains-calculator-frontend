@@ -25,9 +25,29 @@ object Transformers {
     case Failure(_) => BigDecimal(0)
   }
 
+  val optionalStringToOptionalBigDecimal: Option[String] => Option[BigDecimal] = (input) => {
+    if (input.isEmpty) None
+    else {
+
+      Try(BigDecimal(input.get.trim)) match {
+        case Success(value) => Some(value)
+        case Failure(_) => None
+      }
+    }
+  }
+
   val bigDecimalToString: BigDecimal => String = (input) => input.scale match {
     case 1 => input.setScale(2).toString()
     case _ => input.toString
+  }
+
+  val optionalBigDecimalToOptionalString: Option[BigDecimal] => Option[String] = (input) =>
+    if (input.isEmpty) None
+    else {
+    input.get.scale match {
+      case 1 => Some(input.getOrElse(BigDecimal(0.0)).setScale(2).toString())
+      case _ => Some(input.getOrElse(BigDecimal(0.0)).toString)
+    }
   }
 
   val stringToInteger: String => Int = (input) => Try(input.trim.toInt) match {

@@ -91,6 +91,19 @@ class OtherPropertiesFormSpec extends UnitSpec with WithFakeApplication {
       }
     }
 
+    "passing in an invalid map with an random string instead of an amount" should {
+      lazy val map = Map("otherProperties" -> "Yes", "otherPropertiesAmt" -> "a")
+      lazy val form = otherPropertiesForm(true).bind(map)
+
+      "return an invalid form with one error" in {
+        form.errors.size shouldBe 1
+      }
+
+      s"return an error message of '${messages.errorQuestion}" in {
+        form.error("").get.message shouldBe messages.errorQuestion
+      }
+    }
+
     "passing in an invalid map with a negative number" should {
       lazy val map = Map("otherProperties" -> "Yes", "otherPropertiesAmt" -> "-1500")
       lazy val form = otherPropertiesForm(true).bind(map)
