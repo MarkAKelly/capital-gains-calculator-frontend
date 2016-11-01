@@ -31,7 +31,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
-class DisposalValueSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
+class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
   implicit val hc = new HeaderCarrier()
 

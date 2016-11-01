@@ -103,7 +103,7 @@ class DisposalValueFormSpec extends UnitSpec with WithFakeApplication {
       }
     }
 
-    "passing in an invalid map with a value above 1 billion" should {
+    "passing in an invalid map with a value above 1 billion and one pence" should {
       val map = Map("disposalValue" -> "1000000000.01")
       lazy val form = disposalValueForm.bind(map)
 
