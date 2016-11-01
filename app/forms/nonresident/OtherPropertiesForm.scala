@@ -60,8 +60,8 @@ object OtherPropertiesForm {
       "otherProperties" -> text
         .verifying(Messages("calc.common.error.fieldRequired"), mandatoryCheck)
         .verifying(Messages("calc.common.error.fieldRequired"), yesNoCheck),
-      "otherPropertiesAmt" -> optional(text)
-        .transform[Option[BigDecimal]](optionalStringToOptionalBigDecimal, optionalBigDecimalToOptionalString)
+      "otherPropertiesAmt" -> text
+        .transform[Option[BigDecimal]](stringToOptionalBigDecimal, optionalBigDecimalToString)
     )(OtherPropertiesModel.apply)(OtherPropertiesModel.unapply)
       .verifying(Messages("calc.otherProperties.errorQuestion"),
         otherPropertiesForm => validate(otherPropertiesForm, showHiddenQuestion))

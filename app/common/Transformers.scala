@@ -25,14 +25,10 @@ object Transformers {
     case Failure(_) => BigDecimal(0)
   }
 
-  val optionalStringToOptionalBigDecimal: Option[String] => Option[BigDecimal] = (input) => {
-    if (input.isEmpty) None
-    else {
-
-      Try(BigDecimal(input.get.trim)) match {
-        case Success(value) => Some(value)
-        case Failure(_) => None
-      }
+  val stringToOptionalBigDecimal: String => Option[BigDecimal] = (input) => {
+    Try(BigDecimal(input.trim)) match {
+      case Success(value) => Some(value)
+      case Failure(_) => None
     }
   }
 
@@ -41,12 +37,12 @@ object Transformers {
     case _ => input.toString
   }
 
-  val optionalBigDecimalToOptionalString: Option[BigDecimal] => Option[String] = (input) =>
-    if (input.isEmpty) None
+  val optionalBigDecimalToString: Option[BigDecimal] => String = (input) =>
+    if (input.isEmpty) ""
     else {
     input.get.scale match {
-      case 1 => Some(input.getOrElse(BigDecimal(0.0)).setScale(2).toString())
-      case _ => Some(input.getOrElse(BigDecimal(0.0)).toString)
+      case 1 => input.getOrElse(BigDecimal(0.0)).setScale(2).toString()
+      case _ => input.getOrElse(BigDecimal(0.0)).toString
     }
   }
 

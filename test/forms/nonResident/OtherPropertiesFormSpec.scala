@@ -48,7 +48,7 @@ class OtherPropertiesFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       "return a form containing the data" in {
-        form.data shouldBe Map("otherProperties" -> "No")
+        form.data shouldBe Map("otherProperties" -> "No", "otherPropertiesAmt" -> "")
       }
     }
 
