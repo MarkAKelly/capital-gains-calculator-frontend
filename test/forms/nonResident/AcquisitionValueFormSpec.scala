@@ -36,8 +36,11 @@ import models.nonresident.AcquisitionValueModel._
 import scala.concurrent.Future
 import AcquisitionValueForm._
 import assets.MessageLookup
-import assets.MessageLookup.NonResident.AllowableLosses
+import common.Constants
+import assets.MessageLookup.NonResident.{AcquisitionValue => messages}
+import assets.MessageLookup.{NonResident => common}
 import play.api.i18n.Messages
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 /**
   * Created by emma on 31/10/16.
   */
@@ -102,67 +105,38 @@ class AcquisitionValueFormSpec extends UnitSpec with WithFakeApplication with Mo
 
   "Creating a form using an invalid map" when {
     "supplied with no data" should {
-      lazy val form = acquisitionValueForm.bind(Map("acquisitionValue"-> ""))
+      val message = common.mandatoryAmount
+      val data = ""
 
-      "return a form with errors" in {
-        form.hasErrors shouldBe true
-      }
-
-      "return 1 error" in {
-        form.errors.size shouldBe 1
-      }
-
-      s"return an error message ${MessageLookup.NonResident.mandatoryAmount}" in {
-        form.error("acquisitionValue").get.message shouldBe MessageLookup.NonResident.mandatoryAmount
-      }
+      checkMessageAndError(message, data)
     }
 
     "supplied with data of the wrong format (incorrect value for acquisitionValue...)" should {
-      lazy val form = acquisitionValueForm.bind(Map("acquisitionValue" -> "junk text"))
+      val message = common.mandatoryAmount
+      val data = "junk text"
 
-      "return a form with errors" in {
-        form.hasErrors shouldBe true
-      }
-      "return 1 error" in {
-        form.errors.size shouldBe 1
-      }
-
-      s"return an error message ${MessageLookup.NonResident.mandatoryAmount}" in {
-        form.error("acquisitionValue").get.message shouldBe MessageLookup.NonResident.mandatoryAmount
-      }
+      checkMessageAndError(message, data)
     }
 
     "supplied with data containing a negative value" should {
-      lazy val form = acquisitionValueForm.bind(Map("acquisitionValue" -> "-1000"))
+      val message = messages.errorNegative
+      val data = "-1000"
 
-      "return a form with errors" in {
-        form.hasErrors shouldBe true
-      }
-
-      "return 1 error" in {
-        form.errors.size shouldBe 1
-      }
-
-      s"return an error message ${MessageLookup.NonResident.AcquisitionValue.errorNegative}" in {
-        form.error("acquisitionValue").get.message shouldBe MessageLookup.NonResident.AcquisitionValue.errorNegative
-      }
+      checkMessageAndError(message, data)
     }
 
-    "supplied with data containg a value with too many decimal places" should {
-      //lazy val form = acquisitionValueForm.bind(Map("acquisitionValue" -> "1.111"))
+    "supplied with data containing a value with too many decimal places" should {
+      val message = messages.errorDecimalPlaces
+      val data = "1.11111111111"
 
-      /*"return a form with errors" in {
-        form.hasErrors shouldBe true
-      }
-
-      "return 1 error" in {
-        form.errors.size shouldBe 1
-      }
-
-      s"return an error with message ${MessageLookup.NonResident.AcquisitionValue.errorDecimalPlaces}" in {
-        form.error("acquisitionValue").get.message shouldBe MessageLookup.NonResident.AcquisitionValue.errorDecimalPlaces
-      }*/
-      checkMessageAndError(MessageLookup.NonResident.AcquisitionValue.errorDecimalPlaces, "1.11111111111")
+      checkMessageAndError(message, data)
     }
+
+    "supplied with data containing a value that exceeds the max numeric" should {
+      val data = (Constants.maxNumeric + 0.01).toString()
+      val message = messages.errorMaximum(MoneyPounds(Constants.maxNumeric, 0).quantity)
+      checkMessageAndError(message, data)
+    }
+
   }
 }
