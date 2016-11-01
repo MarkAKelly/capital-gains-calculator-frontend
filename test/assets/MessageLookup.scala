@@ -181,6 +181,8 @@ object MessageLookup {
       val negativeValueError = "Enter a positive number for the cost of your improvements"
       val excessDecimalPlacesError = "The cost of your improvements has too many numbers after the decimal point"
 
+      def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
+
     }
 
     object NoCapitalGainsTax {

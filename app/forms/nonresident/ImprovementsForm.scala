@@ -35,6 +35,12 @@ object ImprovementsForm {
     }
   }
 
+//  def verifyIsRequired(data: ImprovementsModel): Boolean = {
+//    data.isClaimingImprovements match {
+//      case Constants.yes =>
+//    }
+//  }
+
   def verifyPositive(data: ImprovementsModel): Boolean = {
     (data.isClaimingImprovements match {
       case "Yes" => isPositive(data.improvementsAmt.getOrElse(0))
@@ -65,16 +71,26 @@ object ImprovementsForm {
     })
   }
 
+  def validateBigDecimal(data: ImprovementsModel): Boolean = {
+    (data.isClaimingImprovements match {
+      case Constants.yes => bigDecimalCheck(data.improvementsAmt.getOrElse(0).toString)
+      case Constants.no => true
+    }) && (data.isClaimingImprovements match {
+      case Constants.yes => bigDecimalCheck(data.improvementsAmtAfter.getOrElse(0).toString)
+      case Constants.no => true
+    })
+  }
+
   val improvementsForm = Form(
     mapping(
-      "isClaimingImprovements" -> text
-        .verifying(Messages("error.required"), mandatoryCheck)
-        .verifying(Messages("error.required"), yesNoCheck),
+      "isClaimingImprovements" -> text,
       "improvementsAmt" -> optional(bigDecimal),
       "improvementsAmtAfter" -> optional(bigDecimal)
     )(ImprovementsModel.apply)(ImprovementsModel.unapply)
       .verifying(Messages("calc.improvements.error.no.value.supplied"),
         improvementsForm => verifyAmountSupplied(improvementsForm))
+      .verifying(Messages("error.real"),
+        improvementsForm => validateBigDecimal(improvementsForm))
       .verifying(Messages("calc.improvements.errorNegative"),
         improvementsForm => verifyPositive(improvementsForm))
       .verifying(Messages("calc.improvements.errorDecimalPlaces"),
