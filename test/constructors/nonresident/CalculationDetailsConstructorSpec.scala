@@ -53,7 +53,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
         }
       }
 
-      "return a link for the calculation election details" in {
+      "not return a link for the calculation election details" in {
         result.fold(cancel("expected result not computed")) { item =>
           item.link should not be None
         }
@@ -94,7 +94,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
         }
       }
 
-      "return a link for the calculation election details" in {
+      "not return a link for the calculation election details" in {
         result.fold(cancel("expected result not computed")) { item =>
           item.link should not be None
         }
@@ -135,7 +135,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
         }
       }
 
-      "return a link for the calculation election details" in {
+      "not return a link for the calculation election details" in {
         result.fold(cancel("expected result not computed")) { item =>
           item.link should not be None
         }
@@ -181,7 +181,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
         }
       }
 
-      "return a link for the total gain details" in {
+      "not return a link for the total gain details" in {
         result.fold(cancel("expected result not computed")) { item =>
           item.link shouldBe None
         }
@@ -215,7 +215,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
         }
       }
 
-      "return a link for the total gain details" in {
+      "not return a link for the total gain details" in {
         result.fold(cancel("expected result not computed")) { item =>
           item.link shouldBe None
         }
@@ -282,7 +282,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
         }
       }
 
-      "return a link for the total loss details" in {
+      "not return a link for the total loss details" in {
         result.fold(cancel("expected result not computed")) { item =>
           item.link shouldBe None
         }
@@ -319,7 +319,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
         }
       }
 
-      "return a link for the AEA details" in {
+      "not return a link for the AEA details" in {
         result.fold(cancel("expected result not computed")) { item =>
           item.link shouldBe None
         }
@@ -344,25 +344,60 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
     }
   }
-//
-//  "Calling taxableGain" when {
-//
-//    /*
-//          if isGreaterThanZero(totalGain) && isGreaterThanZero(taxableGain)
-//          None
-//
-//          if !isPositive(taxableGain)
-//          None
-//
-//          if !isPositive(totalGain)
-//          None
-//
-//          if isGreaterThanZero(totalGain) && isPositive(taxableGain) && !isGreaterThanZero(taxableGain)
-//          None
-//
-//    */
-//
-//  }
+
+  "Calling taxableGain" when {
+
+    "the total gain is greater than zero" should {
+      lazy val model = TestModels.calcModelOneRate
+      lazy val result = target.taxableGain(model)
+
+      "return some taxable gain details" in {
+        result should not be None
+      }
+
+      "return correct ID for the taxable gain details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe "calcDetails:taxableGain"
+        }
+      }
+
+      "return correct question for the taxable gain details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.taxableGain
+        }
+      }
+
+      "return correct answer for the taxable gain details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe model.taxableGain
+        }
+      }
+
+      "not return a link for the taxable gain details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link shouldBe None
+        }
+      }
+    }
+
+    "the total gain is less than zero" should {
+      lazy val model = TestModels.calcModelLoss
+      lazy val result = target.taxableGain(model)
+
+      "return some taxable gain details" in {
+        result shouldBe None
+      }
+    }
+
+    "the total gain is zero" should {
+      lazy val model = TestModels.calcModelZeroTotal
+      lazy val result = target.taxableGain(model)
+
+      "return some taxable gain details" in {
+        result shouldBe None
+      }
+    }
+  }
 //
 //  "Calling taxableRate" when {
 //

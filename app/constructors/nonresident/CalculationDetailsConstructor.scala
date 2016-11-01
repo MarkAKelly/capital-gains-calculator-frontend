@@ -22,6 +22,18 @@ import models.nonresident.{CalculationResultModel, QuestionAnswerModel, SummaryM
 import play.api.i18n.Messages
 
 object CalculationDetailsConstructor {
+  def taxableGain(model: CalculationResultModel): Option[QuestionAnswerModel[BigDecimal]] = {
+    if (model.totalGain > BigDecimal(0)) {
+      val id = "calcDetails:taxableGain"
+
+      val question = Messages("calc.summary.calculation.details.taxableGain")
+
+      val answer = model.taxableGain
+
+      Some(QuestionAnswerModel(id, answer, question, None))
+    }
+    else None
+  }
 
   def usedAea(model: CalculationResultModel): Option[QuestionAnswerModel[BigDecimal]] = {
     if (model.totalGain > BigDecimal(0)) {
