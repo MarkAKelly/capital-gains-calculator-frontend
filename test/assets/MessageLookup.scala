@@ -214,7 +214,9 @@ object MessageLookup {
       val inputQuestion = "How much extra tax relief are you claiming?"
       val totalGain = "Total gain"
       val taxableGain = "Taxable gain"
+      val lossCarriedForward = "Loss carried forward"
       val addRelief = "Add relief"
+      val updateRelief = "Update relief"
 
       def totalLoss(value: String): String = s"Total loss $value"
 
