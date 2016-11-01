@@ -16,17 +16,14 @@
 
 package controllers.CalculationControllerTests
 
-import assets.MessageLookup.{NonResident => commonMessages}
 import assets.MessageLookup.NonResident.{OtherProperties => messages}
 import common.DefaultRoutes._
 import common.nonresident.CustomerTypeKeys
-import common.{Constants, KeystoreKeys}
+import common.KeystoreKeys
 import connectors.CalculatorConnector
-import play.api.libs.json.Json
-import uk.gov.hmrc.http.cache.client.CacheMap
+import controllers.helpers.FakeRequestHelper
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
@@ -37,15 +34,12 @@ import org.scalatest.mock.MockitoSugar
 import scala.concurrent.Future
 import controllers.nonresident.{OtherPropertiesController, routes}
 import models.nonresident.{CurrentIncomeModel, CustomerTypeModel, OtherPropertiesModel}
-import play.api.mvc.Result
-import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
   implicit val hc = new HeaderCarrier()
 
   def setupTarget(getData: Option[OtherPropertiesModel],
-                  postData: Option[OtherPropertiesModel],
                   customerTypeData: Option[CustomerTypeModel],
                   currentIncomeData: Option[CurrentIncomeModel] = None): OtherPropertiesController = {
 
@@ -59,10 +53,6 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
 
     when(mockCalcConnector.fetchAndGetFormData[CurrentIncomeModel](Matchers.eq(KeystoreKeys.currentIncome))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(currentIncomeData))
-
-    lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(OtherPropertiesModel("", Some(0))))))
-    when(mockCalcConnector.saveFormData[OtherPropertiesModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(data))
 
     new OtherPropertiesController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -78,7 +68,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
 
       "for a customer type of Individual" should {
 
-        val target = setupTarget(None, None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
+        val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
         lazy val result = target.otherProperties(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -97,7 +87,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
 
       "for a Customer Type of Individual with no Current Income" should {
 
-        val target = setupTarget(None, None, Some(CustomerTypeModel(CustomerTypeKeys.individual)), Some(CurrentIncomeModel(0)))
+        val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)), Some(CurrentIncomeModel(0)))
         lazy val result = target.otherProperties(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -116,7 +106,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
 
       "for a Customer Type of Trustee" should {
 
-        val target = setupTarget(None, None, Some(CustomerTypeModel(CustomerTypeKeys.trustee)))
+        val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.trustee)))
         lazy val result = target.otherProperties(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -135,7 +125,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
 
       "for a Customer Type of Personal Rep" should {
 
-        val target = setupTarget(None, None, Some(CustomerTypeModel(CustomerTypeKeys.personalRep)))
+        val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.personalRep)))
         lazy val result = target.otherProperties(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -175,7 +165,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
 
       "for an individual" should {
 
-        val target = setupTarget(Some(OtherPropertiesModel("Yes", Some(2100))), None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
+        val target = setupTarget(Some(OtherPropertiesModel("Yes", Some(2100))), Some(CustomerTypeModel(CustomerTypeKeys.individual)))
         lazy val result = target.otherProperties(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -201,7 +191,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
 
       "for a trustee" should {
 
-        val target = setupTarget(Some(OtherPropertiesModel("Yes", None)), None, Some(CustomerTypeModel(CustomerTypeKeys.trustee)))
+        val target = setupTarget(Some(OtherPropertiesModel("Yes", None)), Some(CustomerTypeModel(CustomerTypeKeys.trustee)))
         lazy val result = target.otherProperties(fakeRequest)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -222,7 +212,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
 
         "for a personal rep" should {
 
-          val target = setupTarget(Some(OtherPropertiesModel("Yes", None)), None, Some(CustomerTypeModel(CustomerTypeKeys.personalRep)))
+          val target = setupTarget(Some(OtherPropertiesModel("Yes", None)), Some(CustomerTypeModel(CustomerTypeKeys.personalRep)))
           lazy val result = target.otherProperties(fakeRequest)
           lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -248,26 +238,13 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
   // POST Tests
   "In CalculationController calling the .submitOtherProperties action" when {
 
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
-      "/calculate-your-capital-gains/non-resident/other-properties")
-      .withSession(SessionKeys.sessionId -> "12345")
-      .withFormUrlEncodedBody(body: _*)
-
     "for an individual" should {
-
-      def executeTargetWithMockData(selection: String, amount: String): Future[Result] = {
-        lazy val fakeRequest = buildRequest(("otherProperties", selection), ("otherPropertiesAmt", amount))
-        val mockData = amount match {
-          case "" => OtherPropertiesModel(selection, None)
-          case _ => OtherPropertiesModel(selection, Some(BigDecimal(amount)))
-        }
-        val target = setupTarget(None, Some(mockData), Some(CustomerTypeModel(CustomerTypeKeys.individual)))
-        target.submitOtherProperties(fakeRequest)
-      }
 
       "submitting a valid form with 'Yes' and a non-zero amount" should {
 
-        lazy val result = executeTargetWithMockData("Yes", "2100")
+        lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
+        lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "Yes"), ("otherPropertiesAmt", "2100"))
+        lazy val result = target.submitOtherProperties(request)
 
         "return a 303" in {
           status(result) shouldBe 303
@@ -280,7 +257,9 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
 
       "submitting a valid form with 'Yes' and a nil amount" should {
 
-        lazy val result = executeTargetWithMockData("Yes", "0")
+        lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
+        lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "Yes"), ("otherPropertiesAmt", "0"))
+        lazy val result = target.submitOtherProperties(request)
 
         "return a 303" in {
           status(result) shouldBe 303
@@ -293,7 +272,9 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
 
       "submitting a valid form with 'No'" should {
 
-        lazy val result = executeTargetWithMockData("No", "")
+        lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
+        lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "No"), ("otherPropertiesAmt", ""))
+        lazy val result = target.submitOtherProperties(request)
 
         "return a 303" in {
           status(result) shouldBe 303
@@ -306,80 +287,27 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
 
       "submitting an form with no data" should {
 
-        lazy val result = executeTargetWithMockData("", "")
-
-        "return a 400" in {
-          status(result) shouldBe 400
-        }
-      }
-
-      "submitting an invalid form with 'Yes' selection and a no amount" should {
-
-        lazy val result = executeTargetWithMockData("Yes", "")
-
-        "return a 400" in {
-          status(result) shouldBe 400
-        }
-      }
-
-      "submitting an invalid form with 'Yes' selection and an amount with three decimal places" should {
-
-        lazy val result = executeTargetWithMockData("Yes", "1000.111")
-        lazy val document = Jsoup.parse(bodyOf(result))
+        lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
+        lazy val request = fakeRequestToPOSTWithSession(("otherProperties", ""), ("otherPropertiesAmt", ""))
+        lazy val result = target.submitOtherProperties(request)
 
         "return a 400" in {
           status(result) shouldBe 400
         }
 
-        s"fail with message ${messages.errorDecimalPlaces}" in {
-          document.getElementsByClass("error-notification").text should include(messages.errorDecimalPlaces)
-        }
-      }
-
-      "submitting an invalid form with 'Yes' selection and a negative amount" should {
-
-        lazy val result = executeTargetWithMockData("Yes", "-1000")
-        lazy val document = Jsoup.parse(bodyOf(result))
-
-        "return a 400" in {
-          status(result) shouldBe 400
-        }
-
-        s"fail with message ${messages.errorNegative}" in {
-          document.getElementsByClass("error-notification").text should include(messages.errorNegative)
-        }
-      }
-
-      "submitting a value which exceeds the maximum numeric" should {
-
-        lazy val result = executeTargetWithMockData("Yes", (Constants.maxNumeric + 0.01).toString)
-        lazy val document = Jsoup.parse(bodyOf(result))
-
-        "return a 400" in {
-          status(result) shouldBe 400
-        }
-
-        s"fail with message ${commonMessages.maximumLimit(MoneyPounds(Constants.maxNumeric, 0).quantity)}" in {
-          document.getElementsByClass("error-notification").text should
-            include(commonMessages.maximumLimit(MoneyPounds(Constants.maxNumeric, 0).quantity))
+        "return to the other properties page" in {
+          Jsoup.parse(bodyOf(result)).title shouldEqual messages.question
         }
       }
     }
 
     "for a trustee" should {
-      def executeTargetWithMockData(selection: String, amount: String): Future[Result] = {
-        lazy val fakeRequest = buildRequest(("otherProperties", selection), ("otherPropertiesAmt", amount))
-        val mockData = amount match {
-          case "" => OtherPropertiesModel(selection, None)
-          case _ => OtherPropertiesModel(selection, Some(BigDecimal(amount)))
-        }
-        val target = setupTarget(None, Some(mockData), Some(CustomerTypeModel(CustomerTypeKeys.trustee)))
-        target.submitOtherProperties(fakeRequest)
-      }
 
       "submitting a valid form with 'Yes' selected" should {
 
-        lazy val result = executeTargetWithMockData("Yes", "")
+        lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.trustee)))
+        lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "Yes"), ("otherPropertiesAmt", ""))
+        lazy val result = target.submitOtherProperties(request)
 
         "return a 303" in {
           status(result) shouldBe 303
@@ -392,7 +320,9 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
 
       "submitting a valid form with 'No' selected" should {
 
-        lazy val result = executeTargetWithMockData("No", "")
+        lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.trustee)))
+        lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "No"), ("otherPropertiesAmt", ""))
+        lazy val result = target.submitOtherProperties(request)
 
         "return a 303" in {
           status(result) shouldBe 303
@@ -405,19 +335,12 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
     }
 
     "for a personal rep" should {
-      def executeTargetWithMockData(selection: String, amount: String): Future[Result] = {
-        lazy val fakeRequest = buildRequest(("otherProperties", selection), ("otherPropertiesAmt", amount))
-        val mockData = amount match {
-          case "" => OtherPropertiesModel(selection, None)
-          case _ => OtherPropertiesModel(selection, Some(BigDecimal(amount)))
-        }
-        val target = setupTarget(None, Some(mockData), Some(CustomerTypeModel(CustomerTypeKeys.personalRep)))
-        target.submitOtherProperties(fakeRequest)
-      }
 
       "submitting a valid form with 'Yes' selected" should {
 
-        lazy val result = executeTargetWithMockData("Yes", "")
+        lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.personalRep)))
+        lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "Yes"), ("otherPropertiesAmt", ""))
+        lazy val result = target.submitOtherProperties(request)
 
         "return a 303" in {
           status(result) shouldBe 303
@@ -430,7 +353,9 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
 
       "submitting a valid form with 'No' selected" should {
 
-        lazy val result = executeTargetWithMockData("No", "")
+        lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.trustee)))
+        lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "No"), ("otherPropertiesAmt", ""))
+        lazy val result = target.submitOtherProperties(request)
 
         "return a 303" in {
           status(result) shouldBe 303
