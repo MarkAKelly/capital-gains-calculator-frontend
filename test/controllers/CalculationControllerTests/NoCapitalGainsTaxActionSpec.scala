@@ -20,6 +20,7 @@ import assets.MessageLookup.NonResident.{NoCapitalGainsTax => messages}
 import assets.MessageLookup.{NonResident => commonMessages}
 import common.KeystoreKeys
 import connectors.CalculatorConnector
+import controllers.helpers.FakeRequestHelper
 import controllers.nonresident.NoCapitalGainsTaxController
 import models.nonresident.DisposalDateModel
 import org.jsoup.Jsoup
@@ -33,7 +34,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
-class NoCapitalGainsTaxSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class NoCapitalGainsTaxActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
   implicit val hc = new HeaderCarrier()
 
@@ -50,64 +51,33 @@ class NoCapitalGainsTaxSpec extends UnitSpec with WithFakeApplication with Mocki
   }
 
   //GET Tests
-  "In CalculationController calling the .noCapitalGainsTax action " should {
+  "In CalculationController calling the .noCapitalGainsTax action " when {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/no-capital-gains-tax").withSession(SessionKeys.sessionId -> "12345")
-
-    "when supplied with a model for the date 01 January 2015" should {
-
+    "called with a valid session" should {
       val target = setupTarget(Some(DisposalDateModel(1, 1, 2015)))
-      lazy val result = target.noCapitalGainsTax(fakeRequest)
+      lazy val result = target.noCapitalGainsTax(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
         status(result) shouldBe 200
       }
 
-      "return some HTML that" should {
-
-        "contain some text and use the character set utf-8" in {
-          contentType(result) shouldBe Some("text/html")
-          charset(result) shouldBe Some("utf-8")
-        }
-
-        s"have the title ${messages.title}" in {
-          document.title shouldEqual messages.title
-        }
-
-        s"have the heading '${messages.title}'" in {
-          document.body.getElementsByTag("h1").text shouldEqual messages.title
-        }
-        s"Contain the content '${messages.paragraphOne}'" in {
-          document.body.select("article p").text should include(messages.paragraphOne)
-        }
-        s"Contain the content '${messages.paragraphTwo}'" in {
-          document.body.select("article p").text should include(messages.paragraphTwo)
-        }
-
-        "should contain a Read more sidebar with a link to CGT allowances" in {
-          document.select("aside h2").text shouldBe commonMessages.readMore
-          document.select("aside a").first.text shouldBe s"${messages.link} ${commonMessages.externalLink}"
-        }
-
-        "should contain a change link to the disposal date page" in {
-          document.select("a#change-link").text shouldBe messages.change
-        }
-
-        "should display a date of 1 January 2015" in {
-          document.select("span.bold-small").text shouldEqual "1 January 2015"
-        }
+      "load the No Capital Gains Tax page" in {
+        document.title() shouldBe messages.title
       }
     }
 
-    "when supplied with a model for the date 13 Decemeber 2014" should {
-
-      val target = setupTarget(Some(DisposalDateModel(13, 12, 2014)))
+    "called with an invalid session" should {
+      val target = setupTarget(Some(DisposalDateModel(2, 4, 2013)))
       lazy val result = target.noCapitalGainsTax(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
 
-      "should display a date of 13 December 2014" in {
-        document.select("span.bold-small").text shouldEqual "13 December 2014"
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the session timeout page" in {
+        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
       }
     }
   }
