@@ -23,6 +23,20 @@ import play.api.i18n.Messages
 
 object CalculationDetailsConstructor {
 
+  def usedAea(model: CalculationResultModel): Option[QuestionAnswerModel[BigDecimal]] = {
+    if (model.totalGain > BigDecimal(0)) {
+      val id = "calcDetails:aea"
+
+      val question = Messages("calc.summary.calculation.details.usedAEA")
+
+      val answer = model.usedAnnualExemptAmount
+
+      Some(QuestionAnswerModel(id, answer, question, None))
+    }
+    else None
+  }
+
+
   def totalLoss(model: CalculationResultModel): Option[QuestionAnswerModel[BigDecimal]] = {
     if (model.totalGain >= BigDecimal(0)) None
     else {

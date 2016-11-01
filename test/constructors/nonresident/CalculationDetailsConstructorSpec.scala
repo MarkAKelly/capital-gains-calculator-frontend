@@ -290,26 +290,60 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
     }
 
   }
-//
-//  "Calling usedAEA" when {
-//
-//    /*
-//          if isGreaterThanZero(totalGain) && isGreaterThanZero(taxableGain)
-//          None
-//
-//          if !isPositive(taxableGain)
-//          None
-//
-//          if !isPositive(totalGain)
-//          None
-//
-//          if isGreaterThanZero(totalGain) && isPositive(taxableGain) && !isGreaterThanZero(taxableGain)
-//          None
-//
-//    */
-//
-//  }
-//
+
+  "Calling usedAEA" when {
+
+    "the total gain is greater than zero" should {
+      lazy val model = TestModels.calcModelOneRate
+      lazy val result = target.usedAea(model)
+
+      "return some AEA details" in {
+        result should not be None
+      }
+
+      "return correct ID for the AEA details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe "calcDetails:aea"
+        }
+      }
+
+      "return correct question for the AEA details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.usedAEA
+        }
+      }
+
+      "return correct answer for the AEA details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe model.usedAnnualExemptAmount
+        }
+      }
+
+      "return a link for the AEA details" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link shouldBe None
+        }
+      }
+    }
+
+    "the total gain is less than zero" should {
+      lazy val model = TestModels.calcModelLoss
+      lazy val result = target.usedAea(model)
+
+      "return some AEA details" in {
+        result shouldBe None
+      }
+    }
+
+    "the total gain is zero" should {
+      lazy val model = TestModels.calcModelZeroTotal
+      lazy val result = target.usedAea(model)
+
+      "return some AEA details" in {
+        result shouldBe None
+      }
+    }
+  }
 //
 //  "Calling taxableGain" when {
 //
