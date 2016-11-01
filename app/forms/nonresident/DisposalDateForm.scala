@@ -17,7 +17,9 @@
 package forms.nonresident
 
 import java.time.LocalDate
+
 import common.Dates._
+import common.Transformers._
 import common.Validation._
 import models.nonresident.DisposalDateModel
 import play.api.data.Forms._
@@ -26,16 +28,30 @@ import play.api.i18n.Messages
 
 object DisposalDateForm {
 
-  def isAfterAcquisitionDate(day: Int, month: Int, year: Int, acquisitionDate: Option[LocalDate]): Boolean = acquisitionDate match {
-    case Some(acquisitionDateValue) => constructDate(day,month,year).isAfter(acquisitionDateValue)
-    case _ => true
+  def isAfterAcquisitionDate(day: Int, month: Int, year: Int, acquisitionDate: Option[LocalDate]): Boolean = {
+    if (!isValidDate(day, month, year)) true
+    else {
+      acquisitionDate match {
+        case Some(acquisitionDateValue) => constructDate(day, month, year).isAfter(acquisitionDateValue)
+        case _ => true
+      }
+    }
   }
 
   def disposalDateForm(acquisitionDate: Option[LocalDate]): Form[DisposalDateModel] = Form(
     mapping(
-      "disposalDateDay" -> number,
-      "disposalDateMonth" -> number,
-      "disposalDateYear" -> number
+      "disposalDateDay" -> text
+        .verifying(Messages("calc.common.date.error.invalidDate"), mandatoryCheck)
+        .verifying(Messages("calc.common.date.error.invalidDate"), integerCheck)
+        .transform[Int](stringToInteger, _.toString),
+      "disposalDateMonth" -> text
+        .verifying(Messages("calc.common.date.error.invalidDate"), mandatoryCheck)
+        .verifying(Messages("calc.common.date.error.invalidDate"), integerCheck)
+        .transform[Int](stringToInteger, _.toString),
+      "disposalDateYear" -> text
+        .verifying(Messages("calc.common.date.error.invalidDate"), mandatoryCheck)
+        .verifying(Messages("calc.common.date.error.invalidDate"), integerCheck)
+        .transform[Int](stringToInteger, _.toString)
     )(DisposalDateModel.apply)(DisposalDateModel.unapply)
       .verifying(Messages("calc.common.date.error.invalidDate"), fields =>
         isValidDate(fields.day, fields.month, fields.year))
