@@ -62,14 +62,25 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
   // GET Tests
   "Calling the CalculationController.otherProperties" when {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/other-properties").withSession(SessionKeys.sessionId -> "12345")
+    "no session is active" should {
+      lazy val target = setupTarget(None, None)
+      lazy val result = target.otherProperties(fakeRequest)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      s"redirect to ${controllers.TimeoutController.timeout("restart", "home")}" in {
+        redirectLocation(result).get should include("/calculate-your-capital-gains/session-timeout")
+      }
+    }
 
     "not supplied with a pre-existing stored model" should {
 
       "for a customer type of Individual" should {
 
         val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
-        lazy val result = target.otherProperties(fakeRequest)
+        lazy val result = target.otherProperties(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))
 
         "return a 200" in {
@@ -88,7 +99,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
       "for a Customer Type of Individual with no Current Income" should {
 
         val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)), Some(CurrentIncomeModel(0)))
-        lazy val result = target.otherProperties(fakeRequest)
+        lazy val result = target.otherProperties(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))
 
         "return a 200" in {
@@ -107,7 +118,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
       "for a Customer Type of Trustee" should {
 
         val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.trustee)))
-        lazy val result = target.otherProperties(fakeRequest)
+        lazy val result = target.otherProperties(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))
 
         "return a 200" in {
@@ -126,7 +137,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
       "for a Customer Type of Personal Rep" should {
 
         val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.personalRep)))
-        lazy val result = target.otherProperties(fakeRequest)
+        lazy val result = target.otherProperties(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))
 
         "return a 200" in {
@@ -144,7 +155,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
 
       "if no customer type model exists" should {
         val target = setupTarget(None, None, None)
-        lazy val result = target.otherProperties(fakeRequest)
+        lazy val result = target.otherProperties(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))
 
         "return a 200" in {
@@ -157,79 +168,6 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
 
         s"have a 'Back' link to $missingDataRoute " in {
           document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
-        }
-      }
-    }
-
-    "supplied with a model that already contains data" should {
-
-      "for an individual" should {
-
-        val target = setupTarget(Some(OtherPropertiesModel("Yes", Some(2100))), Some(CustomerTypeModel(CustomerTypeKeys.individual)))
-        lazy val result = target.otherProperties(fakeRequest)
-        lazy val document = Jsoup.parse(bodyOf(result))
-
-        "return a 200" in {
-          status(result) shouldBe 200
-        }
-
-        "return some HTML that" should {
-          "contain some text and use the character set utf-8" in {
-            contentType(result) shouldBe Some("text/html")
-            charset(result) shouldBe Some("utf-8")
-          }
-
-          "have the radio option `Yes` selected by default" in {
-            document.body.getElementById("otherProperties-yes").parent.classNames().contains("selected") shouldBe true
-          }
-
-          "have the value 2100 auto filled" in {
-            document.body().getElementById("otherPropertiesAmt").attr("value") shouldBe "2100"
-          }
-        }
-      }
-
-      "for a trustee" should {
-
-        val target = setupTarget(Some(OtherPropertiesModel("Yes", None)), Some(CustomerTypeModel(CustomerTypeKeys.trustee)))
-        lazy val result = target.otherProperties(fakeRequest)
-        lazy val document = Jsoup.parse(bodyOf(result))
-
-        "return a 200" in {
-          status(result) shouldBe 200
-        }
-
-        "return some HTML that" should {
-          "contain some text and use the character set utf-8" in {
-            contentType(result) shouldBe Some("text/html")
-            charset(result) shouldBe Some("utf-8")
-          }
-
-          "have the radio option `Yes` selected by default" in {
-            document.body.getElementById("otherProperties-yes").parent.classNames().contains("selected") shouldBe true
-          }
-        }
-
-        "for a personal rep" should {
-
-          val target = setupTarget(Some(OtherPropertiesModel("Yes", None)), Some(CustomerTypeModel(CustomerTypeKeys.personalRep)))
-          lazy val result = target.otherProperties(fakeRequest)
-          lazy val document = Jsoup.parse(bodyOf(result))
-
-          "return a 200" in {
-            status(result) shouldBe 200
-          }
-
-          "return some HTML that" should {
-            "contain some text and use the character set utf-8" in {
-              contentType(result) shouldBe Some("text/html")
-              charset(result) shouldBe Some("utf-8")
-            }
-
-            "have the radio option `Yes` selected by default" in {
-              document.body.getElementById("otherProperties-yes").parent.classNames().contains("selected") shouldBe true
-            }
-          }
         }
       }
     }
