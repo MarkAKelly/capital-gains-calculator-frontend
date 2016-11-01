@@ -24,7 +24,6 @@ import common.{Constants, KeystoreKeys}
 import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
-import constructors.nonresident.CalculationElectionConstructor
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import play.api.mvc.AnyContentAsFormUrlEncoded
@@ -41,7 +40,7 @@ import models.nonresident.{CurrentIncomeModel, CustomerTypeModel, OtherPropertie
 import play.api.mvc.Result
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
   implicit val hc = new HeaderCarrier()
 
@@ -51,7 +50,6 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
                   currentIncomeData: Option[CurrentIncomeModel] = None): OtherPropertiesController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
-    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -88,61 +86,6 @@ class OtherPropertiesSpec extends UnitSpec with WithFakeApplication with Mockito
           status(result) shouldBe 200
         }
 
-        "return some HTML that" should {
-
-          "contain some text and use the character set utf-8" in {
-            contentType(result) shouldBe Some("text/html")
-            charset(result) shouldBe Some("utf-8")
-          }
-
-          s"have the title '${messages.question}'" in {
-            document.title shouldEqual messages.question
-          }
-
-          "have the heading Calculate your tax (non-residents) " in {
-            document.body.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
-          }
-
-          s"have a 'Back' link to ${routes.PersonalAllowanceController.personalAllowance().url}" in {
-            document.body.getElementById("back-link").text shouldEqual commonMessages.back
-            document.body.getElementById("back-link").attr("href") shouldEqual routes.PersonalAllowanceController.personalAllowance().url
-          }
-
-          s"have the question '${messages.question}' as the legend of the input" in {
-            document.body.getElementsByTag("legend").text should include (messages.question)
-          }
-
-          "include a read more section that" should {
-
-            s"include a link to https://www.gov.uk/capital-gains-tax with text '${messages.linkOne}'" in {
-              document.body.getElementById("helpLink1").text shouldEqual s"${messages.linkOne} ${commonMessages.externalLink}"
-              document.body.getElementById("helpLink1").attr("href") shouldEqual "https://www.gov.uk/capital-gains-tax"
-            }
-
-            s"include a link to https://www.gov.uk/income-tax-rates/previous-tax-years with text '${messages.linkTwo}'" in {
-              document.body.getElementById("helpLink2").text shouldEqual s"${messages.linkTwo} ${commonMessages.externalLink}"
-              document.body.getElementById("helpLink2").attr("href") shouldEqual "https://www.gov.uk/income-tax-rates/previous-tax-years"
-            }
-
-          }
-
-          s"display a radio button with the option `${commonMessages.yes}`" in {
-            document.body.getElementById("otherProperties-yes").parent.text shouldEqual commonMessages.yes
-          }
-
-          s"display a radio button with the option `${commonMessages.no}`" in {
-            document.body.getElementById("otherProperties-no").parent.text shouldEqual commonMessages.no
-          }
-
-          s"have a hidden monetary input with question '${messages.questionTwo}'" in {
-            document.body.getElementById("otherPropertiesAmt").tagName shouldEqual "input"
-            document.select("label[for=otherPropertiesAmt]").text should include(messages.questionTwo)
-          }
-
-          "display a 'Continue' button " in {
-            document.body.getElementById("continue-button").text shouldEqual commonMessages.continue
-          }
-        }
       }
 
       "for a Customer Type of Individual with no Current Income" should {

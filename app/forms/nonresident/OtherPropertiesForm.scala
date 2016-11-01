@@ -26,28 +26,28 @@ import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object OtherPropertiesForm {
 
-  def validate(data: OtherPropertiesModel, showHiddenQuestion: Boolean) = {
+  def validate(data: OtherPropertiesModel, showHiddenQuestion: Boolean): Boolean = {
     data.otherProperties match {
         case "Yes" if showHiddenQuestion => data.otherPropertiesAmt.isDefined
         case _ => true
     }
   }
 
-  def validateMinimum(data: OtherPropertiesModel, showHiddenQuestion: Boolean) = {
+  def validateMinimum(data: OtherPropertiesModel, showHiddenQuestion: Boolean): Boolean = {
     data.otherProperties match {
         case "Yes" if showHiddenQuestion => isPositive(data.otherPropertiesAmt.getOrElse(0))
         case _ => true
     }
   }
 
-  def validateTwoDec(data: OtherPropertiesModel, showHiddenQuestion: Boolean) = {
+  def validateTwoDec(data: OtherPropertiesModel, showHiddenQuestion: Boolean): Boolean = {
     data.otherProperties match {
         case "Yes" if showHiddenQuestion => decimalPlacesCheck(data.otherPropertiesAmt.getOrElse(0))
         case _ => true
     }
   }
 
-  def validateMax(data: OtherPropertiesModel, showHiddenQuestion: Boolean) = {
+  def validateMax(data: OtherPropertiesModel, showHiddenQuestion: Boolean): Boolean = {
       data.otherProperties match {
         case "Yes" if showHiddenQuestion => maxCheck(data.otherPropertiesAmt.getOrElse(0))
         case _ => true
@@ -56,7 +56,9 @@ object OtherPropertiesForm {
 
   def otherPropertiesForm (showHiddenQuestion: Boolean): Form[OtherPropertiesModel] = Form (
     mapping(
-      "otherProperties" -> nonEmptyText,
+      "otherProperties" -> text
+        .verifying(Messages("calc.common.error.fieldRequired"), mandatoryCheck)
+        .verifying(Messages("calc.common.error.fieldRequired"), yesNoCheck),
       "otherPropertiesAmt" -> optional(bigDecimal)
     )(OtherPropertiesModel.apply)(OtherPropertiesModel.unapply).verifying(Messages("calc.otherProperties.errorQuestion"),
       otherPropertiesForm => validate(otherPropertiesForm, showHiddenQuestion))

@@ -1,0 +1,128 @@
+/*
+ * Copyright 2016 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package views.nonResident
+
+import assets.MessageLookup.{NonResident => commonMessages}
+import assets.MessageLookup.NonResident.{OtherProperties => messages}
+import controllers.helpers.FakeRequestHelper
+import forms.nonresident.OtherPropertiesForm._
+import org.jsoup.Jsoup
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import views.html.calculation.nonresident.otherProperties
+
+class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
+
+  "The other properties view" should {
+
+    "return some HTML that, when the hidden question is displayed" should {
+
+      lazy val view = otherProperties(otherPropertiesForm(true), "back-link", true)(fakeRequest)
+      lazy val document = Jsoup.parse(view.body)
+
+      s"have the title '${messages.question}'" in {
+        document.title shouldEqual messages.question
+      }
+
+      "have the heading Calculate your tax (non-residents) " in {
+        document.body.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
+      }
+
+      s"have a 'Back' link to back-link" which {
+
+        "should have the text" in {
+          document.body.getElementById("back-link").text shouldEqual commonMessages.back
+        }
+
+        "should have an href to 'back-link'" in {
+          document.body.getElementById("back-link").attr("href") shouldEqual "back-link"
+        }
+      }
+
+      s"have the question '${messages.question}' as the legend of the input" in {
+        document.body.getElementsByTag("legend").text should include(messages.question)
+      }
+
+      "include a read more section that" should {
+
+        "include twos links" which {
+
+          s"link one should have text ${messages.linkOne} ${commonMessages.externalLink}" in {
+            document.body.getElementById("helpLink1").text shouldEqual s"${messages.linkOne} ${commonMessages.externalLink}"
+          }
+
+          s"link one should have an href to 'https://www.gov.uk/capital-gains-tax'" in {
+            document.body.getElementById("helpLink1").attr("href") shouldEqual "https://www.gov.uk/capital-gains-tax"
+          }
+
+          s"link two should have text ${messages.linkTwo} ${commonMessages.externalLink}" in {
+            document.body.getElementById("helpLink2").text shouldEqual s"${messages.linkTwo} ${commonMessages.externalLink}"
+          }
+
+          s"link two should have an href to 'https://www.gov.uk/income-tax-rates/previous-tax-years'" in {
+            document.body.getElementById("helpLink2").attr("href") shouldEqual "https://www.gov.uk/income-tax-rates/previous-tax-years"
+          }
+        }
+      }
+
+      "have inputs using the id 'otherProperties'" in {
+        document.body().select("input[type=radio]").attr("id") should include("otherProperties")
+      }
+
+      "have inputs using the id otherPropertiesAmt" in {
+        document.body().select("input[type=number]").attr("id") should include("otherPropertiesAmt")
+      }
+
+      "have a button" which {
+        lazy val button = document.select("button")
+
+        "has the class 'button'" in {
+          button.attr("class") shouldBe "button"
+        }
+
+        "has the type 'submit'" in {
+          button.attr("type") shouldBe "submit"
+        }
+
+        "has the id 'continue-button'" in {
+          button.attr("id") shouldBe "continue-button"
+        }
+
+        "has the text 'Continue'" in {
+          button.text shouldEqual commonMessages.continue
+        }
+      }
+    }
+
+    "return some HTML that, when the hidden question is not displayed" should {
+
+      lazy val view = otherProperties(otherPropertiesForm(false), "back-link", false)(fakeRequest)
+      lazy val document = Jsoup.parse(view.body)
+
+      s"have the title '${messages.question}'" in {
+        document.title shouldEqual messages.question
+      }
+
+      "have inputs using the id 'otherProperties'" in {
+        document.body().select("input[type=radio]").attr("id") should include("otherProperties")
+      }
+
+      "have inputs using the id otherPropertiesAmt" in {
+        document.body().select("input[type=number]").attr("id") shouldEqual ""
+      }
+    }
+  }
+}
