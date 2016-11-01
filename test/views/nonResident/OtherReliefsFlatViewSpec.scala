@@ -30,7 +30,7 @@ class OtherReliefsFlatViewSpec extends UnitSpec with WithFakeApplication with Mo
   "The Other Reliefs Flat view" when {
     "not supplied with a pre-existing stored value and a taxable gain" should {
       val model = CalculationResultModel(100, 1000, 100, 18, 0, None, None, None)
-      lazy val view = otherReliefsFlat(otherReliefsForm(true), model, hasExistingReliefAmount = false)(fakeRequest)
+      lazy val view = otherReliefsFlat(otherReliefsForm(false), model, hasExistingReliefAmount = false)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have a back link" which {
@@ -118,7 +118,7 @@ class OtherReliefsFlatViewSpec extends UnitSpec with WithFakeApplication with Mo
     "supplied with a pre-existing stored value and a negative taxable gain" should {
       val model = CalculationResultModel(100, 1000, -100, 18, 0, None, None, None)
       val map = Map("otherReliefs" -> "1000")
-      lazy val view = otherReliefsFlat(otherReliefsForm(true).bind(map), model, hasExistingReliefAmount = true)(fakeRequest)
+      lazy val view = otherReliefsFlat(otherReliefsForm(false).bind(map), model, hasExistingReliefAmount = true)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "has a list entry with the loss carried forward message and value" in {
@@ -145,7 +145,7 @@ class OtherReliefsFlatViewSpec extends UnitSpec with WithFakeApplication with Mo
     "supplied with an invalid map" should {
       val model = CalculationResultModel(100, 1000, -100, 18, 0, None, None, None)
       val map = Map("otherReliefs" -> "-1000")
-      lazy val view = otherReliefsFlat(otherReliefsForm(true).bind(map), model, hasExistingReliefAmount = true)(fakeRequest)
+      lazy val view = otherReliefsFlat(otherReliefsForm(false).bind(map), model, hasExistingReliefAmount = true)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have an error summary" in {

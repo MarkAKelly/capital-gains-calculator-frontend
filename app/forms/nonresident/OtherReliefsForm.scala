@@ -18,6 +18,7 @@ package forms.nonresident
 
 import common.Constants
 import common.Validation._
+import common.Transformers._
 import models.nonresident.OtherReliefsModel
 import play.api.data.Forms._
 import play.api.data._
@@ -26,22 +27,51 @@ import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object OtherReliefsForm {
 
-  def validateReliefSupplied: OtherReliefsModel => Boolean = data => data.isClaimingOtherReliefs match {
-    case Some("Yes") => data.otherReliefs.isDefined
-    case _ => true
+  private def isRealNumberOption(electionMade: Boolean): OtherReliefsModel => Boolean = {
+    model => (model.isClaimingOtherReliefs, model.otherReliefs) match {
+      case (Some("Yes"), _) => model.otherReliefs.isDefined
+      case _ if electionMade => model.otherReliefs.isDefined
+      case _ => true
+    }
   }
 
-  def otherReliefsForm (electionMade: Boolean): Form[OtherReliefsModel] = Form (
-    mapping(
-      "isClaimingOtherReliefs" -> optional(text)
-        .verifying(Messages("calc.common.error.fieldRequired"), isClaimingOtherReliefs => if (!electionMade) {isClaimingOtherReliefs.isDefined} else true),
-      "otherReliefs" -> optional(bigDecimal)
-        .verifying(Messages("calc.otherReliefs.errorMinimum"), otherReliefs => isPositive(otherReliefs.getOrElse(0)))
-        .verifying(Messages("calc.otherReliefs.errorDecimal"), otherReliefs => decimalPlacesCheck(otherReliefs.getOrElse(0)))
-        .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"),
-          otherReliefs => maxCheck(otherReliefs.getOrElse(0)))
-    )(OtherReliefsModel.apply)(OtherReliefsModel.unapply)
-      .verifying(Messages("calc.otherReliefs.errorNoValue"),
-        otherReliefsForm => if(!electionMade) {validateReliefSupplied(otherReliefsForm)} else true)
-  )
+  private def isPositiveOption(electionMade: Boolean): OtherReliefsModel => Boolean = {
+    model => (model.isClaimingOtherReliefs, model.otherReliefs) match {
+      case (Some("Yes"), Some(value)) => isPositive(value)
+      case (_, Some(value)) if electionMade => isPositive(value)
+      case _ => true
+    }
+  }
+
+  private def decimalPlacesCheckOption(electionMade: Boolean): OtherReliefsModel => Boolean = {
+    model => (model.isClaimingOtherReliefs, model.otherReliefs) match {
+      case (Some("Yes"), Some(value)) => decimalPlacesCheck(value)
+      case (_, Some(value)) if electionMade => decimalPlacesCheck(value)
+      case _ => true
+    }
+  }
+
+  private def maxNumericOption(electionMade: Boolean): OtherReliefsModel => Boolean = {
+    model => (model.isClaimingOtherReliefs, model.otherReliefs) match {
+      case (Some("Yes"), Some(value)) => maxCheck(value)
+      case (_, Some(value)) if electionMade => maxCheck(value)
+      case _ => true
+    }
+  }
+
+  def otherReliefsForm (electionMade: Boolean): Form[OtherReliefsModel] =
+    Form(
+      mapping(
+        "isClaimingOtherReliefs" -> optional(text)
+          .verifying(Messages("calc.common.error.fieldRequired"), isClaimingOtherReliefs => if (!electionMade) {isClaimingOtherReliefs.isDefined} else true),
+        "otherReliefs" -> text
+          .transform(stringToOptionBigDecimal, optionBigDecimalToString)
+      )(OtherReliefsModel.apply)(OtherReliefsModel.unapply)
+        .verifying(Messages("error.real"), isRealNumberOption(electionMade))
+        .verifying(Messages("calc.otherReliefs.errorMinimum"), isPositiveOption(electionMade))
+        .verifying(Messages("calc.otherReliefs.errorDecimal"), decimalPlacesCheckOption(electionMade))
+        .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
+          " " + Messages("calc.common.error.maxNumericExceeded.OrLess"),
+          maxNumericOption(electionMade))
+    )
 }

@@ -52,4 +52,16 @@ object Transformers {
 
   val booleanToString: Boolean => String = (input) => if (input) "Yes" else "No"
 
+
+  val stringToOptionBigDecimal: String => Option[BigDecimal] = {
+    string => Try{BigDecimal(string.trim)} match {
+      case Success(value) => Some(value)
+      case Failure(_) => None
+    }
+  }
+
+  val optionBigDecimalToString: Option[BigDecimal] => String = {
+    case Some(value) => value.toString()
+    case _ => ""
+  }
 }
