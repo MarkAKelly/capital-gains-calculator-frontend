@@ -82,7 +82,6 @@ class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with 
 
       val target = setupTarget(Some(AcquisitionValueModel(1000)), None)
       lazy val result = target.acquisitionValue(fakeRequestWithSession)
-      lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
         status(result) shouldBe 200
