@@ -592,48 +592,6 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
     }
 
-    "base gain is zero and upper gain has a value" should {
-      val model = CalculationResultModel(
-        taxOwed = 8000,
-        totalGain = 40000,
-        baseTaxGain = 0,
-        baseTaxRate = 0,
-        usedAnnualExemptAmount = 8000,
-        upperTaxGain = Some(32000),
-        upperTaxRate = Some(50),
-        simplePRR = None)
-      lazy val result = target.taxableRate(model)
-
-      "return some taxable gain details" in {
-        result should not be None
-      }
-
-      "return correct ID for the taxable rate details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.id shouldBe "calcDetails:taxableRate"
-        }
-      }
-
-      "return correct question for the taxable rate details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.question shouldBe messages.taxRate
-        }
-      }
-
-      "return correct answer for the taxable rate details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe "50%"
-        }
-      }
-
-      "not return a link for the taxable rate details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.link shouldBe None
-        }
-      }
-    }
-
-
     "base gain is greater than zero and upper gain has a value" should {
       val model = CalculationResultModel(
         taxOwed = 8000,
