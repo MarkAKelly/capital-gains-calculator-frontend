@@ -32,6 +32,16 @@ object Transformers {
     }
   }
 
+  val optionalStringToOptionalBigDecimal: Option[String] => Option[BigDecimal] = {
+    case Some(input) => stringToOptionalBigDecimal(input)
+    case None => None
+  }
+
+  val optionalBigDecimalToOptionalString: Option[BigDecimal] => Option[String] = {
+    case Some(data) => Some(data.toString())
+    case None => None
+  }
+
   val bigDecimalToString: BigDecimal => String = (input) => input.scale match {
     case 1 => input.setScale(2).toString()
     case _ => input.toString

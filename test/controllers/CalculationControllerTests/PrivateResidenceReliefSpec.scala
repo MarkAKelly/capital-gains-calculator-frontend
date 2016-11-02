@@ -722,10 +722,6 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       "return a 400 code" in {
         status(result) shouldBe 400
       }
-
-      "return HTML that displays the error message " in {
-        document.select("span.error-notification").text shouldEqual "This field is required"
-      }
     }
 
     "submitting an invalid result with an answer 'Yes' but no data" should {
@@ -734,10 +730,6 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
       "return a 400 code" in {
         status(result) shouldBe 400
-      }
-
-      "return HTML that displays the error message " in {
-        document.select("span.error-notification").text shouldEqual messages.errorNoValue
       }
     }
 
@@ -748,10 +740,6 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       "return a 400 code" in {
         status(result) shouldBe 400
       }
-
-      "return HTML that displays the error message " in {
-        document.select("span.error-notification").text shouldEqual messages.errorNoValue
-      }
     }
 
     "submitting an invalid result with an answer 'Yes' but negative value data" should {
@@ -760,10 +748,6 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
       "return a 400 code" in {
         status(result) shouldBe 400
-      }
-
-      "return HTML that displays the error message " in {
-        document.select("span.error-notification").text shouldEqual messages.errorNegative
       }
     }
 
@@ -774,10 +758,6 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       "return a 400 code" in {
         status(result) shouldBe 400
       }
-
-      "return HTML that displays the error message " in {
-        document.select("span.error-notification").text shouldEqual messages.errorDecimalPlaces
-      }
     }
 
     "submitting an invalid result with an answer 'Yes' but data which is not a number" should {
@@ -786,10 +766,6 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
       "return a 400 code" in {
         status(result) shouldBe 400
-      }
-
-      "return HTML that displays the error message " in {
-        document.select("span.error-notification").text shouldEqual commonMessages.errorRealNumber
       }
     }
 
@@ -800,10 +776,6 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
       "return a 400 code" in {
         status(result) shouldBe 400
       }
-
-      "return HTML that displays the error message " in {
-        document.select("span.error-notification").text shouldEqual messages.errorMaximum(MoneyPounds(Constants.maxNumeric, 0).quantity)
-      }
     }
 
     "submitting an invalid result with an answer 'Yes' where daysAfter exceeds max numeric" should {
@@ -812,10 +784,6 @@ class PrivateResidenceReliefSpec extends UnitSpec with WithFakeApplication with 
 
       "return a 400 code" in {
         status(result) shouldBe 400
-      }
-
-      "return HTML that displays the error message " in {
-        document.select("span.error-notification").text shouldEqual messages.errorMaximum(MoneyPounds(Constants.maxNumeric, 0).quantity)
       }
     }
   }

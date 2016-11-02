@@ -18,13 +18,15 @@ package forms.nonresident
 
 import common.Constants
 import common.Validation._
+import common.Transformers._
 import models.nonresident.PrivateResidenceReliefModel
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.Messages
-import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object PrivateResidenceReliefForm {
+
+  val formatter = java.text.NumberFormat.getIntegerInstance
 
   def verifyAmountSupplied(data: PrivateResidenceReliefModel, showBefore: Boolean, showAfter: Boolean): Boolean = {
     data.isClaimingPRR match {
@@ -43,14 +45,15 @@ object PrivateResidenceReliefForm {
 
   def verifyNoDecimalPlaces (data: PrivateResidenceReliefModel, showBefore: Boolean, showAfter: Boolean): Boolean = {
     data.isClaimingPRR match {
-      case "Yes" if showBefore || showAfter => decimalPlacesCheckNoDecimal(data.daysClaimed.getOrElse(0)) && decimalPlacesCheckNoDecimal(data.daysClaimedAfter.getOrElse(0))
+      case "Yes" if showBefore || showAfter =>
+        decimalPlacesCheckNoDecimal(data.daysClaimed.getOrElse(0)) &&
+        decimalPlacesCheckNoDecimal(data.daysClaimedAfter.getOrElse(0))
       case _ => true
     }
   }
 
   def validateMax (data: PrivateResidenceReliefModel, showBefore: Boolean, showAfter: Boolean): Boolean = {
     data.isClaimingPRR match {
-      case "Yes" if showBefore && showAfter => maxCheck(data.daysClaimed.getOrElse(0)) && maxCheck(data.daysClaimedAfter.getOrElse(0))
       case "Yes" if showBefore || showAfter => maxCheck(data.daysClaimed.getOrElse(0)) && maxCheck(data.daysClaimedAfter.getOrElse(0))
       case _ => true
     }
@@ -58,15 +61,19 @@ object PrivateResidenceReliefForm {
 
   def privateResidenceReliefForm (showBefore: Boolean, showAfter: Boolean): Form[PrivateResidenceReliefModel] = Form(
     mapping(
-      "isClaimingPRR" -> nonEmptyText,
-      "daysClaimed" -> optional(bigDecimal),
-      "daysClaimedAfter" -> optional(bigDecimal)
+      "isClaimingPRR" -> text
+        .verifying(Messages("calc.common.error.fieldRequired"), mandatoryCheck)
+        .verifying(Messages("calc.common.error.fieldRequired"), yesNoCheck),
+      "daysClaimed" -> optional(text)
+        .transform(optionalStringToOptionalBigDecimal, optionalBigDecimalToOptionalString),
+      "daysClaimedAfter" -> optional(text)
+        .transform(optionalStringToOptionalBigDecimal, optionalBigDecimalToOptionalString)
     )(PrivateResidenceReliefModel.apply)(PrivateResidenceReliefModel.unapply)
       .verifying(Messages("calc.privateResidenceRelief.error.noValueProvided"), improvementsForm => verifyAmountSupplied(improvementsForm, showBefore, showAfter))
       .verifying(Messages("calc.privateResidenceRelief.error.errorNegative"), improvementsForm => verifyPositive(improvementsForm, showBefore, showAfter))
       .verifying(Messages("calc.privateResidenceRelief.error.errorDecimalPlaces"), improvementsForm => verifyNoDecimalPlaces(improvementsForm, showBefore, showAfter))
-      .verifying(Messages("calc.privateResidenceRelief.error.maxNumericExceeded") + " " + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.privateResidenceRelief.error.maxNumericExceeded.OrLess"),
-        improvementsForm => validateMax(improvementsForm, showBefore, showAfter)
+      .verifying(Messages("calc.privateResidenceRelief.error.maxNumericExceeded") + " " + formatter.format(Constants.maxNumeric) + " " + Messages("calc.privateResidenceRelief.error.maxNumericExceeded.OrLess"),
+        form => validateMax(form, showBefore, showAfter)
       )
   )
 }
