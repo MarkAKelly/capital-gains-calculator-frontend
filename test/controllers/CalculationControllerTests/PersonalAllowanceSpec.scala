@@ -75,72 +75,8 @@ class PersonalAllowanceSpec extends UnitSpec with WithFakeApplication with Mocki
         status(result) shouldBe 200
       }
 
-      "return some HTML that" should {
-
-        "contain some text and use the character set utf-8" in {
-          contentType(result) shouldBe Some("text/html")
-          charset(result) shouldBe Some("utf-8")
-        }
-
-        s"have the title ${messages.question}" in {
-          document.title shouldEqual messages.question
-        }
-
-        s"have the heading ${commonMessages.pageHeading}" in {
-          document.body.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
-        }
-
-        s"have a 'Back' link to ${routes.CurrentIncomeController.currentIncome()}" in {
-          document.body.getElementById("back-link").text shouldEqual commonMessages.back
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.CurrentIncomeController.currentIncome().toString()
-        }
-
-        s"have the question '${messages.question}' as the label of the input" in {
-          document.body.getElementsByTag("label").text should include(messages.question)
-        }
-
-        "display an input box for the Personal Allowance" in {
-          document.body.getElementById("personalAllowance").tagName() shouldEqual "input"
-        }
-
-        "have no value auto-filled into the input box" in {
-          document.getElementById("personalAllowance").attr("value") shouldBe empty
-        }
-
-        "display a 'Continue' button " in {
-          document.body.getElementById("continue-button").text shouldEqual commonMessages.continue
-        }
-
-        "should contain a Read more sidebar with a link to personal allowances and taxation abroad" in {
-          document.select("aside h2").text shouldBe commonMessages.readMore
-          document.select("aside a").first().attr("href") shouldBe "https://www.gov.uk/income-tax-rates/current-rates-and-allowances"
-          document.select("aside a").first.text shouldBe s"${messages.linkOne} ${commonMessages.externalLink}"
-          document.select("aside a").last().attr("href") shouldBe "https://www.gov.uk/tax-uk-income-live-abroad/personal-allowance"
-          document.select("aside a").last.text shouldBe s"${messages.linkTwo} ${commonMessages.externalLink}"
-        }
-      }
-    }
-
-    "supplied with a pre-existing stored model" should {
-
-      val target = setupTarget(Some(PersonalAllowanceModel(1000)), None)
-      lazy val result = target.personalAllowance(fakeRequest)
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 200" in {
-        status(result) shouldBe 200
-      }
-
-      "return some HTML that" should {
-
-        "contain some text and use the character set utf-8" in {
-          contentType(result) shouldBe Some("text/html")
-          charset(result) shouldBe Some("utf-8")
-        }
-
-        "have the value 1000 auto-filled into the input box" in {
-          document.getElementById("personalAllowance").attr("value") shouldEqual "1000"
-        }
+      s"have the title ${messages.question}" in {
+        document.title shouldEqual messages.question
       }
     }
   }
