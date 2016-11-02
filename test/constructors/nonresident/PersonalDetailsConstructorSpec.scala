@@ -102,7 +102,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
     None,
     None,
     OtherPropertiesModel("Yes", Some(0)),
-    None,
+    Some(AnnualExemptAmountModel(100)),
     AcquisitionDateModel("No", None, None, None),
     AcquisitionValueModel(300000.0),
     None,

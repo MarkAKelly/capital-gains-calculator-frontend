@@ -53,8 +53,8 @@ class QuestionAnswersRowNoLinkViewSpec extends UnitSpec {
           doc.select("div#id-answer").attr("class") shouldBe "grid-layout__column grid-layout__column--1-3"
         }
 
-        "has a change link with a class of 'lede'" in {
-          doc.select("div#id-answer span").attr("class") shouldBe "lede"
+        "has a change link with a class of 'lede' and 'summary-answer" in {
+          doc.select("div#id-answer span").attr("class") shouldBe "lede summary-answer"
         }
 
         "has the text 'answer'" in {
