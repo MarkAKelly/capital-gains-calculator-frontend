@@ -21,7 +21,7 @@ import java.time.LocalDate
 import assets.MessageLookup
 import common.nonresident.CustomerTypeKeys
 import models.nonresident._
-import common.KeystoreKeys
+import common.{KeystoreKeys, TestModels}
 import controllers.helpers.FakeRequestHelper
 import play.api.test.FakeApplication
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -129,6 +129,11 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
         s"will return a message of ${MessageLookup.NonResident.AcquisitionDate.questionTwo}" in {
           target.get.question shouldBe MessageLookup.NonResident.AcquisitionDate.questionTwo
+        }
+
+        "not return any details when user does not know the acquisition date" in {
+          val result = PurchaseDetailsConstructor.getAcquisitionDateAnswer(TestModels.summaryRepresentativeFlatWithAEA)
+          result shouldBe None
         }
       }
 

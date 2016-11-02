@@ -44,6 +44,8 @@ object PurchaseDetailsConstructor {
   }
 
   def getAcquisitionDateAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[LocalDate]] = {
+    if (summaryModel.acquisitionDateModel.hasAcquisitionDate != "Yes") None
+    else {
       Some(QuestionAnswerModel(
         KeystoreKeys.acquisitionDate,
         Dates.constructDate(summaryModel.acquisitionDateModel.day.get,
@@ -51,6 +53,7 @@ object PurchaseDetailsConstructor {
         Messages("calc.acquisitionDate.questionTwo"),
         Some(controllers.nonresident.routes.AcquisitionDateController.acquisitionDate().url)
       ))
+    }
   }
 
   def getAcquisitionValueAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] =  {
