@@ -1,19 +1,18 @@
 @import models.nonresident.QuestionAnswerModel
-@import views.html.helpers.nonresident.questionAnswerRowNoLink
 
 @(sectionID: String, sectionTitle: String, rows: Seq[QuestionAnswerModel[Any]])
 
-    @if(!rows.isEmpty) {
-        <section id=@sectionID class="summary-section">
-            @for(row <- rows) {
-            <div class="grid-layout grid-layout--stacked form-group">
-                <div class="grid-layout__column grid-layout__column--1-3 pdf-header">
-                    @if(row.equals(rows.head)) {
-                    <span class="heading-large">@sectionTitle</span>
-                    }
-                </div>
-                @questionAnswerRowNoLink(row)
-            </div>
+@if(rows.nonEmpty) {
+    <section id=@sectionID class="summary-section">
+    @for(row <- rows) {
+        <div class="grid-layout grid-layout--stacked form-group">
+            <div class="grid-layout__column grid-layout__column--1-3 pdf-header">
+            @if(row == rows.head) {
+                <span class="heading-large">@sectionTitle</span>
             }
-        </section>
+            </div>
+            @questionAnswerRowNoLink(row)
+        </div>
     }
+    </section>
+}

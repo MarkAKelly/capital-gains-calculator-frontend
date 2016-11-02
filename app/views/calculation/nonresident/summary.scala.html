@@ -26,7 +26,7 @@
 
     <div class=font-medium" data-metrics="summary:calc-election:@summary.calculationElectionModel.calculationType">
 
-    @summarySectionNoLink("calculationDetails",Messages("calc.summary.calculation.details.title"),result.calculationDetailsRows)
+    @summarySection("calculationDetails",Messages("calc.summary.calculation.details.title"), result.calculationDetailsRows(summary))
 
     @summarySection("personalDetails", Messages("calc.summary.personal.details.title"), summary.personalDetailsRows)
 
@@ -50,9 +50,7 @@
             <p>
                 @Messages("calc.summary.next.actions.text")
                 <a class="external-link" rel="external" href="https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-uk-residential-property"
-                    target="_blank" data-journey-click="nav:calc:kana-nrcgt">
-                    @Messages("calc.summary.next.actions.link")
-                    <span>@Messages("calc.base.externalLink")</span>
+                    target="_blank" data-journey-click="nav:calc:kana-nrcgt">@Messages("calc.summary.next.actions.link") <span>@Messages("calc.base.externalLink")</span>
                 </a>
             </p>
         </div>

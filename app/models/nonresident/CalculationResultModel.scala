@@ -16,6 +16,7 @@
 
 package models.nonresident
 
+import constructors.nonresident.CalculationDetailsConstructor
 import play.api.libs.json.Json
 
 case class CalculationResultModel(taxOwed: BigDecimal,
@@ -29,8 +30,8 @@ case class CalculationResultModel(taxOwed: BigDecimal,
 
   val taxableGain: BigDecimal = baseTaxGain + upperTaxGain.getOrElse(0)
 
-  //TODO This is a mock value to be wired later on to the constructor
-  val calculationDetailsRows: Seq[QuestionAnswerModel[Any]] = Seq(QuestionAnswerModel("calculation", BigDecimal(200), "question", None))
+  def calculationDetailsRows(answers: SummaryModel): Seq[QuestionAnswerModel[Any]] =
+    CalculationDetailsConstructor.buildSection(this, answers)
 }
 
 object CalculationResultModel {
