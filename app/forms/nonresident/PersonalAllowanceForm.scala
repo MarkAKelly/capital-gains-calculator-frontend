@@ -25,7 +25,7 @@ import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object PersonalAllowanceForm {
 
-  def personalAllowanceForm (maxPA: BigDecimal = BigDecimal(0)) = Form (
+  def personalAllowanceForm (maxPA: BigDecimal = BigDecimal(0)): Form[PersonalAllowanceModel] = Form (
     mapping(
       "personalAllowance" -> bigDecimal
         .verifying(Messages("calc.personalAllowance.errorNegative"), isPositive)
