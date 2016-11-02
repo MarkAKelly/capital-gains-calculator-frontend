@@ -67,6 +67,10 @@
     padding: 0 15px
 }
 
+.summary-answer {
+    white-space: pre-line;
+}
+
 .additional-option-block {
     padding-left: 44px;
     border-left-width: 10px;
