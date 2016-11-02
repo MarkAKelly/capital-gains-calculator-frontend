@@ -28,7 +28,7 @@ import views.html.calculation.nonresident.otherReliefsRebased
 class OtherReliefsRebasedViewSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
   "The Other Reliefs Rebased view" when {
-    
+
     "not supplied with a pre-existing stored value and a taxable gain" should {
       val model = CalculationResultModel(100, 1000, 100, 18, 0, None, None, None)
       lazy val view = otherReliefsRebased(otherReliefsForm(false), model, hasExistingReliefAmount = false)(fakeRequest)
