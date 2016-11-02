@@ -31,7 +31,7 @@ import scala.concurrent.Future
 import controllers.nonresident.{PersonalAllowanceController, routes}
 import models.nonresident.PersonalAllowanceModel
 
-class PersonalAllowanceSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
+class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
   implicit val hc = new HeaderCarrier()
 

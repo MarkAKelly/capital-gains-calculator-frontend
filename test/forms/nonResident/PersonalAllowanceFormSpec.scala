@@ -54,6 +54,34 @@ class PersonalAllowanceFormSpec extends UnitSpec with WithFakeApplication {
       }
     }
 
+    "passing in an invalid map that is empty" should {
+
+      lazy val map = Map("personalAllowance" -> "")
+      lazy val form = personalAllowanceForm(11000).bind(map)
+
+      "return an invalid form with one error" in {
+        form.errors.size shouldBe 1
+      }
+
+      s"return an error message of '${messages.errorRealNumber}" in {
+        form.error("personalAllowance").get.message shouldBe messages.errorRealNumber
+      }
+    }
+
+    "passing in an invalid map that contains characters" should {
+
+      lazy val map = Map("personalAllowance" -> "asdwq1")
+      lazy val form = personalAllowanceForm(11000).bind(map)
+
+      "return an invalid form with one error" in {
+        form.errors.size shouldBe 1
+      }
+
+      s"return an error message of '${messages.errorRealNumber}" in {
+        form.error("personalAllowance").get.message shouldBe messages.errorRealNumber
+      }
+    }
+
     "passing in an invalid map that is negative" should {
 
       lazy val map = Map("personalAllowance" -> "-1200")
