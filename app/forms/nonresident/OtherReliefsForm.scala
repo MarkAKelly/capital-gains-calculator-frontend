@@ -63,7 +63,8 @@ object OtherReliefsForm {
     Form(
       mapping(
         "isClaimingOtherReliefs" -> optional(text)
-          .verifying(Messages("calc.common.error.fieldRequired"), isClaimingOtherReliefs => if (!electionMade) {isClaimingOtherReliefs.isDefined} else true),
+          .verifying(Messages("calc.common.error.fieldRequired"), isClaimingOtherReliefs => if (!electionMade) {isClaimingOtherReliefs.isDefined} else true)
+          .verifying(Messages("calc.common.error.fieldRequired"), isYesNoOption(electionMade)),
         "otherReliefs" -> text
           .transform(stringToOptionBigDecimal, optionBigDecimalToString)
       )(OtherReliefsModel.apply)(OtherReliefsModel.unapply)

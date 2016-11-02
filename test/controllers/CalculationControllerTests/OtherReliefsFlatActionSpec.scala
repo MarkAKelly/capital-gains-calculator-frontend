@@ -89,7 +89,7 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
       }
     }
 
-    "supplied with a pre-existing stored model and a loss" should {
+    "supplied with a pre-existing stored model" should {
       val testOtherReliefsModel = OtherReliefsModel(None, Some(5000))
       val target = setupTarget(
         Some(testOtherReliefsModel),
