@@ -88,10 +88,10 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
     def routeRequest(backUrl: String, improvementsModel: Option[ImprovementsModel], improvementsOptions: Boolean): Future[Result] = {
       improvementsModel match {
         case Some(data) =>
-          Future.successful(Ok(calculation.nonresident.improvements(improvementsForm.fill(data),
+          Future.successful(Ok(calculation.nonresident.improvements(improvementsForm(improvementsOptions).fill(data),
             improvementsOptions, backUrl)))
         case None =>
-          Future.successful(Ok(calculation.nonresident.improvements(improvementsForm,
+          Future.successful(Ok(calculation.nonresident.improvements(improvementsForm(improvementsOptions),
             improvementsOptions, backUrl)))
       }
     }
@@ -109,7 +109,7 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
   val submitImprovements = ValidateSession.async { implicit request =>
 
     def routeRequest(backUrl: String, improvementsOptions: Boolean): Future[Result] = {
-      improvementsForm.bindFromRequest.fold(
+      improvementsForm(improvementsOptions).bindFromRequest.fold(
         errors => {
             Future.successful(BadRequest(calculation.nonresident.improvements(errors,
               improvementsOptions,

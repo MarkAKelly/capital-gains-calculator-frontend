@@ -28,18 +28,12 @@ import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object ImprovementsForm {
 
-  def verifyAmountSupplied(data: ImprovementsModel): Boolean = {
+  def verifyAmountSupplied(data: ImprovementsModel, showHiddenQuestion: Boolean): Boolean = {
     data.isClaimingImprovements match {
-      case "Yes" => data.improvementsAmt.isDefined || data.improvementsAmtAfter.isDefined
-      case "No" => true
+      case "Yes" if showHiddenQuestion => data.improvementsAmt.isDefined || data.improvementsAmtAfter.isDefined
+      case _ => true
     }
   }
-
-//  def verifyIsRequired(data: ImprovementsModel): Boolean = {
-//    data.isClaimingImprovements match {
-//      case Constants.yes =>
-//    }
-//  }
 
   def verifyPositive(data: ImprovementsModel): Boolean = {
     (data.isClaimingImprovements match {
@@ -71,31 +65,24 @@ object ImprovementsForm {
     })
   }
 
-  def validateBigDecimal(data: ImprovementsModel): Boolean = {
-    (data.isClaimingImprovements match {
-      case Constants.yes => bigDecimalCheck(data.improvementsAmt.getOrElse(0).toString)
-      case Constants.no => true
-    }) && (data.isClaimingImprovements match {
-      case Constants.yes => bigDecimalCheck(data.improvementsAmtAfter.getOrElse(0).toString)
-      case Constants.no => true
-    })
-  }
-
-  val improvementsForm = Form(
+  def improvementsForm(showHiddenQuestion: Boolean): Form[ImprovementsModel] = Form(
     mapping(
-      "isClaimingImprovements" -> text,
-      "improvementsAmt" -> optional(bigDecimal),
-      "improvementsAmtAfter" -> optional(bigDecimal)
+      "isClaimingImprovements" -> text
+      .verifying(Messages("calc.common.error.fieldRequired"), mandatoryCheck)
+      .verifying(Messages("calc.common.error.fieldRequired"), yesNoCheck),
+      "improvementsAmt" -> text
+        .transform[Option[BigDecimal]](stringToOptionalBigDecimal, optionalBigDecimalToString),
+      "improvementsAmtAfter" -> text
+        .transform[Option[BigDecimal]](stringToOptionalBigDecimal, optionalBigDecimalToString)
     )(ImprovementsModel.apply)(ImprovementsModel.unapply)
       .verifying(Messages("calc.improvements.error.no.value.supplied"),
-        improvementsForm => verifyAmountSupplied(improvementsForm))
-      .verifying(Messages("error.real"),
-        improvementsForm => validateBigDecimal(improvementsForm))
+        improvementsForm => verifyAmountSupplied(improvementsForm, showHiddenQuestion))
       .verifying(Messages("calc.improvements.errorNegative"),
         improvementsForm => verifyPositive(improvementsForm))
       .verifying(Messages("calc.improvements.errorDecimalPlaces"),
         improvementsForm => verifyTwoDecimalPlaces(improvementsForm))
-      .verifying(Messages("calc.common.error.maxNumericExceeded")  + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"),
-        improvementsForm => validateMax(improvementsForm))
+      .verifying(Messages("calc.common.error.maxNumericExceeded")  + MoneyPounds(Constants.maxNumeric, 0).quantity + " " +
+        Messages("calc.common.error.maxNumericExceeded.OrLess"),
+          improvementsForm => validateMax(improvementsForm))
   )
 }
