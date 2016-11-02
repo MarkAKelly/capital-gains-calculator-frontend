@@ -5,17 +5,19 @@
 
 @(questionAnswer: QuestionAnswerModel[Any])
 
-    <div id=@{s"${questionAnswer.id}-question"} class="grid-layout__column grid-layout__column--1-3">
+@questionAnswer.link.fold(questionAnswerRowNoLink(questionAnswer)) { link =>
+    <div id="@{s"${questionAnswer.id}-question"}" class="grid-layout__column grid-layout__column--1-3">
         <span class="lede">@questionAnswer.question</span>
     </div>
-    <div id=@{s"${questionAnswer.id}-answer"} class="grid-layout__column grid-layout__column--1-3">
-        <a class="lede" href=@questionAnswer.link.get>
-            @{questionAnswer.data match {
-            case string: String => string
-            case int: Int => int.toString
-            case bigDecimal: BigDecimal => s"£${MoneyPounds(bigDecimal).quantity}"
-            case date: LocalDate => datePageFormatNoZero.format(date)
-            case _ => ""
-            }}
-        </a>
+    <div id="@{s"${questionAnswer.id}-answer"}" class="grid-layout__column grid-layout__column--1-3">
+        <a class="lede summary-answer" href="@link">@{
+            questionAnswer.data match {
+                    case string: String => string
+                    case int: Int => int.toString
+                    case bigDecimal: BigDecimal => s"£${MoneyPounds(bigDecimal).quantity}"
+                    case date: LocalDate => datePageFormatNoZero.format(date)
+                    case _ => ""
+                }
+            }</a>
     </div>
+}
