@@ -176,132 +176,78 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
   // POST Tests
   "In CalculationController calling the .submitOtherProperties action" when {
 
-    "for an individual" should {
+    "submitting a valid form with 'Yes' and a non-zero amount" should {
 
-      "submitting a valid form with 'Yes' and a non-zero amount" should {
+      lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
+      lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "Yes"), ("otherPropertiesAmt", "2100"))
+      lazy val result = target.submitOtherProperties(request)
 
-        lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
-        lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "Yes"), ("otherPropertiesAmt", "2100"))
-        lazy val result = target.submitOtherProperties(request)
-
-        "return a 303" in {
-          status(result) shouldBe 303
-        }
-
-        "should redirect to the acquisitionDate page" in {
-          redirectLocation(result) shouldBe Some(s"${routes.AcquisitionDateController.acquisitionDate()}")
-        }
+      "return a 303" in {
+        status(result) shouldBe 303
       }
 
-      "submitting a valid form with 'Yes' and a nil amount" should {
-
-        lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
-        lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "Yes"), ("otherPropertiesAmt", "0"))
-        lazy val result = target.submitOtherProperties(request)
-
-        "return a 303" in {
-          status(result) shouldBe 303
-        }
-
-        "should redirect to the annualExemptAmountPage page" in {
-          redirectLocation(result) shouldBe Some(s"${routes.AnnualExemptAmountController.annualExemptAmount()}")
-        }
-      }
-
-      "submitting a valid form with 'No'" should {
-
-        lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
-        lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "No"), ("otherPropertiesAmt", ""))
-        lazy val result = target.submitOtherProperties(request)
-
-        "return a 303" in {
-          status(result) shouldBe 303
-        }
-
-        "should redirect to the acquisitionDate page" in {
-          redirectLocation(result) shouldBe Some(s"${routes.AcquisitionDateController.acquisitionDate()}")
-        }
-      }
-
-      "submitting an form with no data" should {
-
-        lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
-        lazy val request = fakeRequestToPOSTWithSession(("otherProperties", ""), ("otherPropertiesAmt", ""))
-        lazy val result = target.submitOtherProperties(request)
-
-        "return a 400" in {
-          status(result) shouldBe 400
-        }
-
-        "return to the other properties page" in {
-          Jsoup.parse(bodyOf(result)).title shouldEqual messages.question
-        }
+      "should redirect to the acquisitionDate page" in {
+        redirectLocation(result) shouldBe Some(s"${routes.AcquisitionDateController.acquisitionDate()}")
       }
     }
 
-    "for a trustee" should {
+    "submitting a valid form with 'Yes' and a nil amount" should {
 
-      "submitting a valid form with 'Yes' selected" should {
+      lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
+      lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "Yes"), ("otherPropertiesAmt", "0"))
+      lazy val result = target.submitOtherProperties(request)
 
-        lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.trustee)))
-        lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "Yes"), ("otherPropertiesAmt", ""))
-        lazy val result = target.submitOtherProperties(request)
-
-        "return a 303" in {
-          status(result) shouldBe 303
-        }
-
-        "should redirect to the annual exempt amount page" in {
-          redirectLocation(result) shouldBe Some(s"${routes.AnnualExemptAmountController.annualExemptAmount()}")
-        }
+      "return a 303" in {
+        status(result) shouldBe 303
       }
 
-      "submitting a valid form with 'No' selected" should {
-
-        lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.trustee)))
-        lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "No"), ("otherPropertiesAmt", ""))
-        lazy val result = target.submitOtherProperties(request)
-
-        "return a 303" in {
-          status(result) shouldBe 303
-        }
-
-        "should redirect to the acquisitionDate page" in {
-          redirectLocation(result) shouldBe Some(s"${routes.AcquisitionDateController.acquisitionDate()}")
-        }
+      "should redirect to the annualExemptAmountPage page" in {
+        redirectLocation(result) shouldBe Some(s"${routes.AnnualExemptAmountController.annualExemptAmount()}")
       }
     }
 
-    "for a personal rep" should {
+    "submitting a valid form with 'No'" should {
 
-      "submitting a valid form with 'Yes' selected" should {
+      lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
+      lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "No"), ("otherPropertiesAmt", ""))
+      lazy val result = target.submitOtherProperties(request)
 
-        lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.personalRep)))
-        lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "Yes"), ("otherPropertiesAmt", ""))
-        lazy val result = target.submitOtherProperties(request)
-
-        "return a 303" in {
-          status(result) shouldBe 303
-        }
-
-        "should redirect to the annual exempt amount page" in {
-          redirectLocation(result) shouldBe Some(s"${routes.AnnualExemptAmountController.annualExemptAmount()}")
-        }
+      "return a 303" in {
+        status(result) shouldBe 303
       }
 
-      "submitting a valid form with 'No' selected" should {
+      "should redirect to the acquisitionDate page" in {
+        redirectLocation(result) shouldBe Some(s"${routes.AcquisitionDateController.acquisitionDate()}")
+      }
+    }
 
-        lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.trustee)))
-        lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "No"), ("otherPropertiesAmt", ""))
-        lazy val result = target.submitOtherProperties(request)
+    "submitting a valid form with 'No' and an invalid amount" should {
 
-        "return a 303" in {
-          status(result) shouldBe 303
-        }
+      lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
+      lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "No"), ("otherPropertiesAmt", "-1238.12381"))
+      lazy val result = target.submitOtherProperties(request)
 
-        "should redirect to the acquisitionDate page" in {
-          redirectLocation(result) shouldBe Some(s"${routes.AcquisitionDateController.acquisitionDate()}")
-        }
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "should redirect to the acquisitionDate page" in {
+        redirectLocation(result) shouldBe Some(s"${routes.AcquisitionDateController.acquisitionDate()}")
+      }
+    }
+
+    "submitting an form with no data" should {
+
+      lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
+      lazy val request = fakeRequestToPOSTWithSession(("otherProperties", ""), ("otherPropertiesAmt", ""))
+      lazy val result = target.submitOtherProperties(request)
+
+      "return a 400" in {
+        status(result) shouldBe 400
+      }
+
+      "return to the other properties page" in {
+        Jsoup.parse(bodyOf(result)).title shouldEqual messages.question
       }
     }
   }

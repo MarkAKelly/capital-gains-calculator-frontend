@@ -20,6 +20,7 @@ import assets.MessageLookup.{NonResident => commonMessages}
 import assets.MessageLookup.NonResident.{OtherProperties => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.nonresident.OtherPropertiesForm._
+import models.nonresident.OtherPropertiesModel
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.nonresident.otherProperties
@@ -152,6 +153,17 @@ class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with Fak
 
       "have inputs using the id otherPropertiesAmt" in {
         document.body().select("input[type=number]").attr("id") shouldEqual ""
+      }
+    }
+
+    "when passed a form with errors" should {
+
+      lazy val form = otherPropertiesForm(true).bind(Map("otherProperties" -> "bad-data"))
+      lazy val view = otherProperties(form, "back-link", false)(fakeRequest)
+      lazy val document = Jsoup.parse(view.body)
+
+      "have an error summary" in {
+        document.select("#error-summary-display").size() shouldBe 1
       }
     }
   }
