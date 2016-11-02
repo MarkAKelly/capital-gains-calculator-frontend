@@ -26,6 +26,146 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
 
   val target = CalculationDetailsConstructor
 
+  "Calling buildSection" when {
+
+    "a loss has been made" should {
+      val calculation = TestModels.calcModelLoss
+      val answers = TestModels.summaryIndividualImprovementsWithRebasedModel
+      lazy val result = target.buildSection(calculation, answers)
+
+      "have a calc election question" in {
+        result.exists(qa => qa.id == KeystoreKeys.calculationElection) shouldBe true
+      }
+
+      "not have a gain question" in {
+        result.exists(qa => qa.id == "calcDetails:totalGain") shouldBe false
+      }
+
+      "have a loss question" in {
+        result.exists(qa => qa.id == "calcDetails:totalLoss") shouldBe true
+      }
+
+      "not have an AEA question" in {
+        result.exists(qa => qa.id == "calcDetails:aea") shouldBe false
+      }
+
+      "not have a taxable gain question" in {
+        result.exists(qa => qa.id == "calcDetails:taxableGain") shouldBe false
+      }
+
+      "not have a taxable rate question" in {
+        result.exists(qa => qa.id == "calcDetails:taxableRate") shouldBe false
+      }
+
+      "not have a loss to carry forward question" in {
+        result.exists(qa => qa.id == "calcDetails:lossToCarryForward") shouldBe false
+      }
+    }
+
+    "a gain has been made" should {
+      val calculation = TestModels.calcModelOneRate
+      val answers = TestModels.summaryIndividualImprovementsWithRebasedModel
+      lazy val result = target.buildSection(calculation, answers)
+
+      "have a calc election question" in {
+        result.exists(qa => qa.id == KeystoreKeys.calculationElection) shouldBe true
+      }
+
+      "have a gain question" in {
+        result.exists(qa => qa.id == "calcDetails:totalGain") shouldBe true
+      }
+
+      "not have a loss question" in {
+        result.exists(qa => qa.id == "calcDetails:totalLoss") shouldBe false
+      }
+
+      "have an AEA question" in {
+        result.exists(qa => qa.id == "calcDetails:aea") shouldBe true
+      }
+
+      "have a taxable gain question" in {
+        result.exists(qa => qa.id == "calcDetails:taxableGain") shouldBe true
+      }
+
+      "have a taxable rate question" in {
+        result.exists(qa => qa.id == "calcDetails:taxableRate") shouldBe true
+      }
+
+      "not have a loss to carry forward question" in {
+        result.exists(qa => qa.id == "calcDetails:lossToCarryForward") shouldBe false
+      }
+    }
+
+    "a zero gain has been made" should {
+      val calculation = TestModels.calcModelZeroTotal
+      val answers = TestModels.summaryIndividualImprovementsWithRebasedModel
+      lazy val result = target.buildSection(calculation, answers)
+
+      "have a calc election question" in {
+        result.exists(qa => qa.id == KeystoreKeys.calculationElection) shouldBe true
+      }
+
+      "have a gain question" in {
+        result.exists(qa => qa.id == "calcDetails:totalGain") shouldBe true
+      }
+
+      "not have a loss question" in {
+        result.exists(qa => qa.id == "calcDetails:totalLoss") shouldBe false
+      }
+
+      "not have an AEA question" in {
+        result.exists(qa => qa.id == "calcDetails:aea") shouldBe false
+      }
+
+      "not have a taxable gain question" in {
+        result.exists(qa => qa.id == "calcDetails:taxableGain") shouldBe false
+      }
+
+      "not have a taxable rate question" in {
+        result.exists(qa => qa.id == "calcDetails:taxableRate") shouldBe false
+      }
+
+      "not have a loss to carry forward question" in {
+        result.exists(qa => qa.id == "calcDetails:lossToCarryForward") shouldBe false
+      }
+    }
+
+    "a negative taxable gain has been made" should {
+      val calculation = TestModels.calcModelNegativeTaxable
+      val answers = TestModels.summaryIndividualImprovementsWithRebasedModel
+      lazy val result = target.buildSection(calculation, answers)
+
+      "have a calc election question" in {
+        result.exists(qa => qa.id == KeystoreKeys.calculationElection) shouldBe true
+      }
+
+      "have a gain question" in {
+        result.exists(qa => qa.id == "calcDetails:totalGain") shouldBe true
+      }
+
+      "not have a loss question" in {
+        result.exists(qa => qa.id == "calcDetails:totalLoss") shouldBe false
+      }
+
+      "have an AEA question" in {
+        result.exists(qa => qa.id == "calcDetails:aea") shouldBe true
+      }
+
+      "have a taxable gain question" in {
+        result.exists(qa => qa.id == "calcDetails:taxableGain") shouldBe true
+      }
+
+      "not have a taxable rate question" in {
+        result.exists(qa => qa.id == "calcDetails:taxableRate") shouldBe false
+      }
+
+      "have a loss to carry forward question" in {
+        result.exists(qa => qa.id == "calcDetails:lossToCarryForward") shouldBe true
+      }
+    }
+
+  }
+
   "Calling calculationElection" when {
 
     "the calculation type is a flat calc" should {
@@ -54,7 +194,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
         }
       }
 
-      "not return a link for the calculation election details" in {
+      "return a link for the calculation election details" in {
         result.fold(cancel("expected result not computed")) { item =>
           item.link should not be None
         }
@@ -95,7 +235,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
         }
       }
 
-      "not return a link for the calculation election details" in {
+      "return a link for the calculation election details" in {
         result.fold(cancel("expected result not computed")) { item =>
           item.link should not be None
         }
@@ -136,7 +276,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
         }
       }
 
-      "not return a link for the calculation election details" in {
+      "return a link for the calculation election details" in {
         result.fold(cancel("expected result not computed")) { item =>
           item.link should not be None
         }

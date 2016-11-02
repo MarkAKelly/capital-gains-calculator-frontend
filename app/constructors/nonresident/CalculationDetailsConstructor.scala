@@ -23,6 +23,42 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object CalculationDetailsConstructor {
+
+  def buildSection(calculation: CalculationResultModel, answers: SummaryModel): Seq[QuestionAnswerModel[Any]] = {
+    val electionDetails = calculationElection(answers)
+    val totalGainDetails = totalGain(calculation)
+    val totalLossDetails = totalLoss(calculation)
+    val usedAeaDetails = usedAea(calculation)
+    val taxableGainDetails = taxableGain(calculation)
+    val taxableRateDetails = taxableRate(calculation)
+    val lossToCarryForwardDetails = lossToCarryForward(calculation)
+    Seq(
+      electionDetails,
+      totalGainDetails,
+      totalLossDetails,
+      usedAeaDetails,
+      taxableGainDetails,
+      taxableRateDetails,
+      lossToCarryForwardDetails).flatten
+  }
+
+  def calculationElection(model: SummaryModel): Option[QuestionAnswerModel[String]] = {
+
+    val id = KeystoreKeys.calculationElection
+
+    val question = Messages("calc.summary.calculation.details.calculationElection")
+
+    val answer = model.calculationElectionModel.calculationType match {
+      case "flat" => Messages("calc.summary.calculation.details.flatCalculation")
+      case "time" => Messages("calc.summary.calculation.details.timeCalculation")
+      case "rebased" => Messages("calc.summary.calculation.details.rebasedCalculation")
+    }
+
+    val link = routes.CalculationElectionController.calculationElection().url
+
+    Some(QuestionAnswerModel(id, answer, question, Some(link)))
+  }
+
   def lossToCarryForward(model: CalculationResultModel): Option[QuestionAnswerModel[BigDecimal]] = {
     if (model.taxableGain < BigDecimal(0)) {
       val id = "calcDetails:lossToCarryForward"
@@ -86,7 +122,6 @@ object CalculationDetailsConstructor {
     else None
   }
 
-
   def totalLoss(model: CalculationResultModel): Option[QuestionAnswerModel[BigDecimal]] = {
     if (model.totalGain >= BigDecimal(0)) None
     else {
@@ -111,27 +146,6 @@ object CalculationDetailsConstructor {
 
       Some(QuestionAnswerModel(id, answer, question, None))
     }
-  }
-
-  def buildSection(calculationResult: CalculationResultModel, userResponses: SummaryModel): Seq[QuestionAnswerModel[Any]] = {
-    Seq(calculationElection(userResponses)).flatten
-  }
-
-  def calculationElection(model: SummaryModel): Option[QuestionAnswerModel[String]] = {
-
-    val id = KeystoreKeys.calculationElection
-
-    val question = Messages("calc.summary.calculation.details.calculationElection")
-
-    val answer = model.calculationElectionModel.calculationType match {
-      case "flat" => Messages("calc.summary.calculation.details.flatCalculation")
-      case "time" => Messages("calc.summary.calculation.details.timeCalculation")
-      case "rebased" => Messages("calc.summary.calculation.details.rebasedCalculation")
-    }
-
-    val link = routes.CalculationElectionController.calculationElection().url
-
-    Some(QuestionAnswerModel(id, answer, question, Some(link)))
   }
 
 }
