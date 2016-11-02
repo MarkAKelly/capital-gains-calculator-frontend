@@ -136,6 +136,22 @@ class OtherReliefsFormSpec extends UnitSpec with WithFakeApplication {
       }
     }
 
+    "passing in an invalid map with an invalid answer when calculation has not been chosen" should {
+      val map = Map(
+        "isClaimingOtherReliefs" -> "a",
+        "otherReliefs" -> ""
+      )
+      lazy val form = otherReliefsForm(false).bind(map)
+
+      "return an invalid form with one errors" in {
+        form.errors.size shouldBe 1
+      }
+
+      s"return an error message of ${messages.errorRequired}" in {
+        form.error("isClaimingOtherReliefs").get.message shouldBe messages.errorRequired
+      }
+    }
+
     "passing in an invalid map with an empty value" should {
       val map = Map(
         "isClaimingOtherReliefs" -> "Yes",
