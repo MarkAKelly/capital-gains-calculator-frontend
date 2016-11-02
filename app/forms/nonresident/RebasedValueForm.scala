@@ -56,7 +56,9 @@ object RebasedValueForm {
 
   val rebasedValueForm = Form(
     mapping(
-      "hasRebasedValue" -> text,
+      "hasRebasedValue" -> text
+        .verifying(Messages("calc.common.error.fieldRequired"), mandatoryCheck)
+        .verifying(Messages("calc.common.error.fieldRequired"), yesNoCheck),
       "rebasedValueAmt" -> optional(bigDecimal)
     )(RebasedValueModel.apply)(RebasedValueModel.unapply)
       .verifying(Messages("calc.rebasedValue.error.no.value.supplied"),
