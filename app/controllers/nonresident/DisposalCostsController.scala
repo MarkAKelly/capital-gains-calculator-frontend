@@ -38,13 +38,13 @@ trait DisposalCostsController extends FrontendController with ValidActiveSession
 
   val disposalCosts = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[DisposalCostsModel](KeystoreKeys.disposalCosts).map {
-      case Some(data) => Ok(calculation.nonresident.disposalCosts(disposalCostsForm().fill(data)))
-      case None => Ok(calculation.nonresident.disposalCosts(disposalCostsForm()))
+      case Some(data) => Ok(calculation.nonresident.disposalCosts(disposalCostsForm.fill(data)))
+      case None => Ok(calculation.nonresident.disposalCosts(disposalCostsForm))
     }
   }
 
   val submitDisposalCosts = ValidateSession.async { implicit request =>
-    disposalCostsForm().bindFromRequest.fold(
+    disposalCostsForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(calculation.nonresident.disposalCosts(errors))),
       success => {
         calcConnector.saveFormData(KeystoreKeys.disposalCosts, success)

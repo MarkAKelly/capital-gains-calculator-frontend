@@ -28,7 +28,7 @@ class DisposalCostsViewSpec extends UnitSpec with WithFakeApplication with FakeR
   "Disposal Costs view" when {
 
     "supplied with no errors" should {
-      lazy val view = disposalCosts(disposalCostsForm(BigDecimal(10000)))(fakeRequest)
+      lazy val view = disposalCosts(disposalCostsForm)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       s"have a title of '${messages.DisposalCosts.question}'" in {
@@ -89,7 +89,7 @@ class DisposalCostsViewSpec extends UnitSpec with WithFakeApplication with FakeR
     }
 
     "supplied with errors" should {
-      lazy val form = disposalCostsForm().bind(Map("disposalCosts" -> "a"))
+      lazy val form = disposalCostsForm.bind(Map("disposalCosts" -> "a"))
       lazy val view = disposalCosts(form)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 

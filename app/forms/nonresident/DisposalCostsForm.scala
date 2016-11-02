@@ -26,7 +26,7 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object DisposalCostsForm {
-  def disposalCostsForm(disposalCosts: BigDecimal = BigDecimal(0)): Form[DisposalCostsModel] = Form(
+  val disposalCostsForm = Form(
     mapping(
       "disposalCosts" -> text
         .verifying(Messages("error.real"), mandatoryCheck)

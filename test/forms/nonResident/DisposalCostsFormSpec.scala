@@ -27,7 +27,7 @@ class DisposalCostsFormSpec extends UnitSpec with WithFakeApplication {
 
     "passing a valid model with 1000.0" should {
       val model = DisposalCostsModel(BigDecimal(1000.0))
-      lazy val form = disposalCostsForm(BigDecimal(1000.0)).fill(model)
+      lazy val form = disposalCostsForm.fill(model)
 
       "return a form with 0 errors" in {
         form.errors.size shouldBe 0
@@ -40,7 +40,7 @@ class DisposalCostsFormSpec extends UnitSpec with WithFakeApplication {
 
     "passing a valid map with 2000.0" should {
       val map = Map("disposalCosts" -> "2000.0")
-      lazy val form = disposalCostsForm(BigDecimal(2000.0)).bind(map)
+      lazy val form = disposalCostsForm.bind(map)
 
       "return a form with 0 errors" in {
         form.errors.size shouldBe 0
@@ -53,7 +53,7 @@ class DisposalCostsFormSpec extends UnitSpec with WithFakeApplication {
 
     "passing a valid map with two decimal places" should {
       val map = Map("disposalCosts" -> "2000.05")
-      lazy val form = disposalCostsForm(BigDecimal(2000.05)).bind(map)
+      lazy val form = disposalCostsForm.bind(map)
 
       "return a form with 0 errors" in {
         form.errors.size shouldBe 0
@@ -66,7 +66,7 @@ class DisposalCostsFormSpec extends UnitSpec with WithFakeApplication {
 
     "passing a valid map with 0" should {
       val map = Map("disposalCosts" -> "0.0")
-      lazy val form = disposalCostsForm(BigDecimal(0.0)).bind(map)
+      lazy val form = disposalCostsForm.bind(map)
 
       "return a form with 0 errors" in {
         form.errors.size shouldBe 0
@@ -79,7 +79,7 @@ class DisposalCostsFormSpec extends UnitSpec with WithFakeApplication {
 
     "passing a map with three decimal places" should {
       val map = Map("disposalCosts" -> "2000.052")
-      lazy val form = disposalCostsForm(BigDecimal(2000.052)).bind(map)
+      lazy val form = disposalCostsForm.bind(map)
 
       "return a form with 1 errors" in {
         form.errors.size shouldBe 1
@@ -92,7 +92,7 @@ class DisposalCostsFormSpec extends UnitSpec with WithFakeApplication {
 
     "passing a map with an empty value" should {
       val map = Map("disposalCosts" -> "")
-      lazy val form = disposalCostsForm().bind(map)
+      lazy val form = disposalCostsForm.bind(map)
 
       "return a form with 1 error" in {
         form.errors.size shouldBe 1
@@ -105,7 +105,7 @@ class DisposalCostsFormSpec extends UnitSpec with WithFakeApplication {
 
     "passing a map with a negative number" should {
       val map = Map("disposalCosts" -> "-1000")
-      lazy val form = disposalCostsForm().bind(map)
+      lazy val form = disposalCostsForm.bind(map)
 
       "return a form with 1 error" in {
         form.errors.size shouldBe 1
@@ -118,7 +118,7 @@ class DisposalCostsFormSpec extends UnitSpec with WithFakeApplication {
 
     "passing a map with a string" should {
       val map = Map("disposalCosts" -> "test")
-      lazy val form = disposalCostsForm().bind(map)
+      lazy val form = disposalCostsForm.bind(map)
 
       "return a form with 1 error" in {
         form.errors.size shouldBe 1
@@ -129,5 +129,4 @@ class DisposalCostsFormSpec extends UnitSpec with WithFakeApplication {
       }
     }
   }
-
 }

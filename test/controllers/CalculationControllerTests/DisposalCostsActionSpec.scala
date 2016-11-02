@@ -20,6 +20,7 @@ import assets.MessageLookup.NonResident.{DisposalCosts => messages}
 import assets.MessageLookup.{NonResident => commonMessages}
 import common.{Constants, KeystoreKeys}
 import connectors.CalculatorConnector
+import controllers.helpers.FakeRequestHelper
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
 import org.mockito.Matchers
@@ -38,12 +39,11 @@ import models.nonresident.{AcquisitionDateModel, DisposalCostsModel, RebasedValu
 import play.api.mvc.Result
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
   implicit val hc = new HeaderCarrier()
 
   def setupTarget(getData: Option[DisposalCostsModel],
-                  postData: Option[DisposalCostsModel],
                   acquisitionDate: Option[AcquisitionDateModel],
                   rebasedData: Option[RebasedValueModel] = None): DisposalCostsController = {
 
@@ -58,10 +58,6 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Moc
     when(mockCalcConnector.fetchAndGetFormData[RebasedValueModel](Matchers.eq(KeystoreKeys.rebasedValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(rebasedData))
 
-    lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(DisposalCostsModel(0)))))
-    when(mockCalcConnector.saveFormData[DisposalCostsModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(data))
-
     new DisposalCostsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
     }
@@ -70,12 +66,10 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Moc
   //GET Tests
   "In CalculationController calling the .disposalCosts action " should {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/rebased-costs").withSession(SessionKeys.sessionId -> "12345")
-
     "not supplied with a pre-existing stored model" should {
 
-      val target = setupTarget(None, None, None, None)
-      lazy val result = target.disposalCosts(fakeRequest)
+      val target = setupTarget(None, None, None)
+      lazy val result = target.disposalCosts(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
@@ -89,8 +83,8 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Moc
 
     "supplied with a pre-existing stored model" should {
 
-      val target = setupTarget(Some(DisposalCostsModel(1000)), None, None, None)
-      lazy val result = target.disposalCosts(fakeRequest)
+      val target = setupTarget(Some(DisposalCostsModel(1000)), None, None)
+      lazy val result = target.disposalCosts(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
@@ -101,35 +95,28 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Moc
         document.getElementsByTag("title").text shouldBe messages.question
       }
     }
+
+    "supplied with an invalid session" should {
+      val target = setupTarget(Some(DisposalCostsModel(1000)), None, None)
+      lazy val result = target.disposalCosts(fakeRequest)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the session timeout page" in {
+        redirectLocation(result).get should include("/calculate-your-capital-gains/session-timeout")
+      }
+    }
   }
 
   //POST Tests
   "In CalculationController calling the .submitDisposalCosts action" when {
 
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
-      "/calculate-your-capital-gains/non-resident/disposal-costs")
-      .withSession(SessionKeys.sessionId -> "12345")
-      .withFormUrlEncodedBody(body: _*)
-
-    def executeTargetWithMockData(amount: String,
-                                  acquisitionDate: AcquisitionDateModel,
-                                  rebasedData: Option[RebasedValueModel] = None): Future[Result] = {
-
-      lazy val fakeRequest = buildRequest(("disposalCosts", amount))
-
-      val numeric = "(0-9*)".r
-      val mockData = amount match {
-        case numeric(money) => new DisposalCostsModel(BigDecimal(money))
-        case _ => new DisposalCostsModel(0)
-      }
-
-      val target = setupTarget(None, Some(mockData), Some(acquisitionDate), rebasedData)
-      target.submitDisposalCosts(fakeRequest)
-    }
-
     "submitting a valid form when any acquisition date has been supplied but no property was revalued" should {
-
-      lazy val result = executeTargetWithMockData("1000", AcquisitionDateModel("Yes", Some(12), Some(3), Some(2016)))
+      val target = setupTarget(None, Some(AcquisitionDateModel("Yes", Some(12), Some(3), Some(2016))))
+      lazy val request = fakeRequestToPOSTWithSession(("disposalCosts", "1000"))
+      lazy val result = target.submitDisposalCosts(request)
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -141,8 +128,9 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Moc
     }
 
     "submitting a valid form when no acquisition date has been supplied but a property was revalued" should {
-      val rebased = RebasedValueModel("Yes", Some(BigDecimal(1000)))
-      lazy val result = executeTargetWithMockData("1000", AcquisitionDateModel("No", None, None, None), Some(rebased))
+      val target = setupTarget(None, Some(AcquisitionDateModel("No", None, None, None)), Some(RebasedValueModel("Yes", Some(BigDecimal(1000)))))
+      lazy val request = fakeRequestToPOSTWithSession(("disposalCosts", "1000"))
+      lazy val result = target.submitDisposalCosts(request)
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -154,7 +142,9 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Moc
     }
 
     "submitting a valid form when no acquisition date has been supplied and no property was revalued" should {
-      lazy val result = executeTargetWithMockData("1000", AcquisitionDateModel("No", None, None, None))
+      val target = setupTarget(None, Some(AcquisitionDateModel("No", None, None, None)))
+      lazy val request = fakeRequestToPOSTWithSession(("disposalCosts", "1000"))
+      lazy val result = target.submitDisposalCosts(request)
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -166,7 +156,9 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Moc
     }
 
     "submitting a valid form when an invalid Acquisition Date Model has been supplied and no property was revalued" should {
-      lazy val result = executeTargetWithMockData("1000", AcquisitionDateModel("invalid", None, None, None))
+      val target = setupTarget(None, Some(AcquisitionDateModel("invalid", None, None, None)))
+      lazy val request = fakeRequestToPOSTWithSession(("disposalCosts", "1000"))
+      lazy val result = target.submitDisposalCosts(request)
 
       "return a 303" in {
         status(result) shouldBe 303
@@ -178,8 +170,9 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Moc
     }
 
     "submitting an invalid form with no value" should {
-
-      lazy val result = executeTargetWithMockData("", AcquisitionDateModel("No", None, None, None))
+      val target = setupTarget(None, Some(AcquisitionDateModel("No", None, None, None)))
+      lazy val request = fakeRequestToPOSTWithSession(("disposalCosts", ""))
+      lazy val result = target.submitDisposalCosts(request)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {
@@ -188,64 +181,6 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Moc
 
       s"display the error message '${commonMessages.errorRealNumber}'" in {
         document.select("div label span.error-notification").text shouldEqual commonMessages.errorRealNumber
-      }
-    }
-
-    "submitting an invalid form with a negative value of -432" should {
-
-      lazy val result = executeTargetWithMockData("-432", AcquisitionDateModel("No", None, None, None))
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"display the error message ${messages.errorNegativeNumber}" in {
-        document.select("div label span.error-notification").text shouldEqual messages.errorNegativeNumber
-      }
-    }
-
-    "submitting an invalid form with a value that has more than two decimal places" should {
-
-      lazy val result = executeTargetWithMockData("432.222", AcquisitionDateModel("No", None, None, None))
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"display the error message ${messages.errorDecimalPlaces}" in {
-        document.select("div label span.error-notification").text shouldEqual messages.errorDecimalPlaces
-      }
-    }
-
-    "submitting an invalid form with a value that is negative and has more than two decimal places" should {
-
-      lazy val result = executeTargetWithMockData("-432.9876", AcquisitionDateModel("No", None, None, None))
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"display the error message ${messages.errorNegativeNumber} and ${messages.errorDecimalPlaces}" in {
-        document.select("div label span.error-notification").text shouldEqual (messages.errorNegativeNumber +
-          " " + messages.errorDecimalPlaces)
-      }
-    }
-
-    "submitting a value which exceeds the maximum numeric" should {
-
-      lazy val result = executeTargetWithMockData(Constants.maxNumeric + 0.01.toString, AcquisitionDateModel("No", None, None, None))
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"fail with message ${commonMessages.maximumLimit(MoneyPounds(Constants.maxNumeric, 0).quantity)}" in {
-        document.getElementsByClass("error-notification").text should
-          include (commonMessages.maximumLimit(MoneyPounds(Constants.maxNumeric, 0).quantity))
       }
     }
   }
