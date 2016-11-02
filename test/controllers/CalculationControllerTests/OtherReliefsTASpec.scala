@@ -190,46 +190,7 @@ class OtherReliefsTASpec extends UnitSpec with WithFakeApplication with MockitoS
       lazy val result = executeTargetWithMockData("", TestModels.summaryTrusteeTAWithAEA)
 
       "return a 303" in {
-        status(result) shouldBe 303
-      }
-    }
 
-    "submitting an invalid form with an amount with three decimal places" should {
-      lazy val result = executeTargetWithMockData("1000.111", TestModels.summaryTrusteeTAWithAEA)
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-    }
-
-    "submitting an invalid form with a negative value" should {
-      lazy val result = executeTargetWithMockData("-1000", TestModels.summaryTrusteeTAWithAEA)
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-    }
-
-    "submitting an invalid form with an value of shdgsaf" should {
-      lazy val result = executeTargetWithMockData("shdgsaf", TestModels.summaryTrusteeTAWithAEA)
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-    }
-
-    "submitting a value which exceeds the maximum numeric" should {
-
-      lazy val result = executeTargetWithMockData((Constants.maxNumeric + 0.01).toString, TestModels.summaryIndividualFlatWithoutAEA)
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"fail with message ${messages.errorMaximum(MoneyPounds(Constants.maxNumeric, 0).quantity)}" in {
-        document.getElementsByClass("error-notification").text should
-          include (messages.errorMaximum(MoneyPounds(Constants.maxNumeric, 0).quantity))
       }
     }
   }

@@ -47,6 +47,7 @@ object MessageLookup {
     val invalidAmount = "Enter an amount in the correct format e.g. 10000.00"
     val invalidAmountNoDecimal = "Enter an amount in the correct format e.g. 10000"
     val numericPlayErrorOverride = "Enter a number without commas, for example 10000.00"
+    val optionReqError = "Choose one of the options"
 
   }
 
@@ -161,12 +162,14 @@ object MessageLookup {
       val question = "How much did you sell or give away the property for?"
       val errorNegativeNumber = "Enter a positive number for the amount you sold the property for"
       val errorDecimalPlaces = "The amount you sold the property for has too many numbers after the decimal point"
+      val errorNegative = "Enter a positive number for the amount you sold the property for"
       val bulletIntro = "Put the market value of the property instead if you:"
       val bulletOne = "gave it away as a gift"
       val bulletTwo = "sold it to a relative, business partner or"
       val bulletTwoLink = "someone else you're connected to"
       val bulletThree = "sold it for less than it's worth to help the buyer"
 
+      def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
     object Improvements {
@@ -213,7 +216,11 @@ object MessageLookup {
       val inputQuestion = "How much extra tax relief are you claiming?"
       val totalGain = "Total gain"
       val taxableGain = "Taxable gain"
+      val lossCarriedForward = "Loss carried forward"
       val addRelief = "Add relief"
+      val updateRelief = "Update relief"
+      val errorDecimal = "There are too many numbers after the decimal point in your other reliefs"
+      val errorNegative = "Enter a positive number for your other reliefs"
 
       def totalLoss(value: String): String = s"Total loss $value"
 
