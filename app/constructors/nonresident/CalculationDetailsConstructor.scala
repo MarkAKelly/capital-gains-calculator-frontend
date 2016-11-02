@@ -74,22 +74,20 @@ object CalculationDetailsConstructor {
 
   def taxableRate(model: CalculationResultModel): Option[QuestionAnswerModel[String]] = {
 
-    val lowerRates = if (model.baseTaxGain > BigDecimal(0)) {
-      s"£${MoneyPounds(model.baseTaxGain, 0).quantity} at ${model.baseTaxRate}%"
-    } else ""
+    def toDisplayText(rate: (Int, BigDecimal)): String = s"£${MoneyPounds(rate._2, 0).quantity} at ${rate._1}%"
 
-    val higherRates = model.upperTaxGain.fold("") { gain =>
-      s"£${MoneyPounds(gain, 0).quantity} at ${model.upperTaxRate.get}%"
-    }
+    val lowerRates = if (model.baseTaxGain > BigDecimal(0)) Some(model.baseTaxRate -> model.baseTaxGain) else None
 
-    val rates = Seq(lowerRates, higherRates).filter(_.nonEmpty)
+    val higherRates = if (model.upperTaxGain.isDefined) Some(model.upperTaxRate.get -> model.upperTaxGain.get) else None
+
+    val rates = Seq(lowerRates, higherRates).flatten
 
     if (rates.nonEmpty) {
       val id = "calcDetails:taxableRate"
 
       val question = Messages("calc.summary.calculation.details.taxRate")
 
-      val answer = rates.mkString("\n")
+      val answer = if (rates.size == 1) s"${rates.head._1}%" else rates.map(toDisplayText).mkString("\n")
 
       Some(QuestionAnswerModel(id, answer, question, None))
     }

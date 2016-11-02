@@ -581,7 +581,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
 
       "return correct answer for the taxable rate details" in {
         result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe "£32,000 at 20%"
+          item.data shouldBe "20%"
         }
       }
 
@@ -622,7 +622,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
 
       "return correct answer for the taxable rate details" in {
         result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe "£32,000 at 50%"
+          item.data shouldBe "50%"
         }
       }
 
