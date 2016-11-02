@@ -25,9 +25,25 @@ object Transformers {
     case Failure(_) => BigDecimal(0)
   }
 
+  val stringToOptionalBigDecimal: String => Option[BigDecimal] = (input) => {
+    Try(BigDecimal(input.trim)) match {
+      case Success(value) => Some(value)
+      case Failure(_) => None
+    }
+  }
+
   val bigDecimalToString: BigDecimal => String = (input) => input.scale match {
     case 1 => input.setScale(2).toString()
     case _ => input.toString
+  }
+
+  val optionalBigDecimalToString: Option[BigDecimal] => String = (input) =>
+    if (input.isEmpty) ""
+    else {
+    input.get.scale match {
+      case 1 => input.getOrElse(BigDecimal(0.0)).setScale(2).toString()
+      case _ => input.getOrElse(BigDecimal(0.0)).toString
+    }
   }
 
   val stringToInteger: String => Int = (input) => Try(input.trim.toInt) match {
@@ -52,4 +68,16 @@ object Transformers {
 
   val booleanToString: Boolean => String = (input) => if (input) "Yes" else "No"
 
+
+  val stringToOptionBigDecimal: String => Option[BigDecimal] = {
+    string => Try{BigDecimal(string.trim)} match {
+      case Success(value) => Some(value)
+      case Failure(_) => None
+    }
+  }
+
+  val optionBigDecimalToString: Option[BigDecimal] => String = {
+    case Some(value) => value.toString()
+    case _ => ""
+  }
 }
