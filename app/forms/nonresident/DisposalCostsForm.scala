@@ -17,6 +17,7 @@
 package forms.nonresident
 
 import common.Constants
+import common.Transformers._
 import common.Validation._
 import models.nonresident.DisposalCostsModel
 import play.api.data.Forms._
@@ -27,9 +28,12 @@ import uk.gov.hmrc.play.views.helpers.MoneyPounds
 object DisposalCostsForm {
   val disposalCostsForm = Form(
     mapping(
-      "disposalCosts" -> bigDecimal
-        .verifying(Messages("calc.disposalCosts.errorNegativeNumber"), isPositive)
-        .verifying(Messages("calc.disposalCosts.errorDecimalPlaces"), decimalPlacesCheck)
+      "disposalCosts" -> text
+        .verifying(Messages("error.real"), mandatoryCheck)
+        .verifying(Messages("error.real"), bigDecimalCheck)
+        .transform(stringToBigDecimal, bigDecimalToString)
+        .verifying(Messages("calc.disposalCosts.errorNegativeNumber"), costs => isPositive(costs))
+        .verifying(Messages("calc.disposalCosts.errorDecimalPlaces"), costs => decimalPlacesCheck(costs))
         .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " +
           Messages("calc.common.error.maxNumericExceeded.OrLess"), maxCheck)
     )(DisposalCostsModel.apply)(DisposalCostsModel.unapply)
