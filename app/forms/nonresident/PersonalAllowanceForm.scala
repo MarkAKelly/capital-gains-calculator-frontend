@@ -16,6 +16,7 @@
 
 package forms.nonresident
 
+import common.Transformers._
 import common.Validation._
 import models.nonresident.PersonalAllowanceModel
 import play.api.data.Forms._
@@ -25,9 +26,12 @@ import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object PersonalAllowanceForm {
 
-  def personalAllowanceForm (maxPA: BigDecimal = BigDecimal(0)) = Form (
+  def personalAllowanceForm (maxPA: BigDecimal = BigDecimal(0)): Form[PersonalAllowanceModel] = Form (
     mapping(
-      "personalAllowance" -> bigDecimal
+      "personalAllowance" -> text
+        .verifying(Messages("error.real"), mandatoryCheck)
+        .verifying(Messages("error.real"), bigDecimalCheck)
+        .transform(stringToBigDecimal, bigDecimalToString)
         .verifying(Messages("calc.personalAllowance.errorNegative"), isPositive)
         .verifying(Messages("calc.personalAllowance.errorDecimalPlaces"), decimalPlacesCheckNoDecimal)
         .verifying(Messages("calc.personalAllowance.errorMaxLimit") + MoneyPounds(maxPA, 0).quantity + " " +
