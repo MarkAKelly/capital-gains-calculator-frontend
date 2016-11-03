@@ -303,7 +303,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         }
       }
 
-      s"return a link of ${controllers.nonresident.routes.CustomerTypeController.customerType().url}" in {
+      s"return a link of ${routes.CustomerTypeController.customerType().url}" in {
         result.fold(cancel("expected result not computed")) { item =>
           item.link.fold(cancel("link not supplied when expected")) { link =>
             link shouldBe routes.CustomerTypeController.customerType().url
@@ -338,7 +338,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         }
       }
 
-      s"return a link of ${controllers.nonresident.routes.CustomerTypeController.customerType().url}" in {
+      s"return a link of ${routes.CustomerTypeController.customerType().url}" in {
         result.fold(cancel("expected result not computed")) { item =>
           item.link.fold(cancel("link not supplied when expected")) { link =>
             link shouldBe routes.CustomerTypeController.customerType().url
@@ -373,7 +373,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         }
       }
 
-      s"return a link of ${controllers.nonresident.routes.CustomerTypeController.customerType().url}" in {
+      s"return a link of ${routes.CustomerTypeController.customerType().url}" in {
         result.fold(cancel("expected result not computed")) { item =>
           item.link.fold(cancel("link not supplied when expected")) { link =>
             link shouldBe routes.CustomerTypeController.customerType().url
@@ -381,12 +381,11 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         }
       }
     }
-
   }
 
   "calling .getCurrentIncomeAnswer" when {
 
-    "a current income of 30000.0" should {
+    "a current income greater than 0" should {
 
       lazy val result = target.getCurrentIncomeAnswer(summaryWithAllOptionValuesModel)
 
@@ -406,9 +405,9 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         }
       }
 
-      "return data of 30000.0" in {
+      "return data of greater than 0" in {
         result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe 30000.0
+          item.data shouldBe summaryWithAllOptionValuesModel.currentIncomeModel.get.currentIncome
         }
       }
 
@@ -443,7 +442,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
       "return data of 0.0" in {
         result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe 0.0
+          item.data shouldBe summaryIndividualFlatNoIncomeOtherPropNo.currentIncomeModel.get.currentIncome
         }
       }
 
@@ -469,7 +468,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
   "calling .getPersonalAllowanceAnswer" when {
 
-    "a personal allowance of 11000.0 is given" should {
+    "a personal allowance of greater than 0 is given" should {
 
       lazy val result = target.getPersonalAllowanceAnswer(summaryWithAllOptionValuesModel)
 
@@ -483,9 +482,9 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         }
       }
 
-      "return data of 11000.0 " in {
+      "return data of greater than 0 " in {
         result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe 11000.0
+          item.data shouldBe summaryWithAllOptionValuesModel.personalAllowanceModel.get.personalAllowanceAmt
         }
       }
 
@@ -520,7 +519,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
       "return data of 0.0 " in {
         result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe 0.0
+          item.data shouldBe summaryNoOptionsIndividualModel.personalAllowanceModel.get.personalAllowanceAmt
         }
       }
 
@@ -574,9 +573,9 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         }
       }
 
-      "return data of Yes " in {
+      s"return data of ${messages.yes}" in {
         result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe "Yes"
+          item.data shouldBe messages.yes
         }
       }
 
@@ -609,9 +608,9 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         }
       }
 
-      "return data of No " in {
+      s"return data of ${messages.no}" in {
         result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe "No"
+          item.data shouldBe messages.no
         }
       }
 
@@ -706,7 +705,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
   "calling .getOtherPropertiesAmountAnswer" when {
 
-    "an otherPropertiesAmount of 250000.0 is given" should {
+    "an otherPropertiesAmount of greater than 0 is given" should {
 
       lazy val result = PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryWithAllOptionValuesModel)
 
@@ -714,9 +713,9 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         result should not be None
       }
 
-      "return 250000.0" in {
+      "return greater than 0" in {
         result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe 250000.0
+          item.data shouldBe summaryWithAllOptionValuesModel.otherPropertiesModel.otherPropertiesAmt.get
         }
       }
 
@@ -726,7 +725,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         }
       }
 
-      s"return a question of $messages.OtherProperties.questionTwo} " in {
+      s"return a question of ${messages.OtherProperties.questionTwo} " in {
         result.fold(cancel("expected result not computed")) { item =>
           item.question shouldBe messages.OtherProperties.questionTwo
         }
@@ -735,7 +734,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       s"return a URL of ${routes.OtherPropertiesController.otherProperties().url}" in {
         result.fold(cancel("expected result not computed")) { item =>
           item.link.fold(cancel("link not supplied when expected")) { link =>
-            link shouldBe controllers.nonresident.routes.OtherPropertiesController.otherProperties().url
+            link shouldBe routes.OtherPropertiesController.otherProperties().url
           }
         }
       }
@@ -751,7 +750,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
       "return 0.0" in {
         result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe 0.0
+          item.data shouldBe summaryWithTrusteeValuesModel.otherPropertiesModel.otherPropertiesAmt.get
         }
       }
 
@@ -770,7 +769,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       s"return a URL of ${routes.OtherPropertiesController.otherProperties().url}" in {
         result.fold(cancel("expected result not computed")) { item =>
           item.link.fold(cancel("link not supplied when expected")) { link =>
-            link shouldBe controllers.nonresident.routes.OtherPropertiesController.otherProperties().url
+            link shouldBe routes.OtherPropertiesController.otherProperties().url
           }
         }
       }
@@ -798,7 +797,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       }
     }
 
-    "an AnnualExemptAmount of 10000.0 is given" should {
+    "an AnnualExemptAmount of greater than 0 is given" should {
 
       lazy val result = target.getAnnualExemptAmountAnswer(summaryWithTrusteeValuesModel)
 
@@ -812,9 +811,9 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         }
       }
 
-      s"return a valid data of 10000.0" in {
+      "return a valid data that is greater than 0" in {
         result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe 10000.0
+          item.data shouldBe summaryWithTrusteeValuesModel.annualExemptAmountModel.get.annualExemptAmount
         }
       }
 
@@ -847,9 +846,9 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         }
       }
 
-      s"return a valid data of 0.0" in {
+      "return a valid data of 0.0" in {
         result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe 0.0
+          item.data shouldBe summaryNoOptionsIndividualModel.annualExemptAmountModel.get.annualExemptAmount
         }
       }
 
