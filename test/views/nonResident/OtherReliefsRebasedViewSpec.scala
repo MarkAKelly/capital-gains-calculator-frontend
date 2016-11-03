@@ -41,6 +41,10 @@ class OtherReliefsRebasedViewSpec extends UnitSpec with WithFakeApplication with
           backLink.text shouldEqual messages.back
         }
 
+        "should ahve the class 'back-link'" in {
+          backLink.attr("class") shouldBe "back-link"
+        }
+
         s"should have a route to 'calculation-election'" in {
           backLink.attr("href") shouldEqual
             controllers.nonresident.routes.CalculationElectionController.calculationElection().url
