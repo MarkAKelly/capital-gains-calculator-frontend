@@ -486,6 +486,10 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
       lazy val result = target.getDisabledTrusteeAnswer(summaryWithTrusteeValuesModel)
 
+      "return some details for the DisabledTrustee" in {
+        result should not be None
+      }
+
       s"return an id of ${KeystoreKeys.disabledTrustee}" in {
         result.fold(cancel("expected result not computed")) { item =>
           item.id shouldBe KeystoreKeys.disabledTrustee
@@ -513,6 +517,15 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       }
 
     }
+
+    "using the summaryNoOptionsIndividualModel" should {
+
+      lazy val result = target.getDisabledTrusteeAnswer(summaryNoOptionsIndividualModel)
+
+      "return None" in {
+        result shouldBe None
+      }
+    }
   }
 
   "calling .getOtherPropertiesAnswer" when {
@@ -520,6 +533,10 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
     "using the summaryWithAllOptionsValuesModel" should {
 
       lazy val result = PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithAllOptionValuesModel)
+
+      "return some details for the OtherProperties" in {
+        result should not be None
+      }
 
       s"return ${messages.yes}" in {
         result.fold(cancel("expected result not computed")) { item =>
@@ -552,9 +569,33 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
       lazy val result = PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithTrusteeValuesModel)
 
+      "return some details for the OtherProperties" in {
+        result should not be None
+      }
+
       s"return data of ${messages.yes}" in {
         result.fold(cancel("expected result not computed")) { item =>
           item.data shouldBe messages.yes
+        }
+      }
+
+      s"return an ID of ${KeystoreKeys.otherProperties}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.otherProperties
+        }
+      }
+
+      s"return a question of ${messages.OtherProperties.question} " in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.OtherProperties.question
+        }
+      }
+
+      s"return a link of ${routes.OtherPropertiesController.otherProperties().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe routes.OtherPropertiesController.otherProperties().url
+          }
         }
       }
     }
@@ -565,6 +606,10 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
     "using the summaryWithAllOptionValuesModel" should {
 
       lazy val result = PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryWithAllOptionValuesModel)
+
+      "return some details for the OtherPropertiesAmount" in {
+        result should not be None
+      }
 
       "return 250000.0" in {
         result.fold(cancel("expected result not computed")) { item =>
@@ -592,64 +637,141 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         }
       }
     }
+
+    "using the summaryWithTrusteeValuesModel" should {
+
+      lazy val result = target.getOtherPropertiesAmountAnswer(summaryWithTrusteeValuesModel)
+
+      "return some details for the OtherPropertiesAmount" in {
+        result should not be None
+      }
+
+      "return 0.0" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe 0.0
+        }
+      }
+
+      s"return an ID of ${KeystoreKeys.otherProperties} + Amount" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.otherProperties + "Amount"
+        }
+      }
+
+      s"return a question of $messages.OtherProperties.questionTwo} " in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.OtherProperties.questionTwo
+        }
+      }
+
+      s"return a URL of ${routes.OtherPropertiesController.otherProperties().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe controllers.nonresident.routes.OtherPropertiesController.otherProperties().url
+          }
+        }
+      }
+
+    }
+
+    "using the summaryNoOptionsIndividualModel" should {
+
+      lazy val result = target.getOtherPropertiesAmountAnswer(summaryNoOptionsIndividualModel)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "using the summaryNoOptionsTrusteeModel" should {
+
+      lazy val result = target.getOtherPropertiesAmountAnswer(summaryNoOptionsTrusteeModel)
+
+      "return some details for the OtherPropertiesAmount" in {
+        result should not be None
+      }
+
+      "return 0.0" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe 0.0
+        }
+      }
+
+      s"return an ID of ${KeystoreKeys.otherProperties} + Amount" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.otherProperties + "Amount"
+        }
+      }
+
+      s"return a question of $messages.OtherProperties.questionTwo} " in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.OtherProperties.questionTwo
+        }
+      }
+
+      s"return a URL of ${routes.OtherPropertiesController.otherProperties().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe controllers.nonresident.routes.OtherPropertiesController.otherProperties().url
+          }
+        }
+      }
+    }
+  }
+
+  "calling .getAnnualExemptAmountAnswer" when {
+
+    "using the summaryWithAllOptionValuesModel" should {
+
+      lazy val result = target.getAnnualExemptAmountAnswer(summaryWithAllOptionValuesModel)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "using the summaryWithTrusteeValuesModel" should {
+
+      lazy val result = target.getAnnualExemptAmountAnswer(summaryWithTrusteeValuesModel)
+
+      "return some details for the AnnualExemptyAmount" in {
+        result should not be None
+      }
+
+      s"return a valid id of ${KeystoreKeys.annualExemptAmount}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.annualExemptAmount
+        }
+      }
+
+      s"return a valid data of 10000.0" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe 10000.0
+        }
+      }
+
+      s"return a valid question of ${messages.AnnualExemptAmount.question}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.AnnualExemptAmount.question
+        }
+      }
+
+      s"return a valid link of ${routes.AnnualExemptAmountController.annualExemptAmount().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe routes.AnnualExemptAmountController.annualExemptAmount().url
+          }
+        }
+      }
+    }
+
+    "using the summaryNoOptionsIndividualModel" should {
+
+      lazy val result = target.getAnnualExemptAmountAnswer(summaryNoOptionsIndividualModel)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
   }
 }
-
-
-
-//
-//    ".getAnnualExemptAmountAnswer with otherProperties is a yes and taxable gain is above 0 will return None" in {
-//      PersonalDetailsConstructor.getAnnualExemptAmountAnswer(summaryWithAllOptionValuesModel) shouldBe None
-//    }
-//  }
-//
-//  "when using the summaryWithTrusteeValuesModel" should {
-//
-//
-//    ".getAnnualExemptAmountAnswer with otherProperties is a yes and and no taxable gain" should {
-//
-//      s"return a valid id of ${KeystoreKeys.annualExemptAmount}" in {
-//        PersonalDetailsConstructor.getAnnualExemptAmountAnswer(summaryWithTrusteeValuesModel).get.id shouldBe
-//          KeystoreKeys.annualExemptAmount
-//      }
-//
-//      s"return a valid data of 10000.0" in {
-//        PersonalDetailsConstructor.getAnnualExemptAmountAnswer(summaryWithTrusteeValuesModel).get.data shouldBe 10000.0
-//      }
-//
-//      s"return a valid question of ${MessageLookup.NonResident.AnnualExemptAmount.question}" in {
-//        PersonalDetailsConstructor.getAnnualExemptAmountAnswer(summaryWithTrusteeValuesModel).get.question shouldBe
-//          MessageLookup.NonResident.AnnualExemptAmount.question
-//      }
-//
-//      s"return a valid link of ${controllers.nonresident.routes.AnnualExemptAmountController.annualExemptAmount().url}" in {
-//        PersonalDetailsConstructor.getAnnualExemptAmountAnswer(summaryWithTrusteeValuesModel).get.link shouldBe
-//          Some(controllers.nonresident.routes.AnnualExemptAmountController.annualExemptAmount().url)
-//      }
-//
-//    }
-//  }
-//
-//  "when using the summaryNoOptionsIndividualModel" should {
-//
-
-//
-//    ".getPersonalAllowanceAnswer with an individual but no PersonalAllowanceModel will return None" in {
-//      PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryNoOptionsIndividualModel) shouldBe None
-//    }
-//
-//    ".getPersonalAllowanceAnswer with an trustee but no DisabledTrusteeModel will return None" in {
-//      PersonalDetailsConstructor.getDisabledTrusteeAnswer(summaryNoOptionsTrusteeModel) shouldBe None
-//    }
-//
-//    ".getOtherPropertiesAmountAnswer with a OtherPropertiesModel but with no Amount value will return None" in {
-//      PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryNoOptionsIndividualModel) shouldBe None
-//    }
-//
-//    ".getAnnualExemptAmountAnswer with a otherProperties but no taxable gain will return None" in {
-//      PersonalDetailsConstructor.getAnnualExemptAmountAnswer(summaryNoOptionsIndividualModel) shouldBe None
-//    }
-//
-//  }
-//
-//}
