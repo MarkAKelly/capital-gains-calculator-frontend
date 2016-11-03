@@ -133,7 +133,7 @@ class SummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
       lazy val savePDF = doc.select("a.button")
 
       "which has the class 'button save-pdf-button'" in {
-        savePDF.attr("class") shouldBe "button save-pdf-button"
+        savePDF.attr("class") shouldBe "button nr save-pdf-button"
       }
 
       "which has the text 'Save as PDF'" in {
