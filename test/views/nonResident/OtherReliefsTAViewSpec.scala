@@ -40,6 +40,10 @@ class OtherReliefsTAViewSpec extends UnitSpec with WithFakeApplication with Mock
           backLink.text shouldEqual messages.back
         }
 
+        "should have the class 'back-link'" in {
+          backLink.attr("class") shouldBe "back-link"
+        }
+
         s"should have a route to 'calculation-election'" in {
           backLink.attr("href") shouldEqual
             controllers.nonresident.routes.CalculationElectionController.calculationElection().url
