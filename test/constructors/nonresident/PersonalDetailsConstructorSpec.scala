@@ -145,7 +145,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         result.exists(qa => qa.id == KeystoreKeys.personalAllowance) shouldBe true
       }
 
-      "return a DisabledTrusteeDataAnswer item" in {
+      "not return a DisabledTrusteeDataAnswer item" in {
         result.exists(qa => qa.id == KeystoreKeys.disabledTrustee) shouldBe false
       }
 
@@ -157,7 +157,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         result.exists(qa => qa.id == KeystoreKeys.otherProperties + "Amount") shouldBe true
       }
 
-      "return a AnnualExemptAmountDataAnswer item" in {
+      "not return a AnnualExemptAmountDataAnswer item" in {
         result.exists(qa => qa.id == KeystoreKeys.annualExemptAmount) shouldBe false
       }
     }
@@ -174,11 +174,11 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         result.exists(qa => qa.id == KeystoreKeys.customerType) shouldBe true
       }
 
-      "return a CurrentIncomeAnswer item" in {
+      "not return a CurrentIncomeAnswer item" in {
         result.exists(qa => qa.id == KeystoreKeys.currentIncome) shouldBe false
       }
 
-      "return a PersonalAllowanceAnswer item" in {
+      "not return a PersonalAllowanceAnswer item" in {
         result.exists(qa => qa.id == KeystoreKeys.personalAllowance) shouldBe false
       }
 
@@ -211,15 +211,15 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         result.exists(qa => qa.id == KeystoreKeys.customerType) shouldBe true
       }
 
-      "return a CurrentIncomeAnswer item" in {
+      "not return a CurrentIncomeAnswer item" in {
         result.exists(qa => qa.id == KeystoreKeys.currentIncome) shouldBe false
       }
 
-      "return a PersonalAllowanceAnswer item" in {
+      "not  return a PersonalAllowanceAnswer item" in {
         result.exists(qa => qa.id == KeystoreKeys.personalAllowance) shouldBe false
       }
 
-      "return a DisabledTrusteeDataAnswer item" in {
+      "not  return a DisabledTrusteeDataAnswer item" in {
         result.exists(qa => qa.id == KeystoreKeys.disabledTrustee) shouldBe false
       }
 
@@ -227,11 +227,11 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         result.exists(qa => qa.id == KeystoreKeys.otherProperties) shouldBe true
       }
 
-      "return a OtherPropertiesAmountAnswer item" in {
+      "not return a OtherPropertiesAmountAnswer item" in {
         result.exists(qa => qa.id == KeystoreKeys.otherProperties + "Amount") shouldBe false
       }
 
-      "return a AnnualExemptAmountDataAnswer item" in {
+      "not return a AnnualExemptAmountDataAnswer item" in {
         result.exists(qa => qa.id == KeystoreKeys.annualExemptAmount) shouldBe false
       }
     }
@@ -248,11 +248,11 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         result.exists(qa => qa.id == KeystoreKeys.customerType) shouldBe true
       }
 
-      "return a CurrentIncomeAnswer item" in {
+      "not return a CurrentIncomeAnswer item" in {
         result.exists(qa => qa.id == KeystoreKeys.currentIncome) shouldBe false
       }
 
-      "return a PersonalAllowanceAnswer item" in {
+      "not return a PersonalAllowanceAnswer item" in {
         result.exists(qa => qa.id == KeystoreKeys.personalAllowance) shouldBe false
       }
 
