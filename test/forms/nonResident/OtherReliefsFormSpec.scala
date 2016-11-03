@@ -23,7 +23,7 @@ import assets.MessageLookup.{NonResident => messages}
 
 class OtherReliefsFormSpec extends UnitSpec with WithFakeApplication {
 
-  "Other Reliefs view" when {
+  "Other Reliefs form" when {
 
     "passing in a valid model" should {
       val model = OtherReliefsModel(Some("Yes"), Some(1000))
