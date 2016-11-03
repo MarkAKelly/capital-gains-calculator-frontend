@@ -19,6 +19,7 @@ package constructors.nonresident
 import assets.MessageLookup.{NonResident => messages}
 import controllers.nonresident.{routes => routes}
 import common.KeystoreKeys
+import common.TestModels._
 import common.nonresident.CustomerTypeKeys
 import models.nonresident._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -77,9 +78,9 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
     CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     None,
-    None,
-    OtherPropertiesModel("Yes", None),
-    None,
+    Some(PersonalAllowanceModel(0)),
+    OtherPropertiesModel("Yes", Some(0)),
+    Some(AnnualExemptAmountModel(0)),
     AcquisitionDateModel("No", None, None, None),
     AcquisitionValueModel(300000.0),
     None,
@@ -127,7 +128,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
     "using the summaryWithAllOptionsValuesModel" should {
 
-      lazy val result = target.getPersonalDetailsSection(summaryWithAllOptionValuesModel)
+      lazy val result = target.getPersonalDetailsSection(sumModelTA)
 
       "return a Sequence[QuestionAnswerModel[Any]] with size 5" in {
         result.size shouldBe 5
@@ -204,7 +205,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       lazy val result = target.getPersonalDetailsSection(summaryNoOptionsIndividualModel)
 
       "return a Sequence[QuestionAnswerModel[Any]] with size 5" in {
-        result.size shouldBe 2
+        result.size shouldBe 5
       }
 
       "return a CustomerType item" in {
@@ -215,11 +216,11 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         result.exists(qa => qa.id == KeystoreKeys.currentIncome) shouldBe false
       }
 
-      "not  return a PersonalAllowanceAnswer item" in {
-        result.exists(qa => qa.id == KeystoreKeys.personalAllowance) shouldBe false
+      "return a PersonalAllowanceAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.personalAllowance) shouldBe true
       }
 
-      "not  return a DisabledTrusteeDataAnswer item" in {
+      "not return a DisabledTrusteeDataAnswer item" in {
         result.exists(qa => qa.id == KeystoreKeys.disabledTrustee) shouldBe false
       }
 
@@ -227,12 +228,12 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         result.exists(qa => qa.id == KeystoreKeys.otherProperties) shouldBe true
       }
 
-      "not return a OtherPropertiesAmountAnswer item" in {
-        result.exists(qa => qa.id == KeystoreKeys.otherProperties + "Amount") shouldBe false
+      "return a OtherPropertiesAmountAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.otherProperties + "Amount") shouldBe true
       }
 
-      "not return a AnnualExemptAmountDataAnswer item" in {
-        result.exists(qa => qa.id == KeystoreKeys.annualExemptAmount) shouldBe false
+      "return a AnnualExemptAmountDataAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.annualExemptAmount) shouldBe true
       }
     }
 
@@ -276,7 +277,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
   "calling .getCustomerTypeAnswer" when {
 
-    "using the summaryWithAllOptionsValuesModel" should {
+    "a customer type of individual" should {
 
       lazy val result = target.getCustomerTypeAnswer(summaryWithAllOptionValuesModel)
 
@@ -311,7 +312,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       }
     }
 
-    "using the summaryWithTrusteeValuesModel" should {
+    "a customer type of trustee" should {
 
       lazy val result = target.getCustomerTypeAnswer(summaryWithTrusteeValuesModel)
 
@@ -346,11 +347,46 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       }
     }
 
+    "a customer type of personal rep" should {
+
+      lazy val result = target.getCustomerTypeAnswer(summaryRepresentativeFlatWithoutAEA)
+
+      "return some details for the CustomerType" in {
+        result should not be None
+      }
+
+      s"return an id of ${KeystoreKeys.customerType}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.customerType
+        }
+      }
+
+      s"return a question of ${messages.CustomerType.question}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.CustomerType.question
+        }
+      }
+
+      s"return data of ${CustomerTypeKeys.personalRep}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe CustomerTypeKeys.personalRep
+        }
+      }
+
+      s"return a link of ${controllers.nonresident.routes.CustomerTypeController.customerType().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe routes.CustomerTypeController.customerType().url
+          }
+        }
+      }
+    }
+
   }
 
   "calling .getCurrentIncomeAnswer" when {
 
-    "using the summaryWithAllOptionsValuesModel" should {
+    "a current income of 30000.0" should {
 
       lazy val result = target.getCurrentIncomeAnswer(summaryWithAllOptionValuesModel)
 
@@ -385,7 +421,43 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       }
     }
 
-    "using the summaryWithTrusteeValuesModel" should {
+    "a current income of 0.0" should {
+
+      lazy val result = target.getCurrentIncomeAnswer(summaryIndividualFlatNoIncomeOtherPropNo)
+
+      "return some details for the CurrentIncome" in {
+        result should not be None
+      }
+
+      s"return and id of ${KeystoreKeys.currentIncome}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.currentIncome
+        }
+      }
+
+      s"return a question of ${messages.CurrentIncome.question}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.CurrentIncome.question
+        }
+      }
+
+      "return data of 0.0" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe 0.0
+        }
+      }
+
+      s"return a link of ${routes.CurrentIncomeController.currentIncome().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe routes.CurrentIncomeController.currentIncome().url
+          }
+        }
+      }
+
+    }
+
+    "no current income is given" should {
 
       lazy val result = target.getCurrentIncomeAnswer(summaryWithTrusteeValuesModel)
 
@@ -393,31 +465,11 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         result shouldBe None
       }
     }
-
-    "using the summaryNoOptionsTrusteeModel" should {
-
-      lazy val result = target.getCurrentIncomeAnswer(summaryNoOptionsTrusteeModel)
-
-      "return a None" in {
-        result shouldBe None
-      }
-    }
-
-    "using the summaryNoOptionsIndividualModel" should {
-
-      lazy val result = target.getCurrentIncomeAnswer(summaryNoOptionsIndividualModel)
-
-      "return None" in {
-        result shouldBe None
-      }
-    }
-
-
   }
 
   "calling .getPersonalAllowanceAnswer" when {
 
-    "using the summaryWithAllOptionValuesModel" should {
+    "a personal allowance of 11000.0 is given" should {
 
       lazy val result = target.getPersonalAllowanceAnswer(summaryWithAllOptionValuesModel)
 
@@ -452,16 +504,42 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       }
     }
 
-    "using the summaryWithTrusteeValuesModel" should {
+    "a personal allowance of 0 is given" should {
 
-      lazy val result = target.getPersonalAllowanceAnswer(summaryWithTrusteeValuesModel)
+      lazy val result = target.getPersonalAllowanceAnswer(summaryNoOptionsIndividualModel)
 
-      "return a None" in {
-        result shouldBe None
+      "return some details for the PersonalAllowance" in {
+        result should not be None
+      }
+
+      s"return an id of ${KeystoreKeys.personalAllowance}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.personalAllowance
+        }
+      }
+
+      "return data of 0.0 " in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe 0.0
+        }
+      }
+
+      s"return a question of ${messages.PersonalAllowance.question}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.PersonalAllowance.question
+        }
+      }
+
+      s"return a link of ${routes.PersonalAllowanceController.personalAllowance().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe routes.PersonalAllowanceController.personalAllowance().url
+          }
+        }
       }
     }
 
-    "using the summaryNoOptionsIndividualModel" should {
+    "no personal allowance is given" should {
 
       lazy val result = target.getPersonalAllowanceAnswer(summaryWithTrusteeValuesModel)
 
@@ -473,7 +551,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
   "calling .getDisabledTrusteeAnswer" when {
 
-    "using the summaryWithAllOptionsValuesModel" should {
+    "no disabled trustee is given" should {
 
       lazy val result = target.getDisabledTrusteeAnswer(summaryWithAllOptionValuesModel)
 
@@ -482,7 +560,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       }
     }
 
-    "using the summaryWithTrusteeValuesModel" should {
+    "a disabled trustee with Yes is supplied" should {
 
       lazy val result = target.getDisabledTrusteeAnswer(summaryWithTrusteeValuesModel)
 
@@ -496,7 +574,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         }
       }
 
-      "return data of 11000.0 " in {
+      "return data of Yes " in {
         result.fold(cancel("expected result not computed")) { item =>
           item.data shouldBe "Yes"
         }
@@ -515,22 +593,47 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
           }
         }
       }
-
     }
 
-    "using the summaryNoOptionsIndividualModel" should {
+    "a disabled trustee with No is supplied" should {
 
-      lazy val result = target.getDisabledTrusteeAnswer(summaryNoOptionsIndividualModel)
+      lazy val result = target.getDisabledTrusteeAnswer(summaryTrusteeTAWithAEA)
 
-      "return None" in {
-        result shouldBe None
+      "return some details for the DisabledTrustee" in {
+        result should not be None
+      }
+
+      s"return an id of ${KeystoreKeys.disabledTrustee}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.disabledTrustee
+        }
+      }
+
+      "return data of No " in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe "No"
+        }
+      }
+
+      s"return a question of ${messages.DisabledTrustee.question}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.DisabledTrustee.question
+        }
+      }
+
+      s"return an id of ${routes.DisabledTrusteeController.disabledTrustee().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe routes.DisabledTrusteeController.disabledTrustee().url
+          }
+        }
       }
     }
   }
 
   "calling .getOtherPropertiesAnswer" when {
 
-    "using the summaryWithAllOptionsValuesModel" should {
+    "a otherPropertiesAnswer of yes is given" should {
 
       lazy val result = PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithAllOptionValuesModel)
 
@@ -565,17 +668,17 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       }
     }
 
-    "using the summaryWithTrusteeValuesModel" should {
+    "a otherPropertiesAnswer of no is given" should {
 
-      lazy val result = PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithTrusteeValuesModel)
+      lazy val result = PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryRepresentativeFlatWithoutAEA)
 
       "return some details for the OtherProperties" in {
         result should not be None
       }
 
-      s"return data of ${messages.yes}" in {
+      s"return data of ${messages.no}" in {
         result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe messages.yes
+          item.data shouldBe messages.no
         }
       }
 
@@ -603,7 +706,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
   "calling .getOtherPropertiesAmountAnswer" when {
 
-    "using the summaryWithAllOptionValuesModel" should {
+    "an otherPropertiesAmount of 250000.0 is given" should {
 
       lazy val result = PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryWithAllOptionValuesModel)
 
@@ -638,7 +741,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       }
     }
 
-    "using the summaryWithTrusteeValuesModel" should {
+    "an otherPropertiesAmount of 0.0 is given" should {
 
       lazy val result = target.getOtherPropertiesAmountAnswer(summaryWithTrusteeValuesModel)
 
@@ -674,54 +777,19 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
     }
 
-    "using the summaryNoOptionsIndividualModel" should {
+    "no answer for otherPropertiesAmount is given" should {
 
-      lazy val result = target.getOtherPropertiesAmountAnswer(summaryNoOptionsIndividualModel)
+      lazy val result = target.getOtherPropertiesAmountAnswer(summaryOtherReliefsFlatYesNoValue)
 
       "return a None" in {
         result shouldBe None
-      }
-    }
-
-    "using the summaryNoOptionsTrusteeModel" should {
-
-      lazy val result = target.getOtherPropertiesAmountAnswer(summaryNoOptionsTrusteeModel)
-
-      "return some details for the OtherPropertiesAmount" in {
-        result should not be None
-      }
-
-      "return 0.0" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe 0.0
-        }
-      }
-
-      s"return an ID of ${KeystoreKeys.otherProperties} + Amount" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.id shouldBe KeystoreKeys.otherProperties + "Amount"
-        }
-      }
-
-      s"return a question of $messages.OtherProperties.questionTwo} " in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.question shouldBe messages.OtherProperties.questionTwo
-        }
-      }
-
-      s"return a URL of ${routes.OtherPropertiesController.otherProperties().url}" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.link.fold(cancel("link not supplied when expected")) { link =>
-            link shouldBe controllers.nonresident.routes.OtherPropertiesController.otherProperties().url
-          }
-        }
       }
     }
   }
 
   "calling .getAnnualExemptAmountAnswer" when {
 
-    "using the summaryWithAllOptionValuesModel" should {
+    "no AnnualExemptAmount is given" should {
 
       lazy val result = target.getAnnualExemptAmountAnswer(summaryWithAllOptionValuesModel)
 
@@ -730,11 +798,11 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       }
     }
 
-    "using the summaryWithTrusteeValuesModel" should {
+    "an AnnualExemptAmount of 10000.0 is given" should {
 
       lazy val result = target.getAnnualExemptAmountAnswer(summaryWithTrusteeValuesModel)
 
-      "return some details for the AnnualExemptyAmount" in {
+      "return some details for the AnnualExemptAmount" in {
         result should not be None
       }
 
@@ -765,13 +833,40 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       }
     }
 
-    "using the summaryNoOptionsIndividualModel" should {
+    "an AnnualExemptAmount of 0.0 is given" should {
 
       lazy val result = target.getAnnualExemptAmountAnswer(summaryNoOptionsIndividualModel)
 
-      "return a None" in {
-        result shouldBe None
+      "return some details for the AnnualExemptAmount" in {
+        result should not be None
       }
+
+      s"return a valid id of ${KeystoreKeys.annualExemptAmount}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.annualExemptAmount
+        }
+      }
+
+      s"return a valid data of 0.0" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe 0.0
+        }
+      }
+
+      s"return a valid question of ${messages.AnnualExemptAmount.question}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.AnnualExemptAmount.question
+        }
+      }
+
+      s"return a valid link of ${routes.AnnualExemptAmountController.annualExemptAmount().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe routes.AnnualExemptAmountController.annualExemptAmount().url
+          }
+        }
+      }
+
     }
   }
 }
