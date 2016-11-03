@@ -17,7 +17,7 @@
 package models.nonresident
 
 import common.nonresident.CalculationType
-import constructors.nonresident.{DeductionDetailsConstructor, PropertyDetailsConstructor, SalesDetailsConstructor}
+import constructors.nonresident._
 
 case class SummaryModel(
                           customerTypeModel: CustomerTypeModel,
@@ -50,10 +50,9 @@ case class SummaryModel(
     case _ => "none"
   }
 
-  //TODO These are mock values to be wired later on to the constructor
-  val personalDetailsRows: Seq[QuestionAnswerModel[Any]] = Seq(QuestionAnswerModel("personal", "name", "question", Some("")))
+  val personalDetailsRows: Seq[QuestionAnswerModel[Any]] = PersonalDetailsConstructor.getPersonalDetailsSection(this)
   val saleDetailsRows: Seq[QuestionAnswerModel[Any]] = SalesDetailsConstructor.salesDetailsRows(this)
-  val purchaseDetailsRows: Seq[QuestionAnswerModel[Any]] = Seq(QuestionAnswerModel("purchase", 500, "question", Some("")))
+  val purchaseDetailsRows: Seq[QuestionAnswerModel[Any]] = PurchaseDetailsConstructor.getPurchaseDetailsSection(this)
   val propertyDetailsRows: Seq[QuestionAnswerModel[Any]] = PropertyDetailsConstructor.propertyDetailsRows(this)
   def deductionsDetailsRows(result: CalculationResultModel): Seq[QuestionAnswerModel[Any]] =
     DeductionDetailsConstructor.deductionDetailsRows(this, result)

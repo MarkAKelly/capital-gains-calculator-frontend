@@ -113,7 +113,6 @@ object PersonalDetailsConstructor {
     case _ => None
   }
 
-  //Only if otherProperties is yes and taxable gain is 0
   def getAnnualExemptAmountAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] =
     summaryModel.otherPropertiesModel match {
       case (OtherPropertiesModel("Yes", Some(x))) if x == BigDecimal(0) =>
