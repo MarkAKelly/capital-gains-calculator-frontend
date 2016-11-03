@@ -169,20 +169,6 @@ class RebasedValueActionSpec extends UnitSpec with WithFakeApplication with Mock
         }
       }
 
-      "submitting a valid form with No" should {
-
-        lazy val request = fakeRequestToPOSTWithSession(("hasRebasedValue", "No"), ("rebasedValueAmt", ""))
-        lazy val result = target.submitRebasedValue(request)
-
-        "return a 303" in {
-          status(result) shouldBe 303
-        }
-
-        "redirect to the rebased costs page" in {
-          redirectLocation(result).get shouldEqual routes.ImprovementsController.improvements().url
-        }
-      }
-
       "submitting an invalid form" should {
 
         lazy val request = fakeRequestToPOSTWithSession(("hasRebasedValue", "Yes"), ("rebasedValueAmt", ""))
