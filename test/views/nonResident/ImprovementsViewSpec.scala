@@ -58,16 +58,46 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
 
       "have that content" which {
-        s"display the correct wording for radio option ${messages.yes}" in {
-          document.body.getElementById("isClaimingImprovements-yes").parent.text shouldEqual messages.yes
-        }
-
-        s"display the correct wording for radio option ${messages.no}" in {
-          document.body.getElementById("isClaimingImprovements-no").parent.text shouldEqual messages.no
+        s"display the correct wording for radio option 'isClaimingImprovements'" in {
+          document.body.select("input").attr("id") should include ("isClaimingImprovements")
         }
 
         "contain a hidden component with an input box" in {
           document.body.getElementById("hidden").html should include("input")
+        }
+
+        "contains another hidden component with an input box" in {
+          document.body.getElementById("hidden").html should include("improvementsAmt")
+        }
+      }
+
+      "have a button" which {
+        lazy val button = document.select("button")
+
+        "has the class 'button'" in {
+          button.attr("class") shouldBe "button"
+        }
+
+        "has the type 'submit'" in {
+          button.attr("type") shouldBe "submit"
+        }
+
+        "has the id 'continue-button'" in {
+          button.attr("id") shouldBe "continue-button"
+        }
+      }
+
+      "supplied with errors" should {
+        lazy val form = improvementsForm(true).bind(Map("improvements" -> "testData"))
+        lazy val view = improvements(form, true, "back-link-two")(fakeRequest)
+        lazy val document = Jsoup.parse(view.body)
+
+        s"have a route to 'back-link-two'" in {
+          document.body.getElementById("back-link").attr("href") shouldEqual "back-link-two"
+        }
+
+        "have an error summary" in {
+          document.select("#error-summary-display").size() shouldBe 1
         }
       }
     }

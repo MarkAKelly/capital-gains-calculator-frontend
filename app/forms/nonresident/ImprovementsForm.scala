@@ -35,32 +35,32 @@ object ImprovementsForm {
     }
   }
 
-  def verifyPositive(data: ImprovementsModel): Boolean = {
+  def verifyPositive(data: ImprovementsModel, showHiddenQuestion: Boolean): Boolean = {
     (data.isClaimingImprovements match {
-      case "Yes" => isPositive(data.improvementsAmt.getOrElse(0))
+      case "Yes" if showHiddenQuestion => isPositive(data.improvementsAmt.getOrElse(0))
       case "No" => true
     }) && (data.isClaimingImprovements match {
-      case "Yes" => isPositive(data.improvementsAmtAfter.getOrElse(0))
+      case "Yes" if showHiddenQuestion => isPositive(data.improvementsAmtAfter.getOrElse(0))
       case "No" => true
     })
   }
 
-  def verifyTwoDecimalPlaces(data: ImprovementsModel): Boolean = {
+  def verifyTwoDecimalPlaces(data: ImprovementsModel, showHiddenQuestion: Boolean): Boolean = {
     (data.isClaimingImprovements match {
-      case "Yes" => decimalPlacesCheck(data.improvementsAmt.getOrElse(0))
+      case "Yes" if showHiddenQuestion => decimalPlacesCheck(data.improvementsAmt.getOrElse(0))
       case "No" => true
     }) && (data.isClaimingImprovements match {
-      case "Yes" => decimalPlacesCheck(data.improvementsAmtAfter.getOrElse(0))
+      case "Yes" if showHiddenQuestion => decimalPlacesCheck(data.improvementsAmtAfter.getOrElse(0))
       case "No" => true
     })
   }
 
-  def validateMax(data: ImprovementsModel): Boolean = {
+  def validateMax(data: ImprovementsModel, showHiddenQuestion: Boolean): Boolean = {
     (data.isClaimingImprovements match {
-      case "Yes" => maxCheck(data.improvementsAmt.getOrElse(0))
+      case "Yes" if showHiddenQuestion => maxCheck(data.improvementsAmt.getOrElse(0))
       case "No" => true
     }) && (data.isClaimingImprovements match {
-      case "Yes" => maxCheck(data.improvementsAmtAfter.getOrElse(0))
+      case "Yes" if showHiddenQuestion => maxCheck(data.improvementsAmtAfter.getOrElse(0))
       case "No" => true
     })
   }
@@ -70,19 +70,19 @@ object ImprovementsForm {
       "isClaimingImprovements" -> text
       .verifying(Messages("calc.common.error.fieldRequired"), mandatoryCheck)
       .verifying(Messages("calc.common.error.fieldRequired"), yesNoCheck),
-      "improvementsAmt" -> text
-        .transform[Option[BigDecimal]](stringToOptionalBigDecimal, optionalBigDecimalToString),
-      "improvementsAmtAfter" -> text
-        .transform[Option[BigDecimal]](stringToOptionalBigDecimal, optionalBigDecimalToString)
+      "improvementsAmt" -> optional(text)
+        .transform[Option[BigDecimal]](optionalStringToOptionalBigDecimal, optionalBigDecimalToOptionalString),
+      "improvementsAmtAfter" -> optional(text)
+        .transform[Option[BigDecimal]](optionalStringToOptionalBigDecimal, optionalBigDecimalToOptionalString)
     )(ImprovementsModel.apply)(ImprovementsModel.unapply)
       .verifying(Messages("calc.improvements.error.no.value.supplied"),
         improvementsForm => verifyAmountSupplied(improvementsForm, showHiddenQuestion))
       .verifying(Messages("calc.improvements.errorNegative"),
-        improvementsForm => verifyPositive(improvementsForm))
+        improvementsForm => verifyPositive(improvementsForm, showHiddenQuestion))
       .verifying(Messages("calc.improvements.errorDecimalPlaces"),
-        improvementsForm => verifyTwoDecimalPlaces(improvementsForm))
+        improvementsForm => verifyTwoDecimalPlaces(improvementsForm, showHiddenQuestion))
       .verifying(Messages("calc.common.error.maxNumericExceeded")  + MoneyPounds(Constants.maxNumeric, 0).quantity + " " +
         Messages("calc.common.error.maxNumericExceeded.OrLess"),
-          improvementsForm => validateMax(improvementsForm))
+          improvementsForm => validateMax(improvementsForm, showHiddenQuestion))
   )
 }
