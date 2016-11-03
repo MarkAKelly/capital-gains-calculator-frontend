@@ -20,7 +20,7 @@ import assets.MessageLookup.NonResident.{OtherReliefs => messages}
 import common.{KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
-import controllers.nonresident.OtherReliefsFlatController
+import controllers.nonresident.OtherReliefsTAController
 import models.nonresident._
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -32,7 +32,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
-class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
+class OtherReliefsTAActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
   implicit val hc = new HeaderCarrier()
 
@@ -42,7 +42,7 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
                    result: CalculationResultModel,
                    acquisitionDateData: Option[AcquisitionDateModel],
                    rebasedValueData: Option[RebasedValueModel]
-                 ): OtherReliefsFlatController = {
+                 ): OtherReliefsTAController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
@@ -58,33 +58,33 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
     when(mockCalcConnector.createSummary(Matchers.any()))
       .thenReturn(Future.successful(summary))
 
-    when(mockCalcConnector.calculateFlat(Matchers.any())(Matchers.any()))
+    when(mockCalcConnector.calculateTA(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(Some(result)))
 
-    new OtherReliefsFlatController {
+    new OtherReliefsTAController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
     }
   }
 
-  "Calling the .otherReliefsFlat action " when {
+  "Calling the .otherReliefsTA action " when {
 
     "not supplied with a pre-existing stored model" should {
 
       val target = setupTarget(
         None,
-        TestModels.summaryIndividualFlatWithoutAEA,
+        TestModels.sumModelTA,
         TestModels.calcModelTwoRates,
         Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
         None
       )
-      lazy val result = target.otherReliefsFlat(fakeRequestWithSession)
+      lazy val result = target.otherReliefsTA(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200 with a valid calculation result" in {
         status(result) shouldBe 200
       }
 
-      "load the otherReliefs flat page" in {
+      "load the otherReliefs TA page" in {
         document.title() shouldBe messages.inputQuestion
       }
     }
@@ -93,19 +93,19 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
       val testOtherReliefsModel = OtherReliefsModel(None, Some(5000))
       val target = setupTarget(
         Some(testOtherReliefsModel),
-        TestModels.summaryIndividualFlatWithoutAEA,
+        TestModels.sumModelTA,
         TestModels.calcModelLoss,
         Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
         None
       )
-      lazy val result = target.otherReliefsFlat(fakeRequestWithSession)
+      lazy val result = target.otherReliefsTA(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a status of 200" in {
         status(result) shouldBe 200
       }
 
-      "load the otherReliefs flat page" in {
+      "load the otherReliefs TA page" in {
         document.title() shouldBe messages.inputQuestion
       }
     }
@@ -113,12 +113,12 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
     "supplied with an invalid session" should {
       val target = setupTarget(
         None,
-        TestModels.summaryIndividualFlatWithoutAEA,
+        TestModels.sumModelTA,
         TestModels.calcModelTwoRates,
         Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
         None
       )
-      lazy val result = target.otherReliefsFlat(fakeRequest)
+      lazy val result = target.otherReliefsTA(fakeRequest)
 
       "return a status of 303" in {
         status(result) shouldBe 303
@@ -130,18 +130,18 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
     }
   }
 
-  "Calling the .submitOtherReliefsFlat action" when {
+  "Calling the .submitOtherReliefsTA action" when {
 
     "submitting a valid form" should {
       val target = setupTarget(
         None,
-        TestModels.summaryIndividualFlatWithoutAEA,
+        TestModels.sumModelTA,
         TestModels.calcModelLoss,
         Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
         None
       )
       lazy val request = fakeRequestToPOSTWithSession(("isClaimingOtherReliefs", "Yes"), ("otherReliefs", "1000"))
-      lazy val result = target.submitOtherReliefsFlat(request)
+      lazy val result = target.submitOtherReliefsTA(request)
 
       "return a status of 303" in {
         status(result) shouldBe 303
@@ -155,20 +155,20 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
     "submitting an invalid form" should {
       val target = setupTarget(
         None,
-        TestModels.summaryIndividualFlatWithoutAEA,
+        TestModels.sumModelTA,
         TestModels.calcModelLoss,
         Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
         None
       )
       lazy val request = fakeRequestToPOSTWithSession(("isClaimingOtherReliefs", "Yes"), ("otherReliefs", "-1000"))
-      lazy val result = target.submitOtherReliefsFlat(request)
+      lazy val result = target.submitOtherReliefsTA(request)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a status of 400" in {
         status(result) shouldBe 400
       }
 
-      "return to the other reliefs flat page" in {
+      "return to the other reliefs TA page" in {
         document.title() shouldBe messages.inputQuestion
       }
     }
