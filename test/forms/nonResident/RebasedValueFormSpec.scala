@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class RebasedValueFormSpec extends UnitSpec with WithFakeApplication {
 
-  "Other Reliefs form" when {
+  "Rebased Value form" when {
 
     "passing in a valid model with yes" should {
       val model = RebasedValueModel("Yes", Some(1000))
