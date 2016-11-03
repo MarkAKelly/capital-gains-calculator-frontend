@@ -55,7 +55,9 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         s"has a route to 'back-link'" in {
           backLink.attr("href") shouldBe "back-link"
         }
+      }
 
+      "have that content" which {
         s"display the correct wording for radio option ${messages.yes}" in {
           document.body.getElementById("isClaimingImprovements-yes").parent.text shouldEqual messages.yes
         }
@@ -67,11 +69,7 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         "contain a hidden component with an input box" in {
           document.body.getElementById("hidden").html should include("input")
         }
-
       }
     }
-
-
   }
-
 }
