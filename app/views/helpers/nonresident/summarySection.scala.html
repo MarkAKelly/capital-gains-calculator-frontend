@@ -1,6 +1,6 @@
 @import models.nonresident.QuestionAnswerModel
 
-@(sectionID: String, sectionTitle: String, rows: Seq[QuestionAnswerModel[Any]])
+@(sectionID: String, sectionTitle: String, rows: Seq[QuestionAnswerModel[Any]], decimalPlaces: Int = 2)
 
 @if(rows.nonEmpty) {
     <section id=@sectionID class="summary-section">
@@ -11,7 +11,7 @@
                 <span class="heading-large">@sectionTitle</span>
             }
             </div>
-            @questionAnswerRow(row)
+            @questionAnswerRow(row, decimalPlaces)
         </div>
     }
     </section>
