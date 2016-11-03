@@ -237,6 +237,12 @@
     margin-top: 3.0em;
 }
 
+
+.nr.save-pdf-button {
+    margin-top: 0;
+    margin-bottom: 1em;
+}
+
 .pdf div {
     page-break-inside: avoid
 }
