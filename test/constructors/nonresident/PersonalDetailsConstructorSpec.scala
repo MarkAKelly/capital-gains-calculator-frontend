@@ -16,8 +16,10 @@
 
 package constructors.nonresident
 
-import assets.MessageLookup
+import assets.MessageLookup.{NonResident => messages}
+import controllers.nonresident.{routes => routes}
 import common.KeystoreKeys
+import common.TestModels._
 import common.nonresident.CustomerTypeKeys
 import models.nonresident._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -76,9 +78,9 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
     CustomerTypeModel(CustomerTypeKeys.individual),
     None,
     None,
-    None,
-    OtherPropertiesModel("Yes", None),
-    None,
+    Some(PersonalAllowanceModel(0)),
+    OtherPropertiesModel("Yes", Some(0)),
+    Some(AnnualExemptAmountModel(0)),
     AcquisitionDateModel("No", None, None, None),
     AcquisitionValueModel(300000.0),
     None,
@@ -120,246 +122,748 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
     None
   )
 
-  "Calling PersonalDetailsConstructor" when {
+  val target = PersonalDetailsConstructor
+
+  "calling .getPersonalDetailsSection" when {
 
     "using the summaryWithAllOptionsValuesModel" should {
 
-      ".getPersonalDetailsItem will return a Sequence[QuestionAnswerModel[Any]] with size 5" in{
-        PersonalDetailsConstructor.getPersonalDetailsSection(summaryWithAllOptionValuesModel).size shouldBe 5
+      lazy val result = target.getPersonalDetailsSection(sumModelTA)
+
+      "return a Sequence[QuestionAnswerModel[Any]] with size 5" in {
+        result.size shouldBe 5
       }
 
-      ".getPersonalDetailsItem will return a Sequence[QuestionAnswerModel[Any]] will contain a PersonalDetails.getCustomerType item" in {
-        PersonalDetailsConstructor.getPersonalDetailsSection(summaryWithAllOptionValuesModel)
-          .count(_.equals(PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).get)) shouldBe 1
+      "return a CustomerType item" in {
+        result.exists(qa => qa.id == KeystoreKeys.customerType) shouldBe true
       }
 
-      ".getPersonalDetailsItem will return a Sequence[QuestionAnswerModel[Any]] will contain a PersonalDetails.getCurrentIncomeAnswer item" in {
-        PersonalDetailsConstructor.getPersonalDetailsSection(summaryWithAllOptionValuesModel)
-          .count(_.equals(PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryWithAllOptionValuesModel).get)) shouldBe 1
+      "return a CurrentIncomeAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.currentIncome) shouldBe true
       }
 
-      ".getPersonalDetailsItem will return a Sequence[QuestionAnswerModel[Any]] will contain a PersonalDetails.getPersonalAllowanceAnswer item" in {
-        PersonalDetailsConstructor.getPersonalDetailsSection(summaryWithAllOptionValuesModel)
-          .count(_.equals(PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryWithAllOptionValuesModel).get)) shouldBe 1
+      "return a PersonalAllowanceAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.personalAllowance) shouldBe true
       }
 
-      ".getPersonalDetailsItem will return a Sequence[QuestionAnswerModel[Any]] will contain a PersonalDetails.getOtherPropertiesAnswer item" in {
-        PersonalDetailsConstructor.getPersonalDetailsSection(summaryWithAllOptionValuesModel)
-          .count(_.equals(PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithAllOptionValuesModel).get)) shouldBe 1
+      "not return a DisabledTrusteeDataAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.disabledTrustee) shouldBe false
       }
 
-      ".getPersonalDetailsItem will return a Sequence[QuestionAnswerModel[Any]] will contain a PersonalDetails.getOtherPropertiesAmountAnswer item" in {
-        PersonalDetailsConstructor.getPersonalDetailsSection(summaryWithAllOptionValuesModel)
-          .count(_.equals(PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryWithAllOptionValuesModel).get)) shouldBe 1
+      "return a OtherPropertiesAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.otherProperties) shouldBe true
       }
 
-      ".getCustomerTypeAnswer with a customer type of individual will return an id of " +
-        s"${KeystoreKeys.customerType}" in {
-        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).get.id shouldBe
-          KeystoreKeys.customerType
+      "return a OtherPropertiesAmountAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.otherProperties + "Amount") shouldBe true
       }
 
-      ".getCustomerTypeAnswer with a customer type of individual will return a question of " +
-        s"${MessageLookup.NonResident.CustomerType.question}" in {
-        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).get.question shouldBe
-          MessageLookup.NonResident.CustomerType.question
-      }
-
-      ".getCustomerTypeAnswer with a customer type of individual will return data of " +
-        s"${CustomerTypeKeys.individual}" in {
-        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).get.data shouldBe
-          CustomerTypeKeys.individual
-      }
-
-      ".getCustomerTypeAnswer with a customer type of individual will a link of " +
-        s"${controllers.nonresident.routes.CustomerTypeController.customerType().url}" in {
-        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithAllOptionValuesModel).get.link shouldBe
-          Some(controllers.nonresident.routes.CustomerTypeController.customerType().url)
-      }
-
-      ".getCurrentIncomeAnswer with an income of 30000.0 will return and id of " +
-        s"${KeystoreKeys.currentIncome}" in {
-        PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryWithAllOptionValuesModel).get.id shouldBe
-          KeystoreKeys.currentIncome
-      }
-
-      ".getCurrentIncomeAnswer with an income of 30000.0 will return a question of " +
-        s"${MessageLookup.NonResident.CurrentIncome.question}" in {
-        PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryWithAllOptionValuesModel).get.question shouldBe
-          MessageLookup.NonResident.CurrentIncome.question
-      }
-
-      ".getCurrentIncomeAnswer with an income of 30000.0 will return data of 30000.0" in {
-        PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryWithAllOptionValuesModel).get.data shouldBe 30000.0
-      }
-
-      ".getCurrentIncomeAnswer with an income of 30000.0 will return a link of " +
-        s"${controllers.nonresident.routes.CurrentIncomeController.currentIncome().url}" in {
-        PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryWithAllOptionValuesModel).get.link shouldBe
-          Some(controllers.nonresident.routes.CurrentIncomeController.currentIncome().url)
-      }
-
-      ".getPersonalAllowanceAnswer with an allowance of 11000.0 will return an id of " +
-        s"${KeystoreKeys.personalAllowance}" in {
-        PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryWithAllOptionValuesModel).get.id shouldBe
-          KeystoreKeys.personalAllowance
-      }
-
-      ".getPersonalAllowanceAnswer with an allowance of 11000.0 will return data of 11000.0 " in {
-        PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryWithAllOptionValuesModel).get.data shouldBe 11000.0
-      }
-
-      ".getPersonalAllowanceAnswer with an allowance of 11000.0 will return a question of " +
-        s"${MessageLookup.NonResident.PersonalAllowance.question}" in {
-        PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryWithAllOptionValuesModel).get.question shouldBe
-          MessageLookup.NonResident.PersonalAllowance.question
-      }
-
-      ".getPersonalAllowanceAnswer with an allowance of 11000.0 will return an id of " +
-        s"${controllers.nonresident.routes.PersonalAllowanceController.personalAllowance().url}" in {
-        PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryWithAllOptionValuesModel).get.link shouldBe
-          Some(controllers.nonresident.routes.PersonalAllowanceController.personalAllowance().url)
-      }
-
-      ".getDisabledTrusteeAnswer with a customer type of individual will return a None" in {
-        PersonalDetailsConstructor.getDisabledTrusteeAnswer(summaryWithAllOptionValuesModel) shouldBe None
-      }
-
-      ".getOtherPropertiesAnswer with a value of Yes and 250000.0 should return Yes" in {
-        PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithAllOptionValuesModel).get.data shouldBe "Yes"
-      }
-
-      ".getOtherPropertiesAnswer with a value of Yes and 250000.0 should return an ID of" +
-        s"${KeystoreKeys.otherProperties} " in {
-        PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithAllOptionValuesModel).get.id shouldBe
-          KeystoreKeys.otherProperties
-      }
-
-      ".getOtherPropertiesAnswers with a value of yes and 250000.0 should return a URL of" +
-        s"${controllers.nonresident.routes.OtherPropertiesController.otherProperties().url}" in {
-        PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithAllOptionValuesModel).get.link shouldBe
-          Some(controllers.nonresident.routes.OtherPropertiesController.otherProperties().url)
-      }
-
-      ".getOtherPropertiesAnswers with a value of yes and 250000.0 should return a question of" +
-        s"${MessageLookup.NonResident.OtherProperties.question} " in {
-        PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithAllOptionValuesModel).get.question shouldBe
-          MessageLookup.NonResident.OtherProperties.question
-      }
-
-      ".getOtherPropertiesAmountAnswer with a value of Yes and 250000.0 should return Yes" in {
-        PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryWithAllOptionValuesModel).get.data shouldBe 250000.0
-      }
-
-      ".getOtherPropertiesAmountAnswer with a value of Yes and 250000.0 should return an ID of" +
-        s"${KeystoreKeys.otherProperties} + Amount" in {
-        PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryWithAllOptionValuesModel).get.id shouldBe
-          KeystoreKeys.otherProperties + "Amount"
-      }
-
-      ".getOtherPropertiesAmountAnswer with a value of yes and 250000.0 should return a URL of" +
-        s"${controllers.nonresident.routes.OtherPropertiesController.otherProperties().url}" in {
-        PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryWithAllOptionValuesModel).get.link shouldBe
-          Some(controllers.nonresident.routes.OtherPropertiesController.otherProperties().url)
-      }
-
-      ".getOtherPropertiesAmountAnswer with a value of yes and 250000.0 should return a question of" +
-        s"${MessageLookup.NonResident.OtherProperties.questionTwo} " in {
-        PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryWithAllOptionValuesModel).get.question shouldBe
-          MessageLookup.NonResident.OtherProperties.questionTwo
-      }
-
-      ".getAnnualExemptAmountAnswer with otherProperties is a yes and taxable gain is above 0 will return None" in {
-        PersonalDetailsConstructor.getAnnualExemptAmountAnswer(summaryWithAllOptionValuesModel) shouldBe None
+      "not return a AnnualExemptAmountDataAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.annualExemptAmount) shouldBe false
       }
     }
 
-    "when using the summaryWithTrusteeValuesModel" should {
+    "using the summaryWithTrusteeValuesModel" should {
 
-      ".getCustomerTypeAnswer with a customer type of trustee will return data of " +
-        s"${CustomerTypeKeys.trustee}" in {
-        PersonalDetailsConstructor.getCustomerTypeAnswer(summaryWithTrusteeValuesModel).get.data shouldBe
-          CustomerTypeKeys.trustee
+      lazy val result = target.getPersonalDetailsSection(summaryWithTrusteeValuesModel)
+
+      "return a Sequence[QuestionAnswerModel[Any]] with size 5" in {
+        result.size shouldBe 5
       }
 
-      ".getCurrentIncomeAnswer with a customer type of trustee will return a None" in {
-        PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryWithTrusteeValuesModel) shouldBe None
+      "return a CustomerType item" in {
+        result.exists(qa => qa.id == KeystoreKeys.customerType) shouldBe true
       }
 
-      ".getPersonalAllowanceAnswer with a customer type of trustee will return a None" in {
-        PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryWithTrusteeValuesModel) shouldBe None
+      "not return a CurrentIncomeAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.currentIncome) shouldBe false
       }
 
-      ".getDisabledTrusteeAnswer with an answer of yes will return an id of " +
-        s"${KeystoreKeys.disabledTrustee}" in {
-        PersonalDetailsConstructor.getDisabledTrusteeAnswer(summaryWithTrusteeValuesModel).get.id shouldBe
-          KeystoreKeys.disabledTrustee
+      "not return a PersonalAllowanceAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.personalAllowance) shouldBe false
       }
 
-      ".getDisabledTrusteeAnswer with an answer of yes will return data of 11000.0 " in {
-        PersonalDetailsConstructor.getDisabledTrusteeAnswer(summaryWithTrusteeValuesModel).get.data shouldBe "Yes"
+      "return a DisabledTrusteeDataAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.disabledTrustee) shouldBe true
       }
 
-      ".getDisabledTrusteeAnswer with an answer of yes will return a question of " +
-        s"${MessageLookup.NonResident.DisabledTrustee.question}" in {
-        PersonalDetailsConstructor.getDisabledTrusteeAnswer(summaryWithTrusteeValuesModel).get.question shouldBe
-          MessageLookup.NonResident.DisabledTrustee.question
+      "return a OtherPropertiesAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.otherProperties) shouldBe true
       }
 
-      ".getDisabledTrusteeAnswer with an answer of yes will return an id of " +
-        s"${controllers.nonresident.routes.DisabledTrusteeController.disabledTrustee().url}" in {
-        PersonalDetailsConstructor.getDisabledTrusteeAnswer(summaryWithTrusteeValuesModel).get.link shouldBe
-          Some(controllers.nonresident.routes.DisabledTrusteeController.disabledTrustee().url)
+      "return a OtherPropertiesAmountAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.otherProperties + "Amount") shouldBe true
       }
 
-      ".getOtherPropertiesAnswer with a customer type of trustee will return data of Yes" in {
-        PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithTrusteeValuesModel).get.data shouldBe "Yes"
-      }
-
-      ".getAnnualExemptAmountAnswer with otherProperties is a yes and and no taxable gain" should {
-
-        s"return a valid id of ${KeystoreKeys.annualExemptAmount}" in {
-          PersonalDetailsConstructor.getAnnualExemptAmountAnswer(summaryWithTrusteeValuesModel).get.id shouldBe
-            KeystoreKeys.annualExemptAmount
-        }
-
-        s"return a valid data of 10000.0" in {
-          PersonalDetailsConstructor.getAnnualExemptAmountAnswer(summaryWithTrusteeValuesModel).get.data shouldBe 10000.0
-        }
-
-        s"return a valid question of ${MessageLookup.NonResident.AnnualExemptAmount.question}" in {
-          PersonalDetailsConstructor.getAnnualExemptAmountAnswer(summaryWithTrusteeValuesModel).get.question shouldBe
-            MessageLookup.NonResident.AnnualExemptAmount.question
-        }
-
-        s"return a valid link of ${controllers.nonresident.routes.AnnualExemptAmountController.annualExemptAmount().url}" in {
-          PersonalDetailsConstructor.getAnnualExemptAmountAnswer(summaryWithTrusteeValuesModel).get.link shouldBe
-            Some(controllers.nonresident.routes.AnnualExemptAmountController.annualExemptAmount().url)
-        }
-
+      "return a AnnualExemptAmountDataAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.annualExemptAmount) shouldBe true
       }
     }
 
-    "when using the summaryNoOptionsIndividualModel" should {
+    "using the summaryNoOptionsIndividualModel" should {
 
-      ".getCurrentIncomeAnswer with an individual but no CurrentIncomeAnswerModel will return None" in {
-        PersonalDetailsConstructor.getCurrentIncomeAnswer(summaryNoOptionsIndividualModel) shouldBe None
+      lazy val result = target.getPersonalDetailsSection(summaryNoOptionsIndividualModel)
+
+      "return a Sequence[QuestionAnswerModel[Any]] with size 5" in {
+        result.size shouldBe 5
       }
 
-      ".getPersonalAllowanceAnswer with an individual but no PersonalAllowanceModel will return None" in {
-        PersonalDetailsConstructor.getPersonalAllowanceAnswer(summaryNoOptionsIndividualModel) shouldBe None
+      "return a CustomerType item" in {
+        result.exists(qa => qa.id == KeystoreKeys.customerType) shouldBe true
       }
 
-      ".getPersonalAllowanceAnswer with an trustee but no DisabledTrusteeModel will return None" in {
-        PersonalDetailsConstructor.getDisabledTrusteeAnswer(summaryNoOptionsTrusteeModel) shouldBe None
+      "not return a CurrentIncomeAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.currentIncome) shouldBe false
       }
 
-      ".getOtherPropertiesAmountAnswer with a OtherPropertiesModel but with no Amount value will return None" in {
-        PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryNoOptionsIndividualModel) shouldBe None
+      "return a PersonalAllowanceAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.personalAllowance) shouldBe true
       }
 
-      ".getAnnualExemptAmountAnswer with a otherProperties but no taxable gain will return None" in {
-        PersonalDetailsConstructor.getAnnualExemptAmountAnswer(summaryNoOptionsIndividualModel) shouldBe None
+      "not return a DisabledTrusteeDataAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.disabledTrustee) shouldBe false
+      }
+
+      "return a OtherPropertiesAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.otherProperties) shouldBe true
+      }
+
+      "return a OtherPropertiesAmountAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.otherProperties + "Amount") shouldBe true
+      }
+
+      "return a AnnualExemptAmountDataAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.annualExemptAmount) shouldBe true
+      }
+    }
+
+    "using the summaryNoOptionsTrusteeModel" should {
+
+      lazy val result = target.getPersonalDetailsSection(summaryWithTrusteeValuesModel)
+
+      "return a Sequence[QuestionAnswerModel[Any]] with size 5" in {
+        result.size shouldBe 5
+      }
+
+      "return a CustomerType item" in {
+        result.exists(qa => qa.id == KeystoreKeys.customerType) shouldBe true
+      }
+
+      "not return a CurrentIncomeAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.currentIncome) shouldBe false
+      }
+
+      "not return a PersonalAllowanceAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.personalAllowance) shouldBe false
+      }
+
+      "return a DisabledTrusteeDataAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.disabledTrustee) shouldBe true
+      }
+
+      "return a OtherPropertiesAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.otherProperties) shouldBe true
+      }
+
+      "return a OtherPropertiesAmountAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.otherProperties + "Amount") shouldBe true
+      }
+
+      "return a AnnualExemptAmountDataAnswer item" in {
+        result.exists(qa => qa.id == KeystoreKeys.annualExemptAmount) shouldBe true
+      }
+    }
+  }
+
+  "calling .getCustomerTypeAnswer" when {
+
+    "a customer type of individual" should {
+
+      lazy val result = target.getCustomerTypeAnswer(summaryWithAllOptionValuesModel)
+
+      "return some details for the CustomerType" in {
+        result should not be None
+      }
+
+      s"return an id of ${KeystoreKeys.customerType}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.customerType
+        }
+      }
+
+      s"return a question of ${messages.CustomerType.question}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.CustomerType.question
+        }
+      }
+
+      s"return data of ${CustomerTypeKeys.individual}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe CustomerTypeKeys.individual
+        }
+      }
+
+      s"return a link of ${routes.CustomerTypeController.customerType().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe routes.CustomerTypeController.customerType().url
+          }
+        }
+      }
+    }
+
+    "a customer type of trustee" should {
+
+      lazy val result = target.getCustomerTypeAnswer(summaryWithTrusteeValuesModel)
+
+      "return some details for the CustomerType" in {
+        result should not be None
+      }
+
+      s"return an id of ${KeystoreKeys.customerType}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.customerType
+        }
+      }
+
+      s"return a question of ${messages.CustomerType.question}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.CustomerType.question
+        }
+      }
+
+      s"return data of ${CustomerTypeKeys.trustee}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe CustomerTypeKeys.trustee
+        }
+      }
+
+      s"return a link of ${routes.CustomerTypeController.customerType().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe routes.CustomerTypeController.customerType().url
+          }
+        }
+      }
+    }
+
+    "a customer type of personal rep" should {
+
+      lazy val result = target.getCustomerTypeAnswer(summaryRepresentativeFlatWithoutAEA)
+
+      "return some details for the CustomerType" in {
+        result should not be None
+      }
+
+      s"return an id of ${KeystoreKeys.customerType}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.customerType
+        }
+      }
+
+      s"return a question of ${messages.CustomerType.question}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.CustomerType.question
+        }
+      }
+
+      s"return data of ${CustomerTypeKeys.personalRep}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe CustomerTypeKeys.personalRep
+        }
+      }
+
+      s"return a link of ${routes.CustomerTypeController.customerType().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe routes.CustomerTypeController.customerType().url
+          }
+        }
+      }
+    }
+  }
+
+  "calling .getCurrentIncomeAnswer" when {
+
+    "a current income greater than 0" should {
+
+      lazy val result = target.getCurrentIncomeAnswer(summaryWithAllOptionValuesModel)
+
+      "return some details for the CurrentIncome" in {
+        result should not be None
+      }
+
+      s"return and id of ${KeystoreKeys.currentIncome}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.currentIncome
+        }
+      }
+
+      s"return a question of ${messages.CurrentIncome.question}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.CurrentIncome.question
+        }
+      }
+
+      "return data of greater than 0" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe summaryWithAllOptionValuesModel.currentIncomeModel.get.currentIncome
+        }
+      }
+
+      s"return a link of ${routes.CurrentIncomeController.currentIncome().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe routes.CurrentIncomeController.currentIncome().url
+          }
+        }
+      }
+    }
+
+    "a current income of 0.0" should {
+
+      lazy val result = target.getCurrentIncomeAnswer(summaryIndividualFlatNoIncomeOtherPropNo)
+
+      "return some details for the CurrentIncome" in {
+        result should not be None
+      }
+
+      s"return and id of ${KeystoreKeys.currentIncome}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.currentIncome
+        }
+      }
+
+      s"return a question of ${messages.CurrentIncome.question}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.CurrentIncome.question
+        }
+      }
+
+      "return data of 0.0" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe summaryIndividualFlatNoIncomeOtherPropNo.currentIncomeModel.get.currentIncome
+        }
+      }
+
+      s"return a link of ${routes.CurrentIncomeController.currentIncome().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe routes.CurrentIncomeController.currentIncome().url
+          }
+        }
+      }
+
+    }
+
+    "no current income is given" should {
+
+      lazy val result = target.getCurrentIncomeAnswer(summaryWithTrusteeValuesModel)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+  }
+
+  "calling .getPersonalAllowanceAnswer" when {
+
+    "a personal allowance of greater than 0 is given" should {
+
+      lazy val result = target.getPersonalAllowanceAnswer(summaryWithAllOptionValuesModel)
+
+      "return some details for the PersonalAllowance" in {
+        result should not be None
+      }
+
+      s"return an id of ${KeystoreKeys.personalAllowance}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.personalAllowance
+        }
+      }
+
+      "return data of greater than 0 " in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe summaryWithAllOptionValuesModel.personalAllowanceModel.get.personalAllowanceAmt
+        }
+      }
+
+      s"return a question of ${messages.PersonalAllowance.question}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.PersonalAllowance.question
+        }
+      }
+
+      s"return a link of ${routes.PersonalAllowanceController.personalAllowance().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe routes.PersonalAllowanceController.personalAllowance().url
+          }
+        }
+      }
+    }
+
+    "a personal allowance of 0 is given" should {
+
+      lazy val result = target.getPersonalAllowanceAnswer(summaryNoOptionsIndividualModel)
+
+      "return some details for the PersonalAllowance" in {
+        result should not be None
+      }
+
+      s"return an id of ${KeystoreKeys.personalAllowance}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.personalAllowance
+        }
+      }
+
+      "return data of 0.0 " in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe summaryNoOptionsIndividualModel.personalAllowanceModel.get.personalAllowanceAmt
+        }
+      }
+
+      s"return a question of ${messages.PersonalAllowance.question}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.PersonalAllowance.question
+        }
+      }
+
+      s"return a link of ${routes.PersonalAllowanceController.personalAllowance().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe routes.PersonalAllowanceController.personalAllowance().url
+          }
+        }
+      }
+    }
+
+    "no personal allowance is given" should {
+
+      lazy val result = target.getPersonalAllowanceAnswer(summaryWithTrusteeValuesModel)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+  }
+
+  "calling .getDisabledTrusteeAnswer" when {
+
+    "no disabled trustee is given" should {
+
+      lazy val result = target.getDisabledTrusteeAnswer(summaryWithAllOptionValuesModel)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "a disabled trustee with Yes is supplied" should {
+
+      lazy val result = target.getDisabledTrusteeAnswer(summaryWithTrusteeValuesModel)
+
+      "return some details for the DisabledTrustee" in {
+        result should not be None
+      }
+
+      s"return an id of ${KeystoreKeys.disabledTrustee}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.disabledTrustee
+        }
+      }
+
+      s"return data of ${messages.yes}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe messages.yes
+        }
+      }
+
+      s"return a question of ${messages.DisabledTrustee.question}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.DisabledTrustee.question
+        }
+      }
+
+      s"return an id of ${routes.DisabledTrusteeController.disabledTrustee().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe routes.DisabledTrusteeController.disabledTrustee().url
+          }
+        }
+      }
+    }
+
+    "a disabled trustee with No is supplied" should {
+
+      lazy val result = target.getDisabledTrusteeAnswer(summaryTrusteeTAWithAEA)
+
+      "return some details for the DisabledTrustee" in {
+        result should not be None
+      }
+
+      s"return an id of ${KeystoreKeys.disabledTrustee}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.disabledTrustee
+        }
+      }
+
+      s"return data of ${messages.no}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe messages.no
+        }
+      }
+
+      s"return a question of ${messages.DisabledTrustee.question}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.DisabledTrustee.question
+        }
+      }
+
+      s"return an id of ${routes.DisabledTrusteeController.disabledTrustee().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe routes.DisabledTrusteeController.disabledTrustee().url
+          }
+        }
+      }
+    }
+  }
+
+  "calling .getOtherPropertiesAnswer" when {
+
+    "a otherPropertiesAnswer of yes is given" should {
+
+      lazy val result = PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithAllOptionValuesModel)
+
+      "return some details for the OtherProperties" in {
+        result should not be None
+      }
+
+      s"return ${messages.yes}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe messages.yes
+        }
+      }
+
+      s"return an ID of ${KeystoreKeys.otherProperties}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.otherProperties
+        }
+      }
+
+      s"return a question of ${messages.OtherProperties.question} " in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.OtherProperties.question
+        }
+      }
+
+      s"return a link of ${routes.OtherPropertiesController.otherProperties().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe routes.OtherPropertiesController.otherProperties().url
+          }
+        }
+      }
+    }
+
+    "a otherPropertiesAnswer of no is given" should {
+
+      lazy val result = PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryRepresentativeFlatWithoutAEA)
+
+      "return some details for the OtherProperties" in {
+        result should not be None
+      }
+
+      s"return data of ${messages.no}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe messages.no
+        }
+      }
+
+      s"return an ID of ${KeystoreKeys.otherProperties}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.otherProperties
+        }
+      }
+
+      s"return a question of ${messages.OtherProperties.question} " in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.OtherProperties.question
+        }
+      }
+
+      s"return a link of ${routes.OtherPropertiesController.otherProperties().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe routes.OtherPropertiesController.otherProperties().url
+          }
+        }
+      }
+    }
+  }
+
+  "calling .getOtherPropertiesAmountAnswer" when {
+
+    "an otherPropertiesAmount of greater than 0 is given" should {
+
+      lazy val result = PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryWithAllOptionValuesModel)
+
+      "return some details for the OtherPropertiesAmount" in {
+        result should not be None
+      }
+
+      "return greater than 0" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe summaryWithAllOptionValuesModel.otherPropertiesModel.otherPropertiesAmt.get
+        }
+      }
+
+      s"return an ID of ${KeystoreKeys.otherProperties} + Amount" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.otherProperties + "Amount"
+        }
+      }
+
+      s"return a question of ${messages.OtherProperties.questionTwo} " in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.OtherProperties.questionTwo
+        }
+      }
+
+      s"return a URL of ${routes.OtherPropertiesController.otherProperties().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe routes.OtherPropertiesController.otherProperties().url
+          }
+        }
+      }
+    }
+
+    "an otherPropertiesAmount of 0.0 is given" should {
+
+      lazy val result = target.getOtherPropertiesAmountAnswer(summaryWithTrusteeValuesModel)
+
+      "return some details for the OtherPropertiesAmount" in {
+        result should not be None
+      }
+
+      "return 0.0" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe summaryWithTrusteeValuesModel.otherPropertiesModel.otherPropertiesAmt.get
+        }
+      }
+
+      s"return an ID of ${KeystoreKeys.otherProperties} + Amount" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.otherProperties + "Amount"
+        }
+      }
+
+      s"return a question of $messages.OtherProperties.questionTwo} " in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.OtherProperties.questionTwo
+        }
+      }
+
+      s"return a URL of ${routes.OtherPropertiesController.otherProperties().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe routes.OtherPropertiesController.otherProperties().url
+          }
+        }
+      }
+
+    }
+
+    "no answer for otherPropertiesAmount is given" should {
+
+      lazy val result = target.getOtherPropertiesAmountAnswer(summaryOtherReliefsFlatYesNoValue)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+  }
+
+  "calling .getAnnualExemptAmountAnswer" when {
+
+    "no AnnualExemptAmount is given" should {
+
+      lazy val result = target.getAnnualExemptAmountAnswer(summaryWithAllOptionValuesModel)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "an AnnualExemptAmount of greater than 0 is given" should {
+
+      lazy val result = target.getAnnualExemptAmountAnswer(summaryWithTrusteeValuesModel)
+
+      "return some details for the AnnualExemptAmount" in {
+        result should not be None
+      }
+
+      s"return a valid id of ${KeystoreKeys.annualExemptAmount}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.annualExemptAmount
+        }
+      }
+
+      "return a valid data that is greater than 0" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe summaryWithTrusteeValuesModel.annualExemptAmountModel.get.annualExemptAmount
+        }
+      }
+
+      s"return a valid question of ${messages.AnnualExemptAmount.question}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.AnnualExemptAmount.question
+        }
+      }
+
+      s"return a valid link of ${routes.AnnualExemptAmountController.annualExemptAmount().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe routes.AnnualExemptAmountController.annualExemptAmount().url
+          }
+        }
+      }
+    }
+
+    "an AnnualExemptAmount of 0.0 is given" should {
+
+      lazy val result = target.getAnnualExemptAmountAnswer(summaryNoOptionsIndividualModel)
+
+      "return some details for the AnnualExemptAmount" in {
+        result should not be None
+      }
+
+      s"return a valid id of ${KeystoreKeys.annualExemptAmount}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe KeystoreKeys.annualExemptAmount
+        }
+      }
+
+      "return a valid data of 0.0" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe summaryNoOptionsIndividualModel.annualExemptAmountModel.get.annualExemptAmount
+        }
+      }
+
+      s"return a valid question of ${messages.AnnualExemptAmount.question}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.AnnualExemptAmount.question
+        }
+      }
+
+      s"return a valid link of ${routes.AnnualExemptAmountController.annualExemptAmount().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link.fold(cancel("link not supplied when expected")) { link =>
+            link shouldBe routes.AnnualExemptAmountController.annualExemptAmount().url
+          }
+        }
       }
 
     }
