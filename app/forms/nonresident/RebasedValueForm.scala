@@ -17,6 +17,7 @@
 package forms.nonresident
 
 import common.Constants
+import common.Transformers._
 import common.Validation._
 import models.nonresident.RebasedValueModel
 import play.api.data.Forms._
@@ -59,7 +60,8 @@ object RebasedValueForm {
       "hasRebasedValue" -> text
         .verifying(Messages("calc.common.error.fieldRequired"), mandatoryCheck)
         .verifying(Messages("calc.common.error.fieldRequired"), yesNoCheck),
-      "rebasedValueAmt" -> optional(bigDecimal)
+      "rebasedValueAmt" -> text
+        .transform[Option[BigDecimal]](stringToOptionalBigDecimal, optionalBigDecimalToString)
     )(RebasedValueModel.apply)(RebasedValueModel.unapply)
       .verifying(Messages("calc.rebasedValue.error.no.value.supplied"),
         rebasedValueForm => verifyAmountSupplied(rebasedValueForm))
