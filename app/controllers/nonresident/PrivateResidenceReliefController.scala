@@ -63,7 +63,7 @@ trait PrivateResidenceReliefController extends FrontendController with ValidActi
       case _ => false
     }
 
-  def displayBeforeQuestion(disposalDate: Option[LocalDate], acquisitionDate: Option[LocalDate], hasRebasedValue: Boolean): Boolean =
+  def displayBeforeQuestion(disposalDate: Option[LocalDate], acquisitionDate: Option[LocalDate]): Boolean =
     (disposalDate, acquisitionDate) match {
       case (Some(dDate), Some(aDate)) if TaxDates.dateAfterOctober(dDate) => true
       case (Some(dDate), Some(aDate)) if !TaxDates.dateAfterStart(aDate) => true
@@ -76,7 +76,7 @@ trait PrivateResidenceReliefController extends FrontendController with ValidActi
     def action(disposalDate: Option[LocalDate], acquisitionDate: Option[LocalDate], hasRebasedValue: Boolean) = {
 
       val showBetweenQuestion = displayBetweenQuestion(disposalDate, acquisitionDate, hasRebasedValue)
-      val showBeforeQuestion = displayBeforeQuestion(disposalDate, acquisitionDate, hasRebasedValue)
+      val showBeforeQuestion = displayBeforeQuestion(disposalDate, acquisitionDate)
       val disposalDateLess18Months = Dates.dateMinusMonths(disposalDate, 18)
 
       calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief).map {
@@ -100,7 +100,7 @@ trait PrivateResidenceReliefController extends FrontendController with ValidActi
     def action(disposalDate: Option[LocalDate], acquisitionDate: Option[LocalDate], hasRebasedValue: Boolean) = {
 
       val showBetweenQuestion = displayBetweenQuestion(disposalDate, acquisitionDate, hasRebasedValue)
-      val showBeforeQuestion = displayBeforeQuestion(disposalDate, acquisitionDate, hasRebasedValue)
+      val showBeforeQuestion = displayBeforeQuestion(disposalDate, acquisitionDate)
       val disposalDateLess18Months = Dates.dateMinusMonths(disposalDate, 18)
 
       privateResidenceReliefForm(showBeforeQuestion, showBetweenQuestion).bindFromRequest.fold(
