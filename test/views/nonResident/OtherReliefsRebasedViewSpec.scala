@@ -41,7 +41,7 @@ class OtherReliefsRebasedViewSpec extends UnitSpec with WithFakeApplication with
           backLink.text shouldEqual messages.back
         }
 
-        "should ahve the class 'back-link'" in {
+        "should have the class 'back-link'" in {
           backLink.attr("class") shouldBe "back-link"
         }
 
