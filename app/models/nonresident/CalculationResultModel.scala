@@ -16,6 +16,7 @@
 
 package models.nonresident
 
+import constructors.nonresident.CalculationDetailsConstructor
 import play.api.libs.json.Json
 
 case class CalculationResultModel(taxOwed: BigDecimal,
@@ -28,6 +29,9 @@ case class CalculationResultModel(taxOwed: BigDecimal,
                                   simplePRR: Option[BigDecimal]) {
 
   val taxableGain: BigDecimal = baseTaxGain + upperTaxGain.getOrElse(0)
+
+  def calculationDetailsRows(answers: SummaryModel): Seq[QuestionAnswerModel[Any]] =
+    CalculationDetailsConstructor.buildSection(this, answers)
 }
 
 object CalculationResultModel {
