@@ -39,27 +39,11 @@ trait OtherReliefsController extends FrontendController with ValidActiveSession 
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.CustomerTypeController.customerType().url
 
-  private def otherReliefsBackUrl(implicit hc: HeaderCarrier): Future[String] = {
-    calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
-      case (Some(AcquisitionDateModel("Yes", day, month, year))) if TaxDates.dateAfterStart(day.get, month.get, year.get) =>
-        Future.successful(routes.AllowableLossesController.allowableLosses().url)
-      case (Some(AcquisitionDateModel("Yes", day, month, year))) => Future.successful(routes.CalculationElectionController.calculationElection().url)
-      case (Some(AcquisitionDateModel("No", _, _, _))) =>
-        calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
-          case Some(RebasedValueModel("Yes", _)) => Future.successful(routes.CalculationElectionController.calculationElection().url)
-          case Some(RebasedValueModel("No", _)) => Future.successful(routes.AllowableLossesController.allowableLosses().url)
-          case _ => Future.successful(missingDataRoute)
-        }
-      case _ => Future.successful(missingDataRoute)
-    }
-  }
-
   val otherReliefs = ValidateSession.async { implicit request =>
 
-    def action(dataResult: Option[CalculationResultModel], backUrl: String) = {
+    def action(dataResult: Option[CalculationResultModel]) = {
       calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
-        case Some(data) if data.otherReliefs.isDefined => Ok(calculation.nonresident.otherReliefs(otherReliefsForm(false).fill(data), dataResult.get))
-        case Some(data) if data.otherReliefs.isEmpty => Ok(calculation.nonresident.otherReliefs(otherReliefsForm(true).fill(data), dataResult.get))
+        case Some(data) => Ok(calculation.nonresident.otherReliefs(otherReliefsForm(false).fill(data), dataResult.get))
         case _ => Ok(calculation.nonresident.otherReliefs(otherReliefsForm(false), dataResult.get))
       }
     }
@@ -67,8 +51,7 @@ trait OtherReliefsController extends FrontendController with ValidActiveSession 
     for {
       construct <- calcConnector.createSummary(hc)
       calculation <- calcConnector.calculateFlat(construct)
-      backUrl <- otherReliefsBackUrl
-      finalResult <- action(calculation, backUrl)
+      finalResult <- action(calculation)
     } yield finalResult
   }
 
@@ -90,13 +73,7 @@ trait OtherReliefsController extends FrontendController with ValidActiveSession 
 
     def successAction(model: OtherReliefsModel, construct: SummaryModel) = {
       calcConnector.saveFormData(KeystoreKeys.otherReliefsFlat, model)
-      (construct.acquisitionDateModel.hasAcquisitionDate, construct.rebasedValueModel.getOrElse(RebasedValueModel("No", None)).hasRebasedValue) match {
-        case ("Yes", _) if TaxDates.dateAfterStart(construct.acquisitionDateModel.day.get,
-          construct.acquisitionDateModel.month.get, construct.acquisitionDateModel.year.get) =>
-          Future.successful(Redirect(routes.SummaryController.summary()))
-        case ("No", "No") => Future.successful(Redirect(routes.SummaryController.summary()))
-        case _ => Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
-      }
+      Future.successful(Redirect(routes.SummaryController.summary()))
     }
 
     def action(construct: SummaryModel) = otherReliefsForm(false).bindFromRequest.fold(
