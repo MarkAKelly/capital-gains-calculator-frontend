@@ -26,9 +26,9 @@ import views.html.calculation.nonresident.summaryReport
 
 class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "In CalculationController calling the .summary action" when {
+  "The report summary view" when {
 
-    "return some HTML that" should {
+    "provided with a valid tax year" should {
 
       lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
 
@@ -36,19 +36,31 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
         sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
       lazy val document = Jsoup.parse(view.body)
 
-      "have the correct sub-heading 'You owe'" in {
-        document.select("h1 span").text shouldEqual nrMessages.Summary.secondaryHeading
-      }
+      "have a heading" which {
+        lazy val heading = document.select("h1")
 
-      "have a result amount currently set to £8,000.00" in {
-        document.select("h1 b").text shouldEqual "£8,000.00"
+        "has a class of 'heading-xlarge'" in {
+          heading.attr("class") shouldBe "heading-xlarge"
+        }
+
+        "has a span with the class 'pre-heading'" in {
+          heading.select("span").attr("class") shouldBe "pre-heading"
+        }
+
+        "has a span with the text 'You owe'" in {
+          heading.select("span").text shouldEqual nrMessages.Summary.secondaryHeading
+        }
+
+        "have a result amount currently set to £8,000.00" in {
+          heading.select("b").text shouldEqual "£8,000.00"
+        }
       }
 
       "have the HMRC logo with the HMRC name" in {
         document.select("div.logo span").text shouldBe "HM Revenue & Customs"
       }
 
-      "does not have a notice summary" in {
+      "not have a notice summary" in {
         document.select("div.notice-wrapper").isEmpty shouldBe true
       }
 
@@ -80,8 +92,8 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
 
         lazy val whatToDoNext = document.select("#whatToDoNext")
 
-        "have a div with the id of 'whatToDoNext'" in {
-          whatToDoNext.select("h2").isEmpty shouldBe false
+        "have a heading with the class 'heading-medium'" in {
+          whatToDoNext.select("h2").attr("class") shouldBe "heading-medium"
         }
 
         "have the text 'You need to tell HMRC about the property'" in {
@@ -92,8 +104,43 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
           whatToDoNext.select("p").text should include (nrMessages.whatToDoNextFurtherDetails)
         }
 
+        "have a link with the class 'external-link'" in {
+          whatToDoNext.select("a").attr("class") shouldBe "external-link"
+        }
+
+        "have a link with a rel of 'external'" in {
+          whatToDoNext.select("a").attr("rel") shouldBe "external"
+        }
+
+        "have a link with a target of '_blank'" in {
+          whatToDoNext.select("a").attr("target") shouldBe "_blank"
+        }
+
         "have the correct link" in {
           whatToDoNext.select("a").text shouldBe "https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-uk-residential-property"
+        }
+      }
+    }
+
+    "provided with an invalid tax year" should {
+      lazy val taxYear = TaxYearModel("2018/19", false, "2016/17")
+      lazy val view = summaryReport(businessScenarioOneModel, calcModelTwoRates, taxYear,
+        sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(view.body)
+
+      "have a notice summary" which {
+        lazy val notice = document.body().select("div.notice-wrapper")
+
+        "has a div with the class 'notice'" in {
+          notice.select("div.notice-wrapper > div").attr("class") shouldBe "notice"
+        }
+
+        "has a message with class of 'bold-small'" in {
+          notice.select("strong").attr("class") shouldBe "bold-small"
+        }
+
+        "has the correct message text" in {
+          notice.select("strong").text() shouldBe nrMessages.Summary.basedOnYear("2016/17")
         }
       }
     }

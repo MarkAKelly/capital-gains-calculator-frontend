@@ -302,6 +302,8 @@ object MessageLookup {
       val lossesCarriedForward = "Loss carried forward"
       val taxYearWarning = "Your total might be less accurate because you didn't sell or give away your property in this tax year"
       val saveAsPdf = "Save as PDF"
+
+      def basedOnYear(year: String): String = s"These figures are based on the tax rates from the $year tax year"
     }
 
     object AllowableLosses {
