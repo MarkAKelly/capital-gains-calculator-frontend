@@ -167,20 +167,6 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
       }
     }
 
-    "submitting an invalid form with 'Yes' and a value of 'fhu39awd8'" should {
-
-      lazy val result = executeTargetWithMockData("Yes", "fhu39awd8")
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      "return HTML that displays the error message " in {
-        document.select("div#hidden span.error-notification").text shouldEqual commonMessages.errorRealNumber
-      }
-    }
-
     "submitting an invalid form with 'Yes' and a value of '-200'" should {
 
       lazy val result = executeTargetWithMockData("Yes", "-200")
