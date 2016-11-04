@@ -19,7 +19,7 @@ package constructors.nonresident
 import common.KeystoreKeys
 import common.nonresident.CustomerTypeKeys
 import models.nonresident.{OtherPropertiesModel, QuestionAnswerModel, SummaryModel}
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi}
 
 import scala.math.BigDecimal
 
@@ -49,9 +49,15 @@ object PersonalDetailsConstructor {
   }
 
   def getCustomerTypeAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[String]] = {
+    val answer = summaryModel.customerTypeModel.customerType match {
+      case CustomerTypeKeys.individual => Messages("calc.customerType.individual")
+      case CustomerTypeKeys.trustee => Messages("calc.customerType.trustee")
+      case CustomerTypeKeys.personalRep => Messages("calc.customerType.personalRep")
+    }
+
     Some(QuestionAnswerModel(
       KeystoreKeys.customerType,
-      summaryModel.customerTypeModel.customerType,
+      answer,
       Messages("calc.customerType.question"),
       Some(controllers.nonresident.routes.CustomerTypeController.customerType().url)
     ))

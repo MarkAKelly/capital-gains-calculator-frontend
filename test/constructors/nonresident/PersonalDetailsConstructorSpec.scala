@@ -297,9 +297,9 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         }
       }
 
-      s"return data of ${CustomerTypeKeys.individual}" in {
+      s"return the correct answer" in {
         result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe CustomerTypeKeys.individual
+          item.data shouldBe messages.CustomerType.individual
         }
       }
 
@@ -332,9 +332,9 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         }
       }
 
-      s"return data of ${CustomerTypeKeys.trustee}" in {
+      s"return the correct answer" in {
         result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe CustomerTypeKeys.trustee
+          item.data shouldBe messages.CustomerType.trustee
         }
       }
 
@@ -367,9 +367,9 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         }
       }
 
-      s"return data of ${CustomerTypeKeys.personalRep}" in {
+      s"return the correct answer" in {
         result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe CustomerTypeKeys.personalRep
+          item.data shouldBe messages.CustomerType.personalRep
         }
       }
 
