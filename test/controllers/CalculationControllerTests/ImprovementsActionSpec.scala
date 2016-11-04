@@ -197,7 +197,11 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
 
     "submitting a valid form with 'Yes' and a value of 12045 for improvementsAmtAfter and a None for improvementsAmt" should {
 
-      val target = setupTarget(None, None)
+      // set up scenario so that both improvements values are displayed
+      val acquisitionData = AcquisitionDateModel("No", None, None, None)
+      val rebasedData = RebasedValueModel("Yes", Some(1))
+
+      val target = setupTarget(None, Some(acquisitionData), Some(rebasedData))
       lazy val request = fakeRequestToPOSTWithSession("isClaimingImprovements" -> "Yes", "improvementsAmt" -> "", "improvementsAmtAfter" -> "12045")
       lazy val result = target.submitImprovements(request)
 

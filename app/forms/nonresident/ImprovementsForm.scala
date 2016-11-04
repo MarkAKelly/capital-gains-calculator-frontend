@@ -31,6 +31,7 @@ object ImprovementsForm {
   private def verifyAmountSupplied(data: ImprovementsModel, showHiddenQuestion: Boolean): Boolean = {
     data.isClaimingImprovements match {
       case "Yes" if showHiddenQuestion => data.improvementsAmt.isDefined || data.improvementsAmtAfter.isDefined
+      case "Yes" => data.improvementsAmt.isDefined
       case _ => true
     }
   }

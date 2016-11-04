@@ -162,7 +162,41 @@ class ImprovementsFormSpec extends UnitSpec with WithFakeApplication{
       }
     }
 
-    "passing a in a invalid map with three decimal places for improvementsAmt" should {
+    "selecting 'Yes' but not supplying any amounts when both improvements are shown" should {
+      val map = Map("isClaimingImprovements" -> messages.yes, "improvementsAmt" -> "", "improvementsAmtAfter" -> "")
+      lazy val form = improvementsForm(true).bind(map)
+
+      "return a form with errors" in {
+        form.hasErrors shouldBe true
+      }
+
+      "return a valid form with one error" in {
+        form.errors.size shouldBe 1
+      }
+
+      s"return an error message of ${messages.Improvements.excessDecimalPlacesError} containing the data" in {
+        form.error("").get.message shouldBe messages.Improvements.noValueSuppliedError
+      }
+    }
+
+    "selecting 'Yes' but not supplying a before amount when only before amount is shown" should {
+      val map = Map("isClaimingImprovements" -> messages.yes, "improvementsAmt" -> "", "improvementsAmtAfter" -> "1.11")
+      lazy val form = improvementsForm(false).bind(map)
+
+      "return a form with errors" in {
+        form.hasErrors shouldBe true
+      }
+
+      "return a valid form with one error" in {
+        form.errors.size shouldBe 1
+      }
+
+      s"return an error message of ${messages.Improvements.excessDecimalPlacesError} containing the data" in {
+        form.error("").get.message shouldBe messages.Improvements.noValueSuppliedError
+      }
+    }
+
+    "passing in an invalid map with three decimal places for improvementsAmt" should {
       val map = Map("isClaimingImprovements" -> messages.yes, "improvementsAmt" -> "3000.051", "improvementsAmtAfter" -> "3000.0")
       lazy val form = improvementsForm(true).bind(map)
 
@@ -179,7 +213,7 @@ class ImprovementsFormSpec extends UnitSpec with WithFakeApplication{
       }
     }
 
-    "passing a in a invalid map with three decimal places for improvementsAmtAfter" should {
+    "passing in an invalid map with three decimal places for improvementsAmtAfter" should {
       val map = Map("isClaimingImprovements" -> messages.yes, "improvementsAmt" -> "3000.51", "improvementsAmtAfter" -> "3000.009")
       lazy val form = improvementsForm(true).bind(map)
 
@@ -196,7 +230,7 @@ class ImprovementsFormSpec extends UnitSpec with WithFakeApplication{
       }
     }
 
-    "passing a in a invalid map with a negative number for improvementsAmt" should {
+    "passing in an invalid map with a negative number for improvementsAmt" should {
       val map = Map("isClaimingImprovements" -> messages.yes, "improvementsAmt" -> "-3000.01", "improvementsAmtAfter" -> "3000.0")
       lazy val form = improvementsForm(true).bind(map)
 
@@ -213,7 +247,7 @@ class ImprovementsFormSpec extends UnitSpec with WithFakeApplication{
       }
     }
 
-    "passing a in a invalid map with a negative number for improvementsAmtAfter" should {
+    "passing in an invalid map with a negative number for improvementsAmtAfter" should {
       val map = Map("isClaimingImprovements" -> messages.yes, "improvementsAmt" -> "3000.01", "improvementsAmtAfter" -> "-3000.0")
       lazy val form = improvementsForm(true).bind(map)
 
