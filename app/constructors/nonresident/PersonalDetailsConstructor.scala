@@ -19,7 +19,7 @@ package constructors.nonresident
 import common.KeystoreKeys
 import common.nonresident.CustomerTypeKeys
 import models.nonresident.{OtherPropertiesModel, QuestionAnswerModel, SummaryModel}
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.Messages
 
 import scala.math.BigDecimal
 
