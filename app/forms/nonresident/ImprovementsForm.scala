@@ -28,41 +28,35 @@ import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object ImprovementsForm {
 
-  def verifyAmountSupplied(data: ImprovementsModel, showHiddenQuestion: Boolean): Boolean = {
+  private def verifyAmountSupplied(data: ImprovementsModel, showHiddenQuestion: Boolean): Boolean = {
     data.isClaimingImprovements match {
       case "Yes" if showHiddenQuestion => data.improvementsAmt.isDefined || data.improvementsAmtAfter.isDefined
       case _ => true
     }
   }
 
-  def verifyPositive(data: ImprovementsModel, showHiddenQuestion: Boolean): Boolean = {
-    (data.isClaimingImprovements match {
-      case "Yes" if showHiddenQuestion => isPositive(data.improvementsAmt.getOrElse(0))
+  private def verifyPositive(data: ImprovementsModel, showHiddenQuestion: Boolean): Boolean = {
+    data.isClaimingImprovements match {
+      case "Yes" if showHiddenQuestion => isPositive(data.improvementsAmt.getOrElse(0)) && isPositive(data.improvementsAmtAfter.getOrElse(0))
+      case "Yes" => isPositive(data.improvementsAmt.getOrElse(0))
       case "No" => true
-    }) && (data.isClaimingImprovements match {
-      case "Yes" if showHiddenQuestion => isPositive(data.improvementsAmtAfter.getOrElse(0))
-      case "No" => true
-    })
+    }
   }
 
-  def verifyTwoDecimalPlaces(data: ImprovementsModel, showHiddenQuestion: Boolean): Boolean = {
-    (data.isClaimingImprovements match {
-      case "Yes" if showHiddenQuestion => decimalPlacesCheck(data.improvementsAmt.getOrElse(0))
+  private def verifyTwoDecimalPlaces(data: ImprovementsModel, showHiddenQuestion: Boolean): Boolean = {
+    data.isClaimingImprovements match {
+      case "Yes" if showHiddenQuestion => decimalPlacesCheck(data.improvementsAmt.getOrElse(0)) && decimalPlacesCheck(data.improvementsAmtAfter.getOrElse(0))
+      case "Yes" => decimalPlacesCheck(data.improvementsAmt.getOrElse(0))
       case "No" => true
-    }) && (data.isClaimingImprovements match {
-      case "Yes" if showHiddenQuestion => decimalPlacesCheck(data.improvementsAmtAfter.getOrElse(0))
-      case "No" => true
-    })
+    }
   }
 
-  def validateMax(data: ImprovementsModel, showHiddenQuestion: Boolean): Boolean = {
-    (data.isClaimingImprovements match {
-      case "Yes" if showHiddenQuestion => maxCheck(data.improvementsAmt.getOrElse(0))
+  private def validateMax(data: ImprovementsModel, showHiddenQuestion: Boolean): Boolean = {
+    data.isClaimingImprovements match {
+      case "Yes" if showHiddenQuestion => maxCheck(data.improvementsAmt.getOrElse(0)) &&  maxCheck(data.improvementsAmtAfter.getOrElse(0))
+      case "Yes" => maxCheck(data.improvementsAmt.getOrElse(0))
       case "No" => true
-    }) && (data.isClaimingImprovements match {
-      case "Yes" if showHiddenQuestion => maxCheck(data.improvementsAmtAfter.getOrElse(0))
-      case "No" => true
-    })
+    }
   }
 
   def improvementsForm(showHiddenQuestion: Boolean): Form[ImprovementsModel] = Form(
@@ -71,9 +65,9 @@ object ImprovementsForm {
       .verifying(Messages("calc.common.error.fieldRequired"), mandatoryCheck)
       .verifying(Messages("calc.common.error.fieldRequired"), yesNoCheck),
       "improvementsAmt" -> optional(text)
-        .transform[Option[BigDecimal]](optionalStringToOptionalBigDecimal, optionalBigDecimalToOptionalString),
+        .transform(optionalStringToOptionalBigDecimal, optionalBigDecimalToOptionalString),
       "improvementsAmtAfter" -> optional(text)
-        .transform[Option[BigDecimal]](optionalStringToOptionalBigDecimal, optionalBigDecimalToOptionalString)
+        .transform(optionalStringToOptionalBigDecimal, optionalBigDecimalToOptionalString)
     )(ImprovementsModel.apply)(ImprovementsModel.unapply)
       .verifying(Messages("calc.improvements.error.no.value.supplied"),
         improvementsForm => verifyAmountSupplied(improvementsForm, showHiddenQuestion))

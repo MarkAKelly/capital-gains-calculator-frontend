@@ -25,6 +25,7 @@ import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
+import play.api.test.Helpers._
 import assets.MessageLookup.NonResident.{Improvements => messages}
 import assets.MessageLookup.{NonResident => commonMessages}
 import controllers.helpers.FakeRequestHelper
@@ -91,8 +92,11 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         lazy val result = target.improvements(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${routes.RebasedCostsController.rebasedCosts().url} " in {
+        s"have a back link that contains ${commonMessages.back}" in {
           document.body.getElementById("back-link").text shouldEqual commonMessages.back
+        }
+
+        s"have a 'Back' link to ${routes.RebasedCostsController.rebasedCosts().url} " in {
           document.body.getElementById("back-link").attr("href") shouldEqual routes.RebasedCostsController.rebasedCosts().url
         }
       }
@@ -109,8 +113,11 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         lazy val result = target.improvements(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to ${routes.RebasedValueController.rebasedValue().url} " in {
+        s"have a back link that contains ${commonMessages.back}" in {
           document.body.getElementById("back-link").text shouldEqual commonMessages.back
+        }
+
+        s"have a 'Back' link to ${routes.RebasedValueController.rebasedValue().url} " in {
           document.body.getElementById("back-link").attr("href") shouldEqual routes.RebasedValueController.rebasedValue().url
         }
       }
@@ -125,8 +132,11 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         lazy val result = target.improvements(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to $missingDataRoute " in {
+        s"have a back link that contains ${commonMessages.back}" in {
           document.body.getElementById("back-link").text shouldEqual commonMessages.back
+        }
+
+        s"have a 'Back' link to $missingDataRoute " in {
           document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
         }
       }
@@ -141,139 +151,85 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         lazy val result = target.improvements(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))
 
-        s"have a 'Back' link to $missingDataRoute " in {
+        s"have a back link that contains ${commonMessages.back}" in {
           document.body.getElementById("back-link").text shouldEqual commonMessages.back
+        }
+
+        s"have a 'Back' link to $missingDataRoute " in {
           document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
         }
       }
     }
-
-    "supplied with a pre-existing model with 'Yes' checked and value already entered" should {
-
-      val target = setupTarget(
-        Some(ImprovementsModel("Yes", Some(10000))),
-        Some(AcquisitionDateModel("Yes", Some(1), Some(1),Some(2017)))
-      )
-
-      lazy val result = target.improvements(fakeRequestWithSession)
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 200" in {
-        status(result) shouldBe 200
-      }
-
-      "return some HTML that" should {
-
-        "be pre populated with Yes box selected and a value of 10000 entered" in {
-          document.getElementById("isClaimingImprovements-yes").attr("checked") shouldEqual "checked"
-          document.getElementById("improvementsAmt").attr("value") shouldEqual "10000"
-        }
-      }
-    }
-
-    "supplied with a pre-existing model with 'No' checked and value already entered" should {
-
-      val target = setupTarget(
-        Some(ImprovementsModel("No", Some(0))),
-        Some(AcquisitionDateModel("Yes", Some(1), Some(1),Some(2017)))
-      )
-
-      lazy val result = target.improvements(fakeRequestWithSession)
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 200" in {
-        status(result) shouldBe 200
-      }
-
-      "return some HTML that" should {
-
-        "be pre populated with No box selected and a value of 0" in {
-          document.getElementById("isClaimingImprovements-no").attr("checked") shouldEqual "checked"
-          document.getElementById("improvementsAmt").attr("value") shouldEqual "0"
-        }
-      }
-    }
-
-    "not supplied with a pre-existing stored model but with an acquisition date and a rebased value" should {
-
-      val target = setupTarget(
-        None,
-        Some(AcquisitionDateModel("Yes", Some(1), Some(1),Some(2000))),
-        Some(RebasedValueModel("Yes", Some(1000)))
-      )
-
-      lazy val result = target.improvements(fakeRequestWithSession)
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "contain a two hidden input boxes for improvements" in {
-        document.body.getElementById("hidden").getElementsByTag("input").first().id() shouldBe "improvementsAmt"
-        document.body.getElementById("hidden").getElementsByTag("input").last().id() shouldBe "improvementsAmtAfter"
-      }
-    }
-
-    "not supplied with a pre-existing stored model and no acquisition date but with a rebased value" should {
-
-      val target = setupTarget(
-        None,
-        Some(AcquisitionDateModel("No", Some(1), Some(1),Some(2000))),
-        Some(RebasedValueModel("Yes", Some(1000)))
-      )
-
-      lazy val result = target.improvements(fakeRequestWithSession)
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "contain a two hidden input boxes for improvements" in {
-        document.body.getElementById("hidden").getElementsByTag("input").first().id() shouldBe "improvementsAmt"
-        document.body.getElementById("hidden").getElementsByTag("input").last().id() shouldBe "improvementsAmtAfter"
-      }
-    }
-
-    "not supplied with a pre-existing stored model and with no rebased value model" should {
-
-      val target = setupTarget(
-        None,
-        Some(AcquisitionDateModel("Yes", Some(1), Some(1),Some(2017)))
-      )
-
-      lazy val result = target.improvements(fakeRequestWithSession)
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "contain a two hidden input boxes for improvements" in {
-        document.body.getElementById("hidden").html should include("input")
-        document.body.getElementById("hidden").getElementsByTag("input").first().id() shouldBe "improvementsAmt"
-        document.body.getElementById("hidden").getElementsByTag("input").last().id() shouldBe "improvementsAmt"
-      }
-    }
   }
+
 
   "In CalculationController calling the .submitImprovements action " when {
 
-    "submitting a valid form with 'Yes' and a value of 12045" should {
+    "submitting a valid form with 'Yes' and a value of 12045 for both fields" should {
 
       val target = setupTarget(None, None)
-      lazy val request = fakeRequestToPOSTWithSession("improvements" -> "Yes", "improvementsAmt" -> "12045", "improvementsAmtAfter" -> "12045")
+      lazy val request = fakeRequestToPOSTWithSession("isClaimingImprovements" -> "Yes", "improvementsAmt" -> "12045", "improvementsAmtAfter" -> "12045")
       lazy val result = target.submitImprovements(request)
 
       "return a 303" in {
         status(result) shouldBe 303
       }
+
+      s"redirect to ${routes.DisposalDateController.disposalDate()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.DisposalDateController.disposalDate()}")
+      }
     }
+
+    "submitting a valid form with 'Yes' and a value of 12045 for improvementsAmt and a None for improvementsAmtAfter" should {
+
+      val target = setupTarget(None, None)
+      lazy val request = fakeRequestToPOSTWithSession("isClaimingImprovements" -> "Yes", "improvementsAmt" -> "12045", "improvementsAmtAfter" -> "")
+      lazy val result = target.submitImprovements(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      s"redirect to ${routes.DisposalDateController.disposalDate()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.DisposalDateController.disposalDate()}")
+      }
+    }
+
+    "submitting a valid form with 'Yes' and a value of 12045 for improvementsAmtAfter and a None for improvementsAmt" should {
+
+      val target = setupTarget(None, None)
+      lazy val request = fakeRequestToPOSTWithSession("isClaimingImprovements" -> "Yes", "improvementsAmt" -> "", "improvementsAmtAfter" -> "12045")
+      lazy val result = target.submitImprovements(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      s"redirect to ${routes.DisposalDateController.disposalDate()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.DisposalDateController.disposalDate()}")
+      }
+    }
+
 
     "submitting a valid form with 'No' and no value" should {
 
       val target = setupTarget(None, None)
-      lazy val request = fakeRequestToPOSTWithSession("improvements" -> "No", "improvementsAmt" -> "")
+      lazy val request = fakeRequestToPOSTWithSession("isClaimingImprovements" -> "No", "improvementsAmt" -> "")
       lazy val result = target.submitImprovements(request)
 
       "return a 303" in {
         status(result) shouldBe 303
+      }
+
+      s"redirect to ${routes.DisposalDateController.disposalDate()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.DisposalDateController.disposalDate()}")
       }
     }
 
     "submitting an invalid form with 'testData123' and a value of 'fhu39awd8'" should {
 
       val target = setupTarget(None, None)
-      lazy val request = fakeRequestToPOSTWithSession("improvements" -> "testData123", "improvementsAmt" -> "fhu39awd8")
+      lazy val request = fakeRequestToPOSTWithSession("isClaimingImprovements" -> "testData123", "improvementsAmt" -> "fhu39awd8")
       lazy val result = target.submitImprovements(request)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -281,8 +237,8 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 400
       }
 
-      s"return HTML that displays the error message ${commonMessages.errorRealNumber}" in {
-        document.select("div#hidden span.error-notification").text shouldEqual commonMessages.errorRealNumber
+      "return to the improvements page" in {
+        document.title shouldBe messages.question
       }
     }
   }

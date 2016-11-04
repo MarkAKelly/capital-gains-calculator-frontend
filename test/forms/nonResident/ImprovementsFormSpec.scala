@@ -34,7 +34,7 @@ class ImprovementsFormSpec extends UnitSpec with WithFakeApplication{
       }
 
       "return a form containing the data" in {
-        form.data shouldBe Map("isClaimingImprovements" -> messages.yes, "improvementsAmt" -> "1000.00", "improvementsAmtAfter" -> "1000.00")
+        form.data shouldBe Map("isClaimingImprovements" -> messages.yes, "improvementsAmt" -> "1000.0", "improvementsAmtAfter" -> "1000.0")
       }
     }
 
@@ -94,6 +94,23 @@ class ImprovementsFormSpec extends UnitSpec with WithFakeApplication{
       }
     }
 
+    "passing in a valid map with a improvementsAmt on the max amount and improvementsAmtAfter is empty" should {
+      val map = Map("isClaimingImprovements" -> messages.yes, "improvementsAmt" -> "1000000000.00", "improvementsAmtAfter" -> "")
+      lazy val form = improvementsForm(true).bind(map)
+
+      "return a form with errors" in {
+        form.hasErrors shouldBe false
+      }
+
+      "return a valid form with no errors" in {
+        form.errors.size shouldBe 0
+      }
+
+      "return a form containing the data" in {
+        form.value.get shouldBe ImprovementsModel("Yes", Some(BigDecimal(1000000000.00)), None)
+      }
+    }
+
     "passing in a valid map with a 'isClaimingImprovements' no and an error in improvementsAmt" should {
       val map = Map("isClaimingImprovements" -> messages.no, "improvementsAmt" -> "testData", "improvementsAmtAfter" -> "3000.0")
       lazy val form = improvementsForm(true).bind(map)
@@ -108,6 +125,23 @@ class ImprovementsFormSpec extends UnitSpec with WithFakeApplication{
 
       "return a form containing the data" in {
         form.value.get shouldBe ImprovementsModel("No", None, Some(3000.0))
+      }
+    }
+
+    "passing in a valid map with a 'isClaimingImprovements' yes actionspec" should {
+      val map = Map("isClaimingImprovements" -> messages.yes, "improvementsAmt" -> "12045", "improvementsAmtAfter" -> "12045")
+      lazy val form = improvementsForm(true).bind(map)
+
+      "return a form with errors" in {
+        form.hasErrors shouldBe false
+      }
+
+      "return a valid form with no errors" in {
+        form.errors.size shouldBe 0
+      }
+
+      "return a form containing the data" in {
+        form.value.get shouldBe ImprovementsModel("Yes", Some(12045.0), Some(12045.0))
       }
     }
 
