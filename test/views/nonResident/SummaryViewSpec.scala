@@ -152,5 +152,16 @@ class SummaryViewSpec extends UnitSpec with WithFakeApplication with MockitoSuga
         }
       }
     }
+
+    "supplied with a disposal date within the valid tax years" should {
+      val summaryModel = TestModels.sumModelFlat
+      val calculationModel = TestModels.calcModelOneRate
+      lazy val view = summary(summaryModel, calculationModel, "back-link")(fakeRequest)
+      lazy val document = Jsoup.parse(view.body)
+
+      "display a tax year warning" in {
+        document.select("div.notice-wrapper").size() shouldBe 1
+      }
+    }
   }
 }
