@@ -49,6 +49,8 @@ object MessageLookup {
     val numericPlayErrorOverride = "Enter a number without commas, for example 10000.00"
     val optionReqError = "Choose one of the options"
 
+    val whatToDoNextTextTwo = "You need to tell HMRC about the property"
+    val whatToDoNextFurtherDetails = "Further details on how to tell HMRC about this property can be found at"
   }
 
   object NonResident extends Common {
@@ -290,6 +292,7 @@ object MessageLookup {
       val saleDetailsTitle = "Sale details"
       val deductionsTitle = "Deductions"
       val whatToDoNextText = "What to do next"
+      val whatToDoNextContent = "You need to"
       val whatToDoNextLink = "tell HMRC about the property"
       val startAgain = "Start again"
       val calculationElection = "What would you like to base your tax on?"
@@ -555,7 +558,6 @@ object MessageLookup {
     val whatNextYouCan = "You can "
     val whatNextLink = "tell us about this loss "
     val whatNextText = "so that you might need to pay less tax in the future."
-    val whatToDoNextTextTwo = "You need to tell HMRC about the property"
     val whatToDoNextTextTwoShares = "You need to tell HMRC about the shares"
     val whatToDoNextNoLossText = "Find out whether you need to"
     val whatToDoNextNoLossLinkProperties = "tell HMRC about the property"

@@ -1,11 +1,6 @@
-@import common.Dates
-@import views.html.helpers._
-@import views.html.helpers.resident._
+@import views.html.helpers.nonresident.summarySectionNoLink
 @import models.nonresident._
 @import models.resident._
-@import models.SummaryDataItemModel
-@import constructors.nonresident.SummaryConstructor
-@import constructors.nonresident.SummaryReportConstructor
 @import controllers.nonresident.routes.{ReportController => routes}
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
@@ -21,7 +16,7 @@
     <title>@Messages("calc.summary.title")</title>
 </head>
 
-<div class="pdf">
+<div class="pdf pdf-non-resident">
     <div class="header-container">
         <h1 class="heading-xlarge">
             <span class="pre-heading">@Messages("calc.summary.secondaryHeading")</span>
@@ -36,66 +31,20 @@
     <div class="notice-wrapper">
         <div class="notice">
             <strong class="bold-small">
-                {Messages("calc.resident.summary.dateWarning", taxYear.calculationTaxYear)}
+                {Messages("calc.base.summary.dateWarning", taxYear.calculationTaxYear)}
             </strong>
         </div>
     </div>
     }
     }
 
-    <section id="calcDetails">
+    @summarySectionNoLink("calculationDetails", Messages("calc.summary.calculation.details.title"), result.calculationDetailsRows(summary), 0)
+    @summarySectionNoLink("personalDetails", Messages("calc.summary.personal.details.title"), summary.personalDetailsRows)
+    @summarySectionNoLink("acquisitionDetails", Messages("calc.summary.purchase.details.title"), summary.purchaseDetailsRows)
+    @summarySectionNoLink("propertyDetails", Messages("calc.summary.property.details.title"), summary.propertyDetailsRows)
+    @summarySectionNoLink("saleDetails", Messages("calc.summary.sale.details.title"), summary.saleDetailsRows)
+    @summarySectionNoLink("deductions", Messages("calc.summary.deductions.title"), summary.deductionsDetailsRows(result))
 
-        <!-- Header -->
-        @summarySectionHeaderHelper(Messages("calc.summary.calculation.details.title"))
-
-        <!-- Body -->
-        @SummaryReportConstructor.calculationDetails(result, summary)
-
-    </section>
-
-    <section id="personalDetails">
-        <!-- Header -->
-        @summarySectionHeaderHelper(Messages("calc.summary.personal.details.title"))
-
-        <!-- Body -->
-        @SummaryReportConstructor.personalDetails(result, summary)
-    </section>
-
-    <section id="acquisitionDetails">
-        <!-- Header -->
-        @summarySectionHeaderHelper(Messages("calc.summary.purchase.details.title"))
-
-        <!-- Body -->
-        @SummaryReportConstructor.acquisitionDetails(result, summary)
-    </section>
-
-    <section id="propertyDetails">
-        <!-- Header -->
-        @summarySectionHeaderHelper(Messages("calc.summary.property.details.title"))
-
-        <!-- Body -->
-        @SummaryReportConstructor.propertyDetails(result, summary)
-    </section>
-
-    <section id="saleDetails">
-        <!-- Header -->
-        @summarySectionHeaderHelper(Messages("calc.summary.sale.details.title"))
-
-        <!-- Body -->
-        @SummaryReportConstructor.saleDetails(result, summary)
-    </section>
-
-    <section id="deductions">
-        <!-- Header -->
-        @summarySectionHeaderHelper(Messages("calc.summary.deductions.title"))
-
-        <!-- Body -->
-        @SummaryReportConstructor.deductions(result, summary)
-    </section>
-
-    @*
-    *  What to do next
-    *@
     <div id="whatToDoNext" class="form-group">
         <h2 class="heading-medium">@Messages("calc.summary.next.fullMessage")</h2>
         <p>@Messages("calc.summary.link.message")</p>
