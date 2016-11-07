@@ -16,62 +16,23 @@
 
 package views.nonResident
 
-import assets.MessageLookup.NonResident
-import assets.MessageLookup.NonResident.AcquisitionValue
-import common.KeystoreKeys
-import connectors.CalculatorConnector
-import constructors.nonresident.CalculationElectionConstructor
-import controllers.nonresident.{AcquisitionValueController, routes}
-import models.nonresident.{AcquisitionDateModel, AcquisitionValueModel}
+import controllers.nonresident.routes
 import org.jsoup.Jsoup
-import org.mockito.Matchers
-import org.scalatest.mock.MockitoSugar
-import play.api.libs.json.Json
-import play.api.test.FakeRequest
-import uk.gov.hmrc.http.cache.client.CacheMap
-import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import org.mockito.Mockito._
-import play.api.test.Helpers._
+import forms.nonresident.AcquisitionValueForm._
 import assets.MessageLookup.{NonResident => commonMessages}
 import assets.MessageLookup.NonResident.{AcquisitionValue => messages}
-import scala.concurrent.Future
+import controllers.helpers.FakeRequestHelper
+import views.html.calculation.nonresident.acquisitionValue
 
-/**
-  * Created by emma on 31/10/16.
-  */
-class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
-  def setupTarget(
-                   getData: Option[AcquisitionValueModel],
-                   postData: Option[AcquisitionValueModel],
-                   acquisitionDateModel: Option[AcquisitionDateModel] = None): AcquisitionValueController = {
+class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper{
 
-    val mockCalcConnector = mock[CalculatorConnector]
-    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
-    when(mockCalcConnector.fetchAndGetFormData[AcquisitionValueModel](Matchers.eq(KeystoreKeys.acquisitionValue))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(getData))
+  "the Acquisition Value View" should {
 
-    when(mockCalcConnector.fetchAndGetFormData[AcquisitionDateModel](Matchers.eq(KeystoreKeys.acquisitionDate))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(acquisitionDateModel))
-
-    new AcquisitionValueController {
-      override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
-    }
-  }
-  "return some HTML that" should {
-
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/acquisition-value").withSession(SessionKeys.sessionId -> "12345")
-    lazy val target = setupTarget(None, None)
-    lazy val result = target.acquisitionValue(fakeRequest)
-    lazy val document = Jsoup.parse(bodyOf(result))
-
-    "contain some text and use the character set utf-8" in {
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
-    }
+    lazy val view = acquisitionValue(acquisitionValueForm)(fakeRequest)
+    lazy val document = Jsoup.parse(view.body)
 
     "have the title 'How much did you pay for the property?'" in {
       document.title shouldEqual messages.question
@@ -81,9 +42,15 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Mo
       document.body.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
     }
 
-    s"have a 'Back' link to ${routes.AcquisitionDateController.acquisitionDate()}" in {
-      document.body.getElementById("back-link").text shouldEqual commonMessages.back
-      document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionDateController.acquisitionDate().toString()
+    "have a 'Back link' that" should{
+
+      s"have the text of ${commonMessages.back}" in {
+        document.body.getElementById("back-link").text shouldEqual commonMessages.back
+      }
+
+      s"have a link to ${routes.AcquisitionDateController.acquisitionDate()}" in {
+       document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionDateController.acquisitionDate().toString()
+      }
     }
 
     "have the question 'How much did you pay for the property?'" in {
@@ -94,26 +61,44 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Mo
       document.select("p#bullet-list-title").text shouldEqual messages.bulletTitle
     }
 
-    "Have the bullet content" in {
+    s"Have the bullet content of ${messages.bulletOne}" in {
       document.select("ul li").text should include(messages.bulletOne)
+    }
+
+    s"Have the bullet content of ${messages.bulletTwo}" in {
       document.select("ul li").text should include(messages.bulletTwo)
+    }
+
+    s"Have the bullet content of ${messages.bulletThree}" in {
       document.select("ul li").text should include(messages.bulletThree)
+    }
+
+    s"Have the bullet content of ${messages.bulletFour}" in {
       document.select("ul li").text should include(messages.bulletFour)
+    }
+
+    s"Have the bullet content of ${messages.bulletFive}" in {
       document.select("ul li").text should include(messages.bulletFive)
     }
-    "have a link with a hidden external link field" in {
+
+    s"have a link with a hidden external link field that contains the text of ${messages.bulletLink}" in {
       document.select("ul li a#lossesLink").text should include(messages.bulletLink)
+    }
+
+    s"have a link that contains the text of ${commonMessages.externalLink}" in {
       document.select("span#opensInANewTab").text shouldEqual commonMessages.externalLink
     }
+
     "display an input box for the Acquisition Value" in {
       document.body.getElementById("acquisitionValue").tagName shouldEqual "input"
     }
+
     "have no value auto-filled into the input box" in {
       document.getElementById("acquisitionValue").attr("value") shouldEqual ""
     }
+
     "display a 'Continue' button " in {
       document.body.getElementById("continue-button").text shouldEqual commonMessages.continue
     }
-
   }
 }

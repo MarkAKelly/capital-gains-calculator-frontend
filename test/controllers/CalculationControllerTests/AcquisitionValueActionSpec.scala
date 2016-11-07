@@ -16,30 +16,22 @@
 
 package controllers.CalculationControllerTests
 
-import common.{Constants, KeystoreKeys}
+import common.KeystoreKeys
 import connectors.CalculatorConnector
-import play.api.libs.json.Json
-import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.CalculationElectionConstructor
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.mvc.AnyContentAsFormUrlEncoded
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
-import assets.MessageLookup.{NonResident => commonMessages}
 import assets.MessageLookup.NonResident.{AcquisitionValue => messages}
-import config.AppConfig
 import controllers.helpers.FakeRequestHelper
 
 import scala.concurrent.Future
 import controllers.nonresident.{AcquisitionValueController, routes}
 import models.nonresident.{AcquisitionDateModel, AcquisitionValueModel}
-import play.api.mvc.Result
-import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
@@ -76,15 +68,37 @@ class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with 
       "return a 200" in {
         status(result) shouldBe 200
       }
+
+      s"have the title of ${messages.question}" in {
+        document.title shouldEqual messages.question
+      }
     }
 
     "supplied with a pre-existing stored model" should {
 
       val target = setupTarget(Some(AcquisitionValueModel(1000)), None)
       lazy val result = target.acquisitionValue(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
         status(result) shouldBe 200
+      }
+
+      s"have the title of ${messages.question}" in {
+        document.title shouldEqual messages.question
+      }
+    }
+
+    "not supplied with a valid session" should {
+      val target = setupTarget(None)
+      lazy val result = target.acquisitionValue(fakeRequest)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the session timeout page" in {
+        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
       }
     }
   }
@@ -150,39 +164,6 @@ class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with 
 
       s"fail with message ${messages.errorNegative}" in {
         document.getElementsByClass("error-notification").text should include (messages.errorNegative)
-      }
-    }
-
-    "submitting an invalid form with value 1.111" should {
-
-      lazy val request = fakeRequestToPOSTWithSession(("acquisitionValue", "1.111"))
-      lazy val target = setupTarget(None, None)
-      lazy val result = target.submitAcquisitionValue(request)
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"fail with message ${messages.errorDecimalPlaces}" in {
-        document.getElementsByClass("error-notification").text should include (messages.errorDecimalPlaces)
-      }
-    }
-
-    "submitting a value which exceeds the maximum numeric" should {
-
-      lazy val request = fakeRequestToPOSTWithSession(("acquisitionValue", "1000000000.1"))
-      lazy val target = setupTarget(None, None)
-      lazy val result = target.submitAcquisitionValue(request)
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"fail with message ${messages.errorMaximum(MoneyPounds(Constants.maxNumeric, 0).quantity)}" in {
-        document.getElementsByClass("error-notification").text should
-          include (messages.errorMaximum(MoneyPounds(Constants.maxNumeric, 0).quantity))
       }
     }
   }
