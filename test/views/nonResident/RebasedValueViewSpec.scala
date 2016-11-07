@@ -27,7 +27,7 @@ import views.html.calculation.nonresident.rebasedValue
 
 class RebasedValueViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "The rebased value view" should {
+  "The rebased value view" when {
 
     "not supplied with a pre-existing stored model and no acquisition date" should {
 

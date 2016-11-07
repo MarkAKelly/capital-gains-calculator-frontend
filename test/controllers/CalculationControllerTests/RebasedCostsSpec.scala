@@ -16,41 +16,32 @@
 
 package controllers.CalculationControllerTests
 
-import common.{Constants, KeystoreKeys}
+import assets.MessageLookup.NonResident.{RebasedCosts => messages}
+import common.KeystoreKeys
 import connectors.CalculatorConnector
-import play.api.libs.json.Json
-import uk.gov.hmrc.http.cache.client.CacheMap
+import controllers.helpers.FakeRequestHelper
+import controllers.nonresident.RebasedCostsController
+import models.nonresident.RebasedCostsModel
+import org.jsoup._
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.mvc.AnyContentAsFormUrlEncoded
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import org.jsoup._
 import org.scalatest.mock.MockitoSugar
-import assets.MessageLookup.{NonResident => commonMessages}
-import assets.MessageLookup.NonResident.{RebasedCosts => messages}
-import scala.concurrent.Future
-import controllers.nonresident.{RebasedCostsController, routes}
-import models.nonresident.RebasedCostsModel
-import play.api.mvc.Result
-import uk.gov.hmrc.play.views.helpers.MoneyPounds
+import play.api.test.Helpers._
+import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+import scala.concurrent.Future
+
+class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget(getData: Option[RebasedCostsModel], postData: Option[RebasedCostsModel]): RebasedCostsController = {
+  def setupTarget(getData: Option[RebasedCostsModel]): RebasedCostsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
     when(mockCalcConnector.fetchAndGetFormData[RebasedCostsModel](Matchers.eq(KeystoreKeys.rebasedCosts))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
-
-    lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(RebasedCostsModel("No", None)))))
-    when(mockCalcConnector.saveFormData[RebasedCostsModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(data))
 
     new RebasedCostsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -60,181 +51,77 @@ class RebasedCostsSpec extends UnitSpec with WithFakeApplication with MockitoSug
   // GET Tests
   "Calling the CalculationController.rebasedCosts" when {
 
-    lazy val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/rebased-costs").withSession(SessionKeys.sessionId -> "12345")
-
     "not supplied with a pre-existing stored model" should {
-
-      val target = setupTarget(None, None)
-      lazy val result = target.rebasedCosts(fakeRequest)
+      val target = setupTarget(None)
+      lazy val result = target.rebasedCosts(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
         status(result) shouldBe 200
       }
 
-      "when no previous value is supplied return some HTML that" should {
+      "load the rebased costs page" in {
+        document.title() shouldBe messages.question
+      }
 
-        "contain some text and use the character set utf-8" in{
-          contentType(result) shouldBe Some("text/html")
-          charset(result) shouldBe Some("utf-8")
+      "a previous value is supplied with a pre-existing stored model" should {
+        val target = setupTarget(Some(RebasedCostsModel("Yes", Some(1500))))
+        lazy val result = target.rebasedCosts(fakeRequestWithSession)
+        lazy val document = Jsoup.parse(bodyOf(result))
+
+        "return a 200" in {
+          status(result) shouldBe 200
         }
 
-        s"have the title '${commonMessages.pageHeading}" in {
-          document.getElementsByTag("h1").text shouldBe commonMessages.pageHeading
-        }
-
-        s"have the question '${messages.question}" in {
-          document.getElementsByTag("legend").text shouldBe messages.question
-        }
-
-        "display the correct wording for radio option `yes`" in {
-          document.body.getElementById("hasRebasedCosts-yes").parent.text shouldEqual commonMessages.yes
-        }
-
-        "display the correct wording for radio option `no`" in {
-          document.body.getElementById("hasRebasedCosts-no").parent.text shouldEqual commonMessages.no
-        }
-
-        "contain a hidden component with an input box" in {
-          document.body.getElementById("hidden").html should include ("input")
-        }
-
-        s"have a 'Back' link to ${routes.RebasedValueController.rebasedValue()}" in {
-          document.body.getElementById("back-link").text shouldEqual commonMessages.back
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.RebasedValueController.rebasedValue().toString()
-        }
-
-        "have a continue button" in {
-          document.getElementById("continue-button").tagName() shouldBe "button"
-        }
-
-        "have no auto selected option and an empty input field" in {
-          document.getElementById("hasRebasedCosts-yes").parent.classNames().contains("selected") shouldBe false
-          document.getElementById("hasRebasedCosts-no").parent.classNames().contains("selected") shouldBe false
-          document.getElementById("rebasedCosts").attr("value") shouldBe ""
+        "load the rebased costs page" in {
+          document.title() shouldBe messages.question
         }
       }
 
-      "when a previous value is supplied return some HTML that" should {
-
-        val target = setupTarget(Some(RebasedCostsModel("Yes", Some(1500))), None)
+      "a request is made without a session" should {
+        val target = setupTarget(Some(RebasedCostsModel("Yes", Some(1500))))
         lazy val result = target.rebasedCosts(fakeRequest)
-        lazy val document = Jsoup.parse(bodyOf(result))
 
-        "have an auto selected option and a filled input field" in {
-          document.getElementById("hasRebasedCosts-yes").parent.classNames().contains("selected") shouldBe true
-          document.getElementById("rebasedCosts").attr("value") shouldBe "1500"
+        "return a 303" in {
+          status(result) shouldBe 303
+        }
+
+        "redirect to the session timeout page" in {
+          redirectLocation(result).get should include("/calculate-your-capital-gains/session-timeout")
         }
       }
     }
   }
 
   // POST Tests
-  "In CalculationController calling the .submitRebasedCosts action" when {
+  "Calling the .submitRebasedCosts action" when {
 
-    def buildRequest(body: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest("POST",
-      "/calculate-your-capital-gains/non-resident/rebased-costs")
-      .withSession(SessionKeys.sessionId -> "12345")
-      .withFormUrlEncodedBody(body: _*)
-
-    def executeTargetWithMockData(selection: String, amount: String): Future[Result] = {
-
-      lazy val fakeRequest = buildRequest(("hasRebasedCosts", selection), ("rebasedCosts", amount))
-
-      val numeric = "(0-9*)".r
-      val mockData = amount match {
-        case numeric(money) => new RebasedCostsModel(selection, Some(BigDecimal(money)))
-        case _ => new RebasedCostsModel(selection, None)
-      }
-
-      val target = setupTarget(None, Some(mockData))
-      target.submitRebasedCosts(fakeRequest)
-    }
-
-    "submitting a valid form with no costs" should {
-      lazy val result = executeTargetWithMockData("No", "")
+    "a valid form is submitted" should {
+      val target = setupTarget(None)
+      lazy val request = fakeRequestToPOSTWithSession("hasRebasedCosts" -> "Yes", "rebasedCosts" -> "1000")
+      lazy val result = target.submitRebasedCosts(request)
 
       "return a 303" in {
         status(result) shouldBe 303
       }
-    }
 
-    "submitting a valid form with costs" should {
-      lazy val result = executeTargetWithMockData("Yes", "1000")
-
-      "return a 303" in {
-        status(result) shouldBe 303
+      "redirect to the improvements page" in {
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.ImprovementsController.improvements().url
       }
     }
 
-    "submitting an invalid form with 'Yes' and a value of 'fhu39awd8'" should {
-
-      lazy val result = executeTargetWithMockData("Yes", "fhu39awd8")
+    "an invalid form is submitted" should {
+      val target = setupTarget(None)
+      lazy val request = fakeRequestToPOSTWithSession("hasRebasedCosts" -> "Yes", "rebasedCosts" -> "")
+      lazy val result = target.submitRebasedCosts(request)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 400" in {
         status(result) shouldBe 400
       }
 
-      "return HTML that displays the error message " in {
-        document.select("div#hidden span.error-notification").text shouldEqual commonMessages.errorRealNumber
-      }
-    }
-
-    "submitting an invalid form with 'Yes' and a value of '-200'" should {
-
-      lazy val result = executeTargetWithMockData("Yes", "-200")
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      "return HTML that displays the error message " in {
-        document.select("div#hidden span.error-notification").text shouldEqual messages.errorNegative
-      }
-    }
-
-    "submitting an invalid form with 'Yes' and an empty value" should {
-
-      lazy val result = executeTargetWithMockData("Yes", "")
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      "return HTML that displays the error message " in {
-        document.select("div#hidden span.error-notification").text shouldEqual messages.errorNoValue
-      }
-    }
-
-    "submitting an invalid form with 'Yes' and a value of 1.111" should {
-
-      lazy val result = executeTargetWithMockData("Yes", "1.111")
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      "return HTML that displays the error message " in {
-        document.select("div#hidden span.error-notification").text shouldEqual messages.errorDecimalPlaces
-      }
-    }
-
-    "submitting a value which exceeds the maximum numeric" should {
-
-      lazy val result = executeTargetWithMockData("Yes", (Constants.maxNumeric + 0.01).toString)
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      s"fail with message ${messages.errorMaximum(MoneyPounds(Constants.maxNumeric, 0).quantity)}" in {
-        document.getElementsByClass("error-notification").text should
-          include (messages.errorMaximum(MoneyPounds(Constants.maxNumeric, 0).quantity))
+      "return to the rebased costs page" in {
+        document.title() shouldBe messages.question
       }
     }
   }
