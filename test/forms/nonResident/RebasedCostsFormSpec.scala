@@ -118,7 +118,7 @@ class RebasedCostsFormSpec extends UnitSpec with WithFakeApplication {
     "passing in an invalid map with 'Yes' and a non-numeric amount" should {
       val map = Map(
         "hasRebasedCosts" -> "Yes",
-        "rebasedCosts" -> "")
+        "rebasedCosts" -> "a")
       lazy val form = rebasedCostsForm.bind(map)
 
       "return an invalid form with one error" in {

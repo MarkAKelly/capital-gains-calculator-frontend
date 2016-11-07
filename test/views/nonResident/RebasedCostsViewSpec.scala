@@ -46,7 +46,7 @@ class RebasedCostsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
           backLink.attr("class") shouldBe "back-link"
         }
 
-        s"has a route to 'disposal-costs'" in {
+        s"has a route to 'rebased-value'" in {
           backLink.attr("href") shouldBe controllers.nonresident.routes.RebasedValueController.rebasedValue().url
         }
       }
