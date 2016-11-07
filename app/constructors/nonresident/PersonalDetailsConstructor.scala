@@ -49,9 +49,15 @@ object PersonalDetailsConstructor {
   }
 
   def getCustomerTypeAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[String]] = {
+    val answer = summaryModel.customerTypeModel.customerType match {
+      case CustomerTypeKeys.individual => Messages("calc.customerType.individual")
+      case CustomerTypeKeys.trustee => Messages("calc.customerType.trustee")
+      case CustomerTypeKeys.personalRep => Messages("calc.customerType.personalRep")
+    }
+
     Some(QuestionAnswerModel(
       KeystoreKeys.customerType,
-      summaryModel.customerTypeModel.customerType,
+      answer,
       Messages("calc.customerType.question"),
       Some(controllers.nonresident.routes.CustomerTypeController.customerType().url)
     ))
