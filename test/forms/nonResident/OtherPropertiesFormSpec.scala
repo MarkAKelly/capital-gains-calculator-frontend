@@ -48,7 +48,7 @@ class OtherPropertiesFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       "return a form containing the data" in {
-        form.data shouldBe Map("otherProperties" -> "No", "otherPropertiesAmt" -> "")
+        form.data shouldBe Map("otherProperties" -> "No")
       }
     }
 
@@ -62,6 +62,19 @@ class OtherPropertiesFormSpec extends UnitSpec with WithFakeApplication {
 
       "return a form containing the data" in {
         form.value.get shouldBe OtherPropertiesModel("Yes", Some(BigDecimal(1500)))
+      }
+    }
+
+    "passing in a valid map with an answer without extra input" should {
+      lazy val map = Map("otherProperties" -> "Yes")
+      lazy val form = otherPropertiesForm(false).bind(map)
+
+      "return a valid form with no errors" in {
+        form.errors.size shouldBe 0
+      }
+
+      "return a form containing the data" in {
+        form.value.get shouldBe OtherPropertiesModel("Yes", None)
       }
     }
 
