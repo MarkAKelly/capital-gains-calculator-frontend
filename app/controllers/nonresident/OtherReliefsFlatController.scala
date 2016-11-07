@@ -38,7 +38,7 @@ trait OtherReliefsFlatController extends FrontendController with ValidActiveSess
   override val homeLink = controllers.nonresident.routes.CustomerTypeController.customerType().url
   val calcConnector: CalculatorConnector
 
-  val otherReliefsFlat: Action[AnyContent] = Action.async { implicit request =>
+  val otherReliefsFlat: Action[AnyContent] = ValidateSession.async { implicit request =>
 
     def action(dataResult: Option[CalculationResultModel]) = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
       case Some(data) if data.otherReliefs.isDefined => Ok(calculation.nonresident.otherReliefsFlat(otherReliefsForm(true).fill(data),
@@ -53,7 +53,7 @@ trait OtherReliefsFlatController extends FrontendController with ValidActiveSess
     } yield finalResult
   }
 
-  val submitOtherReliefsFlat = Action.async { implicit request =>
+  val submitOtherReliefsFlat = ValidateSession.async { implicit request =>
 
     def errorAction(form: Form[OtherReliefsModel]) = {
       for {

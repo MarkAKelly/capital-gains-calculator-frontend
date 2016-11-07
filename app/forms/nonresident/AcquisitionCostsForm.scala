@@ -17,6 +17,7 @@
 package forms.nonresident
 
 import common.Constants
+import common.Transformers._
 import common.Validation._
 import models.nonresident.AcquisitionCostsModel
 import play.api.data.Forms._
@@ -28,7 +29,10 @@ object AcquisitionCostsForm {
 
   val acquisitionCostsForm = Form(
     mapping(
-      "acquisitionCosts" -> bigDecimal
+      "acquisitionCosts" -> text
+        .verifying(Messages("error.real"), mandatoryCheck)
+        .verifying(Messages("error.real"), bigDecimalCheck)
+        .transform(stringToBigDecimal, bigDecimalToString)
         .verifying(Messages("calc.acquisitionCosts.errorNegative"), isPositive)
         .verifying(Messages("calc.acquisitionCosts.errorDecimalPlaces"), decimalPlacesCheck)
         .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " +

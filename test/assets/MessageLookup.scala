@@ -40,12 +40,14 @@ object MessageLookup {
     val mandatoryAmount = "Enter an amount"
     val minimumAmount = "Enter an amount that's £0 or more"
     val maximumAmount = "Enter an amount that's £1,000,000,000 or less"
+    val errorRequired = "This field is required"
 
     def maximumLimit(limit: String): String = s"Enter an amount that's £$limit or less"
 
     val invalidAmount = "Enter an amount in the correct format e.g. 10000.00"
     val invalidAmountNoDecimal = "Enter an amount in the correct format e.g. 10000"
     val numericPlayErrorOverride = "Enter a number without commas, for example 10000.00"
+    val optionReqError = "Choose one of the options"
 
     val whatToDoNextTextTwo = "You need to tell HMRC about the property"
     val whatToDoNextFurtherDetails = "Further details on how to tell HMRC about this property can be found at"
@@ -124,6 +126,8 @@ object MessageLookup {
       val helpText = "You can give an estimate if this was in the current tax year"
       val errorNegative = "Enter a positive number for your current income"
       val errorDecimalPlace = "Your current income has too many numbers after the decimal point"
+
+      def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
     object CustomerType {
@@ -131,6 +135,7 @@ object MessageLookup {
       val individual = "I owned it"
       val trustee = "I was a trustee"
       val personalRep = "I was the executor of an estate"
+      val errorInvalid = "Invalid customer type"
     }
 
     object DisabledTrustee {
@@ -159,12 +164,14 @@ object MessageLookup {
       val question = "How much did you sell or give away the property for?"
       val errorNegativeNumber = "Enter a positive number for the amount you sold the property for"
       val errorDecimalPlaces = "The amount you sold the property for has too many numbers after the decimal point"
+      val errorNegative = "Enter a positive number for the amount you sold the property for"
       val bulletIntro = "Put the market value of the property instead if you:"
       val bulletOne = "gave it away as a gift"
       val bulletTwo = "sold it to a relative, business partner or"
       val bulletTwoLink = "someone else you're connected to"
       val bulletThree = "sold it for less than it's worth to help the buyer"
 
+      def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
     object Improvements {
@@ -178,6 +185,8 @@ object MessageLookup {
       val noValueSuppliedError = "Enter the value of your improvements"
       val negativeValueError = "Enter a positive number for the cost of your improvements"
       val excessDecimalPlacesError = "The cost of your improvements has too many numbers after the decimal point"
+
+      def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
 
     }
 
@@ -209,7 +218,11 @@ object MessageLookup {
       val inputQuestion = "How much extra tax relief are you claiming?"
       val totalGain = "Total gain"
       val taxableGain = "Taxable gain"
+      val lossCarriedForward = "Loss carried forward"
       val addRelief = "Add relief"
+      val updateRelief = "Update relief"
+      val errorDecimal = "There are too many numbers after the decimal point in your other reliefs"
+      val errorNegative = "Enter a positive number for your other reliefs"
 
       def totalLoss(value: String): String = s"Total loss $value"
 
@@ -223,7 +236,7 @@ object MessageLookup {
       val errorNegative = "Enter a positive number for your Personal Allowance"
       val errorDecimalPlaces = "Enter a whole number for your Personal Allowance"
       val errorMaxLimit = "Enter a Personal Allowance that's £"
-      val errorMaxLimitEnd = "or Less"
+      val errorMaxLimitEnd = "or less"
     }
 
     object PrivateResidenceRelief {
@@ -259,6 +272,8 @@ object MessageLookup {
       val errorNoValue = "Enter a value for your property on 5 April 2015"
       val errorNegative = "Enter a positive value for your property on 5 April 2015"
       val errorDecimalPlaces = "The value for your property on 5 April 2015 has too many numbers after the decimal point"
+      val helpHiddenContentOne = "When you've answered the questions you'll have a choice about how we work out your total."
+      val helpHiddenContentTwo = "This value lets us calculate your tax in different ways, giving you more options."
 
       def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
@@ -289,6 +304,8 @@ object MessageLookup {
       val lossesCarriedForward = "Loss carried forward"
       val taxYearWarning = "Your total might be less accurate because you didn't sell or give away your property in this tax year"
       val saveAsPdf = "Save as PDF"
+
+      def basedOnYear(year: String): String = s"These figures are based on the tax rates from the $year tax year"
     }
 
     object AllowableLosses {

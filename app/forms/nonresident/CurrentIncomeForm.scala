@@ -17,8 +17,8 @@
 package forms.nonresident
 
 import common.Constants
+import common.Transformers._
 import common.Validation._
-import models._
 import models.nonresident.CurrentIncomeModel
 import play.api.data.Forms._
 import play.api.data._
@@ -29,7 +29,10 @@ object CurrentIncomeForm {
 
   val currentIncomeForm = Form(
     mapping(
-      "currentIncome" -> bigDecimal
+      "currentIncome" -> text
+        .verifying(Messages("error.real"), mandatoryCheck)
+        .verifying(Messages("error.real"), bigDecimalCheck)
+        .transform(stringToBigDecimal, bigDecimalToString)
         .verifying(Messages("calc.currentIncome.errorNegative"), isPositive)
         .verifying(Messages("calc.currentIncome.errorDecimalPlaces"), decimalPlacesCheck)
         .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " +

@@ -23,6 +23,7 @@ import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
+import common.Transformers._
 
 object RebasedCostsForm {
 
@@ -56,8 +57,11 @@ object RebasedCostsForm {
 
   val rebasedCostsForm = Form(
     mapping(
-      "hasRebasedCosts" -> nonEmptyText,
-      "rebasedCosts" -> optional(bigDecimal)
+      "hasRebasedCosts" -> text
+        .verifying(Messages("calc.common.error.fieldRequired"), mandatoryCheck)
+        .verifying(Messages("calc.common.error.fieldRequired"), yesNoCheck),
+      "rebasedCosts" -> text
+        .transform(stringToOptionalBigDecimal, optionalBigDecimalToString)
     )(RebasedCostsModel.apply)(RebasedCostsModel.unapply)
       .verifying(Messages("calc.rebasedCosts.error.no.value.supplied"),
         rebasedCostsForm => verifyAmountSupplied(RebasedCostsModel(rebasedCostsForm.hasRebasedCosts, rebasedCostsForm.rebasedCosts)))

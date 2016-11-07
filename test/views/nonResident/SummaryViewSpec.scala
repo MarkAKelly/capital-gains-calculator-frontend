@@ -16,134 +16,154 @@
 
 package views.nonResident
 
-import common.TestModels._
+import assets.MessageLookup.{NonResident => messages}
+import common.TestModels
 import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
+import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.nonresident.summary
-import assets.MessageLookup.{NonResident => messages}
 
 class SummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "When called the summary view" should {
-    lazy val view = summary(businessScenarioOneModel, calcModelTwoRates, "back-link")(fakeRequestWithSession)
-    lazy val doc = Jsoup.parse(view.body)
+  "Summary view" when {
 
-    "have a back link" which {
-      lazy val backLink = doc.select("#back-link")
+    "supplied with a disposal date within the valid tax years" should {
+      val summaryModel = TestModels.businessScenarioOneModel
+      val calculationModel = TestModels.calcModelOneRate
+      lazy val view = summary(summaryModel, calculationModel, "back-link")(fakeRequest)
+      lazy val document = Jsoup.parse(view.body)
 
-      "has the class back-link" in {
-        backLink.attr("class") shouldBe "back-link"
+      s"have a title of '${messages.Summary.title}'" in {
+        document.title() shouldBe messages.Summary.title
       }
 
-      "has the text 'Back'" in {
-        backLink.text() shouldBe messages.back
+      "have a back link" which {
+        lazy val backLink = document.body().select("#back-link")
+
+        "has a class of 'back-link'" in {
+          backLink.attr("class") shouldBe "back-link"
+        }
+
+        "has the text" in {
+          backLink.text shouldBe messages.back
+        }
+
+        s"has a route to 'back-link'" in {
+          backLink.attr("href") shouldBe "back-link"
+        }
       }
 
-      "has a link to 'back-link'" in {
-        backLink.attr("href") shouldBe "back-link"
+      "have a heading" which {
+        lazy val heading = document.body().select("h1")
+
+        "has a class of heading-xlarge heading-xxlarge" in {
+          heading.attr("class") shouldBe "heading-xlarge heading-xxlarge"
+        }
+
+        "has a span with a class of heading-secondary" in {
+          heading.select("span").attr("class") shouldBe "heading-secondary"
+        }
+
+        s"has a span with the text ${messages.Summary.secondaryHeading}" in {
+          heading.select("span").text() shouldBe messages.Summary.secondaryHeading
+        }
+
+        "has the value of the tax owed" in {
+          heading.select("b").text() shouldBe "£8,000.00"
+        }
+      }
+
+      "not have a tax year warning" in {
+        document.select("div.notice-wrapper").size() shouldBe 0
+      }
+
+      "have a section for calculation details" in {
+        document.select("#calculationDetails span.heading-large").text() shouldBe messages.Summary.calculationDetailsTitle
+      }
+
+      "have a section for personal details" in {
+        document.select("#personalDetails span.heading-large").text() shouldBe messages.Summary.personalDetailsTitle
+      }
+
+      "have a section for purchase details" in {
+        document.select("#purchaseDetails span.heading-large").text() shouldBe messages.Summary.purchaseDetailsTitle
+      }
+
+      "have a section for property details" in {
+        document.select("#propertyDetails span.heading-large").text() shouldBe messages.Summary.propertyDetailsTitle
+      }
+
+      "have a section for sale details" in {
+        document.select("#saleDetails span.heading-large").text() shouldBe messages.Summary.saleDetailsTitle
+      }
+
+      "have a section for deductions details" in {
+        document.select("#deductionsDetails span.heading-large").text() shouldBe messages.Summary.deductionsTitle
+      }
+
+      "have a what to do next section" which {
+        lazy val whatToDoNext = document.select("#whatToDoNext")
+
+        "have a heading with the class 'heading-medium'" in {
+          whatToDoNext.select("h2").attr("class") shouldBe "heading-medium"
+        }
+
+        "has the heading 'What to do next'" in {
+          whatToDoNext.select("h2").text() shouldBe messages.Summary.whatToDoNextText
+        }
+
+        "has a link to 'https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-uk-residential-property'" in {
+          whatToDoNext.select("a").attr("href") shouldBe "https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-uk-residential-property"
+        }
+
+        "should have the text describing what to do next" in {
+          whatToDoNext.select("p").text() shouldBe s"${messages.Summary.whatToDoNextContent} ${messages.Summary.whatToDoNextLink} ${messages.externalLink}"
+        }
+      }
+
+      "have a link to start again" which {
+        lazy val startAgain = document.select("#startAgain")
+
+        "have a class of bold-medium" in {
+          startAgain.attr("class") shouldBe "bold-medium"
+        }
+
+        "have the text 'Start Again" in {
+          startAgain.text() shouldBe messages.Summary.startAgain
+        }
+
+        "have a link to /calculate-your-capital-gains/non-resident/restart" in {
+          startAgain.attr("href") shouldBe controllers.nonresident.routes.SummaryController.restart().url
+        }
+      }
+
+      "have a save pdf button" which {
+        lazy val savePDF = document.select("a.button")
+
+        "which has the class 'button save-pdf-button'" in {
+          savePDF.attr("class") shouldBe "button nr save-pdf-button"
+        }
+
+        "which has the text 'Save as PDF'" in {
+          savePDF.text() shouldBe messages.Summary.saveAsPdf
+        }
+
+        "which has the link to the summary report" in {
+          savePDF.attr("href") shouldBe controllers.nonresident.routes.ReportController.summaryReport().url
+        }
       }
     }
 
-    "have a tax owed heading" which {
-      lazy val heading = doc.select("h1")
+    "supplied with a disposal date within the valid tax years" should {
+      val summaryModel = TestModels.sumModelFlat
+      val calculationModel = TestModels.calcModelOneRate
+      lazy val view = summary(summaryModel, calculationModel, "back-link")(fakeRequest)
+      lazy val document = Jsoup.parse(view.body)
 
-      "has the class 'heading-xlarge heading-xxlarge'" in {
-        heading.attr("class") shouldBe "heading-xlarge heading-xxlarge"
-      }
-
-      "has a span of class 'heading-secondary'" in {
-        heading.select("span").attr("class") shouldBe "heading-secondary"
-      }
-
-      s"has the text '${messages.Summary.secondaryHeading}'" in {
-        heading.select("span").text() shouldBe messages.Summary.secondaryHeading
-      }
-
-      "has a value of tax owed of £8000" in {
-        heading.select("b").text() shouldBe "£8,000.00"
-      }
-    }
-
-    "not display a tax year warning" in {
-      doc.select("div.notice-wrapper").isEmpty shouldBe true
-    }
-
-    "have a section for calculation details" in {
-      doc.select("#calculationDetails span.heading-large").text() shouldBe messages.Summary.calculationDetailsTitle
-    }
-
-    "have a section for personal details" in {
-      doc.select("#personalDetails span.heading-large").text() shouldBe messages.Summary.personalDetailsTitle
-    }
-
-    "have a section for purchase details" in {
-      doc.select("#purchaseDetails span.heading-large").text() shouldBe messages.Summary.purchaseDetailsTitle
-    }
-
-    "have a section for property details" in {
-      doc.select("#propertyDetails span.heading-large").text() shouldBe messages.Summary.propertyDetailsTitle
-    }
-
-    "have a section for sale details" in {
-      doc.select("#saleDetails span.heading-large").text() shouldBe messages.Summary.saleDetailsTitle
-    }
-
-    "have a section for deductions details" in {
-      doc.select("#deductionsDetails span.heading-large").text() shouldBe messages.Summary.deductionsTitle
-    }
-
-    "have a what to do next section" which {
-      lazy val whatToDoNext = doc.select("#whatToDoNext")
-
-      "have a heading with the class 'heading-medium'" in {
-        whatToDoNext.select("h2").attr("class") shouldBe "heading-medium"
-      }
-
-      "has the heading 'What to do next'" in {
-        whatToDoNext.select("h2").text() shouldBe messages.Summary.whatToDoNextText
-      }
-
-      "has a link to 'https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-uk-residential-property'" in {
-        whatToDoNext.select("a").attr("href") shouldBe "https://www.gov.uk/guidance/capital-gains-tax-for-non-residents-uk-residential-property"
-      }
-
-      "should have the text describing what to do next" in {
-        whatToDoNext.select("p").text() shouldBe s"${messages.Summary.whatToDoNextContent} ${messages.Summary.whatToDoNextLink} ${messages.externalLink}"
-      }
-    }
-
-    "have a link to start again" which {
-      lazy val startAgain = doc.select("#startAgain")
-
-      "have a class of bold-medium" in {
-        startAgain.attr("class") shouldBe "bold-medium"
-      }
-
-      "have the text 'Start Again" in {
-        startAgain.text() shouldBe messages.Summary.startAgain
-      }
-
-      "have a link to /calculate-your-capital-gains/non-resident/restart" in {
-        startAgain.attr("href") shouldBe controllers.nonresident.routes.SummaryController.restart().url
-      }
-    }
-
-    "have a save pdf button" which {
-      lazy val savePDF = doc.select("a.button")
-
-      "which has the class 'button save-pdf-button'" in {
-        savePDF.attr("class") shouldBe "button nr save-pdf-button"
-      }
-
-      "which has the text 'Save as PDF'" in {
-        savePDF.text() shouldBe messages.Summary.saveAsPdf
-      }
-
-      "which has the link to the summary report" in {
-        savePDF.attr("href") shouldBe controllers.nonresident.routes.ReportController.summaryReport().url
+      "display a tax year warning" in {
+        document.select("div.notice-wrapper").size() shouldBe 1
       }
     }
   }
-
 }
