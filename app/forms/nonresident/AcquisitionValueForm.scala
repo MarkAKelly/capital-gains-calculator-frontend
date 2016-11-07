@@ -24,12 +24,17 @@ import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
+import common.Transformers._
+
 
 object AcquisitionValueForm {
 
   val acquisitionValueForm = Form(
     mapping(
-      "acquisitionValue" -> bigDecimal
+      "acquisitionValue" -> text
+        .verifying(Messages("calc.common.error.mandatoryAmount"), mandatoryCheck)
+        .verifying(Messages("calc.common.error.mandatoryAmount"), bigDecimalCheck)
+        .transform(stringToBigDecimal, bigDecimalToString)
         .verifying(Messages("calc.acquisitionValue.errorNegative"), isPositive)
         .verifying(Messages("calc.acquisitionValue.errorDecimalPlaces"), decimalPlacesCheck)
         .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " +
