@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+package views.nonResident
+
 import assets.MessageLookup.{NonResident => messages}
 import common.TestModels
 import controllers.helpers.FakeRequestHelper
@@ -22,7 +24,7 @@ import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.nonresident.summary
 
-class SummaryViewSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
+class SummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "Summary view" when {
 
