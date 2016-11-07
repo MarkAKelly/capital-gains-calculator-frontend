@@ -105,35 +105,55 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
             .getAcquisitionValueAnswer(summaryFlatOptionValuesModel).get) shouldBe true
       }
 
-      ".getAcquisitionDateAnswer" should {
+      ".getAcquisitionDateAnswer" when {
 
-        lazy val target = PurchaseDetailsConstructor.getAcquisitionDateAnswer(summaryFlatOptionValuesModel)
+        "provided with a value for acquisition date" should {
+          lazy val target = PurchaseDetailsConstructor.getAcquisitionDateAnswer(summaryFlatOptionValuesModel)
 
-        "will return a data item of 4/9/16" in {
-          lazy val obtainedDate: LocalDate = target.get.data
-          /*lazy val stringConversion = obtainedDate.getDayOfMonth() + "/" + obtainedDate.getMonthValue() +
-            "/" + obtainedDate.getYear*/
-          obtainedDate shouldBe LocalDate.parse("2016-09-04")
+          "will return a data item of 4/9/16" in {
+            lazy val obtainedDate: LocalDate = target.get.data.asInstanceOf[LocalDate]
+            obtainedDate shouldBe LocalDate.parse("2016-09-04")
+          }
+
+          "will return an id of " + s"${KeystoreKeys.acquisitionDate}" in {
+            lazy val obtainedKey = target.get.id
+            obtainedKey shouldBe KeystoreKeys.acquisitionDate
+          }
+          "will return a url of " in {
+            lazy val correctURL = controllers.nonresident.routes.AcquisitionDateController.acquisitionDate().url
+            lazy val obtainedURL = target.get.link.get
+
+            obtainedURL shouldBe correctURL
+          }
+
+          s"will return a message of ${MessageLookup.NonResident.AcquisitionDate.questionTwo}" in {
+            target.get.question shouldBe MessageLookup.NonResident.AcquisitionDate.questionTwo
+          }
         }
 
-        "will return an id of " + s"${KeystoreKeys.acquisitionDate}" in {
-          lazy val obtainedKey = target.get.id
-          obtainedKey shouldBe KeystoreKeys.acquisitionDate
-        }
-        "will return a url of " in {
-          lazy val correctURL = controllers.nonresident.routes.AcquisitionDateController.acquisitionDate().url
-          lazy val obtainedURL = target.get.link.get
+        "provided with no value for acquisition date" should {
+          lazy val result = PurchaseDetailsConstructor.getAcquisitionDateAnswer(TestModels.summaryRepresentativeFlatWithAEA)
 
-          obtainedURL shouldBe correctURL
-        }
+          "will return a data item of 'No'" in {
+            lazy val obtainedAnswer: String = result.get.data.asInstanceOf[String]
+            obtainedAnswer shouldBe "No"
+          }
 
-        s"will return a message of ${MessageLookup.NonResident.AcquisitionDate.questionTwo}" in {
-          target.get.question shouldBe MessageLookup.NonResident.AcquisitionDate.questionTwo
-        }
+          "will return an id of " + s"${KeystoreKeys.acquisitionDate}-question" in {
+            lazy val obtainedKey = result.get.id
+            obtainedKey shouldBe s"${KeystoreKeys.acquisitionDate}-question"
+          }
 
-        "not return any details when user does not know the acquisition date" in {
-          val result = PurchaseDetailsConstructor.getAcquisitionDateAnswer(TestModels.summaryRepresentativeFlatWithAEA)
-          result shouldBe None
+          "will return a url of " in {
+            lazy val correctURL = controllers.nonresident.routes.AcquisitionDateController.acquisitionDate().url
+            lazy val obtainedURL = result.get.link.get
+
+            obtainedURL shouldBe correctURL
+          }
+
+          s"will return a message of ${MessageLookup.NonResident.AcquisitionDate.question}" in {
+            result.get.question shouldBe MessageLookup.NonResident.AcquisitionDate.question
+          }
         }
       }
 

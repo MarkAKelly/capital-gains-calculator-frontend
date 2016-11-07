@@ -43,8 +43,14 @@ object PurchaseDetailsConstructor {
     items.flatten
   }
 
-  def getAcquisitionDateAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[LocalDate]] = {
-    if (summaryModel.acquisitionDateModel.hasAcquisitionDate != "Yes") None
+  def getAcquisitionDateAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[Any]] = {
+    if (summaryModel.acquisitionDateModel.hasAcquisitionDate != "Yes")
+      Some(QuestionAnswerModel(
+        s"${KeystoreKeys.acquisitionDate}-question",
+        Messages("calc.base.no"),
+        Messages("calc.acquisitionDate.question"),
+        Some(controllers.nonresident.routes.AcquisitionDateController.acquisitionDate().url)
+      ))
     else {
       Some(QuestionAnswerModel(
         KeystoreKeys.acquisitionDate,
