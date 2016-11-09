@@ -10,11 +10,14 @@
 
     @errorSummary(disposalDateForm, "disposal-date", "disposalDateDay")
 
-    <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
+    <h1 class="heading-large">@Messages("calc.disposalDate.question")</h1>
 
     @form(action = controllers.nonresident.routes.DisposalDateController.submitDisposalDate) {
 
-        @formInlineDateInput(disposalDateForm, "disposalDate", Messages("calc.disposalDate.question"))
+        @formInlineDateInput(disposalDateForm,
+        "disposalDate",
+        Messages("calc.resident.shares.disposalDate.question"),
+        '_visually_hidden -> true)
 
         <button id="continue-button" type="submit" class="button">@Messages("calc.base.button.continue")</button>
 

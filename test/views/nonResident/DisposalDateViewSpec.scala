@@ -42,8 +42,8 @@ class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         document.title shouldEqual messages.question
       }
 
-      "have the heading Calculate your tax (non-residents) " in {
-        document.body.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
+      s"have the heading ${Messages("calc.disposalDate.question")} " in {
+        document.body.getElementsByTag("h1").text shouldEqual messages.question
       }
 
       "have a back link" which {
