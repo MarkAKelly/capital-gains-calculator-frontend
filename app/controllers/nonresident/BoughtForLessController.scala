@@ -17,12 +17,10 @@
 package controllers.nonresident
 
 import connectors.CalculatorConnector
-import constructors.nonresident.CalculationElectionConstructor
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
 object BoughtForLessController extends BoughtForLessController {
   val calcConnector = CalculatorConnector
-  val calcElectionConstructor = CalculationElectionConstructor
 }
 
 trait BoughtForLessController extends FrontendController {
