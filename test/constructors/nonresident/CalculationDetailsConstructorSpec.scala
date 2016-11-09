@@ -26,6 +26,12 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
 
   val target = CalculationDetailsConstructor
 
+  def assertOption[T](option: Option[T])(test: T => Unit): Unit = {
+    option.fold(cancel("expected option is None")) { value =>
+      test(value)
+    }
+  }
+
   "Calling buildSection" when {
 
     "a loss has been made" should {
@@ -177,31 +183,23 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct ID for the calculation election details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.id shouldBe KeystoreKeys.calculationElection
-        }
+        assertOption(result)(_.id shouldBe KeystoreKeys.calculationElection)
       }
 
       "return correct question for the calculation election details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.question shouldBe messages.calculationElection
-        }
+        assertOption(result)(_.question shouldBe messages.calculationElection)
       }
 
       "return correct answer for the calculation election details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe messages.flatCalculation
-        }
+        assertOption(result)(_.data shouldBe messages.flatCalculation)
       }
 
       "return a link for the calculation election details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.link should not be None
-        }
+        assertOption(result)(_.link should not be None)
       }
 
       "return correct link for the calculation election details" in {
-        result.fold(cancel("expected result not computed")) { item =>
+        assertOption(result) { item =>
           item.link.fold(cancel("link not supplied when expected")) { link =>
             link shouldBe routes.CalculationElectionController.calculationElection().url
           }
@@ -218,31 +216,23 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct ID for the calculation election details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.id shouldBe KeystoreKeys.calculationElection
-        }
+        assertOption(result)(_.id shouldBe KeystoreKeys.calculationElection)
       }
 
       "return correct question for the calculation election details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.question shouldBe messages.calculationElection
-        }
+        assertOption(result)(_.question shouldBe messages.calculationElection)
       }
 
       "return correct answer for the calculation election details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe messages.rebasedCalculation
-        }
+        assertOption(result)(_.data shouldBe messages.rebasedCalculation)
       }
 
       "return a link for the calculation election details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.link should not be None
-        }
+        assertOption(result)(_.link should not be None)
       }
 
       "return correct link for the calculation election details" in {
-        result.fold(cancel("expected result not computed")) { item =>
+        assertOption(result) { item =>
           item.link.fold(cancel("link not supplied when expected")) { link =>
             link shouldBe routes.CalculationElectionController.calculationElection().url
           }
@@ -259,38 +249,22 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct ID for the calculation election details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.id shouldBe KeystoreKeys.calculationElection
-        }
+        assertOption(result)(_.id shouldBe KeystoreKeys.calculationElection)
       }
 
       "return correct question for the calculation election details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.question shouldBe messages.calculationElection
-        }
+        assertOption(result)(_.question shouldBe messages.calculationElection)
       }
 
       "return correct answer for the calculation election details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe messages.timeCalculation
-        }
+        assertOption(result)(_.data shouldBe messages.timeCalculation)
       }
 
       "return a link for the calculation election details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.link should not be None
-        }
+        assertOption(result)(_.link should not be None)
       }
 
-      "return correct link for the calculation election details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.link.fold(cancel("link not supplied when expected")) { link =>
-            link shouldBe routes.CalculationElectionController.calculationElection().url
-          }
-        }
-      }
     }
-
   }
 
   "Calling totalGain" when {
@@ -305,27 +279,19 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct ID for the total gain details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.id shouldBe "calcDetails:totalGain"
-        }
+        assertOption(result)(_.id shouldBe "calcDetails:totalGain")
       }
 
       "return correct question for the total gain details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.question shouldBe messages.totalGain
-        }
+        assertOption(result)(_.question shouldBe messages.totalGain)
       }
 
       "return correct answer for the total gain details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe model.totalGain
-        }
+        assertOption(result)(_.data shouldBe model.totalGain)
       }
 
       "not return a link for the total gain details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.link shouldBe None
-        }
+        assertOption(result)(_.link shouldBe None)
       }
     }
 
@@ -339,27 +305,19 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct ID for the total gain details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.id shouldBe "calcDetails:totalGain"
-        }
+        assertOption(result)(_.id shouldBe "calcDetails:totalGain")
       }
 
       "return correct question for the total gain details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.question shouldBe messages.totalGain
-        }
+        assertOption(result)(_.question shouldBe messages.totalGain)
       }
 
       "return correct answer for the total gain details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe model.totalGain
-        }
+        assertOption(result)(_.data shouldBe model.totalGain)
       }
 
       "not return a link for the total gain details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.link shouldBe None
-        }
+        assertOption(result)(_.link shouldBe None)
       }
     }
 
@@ -406,30 +364,21 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct ID for the total loss details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.id shouldBe "calcDetails:totalLoss"
-        }
+        assertOption(result)(_.id shouldBe "calcDetails:totalLoss")
       }
 
       "return correct question for the total loss details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.question shouldBe messages.totalLoss
-        }
+        assertOption(result)(_.question shouldBe messages.totalLoss)
       }
 
       "return correct answer for the total loss details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe model.totalGain.abs
-        }
+        assertOption(result)(_.data shouldBe model.totalGain.abs)
       }
 
       "not return a link for the total loss details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.link shouldBe None
-        }
+        assertOption(result)(_.link shouldBe None)
       }
     }
-
   }
 
   "Calling usedAEA" when {
@@ -443,27 +392,19 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct ID for the AEA details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.id shouldBe "calcDetails:aea"
-        }
+        assertOption(result)(_.id shouldBe "calcDetails:aea")
       }
 
       "return correct question for the AEA details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.question shouldBe messages.usedAEA
-        }
+        assertOption(result)(_.question shouldBe messages.usedAEA)
       }
 
       "return correct answer for the AEA details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe model.usedAnnualExemptAmount
-        }
+        assertOption(result)(_.data shouldBe model.usedAnnualExemptAmount)
       }
 
       "not return a link for the AEA details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.link shouldBe None
-        }
+        assertOption(result)(_.link shouldBe None)
       }
     }
 
@@ -497,27 +438,19 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct ID for the taxable gain details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.id shouldBe "calcDetails:taxableGain"
-        }
+        assertOption(result)(_.id shouldBe "calcDetails:taxableGain")
       }
 
       "return correct question for the taxable gain details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.question shouldBe messages.taxableGain
-        }
+        assertOption(result)(_.question shouldBe messages.taxableGain)
       }
 
       "return correct answer for the taxable gain details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe model.taxableGain
-        }
+        assertOption(result)(_.data shouldBe model.taxableGain)
       }
 
       "not return a link for the taxable gain details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.link shouldBe None
-        }
+        assertOption(result)(_.link shouldBe None)
       }
     }
 
@@ -568,27 +501,19 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct ID for the taxable rate details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.id shouldBe "calcDetails:taxableRate"
-        }
+        assertOption(result)(_.id shouldBe "calcDetails:taxableRate")
       }
 
       "return correct question for the taxable rate details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.question shouldBe messages.taxRate
-        }
+        assertOption(result)(_.question shouldBe messages.taxRate)
       }
 
       "return correct answer for the taxable rate details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe "20%"
-        }
+        assertOption(result)(_.data shouldBe "20%")
       }
 
       "not return a link for the taxable rate details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.link shouldBe None
-        }
+        assertOption(result)(_.link shouldBe None)
       }
     }
 
@@ -609,27 +534,19 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct ID for the taxable rate details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.id shouldBe "calcDetails:taxableRate"
-        }
+        assertOption(result)(_.id shouldBe "calcDetails:taxableRate")
       }
 
       "return correct question for the taxable rate details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.question shouldBe messages.taxRate
-        }
+        assertOption(result)(_.question shouldBe messages.taxRate)
       }
 
       "return correct answer for the taxable rate details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe "£10,000 at 18%\n£32,000 at 50%"
-        }
+        assertOption(result)(_.data shouldBe "£10,000 at 18%\n£32,000 at 50%")
       }
 
       "not return a link for the taxable rate details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.link shouldBe None
-        }
+        assertOption(result)(_.link shouldBe None)
       }
     }
   }
@@ -674,27 +591,19 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct ID for the loss to carry forward details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.id shouldBe "calcDetails:lossToCarryForward"
-        }
+        assertOption(result)(_.id shouldBe "calcDetails:lossToCarryForward")
       }
 
       "return correct question for the loss to carry forward details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.question shouldBe messages.lossesCarriedForward
-        }
+        assertOption(result)(_.question shouldBe messages.lossesCarriedForward)
       }
 
       "return correct answer for the loss to carry forward details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe model.taxableGain.abs
-        }
+        assertOption(result)(_.data shouldBe model.taxableGain.abs)
       }
 
       "not return a link for the loss to carry forward details" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.link shouldBe None
-        }
+        assertOption(result)(_.link shouldBe None)
       }
     }
 
