@@ -26,11 +26,15 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
 
   val target = CalculationDetailsConstructor
 
-  def assertOption[T](option: Option[T])(test: T => Unit): Unit = {
-    option.fold(cancel("expected option is None")) { value =>
+  def assertOption[T](message: String)(option: Option[T])(test: T => Unit): Unit = {
+    option.fold(cancel(message)) { value =>
       test(value)
     }
   }
+
+  def assertExpectedResult[T](option: Option[T])(test: T => Unit): Unit = assertOption("expected option is None")(option)(test)
+
+  def assertExpectedLink[T](option: Option[T])(test: T => Unit): Unit = assertOption("expected link is None")(option)(test)
 
   "Calling buildSection" when {
 
@@ -183,24 +187,24 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct ID for the calculation election details" in {
-        assertOption(result)(_.id shouldBe KeystoreKeys.calculationElection)
+        assertExpectedResult(result)(_.id shouldBe KeystoreKeys.calculationElection)
       }
 
       "return correct question for the calculation election details" in {
-        assertOption(result)(_.question shouldBe messages.calculationElection)
+        assertExpectedResult(result)(_.question shouldBe messages.calculationElection)
       }
 
       "return correct answer for the calculation election details" in {
-        assertOption(result)(_.data shouldBe messages.flatCalculation)
+        assertExpectedResult(result)(_.data shouldBe messages.flatCalculation)
       }
 
       "return a link for the calculation election details" in {
-        assertOption(result)(_.link should not be None)
+        assertExpectedResult(result)(_.link should not be None)
       }
 
       "return correct link for the calculation election details" in {
-        assertOption(result) { item =>
-          item.link.fold(cancel("link not supplied when expected")) { link =>
+        assertExpectedResult(result) { item =>
+          assertExpectedLink(item.link) { link =>
             link shouldBe routes.CalculationElectionController.calculationElection().url
           }
         }
@@ -216,24 +220,24 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct ID for the calculation election details" in {
-        assertOption(result)(_.id shouldBe KeystoreKeys.calculationElection)
+        assertExpectedResult(result)(_.id shouldBe KeystoreKeys.calculationElection)
       }
 
       "return correct question for the calculation election details" in {
-        assertOption(result)(_.question shouldBe messages.calculationElection)
+        assertExpectedResult(result)(_.question shouldBe messages.calculationElection)
       }
 
       "return correct answer for the calculation election details" in {
-        assertOption(result)(_.data shouldBe messages.rebasedCalculation)
+        assertExpectedResult(result)(_.data shouldBe messages.rebasedCalculation)
       }
 
       "return a link for the calculation election details" in {
-        assertOption(result)(_.link should not be None)
+        assertExpectedResult(result)(_.link should not be None)
       }
 
       "return correct link for the calculation election details" in {
-        assertOption(result) { item =>
-          item.link.fold(cancel("link not supplied when expected")) { link =>
+        assertExpectedResult(result) { item =>
+          assertExpectedLink(item.link) { link =>
             link shouldBe routes.CalculationElectionController.calculationElection().url
           }
         }
@@ -249,21 +253,28 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct ID for the calculation election details" in {
-        assertOption(result)(_.id shouldBe KeystoreKeys.calculationElection)
+        assertExpectedResult(result)(_.id shouldBe KeystoreKeys.calculationElection)
       }
 
       "return correct question for the calculation election details" in {
-        assertOption(result)(_.question shouldBe messages.calculationElection)
+        assertExpectedResult(result)(_.question shouldBe messages.calculationElection)
       }
 
       "return correct answer for the calculation election details" in {
-        assertOption(result)(_.data shouldBe messages.timeCalculation)
+        assertExpectedResult(result)(_.data shouldBe messages.timeCalculation)
       }
 
       "return a link for the calculation election details" in {
-        assertOption(result)(_.link should not be None)
+        assertExpectedResult(result)(_.link should not be None)
       }
 
+      "return correct link for the calculation election details" in {
+        assertExpectedResult(result) { item =>
+          assertExpectedLink(item.link) { link =>
+            link shouldBe routes.CalculationElectionController.calculationElection().url
+          }
+        }
+      }
     }
   }
 
@@ -279,19 +290,19 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct ID for the total gain details" in {
-        assertOption(result)(_.id shouldBe "calcDetails:totalGain")
+        assertExpectedResult(result)(_.id shouldBe "calcDetails:totalGain")
       }
 
       "return correct question for the total gain details" in {
-        assertOption(result)(_.question shouldBe messages.totalGain)
+        assertExpectedResult(result)(_.question shouldBe messages.totalGain)
       }
 
       "return correct answer for the total gain details" in {
-        assertOption(result)(_.data shouldBe model.totalGain)
+        assertExpectedResult(result)(_.data shouldBe model.totalGain)
       }
 
       "not return a link for the total gain details" in {
-        assertOption(result)(_.link shouldBe None)
+        assertExpectedResult(result)(_.link shouldBe None)
       }
     }
 
@@ -305,19 +316,19 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct ID for the total gain details" in {
-        assertOption(result)(_.id shouldBe "calcDetails:totalGain")
+        assertExpectedResult(result)(_.id shouldBe "calcDetails:totalGain")
       }
 
       "return correct question for the total gain details" in {
-        assertOption(result)(_.question shouldBe messages.totalGain)
+        assertExpectedResult(result)(_.question shouldBe messages.totalGain)
       }
 
       "return correct answer for the total gain details" in {
-        assertOption(result)(_.data shouldBe model.totalGain)
+        assertExpectedResult(result)(_.data shouldBe model.totalGain)
       }
 
       "not return a link for the total gain details" in {
-        assertOption(result)(_.link shouldBe None)
+        assertExpectedResult(result)(_.link shouldBe None)
       }
     }
 
@@ -364,19 +375,19 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct ID for the total loss details" in {
-        assertOption(result)(_.id shouldBe "calcDetails:totalLoss")
+        assertExpectedResult(result)(_.id shouldBe "calcDetails:totalLoss")
       }
 
       "return correct question for the total loss details" in {
-        assertOption(result)(_.question shouldBe messages.totalLoss)
+        assertExpectedResult(result)(_.question shouldBe messages.totalLoss)
       }
 
       "return correct answer for the total loss details" in {
-        assertOption(result)(_.data shouldBe model.totalGain.abs)
+        assertExpectedResult(result)(_.data shouldBe model.totalGain.abs)
       }
 
       "not return a link for the total loss details" in {
-        assertOption(result)(_.link shouldBe None)
+        assertExpectedResult(result)(_.link shouldBe None)
       }
     }
   }
@@ -392,19 +403,19 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct ID for the AEA details" in {
-        assertOption(result)(_.id shouldBe "calcDetails:aea")
+        assertExpectedResult(result)(_.id shouldBe "calcDetails:aea")
       }
 
       "return correct question for the AEA details" in {
-        assertOption(result)(_.question shouldBe messages.usedAEA)
+        assertExpectedResult(result)(_.question shouldBe messages.usedAEA)
       }
 
       "return correct answer for the AEA details" in {
-        assertOption(result)(_.data shouldBe model.usedAnnualExemptAmount)
+        assertExpectedResult(result)(_.data shouldBe model.usedAnnualExemptAmount)
       }
 
       "not return a link for the AEA details" in {
-        assertOption(result)(_.link shouldBe None)
+        assertExpectedResult(result)(_.link shouldBe None)
       }
     }
 
@@ -438,19 +449,19 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct ID for the taxable gain details" in {
-        assertOption(result)(_.id shouldBe "calcDetails:taxableGain")
+        assertExpectedResult(result)(_.id shouldBe "calcDetails:taxableGain")
       }
 
       "return correct question for the taxable gain details" in {
-        assertOption(result)(_.question shouldBe messages.taxableGain)
+        assertExpectedResult(result)(_.question shouldBe messages.taxableGain)
       }
 
       "return correct answer for the taxable gain details" in {
-        assertOption(result)(_.data shouldBe model.taxableGain)
+        assertExpectedResult(result)(_.data shouldBe model.taxableGain)
       }
 
       "not return a link for the taxable gain details" in {
-        assertOption(result)(_.link shouldBe None)
+        assertExpectedResult(result)(_.link shouldBe None)
       }
     }
 
@@ -501,19 +512,19 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct ID for the taxable rate details" in {
-        assertOption(result)(_.id shouldBe "calcDetails:taxableRate")
+        assertExpectedResult(result)(_.id shouldBe "calcDetails:taxableRate")
       }
 
       "return correct question for the taxable rate details" in {
-        assertOption(result)(_.question shouldBe messages.taxRate)
+        assertExpectedResult(result)(_.question shouldBe messages.taxRate)
       }
 
       "return correct answer for the taxable rate details" in {
-        assertOption(result)(_.data shouldBe "20%")
+        assertExpectedResult(result)(_.data shouldBe "20%")
       }
 
       "not return a link for the taxable rate details" in {
-        assertOption(result)(_.link shouldBe None)
+        assertExpectedResult(result)(_.link shouldBe None)
       }
     }
 
@@ -534,19 +545,19 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct ID for the taxable rate details" in {
-        assertOption(result)(_.id shouldBe "calcDetails:taxableRate")
+        assertExpectedResult(result)(_.id shouldBe "calcDetails:taxableRate")
       }
 
       "return correct question for the taxable rate details" in {
-        assertOption(result)(_.question shouldBe messages.taxRate)
+        assertExpectedResult(result)(_.question shouldBe messages.taxRate)
       }
 
       "return correct answer for the taxable rate details" in {
-        assertOption(result)(_.data shouldBe "£10,000 at 18%\n£32,000 at 50%")
+        assertExpectedResult(result)(_.data shouldBe "£10,000 at 18%\n£32,000 at 50%")
       }
 
       "not return a link for the taxable rate details" in {
-        assertOption(result)(_.link shouldBe None)
+        assertExpectedResult(result)(_.link shouldBe None)
       }
     }
   }
@@ -591,19 +602,19 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct ID for the loss to carry forward details" in {
-        assertOption(result)(_.id shouldBe "calcDetails:lossToCarryForward")
+        assertExpectedResult(result)(_.id shouldBe "calcDetails:lossToCarryForward")
       }
 
       "return correct question for the loss to carry forward details" in {
-        assertOption(result)(_.question shouldBe messages.lossesCarriedForward)
+        assertExpectedResult(result)(_.question shouldBe messages.lossesCarriedForward)
       }
 
       "return correct answer for the loss to carry forward details" in {
-        assertOption(result)(_.data shouldBe model.taxableGain.abs)
+        assertExpectedResult(result)(_.data shouldBe model.taxableGain.abs)
       }
 
       "not return a link for the loss to carry forward details" in {
-        assertOption(result)(_.link shouldBe None)
+        assertExpectedResult(result)(_.link shouldBe None)
       }
     }
 
