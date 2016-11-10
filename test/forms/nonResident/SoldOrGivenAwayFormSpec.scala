@@ -17,17 +17,17 @@
 package forms.nonResident
 
 import assets.MessageLookup.{NonResident => commonMessages}
-import models.nonresident.SellOrGiveAwayModel
-import forms.nonresident.SellOrGiveAwayForm._
+import models.nonresident.SoldOrGivenAwayModel
+import forms.nonresident.SoldOrGivenAwayForm._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class SellOrGiveAwayFormSpec extends UnitSpec with WithFakeApplication{
+class SoldOrGivenAwayFormSpec extends UnitSpec with WithFakeApplication{
 
   "Sell Or Give Away Form" when {
 
     "passing in a true valid model" should {
-      val model = SellOrGiveAwayModel(true)
-      val form = sellOrGiveAwayForm.fill(model)
+      val model = SoldOrGivenAwayModel(true)
+      val form = soldOrGivenAwayForm.fill(model)
 
       "return a form with 0 errors" in {
         form.errors.size shouldBe 0
@@ -40,34 +40,34 @@ class SellOrGiveAwayFormSpec extends UnitSpec with WithFakeApplication{
 
     "passing in a valid yes map" should {
       val map = Map("soldIt" -> "Yes")
-      lazy val form = sellOrGiveAwayForm.bind(map)
+      lazy val form = soldOrGivenAwayForm.bind(map)
 
       "return a form with 0 errors" in {
         form.errors.size shouldBe 0
       }
 
       "return the correct data" in {
-        form.value shouldBe Some(SellOrGiveAwayModel(true))
+        form.value shouldBe Some(SoldOrGivenAwayModel(true))
       }
     }
 
     "passing in a valid no map" should {
       val map = Map("soldIt" -> "No")
-      lazy val form = sellOrGiveAwayForm.bind(map)
+      lazy val form = soldOrGivenAwayForm.bind(map)
 
       "return a form with 0 errors" in {
         form.errors.size shouldBe 0
       }
 
       "return the correct data" in {
-        form.value shouldBe Some(SellOrGiveAwayModel(false))
+        form.value shouldBe Some(SoldOrGivenAwayModel(false))
       }
     }
 
 
     "passing in invalid data" should {
       val map = Map("soldIt" -> "999")
-      lazy val form = sellOrGiveAwayForm.bind(map)
+      lazy val form = soldOrGivenAwayForm.bind(map)
 
       "return a form with 1 error" in {
         form.errors.size shouldBe 1
@@ -80,7 +80,7 @@ class SellOrGiveAwayFormSpec extends UnitSpec with WithFakeApplication{
 
     "passing in an empty map" should {
       val map = Map("soldIt" -> "")
-      lazy val form = sellOrGiveAwayForm.bind(map)
+      lazy val form = soldOrGivenAwayForm.bind(map)
 
       "return a form with 1 error" in {
         form.errors.size shouldBe 1

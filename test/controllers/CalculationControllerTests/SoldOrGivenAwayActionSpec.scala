@@ -19,12 +19,16 @@ package controllers.CalculationControllerTests
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
-import models.nonresident.SellOrGiveAwayModel
+import controllers.nonresident.SoldOrGivenAwayController
+import models.nonresident.SoldOrGivenAwayModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
+import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import assets.MessageLookup.NonResident.{SoldOrGivenAway => messages}
+import play.api.test.Helpers._
 
 import scala.concurrent.Future
 
@@ -32,35 +36,109 @@ class SoldOrGivenAwayActionSpec extends UnitSpec with WithFakeApplication with M
 
   implicit val hc = new HeaderCarrier()
 
-//  def setUpTarget(getData: Option[SellOrGiveAwayModel]): SellOrGiveAwayController = {
-//
-//    val mockCalcConnector = mock[CalculatorConnector]
-//
-//    when(mockCalcConnector.fetchAndGetFormData[SellOrGiveAwayModel](Matchers.eq(KeystoreKeys.sellOrGiveAway))(Matchers.any(), Matchers.any()))
-//      .thenReturn(Future.successful(getData))
-//
-//    new SellOrGiveAwayController = {
-//      override val calcConnector: CalculatorConnector = mockCalcConnector
-//    }
-//  }
-//
-//  //GET Tests
-//
-//  "Calling the SellOrGiveAway .sellOrGiveAway" when {
-//
-//    "not supplied with a pre-existing model" should {
-//      val target = setUpTarget(None)
-//      lazy val result = target.sellOrGiveAway(fakeRequestWithSession)
-//      lazy val document = Jsoup.parse(bodyOf(result))
-//
-//      "return a 200 response" in {
-//
-//      }
-//
-//      s"have the title of ${SellOrGiveAway.title}" in {
-//
-//      }
-//    }
-//  }
+  def setUpTarget(getData: Option[SoldOrGivenAwayModel]): SoldOrGivenAwayController = {
 
+    val mockCalcConnector = mock[CalculatorConnector]
+
+    when(mockCalcConnector.fetchAndGetFormData[SoldOrGivenAwayModel](Matchers.eq(KeystoreKeys.soldOrGivenAway))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(getData))
+
+    new SoldOrGivenAwayController  {
+      override val calcConnector: CalculatorConnector = mockCalcConnector
+    }
+  }
+
+  //GET Tests
+  "Calling the SellOrGiveAway .sellOrGiveAway" when {
+
+    "not supplied with a pre-existing model" should {
+      val target = setUpTarget(None)
+      lazy val result = target.soldOrGivenAway(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 200 response" in {
+        status(result) shouldBe 200
+      }
+
+      s"have the title of ${messages.title}" in {
+        document.title() shouldBe messages.title
+      }
+    }
+
+    "supplied with a pre-existing model" should {
+      val target = setUpTarget(Some(SoldOrGivenAwayModel(true)))
+      lazy val result = target.soldOrGivenAway(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 200 response" in {
+        status(result) shouldBe 200
+      }
+
+      s"have the title of ${messages.title}" in {
+        document.title() shouldBe messages.title
+      }
+    }
+
+    "not supplied with a valid session" should {
+      val target = setUpTarget(Some(SoldOrGivenAwayModel(true)))
+      lazy val result = target.soldOrGivenAway(fakeRequest)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 303 response" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the session timeout page" in {
+        redirectLocation(result).get should include("/calculate-your-capital-gains/session-timeout")
+      }
+    }
+  }
+
+  //POST Tests
+  "Calling the SoldOrGivenAway .submitSoldOrGivenAway" when {
+
+    "a valid form is submitted with Yes" should {
+      val target = setUpTarget(None)
+      lazy val request = fakeRequestToPOSTWithSession("soldIt" -> "Yes")
+      lazy val result = target.submitSoldOrGivenAway(request)
+
+      "return a 303 response" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the Sold For Less Page" in{
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.SoldForLessController.soldForLess().url
+      }
+    }
+
+    //TODO: Refactor test other route is implemented
+    "a valid form is submitted with No" should {
+      val target = setUpTarget(None)
+      lazy val request = fakeRequestToPOSTWithSession("soldIt" -> "No")
+      lazy val result = target.submitSoldOrGivenAway(request)
+
+      "return a 303 response" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the Sold For Less Page" in{
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.SoldForLessController.soldForLess().url
+      }
+    }
+
+    "an invalid form is submitted with no data" should {
+      val target = setUpTarget(None)
+      lazy val request = fakeRequestToPOSTWithSession("soldIt" -> "")
+      lazy val result = target.submitSoldOrGivenAway(request)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 400 response" in {
+        status(result) shouldBe 400
+      }
+
+      "stay on the SoldOrGivenAway page" in {
+        document.title shouldBe messages.title
+      }
+    }
+  }
 }

@@ -24,6 +24,8 @@ import controllers.predicates.ValidActiveSession
 import models.nonresident.SoldOrGivenAwayModel
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
+import scala.concurrent.Future
+
 object SoldOrGivenAwayController extends SoldOrGivenAwayController {
   val calcConnector = CalculatorConnector
 }
@@ -39,5 +41,18 @@ trait SoldOrGivenAwayController extends FrontendController with ValidActiveSessi
     }
   }
 
-  val submitSoldOrGivenAway = TODO
+  val submitSoldOrGivenAway = ValidateSession.async { implicit request =>
+
+    soldOrGivenAwayForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(calculation.nonresident.soldOrGivenAway(errors))),
+      success => {
+        calcConnector.saveFormData[SoldOrGivenAwayModel](KeystoreKeys.soldOrGivenAway, success)
+        success match {
+          case SoldOrGivenAwayModel(true) => Future.successful(Redirect(routes.SoldForLessController.soldForLess()))
+          //TODO: Redirect to Market Value of Property
+          case SoldOrGivenAwayModel(false) => Future.successful(Redirect(routes.SoldForLessController.soldForLess()))
+        }
+      }
+    )
+  }
 }

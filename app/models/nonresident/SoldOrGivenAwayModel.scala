@@ -21,5 +21,5 @@ import play.api.libs.json.Json
 case class SoldOrGivenAwayModel(SoldIt: Boolean)
 
 object SoldOrGivenAwayModel {
-  implicit val formats = Json.format[RebasedValueModel]
+  implicit val formats = Json.format[SoldOrGivenAwayModel]
 }
