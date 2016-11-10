@@ -50,7 +50,7 @@ trait DisposalValueController extends FrontendController with ValidActiveSession
 
     def successAction(model: DisposalValueModel) = {
       calcConnector.saveFormData(KeystoreKeys.disposalValue, model)
-      Future.successful(Redirect(routes.AcquisitionCostsController.acquisitionCosts()))
+      Future.successful(Redirect(routes.DisposalCostsController.disposalCosts()))
     }
 
     disposalValueForm.bindFromRequest.fold(errorAction, successAction)

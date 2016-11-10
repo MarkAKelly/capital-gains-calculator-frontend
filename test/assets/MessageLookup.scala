@@ -165,7 +165,7 @@ object MessageLookup {
 
     object DisposalValue {
 
-      val question = "How much did you sell or give away the property for?"
+      val question = "How much did you sell the property for?"
       val errorNegativeNumber = "Enter a positive number for the amount you sold the property for"
       val errorDecimalPlaces = "The amount you sold the property for has too many numbers after the decimal point"
       val errorNegative = "Enter a positive number for the amount you sold the property for"

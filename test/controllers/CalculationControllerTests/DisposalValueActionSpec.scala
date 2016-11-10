@@ -103,8 +103,8 @@ class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with Moc
         status(result) shouldBe 303
       }
 
-      "redirect to the Acquisition Costs page" in {
-        redirectLocation(result) shouldBe Some(controllers.nonresident.routes.AcquisitionCostsController.acquisitionCosts().url)
+      "redirect to the Disposal Costs page" in {
+        redirectLocation(result) shouldBe Some(controllers.nonresident.routes.DisposalCostsController.disposalCosts().url)
       }
     }
 
