@@ -51,8 +51,8 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with Mocki
       "have a heading" which {
         lazy val heading = document.body().select("h1")
 
-        "has a class of heading-large" in {
-          heading.attr("class") shouldBe "heading-large"
+        "has a class of heading-xlarge" in {
+          heading.attr("class") shouldBe "heading-xlarge"
         }
 
         s"has the text '${messages.DisposalValue.question}'" in {
