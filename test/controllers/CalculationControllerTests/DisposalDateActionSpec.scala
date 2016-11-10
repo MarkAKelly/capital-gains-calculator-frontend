@@ -113,8 +113,8 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.DisposalValueController.disposalValue()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.DisposalValueController.disposalValue()}")
+      s"redirect to ${routes.SoldOrGivenAwayController.soldOrGivenAway()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.SoldOrGivenAwayController.soldOrGivenAway()}")
       }
     }
 
@@ -128,8 +128,8 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.DisposalValueController.disposalValue()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.DisposalValueController.disposalValue()}")
+      s"redirect to ${routes.SoldOrGivenAwayController.soldOrGivenAway()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.SoldOrGivenAwayController.soldOrGivenAway()}")
       }
     }
 
