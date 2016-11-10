@@ -147,21 +147,5 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Mock
         redirectLocation(result) shouldBe Some(s"${routes.NoCapitalGainsTaxController.noCapitalGainsTax()}")
       }
     }
-
-    "submitting a disposal date of 22/02/1990 which is before acquisition date 22/01/2000" should {
-
-      lazy val target = setupTarget(None, Some(AcquisitionDateModel("Yes", Some(22), Some(1), Some(2000))))
-      lazy val request = fakeRequestToPOSTWithSession(("disposalDateDay", "22"), ("disposalDateMonth", "2"), ("disposalDateYear", "1990"))
-      lazy val result = target.submitDisposalDate(request)
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      "should return to the disposal date page" in {
-        document.title shouldEqual messages.question
-      }
-    }
   }
 }

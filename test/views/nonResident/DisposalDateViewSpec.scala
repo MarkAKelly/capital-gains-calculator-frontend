@@ -35,7 +35,7 @@ class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     "return some HTML" which {
 
       lazy val acquisitionDate = LocalDate.of(2010, 3, 1)
-      lazy val view = disposalDate(disposalDateForm(Some(acquisitionDate)))(fakeRequest)
+      lazy val view = disposalDate(disposalDateForm)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have the title 'When did you sign the contract that made someone else the owner?'" in {
@@ -44,22 +44,6 @@ class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
       s"have the heading ${Messages("calc.disposalDate.question")} " in {
         document.body.getElementsByTag("h1").text shouldEqual messages.question
-      }
-
-      "have a back link" which {
-        lazy val backLink = document.body().select("#back-link")
-
-        "has a class of 'back-link'" in {
-          backLink.attr("class") shouldBe "back-link"
-        }
-
-        "has the text" in {
-          backLink.text shouldBe commonMessages.back
-        }
-
-        s"has a route to 'customer-type'" in {
-          backLink.attr("href") shouldBe routes.ImprovementsController.improvements().url
-        }
       }
 
       s"have the question '${Messages("calc.disposalDate.question")}'" in {
@@ -93,7 +77,7 @@ class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     "supplied with errors" should {
       lazy val acquisitionDate = LocalDate.of(2010, 3, 1)
-      lazy val form = disposalDateForm(Some(acquisitionDate)).bind(Map("disposalDateDay" -> "a"))
+      lazy val form = disposalDateForm.bind(Map("disposalDateDay" -> "a"))
       lazy val view = disposalDate(form)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 

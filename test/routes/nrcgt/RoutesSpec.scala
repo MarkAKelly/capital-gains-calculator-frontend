@@ -100,7 +100,7 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
   "The URL for the customerType Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/" in {
       val path = controllers.nonresident.routes.CustomerTypeController.customerType().url
-      path shouldEqual "/calculate-your-capital-gains/non-resident/"
+      path shouldEqual "/calculate-your-capital-gains/non-resident/customer-type"
     }
   }
 
@@ -251,7 +251,7 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
   "The URL for the disposalDate Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/disposal-date" in {
       val path = controllers.nonresident.routes.DisposalDateController.disposalDate().url
-      path shouldEqual "/calculate-your-capital-gains/non-resident/disposal-date"
+      path shouldEqual "/calculate-your-capital-gains/non-resident/"
     }
   }
 
