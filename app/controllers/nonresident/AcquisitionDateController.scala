@@ -16,17 +16,14 @@
 
 package controllers.nonresident
 
-import common.DefaultRoutes._
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.AcquisitionDateForm._
-import models.nonresident.{AcquisitionDateModel, OtherPropertiesModel}
+import models.nonresident.AcquisitionDateModel
 import play.api.data.Form
-import play.api.mvc.Result
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation
 
 import scala.concurrent.Future

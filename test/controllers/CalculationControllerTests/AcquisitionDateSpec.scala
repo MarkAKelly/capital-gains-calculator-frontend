@@ -16,22 +16,21 @@
 
 package controllers.CalculationControllerTests
 
-import common.DefaultRoutes._
-import common.KeystoreKeys
+import assets.MessageLookup.NonResident.{AcquisitionDate => messages}
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
+import controllers.helpers.FakeRequestHelper
+import controllers.nonresident.AcquisitionDateController
+import models.nonresident.AcquisitionDateModel
+import org.jsoup._
 import org.mockito.Matchers
 import org.mockito.Mockito._
+import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import org.jsoup._
-import org.scalatest.mock.MockitoSugar
-import assets.MessageLookup.NonResident.{AcquisitionDate => messages}
-import controllers.helpers.FakeRequestHelper
+
 import scala.concurrent.Future
-import controllers.nonresident.{AcquisitionDateController, routes}
-import models.nonresident.{AcquisitionDateModel, OtherPropertiesModel}
 
 class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
@@ -44,7 +43,7 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[AcquisitionDateModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
-    .thenReturn(Future.successful(getData))
+      .thenReturn(Future.successful(getData))
 
     new AcquisitionDateController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
