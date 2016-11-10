@@ -59,7 +59,7 @@ class SoldForLessViewSpec extends UnitSpec with WithFakeApplication with Mockito
         lazy val heading = document.body().select("h1")
 
         "has a class of heading-large" in {
-          heading.attr("class") shouldBe "heading-large"
+          heading.attr("class") shouldBe "heading-xlarge"
         }
 
         s"has the text '${messages.question}'" in {
