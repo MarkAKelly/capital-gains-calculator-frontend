@@ -278,6 +278,15 @@ object MessageLookup {
       def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
+    //How Became Owner messages
+    object HowBecameOwner {
+      val title = "How did you become the property owner?"
+      val errorMandatory = "Tell us how you became the property owner"
+      val bought = "Bought it"
+      val gifted = "Got it as a gift"
+      val inherited = "Inherited it"
+    }
+
     object Summary {
 
       val title = "Summary"
