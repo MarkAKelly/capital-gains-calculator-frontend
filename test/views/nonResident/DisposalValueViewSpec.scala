@@ -44,7 +44,7 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with Mocki
         }
 
         s"has a route to 'disposal-date'" in {
-          backLink.attr("href") shouldBe controllers.nonresident.routes.DisposalDateController.disposalDate().url
+          backLink.attr("href") shouldBe controllers.nonresident.routes.SoldForLessController.soldForLess().url
         }
       }
 
@@ -55,66 +55,21 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with Mocki
           heading.attr("class") shouldBe "heading-large"
         }
 
-        s"has the text '${messages.pageHeading}'" in {
-          heading.text shouldBe messages.pageHeading
+        s"has the text '${messages.DisposalValue.question}'" in {
+          heading.text shouldBe messages.DisposalValue.question
         }
       }
 
-      s"have the question '${messages.DisposalValue.question}'" in {
-        document.body.select("label span").first().text shouldBe messages.DisposalValue.question
-      }
+      s"have a label" which {
 
-      "have additional content" which {
-        s"has a paragraph with the text ${messages.DisposalValue.bulletIntro}" in {
-          document.body().select("#bullet-list-title").text() shouldBe messages.DisposalValue.bulletIntro
+        lazy val label = document.select("label span").first()
+
+        s"has the question '${messages.DisposalValue.question}'" in {
+          label.text shouldBe messages.DisposalValue.question
         }
 
-        "has a bullet list" which {
-          lazy val bulletList = document.body().select("form ul")
-
-          "has a class of 'list-bullet'" in {
-            bulletList.attr("class") shouldBe "list-bullet"
-          }
-
-          "has three bullet points" in {
-            bulletList.select("li").size() shouldBe 3
-          }
-
-          s"has a bullet point with the message ${messages.DisposalValue.bulletOne}" in {
-            bulletList.select("li").text() should include (messages.DisposalValue.bulletOne)
-          }
-
-          s"has a bullet point with the message ${messages.DisposalValue.bulletTwo}" in {
-            bulletList.select("li").text() should include (messages.DisposalValue.bulletTwo)
-          }
-
-          s"has a bullet point with the message ${messages.DisposalValue.bulletThree}" in {
-            bulletList.select("li").text() should include (messages.DisposalValue.bulletThree)
-          }
-
-          "has a link" which {
-            lazy val link = bulletList.select("#lossesLink")
-
-            "has a class of 'external-link'" in {
-              link.attr("class") shouldBe "external-link"
-            }
-
-            "has a rel of 'external'" in {
-              link.attr("rel") shouldBe "external"
-            }
-
-            "has a target of '_blank'" in {
-              link.attr("target") shouldBe "_blank"
-            }
-
-            "has an href of 'https://www.gov.uk/capital-gains-tax/losses'" in {
-              link.attr("href") shouldBe "https://www.gov.uk/capital-gains-tax/losses"
-            }
-
-            "has the correct link text" in {
-              link.text() shouldBe s"${messages.DisposalValue.bulletTwoLink} ${messages.externalLink}"
-            }
-          }
+        "has the class visuallyhidden" in {
+          label.hasClass("visuallyhidden") shouldEqual true
         }
       }
 

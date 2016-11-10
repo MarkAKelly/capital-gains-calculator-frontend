@@ -4,34 +4,17 @@
 
 @(disposalValueForm: Form[DisposalValueModel])(implicit request: Request[_])
 
-@contentLink = {
-    <a id="lossesLink" class="external-link" rel="external" href="https://www.gov.uk/capital-gains-tax/losses"
-       target="_blank" data-journey-click="help:govUK:disposal-cgt-losses">
-        @Messages("calc.disposalValue.bullet.two.link")
-        <span id="opensInANewWindow">@Messages("calc.base.externalLink")</span>
-    </a>
-}
-
-@bulletContent = {
-    <p id="bullet-list-title">@Messages("calc.disposalValue.bullet.title") </p>
-    <ul class="list-bullet">
-        <li>@Messages("calc.disposalValue.bullet.one")</li>
-        <li>@Messages("calc.disposalValue.bullet.two") @contentLink</li>
-        <li>@Messages("calc.disposalValue.bullet.three")</li>
-    </ul>
-}
-
 @main_template(Messages("calc.disposalValue.question")) {
 
-    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.DisposalDateController.disposalDate">@Messages("calc.base.back")</a>
+    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.SoldForLessController.soldForLess">@Messages("calc.base.back")</a>
 
     @errorSummary(disposalValueForm, "disposal-value")
 
-    <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
+    <h1 class="heading-large">@Messages("calc.disposalValue.question")</h1>
 
     @form(action = controllers.nonresident.routes.DisposalValueController.submitDisposalValue) {
 
-        @formInputMoney(disposalValueForm, "disposalValue", Messages("calc.disposalValue.question"), additionalHTMLContent = Some(bulletContent.toString()))
+        @formInputMoney(disposalValueForm, "disposalValue", Messages("calc.disposalValue.question"), hideLabel = true)
 
         <button id="continue-button" type="submit" class="button">@Messages("calc.base.button.continue")</button>
 
