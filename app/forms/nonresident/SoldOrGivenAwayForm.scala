@@ -28,8 +28,8 @@ object SoldOrGivenAwayForm {
   val soldOrGivenAwayForm = Form(
     mapping(
       "soldIt" -> text
-        .verifying(Messages("calc.common.error.fieldRequired"), mandatoryCheck)
-        .verifying(Messages("calc.common.error.fieldRequired"), yesNoCheck)
+        .verifying(Messages("error.required"), mandatoryCheck)
+        .verifying(Messages("error.required"), yesNoCheck)
         .transform[Boolean](stringToBoolean, booleanToString)
     )(SoldOrGivenAwayModel.apply)(SoldOrGivenAwayModel.unapply)
   )

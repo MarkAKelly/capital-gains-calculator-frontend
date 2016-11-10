@@ -76,6 +76,18 @@ class SoldOrGivenAwayViewSpec extends UnitSpec with WithFakeApplication with Fak
         document.body().select("input[type=radio]").attr("id") should include ("soldIt")
       }
 
+      "have a legend that" should {
+        lazy val legend = document.body.select("legend")
+
+        s"have the text of ${messages.title}" in {
+          legend.text shouldBe messages.title
+        }
+
+        "be visually hidden" in {
+          legend.hasClass("visuallyhidden") shouldEqual true
+        }
+      }
+
       "have a button that" should {
         lazy val button = document.select("button")
 

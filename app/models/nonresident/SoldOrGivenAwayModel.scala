@@ -18,7 +18,7 @@ package models.nonresident
 
 import play.api.libs.json.Json
 
-case class SoldOrGivenAwayModel(SoldIt: Boolean)
+case class SoldOrGivenAwayModel(soldIt: Boolean)
 
 object SoldOrGivenAwayModel {
   implicit val formats = Json.format[SoldOrGivenAwayModel]
