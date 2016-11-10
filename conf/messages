@@ -203,6 +203,9 @@ calc.disposalValue.bullet.two = sold it to a relative, business partner or
 calc.disposalValue.bullet.two.link = someone else you''re connected to
 calc.disposalValue.bullet.three = sold it for less than it''s worth to help the buyer
 
+## Sold For Less Non-resident ##
+calc.nonResident.soldForLess.question = Did you sell the property for less than it was worth to help the buyer?
+
 ## Acquisition Costs ##
 calc.acquisitionCosts.question = How much did you pay in costs when you became the property owner?
 calc.acquisitionCosts.helpText = Costs include agent fees, legal fees and surveys
