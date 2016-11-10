@@ -20,6 +20,82 @@ import org.scalatest.Matchers
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
+
+  /* Sold or Given Away routes */
+  "The URL for the soldOrGivenAway Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/sold-or-given-away" in {
+      val path = controllers.nonresident.routes.SoldOrGivenAwayController.soldOrGivenAway().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/sold-or-given-away"
+    }
+  }
+
+  "The URL for the submitSoldOrGivenAway Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/sold-or-given-away" in {
+      val path = controllers.nonresident.routes.SoldOrGivenAwayController.submitSoldOrGivenAway().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/sold-or-given-away"
+    }
+  }
+
+  /* Sold for Less routes */
+  "The URL for the soldForLess Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/sold-for-less" in {
+      val path = controllers.nonresident.routes.SoldForLessController.soldForLess().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/sold-for-less"
+    }
+  }
+
+  "The URL for the submitSoldForLess Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/sold-for-less" in {
+      val path = controllers.nonresident.routes.SoldForLessController.submitSoldForLess().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/sold-for-less"
+    }
+  }
+
+  /* How Became Owner routes */
+  "The URL for the howBecameOwner Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/how-became-owner" in {
+      val path = controllers.nonresident.routes.HowBecameOwnerController.howBecameOwner().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/how-became-owner"
+    }
+  }
+
+  "The URL for the submitHowBecameOwner Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/how-became-owner" in {
+      val path = controllers.nonresident.routes.HowBecameOwnerController.submitHowBecameOwner().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/how-became-owner"
+    }
+  }
+
+  /* Bought for Less routes */
+  "The URL for the boughtForLess Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/bought-for-less" in {
+      val path = controllers.nonresident.routes.BoughtForLessController.boughtForLess().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/bought-for-less"
+    }
+  }
+
+  "The URL for the submitBoughtForLess Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/bought-for-less" in {
+      val path = controllers.nonresident.routes.BoughtForLessController.submitBoughtForLess().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/bought-for-less"
+    }
+  }
+
+  /* Check Your Answers routes */
+  "The URL for the checkYourAnswers Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/check-your-answers" in {
+      val path = controllers.nonresident.routes.CheckYourAnswersController.checkYourAnswers().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/check-your-answers"
+    }
+  }
+
+  "The URL for the submitCheckYourAnswers Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/check-your-answers" in {
+      val path = controllers.nonresident.routes.CheckYourAnswersController.submitCheckYourAnswers().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/check-your-answers"
+    }
+  }
+
   /* Customer Type routes */
   "The URL for the customerType Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/" in {
