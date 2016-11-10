@@ -50,7 +50,7 @@ class SoldForLessViewSpec extends UnitSpec with WithFakeApplication with Mockito
         }
 
         s"has a route to 'disposal-date'" in {
-          backLink.attr("href") shouldBe controllers.nonresident.routes.DisposalDateController.disposalDate().url
+          backLink.attr("href") shouldBe controllers.nonresident.routes.SoldOrGivenAwayController.soldOrGivenAway.url
         }
       }
 
@@ -91,8 +91,8 @@ class SoldForLessViewSpec extends UnitSpec with WithFakeApplication with Mockito
           form.attr("method") shouldBe "POST"
         }
 
-        s"has an action of '${controllers.nonresident.routes.DisposalValueController.submitDisposalValue().url}'" in {
-          form.attr("action") shouldBe controllers.nonresident.routes.DisposalValueController.submitDisposalValue().url
+        s"has an action of '${controllers.nonresident.routes.SoldForLessController.submitSoldForLess.url}'" in {
+          form.attr("action") shouldBe controllers.nonresident.routes.SoldForLessController.submitSoldForLess.url
         }
       }
 
