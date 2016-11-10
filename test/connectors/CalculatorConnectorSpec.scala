@@ -20,6 +20,7 @@ import java.util.UUID
 
 import common.KeystoreKeys
 import common.nonresident.CustomerTypeKeys
+import config.WSHttp
 import models.nonresident._
 import models.resident
 import models.resident.IncomeAnswersModel
@@ -199,6 +200,44 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
 
   }
 
+  def setupMockedConnector(totalGainAnswersModel: TotalGainAnswersModel): CalculatorConnector = {
+
+    val mockSessionCache = mock[SessionCache]
+
+    when(mockSessionCache.fetchAndGetEntry[DisposalDateModel](Matchers.eq(KeystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(totalGainAnswersModel.disposalDateModel)))
+
+    when(mockSessionCache.fetchAndGetEntry[DisposalValueModel](Matchers.eq(KeystoreKeys.disposalValue))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(totalGainAnswersModel.disposalValueModel)))
+
+    when(mockSessionCache.fetchAndGetEntry[DisposalCostsModel](Matchers.eq(KeystoreKeys.disposalCosts))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(totalGainAnswersModel.disposalCostsModel)))
+
+    when(mockSessionCache.fetchAndGetEntry[AcquisitionValueModel](Matchers.eq(KeystoreKeys.acquisitionValue))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(totalGainAnswersModel.acquisitionValueModel)))
+
+    when(mockSessionCache.fetchAndGetEntry[AcquisitionCostsModel](Matchers.eq(KeystoreKeys.acquisitionCosts))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(totalGainAnswersModel.acquisitionCostsModel)))
+
+    when(mockSessionCache.fetchAndGetEntry[AcquisitionDateModel](Matchers.eq(KeystoreKeys.acquisitionDate))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(totalGainAnswersModel.acquisitionDateModel)))
+
+    when(mockSessionCache.fetchAndGetEntry[RebasedValueModel](Matchers.eq(KeystoreKeys.rebasedValue))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(totalGainAnswersModel.rebasedValueModel))
+
+    when(mockSessionCache.fetchAndGetEntry[RebasedCostsModel](Matchers.eq(KeystoreKeys.rebasedCosts))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(totalGainAnswersModel.rebasedCostsModel))
+
+    when(mockSessionCache.fetchAndGetEntry[ImprovementsModel](Matchers.eq(KeystoreKeys.improvements))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(totalGainAnswersModel.improvementsModel)))
+
+    new CalculatorConnector {
+      override val sessionCache: SessionCache = mockSessionCache
+      override val http: HttpGet = WSHttp
+      override val serviceUrl: String = ""
+    }
+  }
+
   val sumModelFlat = SummaryModel(
     CustomerTypeModel(CustomerTypeKeys.individual),
     None,
@@ -293,6 +332,30 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     OtherReliefsModel(Some("No"), None),
     OtherReliefsModel(Some("No"), None),
     None
+  )
+
+  val totalGainNoOptionalModel = TotalGainAnswersModel(
+    DisposalDateModel(10, 10, 2016),
+    DisposalValueModel(10000),
+    DisposalCostsModel(100),
+    AcquisitionValueModel(5000),
+    AcquisitionCostsModel(200),
+    AcquisitionDateModel("No", None, None, None),
+    None,
+    None,
+    ImprovementsModel("No", None, None)
+  )
+
+  val totalGainAllOptionalModel = TotalGainAnswersModel(
+    DisposalDateModel(10, 10, 2016),
+    DisposalValueModel(10000),
+    DisposalCostsModel(100),
+    AcquisitionValueModel(5000),
+    AcquisitionCostsModel(200),
+    AcquisitionDateModel("Yes", Some(1), Some(4), Some(2013)),
+    Some(RebasedValueModel("Yes", Some(7500))),
+    Some(RebasedCostsModel("Yes", Some(150))),
+    ImprovementsModel("Yes", Some(50), Some(25))
   )
 
   "Calculator Connector" should {
@@ -406,6 +469,25 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
       mockResidentSharesFetchAndGetFormData()
       lazy val result = TargetCalculatorConnector.getShareIncomeAnswers(hc)
       await(result).isInstanceOf[IncomeAnswersModel] shouldBe true
+    }
+  }
+
+  "Calling getNRTotalGainAnswers" should {
+
+    "return a valid TotalGainAnswersModel with no optional values" in {
+      val hc = mock[HeaderCarrier]
+      val connector = setupMockedConnector(totalGainNoOptionalModel)
+      val result = connector.getNRTotalGainAnswers(hc)
+
+      await(result) shouldBe totalGainNoOptionalModel
+    }
+
+    "return a valid TotalGainAnswersModel with all optional values" in {
+      val hc = mock[HeaderCarrier]
+      val connector = setupMockedConnector(totalGainAllOptionalModel)
+      val result = connector.getNRTotalGainAnswers(hc)
+
+      await(result) shouldBe totalGainAllOptionalModel
     }
   }
 }
