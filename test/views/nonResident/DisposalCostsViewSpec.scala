@@ -52,6 +52,18 @@ class DisposalCostsViewSpec extends UnitSpec with WithFakeApplication with FakeR
         }
       }
 
+      "have a heading" which {
+        lazy val heading = document.body().select("h1")
+
+        "has a class of heading-xlarge" in {
+          heading.attr("class") shouldBe "heading-xlarge"
+        }
+
+        s"has the text '${messages.question}'" in {
+          heading.text shouldBe messages.question
+        }
+      }
+
       "have a hint" which {
 
         lazy val hint = document.select("#input-hint")
