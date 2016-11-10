@@ -36,17 +36,13 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Fa
 
     "have a h1 tag that" should {
 
-      s"have the heading ${commonMessages.pageHeading}" in {
-        document.select("h1").text shouldEqual commonMessages.pageHeading
+      s"have the heading ${messages.question}" in {
+        document.select("h1").text shouldEqual messages.question
       }
 
       "have the heading-large class" in {
-        document.select("h1").hasClass("heading-large") shouldBe true
+        document.select("h1").hasClass("heading-xlarge") shouldBe true
       }
-    }
-
-    "have the title 'How much did you pay for the property?'" in {
-      document.title shouldEqual messages.question
     }
 
     "have the home link to 'home'" in {
@@ -59,8 +55,8 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Fa
         document.select("a#back-link").text shouldEqual commonMessages.back
       }
 
-      s"have a link to ${routes.AcquisitionDateController.acquisitionDate()}" in {
-       document.select("a#back-link").attr("href") shouldEqual routes.AcquisitionDateController.acquisitionDate().toString()
+      s"have a link to ${routes.BoughtForLessController.boughtForLess().url}" in {
+       document.select("a#back-link").attr("href") shouldEqual routes.BoughtForLessController.boughtForLess().url
       }
 
       "has the back-link class" in {
@@ -78,56 +74,6 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Fa
 
       "with method type POST" in {
         form.attr("method") shouldBe "POST"
-      }
-    }
-
-    "have the question 'How much did you pay for the property?'" in {
-      document.body.getElementsByTag("label").text should include (messages.question)
-    }
-
-    "have a bullet list that" should {
-
-      "have a bullet list class present" in {
-        document.select("ul").hasClass("list-bullet") shouldBe true
-      }
-
-      "have the bullet list content title and content" in {
-        document.select("p#bullet-list-title").text shouldEqual messages.bulletTitle
-      }
-
-      s"Have the content of ${messages.bulletOne}" in {
-        document.select("ul li").text should include(messages.bulletOne)
-      }
-
-      s"Have the content of ${messages.bulletTwo}" in {
-        document.select("ul li").text should include(messages.bulletTwo)
-      }
-
-      s"Have the content of ${messages.bulletThree}" in {
-        document.select("ul li").text should include(messages.bulletThree)
-      }
-
-      s"Have the content of ${messages.bulletFour}" in {
-        document.select("ul li").text should include(messages.bulletFour)
-      }
-
-      s"Have the content of ${messages.bulletFive}" in {
-        document.select("ul li").text should include(messages.bulletFive)
-      }
-    }
-
-    "have a link that" should {
-
-      s"have a hidden external link field that contains the text of ${messages.bulletLink}" in {
-        document.select("ul li a#lossesLink").text should include(messages.bulletLink)
-      }
-
-      s"contains the text of ${commonMessages.externalLink}" in {
-        document.select("span#opensInANewTab").text shouldEqual commonMessages.externalLink
-      }
-
-      "have the class of external-link" in {
-        document.select("ul li a#lossesLink").hasClass("external-link") shouldBe true
       }
     }
 
