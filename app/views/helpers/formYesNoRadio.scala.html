@@ -3,8 +3,8 @@
 
 @(field: Field, legend: String, legendClass: Option[String] = None, helpText: Option[String] = None)
 
-@{
-    if (helpText.isDefined && legendClass.isDefined) {
+@{(helpText, legendClass) match {
+    case (Some(help), Some(legend)) => {
         formInputRadioGroup(
             field = field,
             Seq(
@@ -12,14 +12,14 @@
             "No" -> Messages("calc.base.no")),
             '_legend -> legend,
             '_legendID -> field.id,
-            '_legendClass -> legendClass.get,
+            '_legendClass -> legend,
             '_labelAfter -> true,
-            '_helpText -> helpText.get,
+            '_helpText -> help,
             '_labelClass -> "block-label",
             '_groupClass -> "inline form-group radio-list",
             '_fieldsetAttributes -> "aria-details = help")
         }
-    else if (helpText.isDefined) {
+    case (Some(help), _) => {
         formInputRadioGroup(
             field = field,
             Seq(
@@ -28,12 +28,12 @@
             '_legend -> legend,
             '_legendID -> field.id,
             '_labelAfter -> true,
-            '_helpText -> helpText.get,
+            '_helpText -> help,
             '_labelClass -> "block-label",
             '_groupClass -> "inline form-group radio-list",
             '_fieldsetAttributes -> "aria-details = help")
     }
-    else if (legendClass.isDefined) {
+    case (_, Some(legend)) => {
         formInputRadioGroup(
             field = field,
             Seq(
@@ -41,13 +41,13 @@
             "No" -> Messages("calc.base.no")),
             '_legend -> legend,
             '_legendID -> field.id,
-            '_legendClass -> legendClass.get,
+            '_legendClass -> legend,
             '_labelAfter -> true,
             '_labelClass -> "block-label",
             '_groupClass -> "inline form-group radio-list",
             '_fieldsetAttributes -> "aria-details = help")
     }
-    else {
+    case _ => {
         formInputRadioGroup(
             field = field,
             Seq(
@@ -60,4 +60,4 @@
             '_groupClass -> "inline form-group radio-list",
             '_fieldsetAttributes -> "aria-details = help")
     }
-}
+}}
