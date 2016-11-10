@@ -19,22 +19,17 @@ package constructors.nonresident
 import common.{KeystoreKeys, TestModels}
 import assets.MessageLookup.NonResident.{Summary => messages}
 import controllers.nonresident.routes
+import helpers.AssertHelpers
 import models.nonresident.CalculationResultModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
+class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplication with AssertHelpers {
 
   val target = CalculationDetailsConstructor
 
-  def assertOption[T](message: String)(option: Option[T])(test: T => Unit): Unit = {
-    option.fold(cancel(message)) { value =>
-      test(value)
-    }
-  }
+  private def assertExpectedResult[T](option: Option[T])(test: T => Unit) = assertOption("expected option is None")(option)(test)
 
-  def assertExpectedResult[T](option: Option[T])(test: T => Unit): Unit = assertOption("expected option is None")(option)(test)
-
-  def assertExpectedLink[T](option: Option[T])(test: T => Unit): Unit = assertOption("expected link is None")(option)(test)
+  private def assertExpectedLink[T](option: Option[T])(test: T => Unit) = assertOption("expected link is None")(option)(test)
 
   "Calling buildSection" when {
 
