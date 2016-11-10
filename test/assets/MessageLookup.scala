@@ -159,6 +159,10 @@ object MessageLookup {
 
     }
 
+    object SoldForLess {
+      val question = "Did you sell the property for less than it was worth to help the buyer?"
+    }
+
     object DisposalValue {
 
       val question = "How much did you sell or give away the property for?"

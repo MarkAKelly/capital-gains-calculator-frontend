@@ -18,6 +18,12 @@ package common
 
 object KeystoreKeys {
 
+  object NonResidentKeys{
+
+    val soldForLess = "nr:soldForLess"
+
+  }
+
   val customerType = "nr:customerType"
   val disabledTrustee = "nr:disabledTrustee"
   val currentIncome = "nr:currentIncome"
