@@ -43,20 +43,12 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Moc
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget(getData: Option[DisposalCostsModel],
-                  acquisitionDate: Option[AcquisitionDateModel],
-                  rebasedData: Option[RebasedValueModel] = None): DisposalCostsController = {
+  def setupTarget(getData: Option[DisposalCostsModel]): DisposalCostsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
     when(mockCalcConnector.fetchAndGetFormData[DisposalCostsModel](Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
-
-    when(mockCalcConnector.fetchAndGetFormData[AcquisitionDateModel](Matchers.eq(KeystoreKeys.acquisitionDate))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(acquisitionDate))
-
-    when(mockCalcConnector.fetchAndGetFormData[RebasedValueModel](Matchers.eq(KeystoreKeys.rebasedValue))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(rebasedData))
 
     new DisposalCostsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -68,7 +60,7 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Moc
 
     "not supplied with a pre-existing stored model" should {
 
-      val target = setupTarget(None, None, None)
+      val target = setupTarget(None)
       lazy val result = target.disposalCosts(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -83,7 +75,7 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Moc
 
     "supplied with a pre-existing stored model" should {
 
-      val target = setupTarget(Some(DisposalCostsModel(1000)), None, None)
+      val target = setupTarget(Some(DisposalCostsModel(1000)))
       lazy val result = target.disposalCosts(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -97,7 +89,7 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Moc
     }
 
     "supplied with an invalid session" should {
-      val target = setupTarget(Some(DisposalCostsModel(1000)), None, None)
+      val target = setupTarget(Some(DisposalCostsModel(1000)))
       lazy val result = target.disposalCosts(fakeRequest)
 
       "return a 303" in {
@@ -113,8 +105,8 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Moc
   //POST Tests
   "In CalculationController calling the .submitDisposalCosts action" when {
 
-    "submitting a valid form when any acquisition date has been supplied but no property was revalued" should {
-      val target = setupTarget(None, Some(AcquisitionDateModel("Yes", Some(12), Some(3), Some(2016))))
+    "submitting a valid form with 1000" should {
+      val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("disposalCosts", "1000"))
       lazy val result = target.submitDisposalCosts(request)
 
@@ -122,55 +114,13 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Moc
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.PrivateResidenceReliefController.privateResidenceRelief()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.PrivateResidenceReliefController.privateResidenceRelief()}")
-      }
-    }
-
-    "submitting a valid form when no acquisition date has been supplied but a property was revalued" should {
-      val target = setupTarget(None, Some(AcquisitionDateModel("No", None, None, None)), Some(RebasedValueModel("Yes", Some(BigDecimal(1000)))))
-      lazy val request = fakeRequestToPOSTWithSession(("disposalCosts", "1000"))
-      lazy val result = target.submitDisposalCosts(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      s"redirect to ${routes.PrivateResidenceReliefController.privateResidenceRelief()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.PrivateResidenceReliefController.privateResidenceRelief()}")
-      }
-    }
-
-    "submitting a valid form when no acquisition date has been supplied and no property was revalued" should {
-      val target = setupTarget(None, Some(AcquisitionDateModel("No", None, None, None)))
-      lazy val request = fakeRequestToPOSTWithSession(("disposalCosts", "1000"))
-      lazy val result = target.submitDisposalCosts(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      s"redirect to ${routes.AllowableLossesController.allowableLosses()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.AllowableLossesController.allowableLosses()}")
-      }
-    }
-
-    "submitting a valid form when an invalid Acquisition Date Model has been supplied and no property was revalued" should {
-      val target = setupTarget(None, Some(AcquisitionDateModel("invalid", None, None, None)))
-      lazy val request = fakeRequestToPOSTWithSession(("disposalCosts", "1000"))
-      lazy val result = target.submitDisposalCosts(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      s"redirect to ${routes.AllowableLossesController.allowableLosses()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.AllowableLossesController.allowableLosses()}")
+      s"redirect to ${routes.AcquisitionDateController.acquisitionDate()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.AcquisitionDateController.acquisitionDate()}")
       }
     }
 
     "submitting an invalid form with no value" should {
-      val target = setupTarget(None, Some(AcquisitionDateModel("No", None, None, None)))
+      val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("disposalCosts", ""))
       lazy val result = target.submitDisposalCosts(request)
       lazy val document = Jsoup.parse(bodyOf(result))
@@ -179,8 +129,8 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Moc
         status(result) shouldBe 400
       }
 
-      s"display the error message '${commonMessages.errorRealNumber}'" in {
-        document.select("div label span.error-notification").text shouldEqual commonMessages.errorRealNumber
+      "return to the disposal costs page" in {
+        document.title shouldEqual messages.question
       }
     }
   }

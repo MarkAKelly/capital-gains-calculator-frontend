@@ -146,7 +146,14 @@ object MessageLookup {
 
     object DisposalCosts {
 
-      val question = "How much did you pay in costs when you stopped being the property owner?"
+      val question = "How much did you pay in costs when you stopped owning the property?"
+
+      val helpTitle = "This is what you paid for:"
+      val helpBulletOne = "estate agents or auctioneers"
+      val helpBulletTwo = "solicitors or conveyancers"
+      val helpBulletThree = "any professional help to value your property, eg surveyor or valuer"
+      val helpBulletFour = "advertising to find a buyer"
+
       val errorNegativeNumber = "Enter a positive number for your selling costs"
       val errorDecimalPlaces = "There are too many numbers after the decimal point in your selling costs"
 
@@ -159,9 +166,13 @@ object MessageLookup {
 
     }
 
+    object SoldForLess {
+      val question = "Did you sell the property for less than it was worth to help the buyer?"
+    }
+
     object DisposalValue {
 
-      val question = "How much did you sell or give away the property for?"
+      val question = "How much did you sell the property for?"
       val errorNegativeNumber = "Enter a positive number for the amount you sold the property for"
       val errorDecimalPlaces = "The amount you sold the property for has too many numbers after the decimal point"
       val errorNegative = "Enter a positive number for the amount you sold the property for"
