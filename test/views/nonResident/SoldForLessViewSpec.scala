@@ -16,66 +16,72 @@
 
 package views.nonResident
 
-import assets.MessageLookup.{NonResident => messages}
 import controllers.helpers.FakeRequestHelper
-import org.jsoup.Jsoup
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import views.html.calculation.nonresident.disposalValue
-import forms.nonresident.DisposalValueForm._
-import models.nonresident.DisposalValueModel
+import views.html.calculation.nonresident.soldForLess
+import forms.nonresident.SoldForLessForm._
+import assets.MessageLookup.{NonResident => commonMessages}
+import assets.MessageLookup.NonResident.{SoldForLess => messages}
+import org.jsoup.Jsoup
 
-class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
+class SoldForLessViewSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
-  "Disposal value view" when {
+  "The Sold for Less view spec"  when {
 
     "supplied with no errors" should {
-      lazy val view = disposalValue(disposalValueForm)(fakeRequest)
+
+      lazy val view = soldForLess(soldForLessForm)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
-      s"have a title of '${messages.DisposalValue.question}'" in {
-        document.title() shouldBe messages.DisposalValue.question
+      s"have a title of '${messages.question}'" in {
+        document.title() shouldBe messages.question
       }
 
       "have a back link" which {
         lazy val backLink = document.body().select("#back-link")
 
-        "has the text" in {
-          backLink.text shouldBe messages.back
+        "has a class of 'back-link'" in {
+          backLink.attr("class") shouldBe "back-link"
         }
 
-        s"has a route to 'sold-for-less'" in {
-          backLink.attr("href") shouldBe controllers.nonresident.routes.SoldForLessController.soldForLess().url
+        "has the text" in {
+          backLink.text shouldBe commonMessages.back
+        }
+
+        s"has a route to 'sold-or-given-away'" in {
+          backLink.attr("href") shouldBe controllers.nonresident.routes.SoldOrGivenAwayController.soldOrGivenAway().url
         }
       }
 
       "have a heading" which {
+
         lazy val heading = document.body().select("h1")
 
-        "has a class of heading-xlarge" in {
+        "has a class of heading-large" in {
           heading.attr("class") shouldBe "heading-xlarge"
         }
 
-        s"has the text '${messages.DisposalValue.question}'" in {
-          heading.text shouldBe messages.DisposalValue.question
+        s"has the text '${messages.question}'" in {
+          heading.text shouldBe messages.question
         }
       }
 
-      s"have a label" which {
+      s"have the legend" which {
 
-        lazy val label = document.select("label span").first()
+        lazy val legend = document.select("legend")
 
-        s"has the question '${messages.DisposalValue.question}'" in {
-          label.text shouldBe messages.DisposalValue.question
+        s"has the question ${messages.question}" in {
+          legend.text shouldEqual messages.question
         }
 
         "has the class visuallyhidden" in {
-          label.hasClass("visuallyhidden") shouldEqual true
+          document.body.select("legend").hasClass("visuallyhidden") shouldBe true
         }
       }
 
-      "have an input with the id 'disposalValue" in {
-        document.body().select("input").attr("id") shouldBe "disposalValue"
+      "have inputs containing the id 'soldForLess'" in {
+        document.body().select("input").attr("id") should include("soldForLess")
       }
 
       "have a form" which {
@@ -85,8 +91,8 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with Mocki
           form.attr("method") shouldBe "POST"
         }
 
-        s"has an action of '${controllers.nonresident.routes.DisposalValueController.submitDisposalValue().url}'" in {
-          form.attr("action") shouldBe controllers.nonresident.routes.DisposalValueController.submitDisposalValue().url
+        s"has an action of '${controllers.nonresident.routes.SoldForLessController.submitSoldForLess.url}'" in {
+          form.attr("action") shouldBe controllers.nonresident.routes.SoldForLessController.submitSoldForLess.url
         }
       }
 
@@ -108,13 +114,16 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with Mocki
     }
 
     "supplied with a form with errors" should {
-      lazy val form = disposalValueForm.bind(Map("disposalValue" -> "testData"))
-      lazy val view = disposalValue(form)(fakeRequest)
+
+      lazy val form = soldForLessForm.bind(Map("soldForLess" -> "a"))
+      lazy val view = soldForLess(form)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have an error summary" in {
         document.select("#error-summary-display").size() shouldBe 1
       }
     }
+
   }
+
 }
