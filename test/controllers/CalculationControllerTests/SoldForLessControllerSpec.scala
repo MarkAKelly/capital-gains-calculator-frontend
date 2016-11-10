@@ -123,7 +123,7 @@ class SoldForLessControllerSpec extends UnitSpec with WithFakeApplication with F
         status(result) shouldBe 303
       }
 
-      "redirect to the other properties page" in {
+      "redirect to the disposal value page" in {
         redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/non-resident/disposal-value")
       }
     }
