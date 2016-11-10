@@ -49,8 +49,8 @@ class SoldForLessViewSpec extends UnitSpec with WithFakeApplication with Mockito
           backLink.text shouldBe commonMessages.back
         }
 
-        s"has a route to 'disposal-date'" in {
-          backLink.attr("href") shouldBe controllers.nonresident.routes.SoldOrGivenAwayController.soldOrGivenAway.url
+        s"has a route to 'sold-or-given-away'" in {
+          backLink.attr("href") shouldBe controllers.nonresident.routes.SoldOrGivenAwayController.soldOrGivenAway().url
         }
       }
 
