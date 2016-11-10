@@ -16,16 +16,28 @@
 
 package controllers.nonresident
 
+import common.KeystoreKeys
+import views.html.calculation
+import forms.nonresident.SoldOrGivenAwayForm._
 import connectors.CalculatorConnector
+import controllers.predicates.ValidActiveSession
+import models.nonresident.SoldOrGivenAwayModel
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
 object SoldOrGivenAwayController extends SoldOrGivenAwayController {
   val calcConnector = CalculatorConnector
 }
 
-trait SoldOrGivenAwayController extends FrontendController {
+trait SoldOrGivenAwayController extends FrontendController with ValidActiveSession  {
 
-  val soldOrGivenAway = TODO
+  val calcConnector: CalculatorConnector
+
+  val soldOrGivenAway = ValidateSession.async { implicit request =>
+    calcConnector.fetchAndGetFormData[SoldOrGivenAwayModel](KeystoreKeys.soldOrGivenAway).map {
+      case Some(data) => Ok(calculation.nonresident.soldOrGivenAway(soldOrGivenAwayForm.fill(data)))
+      case None => Ok(calculation.nonresident.soldOrGivenAway(soldOrGivenAwayForm))
+    }
+  }
 
   val submitSoldOrGivenAway = TODO
 }

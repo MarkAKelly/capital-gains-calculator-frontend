@@ -14,23 +14,12 @@
  * limitations under the License.
  */
 
-package forms.nonresident
+package models.nonresident
 
-import common.Transformers._
-import common.Validation._
-import models.nonresident.SellOrGiveAwayModel
-import play.api.data.Form
-import play.api.data.Forms._
-import play.api.i18n.Messages
+import play.api.libs.json.Json
 
-object SellOrGiveAwayForm {
+case class SoldOrGivenAwayModel(SoldIt: Boolean)
 
-  val sellOrGiveAwayForm = Form(
-    mapping(
-      "soldIt" -> text
-        .verifying(Messages("calc.common.error.fieldRequired"), mandatoryCheck)
-        .verifying(Messages("calc.common.error.fieldRequired"), yesNoCheck)
-        .transform[Boolean](stringToBoolean, booleanToString)
-    )(SellOrGiveAwayModel.apply)(SellOrGiveAwayModel.unapply)
-  )
+object SoldOrGivenAwayModel {
+  implicit val formats = Json.format[RebasedValueModel]
 }
