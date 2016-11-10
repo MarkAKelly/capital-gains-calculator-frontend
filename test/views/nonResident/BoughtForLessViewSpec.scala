@@ -60,6 +60,63 @@ class BoughtForLessViewSpec extends UnitSpec with WithFakeApplication with Mocki
         "has an href to the how became owner page" in {
           assertHTML(backLink)(_.attr("href") shouldBe controllers.nonresident.routes.HowBecameOwnerController.howBecameOwner().url)
         }
+
+      }
+
+      "have a H1 tag" which {
+        lazy val header = document.select("h1")
+
+        "has only a single header" in {
+          header.size() shouldBe 1
+        }
+
+        s"has the text of ${messages.BoughtForLess.question}" in {
+          assertHTML(header)(_.text() shouldBe messages.BoughtForLess.question)
+        }
+
+        "has the class" in {
+          assertHTML(header)(_.attr("class") shouldBe "heading-xlarge")
+        }
+      }
+
+      "have a form" which {
+        lazy val form = document.body().select("form")
+
+        "has a method of POST" in {
+          form.attr("method") shouldBe "POST"
+        }
+
+        s"has an action of '${controllers.nonresident.routes.BoughtForLessController.submitBoughtForLess().url}'" in {
+          form.attr("action") shouldBe controllers.nonresident.routes.BoughtForLessController.submitBoughtForLess().url
+        }
+      }
+
+      "have a visually hidden legend" which {
+        lazy val legend = document.body().select("legend")
+
+        "has the class visuallyhidden" in {
+          legend.attr("class") shouldBe "visuallyhidden"
+        }
+
+        s"has the text ${messages.BoughtForLess.question}" in {
+          legend.text() shouldBe messages.BoughtForLess.question
+        }
+      }
+
+      "have a fieldset with the class 'inline form-group radio-list'" in {
+        document.select("fieldset").attr("class") shouldBe "inline form-group radio-list"
+      }
+
+      "contain an option for 'Yes'"
+    }
+
+    "supplied with errors" should {
+      lazy val form = boughtForLessForm.bind(Map("boughtForLess" -> "invalid text"))
+      lazy val view = boughtForLess(form)(fakeRequest)
+      lazy val document = Jsoup.parse(view.body)
+
+      "have an error summary" in {
+        document.select("#error-summary-display").size() shouldBe 1
       }
     }
   }

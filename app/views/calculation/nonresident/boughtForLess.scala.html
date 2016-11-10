@@ -7,4 +7,24 @@
 @main_template(Messages("calc.boughtForLess.question")) {
 
     <a id="back-link" class="back-link" href="@controllers.nonresident.routes.HowBecameOwnerController.howBecameOwner">@Messages("calc.base.back")</a>
+
+    @errorSummary(boughtForLessForm, "boughtForLess")
+
+    <h1 class="heading-xlarge">@Messages("calc.boughtForLess.question")</h1>
+
+    @form(action = controllers.nonresident.routes.BoughtForLessController.submitBoughtForLess) {
+
+        @formInputRadioGroup(
+        field = boughtForLessForm("boughtForLess"),
+        Seq(
+        "Yes" -> Messages("calc.base.yes"),
+        "No" -> Messages("calc.base.no")),
+        '_legend -> Messages("calc.boughtForLess.question"),
+        '_legendClass -> "visuallyhidden",
+        '_labelAfter -> true,
+        '_labelClass -> "block-label",
+        '_groupClass -> "inline form-group radio-list",
+        '_fieldsetAttributes -> "aria-details = help"
+        )
+    }
 }
