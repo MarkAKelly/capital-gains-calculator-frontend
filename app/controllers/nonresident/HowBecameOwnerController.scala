@@ -16,15 +16,15 @@
 
 package controllers.nonresident
 
+
 import java.util.UUID
 
 import common.KeystoreKeys
-import common.nonresident.{CustomerTypeKeys, HowBecameOwnerKeys}
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.HowBecameOwnerForm._
-import models.nonresident.{CustomerTypeModel, HowBecameOwnerModel}
+import models.nonresident.HowBecameOwnerModel
 import play.api.mvc.{Action, Result}
 import play.api.data.Form
 import uk.gov.hmrc.play.frontend.controller.FrontendController
@@ -35,17 +35,14 @@ import scala.concurrent.Future
 
 object HowBecameOwnerController extends HowBecameOwnerController {
   val calcConnector = CalculatorConnector
-  val calcElectionConstructor = CalculationElectionConstructor
-}
+  }
 
 trait HowBecameOwnerController extends FrontendController with ValidActiveSession {
 
-  override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
-  override val homeLink = controllers.nonresident.routes.HowBecameOwnerController.howBecameOwner().url
   val calcConnector: CalculatorConnector
-  val calcElectionConstructor: CalculationElectionConstructor
 
-  val howBecameOwner = Action.async { implicit request =>
+
+  val howBecameOwner = ValidateSession.async { implicit request =>
     if (request.session.get(SessionKeys.sessionId).isEmpty) {
       val sessionId = UUID.randomUUID.toString
       Future.successful(Ok(views.howBecameOwner(howBecameOwnerForm)).withSession(request.session + (SessionKeys.sessionId -> s"session-$sessionId")))
@@ -74,12 +71,13 @@ trait HowBecameOwnerController extends FrontendController with ValidActiveSessio
     def routeRequest(data: HowBecameOwnerModel): Future[Result] = {
       data.gainedBy match {
 
-        case HowBecameOwnerKeys.bought => Future.successful(Redirect(routes.CurrentIncomeController.currentIncome()))
-        case HowBecameOwnerKeys.inherited => Future.successful(Redirect(routes.DisabledTrusteeController.disabledTrustee()))
-        case HowBecameOwnerKeys.gifted => Future.successful(Redirect(routes.OtherPropertiesController.otherProperties()))
+        case "Gifted" => Future.successful(Redirect(routes.WorthWhenGiftedController.worthWhenGifted()))
+        case "Inherited" => Future.successful(Redirect(routes.WorthWhenInheritedController.worthWhenInherited()))
+        case _ => Future.successful(Redirect(routes.BoughtForLessController.boughtForLess()))
       }
     }
 
     howBecameOwnerForm.bindFromRequest.fold(errorAction, successAction)
   }
 }
+

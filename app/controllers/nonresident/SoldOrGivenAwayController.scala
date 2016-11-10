@@ -14,10 +14,18 @@
  * limitations under the License.
  */
 
-package common.nonresident
+package controllers.nonresident
 
-object HowBecameOwnerKeys {
-  val bought = "bought"
-  val inherited = "inherited"
-  val gifted = "gifted"
+import connectors.CalculatorConnector
+import uk.gov.hmrc.play.frontend.controller.FrontendController
+
+object SoldOrGivenAwayController extends SoldOrGivenAwayController {
+  val calcConnector = CalculatorConnector
+}
+
+trait SoldOrGivenAwayController extends FrontendController {
+
+  val soldOrGivenAway = TODO
+
+  val submitSoldOrGivenAway = TODO
 }

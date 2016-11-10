@@ -6,6 +6,8 @@
 
 @main_template(title = Messages("calc.howBecameOwner.title")) {
 
+<a id="back-link" class="back-link" href="@controllers.nonresident.routes.AcquisitionDateController.acquisitionDate">@Messages("calc.base.back")</a>
+
 @errorSummary(howBecameOwnerForm, "gainedBy")
 
 <h1 class="heading-large">@Messages("calc.howBecameOwner.title")</h1>

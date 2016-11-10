@@ -1,6 +1,34 @@
 #Non Resident Calculation controller routes
 ########################################################
 
+#Sold or Given Away
+GET         /sold-or-given-away                 controllers.nonresident.SoldOrGivenAwayController.soldOrGivenAway
+POST        /sold-or-given-away                 controllers.nonresident.SoldOrGivenAwayController.submitSoldOrGivenAway
+
+#Sold for Less
+GET         /sold-for-less                      controllers.nonresident.SoldForLessController.soldForLess
+POST        /sold-for-less                      controllers.nonresident.SoldForLessController.submitSoldForLess
+
+#How Became Owner
+GET         /how-became-owner                   controllers.nonresident.HowBecameOwnerController.howBecameOwner
+POST        /how-became-owner                   controllers.nonresident.HowBecameOwnerController.submitHowBecameOwner
+
+#Bought for Less
+GET         /bought-for-less                    controllers.nonresident.BoughtForLessController.boughtForLess
+POST        /bought-for-less                    controllers.nonresident.BoughtForLessController.submitBoughtForLess
+
+#Worth When Inherited
+GET         /worth-when-inherited               controllers.nonresident.WorthWhenInheritedController.worthWhenInherited
+POST        /worth-when-inherited               controllers.nonresident.WorthWhenInheritedController.submitWorthWhenInherited
+
+#Worth When Gifted
+GET         /worth-when-gifted                  controllers.nonresident.WorthWhenGiftedController.worthWhenGifted
+POST        /worth-when-gifted                  controllers.nonresident.WorthWhenGiftedController.submitWorthWhenGifted
+
+#Check Your Answers
+GET         /check-your-answers                 controllers.nonresident.CheckYourAnswersController.checkYourAnswers
+POST        /check-your-answers                 controllers.nonresident.CheckYourAnswersController.submitCheckYourAnswers
+
 #Customer Type
 GET         /                                   controllers.nonresident.CustomerTypeController.customerType
 GET         /customer-type                      controllers.nonresident.CustomerTypeController.customerType
