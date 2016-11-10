@@ -16,6 +16,7 @@
 
 package forms.nonresident
 
+import common.Transformers._
 import common.Validation._
 import models.nonresident.SellOrGiveAwayModel
 import play.api.data.Form
@@ -26,8 +27,10 @@ object SellOrGiveAwayForm {
 
   val sellOrGiveAwayForm = Form(
     mapping(
-      "soldIt" -> boolean
+      "soldIt" -> text
+        .verifying(Messages("calc.common.error.fieldRequired"), mandatoryCheck)
+        .verifying(Messages("calc.common.error.fieldRequired"), yesNoCheck)
+        .transform[Boolean](stringToBoolean, booleanToString)
     )(SellOrGiveAwayModel.apply)(SellOrGiveAwayModel.unapply)
   )
-
 }

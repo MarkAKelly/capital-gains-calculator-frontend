@@ -19,14 +19,13 @@ package forms.nonResident
 import assets.MessageLookup.{NonResident => commonMessages}
 import models.nonresident.SellOrGiveAwayModel
 import forms.nonresident.SellOrGiveAwayForm._
-//import assets.MessageLookup.NonResident.{SellOrGiveAway => messages}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class SellOrGiveAwayFormSpec extends UnitSpec with WithFakeApplication{
 
   "Sell Or Give Away Form" when {
 
-    "passing in a valid model" should {
+    "passing in a true valid model" should {
       val model = SellOrGiveAwayModel(true)
       val form = sellOrGiveAwayForm.fill(model)
 
@@ -35,12 +34,12 @@ class SellOrGiveAwayFormSpec extends UnitSpec with WithFakeApplication{
       }
 
       "return the correct data" in {
-        form.data shouldBe Map("soldIt" -> "true")
+        form.data shouldBe Map("soldIt" -> "Yes")
       }
     }
 
-    "passing in a valid map" should {
-      val map = Map("soldIt" -> "true")
+    "passing in a valid yes map" should {
+      val map = Map("soldIt" -> "Yes")
       lazy val form = sellOrGiveAwayForm.bind(map)
 
       "return a form with 0 errors" in {
@@ -52,6 +51,20 @@ class SellOrGiveAwayFormSpec extends UnitSpec with WithFakeApplication{
       }
     }
 
+    "passing in a valid no map" should {
+      val map = Map("soldIt" -> "No")
+      lazy val form = sellOrGiveAwayForm.bind(map)
+
+      "return a form with 0 errors" in {
+        form.errors.size shouldBe 0
+      }
+
+      "return the correct data" in {
+        form.value shouldBe Some(SellOrGiveAwayModel(false))
+      }
+    }
+
+
     "passing in invalid data" should {
       val map = Map("soldIt" -> "999")
       lazy val form = sellOrGiveAwayForm.bind(map)
@@ -60,9 +73,9 @@ class SellOrGiveAwayFormSpec extends UnitSpec with WithFakeApplication{
         form.errors.size shouldBe 1
       }
 
-//      s"return the error message of ${SellOrGiveAway.errorCompulsaryMessage}" in {
-//        form.error("sellOrGiveAway") shouldbe SellOrGiveAway.errorCompulsaryMessage
-//      }
+      s"return the error message of ${commonMessages.errorRequired}" in {
+        form.error("soldIt").get.message shouldBe commonMessages.errorRequired
+      }
     }
 
     "passing in an empty map" should {
@@ -73,9 +86,9 @@ class SellOrGiveAwayFormSpec extends UnitSpec with WithFakeApplication{
         form.errors.size shouldBe 1
       }
 
-//      s"return the error message of ${SellOrGiveAway.errorCompulsaryMessage}" in {
-//        form.error("sellOrGiveAway") shouldbe SellOrGiveAway.errorCompulsaryMessage
-//      }
+      s"return the error message of ${commonMessages.errorRequired}" in {
+        form.error("soldIt").get.message shouldBe commonMessages.errorRequired
+      }
     }
   }
 }
