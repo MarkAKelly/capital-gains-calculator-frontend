@@ -1,0 +1,63 @@
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import play.api.i18n._
+
+@(field: Field, legend: String, legendClass: Option[String] = None, helpText: Option[String] = None)
+
+@{
+    if (helpText.isDefined && legendClass.isDefined) {
+        formInputRadioGroup(
+            field = field,
+            Seq(
+            "Yes" -> Messages("calc.base.yes"),
+            "No" -> Messages("calc.base.no")),
+            '_legend -> legend,
+            '_legendID -> field.id,
+            '_legendClass -> legendClass.get,
+            '_labelAfter -> true,
+            '_helpText -> helpText.get,
+            '_labelClass -> "block-label",
+            '_groupClass -> "inline form-group radio-list",
+            '_fieldsetAttributes -> "aria-details = help")
+        }
+    else if (helpText.isDefined) {
+        formInputRadioGroup(
+            field = field,
+            Seq(
+            "Yes" -> Messages("calc.base.yes"),
+            "No" -> Messages("calc.base.no")),
+            '_legend -> legend,
+            '_legendID -> field.id,
+            '_labelAfter -> true,
+            '_helpText -> helpText.get,
+            '_labelClass -> "block-label",
+            '_groupClass -> "inline form-group radio-list",
+            '_fieldsetAttributes -> "aria-details = help")
+    }
+    else if (legendClass.isDefined) {
+        formInputRadioGroup(
+            field = field,
+            Seq(
+            "Yes" -> Messages("calc.base.yes"),
+            "No" -> Messages("calc.base.no")),
+            '_legend -> legend,
+            '_legendID -> field.id,
+            '_legendClass -> legendClass.get,
+            '_labelAfter -> true,
+            '_labelClass -> "block-label",
+            '_groupClass -> "inline form-group radio-list",
+            '_fieldsetAttributes -> "aria-details = help")
+    }
+    else {
+        formInputRadioGroup(
+            field = field,
+            Seq(
+            "Yes" -> Messages("calc.base.yes"),
+            "No" -> Messages("calc.base.no")),
+            '_legend -> legend,
+            '_legendID -> field.id,
+            '_labelAfter -> true,
+            '_labelClass -> "block-label",
+            '_groupClass -> "inline form-group radio-list",
+            '_fieldsetAttributes -> "aria-details = help")
+    }
+}
