@@ -334,30 +334,6 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     None
   )
 
-  val totalGainNoOptionalModel = TotalGainAnswersModel(
-    DisposalDateModel(10, 10, 2016),
-    DisposalValueModel(10000),
-    DisposalCostsModel(100),
-    AcquisitionValueModel(5000),
-    AcquisitionCostsModel(200),
-    AcquisitionDateModel("No", None, None, None),
-    None,
-    None,
-    ImprovementsModel("No", None, None)
-  )
-
-  val totalGainAllOptionalModel = TotalGainAnswersModel(
-    DisposalDateModel(10, 10, 2016),
-    DisposalValueModel(10000),
-    DisposalCostsModel(100),
-    AcquisitionValueModel(5000),
-    AcquisitionCostsModel(200),
-    AcquisitionDateModel("Yes", Some(1), Some(4), Some(2013)),
-    Some(RebasedValueModel("Yes", Some(7500))),
-    Some(RebasedCostsModel("Yes", Some(150))),
-    ImprovementsModel("Yes", Some(50), Some(25))
-  )
-
   "Calculator Connector" should {
 
     "fetch and get from keystore" in {
@@ -469,25 +445,6 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
       mockResidentSharesFetchAndGetFormData()
       lazy val result = TargetCalculatorConnector.getShareIncomeAnswers(hc)
       await(result).isInstanceOf[IncomeAnswersModel] shouldBe true
-    }
-  }
-
-  "Calling getNRTotalGainAnswers" should {
-
-    "return a valid TotalGainAnswersModel with no optional values" in {
-      val hc = mock[HeaderCarrier]
-      val connector = setupMockedConnector(totalGainNoOptionalModel)
-      val result = connector.getNRTotalGainAnswers(hc)
-
-      await(result) shouldBe totalGainNoOptionalModel
-    }
-
-    "return a valid TotalGainAnswersModel with all optional values" in {
-      val hc = mock[HeaderCarrier]
-      val connector = setupMockedConnector(totalGainAllOptionalModel)
-      val result = connector.getNRTotalGainAnswers(hc)
-
-      await(result) shouldBe totalGainAllOptionalModel
     }
   }
 }

@@ -161,32 +161,6 @@ trait CalculatorConnector {
       calculationElectionModel, otherReliefsFlatModel, otherReliefsTAModel, otherReliefsRebasedModel, privateResidenceReliefModel)
   }
 
-  def getNRTotalGainAnswers(implicit hc: HeaderCarrier): Future[TotalGainAnswersModel] = {
-    //TODO add additional questions when added to model
-    val disposalDate = fetchAndGetFormData[DisposalDateModel](KeystoreKeys.disposalDate).map(data => data.get)
-    val disposalValue = fetchAndGetFormData[DisposalValueModel](KeystoreKeys.disposalValue).map(data => data.get)
-    val disposalCosts = fetchAndGetFormData[DisposalCostsModel](KeystoreKeys.disposalCosts).map(data => data.get)
-    val acquisitionValue = fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.acquisitionValue).map(data => data.get)
-    val acquisitionCosts = fetchAndGetFormData[AcquisitionCostsModel](KeystoreKeys.acquisitionCosts).map(data => data.get)
-    val acquisitionDate = fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).map(data => data.get)
-    val rebasedValue = fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue)
-    val rebasedCosts = fetchAndGetFormData[RebasedCostsModel](KeystoreKeys.rebasedCosts)
-    val improvements = fetchAndGetFormData[ImprovementsModel](KeystoreKeys.improvements).map(data => data.get)
-
-    for {
-      disposalDate <- disposalDate
-      disposalValue <- disposalValue
-      disposalCosts <- disposalCosts
-      acquisitionValue <- acquisitionValue
-      acquisitionCosts <- acquisitionCosts
-      acquisitionDate <- acquisitionDate
-      rebasedValue <- rebasedValue
-      rebasedCosts <- rebasedCosts
-      improvements <- improvements
-    } yield TotalGainAnswersModel(disposalDate, disposalValue, disposalCosts, acquisitionValue, acquisitionCosts, acquisitionDate,
-      rebasedValue, rebasedCosts, improvements)
-  }
-
   //Rtt property calculation methods
   def calculateRttPropertyGrossGain(input: YourAnswersSummaryModel)(implicit hc: HeaderCarrier): Future[BigDecimal] = {
     http.GET[BigDecimal](s"$serviceUrl/capital-gains-calculator/calculate-total-gain" +
