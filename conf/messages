@@ -251,6 +251,9 @@ calc.allowableLosses.errorQuestion = Enter the value of your allowable losses
 calc.allowableLosses.errorMinimum = Enter a positive number for your allowable losses
 calc.allowableLosses.errorDecimal = There are too many numbers after the decimal point in your allowable losses
 
+## Bought For Less ##
+calc.boughtForLess.question = Did you buy the property for less than it was worth because the seller wanted to help you?
+
 ## Calculation Election ##
 calc.calculationElection.pageHeading = Working out your total
 calc.calculationElection.question = Which method of calculation would you like?

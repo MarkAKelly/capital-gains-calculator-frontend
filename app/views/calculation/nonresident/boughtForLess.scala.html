@@ -1,0 +1,10 @@
+@import models.nonresident.BoughtForLessModel
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import views.html.helpers._
+
+@(boughtForLessForm: Form[BoughtForLessModel])(implicit request: Request[_])
+
+@main_template(Messages("calc.boughtForLess.question")) {
+
+    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.HowBecameOwnerController.howBecameOwner">@Messages("calc.base.back")</a>
+}
