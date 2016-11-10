@@ -8,6 +8,8 @@
 
     <a id="back-link" class="back-link" href="@controllers.nonresident.routes.DisposalDateController.disposalDate()">@Messages("calc.base.back")</a>
 
+    @errorSummary(soldOrGivenAway, "soldIt")
+
     <h1 class="heading-xlarge">@Messages("calc.soldOrGivenAway.title")</h1>
 
     @form(action = controllers.nonresident.routes.DisposalDateController.submitDisposalDate) {

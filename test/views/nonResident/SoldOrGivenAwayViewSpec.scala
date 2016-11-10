@@ -108,6 +108,15 @@ class SoldOrGivenAwayViewSpec extends UnitSpec with WithFakeApplication with Fak
         }
       }
     }
-  }
 
+    "provided with errors" should {
+      lazy val form = soldOrGivenAwayForm.bind(Map("soldIt" -> "999"))
+      lazy val view = soldOrGivenAway(form)(fakeRequest)
+      lazy val document = Jsoup.parse(view.body)
+
+      "have an error summary" in {
+        document.select("#error-summary-display").size shouldBe 1
+      }
+    }
+  }
 }
