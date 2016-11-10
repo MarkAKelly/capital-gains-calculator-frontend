@@ -20,7 +20,7 @@ import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.DisposalCostsForm._
-import models.nonresident.{AcquisitionDateModel, DisposalCostsModel, RebasedValueModel}
+import models.nonresident.DisposalCostsModel
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import views.html.calculation
 
@@ -48,18 +48,7 @@ trait DisposalCostsController extends FrontendController with ValidActiveSession
       errors => Future.successful(BadRequest(calculation.nonresident.disposalCosts(errors))),
       success => {
         calcConnector.saveFormData(KeystoreKeys.disposalCosts, success)
-        calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
-          case Some(data) if data.hasAcquisitionDate == "Yes" =>
-            Future.successful(Redirect(routes.PrivateResidenceReliefController.privateResidenceRelief()))
-          case _ =>
-            calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
-              case Some(rebasedData) if rebasedData.hasRebasedValue == "Yes" =>
-                Future.successful(Redirect(routes.PrivateResidenceReliefController.privateResidenceRelief()))
-              case _ =>
-                Future.successful(Redirect(routes.AllowableLossesController.allowableLosses()))
-
-            }
-        }
+        Future.successful(Redirect(routes.AcquisitionDateController.acquisitionDate()))
       }
     )
   }

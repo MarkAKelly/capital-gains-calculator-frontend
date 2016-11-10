@@ -205,7 +205,14 @@ calc.acquisitionCosts.errorNegative = Enter a positive number for your costs
 calc.acquisitionCosts.errorDecimalPlaces = There are too many numbers after the decimal point in your costs
 
 ## Disposal Costs ##
-calc.disposalCosts.question = How much did you pay in costs when you stopped being the property owner?
+calc.disposalCosts.question = How much did you pay in costs when you stopped owning the property?
+
+calc.disposalCosts.helpTitle = This is what you paid for:
+calc.disposalCosts.helpBulletOne = estate agents or auctioneers
+calc.disposalCosts.helpBulletTwo = solicitors or conveyancers
+calc.disposalCosts.helpBulletThree = any professional help to value your property, eg surveyor or valuer
+calc.disposalCosts.helpBulletFour = advertising to find a buyer
+
 calc.disposalCosts.errorNegativeNumber = Enter a positive number for your selling costs
 calc.disposalCosts.errorDecimalPlaces = There are too many numbers after the decimal point in your selling costs
 
