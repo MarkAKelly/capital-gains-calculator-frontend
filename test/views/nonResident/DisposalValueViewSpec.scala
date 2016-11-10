@@ -23,6 +23,7 @@ import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.nonresident.disposalValue
 import forms.nonresident.DisposalValueForm._
+import models.nonresident.DisposalValueModel
 
 class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
@@ -43,7 +44,7 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with Mocki
           backLink.text shouldBe messages.back
         }
 
-        s"has a route to 'disposal-date'" in {
+        s"has a route to 'sold-for-less'" in {
           backLink.attr("href") shouldBe controllers.nonresident.routes.SoldForLessController.soldForLess().url
         }
       }
@@ -103,6 +104,16 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with Mocki
         "has the id 'continue-button'" in {
           button.attr("id") shouldBe "continue-button"
         }
+      }
+    }
+
+    "supplied with a form with errors" should {
+      lazy val form = disposalValueForm.bind(Map("disposalValue" -> "testData"))
+      lazy val view = disposalValue(form)(fakeRequest)
+      lazy val document = Jsoup.parse(view.body)
+
+      "have an error summary" in {
+        document.select("#error-summary-display").size() shouldBe 1
       }
     }
   }
