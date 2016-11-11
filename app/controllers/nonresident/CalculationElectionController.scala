@@ -37,7 +37,7 @@ object CalculationElectionController extends CalculationElectionController {
 trait CalculationElectionController extends FrontendController with ValidActiveSession {
 
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
-  override val homeLink = controllers.nonresident.routes.CustomerTypeController.customerType().url
+  override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
   val calcConnector: CalculatorConnector
   val calcElectionConstructor: CalculationElectionConstructor
 

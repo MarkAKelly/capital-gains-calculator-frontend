@@ -67,8 +67,8 @@ class SoldOrGivenAwayViewSpec extends UnitSpec with WithFakeApplication with Fak
           form.attr("method") shouldBe "POST"
         }
 
-        s"have an action of ${controllers.nonresident.routes.DisposalDateController.disposalDate().url}" in {
-          form.attr("action") shouldBe controllers.nonresident.routes.DisposalDateController.disposalDate().url
+        s"have an action of ${controllers.nonresident.routes.SoldOrGivenAwayController.soldOrGivenAway().url}" in {
+          form.attr("action") shouldBe controllers.nonresident.routes.SoldOrGivenAwayController.soldOrGivenAway().url
         }
       }
 
