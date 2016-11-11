@@ -11,7 +11,7 @@
 
 @main_template(Messages("calc.rebasedValue.question")) {
 
-    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.AcquisitionValueController.acquisitionValue">Back</a>
+    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.AcquisitionValueController.acquisitionValue">@Messages("calc.base.back")</a>
 
     @errorSummary(rebasedValueForm, "rebased-value", "rebasedValueAmt")
 
