@@ -108,8 +108,8 @@ class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with 
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.DisposalCostsController.disposalCosts()}" in {
-        redirectLocation(result) shouldBe Some(routes.DisposalCostsController.disposalCosts().url)
+      s"redirect to ${routes.AcquisitionCostsController.acquisitionCosts()}" in {
+        redirectLocation(result) shouldBe Some(routes.AcquisitionCostsController.acquisitionCosts().url)
       }
     }
 

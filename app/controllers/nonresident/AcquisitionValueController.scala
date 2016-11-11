@@ -50,7 +50,7 @@ trait AcquisitionValueController extends FrontendController with ValidActiveSess
       errors => Future.successful(BadRequest(calculation.nonresident.acquisitionValue(errors))),
       success => {
         calcConnector.saveFormData(KeystoreKeys.acquisitionValue, success)
-        Future.successful(Redirect(routes.DisposalCostsController.disposalCosts()))
+        Future.successful(Redirect(routes.AcquisitionCostsController.acquisitionCosts()))
       }
     )
   }
