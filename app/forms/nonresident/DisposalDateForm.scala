@@ -28,17 +28,7 @@ import play.api.i18n.Messages
 
 object DisposalDateForm {
 
-  def isAfterAcquisitionDate(day: Int, month: Int, year: Int, acquisitionDate: Option[LocalDate]): Boolean = {
-    if (!isValidDate(day, month, year)) true
-    else {
-      acquisitionDate match {
-        case Some(acquisitionDateValue) => constructDate(day, month, year).isAfter(acquisitionDateValue)
-        case _ => true
-      }
-    }
-  }
-
-  def disposalDateForm(acquisitionDate: Option[LocalDate]): Form[DisposalDateModel] = Form(
+  val disposalDateForm = Form(
     mapping(
       "disposalDateDay" -> text
         .verifying(Messages("calc.common.date.error.invalidDate"), mandatoryCheck)
@@ -55,7 +45,5 @@ object DisposalDateForm {
     )(DisposalDateModel.apply)(DisposalDateModel.unapply)
       .verifying(Messages("calc.common.date.error.invalidDate"), fields =>
         isValidDate(fields.day, fields.month, fields.year))
-      .verifying(Messages("calc.disposalDate.error.disposalDateAfterAcquisition"), fields =>
-        isAfterAcquisitionDate(fields.day, fields.month, fields.year, acquisitionDate))
   )
 }

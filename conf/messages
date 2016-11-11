@@ -260,6 +260,10 @@ calc.howBecameOwner.bought = Bought it
 calc.howBecameOwner.gifted = Got it as a gift
 calc.howBecameOwner.inherited= Inherited it
 
+## Bought For Less ##
+calc.boughtForLess.question = Did you buy the property for less than it was worth because the seller wanted to help you?
+
+
 ## Calculation Election ##
 calc.calculationElection.pageHeading = Working out your total
 calc.calculationElection.question = Which method of calculation would you like?
