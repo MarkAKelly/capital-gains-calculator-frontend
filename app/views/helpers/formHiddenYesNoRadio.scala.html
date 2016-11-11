@@ -1,23 +1,39 @@
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 
-@(form: Form[_], fieldName: String, questionText:String, content:Html, helpText:Option[String] = None)(implicit lang: play.api.i18n.Lang)
+@(form: Form[_], fieldName: String, questionText:String, content:Html, helpText:Option[String] = None, hideLegend: Boolean = false)(implicit lang: play.api.i18n.Lang)
 
 @hiddenClasses = @{if(form.errors.filter(_.key == "").length > 0) "form-field--error" else "" }
 
 <div class="form-group" data-hidden='hidden'>
 
-    @formInputRadioGroup(
-        field = form(fieldName),
-        Seq(
+    @if(hideLegend) {
+        @formInputRadioGroup(
+            field = form(fieldName),
+            Seq(
             "Yes"->Messages("calc.base.yes"),
             "No"->Messages("calc.base.no")),
-        '_legend -> questionText,
-        '_legendID -> fieldName,
-        '_helpText -> helpText,
-        '_labelAfter -> true,
-        '_labelClass -> "block-label",
-        '_groupClass -> "inline"
-    )
+            '_legend -> questionText,
+            '_legendClass -> "visuallyhidden",
+            '_legendID -> fieldName,
+            '_helpText -> helpText,
+            '_labelAfter -> true,
+            '_labelClass -> "block-label",
+            '_groupClass -> "inline"
+        )
+    } else {
+        @formInputRadioGroup(
+            field = form(fieldName),
+            Seq(
+                "Yes"->Messages("calc.base.yes"),
+                "No"->Messages("calc.base.no")),
+            '_legend -> questionText,
+            '_legendID -> fieldName,
+            '_helpText -> helpText,
+            '_labelAfter -> true,
+            '_labelClass -> "block-label",
+            '_groupClass -> "inline"
+        )
+    }
 
     <div class="panel-indent" id='hidden'>
         <div class="@hiddenClasses">

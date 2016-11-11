@@ -186,7 +186,12 @@ object MessageLookup {
     }
 
     object Improvements {
-      val help = "Improvements are permanent changes that raise the value of a property, like adding extensions or garages"
+      val helpOne = "Improvements are permanent changes that increase the value of a property, like adding extensions or garages."
+      val helpTwo = "Normal maintenance costs don't count."
+
+      val exampleTitle = "Show me an example"
+      val exampleOne = "Replacing a basic kitchen or bathroom with a luxury version is normally considered an improvement."
+      val exampleTwo = "Replacing them with something of a similar standard is normally not an improvement."
 
       val question = "Did you make any improvements to the property?"
       val questionTwo = "How much did the improvements cost?"
