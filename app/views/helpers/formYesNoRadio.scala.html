@@ -4,7 +4,7 @@
 @(field: Field, legend: String, legendClass: Option[String] = None, helpText: Option[String] = None)
 
 @{(helpText, legendClass) match {
-    case (Some(help), Some(legend)) => {
+    case (Some(help), Some(legendClass)) => {
         formInputRadioGroup(
             field = field,
             Seq(
@@ -12,7 +12,7 @@
             "No" -> Messages("calc.base.no")),
             '_legend -> legend,
             '_legendID -> field.id,
-            '_legendClass -> legend,
+            '_legendClass -> legendClass,
             '_labelAfter -> true,
             '_helpText -> help,
             '_labelClass -> "block-label",
@@ -33,7 +33,7 @@
             '_groupClass -> "inline form-group radio-list",
             '_fieldsetAttributes -> "aria-details = help")
     }
-    case (_, Some(legend)) => {
+    case (_, Some(legendClass)) => {
         formInputRadioGroup(
             field = field,
             Seq(
@@ -41,7 +41,7 @@
             "No" -> Messages("calc.base.no")),
             '_legend -> legend,
             '_legendID -> field.id,
-            '_legendClass -> legend,
+            '_legendClass -> legendClass,
             '_labelAfter -> true,
             '_labelClass -> "block-label",
             '_groupClass -> "inline form-group radio-list",

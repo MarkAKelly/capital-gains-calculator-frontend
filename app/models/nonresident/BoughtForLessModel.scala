@@ -14,24 +14,12 @@
  * limitations under the License.
  */
 
-package helpers
+package models.nonresident
 
-import org.jsoup.select.Elements
-import org.scalatest.Assertions.cancel
+import play.api.libs.json.Json
 
-trait AssertHelpers {
+case class BoughtForLessModel (boughtForLess: Boolean)
 
-  //requires a test for a Some result before using this assert
-  def assertOption[T](message: String)(option: Option[T])(test: T => Unit): Unit = {
-    option.fold(cancel(message)) { value =>
-      test(value)
-    }
-  }
-
-  //requires a test to validate a non-empty array before using this assert
-  def assertHTML(elements: Elements)(test: Elements => Unit): Unit = {
-    if(elements.isEmpty) cancel("element not found")
-    else test(elements)
-  }
-
+object BoughtForLessModel {
+  implicit val format = Json.format[BoughtForLessModel]
 }
