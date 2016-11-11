@@ -289,6 +289,12 @@ object MessageLookup {
       def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
+    object SoldOrGivenAway {
+
+      val title = "Did you sell or give away the property?"
+
+    }
+
     object Summary {
 
       val title = "Summary"
