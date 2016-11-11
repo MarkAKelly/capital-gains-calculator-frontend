@@ -16,7 +16,8 @@
 
 package views.nonResident
 
-import assets.MessageLookup.{NonResident => messages}
+import assets.MessageLookup.NonResident.{DisposalCosts => messages}
+import assets.MessageLookup.{NonResident => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import forms.nonresident.DisposalCostsForm._
@@ -31,8 +32,8 @@ class DisposalCostsViewSpec extends UnitSpec with WithFakeApplication with FakeR
       lazy val view = disposalCosts(disposalCostsForm)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
-      s"have a title of '${messages.DisposalCosts.question}'" in {
-        document.title shouldBe messages.DisposalCosts.question
+      s"have a title of '${messages.question}'" in {
+        document.title shouldBe messages.question
       }
 
       "have a back link" which {
@@ -43,11 +44,55 @@ class DisposalCostsViewSpec extends UnitSpec with WithFakeApplication with FakeR
         }
 
         "has the text" in {
-          backLink.text shouldBe messages.back
+          backLink.text shouldBe commonMessages.back
         }
 
-        s"has a route to 'acquisition-costs'" in {
-          backLink.attr("href") shouldBe controllers.nonresident.routes.AcquisitionCostsController.acquisitionCosts().url
+        s"has a route to 'disposal-value'" in {
+          backLink.attr("href") shouldBe controllers.nonresident.routes.DisposalValueController.disposalValue().url
+        }
+      }
+
+      "have a heading" which {
+        lazy val heading = document.body().select("h1")
+
+        "has a class of heading-xlarge" in {
+          heading.attr("class") shouldBe "heading-xlarge"
+        }
+
+        s"has the text '${messages.question}'" in {
+          heading.text shouldBe messages.question
+        }
+      }
+
+      "have a hint" which {
+
+        lazy val hint = document.select("#input-hint")
+
+        "should have the class form-hint" in {
+          hint.hasClass("form-hint") shouldEqual true
+        }
+
+        "should contain a bullet list" which {
+
+          s"has the title ${messages.helpTitle}" in {
+            hint.select("p").text shouldEqual messages.helpTitle
+          }
+
+          s"has a bullet point with the text ${messages.helpBulletOne}" in {
+            hint.select("ul li").text should include(messages.helpBulletOne)
+          }
+
+          s"has a bullet point with the text ${messages.helpBulletTwo}" in {
+            hint.select("ul li").text should include(messages.helpBulletTwo)
+          }
+
+          s"has a bullet point with the text ${messages.helpBulletThree}" in {
+            hint.select("ul li").text should include(messages.helpBulletThree)
+          }
+
+          s"has a bullet point with the text ${messages.helpBulletFour}" in {
+            hint.select("ul li").text should include(messages.helpBulletFour)
+          }
         }
       }
 
@@ -63,8 +108,8 @@ class DisposalCostsViewSpec extends UnitSpec with WithFakeApplication with FakeR
         }
       }
 
-      s"have the question ${messages.DisposalCosts.question}" in {
-        document.body.select("label span").first.text shouldBe messages.DisposalCosts.question
+      s"have the question ${messages.question}" in {
+        document.body.select("label span").first.text shouldBe messages.question
       }
 
       "have an input with the id 'disposalCosts" in {
