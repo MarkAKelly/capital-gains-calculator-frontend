@@ -67,18 +67,18 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
         "have hint text" which {
 
-          lazy val helpText = document.select("span #input-hint")
+          lazy val helpText = document.select("#input-hint")
 
           "should have the class form-hint" in {
             helpText.hasClass("form-hint") shouldEqual true
           }
 
           s"should have a first sentence of ${messages.Improvements.helpOne}" in {
-            helpText.text should include(messages.Improvements.helpOne)
+            helpText.select("p").text() should include(messages.Improvements.helpOne)
           }
 
           s"should have a second sentence of ${messages.Improvements.helpTwo}" in {
-            helpText.text should include(messages.Improvements.helpTwo)
+            helpText.select("p").text() should include(messages.Improvements.helpTwo)
           }
         }
 
@@ -90,10 +90,6 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
             lazy val exampleTitle = example.select("span")
 
-            "should have the class summary" in {
-              exampleTitle.hasClass("summary") shouldEqual true
-            }
-
             s"should have the text ${messages.Improvements.exampleTitle}" in {
               exampleTitle.text shouldEqual messages.Improvements.exampleTitle
             }
@@ -103,16 +99,12 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
             lazy val exampleContent = example.select("div")
 
-            "should have the class panel-indent" in {
-              exampleContent.hasClass("panel-indent") shouldEqual true
-            }
-
             s"should have a first sentence of ${messages.Improvements.exampleOne}" in {
-              example.select("p").text should include(messages.Improvements.exampleOne)
+              exampleContent.select("p").text should include(messages.Improvements.exampleOne)
             }
 
             s"should have a second sentence of ${messages.Improvements.exampleTwo}" in {
-              example.select("p").text should include(messages.Improvements.exampleTwo)
+              exampleContent.select("p").text should include(messages.Improvements.exampleTwo)
             }
           }
         }

@@ -40,7 +40,7 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
   override val homeLink = controllers.nonresident.routes.CustomerTypeController.customerType().url
 
 //This will need to be replace with backLink when the back routing logic is added back in
-  private val tempBackLink = controllers.nonresident.routes.DisposalCostsController.disposalCosts().url
+  private val tempBackLink = routes.DisposalCostsController.disposalCosts().url
 
   private def improvementsBackUrl(implicit hc: HeaderCarrier): Future[String] = {
     def checkRebasedValue = {
