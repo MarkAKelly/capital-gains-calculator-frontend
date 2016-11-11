@@ -6,15 +6,16 @@
 
 @main_template(Messages("calc.disposalDate.question")) {
 
-    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.ImprovementsController.improvements">@Messages("calc.base.back")</a>
-
     @errorSummary(disposalDateForm, "disposal-date", "disposalDateDay")
 
-    <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
+    <h1 class="heading-xlarge">@Messages("calc.disposalDate.question")</h1>
 
     @form(action = controllers.nonresident.routes.DisposalDateController.submitDisposalDate) {
 
-        @formInlineDateInput(disposalDateForm, "disposalDate", Messages("calc.disposalDate.question"))
+        @formInlineDateInput(disposalDateForm,
+        "disposalDate",
+        Messages("calc.disposalDate.question"),
+        '_visually_hidden -> true)
 
         <button id="continue-button" type="submit" class="button">@Messages("calc.base.button.continue")</button>
 

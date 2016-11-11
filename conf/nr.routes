@@ -22,7 +22,6 @@ GET         /check-your-answers                 controllers.nonresident.CheckYou
 POST        /check-your-answers                 controllers.nonresident.CheckYourAnswersController.submitCheckYourAnswers
 
 #Customer Type
-GET         /                                   controllers.nonresident.CustomerTypeController.customerType
 GET         /customer-type                      controllers.nonresident.CustomerTypeController.customerType
 POST        /customer-type                      controllers.nonresident.CustomerTypeController.submitCustomerType
 
@@ -67,6 +66,7 @@ GET         /improvements                       controllers.nonresident.Improvem
 POST        /improvements                       controllers.nonresident.ImprovementsController.submitImprovements
 
 #Disposal Date
+GET         /                                   controllers.nonresident.DisposalDateController.disposalDate
 GET         /disposal-date                      controllers.nonresident.DisposalDateController.disposalDate
 POST        /disposal-date                      controllers.nonresident.DisposalDateController.submitDisposalDate
 

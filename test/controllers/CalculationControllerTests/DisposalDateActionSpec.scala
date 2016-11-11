@@ -36,17 +36,13 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Mock
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget(getData: Option[DisposalDateModel],
-                   acquisitionData: Option[AcquisitionDateModel] = None
+  def setupTarget(getData: Option[DisposalDateModel]
                  ): DisposalDateController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
     when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
-
-    when(mockCalcConnector.fetchAndGetFormData[AcquisitionDateModel](Matchers.eq(KeystoreKeys.acquisitionDate))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(acquisitionData))
 
     new DisposalDateController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -105,7 +101,7 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Mock
 
     "submitting a valid date 31/01/2016" should {
 
-      lazy val target = setupTarget(None, Some(AcquisitionDateModel("Yes", Some(1), Some(4), Some(2010))))
+      lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("disposalDateDay", "31"), ("disposalDateMonth", "1"), ("disposalDateYear", "2016"))
       lazy val result = target.submitDisposalDate(request)
 
@@ -113,14 +109,14 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.DisposalValueController.disposalValue()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.DisposalValueController.disposalValue()}")
+      s"redirect to ${routes.SoldOrGivenAwayController.soldOrGivenAway()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.SoldOrGivenAwayController.soldOrGivenAway()}")
       }
     }
 
     "submitting a valid leap year date 29/02/2016" should {
 
-      lazy val target = setupTarget(None, Some(AcquisitionDateModel("Yes", Some(1), Some(4), Some(2010))))
+      lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("disposalDateDay", "29"), ("disposalDateMonth", "2"), ("disposalDateYear", "2016"))
       lazy val result = target.submitDisposalDate(request)
 
@@ -128,14 +124,14 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.DisposalValueController.disposalValue()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.DisposalValueController.disposalValue()}")
+      s"redirect to ${routes.SoldOrGivenAwayController.soldOrGivenAway()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.SoldOrGivenAwayController.soldOrGivenAway()}")
       }
     }
 
     "submitting a valid date of 20/02/2014 before the tax start date" should {
 
-      lazy val target = setupTarget(None, Some(AcquisitionDateModel("Yes", Some(1), Some(4), Some(2010))))
+      lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("disposalDateDay", "20"), ("disposalDateMonth", "2"), ("disposalDateYear", "2014"))
       lazy val result = target.submitDisposalDate(request)
 
@@ -145,22 +141,6 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Mock
 
       s"redirect to ${routes.NoCapitalGainsTaxController.noCapitalGainsTax()}" in {
         redirectLocation(result) shouldBe Some(s"${routes.NoCapitalGainsTaxController.noCapitalGainsTax()}")
-      }
-    }
-
-    "submitting a disposal date of 22/02/1990 which is before acquisition date 22/01/2000" should {
-
-      lazy val target = setupTarget(None, Some(AcquisitionDateModel("Yes", Some(22), Some(1), Some(2000))))
-      lazy val request = fakeRequestToPOSTWithSession(("disposalDateDay", "22"), ("disposalDateMonth", "2"), ("disposalDateYear", "1990"))
-      lazy val result = target.submitDisposalDate(request)
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      "should return to the disposal date page" in {
-        document.title shouldEqual messages.question
       }
     }
   }
