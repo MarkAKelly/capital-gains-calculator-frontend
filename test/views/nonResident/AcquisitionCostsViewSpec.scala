@@ -65,7 +65,9 @@ class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with Mo
       s"have the question '${messages.AcquisitionCosts.question}'" in {
         document.body.select("label span").first().text shouldBe messages.AcquisitionCosts.question
       }
-
+      s"have a paragraph that has the text '${messages.AcquisitionCosts.bulletTitle}" in {
+        document.body.select("p#bulletTitle").text() shouldBe messages.AcquisitionCosts.bulletTitle
+      }
       "have a list" which {
         lazy val list = document.body().select("ul.list")
 
