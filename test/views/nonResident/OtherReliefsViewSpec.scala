@@ -34,10 +34,6 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val view = otherReliefs(otherReliefsForm(false), model)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
-      s"have a title of ${messages.OtherReliefs.question}" in {
-        document.title() shouldBe messages.OtherReliefs.question
-      }
-
       "have a back link" which {
         lazy val backLink = document.select("#back-link")
 
@@ -47,7 +43,7 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
 
         s"should have a route to 'allowable losses'" in {
           backLink.attr("href") shouldEqual
-            controllers.nonresident.routes.AllowableLossesController.allowableLosses().url
+            controllers.nonresident.routes.ImprovementsController.improvements().url
         }
       }
 
@@ -58,8 +54,8 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
           heading.attr("class") shouldBe "heading-large"
         }
 
-        s"has the text '${messages.pageHeading}'" in {
-          heading.text shouldBe messages.pageHeading
+        s"has the text '${messages.OtherReliefs.question}'" in {
+          heading.text shouldBe messages.OtherReliefs.question
         }
       }
 
