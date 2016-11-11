@@ -52,19 +52,6 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Mock
   // GET Tests
   "Calling the CalculationController.disposalDate" when {
 
-    "no session is active" should {
-      lazy val target = setupTarget(None)
-      lazy val result = target.disposalDate(fakeRequest)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      s"redirect to ${controllers.TimeoutController.timeout("restart", "home")}" in {
-        redirectLocation(result).get should include("/calculate-your-capital-gains/session-timeout")
-      }
-    }
-
     "not supplied with a pre-existing stored model" should {
 
       lazy val target = setupTarget(None)
