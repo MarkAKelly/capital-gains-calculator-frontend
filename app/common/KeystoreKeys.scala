@@ -47,6 +47,8 @@ object KeystoreKeys {
   val otherReliefsRebased = "nr:otherReliefsRebased"
   val privateResidenceRelief = "nr:privateResidenceRelief"
   val howBecameOwner = "nr:howBecameOwner"
+  val soldOrGivenAway = "nr:soldOrGivenAway"
+
 
   object ResidentPropertyKeys {
     val disposalDate = "res:property:disposalDate"

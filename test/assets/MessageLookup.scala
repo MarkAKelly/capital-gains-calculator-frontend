@@ -298,6 +298,11 @@ object MessageLookup {
       val inherited = "Inherited it"
     }
 
+    object SoldOrGivenAway {
+
+      val title = "Did you sell or give away the property?"
+    }
+
     object Summary {
 
       val title = "Summary"

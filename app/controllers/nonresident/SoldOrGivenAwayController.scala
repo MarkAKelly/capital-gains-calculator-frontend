@@ -16,16 +16,43 @@
 
 package controllers.nonresident
 
+import common.KeystoreKeys
+import views.html.calculation
+import forms.nonresident.SoldOrGivenAwayForm._
 import connectors.CalculatorConnector
+import controllers.predicates.ValidActiveSession
+import models.nonresident.SoldOrGivenAwayModel
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+
+import scala.concurrent.Future
 
 object SoldOrGivenAwayController extends SoldOrGivenAwayController {
   val calcConnector = CalculatorConnector
 }
 
-trait SoldOrGivenAwayController extends FrontendController {
+trait SoldOrGivenAwayController extends FrontendController with ValidActiveSession  {
 
-  val soldOrGivenAway = TODO
+  val calcConnector: CalculatorConnector
 
-  val submitSoldOrGivenAway = TODO
+  val soldOrGivenAway = ValidateSession.async { implicit request =>
+    calcConnector.fetchAndGetFormData[SoldOrGivenAwayModel](KeystoreKeys.soldOrGivenAway).map {
+      case Some(data) => Ok(calculation.nonresident.soldOrGivenAway(soldOrGivenAwayForm.fill(data)))
+      case None => Ok(calculation.nonresident.soldOrGivenAway(soldOrGivenAwayForm))
+    }
+  }
+
+  val submitSoldOrGivenAway = ValidateSession.async { implicit request =>
+
+    soldOrGivenAwayForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(calculation.nonresident.soldOrGivenAway(errors))),
+      success => {
+        calcConnector.saveFormData[SoldOrGivenAwayModel](KeystoreKeys.soldOrGivenAway, success)
+        success match {
+          case SoldOrGivenAwayModel(true) => Future.successful(Redirect(routes.SoldForLessController.soldForLess()))
+          //TODO: Redirect to Market Value of Property
+          case SoldOrGivenAwayModel(false) => Future.successful(Redirect(routes.SoldForLessController.soldForLess()))
+        }
+      }
+    )
+  }
 }
