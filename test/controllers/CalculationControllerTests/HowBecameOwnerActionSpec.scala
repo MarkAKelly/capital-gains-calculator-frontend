@@ -61,38 +61,26 @@ class HowBecameOwnerActionSpec extends UnitSpec with WithFakeApplication with Fa
         doc.title shouldEqual messages.title
       }
 
-      "have a back link to acquisition date" in {
-        doc.body().select("a#back-link").attr("href") shouldBe "/calculate-your-capital-gains/non-resident/acquisition-date"
+      "provided with a valid session with stored data" should {
+        lazy val target = setupTarget(Some(HowBecameOwnerModel("Bought")))
+        lazy val result = target.howBecameOwner(fakeRequestWithSession)
+
+        "return a status of 200" in {
+          status(result) shouldBe 200
+        }
       }
 
-      "have a home link to 'homeLink'" in {
-        doc.select("a#homeNavHref").attr("href") shouldBe "/calculate-your-capital-gains/non-resident/"
-      }
+      "provided with an invalid session" should {
+        lazy val target = setupTarget(None)
+        lazy val result = target.howBecameOwner(fakeRequest)
 
-      "have a method to POST" in {
-        doc.select("form").attr("method") shouldBe "POST"
-      }
+        "return a status of 303" in {
+          status(result) shouldBe 303
+        }
 
-      "have an action to how-became-owner" in {
-        doc.select("form").attr("action") shouldBe "/calculate-your-capital-gains/non-resident/how-became-owner"
-      }
-    }
-
-    "provided with a valid session with stored data" should {
-      lazy val target = setupTarget(Some(HowBecameOwnerModel("Bought")))
-      lazy val result = target.howBecameOwner(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-    }
-
-    "provided with an invalid session" should {
-      lazy val target = setupTarget(None)
-      lazy val result = target.howBecameOwner(fakeRequest)
-
-      "return a status of 303" in {
-        status(result) shouldBe 303
+        "return you to the session timeout page" in {
+          redirectLocation(result).get should include("/calculate-your-capital-gains/session-timeout")
+        }
       }
     }
   }

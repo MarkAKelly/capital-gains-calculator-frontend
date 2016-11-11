@@ -254,7 +254,7 @@ calc.allowableLosses.errorMinimum = Enter a positive number for your allowable l
 calc.allowableLosses.errorDecimal = There are too many numbers after the decimal point in your allowable losses
 
 ## How Became Owner messages
-calc.howBecameOwner.errors.mandatory = Tell us how you became the property owner
+calc.howBecameOwner.errors.required = Tell us how you became the property owner
 calc.howBecameOwner.title = How did you become the property owner?
 calc.howBecameOwner.bought = Bought it
 calc.howBecameOwner.gifted = Got it as a gift

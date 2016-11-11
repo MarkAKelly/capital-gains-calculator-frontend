@@ -17,18 +17,15 @@
 package controllers.nonresident
 
 
-import java.util.UUID
 
 import common.KeystoreKeys
 import connectors.CalculatorConnector
-import constructors.nonresident.CalculationElectionConstructor
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.HowBecameOwnerForm._
 import models.nonresident.HowBecameOwnerModel
-import play.api.mvc.{Action, Result}
 import play.api.data.Form
+import play.api.mvc.Result
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.SessionKeys
 import views.html.calculation.{nonresident => views}
 
 import scala.concurrent.Future
@@ -43,15 +40,9 @@ trait HowBecameOwnerController extends FrontendController with ValidActiveSessio
 
 
   val howBecameOwner = ValidateSession.async { implicit request =>
-    if (request.session.get(SessionKeys.sessionId).isEmpty) {
-      val sessionId = UUID.randomUUID.toString
-      Future.successful(Ok(views.howBecameOwner(howBecameOwnerForm)).withSession(request.session + (SessionKeys.sessionId -> s"session-$sessionId")))
-    }
-    else {
-      calcConnector.fetchAndGetFormData[HowBecameOwnerModel](KeystoreKeys.howBecameOwner).map {
-        case Some(data) => Ok(views.howBecameOwner(howBecameOwnerForm.fill(data)))
-        case None => Ok(views.howBecameOwner(howBecameOwnerForm))
-      }
+    calcConnector.fetchAndGetFormData[HowBecameOwnerModel](KeystoreKeys.howBecameOwner).map {
+      case Some(data) => Ok(views.howBecameOwner(howBecameOwnerForm.fill(data)))
+      case None => Ok(views.howBecameOwner(howBecameOwnerForm))
     }
   }
 
