@@ -96,7 +96,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         }
 
         s"have a 'Back' link to ${routes.DisposalCostsController.disposalCosts().url} " in {
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalCostsController.disposalCosts().url
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionCostsController.acquisitionCosts().url
         }
       }
 
@@ -117,7 +117,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         }
 
         s"have a 'Back' link to ${routes.DisposalCostsController.disposalCosts().url} " in {
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalCostsController.disposalCosts().url
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionCostsController.acquisitionCosts().url
         }
       }
 
@@ -136,7 +136,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         }
 
         s"have a 'Back' link to ${routes.DisposalCostsController.disposalCosts().url} " in {
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalCostsController.disposalCosts().url
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionCostsController.acquisitionCosts().url
         }
       }
 
@@ -155,7 +155,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         }
 
         s"have a 'Back' link to ${routes.DisposalCostsController.disposalCosts().url}" in {
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalCostsController.disposalCosts().url
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionCostsController.acquisitionCosts().url
         }
       }
     }
