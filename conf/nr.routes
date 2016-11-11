@@ -17,6 +17,14 @@ POST        /how-became-owner                   controllers.nonresident.HowBecam
 GET         /bought-for-less                    controllers.nonresident.BoughtForLessController.boughtForLess
 POST        /bought-for-less                    controllers.nonresident.BoughtForLessController.submitBoughtForLess
 
+#Worth When Inherited
+GET         /worth-when-inherited               controllers.nonresident.WorthWhenInheritedController.worthWhenInherited
+POST        /worth-when-inherited               controllers.nonresident.WorthWhenInheritedController.submitWorthWhenInherited
+
+#Worth When Gifted
+GET         /worth-when-gifted                  controllers.nonresident.WorthWhenGiftedController.worthWhenGifted
+POST        /worth-when-gifted                  controllers.nonresident.WorthWhenGiftedController.submitWorthWhenGifted
+
 #Check Your Answers
 GET         /check-your-answers                 controllers.nonresident.CheckYourAnswersController.checkYourAnswers
 POST        /check-your-answers                 controllers.nonresident.CheckYourAnswersController.submitCheckYourAnswers

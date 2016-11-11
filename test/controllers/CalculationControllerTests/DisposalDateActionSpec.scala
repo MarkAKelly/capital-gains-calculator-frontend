@@ -17,20 +17,19 @@
 package controllers.CalculationControllerTests
 
 import assets.MessageLookup.NonResident.{DisposalDate => messages}
-import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
+import controllers.nonresident.{DisposalDateController, routes}
+import models.nonresident.DisposalDateModel
+import org.jsoup._
 import org.mockito.Matchers
 import org.mockito.Mockito._
+import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import org.jsoup._
-import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.nonresident.{DisposalDateController, routes}
-import models.nonresident.{AcquisitionDateModel, DisposalDateModel}
 
 class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 

@@ -24,7 +24,6 @@ import controllers.predicates.ValidActiveSession
 import forms.nonresident.DisposalDateForm._
 import models.nonresident.DisposalDateModel
 import play.api.data.Form
-import play.api.mvc.Action
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.SessionKeys
 import views.html.calculation
@@ -42,7 +41,7 @@ trait DisposalDateController extends FrontendController with ValidActiveSession 
   override val homeLink = controllers.nonresident.routes.CustomerTypeController.customerType().url
 
 
-  val disposalDate = Action.async { implicit request =>
+  val disposalDate = ValidateSession.async { implicit request =>
     if (request.session.get(SessionKeys.sessionId).isEmpty) {
       val sessionId = UUID.randomUUID.toString
       Future.successful(Ok(views.html.calculation.nonresident.
