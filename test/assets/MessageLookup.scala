@@ -97,6 +97,10 @@ object MessageLookup {
       val errorDecimalPlaces = "Your allowance has too many numbers after the decimal point"
     }
 
+    object BoughtForLess {
+      val question = "Did you buy the property for less than it was worth because the seller wanted to help you?"
+    }
+
     object CalculationElection {
       val heading = "Working out your total"
       val question = "Which method of calculation would you like?"
