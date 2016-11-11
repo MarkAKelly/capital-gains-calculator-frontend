@@ -22,15 +22,12 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{NonResident => messages}
 import views.html.calculation.nonresident.boughtForLess
 import forms.nonresident.BoughtForLessForm._
+import helpers.AssertHelpers
 import org.jsoup.Jsoup
-import org.jsoup.select.Elements
 
-class BoughtForLessViewSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
+class BoughtForLessViewSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper with AssertHelpers{
 
-  def assertHTML(elements: Elements)(test: Elements => Unit): Unit = {
-    if(elements.isEmpty) cancel("element not found")
-    else test(elements)
-  }
+
 
   "Bought for less view" when {
 
@@ -103,11 +100,25 @@ class BoughtForLessViewSpec extends UnitSpec with WithFakeApplication with Mocki
         }
       }
 
-      "have a fieldset with the class 'inline form-group radio-list'" in {
-        document.select("fieldset").attr("class") shouldBe "inline form-group radio-list"
+      "has inputs with the id boughtForLess" in {
+        document.select("input").attr("id") should include("boughtForLess")
       }
 
-      "contain an option for 'Yes'"
+      "have a button" which {
+        lazy val button = document.select("button")
+
+        "has the class 'button'" in {
+          button.attr("class") shouldBe "button"
+        }
+
+        "has the type 'submit'" in {
+          button.attr("type") shouldBe "submit"
+        }
+
+        "has the id 'continue-button'" in {
+          button.attr("id") shouldBe "continue-button"
+        }
+      }
     }
 
     "supplied with errors" should {
@@ -120,5 +131,4 @@ class BoughtForLessViewSpec extends UnitSpec with WithFakeApplication with Mocki
       }
     }
   }
-
 }

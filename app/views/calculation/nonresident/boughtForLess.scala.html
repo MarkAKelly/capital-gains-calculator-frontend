@@ -14,17 +14,12 @@
 
     @form(action = controllers.nonresident.routes.BoughtForLessController.submitBoughtForLess) {
 
-        @formInputRadioGroup(
-        field = boughtForLessForm("boughtForLess"),
-        Seq(
-        "Yes" -> Messages("calc.base.yes"),
-        "No" -> Messages("calc.base.no")),
-        '_legend -> Messages("calc.boughtForLess.question"),
-        '_legendClass -> "visuallyhidden",
-        '_labelAfter -> true,
-        '_labelClass -> "block-label",
-        '_groupClass -> "inline form-group radio-list",
-        '_fieldsetAttributes -> "aria-details = help"
+        @formYesNoRadio(
+            field = boughtForLessForm("boughtForLess"),
+            legend = Messages("calc.boughtForLess.question"),
+            legendClass = Some("visuallyhidden")
         )
+
+        <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
     }
 }
