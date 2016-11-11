@@ -121,14 +121,6 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
       "return some HTML that" should {
 
-        s"has the question of ${messages.Improvements.question}" in {
-          document.title shouldBe messages.Improvements.question
-        }
-
-        s"has the heading of ${messages.pageHeading}" in {
-          document.body().getElementsByTag("h1").text shouldBe messages.pageHeading
-        }
-
         "have that content" which {
           s"display the correct wording for radio option 'isClaimingImprovements'" in {
             document.body.select("input").attr("id") should include ("isClaimingImprovements")
