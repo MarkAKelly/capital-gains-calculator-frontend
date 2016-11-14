@@ -38,30 +38,30 @@ trait SummaryController extends FrontendController with ValidActiveSession {
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
   val calcConnector: CalculatorConnector
 
-  def summaryBackUrl(implicit hc: HeaderCarrier): Future[String] = {
-    Future.successful(routes.CheckYourAnswersController.checkYourAnswers().url)
-  }
-
-  def displayDateWarning(disposalDate: DisposalDateModel): Future[Boolean] = {
-    Future.successful(!TaxDates.dateInsideTaxYear(disposalDate.day, disposalDate.month, disposalDate.year))
-  }
-
-  def reliefApplied(summaryModel: SummaryModel): Future[String] = {
-    Future.successful(summaryModel.reliefApplied())
-  }
-
-  def calculateDetails(summaryData: SummaryModel)(implicit headerCarrier: HeaderCarrier): Future[Option[CalculationResultModel]] = {
-    summaryData.calculationElectionModel.calculationType match {
-      case "flat" =>
-        calcConnector.calculateFlat(summaryData)
-      case "time" =>
-        calcConnector.calculateTA(summaryData)
-      case "rebased" =>
-        calcConnector.calculateRebased(summaryData)
-    }
-  }
-
   val summary = ValidateSession.async { implicit request =>
+
+    def summaryBackUrl(implicit hc: HeaderCarrier): Future[String] = {
+      Future.successful(routes.CheckYourAnswersController.checkYourAnswers().url)
+    }
+
+    def displayDateWarning(disposalDate: DisposalDateModel): Future[Boolean] = {
+      Future.successful(!TaxDates.dateInsideTaxYear(disposalDate.day, disposalDate.month, disposalDate.year))
+    }
+
+    def reliefApplied(summaryModel: SummaryModel): Future[String] = {
+      Future.successful(summaryModel.reliefApplied())
+    }
+
+    def calculateDetails(summaryData: SummaryModel)(implicit headerCarrier: HeaderCarrier): Future[Option[CalculationResultModel]] = {
+      summaryData.calculationElectionModel.calculationType match {
+        case "flat" =>
+          calcConnector.calculateFlat(summaryData)(hc)
+        case "time" =>
+          calcConnector.calculateTA(summaryData)(hc)
+        case "rebased" =>
+          calcConnector.calculateRebased(summaryData)(hc)
+      }
+    }
 
     def routeRequest(calculationResult: Option[CalculationResultModel],
                      backUrl: String, displayDateWarning: Boolean,
