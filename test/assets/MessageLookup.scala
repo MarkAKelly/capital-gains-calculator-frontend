@@ -64,6 +64,10 @@ object MessageLookup {
       val helpText = "Costs include agent fees, legal fees and surveys"
       val errorNegative = "Enter a positive number for your costs"
       val errorDecimalPlaces = "There are too many numbers after the decimal point in your costs"
+      val bulletTitle = "This is what you paid for:"
+      val bulletOne = "estate agents or auctioneers"
+      val bulletTwo = "solicitors or conveyancers, including Stamp Duty Land Tax"
+      val bulletThree = "any professional help to value the property, eg surveyor or valuer"
 
       def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }

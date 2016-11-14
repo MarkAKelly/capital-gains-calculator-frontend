@@ -207,6 +207,10 @@ calc.acquisitionCosts.question = How much did you pay in costs when you became t
 calc.acquisitionCosts.helpText = Costs include agent fees, legal fees and surveys
 calc.acquisitionCosts.errorNegative = Enter a positive number for your costs
 calc.acquisitionCosts.errorDecimalPlaces = There are too many numbers after the decimal point in your costs
+calc.acquisitionCosts.bulletTitle = This is what you paid for:
+calc.acquisitionCosts.bulletOne = estate agents or auctioneers
+calc.acquisitionCosts.bulletTwo = solicitors or conveyancers, including Stamp Duty Land Tax
+calc.acquisitionCosts.bulletThree = any professional help to value the property, eg surveyor or valuer
 
 ## Disposal Costs ##
 calc.disposalCosts.question = How much did you pay in costs when you stopped owning the property?

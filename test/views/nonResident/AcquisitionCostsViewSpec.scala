@@ -24,6 +24,7 @@ import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.nonresident.acquisitionCosts
 import assets.MessageLookup.{NonResident => messages}
+import views.html.helper.select
 
 class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
@@ -44,30 +45,56 @@ class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with Mo
           backLink.text shouldBe MessageLookup.NonResident.back
         }
 
-        s"has a route to 'disposal-costs'" in {
-          backLink.attr("href") shouldBe controllers.nonresident.routes.DisposalValueController.disposalValue().url
+        s"has a route to 'Acquisition Value'" in {
+          backLink.attr("href") shouldBe controllers.nonresident.routes.AcquisitionValueController.acquisitionValue().url
         }
+
+        "has the class 'back-link'" in {
+          backLink.attr("class") shouldBe "back-link"
+        }
+
       }
 
       "have a heading" which {
         lazy val heading = document.body().select("h1")
 
         "has a class of heading-large" in {
-          heading.attr("class") shouldBe "heading-large"
+          heading.attr("class") shouldBe "heading-xlarge"
         }
 
-        s"has the text '${messages.pageHeading}'" in {
-          heading.text shouldBe messages.pageHeading
+        s"has the text '${messages.AcquisitionCosts.question}'" in {
+          heading.text shouldBe messages.AcquisitionCosts.question
         }
       }
 
       s"have the question '${messages.AcquisitionCosts.question}'" in {
         document.body.select("label span").first().text shouldBe messages.AcquisitionCosts.question
       }
-
-      s"have the help text '${messages.AcquisitionCosts.helpText}'" in {
-        document.body.select("label span.form-hint").text() shouldBe messages.AcquisitionCosts.helpText
+      s"have a paragraph that has the text '${messages.AcquisitionCosts.bulletTitle}" in {
+        document.body.select("p#bulletTitle").text() shouldBe messages.AcquisitionCosts.bulletTitle
       }
+
+      "have a list" which {
+        lazy val list = document.body().select("#helpList")
+
+        s"has a bullet point with the text '${messages.AcquisitionCosts.bulletOne}'" in {
+          list.select(":first-child").text() shouldBe messages.AcquisitionCosts.bulletOne
+        }
+
+        s"has a bullet point with the text '${messages.AcquisitionCosts.bulletTwo}'" in {
+          list.select(":nth-child(2)").text() shouldBe messages.AcquisitionCosts.bulletTwo
+        }
+
+        s"has a bullet point with the text '${messages.AcquisitionCosts.bulletThree}'" in {
+          list.select(":last-child").text() shouldBe messages.AcquisitionCosts.bulletThree
+        }
+
+        "has the class 'list list-bullet'" in {
+          list.attr("class") shouldBe "list list-bullet"
+        }
+
+      }
+
 
       "have an input with the id 'acquisitionCosts" in {
         document.body().select("input").attr("id") shouldBe "acquisitionCosts"
@@ -101,6 +128,7 @@ class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with Mo
         }
       }
     }
+    }
 
     "supplied with errors" should {
       lazy val form = acquisitionCostsForm.bind(Map("acquisitionCosts" -> "a"))
@@ -111,5 +139,4 @@ class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with Mo
         document.select("#error-summary-display").size() shouldBe 1
       }
     }
-  }
 }

@@ -105,8 +105,8 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
         status(result) shouldBe 303
       }
 
-      s"redirect to '${controllers.nonresident.routes.DisposalCostsController.disposalCosts().url}'" in {
-        redirectLocation(result).get shouldBe controllers.nonresident.routes.DisposalCostsController.disposalCosts().url
+      s"redirect to '${controllers.nonresident.routes.ImprovementsController.improvements().url}'" in {
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.ImprovementsController.improvements().url
       }
     }
 
