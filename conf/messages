@@ -307,7 +307,7 @@ calc.otherReliefs.errorNoValue = Enter the value for your relief
 calc.otherReliefs.help = For example, lettings relief
 
 ## Sold Or Given Away##
-calc.soldOrGivenAway.title = Did you sell or give away the property?
+calc.soldOrGivenAway.question = Did you sell or give away the property?
 calc.soldOrGivenAway.sold = I sold it
 calc.soldOrGivenAway.gave = I gave it away
 

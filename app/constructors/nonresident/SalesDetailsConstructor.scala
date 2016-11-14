@@ -18,7 +18,7 @@ package constructors.nonresident
 
 import java.time.LocalDate
 
-import models.nonresident.{QuestionAnswerModel, SummaryModel}
+import models.nonresident.{QuestionAnswerModel, SummaryModel, TotalGainAnswersModel}
 import common.{Dates, KeystoreKeys => keys}
 import play.api.i18n.Messages
 
@@ -40,6 +40,34 @@ object SalesDetailsConstructor {
       date,
       Messages("calc.disposalDate.question"),
       Some(controllers.nonresident.routes.DisposalDateController.disposalDate().url))
+  }
+
+  def soldOrGivenAwayRow(answers: TotalGainAnswersModel): QuestionAnswerModel[String] = {
+    if (answers.soldOrGivenAwayModel.soldIt) {
+      QuestionAnswerModel[String](keys.soldOrGivenAway,
+        Messages("calc.soldOrGivenAway.sold"),
+        Messages("calc.soldOrGivenAway.question"),
+        Some(controllers.nonresident.routes.SoldOrGivenAwayController.soldOrGivenAway().url)
+      )
+    }
+    else {
+      QuestionAnswerModel[String](keys.soldOrGivenAway,
+        Messages("calc.soldOrGivenAway.gave"),
+        Messages("calc.soldOrGivenAway.question"),
+        Some(controllers.nonresident.routes.SoldOrGivenAwayController.soldOrGivenAway().url)
+      )
+    }
+  }
+
+  def soldForLessRow(answers: TotalGainAnswersModel): Option[QuestionAnswerModel[Boolean]] = {
+    if (answers.soldOrGivenAwayModel.soldIt) {
+      Some(QuestionAnswerModel[Boolean](keys.soldOrGivenAway,
+        answers.soldForLessModel.get.soldForLess,
+        Messages("calc.nonResident.soldForLess.question"),
+        Some(controllers.nonresident.routes.SoldForLessController.soldForLess().url)
+      ))
+    }
+    else None
   }
 
   def disposalValueRow(answers: SummaryModel): QuestionAnswerModel[BigDecimal] = {
