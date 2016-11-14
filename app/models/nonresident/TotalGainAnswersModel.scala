@@ -16,6 +16,8 @@
 
 package models.nonresident
 
+import constructors.nonresident.SalesDetailsConstructor
+
 case class TotalGainAnswersModel(disposalDateModel: DisposalDateModel,
                                  soldOrGivenAwayModel: SoldOrGivenAwayModel,
                                  soldForLessModel: Option[SoldForLessModel],
@@ -28,4 +30,7 @@ case class TotalGainAnswersModel(disposalDateModel: DisposalDateModel,
                                  acquisitionDateModel: AcquisitionDateModel,
                                  rebasedValueModel: Option[RebasedValueModel],
                                  rebasedCostsModel: Option[RebasedCostsModel],
-                                 improvementsModel: ImprovementsModel)
+                                 improvementsModel: ImprovementsModel) {
+
+  val salesDetailsRows: Seq[QuestionAnswerModel[Any]] = SalesDetailsConstructor.salesDetailsRows(this)
+}

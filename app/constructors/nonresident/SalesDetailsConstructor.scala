@@ -24,38 +24,42 @@ import play.api.i18n.Messages
 
 object SalesDetailsConstructor {
 
-  def salesDetailsRows(answers: SummaryModel): Seq[QuestionAnswerModel[Any]] = {
+  def salesDetailsRows(answers: TotalGainAnswersModel): Seq[QuestionAnswerModel[Any]] = {
     val disposalDate = disposalDateRow(answers)
     val disposalValue = disposalValueRow(answers)
     val disposalCosts = disposalCostsRow(answers)
+    val soldOrGivenAway = soldOrGivenAwayRow(answers)
+    val soldForLess = soldForLessRow(answers)
 
-    Seq(disposalDate, disposalValue, disposalCosts)
+    val items = Seq(disposalDate, soldOrGivenAway, soldForLess, disposalValue, disposalCosts)
+
+    items.flatten
   }
 
-  def disposalDateRow(answers: SummaryModel): QuestionAnswerModel[LocalDate] = {
+  def disposalDateRow(answers: TotalGainAnswersModel): Option[QuestionAnswerModel[LocalDate]] = {
     val dateModel = answers.disposalDateModel
     val date = Dates.constructDate(dateModel.day, dateModel.month, dateModel.year)
 
-    QuestionAnswerModel[LocalDate](keys.disposalDate,
+    Some(QuestionAnswerModel[LocalDate](keys.disposalDate,
       date,
       Messages("calc.disposalDate.question"),
-      Some(controllers.nonresident.routes.DisposalDateController.disposalDate().url))
+      Some(controllers.nonresident.routes.DisposalDateController.disposalDate().url)))
   }
 
-  def soldOrGivenAwayRow(answers: TotalGainAnswersModel): QuestionAnswerModel[String] = {
+  def soldOrGivenAwayRow(answers: TotalGainAnswersModel): Option[QuestionAnswerModel[String]] = {
     if (answers.soldOrGivenAwayModel.soldIt) {
-      QuestionAnswerModel[String](keys.soldOrGivenAway,
+      Some(QuestionAnswerModel[String](keys.soldOrGivenAway,
         Messages("calc.soldOrGivenAway.sold"),
         Messages("calc.soldOrGivenAway.question"),
         Some(controllers.nonresident.routes.SoldOrGivenAwayController.soldOrGivenAway().url)
-      )
+      ))
     }
     else {
-      QuestionAnswerModel[String](keys.soldOrGivenAway,
+      Some(QuestionAnswerModel[String](keys.soldOrGivenAway,
         Messages("calc.soldOrGivenAway.gave"),
         Messages("calc.soldOrGivenAway.question"),
         Some(controllers.nonresident.routes.SoldOrGivenAwayController.soldOrGivenAway().url)
-      )
+      ))
     }
   }
 
@@ -70,17 +74,17 @@ object SalesDetailsConstructor {
     else None
   }
 
-  def disposalValueRow(answers: SummaryModel): QuestionAnswerModel[BigDecimal] = {
-    QuestionAnswerModel[BigDecimal](keys.disposalValue,
+  def disposalValueRow(answers: TotalGainAnswersModel): Option[QuestionAnswerModel[BigDecimal]] = {
+    Some(QuestionAnswerModel[BigDecimal](keys.disposalValue,
       answers.disposalValueModel.disposalValue,
       Messages("calc.disposalValue.question"),
-      Some(controllers.nonresident.routes.DisposalValueController.disposalValue().url))
+      Some(controllers.nonresident.routes.DisposalValueController.disposalValue().url)))
   }
 
-  def disposalCostsRow(answers: SummaryModel): QuestionAnswerModel[BigDecimal] = {
-    QuestionAnswerModel[BigDecimal](keys.disposalCosts,
+  def disposalCostsRow(answers: TotalGainAnswersModel): Option[QuestionAnswerModel[BigDecimal]] = {
+    Some(QuestionAnswerModel[BigDecimal](keys.disposalCosts,
       answers.disposalCostsModel.disposalCosts,
       Messages("calc.disposalCosts.question"),
-      Some(controllers.nonresident.routes.DisposalCostsController.disposalCosts().url))
+      Some(controllers.nonresident.routes.DisposalCostsController.disposalCosts().url)))
   }
 }

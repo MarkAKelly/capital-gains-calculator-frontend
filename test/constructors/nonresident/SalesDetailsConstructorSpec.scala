@@ -18,7 +18,6 @@ package constructors.nonresident
 
 import java.time.LocalDate
 
-import common.TestModels
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.{NonResident => messages}
 import helpers.AssertHelpers
@@ -27,11 +26,11 @@ import models.nonresident._
 class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication with AssertHelpers {
 
   val totalGainGiven = TotalGainAnswersModel(
-    DisposalDateModel(10, 10, 2016),
+    DisposalDateModel(10, 10, 2010),
     SoldOrGivenAwayModel(false),
     None,
-    DisposalValueModel(10000),
-    DisposalCostsModel(100),
+    DisposalValueModel(150000),
+    DisposalCostsModel(600),
     HowBecameOwnerModel("Gifted"),
     None,
     AcquisitionValueModel(5000),
@@ -43,11 +42,11 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication with
   )
 
   val totalGainSold = TotalGainAnswersModel(
-    DisposalDateModel(10, 10, 2016),
+    DisposalDateModel(10, 10, 2018),
     SoldOrGivenAwayModel(true),
     Some(SoldForLessModel(false)),
-    DisposalValueModel(10000),
-    DisposalCostsModel(100),
+    DisposalValueModel(90000),
+    DisposalCostsModel(0),
     HowBecameOwnerModel("Bought"),
     Some(BoughtForLessModel(false)),
     AcquisitionValueModel(5000),
@@ -79,23 +78,30 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication with
   "Calling salesDetailsRows" when {
 
     "using the summaryIndividualImprovementsNoRebasedModel model" should {
-      val model = TestModels.summaryIndividualImprovementsNoRebasedModel
-      lazy val result = SalesDetailsConstructor.salesDetailsRows(model)
+      lazy val result = SalesDetailsConstructor.salesDetailsRows(totalGainForLess)
 
       "return a Sequence of size 3" in {
-        result.size shouldBe 3
+        result.size shouldBe 5
       }
 
       "return a sequence with a Disposal Date" in {
-        result.contains(SalesDetailsConstructor.disposalDateRow(model))
+        result.contains(SalesDetailsConstructor.disposalDateRow(totalGainForLess).get)
+      }
+
+      "return a sequence with Sold Or Given Away" in {
+        result.contains(SalesDetailsConstructor.soldOrGivenAwayRow(totalGainForLess).get)
+      }
+
+      "return a sequence with Sold For Less" in {
+        result.contains(SalesDetailsConstructor.soldForLessRow(totalGainForLess).get)
       }
 
       "return a sequence with a Disposal Value" in {
-        result.contains(SalesDetailsConstructor.disposalValueRow(model))
+        result.contains(SalesDetailsConstructor.disposalValueRow(totalGainForLess).get)
       }
 
       "return a sequence with Disposal Costs" in {
-        result.contains(SalesDetailsConstructor.disposalCostsRow(model))
+        result.contains(SalesDetailsConstructor.disposalCostsRow(totalGainForLess).get)
       }
     }
   }
@@ -103,8 +109,7 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication with
   "Calling disposalDateRow" when {
 
     "supplied with a date of 10 October 2010" should {
-      val model = TestModels.summaryIndividualImprovementsNoRebasedModel
-      lazy val result = SalesDetailsConstructor.disposalDateRow(model)
+      lazy val result = SalesDetailsConstructor.disposalDateRow(totalGainGiven).get
 
       "have an id of nr:disposalDate" in {
         result.id shouldBe "nr:disposalDate"
@@ -124,8 +129,7 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication with
     }
 
     "supplied with a date of 10 October 2018" should {
-      val model = TestModels.summaryIndividualPRRAcqDateAfterAndDisposalDateBefore
-      lazy val result = SalesDetailsConstructor.disposalDateRow(model)
+      lazy val result = SalesDetailsConstructor.disposalDateRow(totalGainSold).get
 
       "have the data for 10 October 2018" in {
         result.data shouldBe LocalDate.parse("2018-10-10")
@@ -136,7 +140,7 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication with
   "Calling soldOrGivenAwayRow" when {
 
     "supplied with an answer of false" should {
-      lazy val result = SalesDetailsConstructor.soldOrGivenAwayRow(totalGainGiven)
+      lazy val result = SalesDetailsConstructor.soldOrGivenAwayRow(totalGainGiven).get
 
       "have an id of nr:soldOrGivenAway" in {
         result.id shouldBe "nr:soldOrGivenAway"
@@ -156,7 +160,7 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication with
     }
 
     "supplied with an answer of true" should {
-      lazy val result = SalesDetailsConstructor.soldOrGivenAwayRow(totalGainSold)
+      lazy val result = SalesDetailsConstructor.soldOrGivenAwayRow(totalGainSold).get
 
       "have an id of nr:soldOrGivenAway" in {
         result.id shouldBe "nr:soldOrGivenAway"
@@ -226,8 +230,7 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication with
   "Calling disposalValueRow" when {
 
     "supplied with a value of 150000" should {
-      val model = TestModels.summaryIndividualImprovementsNoRebasedModel
-      lazy val result = SalesDetailsConstructor.disposalValueRow(model)
+      lazy val result = SalesDetailsConstructor.disposalValueRow(totalGainGiven).get
 
       "have an id of nr:disposalValue" in {
         result.id shouldBe "nr:disposalValue"
@@ -247,8 +250,7 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication with
     }
 
     "supplied with a value of 90000" should {
-      val model = TestModels.summaryIndividualFlatLoss
-      lazy val result = SalesDetailsConstructor.disposalValueRow(model)
+      lazy val result = SalesDetailsConstructor.disposalValueRow(totalGainSold).get
 
       "have the data for 90000" in {
         result.data shouldBe BigDecimal(90000)
@@ -259,8 +261,7 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication with
   "Calling disposalCostsRow" when {
 
     "supplied with a value of 600" should {
-      val model = TestModels.summaryIndividualImprovementsNoRebasedModel
-      lazy val result = SalesDetailsConstructor.disposalCostsRow(model)
+      lazy val result = SalesDetailsConstructor.disposalCostsRow(totalGainGiven).get
 
       "have an id of nr:disposalCosts" in {
         result.id shouldBe "nr:disposalCosts"
@@ -280,8 +281,7 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication with
     }
 
     "supplied with a value of 0" should {
-      val model = TestModels.summaryIndividualFlatLoss
-      lazy val result = SalesDetailsConstructor.disposalCostsRow(model)
+      lazy val result = SalesDetailsConstructor.disposalCostsRow(totalGainSold).get
 
       "have the data for 0" in {
         result.data shouldBe BigDecimal(0)
