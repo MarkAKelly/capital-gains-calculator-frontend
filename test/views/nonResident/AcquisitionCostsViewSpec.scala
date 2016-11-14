@@ -48,6 +48,11 @@ class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with Mo
         s"has a route to 'Acquisition Value'" in {
           backLink.attr("href") shouldBe controllers.nonresident.routes.AcquisitionValueController.acquisitionValue().url
         }
+
+        "has the class 'back-link'" in {
+          backLink.attr("class") shouldBe "back-link"
+        }
+
       }
 
       "have a heading" which {
@@ -68,8 +73,9 @@ class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with Mo
       s"have a paragraph that has the text '${messages.AcquisitionCosts.bulletTitle}" in {
         document.body.select("p#bulletTitle").text() shouldBe messages.AcquisitionCosts.bulletTitle
       }
+
       "have a list" which {
-        lazy val list = document.body().select("ul.list")
+        lazy val list = document.body().select("#helpList")
 
         s"has a bullet point with the text '${messages.AcquisitionCosts.bulletOne}'" in {
           list.select(":first-child").text() shouldBe messages.AcquisitionCosts.bulletOne
@@ -82,6 +88,11 @@ class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with Mo
         s"has a bullet point with the text '${messages.AcquisitionCosts.bulletThree}'" in {
           list.select(":last-child").text() shouldBe messages.AcquisitionCosts.bulletThree
         }
+
+        "has the class 'list list-bullet'" in {
+          list.attr("class") shouldBe "list list-bullet"
+        }
+
       }
 
 
