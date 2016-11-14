@@ -1,0 +1,10 @@
+@import models.nonresident.QuestionAnswerModel
+
+@(questions: Seq[(QuestionAnswerModel[Int])], backLink: String)(implicit request: Request[_])
+
+@main_template(""){
+
+    <a id="back-link" class="back-link" href=backLink>@Messages("calc.base.back")</a>
+
+    <h1 class="heading-xlarge">@Messages("calc.checkYourAnswers.title")</h1>
+}
