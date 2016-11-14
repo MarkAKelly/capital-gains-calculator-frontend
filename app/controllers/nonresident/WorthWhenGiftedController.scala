@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-package helpers
+package controllers.nonresident
 
-import org.jsoup.select.Elements
-import org.scalatest.Assertions.cancel
+import connectors.CalculatorConnector
+import uk.gov.hmrc.play.frontend.controller.FrontendController
 
-trait AssertHelpers {
+object WorthWhenGiftedController extends WorthWhenGiftedController {
+  val calcConnector = CalculatorConnector
+}
 
-  //requires a test for a Some result before using this assert
-  def assertOption[T](message: String)(option: Option[T])(test: T => Unit): Unit = {
-    option.fold(cancel(message)) { value =>
-      test(value)
-    }
-  }
+trait WorthWhenGiftedController extends FrontendController {
 
-  //requires a test to validate a non-empty array before using this assert
-  def assertHTML(elements: Elements)(test: Elements => Unit): Unit = {
-    if(elements.isEmpty) cancel("element not found")
-    else test(elements)
-  }
+  val worthWhenGifted = TODO
 
+  val submitWorthWhenGifted = TODO
 }

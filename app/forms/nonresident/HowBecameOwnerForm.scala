@@ -14,24 +14,25 @@
  * limitations under the License.
  */
 
-package helpers
+package forms.nonresident
 
-import org.jsoup.select.Elements
-import org.scalatest.Assertions.cancel
+/**
+  * Created by morgan on 09/11/16.
+  */
 
-trait AssertHelpers {
+import models.nonresident.HowBecameOwnerModel
+import play.api.data.Form
+import play.api.data.Forms._
+import common.Validation._
+import play.api.i18n.Messages
 
-  //requires a test for a Some result before using this assert
-  def assertOption[T](message: String)(option: Option[T])(test: T => Unit): Unit = {
-    option.fold(cancel(message)) { value =>
-      test(value)
-    }
-  }
+object HowBecameOwnerForm {
 
-  //requires a test to validate a non-empty array before using this assert
-  def assertHTML(elements: Elements)(test: Elements => Unit): Unit = {
-    if(elements.isEmpty) cancel("element not found")
-    else test(elements)
-  }
-
+  val howBecameOwnerForm = Form(
+    mapping(
+      "gainedBy" -> text
+        .verifying(Messages("calc.howBecameOwner.errors.required"), mandatoryCheck)
+        .verifying(Messages("calc.howBecameOwner.errors.required"), howBecameOwnerCheck)
+    )(HowBecameOwnerModel.apply)(HowBecameOwnerModel.unapply)
+  )
 }

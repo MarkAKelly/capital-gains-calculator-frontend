@@ -97,6 +97,10 @@ object MessageLookup {
       val errorDecimalPlaces = "Your allowance has too many numbers after the decimal point"
     }
 
+    object BoughtForLess {
+      val question = "Did you buy the property for less than it was worth because the seller wanted to help you?"
+    }
+
     object CalculationElection {
       val heading = "Working out your total"
       val question = "Which method of calculation would you like?"
@@ -291,10 +295,18 @@ object MessageLookup {
       def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
+    //How Became Owner messages
+    object HowBecameOwner {
+      val title = "How did you become the owner?"
+      val errorMandatory = "Tell us how you became the owner"
+      val bought = "Bought it"
+      val gifted = "Got it as a gift"
+      val inherited = "Inherited it"
+    }
+
     object SoldOrGivenAway {
 
       val title = "Did you sell or give away the property?"
-
     }
 
     object Summary {
