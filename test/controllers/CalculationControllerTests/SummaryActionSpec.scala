@@ -70,6 +70,12 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
     }
   }
 
+  "SummaryController" should {
+    s"have a session timeout home link of '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+      SummaryController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+    }
+  }
+
   "Calling the .summaryBackUrl" when {
 
     "provided with an acquisition date" should {

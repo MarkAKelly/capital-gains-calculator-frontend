@@ -51,6 +51,12 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
     }
   }
 
+  "AcquisitionDateController" should {
+    s"have a session timeout home link of '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+      AcquisitionDateController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+    }
+  }
+
   "Calling the .acquisitionDate action " should {
 
     "no session is active" should {
