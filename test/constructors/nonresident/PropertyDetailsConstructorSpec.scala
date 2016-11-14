@@ -16,83 +16,71 @@
 
 package constructors.nonresident
 
-import common.TestModels
 import assets.MessageLookup.NonResident.{Improvements => messages}
+import helpers.AssertHelpers
+import models.nonresident._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class PropertyDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
+class PropertyDetailsConstructorSpec extends UnitSpec with WithFakeApplication with AssertHelpers {
+
+  val noImprovements = TotalGainAnswersModel(
+    DisposalDateModel(10, 10, 2010),
+    SoldOrGivenAwayModel(false),
+    None,
+    DisposalValueModel(150000),
+    DisposalCostsModel(600),
+    HowBecameOwnerModel("Gifted"),
+    None,
+    AcquisitionValueModel(5000),
+    AcquisitionCostsModel(200),
+    AcquisitionDateModel("No", None, None, None),
+    None,
+    None,
+    ImprovementsModel("No", None, None)
+  )
+
+  val noRebasedImprovements = TotalGainAnswersModel(
+    DisposalDateModel(10, 10, 2018),
+    SoldOrGivenAwayModel(true),
+    Some(SoldForLessModel(false)),
+    DisposalValueModel(90000),
+    DisposalCostsModel(0),
+    HowBecameOwnerModel("Bought"),
+    Some(BoughtForLessModel(false)),
+    AcquisitionValueModel(5000),
+    AcquisitionCostsModel(200),
+    AcquisitionDateModel("Yes", Some(1), Some(4), Some(2013)),
+    Some(RebasedValueModel("No", None)),
+    Some(RebasedCostsModel("No", None)),
+    ImprovementsModel("Yes", Some(50), None)
+  )
+
+  val allImprovements = TotalGainAnswersModel(
+    DisposalDateModel(10, 10, 2016),
+    SoldOrGivenAwayModel(true),
+    Some(SoldForLessModel(true)),
+    DisposalValueModel(10000),
+    DisposalCostsModel(100),
+    HowBecameOwnerModel("Bought"),
+    Some(BoughtForLessModel(true)),
+    AcquisitionValueModel(5000),
+    AcquisitionCostsModel(200),
+    AcquisitionDateModel("Yes", Some(1), Some(4), Some(2013)),
+    Some(RebasedValueModel("Yes", Some(7500))),
+    Some(RebasedCostsModel("Yes", Some(150))),
+    ImprovementsModel("Yes", Some(50), Some(25))
+  )
+
+  private def assertExpectedResult[T](option: Option[T])(test: T => Unit) = assertOption("expected option is None")(option)(test)
 
   "Calling propertyDetailsRow" when {
-    "using the businessScenarioOneModel (no improvements)" should {
-      lazy val model = TestModels.businessScenarioOneModel
-      lazy val result = PropertyDetailsConstructor.propertyDetailsRows(model)
 
-      "return a sequence of size 1" in {
-        result.size shouldEqual 1
-      }
-
-      "return a isClaiming Improvements of 'No'" in {
-        result.contains(PropertyDetailsConstructor.improvementsIsClaimingRow(model).get) shouldEqual true
-      }
-    }
-
-    "using the sumModelTA model (improvements and time apportioned)" should {
-      lazy val model = TestModels.sumModelTA
-      lazy val result = PropertyDetailsConstructor.propertyDetailsRows(model)
-
-      "return a sequence of size two" in {
-        result.size shouldEqual 2
-      }
-
-      "return an isClaiming Improvements of 'Yes'" in {
-        result.contains(PropertyDetailsConstructor.improvementsIsClaimingRow(model).get) shouldEqual true
-      }
-
-      "return a Improvements value row" in {
-        result.contains(PropertyDetailsConstructor.improvementsTotalRow(model, true).get) shouldEqual true
-      }
-    }
-
-    "using the sumModelRebased model (improvements and rebased)" should {
-      lazy val model = TestModels.sumModelRebased
-      lazy val result = PropertyDetailsConstructor.propertyDetailsRows(model)
-
-      "return a sequence of size two" in {
-        result.size shouldEqual 2
-      }
-
-      "return an isClaiming Improvements of 'Yes'" in {
-        result.contains(PropertyDetailsConstructor.improvementsIsClaimingRow(model).get) shouldEqual true
-      }
-
-      "return a Improvements value row" in {
-        result.contains(PropertyDetailsConstructor.improvementsAfterRow(model, true).get) shouldEqual true
-      }
-    }
-
-    "using the summaryIndividualFlatLoss model (improvements and flat)" should {
-      lazy val model = TestModels.summaryIndividualFlatLoss
-      lazy val result = PropertyDetailsConstructor.propertyDetailsRows(model)
-
-      "return a sequence of size two" in {
-        result.size shouldEqual 2
-      }
-
-      "return an isClaiming Improvements of 'Yes'" in {
-        result.contains(PropertyDetailsConstructor.improvementsIsClaimingRow(model).get) shouldEqual true
-      }
-
-      "return a Improvements value row" in {
-        result.contains(PropertyDetailsConstructor.improvementsTotalRow(model, true).get) shouldEqual true
-      }
-    }
   }
 
   "Calling improvementsIsClaimingRow" when {
 
     "supplied with a value of Yes" should {
-      lazy val model = TestModels.sumModelTA
-      lazy val result = PropertyDetailsConstructor.improvementsIsClaimingRow(model).get
+      lazy val result = PropertyDetailsConstructor.improvementsIsClaimingRow(allImprovements).get
 
       "have an id of nr:improvements-isClaiming" in {
         result.id shouldBe "nr:improvements-isClaiming"
@@ -112,10 +100,9 @@ class PropertyDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
     }
 
     "supplied with a value of No" should {
-      lazy val model = TestModels.sumModelFlat
-      lazy val result = PropertyDetailsConstructor.improvementsIsClaimingRow(model).get
+      lazy val result = PropertyDetailsConstructor.improvementsIsClaimingRow(noImprovements).get
 
-      "have the data for 10 October 2018" in {
+      "have the data for No" in {
         result.data shouldBe "No"
       }
     }
@@ -124,31 +111,33 @@ class PropertyDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
   "Calling improvementsTotalRow" when {
 
     "supplied with a value of 500 and should be displayed it true" should {
-      lazy val model = TestModels.sumModelTA
-      lazy val result = PropertyDetailsConstructor.improvementsTotalRow(model, true).get
+      lazy val result = PropertyDetailsConstructor.improvementsTotalRow(noRebasedImprovements, true)
 
-      "have an id of nr:improvements-total" in {
-        result.id shouldBe "nr:improvements-total"
+      "return some value" in {
+        result.isDefined shouldBe true
       }
 
-      "have the data for the value of 500" in {
-        result.data shouldBe BigDecimal(500)
+      "have an id of nr:improvements-total" in {
+        assertExpectedResult(result)(_.id shouldBe "nr:improvements-total")
+      }
+
+      "have the data for the value of 50" in {
+        assertExpectedResult(result)(_.data shouldBe BigDecimal(50))
       }
 
       "have the question for improvements values" in {
-        result.question shouldBe messages.questionTwo
+        assertExpectedResult(result)(_.question shouldBe messages.questionTwo)
       }
 
       "have a link to the improvements page" in {
-        result.link shouldBe Some(controllers.nonresident.routes.ImprovementsController.improvements().url)
+        assertExpectedResult(result)(_.link shouldBe Some(controllers.nonresident.routes.ImprovementsController.improvements().url))
       }
     }
 
-    "supplied with a value of 500 but should be displayed it false" should {
-      lazy val model = TestModels.sumModelTA
-      lazy val result = PropertyDetailsConstructor.improvementsTotalRow(model, false)
+    "supplied with no improvements value" should {
+      lazy val result = PropertyDetailsConstructor.improvementsTotalRow(noImprovements, false)
 
-      "be a None" in {
+      "return a None" in {
         result shouldBe None
       }
     }
@@ -157,31 +146,33 @@ class PropertyDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
   "Calling improvementsAfterRow" when {
 
     "supplied with a value of 1000 and should be displayed it true" should {
-      lazy val model = TestModels.summaryIndividualImprovementsWithRebasedModel
-      lazy val result = PropertyDetailsConstructor.improvementsAfterRow(model, true).get
+      lazy val result = PropertyDetailsConstructor.improvementsAfterRow(allImprovements, true)
 
-      "have an id of nr:improvements-after" in {
-        result.id shouldBe "nr:improvements-after"
+      "return some value" in {
+        result.isDefined shouldBe true
       }
 
-      "have the data for the value of 1000" in {
-        result.data shouldBe BigDecimal(1000)
+      "have an id of nr:improvements-after" in {
+        assertExpectedResult(result)(_.id shouldBe "nr:improvements-after")
+      }
+
+      "have the data for the value of 25" in {
+        assertExpectedResult(result)(_.data shouldBe BigDecimal(25))
       }
 
       "have the question for improvements value" in {
-        result.question shouldBe messages.questionFour
+        assertExpectedResult(result)(_.question shouldBe messages.questionFour)
       }
 
       "have a link to the improvements page" in {
-        result.link shouldBe Some(controllers.nonresident.routes.ImprovementsController.improvements().url)
+        assertExpectedResult(result)(_.link shouldBe Some(controllers.nonresident.routes.ImprovementsController.improvements().url))
       }
     }
 
-    "supplied with a value of 500 but should be displayed it false" should {
-      lazy val model = TestModels.summaryIndividualImprovementsWithRebasedModel
-      lazy val result = PropertyDetailsConstructor.improvementsAfterRow(model, false)
+    "supplied with a no value for improvements after" should {
+      lazy val result = PropertyDetailsConstructor.improvementsAfterRow(noRebasedImprovements, false)
 
-      "be a None" in {
+      "return a None" in {
         result shouldBe None
       }
     }
