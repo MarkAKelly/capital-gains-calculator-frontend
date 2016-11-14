@@ -80,6 +80,20 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Mock
         document.title shouldEqual messages.question
       }
     }
+
+    "supplied with a pre-existing stored model without a session" should {
+      lazy val target = setupTarget(Some(DisposalDateModel(1, 3, 2016)))
+      lazy val result = target.disposalDate(fakeRequest)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 200" in {
+        status(result) shouldBe 200
+      }
+
+      "should return to the disposal date page" in {
+        document.title shouldEqual messages.question
+      }
+    }
   }
 
   // POST Tests
