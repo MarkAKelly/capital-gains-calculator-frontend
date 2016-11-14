@@ -16,7 +16,6 @@
 
 package controllers.CalculationControllerTests
 
-import common.DefaultRoutes._
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import org.mockito.Matchers
@@ -96,8 +95,8 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
           document.body.getElementById("back-link").text shouldEqual commonMessages.back
         }
 
-        s"have a 'Back' link to ${routes.RebasedCostsController.rebasedCosts().url} " in {
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.RebasedCostsController.rebasedCosts().url
+        s"have a 'Back' link to ${routes.DisposalCostsController.disposalCosts().url} " in {
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionCostsController.acquisitionCosts().url
         }
       }
 
@@ -117,8 +116,8 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
           document.body.getElementById("back-link").text shouldEqual commonMessages.back
         }
 
-        s"have a 'Back' link to ${routes.RebasedValueController.rebasedValue().url} " in {
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.RebasedValueController.rebasedValue().url
+        s"have a 'Back' link to ${routes.DisposalCostsController.disposalCosts().url} " in {
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionCostsController.acquisitionCosts().url
         }
       }
 
@@ -136,8 +135,8 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
           document.body.getElementById("back-link").text shouldEqual commonMessages.back
         }
 
-        s"have a 'Back' link to $missingDataRoute " in {
-          document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
+        s"have a 'Back' link to ${routes.DisposalCostsController.disposalCosts().url} " in {
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionCostsController.acquisitionCosts().url
         }
       }
 
@@ -155,65 +154,29 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
           document.body.getElementById("back-link").text shouldEqual commonMessages.back
         }
 
-        s"have a 'Back' link to $missingDataRoute " in {
-          document.body.getElementById("back-link").attr("href") shouldEqual missingDataRoute
+        s"have a 'Back' link to ${routes.DisposalCostsController.disposalCosts().url}" in {
+          document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionCostsController.acquisitionCosts().url
         }
       }
     }
   }
 
-
   "In CalculationController calling the .submitImprovements action " when {
 
-    "submitting a valid form with 'Yes' and a value of 12045 for both fields" should {
+    "submitting a valid form with 'Yes' and a value of 12045 for improvementsAmt" should {
 
       val target = setupTarget(None, None)
-      lazy val request = fakeRequestToPOSTWithSession("isClaimingImprovements" -> "Yes", "improvementsAmt" -> "12045", "improvementsAmtAfter" -> "12045")
+      lazy val request = fakeRequestToPOSTWithSession("isClaimingImprovements" -> "Yes", "improvementsAmt" -> "12045")
       lazy val result = target.submitImprovements(request)
 
       "return a 303" in {
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.DisposalDateController.disposalDate()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.DisposalDateController.disposalDate()}")
+      s"redirect to ${routes.OtherReliefsController.otherReliefs()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsController.otherReliefs()}")
       }
     }
-
-    "submitting a valid form with 'Yes' and a value of 12045 for improvementsAmt and a None for improvementsAmtAfter" should {
-
-      val target = setupTarget(None, None)
-      lazy val request = fakeRequestToPOSTWithSession("isClaimingImprovements" -> "Yes", "improvementsAmt" -> "12045", "improvementsAmtAfter" -> "")
-      lazy val result = target.submitImprovements(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      s"redirect to ${routes.DisposalDateController.disposalDate()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.DisposalDateController.disposalDate()}")
-      }
-    }
-
-    "submitting a valid form with 'Yes' and a value of 12045 for improvementsAmtAfter and a None for improvementsAmt" should {
-
-      // set up scenario so that both improvements values are displayed
-      val acquisitionData = AcquisitionDateModel("No", None, None, None)
-      val rebasedData = RebasedValueModel("Yes", Some(1))
-
-      val target = setupTarget(None, Some(acquisitionData), Some(rebasedData))
-      lazy val request = fakeRequestToPOSTWithSession("isClaimingImprovements" -> "Yes", "improvementsAmt" -> "", "improvementsAmtAfter" -> "12045")
-      lazy val result = target.submitImprovements(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      s"redirect to ${routes.DisposalDateController.disposalDate()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.DisposalDateController.disposalDate()}")
-      }
-    }
-
 
     "submitting a valid form with 'No' and no value" should {
 
@@ -225,8 +188,8 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.DisposalDateController.disposalDate()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.DisposalDateController.disposalDate()}")
+      s"redirect to ${routes.OtherReliefsController.otherReliefs()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsController.otherReliefs()}")
       }
     }
 
