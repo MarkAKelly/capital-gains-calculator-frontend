@@ -31,10 +31,13 @@ trait AnswersConstructor {
   val calculatorConnector: CalculatorConnector
 
   def getNRTotalGainAnswers(implicit hc: HeaderCarrier): Future[TotalGainAnswersModel] = {
-    //TODO add additional questions when added to model
     val disposalDate = calculatorConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.disposalDate).map(data => data.get)
+    val soldOrGivenAway = calculatorConnector.fetchAndGetFormData[SoldOrGivenAwayModel](KeystoreKeys.soldOrGivenAway).map(data => data.get)
+    val soldForLess = calculatorConnector.fetchAndGetFormData[SoldForLessModel](KeystoreKeys.NonResidentKeys.soldForLess)
     val disposalValue = calculatorConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.disposalValue).map(data => data.get)
     val disposalCosts = calculatorConnector.fetchAndGetFormData[DisposalCostsModel](KeystoreKeys.disposalCosts).map(data => data.get)
+    val howBecameOwner = calculatorConnector.fetchAndGetFormData[HowBecameOwnerModel](KeystoreKeys.howBecameOwner).map(data => data.get)
+    val boughtForLess = calculatorConnector.fetchAndGetFormData[BoughtForLessModel](KeystoreKeys.boughtForLess)
     val acquisitionValue = calculatorConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.acquisitionValue).map(data => data.get)
     val acquisitionCosts = calculatorConnector.fetchAndGetFormData[AcquisitionCostsModel](KeystoreKeys.acquisitionCosts).map(data => data.get)
     val acquisitionDate = calculatorConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).map(data => data.get)
@@ -44,15 +47,20 @@ trait AnswersConstructor {
 
     for {
       disposalDate <- disposalDate
+      soldOrGivenAway <- soldOrGivenAway
+      soldForLess <- soldForLess
       disposalValue <- disposalValue
       disposalCosts <- disposalCosts
+      howBecameOwner <- howBecameOwner
+      boughtForLess <- boughtForLess
       acquisitionValue <- acquisitionValue
       acquisitionCosts <- acquisitionCosts
       acquisitionDate <- acquisitionDate
       rebasedValue <- rebasedValue
       rebasedCosts <- rebasedCosts
       improvements <- improvements
-    } yield TotalGainAnswersModel(disposalDate, disposalValue, disposalCosts, acquisitionValue, acquisitionCosts, acquisitionDate,
+    } yield TotalGainAnswersModel(disposalDate, soldOrGivenAway, soldForLess, disposalValue, disposalCosts,
+      howBecameOwner, boughtForLess, acquisitionValue, acquisitionCosts, acquisitionDate,
       rebasedValue, rebasedCosts, improvements)
   }
 }

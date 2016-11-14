@@ -19,11 +19,13 @@ package constructors.nonresident
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import models.nonresident._
+import org.apache.xpath.functions.FuncRound
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
+
 import scala.concurrent.Future
 
 class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
@@ -35,11 +37,23 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
     when(mockConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(totalGainAnswersModel.disposalDateModel)))
 
+    when(mockConnector.fetchAndGetFormData[SoldOrGivenAwayModel](Matchers.eq(KeystoreKeys.soldOrGivenAway))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(totalGainAnswersModel.soldOrGivenAwayModel)))
+
+    when(mockConnector.fetchAndGetFormData[SoldForLessModel](Matchers.eq(KeystoreKeys.NonResidentKeys.soldForLess))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(totalGainAnswersModel.soldForLessModel))
+
     when(mockConnector.fetchAndGetFormData[DisposalValueModel](Matchers.eq(KeystoreKeys.disposalValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(totalGainAnswersModel.disposalValueModel)))
 
     when(mockConnector.fetchAndGetFormData[DisposalCostsModel](Matchers.eq(KeystoreKeys.disposalCosts))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(totalGainAnswersModel.disposalCostsModel)))
+
+    when(mockConnector.fetchAndGetFormData[HowBecameOwnerModel](Matchers.eq(KeystoreKeys.howBecameOwner))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(totalGainAnswersModel.howBecameOwnerModel)))
+
+    when(mockConnector.fetchAndGetFormData[BoughtForLessModel](Matchers.eq(KeystoreKeys.boughtForLess))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(totalGainAnswersModel.boughtForLessModel))
 
     when(mockConnector.fetchAndGetFormData[AcquisitionValueModel](Matchers.eq(KeystoreKeys.acquisitionValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(totalGainAnswersModel.acquisitionValueModel)))
@@ -66,8 +80,12 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
 
   val totalGainNoOptionalModel = TotalGainAnswersModel(
     DisposalDateModel(10, 10, 2016),
+    SoldOrGivenAwayModel(false),
+    None,
     DisposalValueModel(10000),
     DisposalCostsModel(100),
+    HowBecameOwnerModel("Gifted"),
+    None,
     AcquisitionValueModel(5000),
     AcquisitionCostsModel(200),
     AcquisitionDateModel("No", None, None, None),
@@ -78,8 +96,12 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
 
   val totalGainAllOptionalModel = TotalGainAnswersModel(
     DisposalDateModel(10, 10, 2016),
+    SoldOrGivenAwayModel(true),
+    Some(SoldForLessModel(false)),
     DisposalValueModel(10000),
     DisposalCostsModel(100),
+    HowBecameOwnerModel("Bought"),
+    Some(BoughtForLessModel(false)),
     AcquisitionValueModel(5000),
     AcquisitionCostsModel(200),
     AcquisitionDateModel("Yes", Some(1), Some(4), Some(2013)),

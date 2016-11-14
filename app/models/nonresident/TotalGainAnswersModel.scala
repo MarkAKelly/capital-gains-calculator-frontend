@@ -17,11 +17,15 @@
 package models.nonresident
 
 case class TotalGainAnswersModel(disposalDateModel: DisposalDateModel,
-                                  disposalValueModel: DisposalValueModel,
-                                  disposalCostsModel: DisposalCostsModel,
-                                  acquisitionValueModel: AcquisitionValueModel,
-                                  acquisitionCostsModel: AcquisitionCostsModel,
-                                  acquisitionDateModel: AcquisitionDateModel,
-                                  rebasedValueModel: Option[RebasedValueModel],
-                                  rebasedCostsModel: Option[RebasedCostsModel],
-                                  improvementsModel: ImprovementsModel)
+                                 soldOrGivenAwayModel: SoldOrGivenAwayModel,
+                                 soldForLessModel: Option[SoldForLessModel],
+                                 disposalValueModel: DisposalValueModel,
+                                 disposalCostsModel: DisposalCostsModel,
+                                 howBecameOwnerModel: HowBecameOwnerModel,
+                                 boughtForLessModel: Option[BoughtForLessModel],
+                                 acquisitionValueModel: AcquisitionValueModel,
+                                 acquisitionCostsModel: AcquisitionCostsModel,
+                                 acquisitionDateModel: AcquisitionDateModel,
+                                 rebasedValueModel: Option[RebasedValueModel],
+                                 rebasedCostsModel: Option[RebasedCostsModel],
+                                 improvementsModel: ImprovementsModel)
