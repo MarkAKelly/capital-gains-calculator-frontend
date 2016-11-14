@@ -19,7 +19,6 @@ package constructors.nonresident
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import models.nonresident._
-import org.apache.xpath.functions.FuncRound
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
