@@ -26,7 +26,7 @@ class YourAnswersConstructorSpec extends UnitSpec {
     "only fetching total gain answers" should {
       //TODO update to total gain when new model is available
       val model = TestModels.sumModelFlat
-      val result = YourAnswersConstructor.fetchYourAnswers(model)
+      val result = YourAnswersConstructor.fetchYourAnswers(model, TestModels.calcModelOneRate)
 
       "contain the answers from sale details" in {
         val salesDetails = SalesDetailsConstructor.salesDetailsRows(model)
@@ -45,7 +45,12 @@ class YourAnswersConstructorSpec extends UnitSpec {
 
         result.containsSlice(propertyDetails) shouldBe true
       }
+
+      "contain the answers from deduction details" in {
+        val deductionDetails = DeductionDetailsConstructor.deductionDetailsRows(model, TestModels.calcModelOneRate)
+
+        result.containsSlice(deductionDetails) shouldBe true
+      }
     }
   }
-
 }

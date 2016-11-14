@@ -16,21 +16,23 @@
 
 package constructors.nonresident
 
-import models.nonresident.{QuestionAnswerModel, SummaryModel}
+import models.nonresident.{CalculationResultModel, QuestionAnswerModel, SummaryModel}
 
 object YourAnswersConstructor {
 
   //TODO update to use the new answers models
-  def fetchYourAnswers(summaryModel: SummaryModel): Seq[QuestionAnswerModel[Any]] = {
+  def fetchYourAnswers(summaryModel: SummaryModel, resultModel: CalculationResultModel): Seq[QuestionAnswerModel[Any]] = {
     val salesDetailsRows = SalesDetailsConstructor.salesDetailsRows(summaryModel)
     val purchaseDetailsRows = PurchaseDetailsConstructor.getPurchaseDetailsSection(summaryModel)
     val propertyDetailsRows = PropertyDetailsConstructor.propertyDetailsRows(summaryModel)
+    val deductionDetailsRows = DeductionDetailsConstructor.deductionDetailsRows(summaryModel, resultModel)
 
     for {
       salesDetails <- salesDetailsRows
       purchaseDetails <- purchaseDetailsRows
       propertyDetails <- propertyDetailsRows
-      answerRows <- salesDetailsRows ++ purchaseDetailsRows ++ propertyDetailsRows
+      deductionDetails <- deductionDetailsRows
+      answerRows <- salesDetailsRows ++ purchaseDetailsRows ++ propertyDetailsRows ++ deductionDetailsRows
     } yield answerRows
   }
 }
