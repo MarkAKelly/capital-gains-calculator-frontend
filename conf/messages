@@ -305,6 +305,7 @@ calc.soldOrGivenAway.gave = I gave it away
 
 ## Summary ##
 calc.summary.title = Summary
+calc.summary.amountYouOwe = Amount you owe
 calc.summary.secondaryHeading = You owe
 calc.summary.calculation.details.title = Calculation details
 calc.summary.calculation.details.totalGain = Your total gain
