@@ -24,8 +24,8 @@ import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object CalculationDetailsConstructor {
 
-  def buildSection(calculation: CalculationResultModel, answers: SummaryModel): Seq[QuestionAnswerModel[Any]] = {
-    val electionDetails = calculationElection(answers)
+  def buildSection(calculation: CalculationResultModel, calculationType: String): Seq[QuestionAnswerModel[Any]] = {
+    val electionDetails = calculationElection(calculationType)
     val totalGainDetails = totalGain(calculation)
     val totalLossDetails = totalLoss(calculation)
     val usedAeaDetails = usedAea(calculation)
@@ -42,13 +42,13 @@ object CalculationDetailsConstructor {
       lossToCarryForwardDetails).flatten
   }
 
-  def calculationElection(model: SummaryModel): Option[QuestionAnswerModel[String]] = {
+  def calculationElection(calculationType: String): Option[QuestionAnswerModel[String]] = {
 
     val id = KeystoreKeys.calculationElection
 
     val question = Messages("calc.summary.calculation.details.calculationElection")
 
-    val answer = model.calculationElectionModel.calculationType match {
+    val answer = calculationType match {
       case "flat" => Messages("calc.summary.calculation.details.flatCalculation")
       case "time" => Messages("calc.summary.calculation.details.timeCalculation")
       case "rebased" => Messages("calc.summary.calculation.details.rebasedCalculation")
