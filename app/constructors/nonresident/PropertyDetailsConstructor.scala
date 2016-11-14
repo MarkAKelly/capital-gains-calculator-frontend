@@ -16,8 +16,8 @@
 
 package constructors.nonresident
 
-import models.nonresident.{QuestionAnswerModel, TotalGainAnswersModel}
-import common.{KeystoreKeys => keys}
+import models.nonresident.{AcquisitionDateModel, QuestionAnswerModel, RebasedValueModel, TotalGainAnswersModel}
+import common.{TaxDates, KeystoreKeys => keys}
 import play.api.i18n.Messages
 
 object PropertyDetailsConstructor {
@@ -25,7 +25,11 @@ object PropertyDetailsConstructor {
   def propertyDetailsRows(answers: TotalGainAnswersModel): Seq[QuestionAnswerModel[Any]] = {
 
     val rebasedImprovements =
-      true
+      answers.acquisitionDateModel match {
+        case AcquisitionDateModel("Yes",_,_,_) if !TaxDates.dateAfterStart(answers.acquisitionDateModel.get) => true
+        case AcquisitionDateModel("No",_,_,_) if answers.rebasedValueModel.get.hasRebasedValue.equals("Yes") => true
+        case _ => false
+      }
 
     val totalImprovements =
       if(answers.improvementsModel.isClaimingImprovements == "Yes") true
