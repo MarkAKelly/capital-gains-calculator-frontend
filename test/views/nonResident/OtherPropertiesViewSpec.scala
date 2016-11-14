@@ -53,6 +53,10 @@ class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with Fak
         }
       }
 
+      s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+        document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+      }
+
       s"have the question '${messages.question}' as the legend of the input" in {
         document.body.getElementsByTag("legend").text should include(messages.question)
       }

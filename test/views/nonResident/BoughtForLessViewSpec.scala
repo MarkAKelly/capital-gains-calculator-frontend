@@ -57,7 +57,10 @@ class BoughtForLessViewSpec extends UnitSpec with WithFakeApplication with Mocki
         "has an href to the how became owner page" in {
           assertHTML(backLink)(_.attr("href") shouldBe controllers.nonresident.routes.HowBecameOwnerController.howBecameOwner().url)
         }
+      }
 
+      s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+        document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
       }
 
       "have a H1 tag" which {

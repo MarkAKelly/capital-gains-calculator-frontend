@@ -37,7 +37,8 @@ object HowBecameOwnerController extends HowBecameOwnerController {
 trait HowBecameOwnerController extends FrontendController with ValidActiveSession {
 
   val calcConnector: CalculatorConnector
-
+  override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
+  override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
 
   val howBecameOwner = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[HowBecameOwnerModel](KeystoreKeys.howBecameOwner).map {

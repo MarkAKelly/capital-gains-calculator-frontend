@@ -35,6 +35,8 @@ object SoldForLessController extends SoldForLessController {
 trait SoldForLessController extends FrontendController with ValidActiveSession {
 
   val calcConnector: CalculatorConnector
+  override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
+  override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
 
   val soldForLess = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[SoldForLessModel](KeystoreKeys.NonResidentKeys.soldForLess).map {
