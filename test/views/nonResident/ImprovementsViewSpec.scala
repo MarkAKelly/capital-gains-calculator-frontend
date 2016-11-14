@@ -31,17 +31,21 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     "supplied with no errors and improvementsOptions = true" should {
 
-      lazy val view = improvements(improvementsForm(true), true, "back-link")(fakeRequest)
+      lazy val view = improvements(improvementsForm(true), false, "back-link")(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "return some HTML that" should {
 
-        s"has the question of ${messages.Improvements.question}" in {
+        s"has the title of ${messages.Improvements.question}" in {
           document.title shouldBe messages.Improvements.question
         }
 
-        s"has the heading of ${messages.pageHeading}" in {
-          document.body().getElementsByTag("h1").text shouldBe messages.pageHeading
+        s"has the heading of ${messages.Improvements.question}" in {
+          document.body().getElementsByTag("h1").text shouldBe messages.Improvements.question
+        }
+
+        "does not contain another component with an input box" in {
+          document.body.select("input").attr("id") should not include "improvementsAmtAfter"
         }
 
         "have a back link" which {
@@ -61,10 +65,65 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
           }
         }
 
-        "have that content" which {
-          s"display the correct wording for radio option 'isClaimingImprovements'" in {
-            document.body.select("input").attr("id") should include ("isClaimingImprovements")
+        "have hint text" which {
+
+          lazy val helpText = document.select("#input-hint")
+
+          "should have the class form-hint" in {
+            helpText.hasClass("form-hint") shouldEqual true
           }
+
+          s"should have a first sentence of ${messages.Improvements.helpOne}" in {
+            helpText.select("p").text() should include(messages.Improvements.helpOne)
+          }
+
+          s"should have a second sentence of ${messages.Improvements.helpTwo}" in {
+            helpText.select("p").text() should include(messages.Improvements.helpTwo)
+          }
+        }
+
+        "have a drop down example section" which {
+
+          lazy val example = document.select("details")
+
+          "should have a span for the title" which {
+
+            lazy val exampleTitle = example.select("span")
+
+            s"should have the text ${messages.Improvements.exampleTitle}" in {
+              exampleTitle.text shouldEqual messages.Improvements.exampleTitle
+            }
+          }
+
+          "should have a div" which {
+
+            lazy val exampleContent = example.select("div")
+
+            s"should have a first sentence of ${messages.Improvements.exampleOne}" in {
+              exampleContent.select("p").text should include(messages.Improvements.exampleOne)
+            }
+
+            s"should have a second sentence of ${messages.Improvements.exampleTwo}" in {
+              exampleContent.select("p").text should include(messages.Improvements.exampleTwo)
+            }
+          }
+        }
+
+        "have a legend that" should {
+
+          lazy val legend = document.select("legend")
+
+          s"have the text ${messages.Improvements.question}" in {
+            legend.text shouldEqual messages.Improvements.question
+          }
+
+          "have the class visuallyhidden" in {
+            legend.hasClass("visuallyhidden") shouldEqual true
+          }
+        }
+
+        s"has the correct id for the radio options 'isClaimingImprovements'" in {
+          document.body.select("input").attr("id") should include ("isClaimingImprovements")
         }
 
         "have a form" which {
@@ -83,18 +142,17 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
           lazy val hiddenContent = document.body().select("#hidden")
 
           "which has a single div with a class of form-group" in {
-            hiddenContent.select("div.form-group").size() shouldBe 3
+            hiddenContent.select("div.form-group").size() shouldBe 1
           }
 
-          s"contains the question ${messages.Improvements.questionThree}" in {
-            hiddenContent.select("label").text() should include(messages.Improvements.questionThree)
+          "contains an input with the id 'improvementsAmt'" in {
+            hiddenContent.select("input").attr("id") shouldBe "improvementsAmt"
           }
 
-          s"contains the question ${messages.Improvements.questionFour}" in {
-            hiddenContent.select("label").text() should include(messages.Improvements.questionFour)
+          s"contains the question ${messages.Improvements.questionTwo}" in {
+            hiddenContent.select("label").text() startsWith messages.Improvements.questionTwo
           }
         }
-
 
         "have a button" which {
           lazy val button = document.select("button")
@@ -116,26 +174,14 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     "supplied with no errors and improvementsOptions = false" should {
 
-      lazy val view = improvements(improvementsForm(true), false, "back-link")(fakeRequest)
+      lazy val view = improvements(improvementsForm(true), true, "back-link")(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "return some HTML that" should {
 
-        s"has the question of ${messages.Improvements.question}" in {
-          document.title shouldBe messages.Improvements.question
-        }
-
-        s"has the heading of ${messages.pageHeading}" in {
-          document.body().getElementsByTag("h1").text shouldBe messages.pageHeading
-        }
-
         "have that content" which {
           s"display the correct wording for radio option 'isClaimingImprovements'" in {
             document.body.select("input").attr("id") should include ("isClaimingImprovements")
-          }
-
-          "does not contain another component with an input box" in {
-            document.body.select("input").attr("id") should not include "improvementsAmtAfter"
           }
         }
 
@@ -143,15 +189,15 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
           lazy val hiddenContent = document.body().select("#hidden")
 
           "which has a single div with a class of form-group" in {
-            hiddenContent.select("div.form-group").size() shouldBe 1
+            hiddenContent.select("div.form-group").size() shouldBe 3
           }
 
-          "contains an input with the id 'improvementsAmt'" in {
-            hiddenContent.select("input").attr("id") shouldBe "improvementsAmt"
+          s"contains the question ${messages.Improvements.questionThree}" in {
+            hiddenContent.select("label").text() should include(messages.Improvements.questionThree)
           }
 
-          s"contains the question ${messages.Improvements.questionTwo}" in {
-            hiddenContent.select("label").text() startsWith messages.Improvements.questionTwo
+          s"contains the question ${messages.Improvements.questionFour}" in {
+            hiddenContent.select("label").text() should include(messages.Improvements.questionFour)
           }
         }
       }
@@ -159,12 +205,8 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
     "supplied with errors" should {
       lazy val form = improvementsForm(true).bind(Map("improvements" -> "testData"))
-      lazy val view = improvements(form, true, "back-link-two")(fakeRequest)
+      lazy val view = improvements(form, true, "back-link")(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
-
-      s"have a route to 'back-link-two'" in {
-        document.body.getElementById("back-link").attr("href") shouldEqual "back-link-two"
-      }
 
       "have an error summary" in {
         document.select("#error-summary-display").size() shouldBe 1

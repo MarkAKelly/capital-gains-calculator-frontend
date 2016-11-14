@@ -16,17 +16,14 @@
 
 package controllers.nonresident
 
-import common.DefaultRoutes._
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.AcquisitionDateForm._
-import models.nonresident.{AcquisitionDateModel, OtherPropertiesModel}
+import models.nonresident.AcquisitionDateModel
 import play.api.data.Form
-import play.api.mvc.Result
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation
 
 import scala.concurrent.Future
@@ -43,43 +40,25 @@ trait AcquisitionDateController extends FrontendController with ValidActiveSessi
   val calcConnector: CalculatorConnector
   val calcElectionConstructor: CalculationElectionConstructor
 
-  def acquisitionDateBackUrl(implicit hc: HeaderCarrier): Future[String] = {
-    calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.otherProperties).map {
-      case Some(OtherPropertiesModel("Yes", Some(value))) if value == BigDecimal(0) => routes.AnnualExemptAmountController.annualExemptAmount().url
-      case None => missingDataRoute
-      case _ => routes.OtherPropertiesController.otherProperties().url
-    }
-  }
-
   val acquisitionDate = ValidateSession.async { implicit request =>
-
-    def routeRequest(backUrl: String): Future[Result] = {
-      calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).map {
-        case Some(data) => Ok(calculation.nonresident.acquisitionDate(acquisitionDateForm.fill(data), backUrl))
-        case None => Ok(calculation.nonresident.acquisitionDate(acquisitionDateForm, backUrl))
-      }
+    calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).map {
+      case Some(data) => Ok(calculation.nonresident.acquisitionDate(acquisitionDateForm.fill(data)))
+      case None => Ok(calculation.nonresident.acquisitionDate(acquisitionDateForm))
     }
-
-    for {
-      backUrl <- acquisitionDateBackUrl
-      finalResult <- routeRequest(backUrl)
-    } yield finalResult
   }
 
   val submitAcquisitionDate = ValidateSession.async { implicit request =>
 
     def errorAction(form: Form[AcquisitionDateModel]) = {
       for {
-        backUrl <- acquisitionDateBackUrl(hc)
-        route <- Future.successful(BadRequest(calculation.nonresident.acquisitionDate(form, backUrl)))
+        route <- Future.successful(BadRequest(calculation.nonresident.acquisitionDate(form)))
       } yield route
     }
 
     def successAction(model: AcquisitionDateModel) = {
       calcConnector.saveFormData(KeystoreKeys.acquisitionDate, model)
-      Future.successful(Redirect(routes.AcquisitionValueController.acquisitionValue()))
+      Future.successful(Redirect(routes.HowBecameOwnerController.howBecameOwner()))
     }
-
     acquisitionDateForm.bindFromRequest.fold(errorAction, successAction)
   }
 }

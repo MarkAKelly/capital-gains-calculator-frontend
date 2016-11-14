@@ -4,39 +4,18 @@
 
 @(acquisitionValueForm: Form[AcquisitionValueModel])(implicit request: Request[_])
 
-@contentLink = {
-    <a id="lossesLink" class="external-link" rel="external" href="https://www.gov.uk/capital-gains-tax/losses"
-       target="_blank" data-journey-click="help:govUK:acquisition-cgt-losses">
-        @Messages("calc.acquisitionValue.bullet.three.link")
-        <span id="opensInANewTab">@Messages("calc.base.externalLink")</span>
-    </a>
-}
-
-@bulletContent = {
-    <p id="bullet-list-title">@Messages("calc.acquisitionValue.bullet.title") </p>
-    <ul class="list-bullet">
-        <li>@Messages("calc.acquisitionValue.bullet.one")</li>
-        <li>@Messages("calc.acquisitionValue.bullet.two")</li>
-        <li>@Messages("calc.acquisitionValue.bullet.three") @contentLink</li>
-        <li>@Messages("calc.acquisitionValue.bullet.four")</li>
-        <li>@Messages("calc.acquisitionValue.bullet.five")</li>
-    </ul>
-}
-
 @main_template(Messages("calc.acquisitionValue.question")) {
 
-    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.AcquisitionDateController.acquisitionDate">@Messages("calc.base.back")</a>
+    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.BoughtForLessController.boughtForLess">@Messages("calc.base.back")</a>
 
     @errorSummary(acquisitionValueForm, "acquisition-value")
 
-    <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
+    <h1 class="heading-xlarge">@Messages("calc.acquisitionValue.question")</h1>
 
     @form(action = controllers.nonresident.routes.AcquisitionValueController.submitAcquisitionValue) {
 
-        @formInputMoney(acquisitionValueForm, "acquisitionValue", Messages("calc.acquisitionValue.question"), additionalHTMLContent = Some(bulletContent.toString()))
+        @formInputMoney(acquisitionValueForm, "acquisitionValue", Messages("calc.acquisitionValue.question"), None, None, true)
 
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
-
     }
-
 }

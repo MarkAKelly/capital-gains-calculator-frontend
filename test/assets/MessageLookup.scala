@@ -97,6 +97,10 @@ object MessageLookup {
       val errorDecimalPlaces = "Your allowance has too many numbers after the decimal point"
     }
 
+    object BoughtForLess {
+      val question = "Did you buy the property for less than it was worth because the seller wanted to help you?"
+    }
+
     object CalculationElection {
       val heading = "Working out your total"
       val question = "Which method of calculation would you like?"
@@ -146,7 +150,14 @@ object MessageLookup {
 
     object DisposalCosts {
 
-      val question = "How much did you pay in costs when you stopped being the property owner?"
+      val question = "How much did you pay in costs when you stopped owning the property?"
+
+      val helpTitle = "This is what you paid for:"
+      val helpBulletOne = "estate agents or auctioneers"
+      val helpBulletTwo = "solicitors or conveyancers"
+      val helpBulletThree = "any professional help to value your property, eg surveyor or valuer"
+      val helpBulletFour = "advertising to find a buyer"
+
       val errorNegativeNumber = "Enter a positive number for your selling costs"
       val errorDecimalPlaces = "There are too many numbers after the decimal point in your selling costs"
 
@@ -159,9 +170,13 @@ object MessageLookup {
 
     }
 
+    object SoldForLess {
+      val question = "Did you sell the property for less than it was worth to help the buyer?"
+    }
+
     object DisposalValue {
 
-      val question = "How much did you sell or give away the property for?"
+      val question = "How much did you sell the property for?"
       val errorNegativeNumber = "Enter a positive number for the amount you sold the property for"
       val errorDecimalPlaces = "The amount you sold the property for has too many numbers after the decimal point"
       val errorNegative = "Enter a positive number for the amount you sold the property for"
@@ -175,13 +190,15 @@ object MessageLookup {
     }
 
     object Improvements {
-      val help = "Improvements are permanent changes that raise the value of a property, like adding extensions or garages"
-
+      val helpOne = "Improvements are permanent changes that increase the value of a property, like adding extensions or garages."
+      val helpTwo = "Normal maintenance costs don't count."
+      val exampleTitle = "Show me an example"
+      val exampleOne = "Replacing a basic kitchen or bathroom with a luxury version is normally considered an improvement."
+      val exampleTwo = "Replacing them with something of a similar standard is normally not an improvement."
       val question = "Did you make any improvements to the property?"
       val questionTwo = "How much did the improvements cost?"
       val questionThree = "How much did you spend on improvements before 6 April 2015?"
       val questionFour = "How much have you spent on improvements since 6 April 2015?"
-
       val noValueSuppliedError = "Enter the value of your improvements"
       val negativeValueError = "Enter a positive number for the cost of your improvements"
       val excessDecimalPlacesError = "The cost of your improvements has too many numbers after the decimal point"
@@ -276,6 +293,20 @@ object MessageLookup {
       val helpHiddenContentTwo = "This value lets us calculate your tax in different ways, giving you more options."
 
       def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
+    }
+
+    //How Became Owner messages
+    object HowBecameOwner {
+      val title = "How did you become the owner?"
+      val errorMandatory = "Tell us how you became the owner"
+      val bought = "Bought it"
+      val gifted = "Got it as a gift"
+      val inherited = "Inherited it"
+    }
+
+    object SoldOrGivenAway {
+
+      val title = "Did you sell or give away the property?"
     }
 
     object Summary {

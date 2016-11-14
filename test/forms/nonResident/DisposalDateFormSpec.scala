@@ -31,7 +31,7 @@ class DisposalDateFormSpec extends UnitSpec with WithFakeApplication {
 
       lazy val acquisitionDate = LocalDate.of(2010, 3, 1)
       lazy val model = DisposalDateModel(1, 4, 2016)
-      lazy val form = disposalDateForm(Some(acquisitionDate)).fill(model)
+      lazy val form = disposalDateForm.fill(model)
 
       "return a valid form with no errors" in {
         form.errors.size shouldBe 0
@@ -46,7 +46,7 @@ class DisposalDateFormSpec extends UnitSpec with WithFakeApplication {
 
       lazy val acquisitionDate = LocalDate.of(2010, 3, 1)
       lazy val map = Map("disposalDateDay" -> "29", "disposalDateMonth" -> "2", "disposalDateYear" -> "2016")
-      lazy val form = disposalDateForm(Some(acquisitionDate)).bind(map)
+      lazy val form = disposalDateForm.bind(map)
 
       "return a valid form with no errors" in {
         form.errors.size shouldBe 0
@@ -57,26 +57,10 @@ class DisposalDateFormSpec extends UnitSpec with WithFakeApplication {
       }
     }
 
-    "passing in a date that is before the acquisition date" should {
-
-      lazy val acquisitionDate = LocalDate.of(2010, 3, 1)
-      lazy val map = Map("disposalDateDay" -> "1", "disposalDateMonth" -> "4", "disposalDateYear" -> "2009")
-      lazy val form = disposalDateForm(Some(acquisitionDate)).bind(map)
-
-      "return an invalid form with one error" in {
-        form.errors.size shouldBe 1
-      }
-
-      s"return an error message of '${messages.DisposalDate.errorDateAfter}" in {
-        form.error("").get.message shouldBe messages.DisposalDate.errorDateAfter
-      }
-    }
-
     "passing in a date has letters in it" should {
 
-      lazy val acquisitionDate = LocalDate.of(2010, 3, 1)
       lazy val map = Map("disposalDateDay" -> "a", "disposalDateMonth" -> "b", "disposalDateYear" -> "c")
-      lazy val form = disposalDateForm(Some(acquisitionDate)).bind(map)
+      lazy val form = disposalDateForm.bind(map)
 
       "return an invalid form with one error" in {
         form.hasErrors shouldBe true
@@ -89,9 +73,8 @@ class DisposalDateFormSpec extends UnitSpec with WithFakeApplication {
 
     "passing in a date without a day" should {
 
-      lazy val acquisitionDate = LocalDate.of(2010, 3, 1)
       lazy val map = Map("disposalDateDay" -> "", "disposalDateMonth" -> "4", "disposalDateYear" -> "2009")
-      lazy val form = disposalDateForm(Some(acquisitionDate)).bind(map)
+      lazy val form = disposalDateForm.bind(map)
 
       "return an invalid form with one error" in {
         form.errors.size shouldBe 1
@@ -104,9 +87,8 @@ class DisposalDateFormSpec extends UnitSpec with WithFakeApplication {
 
     "passing in a date without a month" should {
 
-      lazy val acquisitionDate = LocalDate.of(2010, 3, 1)
       lazy val map = Map("disposalDateDay" -> "1", "disposalDateMonth" -> "", "disposalDateYear" -> "2009")
-      lazy val form = disposalDateForm(Some(acquisitionDate)).bind(map)
+      lazy val form = disposalDateForm.bind(map)
 
       "return an invalid form with one error" in {
         form.errors.size shouldBe 1
@@ -119,9 +101,8 @@ class DisposalDateFormSpec extends UnitSpec with WithFakeApplication {
 
     "passing in a date without a year" should {
 
-      lazy val acquisitionDate = LocalDate.of(2010, 3, 1)
       lazy val map = Map("disposalDateDay" -> "1", "disposalDateMonth" -> "4", "disposalDateYear" -> "")
-      lazy val form = disposalDateForm(Some(acquisitionDate)).bind(map)
+      lazy val form = disposalDateForm.bind(map)
 
       "return an invalid form with one error" in {
         form.errors.size shouldBe 1
@@ -134,9 +115,8 @@ class DisposalDateFormSpec extends UnitSpec with WithFakeApplication {
 
     "passing in a date with a days value over 31" should {
 
-      lazy val acquisitionDate = LocalDate.of(2010, 3, 1)
       lazy val map = Map("disposalDateDay" -> "32", "disposalDateMonth" -> "4", "disposalDateYear" -> "2009")
-      lazy val form = disposalDateForm(Some(acquisitionDate)).bind(map)
+      lazy val form = disposalDateForm.bind(map)
 
       "return an invalid form with one error" in {
         form.errors.size shouldBe 1
@@ -149,9 +129,8 @@ class DisposalDateFormSpec extends UnitSpec with WithFakeApplication {
 
     "passing in a date with a days value less than 1" should {
 
-      lazy val acquisitionDate = LocalDate.of(2010, 3, 1)
       lazy val map = Map("disposalDateDay" -> "0", "disposalDateMonth" -> "4", "disposalDateYear" -> "2009")
-      lazy val form = disposalDateForm(Some(acquisitionDate)).bind(map)
+      lazy val form = disposalDateForm.bind(map)
 
       "return an invalid form with one error" in {
         form.errors.size shouldBe 1
@@ -164,9 +143,8 @@ class DisposalDateFormSpec extends UnitSpec with WithFakeApplication {
 
     "passing in a date with a months value over 12" should {
 
-      lazy val acquisitionDate = LocalDate.of(2010, 3, 1)
       lazy val map = Map("disposalDateDay" -> "1", "disposalDateMonth" -> "13", "disposalDateYear" -> "2009")
-      lazy val form = disposalDateForm(Some(acquisitionDate)).bind(map)
+      lazy val form = disposalDateForm.bind(map)
 
       "return an invalid form with one error" in {
         form.errors.size shouldBe 1
@@ -179,9 +157,8 @@ class DisposalDateFormSpec extends UnitSpec with WithFakeApplication {
 
     "passing in a date with a months value over 1" should {
 
-      lazy val acquisitionDate = LocalDate.of(2010, 3, 1)
       lazy val map = Map("disposalDateDay" -> "1", "disposalDateMonth" -> "0", "disposalDateYear" -> "2009")
-      lazy val form = disposalDateForm(Some(acquisitionDate)).bind(map)
+      lazy val form = disposalDateForm.bind(map)
 
       "return an invalid form with one error" in {
         form.errors.size shouldBe 1

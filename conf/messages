@@ -171,7 +171,11 @@ calc.rebasedCosts.errorDecimalPlaces = There are too many numbers after the deci
 
 ## Improvements ##
 calc.improvements.question = Did you make any improvements to the property?
-calc.improvements.help = Improvements are permanent changes that raise the value of a property, like adding extensions or garages
+calc.improvements.helpOne = Improvements are permanent changes that increase the value of a property, like adding extensions or garages.
+calc.improvements.helpTwo = Normal maintenance costs don''t count.
+calc.improvements.exampleTitle = Show me an example
+calc.improvements.exampleOne = Replacing a basic kitchen or bathroom with a luxury version is normally considered an improvement.
+calc.improvements.exampleTwo = Replacing them with something of a similar standard is normally not an improvement.
 calc.improvements.questionTwo = How much did the improvements cost?
 calc.improvements.questionThree = How much did you spend on improvements before 6 April 2015?
 calc.improvements.questionFour = How much have you spent on improvements since 6 April 2015?
@@ -191,17 +195,12 @@ nocgt.content.change = Change
 nocgt.sidebar.linkone = Capital Gains Tax for non-residents
 
 ## Disposal Value ##
-calc.disposalValue.question = How much did you sell or give away the property for?
+calc.disposalValue.question = How much did you sell the property for?
 calc.disposalValue.errorNegative = Enter a positive number for the amount you sold the property for
 calc.disposalValue.errorDecimalPlaces = The amount you sold the property for has too many numbers after the decimal point
-calc.disposalValue.bullet.title = Put the market value of the property instead if you:
-calc.disposalValue.bullet.titleOne = Put the
-calc.disposalValue.bullet.titleTwo = market value
-calc.disposalValue.bullet.titleThree = of the property instead if you:
-calc.disposalValue.bullet.one = gave it away as a gift
-calc.disposalValue.bullet.two = sold it to a relative, business partner or
-calc.disposalValue.bullet.two.link = someone else you''re connected to
-calc.disposalValue.bullet.three = sold it for less than it''s worth to help the buyer
+
+## Sold For Less Non-resident ##
+calc.nonResident.soldForLess.question = Did you sell the property for less than it was worth to help the buyer?
 
 ## Acquisition Costs ##
 calc.acquisitionCosts.question = How much did you pay in costs when you became the property owner?
@@ -210,7 +209,14 @@ calc.acquisitionCosts.errorNegative = Enter a positive number for your costs
 calc.acquisitionCosts.errorDecimalPlaces = There are too many numbers after the decimal point in your costs
 
 ## Disposal Costs ##
-calc.disposalCosts.question = How much did you pay in costs when you stopped being the property owner?
+calc.disposalCosts.question = How much did you pay in costs when you stopped owning the property?
+
+calc.disposalCosts.helpTitle = This is what you paid for:
+calc.disposalCosts.helpBulletOne = estate agents or auctioneers
+calc.disposalCosts.helpBulletTwo = solicitors or conveyancers
+calc.disposalCosts.helpBulletThree = any professional help to value your property, eg surveyor or valuer
+calc.disposalCosts.helpBulletFour = advertising to find a buyer
+
 calc.disposalCosts.errorNegativeNumber = Enter a positive number for your selling costs
 calc.disposalCosts.errorDecimalPlaces = There are too many numbers after the decimal point in your selling costs
 
@@ -251,6 +257,17 @@ calc.allowableLosses.errorQuestion = Enter the value of your allowable losses
 calc.allowableLosses.errorMinimum = Enter a positive number for your allowable losses
 calc.allowableLosses.errorDecimal = There are too many numbers after the decimal point in your allowable losses
 
+## How Became Owner messages
+calc.howBecameOwner.errors.required = Tell us how you became the owner
+calc.howBecameOwner.title = How did you become the owner?
+calc.howBecameOwner.bought = Bought it
+calc.howBecameOwner.gifted = Got it as a gift
+calc.howBecameOwner.inherited= Inherited it
+
+## Bought For Less ##
+calc.boughtForLess.question = Did you buy the property for less than it was worth because the seller wanted to help you?
+
+
 ## Calculation Election ##
 calc.calculationElection.pageHeading = Working out your total
 calc.calculationElection.question = Which method of calculation would you like?
@@ -284,6 +301,11 @@ calc.otherReliefs.errorMinimum = Enter a positive number for your other reliefs
 calc.otherReliefs.errorDecimal = There are too many numbers after the decimal point in your other reliefs
 calc.otherReliefs.errorNoValue = Enter the value for your relief
 calc.otherReliefs.help = For example, lettings relief
+
+## Sold Or Given Away##
+calc.soldOrGivenAway.title = Did you sell or give away the property?
+calc.soldOrGivenAway.sold = I sold it
+calc.soldOrGivenAway.gave = I gave it away
 
 ## Summary ##
 calc.summary.title = Summary
