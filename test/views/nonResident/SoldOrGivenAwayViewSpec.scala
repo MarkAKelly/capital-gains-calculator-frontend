@@ -60,6 +60,10 @@ class SoldOrGivenAwayViewSpec extends UnitSpec with WithFakeApplication with Fak
         }
       }
 
+      s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+        document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+      }
+
       "have a form that" should {
         lazy val form = document.body().select("form")
 
