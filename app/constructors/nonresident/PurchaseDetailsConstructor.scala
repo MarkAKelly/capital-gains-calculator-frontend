@@ -16,98 +16,55 @@
 
 package constructors.nonresident
 
-import java.time.LocalDate
-import common.nonresident.CalculationType
-import common.{Dates, KeystoreKeys}
-import models.nonresident.{QuestionAnswerModel, SummaryModel}
+import common.KeystoreKeys
+import models.nonresident.{QuestionAnswerModel, TotalGainAnswersModel}
 import play.api.i18n.Messages
 
 
 object PurchaseDetailsConstructor {
 
-  def getPurchaseDetailsSection(summaryModel: SummaryModel): Seq[QuestionAnswerModel[Any]] = {
+  def getPurchaseDetailsSection(totalGainAnswersModel: TotalGainAnswersModel): Seq[QuestionAnswerModel[Any]] = {
 
-    val acquisitionDateData = getAcquisitionDateAnswer(summaryModel)
-    val acquisitionValueData = getAcquisitionValueAnswer(summaryModel)
-    val acquisitionCostsData = getAcquisitionCostsAnswer(summaryModel)
-    val rebasedValueData = getRebasedValueAnswer(summaryModel)
-    val rebasedCostsData = getRebasedCostsAnswer(summaryModel)
+    val acquisitionDateData = getAcquisitionDateAnswer(totalGainAnswersModel)
+    val acquisitionValueData = getAcquisitionValueAnswer(totalGainAnswersModel)
+    val acquisitionCostsData = getAcquisitionCostsAnswer(totalGainAnswersModel)
 
     val items = Seq(
       acquisitionDateData,
       acquisitionValueData,
-      acquisitionCostsData,
-      rebasedValueData,
-      rebasedCostsData
+      acquisitionCostsData
     )
     items.flatten
   }
 
-  def getAcquisitionDateAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[Any]] = {
-    if (summaryModel.acquisitionDateModel.hasAcquisitionDate != "Yes")
-      Some(QuestionAnswerModel(
-        s"${KeystoreKeys.acquisitionDate}-question",
-        Messages("calc.base.no"),
-        Messages("calc.acquisitionDate.question"),
-        Some(controllers.nonresident.routes.AcquisitionDateController.acquisitionDate().url)
-      ))
-    else {
-      Some(QuestionAnswerModel(
-        KeystoreKeys.acquisitionDate,
-        Dates.constructDate(summaryModel.acquisitionDateModel.day.get,
-          summaryModel.acquisitionDateModel.month.get, summaryModel.acquisitionDateModel.year.get),
-        Messages("calc.acquisitionDate.questionTwo"),
-        Some(controllers.nonresident.routes.AcquisitionDateController.acquisitionDate().url)
-      ))
-    }
-  }
-
-  def getAcquisitionValueAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] =  {
-    if (!(summaryModel.calculationElectionModel.calculationType.equals(CalculationType.rebased)))
-      Some(QuestionAnswerModel(
-        KeystoreKeys.acquisitionValue,
-        summaryModel.acquisitionValueModel.acquisitionValueAmt,
-        Messages("calc.acquisitionValue.question"),
-        Some(controllers.nonresident.routes.AcquisitionValueController.acquisitionValue().url)
-      ))
-    else
-      None
-  }
-
-  def getAcquisitionCostsAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] = {
-    if (summaryModel.calculationElectionModel.calculationType.equals(CalculationType.flat))
-      Some(QuestionAnswerModel(
-        KeystoreKeys.acquisitionCosts,
-        summaryModel.acquisitionCostsModel.acquisitionCostsAmt,
-        Messages("calc.acquisitionCosts.question"),
-        Some(controllers.nonresident.routes.AcquisitionCostsController.acquisitionCosts.url)
-      ))
-    else
-      None
-  }
-
-  def getRebasedValueAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[Option[BigDecimal]]] =
-    (summaryModel.rebasedValueModel, summaryModel.calculationElectionModel.calculationType) match {
-    case(Some(rebasedValueModel), CalculationType.rebased) =>
-      Some(QuestionAnswerModel(
-        KeystoreKeys.rebasedValue,
-        rebasedValueModel.rebasedValueAmt,
-        Messages("calc.rebasedValue.questionTwo"),
-        Some(controllers.nonresident.routes.RebasedValueController.rebasedValue.url)
-      ))
-    case _ => None
-  }
-
-  def getRebasedCostsAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[Option[BigDecimal]]] =
-    (summaryModel.rebasedCostsModel, summaryModel.calculationElectionModel.calculationType) match {
-      case(Some(rebasedCostsModel), CalculationType.rebased)  =>
-        Some(QuestionAnswerModel(
-        KeystoreKeys.rebasedCosts,
-          rebasedCostsModel.rebasedCosts,
-          Messages("calc.rebasedCosts.questionTwo"),
-          Some(controllers.nonresident.routes.RebasedCostsController.rebasedCosts.url)
+  def getAcquisitionDateAnswer(totalGainAnswersModel: TotalGainAnswersModel): Option[QuestionAnswerModel[Any]] = {
+    Some(QuestionAnswerModel(
+      s"${KeystoreKeys.acquisitionDate}-question",
+      totalGainAnswersModel.acquisitionDateModel.hasAcquisitionDate,
+      Messages("calc.acquisitionDate.question"),
+      Some(controllers.nonresident.routes.AcquisitionDateController.acquisitionDate().url)
     ))
-        case _ => None
-    }
+  }
 
+  def howBecameOwner(totalGainAnswersModel: TotalGainAnswersModel): Option[QuestionAnswerModel[String]] = {
+    ???
+  }
+
+  def getAcquisitionValueAnswer(totalGainAnswersModel: TotalGainAnswersModel): Option[QuestionAnswerModel[BigDecimal]] = {
+    Some(QuestionAnswerModel(
+      KeystoreKeys.acquisitionValue,
+      totalGainAnswersModel.acquisitionValueModel.acquisitionValueAmt,
+      Messages("calc.acquisitionValue.question"),
+      Some(controllers.nonresident.routes.AcquisitionValueController.acquisitionValue().url)
+    ))
+  }
+
+  def getAcquisitionCostsAnswer(totalGainAnswersModel: TotalGainAnswersModel): Option[QuestionAnswerModel[BigDecimal]] = {
+    Some(QuestionAnswerModel(
+      KeystoreKeys.acquisitionCosts,
+      totalGainAnswersModel.acquisitionCostsModel.acquisitionCostsAmt,
+      Messages("calc.acquisitionCosts.question"),
+      Some(controllers.nonresident.routes.AcquisitionCostsController.acquisitionCosts().url)
+    ))
+  }
 }

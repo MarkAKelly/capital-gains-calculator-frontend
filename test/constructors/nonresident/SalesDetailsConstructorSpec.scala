@@ -77,7 +77,7 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication with
 
   "Calling salesDetailsRows" when {
 
-    "using the summaryIndividualImprovementsNoRebasedModel model" should {
+    "using the totalGainForLess model" should {
       lazy val result = SalesDetailsConstructor.salesDetailsRows(totalGainForLess)
 
       "return a Sequence of size 3" in {
