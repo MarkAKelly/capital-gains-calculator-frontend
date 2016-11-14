@@ -57,8 +57,8 @@ class HowBecameOwnerActionSpec extends UnitSpec with WithFakeApplication with Fa
         status(result) shouldBe 200
       }
 
-      s"return some html with title of ${messages.title}" in {
-        doc.title shouldEqual messages.title
+      s"return some html with title of ${messages.question}" in {
+        doc.title shouldEqual messages.question
       }
 
       "provided with a valid session with stored data" should {
@@ -138,7 +138,7 @@ class HowBecameOwnerActionSpec extends UnitSpec with WithFakeApplication with Fa
     }
 
     "return to the page" in {
-      doc.title shouldEqual messages.title
+      doc.title shouldEqual messages.question
     }
 
     "raise an error on the page" in {

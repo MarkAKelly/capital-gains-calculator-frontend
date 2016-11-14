@@ -16,6 +16,8 @@
 
 package constructors.nonresident
 
+import java.time.LocalDate
+
 import common.KeystoreKeys
 import models.nonresident.{QuestionAnswerModel, TotalGainAnswersModel}
 import play.api.i18n.Messages
@@ -25,19 +27,25 @@ object PurchaseDetailsConstructor {
 
   def getPurchaseDetailsSection(totalGainAnswersModel: TotalGainAnswersModel): Seq[QuestionAnswerModel[Any]] = {
 
-    val acquisitionDateData = getAcquisitionDateAnswer(totalGainAnswersModel)
-    val acquisitionValueData = getAcquisitionValueAnswer(totalGainAnswersModel)
-    val acquisitionCostsData = getAcquisitionCostsAnswer(totalGainAnswersModel)
+    val acquisitionDateAnswerData = acquisitionDateAnswerRow(totalGainAnswersModel)
+    val acquisitionDateData = acquisitionDateRow(totalGainAnswersModel)
+    val howBecameOwnerData = howBecameOwnerRow(totalGainAnswersModel)
+    val boughtForLessData = boughtForLessRow(totalGainAnswersModel)
+    val acquisitionValueData = acquisitionValueRow(totalGainAnswersModel)
+    val acquisitionCostsData = acquisitionCostsRow(totalGainAnswersModel)
 
     val items = Seq(
+      acquisitionDateAnswerData,
       acquisitionDateData,
+      howBecameOwnerData,
+      boughtForLessData,
       acquisitionValueData,
       acquisitionCostsData
     )
     items.flatten
   }
 
-  def getAcquisitionDateAnswer(totalGainAnswersModel: TotalGainAnswersModel): Option[QuestionAnswerModel[Any]] = {
+  def acquisitionDateAnswerRow(totalGainAnswersModel: TotalGainAnswersModel): Option[QuestionAnswerModel[String]] = {
     Some(QuestionAnswerModel(
       s"${KeystoreKeys.acquisitionDate}-question",
       totalGainAnswersModel.acquisitionDateModel.hasAcquisitionDate,
@@ -46,11 +54,46 @@ object PurchaseDetailsConstructor {
     ))
   }
 
-  def howBecameOwner(totalGainAnswersModel: TotalGainAnswersModel): Option[QuestionAnswerModel[String]] = {
-    ???
+  def acquisitionDateRow(totalGainAnswersModel: TotalGainAnswersModel): Option[QuestionAnswerModel[LocalDate]] = {
+    if (totalGainAnswersModel.acquisitionDateModel.hasAcquisitionDate.equals("Yes")) {
+      Some(QuestionAnswerModel(
+        s"${KeystoreKeys.acquisitionDate}",
+        totalGainAnswersModel.acquisitionDateModel.get,
+        Messages("calc.acquisitionDate.questionTwo"),
+        Some(controllers.nonresident.routes.AcquisitionDateController.acquisitionDate().url)
+      ))
+    } else None
   }
 
-  def getAcquisitionValueAnswer(totalGainAnswersModel: TotalGainAnswersModel): Option[QuestionAnswerModel[BigDecimal]] = {
+  def howBecameOwnerRow(totalGainAnswersModel: TotalGainAnswersModel): Option[QuestionAnswerModel[String]] = {
+
+    val answer = totalGainAnswersModel.howBecameOwnerModel.gainedBy match {
+      case "Bought" => Messages("calc.howBecameOwner.bought")
+      case "Inherited" => Messages("calc.howBecameOwner.inherited")
+      case _ => Messages("calc.howBecameOwner.gifted")
+    }
+
+    Some(QuestionAnswerModel(
+      s"${KeystoreKeys.howBecameOwner}",
+      answer,
+      Messages("calc.howBecameOwner.question"),
+      Some(controllers.nonresident.routes.HowBecameOwnerController.howBecameOwner().url)
+    ))
+  }
+
+  def boughtForLessRow(totalGainAnswersModel: TotalGainAnswersModel): Option[QuestionAnswerModel[Boolean]] = {
+    totalGainAnswersModel.howBecameOwnerModel.gainedBy match {
+      case "Bought" => Some(QuestionAnswerModel(
+        s"${KeystoreKeys.boughtForLess}",
+        totalGainAnswersModel.boughtForLessModel.get.boughtForLess,
+        Messages("calc.boughtForLess.question"),
+        Some(controllers.nonresident.routes.BoughtForLessController.boughtForLess().url)
+      ))
+      case _ => None
+    }
+  }
+
+  def acquisitionValueRow(totalGainAnswersModel: TotalGainAnswersModel): Option[QuestionAnswerModel[BigDecimal]] = {
     Some(QuestionAnswerModel(
       KeystoreKeys.acquisitionValue,
       totalGainAnswersModel.acquisitionValueModel.acquisitionValueAmt,
@@ -59,7 +102,7 @@ object PurchaseDetailsConstructor {
     ))
   }
 
-  def getAcquisitionCostsAnswer(totalGainAnswersModel: TotalGainAnswersModel): Option[QuestionAnswerModel[BigDecimal]] = {
+  def acquisitionCostsRow(totalGainAnswersModel: TotalGainAnswersModel): Option[QuestionAnswerModel[BigDecimal]] = {
     Some(QuestionAnswerModel(
       KeystoreKeys.acquisitionCosts,
       totalGainAnswersModel.acquisitionCostsModel.acquisitionCostsAmt,
