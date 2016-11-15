@@ -263,7 +263,7 @@ calc.allowableLosses.errorDecimal = There are too many numbers after the decimal
 
 ## How Became Owner messages
 calc.howBecameOwner.errors.required = Tell us how you became the owner
-calc.howBecameOwner.title = How did you become the owner?
+calc.howBecameOwner.question = How did you become the owner?
 calc.howBecameOwner.bought = Bought it
 calc.howBecameOwner.gifted = Got it as a gift
 calc.howBecameOwner.inherited= Inherited it
@@ -307,12 +307,13 @@ calc.otherReliefs.errorNoValue = Enter the value for your relief
 calc.otherReliefs.help = For example, lettings relief
 
 ## Sold Or Given Away##
-calc.soldOrGivenAway.title = Did you sell or give away the property?
+calc.soldOrGivenAway.question = Did you sell or give away the property?
 calc.soldOrGivenAway.sold = I sold it
 calc.soldOrGivenAway.gave = I gave it away
 
 ## Summary ##
 calc.summary.title = Summary
+calc.summary.amount.you.owe = Amount you owe
 calc.summary.secondaryHeading = You owe
 calc.summary.calculation.details.title = Calculation details
 calc.summary.calculation.details.totalGain = Your total gain

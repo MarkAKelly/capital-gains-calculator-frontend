@@ -310,13 +310,16 @@ object MessageLookup {
 
     object SoldOrGivenAway {
 
-      val title = "Did you sell or give away the property?"
+      val question = "Did you sell or give away the property?"
+      val sold = "I sold it"
+      val gave = "I gave it away"
     }
 
     object Summary {
 
       val title = "Summary"
       val secondaryHeading = "You owe"
+      val amountOwed = "Amount you owe"
       val calculationDetailsTitle = "Calculation details"
       val totalGain = "Your total gain"
       val totalLoss = "Loss"
