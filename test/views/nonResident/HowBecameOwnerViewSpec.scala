@@ -16,22 +16,22 @@
 
 package views.nonResident
 
+import assets.MessageLookup.{NonResident => commonMessages}
+import assets.MessageLookup.NonResident.{HowBecameOwner => messages}
 import controllers.helpers.FakeRequestHelper
+import forms.nonresident.HowBecameOwnerForm._
+import org.jsoup.Jsoup
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import views.html.calculation.nonresident.soldForLess
-import forms.nonresident.SoldForLessForm._
-import assets.MessageLookup.{NonResident => commonMessages}
-import assets.MessageLookup.NonResident.{SoldForLess => messages}
-import org.jsoup.Jsoup
+import views.html.calculation.nonresident.howBecameOwner
 
-class SoldForLessViewSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
+class HowBecameOwnerViewSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
   "The Sold for Less view spec"  when {
 
     "supplied with no errors" should {
 
-      lazy val view = soldForLess(soldForLessForm)(fakeRequest)
+      lazy val view = howBecameOwner(howBecameOwnerForm)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       s"have a title of '${messages.question}'" in {
@@ -50,7 +50,7 @@ class SoldForLessViewSpec extends UnitSpec with WithFakeApplication with Mockito
         }
 
         s"has a route to 'sold-or-given-away'" in {
-          backLink.attr("href") shouldBe controllers.nonresident.routes.SoldOrGivenAwayController.soldOrGivenAway().url
+          backLink.attr("href") shouldBe controllers.nonresident.routes.AcquisitionDateController.acquisitionDate().url
         }
       }
 
@@ -84,8 +84,8 @@ class SoldForLessViewSpec extends UnitSpec with WithFakeApplication with Mockito
         }
       }
 
-      "have inputs containing the id 'soldForLess'" in {
-        document.body().select("input").attr("id") should include("soldForLess")
+      "have inputs containing the id 'gainedBy'" in {
+        document.body().select("input").attr("id") should include("gainedBy")
       }
 
       "have a form" which {
@@ -95,8 +95,8 @@ class SoldForLessViewSpec extends UnitSpec with WithFakeApplication with Mockito
           form.attr("method") shouldBe "POST"
         }
 
-        s"has an action of '${controllers.nonresident.routes.SoldForLessController.submitSoldForLess().url}'" in {
-          form.attr("action") shouldBe controllers.nonresident.routes.SoldForLessController.submitSoldForLess().url
+        s"has an action of '${controllers.nonresident.routes.HowBecameOwnerController.submitHowBecameOwner().url}'" in {
+          form.attr("action") shouldBe controllers.nonresident.routes.HowBecameOwnerController.submitHowBecameOwner().url
         }
       }
 
@@ -119,8 +119,8 @@ class SoldForLessViewSpec extends UnitSpec with WithFakeApplication with Mockito
 
     "supplied with a form with errors" should {
 
-      lazy val form = soldForLessForm.bind(Map("soldForLess" -> "a"))
-      lazy val view = soldForLess(form)(fakeRequest)
+      lazy val form = howBecameOwnerForm.bind(Map("gainedBy" -> "a"))
+      lazy val view = howBecameOwner(form)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have an error summary" in {
