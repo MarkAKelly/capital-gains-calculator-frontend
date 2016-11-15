@@ -17,17 +17,37 @@ POST        /how-became-owner                   controllers.nonresident.HowBecam
 GET         /bought-for-less                    controllers.nonresident.BoughtForLessController.boughtForLess
 POST        /bought-for-less                    controllers.nonresident.BoughtForLessController.submitBoughtForLess
 
-#Worth When Inherited
-GET         /worth-when-inherited               controllers.nonresident.WorthWhenInheritedController.worthWhenInherited
-POST        /worth-when-inherited               controllers.nonresident.WorthWhenInheritedController.submitWorthWhenInherited
-
-#Worth When Gifted
-GET         /worth-when-gifted                  controllers.nonresident.WorthWhenGiftedController.worthWhenGifted
-POST        /worth-when-gifted                  controllers.nonresident.WorthWhenGiftedController.submitWorthWhenGifted
-
 #Check Your Answers
 GET         /check-your-answers                 controllers.nonresident.CheckYourAnswersController.checkYourAnswers
 POST        /check-your-answers                 controllers.nonresident.CheckYourAnswersController.submitCheckYourAnswers
+
+#Market Value When Sold
+GET         /market-value-when-sold              controllers.nonresident.MarketValueWhenSoldController.marketValueWhenSold
+POST        /market-value-when-sold              controllers.nonresident.MarketValueWhenSoldController.submitMarketValueWhenSold
+
+#Worth When Bought for Less
+GET         /worth-when-bought-for-less          controllers.nonresident.WorthWhenBoughtForLessController.worthWhenBoughtForLess
+POST        /worth-when-bought-for-less          controllers.nonresident.WorthWhenBoughtForLessController.submitWorthWhenBoughtForLess
+
+#Worth When Gifted Too
+GET         /worth-when-gifted-too               controllers.nonresident.WorthWhenGiftedTooController.worthWhenGiftedToo
+POST        /worth-when-gifted-too               controllers.nonresident.WorthWhenGiftedTooController.submitWorthWhenGiftedToo
+
+#Worth When Inherited
+GET         /worth-when-inherited                controllers.nonresident.WorthWhenInheritedController.worthWhenInherited
+POST        /worth-when-inherited                controllers.nonresident.WorthWhenInheritedController.submitWorthWhenInherited
+
+#Worth Before Legislation Start
+GET         /worth-before-legislation-start      controllers.nonresident.WorthBeforeLegislationStartController.worthBeforeLegislationStart
+POST        /worth-before-legislation-start      controllers.nonresident.WorthBeforeLegislationStartController.submitWorthBeforeLegislationStart
+
+#Worth On Legislation Start
+GET         /worth-on-legislation-start          controllers.nonresident.WorthOnLegislationStartController.worthOnLegislationStart
+POST        /worth-on-legislation-start          controllers.nonresident.WorthOnLegislationStartController.submitWorthOnLegislationStart
+
+#Rebased Valuation Cost
+GET         /rebased-valuation-cost              controllers.nonresident.RebasedValuationCostController.rebasedValuationCost
+POST        /rebased-valuation-cost              controllers.nonresident.RebasedValuationCostController.submitRebasedValuationCost
 
 #Customer Type
 GET         /customer-type                      controllers.nonresident.CustomerTypeController.customerType
