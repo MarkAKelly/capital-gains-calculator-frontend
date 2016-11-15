@@ -16,7 +16,7 @@
 
 package models.nonresident
 
-import constructors.nonresident.{PropertyDetailsConstructor, PurchaseDetailsConstructor, SalesDetailsConstructor}
+import constructors.nonresident.{DeductionDetailsConstructor, PropertyDetailsConstructor, PurchaseDetailsConstructor, SalesDetailsConstructor}
 
 case class TotalGainAnswersModel(disposalDateModel: DisposalDateModel,
                                  soldOrGivenAwayModel: SoldOrGivenAwayModel,
@@ -30,9 +30,11 @@ case class TotalGainAnswersModel(disposalDateModel: DisposalDateModel,
                                  acquisitionDateModel: AcquisitionDateModel,
                                  rebasedValueModel: Option[RebasedValueModel],
                                  rebasedCostsModel: Option[RebasedCostsModel],
-                                 improvementsModel: ImprovementsModel) {
+                                 improvementsModel: ImprovementsModel,
+                                 otherReliefsFlat: Option[OtherReliefsModel]) {
 
-  val salesDetailsRows: Seq[QuestionAnswerModel[Any]] = SalesDetailsConstructor.salesDetailsRows(this)
-  val purchaseDetailsRows: Seq[QuestionAnswerModel[Any]] = PurchaseDetailsConstructor.getPurchaseDetailsSection(this)
-  val propertyDetailsRows: Seq[QuestionAnswerModel[Any]] = PropertyDetailsConstructor.propertyDetailsRows(this)
+  lazy val salesDetailsRows: Seq[QuestionAnswerModel[Any]] = SalesDetailsConstructor.salesDetailsRows(this)
+  lazy val purchaseDetailsRows: Seq[QuestionAnswerModel[Any]] = PurchaseDetailsConstructor.getPurchaseDetailsSection(this)
+  lazy val propertyDetailsRows: Seq[QuestionAnswerModel[Any]] = PropertyDetailsConstructor.propertyDetailsRows(this)
+  lazy val deductionDetailsRows: Seq[QuestionAnswerModel[Any]] = DeductionDetailsConstructor.deductionDetailsRows(this)
 }

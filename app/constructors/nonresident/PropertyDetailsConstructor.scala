@@ -16,7 +16,7 @@
 
 package constructors.nonresident
 
-import models.nonresident.{AcquisitionDateModel, QuestionAnswerModel, RebasedValueModel, TotalGainAnswersModel}
+import models.nonresident.{AcquisitionDateModel, QuestionAnswerModel, TotalGainAnswersModel}
 import common.{TaxDates, KeystoreKeys => keys}
 import play.api.i18n.Messages
 

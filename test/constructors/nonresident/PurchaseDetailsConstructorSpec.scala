@@ -39,7 +39,8 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
     AcquisitionDateModel("No", None, None, None),
     None,
     None,
-    ImprovementsModel("No", None, None)
+    ImprovementsModel("No", None, None),
+    None
   )
 
   val totalGainInherited = TotalGainAnswersModel(
@@ -55,7 +56,8 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
     AcquisitionDateModel("No", None, None, None),
     None,
     None,
-    ImprovementsModel("No", None, None)
+    ImprovementsModel("No", None, None),
+    None
   )
 
   val totalGainSold = TotalGainAnswersModel(
@@ -71,7 +73,8 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
     AcquisitionDateModel("Yes", Some(1), Some(4), Some(2013)),
     Some(RebasedValueModel("Yes", Some(7500))),
     Some(RebasedCostsModel("Yes", Some(150))),
-    ImprovementsModel("Yes", Some(50), Some(25))
+    ImprovementsModel("Yes", Some(50), Some(25)),
+    None
   )
 
   val totalGainForLess = TotalGainAnswersModel(
@@ -87,7 +90,8 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
     AcquisitionDateModel("Yes", Some(1), Some(4), Some(2013)),
     Some(RebasedValueModel("Yes", Some(7500))),
     Some(RebasedCostsModel("Yes", Some(150))),
-    ImprovementsModel("Yes", Some(50), Some(25))
+    ImprovementsModel("Yes", Some(50), Some(25)),
+    None
   )
 
   private def assertExpectedResult[T](option: Option[T])(test: T => Unit) = assertOption("expected option is None")(option)(test)

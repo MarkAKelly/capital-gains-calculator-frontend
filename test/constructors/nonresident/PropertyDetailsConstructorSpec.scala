@@ -36,7 +36,8 @@ class PropertyDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
     AcquisitionDateModel("No", None, None, None),
     None,
     None,
-    ImprovementsModel("No", None, None)
+    ImprovementsModel("No", None, None),
+    None
   )
 
   val noRebasedImprovements = TotalGainAnswersModel(
@@ -52,7 +53,8 @@ class PropertyDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
     AcquisitionDateModel("Yes", Some(1), Some(4), Some(2013)),
     Some(RebasedValueModel("No", None)),
     Some(RebasedCostsModel("No", None)),
-    ImprovementsModel("Yes", Some(50), None)
+    ImprovementsModel("Yes", Some(50), None),
+    None
   )
 
   val allImprovements = TotalGainAnswersModel(
@@ -68,13 +70,33 @@ class PropertyDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
     AcquisitionDateModel("Yes", Some(1), Some(4), Some(2013)),
     Some(RebasedValueModel("Yes", Some(7500))),
     Some(RebasedCostsModel("Yes", Some(150))),
-    ImprovementsModel("Yes", Some(50), Some(25))
+    ImprovementsModel("Yes", Some(50), Some(25)),
+    None
   )
 
   private def assertExpectedResult[T](option: Option[T])(test: T => Unit) = assertOption("expected option is None")(option)(test)
 
   "Calling propertyDetailsRow" when {
 
+    "supplied with all improvements" should {
+      lazy val result = PropertyDetailsConstructor.propertyDetailsRows(allImprovements)
+
+      "return a sequence with 3 entries" in {
+        result.size shouldBe 3
+      }
+
+      "return a sequence with an improvements question" in {
+        result.contains(PropertyDetailsConstructor.improvementsIsClaimingRow(allImprovements).get)
+      }
+
+      "return a sequence with an improvements value" in {
+        result.contains(PropertyDetailsConstructor.improvementsTotalRow(allImprovements, true).get)
+      }
+
+      "return a sequence with an improvements after value" in {
+        result.contains(PropertyDetailsConstructor.improvementsAfterRow(allImprovements, true).get)
+      }
+    }
   }
 
   "Calling improvementsIsClaimingRow" when {
