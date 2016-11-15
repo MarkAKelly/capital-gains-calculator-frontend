@@ -4,7 +4,7 @@
 @import controllers.nonresident.routes.{ReportController => routes}
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-@(summary: SummaryModel, result: CalculationResultModel, taxYear: TaxYearModel, electionType: String)(implicit request: Request[_])
+@(totalGain: TotalGainAnswersModel, result: CalculationResultModel, taxYear: TaxYearModel, electionType: String)(implicit request: Request[_])
 
 <!DOCTYPE html>
 <html>
@@ -38,12 +38,11 @@
     }
     }
 
-    @summarySectionNoLink("calculationDetails", Messages("calc.summary.calculation.details.title"), result.calculationDetailsRows(summary.calculationElectionModel.calculationType), 0)
-    @summarySectionNoLink("personalDetails", Messages("calc.summary.personal.details.title"), summary.personalDetailsRows)
-    @summarySectionNoLink("acquisitionDetails", Messages("calc.summary.purchase.details.title"), summary.purchaseDetailsRows)
-    @summarySectionNoLink("propertyDetails", Messages("calc.summary.property.details.title"), summary.propertyDetailsRows)
-    @summarySectionNoLink("saleDetails", Messages("calc.summary.sale.details.title"), summary.saleDetailsRows)
-    @summarySectionNoLink("deductions", Messages("calc.summary.deductions.title"), summary.deductionsDetailsRows(result))
+    @summarySectionNoLink("calculationDetails", Messages("calc.summary.calculation.details.title"), result.calculationDetailsRows(totalGain.calculationElectionModel.calculationType), 0)
+    @summarySectionNoLink("purchaseDetails", Messages("calc.summary.purchase.details.title"), totalGain.purchaseDetailsRows)
+    @summarySectionNoLink("propertyDetails", Messages("calc.summary.property.details.title"), totalGain.propertyDetailsRows)
+    @summarySectionNoLink("salesDetails", Messages("calc.summary.sale.details.title"), totalGain.salesDetailsRows)
+    @summarySectionNoLink("deductions", Messages("calc.summary.deductions.title"), totalGain.deductionDetailsRows)
 
     <div id="whatToDoNext" class="form-group">
         <h2 class="heading-medium">@Messages("calc.summary.next.fullMessage")</h2>

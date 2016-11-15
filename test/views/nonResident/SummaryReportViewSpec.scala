@@ -144,5 +144,65 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
         }
       }
     }
+
+    "provided with a flat loss calculation" should {
+      lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
+
+      lazy val view = summaryReport(businessScenarioFiveModel, calcModelTwoRates, taxYear,
+        sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(view.body)
+
+      "have a heading" which {
+        lazy val heading = document.select("h1")
+
+        "has a class of 'heading-xlarge'" in {
+          heading.attr("class") shouldBe "heading-xlarge"
+        }
+
+        "has a span with the class 'pre-heading'" in {
+          heading.select("span").attr("class") shouldBe "pre-heading"
+        }
+
+        "has a span with the text 'You owe'" in {
+          heading.select("span").text shouldEqual nrMessages.Summary.secondaryHeading
+        }
+
+        "have a result amount currently set to £0" in {
+          heading.select("b").text shouldEqual "£0"
+        }
+      }
+
+      "have the HMRC logo with the HMRC name" in {
+        document.select("div.logo span").text shouldBe "HM Revenue & Customs"
+      }
+
+      "not have a notice summary" in {
+        document.select("div.notice-wrapper").isEmpty shouldBe true
+      }
+
+      "have a 'Calculation details' section that" in {
+        document.select("#calculationDetails span.heading-large").text should include(nrMessages.Summary.calculationDetailsTitle)
+      }
+
+      "have an 'Owning the property' section that" in {
+        document.select("#purchaseDetails span.heading-large").text should include(nrMessages.Summary.purchaseDetailsTitle)
+      }
+
+      "have a 'Property details' section that" in {
+        document.select("#propertyDetails span.heading-large").text should include(nrMessages.Summary.propertyDetailsTitle)
+      }
+
+      "have a 'Sale details' section that" in {
+        document.select("#salesDetails span.heading-large").text should include(nrMessages.Summary.salesDetailsTitle)
+      }
+
+      "have a 'Deductions details' section that" in {
+        document.select("#deductions span.heading-large").text should include(nrMessages.Summary.deductionsTitle)
+      }
+
+      "not have a 'Personal details' section that" in {
+        document.select("#personalDetails span.heading-large").text shouldBe ""
+      }
+    }
   }
 }
