@@ -20,16 +20,16 @@ import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
-object WorthWhenInheritedController extends WorthWhenInheritedController {
+object WorthOnLegislationStartController extends WorthOnLegislationStartController {
   val calcConnector = CalculatorConnector
 }
 
-trait WorthWhenInheritedController extends FrontendController with ValidActiveSession {
+trait WorthOnLegislationStartController extends FrontendController with ValidActiveSession {
 
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
 
-  val worthWhenInherited = TODO
+  val worthOnLegislationStart = TODO
 
-  val submitWorthWhenInherited = TODO
+  val submitWorthOnLegislationStart = TODO
 }

@@ -96,6 +96,111 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
+  /* Market Value When Sold routes */
+  "The URL for the marketValueWhenSold Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/market-value-when-sold" in {
+      val path = controllers.nonresident.routes.MarketValueWhenSoldController.marketValueWhenSold().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/market-value-when-sold"
+    }
+  }
+
+  "The URL for the submitMarketValueWhenSold Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/market-value-when-sold" in {
+      val path = controllers.nonresident.routes.MarketValueWhenSoldController.submitMarketValueWhenSold().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/market-value-when-sold"
+    }
+  }
+
+  /* Worth When Bought For Less routes */
+  "The URL for the worthWhenBoughtForLess Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/worth-when-bought-for-less" in {
+      val path = controllers.nonresident.routes.WorthWhenBoughtForLessController.worthWhenBoughtForLess().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/worth-when-bought-for-less"
+    }
+  }
+
+  "The URL for the submitWorthWhenBoughtForLess Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/worth-when-bought-for-less" in {
+      val path = controllers.nonresident.routes.WorthWhenBoughtForLessController.submitWorthWhenBoughtForLess().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/worth-when-bought-for-less"
+    }
+  }
+
+  /* Worth When Gifted Too routes */
+  "The URL for the worthWhenGiftedToo Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/worth-when-gifted-too" in {
+      val path = controllers.nonresident.routes.WorthWhenGiftedTooController.worthWhenGiftedToo().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/worth-when-gifted-too"
+    }
+  }
+
+  "The URL for the submitWorthWhenGiftedToo Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/worth-when-gifted-too" in {
+      val path = controllers.nonresident.routes.WorthWhenGiftedTooController.submitWorthWhenGiftedToo().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/worth-when-gifted-too"
+    }
+  }
+
+  /* Worth When Inherited routes */
+  "The URL for the worthWhenInherited Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/worth-when-inherited" in {
+      val path = controllers.nonresident.routes.WorthWhenInheritedController.worthWhenInherited().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/worth-when-inherited"
+    }
+  }
+
+  "The URL for the submitWorthWhenInherited Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/worth-when-inherited" in {
+      val path = controllers.nonresident.routes.WorthWhenInheritedController.submitWorthWhenInherited().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/worth-when-inherited"
+    }
+  }
+
+  /* Worth Before Legislation Start routes */
+  "The URL for the worthBeforeLegislationStart Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/worth-before-legislation-start" in {
+      val path = controllers.nonresident.routes.WorthBeforeLegislationStartController.worthBeforeLegislationStart().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/worth-before-legislation-start"
+    }
+  }
+
+  "The URL for the submitWorthBeforeLegislationStart Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/worth-before-legislation-start" in {
+      val path = controllers.nonresident.routes.WorthBeforeLegislationStartController.submitWorthBeforeLegislationStart().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/worth-before-legislation-start"
+    }
+  }
+
+  /* Worth On Legislation routes */
+  "The URL for the worthOnLegislationStart Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/worth-on-legislation-start" in {
+      val path = controllers.nonresident.routes.WorthOnLegislationStartController.worthOnLegislationStart().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/worth-on-legislation-start"
+    }
+  }
+
+  "The URL for the submitWorthOnLegislationStart Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/worth-on-legislation-start" in {
+      val path = controllers.nonresident.routes.WorthOnLegislationStartController.submitWorthOnLegislationStart().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/worth-on-legislation-start"
+    }
+  }
+
+  /* Rebased Valuation Cost routes */
+  "The URL for the rebasedValuationCost Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/rebased-valuation-cost" in {
+      val path = controllers.nonresident.routes.RebasedValuationCostController.rebasedValuationCost().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/rebased-valuation-cost"
+    }
+  }
+
+  "The URL for the submitRebasedValuationCost Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/rebased-valuation-cost" in {
+      val path = controllers.nonresident.routes.RebasedValuationCostController.submitRebasedValuationCost().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/rebased-valuation-cost"
+    }
+  }
+
   /* Customer Type routes */
   "The URL for the customerType Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/" in {

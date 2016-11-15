@@ -63,7 +63,7 @@ trait HowBecameOwnerController extends FrontendController with ValidActiveSessio
     def routeRequest(data: HowBecameOwnerModel): Future[Result] = {
       data.gainedBy match {
 
-        case "Gifted" => Future.successful(Redirect(routes.WorthWhenGiftedController.worthWhenGifted()))
+        case "Gifted" => Future.successful(Redirect(routes.WorthWhenGiftedTooController.worthWhenGiftedToo()))
         case "Inherited" => Future.successful(Redirect(routes.WorthWhenInheritedController.worthWhenInherited()))
         case _ => Future.successful(Redirect(routes.BoughtForLessController.boughtForLess()))
       }
