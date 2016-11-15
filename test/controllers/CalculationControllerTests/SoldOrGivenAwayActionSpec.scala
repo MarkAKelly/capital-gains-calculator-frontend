@@ -66,8 +66,8 @@ class SoldOrGivenAwayActionSpec extends UnitSpec with WithFakeApplication with M
         status(result) shouldBe 200
       }
 
-      s"have the title of ${messages.title}" in {
-        document.title() shouldBe messages.title
+      s"have the title of ${messages.question}" in {
+        document.title() shouldBe messages.question
       }
     }
 
@@ -80,8 +80,8 @@ class SoldOrGivenAwayActionSpec extends UnitSpec with WithFakeApplication with M
         status(result) shouldBe 200
       }
 
-      s"have the title of ${messages.title}" in {
-        document.title() shouldBe messages.title
+      s"have the title of ${messages.question}" in {
+        document.title() shouldBe messages.question
       }
     }
 
@@ -143,7 +143,7 @@ class SoldOrGivenAwayActionSpec extends UnitSpec with WithFakeApplication with M
       }
 
       "stay on the SoldOrGivenAway page" in {
-        document.title shouldBe messages.title
+        document.title shouldBe messages.question
       }
     }
   }

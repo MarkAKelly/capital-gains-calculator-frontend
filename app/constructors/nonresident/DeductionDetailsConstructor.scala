@@ -24,106 +24,35 @@ import play.api.i18n.Messages
 
 object DeductionDetailsConstructor {
 
-  def deductionDetailsRows(answers: SummaryModel, results: CalculationResultModel): Seq[QuestionAnswerModel[Any]] = {
-    val privateResidenceRelief = privateResidenceReliefRow(results)
-    val allowableLosses = allowableLossesRow(answers)
+  def deductionDetailsRows(answers: TotalGainAnswersModel): Seq[QuestionAnswerModel[Any]] = {
     val otherReliefsFlatQuestion = otherReliefsFlatQuestionRow(answers)
     val otherReliefsFlatValue = otherReliefsFlatValueRow(answers)
-    val otherReliefsTAValue = otherReliefsTAValueRow(answers)
-    val otherReliefsRebasedValue = otherReliefsRebasedValueRow(answers)
 
-    val sequence = Seq(privateResidenceRelief, allowableLosses, otherReliefsFlatQuestion,
-      otherReliefsFlatValue, otherReliefsTAValue, otherReliefsRebasedValue)
+    val sequence = Seq(otherReliefsFlatQuestion, otherReliefsFlatValue)
 
     sequence.flatten
   }
 
-  def privateResidenceReliefRow(results: CalculationResultModel): Option[QuestionAnswerModel[BigDecimal]] = {
-    if (results.simplePRR.isDefined) {
-      Some(QuestionAnswerModel(keys.privateResidenceRelief,
-        results.simplePRR.get,
-        Messages("calc.privateResidenceRelief.question"),
-        Some(routes.PrivateResidenceReliefController.privateResidenceRelief().toString())
+  def otherReliefsFlatQuestionRow(answers: TotalGainAnswersModel): Option[QuestionAnswerModel[String]] = {
+    answers.otherReliefsFlat match {
+      case Some(OtherReliefsModel(Some(answer), _)) => Some(QuestionAnswerModel(
+        s"${keys.otherReliefsFlat}-question",
+        answer,
+        Messages("calc.otherReliefs.questionTwo"),
+        Some(controllers.nonresident.routes.OtherReliefsController.otherReliefs().url)
       ))
-    } else None
-  }
-
-  def allowableLossesRow(answers: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] = {
-    Some(QuestionAnswerModel(keys.allowableLosses,
-      answers.allowableLossesModel match {
-        case AllowableLossesModel("Yes", Some(value)) => value
-        case _ => BigDecimal(0.0)
-      },
-      Messages("calc.allowableLosses.question.two"),
-      Some(routes.AllowableLossesController.allowableLosses().toString())))
-  }
-
-  def otherReliefsFlatValueRow(answers: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] = {
-    (answers.calculationElectionModel.calculationType, answers.otherReliefsModelFlat) match {
-      case (calculationKeys.flat, OtherReliefsModel(Some("Yes"), Some(value))) =>
-        Some(QuestionAnswerModel(keys.otherReliefsFlat,
-          value,
-          Messages("calc.otherReliefs.question"),
-          Some(routes.OtherReliefsController.otherReliefs().toString())))
-      case (calculationKeys.flat, OtherReliefsModel(Some("Yes"), None)) =>
-        Some(QuestionAnswerModel(keys.otherReliefsFlat,
-          BigDecimal(0),
-          Messages("calc.otherReliefs.question"),
-          Some(routes.OtherReliefsController.otherReliefs().toString())))
-      case (calculationKeys.flat, OtherReliefsModel(None, Some(value))) =>
-        Some(QuestionAnswerModel(keys.otherReliefsFlat,
-          value,
-          Messages("calc.otherReliefs.question"),
-          Some(routes.OtherReliefsFlatController.otherReliefsFlat().toString())))
-      case (calculationKeys.flat, OtherReliefsModel(None, None)) =>
-        Some(QuestionAnswerModel(keys.otherReliefsFlat,
-          BigDecimal(0),
-          Messages("calc.otherReliefs.question"),
-          Some(routes.OtherReliefsFlatController.otherReliefsFlat().toString())))
       case _ => None
     }
   }
 
-  def otherReliefsFlatQuestionRow(answers: SummaryModel): Option[QuestionAnswerModel[String]] = {
-    (answers.calculationElectionModel.calculationType, answers.otherReliefsModelFlat) match {
-      case (calculationKeys.flat, OtherReliefsModel(Some("No"), _)) =>
-        Some(QuestionAnswerModel(s"${keys.otherReliefsFlat}-claimed",
-          "No",
-          Messages("calc.otherReliefs.questionTwo"),
-          Some(routes.OtherReliefsController.otherReliefs().toString())
-        ))
-      case _ => None
-    }
-  }
-
-  def otherReliefsTAValueRow(answers: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] = {
-    (answers.calculationElectionModel.calculationType, answers.otherReliefsModelTA.otherReliefs) match {
-      case (calculationKeys.timeApportioned, Some(value)) =>
-        Some(QuestionAnswerModel(keys.otherReliefsTA,
-          value,
-          Messages("calc.otherReliefs.question"),
-          Some(routes.OtherReliefsTAController.otherReliefsTA().toString())))
-      case (calculationKeys.timeApportioned, _) =>
-        Some(QuestionAnswerModel(keys.otherReliefsTA,
-          BigDecimal(0),
-          Messages("calc.otherReliefs.question"),
-          Some(routes.OtherReliefsTAController.otherReliefsTA().toString())))
-      case _ => None
-    }
-  }
-
-  def otherReliefsRebasedValueRow(answers: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] = {
-    (answers.calculationElectionModel.calculationType, answers.otherReliefsModelRebased.otherReliefs) match {
-      case (calculationKeys.rebased, Some(value)) =>
-        Some(QuestionAnswerModel(keys.otherReliefsRebased,
-          value,
-          Messages("calc.otherReliefs.question"),
-          Some(routes.OtherReliefsRebasedController.otherReliefsRebased().toString())))
-      case (calculationKeys.rebased, _) =>
-        Some(QuestionAnswerModel(keys.otherReliefsRebased,
-          BigDecimal(0),
-          Messages("calc.otherReliefs.question"),
-          Some(routes.OtherReliefsRebasedController.otherReliefsRebased().toString())))
+  def otherReliefsFlatValueRow(answers: TotalGainAnswersModel): Option[QuestionAnswerModel[BigDecimal]] = {
+    answers.otherReliefsFlat match {
+      case Some(OtherReliefsModel(Some("Yes"), value)) => Some(QuestionAnswerModel(
+        keys.otherReliefsFlat,
+        value.get,
+        Messages("calc.otherReliefs.question"),
+        Some(controllers.nonresident.routes.OtherReliefsController.otherReliefs().url)
+      ))
       case _ => None
     }
   }

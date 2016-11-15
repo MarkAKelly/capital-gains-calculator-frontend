@@ -16,7 +16,12 @@
 
 package models.nonresident
 
+import java.time.LocalDate
+
+import common.Dates
 import play.api.libs.json._
+
+import scala.util.{Success, Try}
 
 case class AcquisitionDateModel (
                                   hasAcquisitionDate: String,
@@ -26,4 +31,14 @@ case class AcquisitionDateModel (
 
 object AcquisitionDateModel {
   implicit val format = Json.format[AcquisitionDateModel]
+
+  implicit val createDate: AcquisitionDateModel => Option[LocalDate] = model => {
+    val dateFormatter = Dates.formatter
+    Try {
+      LocalDate.parse(s"${model.day.get}/${model.month.get}/${model.year.get}", dateFormatter)
+    } match {
+      case Success(date) => Some(date)
+      case _ => None
+    }
+  }
 }

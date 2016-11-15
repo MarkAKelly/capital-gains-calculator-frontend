@@ -55,8 +55,8 @@ class SoldOrGivenAwayViewSpec extends UnitSpec with WithFakeApplication with Fak
           heading.attr("class") shouldBe "heading-xlarge"
         }
 
-        s"have the text of ${messages.title}" in {
-          heading.text shouldBe messages.title
+        s"have the text of ${messages.question}" in {
+          heading.text shouldBe messages.question
         }
       }
 
@@ -83,8 +83,8 @@ class SoldOrGivenAwayViewSpec extends UnitSpec with WithFakeApplication with Fak
       "have a legend that" should {
         lazy val legend = document.body.select("legend")
 
-        s"have the text of ${messages.title}" in {
-          legend.text shouldBe messages.title
+        s"have the text of ${messages.question}" in {
+          legend.text shouldBe messages.question
         }
 
         "be visually hidden" in {

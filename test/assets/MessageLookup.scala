@@ -301,7 +301,7 @@ object MessageLookup {
 
     //How Became Owner messages
     object HowBecameOwner {
-      val title = "How did you become the owner?"
+      val question = "How did you become the owner?"
       val errorMandatory = "Tell us how you became the owner"
       val bought = "Bought it"
       val gifted = "Got it as a gift"
@@ -310,7 +310,9 @@ object MessageLookup {
 
     object SoldOrGivenAway {
 
-      val title = "Did you sell or give away the property?"
+      val question = "Did you sell or give away the property?"
+      val sold = "I sold it"
+      val gave = "I gave it away"
     }
 
     object Summary {
