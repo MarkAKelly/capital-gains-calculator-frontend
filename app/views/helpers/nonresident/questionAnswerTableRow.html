@@ -1,0 +1,19 @@
+//used in NRCGT Check Your Answers page, displays the question, data value and change link in one row
+
+@import models.nonresident.QuestionAnswerModel
+
+@(question: QuestionAnswerModel[Any])
+
+<tr>
+    <td>@question.question</td>
+    <td>@{question.data match {
+            case string: String => string
+            case int: Int => int.toString
+            case bigDecimal: BigDecimal => s"£${MoneyPounds(bigDecimal, decimalPlaces).quantity}"
+            case date: LocalDate => datePageFormatNoZero.format(date)
+            case _ => ""
+        }}</td>
+    <td class = "change-your-answer">
+        <a href="@question.link">Change</a>
+    </td>
+</tr>

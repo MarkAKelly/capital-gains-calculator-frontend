@@ -129,6 +129,7 @@ object MessageLookup {
 
     object CheckYourAnswers {
       val heading = "Check your answers"
+      val tableHeading = "You've told us"
     }
 
     object CurrentIncome {

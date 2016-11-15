@@ -339,6 +339,7 @@ calc.summary.warning.taxYear = Your total might be less accurate because you did
 
 ## Check Your Answers ##
 calc.checkYourAnswers.title = Check your answers
+calc.checkYourAnswers.tableHeading = You''ve told us
 
 ###############################################################################################
 ## Resident messages ##
