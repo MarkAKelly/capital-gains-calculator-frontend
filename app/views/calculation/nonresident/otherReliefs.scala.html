@@ -24,11 +24,11 @@
 
 @main_template(Messages("calc.otherReliefs.questionTwo")) {
 
-    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.AllowableLossesController.allowableLosses">@Messages("calc.base.back")</a>
+    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.ImprovementsController.improvements">@Messages("calc.base.back")</a>
 
     @errorSummary(otherReliefsForm, "other-reliefs", "otherReliefs")
 
-    <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
+    <h1 class="heading-xlarge">@Messages("calc.otherReliefs.questionTwo")</h1>
 
     <div class="form-group">
         @form(action = controllers.nonresident.routes.OtherReliefsController.submitOtherReliefs) {

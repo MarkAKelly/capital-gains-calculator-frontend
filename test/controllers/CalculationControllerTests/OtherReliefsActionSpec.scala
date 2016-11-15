@@ -131,7 +131,7 @@ class OtherReliefsActionSpec extends UnitSpec with WithFakeApplication with Mock
       }
 
       "redirect to the summary page" in {
-        redirectLocation(result).get shouldBe controllers.nonresident.routes.SummaryController.summary().url
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.CheckYourAnswersController.checkYourAnswers().url
       }
     }
 
