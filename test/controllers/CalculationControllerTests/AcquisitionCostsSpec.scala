@@ -49,6 +49,12 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
     }
   }
 
+  "AcquisitionCostsController" should {
+    s"have a session timeout home link of '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+      AcquisitionCostsController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+    }
+  }
+
   "In CalculationController calling the .acquisitionCosts action " should {
 
     "not supplied with a pre-existing stored model" should {

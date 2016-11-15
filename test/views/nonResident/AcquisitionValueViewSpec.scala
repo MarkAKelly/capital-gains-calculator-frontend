@@ -45,8 +45,8 @@ class AcquisitionValueViewSpec extends UnitSpec with WithFakeApplication with Fa
       }
     }
 
-    "have the home link to 'home'" in {
-      document.select("#homeNavHref").attr("href") shouldBe "/calculate-your-capital-gains/non-resident/"
+    s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+      document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
     }
 
     "have a 'Back link' that" should{

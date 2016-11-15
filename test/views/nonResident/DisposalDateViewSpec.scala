@@ -50,6 +50,10 @@ class DisposalDateViewSpec extends UnitSpec with WithFakeApplication with FakeRe
         document.body().select("input[type=number]").attr("id") should include ("disposalDate")
       }
 
+      s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+        document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+      }
+
       "have a button" which {
         lazy val button = document.select("button")
 

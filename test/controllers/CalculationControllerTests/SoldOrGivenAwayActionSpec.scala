@@ -48,6 +48,12 @@ class SoldOrGivenAwayActionSpec extends UnitSpec with WithFakeApplication with M
     }
   }
 
+  "SoldOrGivenAwayController" should {
+    s"have a session timeout home link of '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+      SoldOrGivenAwayController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+    }
+  }
+
   //GET Tests
   "Calling the SellOrGiveAway .sellOrGiveAway" when {
 

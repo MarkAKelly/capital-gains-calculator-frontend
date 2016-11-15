@@ -17,13 +17,17 @@
 package controllers.nonresident
 
 import connectors.CalculatorConnector
+import controllers.predicates.ValidActiveSession
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
 object CheckYourAnswersController extends CheckYourAnswersController {
   val calcConnector = CalculatorConnector
 }
 
-trait CheckYourAnswersController extends FrontendController {
+trait CheckYourAnswersController extends FrontendController with ValidActiveSession {
+
+  override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
+  override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
 
   val checkYourAnswers = TODO
 
