@@ -57,6 +57,10 @@ trait CalculatorConnector {
     sessionCache.fetchAndGetEntry(key)
   }
 
+  def calculateTotalGain(totalGainAnswersModel: TotalGainAnswersModel)(implicit hc: HeaderCarrier): Future[Option[TotalGainResultsModel]] = {
+    ???
+  }
+
   def calculateFlat(input: SummaryModel)(implicit hc: HeaderCarrier): Future[Option[CalculationResultModel]] = {
     http.GET[Option[CalculationResultModel]](s"$serviceUrl/capital-gains-calculator/calculate-flat?${
       CalculateRequestConstructor.baseCalcUrl(input)
