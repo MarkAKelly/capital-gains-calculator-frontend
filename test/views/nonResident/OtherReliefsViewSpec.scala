@@ -34,6 +34,10 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val view = otherReliefs(otherReliefsForm(false), model)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
+      s"have a title of ${messages.OtherReliefs.question}" in {
+        document.title() shouldBe messages.OtherReliefs.question
+      }
+
       "have a back link" which {
         lazy val backLink = document.select("#back-link")
 
@@ -51,7 +55,7 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
         lazy val heading = document.body().select("h1")
 
         "has a class of heading-large" in {
-          heading.attr("class") shouldBe "heading-large"
+          heading.attr("class") shouldBe "heading-xlarge"
         }
 
         s"has the text '${messages.OtherReliefs.question}'" in {
