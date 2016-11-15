@@ -132,7 +132,7 @@ class PropertyDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
 
   "Calling improvementsTotalRow" when {
 
-    "supplied with a value of 500 and should be displayed it true" should {
+    "supplied with a value of 50 and should be displayed it true" should {
       lazy val result = PropertyDetailsConstructor.improvementsTotalRow(noRebasedImprovements, true)
 
       "return some value" in {
@@ -167,7 +167,7 @@ class PropertyDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
 
   "Calling improvementsAfterRow" when {
 
-    "supplied with a value of 1000 and should be displayed it true" should {
+    "supplied with a value of 25 and should be displayed it true" should {
       lazy val result = PropertyDetailsConstructor.improvementsAfterRow(allImprovements, true)
 
       "return some value" in {
