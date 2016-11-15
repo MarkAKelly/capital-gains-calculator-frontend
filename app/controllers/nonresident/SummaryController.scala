@@ -16,12 +16,11 @@
 
 package controllers.nonresident
 
-import common.DefaultRoutes._
-import common.{KeystoreKeys, TaxDates}
+import common.TaxDates
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
-import models.nonresident.{AcquisitionDateModel, RebasedValueModel}
-import play.api.mvc.{Action, AnyContent}
+import models.nonresident._
+import play.api.mvc.{Action, AnyContent, Result}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation
@@ -38,46 +37,53 @@ trait SummaryController extends FrontendController with ValidActiveSession {
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
   val calcConnector: CalculatorConnector
 
-  def summaryBackUrl(implicit hc: HeaderCarrier): Future[String] = {
-    calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
-      case Some(AcquisitionDateModel("Yes", day, month, year)) if TaxDates.dateAfterStart(day.get, month.get, year.get) =>
-        Future.successful(routes.OtherReliefsController.otherReliefs().url)
-      case Some(AcquisitionDateModel("Yes", _, _, _)) => Future.successful(routes.CalculationElectionController.calculationElection().url)
-      case Some(AcquisitionDateModel("No", _, _, _)) =>
-        calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
-          case Some(RebasedValueModel("Yes", _)) => Future.successful(routes.CalculationElectionController.calculationElection().url)
-          case Some(RebasedValueModel("No", _)) => Future.successful(routes.OtherReliefsController.otherReliefs().url)
-          case _ => Future.successful(missingDataRoute)
-        }
-      case _ => Future.successful(missingDataRoute)
-    }
-  }
-
   val summary = ValidateSession.async { implicit request =>
 
-    def routeRequest(backUrl: String) = {
-      calcConnector.createSummary(hc).flatMap(summaryData =>
-        summaryData.calculationElectionModel.calculationType match {
-          case "flat" =>
-            calcConnector.calculateFlat(summaryData).map(result =>
-              Ok(calculation.nonresident.summary(summaryData, result.get, backUrl)))
-          case "time" =>
-            calcConnector.calculateTA(summaryData).map(result =>
-              Ok(calculation.nonresident.summary(summaryData, result.get, backUrl)))
-          case "rebased" =>
-            calcConnector.calculateRebased(summaryData).map(result =>
-              Ok(calculation.nonresident.summary(summaryData, result.get, backUrl)))
-        })
+    def summaryBackUrl(implicit hc: HeaderCarrier): Future[String] = {
+      Future.successful(routes.CheckYourAnswersController.checkYourAnswers().url)
+    }
+
+    def displayDateWarning(disposalDate: DisposalDateModel): Future[Boolean] = {
+      Future.successful(!TaxDates.dateInsideTaxYear(disposalDate.day, disposalDate.month, disposalDate.year))
+    }
+
+    def reliefApplied(summaryModel: SummaryModel): Future[String] = {
+      Future.successful(summaryModel.reliefApplied())
+    }
+
+    def calculateDetails(summaryData: SummaryModel)(implicit headerCarrier: HeaderCarrier): Future[Option[CalculationResultModel]] = {
+      summaryData.calculationElectionModel.calculationType match {
+        case "flat" =>
+          calcConnector.calculateFlat(summaryData)(hc)
+        case "time" =>
+          calcConnector.calculateTA(summaryData)(hc)
+        case "rebased" =>
+          calcConnector.calculateRebased(summaryData)(hc)
+      }
+    }
+
+    def routeRequest(calculationResult: Option[CalculationResultModel],
+                     backUrl: String, displayDateWarning: Boolean,
+                     calculationType: String, reliefApplied: String,
+                     customerType: String): Future[Result] = {
+      Future.successful(Ok(calculation.nonresident.summary(calculationResult.get, backUrl, displayDateWarning,
+        calculationType, reliefApplied, customerType)))
     }
 
     for {
       backUrl <- summaryBackUrl
-      route <- routeRequest(backUrl)
+      answers <- calcConnector.createSummary(hc)
+      displayWarning <- displayDateWarning(answers.disposalDateModel)
+      calculationDetails <- calculateDetails(answers)(hc)
+      reliefApplied <- reliefApplied(answers)
+      route <- routeRequest(calculationDetails, backUrl, displayWarning,
+        answers.calculationElectionModel.calculationType,
+        reliefApplied, answers.customerTypeModel.customerType)
     } yield route
   }
 
   def restart(): Action[AnyContent] = Action.async { implicit request =>
     calcConnector.clearKeystore(hc)
-    Future.successful(Redirect(routes.CustomerTypeController.customerType()))
+    Future.successful(Redirect(routes.DisposalDateController.disposalDate()))
   }
 }

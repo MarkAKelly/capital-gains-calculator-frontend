@@ -317,6 +317,7 @@ object MessageLookup {
 
       val title = "Summary"
       val secondaryHeading = "You owe"
+      val amountOwed = "Amount you owe"
       val calculationDetailsTitle = "Calculation details"
       val totalGain = "Your total gain"
       val totalLoss = "Loss"
