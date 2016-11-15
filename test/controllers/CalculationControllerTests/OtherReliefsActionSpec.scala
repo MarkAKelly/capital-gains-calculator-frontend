@@ -58,6 +58,12 @@ class OtherReliefsActionSpec extends UnitSpec with WithFakeApplication with Mock
     }
   }
 
+  "OtherReliefsController" should {
+    s"have a session timeout home link of '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+      OtherReliefsController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+    }
+  }
+
   "Calling the .otherReliefs action " when {
 
     "not supplied with a pre-existing stored model" should {

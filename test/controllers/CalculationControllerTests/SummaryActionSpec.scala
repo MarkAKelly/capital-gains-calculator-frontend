@@ -38,20 +38,13 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget(
-                   summary: SummaryModel,
+  def setupTarget( summary: SummaryModel,
                    result: CalculationResultModel,
                    acquisitionDateData: Option[AcquisitionDateModel],
                    rebasedValueData: Option[RebasedValueModel]
                  ): SummaryController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
-
-    when(mockCalcConnector.fetchAndGetFormData[RebasedValueModel](Matchers.eq(KeystoreKeys.rebasedValue))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(rebasedValueData))
-
-    when(mockCalcConnector.fetchAndGetFormData[AcquisitionDateModel](Matchers.eq(KeystoreKeys.acquisitionDate))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(acquisitionDateData))
 
     when(mockCalcConnector.createSummary(Matchers.any()))
       .thenReturn(Future.successful(summary))
@@ -70,59 +63,9 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
     }
   }
 
-  "Calling the .summaryBackUrl" when {
-
-    "provided with an acquisition date" should {
-
-      "return a route to other reliefs when date is after start date" in {
-        val acquisitionDate = AcquisitionDateModel("Yes", Some(10), Some(5), Some(2017))
-        val target = setupTarget(TestModels.sumModelTA, TestModels.calcModelOneRate, Some(acquisitionDate), None)
-        val result = target.summaryBackUrl
-
-        await(result) shouldBe controllers.nonresident.routes.OtherReliefsController.otherReliefs().url
-      }
-
-      "return a route to the calculation election page when date is before start date" in {
-        val acquisitionDate = AcquisitionDateModel("Yes", Some(10), Some(5), Some(2013))
-        val target = setupTarget(TestModels.sumModelTA, TestModels.calcModelOneRate, Some(acquisitionDate), None)
-        val result = target.summaryBackUrl
-
-        await(result) shouldBe controllers.nonresident.routes.CalculationElectionController.calculationElection().url
-      }
-    }
-
-    "provided with no acquisition date" should {
-      val acquisitionDate = AcquisitionDateModel("No", None, None, None)
-
-      "return a route to the calculation election page when a rebased value is provided" in {
-        val rebasedValue = RebasedValueModel("Yes", Some(100))
-        val target = setupTarget(TestModels.sumModelTA, TestModels.calcModelOneRate, Some(acquisitionDate), Some(rebasedValue))
-        val result = target.summaryBackUrl
-
-        await(result) shouldBe controllers.nonresident.routes.CalculationElectionController.calculationElection().url
-      }
-
-      "return a route with to the other reliefs page when no rebased value is provided" in {
-        val rebasedValue = RebasedValueModel("No", None)
-        val target = setupTarget(TestModels.sumModelTA, TestModels.calcModelOneRate, Some(acquisitionDate), Some(rebasedValue))
-        val result = target.summaryBackUrl
-
-        await(result) shouldBe controllers.nonresident.routes.OtherReliefsController.otherReliefs().url
-      }
-
-      "return a missing route when no rebased value is found" in {
-        val target = setupTarget(TestModels.sumModelTA, TestModels.calcModelOneRate, Some(acquisitionDate), None)
-        val result = target.summaryBackUrl
-
-        await(result) shouldBe missingDataRoute
-      }
-    }
-
-    "no acquisition date is found" should {
-      val target = setupTarget(TestModels.sumModelTA, TestModels.calcModelOneRate, None, None)
-      val result = target.summaryBackUrl
-
-      await(result) shouldBe missingDataRoute
+  "SummaryController" should {
+    s"have a session timeout home link of '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+      SummaryController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
     }
   }
 
@@ -144,6 +87,10 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
       "load the summary page" in {
         document.title() shouldBe messages.title
+      }
+
+      "has a back-link to the check your answers page" in {
+        document.select("#back-link").attr("href") shouldEqual controllers.nonresident.routes.CheckYourAnswersController.checkYourAnswers().url
       }
     }
 
@@ -180,7 +127,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
     }
 
     "redirect to the start page" in {
-      redirectLocation(result).get shouldBe controllers.nonresident.routes.CustomerTypeController.customerType().url
+      redirectLocation(result).get shouldBe controllers.nonresident.routes.DisposalDateController.disposalDate().url
     }
   }
 }

@@ -55,9 +55,13 @@ class SoldOrGivenAwayViewSpec extends UnitSpec with WithFakeApplication with Fak
           heading.attr("class") shouldBe "heading-xlarge"
         }
 
-        s"have the text of ${messages.title}" in {
-          heading.text shouldBe messages.title
+        s"have the text of ${messages.question}" in {
+          heading.text shouldBe messages.question
         }
+      }
+
+      s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+        document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
       }
 
       "have a form that" should {
@@ -79,8 +83,8 @@ class SoldOrGivenAwayViewSpec extends UnitSpec with WithFakeApplication with Fak
       "have a legend that" should {
         lazy val legend = document.body.select("legend")
 
-        s"have the text of ${messages.title}" in {
-          legend.text shouldBe messages.title
+        s"have the text of ${messages.question}" in {
+          legend.text shouldBe messages.question
         }
 
         "be visually hidden" in {

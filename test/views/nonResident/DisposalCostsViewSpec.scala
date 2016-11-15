@@ -64,6 +64,10 @@ class DisposalCostsViewSpec extends UnitSpec with WithFakeApplication with FakeR
         }
       }
 
+      s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+        document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+      }
+
       "have a hint" which {
 
         lazy val hint = document.select("#input-hint")

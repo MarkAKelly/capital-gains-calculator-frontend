@@ -44,6 +44,7 @@ trait AnswersConstructor {
     val rebasedValue = calculatorConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue)
     val rebasedCosts = calculatorConnector.fetchAndGetFormData[RebasedCostsModel](KeystoreKeys.rebasedCosts)
     val improvements = calculatorConnector.fetchAndGetFormData[ImprovementsModel](KeystoreKeys.improvements).map(data => data.get)
+    val otherReliefsFlat = calculatorConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat)
 
     for {
       disposalDate <- disposalDate
@@ -59,8 +60,9 @@ trait AnswersConstructor {
       rebasedValue <- rebasedValue
       rebasedCosts <- rebasedCosts
       improvements <- improvements
+      otherReliefsFlat <- otherReliefsFlat
     } yield TotalGainAnswersModel(disposalDate, soldOrGivenAway, soldForLess, disposalValue, disposalCosts,
       howBecameOwner, boughtForLess, acquisitionValue, acquisitionCosts, acquisitionDate,
-      rebasedValue, rebasedCosts, improvements)
+      rebasedValue, rebasedCosts, improvements, otherReliefsFlat)
   }
 }

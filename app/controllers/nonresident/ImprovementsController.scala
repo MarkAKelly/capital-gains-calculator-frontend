@@ -37,7 +37,7 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
 
   val calcConnector: CalculatorConnector
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
-  override val homeLink = controllers.nonresident.routes.CustomerTypeController.customerType().url
+  override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
 
 //This will need to be replace with backLink when the back routing logic is added back in
   private val tempBackLink = routes.AcquisitionCostsController.acquisitionCosts().url
