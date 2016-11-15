@@ -16,8 +16,7 @@
 
 package controllers.nonresident
 
-import common.DefaultRoutes._
-import common.{KeystoreKeys, TaxDates}
+import common.TaxDates
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
 import models.nonresident._

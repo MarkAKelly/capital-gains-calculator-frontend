@@ -29,7 +29,11 @@ class AmountYouOwePartialSpec extends UnitSpec with WithFakeApplication {
       lazy val result = amountYouOweRow(BigDecimal(1000), 2)
       lazy val doc = Jsoup.parse(result.body)
 
-      "have a div for the question with an id of 'id-question' which" which {
+      "have a div for the question" which {
+
+        "have an id of amount-you-owe-question" in {
+          doc.select("div > div").first().attr("id") shouldEqual "amount-you-owe-question"
+        }
 
         "has a class of 'grid-layout__column grid-layout__column--1-2'" in {
           doc.select("div#amount-you-owe-question").attr("class") shouldBe "grid-layout__column grid-layout__column--1-2"
@@ -44,7 +48,11 @@ class AmountYouOwePartialSpec extends UnitSpec with WithFakeApplication {
         }
       }
 
-      "have a div for the answer with an id of 'id-answer'" which {
+      "have a div for the answer" which {
+
+        "has an id of amount-you-owe-value" in {
+          doc.select("div > div").last().attr("id") shouldEqual "amount-you-owe-value"
+        }
 
         "has a class of 'grid-layout__column grid-layout__column--1-2'" in {
           doc.select("div#amount-you-owe-value").attr("class") shouldBe "grid-layout__column grid-layout__column--1-2"
