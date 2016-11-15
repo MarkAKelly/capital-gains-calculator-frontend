@@ -61,6 +61,10 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with Mocki
         }
       }
 
+      s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+        document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+      }
+
       s"have a label" which {
 
         lazy val label = document.select("label span").first()

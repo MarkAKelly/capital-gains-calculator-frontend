@@ -20,6 +20,7 @@ import java.util.UUID
 
 import common.KeystoreKeys
 import common.nonresident.CustomerTypeKeys
+import config.WSHttp
 import models.nonresident._
 import models.resident
 import models.resident.IncomeAnswersModel
@@ -197,6 +198,44 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     when(mockSessionCache.fetchAndGetEntry[resident.shares.gain.ValueBeforeLegislationStartModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.valueBeforeLegislationStart))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(mock[resident.shares.gain.ValueBeforeLegislationStartModel])))
 
+  }
+
+  def setupMockedConnector(totalGainAnswersModel: TotalGainAnswersModel): CalculatorConnector = {
+
+    val mockSessionCache = mock[SessionCache]
+
+    when(mockSessionCache.fetchAndGetEntry[DisposalDateModel](Matchers.eq(KeystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(totalGainAnswersModel.disposalDateModel)))
+
+    when(mockSessionCache.fetchAndGetEntry[DisposalValueModel](Matchers.eq(KeystoreKeys.disposalValue))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(totalGainAnswersModel.disposalValueModel)))
+
+    when(mockSessionCache.fetchAndGetEntry[DisposalCostsModel](Matchers.eq(KeystoreKeys.disposalCosts))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(totalGainAnswersModel.disposalCostsModel)))
+
+    when(mockSessionCache.fetchAndGetEntry[AcquisitionValueModel](Matchers.eq(KeystoreKeys.acquisitionValue))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(totalGainAnswersModel.acquisitionValueModel)))
+
+    when(mockSessionCache.fetchAndGetEntry[AcquisitionCostsModel](Matchers.eq(KeystoreKeys.acquisitionCosts))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(totalGainAnswersModel.acquisitionCostsModel)))
+
+    when(mockSessionCache.fetchAndGetEntry[AcquisitionDateModel](Matchers.eq(KeystoreKeys.acquisitionDate))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(totalGainAnswersModel.acquisitionDateModel)))
+
+    when(mockSessionCache.fetchAndGetEntry[RebasedValueModel](Matchers.eq(KeystoreKeys.rebasedValue))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(totalGainAnswersModel.rebasedValueModel))
+
+    when(mockSessionCache.fetchAndGetEntry[RebasedCostsModel](Matchers.eq(KeystoreKeys.rebasedCosts))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(totalGainAnswersModel.rebasedCostsModel))
+
+    when(mockSessionCache.fetchAndGetEntry[ImprovementsModel](Matchers.eq(KeystoreKeys.improvements))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(totalGainAnswersModel.improvementsModel)))
+
+    new CalculatorConnector {
+      override val sessionCache: SessionCache = mockSessionCache
+      override val http: HttpGet = WSHttp
+      override val serviceUrl: String = ""
+    }
   }
 
   val sumModelFlat = SummaryModel(

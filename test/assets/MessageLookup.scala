@@ -64,6 +64,10 @@ object MessageLookup {
       val helpText = "Costs include agent fees, legal fees and surveys"
       val errorNegative = "Enter a positive number for your costs"
       val errorDecimalPlaces = "There are too many numbers after the decimal point in your costs"
+      val bulletTitle = "This is what you paid for:"
+      val bulletOne = "estate agents or auctioneers"
+      val bulletTwo = "solicitors or conveyancers, including Stamp Duty Land Tax"
+      val bulletThree = "any professional help to value the property, eg surveyor or valuer"
 
       def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
@@ -190,13 +194,15 @@ object MessageLookup {
     }
 
     object Improvements {
-      val help = "Improvements are permanent changes that raise the value of a property, like adding extensions or garages"
-
+      val helpOne = "Improvements are permanent changes that increase the value of a property, like adding extensions or garages."
+      val helpTwo = "Normal maintenance costs don't count."
+      val exampleTitle = "Show me an example"
+      val exampleOne = "Replacing a basic kitchen or bathroom with a luxury version is normally considered an improvement."
+      val exampleTwo = "Replacing them with something of a similar standard is normally not an improvement."
       val question = "Did you make any improvements to the property?"
       val questionTwo = "How much did the improvements cost?"
       val questionThree = "How much did you spend on improvements before 6 April 2015?"
       val questionFour = "How much have you spent on improvements since 6 April 2015?"
-
       val noValueSuppliedError = "Enter the value of your improvements"
       val negativeValueError = "Enter a positive number for the cost of your improvements"
       val excessDecimalPlacesError = "The cost of your improvements has too many numbers after the decimal point"

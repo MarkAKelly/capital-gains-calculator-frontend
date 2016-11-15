@@ -66,6 +66,12 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
     }
   }
 
+  "OtherReliefsFlatController" should {
+    s"have a session timeout home link of '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+      OtherReliefsFlatController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+    }
+  }
+
   "Calling the .otherReliefsFlat action " when {
 
     "not supplied with a pre-existing stored model" should {

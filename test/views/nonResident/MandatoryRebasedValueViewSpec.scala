@@ -56,8 +56,8 @@ class MandatoryRebasedValueViewSpec extends UnitSpec with WithFakeApplication wi
       }
     }
 
-    s"have the home link to 'home'" in {
-      doc.select("#homeNavHref").attr("href") shouldEqual "/calculate-your-capital-gains/non-resident/"
+    s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+      doc.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
     }
 
     "have a back button" which {

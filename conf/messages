@@ -171,7 +171,11 @@ calc.rebasedCosts.errorDecimalPlaces = There are too many numbers after the deci
 
 ## Improvements ##
 calc.improvements.question = Did you make any improvements to the property?
-calc.improvements.help = Improvements are permanent changes that raise the value of a property, like adding extensions or garages
+calc.improvements.helpOne = Improvements are permanent changes that increase the value of a property, like adding extensions or garages.
+calc.improvements.helpTwo = Normal maintenance costs don''t count.
+calc.improvements.exampleTitle = Show me an example
+calc.improvements.exampleOne = Replacing a basic kitchen or bathroom with a luxury version is normally considered an improvement.
+calc.improvements.exampleTwo = Replacing them with something of a similar standard is normally not an improvement.
 calc.improvements.questionTwo = How much did the improvements cost?
 calc.improvements.questionThree = How much did you spend on improvements before 6 April 2015?
 calc.improvements.questionFour = How much have you spent on improvements since 6 April 2015?
@@ -203,6 +207,10 @@ calc.acquisitionCosts.question = How much did you pay in costs when you became t
 calc.acquisitionCosts.helpText = Costs include agent fees, legal fees and surveys
 calc.acquisitionCosts.errorNegative = Enter a positive number for your costs
 calc.acquisitionCosts.errorDecimalPlaces = There are too many numbers after the decimal point in your costs
+calc.acquisitionCosts.bulletTitle = This is what you paid for:
+calc.acquisitionCosts.bulletOne = estate agents or auctioneers
+calc.acquisitionCosts.bulletTwo = solicitors or conveyancers, including Stamp Duty Land Tax
+calc.acquisitionCosts.bulletThree = any professional help to value the property, eg surveyor or valuer
 
 ## Disposal Costs ##
 calc.disposalCosts.question = How much did you pay in costs when you stopped owning the property?

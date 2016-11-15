@@ -36,7 +36,7 @@ object AcquisitionCostsController extends AcquisitionCostsController{
 trait AcquisitionCostsController extends FrontendController with ValidActiveSession {
 
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
-  override val homeLink = controllers.nonresident.routes.CustomerTypeController.customerType().url
+  override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
   val calcConnector: CalculatorConnector
   val calcElectionConstructor: CalculationElectionConstructor
 
@@ -51,7 +51,7 @@ trait AcquisitionCostsController extends FrontendController with ValidActiveSess
 
     def successAction(model: AcquisitionCostsModel) = {
       calcConnector.saveFormData(KeystoreKeys.acquisitionCosts, model)
-      Future.successful(Redirect(routes.DisposalCostsController.disposalCosts()))
+      Future.successful(Redirect(routes.ImprovementsController.improvements()))
     }
 
     def errorAction(form: Form[AcquisitionCostsModel]) = {

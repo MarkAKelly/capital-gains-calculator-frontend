@@ -54,6 +54,10 @@ class SoldForLessViewSpec extends UnitSpec with WithFakeApplication with Mockito
         }
       }
 
+      s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+        document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+      }
+
       "have a heading" which {
 
         lazy val heading = document.body().select("h1")

@@ -49,6 +49,12 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
     }
   }
 
+  "AcquisitionCostsController" should {
+    s"have a session timeout home link of '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+      AcquisitionCostsController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+    }
+  }
+
   "In CalculationController calling the .acquisitionCosts action " should {
 
     "not supplied with a pre-existing stored model" should {
@@ -105,8 +111,8 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
         status(result) shouldBe 303
       }
 
-      s"redirect to '${controllers.nonresident.routes.DisposalCostsController.disposalCosts().url}'" in {
-        redirectLocation(result).get shouldBe controllers.nonresident.routes.DisposalCostsController.disposalCosts().url
+      s"redirect to '${controllers.nonresident.routes.ImprovementsController.improvements().url}'" in {
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.ImprovementsController.improvements().url
       }
     }
 

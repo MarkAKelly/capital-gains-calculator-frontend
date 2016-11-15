@@ -47,6 +47,12 @@ class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with Moc
     }
   }
 
+  "DisposalValueController" should {
+    s"have a session timeout home link of '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+      DisposalValueController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+    }
+  }
+
   //GET Tests
   "In CalculationController calling the .disposalValue action" when {
 

@@ -53,6 +53,12 @@ class RebasedValueActionSpec extends UnitSpec with WithFakeApplication with Mock
     }
   }
 
+  "RebasedValueController" should {
+    s"have a session timeout home link of '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+      RebasedValueController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+    }
+  }
+
   //GET tests
   "In CalculationController calling the .rebasedValue action " when {
 

@@ -59,6 +59,10 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with M
         }
       }
 
+      s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+        document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+      }
+
       s"has the question '${messages.question}' as the label of the input" in {
         document.body.getElementsByTag("label").text should include(messages.question)
       }

@@ -37,7 +37,10 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
 
   val calcConnector: CalculatorConnector
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
-  override val homeLink = controllers.nonresident.routes.CustomerTypeController.customerType().url
+  override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
+
+//This will need to be replace with backLink when the back routing logic is added back in
+  private val tempBackLink = routes.AcquisitionCostsController.acquisitionCosts().url
 
   private def improvementsBackUrl(implicit hc: HeaderCarrier): Future[String] = {
     def checkRebasedValue = {
@@ -89,10 +92,10 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
       improvementsModel match {
         case Some(data) =>
           Future.successful(Ok(calculation.nonresident.improvements(improvementsForm(improvementsOptions).fill(data),
-            improvementsOptions, backUrl)))
+            improvementsOptions, tempBackLink)))
         case None =>
           Future.successful(Ok(calculation.nonresident.improvements(improvementsForm(improvementsOptions),
-            improvementsOptions, backUrl)))
+            improvementsOptions, tempBackLink)))
       }
     }
 
@@ -102,7 +105,7 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
       improvements <- fetchImprovements(hc)
       improvementsOptions <- displayImprovementsSectionCheck(rebasedValue, acquisitionDate)
       backUrl <- improvementsBackUrl
-      route <- routeRequest(backUrl, improvements, improvementsOptions)
+      route <- routeRequest(tempBackLink, improvements, improvementsOptions)
     } yield route
   }
 
@@ -113,11 +116,11 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
         errors => {
             Future.successful(BadRequest(calculation.nonresident.improvements(errors,
               improvementsOptions,
-              backUrl)))
+              tempBackLink)))
         },
         success => {
           calcConnector.saveFormData(KeystoreKeys.improvements, success)
-          Future.successful(Redirect(routes.DisposalDateController.disposalDate()))
+          Future.successful(Redirect(routes.OtherReliefsController.otherReliefs()))
         }
       )
     }
@@ -127,7 +130,7 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
       acquisitionDate <- fetchAcquisitionDate(hc)
       improvementsOptions <- displayImprovementsSectionCheck(rebasedValue, acquisitionDate)
       backUrl <- improvementsBackUrl
-      route <- routeRequest(backUrl, improvementsOptions)
+      route <- routeRequest(tempBackLink, improvementsOptions)
     } yield route
   }
 }

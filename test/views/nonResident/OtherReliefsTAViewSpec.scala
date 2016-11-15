@@ -62,6 +62,10 @@ class OtherReliefsTAViewSpec extends UnitSpec with WithFakeApplication with Mock
         }
       }
 
+      s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+        document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+      }
+
       "have a form" which {
         lazy val form = document.body().select("form")
 

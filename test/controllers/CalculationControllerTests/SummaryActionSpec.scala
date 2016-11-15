@@ -46,12 +46,6 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[RebasedValueModel](Matchers.eq(KeystoreKeys.rebasedValue))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(rebasedValueData))
-
-    when(mockCalcConnector.fetchAndGetFormData[AcquisitionDateModel](Matchers.eq(KeystoreKeys.acquisitionDate))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(acquisitionDateData))
-
     when(mockCalcConnector.createSummary(Matchers.any()))
       .thenReturn(Future.successful(summary))
 
@@ -66,6 +60,12 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
     new SummaryController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
+    }
+  }
+
+  "SummaryController" should {
+    s"have a session timeout home link of '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+      SummaryController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
     }
   }
 
