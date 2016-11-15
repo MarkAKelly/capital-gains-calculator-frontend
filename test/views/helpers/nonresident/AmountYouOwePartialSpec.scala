@@ -18,10 +18,10 @@ package views.helpers.nonresident
 
 import controllers.helpers.FakeRequestHelper
 import org.jsoup.Jsoup
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.helpers.nonresident.amountYouOweRow
 
-class AmountYouOwePartialSpec extends UnitSpec {
+class AmountYouOwePartialSpec extends UnitSpec with WithFakeApplication {
 
   "Creating questionAnswerRow" when {
 
