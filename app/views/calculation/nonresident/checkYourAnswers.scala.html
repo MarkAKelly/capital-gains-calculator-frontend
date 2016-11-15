@@ -1,6 +1,5 @@
 @import models.nonresident.QuestionAnswerModel
-@import views.helpers.nonresident.questionAnswerTableRow
-
+@import views.html.helpers.nonresident._
 @(questions: Seq[(QuestionAnswerModel[Any])], backLink: String)(implicit request: Request[_])
 
 @main_template(Messages("calc.checkYourAnswers.title"), articleLayout = false){
