@@ -16,7 +16,7 @@
 
 package views.helpers.nonresident
 
-import controllers.helpers.FakeRequestHelper
+import assets.MessageLookup.NonResident.{Summary => messages}
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.helpers.nonresident.amountYouOweRow
@@ -40,7 +40,7 @@ class AmountYouOwePartialSpec extends UnitSpec with WithFakeApplication {
         }
 
         "has the text 'Amount you owe'" in {
-          doc.select("div#amount-you-owe-question span").text shouldBe "Amount you owe"
+          doc.select("div#amount-you-owe-question span").text shouldBe messages.amountOwed
         }
       }
 
