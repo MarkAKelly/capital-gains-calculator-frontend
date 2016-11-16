@@ -58,7 +58,7 @@ trait CalculatorConnector {
   }
 
   def calculateTotalGain(totalGainAnswersModel: TotalGainAnswersModel)(implicit hc: HeaderCarrier): Future[Option[TotalGainResultsModel]] = {
-    http.GET[Option[TotalGainResultsModel]](s"$serviceUrl/capital-gains-calculator/non-resident/calculate-total-gain${
+    http.GET[Option[TotalGainResultsModel]](s"$serviceUrl/capital-gains-calculator/non-resident/calculate-total-gain?${
       TotalGainRequestConstructor.totalGainQuery(totalGainAnswersModel)
     }")
   }
