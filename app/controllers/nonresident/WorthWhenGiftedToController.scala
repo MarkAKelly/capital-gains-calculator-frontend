@@ -16,9 +16,15 @@
 
 package controllers.nonresident
 
+import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
+import forms.nonresident.WorthWhenGiftedToForm._
+import models.nonresident.WorthWhenGiftedToModel
+import play.api.data.Form
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+import views.html.calculation
+import scala.concurrent.Future
 
 object WorthWhenGiftedToController extends WorthWhenGiftedToController {
   val calcConnector = CalculatorConnector
@@ -26,10 +32,26 @@ object WorthWhenGiftedToController extends WorthWhenGiftedToController {
 
 trait WorthWhenGiftedToController extends FrontendController with ValidActiveSession {
 
+  val calcConnector: CalculatorConnector
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
 
-  val worthWhenGiftedTo = TODO
+  val worthWhenGiftedTo = ValidateSession.async { implicit request =>
+    calcConnector.fetchAndGetFormData[WorthWhenGiftedToModel](KeystoreKeys.worthWhenGiftedTo).map {
+      case Some(data) => Ok(calculation.nonresident.worthWhenGiftedTo(worthWhenGiftedToForm.fill(data)))
+      case None => Ok(calculation.nonresident.worthWhenGiftedTo(worthWhenGiftedToForm))
+    }
+  }
 
-  val submitWorthWhenGiftedTo = TODO
+  val submitWorthWhenGiftedTo = ValidateSession.async { implicit request =>
+
+    def errorAction(form: Form[WorthWhenGiftedToModel]) = Future.successful(BadRequest(calculation.nonresident.worthWhenGiftedTo(form)))
+
+    def successAction(model: WorthWhenGiftedToModel) = {
+      calcConnector.saveFormData(KeystoreKeys.worthWhenGiftedTo, model)
+      Future.successful(Redirect(routes.AcquisitionCostsController.acquisitionCosts()))
+    }
+
+    worthWhenGiftedToForm.bindFromRequest.fold(errorAction, successAction)
+  }
 }

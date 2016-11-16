@@ -1,0 +1,24 @@
+@import models.nonresident.WorthWhenGiftedToModel
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import views.html.helpers._
+@import views.html.main_template
+
+@(worthWhenGiftedTo : Form[WorthWhenGiftedToModel])(implicit request: Request[_])
+
+@main_template(Messages("calc.worthWhenGiftedTo.question")) {
+
+    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.HowBecameOwnerController.howBecameOwner">@Messages("calc.base.back")</a>
+
+    @errorSummary(worthWhenGiftedTo, "worthWhenGiftedToValue")
+
+    <h1 class="heading-xlarge">@Messages("calc.worthWhenGiftedTo.question")</h1>
+
+    <p id="helpText" class="form-hint">@Messages("calc.worthWhenGiftedTo.hintOne")<br>@Messages("calc.worthWhenGiftedTo.hintTwo")</p>
+
+    @form(action = controllers.nonresident.routes.WorthWhenGiftedToController.submitWorthWhenGiftedTo) {
+
+        @formInputMoney(worthWhenGiftedTo, "worthWhenGiftedToValue", Messages("calc.worthWhenGiftedTo.question"), hideLabel = true)
+
+        <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+    }
+}
