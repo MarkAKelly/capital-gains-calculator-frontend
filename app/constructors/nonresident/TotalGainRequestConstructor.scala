@@ -22,67 +22,72 @@ import models.nonresident._
 object TotalGainRequestConstructor {
 
   def totalGainQuery(totalGainAnswersModel: TotalGainAnswersModel): String = {
-    disposalValue(totalGainAnswersModel) +
-    disposalCosts(totalGainAnswersModel) +
-    acquisitionValue(totalGainAnswersModel) +
-    acquisitionCosts(totalGainAnswersModel) +
-    rebasedValues(totalGainAnswersModel) +
-    timeApportionedValues(totalGainAnswersModel)
+    disposalValue(totalGainAnswersModel.disposalValueModel) +
+    disposalCosts(totalGainAnswersModel.disposalCostsModel) +
+    acquisitionValue(totalGainAnswersModel.acquisitionValueModel) +
+    acquisitionCosts(totalGainAnswersModel.acquisitionCostsModel) +
+    improvements(totalGainAnswersModel.improvementsModel) +
+    rebasedValues(totalGainAnswersModel.rebasedValueModel, totalGainAnswersModel.rebasedCostsModel,
+      totalGainAnswersModel.improvementsModel, totalGainAnswersModel.acquisitionDateModel) +
+    timeApportionedValues(totalGainAnswersModel.disposalDateModel, totalGainAnswersModel.acquisitionDateModel)
   }
 
-  def disposalValue(totalGainAnswersModel: TotalGainAnswersModel): String = {
-    s"disposalValue=${totalGainAnswersModel.disposalValueModel.disposalValue}"
+  def disposalValue(disposalValueModel: DisposalValueModel): String = {
+    s"disposalValue=${disposalValueModel.disposalValue}"
   }
 
-  def disposalCosts(totalGainAnswersModel: TotalGainAnswersModel): String = {
-    s"&disposalCosts=${totalGainAnswersModel.disposalCostsModel.disposalCosts}"
+  def disposalCosts(disposalCostsModel: DisposalCostsModel): String = {
+    s"&disposalCosts=${disposalCostsModel.disposalCosts}"
   }
 
-  def acquisitionValue(totalGainAnswersModel: TotalGainAnswersModel): String = {
-    s"&acquisitionValue=${totalGainAnswersModel.acquisitionValueModel.acquisitionValueAmt}"
+  def acquisitionValue(acquisitionValueModel: AcquisitionValueModel): String = {
+    s"&acquisitionValue=${acquisitionValueModel.acquisitionValueAmt}"
   }
 
-  def acquisitionCosts(totalGainAnswersModel: TotalGainAnswersModel): String = {
-    s"&acquisitionCosts=${totalGainAnswersModel.acquisitionCostsModel.acquisitionCostsAmt}"
+  def acquisitionCosts(acquisitionCostsModel: AcquisitionCostsModel): String = {
+    s"&acquisitionCosts=${acquisitionCostsModel.acquisitionCostsAmt}"
   }
 
-  def improvements(totalGainAnswersModel: TotalGainAnswersModel): String = {
-    totalGainAnswersModel.improvementsModel match {
+  def improvements(improvementsModel: ImprovementsModel): String = {
+    improvementsModel match {
       case ImprovementsModel("Yes", Some(value), _) =>
         s"&improvements=$value"
       case _ => "&improvements=0"
     }
   }
 
-  def rebasedValues(totalGainAnswersModel: TotalGainAnswersModel): String = {
-    (totalGainAnswersModel.rebasedValueModel, totalGainAnswersModel.acquisitionDateModel) match {
+  def rebasedValues(rebasedValueModel: Option[RebasedValueModel],
+                    rebasedCostsModel: Option[RebasedCostsModel],
+                    improvementsModel: ImprovementsModel,
+                    acquisitionDateModel: AcquisitionDateModel): String = {
+    (rebasedValueModel, acquisitionDateModel) match {
       case (Some(RebasedValueModel("Yes", Some(value))), AcquisitionDateModel("Yes",_,_,_))
-        if TaxDates.dateAfterStart(totalGainAnswersModel.acquisitionDateModel.get) =>
-        s"&rebasedValue=$value${rebasedCosts(totalGainAnswersModel)}${improvementsAfterTaxStarted(totalGainAnswersModel)}"
+        if !TaxDates.dateAfterStart(acquisitionDateModel.get) =>
+        s"&rebasedValue=$value${rebasedCosts(rebasedCostsModel.get)}${improvementsAfterTaxStarted(improvementsModel)}"
       case (Some(RebasedValueModel("Yes", Some(value))), AcquisitionDateModel("No",_,_,_)) =>
-        s"&rebasedValue=$value${rebasedCosts(totalGainAnswersModel)}${improvementsAfterTaxStarted(totalGainAnswersModel)}"
+        s"&rebasedValue=$value${rebasedCosts(rebasedCostsModel.get)}${improvementsAfterTaxStarted(improvementsModel)}"
       case _ => ""
     }
   }
 
-  def rebasedCosts(totalGainAnswersModel: TotalGainAnswersModel): String = {
-    totalGainAnswersModel.rebasedCostsModel match {
-      case Some(RebasedCostsModel("Yes", Some(value))) => s"&rebasedCosts=$value"
+  def rebasedCosts(rebasedCostsModel: RebasedCostsModel): String = {
+    rebasedCostsModel match {
+      case RebasedCostsModel("Yes", Some(value)) => s"&rebasedCosts=$value"
       case _ => "&rebasedCosts=0"
     }
   }
 
-  def improvementsAfterTaxStarted(totalGainAnswersModel: TotalGainAnswersModel): String = {
-    totalGainAnswersModel.improvementsModel match {
+  def improvementsAfterTaxStarted(improvementsModel: ImprovementsModel): String = {
+    improvementsModel match {
       case ImprovementsModel("Yes", _, Some(value)) => s"&improvementsAfterTaxStarted=$value"
-      case _ => "improvementsAfterTaxStarted=0"
+      case _ => "&improvementsAfterTaxStarted=0"
     }
   }
 
-  def timeApportionedValues(totalGainAnswersModel: TotalGainAnswersModel): String = {
-    (totalGainAnswersModel.disposalDateModel, totalGainAnswersModel.acquisitionDateModel) match {
+  def timeApportionedValues(disposalDateModel: DisposalDateModel, acquisitionDateModel: AcquisitionDateModel): String = {
+    (disposalDateModel, acquisitionDateModel) match {
       case (DisposalDateModel(dDay, dMonth, dYear), AcquisitionDateModel("Yes", Some(aDay), Some(aMonth), Some(aYear)))
-        if TaxDates.dateAfterStart(totalGainAnswersModel.acquisitionDateModel.get) =>
+        if !TaxDates.dateAfterStart(acquisitionDateModel.get) =>
         s"&disposalDate=$dYear-$dMonth-$dDay&acquisitionDate=$aYear-$aMonth-$aDay"
       case _ => ""
     }
