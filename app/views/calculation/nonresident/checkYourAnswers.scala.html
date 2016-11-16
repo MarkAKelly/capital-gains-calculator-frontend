@@ -1,5 +1,7 @@
 @import models.nonresident.QuestionAnswerModel
 @import views.html.helpers.nonresident._
+@import uk.gov.hmrc.play.views.html.helpers.form
+
 @(questions: Seq[(QuestionAnswerModel[Any])], backLink: String)(implicit request: Request[_])
 
 @main_template(Messages("calc.checkYourAnswers.title"), articleLayout = false){
@@ -8,15 +10,11 @@
 
     <h1 class="heading-xlarge">@Messages("calc.checkYourAnswers.title")</h1>
 
-    <table class="check-your-answers">
-        <thead>
-            <th class="heading-medium" colspan="2">@Messages("calc.checkYourAnswers.tableHeading")</th>
-            <th></th>
-        </thead>
-        <tbody>
-            @for(question <- questions) {
-                @questionAnswerTableRow(question)
-            }
-        </tbody>
-    </table>
+    @questionAnswerTableRow(questions)
+
+    <form class="form" method="">
+        <div class="form-group">
+            <button class="button" type="submit" href="@controllers.nonresident.routes.CalculationElectionController.calculationElection()"id="continue-button">@Messages("calc.base.continue")</button>
+        </div>
+    </form>
 }

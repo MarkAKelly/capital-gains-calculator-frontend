@@ -6,17 +6,28 @@
 @(questions: Seq[(QuestionAnswerModel[Any])])
 
 
-<tr id="@{s"${question.id}-question"}">
-    <td>@question.question</td>
-    <td>@{question.data match {
-            case string: String => string
-            case int: Int => int.toString
-            case bigDecimal: BigDecimal => s"£${MoneyPounds(bigDecimal, 2).quantity}"
-            case date: LocalDate => datePageFormatNoZero.format(date)
-            case boolean: Boolean => booleanToString
-            case _ => ""
-        }}</td>
-    <td class = "change-your-answer">
-        <a href="@question.link">Change</a>
-    </td>
-</tr>
+<table class="check-your-answers">
+    <thead>
+        <th class="heading-medium" colspan="2">@Messages("calc.checkYourAnswers.tableHeading")</th>
+        <th></th>
+    </thead>
+    <tbody>
+    @for(question <- questions) {
+        <tr id="@{s"${question.id}"}">
+            <td id="@{s"${question.id}-question"}">@question.question</td>
+            <td id="@{s"${question.id}-data"}">
+            @{question.data match {
+                case string: String => string
+                case int: Int => int.toString
+                case bigDecimal: BigDecimal => s"£${MoneyPounds(bigDecimal, 2).quantity}"
+                case date: LocalDate => datePageFormatNoZero.format(date)
+                case boolean: Boolean => booleanToString(boolean)
+                case _ => ""
+            }}</td>
+            <td id="@{s"${question.id}-changeLink"}" class = "change-your-answer">
+                <a href="@question.link">Change</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

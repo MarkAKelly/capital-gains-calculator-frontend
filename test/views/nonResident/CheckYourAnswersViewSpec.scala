@@ -50,43 +50,13 @@ class CheckYourAnswersViewSpec extends UnitSpec with WithFakeApplication with Fa
           }
         }
 
-        "has a table" which {
-          lazy val table = document.select("table")
-
-          "has a table header" which {
-            lazy val tableHeaders = table.select("thead")
-            "has the class 'check-your-answers'" in {
-              table.attr("class") shouldBe "check-your-answers"
-            }
-
-            "has the table heading with the text 'You've told us'" in {
-              tableHeaders.first().text() shouldBe MessageLookup.NonResident.CheckYourAnswers.tableHeading
-            }
-
-            "has a secondary table heading that's empty" in {
-              tableHeaders.select(":gt(1)").text() shouldBe ""
-            }
+        "has a continue button" which {
+          lazy val continueButton = document.select("#continue-button")
+          s"have the text ${MessageLookup.NonResident.continue}" in {
+            continueButton.text() shouldBe MessageLookup.NonResident.continue
           }
+          s"have the text " in {
 
-          "has a table body" which {
-            lazy val tableBody = table.select("tbody")
-            lazy val tableRow = tableBody.select("tr")
-            "has a table row containing the question 'dummyQuestion'" in {
-              tableRow.select("td").first().text() shouldBe "dummyQuestion"
-            }
-            "has a table row containing the data item '200'" in {
-              tableRow.select("td").eq(1).text() shouldBe "200"
-            }
-            "has a table row that contains a Change link" which {
-              lazy val changeLink = tableRow.select("td").eq(2).select("a")
-              "has the hyper-link text 'Change'" in {
-               changeLink.text() shouldBe "Change"
-              }
-
-              "has the href to google.com" in {
-                changeLink.attr("href") shouldBe "google.com"
-              }
-            }
           }
         }
       }

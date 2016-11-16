@@ -16,20 +16,14 @@
 
 package controllers.nonresident
 
-import java.util.UUID
-import java.util.concurrent.Future
-
-import common.KeystoreKeys
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import controllers.predicates.ValidActiveSession
-import forms.nonresident.AcquisitionCostsForm._
-import forms.nonresident.DisposalDateForm._
-import models.nonresident.{AcquisitionCostsModel, DisposalDateModel, QuestionAnswerModel}
-import play.api.mvc.Action
-import uk.gov.hmrc.play.http.SessionKeys
+import models.nonresident.QuestionAnswerModel
 import views.html.calculation
+
+import scala.concurrent.Future
 
 object CheckYourAnswersController extends CheckYourAnswersController {
   val calcConnector = CalculatorConnector
@@ -40,12 +34,16 @@ trait CheckYourAnswersController extends FrontendController with ValidActiveSess
 
   val mockQuestionAnswersSeq = Seq(QuestionAnswerModel("dummyId", 200, "dummyQuestion", Some("google.com")))
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
-  override val homeLink = controllers.nonresident.routes.CustomerTypeController.customerType().url
+  override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
   val calcConnector: CalculatorConnector
   val calcElectionConstructor: CalculationElectionConstructor
 
-  val checkYourAnswers = Action { implicit request =>
-    Ok(calculation.nonresident.checkYourAnswers(mockQuestionAnswersSeq, "google.com"))
+  val checkYourAnswers = ValidateSession.async { implicit request =>
+    //val model = AnswersConstructor.getNRTotalGainAnswers
+
+    Future.successful(Ok(calculation.nonresident.checkYourAnswers(mockQuestionAnswersSeq, "google.com")))
   }
-  val submitCheckYourAnswers = TODO
+  val submitCheckYourAnswers = ValidateSession.async { implicit request =>
+    Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
+  }
 }
