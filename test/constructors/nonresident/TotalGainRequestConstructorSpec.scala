@@ -68,13 +68,13 @@ class TotalGainRequestConstructorSpec extends UnitSpec {
     "produce a valid query string with no provided value" in {
       val result = TotalGainRequestConstructor.improvements(ImprovementsModel("No", Some(300), None))
 
-      result shouldBe "&improvements=0"
+      result shouldBe ""
     }
 
     "produce a valid query string with a None provided value" in {
       val result = TotalGainRequestConstructor.improvements(ImprovementsModel("Yes", None, None))
 
-      result shouldBe "&improvements=0"
+      result shouldBe ""
     }
   }
 
@@ -89,13 +89,13 @@ class TotalGainRequestConstructorSpec extends UnitSpec {
     "produce a valid query string with no provided value" in {
       val result = TotalGainRequestConstructor.rebasedCosts(RebasedCostsModel("No", Some(300)))
 
-      result shouldBe "&rebasedCosts=0"
+      result shouldBe ""
     }
 
     "produce a valid query string with a None provided value" in {
       val result = TotalGainRequestConstructor.rebasedCosts(RebasedCostsModel("Yes", None))
 
-      result shouldBe "&rebasedCosts=0"
+      result shouldBe ""
     }
   }
 
@@ -110,13 +110,13 @@ class TotalGainRequestConstructorSpec extends UnitSpec {
     "produce a valid query string with no provided value" in {
       val result = TotalGainRequestConstructor.improvementsAfterTaxStarted(ImprovementsModel("No", None, Some(300)))
 
-      result shouldBe "&improvementsAfterTaxStarted=0"
+      result shouldBe ""
     }
 
     "produce a valid query string with a None provided value" in {
       val result = TotalGainRequestConstructor.improvementsAfterTaxStarted(ImprovementsModel("Yes", None, None))
 
-      result shouldBe "&improvementsAfterTaxStarted=0"
+      result shouldBe ""
     }
   }
 

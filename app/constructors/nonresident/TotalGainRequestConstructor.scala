@@ -52,7 +52,7 @@ object TotalGainRequestConstructor {
     improvementsModel match {
       case ImprovementsModel("Yes", Some(value), _) =>
         s"&improvements=$value"
-      case _ => "&improvements=0"
+      case _ => ""
     }
   }
 
@@ -73,14 +73,14 @@ object TotalGainRequestConstructor {
   def rebasedCosts(rebasedCostsModel: RebasedCostsModel): String = {
     rebasedCostsModel match {
       case RebasedCostsModel("Yes", Some(value)) => s"&rebasedCosts=$value"
-      case _ => "&rebasedCosts=0"
+      case _ => ""
     }
   }
 
   def improvementsAfterTaxStarted(improvementsModel: ImprovementsModel): String = {
     improvementsModel match {
       case ImprovementsModel("Yes", _, Some(value)) => s"&improvementsAfterTaxStarted=$value"
-      case _ => "&improvementsAfterTaxStarted=0"
+      case _ => ""
     }
   }
 
