@@ -16,16 +16,15 @@
 
 package constructors.nonresident
 
-import models.nonresident.{CalculationResultModel, QuestionAnswerModel, SummaryModel}
+import models.nonresident.{QuestionAnswerModel, TotalGainAnswersModel}
 
 object YourAnswersConstructor {
 
-  //TODO update to use the new answers models
-  def fetchYourAnswers(summaryModel: SummaryModel, resultModel: CalculationResultModel): Seq[QuestionAnswerModel[Any]] = {
-    val salesDetailsRows = SalesDetailsConstructor.salesDetailsRows(summaryModel)
-    val purchaseDetailsRows = PurchaseDetailsConstructor.getPurchaseDetailsSection(summaryModel)
-    val propertyDetailsRows = PropertyDetailsConstructor.propertyDetailsRows(summaryModel)
-    val deductionDetailsRows = DeductionDetailsConstructor.deductionDetailsRows(summaryModel, resultModel)
+  def fetchYourAnswers(totalGainAnswersModel: TotalGainAnswersModel): Seq[QuestionAnswerModel[Any]] = {
+    val salesDetailsRows = SalesDetailsConstructor.salesDetailsRows(totalGainAnswersModel)
+    val purchaseDetailsRows = PurchaseDetailsConstructor.getPurchaseDetailsSection(totalGainAnswersModel)
+    val propertyDetailsRows = PropertyDetailsConstructor.propertyDetailsRows(totalGainAnswersModel)
+    val deductionDetailsRows = DeductionDetailsConstructor.deductionDetailsRows(totalGainAnswersModel)
 
     for {
       salesDetails <- salesDetailsRows

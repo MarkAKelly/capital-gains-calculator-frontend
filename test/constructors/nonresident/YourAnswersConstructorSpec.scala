@@ -16,7 +16,7 @@
 
 package constructors.nonresident
 
-import common.TestModels
+import models.nonresident._
 import uk.gov.hmrc.play.test.UnitSpec
 
 class YourAnswersConstructorSpec extends UnitSpec {
@@ -24,30 +24,42 @@ class YourAnswersConstructorSpec extends UnitSpec {
   "Calling .fetchYourAnswers" when {
 
     "only fetching total gain answers" should {
-      //TODO update to total gain when new model is available
-      val model = TestModels.sumModelFlat
-      val result = YourAnswersConstructor.fetchYourAnswers(model, TestModels.calcModelOneRate)
+      val model = TotalGainAnswersModel(DisposalDateModel(5, 10, 2016),
+        SoldOrGivenAwayModel(true),
+        Some(SoldForLessModel(false)),
+        DisposalValueModel(1000),
+        DisposalCostsModel(100),
+        HowBecameOwnerModel("Gifted"),
+        Some(BoughtForLessModel(false)),
+        AcquisitionValueModel(2000),
+        AcquisitionCostsModel(200),
+        AcquisitionDateModel("Yes", Some(4), Some(10), Some(2013)),
+        Some(RebasedValueModel("Yes", Some(3000))),
+        Some(RebasedCostsModel("Yes", Some(300))),
+        ImprovementsModel("Yes", Some(10), Some(20)),
+        None)
+      lazy val result = YourAnswersConstructor.fetchYourAnswers(model)
 
       "contain the answers from sale details" in {
-        val salesDetails = SalesDetailsConstructor.salesDetailsRows(model)
+        lazy val salesDetails = SalesDetailsConstructor.salesDetailsRows(model)
 
         result.containsSlice(salesDetails) shouldBe true
       }
 
       "contain the answers from purchase details" in {
-        val purchaseDetails = PurchaseDetailsConstructor.getPurchaseDetailsSection(model)
+        lazy val purchaseDetails = PurchaseDetailsConstructor.getPurchaseDetailsSection(model)
 
         result.containsSlice(purchaseDetails) shouldBe true
       }
 
       "contain the answers from property details" in {
-        val propertyDetails = PropertyDetailsConstructor.propertyDetailsRows(model)
+        lazy val propertyDetails = PropertyDetailsConstructor.propertyDetailsRows(model)
 
         result.containsSlice(propertyDetails) shouldBe true
       }
 
       "contain the answers from deduction details" in {
-        val deductionDetails = DeductionDetailsConstructor.deductionDetailsRows(model, TestModels.calcModelOneRate)
+        lazy val deductionDetails = DeductionDetailsConstructor.deductionDetailsRows(model)
 
         result.containsSlice(deductionDetails) shouldBe true
       }
