@@ -26,12 +26,6 @@ object YourAnswersConstructor {
     val propertyDetailsRows = PropertyDetailsConstructor.propertyDetailsRows(totalGainAnswersModel)
     val deductionDetailsRows = DeductionDetailsConstructor.deductionDetailsRows(totalGainAnswersModel)
 
-    for {
-      salesDetails <- salesDetailsRows
-      purchaseDetails <- purchaseDetailsRows
-      propertyDetails <- propertyDetailsRows
-      deductionDetails <- deductionDetailsRows
-      answerRows <- salesDetailsRows ++ purchaseDetailsRows ++ propertyDetailsRows ++ deductionDetailsRows
-    } yield answerRows
+    salesDetailsRows ++ purchaseDetailsRows ++ propertyDetailsRows ++ deductionDetailsRows
   }
 }

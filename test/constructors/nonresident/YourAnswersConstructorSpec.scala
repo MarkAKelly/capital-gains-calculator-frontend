@@ -37,7 +37,7 @@ class YourAnswersConstructorSpec extends UnitSpec {
         Some(RebasedValueModel("Yes", Some(3000))),
         Some(RebasedCostsModel("Yes", Some(300))),
         ImprovementsModel("Yes", Some(10), Some(20)),
-        None)
+        Some(OtherReliefsModel(Some("Yes"), Some(30))))
       lazy val result = YourAnswersConstructor.fetchYourAnswers(model)
 
       "contain the answers from sale details" in {
@@ -54,6 +54,7 @@ class YourAnswersConstructorSpec extends UnitSpec {
 
       "contain the answers from property details" in {
         lazy val propertyDetails = PropertyDetailsConstructor.propertyDetailsRows(model)
+        lazy val deductionDetails = DeductionDetailsConstructor.deductionDetailsRows(model)
 
         result.containsSlice(propertyDetails) shouldBe true
       }
