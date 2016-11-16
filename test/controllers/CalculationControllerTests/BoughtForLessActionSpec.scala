@@ -111,7 +111,7 @@ class BoughtForLessActionSpec extends UnitSpec with WithFakeApplication with Moc
         status(result) shouldBe 303
       }
 
-      "redirect to the wothWhenBoughtForLess page" in {
+      "redirect to the worthWhenBoughtForLess page" in {
         redirectLocation(result) shouldBe Some(controllers.nonresident.routes.WorthWhenBoughtForLessController.worthWhenBoughtForLess().url)
       }
     }
