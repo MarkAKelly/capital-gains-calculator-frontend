@@ -16,19 +16,19 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup.NonResident.{SoldOrGivenAway => messages}
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
-import controllers.nonresident.SoldOrGivenAwayController
+import controllers.nonresident.{MarketValueWhenSoldController, SoldOrGivenAwayController}
 import models.nonresident.SoldOrGivenAwayModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
+import play.api.test.Helpers._
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.NonResident.{SoldOrGivenAway => messages}
-import play.api.test.Helpers._
 
 import scala.concurrent.Future
 
@@ -46,6 +46,10 @@ class SoldOrGivenAwayActionSpec extends UnitSpec with WithFakeApplication with M
     new SoldOrGivenAwayController  {
       override val calcConnector: CalculatorConnector = mockCalcConnector
     }
+  }
+
+  object MarketValueWhenSoldController extends MarketValueWhenSoldController {
+    val calcConnector = CalculatorConnector
   }
 
   "SoldOrGivenAwayController" should {
@@ -127,8 +131,8 @@ class SoldOrGivenAwayActionSpec extends UnitSpec with WithFakeApplication with M
         status(result) shouldBe 303
       }
 
-      "redirect to the Sold For Less Page" in{
-        redirectLocation(result).get shouldBe controllers.nonresident.routes.SoldForLessController.soldForLess().url
+      "redirect to the Market Value When Sold Page" in{
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.MarketValueWhenSoldController.marketValueWhenSold().url
       }
     }
 
