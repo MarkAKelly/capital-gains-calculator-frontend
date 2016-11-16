@@ -16,16 +16,45 @@
 
 package controllers.nonresident
 
+import common.KeystoreKeys
 import connectors.CalculatorConnector
+import controllers.predicates.ValidActiveSession
+import models.nonresident.BoughtForLessModel
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+import views.html.calculation
+import forms.nonresident.BoughtForLessForm._
+import play.api.data.Form
+
+import scala.concurrent.Future
 
 object BoughtForLessController extends BoughtForLessController {
   val calcConnector = CalculatorConnector
 }
 
-trait BoughtForLessController extends FrontendController {
+trait BoughtForLessController extends FrontendController with ValidActiveSession{
 
-  val boughtForLess = TODO
+  override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
+  override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
+  val calcConnector: CalculatorConnector
 
-  val submitBoughtForLess = TODO
+  val boughtForLess = ValidateSession.async { implicit request =>
+    calcConnector.fetchAndGetFormData[BoughtForLessModel](KeystoreKeys.boughtForLess).map {
+      case Some(data) => Ok(calculation.nonresident.boughtForLess(boughtForLessForm.fill(data)))
+      case None => Ok(calculation.nonresident.boughtForLess(boughtForLessForm))
+    }
+  }
+
+  val submitBoughtForLess = ValidateSession.async {implicit request =>
+
+    def successAction(model: BoughtForLessModel) = {
+      calcConnector.saveFormData[BoughtForLessModel](KeystoreKeys.boughtForLess, model)
+      Future.successful(Redirect(routes.AcquisitionValueController.acquisitionValue()))
+    }
+
+    def errorAction(form: Form[BoughtForLessModel]) = {
+      Future.successful(BadRequest(calculation.nonresident.boughtForLess(form)))
+    }
+
+    boughtForLessForm.bindFromRequest.fold(errorAction, successAction)
+  }
 }

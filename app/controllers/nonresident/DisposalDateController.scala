@@ -16,17 +16,17 @@
 
 package controllers.nonresident
 
-import java.time.LocalDate
+import java.util.UUID
 
-import common.{Dates, KeystoreKeys, TaxDates}
+import common.{KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.DisposalDateForm._
-import models.nonresident.{AcquisitionDateModel, DisposalDateModel}
+import models.nonresident.DisposalDateModel
 import play.api.data.Form
-import play.api.mvc.Result
+import play.api.mvc.Action
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.play.http.SessionKeys
 import views.html.calculation
 
 import scala.concurrent.Future
@@ -39,27 +39,21 @@ trait DisposalDateController extends FrontendController with ValidActiveSession 
 
   val calcConnector: CalculatorConnector
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
-  override val homeLink = controllers.nonresident.routes.CustomerTypeController.customerType().url
+  override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
 
-  private def getAcquisitionDate(implicit hc: HeaderCarrier): Future[Option[LocalDate]] =
-    calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).map {
-      case Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year))) => Some(Dates.constructDate(day, month, year))
-      case _ => None
+  val disposalDate = Action.async { implicit request =>
+    if (request.session.get(SessionKeys.sessionId).isEmpty) {
+      val sessionId = UUID.randomUUID.toString
+      Future.successful(Ok(views.html.calculation.nonresident.
+        disposalDate(disposalDateForm)).withSession(request.session +
+        (SessionKeys.sessionId -> s"session-$sessionId")))
     }
-
-  val disposalDate = ValidateSession.async { implicit request =>
-
-    def routeRequest(acquisitionDate: Option[LocalDate]): Future[Result] = {
+    else {
       calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.disposalDate).map {
-        case Some(data) => Ok(calculation.nonresident.disposalDate(disposalDateForm(acquisitionDate).fill(data)))
-        case None => Ok(calculation.nonresident.disposalDate(disposalDateForm(acquisitionDate)))
+        case Some(data) => Ok(calculation.nonresident.disposalDate(disposalDateForm.fill(data)))
+        case None => Ok(calculation.nonresident.disposalDate(disposalDateForm))
       }
     }
-
-    for {
-      acquisitionDate <- getAcquisitionDate
-      route <- routeRequest(acquisitionDate)
-    } yield route
   }
 
   val submitDisposalDate = ValidateSession.async { implicit request =>
@@ -71,15 +65,9 @@ trait DisposalDateController extends FrontendController with ValidActiveSession 
       if (!TaxDates.dateAfterStart(model.day, model.month, model.year)) {
         Future.successful(Redirect(routes.NoCapitalGainsTaxController.noCapitalGainsTax()))
       } else {
-        Future.successful(Redirect(routes.DisposalValueController.disposalValue()))
+        Future.successful(Redirect(routes.SoldOrGivenAwayController.soldOrGivenAway()))
       }
     }
-
-    def routeRequest(acquisitionDate: Option[LocalDate]): Future[Result] = disposalDateForm(acquisitionDate).bindFromRequest.fold(errorAction, successAction)
-
-    for {
-      acquisitionDate <- getAcquisitionDate
-      route <- routeRequest(acquisitionDate)
-    } yield route
+    disposalDateForm.bindFromRequest.fold(errorAction, successAction)
   }
 }

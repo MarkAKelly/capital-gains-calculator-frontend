@@ -36,7 +36,9 @@ object ImprovementsConstructor {
             ("improvementsAmt", Messages("calc.improvements.questionThree"), None),
             ("improvementsAmtAfter", Messages("calc.improvements.questionFour"), None)
           )
-        ), Some(Messages("calc.improvements.help"))
+        ),
+        None,
+        hideLegend = true
       )
     } else {
       formHiddenYesNoRadio(
@@ -44,7 +46,8 @@ object ImprovementsConstructor {
         "isClaimingImprovements",
         Messages("calc.improvements.question"),
         formInputMoney(improvementsForm, "improvementsAmt", Messages("calc.improvements.questionTwo")),
-        Some(Messages("calc.improvements.help"))
+        None,
+        hideLegend = true
       )
     }
   }

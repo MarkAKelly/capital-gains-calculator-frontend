@@ -57,6 +57,11 @@ class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSu
     }
   }
 
+  "CurrentIncomeController" should {
+    s"have a session timeout home link of '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+      CurrentIncomeController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+    }
+  }
 
   //GET Tests
   "Calling the .currentIncome action " when {

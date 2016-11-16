@@ -16,16 +16,60 @@
 
 package controllers.nonresident
 
+
+
+import common.KeystoreKeys
 import connectors.CalculatorConnector
+import controllers.predicates.ValidActiveSession
+import forms.nonresident.HowBecameOwnerForm._
+import models.nonresident.HowBecameOwnerModel
+import play.api.data.Form
+import play.api.mvc.Result
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+import views.html.calculation.{nonresident => views}
+
+import scala.concurrent.Future
 
 object HowBecameOwnerController extends HowBecameOwnerController {
   val calcConnector = CalculatorConnector
+  }
+
+trait HowBecameOwnerController extends FrontendController with ValidActiveSession {
+
+  val calcConnector: CalculatorConnector
+  override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
+  override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
+
+  val howBecameOwner = ValidateSession.async { implicit request =>
+    calcConnector.fetchAndGetFormData[HowBecameOwnerModel](KeystoreKeys.howBecameOwner).map {
+      case Some(data) => Ok(views.howBecameOwner(howBecameOwnerForm.fill(data)))
+      case None => Ok(views.howBecameOwner(howBecameOwnerForm))
+    }
+  }
+
+  val submitHowBecameOwner = ValidateSession.async { implicit request =>
+
+    def errorAction(form: Form[HowBecameOwnerModel]) = {
+      Future.successful(BadRequest(views.howBecameOwner(form)))
+    }
+
+    def successAction(model: HowBecameOwnerModel) = {
+      for {
+        save <- calcConnector.saveFormData[HowBecameOwnerModel](KeystoreKeys.howBecameOwner, model)
+        route <- routeRequest(model)
+      } yield route
+    }
+
+    def routeRequest(data: HowBecameOwnerModel): Future[Result] = {
+      data.gainedBy match {
+
+        case "Gifted" => Future.successful(Redirect(routes.WorthWhenGiftedController.worthWhenGifted()))
+        case "Inherited" => Future.successful(Redirect(routes.WorthWhenInheritedController.worthWhenInherited()))
+        case _ => Future.successful(Redirect(routes.BoughtForLessController.boughtForLess()))
+      }
+    }
+
+    howBecameOwnerForm.bindFromRequest.fold(errorAction, successAction)
+  }
 }
 
-trait HowBecameOwnerController extends FrontendController {
-
-  val howBecameOwner = TODO
-
-  val submitHowBecameOwner = TODO
-}

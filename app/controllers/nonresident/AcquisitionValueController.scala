@@ -30,15 +30,13 @@ import scala.concurrent.Future
 
 object AcquisitionValueController extends AcquisitionValueController {
   val calcConnector = CalculatorConnector
-  val calcElectionConstructor = CalculationElectionConstructor
 }
 
 trait AcquisitionValueController extends FrontendController with ValidActiveSession {
 
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
-  override val homeLink = controllers.nonresident.routes.CustomerTypeController.customerType().url
+  override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
   val calcConnector: CalculatorConnector
-  val calcElectionConstructor: CalculationElectionConstructor
 
   val acquisitionValue = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.acquisitionValue).map {
@@ -48,31 +46,12 @@ trait AcquisitionValueController extends FrontendController with ValidActiveSess
   }
 
   val submitAcquisitionValue = ValidateSession.async { implicit request =>
-
-    def errorAction(form: Form[AcquisitionValueModel]) = {
-      Future.successful(BadRequest(calculation.nonresident.acquisitionValue(form)))
-    }
-
-    def successAction(model: AcquisitionValueModel) = {
-      calcConnector.saveFormData(KeystoreKeys.acquisitionValue, model)
-      for {
-        data <- fetchData()
-        route <- getRoute(data.get)
-      } yield route
-    }
-
-    def fetchData() = calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate)
-
-    def getRoute(date: AcquisitionDateModel) = date.hasAcquisitionDate match {
-      case "Yes" if !TaxDates.dateAfterStart(date.day.getOrElse(0), date.month.getOrElse(0), date.year.getOrElse(0)) =>
-                      Future.successful(Redirect(routes.RebasedValueController.rebasedValue()))
-      case "No" => Future.successful(Redirect(routes.RebasedValueController.rebasedValue()))
-      case _ => Future.successful(Redirect(routes.ImprovementsController.improvements()))
-    }
-
     acquisitionValueForm.bindFromRequest.fold(
-      errors => errorAction(errors),
-      success => successAction(success)
+      errors => Future.successful(BadRequest(calculation.nonresident.acquisitionValue(errors))),
+      success => {
+        calcConnector.saveFormData(KeystoreKeys.acquisitionValue, success)
+        Future.successful(Redirect(routes.AcquisitionCostsController.acquisitionCosts()))
+      }
     )
   }
 }

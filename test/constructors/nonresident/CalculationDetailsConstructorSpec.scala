@@ -16,8 +16,9 @@
 
 package constructors.nonresident
 
-import common.{KeystoreKeys, TestModels}
 import assets.MessageLookup.NonResident.{Summary => messages}
+import common.nonresident.CalculationType
+import common.{KeystoreKeys, TestModels}
 import controllers.nonresident.routes
 import helpers.AssertHelpers
 import models.nonresident.CalculationResultModel
@@ -35,8 +36,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
 
     "a loss has been made" should {
       val calculation = TestModels.calcModelLoss
-      val answers = TestModels.summaryIndividualImprovementsWithRebasedModel
-      lazy val result = target.buildSection(calculation, answers)
+      lazy val result = target.buildSection(calculation, CalculationType.flat)
 
       "have a calc election question" in {
         result.exists(qa => qa.id == KeystoreKeys.calculationElection) shouldBe true
@@ -69,8 +69,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
 
     "a gain has been made" should {
       val calculation = TestModels.calcModelOneRate
-      val answers = TestModels.summaryIndividualImprovementsWithRebasedModel
-      lazy val result = target.buildSection(calculation, answers)
+      lazy val result = target.buildSection(calculation, CalculationType.timeApportioned)
 
       "have a calc election question" in {
         result.exists(qa => qa.id == KeystoreKeys.calculationElection) shouldBe true
@@ -103,8 +102,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
 
     "a zero gain has been made" should {
       val calculation = TestModels.calcModelZeroTotal
-      val answers = TestModels.summaryIndividualImprovementsWithRebasedModel
-      lazy val result = target.buildSection(calculation, answers)
+      lazy val result = target.buildSection(calculation, CalculationType.rebased)
 
       "have a calc election question" in {
         result.exists(qa => qa.id == KeystoreKeys.calculationElection) shouldBe true
@@ -137,8 +135,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
 
     "a negative taxable gain has been made" should {
       val calculation = TestModels.calcModelNegativeTaxable
-      val answers = TestModels.summaryIndividualImprovementsWithRebasedModel
-      lazy val result = target.buildSection(calculation, answers)
+      lazy val result = target.buildSection(calculation, CalculationType.flat)
 
       "have a calc election question" in {
         result.exists(qa => qa.id == KeystoreKeys.calculationElection) shouldBe true
@@ -174,8 +171,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
   "Calling calculationElection" when {
 
     "the calculation type is a flat calc" should {
-      val model = TestModels.sumModelFlat
-      lazy val result = target.calculationElection(model)
+      lazy val result = target.calculationElection(CalculationType.flat)
 
       "return some details for the calculation election" in {
         result should not be None
@@ -207,8 +203,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
     }
 
     "the calculation type is a rebased calc" should {
-      val model = TestModels.sumModelRebased
-      lazy val result = target.calculationElection(model)
+      lazy val result = target.calculationElection(CalculationType.rebased)
 
       "return some details for the calculation election" in {
         result should not be None
@@ -240,8 +235,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
     }
 
     "the calculation type is a time apportioned calc" should {
-      val model = TestModels.sumModelTA
-      lazy val result = target.calculationElection(model)
+      lazy val result = target.calculationElection(CalculationType.timeApportioned)
 
       "return some details for the calculation election" in {
         result should not be None
