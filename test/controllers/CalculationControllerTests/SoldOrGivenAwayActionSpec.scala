@@ -20,7 +20,7 @@ import assets.MessageLookup.NonResident.{SoldOrGivenAway => messages}
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
-import controllers.nonresident.{MarketValueWhenSoldController, SoldOrGivenAwayController}
+import controllers.nonresident.SoldOrGivenAwayController
 import models.nonresident.SoldOrGivenAwayModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -46,10 +46,6 @@ class SoldOrGivenAwayActionSpec extends UnitSpec with WithFakeApplication with M
     new SoldOrGivenAwayController  {
       override val calcConnector: CalculatorConnector = mockCalcConnector
     }
-  }
-
-  object MarketValueWhenSoldController extends MarketValueWhenSoldController {
-    val calcConnector = CalculatorConnector
   }
 
   "SoldOrGivenAwayController" should {
@@ -121,7 +117,6 @@ class SoldOrGivenAwayActionSpec extends UnitSpec with WithFakeApplication with M
       }
     }
 
-    //TODO: Refactor test other route is implemented
     "a valid form is submitted with No" should {
       val target = setUpTarget(None)
       lazy val request = fakeRequestToPOSTWithSession("soldIt" -> "No")
