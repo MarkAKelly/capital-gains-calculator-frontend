@@ -54,7 +54,6 @@ class YourAnswersConstructorSpec extends UnitSpec {
 
       "contain the answers from property details" in {
         lazy val propertyDetails = PropertyDetailsConstructor.propertyDetailsRows(model)
-        lazy val deductionDetails = DeductionDetailsConstructor.deductionDetailsRows(model)
 
         result.containsSlice(propertyDetails) shouldBe true
       }
