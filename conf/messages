@@ -320,6 +320,9 @@ calc.acquisitionMarketValue.hintTwo = If you don''t know the exact value, you mu
 ## Worth When Gifted To ##
 calc.worthWhenGiftedTo.question = What was the market value of the property when you got it as a gift?
 
+## Worth When Bought For Less ##
+calc.worthWhenBoughtForLess.question = What was the market value of the property when you bought it?
+
 ## Summary ##
 calc.summary.title = Summary
 calc.summary.amount.you.owe = Amount you owe

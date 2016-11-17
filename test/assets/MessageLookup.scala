@@ -314,13 +314,22 @@ object MessageLookup {
       val gave = "I gave it away"
     }
 
-    //Worth When Gifted To messages
-    object WorthWhenGiftedTo {
-      val question = "What was the market value of the property when you got it as a gift?"
+    //Acquisition Market Value messages
+    object AcquisitionMarketValue {
       val errorNegativeNumber = "Enter a positive number for the market value of the property"
       val errorDecimalPlaces = "The market value of the property has too many numbers after the decimal point"
       val hintOne = "You can use a valuation from a surveyor."
       val hintTwo = "If you don't know the exact value, you must provide a realistic estimate. You might have to pay more if we think your estimate is unrealistic."
+    }
+
+    //Worth When Gifted To messages
+    object WorthWhenGiftedTo {
+      val question = "What was the market value of the property when you got it as a gift?"
+    }
+
+    //Worth When Bought for Less messages
+    object WorthWhenBoughtForLess {
+      val question = "What was the market value of the property when you bought it?"
     }
 
     object Summary {
