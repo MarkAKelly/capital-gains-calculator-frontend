@@ -34,7 +34,7 @@ object RebasedValueForm {
     mapping(
       "rebasedValueAmt" -> optional(text)
         .verifying(Messages("calc.nonResident.rebasedValue.error.no.value.supplied"), data => mandatoryField(data, required))
-        .verifying(Messages("DUMMY MESSAGE FOR NOW"), data => bigDecimalCheck(data.getOrElse("")))
+        .verifying(Messages("error.number"), data => bigDecimalCheck(data.getOrElse("")))
         .transform[Option[BigDecimal]](optionalStringToOptionalBigDecimal, optionalBigDecimalToOptionalString)
         .verifying(Messages("calc.nonResident.rebasedValue.errorNegative"), data => isPositive(data.getOrElse(0)))
         .verifying(Messages("calc.nonResident.rebasedValue.errorDecimalPlaces"), data => decimalPlacesCheck(data.getOrElse(0)))
