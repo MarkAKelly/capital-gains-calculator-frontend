@@ -49,8 +49,8 @@ object KeystoreKeys {
   val howBecameOwner = "nr:howBecameOwner"
   val soldOrGivenAway = "nr:soldOrGivenAway"
   val boughtForLess = "nr:boughtForLess"
-  val worthWhenGiftedTo = "nr:worthWhenGiftedTo"
-  val worthWhenInherited = "nr:worthWhenInherited"
+  val acquisitionMarketValue = "nr:acquisitionMarketValue"
+
 
   object ResidentPropertyKeys {
     val disposalDate = "res:property:disposalDate"

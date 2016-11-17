@@ -19,10 +19,9 @@ package controllers.nonresident
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
-import forms.nonresident.WorthWhenInheritedForm._
-import models.nonresident.WorthWhenInheritedModel
+import forms.nonresident.AcquisitionMarketValueForm._
+import models.nonresident.AcquisitionValueModel
 import play.api.data.Form
-
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import views.html.calculation.{nonresident => views}
 
@@ -39,21 +38,21 @@ trait WorthWhenInheritedController extends FrontendController with ValidActiveSe
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
 
   val worthWhenInherited = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[WorthWhenInheritedModel](KeystoreKeys.worthWhenInherited).map {
-      case Some(data) => Ok(views.worthWhenInherited(worthWhenInheritedForm.fill(data)))
-      case None => Ok(views.worthWhenInherited(worthWhenInheritedForm))
+    calcConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.acquisitionMarketValue).map {
+      case Some(data) => Ok(views.worthWhenInherited(acquisitionMarketValueForm.fill(data)))
+      case None => Ok(views.worthWhenInherited(acquisitionMarketValueForm))
     }
   }
 
   val submitWorthWhenInherited = ValidateSession.async { implicit request =>
 
-    def errorAction(form: Form[WorthWhenInheritedModel]) = Future.successful(BadRequest(views.worthWhenInherited(form)))
+    def errorAction(form: Form[AcquisitionValueModel]) = Future.successful(BadRequest(views.worthWhenInherited(form)))
 
-    def successAction(model: WorthWhenInheritedModel) = {
-      calcConnector.saveFormData(KeystoreKeys.worthWhenInherited, model)
+    def successAction(model: AcquisitionValueModel) = {
+      calcConnector.saveFormData(KeystoreKeys.acquisitionMarketValue, model)
       Future.successful(Redirect(routes.AcquisitionCostsController.acquisitionCosts()))
     }
 
-    worthWhenInheritedForm.bindFromRequest.fold(errorAction, successAction)
+    acquisitionMarketValueForm.bindFromRequest.fold(errorAction, successAction)
   }
 }
