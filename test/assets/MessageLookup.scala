@@ -284,17 +284,19 @@ object MessageLookup {
     }
 
     object RebasedValue {
-      val question = "Do you know how much the property was worth on 5 April 2015?"
-      val questionHelpText = "Only tell us if you owned the property on that date"
-      val inputQuestion = "What was the value of the property?"
-      val inputQuestionMandatory = "What was the property worth on 5 April 2015?"
-      val inputHelpText = "You can use a valuation from a surveyor or a property website."
+      val question = "What was the market value of the property on 5 April 2015?"
+
+      val questionOptionalText = "Only tell us if you owned the property on that date"
+
+      val inputHintText = "If you don't know the exact value, you must provide a realistic estimate. " +
+        "You might have to pay more if we think your estimate is unrealistic."
       val additionalContentTitle = "Why we're asking for this"
+      val helpHiddenContent = "This value lets us calculate your tax in different ways, which means you may have less tax to pay."
+
       val errorNoValue = "Enter a value for your property on 5 April 2015"
       val errorNegative = "Enter a positive value for your property on 5 April 2015"
       val errorDecimalPlaces = "The value for your property on 5 April 2015 has too many numbers after the decimal point"
-      val helpHiddenContentOne = "When you've answered the questions you'll have a choice about how we work out your total."
-      val helpHiddenContentTwo = "This value lets us calculate your tax in different ways, giving you more options."
+
 
       def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }

@@ -92,7 +92,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         val target = setupTarget(
           None,
           Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2014))),
-          Some(RebasedValueModel("Yes", Some(500)))
+          Some(RebasedValueModel(Some(500)))
         )
         lazy val result = target.improvements(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))
@@ -113,7 +113,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         val target = setupTarget(
           None,
           Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2014))),
-          Some(RebasedValueModel("No", None))
+          Some(RebasedValueModel(None))
         )
         lazy val result = target.improvements(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))

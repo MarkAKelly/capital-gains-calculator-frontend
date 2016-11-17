@@ -27,6 +27,7 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
@@ -47,6 +48,9 @@ class RebasedValueActionSpec extends UnitSpec with WithFakeApplication with Mock
 
     when(mockCalcConnector.fetchAndGetFormData[AcquisitionDateModel](Matchers.eq(KeystoreKeys.acquisitionDate))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(acquisitionDateModel))
+
+    when(mockCalcConnector.saveFormData[RebasedValueModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(mock[CacheMap]))
 
     new RebasedValueController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -101,8 +105,8 @@ class RebasedValueActionSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 200
       }
 
-      s"route to the mandatory rebased value view with the question ${messages.inputQuestionMandatory}" in {
-        document.title shouldEqual messages.inputQuestionMandatory
+      s"route to the mandatory rebased value view with the question ${messages.question}" in {
+        document.title shouldEqual messages.question
       }
     }
   }
@@ -113,9 +117,9 @@ class RebasedValueActionSpec extends UnitSpec with WithFakeApplication with Mock
 
       lazy val target = setupTarget(None, Some(AcquisitionDateModel("No", None, None, None)))
 
-      "submitting a valid form with 'Yes' and a value of 12045" should {
+      "submitting a valid form with a value of 12045" should {
 
-        lazy val request = fakeRequestToPOSTWithSession(("hasRebasedValue", "Yes"), ("rebasedValueAmt", "100"))
+        lazy val request = fakeRequestToPOSTWithSession(("rebasedValueAmt", "12045"))
         lazy val result = target.submitRebasedValue(request)
 
         "return a 303" in {
@@ -127,9 +131,9 @@ class RebasedValueActionSpec extends UnitSpec with WithFakeApplication with Mock
         }
       }
 
-      "submitting a valid form with 'No' and no value" should {
+      "submitting a valid form with no value" should {
 
-        lazy val request = fakeRequestToPOSTWithSession(("hasRebasedValue", "No"), ("rebasedValueAmt", ""))
+        lazy val request = fakeRequestToPOSTWithSession(("rebasedValueAmt", ""))
         lazy val result = target.submitRebasedValue(request)
 
         "return a 303" in {
@@ -143,7 +147,7 @@ class RebasedValueActionSpec extends UnitSpec with WithFakeApplication with Mock
 
       "submitting a value which exceeds the maximum numeric" should {
 
-        lazy val request = fakeRequestToPOSTWithSession(("hasRebasedValue", "Yes"), ("rebasedValueAmt", ""))
+        lazy val request = fakeRequestToPOSTWithSession(("rebasedValueAmt", "4372814326478132946"))
         lazy val result = target.submitRebasedValue(request)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -154,6 +158,10 @@ class RebasedValueActionSpec extends UnitSpec with WithFakeApplication with Mock
         s"return to the rebased value page" in {
           document.title shouldEqual messages.question
         }
+
+        s"return to the rebased value page that has a paragraph with the text ${messages.questionOptionalText}" in {
+          document.select("article > p").text shouldEqual messages.questionOptionalText
+        }
       }
     }
 
@@ -163,7 +171,7 @@ class RebasedValueActionSpec extends UnitSpec with WithFakeApplication with Mock
 
       "submitting a valid form with Yes" should {
 
-        lazy val request = fakeRequestToPOSTWithSession(("hasRebasedValue", "Yes"), ("rebasedValueAmt", "100"))
+        lazy val request = fakeRequestToPOSTWithSession(("rebasedValueAmt", "100"))
         lazy val result = target.submitRebasedValue(request)
 
         "return a 303" in {
@@ -177,7 +185,7 @@ class RebasedValueActionSpec extends UnitSpec with WithFakeApplication with Mock
 
       "submitting an invalid form" should {
 
-        lazy val request = fakeRequestToPOSTWithSession(("hasRebasedValue", "Yes"), ("rebasedValueAmt", ""))
+        lazy val request = fakeRequestToPOSTWithSession(("rebasedValueAmt", ""))
         lazy val result = target.submitRebasedValue(request)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -185,8 +193,8 @@ class RebasedValueActionSpec extends UnitSpec with WithFakeApplication with Mock
           status(result) shouldBe 400
         }
 
-        s"return to the mandatory rebased value page" in {
-          document.title shouldEqual messages.inputQuestionMandatory
+        s"return to the mandatory rebased value page that does NOT have a paragraph with the text ${messages.questionOptionalText}" in {
+          document.select("article > p").text shouldEqual ""
         }
       }
     }
