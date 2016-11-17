@@ -16,13 +16,14 @@
 
 package controllers.nonresident
 
-import common.KeystoreKeys
+import common.{KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.AcquisitionDateForm._
 import models.nonresident.AcquisitionDateModel
 import play.api.data.Form
+import play.api.mvc.Result
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import views.html.calculation
 
@@ -57,8 +58,17 @@ trait AcquisitionDateController extends FrontendController with ValidActiveSessi
 
     def successAction(model: AcquisitionDateModel) = {
       calcConnector.saveFormData(KeystoreKeys.acquisitionDate, model)
-      Future.successful(Redirect(routes.HowBecameOwnerController.howBecameOwner()))
+      model.hasAcquisitionDate match {
+        case "Yes" =>
+          if(TaxDates.dateBeforeLegislationStart(model.day.get, model.month.get, model.year.get)) {
+            Future.successful(Redirect(routes.WorthBeforeLegislationStartController.worthBeforeLegislationStart()))
+          } else {
+            Future.successful(Redirect(routes.HowBecameOwnerController.howBecameOwner()))
+          }
+        case "No" => Future.successful(Redirect(routes.HowBecameOwnerController.howBecameOwner()))
+      }
     }
+
     acquisitionDateForm.bindFromRequest.fold(errorAction, successAction)
   }
 }
