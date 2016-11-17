@@ -16,11 +16,11 @@
 
 package controllers.CalculationControllerTests
 
-import assets.MessageLookup.NonResident.{WorthWhenGiftedTo => messages}
+import assets.MessageLookup.NonResident.{WorthWhenBoughtForLess => messages}
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
-import controllers.nonresident.WorthWhenGiftedToController
+import controllers.nonresident.WorthWhenBoughtForLessController
 import models.nonresident.AcquisitionValueModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -32,9 +32,9 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
-class WorthWhenGiftedToActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
+class WorthWhenBoughtForLessActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
-  def setupTarget(getData: Option[AcquisitionValueModel]): WorthWhenGiftedToController = {
+  def setupTarget(getData: Option[AcquisitionValueModel]): WorthWhenBoughtForLessController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
@@ -44,23 +44,23 @@ class WorthWhenGiftedToActionSpec extends UnitSpec with WithFakeApplication with
     when(mockCalcConnector.saveFormData[AcquisitionValueModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
 
-    new WorthWhenGiftedToController {
+    new WorthWhenBoughtForLessController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
     }
   }
 
-  "WorthWhenGiftedToController" should {
+  "WorthWhenBoughtForLessController" should {
     s"have a session timeout home link of '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
-      WorthWhenGiftedToController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+      WorthWhenBoughtForLessController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
     }
   }
 
-  "Calling .worthWhenGiftedTo" when {
+  "Calling .worthWhenBoughtForLess" when {
 
     "request has a valid session and no keystore value" should {
 
       lazy val target = setupTarget(None)
-      lazy val result = target.worthWhenGiftedTo(fakeRequestWithSession)
+      lazy val result = target.worthWhenBoughtForLess(fakeRequestWithSession)
 
       "return a status of 200" in {
         status(result) shouldBe 200
@@ -75,7 +75,7 @@ class WorthWhenGiftedToActionSpec extends UnitSpec with WithFakeApplication with
     "request has a valid session and some keystore value" should {
 
       lazy val target = setupTarget(Some(AcquisitionValueModel(BigDecimal(1000.00))))
-      lazy val result = target.worthWhenGiftedTo(fakeRequestWithSession)
+      lazy val result = target.worthWhenBoughtForLess(fakeRequestWithSession)
 
       "return a status of 200" in {
         status(result) shouldBe 200
@@ -90,7 +90,7 @@ class WorthWhenGiftedToActionSpec extends UnitSpec with WithFakeApplication with
     "request has an invalid session" should {
 
       lazy val target = setupTarget(None)
-      lazy val result = target.worthWhenGiftedTo(fakeRequest)
+      lazy val result = target.worthWhenBoughtForLess(fakeRequest)
 
       "return a status of 303" in {
         status(result) shouldBe 303
@@ -102,13 +102,13 @@ class WorthWhenGiftedToActionSpec extends UnitSpec with WithFakeApplication with
     }
   }
 
-  "Calling .submitWorthWhenGiftedTo" should {
+  "Calling .submitWorthWhenBoughtForLess" should {
 
     "with valid form with the answer '1000.00'" should {
 
       lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("acquisitionMarketValue", "1000.00"))
-      lazy val result = target.submitWorthWhenGiftedTo(request)
+      lazy val result = target.submitWorthWhenBoughtForLess(request)
 
       "return a status of 303" in {
         status(result) shouldBe 303
@@ -123,14 +123,14 @@ class WorthWhenGiftedToActionSpec extends UnitSpec with WithFakeApplication with
 
       lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("acquisitionMarketValue", "a"))
-      lazy val result = target.submitWorthWhenGiftedTo(request)
+      lazy val result = target.submitWorthWhenBoughtForLess(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
       "return a status of 400" in {
         status(result) shouldBe 400
       }
 
-      "return to the Worth When Gifted To page" in {
+      "return to the Worth When Bought For Less page" in {
         doc.title() shouldEqual messages.question
       }
     }

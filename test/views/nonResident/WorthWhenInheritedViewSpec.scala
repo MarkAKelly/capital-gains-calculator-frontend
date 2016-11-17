@@ -16,7 +16,8 @@
 
 package views.nonResident
 
-import assets.MessageLookup.NonResident.{WorthWhenInherited => messages}
+import assets.MessageLookup.NonResident.WorthWhenInherited
+import assets.MessageLookup.NonResident.{AcquisitionMarketValue => messages}
 import assets.MessageLookup.{NonResident => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import forms.nonresident.AcquisitionMarketValueForm._
@@ -34,8 +35,8 @@ class WorthWhenInheritedViewSpec extends UnitSpec with WithFakeApplication with 
       lazy val view = worthWhenInherited(acquisitionMarketValueForm)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
-      s"have a title of '${messages.question}'" in {
-        document.title() shouldBe messages.question
+      s"have a title of '${WorthWhenInherited.question}'" in {
+        document.title() shouldBe WorthWhenInherited.question
       }
 
       "have a back link" which {
@@ -66,8 +67,8 @@ class WorthWhenInheritedViewSpec extends UnitSpec with WithFakeApplication with 
           heading.attr("class") shouldBe "heading-xlarge"
         }
 
-        s"has the text '${messages.question}'" in {
-          heading.text shouldBe messages.question
+        s"has the text '${WorthWhenInherited.question}'" in {
+          heading.text shouldBe WorthWhenInherited.question
         }
       }
 

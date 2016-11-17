@@ -16,7 +16,7 @@
 
 package forms.nonResident
 
-import assets.MessageLookup.NonResident.{WorthWhenGiftedTo => messages}
+import assets.MessageLookup.NonResident.{AcquisitionMarketValue => messages}
 import assets.MessageLookup.{NonResident => commonMessages}
 import forms.nonresident.AcquisitionMarketValueForm._
 import models.nonresident.AcquisitionValueModel
