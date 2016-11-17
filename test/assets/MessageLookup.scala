@@ -128,7 +128,7 @@ object MessageLookup {
     }
 
     object CheckYourAnswers {
-      val heading = "Check your answers"
+      val question = "Check your answers"
       val tableHeading = "You've told us"
     }
 

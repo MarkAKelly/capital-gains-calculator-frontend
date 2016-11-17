@@ -17,34 +17,36 @@
 package controllers.nonresident
 
 import connectors.CalculatorConnector
-import constructors.nonresident.CalculationElectionConstructor
+import constructors.nonresident.{AnswersConstructor, CalculationElectionConstructor, YourAnswersConstructor}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import controllers.predicates.ValidActiveSession
-import models.nonresident.QuestionAnswerModel
 import views.html.calculation
 
 import scala.concurrent.Future
 
 object CheckYourAnswersController extends CheckYourAnswersController {
-  val calcConnector = CalculatorConnector
   val calcElectionConstructor = CalculationElectionConstructor
+  val answersConstructor = AnswersConstructor
 }
 
 trait CheckYourAnswersController extends FrontendController with ValidActiveSession {
 
-  val mockQuestionAnswersSeq = Seq(QuestionAnswerModel("dummyId", 200, "dummyQuestion", Some("google.com")))
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
-  val calcConnector: CalculatorConnector
-  val calcElectionConstructor: CalculationElectionConstructor
+  val answersConstructor: AnswersConstructor
+  val backLink = controllers.nonresident.routes.OtherReliefsController.otherReliefs().url
 
 
   val checkYourAnswers = ValidateSession.async { implicit request =>
-    //val model = AnswersConstructor.getNRTotalGainAnswers
 
-    Future.successful(Ok(calculation.nonresident.checkYourAnswers(mockQuestionAnswersSeq, "google.com")))
+    for {
+      model <- answersConstructor.getNRTotalGainAnswers
+      answers <- Future.successful(YourAnswersConstructor.fetchYourAnswers(model))
+    } yield {
+      Ok(calculation.nonresident.checkYourAnswers(answers, backLink))
+    }
   }
   val submitCheckYourAnswers = ValidateSession.async { implicit request =>
-    Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
+    Future.successful(Redirect(routes.SummaryController.summary()))
   }
 }

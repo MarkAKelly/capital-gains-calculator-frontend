@@ -35,14 +35,14 @@ class CheckYourAnswersViewSpec extends UnitSpec with WithFakeApplication with Fa
 
         lazy val document = Jsoup.parse(view.body)
 
-        s"has the title text ${MessageLookup.NonResident.CheckYourAnswers.heading}" in {
-          document.title shouldBe MessageLookup.NonResident.CheckYourAnswers.heading
+        s"has the title text ${MessageLookup.NonResident.CheckYourAnswers.question}" in {
+          document.title shouldBe MessageLookup.NonResident.CheckYourAnswers.question
         }
 
         "have a heading" which {
           lazy val heading = document.select("h1")
-          s"has the title text ${MessageLookup.NonResident.CheckYourAnswers.heading}" in {
-            heading.text() shouldBe MessageLookup.NonResident.CheckYourAnswers.heading
+          s"has the title text ${MessageLookup.NonResident.CheckYourAnswers.question}" in {
+            heading.text() shouldBe MessageLookup.NonResident.CheckYourAnswers.question
           }
 
           "has a class of 'heading-xlarge'" in {

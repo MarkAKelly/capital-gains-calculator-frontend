@@ -57,7 +57,6 @@ class QuestionAnswerTableRowViewSpec extends UnitSpec with WithFakeApplication {
         "has a change link column with a hyper-link" which {
           lazy val changeLink = row.select("#id-changeLink")
           "has the hyper-link text 'Change'" in {
-            //needs to be a message
             changeLink.text() shouldBe Messages("calc.nonresident.check.change")
           }
 
@@ -148,7 +147,6 @@ class QuestionAnswerTableRowViewSpec extends UnitSpec with WithFakeApplication {
       "has a change link column with a hyper-link" which {
         lazy val changeLink = row.select(s"#$idBoolean-changeLink")
         "has the hyper-link text 'Change'" in {
-          //needs to be a message
           changeLink.text() shouldBe Messages("calc.nonresident.check.change")
         }
 
