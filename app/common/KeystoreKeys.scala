@@ -51,6 +51,7 @@ object KeystoreKeys {
   val boughtForLess = "nr:boughtForLess"
   val acquisitionMarketValue = "nr:acquisitionMarketValue"
 
+
   object ResidentPropertyKeys {
     val disposalDate = "res:property:disposalDate"
     val disposalValue = "res:property:disposalValue"

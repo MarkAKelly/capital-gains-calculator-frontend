@@ -322,6 +322,11 @@ object MessageLookup {
       val hintTwo = "If you don't know the exact value, you must provide a realistic estimate. You might have to pay more if we think your estimate is unrealistic."
     }
 
+    //Worth When Inherited messages
+    object WorthWhenInherited {
+      val question = "What was the market value of the property when you inherited it?"
+    }
+
     //Worth When Gifted To messages
     object WorthWhenGiftedTo {
       val question = "What was the market value of the property when you got it as a gift?"
