@@ -1,0 +1,24 @@
+@import models.nonresident.WorthWhenBoughtForLessModel
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import views.html.helpers._
+@import views.html.main_template
+
+@(worthWhenBoughtForLess : Form[WorthWhenBoughtForLessModel])(implicit request: Request[_])
+
+@main_template(Messages("calc.worthWhenBoughtForLess.question")) {
+
+    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.BoughtForLessController.boughtForLess">@Messages("calc.base.back")</a>
+
+    @errorSummary(worthWhenBoughtForLess, "worthWhenBoughtForLessValue")
+
+    <h1 class="heading-xlarge">@Messages("calc.worthWhenBoughtForLess.question")</h1>
+
+    <p id="helpText" class="form-hint">@Messages("calc.worthWhenBoughtForLess.hintOne")<br>@Messages("calc.worthWhenBoughtForLess.hintTwo")</p>
+
+    @form(action = controllers.nonresident.routes.WorthWhenBoughtForLessController.submitWorthWhenBoughtForLess) {
+
+        @formInputMoney(worthWhenBoughtForLess, "worthWhenBoughtForLessValue", Messages("calc.worthWhenBoughtForLess.question"), hideLabel = true)
+
+        <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+    }
+}
