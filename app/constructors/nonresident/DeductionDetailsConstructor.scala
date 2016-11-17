@@ -25,31 +25,18 @@ import play.api.i18n.Messages
 object DeductionDetailsConstructor {
 
   def deductionDetailsRows(answers: TotalGainAnswersModel): Seq[QuestionAnswerModel[Any]] = {
-    val otherReliefsFlatQuestion = otherReliefsFlatQuestionRow(answers)
     val otherReliefsFlatValue = otherReliefsFlatValueRow(answers)
 
-    val sequence = Seq(otherReliefsFlatQuestion, otherReliefsFlatValue)
+    val sequence = Seq(otherReliefsFlatValue)
 
     sequence.flatten
   }
 
-  def otherReliefsFlatQuestionRow(answers: TotalGainAnswersModel): Option[QuestionAnswerModel[String]] = {
-    answers.otherReliefsFlat match {
-      case Some(OtherReliefsModel(Some(answer), _)) => Some(QuestionAnswerModel(
-        s"${keys.otherReliefsFlat}-question",
-        answer,
-        Messages("calc.otherReliefs.questionTwo"),
-        Some(controllers.nonresident.routes.OtherReliefsController.otherReliefs().url)
-      ))
-      case _ => None
-    }
-  }
-
   def otherReliefsFlatValueRow(answers: TotalGainAnswersModel): Option[QuestionAnswerModel[BigDecimal]] = {
     answers.otherReliefsFlat match {
-      case Some(OtherReliefsModel(Some("Yes"), value)) => Some(QuestionAnswerModel(
+      case Some(OtherReliefsModel(value)) => Some(QuestionAnswerModel(
         keys.otherReliefsFlat,
-        value.get,
+        value,
         Messages("calc.otherReliefs.question"),
         Some(controllers.nonresident.routes.OtherReliefsController.otherReliefs().url)
       ))

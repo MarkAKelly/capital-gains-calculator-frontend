@@ -127,11 +127,11 @@ trait CalculatorConnector {
     val calculationElection = fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection).map(formData =>
       formData.getOrElse(CalculationElectionModel("")))
     val otherReliefsFlat = fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map(formData =>
-      formData.getOrElse(OtherReliefsModel(Some("No"), None)))
+      formData.getOrElse(OtherReliefsModel(0)))
     val otherReliefsTA = fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA).map(formData =>
-      formData.getOrElse(OtherReliefsModel(Some("No"), None)))
+      formData.getOrElse(OtherReliefsModel(0)))
     val otherReliefsRebased = fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map(formData =>
-      formData.getOrElse(OtherReliefsModel(Some("No"), None)))
+      formData.getOrElse(OtherReliefsModel(0)))
     val privateResidenceRelief = fetchAndGetFormData[models.nonresident.PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief)
     for {
       customerTypeModel <- customerType

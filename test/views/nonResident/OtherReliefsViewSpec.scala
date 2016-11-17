@@ -30,8 +30,7 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
   "The Other Reliefs Flat view" when {
 
     "not supplied with a pre-existing stored value and a taxable gain" should {
-      val model = CalculationResultModel(100, 1000, 100, 18, 0, None, None, None)
-      lazy val view = otherReliefs(otherReliefsForm(false), model)(fakeRequest)
+      lazy val view = otherReliefs(otherReliefsForm)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       s"have a title of ${messages.OtherReliefs.question}" in {
@@ -43,6 +42,10 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
 
         "should have the text" in {
           backLink.text shouldEqual messages.back
+        }
+
+        "should have a class of back-link" in {
+          backLink.attr("class") shouldBe "back-link"
         }
 
         s"should have a route to 'improvements'" in {
@@ -83,28 +86,12 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
         document.body.select("legend").first().text shouldBe messages.OtherReliefs.question
       }
 
-      "have include 'isClaimingOtherReliefs' as part of the id on the option inputs" in {
-        document.select("input").attr("id") should include ("isClaimingOtherReliefs")
-      }
-
       "have an input using the id otherReliefs" in {
-        document.body().select("input[type=number]").attr("id") should include ("otherReliefs")
+        document.body().select("input[type=number]").attr("id") should include("otherReliefs")
       }
 
-      "have additional content" which {
-        lazy val content = document.select("form > div")
-
-        "has a list of class list" in {
-          content.select("ul").attr("class") shouldBe "list"
-        }
-
-        "has a list entry with the total gain message and value" in {
-          content.select("li#totalGain").text() shouldBe s"${messages.OtherReliefs.totalGain} £1,000"
-        }
-
-        "has a list entry with the taxable gain message and value" in {
-          content.select("li#taxableGain").text() shouldBe s"${messages.OtherReliefs.taxableGain} £100"
-        }
+      "have the correct help text" in {
+        document.body().select("form .form-hint") shouldBe s"${messages.OtherReliefs.help}\n${messages.OtherReliefs.helpTwo}"
       }
 
       "have a button" which {
@@ -124,21 +111,9 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
       }
     }
 
-    "supplied with a pre-existing stored value and a negative taxable gain" should {
-      val model = CalculationResultModel(100, 1000, -100, 18, 0, None, None, None)
-      val map = Map("otherReliefs" -> "1000")
-      lazy val view = otherReliefs(otherReliefsForm(false).bind(map), model)(fakeRequest)
-      lazy val document = Jsoup.parse(view.body)
-
-      "has a list entry with the loss carried forward message and value" in {
-        document.select("li#taxableGain").text() shouldBe s"${messages.OtherReliefs.lossCarriedForward} £100"
-      }
-    }
-
     "supplied with an invalid map" should {
-      val model = CalculationResultModel(100, 1000, -100, 18, 0, None, None, None)
       val map = Map("otherReliefs" -> "-1000")
-      lazy val view = otherReliefs(otherReliefsForm(false).bind(map), model)(fakeRequest)
+      lazy val view = otherReliefs(otherReliefsForm.bind(map))(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have an error summary" in {
@@ -147,3 +122,4 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
     }
   }
 }
+

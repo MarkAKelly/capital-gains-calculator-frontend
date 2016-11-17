@@ -38,9 +38,9 @@ trait OtherReliefsRebasedController extends FrontendController with ValidActiveS
 
   val otherReliefsRebased = ValidateSession.async { implicit request =>
     def action(dataResult: Option[CalculationResultModel]) = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map {
-      case Some(data) if data.otherReliefs.isDefined => Ok(calculation.nonresident.otherReliefsRebased(otherReliefsForm(true).fill(data),
+      case Some(data) => Ok(calculation.nonresident.otherReliefsRebased(otherReliefsForm.fill(data),
         dataResult.get, hasExistingReliefAmount = true))
-      case _ => Ok(calculation.nonresident.otherReliefsRebased(otherReliefsForm(true), dataResult.get, hasExistingReliefAmount = false))
+      case _ => Ok(calculation.nonresident.otherReliefsRebased(otherReliefsForm, dataResult.get, hasExistingReliefAmount = false))
     }
 
     for {
@@ -62,7 +62,7 @@ trait OtherReliefsRebasedController extends FrontendController with ValidActiveS
 
     def errorRoute(form: Form[OtherReliefsModel], dataResult: Option[CalculationResultModel]) = {
       calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map {
-        case Some(data) if data.otherReliefs.isDefined => BadRequest(calculation.nonresident.otherReliefsRebased(form, dataResult.get,
+        case Some(data) => BadRequest(calculation.nonresident.otherReliefsRebased(form, dataResult.get,
           hasExistingReliefAmount = true))
         case _ => BadRequest(calculation.nonresident.otherReliefsRebased(form, dataResult.get, hasExistingReliefAmount = false))
       }
@@ -73,6 +73,6 @@ trait OtherReliefsRebasedController extends FrontendController with ValidActiveS
       Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
     }
 
-    otherReliefsForm(true).bindFromRequest.fold(errorAction, successAction)
+    otherReliefsForm.bindFromRequest.fold(errorAction, successAction)
   }
 }

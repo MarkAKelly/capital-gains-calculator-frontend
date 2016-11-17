@@ -85,7 +85,7 @@ class OtherReliefsActionSpec extends UnitSpec with WithFakeApplication with Mock
     }
 
     "supplied with a pre-existing stored model" should {
-      val testOtherReliefsModel = OtherReliefsModel(Some("Yes"), Some(5000))
+      val testOtherReliefsModel = OtherReliefsModel(5000)
       val target = setupTarget(
         Some(testOtherReliefsModel),
         TestModels.summaryIndividualFlatWithoutAEA,

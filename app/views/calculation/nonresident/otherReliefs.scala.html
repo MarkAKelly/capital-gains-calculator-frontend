@@ -4,23 +4,7 @@
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 @import views.html.helpers._
 
-@(otherReliefsForm: Form[OtherReliefsModel], result: CalculationResultModel)(implicit request: Request[_])
-
-@hiddenYesNoContent = {
-    <ul class="list">
-        <li id="totalGain">@SummaryConstructor.gainMessage(result)
-            <b> &pound;@{MoneyPounds(result.totalGain,0).quantity}</b>
-        </li>
-
-        <li id="taxableGain">@{if (result.taxableGain >= 0) Messages("calc.otherReliefs.taxableGain")
-            else Messages("calc.summary.calculation.details.lossCarriedForward")
-            }
-            <b> &pound;@{MoneyPounds(result.taxableGain,0).quantity}</b>
-        </li>
-    </ul>
-
-    @formInputMoney(otherReliefsForm, "otherReliefs", Messages("calc.otherReliefs.question"))
-}
+@(otherReliefsForm: Form[OtherReliefsModel])(implicit request: Request[_])
 
 @main_template(Messages("calc.otherReliefs.questionTwo")) {
 
@@ -33,13 +17,11 @@
     <div class="form-group">
         @form(action = controllers.nonresident.routes.OtherReliefsController.submitOtherReliefs) {
 
-            @formHiddenYesNoRadio(
-                otherReliefsForm,
-                "isClaimingOtherReliefs",
-                Messages("calc.otherReliefs.questionTwo"),
-                hiddenYesNoContent,
-                Some(Messages("calc.otherReliefs.help"))
-            )
+        @formInputMoney(otherReliefsForm,
+            "otherReliefs",
+            Messages("calc.otherReliefs.questionTwo"),
+            hideLabel = true,
+            helpText = Some(s"${Messages("calc.otherReliefs.help")}\n${Messages("calc.otherReliefs.helpTwo")}"))
 
         <button class="button" class="button" id="continue-button">@Messages("calc.base.button.continue")</button>
     }

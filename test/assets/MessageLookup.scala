@@ -234,9 +234,8 @@ object MessageLookup {
     }
 
     object OtherReliefs {
-      val question = "Do you want to add other tax relief?"
       val help = "For example, lettings relief"
-      val inputQuestion = "How much extra tax relief are you claiming?"
+      val question = "How much extra tax relief are you claiming?"
       val totalGain = "Total gain"
       val taxableGain = "Taxable gain"
       val lossCarriedForward = "Loss carried forward"
@@ -244,6 +243,7 @@ object MessageLookup {
       val updateRelief = "Update relief"
       val errorDecimal = "There are too many numbers after the decimal point in your other reliefs"
       val errorNegative = "Enter a positive number for your other reliefs"
+      val helpTwo = "Don't include any Private Residence Relief."
 
       def totalLoss(value: String): String = s"Total loss $value"
 

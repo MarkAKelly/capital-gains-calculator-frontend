@@ -26,8 +26,8 @@ class OtherReliefsFormSpec extends UnitSpec with WithFakeApplication {
   "Other Reliefs form" when {
 
     "passing in a valid model" should {
-      val model = OtherReliefsModel(Some("Yes"), Some(1000))
-      lazy val form = otherReliefsForm(false).fill(model)
+      val model = OtherReliefsModel(1000)
+      lazy val form = otherReliefsForm.fill(model)
 
       "return a valid form with no errors" in {
         form.errors.size shouldBe 0
@@ -35,73 +35,23 @@ class OtherReliefsFormSpec extends UnitSpec with WithFakeApplication {
 
       "return a form containing the data" in {
         form.data shouldBe Map(
-          "isClaimingOtherReliefs" -> "Yes",
           "otherReliefs" -> "1000"
         )
       }
     }
 
-    "passing in a valid map with a yes" should {
+    "passing in a valid map" should {
       val map = Map(
-        "isClaimingOtherReliefs" -> "Yes",
         "otherReliefs" -> "1000"
       )
-      lazy val form = otherReliefsForm(false).bind(map)
+      lazy val form = otherReliefsForm.bind(map)
 
       "return a valid form with no errors" in {
         form.errors.size shouldBe 0
       }
 
       "return a form containing the data" in {
-        form.value shouldBe Some(OtherReliefsModel(Some("Yes"), Some(1000)))
-      }
-    }
-
-    "passing in a valid map with a no" should {
-      val map = Map(
-        "isClaimingOtherReliefs" -> "No",
-        "otherReliefs" -> ""
-      )
-      lazy val form = otherReliefsForm(false).bind(map)
-
-      "return a valid form with no errors" in {
-        form.errors.size shouldBe 0
-      }
-
-      "return a form containing the data" in {
-        form.value shouldBe Some(OtherReliefsModel(Some("No"), None))
-      }
-    }
-
-    "passing in a valid map with a no but an invalid amount" should {
-      val map = Map(
-        "isClaimingOtherReliefs" -> "No",
-        "otherReliefs" -> "-1000.065"
-      )
-      lazy val form = otherReliefsForm(false).bind(map)
-
-      "return a valid form with no errors" in {
-        form.errors.size shouldBe 0
-      }
-
-      "return a form containing the data" in {
-        form.value shouldBe Some(OtherReliefsModel(Some("No"), Some(-1000.065)))
-      }
-    }
-
-    "passing in a valid map with a no but an amount above the max" should {
-      val map = Map(
-        "isClaimingOtherReliefs" -> "No",
-        "otherReliefs" -> "1000000001"
-      )
-      lazy val form = otherReliefsForm(false).bind(map)
-
-      "return a valid form with no errors" in {
-        form.errors.size shouldBe 0
-      }
-
-      "return a form containing the data" in {
-        form.value shouldBe Some(OtherReliefsModel(Some("No"), Some(1000000001)))
+        form.value shouldBe Some(OtherReliefsModel(1000))
       }
     }
 
@@ -109,55 +59,22 @@ class OtherReliefsFormSpec extends UnitSpec with WithFakeApplication {
       val map = Map(
         "otherReliefs" -> "1000.05"
       )
-      lazy val form = otherReliefsForm(true).bind(map)
+      lazy val form = otherReliefsForm.bind(map)
 
       "return a valid form with no errors" in {
         form.errors.size shouldBe 0
       }
 
       "return a form containing the data" in {
-        form.value shouldBe Some(OtherReliefsModel(None, Some(1000.05)))
-      }
-    }
-
-    "passing in an invalid map with an empty answer when calculation has not been chosen" should {
-      val map = Map(
-        "isClaimingOtherReliefs" -> "",
-        "otherReliefs" -> ""
-      )
-      lazy val form = otherReliefsForm(false).bind(map)
-
-      "return an invalid form with one errors" in {
-        form.errors.size shouldBe 1
-      }
-
-      s"return an error message of ${messages.errorRequired}" in {
-        form.error("isClaimingOtherReliefs").get.message shouldBe messages.errorRequired
-      }
-    }
-
-    "passing in an invalid map with an invalid answer when calculation has not been chosen" should {
-      val map = Map(
-        "isClaimingOtherReliefs" -> "a",
-        "otherReliefs" -> ""
-      )
-      lazy val form = otherReliefsForm(false).bind(map)
-
-      "return an invalid form with one errors" in {
-        form.errors.size shouldBe 1
-      }
-
-      s"return an error message of ${messages.errorRequired}" in {
-        form.error("isClaimingOtherReliefs").get.message shouldBe messages.errorRequired
+        form.value shouldBe Some(OtherReliefsModel(1000.05))
       }
     }
 
     "passing in an invalid map with an empty value" should {
       val map = Map(
-        "isClaimingOtherReliefs" -> "Yes",
         "otherReliefs" -> ""
       )
-      lazy val form = otherReliefsForm(false).bind(map)
+      lazy val form = otherReliefsForm.bind(map)
 
       "return an invalid form with one error" in {
         form.errors.size shouldBe 1
@@ -170,10 +87,9 @@ class OtherReliefsFormSpec extends UnitSpec with WithFakeApplication {
 
     "passing in an invalid map with a non-numeric value" should {
       val map = Map(
-        "isClaimingOtherReliefs" -> "Yes",
         "otherReliefs" -> "a"
       )
-      lazy val form = otherReliefsForm(false).bind(map)
+      lazy val form = otherReliefsForm.bind(map)
 
       "return an invalid form with one error" in {
         form.errors.size shouldBe 1
@@ -186,10 +102,9 @@ class OtherReliefsFormSpec extends UnitSpec with WithFakeApplication {
 
     "passing in an invalid map with an invalid number of decimal places" should {
       val map = Map(
-        "isClaimingOtherReliefs" -> "",
         "otherReliefs" -> "1000.056"
       )
-      lazy val form = otherReliefsForm(true).bind(map)
+      lazy val form = otherReliefsForm.bind(map)
 
       "return an invalid form with one error" in {
         form.errors.size shouldBe 1
@@ -202,10 +117,9 @@ class OtherReliefsFormSpec extends UnitSpec with WithFakeApplication {
 
     "passing in an invalid map with a negative number" should {
       val map = Map(
-        "isClaimingOtherReliefs" -> "Yes",
         "otherReliefs" -> "-1000"
       )
-      lazy val form = otherReliefsForm(false).bind(map)
+      lazy val form = otherReliefsForm.bind(map)
 
       "return an invalid form with one error" in {
         form.errors.size shouldBe 1
@@ -218,10 +132,9 @@ class OtherReliefsFormSpec extends UnitSpec with WithFakeApplication {
 
     "passing in an invalid map with a number higher than the maximum" should {
       val map = Map(
-        "isClaimingOtherReliefs" -> "Yes",
         "otherReliefs" -> "1000000000.01"
       )
-      lazy val form = otherReliefsForm(false).bind(map)
+      lazy val form = otherReliefsForm.bind(map)
 
       "return an invalid form with one error" in {
         form.errors.size shouldBe 1
@@ -234,10 +147,9 @@ class OtherReliefsFormSpec extends UnitSpec with WithFakeApplication {
 
     "passing in an invalid map with multiple errors" should {
       val map = Map(
-        "isClaimingOtherReliefs" -> "Yes",
         "otherReliefs" -> "-500.345"
       )
-      lazy val form = otherReliefsForm(false).bind(map)
+      lazy val form = otherReliefsForm.bind(map)
 
       "return an invalid form with two errors" in {
         form.errors.size shouldBe 2
