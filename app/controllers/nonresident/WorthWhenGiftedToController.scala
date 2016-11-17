@@ -19,8 +19,8 @@ package controllers.nonresident
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
-import forms.nonresident.WorthWhenGiftedToForm._
-import models.nonresident.WorthWhenGiftedToModel
+import forms.nonresident.AcquisitionMarketValueForm._
+import models.nonresident.AcquisitionValueModel
 import play.api.data.Form
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import views.html.calculation
@@ -37,21 +37,21 @@ trait WorthWhenGiftedToController extends FrontendController with ValidActiveSes
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
 
   val worthWhenGiftedTo = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[WorthWhenGiftedToModel](KeystoreKeys.worthWhenGiftedTo).map {
-      case Some(data) => Ok(calculation.nonresident.worthWhenGiftedTo(worthWhenGiftedToForm.fill(data)))
-      case None => Ok(calculation.nonresident.worthWhenGiftedTo(worthWhenGiftedToForm))
+    calcConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.worthWhenGiftedTo).map {
+      case Some(data) => Ok(calculation.nonresident.worthWhenGiftedTo(acquisitionMarketValueForm.fill(data)))
+      case None => Ok(calculation.nonresident.worthWhenGiftedTo(acquisitionMarketValueForm))
     }
   }
 
   val submitWorthWhenGiftedTo = ValidateSession.async { implicit request =>
 
-    def errorAction(form: Form[WorthWhenGiftedToModel]) = Future.successful(BadRequest(calculation.nonresident.worthWhenGiftedTo(form)))
+    def errorAction(form: Form[AcquisitionValueModel]) = Future.successful(BadRequest(calculation.nonresident.worthWhenGiftedTo(form)))
 
-    def successAction(model: WorthWhenGiftedToModel) = {
+    def successAction(model: AcquisitionValueModel) = {
       calcConnector.saveFormData(KeystoreKeys.worthWhenGiftedTo, model)
       Future.successful(Redirect(routes.AcquisitionCostsController.acquisitionCosts()))
     }
 
-    worthWhenGiftedToForm.bindFromRequest.fold(errorAction, successAction)
+    acquisitionMarketValueForm.bindFromRequest.fold(errorAction, successAction)
   }
 }
