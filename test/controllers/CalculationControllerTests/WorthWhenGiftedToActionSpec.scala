@@ -39,7 +39,7 @@ class WorthWhenGiftedToActionSpec extends UnitSpec with WithFakeApplication with
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[AcquisitionValueModel](Matchers.eq(KeystoreKeys.worthWhenGiftedTo))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[AcquisitionValueModel](Matchers.eq(KeystoreKeys.acquisitionMarketValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
     when(mockCalcConnector.saveFormData[AcquisitionValueModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))

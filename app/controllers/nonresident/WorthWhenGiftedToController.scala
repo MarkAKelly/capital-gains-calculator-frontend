@@ -37,7 +37,7 @@ trait WorthWhenGiftedToController extends FrontendController with ValidActiveSes
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
 
   val worthWhenGiftedTo = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.worthWhenGiftedTo).map {
+    calcConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.acquisitionMarketValue).map {
       case Some(data) => Ok(calculation.nonresident.worthWhenGiftedTo(acquisitionMarketValueForm.fill(data)))
       case None => Ok(calculation.nonresident.worthWhenGiftedTo(acquisitionMarketValueForm))
     }
@@ -48,7 +48,7 @@ trait WorthWhenGiftedToController extends FrontendController with ValidActiveSes
     def errorAction(form: Form[AcquisitionValueModel]) = Future.successful(BadRequest(calculation.nonresident.worthWhenGiftedTo(form)))
 
     def successAction(model: AcquisitionValueModel) = {
-      calcConnector.saveFormData(KeystoreKeys.worthWhenGiftedTo, model)
+      calcConnector.saveFormData(KeystoreKeys.acquisitionMarketValue, model)
       Future.successful(Redirect(routes.AcquisitionCostsController.acquisitionCosts()))
     }
 
