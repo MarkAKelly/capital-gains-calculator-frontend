@@ -299,7 +299,6 @@ object MessageLookup {
       def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
-    //How Became Owner messages
     object HowBecameOwner {
       val question = "How did you become the owner?"
       val errorMandatory = "Tell us how you became the owner"
@@ -314,13 +313,17 @@ object MessageLookup {
       val gave = "I gave it away"
     }
 
-    //Worth When Gifted To messages
     object WorthWhenGiftedTo {
       val question = "What was the market value of the property when you got it as a gift?"
       val errorNegativeNumber = "Enter a positive number for the market value of the property"
       val errorDecimalPlaces = "The market value of the property has too many numbers after the decimal point"
       val hintOne = "You can use a valuation from a surveyor."
-      val hintTwo = "If you don't know the exact value, you must provide a realistic estimate. You might have to pay more if we think your estimate is unrealistic."
+      val hintTwo = "If you don't know the exact value, you must provide a realistic estimate. " +
+        "You might have to pay more if we think your estimate is unrealistic."
+    }
+
+    object WorthBeforeLegislationStart {
+      val question = "What was the property worth on 31st March 1982?"
     }
 
     object Summary {

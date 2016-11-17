@@ -9,13 +9,16 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIED OR CONDITIONS OF ANY KIND, either express or implied.
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
 
 package forms.nonResident
 
+import forms.nonresident.WorthBeforeLegislationStartForm._
+import models.nonresident.WorthBeforeLegislationStartModel
+import assets.MessageLookup.{NonResident => commonMessages}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class WorthBeforeLegislationStartFormSpec extends UnitSpec with WithFakeApplication {
@@ -35,6 +38,64 @@ class WorthBeforeLegislationStartFormSpec extends UnitSpec with WithFakeApplicat
       }
     }
 
-  }
+    "passing in a valid map" should {
+      lazy val form = worthBeforeLegislationStartForm.bind(Map("worthBeforeLegislationStart" -> "125000"))
 
+      "return a form with 0 errors" in {
+        form.errors.size shouldBe 0
+      }
+
+      "return a form containing 125000" in {
+        form.value shouldBe Some(WorthBeforeLegislationStartModel(125000))
+      }
+    }
+
+    "passing in an invalid map with 'Yes'" should {
+      lazy val form = worthBeforeLegislationStartForm.bind(Map("worthBeforeLegislationStart" -> "Yes"))
+
+      "return a form with 1 error" in {
+        form.errors.size shouldBe 1
+      }
+
+      s"return an error message of ${commonMessages.errorRealNumber}" in {
+        form.error("worthBeforeLegislationStart").get.message shouldBe commonMessages.errorRealNumber
+      }
+    }
+
+    "passing in an invalid map with a number too large" should {
+      lazy val form = worthBeforeLegislationStartForm.bind(Map("worthBeforeLegislationStart" -> "100000000000"))
+
+      "return a form with 1 error" in {
+        form.errors.size shouldBe 1
+      }
+
+      s"return an error message of ${commonMessages.maximumAmount}" in {
+        form.error("worthBeforeLegislationStart").get.message shouldBe commonMessages.maximumAmount
+      }
+    }
+
+    "passing in an invalid map with a number with too many decimal places" should {
+      lazy val form = worthBeforeLegislationStartForm.bind(Map("worthBeforeLegislationStart" -> "100.000"))
+
+      "return a form with 1 error" in {
+        form.errors.size shouldBe 1
+      }
+
+      s"return an error message of ${commonMessages.invalidAmountNoDecimal}" in {
+        form.error("worthBeforeLegislationStart").get.message shouldBe commonMessages.invalidAmountNoDecimal
+      }
+    }
+
+    "passing in an invalid map with a negative number" should {
+      lazy val form = worthBeforeLegislationStartForm.bind(Map("worthBeforeLegislationStart" -> "-100.00"))
+
+      "return a form with 1 error" in {
+        form.errors.size shouldBe 1
+      }
+
+      s"return an error message of ${commonMessages.invalidAmountNoDecimal}" in {
+        form.error("worthBeforeLegislationStart").get.message shouldBe commonMessages.invalidAmountNoDecimal
+      }
+    }
+  }
 }

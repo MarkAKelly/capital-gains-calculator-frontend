@@ -271,6 +271,10 @@ calc.howBecameOwner.inherited= Inherited it
 ## Bought For Less ##
 calc.boughtForLess.question = Did you buy the property for less than it was worth because the seller wanted to help you?
 
+## Worth Before Legislation Start ##
+calc.worthBeforeLegislationStart.question = What was the property worth on 31st March 1982?
+calc.worthBeforeLegislationStart.errorDecimal = There are too many numbers after the decimal point in your market value
+calc.worthBeforeLegislationStart.errorMinimum = Enter a positive number for your market value
 
 ## Calculation Election ##
 calc.calculationElection.pageHeading = Working out your total
