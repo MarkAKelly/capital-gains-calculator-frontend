@@ -57,13 +57,7 @@ trait AcquisitionDateController extends FrontendController with ValidActiveSessi
     }
 
     def successAction(model: AcquisitionDateModel) = {
-      for {
-        save <- calcConnector.saveFormData(KeystoreKeys.acquisitionDate, model)
-        route <- routeRequest(model)
-      } yield route
-    }
-
-    def routeRequest(model: AcquisitionDateModel): Future[Result] = {
+      calcConnector.saveFormData(KeystoreKeys.acquisitionDate, model)
       model.hasAcquisitionDate match {
         case "Yes" =>
           if(TaxDates.dateBeforeLegislationStart(model.day.get, model.month.get, model.year.get)) {
