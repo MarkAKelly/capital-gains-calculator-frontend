@@ -1,0 +1,24 @@
+@import models.nonresident.WorthWhenInheritedModel
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import views.html.helpers._
+@import views.html.main_template
+
+@(worthWhenInherited : Form[WorthWhenInheritedModel])(implicit request: Request[_])
+
+@main_template(Messages("calc.worthWhenInherited.question")) {
+
+    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.HowBecameOwnerController.howBecameOwner">@Messages("calc.base.back")</a>
+
+    @errorSummary(worthWhenInherited, "worthWhenInheritedValue")
+
+    <h1 class="heading-xlarge">@Messages("calc.worthWhenInherited.question")</h1>
+
+    <p id="helpText" class="form-hint">@Messages("calc.worthWhenInherited.hintOne")<br>@Messages("calc.worthWhenInherited.hintTwo")</p>
+
+    @form(action = controllers.nonresident.routes.WorthWhenInheritedController.submitWorthWhenInherited) {
+
+        @formInputMoney(worthWhenInherited, "worthWhenInheritedValue", Messages("calc.worthWhenInherited.question"), hideLabel = true)
+
+        <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
+    }
+}

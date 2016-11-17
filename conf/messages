@@ -318,6 +318,13 @@ calc.worthWhenGiftedTo.question = What was the market value of the property when
 calc.worthWhenGiftedTo.hintOne = You can use a valuation from a surveyor.
 calc.worthWhenGiftedTo.hintTwo = If you don''t know the exact value, you must provide a realistic estimate. You might have to pay more if we think your estimate is unrealistic.
 
+## Worth When Inherited ##
+calc.worthWhenInherited.errorDecimalPlaces = The market value of the property has too many numbers after the decimal point
+calc.worthWhenInherited.errorNegative = Enter a positive number for the market value of the property
+calc.worthWhenInherited.question = What was the market value of the property when you inherited it?
+calc.worthWhenInherited.hintOne = You can use a valuation from a surveyor.
+calc.worthWhenInherited.hintTwo = If you don’t know the exact value, you must provide a realistic estimate. You might have to pay more if we think your estimate is unrealistic.
+
 ## Summary ##
 calc.summary.title = Summary
 calc.summary.amount.you.owe = Amount you owe

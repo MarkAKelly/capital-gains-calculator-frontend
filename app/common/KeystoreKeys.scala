@@ -50,6 +50,7 @@ object KeystoreKeys {
   val soldOrGivenAway = "nr:soldOrGivenAway"
   val boughtForLess = "nr:boughtForLess"
   val worthWhenGiftedTo = "nr:worthWhenGiftedTo"
+  val worthWhenInherited = "nr:worthWhenInherited"
 
   object ResidentPropertyKeys {
     val disposalDate = "res:property:disposalDate"
