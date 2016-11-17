@@ -19,11 +19,12 @@ package controllers.nonresident
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
-import models.nonresident.WorthWhenBoughtForLessModel
-import forms.nonresident.WorthWhenBoughtForLessForm._
+import forms.nonresident.AcquisitionMarketValueForm._
+import models.nonresident.AcquisitionValueModel
 import play.api.data.Form
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import views.html.calculation
+
 import scala.concurrent.Future
 
 object WorthWhenBoughtForLessController extends WorthWhenBoughtForLessController {
@@ -37,21 +38,21 @@ trait WorthWhenBoughtForLessController extends FrontendController with ValidActi
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
 
   val worthWhenBoughtForLess = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[WorthWhenBoughtForLessModel](KeystoreKeys.worthWhenBoughtForLess).map {
-      case Some(data) => Ok(calculation.nonresident.worthWhenBoughtForLess(worthWhenBoughtForLessForm.fill(data)))
-      case None => Ok(calculation.nonresident.worthWhenBoughtForLess(worthWhenBoughtForLessForm))
+    calcConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.acquisitionMarketValue).map {
+      case Some(data) => Ok(calculation.nonresident.worthWhenBoughtForLess(acquisitionMarketValueForm.fill(data)))
+      case None => Ok(calculation.nonresident.worthWhenBoughtForLess(acquisitionMarketValueForm))
     }
   }
 
   val submitWorthWhenBoughtForLess = ValidateSession.async { implicit request =>
 
-    def errorAction(form: Form[WorthWhenBoughtForLessModel]) = Future.successful(BadRequest(calculation.nonresident.worthWhenBoughtForLess(form)))
+    def errorAction(form: Form[AcquisitionValueModel]) = Future.successful(BadRequest(calculation.nonresident.worthWhenBoughtForLess(form)))
 
-    def successAction(model: WorthWhenBoughtForLessModel) = {
-      calcConnector.saveFormData(KeystoreKeys.worthWhenBoughtForLess, model)
+    def successAction(model: AcquisitionValueModel) = {
+      calcConnector.saveFormData(KeystoreKeys.acquisitionMarketValue, model)
       Future.successful(Redirect(routes.AcquisitionCostsController.acquisitionCosts()))
     }
 
-    worthWhenBoughtForLessForm.bindFromRequest.fold(errorAction, successAction)
+    acquisitionMarketValueForm.bindFromRequest.fold(errorAction, successAction)
   }
 }

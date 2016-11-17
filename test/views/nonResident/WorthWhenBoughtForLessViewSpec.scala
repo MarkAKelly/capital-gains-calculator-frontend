@@ -16,10 +16,11 @@
 
 package views.nonResident
 
-import assets.MessageLookup.NonResident.{WorthWhenBoughtForLess => messages}
+import assets.MessageLookup.NonResident.{AcquisitionMarketValue => messages}
+import assets.MessageLookup.NonResident.WorthWhenBoughtForLess
 import assets.MessageLookup.{NonResident => commonMessages}
 import controllers.helpers.FakeRequestHelper
-import forms.nonresident.WorthWhenBoughtForLessForm._
+import forms.nonresident.AcquisitionMarketValueForm._
 import org.jsoup.Jsoup
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -31,11 +32,11 @@ class WorthWhenBoughtForLessViewSpec extends UnitSpec with WithFakeApplication w
 
     "supplied with no errors" should {
 
-      lazy val view = worthWhenBoughtForLess(worthWhenBoughtForLessForm)(fakeRequest)
+      lazy val view = worthWhenBoughtForLess(acquisitionMarketValueForm)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
-      s"have a title of '${messages.question}'" in {
-        document.title() shouldBe messages.question
+      s"have a title of '${WorthWhenBoughtForLess.question}'" in {
+        document.title() shouldBe WorthWhenBoughtForLess.question
       }
 
       "have a back link" which {
@@ -66,8 +67,8 @@ class WorthWhenBoughtForLessViewSpec extends UnitSpec with WithFakeApplication w
           heading.attr("class") shouldBe "heading-xlarge"
         }
 
-        s"has the text '${messages.question}'" in {
-          heading.text shouldBe messages.question
+        s"has the text '${WorthWhenBoughtForLess.question}'" in {
+          heading.text shouldBe WorthWhenBoughtForLess.question
         }
       }
 
@@ -84,8 +85,8 @@ class WorthWhenBoughtForLessViewSpec extends UnitSpec with WithFakeApplication w
         }
       }
 
-      "have input containing the id 'worthWhenBoughtForLessValue'" in {
-        document.body().select("input").attr("id") should include("worthWhenBoughtForLessValue")
+      "have input containing the id 'acquisitionMarketValue'" in {
+        document.body().select("input").attr("id") should include("acquisitionMarketValue")
       }
 
       "have a form" which {
@@ -119,7 +120,7 @@ class WorthWhenBoughtForLessViewSpec extends UnitSpec with WithFakeApplication w
 
     "supplied with a form with errors" should {
 
-      lazy val form = worthWhenBoughtForLessForm.bind(Map("worthWhenBoughtForLessValue" -> "a"))
+      lazy val form = acquisitionMarketValueForm.bind(Map("acquisitionMarketValue" -> "a"))
       lazy val view = worthWhenBoughtForLess(form)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 

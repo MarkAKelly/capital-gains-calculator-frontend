@@ -21,28 +21,27 @@ import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.nonresident.WorthWhenGiftedToController
-import models.nonresident.WorthWhenGiftedToModel
+import models.nonresident.AcquisitionValueModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
-import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
 class WorthWhenGiftedToActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
-  def setupTarget(getData: Option[WorthWhenGiftedToModel]): WorthWhenGiftedToController = {
+  def setupTarget(getData: Option[AcquisitionValueModel]): WorthWhenGiftedToController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[WorthWhenGiftedToModel](Matchers.eq(KeystoreKeys.worthWhenGiftedTo))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[AcquisitionValueModel](Matchers.eq(KeystoreKeys.acquisitionMarketValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
-    when(mockCalcConnector.saveFormData[WorthWhenGiftedToModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.saveFormData[AcquisitionValueModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(mock[CacheMap]))
 
     new WorthWhenGiftedToController {
@@ -75,7 +74,7 @@ class WorthWhenGiftedToActionSpec extends UnitSpec with WithFakeApplication with
 
     "request has a valid session and some keystore value" should {
 
-      lazy val target = setupTarget(Some(WorthWhenGiftedToModel(BigDecimal(1000.00))))
+      lazy val target = setupTarget(Some(AcquisitionValueModel(BigDecimal(1000.00))))
       lazy val result = target.worthWhenGiftedTo(fakeRequestWithSession)
 
       "return a status of 200" in {
@@ -108,7 +107,7 @@ class WorthWhenGiftedToActionSpec extends UnitSpec with WithFakeApplication with
     "with valid form with the answer '1000.00'" should {
 
       lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("worthWhenGiftedToValue", "1000.00"))
+      lazy val request = fakeRequestToPOSTWithSession(("acquisitionMarketValue", "1000.00"))
       lazy val result = target.submitWorthWhenGiftedTo(request)
 
       "return a status of 303" in {
@@ -123,7 +122,7 @@ class WorthWhenGiftedToActionSpec extends UnitSpec with WithFakeApplication with
     "with an invalid form with the answer 'a'" should {
 
       lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("worthWhenGiftedToValue", "a"))
+      lazy val request = fakeRequestToPOSTWithSession(("acquisitionMarketValue", "a"))
       lazy val result = target.submitWorthWhenGiftedTo(request)
       lazy val doc = Jsoup.parse(bodyOf(result))
 
