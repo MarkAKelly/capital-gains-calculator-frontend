@@ -48,6 +48,12 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Mock
     }
   }
 
+  "DisposalDateController" should {
+    s"have a session timeout home link of '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+      DisposalDateController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+    }
+  }
+
   // GET Tests
   "Calling the CalculationController.disposalDate" when {
 
@@ -70,6 +76,20 @@ class DisposalDateActionSpec extends UnitSpec with WithFakeApplication with Mock
 
       lazy val target = setupTarget(Some(DisposalDateModel(1, 3, 2016)))
       lazy val result = target.disposalDate(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 200" in {
+        status(result) shouldBe 200
+      }
+
+      "should return to the disposal date page" in {
+        document.title shouldEqual messages.question
+      }
+    }
+
+    "supplied with a pre-existing stored model without a session" should {
+      lazy val target = setupTarget(Some(DisposalDateModel(1, 3, 2016)))
+      lazy val result = target.disposalDate(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {

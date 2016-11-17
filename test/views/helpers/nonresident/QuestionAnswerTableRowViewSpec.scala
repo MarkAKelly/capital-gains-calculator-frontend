@@ -16,16 +16,15 @@
 
 package views.helpers.nonresident
 
-import models.nonresident.QuestionAnswerModel
-import org.jsoup.Jsoup
-import uk.gov.hmrc.play.test.UnitSpec
-import views.html.helpers.nonresident.questionAnswerTableRow
 import java.time.LocalDate
 
-/**
-  * Created by emma on 15/11/16.
-  */
-class QuestionAnswerTableRowViewSpec extends UnitSpec {
+import models.nonresident.QuestionAnswerModel
+import org.jsoup.Jsoup
+import play.api.i18n.Messages
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import views.html.helpers.nonresident.questionAnswerTableRow
+
+class QuestionAnswerTableRowViewSpec extends UnitSpec with WithFakeApplication {
 
   def assertDataColumnContents(expectedOutput: String, model:QuestionAnswerModel[Any]): Unit ={
     lazy val result = questionAnswerTableRow(Seq(model))
@@ -34,16 +33,16 @@ class QuestionAnswerTableRowViewSpec extends UnitSpec {
 
     lazy val dataColumnContents = doc.select(s"${model.id}-data").text()
 
-    s"generate a row with a data column with the data '${expectedOutput}'" in {
+    s"generate a row with a data column with the data '$expectedOutput'" in {
       dataColumnContents shouldBe ""
     }
   }
 
   "Creating a single table of one row" when {
     "passing in a String answer" should {
-      val model = Seq(QuestionAnswerModel[String]("id", "answer", "question", Some("change-link")))
-      val result = questionAnswerTableRow(model)
-      val doc = Jsoup.parse(result.body)
+      lazy val model = Seq(QuestionAnswerModel[String]("id", "answer", "question", Some("change-link")))
+      lazy val result = questionAnswerTableRow(model)
+      lazy val doc = Jsoup.parse(result.body)
 
       "have a table row with a table row for the question with ID id-question" which {
         lazy val row = doc.select("#id")
@@ -59,7 +58,7 @@ class QuestionAnswerTableRowViewSpec extends UnitSpec {
           lazy val changeLink = row.select("#id-changeLink")
           "has the hyper-link text 'Change'" in {
             //needs to be a message
-            changeLink.text() shouldBe "Change"
+            changeLink.text() shouldBe Messages("calc.nonresident.check.change")
           }
 
           "has a link to 'change-link'" in {
@@ -94,9 +93,9 @@ class QuestionAnswerTableRowViewSpec extends UnitSpec {
       }
 
       "passing in a non-matching type" should {
-        val model = Seq(QuestionAnswerModel[Double]("id", 50.2, "question", Some("change-link")))
-        val result = questionAnswerTableRow(model)
-        val doc = Jsoup.parse(result.body)
+        lazy val model = Seq(QuestionAnswerModel[Double]("id", 50.2, "question", Some("change-link")))
+        lazy val result = questionAnswerTableRow(model)
+        lazy val doc = Jsoup.parse(result.body)
 
         "generate a data column with a blank answer" in {
           doc.select("id-data").text() shouldBe ""
@@ -110,24 +109,24 @@ class QuestionAnswerTableRowViewSpec extends UnitSpec {
 
     val model = Seq(QuestionAnswerModel[String](idString, "answer", "question", Some("change-link")),
       QuestionAnswerModel[Boolean](idBoolean, false, "question", Some("change-link-diff")))
-    val result = questionAnswerTableRow(model)
-    val doc = Jsoup.parse(result.body)
+    lazy val result = questionAnswerTableRow(model)
+    lazy val doc = Jsoup.parse(result.body)
 
     s"have a table row with a table row for the question with ID ${idString}" which {
-      lazy val row = doc.select("#stringQ")
+      lazy val row = doc.select("#stringQA")
       "has a question column with the question 'question'" in {
-        doc.select(s"#${idString}-question").text() shouldBe "question"
+        doc.select(s"#$idString-question").text() shouldBe "question"
       }
 
       "has a data column with the data 'answer'" in {
-        doc.select(s"#${idString}-data").text() shouldBe "answer"
+        doc.select(s"#$idString-data").text() shouldBe "answer"
       }
 
       "has a change link column with a hyper-link" which {
-        lazy val changeLink = row.select(s"#${idString}-changeLink")
+        lazy val changeLink = row.select(s"#$idString-changeLink")
         "has the hyper-link text 'Change'" in {
           //needs to be a message
-          changeLink.text() shouldBe "Change"
+          changeLink.text() shouldBe Messages("calc.nonresident.check.change")
         }
 
         "has a link to 'change-link'" in {
@@ -137,20 +136,20 @@ class QuestionAnswerTableRowViewSpec extends UnitSpec {
     }
 
     s"have a table row with a table row for the question with ID ${idBoolean}" which {
-      lazy val row = doc.select("#stringQ")
+      lazy val row = doc.select("#booleanQA")
       "has a question column with the question 'question'" in {
-        doc.select(s"#${idBoolean}-question").text() shouldBe "question"
+        doc.select(s"#$idBoolean-question").text() shouldBe "question"
       }
 
       "has a data column with the data 'No'" in {
-        doc.select(s"#${idBoolean}-data").text() shouldBe "No"
+        doc.select(s"#$idBoolean-data").text() shouldBe "No"
       }
 
       "has a change link column with a hyper-link" which {
-        lazy val changeLink = row.select(s"#${idBoolean}-changeLink")
+        lazy val changeLink = row.select(s"#$idBoolean-changeLink")
         "has the hyper-link text 'Change'" in {
           //needs to be a message
-          changeLink.text() shouldBe "Change"
+          changeLink.text() shouldBe Messages("calc.nonresident.check.change")
         }
 
         "has a link to 'change-link-diff'" in {

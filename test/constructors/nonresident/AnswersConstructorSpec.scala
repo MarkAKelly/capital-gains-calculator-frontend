@@ -72,6 +72,9 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
     when(mockConnector.fetchAndGetFormData[ImprovementsModel](Matchers.eq(KeystoreKeys.improvements))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(totalGainAnswersModel.improvementsModel)))
 
+    when(mockConnector.fetchAndGetFormData[OtherReliefsModel](Matchers.eq(KeystoreKeys.otherReliefsFlat))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(totalGainAnswersModel.otherReliefsFlat))
+
     new AnswersConstructor {
       override val calculatorConnector: CalculatorConnector = mockConnector
     }
@@ -90,7 +93,8 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
     AcquisitionDateModel("No", None, None, None),
     None,
     None,
-    ImprovementsModel("No", None, None)
+    ImprovementsModel("No", None, None),
+    None
   )
 
   val totalGainAllOptionalModel = TotalGainAnswersModel(
@@ -106,7 +110,8 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
     AcquisitionDateModel("Yes", Some(1), Some(4), Some(2013)),
     Some(RebasedValueModel("Yes", Some(7500))),
     Some(RebasedCostsModel("Yes", Some(150))),
-    ImprovementsModel("Yes", Some(50), Some(25))
+    ImprovementsModel("Yes", Some(50), Some(25)),
+    Some(OtherReliefsModel(Some("Yes"), Some(1000)))
   )
 
   "Calling getNRTotalGainAnswers" should {

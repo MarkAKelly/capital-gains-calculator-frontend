@@ -38,6 +38,7 @@ trait CheckYourAnswersController extends FrontendController with ValidActiveSess
   val calcConnector: CalculatorConnector
   val calcElectionConstructor: CalculationElectionConstructor
 
+
   val checkYourAnswers = ValidateSession.async { implicit request =>
     //val model = AnswersConstructor.getNRTotalGainAnswers
 

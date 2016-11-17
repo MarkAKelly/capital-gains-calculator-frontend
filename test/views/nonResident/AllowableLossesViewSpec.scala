@@ -47,6 +47,10 @@ class AllowableLossesViewSpec extends UnitSpec with WithFakeApplication with Moc
           }
         }
 
+        s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+          document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+        }
+
         "have the title 'Are you claiming any allowable losses?'" in {
           document.title shouldEqual messages.yesNoQuestion
         }

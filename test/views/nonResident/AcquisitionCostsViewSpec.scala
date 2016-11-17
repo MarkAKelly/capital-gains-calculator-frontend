@@ -52,7 +52,10 @@ class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with Mo
         "has the class 'back-link'" in {
           backLink.attr("class") shouldBe "back-link"
         }
+      }
 
+      s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+        document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
       }
 
       "have a heading" which {

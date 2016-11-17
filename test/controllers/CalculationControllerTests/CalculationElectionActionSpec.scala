@@ -96,6 +96,12 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
     }
   }
 
+  "CalculationElectionController" should {
+    s"have a session timeout home link of '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+      CalculationElectionController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+    }
+  }
+
   // GET Tests
   "In CalculationController calling the .calculationElection action" when {
 

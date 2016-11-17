@@ -54,6 +54,10 @@ class SoldForLessViewSpec extends UnitSpec with WithFakeApplication with Mockito
         }
       }
 
+      s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+        document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+      }
+
       "have a heading" which {
 
         lazy val heading = document.body().select("h1")
@@ -91,8 +95,8 @@ class SoldForLessViewSpec extends UnitSpec with WithFakeApplication with Mockito
           form.attr("method") shouldBe "POST"
         }
 
-        s"has an action of '${controllers.nonresident.routes.SoldForLessController.submitSoldForLess.url}'" in {
-          form.attr("action") shouldBe controllers.nonresident.routes.SoldForLessController.submitSoldForLess.url
+        s"has an action of '${controllers.nonresident.routes.SoldForLessController.submitSoldForLess().url}'" in {
+          form.attr("action") shouldBe controllers.nonresident.routes.SoldForLessController.submitSoldForLess().url
         }
       }
 

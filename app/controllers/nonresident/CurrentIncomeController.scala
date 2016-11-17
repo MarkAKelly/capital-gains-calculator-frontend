@@ -33,7 +33,7 @@ object CurrentIncomeController extends CurrentIncomeController {
 trait CurrentIncomeController extends FrontendController with ValidActiveSession {
 
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
-  override val homeLink = controllers.nonresident.routes.CustomerTypeController.customerType().url
+  override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
   val calcConnector: CalculatorConnector
 
   val currentIncome = ValidateSession.async { implicit request =>
