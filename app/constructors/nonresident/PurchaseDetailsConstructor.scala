@@ -28,7 +28,7 @@ object PurchaseDetailsConstructor {
   def getPurchaseDetailsSection(totalGainAnswersModel: TotalGainAnswersModel): Seq[QuestionAnswerModel[Any]] = {
 
     val useRebasedValues =
-      totalGainAnswersModel.acquisitionDateModel match {
+      (totalGainAnswersModel.acquisitionDateModel) match {
         case AcquisitionDateModel("Yes",_,_,_) if !TaxDates.dateAfterStart(totalGainAnswersModel.acquisitionDateModel.get) => true
         case AcquisitionDateModel("No",_,_,_) if totalGainAnswersModel.rebasedValueModel.get.rebasedValueAmt.isDefined => true
         case _ => false

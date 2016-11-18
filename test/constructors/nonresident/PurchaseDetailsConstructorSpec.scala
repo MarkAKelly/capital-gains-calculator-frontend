@@ -37,7 +37,7 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
     AcquisitionValueModel(300000),
     AcquisitionCostsModel(2500),
     AcquisitionDateModel("No", None, None, None),
-    None,
+    Some(RebasedValueModel(None)),
     None,
     ImprovementsModel("No", None, None),
     None
@@ -101,8 +101,8 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
     "using the totalGainForLess model" should {
       lazy val result = PurchaseDetailsConstructor.getPurchaseDetailsSection(totalGainForLess)
 
-      "will return a Sequence with size 6" in {
-        result.size shouldBe 6
+      "will return a Sequence with size 9" in {
+        result.size shouldBe 9
       }
 
       "return a Sequence that will contain an acquisitionDateAnswer data item" in {
@@ -127,6 +127,42 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
 
       "return a Sequence that will contain a boughtForLess data item" in {
         result.contains(PurchaseDetailsConstructor.boughtForLessRow(totalGainForLess).get) shouldBe true
+      }
+
+      "return a Sequence that will contain a rebasedValue data item" in {
+        result.contains(PurchaseDetailsConstructor.rebasedValueRow(totalGainForLess.rebasedValueModel, true).get) shouldBe true
+      }
+
+      "return a Sequence that will contain a rebasedCostsQuestion data item" in {
+        result.contains(PurchaseDetailsConstructor.rebasedCostsQuestionRow(totalGainForLess.rebasedCostsModel, true).get) shouldBe true
+      }
+
+      "return a Sequence that will contain a rebasedCosts data item" in {
+        result.contains(PurchaseDetailsConstructor.rebasedCostsRow(totalGainForLess.rebasedCostsModel, true).get) shouldBe true
+      }
+    }
+
+    "using the totalGainGiven model" should {
+      lazy val result = PurchaseDetailsConstructor.getPurchaseDetailsSection(totalGainGiven)
+
+      "will return a Sequence with size 9" in {
+        result.size shouldBe 4
+      }
+
+      "return a Sequence that will contain an acquisitionDateAnswer data item" in {
+        result.contains(PurchaseDetailsConstructor.acquisitionDateAnswerRow(totalGainGiven).get) shouldBe true
+      }
+
+      "return a Sequence that will contain an acquisitionCost data item" in {
+        result.contains(PurchaseDetailsConstructor.acquisitionCostsRow(totalGainGiven).get) shouldBe true
+      }
+
+      "return a Sequence that will contain an acquisitionValue data item" in {
+        result.contains(PurchaseDetailsConstructor.acquisitionValueRow(totalGainGiven).get) shouldBe true
+      }
+
+      "return a Sequence that will contain a howBecameOwner data item" in {
+        result.contains(PurchaseDetailsConstructor.howBecameOwnerRow(totalGainGiven).get) shouldBe true
       }
     }
   }
