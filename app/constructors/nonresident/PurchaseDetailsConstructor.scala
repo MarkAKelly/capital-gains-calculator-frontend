@@ -19,7 +19,7 @@ package constructors.nonresident
 import java.time.LocalDate
 
 import common.{KeystoreKeys, TaxDates}
-import models.nonresident.{AcquisitionDateModel, QuestionAnswerModel, RebasedValueModel, TotalGainAnswersModel}
+import models.nonresident._
 import play.api.i18n.Messages
 
 
@@ -129,4 +129,27 @@ object PurchaseDetailsConstructor {
     }
     else None
   }
+
+  def rebasedCostsQuestionRow(rebasedCostsModel: Option[RebasedCostsModel], useRebasedValues: Boolean): Option[QuestionAnswerModel[String]] = {
+    if (useRebasedValues) {
+      Some(QuestionAnswerModel(
+        s"${KeystoreKeys.rebasedCosts}-question",
+        rebasedCostsModel.get.hasRebasedCosts,
+        Messages("calc.rebasedCosts.question"),
+        Some(controllers.nonresident.routes.RebasedCostsController.rebasedCosts().url)
+      ))
+    } else None
+  }
+
+//  def rebasedCostsRow(rebasedCostsModel: Option[RebasedCostsModel], useRebasedValues: Boolean): Option[QuestionAnswerModel[BigDecimal]] = {
+//    if (useRebasedValues && rebasedCostsModel.get.rebasedCosts.isDefined) {
+//      Some(QuestionAnswerModel(
+//        KeystoreKeys.rebasedValue,
+//        rebasedCostsModel.get.rebasedCosts.get,
+//        s"${Messages("calc.nonResident.rebasedValue.question")} ${Messages("calc.nonResident.rebasedValue.date")}",
+//        Some(controllers.nonresident.routes.RebasedValueController.rebasedValue().url)
+//      ))
+//    }
+//    else None
+//  }
 }

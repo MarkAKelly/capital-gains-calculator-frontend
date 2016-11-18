@@ -398,4 +398,48 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
       }
     }
   }
+
+  "Calling .rebasedCostsQuestionRow" when {
+
+    "a value is applicable" should {
+      lazy val result = PurchaseDetailsConstructor.rebasedCostsQuestionRow(Some(RebasedCostsModel("Yes", None)), true)
+
+      "return Some value" in {
+        result.isDefined shouldBe true
+      }
+
+      "have an id of nr:boughtForLess" in {
+        assertExpectedResult[QuestionAnswerModel[String]](result)(_.id shouldBe "nr:rebasedCosts-question")
+      }
+
+      "have a value of Yes" in {
+        assertExpectedResult[QuestionAnswerModel[String]](result)(_.data shouldBe "Yes")
+      }
+
+      "have the question for bought for less" in {
+        assertExpectedResult[QuestionAnswerModel[String]](result)(_.question shouldBe messages.RebasedCosts.question)
+      }
+
+      "have a link to the bought for less page" in {
+        assertExpectedResult[QuestionAnswerModel[String]](result)(_.link
+          shouldBe Some(controllers.nonresident.routes.RebasedCostsController.rebasedCosts().url))
+      }
+    }
+
+    "a value is not applicable" should {
+      lazy val result = PurchaseDetailsConstructor.rebasedCostsQuestionRow(Some(RebasedCostsModel("No", None)), false)
+
+      "should return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "a value is not found" should {
+      lazy val result = PurchaseDetailsConstructor.rebasedCostsQuestionRow(None, false)
+
+      "should return a None" in {
+        result shouldBe None
+      }
+    }
+  }
 }
