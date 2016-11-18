@@ -40,6 +40,9 @@ object PurchaseDetailsConstructor {
     val boughtForLessData = boughtForLessRow(totalGainAnswersModel)
     val acquisitionValueData = acquisitionValueRow(totalGainAnswersModel)
     val acquisitionCostsData = acquisitionCostsRow(totalGainAnswersModel)
+    val rebasedValueData = rebasedValueRow(totalGainAnswersModel.rebasedValueModel, useRebasedValues)
+    val rebasedCostsQuestionData = rebasedCostsQuestionRow(totalGainAnswersModel.rebasedCostsModel, useRebasedValues)
+    val rebasedCostsData = rebasedCostsRow(totalGainAnswersModel.rebasedCostsModel, useRebasedValues)
 
     val items = Seq(
       acquisitionDateAnswerData,
@@ -47,7 +50,10 @@ object PurchaseDetailsConstructor {
       howBecameOwnerData,
       boughtForLessData,
       acquisitionValueData,
-      acquisitionCostsData
+      acquisitionCostsData,
+      rebasedValueData,
+      rebasedCostsQuestionData,
+      rebasedCostsData
     )
     items.flatten
   }
@@ -141,15 +147,15 @@ object PurchaseDetailsConstructor {
     } else None
   }
 
-//  def rebasedCostsRow(rebasedCostsModel: Option[RebasedCostsModel], useRebasedValues: Boolean): Option[QuestionAnswerModel[BigDecimal]] = {
-//    if (useRebasedValues && rebasedCostsModel.get.rebasedCosts.isDefined) {
-//      Some(QuestionAnswerModel(
-//        KeystoreKeys.rebasedValue,
-//        rebasedCostsModel.get.rebasedCosts.get,
-//        s"${Messages("calc.nonResident.rebasedValue.question")} ${Messages("calc.nonResident.rebasedValue.date")}",
-//        Some(controllers.nonresident.routes.RebasedValueController.rebasedValue().url)
-//      ))
-//    }
-//    else None
-//  }
+  def rebasedCostsRow(rebasedCostsModel: Option[RebasedCostsModel], useRebasedValues: Boolean): Option[QuestionAnswerModel[BigDecimal]] = {
+    (useRebasedValues, rebasedCostsModel) match {
+      case (true, Some(RebasedCostsModel("Yes", Some(value)))) => Some(QuestionAnswerModel(
+        KeystoreKeys.rebasedCosts,
+        value,
+        Messages("calc.rebasedCosts.questionTwo"),
+        Some(controllers.nonresident.routes.RebasedCostsController.rebasedCosts().url)
+      ))
+      case _ => None
+    }
+  }
 }

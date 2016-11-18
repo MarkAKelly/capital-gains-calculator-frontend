@@ -442,4 +442,56 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
       }
     }
   }
+
+  "Calling .rebasedCostsRow" when {
+
+    "an applicable value is provided" should {
+      lazy val result = PurchaseDetailsConstructor.rebasedCostsRow(Some(RebasedCostsModel("Yes", Some(1))), true)
+
+      "return Some value" in {
+        result.isDefined shouldBe true
+      }
+
+      "have an id of nr:boughtForLess" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.id shouldBe "nr:rebasedCosts")
+      }
+
+      "have a value of Yes" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.data shouldBe 1)
+      }
+
+      "have the question for bought for less" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.question shouldBe messages.RebasedCosts.inputQuestion)
+      }
+
+      "have a link to the bought for less page" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.link
+          shouldBe Some(controllers.nonresident.routes.RebasedCostsController.rebasedCosts().url))
+      }
+    }
+
+    "an applicable value is not provided" should {
+      lazy val result = PurchaseDetailsConstructor.rebasedCostsRow(Some(RebasedCostsModel("No", None)), true)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "an applicable value is not found" should {
+      lazy val result = PurchaseDetailsConstructor.rebasedCostsRow(None, true)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "no applicable value is required" should {
+      lazy val result = PurchaseDetailsConstructor.rebasedCostsRow(Some(RebasedCostsModel("Yes", Some(1))), false)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+  }
 }
