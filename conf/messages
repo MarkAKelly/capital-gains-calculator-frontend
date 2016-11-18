@@ -168,7 +168,7 @@ calc.nonResident.mandatoryRebasedValue.helpText = This value lets us calculate y
 calc.nonResident.mandatoryRebasedValue.hintText = If you don''t know the exact value, you must provide a realistic estimate. You might have to pay more if we think your estimate is unrealistic.
 
 ## Rebased Costs ##
-calc.rebasedCosts.question = Did you pay for the valuation?
+calc.rebasedCosts.question = Did you pay to have the property valued at 5 April 2015?
 calc.rebasedCosts.questionTwo = How much did it cost to get the property valued?
 calc.rebasedCosts.errorNegative = Enter a positive number for your costs
 calc.rebasedCosts.error.no.value.supplied = Enter the value for your costs
