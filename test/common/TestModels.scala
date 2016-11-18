@@ -46,6 +46,23 @@ object TestModels {
     Some(PrivateResidenceReliefModel("Yes", Some(2847), Some(0)))
   )
 
+  val businessScenarioFiveModel = TotalGainAnswersModel(
+    DisposalDateModel(5, 6, 2016),
+    SoldOrGivenAwayModel(true),
+    Some(SoldForLessModel(true)),
+    DisposalValueModel(950000),
+    DisposalCostsModel(15000),
+    HowBecameOwnerModel("Bought"),
+    Some(BoughtForLessModel(false)),
+    AcquisitionValueModel(1250000),
+    AcquisitionCostsModel(20000),
+    AcquisitionDateModel("No", None, None, None),
+    None,
+    None,
+    ImprovementsModel("No", None),
+    Some(OtherReliefsModel(Some("No"), None))
+  )
+
   val sumModelFlat = SummaryModel(
     CustomerTypeModel(CustomerTypeKeys.individual),
     None,

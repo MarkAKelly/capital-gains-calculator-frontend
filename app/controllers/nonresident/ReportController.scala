@@ -16,21 +16,17 @@
 
 package controllers.nonresident
 
-import java.time.LocalDate
-
-import common.Dates._
 import common.KeystoreKeys
 import connectors.CalculatorConnector
-import constructors.nonresident.SummaryConstructor
+import constructors.nonresident.{AnswersConstructor, SummaryConstructor}
 import controllers.predicates.ValidActiveSession
 import it.innove.play.pdf.PdfGenerator
-import models.nonresident.{CalculationResultModel, DisposalDateModel, SummaryModel}
+import models.nonresident._
 import models.resident.TaxYearModel
 import play.api.i18n.Messages
+import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import play.api.mvc.{Action, RequestHeader}
 import uk.gov.hmrc.play.http.HeaderCarrier
-import views.html.calculation
 import views.html.calculation.nonresident.{summaryReport => summaryView}
 
 import scala.concurrent.Future
@@ -38,38 +34,34 @@ import scala.concurrent.Future
 
 object ReportController extends ReportController {
   val calcConnector = CalculatorConnector
+  val answersConstructor = AnswersConstructor
 }
 
 trait ReportController extends FrontendController with ValidActiveSession {
 
   val calcConnector: CalculatorConnector
+  val answersConstructor: AnswersConstructor
 
-  def host(implicit request: RequestHeader): String ={
+  def host(implicit request: RequestHeader): String = {
     s"http://${request.host}/"
   }
 
   def getTaxYear(disposalDate: DisposalDateModel)(implicit hc: HeaderCarrier): Future[Option[TaxYearModel]] =
     calcConnector.getTaxYear(disposalDate.year.toString)
 
-  def resultModel(summaryModel: SummaryModel)(implicit hc: HeaderCarrier): Future[Option[CalculationResultModel]] = {
-    summaryModel.calculationElectionModel.calculationType match {
-      case "flat" =>
-        calcConnector.calculateFlat(summaryModel)
-      case "time" =>
-        calcConnector.calculateTA(summaryModel)
-      case "rebased" =>
-        calcConnector.calculateRebased(summaryModel)
-    }
+  def resultModel(totalGainAnswersModel: TotalGainAnswersModel)(implicit hc: HeaderCarrier): Future[Option[TotalGainResultsModel]] = {
+    calcConnector.calculateTotalGain(totalGainAnswersModel)
   }
 
   val summaryReport = ValidateSession.async { implicit request =>
     for {
-      summary <- calcConnector.createSummary(hc)
+      summary <- answersConstructor.getNRTotalGainAnswers
+      calculationType <- calcConnector.fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection)
       result <- resultModel(summary)(hc)
       taxYear <- getTaxYear(summary.disposalDateModel)
 
     } yield {
-      PdfGenerator.ok(summaryView(summary, result.get, taxYear.get, SummaryConstructor.calcTypeMessage(summary.calculationElectionModel.calculationType)),
+      PdfGenerator.ok(summaryView(summary, result.get, taxYear.get, calculationType.get.calculationType),
         host).toScala
         .withHeaders("Content-Disposition" ->s"""attachment; filename="${Messages("calc.summary.title")}.pdf"""")
     }
