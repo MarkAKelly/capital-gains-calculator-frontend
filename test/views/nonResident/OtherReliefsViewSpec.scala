@@ -83,7 +83,7 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
       }
 
       s"have the question '${messages.OtherReliefs.question}'" in {
-        document.body.select("legend").first().text shouldBe messages.OtherReliefs.question
+        document.body.select("label").text should  include(messages.OtherReliefs.question)
       }
 
       "have an input using the id otherReliefs" in {
@@ -91,7 +91,8 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
       }
 
       "have the correct help text" in {
-        document.body().select("form .form-hint") shouldBe s"${messages.OtherReliefs.help}\n${messages.OtherReliefs.helpTwo}"
+        document.body().select("form .form-hint").text().replaceAll("[\\n]", " ") shouldBe
+          s"${messages.OtherReliefs.help} ${messages.OtherReliefs.helpTwo}"
       }
 
       "have a button" which {

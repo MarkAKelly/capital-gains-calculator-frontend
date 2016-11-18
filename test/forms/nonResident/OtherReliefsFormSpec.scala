@@ -81,7 +81,7 @@ class OtherReliefsFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       s"return an error message of ${messages.errorRealNumber}" in {
-        form.error("").get.message shouldBe messages.errorRealNumber
+        form.error("otherReliefs").get.message shouldBe messages.errorRealNumber
       }
     }
 
@@ -96,7 +96,7 @@ class OtherReliefsFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       s"return an error message of ${messages.errorRealNumber}" in {
-        form.error("").get.message shouldBe messages.errorRealNumber
+        form.error("otherReliefs").get.message shouldBe messages.errorRealNumber
       }
     }
 
@@ -111,7 +111,7 @@ class OtherReliefsFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       s"return an error message of ${messages.OtherReliefs.errorDecimal}" in {
-        form.error("").get.message shouldBe messages.OtherReliefs.errorDecimal
+        form.error("otherReliefs").get.message shouldBe messages.OtherReliefs.errorDecimal
       }
     }
 
@@ -126,7 +126,7 @@ class OtherReliefsFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       s"return an error message of ${messages.OtherReliefs.errorNegative}" in {
-        form.error("").get.message shouldBe messages.OtherReliefs.errorNegative
+        form.error("otherReliefs").get.message shouldBe messages.OtherReliefs.errorNegative
       }
     }
 
@@ -141,7 +141,7 @@ class OtherReliefsFormSpec extends UnitSpec with WithFakeApplication {
       }
 
       s"return an error message of ${messages.OtherReliefs.errorMaximum("1,000,000,000")}" in {
-        form.error("").get.message shouldBe messages.OtherReliefs.errorMaximum("1,000,000,000")
+        form.error("otherReliefs").get.message shouldBe messages.OtherReliefs.errorMaximum("1,000,000,000")
       }
     }
 

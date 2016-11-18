@@ -101,14 +101,6 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
       }
     }
 
-    "an answer of No to other reliefs is found" should {
-      lazy val result = DeductionDetailsConstructor.otherReliefsFlatValueRow(noOtherReliefs)
-
-      "return a None" in {
-        result shouldBe None
-      }
-    }
-
     "an answer of Yes to other reliefs is found" should {
       lazy val result = DeductionDetailsConstructor.otherReliefsFlatValueRow(yesOtherReliefs)
 

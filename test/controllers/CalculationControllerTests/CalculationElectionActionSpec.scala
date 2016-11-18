@@ -59,9 +59,9 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
     when(mockCalcConnector.createSummary(Matchers.any()))
       .thenReturn(summaryData)
 
-    val flatReliefs = Some(otherReliefsFlat.get.otherReliefs)
-    val timeReliefs = Some(otherReliefsTA.get.otherReliefs)
-    val rebasedReliefs = Some(otherReliefsRebased.get.otherReliefs)
+    val flatReliefs = Some(otherReliefsFlat.getOrElse(OtherReliefsModel(0)).otherReliefs)
+    val timeReliefs = Some(otherReliefsTA.getOrElse(OtherReliefsModel(0)).otherReliefs)
+    val rebasedReliefs = Some(otherReliefsRebased.getOrElse(OtherReliefsModel(0)).otherReliefs)
 
     when(mockCalcElectionConstructor.generateElection(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(),
       Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any()))

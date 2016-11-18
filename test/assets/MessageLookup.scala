@@ -234,7 +234,7 @@ object MessageLookup {
     }
 
     object OtherReliefs {
-      val help = "For example, lettings relief"
+      val help = "For example, lettings relief."
       val question = "How much extra tax relief are you claiming?"
       val totalGain = "Total gain"
       val taxableGain = "Taxable gain"
