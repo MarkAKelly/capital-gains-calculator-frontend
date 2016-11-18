@@ -27,7 +27,7 @@ object PropertyDetailsConstructor {
     val rebasedImprovements =
       answers.acquisitionDateModel match {
         case AcquisitionDateModel("Yes",_,_,_) if !TaxDates.dateAfterStart(answers.acquisitionDateModel.get) => true
-        case AcquisitionDateModel("No",_,_,_) if answers.rebasedValueModel.get.hasRebasedValue.equals("Yes") => true
+        case AcquisitionDateModel("No",_,_,_) if answers.rebasedValueModel.get.rebasedValueAmt.isDefined => true
         case _ => false
       }
 

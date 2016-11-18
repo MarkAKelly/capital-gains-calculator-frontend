@@ -35,7 +35,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
     Some(AnnualExemptAmountModel(10000.0)),
     AcquisitionDateModel("Yes", Some(4), Some(9), Some(2016)),
     AcquisitionValueModel(300000.0),
-    Some(RebasedValueModel("Yes", Some(350000.0))),
+    Some(RebasedValueModel(Some(350000.0))),
     Some(RebasedCostsModel("Yes", Some(4000.0))),
     ImprovementsModel("Yes", Some(2000.0)),
     DisposalDateModel(5, 9, 2016),

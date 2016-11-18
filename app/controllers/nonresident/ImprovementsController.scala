@@ -45,8 +45,8 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
   private def improvementsBackUrl(implicit hc: HeaderCarrier): Future[String] = {
     def checkRebasedValue = {
       calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
-        case Some(RebasedValueModel("Yes", data)) => Future.successful(routes.RebasedCostsController.rebasedCosts().url)
-        case Some(RebasedValueModel("No", data)) => Future.successful(routes.RebasedValueController.rebasedValue().url)
+        case Some(RebasedValueModel(data)) if data.isDefined => Future.successful(routes.RebasedCostsController.rebasedCosts().url)
+        case Some(RebasedValueModel(data)) => Future.successful(routes.RebasedValueController.rebasedValue().url)
         case _ => Future.successful(missingDataRoute)
       }
     }
@@ -76,10 +76,10 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
     (rebasedValueModel, acquisitionDateModel) match {
       case (Some(value), Some(data)) if data.hasAcquisitionDate == "Yes" &&
         !TaxDates.dateAfterStart(data.day.get, data.month.get, data.year.get) &&
-        value.hasRebasedValue == "Yes" =>
+        value.rebasedValueAmt.isDefined =>
         Future.successful(true)
       case (Some(value), Some(data)) if data.hasAcquisitionDate == "No" &&
-        value.hasRebasedValue == "Yes" =>
+        value.rebasedValueAmt.isDefined =>
         Future.successful(true)
       case (_, _) =>
         Future.successful(false)

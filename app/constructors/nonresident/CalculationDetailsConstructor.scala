@@ -18,28 +18,26 @@ package constructors.nonresident
 
 import common.KeystoreKeys
 import controllers.nonresident.routes
-import models.nonresident.{CalculationResultModel, QuestionAnswerModel}
+import models.nonresident.{QuestionAnswerModel, TotalGainResultsModel}
 import play.api.i18n.Messages
-import uk.gov.hmrc.play.views.helpers.MoneyPounds
+import common.nonresident.CalculationType
 
 object CalculationDetailsConstructor {
 
-  def buildSection(calculation: CalculationResultModel, calculationType: String): Seq[QuestionAnswerModel[Any]] = {
+  def buildSection(calculation: TotalGainResultsModel, calculationType: String): Seq[QuestionAnswerModel[Any]] = {
     val electionDetails = calculationElection(calculationType)
-    val totalGainDetails = totalGain(calculation)
-    val totalLossDetails = totalLoss(calculation)
-    val usedAeaDetails = usedAea(calculation)
-    val taxableGainDetails = taxableGain(calculation)
-    val taxableRateDetails = taxableRate(calculation)
-    val lossToCarryForwardDetails = lossToCarryForward(calculation)
+    val totalGainAmount = calculationType match {
+      case CalculationType.flat => calculation.flatGain
+      case CalculationType.timeApportioned => calculation.timeApportionedGain.get
+      case CalculationType.rebased => calculation.rebasedGain.get
+    }
+    val totalGainDetails = totalGain(totalGainAmount)
+    val totalLossDetails = totalLoss(totalGainAmount)
     Seq(
       electionDetails,
       totalGainDetails,
-      totalLossDetails,
-      usedAeaDetails,
-      taxableGainDetails,
-      taxableRateDetails,
-      lossToCarryForwardDetails).flatten
+      totalLossDetails
+    ).flatten
   }
 
   def calculationElection(calculationType: String): Option[QuestionAnswerModel[String]] = {
@@ -48,10 +46,12 @@ object CalculationDetailsConstructor {
 
     val question = Messages("calc.summary.calculation.details.calculationElection")
 
+    println(s"############CalculationType=$calculationType##################")
+
     val answer = calculationType match {
-      case "flat" => Messages("calc.summary.calculation.details.flatCalculation")
-      case "time" => Messages("calc.summary.calculation.details.timeCalculation")
-      case "rebased" => Messages("calc.summary.calculation.details.rebasedCalculation")
+      case CalculationType.flat => Messages("calc.summary.calculation.details.flatCalculation")
+      case CalculationType.timeApportioned => Messages("calc.summary.calculation.details.timeCalculation")
+      case CalculationType.rebased => Messages("calc.summary.calculation.details.rebasedCalculation")
     }
 
     val link = routes.CalculationElectionController.calculationElection().url
@@ -59,88 +59,27 @@ object CalculationDetailsConstructor {
     Some(QuestionAnswerModel(id, answer, question, Some(link)))
   }
 
-  def lossToCarryForward(model: CalculationResultModel): Option[QuestionAnswerModel[BigDecimal]] = {
-    if (model.taxableGain < BigDecimal(0)) {
-      val id = "calcDetails:lossToCarryForward"
-
-      val question = Messages("calc.summary.calculation.details.lossCarriedForward")
-
-      val answer = model.taxableGain.abs
-
-      Some(QuestionAnswerModel(id, answer, question, None))
-    }
-    else None
-  }
-
-  def taxableRate(model: CalculationResultModel): Option[QuestionAnswerModel[String]] = {
-
-    def toDisplayText(rate: (Int, BigDecimal)): String = s"£${MoneyPounds(rate._2, 0).quantity} at ${rate._1}%"
-
-    val lowerRates = if (model.baseTaxGain > BigDecimal(0)) Some(model.baseTaxRate -> model.baseTaxGain) else None
-
-    val higherRates = if (model.upperTaxGain.isDefined) Some(model.upperTaxRate.get -> model.upperTaxGain.get) else None
-
-    val rates = Seq(lowerRates, higherRates).flatten
-
-    if (rates.nonEmpty) {
-      val id = "calcDetails:taxableRate"
-
-      val question = Messages("calc.summary.calculation.details.taxRate")
-
-      val answer = if (rates.size == 1) s"${rates.head._1}%" else rates.map(toDisplayText).mkString("\n")
-
-      Some(QuestionAnswerModel(id, answer, question, None))
-    }
-    else None
-  }
-
-  def taxableGain(model: CalculationResultModel): Option[QuestionAnswerModel[BigDecimal]] = {
-    if (model.totalGain > BigDecimal(0)) {
-      val id = "calcDetails:taxableGain"
-
-      val question = Messages("calc.summary.calculation.details.taxableGain")
-
-      val answer = model.taxableGain
-
-      Some(QuestionAnswerModel(id, answer, question, None))
-    }
-    else None
-  }
-
-  def usedAea(model: CalculationResultModel): Option[QuestionAnswerModel[BigDecimal]] = {
-    if (model.totalGain > BigDecimal(0)) {
-      val id = "calcDetails:aea"
-
-      val question = Messages("calc.summary.calculation.details.usedAEA")
-
-      val answer = model.usedAnnualExemptAmount
-
-      Some(QuestionAnswerModel(id, answer, question, None))
-    }
-    else None
-  }
-
-  def totalLoss(model: CalculationResultModel): Option[QuestionAnswerModel[BigDecimal]] = {
-    if (model.totalGain >= BigDecimal(0)) None
+  def totalLoss(totalGain: BigDecimal): Option[QuestionAnswerModel[BigDecimal]] = {
+    if (totalGain >= BigDecimal(0)) None
     else {
       val id = "calcDetails:totalLoss"
 
       val question = Messages("calc.summary.calculation.details.totalLoss")
 
-      val answer = model.totalGain.abs
+      val answer = totalGain.abs
 
       Some(QuestionAnswerModel(id, answer, question, None))
     }
   }
 
-  def totalGain(model: CalculationResultModel): Option[QuestionAnswerModel[BigDecimal]] = {
-    if (model.totalGain < BigDecimal(0)) None
+  def totalGain(totalGain: BigDecimal): Option[QuestionAnswerModel[BigDecimal]] = {
+    if (totalGain < BigDecimal(0)) None
     else {
       val id = "calcDetails:totalGain"
 
       val question = Messages("calc.summary.calculation.details.totalGain")
 
-      val answer = model.totalGain
+      val answer = totalGain
 
       Some(QuestionAnswerModel(id, answer, question, None))
     }
