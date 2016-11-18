@@ -46,7 +46,7 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
         Some(RebasedValueModel("Yes", Some(3000))),
         Some(RebasedCostsModel("Yes", Some(300))),
         ImprovementsModel("Yes", Some(10), Some(20)),
-        Some(OtherReliefsModel(Some("Yes"), Some(1000))))
+        Some(OtherReliefsModel(1000)))
 
       val resultsModel = TotalGainResultsModel(1000, Some(2000), Some(3000))
 
@@ -151,7 +151,7 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
         Some(RebasedValueModel("Yes", Some(3000))),
         Some(RebasedCostsModel("Yes", Some(300))),
         ImprovementsModel("Yes", Some(10), Some(20)),
-        Some(OtherReliefsModel(Some("Yes"), Some(1000))))
+        Some(OtherReliefsModel(1000)))
 
       val resultsModel = TotalGainResultsModel(1000, Some(2000), Some(3000))
       lazy val view = summaryReport(answersModel, resultsModel, taxYear,
@@ -191,7 +191,7 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
         Some(RebasedValueModel("Yes", Some(3000))),
         Some(RebasedCostsModel("Yes", Some(300))),
         ImprovementsModel("Yes", Some(10), Some(20)),
-        Some(OtherReliefsModel(Some("Yes"), Some(1000))))
+        Some(OtherReliefsModel(1000)))
 
       val resultsModel = TotalGainResultsModel(-1000, Some(2000), Some(3000))
 

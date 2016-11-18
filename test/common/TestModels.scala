@@ -60,7 +60,7 @@ object TestModels {
     None,
     None,
     ImprovementsModel("No", None),
-    Some(OtherReliefsModel(Some("No"), None))
+    Some(OtherReliefsModel(0))
   )
 
   val sumModelFlat = SummaryModel(
