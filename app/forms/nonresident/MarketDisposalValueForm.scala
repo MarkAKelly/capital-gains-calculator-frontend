@@ -26,8 +26,8 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 trait MarketDisposalValueForm {
-  abstract val errorNegative: String
-  abstract val errorDecimalPlaces: String
+  val errorNegative: String
+  val errorDecimalPlaces: String
 
   val marketValueForm = Form(
     mapping(

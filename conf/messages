@@ -224,6 +224,9 @@ calc.disposalCosts.helpBulletFour = advertising to find a buyer
 calc.disposalCosts.errorNegativeNumber = Enter a positive number for your selling costs
 calc.disposalCosts.errorDecimalPlaces = There are too many numbers after the decimal point in your selling costs
 
+## Market Value ##
+calc.marketValue.gaveItAway.question = What was the property worth when you gave it away?
+
 ## Private Residence Relief ##
 calc.privateResidenceRelief.question = Are you claiming Private Residence Relief?
 calc.privateResidenceRelief.questionBetween.partOne = How many days between 5 April 2015 and
