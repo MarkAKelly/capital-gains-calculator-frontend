@@ -19,24 +19,24 @@ package forms.nonresident
 import common.Constants
 import common.Transformers._
 import common.Validation._
-import models.nonresident.WorthWhenGiftedToModel
+import models.nonresident.AcquisitionValueModel
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-object WorthWhenGiftedToForm {
+object AcquisitionMarketValueForm {
 
-  val worthWhenGiftedToForm = Form(
+  val acquisitionMarketValueForm = Form(
     mapping(
-      "worthWhenGiftedToValue" -> text
+      "acquisitionMarketValue" -> text
         .verifying(Messages("error.real"), mandatoryCheck)
         .verifying(Messages("error.real"), bigDecimalCheck)
         .transform(stringToBigDecimal, bigDecimalToString)
-        .verifying(Messages("calc.worthWhenGiftedTo.errorNegative"), isPositive)
-        .verifying(Messages("calc.worthWhenGiftedTo.errorDecimalPlaces"), decimalPlacesCheck)
+        .verifying(Messages("calc.acquisitionMarketValue.errorNegative"), isPositive)
+        .verifying(Messages("calc.acquisitionMarketValue.errorDecimalPlaces"), decimalPlacesCheck)
         .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " +
           Messages("calc.common.error.maxNumericExceeded.OrLess"), maxCheck)
-    )(WorthWhenGiftedToModel.apply)(WorthWhenGiftedToModel.unapply)
+    )(AcquisitionValueModel.apply)(AcquisitionValueModel.unapply)
   )
 }

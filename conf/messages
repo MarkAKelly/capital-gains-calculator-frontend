@@ -271,11 +271,6 @@ calc.howBecameOwner.inherited= Inherited it
 ## Bought For Less ##
 calc.boughtForLess.question = Did you buy the property for less than it was worth because the seller wanted to help you?
 
-## Worth Before Legislation Start ##
-calc.worthBeforeLegislationStart.question = What was the property worth on 31st March 1982?
-calc.worthBeforeLegislationStart.errorDecimal = There are too many numbers after the decimal point in your market value
-calc.worthBeforeLegislationStart.errorMinimum = Enter a positive number for the market value of the property
-
 ## Calculation Election ##
 calc.calculationElection.pageHeading = Working out your total
 calc.calculationElection.question = Which method of calculation would you like?
@@ -315,12 +310,23 @@ calc.soldOrGivenAway.question = Did you sell or give away the property?
 calc.soldOrGivenAway.sold = I sold it
 calc.soldOrGivenAway.gave = I gave it away
 
+## Acquisition Market Value ##
+calc.acquisitionMarketValue.errorDecimalPlaces = The market value of the property has too many numbers after the decimal point
+calc.acquisitionMarketValue.errorNegative = Enter a positive number for the market value of the property
+calc.acquisitionMarketValue.hintOne = You can use a valuation from a surveyor.
+calc.acquisitionMarketValue.hintTwo = If you don''t know the exact value, you must provide a realistic estimate. You might have to pay more if we think your estimate is unrealistic.
+
 ## Worth When Gifted To ##
-calc.worthWhenGiftedTo.errorDecimalPlaces = The market value of the property has too many numbers after the decimal point
-calc.worthWhenGiftedTo.errorNegative = Enter a positive number for the market value of the property
 calc.worthWhenGiftedTo.question = What was the market value of the property when you got it as a gift?
-calc.worthWhenGiftedTo.hintOne = You can use a valuation from a surveyor.
-calc.worthWhenGiftedTo.hintTwo = If you don''t know the exact value, you must provide a realistic estimate. You might have to pay more if we think your estimate is unrealistic.
+
+## Worth When Inherited ##
+calc.worthWhenInherited.question = What was the market value of the property when you inherited it?
+
+## Worth When Bought For Less ##
+calc.worthWhenBoughtForLess.question = What was the market value of the property when you bought it?
+
+## Worth Before Legislation Start ##
+calc.worthBeforeLegislationStart.question = What was the property worth on 31st March 1982?
 
 ## Summary ##
 calc.summary.title = Summary

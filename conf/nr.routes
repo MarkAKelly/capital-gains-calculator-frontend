@@ -41,10 +41,6 @@ POST        /worth-when-inherited                controllers.nonresident.WorthWh
 GET         /worth-before-legislation-start      controllers.nonresident.WorthBeforeLegislationStartController.worthBeforeLegislationStart
 POST        /worth-before-legislation-start      controllers.nonresident.WorthBeforeLegislationStartController.submitWorthBeforeLegislationStart
 
-#Worth On Legislation Start
-GET         /worth-on-legislation-start          controllers.nonresident.WorthOnLegislationStartController.worthOnLegislationStart
-POST        /worth-on-legislation-start          controllers.nonresident.WorthOnLegislationStartController.submitWorthOnLegislationStart
-
 #Rebased Valuation Cost
 GET         /rebased-valuation-cost              controllers.nonresident.RebasedValuationCostController.rebasedValuationCost
 POST        /rebased-valuation-cost              controllers.nonresident.RebasedValuationCostController.submitRebasedValuationCost

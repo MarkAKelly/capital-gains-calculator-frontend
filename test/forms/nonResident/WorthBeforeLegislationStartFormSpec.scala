@@ -19,6 +19,7 @@ package forms.nonResident
 import forms.nonresident.WorthBeforeLegislationStartForm._
 import models.nonresident.WorthBeforeLegislationStartModel
 import assets.MessageLookup.{NonResident => commonMessages}
+import assets.MessageLookup.NonResident.{AcquisitionMarketValue => messages}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class WorthBeforeLegislationStartFormSpec extends UnitSpec with WithFakeApplication {
@@ -81,8 +82,8 @@ class WorthBeforeLegislationStartFormSpec extends UnitSpec with WithFakeApplicat
         form.errors.size shouldBe 1
       }
 
-      s"return an error message of ${commonMessages.WorthWhenGiftedTo.errorDecimalPlaces}" in {
-        form.error("worthBeforeLegislationStart").get.message shouldBe commonMessages.WorthWhenGiftedTo.errorDecimalPlaces
+      s"return an error message of ${messages.errorDecimalPlaces}" in {
+        form.error("worthBeforeLegislationStart").get.message shouldBe messages.errorDecimalPlaces
       }
     }
 
@@ -93,8 +94,8 @@ class WorthBeforeLegislationStartFormSpec extends UnitSpec with WithFakeApplicat
         form.errors.size shouldBe 1
       }
 
-      s"return an error message of ${commonMessages.WorthWhenGiftedTo.errorNegativeNumber}" in {
-        form.error("worthBeforeLegislationStart").get.message shouldBe commonMessages.WorthWhenGiftedTo.errorNegativeNumber
+      s"return an error message of ${messages.errorNegativeNumber}" in {
+        form.error("worthBeforeLegislationStart").get.message shouldBe messages.errorNegativeNumber
       }
     }
   }

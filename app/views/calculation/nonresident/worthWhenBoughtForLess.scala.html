@@ -5,19 +5,19 @@
 
 @(acquisitionMarketValue : Form[AcquisitionValueModel])(implicit request: Request[_])
 
-@main_template(Messages("calc.worthWhenGiftedTo.question")) {
+@main_template(Messages("calc.worthWhenBoughtForLess.question")) {
 
-    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.HowBecameOwnerController.howBecameOwner">@Messages("calc.base.back")</a>
+    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.BoughtForLessController.boughtForLess">@Messages("calc.base.back")</a>
 
     @errorSummary(acquisitionMarketValue, "acquisitionMarketValue")
 
-    <h1 class="heading-xlarge">@Messages("calc.worthWhenGiftedTo.question")</h1>
+    <h1 class="heading-xlarge">@Messages("calc.worthWhenBoughtForLess.question")</h1>
 
     <p id="helpText" class="form-hint">@Messages("calc.acquisitionMarketValue.hintOne")<br>@Messages("calc.acquisitionMarketValue.hintTwo")</p>
 
-    @form(action = controllers.nonresident.routes.WorthWhenGiftedToController.submitWorthWhenGiftedTo) {
+    @form(action = controllers.nonresident.routes.WorthWhenBoughtForLessController.submitWorthWhenBoughtForLess) {
 
-        @formInputMoney(acquisitionMarketValue, "acquisitionMarketValue", Messages("calc.worthWhenGiftedTo.question"), hideLabel = true)
+        @formInputMoney(acquisitionMarketValue, "acquisitionMarketValue", Messages("calc.worthWhenBoughtForLess.question"), hideLabel = true)
 
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
     }

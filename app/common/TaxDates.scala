@@ -21,6 +21,7 @@ import java.time.LocalDate
 import common.Dates.{constructDate, formatter}
 
 object TaxDates {
+  val legislationDate = LocalDate.parse("1/4/1982", formatter)
   val taxStartDate = LocalDate.parse("5/4/2015", formatter)
   val taxStartDatePlus18Months = LocalDate.parse("5/10/2016", formatter)
   val taxYearStartDate = LocalDate.parse("5/4/2016", formatter)
@@ -29,6 +30,8 @@ object TaxDates {
   def dateAfterStart(day: Int, month: Int, year: Int): Boolean = constructDate(day, month, year).isAfter(taxStartDate)
 
   def dateAfterStart(date: LocalDate): Boolean = date.isAfter(taxStartDate)
+
+  def dateBeforeLegislationStart(day: Int, month: Int, year: Int): Boolean = constructDate(day, month, year).isBefore(legislationDate)
 
   def dateAfter18Months(day: Int, month: Int, year: Int): Boolean = constructDate(day, month, year).isAfter(taxStartDatePlus18Months)
 

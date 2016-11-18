@@ -16,28 +16,27 @@
 
 package views.nonResident
 
+import assets.MessageLookup.NonResident.WorthWhenInherited
 import assets.MessageLookup.NonResident.{AcquisitionMarketValue => messages}
-import assets.MessageLookup.NonResident.WorthWhenGiftedTo
 import assets.MessageLookup.{NonResident => commonMessages}
-
 import controllers.helpers.FakeRequestHelper
 import forms.nonresident.AcquisitionMarketValueForm._
 import org.jsoup.Jsoup
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import views.html.calculation.nonresident.worthWhenGiftedTo
+import views.html.calculation.nonresident.worthWhenInherited
 
-class WorthWhenGiftedToViewSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
+class WorthWhenInheritedViewSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
-  "The Worth When Gifted To view spec" when {
+  "The Worth When Inherited To view spec" when {
 
     "supplied with no errors" should {
 
-      lazy val view = worthWhenGiftedTo(acquisitionMarketValueForm)(fakeRequest)
+      lazy val view = worthWhenInherited(acquisitionMarketValueForm)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
-      s"have a title of '${WorthWhenGiftedTo.question}'" in {
-        document.title() shouldBe WorthWhenGiftedTo.question
+      s"have a title of '${WorthWhenInherited.question}'" in {
+        document.title() shouldBe WorthWhenInherited.question
       }
 
       "have a back link" which {
@@ -68,8 +67,8 @@ class WorthWhenGiftedToViewSpec extends UnitSpec with WithFakeApplication with M
           heading.attr("class") shouldBe "heading-xlarge"
         }
 
-        s"has the text '${WorthWhenGiftedTo.question}'" in {
-          heading.text shouldBe WorthWhenGiftedTo.question
+        s"has the text '${WorthWhenInherited.question}'" in {
+          heading.text shouldBe WorthWhenInherited.question
         }
       }
 
@@ -97,8 +96,8 @@ class WorthWhenGiftedToViewSpec extends UnitSpec with WithFakeApplication with M
           form.attr("method") shouldBe "POST"
         }
 
-        s"has an action of '${controllers.nonresident.routes.WorthWhenGiftedToController.submitWorthWhenGiftedTo().url}'" in {
-          form.attr("action") shouldBe controllers.nonresident.routes.WorthWhenGiftedToController.submitWorthWhenGiftedTo().url
+        s"has an action of '${controllers.nonresident.routes.WorthWhenInheritedController.submitWorthWhenInherited().url}'" in {
+          form.attr("action") shouldBe controllers.nonresident.routes.WorthWhenInheritedController.submitWorthWhenInherited().url
         }
       }
 
@@ -122,7 +121,7 @@ class WorthWhenGiftedToViewSpec extends UnitSpec with WithFakeApplication with M
     "supplied with a form with errors" should {
 
       lazy val form = acquisitionMarketValueForm.bind(Map("acquisitionMarketValue" -> "a"))
-      lazy val view = worthWhenGiftedTo(form)(fakeRequest)
+      lazy val view = worthWhenInherited(form)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have an error summary" in {

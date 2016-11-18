@@ -16,130 +16,130 @@
 
 package forms.nonResident
 
-import assets.MessageLookup.NonResident.{WorthWhenGiftedTo => messages}
+import assets.MessageLookup.NonResident.{AcquisitionMarketValue => messages}
 import assets.MessageLookup.{NonResident => commonMessages}
-import forms.nonresident.WorthWhenGiftedToForm._
-import models.nonresident.WorthWhenGiftedToModel
+import forms.nonresident.AcquisitionMarketValueForm._
+import models.nonresident.AcquisitionValueModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class WorthWhenGiftedToFormSpec extends UnitSpec with WithFakeApplication {
+class AcquisitionMarketValueFormSpec extends UnitSpec with WithFakeApplication {
 
-  "Worth When Gifted To form" when {
+  "Acquisition Market Value form" when {
 
     "passing in a valid model" should {
-      val model = WorthWhenGiftedToModel(BigDecimal(1500))
-      lazy val form = worthWhenGiftedToForm.fill(model)
+      val model = AcquisitionValueModel(BigDecimal(1500))
+      lazy val form = acquisitionMarketValueForm.fill(model)
 
       "return a valid form with no errors" in {
         form.errors.size shouldBe 0
       }
 
       "return a form containing the data" in {
-        form.data shouldBe Map("worthWhenGiftedToValue" -> "1500")
+        form.data shouldBe Map("acquisitionMarketValue" -> "1500")
       }
     }
 
     "passing in a valid map with two decimal places" should {
-      val map = Map("worthWhenGiftedToValue" -> "2500.01")
-      lazy val form = worthWhenGiftedToForm.bind(map)
+      val map = Map("acquisitionMarketValue" -> "2500.01")
+      lazy val form = acquisitionMarketValueForm.bind(map)
 
       "return a valid form with no errors" in {
         form.errors.size shouldBe 0
       }
 
       "return a form containing the data" in {
-        form.value shouldBe Some(WorthWhenGiftedToModel(BigDecimal(2500.01)))
+        form.value shouldBe Some(AcquisitionValueModel(BigDecimal(2500.01)))
       }
     }
 
     "passing in an invalid map with three decimal places" should {
-      val map = Map("worthWhenGiftedToValue" -> "1850.456")
-      lazy val form = worthWhenGiftedToForm.bind(map)
+      val map = Map("acquisitionMarketValue" -> "1850.456")
+      lazy val form = acquisitionMarketValueForm.bind(map)
 
       "return an invalid form with one error" in {
         form.errors.size shouldBe 1
       }
 
       s"return an error message of '${messages.errorDecimalPlaces}" in {
-        form.error("worthWhenGiftedToValue").get.message shouldBe messages.errorDecimalPlaces
+        form.error("acquisitionMarketValue").get.message shouldBe messages.errorDecimalPlaces
       }
     }
 
     "passing in a valid map with a value of 0" should {
-      val map = Map("worthWhenGiftedToValue" -> "0")
-      lazy val form = worthWhenGiftedToForm.bind(map)
+      val map = Map("acquisitionMarketValue" -> "0")
+      lazy val form = acquisitionMarketValueForm.bind(map)
 
       "return a valid form with no errors" in {
         form.errors.size shouldBe 0
       }
 
       "return a form containing the data" in {
-        form.value shouldBe Some(WorthWhenGiftedToModel(BigDecimal(0)))
+        form.value shouldBe Some(AcquisitionValueModel(BigDecimal(0)))
       }
     }
 
     "passing in an invalid map with a negative value" should {
-      val map = Map("worthWhenGiftedToValue" -> "-1200")
-      lazy val form = worthWhenGiftedToForm.bind(map)
+      val map = Map("acquisitionMarketValue" -> "-1200")
+      lazy val form = acquisitionMarketValueForm.bind(map)
 
       "return an invalid form with one error" in {
         form.errors.size shouldBe 1
       }
 
       s"return an error message of '${messages.errorNegativeNumber}" in {
-        form.error("worthWhenGiftedToValue").get.message shouldBe messages.errorNegativeNumber
+        form.error("acquisitionMarketValue").get.message shouldBe messages.errorNegativeNumber
       }
     }
 
     "passing in a valid map with the maximum value" should {
-      val map = Map("worthWhenGiftedToValue" -> "1000000000")
-      lazy val form = worthWhenGiftedToForm.bind(map)
+      val map = Map("acquisitionMarketValue" -> "1000000000")
+      lazy val form = acquisitionMarketValueForm.bind(map)
 
       "return a valid form with no errors" in {
         form.errors.size shouldBe 0
       }
 
       "return a form containing the data" in {
-        form.value shouldBe Some(WorthWhenGiftedToModel(BigDecimal(1000000000)))
+        form.value shouldBe Some(AcquisitionValueModel(BigDecimal(1000000000)))
       }
     }
 
     "passing in an invalid map with a value above 1 billion and one pence" should {
-      val map = Map("worthWhenGiftedToValue" -> "1000000000.01")
-      lazy val form = worthWhenGiftedToForm.bind(map)
+      val map = Map("acquisitionMarketValue" -> "1000000000.01")
+      lazy val form = acquisitionMarketValueForm.bind(map)
 
       "return an invalid form with one error" in {
         form.errors.size shouldBe 1
       }
 
       s"return an error message of '${commonMessages.maximumAmount}" in {
-        form.error("worthWhenGiftedToValue").get.message shouldBe commonMessages.maximumAmount
+        form.error("acquisitionMarketValue").get.message shouldBe commonMessages.maximumAmount
       }
     }
 
     "passing in an invalid map with an empty value" should {
-      val map = Map("worthWhenGiftedToValue" -> "")
-      lazy val form = worthWhenGiftedToForm.bind(map)
+      val map = Map("acquisitionMarketValue" -> "")
+      lazy val form = acquisitionMarketValueForm.bind(map)
 
       "return an invalid form with one error" in {
         form.errors.size shouldBe 1
       }
 
       s"return an error message of '${commonMessages.errorRealNumber}" in {
-        form.error("worthWhenGiftedToValue").get.message shouldBe commonMessages.errorRealNumber
+        form.error("acquisitionMarketValue").get.message shouldBe commonMessages.errorRealNumber
       }
     }
 
     "passing in an invalid map with a non-numeric value" should {
-      val map = Map("worthWhenGiftedToValue" -> "a")
-      lazy val form = worthWhenGiftedToForm.bind(map)
+      val map = Map("acquisitionMarketValue" -> "a")
+      lazy val form = acquisitionMarketValueForm.bind(map)
 
       "return an invalid form with one error" in {
         form.errors.size shouldBe 1
       }
 
       s"return an error message of '${commonMessages.errorRealNumber}" in {
-        form.error("worthWhenGiftedToValue").get.message shouldBe commonMessages.errorRealNumber
+        form.error("acquisitionMarketValue").get.message shouldBe commonMessages.errorRealNumber
       }
     }
   }
