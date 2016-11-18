@@ -327,6 +327,8 @@ calc.worthWhenBoughtForLess.question = What was the market value of the property
 
 ## Worth Before Legislation Start ##
 calc.worthBeforeLegislationStart.question = What was the property worth on 31st March 1982?
+calc.worthBeforeLegislationStart.expandableText = You only need to pay tax on gains made after this date
+calc.worthBeforeLegislationStart.expandableTitle = Why we''re asking for this
 
 ## Summary ##
 calc.summary.title = Summary

@@ -22,7 +22,10 @@ import connectors.CalculatorConnector
 import forms.nonresident.WorthBeforeLegislationStartForm._
 import controllers.predicates.ValidActiveSession
 import models.nonresident.WorthBeforeLegislationStartModel
+import play.api.data.Form
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+
+import scala.concurrent.Future
 
 object WorthBeforeLegislationStartController extends WorthBeforeLegislationStartController {
   val calcConnector = CalculatorConnector
@@ -35,11 +38,21 @@ trait WorthBeforeLegislationStartController extends FrontendController with Vali
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
 
   val worthBeforeLegislationStart = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[WorthBeforeLegislationStartModel](KeystoreKeys.NonResidentKeys.soldForLess).map {
+    calcConnector.fetchAndGetFormData[WorthBeforeLegislationStartModel](KeystoreKeys.worthBeforeLegislationStart).map {
       case Some(data) => Ok(views.worthBeforeLegislationStart(worthBeforeLegislationStartForm.fill(data)))
       case None => Ok(views.worthBeforeLegislationStart(worthBeforeLegislationStartForm))
     }
   }
 
-  val submitWorthBeforeLegislationStart = TODO
+  val submitWorthBeforeLegislationStart = ValidateSession.async { implicit request =>
+
+    def errorAction(form: Form[WorthBeforeLegislationStartModel]) = Future.successful(BadRequest(views.worthBeforeLegislationStart(form)))
+
+    def successAction(model: WorthBeforeLegislationStartModel) = {
+      calcConnector.saveFormData(KeystoreKeys.worthBeforeLegislationStart, model)
+      Future.successful(Redirect(routes.AcquisitionCostsController.acquisitionCosts()))
+    }
+
+    worthBeforeLegislationStartForm.bindFromRequest.fold(errorAction, successAction)
+  }
 }

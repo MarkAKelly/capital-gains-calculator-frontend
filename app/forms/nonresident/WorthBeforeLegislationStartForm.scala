@@ -33,8 +33,8 @@ object WorthBeforeLegislationStartForm {
         .verifying(Messages("error.real"), mandatoryCheck)
         .verifying(Messages("error.real"), bigDecimalCheck)
         .transform[BigDecimal](stringToBigDecimal, bigDecimalToString)
-        .verifying(Messages("calc.acquisitionMarketValue.errorMinimum"), value => isPositive(value))
-        .verifying(Messages("calc.acquisitionMarketValue.errorDecimal"), value => decimalPlacesCheck(value))
+        .verifying(Messages("calc.acquisitionMarketValue.errorNegative"), isPositive)
+        .verifying(Messages("calc.acquisitionMarketValue.errorDecimalPlaces"), decimalPlacesCheck)
         .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " +
           Messages("calc.common.error.maxNumericExceeded.OrLess"), maxCheck)
     )(WorthBeforeLegislationStartModel.apply)(WorthBeforeLegislationStartModel.unapply)
