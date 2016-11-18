@@ -81,8 +81,8 @@ class WorthBeforeLegislationStartFormSpec extends UnitSpec with WithFakeApplicat
         form.errors.size shouldBe 1
       }
 
-      s"return an error message of ${commonMessages.invalidAmountNoDecimal}" in {
-        form.error("worthBeforeLegislationStart").get.message shouldBe commonMessages.invalidAmountNoDecimal
+      s"return an error message of ${commonMessages.WorthWhenGiftedTo.errorDecimalPlaces}" in {
+        form.error("worthBeforeLegislationStart").get.message shouldBe commonMessages.WorthWhenGiftedTo.errorDecimalPlaces
       }
     }
 
@@ -93,8 +93,8 @@ class WorthBeforeLegislationStartFormSpec extends UnitSpec with WithFakeApplicat
         form.errors.size shouldBe 1
       }
 
-      s"return an error message of ${commonMessages.invalidAmountNoDecimal}" in {
-        form.error("worthBeforeLegislationStart").get.message shouldBe commonMessages.invalidAmountNoDecimal
+      s"return an error message of ${commonMessages.WorthWhenGiftedTo.errorNegativeNumber}" in {
+        form.error("worthBeforeLegislationStart").get.message shouldBe commonMessages.WorthWhenGiftedTo.errorNegativeNumber
       }
     }
   }

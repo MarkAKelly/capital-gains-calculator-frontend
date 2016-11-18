@@ -316,7 +316,7 @@ object MessageLookup {
     object WorthWhenGiftedTo {
       val question = "What was the market value of the property when you got it as a gift?"
       val errorNegativeNumber = "Enter a positive number for the market value of the property"
-      val errorDecimalPlaces = "The market value of the property has too many numbers after the decimal point"
+      val errorDecimalPlaces = "There are too many numbers after the decimal point in your market value"
       val hintOne = "You can use a valuation from a surveyor."
       val hintTwo = "If you don't know the exact value, you must provide a realistic estimate. " +
         "You might have to pay more if we think your estimate is unrealistic."

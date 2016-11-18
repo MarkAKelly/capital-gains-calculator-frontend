@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIED OR CONDITIONS OF ANY KIND, either express or implied.
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -54,7 +54,7 @@ class WorthBeforeLegislationStartActionSpec extends UnitSpec with WithFakeApplic
 
     "calling .worthBeforeLegislationStart" should {
 
-      "with no pre-existing model" in {
+      "with no pre-existing model" should {
         val target = setUpTarget(None)
         lazy val result = target.worthBeforeLegislationStart(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))

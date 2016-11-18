@@ -16,8 +16,12 @@
 
 package controllers.nonresident
 
+import common.KeystoreKeys
+import views.html.calculation.{nonresident => views}
 import connectors.CalculatorConnector
+import forms.nonresident.WorthBeforeLegislationStartForm._
 import controllers.predicates.ValidActiveSession
+import models.nonresident.WorthBeforeLegislationStartModel
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
 object WorthBeforeLegislationStartController extends WorthBeforeLegislationStartController {
@@ -26,10 +30,16 @@ object WorthBeforeLegislationStartController extends WorthBeforeLegislationStart
 
 trait WorthBeforeLegislationStartController extends FrontendController with ValidActiveSession {
 
+  val calcConnector: CalculatorConnector
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
 
-  val worthBeforeLegislationStart = TODO
+  val worthBeforeLegislationStart = ValidateSession.async { implicit request =>
+    calcConnector.fetchAndGetFormData[WorthBeforeLegislationStartModel](KeystoreKeys.NonResidentKeys.soldForLess).map {
+      case Some(data) => Ok(views.worthBeforeLegislationStart(worthBeforeLegislationStartForm.fill(data)))
+      case None => Ok(views.worthBeforeLegislationStart(worthBeforeLegislationStartForm))
+    }
+  }
 
   val submitWorthBeforeLegislationStart = TODO
 }
