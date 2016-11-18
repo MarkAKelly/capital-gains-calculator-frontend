@@ -55,10 +55,10 @@ trait RebasedValueController extends FrontendController with ValidActiveSession 
   val rebasedValue = ValidateSession.async { implicit request =>
     def routeRequest(routeToMandatory: Boolean, rebasedValue: Option[RebasedValueModel]): Future[Result] =
       (routeToMandatory, rebasedValue) match {
-        case (x, Some(data)) if x => Future.successful(Ok(calculation.nonresident.mandatoryRebasedValue(rebasedValueForm(x).fill(data))))
-        case (y, Some(data)) if !y => Future.successful(Ok(calculation.nonresident.rebasedValue(rebasedValueForm(y).fill(data))))
-        case (q, None) if q => Future.successful(Ok(calculation.nonresident.mandatoryRebasedValue(rebasedValueForm(q))))
-        case (p, None) if !p => Future.successful(Ok(calculation.nonresident.rebasedValue(rebasedValueForm(p))))
+        case (true, Some(data)) => Future.successful(Ok(calculation.nonresident.mandatoryRebasedValue(rebasedValueForm(routeToMandatory).fill(data))))
+        case (false, Some(data)) => Future.successful(Ok(calculation.nonresident.rebasedValue(rebasedValueForm(routeToMandatory).fill(data))))
+        case (true, None) => Future.successful(Ok(calculation.nonresident.mandatoryRebasedValue(rebasedValueForm(routeToMandatory))))
+        case (false, None) => Future.successful(Ok(calculation.nonresident.rebasedValue(rebasedValueForm(routeToMandatory))))
     }
 
     for {
