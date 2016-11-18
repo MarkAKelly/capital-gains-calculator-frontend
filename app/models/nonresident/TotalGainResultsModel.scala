@@ -16,9 +16,13 @@
 
 package models.nonresident
 
+import constructors.nonresident.CalculationDetailsConstructor
 import play.api.libs.json.Json
 
-case class TotalGainResultsModel(flatGain: BigDecimal, rebasedGain: Option[BigDecimal], timeApportionedGain: Option[BigDecimal])
+case class TotalGainResultsModel(flatGain: BigDecimal, rebasedGain: Option[BigDecimal], timeApportionedGain: Option[BigDecimal]) {
+
+  def calculationDetailsRows(calculationType: String): Seq[QuestionAnswerModel[Any]] = CalculationDetailsConstructor.buildSection(this, calculationType)
+}
 
 object TotalGainResultsModel {
   implicit val formats = Json.format[TotalGainResultsModel]
