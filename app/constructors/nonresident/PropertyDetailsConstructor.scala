@@ -36,7 +36,7 @@ object PropertyDetailsConstructor {
       else false
 
     val improvementsIsClaiming = improvementsIsClaimingRow(answers)
-    val improvementsTotal = improvementsTotalRow(answers, totalImprovements)
+    val improvementsTotal = improvementsTotalRow(answers, totalImprovements, rebasedImprovements)
     val improvementsAfter = improvementsAfterRow(answers, rebasedImprovements)
 
     val sequence = Seq(improvementsIsClaiming, improvementsTotal, improvementsAfter)
@@ -51,10 +51,17 @@ object PropertyDetailsConstructor {
     ))
   }
 
-  def improvementsTotalRow(answers: TotalGainAnswersModel, display: Boolean): Option[QuestionAnswerModel[BigDecimal]] = {
-    if(display) {
+  def improvementsTotalRow(answers: TotalGainAnswersModel, display: Boolean, displayRebased: Boolean): Option[QuestionAnswerModel[BigDecimal]] = {
+    if (display && displayRebased) {
       val total: BigDecimal = answers.improvementsModel.improvementsAmt.getOrElse(BigDecimal(0))
-                        . +(answers.improvementsModel.improvementsAmtAfter.getOrElse(BigDecimal(0)))
+      Some(QuestionAnswerModel[BigDecimal](s"${keys.improvements}-total",
+        total,
+        Messages("calc.improvements.questionThree"),
+        Some(controllers.nonresident.routes.ImprovementsController.improvements().url)
+      ))
+    }
+    else if(display) {
+      val total: BigDecimal = answers.improvementsModel.improvementsAmt.getOrElse(BigDecimal(0))
       Some(QuestionAnswerModel[BigDecimal](s"${keys.improvements}-total",
         total,
         Messages("calc.improvements.questionTwo"),
