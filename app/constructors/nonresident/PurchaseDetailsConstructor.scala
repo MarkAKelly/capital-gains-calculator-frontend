@@ -18,14 +18,21 @@ package constructors.nonresident
 
 import java.time.LocalDate
 
-import common.KeystoreKeys
-import models.nonresident.{QuestionAnswerModel, TotalGainAnswersModel}
+import common.{KeystoreKeys, TaxDates}
+import models.nonresident.{AcquisitionDateModel, QuestionAnswerModel, RebasedValueModel, TotalGainAnswersModel}
 import play.api.i18n.Messages
 
 
 object PurchaseDetailsConstructor {
 
   def getPurchaseDetailsSection(totalGainAnswersModel: TotalGainAnswersModel): Seq[QuestionAnswerModel[Any]] = {
+
+    val useRebasedValues =
+      totalGainAnswersModel.acquisitionDateModel match {
+        case AcquisitionDateModel("Yes",_,_,_) if !TaxDates.dateAfterStart(totalGainAnswersModel.acquisitionDateModel.get) => true
+        case AcquisitionDateModel("No",_,_,_) if totalGainAnswersModel.rebasedValueModel.get.rebasedValueAmt.isDefined => true
+        case _ => false
+      }
 
     val acquisitionDateAnswerData = acquisitionDateAnswerRow(totalGainAnswersModel)
     val acquisitionDateData = acquisitionDateRow(totalGainAnswersModel)
@@ -109,5 +116,17 @@ object PurchaseDetailsConstructor {
       Messages("calc.acquisitionCosts.question"),
       Some(controllers.nonresident.routes.AcquisitionCostsController.acquisitionCosts().url)
     ))
+  }
+
+  def rebasedValueRow(rebasedValueModel: Option[RebasedValueModel], useRebasedValues: Boolean): Option[QuestionAnswerModel[BigDecimal]] = {
+    if (useRebasedValues) {
+      Some(QuestionAnswerModel(
+        KeystoreKeys.rebasedValue,
+        rebasedValueModel.get.rebasedValueAmt.get,
+        s"${Messages("calc.nonResident.rebasedValue.question")} ${Messages("calc.nonResident.rebasedValue.date")}",
+        Some(controllers.nonresident.routes.RebasedValueController.rebasedValue().url)
+      ))
+    }
+    else None
   }
 }
