@@ -27,8 +27,10 @@ import org.scalatest.mock.MockitoSugar
 import controllers.helpers.FakeRequestHelper
 import controllers.nonresident.ReportController
 import assets.MessageLookup.{SummaryPage => messages}
+import constructors.nonresident.AnswersConstructor
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import models.nonresident.{CalculationResultModel, SummaryModel}
+import models.nonresident._
+import common.nonresident.CalculationType
 
 import scala.concurrent.Future
 
@@ -36,37 +38,56 @@ class ReportSpec extends UnitSpec with WithFakeApplication with FakeRequestHelpe
 
   def setupTarget
   (
-    summaryModel: SummaryModel,
-    calculationResultsModel: Option[CalculationResultModel],
-    taxYearModel: Option[TaxYearModel]
+    totalGainAnswersModel: TotalGainAnswersModel,
+    totalGainResultsModel: Option[TotalGainResultsModel],
+    taxYearModel: Option[TaxYearModel],
+    calculationElectionModel: CalculationElectionModel
   ): ReportController = {
 
     lazy val mockCalculatorConnector = mock[CalculatorConnector]
+    lazy val mockAnswersConstructor = mock[AnswersConstructor]
 
-    when(mockCalculatorConnector.createSummary(Matchers.any()))
-      .thenReturn(Future.successful(summaryModel))
+    when(mockAnswersConstructor.getNRTotalGainAnswers(Matchers.any()))
+      .thenReturn(Future.successful(totalGainAnswersModel))
 
-    when(mockCalculatorConnector.calculateFlat(Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(calculationResultsModel))
+    when(mockCalculatorConnector.fetchAndGetFormData[CalculationElectionModel](Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(Some(calculationElectionModel))
 
-    when(mockCalculatorConnector.calculateTA(Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(calculationResultsModel))
-
-    when(mockCalculatorConnector.calculateRebased(Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(calculationResultsModel))
+    when(mockCalculatorConnector.calculateTotalGain(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(totalGainResultsModel))
 
     when(mockCalculatorConnector.getTaxYear(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(taxYearModel))
 
     new ReportController {
       override val calcConnector: CalculatorConnector = mockCalculatorConnector
+      override val answersConstructor = mockAnswersConstructor
       override def host(implicit request: RequestHeader): String = "http://localhost:9977"
     }
   }
 
+  val model = TotalGainAnswersModel(DisposalDateModel(5, 10, 2016),
+    SoldOrGivenAwayModel(true),
+    Some(SoldForLessModel(false)),
+    DisposalValueModel(1000),
+    DisposalCostsModel(100),
+    HowBecameOwnerModel("Gifted"),
+    Some(BoughtForLessModel(false)),
+    AcquisitionValueModel(2000),
+    AcquisitionCostsModel(200),
+    AcquisitionDateModel("Yes", Some(4), Some(10), Some(2013)),
+    Some(RebasedValueModel(Some(3000))),
+    Some(RebasedCostsModel("Yes", Some(300))),
+    ImprovementsModel("Yes", Some(10), Some(20)),
+    Some(OtherReliefsModel(Some("Yes"), Some(30))))
+
   "ReportController" should {
     "use the correct calculator connector" in {
       ReportController.calcConnector shouldBe CalculatorConnector
+    }
+
+    "use the correct answers constructor" in {
+      ReportController.answersConstructor shouldBe AnswersConstructor
     }
   }
 
@@ -78,9 +99,10 @@ class ReportSpec extends UnitSpec with WithFakeApplication with FakeRequestHelpe
       lazy val taxYear = TaxYearModel("2016-12-12", true, "16")
 
       lazy val target = setupTarget(
-        sumModelFlat,
-        Some(calcModelZeroTotal),
-        Some(taxYear)
+        model,
+        Some(TotalGainResultsModel(1000, None, None)),
+        Some(taxYear),
+        CalculationElectionModel(CalculationType.flat)
       )
 
       lazy val result = target.summaryReport(fakeRequestWithSession)
@@ -108,9 +130,10 @@ class ReportSpec extends UnitSpec with WithFakeApplication with FakeRequestHelpe
       lazy val taxYear = TaxYearModel("2016-12-12", true, "16")
 
       lazy val target = setupTarget(
-        summaryIndividualRebased,
-        Some(calcModelZeroTotal),
-        Some(taxYear)
+        model,
+        Some(TotalGainResultsModel(1000, Some(2000), None)),
+        Some(taxYear),
+        CalculationElectionModel(CalculationType.rebased)
       )
 
       lazy val result = target.summaryReport(fakeRequestWithSession)
@@ -138,9 +161,10 @@ class ReportSpec extends UnitSpec with WithFakeApplication with FakeRequestHelpe
       lazy val taxYear = TaxYearModel("2016-12-12", true, "16")
 
       lazy val target = setupTarget(
-        sumModelTA,
-        Some(calcModelZeroTotal),
-        Some(taxYear)
+        model,
+        Some(TotalGainResultsModel(1000, None, Some(3000))),
+        Some(taxYear),
+        CalculationElectionModel(CalculationType.timeApportioned)
       )
 
       lazy val result = target.summaryReport(fakeRequestWithSession)
@@ -166,9 +190,10 @@ class ReportSpec extends UnitSpec with WithFakeApplication with FakeRequestHelpe
       lazy val taxYear = TaxYearModel("2016-12-12", true, "16")
 
       lazy val target = setupTarget(
-        sumModelTA,
-        Some(calcModelZeroTotal),
-        Some(taxYear)
+        model,
+        Some(TotalGainResultsModel(1000, None, None)),
+        Some(taxYear),
+        CalculationElectionModel(CalculationType.flat)
       )
 
       lazy val result = target.summaryReport(fakeRequest)
