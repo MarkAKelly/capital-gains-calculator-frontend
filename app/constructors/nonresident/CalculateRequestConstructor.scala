@@ -162,7 +162,7 @@ object CalculateRequestConstructor {
 
   def improvements(input: SummaryModel): String = s"&improvementsAmt=${
     (input.improvementsModel.isClaimingImprovements, input.rebasedValueModel) match {
-      case ("Yes", Some(RebasedValueModel("Yes", _))) => input.improvementsModel.improvementsAmtAfter.getOrElse(BigDecimal(0)) +
+      case ("Yes", Some(RebasedValueModel(data))) if data.isDefined => input.improvementsModel.improvementsAmtAfter.getOrElse(BigDecimal(0)) +
         input.improvementsModel.improvementsAmt.getOrElse(BigDecimal(0))
       case ("No", _) => 0
       case _ => input.improvementsModel.improvementsAmt.getOrElse(0)
@@ -189,8 +189,9 @@ object CalculateRequestConstructor {
 
   def privateResidenceReliefRebased(input: SummaryModel): String = s"${
     (input.rebasedValueModel, input.privateResidenceReliefModel) match {
-      case (Some(RebasedValueModel("Yes", rebasedValue)), Some(PrivateResidenceReliefModel("Yes", claimed, after)))
-        if dateAfter18Months(input.disposalDateModel.day, input.disposalDateModel.month, input.disposalDateModel.year) && after.isDefined =>
+      case (Some(RebasedValueModel(rebasedValue)), Some(PrivateResidenceReliefModel("Yes", claimed, after)))
+        if dateAfter18Months(input.disposalDateModel.day, input.disposalDateModel.month, input.disposalDateModel.year) &&
+          after.isDefined && rebasedValue.isDefined =>
         s"&daysClaimed=${after.get}"
       case _ => ""
     }
