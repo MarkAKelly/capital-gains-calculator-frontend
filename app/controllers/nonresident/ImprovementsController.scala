@@ -43,6 +43,7 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
   private val tempBackLink = routes.AcquisitionCostsController.acquisitionCosts().url
 
   private def improvementsBackUrl(implicit hc: HeaderCarrier): Future[String] = {
+
     def checkRebasedValue = {
       calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
         case Some(RebasedValueModel(data)) if data.isDefined => Future.successful(routes.RebasedCostsController.rebasedCosts().url)
@@ -53,7 +54,7 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
 
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
       case Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year))) if TaxDates.dateAfterStart(day, month, year) =>
-        Future.successful(routes.AcquisitionValueController.acquisitionValue().url)
+        Future.successful(routes.AcquisitionCostsController.acquisitionCosts().url)
       case None => Future.successful(missingDataRoute)
       case _ => checkRebasedValue
     }
