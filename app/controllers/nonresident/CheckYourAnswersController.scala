@@ -16,7 +16,6 @@
 
 package controllers.nonresident
 
-import connectors.CalculatorConnector
 import constructors.nonresident.{AnswersConstructor, CalculationElectionConstructor, YourAnswersConstructor}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import controllers.predicates.ValidActiveSession
@@ -46,6 +45,7 @@ trait CheckYourAnswersController extends FrontendController with ValidActiveSess
       Ok(calculation.nonresident.checkYourAnswers(answers, backLink))
     }
   }
+
   val submitCheckYourAnswers = ValidateSession.async { implicit request =>
     Future.successful(Redirect(routes.SummaryController.summary()))
   }
