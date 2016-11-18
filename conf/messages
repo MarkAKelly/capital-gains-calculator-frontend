@@ -163,7 +163,7 @@ calc.rebasedValue.helpHidden.content = When you''ve answered the questions you''
 calc.rebasedValue.helpHidden.contentTwo = This value lets us calculate your tax in different ways, giving you more options.
 
 ## Rebased Costs ##
-calc.rebasedCosts.question = Did you pay for the valuation?
+calc.rebasedCosts.question = Did you pay to have the property valued at 5 April 2015?
 calc.rebasedCosts.questionTwo = How much did it cost to get the property valued?
 calc.rebasedCosts.errorNegative = Enter a positive number for your costs
 calc.rebasedCosts.error.no.value.supplied = Enter the value for your costs

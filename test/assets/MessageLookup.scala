@@ -274,7 +274,7 @@ object MessageLookup {
     }
 
     object RebasedCosts {
-      val question = "Did you pay for the valuation?"
+      val question = "Did you pay to have the property valued at 5 April 2015?"
       val inputQuestion = "How much did it cost to get the property valued?"
       val errorNegative = "Enter a positive number for your costs"
       val errorNoValue = "Enter the value for your costs"
