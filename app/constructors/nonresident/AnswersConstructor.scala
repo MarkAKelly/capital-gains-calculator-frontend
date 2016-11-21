@@ -16,10 +16,12 @@
 
 package constructors.nonresident
 
-import common.KeystoreKeys
+import common.{KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
 import models.nonresident._
+import models.resident.properties.gain.WorthWhenGiftedModel
 import uk.gov.hmrc.play.http.HeaderCarrier
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -36,15 +38,26 @@ trait AnswersConstructor {
     val soldForLess = calculatorConnector.fetchAndGetFormData[SoldForLessModel](KeystoreKeys.NonResidentKeys.soldForLess)
     val disposalValue = calculatorConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.disposalValue).map(data => data.get)
     val disposalCosts = calculatorConnector.fetchAndGetFormData[DisposalCostsModel](KeystoreKeys.disposalCosts).map(data => data.get)
-    val howBecameOwner = calculatorConnector.fetchAndGetFormData[HowBecameOwnerModel](KeystoreKeys.howBecameOwner).map(data => data.get)
+    val howBecameOwner = calculatorConnector.fetchAndGetFormData[HowBecameOwnerModel](KeystoreKeys.howBecameOwner)
     val boughtForLess = calculatorConnector.fetchAndGetFormData[BoughtForLessModel](KeystoreKeys.boughtForLess)
-    val acquisitionValue = calculatorConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.acquisitionValue).map(data => data.get)
     val acquisitionCosts = calculatorConnector.fetchAndGetFormData[AcquisitionCostsModel](KeystoreKeys.acquisitionCosts).map(data => data.get)
     val acquisitionDate = calculatorConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).map(data => data.get)
     val rebasedValue = calculatorConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue)
     val rebasedCosts = calculatorConnector.fetchAndGetFormData[RebasedCostsModel](KeystoreKeys.rebasedCosts)
     val improvements = calculatorConnector.fetchAndGetFormData[ImprovementsModel](KeystoreKeys.improvements).map(data => data.get)
     val otherReliefsFlat = calculatorConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat)
+
+    def acquisitionValue(acquisitionDateModel: AcquisitionDateModel, howBecameOwnerModel: Option[HowBecameOwnerModel]): Future[AcquisitionValueModel] =
+      (acquisitionDateModel, howBecameOwnerModel) match {
+        case (AcquisitionDateModel("Yes",_,_,_),_) if TaxDates.dateBeforeLegislationStart(acquisitionDateModel.get) =>
+          calculatorConnector.fetchAndGetFormData[WorthBeforeLegislationStartModel](KeystoreKeys.worthBeforeLegislationStart).map(data =>
+            AcquisitionValueModel(data.get.worthBeforeLegislationStart)
+          )
+        case (_, Some(HowBecameOwnerModel(value))) if !value.equals("Bought") =>
+          calculatorConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.acquisitionMarketValue)
+            .map(data => data.get)
+        case _ => calculatorConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.acquisitionValue).map(data => data.get)
+      }
 
     for {
       disposalDate <- disposalDate
@@ -54,9 +67,9 @@ trait AnswersConstructor {
       disposalCosts <- disposalCosts
       howBecameOwner <- howBecameOwner
       boughtForLess <- boughtForLess
-      acquisitionValue <- acquisitionValue
-      acquisitionCosts <- acquisitionCosts
       acquisitionDate <- acquisitionDate
+      acquisitionValue <- acquisitionValue(acquisitionDate, howBecameOwner)
+      acquisitionCosts <- acquisitionCosts
       rebasedValue <- rebasedValue
       rebasedCosts <- rebasedCosts
       improvements <- improvements

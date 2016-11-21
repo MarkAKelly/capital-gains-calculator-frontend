@@ -29,7 +29,7 @@ class YourAnswersConstructorSpec extends UnitSpec {
         Some(SoldForLessModel(false)),
         DisposalValueModel(1000),
         DisposalCostsModel(100),
-        HowBecameOwnerModel("Gifted"),
+        Some(HowBecameOwnerModel("Gifted")),
         Some(BoughtForLessModel(false)),
         AcquisitionValueModel(2000),
         AcquisitionCostsModel(200),

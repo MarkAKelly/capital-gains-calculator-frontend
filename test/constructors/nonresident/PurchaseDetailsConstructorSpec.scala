@@ -31,7 +31,7 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
     None,
     DisposalValueModel(150000),
     DisposalCostsModel(600),
-    HowBecameOwnerModel("Gifted"),
+    Some(HowBecameOwnerModel("Gifted")),
     None,
     AcquisitionValueModel(300000),
     AcquisitionCostsModel(2500),
@@ -48,7 +48,7 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
     None,
     DisposalValueModel(150000),
     DisposalCostsModel(600),
-    HowBecameOwnerModel("Inherited"),
+    Some(HowBecameOwnerModel("Inherited")),
     None,
     AcquisitionValueModel(300000),
     AcquisitionCostsModel(2500),
@@ -65,7 +65,7 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
     Some(SoldForLessModel(false)),
     DisposalValueModel(90000),
     DisposalCostsModel(0),
-    HowBecameOwnerModel("Bought"),
+    Some(HowBecameOwnerModel("Bought")),
     Some(BoughtForLessModel(false)),
     AcquisitionValueModel(5000),
     AcquisitionCostsModel(200),
@@ -82,7 +82,7 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
     Some(SoldForLessModel(true)),
     DisposalValueModel(10000),
     DisposalCostsModel(100),
-    HowBecameOwnerModel("Bought"),
+    Some(HowBecameOwnerModel("Bought")),
     Some(BoughtForLessModel(true)),
     AcquisitionValueModel(5000),
     AcquisitionCostsModel(200),
@@ -117,7 +117,7 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
       }
 
       "return a Sequence that will contain an acquisitionValue data item" in {
-        result.contains(PurchaseDetailsConstructor.acquisitionValueRow(totalGainForLess).get) shouldBe true
+        result.contains(PurchaseDetailsConstructor.acquisitionValueRow(totalGainForLess, useWorthBeforeLegislationStart = false).get) shouldBe true
       }
 
       "return a Sequence that will contain a howBecameOwner data item" in {
@@ -157,7 +157,7 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
       }
 
       "return a Sequence that will contain an acquisitionValue data item" in {
-        result.contains(PurchaseDetailsConstructor.acquisitionValueRow(totalGainGiven).get) shouldBe true
+        result.contains(PurchaseDetailsConstructor.acquisitionValueRow(totalGainGiven, useWorthBeforeLegislationStart = false).get) shouldBe true
       }
 
       "return a Sequence that will contain a howBecameOwner data item" in {
@@ -323,7 +323,7 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
   "Calling .acquisitionValueRow" when {
 
     "a value of 300000 is given" should {
-      lazy val result = PurchaseDetailsConstructor.acquisitionValueRow(totalGainGiven).get
+      lazy val result = PurchaseDetailsConstructor.acquisitionValueRow(totalGainGiven, useWorthBeforeLegislationStart = false).get
 
       "have an id of nr:acquisitionValue" in {
         result.id shouldBe "nr:acquisitionValue"
@@ -333,8 +333,8 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
         result.data shouldBe 300000
       }
 
-      "have the question for acquisition value" in {
-        result.question shouldBe messages.AcquisitionValue.question
+      "have the question for worth when gifted to" in {
+        result.question shouldBe messages.WorthWhenGiftedTo.question
       }
 
       "have a link to the acquisition date page" in {
@@ -343,10 +343,34 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
     }
 
     "a value of 5000 is given" should {
-      lazy val result = PurchaseDetailsConstructor.acquisitionValueRow(totalGainSold).get
+      lazy val result = PurchaseDetailsConstructor.acquisitionValueRow(totalGainSold, useWorthBeforeLegislationStart = false).get
 
       "have the data for '5000'" in {
         result.data shouldBe 5000
+      }
+    }
+
+    "a value for acquisition is given" should {
+      lazy val result = PurchaseDetailsConstructor.acquisitionValueRow(totalGainSold, useWorthBeforeLegislationStart = false).get
+
+      "have the question for acquisition value" in {
+        result.question shouldBe messages.AcquisitionValue.question
+      }
+    }
+
+    "a worth when inherited is given" should {
+      lazy val result = PurchaseDetailsConstructor.acquisitionValueRow(totalGainInherited, useWorthBeforeLegislationStart = false).get
+
+      "have the question for worth when inherited" in {
+        result.question shouldBe messages.WorthWhenInherited.question
+      }
+    }
+
+    "a worth before legislation start value is given" should {
+      lazy val result = PurchaseDetailsConstructor.acquisitionValueRow(totalGainSold, useWorthBeforeLegislationStart = true).get
+
+      "have the question for worth before legislation start" in {
+        result.question shouldBe messages.WorthBeforeLegislationStart.question
       }
     }
   }
