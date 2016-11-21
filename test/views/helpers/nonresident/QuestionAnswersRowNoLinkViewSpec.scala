@@ -106,5 +106,25 @@ class QuestionAnswersRowNoLinkViewSpec extends UnitSpec {
         doc.select("div#id-answer span").text() shouldBe ""
       }
     }
+
+    "passing in a boolean type with true" should {
+      val model = QuestionAnswerModel[Boolean]("id", true, "question", Some("change-link"))
+      val result = questionAnswerRowNoLink(model, 2)
+      val doc = Jsoup.parse(result.body)
+
+      "have an answer 'Yes'" in {
+        doc.select("div#id-answer span").text() shouldBe "Yes"
+      }
+    }
+
+    "passing in a boolean type with false" should {
+      val model = QuestionAnswerModel[Boolean]("id", false, "question", Some("change-link"))
+      val result = questionAnswerRowNoLink(model, 2)
+      val doc = Jsoup.parse(result.body)
+
+      "have an answer 'Yes'" in {
+        doc.select("div#id-answer span").text() shouldBe "No"
+      }
+    }
   }
 }
