@@ -16,20 +16,37 @@
 
 package controllers.nonresident
 
-import connectors.CalculatorConnector
-import controllers.predicates.ValidActiveSession
+import constructors.nonresident.{AnswersConstructor, CalculationElectionConstructor, YourAnswersConstructor}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+import controllers.predicates.ValidActiveSession
+import views.html.calculation
+
+import scala.concurrent.Future
 
 object CheckYourAnswersController extends CheckYourAnswersController {
-  val calcConnector = CalculatorConnector
+  val calcElectionConstructor = CalculationElectionConstructor
+  val answersConstructor = AnswersConstructor
 }
 
 trait CheckYourAnswersController extends FrontendController with ValidActiveSession {
 
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
+  val answersConstructor: AnswersConstructor
+  val backLink = controllers.nonresident.routes.OtherReliefsController.otherReliefs().url
 
-  val checkYourAnswers = TODO
 
-  val submitCheckYourAnswers = TODO
+  val checkYourAnswers = ValidateSession.async { implicit request =>
+
+    for {
+      model <- answersConstructor.getNRTotalGainAnswers
+      answers <- Future.successful(YourAnswersConstructor.fetchYourAnswers(model))
+    } yield {
+      Ok(calculation.nonresident.checkYourAnswers(answers, backLink))
+    }
+  }
+
+  val submitCheckYourAnswers = ValidateSession.async { implicit request =>
+    Future.successful(Redirect(routes.SummaryController.summary()))
+  }
 }

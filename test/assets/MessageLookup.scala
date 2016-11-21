@@ -127,6 +127,13 @@ object MessageLookup {
       val whyMoreDetailsTwo = "Higher totals sometimes qualify for larger reliefs, which can reduce the amount you owe."
     }
 
+    object CheckYourAnswers {
+      val question = "Check your answers"
+      val tableHeading = "You've told us"
+      val change = "Change"
+      val hiddenText = "your response to the question"
+    }
+
     object CurrentIncome {
       val question = "In the tax year when you stopped owning the property, what was your total UK income?"
       val linkOne = "Income Tax"
