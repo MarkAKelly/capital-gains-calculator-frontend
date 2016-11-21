@@ -38,9 +38,9 @@
             </tbody>
         </table>
 
-    <form class="form" method="">
+    @form(action = controllers.nonresident.routes.CheckYourAnswersController.submitCheckYourAnswers()) {
         <div class="form-group">
-            <a class="button" type="submit" href="@controllers.nonresident.routes.CalculationElectionController.calculationElection()" id="continue-button">@Messages("calc.base.continue")</a>
+            <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
         </div>
-    </form>
+    }
 }
