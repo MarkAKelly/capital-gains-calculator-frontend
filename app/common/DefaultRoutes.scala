@@ -20,6 +20,6 @@ import controllers.nonresident.routes
 
 object DefaultRoutes {
 
-  val missingDataRoute = routes.CustomerTypeController.customerType().url
+  val missingDataRoute = routes.DisposalDateController.disposalDate().url
 
 }
