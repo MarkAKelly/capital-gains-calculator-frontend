@@ -48,7 +48,7 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
       Future.successful(routes.RebasedValueController.rebasedValue().url)
     case (Some(RebasedValueModel(Some(data))), Some(AcquisitionDateModel("No", _, _, _))) =>
       Future.successful(routes.RebasedCostsController.rebasedCosts().url)
-    case (_, Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year))))
+    case (Some(RebasedValueModel(Some(data))), Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year))))
       if !TaxDates.dateAfterStart(day, month, year) =>
       Future.successful(routes.RebasedCostsController.rebasedCosts().url)
     case (_, _) => Future.successful(missingDataRoute)
