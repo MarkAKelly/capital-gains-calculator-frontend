@@ -22,7 +22,7 @@
                 @questions.map { question =>
                     <tr data-question="@question.question">
                         <td>@question.question</td>
-                        <td>
+                        <td id="@{s"${question.id}-answer"}">
                             @{question.data match {
                             case string: String => string
                             case int: Int => int.toString

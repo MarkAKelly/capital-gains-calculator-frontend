@@ -75,8 +75,15 @@ class CheckYourAnswersViewSpec extends UnitSpec with WithFakeApplication with Fa
           doc.select("tr > td").first().text() shouldBe "question"
         }
 
-        "has a data column with the data 'answer'" in {
-          doc.select("tr > td").get(1).text() shouldBe "answer"
+        "has a data column for the answer" which {
+
+          "should have the id 'id'" in {
+            doc.select("tr > td").get(1).attr("id") shouldBe "id-answer"
+          }
+
+          "should have the answer 'answer'" in {
+            doc.select("tr > td").get(1).text() shouldBe "answer"
+          }
         }
 
         "has the hyper-link text 'Change'" in {

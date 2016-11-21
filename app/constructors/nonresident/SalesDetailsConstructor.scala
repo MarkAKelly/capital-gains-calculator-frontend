@@ -65,7 +65,7 @@ object SalesDetailsConstructor {
 
   def soldForLessRow(answers: TotalGainAnswersModel): Option[QuestionAnswerModel[Boolean]] = {
     if (answers.soldOrGivenAwayModel.soldIt) {
-      Some(QuestionAnswerModel[Boolean](keys.soldOrGivenAway,
+      Some(QuestionAnswerModel[Boolean](keys.NonResidentKeys.soldForLess,
         answers.soldForLessModel.get.soldForLess,
         Messages("calc.nonResident.soldForLess.question"),
         Some(controllers.nonresident.routes.SoldForLessController.soldForLess().url)
