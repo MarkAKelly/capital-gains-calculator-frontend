@@ -16,9 +16,13 @@
 
 package controllers.nonresident
 
+import common.KeystoreKeys
+import common.nonresident.CalculationType
+import connectors.CalculatorConnector
 import constructors.nonresident.{AnswersConstructor, CalculationElectionConstructor, YourAnswersConstructor}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import controllers.predicates.ValidActiveSession
+import models.nonresident.CalculationElectionModel
 import views.html.calculation
 
 import scala.concurrent.Future
@@ -26,6 +30,7 @@ import scala.concurrent.Future
 object CheckYourAnswersController extends CheckYourAnswersController {
   val calcElectionConstructor = CalculationElectionConstructor
   val answersConstructor = AnswersConstructor
+  val calculatorConnector = CalculatorConnector
 }
 
 trait CheckYourAnswersController extends FrontendController with ValidActiveSession {
@@ -33,6 +38,7 @@ trait CheckYourAnswersController extends FrontendController with ValidActiveSess
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
   val answersConstructor: AnswersConstructor
+  val calculatorConnector: CalculatorConnector
   val backLink = controllers.nonresident.routes.OtherReliefsController.otherReliefs().url
 
 
@@ -47,6 +53,7 @@ trait CheckYourAnswersController extends FrontendController with ValidActiveSess
   }
 
   val submitCheckYourAnswers = ValidateSession.async { implicit request =>
+    calculatorConnector.saveFormData[CalculationElectionModel](KeystoreKeys.calculationElection, CalculationElectionModel(CalculationType.flat))
     Future.successful(Redirect(routes.SummaryController.summary()))
   }
 }
