@@ -75,10 +75,6 @@ class WorthBeforeLegislationStartViewSpec extends UnitSpec with WithFakeApplicat
 
         lazy val helpText = document.body().select("#helpText")
 
-        s"contains help text '${messages.hintOne}'" in {
-          helpText.text() should include(messages.hintOne)
-        }
-
         s"contains help text '${messages.hintTwo}'" in {
           helpText.text() should include (messages.hintTwo)
         }

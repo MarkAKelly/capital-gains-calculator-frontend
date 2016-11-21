@@ -325,7 +325,7 @@ object MessageLookup {
     }
 
     object WorthBeforeLegislationStart {
-      val question = "What was the property worth on 31st March 1982?"
+      val question = "What was the market value of the property on 31 March 1982?"
       val expandableText = "You only need to pay tax on gains made after this date"
       val expandableTitle = "Why we're asking for this"
     }
