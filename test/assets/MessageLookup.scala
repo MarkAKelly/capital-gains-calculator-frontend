@@ -259,9 +259,9 @@ object MessageLookup {
       val disposalHelpTextAdditional = "You might have to pay more if we think your estimate is unrealistic."
 
       val disposalErrorDecimalPlacesGaveAway = "There are too many numbers after the decimal point in your market value" +
-        "at the point of giving away"
+        " at the point of giving away"
       val disposalErrorDecimalPlacesSold = "There are too many numbers after the decimal point in your market value" +
-        "at the point of being sold"
+        " at the point of being sold"
 
       val errorNegativeGaveAway = "Enter a positive number for the market value at the point of being given away"
       val errorNegativeSold = "Enter a positive number for the market value at the point of being sold"
