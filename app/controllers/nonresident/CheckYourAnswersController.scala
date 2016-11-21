@@ -33,7 +33,7 @@ trait CheckYourAnswersController extends FrontendController with ValidActiveSess
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
   val answersConstructor: AnswersConstructor
-  val backLink = controllers.nonresident.routes.OtherReliefsController.otherReliefs().url
+  val backLink = controllers.nonresident.routes.ImprovementsController.improvements().url
 
 
   val checkYourAnswers = ValidateSession.async { implicit request =>

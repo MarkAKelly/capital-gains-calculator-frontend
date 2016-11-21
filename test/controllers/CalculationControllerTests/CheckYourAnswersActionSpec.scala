@@ -79,6 +79,10 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
       "load the check your answers page" in {
         document.title() shouldBe messages.CheckYourAnswers.question
       }
+
+      "have a back link to the improvements page" in {
+        document.select("#back-link").attr("href") shouldBe controllers.nonresident.routes.ImprovementsController.improvements().url
+      }
     }
 
     "provided with an invalid session" should {
