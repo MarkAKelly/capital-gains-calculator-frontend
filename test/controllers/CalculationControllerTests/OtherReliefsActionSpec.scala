@@ -119,7 +119,7 @@ class OtherReliefsActionSpec extends UnitSpec with WithFakeApplication with Mock
 
     "submitting a valid form" should {
       val target = setupTarget(None, TestModels.summaryIndividualFlatWithoutAEA, TestModels.calcModelTwoRates)
-      lazy val request = fakeRequestToPOSTWithSession("isClaimingOtherReliefs" -> "Yes", "otherReliefs" -> "1000")
+      lazy val request = fakeRequestToPOSTWithSession("otherReliefs" -> "1000")
       lazy val result = target.submitOtherReliefs(request)
 
       "return a status of 303" in {
@@ -133,7 +133,7 @@ class OtherReliefsActionSpec extends UnitSpec with WithFakeApplication with Mock
 
     "submitting an invalid form" should {
       val target = setupTarget(None, TestModels.summaryIndividualFlatWithoutAEA, TestModels.calcModelTwoRates)
-      lazy val request = fakeRequestToPOSTWithSession("isClaimingOtherReliefs" -> "Yes", "otherReliefs" -> "")
+      lazy val request = fakeRequestToPOSTWithSession("otherReliefs" -> "")
       lazy val result = target.submitOtherReliefs(request)
       lazy val document = Jsoup.parse(bodyOf(result))
 
