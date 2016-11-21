@@ -46,8 +46,6 @@ object CalculationDetailsConstructor {
 
     val question = Messages("calc.summary.calculation.details.calculationElection")
 
-    println(s"############CalculationType=$calculationType##################")
-
     val answer = calculationType match {
       case CalculationType.flat => Messages("calc.summary.calculation.details.flatCalculation")
       case CalculationType.timeApportioned => Messages("calc.summary.calculation.details.timeCalculation")

@@ -26,6 +26,8 @@ import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.mockito.Mockito._
 import assets.MessageLookup.{NonResident => messages}
+import connectors.CalculatorConnector
+
 import scala.concurrent.Future
 import play.api.test.Helpers._
 
@@ -34,12 +36,14 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
   def setupTarget(totalGainAnswersModel: TotalGainAnswersModel): CheckYourAnswersController = {
 
     val mockAnswersConstructor = mock[AnswersConstructor]
+    val mockCalcConnector = mock[CalculatorConnector]
 
     when(mockAnswersConstructor.getNRTotalGainAnswers(Matchers.any()))
       .thenReturn(Future.successful(totalGainAnswersModel))
 
     new CheckYourAnswersController {
       override val answersConstructor: AnswersConstructor = mockAnswersConstructor
+      override val calculatorConnector: CalculatorConnector = mockCalcConnector
     }
   }
 
