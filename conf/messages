@@ -323,6 +323,18 @@ calc.soldOrGivenAway.question = Did you sell or give away the property?
 calc.soldOrGivenAway.sold = I sold it
 calc.soldOrGivenAway.gave = I gave it away
 
+## Acquisition Market Value ##
+calc.acquisitionMarketValue.errorDecimalPlaces = The market value of the property has too many numbers after the decimal point
+calc.acquisitionMarketValue.errorNegative = Enter a positive number for the market value of the property
+calc.acquisitionMarketValue.hintOne = You can use a valuation from a surveyor.
+calc.acquisitionMarketValue.hintTwo = If you don''t know the exact value, you must provide a realistic estimate. You might have to pay more if we think your estimate is unrealistic.
+
+## Worth When Gifted To ##
+calc.worthWhenGiftedTo.question = What was the market value of the property when you got it as a gift?
+
+## Worth When Bought For Less ##
+calc.worthWhenBoughtForLess.question = What was the market value of the property when you bought it?
+
 ## Summary ##
 calc.summary.title = Summary
 calc.summary.amount.you.owe = Amount you owe

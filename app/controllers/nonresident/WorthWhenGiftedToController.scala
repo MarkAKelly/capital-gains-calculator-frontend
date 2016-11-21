@@ -24,29 +24,28 @@ import models.nonresident.AcquisitionValueModel
 import play.api.data.Form
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import views.html.calculation
-
 import scala.concurrent.Future
 
-object WorthWhenBoughtForLessController extends WorthWhenBoughtForLessController {
+object WorthWhenGiftedToController extends WorthWhenGiftedToController {
   val calcConnector = CalculatorConnector
 }
 
-trait WorthWhenBoughtForLessController extends FrontendController with ValidActiveSession {
+trait WorthWhenGiftedToController extends FrontendController with ValidActiveSession {
 
   val calcConnector: CalculatorConnector
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
 
-  val worthWhenBoughtForLess = ValidateSession.async { implicit request =>
+  val worthWhenGiftedTo = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.acquisitionMarketValue).map {
-      case Some(data) => Ok(calculation.nonresident.worthWhenBoughtForLess(acquisitionMarketValueForm.fill(data)))
-      case None => Ok(calculation.nonresident.worthWhenBoughtForLess(acquisitionMarketValueForm))
+      case Some(data) => Ok(calculation.nonresident.worthWhenGiftedTo(acquisitionMarketValueForm.fill(data)))
+      case None => Ok(calculation.nonresident.worthWhenGiftedTo(acquisitionMarketValueForm))
     }
   }
 
-  val submitWorthWhenBoughtForLess = ValidateSession.async { implicit request =>
+  val submitWorthWhenGiftedTo = ValidateSession.async { implicit request =>
 
-    def errorAction(form: Form[AcquisitionValueModel]) = Future.successful(BadRequest(calculation.nonresident.worthWhenBoughtForLess(form)))
+    def errorAction(form: Form[AcquisitionValueModel]) = Future.successful(BadRequest(calculation.nonresident.worthWhenGiftedTo(form)))
 
     def successAction(model: AcquisitionValueModel) = {
       calcConnector.saveFormData(KeystoreKeys.acquisitionMarketValue, model)

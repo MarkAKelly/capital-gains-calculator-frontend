@@ -126,18 +126,18 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
-  /* Worth When Gifted Too routes */
-  "The URL for the worthWhenGiftedToo Action" should {
-    "be equal to /calculate-your-capital-gains/non-resident/worth-when-gifted-too" in {
-      val path = controllers.nonresident.routes.WorthWhenGiftedTooController.worthWhenGiftedToo().url
-      path shouldEqual "/calculate-your-capital-gains/non-resident/worth-when-gifted-too"
+  /* Worth When Gifted To routes */
+  "The URL for the worthWhenGiftedTo Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/worth-when-gifted-to" in {
+      val path = controllers.nonresident.routes.WorthWhenGiftedToController.worthWhenGiftedTo().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/worth-when-gifted-to"
     }
   }
 
-  "The URL for the submitWorthWhenGiftedToo Action" should {
-    "be equal to /calculate-your-capital-gains/non-resident/worth-when-gifted-too" in {
-      val path = controllers.nonresident.routes.WorthWhenGiftedTooController.submitWorthWhenGiftedToo().url
-      path shouldEqual "/calculate-your-capital-gains/non-resident/worth-when-gifted-too"
+  "The URL for the submitWorthWhenGiftedTo Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/worth-when-gifted-to" in {
+      val path = controllers.nonresident.routes.WorthWhenGiftedToController.submitWorthWhenGiftedTo().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/worth-when-gifted-to"
     }
   }
 

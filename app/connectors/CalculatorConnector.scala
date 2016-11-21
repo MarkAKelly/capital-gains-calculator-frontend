@@ -229,7 +229,7 @@ trait CalculatorConnector {
       case _ => None
     }
 
-    val worthWhenBoughtForLess = fetchAndGetFormData[WorthWhenBoughtForLessModel](ResidentPropertyKeys.worthWhenBoughtForLess).map {
+    val worthWhenBoughtForLess = fetchAndGetFormData[resident.properties.WorthWhenBoughtForLessModel](ResidentPropertyKeys.worthWhenBoughtForLess).map {
       case Some(data) => Some(data.amount)
       case _ => None
     }

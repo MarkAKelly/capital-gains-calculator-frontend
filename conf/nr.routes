@@ -34,9 +34,9 @@ POST        /market-value-when-gave-away        controllers.nonresident.MarketVa
 GET         /worth-when-bought-for-less          controllers.nonresident.WorthWhenBoughtForLessController.worthWhenBoughtForLess
 POST        /worth-when-bought-for-less          controllers.nonresident.WorthWhenBoughtForLessController.submitWorthWhenBoughtForLess
 
-#Worth When Gifted Too
-GET         /worth-when-gifted-too               controllers.nonresident.WorthWhenGiftedTooController.worthWhenGiftedToo
-POST        /worth-when-gifted-too               controllers.nonresident.WorthWhenGiftedTooController.submitWorthWhenGiftedToo
+#Worth When Gifted To
+GET         /worth-when-gifted-to                controllers.nonresident.WorthWhenGiftedToController.worthWhenGiftedTo
+POST        /worth-when-gifted-to                controllers.nonresident.WorthWhenGiftedToController.submitWorthWhenGiftedTo
 
 #Worth When Inherited
 GET         /worth-when-inherited                controllers.nonresident.WorthWhenInheritedController.worthWhenInherited
