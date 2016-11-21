@@ -34,6 +34,13 @@ object PurchaseDetailsConstructor {
         case _ => false
       }
 
+    val useWorthBeforeLegislationStart = {
+      totalGainAnswersModel.acquisitionDateModel match {
+        case AcquisitionDateModel("Yes",_,_,_) if TaxDates.dateBeforeLegislationStart(totalGainAnswersModel.acquisitionDateModel.get) =>true
+        case _ => false
+      }
+    }
+
     val acquisitionDateAnswerData = acquisitionDateAnswerRow(totalGainAnswersModel)
     val acquisitionDateData = acquisitionDateRow(totalGainAnswersModel)
     val howBecameOwnerData = howBecameOwnerRow(totalGainAnswersModel)
