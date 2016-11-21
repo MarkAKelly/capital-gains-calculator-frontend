@@ -79,7 +79,7 @@ class ReportSpec extends UnitSpec with WithFakeApplication with FakeRequestHelpe
     Some(RebasedValueModel("Yes", Some(3000))),
     Some(RebasedCostsModel("Yes", Some(300))),
     ImprovementsModel("Yes", Some(10), Some(20)),
-    Some(OtherReliefsModel(Some("Yes"), Some(30))))
+    Some(OtherReliefsModel(30)))
 
   "ReportController" should {
     "use the correct calculator connector" in {

@@ -111,7 +111,7 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
     Some(RebasedValueModel("Yes", Some(7500))),
     Some(RebasedCostsModel("Yes", Some(150))),
     ImprovementsModel("Yes", Some(50), Some(25)),
-    Some(OtherReliefsModel(Some("Yes"), Some(1000)))
+    Some(OtherReliefsModel(1000))
   )
 
   "Calling getNRTotalGainAnswers" should {

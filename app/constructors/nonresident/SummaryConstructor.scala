@@ -508,31 +508,11 @@ object SummaryConstructor {
             }),
             Some(routes.AllowableLossesController.allowableLosses().toString())
           ),
-          summary.otherReliefsModelFlat.isClaimingOtherReliefs match {
-            case Some("No") =>
-              SummaryDataItemModel(
-                Messages("calc.otherReliefs.questionTwo"),
-                summary.otherReliefsModelFlat.isClaimingOtherReliefs match {
-                  case Some(data) => summary.otherReliefsModelFlat.isClaimingOtherReliefs.get
-                  case None => "No"
-                },
-                Some(routes.OtherReliefsController.otherReliefs().toString())
-              )
-            case Some("Yes") => SummaryDataItemModel(
+          SummaryDataItemModel(
               Messages("calc.otherReliefs.question"),
-              "&pound;" + (summary.otherReliefsModelFlat.otherReliefs match {
-                case Some(data) => MoneyPounds(data).quantity
-                case None => "0.00"
-              }),
-              Some(routes.OtherReliefsController.otherReliefs().toString()))
-            case _ => SummaryDataItemModel(
-              Messages("calc.otherReliefs.question"),
-              "&pound;" + (summary.otherReliefsModelFlat.otherReliefs match {
-                case Some(data) => MoneyPounds(data).quantity
-                case None => "0.00"
-              }),
+              s"&pound;${summary.otherReliefsModelFlat.otherReliefs}",
               Some(routes.OtherReliefsFlatController.otherReliefsFlat().toString()))
-          })
+          )
         case "time" => Array(
           SummaryDataItemModel(
             Messages("calc.privateResidenceRelief.question"),
@@ -549,10 +529,7 @@ object SummaryConstructor {
           ),
           SummaryDataItemModel(
             Messages("calc.otherReliefs.question"),
-            "&pound;" + (summary.otherReliefsModelTA.otherReliefs match {
-              case Some(data) => MoneyPounds(data).quantity
-              case None => "0.00"
-            }),
+            s"&pound;${summary.otherReliefsModelTA.otherReliefs}",
             Some(routes.OtherReliefsTAController.otherReliefsTA().toString())
           )
         )
@@ -572,10 +549,7 @@ object SummaryConstructor {
           ),
           SummaryDataItemModel(
             Messages("calc.otherReliefs.question"),
-            "&pound;" + (summary.otherReliefsModelRebased.otherReliefs match {
-              case Some(data) => MoneyPounds(data).quantity
-              case None => "0.00"
-            }),
+            s"&pound;${summary.otherReliefsModelRebased.otherReliefs}",
             Some(routes.OtherReliefsRebasedController.otherReliefsRebased().toString())
           )
         )

@@ -56,7 +56,7 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
     Some(RebasedValueModel("Yes", Some(3000))),
     Some(RebasedCostsModel("Yes", Some(300))),
     ImprovementsModel("Yes", Some(10), Some(20)),
-    Some(OtherReliefsModel(Some("Yes"), Some(30))))
+    Some(OtherReliefsModel(30)))
 
   "Check Your Answers Controller" should {
 

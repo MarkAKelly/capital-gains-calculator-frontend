@@ -43,19 +43,19 @@ trait CalculationElectionController extends FrontendController with ValidActiveS
 
   private def getOtherReliefsFlat(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] =
     calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
-      case Some(data) => data.otherReliefs
+      case Some(data) => Some(data.otherReliefs)
       case _ => None
     }
 
   private def getOtherReliefsTA(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] =
     calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA).map {
-      case Some(data) => data.otherReliefs
+      case Some(data) => Some(data.otherReliefs)
       case _ => None
     }
 
   private def getOtherReliefsRebased(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] =
     calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map {
-      case Some(data) => data.otherReliefs
+      case Some(data) => Some(data.otherReliefs)
       case _ => None
     }
 
