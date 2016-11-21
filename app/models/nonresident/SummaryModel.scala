@@ -44,16 +44,16 @@ case class SummaryModel(
                         ) {
 
   def reliefApplied(): String = calculationElectionModel.calculationType match {
-    case CalculationType.flat if otherReliefsModelFlat.otherReliefs.getOrElse(BigDecimal(0)) > 0 => CalculationType.flat
-    case CalculationType.rebased if otherReliefsModelRebased.otherReliefs.getOrElse(BigDecimal(0)) > 0 => CalculationType.rebased
-    case CalculationType.timeApportioned if otherReliefsModelTA.otherReliefs.getOrElse(BigDecimal(0)) > 0 => CalculationType.timeApportioned
+    case CalculationType.flat if otherReliefsModelFlat.otherReliefs > 0 => CalculationType.flat
+    case CalculationType.rebased if otherReliefsModelRebased.otherReliefs > 0 => CalculationType.rebased
+    case CalculationType.timeApportioned if otherReliefsModelTA.otherReliefs > 0 => CalculationType.timeApportioned
     case _ => "none"
   }
 
   val personalDetailsRows: Seq[QuestionAnswerModel[Any]] = PersonalDetailsConstructor.getPersonalDetailsSection(this)
-  val saleDetailsRows: Seq[QuestionAnswerModel[Any]] = SalesDetailsConstructor.salesDetailsRows(this)
-  val purchaseDetailsRows: Seq[QuestionAnswerModel[Any]] = PurchaseDetailsConstructor.getPurchaseDetailsSection(this)
-  val propertyDetailsRows: Seq[QuestionAnswerModel[Any]] = PropertyDetailsConstructor.propertyDetailsRows(this)
+  val saleDetailsRows: Seq[QuestionAnswerModel[Any]] = Seq(QuestionAnswerModel[String]("", "", "", None))
+  val purchaseDetailsRows: Seq[QuestionAnswerModel[Any]] = Seq(QuestionAnswerModel[String]("", "", "", None))
+  val propertyDetailsRows: Seq[QuestionAnswerModel[Any]] = Seq(QuestionAnswerModel[String]("", "", "", None))
   def deductionsDetailsRows(result: CalculationResultModel): Seq[QuestionAnswerModel[Any]] =
-    DeductionDetailsConstructor.deductionDetailsRows(this, result)
+    Seq(QuestionAnswerModel[String]("", "", "", None))
 }

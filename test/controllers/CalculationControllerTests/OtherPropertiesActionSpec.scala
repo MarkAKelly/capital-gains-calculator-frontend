@@ -59,6 +59,12 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
     }
   }
 
+  "OtherPropertiesController" should {
+    s"have a session timeout home link of '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+      OtherPropertiesController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+    }
+  }
+
   // GET Tests
   "Calling the CalculationController.otherProperties" when {
 

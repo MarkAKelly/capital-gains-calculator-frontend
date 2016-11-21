@@ -35,7 +35,7 @@ trait DisposalValueController extends FrontendController with ValidActiveSession
 
   val calcConnector: CalculatorConnector
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
-  override val homeLink = controllers.nonresident.routes.CustomerTypeController.customerType().url
+  override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
 
   val disposalValue = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.disposalValue).map {
@@ -50,7 +50,7 @@ trait DisposalValueController extends FrontendController with ValidActiveSession
 
     def successAction(model: DisposalValueModel) = {
       calcConnector.saveFormData(KeystoreKeys.disposalValue, model)
-      Future.successful(Redirect(routes.AcquisitionCostsController.acquisitionCosts()))
+      Future.successful(Redirect(routes.DisposalCostsController.disposalCosts()))
     }
 
     disposalValueForm.bindFromRequest.fold(errorAction, successAction)

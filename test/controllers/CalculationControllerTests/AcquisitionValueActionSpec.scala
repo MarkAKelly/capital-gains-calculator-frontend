@@ -37,22 +37,21 @@ class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with 
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget(
-                   getData: Option[AcquisitionValueModel],
-                   acquisitionDateModel: Option[AcquisitionDateModel] = None): AcquisitionValueController = {
+  def setupTarget(getData: Option[AcquisitionValueModel]): AcquisitionValueController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
-    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[AcquisitionValueModel](Matchers.eq(KeystoreKeys.acquisitionValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
-    when(mockCalcConnector.fetchAndGetFormData[AcquisitionDateModel](Matchers.eq(KeystoreKeys.acquisitionDate))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(acquisitionDateModel))
-
     new AcquisitionValueController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
+    }
+  }
+
+  "AcquisitionValueController" should {
+    s"have a session timeout home link of '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+      AcquisitionValueController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
     }
   }
 
@@ -61,7 +60,7 @@ class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with 
 
     "not supplied with a pre-existing stored model" should {
 
-      val target = setupTarget(None, None)
+      val target = setupTarget(None)
       lazy val result = target.acquisitionValue(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -76,7 +75,7 @@ class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with 
 
     "supplied with a pre-existing stored model" should {
 
-      val target = setupTarget(Some(AcquisitionValueModel(1000)), None)
+      val target = setupTarget(Some(AcquisitionValueModel(1000)))
       lazy val result = target.acquisitionValue(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -106,55 +105,23 @@ class AcquisitionValueActionSpec extends UnitSpec with WithFakeApplication with 
   // POST Tests
   "In CalculationController calling the .submitAcquisitionValue action" when {
 
-    "submit a valid form with a acquisition date after tax start" should {
-      val acquisitionDateModelYesAfterStartDate = new AcquisitionDateModel("Yes", Some(10), Some(10), Some(2017))
+    "submit a valid form with a valid acquisitionValue" should {
       lazy val request = fakeRequestToPOSTWithSession(("acquisitionValue", "1000"))
-      lazy val target = setupTarget(None, Some(acquisitionDateModelYesAfterStartDate))
-      lazy val result = target.submitAcquisitionValue(request)
-
-      s"return a 303 to ${routes.ImprovementsController.improvements()}" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the improvements page" in {
-        redirectLocation(result) shouldBe Some(s"${routes.ImprovementsController.improvements()}")
-      }
-    }
-
-    "submitting a valid form with a date before 5 5 2015" should {
-
-      val date = new AcquisitionDateModel("Yes", Some(10), Some(10), Some(2010))
-      lazy val request = fakeRequestToPOSTWithSession(("acquisitionValue", "1000"))
-      lazy val target = setupTarget(None, Some(date))
+      lazy val target = setupTarget(None)
       lazy val result = target.submitAcquisitionValue(request)
 
       "return a 303" in {
         status(result) shouldBe 303
       }
-      "redirect to the rebased value page" in {
-        redirectLocation(result) shouldBe Some(s"${routes.RebasedValueController.rebasedValue()}")
-      }
-    }
 
-    "submitting a valid form with No date supplied" should {
-
-      val noDate = new AcquisitionDateModel("No", None, None, None)
-      lazy val request = fakeRequestToPOSTWithSession(("acquisitionValue", "1000"))
-      lazy val target = setupTarget(None, Some(noDate))
-      lazy val result = target.submitAcquisitionValue(request)
-
-      s"return a 303 to ${routes.RebasedValueController.rebasedValue()}" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to rebased value" in {
-        redirectLocation(result) shouldBe Some(s"${routes.RebasedValueController.rebasedValue()}")
+      s"redirect to ${routes.AcquisitionCostsController.acquisitionCosts()}" in {
+        redirectLocation(result) shouldBe Some(routes.AcquisitionCostsController.acquisitionCosts().url)
       }
     }
 
     "submitting an invalid form with a negative value" should {
       lazy val request = fakeRequestToPOSTWithSession(("acquisitionValue", "-1000"))
-      lazy val target = setupTarget(None, None)
+      lazy val target = setupTarget(None)
       lazy val result = target.submitAcquisitionValue(request)
       lazy val document = Jsoup.parse(bodyOf(result))
 

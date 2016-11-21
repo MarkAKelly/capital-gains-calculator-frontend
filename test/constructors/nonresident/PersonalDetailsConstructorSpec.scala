@@ -44,9 +44,9 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
     DisposalCostsModel(5000.0),
     AllowableLossesModel("Yes", Some(20000.0)),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(Some("Yes"), Some(100.0)),
-    OtherReliefsModel(Some("Yes"), Some(100.0)),
-    OtherReliefsModel(Some("Yes"), Some(100.0)),
+    OtherReliefsModel(100),
+    OtherReliefsModel(100),
+    OtherReliefsModel(100),
     Some(PrivateResidenceReliefModel("Yes", Some(2500.0), Some(0.0)))
   )
 
@@ -68,9 +68,9 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
     DisposalCostsModel(5000.0),
     AllowableLossesModel("No", None),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
     None
   )
 
@@ -92,9 +92,9 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
     DisposalCostsModel(5000.0),
     AllowableLossesModel("No", None),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
     None
   )
 
@@ -116,9 +116,9 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
     DisposalCostsModel(5000.0),
     AllowableLossesModel("No", None),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
     None
   )
 

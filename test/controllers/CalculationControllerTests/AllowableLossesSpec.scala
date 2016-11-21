@@ -66,6 +66,12 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with FakeReq
     }
   }
 
+  "AllowableLossesController" should {
+    s"have a session timeout home link of '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+      AllowableLossesController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+    }
+  }
+
   "In CalculationController calling the .allowableLosses action" when {
 
     "no prior data is supplied" should {

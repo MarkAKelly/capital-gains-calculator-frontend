@@ -37,25 +37,25 @@ object CalculationElectionController extends CalculationElectionController {
 trait CalculationElectionController extends FrontendController with ValidActiveSession {
 
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
-  override val homeLink = controllers.nonresident.routes.CustomerTypeController.customerType().url
+  override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
   val calcConnector: CalculatorConnector
   val calcElectionConstructor: CalculationElectionConstructor
 
   private def getOtherReliefsFlat(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] =
     calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
-      case Some(data) => data.otherReliefs
+      case Some(data) => Some(data.otherReliefs)
       case _ => None
     }
 
   private def getOtherReliefsTA(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] =
     calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA).map {
-      case Some(data) => data.otherReliefs
+      case Some(data) => Some(data.otherReliefs)
       case _ => None
     }
 
   private def getOtherReliefsRebased(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] =
     calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map {
-      case Some(data) => data.otherReliefs
+      case Some(data) => Some(data.otherReliefs)
       case _ => None
     }
 

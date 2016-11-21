@@ -31,7 +31,7 @@ class OtherReliefsRebasedViewSpec extends UnitSpec with WithFakeApplication with
 
     "not supplied with a pre-existing stored value and a taxable gain" should {
       val model = CalculationResultModel(100, 1000, 100, 18, 0, None, None, None)
-      lazy val view = otherReliefsRebased(otherReliefsForm(false), model, hasExistingReliefAmount = false)(fakeRequest)
+      lazy val view = otherReliefsRebased(otherReliefsForm, model, hasExistingReliefAmount = false)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have a back link" which {
@@ -63,6 +63,10 @@ class OtherReliefsRebasedViewSpec extends UnitSpec with WithFakeApplication with
         }
       }
 
+      s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+        document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+      }
+
       "have a form" which {
         lazy val form = document.body().select("form")
 
@@ -76,7 +80,7 @@ class OtherReliefsRebasedViewSpec extends UnitSpec with WithFakeApplication with
       }
 
       s"have the question '${messages.OtherReliefs.question}'" in {
-        document.body.select("label").first().text shouldBe messages.OtherReliefs.inputQuestion
+        document.body.select("label").first().text shouldBe messages.OtherReliefs.question
       }
 
       s"have the help text '${messages.OtherReliefs.help}'" in {
@@ -123,7 +127,7 @@ class OtherReliefsRebasedViewSpec extends UnitSpec with WithFakeApplication with
     "supplied with a pre-existing stored value and a negative taxable gain" should {
       val model = CalculationResultModel(100, 1000, -100, 18, 0, None, None, None)
       val map = Map("otherReliefs" -> "1000")
-      lazy val view = otherReliefsRebased(otherReliefsForm(false).bind(map), model, hasExistingReliefAmount = true)(fakeRequest)
+      lazy val view = otherReliefsRebased(otherReliefsForm.bind(map), model, hasExistingReliefAmount = true)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "has a list entry with the loss carried forward message and value" in {
@@ -150,7 +154,7 @@ class OtherReliefsRebasedViewSpec extends UnitSpec with WithFakeApplication with
     "supplied with an invalid map" should {
       val model = CalculationResultModel(100, 1000, -100, 18, 0, None, None, None)
       val map = Map("otherReliefs" -> "-1000")
-      lazy val view = otherReliefsRebased(otherReliefsForm(false).bind(map), model, hasExistingReliefAmount = true)(fakeRequest)
+      lazy val view = otherReliefsRebased(otherReliefsForm.bind(map), model, hasExistingReliefAmount = true)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have an error summary" in {

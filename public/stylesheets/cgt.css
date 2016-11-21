@@ -1,3 +1,7 @@
+.panel-indent--wide {
+    border-left-width: 10px;
+}
+
 .poundSign {
     position:relative;
     margin-left:5px;
@@ -27,7 +31,6 @@
   margin-left: -15px;
 }
 
-
 .notice-wrapper {
     border: 2px solid #BFC1C3;
     padding: 20px;
@@ -39,6 +42,10 @@
 .icon-important-size {
     width: 35px;
     height: 35px;
+}
+
+.non-resident-summary-padding-above {
+    padding-top: 2.5em;
 }
 
 .visuallyhidden {

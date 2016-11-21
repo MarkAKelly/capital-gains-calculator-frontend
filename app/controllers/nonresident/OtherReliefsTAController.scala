@@ -34,15 +34,15 @@ object OtherReliefsTAController extends OtherReliefsTAController {
 trait OtherReliefsTAController extends FrontendController with ValidActiveSession {
 
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
-  override val homeLink = controllers.nonresident.routes.CustomerTypeController.customerType().url
+  override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
   val calcConnector: CalculatorConnector
 
   val otherReliefsTA = ValidateSession.async { implicit request =>
 
     def action(dataResult: Option[CalculationResultModel]) = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA).map {
-      case Some(data) if data.otherReliefs.isDefined => Ok(calculation.nonresident.otherReliefsTA(otherReliefsForm(false).fill(data),
+      case Some(data) => Ok(calculation.nonresident.otherReliefsTA(otherReliefsForm.fill(data),
         dataResult.get, hasExistingReliefAmount = true))
-      case _ => Ok(calculation.nonresident.otherReliefsTA(otherReliefsForm(true), dataResult.get, hasExistingReliefAmount = false))
+      case _ => Ok(calculation.nonresident.otherReliefsTA(otherReliefsForm, dataResult.get, hasExistingReliefAmount = false))
     }
 
     for {
@@ -64,7 +64,7 @@ trait OtherReliefsTAController extends FrontendController with ValidActiveSessio
 
     def errorRoute(form: Form[OtherReliefsModel], dataResult: Option[CalculationResultModel]) = {
       calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map {
-        case Some(data) if data.otherReliefs.isDefined => BadRequest(calculation.nonresident.otherReliefsRebased(form,
+        case Some(data) => BadRequest(calculation.nonresident.otherReliefsRebased(form,
           dataResult.get, hasExistingReliefAmount = true))
         case _ => BadRequest(calculation.nonresident.otherReliefsRebased(form, dataResult.get, hasExistingReliefAmount = false))
       }
@@ -75,7 +75,7 @@ trait OtherReliefsTAController extends FrontendController with ValidActiveSessio
       Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
     }
 
-    otherReliefsForm(true).bindFromRequest.fold(errorAction, successAction)
+    otherReliefsForm.bindFromRequest.fold(errorAction, successAction)
   }
 
 }

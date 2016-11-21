@@ -33,8 +33,6 @@ import uk.gov.hmrc.play.http.SessionKeys
 
 import scala.concurrent.Future
 
-
-
 class CalculationElectionViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
   "The Calculation Election View" should {
@@ -58,8 +56,8 @@ class CalculationElectionViewSpec extends UnitSpec with WithFakeApplication with
       }
     }
 
-    "have the home link to 'home'" in {
-      doc.select("#homeNavHref").attr("href") shouldBe "/calculate-your-capital-gains/non-resident/"
+    s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+      doc.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
     }
 
     "have a back button" which {

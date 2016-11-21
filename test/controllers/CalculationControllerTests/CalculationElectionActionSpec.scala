@@ -59,9 +59,9 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
     when(mockCalcConnector.createSummary(Matchers.any()))
       .thenReturn(summaryData)
 
-    val flatReliefs = otherReliefsFlat match { case Some(x) => x.otherReliefs case _ => None }
-    val timeReliefs = otherReliefsTA match { case Some(x) => x.otherReliefs case _ => None }
-    val rebasedReliefs = otherReliefsRebased match { case Some(x) => x.otherReliefs case _ => None }
+    val flatReliefs = Some(otherReliefsFlat.getOrElse(OtherReliefsModel(0)).otherReliefs)
+    val timeReliefs = Some(otherReliefsTA.getOrElse(OtherReliefsModel(0)).otherReliefs)
+    val rebasedReliefs = Some(otherReliefsRebased.getOrElse(OtherReliefsModel(0)).otherReliefs)
 
     when(mockCalcElectionConstructor.generateElection(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(),
       Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any()))
@@ -93,6 +93,12 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
     new CalculationElectionController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
       override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
+    }
+  }
+
+  "CalculationElectionController" should {
+    s"have a session timeout home link of '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+      CalculationElectionController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
     }
   }
 
@@ -130,9 +136,9 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
         None,
         TestModels.summaryTrusteeTAWithoutAEA,
         None,
-        Some(OtherReliefsModel(None, Some(500))),
-        Some(OtherReliefsModel(None, Some(600))),
-        Some(OtherReliefsModel(None, Some(700)))
+        Some(OtherReliefsModel(500)),
+        Some(OtherReliefsModel(600)),
+        Some(OtherReliefsModel(700))
       )
       lazy val result = target.calculationElection(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))

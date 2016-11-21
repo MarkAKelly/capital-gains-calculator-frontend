@@ -29,7 +29,7 @@ class AcquisitionDateViewSpec extends UnitSpec with WithFakeApplication with Moc
   "Acquisition date view" when {
 
     "supplied with no errors" should {
-      lazy val view = acquisitionDate(acquisitionDateForm, "back-link")(fakeRequest)
+      lazy val view = acquisitionDate(acquisitionDateForm)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       s"have a title of '${messages.AcquisitionDate.question}'" in {
@@ -43,24 +43,37 @@ class AcquisitionDateViewSpec extends UnitSpec with WithFakeApplication with Moc
         }
 
         s"should have a route to 'back-link'" in {
-          document.body.getElementById("back-link").attr("href") shouldEqual "back-link"
+          document.body.getElementById("back-link").attr("href") shouldEqual controllers.nonresident.routes.DisposalCostsController.disposalCosts().url
         }
+      }
+
+      s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+        document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
       }
 
       "have a heading" which {
         lazy val heading = document.body().select("h1")
 
-        "has a class of heading-large" in {
-          heading.attr("class") shouldBe "heading-large"
+        "has a class of heading-xlarge" in {
+          heading.attr("class") shouldBe "heading-xlarge"
         }
 
-        s"has the text '${messages.pageHeading}'" in {
-          heading.text shouldBe messages.pageHeading
+        s"has the text '${messages.AcquisitionDate.question}'" in {
+          heading.text shouldBe messages.AcquisitionDate.question
         }
       }
 
-      s"have the question '${messages.AcquisitionDate.question}'" in {
-        document.body.select("legend").text.stripSuffix(" ") shouldBe messages.AcquisitionDate.question
+      "have a legend that" should {
+
+        lazy val legend = document.body.select("legend")
+
+        s"have the question '${messages.AcquisitionDate.question}'" in {
+          legend.text.stripSuffix(" ") shouldBe messages.AcquisitionDate.question
+        }
+
+        "be visually hidden" in {
+          legend.hasClass("visuallyhidden") shouldEqual true
+        }
       }
 
       "have a form" which {
@@ -102,12 +115,8 @@ class AcquisitionDateViewSpec extends UnitSpec with WithFakeApplication with Moc
 
     "supplied with errors" should {
       lazy val form = acquisitionDateForm.bind(Map("hasAcquisitionDate" -> "Yes"))
-      lazy val view = acquisitionDate(form, "back-link-two")(fakeRequest)
+      lazy val view = acquisitionDate(form)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
-
-      s"have a route to 'back-link-two'" in {
-        document.body.getElementById("back-link").attr("href") shouldEqual "back-link-two"
-      }
 
       "have an error summary" in {
         document.select("#error-summary-display").size() shouldBe 1

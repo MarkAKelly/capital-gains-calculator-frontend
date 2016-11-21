@@ -66,6 +66,12 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
     }
   }
 
+  "OtherReliefsFlatController" should {
+    s"have a session timeout home link of '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+      OtherReliefsFlatController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+    }
+  }
+
   "Calling the .otherReliefsFlat action " when {
 
     "not supplied with a pre-existing stored model" should {
@@ -85,12 +91,12 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "load the otherReliefs flat page" in {
-        document.title() shouldBe messages.inputQuestion
+        document.title() shouldBe messages.question
       }
     }
 
     "supplied with a pre-existing stored model" should {
-      val testOtherReliefsModel = OtherReliefsModel(None, Some(5000))
+      val testOtherReliefsModel = OtherReliefsModel(5000)
       val target = setupTarget(
         Some(testOtherReliefsModel),
         TestModels.summaryIndividualFlatWithoutAEA,
@@ -106,7 +112,7 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "load the otherReliefs flat page" in {
-        document.title() shouldBe messages.inputQuestion
+        document.title() shouldBe messages.question
       }
     }
 
@@ -169,7 +175,7 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "return to the other reliefs flat page" in {
-        document.title() shouldBe messages.inputQuestion
+        document.title() shouldBe messages.question
       }
     }
   }

@@ -16,11 +16,12 @@
 
 package constructors.nonresident
 
-import common.{KeystoreKeys, TestModels}
 import assets.MessageLookup.NonResident.{Summary => messages}
+import common.nonresident.CalculationType
+import common.{KeystoreKeys, TestModels}
 import controllers.nonresident.routes
 import helpers.AssertHelpers
-import models.nonresident.CalculationResultModel
+import models.nonresident.{CalculationResultModel, TotalGainResultsModel}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplication with AssertHelpers {
@@ -32,11 +33,10 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
   private def assertExpectedLink[T](option: Option[T])(test: T => Unit) = assertOption("expected link is None")(option)(test)
 
   "Calling buildSection" when {
-
+    val calculation = TotalGainResultsModel(-1000, Some(2000), Some(0))
     "a loss has been made" should {
-      val calculation = TestModels.calcModelLoss
-      val answers = TestModels.summaryIndividualImprovementsWithRebasedModel
-      lazy val result = target.buildSection(calculation, answers)
+
+      lazy val result = target.buildSection(calculation, CalculationType.flat)
 
       "have a calc election question" in {
         result.exists(qa => qa.id == KeystoreKeys.calculationElection) shouldBe true
@@ -49,28 +49,11 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       "have a loss question" in {
         result.exists(qa => qa.id == "calcDetails:totalLoss") shouldBe true
       }
-
-      "not have an AEA question" in {
-        result.exists(qa => qa.id == "calcDetails:aea") shouldBe false
-      }
-
-      "not have a taxable gain question" in {
-        result.exists(qa => qa.id == "calcDetails:taxableGain") shouldBe false
-      }
-
-      "not have a taxable rate question" in {
-        result.exists(qa => qa.id == "calcDetails:taxableRate") shouldBe false
-      }
-
-      "not have a loss to carry forward question" in {
-        result.exists(qa => qa.id == "calcDetails:lossToCarryForward") shouldBe false
-      }
     }
 
     "a gain has been made" should {
-      val calculation = TestModels.calcModelOneRate
-      val answers = TestModels.summaryIndividualImprovementsWithRebasedModel
-      lazy val result = target.buildSection(calculation, answers)
+      val calculation = TotalGainResultsModel(-1000, Some(2000), Some(0))
+      lazy val result = target.buildSection(calculation, CalculationType.timeApportioned)
 
       "have a calc election question" in {
         result.exists(qa => qa.id == KeystoreKeys.calculationElection) shouldBe true
@@ -82,29 +65,12 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
 
       "not have a loss question" in {
         result.exists(qa => qa.id == "calcDetails:totalLoss") shouldBe false
-      }
-
-      "have an AEA question" in {
-        result.exists(qa => qa.id == "calcDetails:aea") shouldBe true
-      }
-
-      "have a taxable gain question" in {
-        result.exists(qa => qa.id == "calcDetails:taxableGain") shouldBe true
-      }
-
-      "have a taxable rate question" in {
-        result.exists(qa => qa.id == "calcDetails:taxableRate") shouldBe true
-      }
-
-      "not have a loss to carry forward question" in {
-        result.exists(qa => qa.id == "calcDetails:lossToCarryForward") shouldBe false
       }
     }
 
     "a zero gain has been made" should {
-      val calculation = TestModels.calcModelZeroTotal
-      val answers = TestModels.summaryIndividualImprovementsWithRebasedModel
-      lazy val result = target.buildSection(calculation, answers)
+      val calculation = TotalGainResultsModel(-1000, Some(2000), Some(0))
+      lazy val result = target.buildSection(calculation, CalculationType.rebased)
 
       "have a calc election question" in {
         result.exists(qa => qa.id == KeystoreKeys.calculationElection) shouldBe true
@@ -117,65 +83,13 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       "not have a loss question" in {
         result.exists(qa => qa.id == "calcDetails:totalLoss") shouldBe false
       }
-
-      "not have an AEA question" in {
-        result.exists(qa => qa.id == "calcDetails:aea") shouldBe false
-      }
-
-      "not have a taxable gain question" in {
-        result.exists(qa => qa.id == "calcDetails:taxableGain") shouldBe false
-      }
-
-      "not have a taxable rate question" in {
-        result.exists(qa => qa.id == "calcDetails:taxableRate") shouldBe false
-      }
-
-      "not have a loss to carry forward question" in {
-        result.exists(qa => qa.id == "calcDetails:lossToCarryForward") shouldBe false
-      }
     }
-
-    "a negative taxable gain has been made" should {
-      val calculation = TestModels.calcModelNegativeTaxable
-      val answers = TestModels.summaryIndividualImprovementsWithRebasedModel
-      lazy val result = target.buildSection(calculation, answers)
-
-      "have a calc election question" in {
-        result.exists(qa => qa.id == KeystoreKeys.calculationElection) shouldBe true
-      }
-
-      "have a gain question" in {
-        result.exists(qa => qa.id == "calcDetails:totalGain") shouldBe true
-      }
-
-      "not have a loss question" in {
-        result.exists(qa => qa.id == "calcDetails:totalLoss") shouldBe false
-      }
-
-      "have an AEA question" in {
-        result.exists(qa => qa.id == "calcDetails:aea") shouldBe true
-      }
-
-      "have a taxable gain question" in {
-        result.exists(qa => qa.id == "calcDetails:taxableGain") shouldBe true
-      }
-
-      "not have a taxable rate question" in {
-        result.exists(qa => qa.id == "calcDetails:taxableRate") shouldBe false
-      }
-
-      "have a loss to carry forward question" in {
-        result.exists(qa => qa.id == "calcDetails:lossToCarryForward") shouldBe true
-      }
-    }
-
   }
 
   "Calling calculationElection" when {
 
     "the calculation type is a flat calc" should {
-      val model = TestModels.sumModelFlat
-      lazy val result = target.calculationElection(model)
+      lazy val result = target.calculationElection(CalculationType.flat)
 
       "return some details for the calculation election" in {
         result should not be None
@@ -207,8 +121,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
     }
 
     "the calculation type is a rebased calc" should {
-      val model = TestModels.sumModelRebased
-      lazy val result = target.calculationElection(model)
+      lazy val result = target.calculationElection(CalculationType.rebased)
 
       "return some details for the calculation election" in {
         result should not be None
@@ -240,8 +153,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
     }
 
     "the calculation type is a time apportioned calc" should {
-      val model = TestModels.sumModelTA
-      lazy val result = target.calculationElection(model)
+      lazy val result = target.calculationElection(CalculationType.timeApportioned)
 
       "return some details for the calculation election" in {
         result should not be None
@@ -277,8 +189,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
 
     "the gain is zero" should {
 
-      val model = TestModels.calcModelZeroTotal
-      lazy val result = target.totalGain(model)
+      lazy val result = target.totalGain(0)
 
       "return some total gain details" in {
         result should not be None
@@ -293,7 +204,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct answer for the total gain details" in {
-        assertExpectedResult(result)(_.data shouldBe model.totalGain)
+        assertExpectedResult(result)(_.data shouldBe 0)
       }
 
       "not return a link for the total gain details" in {
@@ -303,8 +214,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
 
     "the gain is greater than zero" should {
 
-      val model = TestModels.calcModelOneRate
-      lazy val result = target.totalGain(model)
+      lazy val result = target.totalGain(1)
 
       "return some total gain details" in {
         result should not be None
@@ -319,7 +229,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct answer for the total gain details" in {
-        assertExpectedResult(result)(_.data shouldBe model.totalGain)
+        assertExpectedResult(result)(_.data shouldBe 1)
       }
 
       "not return a link for the total gain details" in {
@@ -329,8 +239,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
 
     "the total gain is less than zero" should {
 
-      val model = TestModels.calcModelLoss
-      lazy val result = target.totalGain(model)
+      lazy val result = target.totalGain(-1)
 
       "return no total gain details" in {
         result shouldBe None
@@ -342,8 +251,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
 
     "the gain is zero" should {
 
-      val model = TestModels.calcModelZeroTotal
-      lazy val result = target.totalLoss(model)
+      lazy val result = target.totalLoss(0)
 
       "return no total loss details" in {
         result shouldBe None
@@ -352,8 +260,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
 
     "the gain is greater than zero" should {
 
-      val model = TestModels.calcModelOneRate
-      lazy val result = target.totalLoss(model)
+      lazy val result = target.totalLoss(1)
 
       "return no total loss details" in {
         result shouldBe None
@@ -362,8 +269,7 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
 
     "the total gain is less than zero" should {
 
-      val model = TestModels.calcModelLoss
-      lazy val result = target.totalLoss(model)
+      lazy val result = target.totalLoss(-1)
 
       "return some total loss details" in {
         result should not be None
@@ -378,240 +284,12 @@ class CalculationDetailsConstructorSpec extends UnitSpec with WithFakeApplicatio
       }
 
       "return correct answer for the total loss details" in {
-        assertExpectedResult(result)(_.data shouldBe model.totalGain.abs)
+        assertExpectedResult(result)(_.data shouldBe 1)
       }
 
       "not return a link for the total loss details" in {
         assertExpectedResult(result)(_.link shouldBe None)
       }
     }
-  }
-
-  "Calling usedAEA" when {
-
-    "the total gain is greater than zero" should {
-      val model = TestModels.calcModelOneRate
-      lazy val result = target.usedAea(model)
-
-      "return some AEA details" in {
-        result should not be None
-      }
-
-      "return correct ID for the AEA details" in {
-        assertExpectedResult(result)(_.id shouldBe "calcDetails:aea")
-      }
-
-      "return correct question for the AEA details" in {
-        assertExpectedResult(result)(_.question shouldBe messages.usedAEA)
-      }
-
-      "return correct answer for the AEA details" in {
-        assertExpectedResult(result)(_.data shouldBe model.usedAnnualExemptAmount)
-      }
-
-      "not return a link for the AEA details" in {
-        assertExpectedResult(result)(_.link shouldBe None)
-      }
-    }
-
-    "the total gain is less than zero" should {
-      val model = TestModels.calcModelLoss
-      lazy val result = target.usedAea(model)
-
-      "return some AEA details" in {
-        result shouldBe None
-      }
-    }
-
-    "the total gain is zero" should {
-      val model = TestModels.calcModelZeroTotal
-      lazy val result = target.usedAea(model)
-
-      "return some AEA details" in {
-        result shouldBe None
-      }
-    }
-  }
-
-  "Calling taxableGain" when {
-
-    "the total gain is greater than zero" should {
-      val model = TestModels.calcModelOneRate
-      lazy val result = target.taxableGain(model)
-
-      "return some taxable gain details" in {
-        result should not be None
-      }
-
-      "return correct ID for the taxable gain details" in {
-        assertExpectedResult(result)(_.id shouldBe "calcDetails:taxableGain")
-      }
-
-      "return correct question for the taxable gain details" in {
-        assertExpectedResult(result)(_.question shouldBe messages.taxableGain)
-      }
-
-      "return correct answer for the taxable gain details" in {
-        assertExpectedResult(result)(_.data shouldBe model.taxableGain)
-      }
-
-      "not return a link for the taxable gain details" in {
-        assertExpectedResult(result)(_.link shouldBe None)
-      }
-    }
-
-    "the total gain is less than zero" should {
-      val model = TestModels.calcModelLoss
-      lazy val result = target.taxableGain(model)
-
-      "return some taxable gain details" in {
-        result shouldBe None
-      }
-    }
-
-    "the total gain is zero" should {
-      val model = TestModels.calcModelZeroTotal
-      lazy val result = target.taxableGain(model)
-
-      "return some taxable gain details" in {
-        result shouldBe None
-      }
-    }
-  }
-
-  "Calling taxableRate" when {
-
-    "base gain is zero and upper gain is not present" should {
-      val model = TestModels.calcModelLoss
-      lazy val result = target.taxableRate(model)
-
-      "return no taxable rate details" in {
-        result shouldBe None
-      }
-    }
-
-    "base gain is greater than zero and upper gain is not present" should {
-      val model = CalculationResultModel(
-        taxOwed = 8000,
-        totalGain = 40000,
-        baseTaxGain = 32000,
-        baseTaxRate = 20,
-        usedAnnualExemptAmount = 8000,
-        upperTaxGain = None,
-        upperTaxRate = None,
-        simplePRR = None)
-      lazy val result = target.taxableRate(model)
-
-      "return some taxable gain details" in {
-        result should not be None
-      }
-
-      "return correct ID for the taxable rate details" in {
-        assertExpectedResult(result)(_.id shouldBe "calcDetails:taxableRate")
-      }
-
-      "return correct question for the taxable rate details" in {
-        assertExpectedResult(result)(_.question shouldBe messages.taxRate)
-      }
-
-      "return correct answer for the taxable rate details" in {
-        assertExpectedResult(result)(_.data shouldBe "20%")
-      }
-
-      "not return a link for the taxable rate details" in {
-        assertExpectedResult(result)(_.link shouldBe None)
-      }
-    }
-
-    "base gain is greater than zero and upper gain has a value" should {
-      val model = CalculationResultModel(
-        taxOwed = 8000,
-        totalGain = 40000,
-        baseTaxGain = 10000,
-        baseTaxRate = 18,
-        usedAnnualExemptAmount = 8000,
-        upperTaxGain = Some(32000),
-        upperTaxRate = Some(50),
-        simplePRR = None)
-      lazy val result = target.taxableRate(model)
-
-      "return some taxable gain details" in {
-        result should not be None
-      }
-
-      "return correct ID for the taxable rate details" in {
-        assertExpectedResult(result)(_.id shouldBe "calcDetails:taxableRate")
-      }
-
-      "return correct question for the taxable rate details" in {
-        assertExpectedResult(result)(_.question shouldBe messages.taxRate)
-      }
-
-      "return correct answer for the taxable rate details" in {
-        assertExpectedResult(result)(_.data shouldBe "£10,000 at 18%\n£32,000 at 50%")
-      }
-
-      "not return a link for the taxable rate details" in {
-        assertExpectedResult(result)(_.link shouldBe None)
-      }
-    }
-  }
-
-  "Calling lossToCarryForward" when {
-
-    "the taxable gain is zero" should {
-
-      val model = TestModels.calcModelZeroTotal
-      lazy val result = target.lossToCarryForward(model)
-
-      "return no loss to carry forward details" in {
-        result shouldBe None
-      }
-    }
-
-    "the taxable gain is greater than zero" should {
-
-      val model = TestModels.calcModelOneRate
-      lazy val result = target.lossToCarryForward(model)
-
-      "return no loss to carry forward details" in {
-        result shouldBe None
-      }
-    }
-
-    "the taxable gain is less than zero" should {
-
-      val model = CalculationResultModel(
-        taxOwed = 0,
-        totalGain = 0,
-        baseTaxGain = -55,
-        baseTaxRate = 20,
-        usedAnnualExemptAmount = 0,
-        upperTaxGain = Some(BigDecimal(-55)),
-        upperTaxRate = Some(50),
-        simplePRR = None)
-      lazy val result = target.lossToCarryForward(model)
-
-      "return some loss to carry forward details" in {
-        result should not be None
-      }
-
-      "return correct ID for the loss to carry forward details" in {
-        assertExpectedResult(result)(_.id shouldBe "calcDetails:lossToCarryForward")
-      }
-
-      "return correct question for the loss to carry forward details" in {
-        assertExpectedResult(result)(_.question shouldBe messages.lossesCarriedForward)
-      }
-
-      "return correct answer for the loss to carry forward details" in {
-        assertExpectedResult(result)(_.data shouldBe model.taxableGain.abs)
-      }
-
-      "not return a link for the loss to carry forward details" in {
-        assertExpectedResult(result)(_.link shouldBe None)
-      }
-    }
-
   }
 }

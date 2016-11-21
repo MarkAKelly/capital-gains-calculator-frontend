@@ -23,6 +23,7 @@ import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.nonresident.disposalValue
 import forms.nonresident.DisposalValueForm._
+import models.nonresident.DisposalValueModel
 
 class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
@@ -43,78 +44,37 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with Mocki
           backLink.text shouldBe messages.back
         }
 
-        s"has a route to 'disposal-date'" in {
-          backLink.attr("href") shouldBe controllers.nonresident.routes.DisposalDateController.disposalDate().url
+        s"has a route to 'sold-for-less'" in {
+          backLink.attr("href") shouldBe controllers.nonresident.routes.SoldForLessController.soldForLess().url
         }
       }
 
       "have a heading" which {
         lazy val heading = document.body().select("h1")
 
-        "has a class of heading-large" in {
-          heading.attr("class") shouldBe "heading-large"
+        "has a class of heading-xlarge" in {
+          heading.attr("class") shouldBe "heading-xlarge"
         }
 
-        s"has the text '${messages.pageHeading}'" in {
-          heading.text shouldBe messages.pageHeading
+        s"has the text '${messages.DisposalValue.question}'" in {
+          heading.text shouldBe messages.DisposalValue.question
         }
       }
 
-      s"have the question '${messages.DisposalValue.question}'" in {
-        document.body.select("label span").first().text shouldBe messages.DisposalValue.question
+      s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+        document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
       }
 
-      "have additional content" which {
-        s"has a paragraph with the text ${messages.DisposalValue.bulletIntro}" in {
-          document.body().select("#bullet-list-title").text() shouldBe messages.DisposalValue.bulletIntro
+      s"have a label" which {
+
+        lazy val label = document.select("label span").first()
+
+        s"has the question '${messages.DisposalValue.question}'" in {
+          label.text shouldBe messages.DisposalValue.question
         }
 
-        "has a bullet list" which {
-          lazy val bulletList = document.body().select("form ul")
-
-          "has a class of 'list-bullet'" in {
-            bulletList.attr("class") shouldBe "list-bullet"
-          }
-
-          "has three bullet points" in {
-            bulletList.select("li").size() shouldBe 3
-          }
-
-          s"has a bullet point with the message ${messages.DisposalValue.bulletOne}" in {
-            bulletList.select("li").text() should include (messages.DisposalValue.bulletOne)
-          }
-
-          s"has a bullet point with the message ${messages.DisposalValue.bulletTwo}" in {
-            bulletList.select("li").text() should include (messages.DisposalValue.bulletTwo)
-          }
-
-          s"has a bullet point with the message ${messages.DisposalValue.bulletThree}" in {
-            bulletList.select("li").text() should include (messages.DisposalValue.bulletThree)
-          }
-
-          "has a link" which {
-            lazy val link = bulletList.select("#lossesLink")
-
-            "has a class of 'external-link'" in {
-              link.attr("class") shouldBe "external-link"
-            }
-
-            "has a rel of 'external'" in {
-              link.attr("rel") shouldBe "external"
-            }
-
-            "has a target of '_blank'" in {
-              link.attr("target") shouldBe "_blank"
-            }
-
-            "has an href of 'https://www.gov.uk/capital-gains-tax/losses'" in {
-              link.attr("href") shouldBe "https://www.gov.uk/capital-gains-tax/losses"
-            }
-
-            "has the correct link text" in {
-              link.text() shouldBe s"${messages.DisposalValue.bulletTwoLink} ${messages.externalLink}"
-            }
-          }
+        "has the class visuallyhidden" in {
+          label.hasClass("visuallyhidden") shouldEqual true
         }
       }
 
@@ -148,6 +108,16 @@ class DisposalValueViewSpec extends UnitSpec with WithFakeApplication with Mocki
         "has the id 'continue-button'" in {
           button.attr("id") shouldBe "continue-button"
         }
+      }
+    }
+
+    "supplied with a form with errors" should {
+      lazy val form = disposalValueForm.bind(Map("disposalValue" -> "testData"))
+      lazy val view = disposalValue(form)(fakeRequest)
+      lazy val document = Jsoup.parse(view.body)
+
+      "have an error summary" in {
+        document.select("#error-summary-display").size() shouldBe 1
       }
     }
   }
