@@ -20,7 +20,6 @@ import java.time.LocalDate
 
 import assets.MessageLookup.{NonResident => messages}
 import models.nonresident._
-import common.{KeystoreKeys, TestModels}
 import helpers.AssertHelpers
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
@@ -145,7 +144,7 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
     "using the totalGainGiven model" should {
       lazy val result = PurchaseDetailsConstructor.getPurchaseDetailsSection(totalGainGiven)
 
-      "will return a Sequence with size 9" in {
+      "will return a Sequence with size 4" in {
         result.size shouldBe 4
       }
 
@@ -392,7 +391,7 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
         result.isDefined shouldBe true
       }
 
-      "have an id of nr:boughtForLess" in {
+      "have an id of nr:rebasedValue" in {
         assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.id shouldBe "nr:rebasedValue")
       }
 
@@ -400,11 +399,11 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
         assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.data shouldBe 10)
       }
 
-      "have the question for bought for less" in {
+      "have the question for rebased value" in {
         assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.question shouldBe messages.RebasedValue.question)
       }
 
-      "have a link to the bought for less page" in {
+      "have a link to the rebased value page" in {
         assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.link
           shouldBe Some(controllers.nonresident.routes.RebasedValueController.rebasedValue().url))
       }
@@ -444,7 +443,7 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
         result.isDefined shouldBe true
       }
 
-      "have an id of nr:boughtForLess" in {
+      "have an id of nr:rebasedCosts-question" in {
         assertExpectedResult[QuestionAnswerModel[String]](result)(_.id shouldBe "nr:rebasedCosts-question")
       }
 
@@ -452,11 +451,11 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
         assertExpectedResult[QuestionAnswerModel[String]](result)(_.data shouldBe "Yes")
       }
 
-      "have the question for bought for less" in {
+      "have the question for rebased costs" in {
         assertExpectedResult[QuestionAnswerModel[String]](result)(_.question shouldBe messages.RebasedCosts.question)
       }
 
-      "have a link to the bought for less page" in {
+      "have a link to the rebased costs page" in {
         assertExpectedResult[QuestionAnswerModel[String]](result)(_.link
           shouldBe Some(controllers.nonresident.routes.RebasedCostsController.rebasedCosts().url))
       }
@@ -488,7 +487,7 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
         result.isDefined shouldBe true
       }
 
-      "have an id of nr:boughtForLess" in {
+      "have an id of nr:rebasedCosts" in {
         assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.id shouldBe "nr:rebasedCosts")
       }
 
@@ -496,11 +495,11 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
         assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.data shouldBe 1)
       }
 
-      "have the question for bought for less" in {
+      "have the question for rebased costs" in {
         assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.question shouldBe messages.RebasedCosts.inputQuestion)
       }
 
-      "have a link to the bought for less page" in {
+      "have a link to the rebased costs page" in {
         assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.link
           shouldBe Some(controllers.nonresident.routes.RebasedCostsController.rebasedCosts().url))
       }
