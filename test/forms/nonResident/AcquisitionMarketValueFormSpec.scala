@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class AcquisitionMarketValueFormSpec extends UnitSpec with WithFakeApplication {
 
-  "Worth When Gifted To form" when {
+  "Acquisition Market Value form" when {
 
     "passing in a valid model" should {
       val model = AcquisitionValueModel(BigDecimal(1500))

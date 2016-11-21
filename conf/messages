@@ -276,7 +276,6 @@ calc.howBecameOwner.inherited= Inherited it
 ## Bought For Less ##
 calc.boughtForLess.question = Did you buy the property for less than it was worth because the seller wanted to help you?
 
-
 ## Calculation Election ##
 calc.calculationElection.pageHeading = Working out your total
 calc.calculationElection.question = Which method of calculation would you like?
@@ -330,6 +329,11 @@ calc.worthWhenInherited.question = What was the market value of the property whe
 
 ## Worth When Bought For Less ##
 calc.worthWhenBoughtForLess.question = What was the market value of the property when you bought it?
+
+## Worth Before Legislation Start ##
+calc.worthBeforeLegislationStart.question = What was the market value of the property on 31 March 1982?
+calc.worthBeforeLegislationStart.expandableText = You only need to pay tax on gains made after this date
+calc.worthBeforeLegislationStart.expandableTitle = Why we''re asking for this
 
 ## Summary ##
 calc.summary.title = Summary
