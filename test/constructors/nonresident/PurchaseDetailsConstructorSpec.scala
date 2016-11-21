@@ -20,7 +20,6 @@ import java.time.LocalDate
 
 import assets.MessageLookup.{NonResident => messages}
 import models.nonresident._
-import common.{KeystoreKeys, TestModels}
 import helpers.AssertHelpers
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
@@ -37,7 +36,7 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
     AcquisitionValueModel(300000),
     AcquisitionCostsModel(2500),
     AcquisitionDateModel("No", None, None, None),
-    None,
+    Some(RebasedValueModel(None)),
     None,
     ImprovementsModel("No", None, None),
     None
@@ -101,8 +100,8 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
     "using the totalGainForLess model" should {
       lazy val result = PurchaseDetailsConstructor.getPurchaseDetailsSection(totalGainForLess)
 
-      "will return a Sequence with size 6" in {
-        result.size shouldBe 6
+      "will return a Sequence with size 9" in {
+        result.size shouldBe 9
       }
 
       "return a Sequence that will contain an acquisitionDateAnswer data item" in {
@@ -127,6 +126,42 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
 
       "return a Sequence that will contain a boughtForLess data item" in {
         result.contains(PurchaseDetailsConstructor.boughtForLessRow(totalGainForLess).get) shouldBe true
+      }
+
+      "return a Sequence that will contain a rebasedValue data item" in {
+        result.contains(PurchaseDetailsConstructor.rebasedValueRow(totalGainForLess.rebasedValueModel, true).get) shouldBe true
+      }
+
+      "return a Sequence that will contain a rebasedCostsQuestion data item" in {
+        result.contains(PurchaseDetailsConstructor.rebasedCostsQuestionRow(totalGainForLess.rebasedCostsModel, true).get) shouldBe true
+      }
+
+      "return a Sequence that will contain a rebasedCosts data item" in {
+        result.contains(PurchaseDetailsConstructor.rebasedCostsRow(totalGainForLess.rebasedCostsModel, true).get) shouldBe true
+      }
+    }
+
+    "using the totalGainGiven model" should {
+      lazy val result = PurchaseDetailsConstructor.getPurchaseDetailsSection(totalGainGiven)
+
+      "will return a Sequence with size 4" in {
+        result.size shouldBe 4
+      }
+
+      "return a Sequence that will contain an acquisitionDateAnswer data item" in {
+        result.contains(PurchaseDetailsConstructor.acquisitionDateAnswerRow(totalGainGiven).get) shouldBe true
+      }
+
+      "return a Sequence that will contain an acquisitionCost data item" in {
+        result.contains(PurchaseDetailsConstructor.acquisitionCostsRow(totalGainGiven).get) shouldBe true
+      }
+
+      "return a Sequence that will contain an acquisitionValue data item" in {
+        result.contains(PurchaseDetailsConstructor.acquisitionValueRow(totalGainGiven).get) shouldBe true
+      }
+
+      "return a Sequence that will contain a howBecameOwner data item" in {
+        result.contains(PurchaseDetailsConstructor.howBecameOwnerRow(totalGainGiven).get) shouldBe true
       }
     }
   }
@@ -343,6 +378,154 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
 
       "have the data for '200'" in {
         result.data shouldBe 200
+      }
+    }
+  }
+
+  "Calling .rebasedValueRow" when {
+
+    "a value is applicable" should {
+      lazy val result = PurchaseDetailsConstructor.rebasedValueRow(Some(RebasedValueModel(Some(10))), true)
+
+      "return Some value" in {
+        result.isDefined shouldBe true
+      }
+
+      "have an id of nr:rebasedValue" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.id shouldBe "nr:rebasedValue")
+      }
+
+      "have a value of 10" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.data shouldBe 10)
+      }
+
+      "have the question for rebased value" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.question shouldBe messages.RebasedValue.question)
+      }
+
+      "have a link to the rebased value page" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.link
+          shouldBe Some(controllers.nonresident.routes.RebasedValueController.rebasedValue().url))
+      }
+    }
+
+    "a value is provided but not applicable" should {
+      lazy val result = PurchaseDetailsConstructor.rebasedValueRow(Some(RebasedValueModel(Some(10))), false)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "a value is not provided or applicable" should {
+      lazy val result = PurchaseDetailsConstructor.rebasedValueRow(Some(RebasedValueModel(None)), false)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "a value is not found or applicable" should {
+      lazy val result = PurchaseDetailsConstructor.rebasedValueRow(None, false)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+  }
+
+  "Calling .rebasedCostsQuestionRow" when {
+
+    "a value is applicable" should {
+      lazy val result = PurchaseDetailsConstructor.rebasedCostsQuestionRow(Some(RebasedCostsModel("Yes", None)), true)
+
+      "return Some value" in {
+        result.isDefined shouldBe true
+      }
+
+      "have an id of nr:rebasedCosts-question" in {
+        assertExpectedResult[QuestionAnswerModel[String]](result)(_.id shouldBe "nr:rebasedCosts-question")
+      }
+
+      "have a value of Yes" in {
+        assertExpectedResult[QuestionAnswerModel[String]](result)(_.data shouldBe "Yes")
+      }
+
+      "have the question for rebased costs" in {
+        assertExpectedResult[QuestionAnswerModel[String]](result)(_.question shouldBe messages.RebasedCosts.question)
+      }
+
+      "have a link to the rebased costs page" in {
+        assertExpectedResult[QuestionAnswerModel[String]](result)(_.link
+          shouldBe Some(controllers.nonresident.routes.RebasedCostsController.rebasedCosts().url))
+      }
+    }
+
+    "a value is not applicable" should {
+      lazy val result = PurchaseDetailsConstructor.rebasedCostsQuestionRow(Some(RebasedCostsModel("No", None)), false)
+
+      "should return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "a value is not found" should {
+      lazy val result = PurchaseDetailsConstructor.rebasedCostsQuestionRow(None, false)
+
+      "should return a None" in {
+        result shouldBe None
+      }
+    }
+  }
+
+  "Calling .rebasedCostsRow" when {
+
+    "an applicable value is provided" should {
+      lazy val result = PurchaseDetailsConstructor.rebasedCostsRow(Some(RebasedCostsModel("Yes", Some(1))), true)
+
+      "return Some value" in {
+        result.isDefined shouldBe true
+      }
+
+      "have an id of nr:rebasedCosts" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.id shouldBe "nr:rebasedCosts")
+      }
+
+      "have a value of Yes" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.data shouldBe 1)
+      }
+
+      "have the question for rebased costs" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.question shouldBe messages.RebasedCosts.inputQuestion)
+      }
+
+      "have a link to the rebased costs page" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.link
+          shouldBe Some(controllers.nonresident.routes.RebasedCostsController.rebasedCosts().url))
+      }
+    }
+
+    "an applicable value is not provided" should {
+      lazy val result = PurchaseDetailsConstructor.rebasedCostsRow(Some(RebasedCostsModel("No", None)), true)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "an applicable value is not found" should {
+      lazy val result = PurchaseDetailsConstructor.rebasedCostsRow(None, true)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "no applicable value is required" should {
+      lazy val result = PurchaseDetailsConstructor.rebasedCostsRow(Some(RebasedCostsModel("Yes", Some(1))), false)
+
+      "return a None" in {
+        result shouldBe None
       }
     }
   }
