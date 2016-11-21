@@ -41,6 +41,21 @@ class CheckYourAnswersViewSpec extends UnitSpec with WithFakeApplication with Fa
           document.title shouldBe messages.question
         }
 
+        "have a back link" which {
+
+          "should have the text" in {
+            document.body.getElementById("back-link").text shouldEqual MessageLookup.NonResident.back
+          }
+
+          "has the back-link class" in {
+            document.select("a#back-link").hasClass("back-link") shouldBe true
+          }
+
+          s"should have a route too 'back-link'" in {
+            document.body.getElementById("back-link").attr("href") shouldEqual controllers.nonresident.routes.OtherReliefsController.otherReliefs().url
+          }
+        }
+
         "have a heading" which {
           lazy val heading = document.select("h1")
           s"has the title text ${messages.question}" in {
