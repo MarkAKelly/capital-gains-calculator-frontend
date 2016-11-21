@@ -16,8 +16,9 @@
 
 package views.nonResident
 
+import assets.MessageLookup
 import controllers.helpers.FakeRequestHelper
-import forms.nonresident.marketValueGaveAwayForm._
+import forms.nonresident.MarketValueGaveAwayForm._
 import org.jsoup.Jsoup
 import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
@@ -35,10 +36,69 @@ class marketValueGaveAwayViewSpec extends UnitSpec with WithFakeApplication with
 
     "supplied with no errors" should {
       s"have a title of" in {
-        document.title() shouldBe Messages("calc.marketValue.gaveItAway.question")
+        document.title() shouldBe MessageLookup.NonResident.MarketValue.disposalGaveAwayQuestion
+      }
+
+      s"have a header" which {
+        lazy val header = document.select("h1")
+        s"has the text '${MessageLookup.NonResident.MarketValue.disposalGaveAwayQuestion}'" in {
+          header.text() shouldBe MessageLookup.NonResident.MarketValue.disposalGaveAwayQuestion
+        }
+
+        s"has the class 'head-xlarge'" in {
+          header.attr("class") shouldBe "heading-xlarge"
+        }
+      }
+
+      s"have a paragraph" which {
+        lazy val helpText = document.select("p.form-hint")
+        s"has the help text'${MessageLookup.NonResident.MarketValue.disposalHelpText}'" in {
+          helpText.html() shouldBe MessageLookup.NonResident.MarketValue.disposalHelpText +
+            " <br> " + MessageLookup.NonResident.MarketValue.disposalHelpTextAdditional
+        }
+        s"has the class 'form-hint'" in {
+          helpText.attr("class") shouldBe "form-hint"
+        }
       }
 
 
+      "have a form" which {
+        lazy val form = document.body().select("form")
+
+        "has a method of POST" in {
+          form.attr("method") shouldBe "POST"
+        }
+
+        s"has an action of '${controllers.nonresident.routes.MarketValueWhenSoldOrGaveAwayController.submitMarketValueWhenSold()}'" in {
+          form.attr("action") shouldBe controllers.nonresident.routes.MarketValueWhenSoldOrGaveAwayController.submitMarketValueWhenSold().url
+        }
+      }
+
+      "have a button" which {
+        lazy val button = document.select("button")
+
+        "has the class 'button'" in {
+          button.attr("class") shouldBe "button"
+        }
+
+        "has the type 'submit'" in {
+          button.attr("type") shouldBe "submit"
+        }
+
+        "has the id 'continue-button'" in {
+          button.attr("id") shouldBe "continue-button"
+        }
+      }
     }
+
+    "supplied with a form with errors" should {
+      lazy val form = marketValueForm.bind(Map("disposalValue" -> "testData"))
+      lazy val view = marketValueGaveAway(form)(fakeRequest)
+      lazy val document = Jsoup.parse(view.body)
+
+      "have an error summary" in {
+      document.select("#error-summary-display").size() shouldBe 1
+      }
+      }
   }
 }

@@ -26,7 +26,9 @@ import play.api.i18n.Messages
 import play.api.i18n.Messages.Message
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-object marketValueGaveAwayForm extends MarketDisposalValueForm {
-  override val errorNegative = ""
-  override val errorDecimalPlaces = ""
+object MarketValueGaveAwayForm extends MarketDisposalValueForm {
+  override val errorNegative = Messages("calc.marketValue.error.gaveItAway.negative")
+  override val errorDecimalPlaces = Messages("calc.marketValue.error.gaveItAway.decimalPlaces")
+
+  val marketValueWhenGaveAwayForm = marketValueForm
 }

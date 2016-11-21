@@ -1,4 +1,3 @@
-@import views.html.helpers._
 @import models.nonresident.DisposalValueModel
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
@@ -7,4 +6,17 @@
 
 @main_template(Messages("calc.marketValue.gaveItAway.question")) {
 
+    @errorSummary(marketValueForm, "disposalValue")
+
+    <h1 class="heading-xlarge" for="disposal-value">@Messages("calc.marketValue.gaveItAway.question")</h1>
+
+    <p class="form-hint">@Messages("calc.marketValue.helpText") <br/>
+        @Messages("calc.marketValue.helpTextAdditional")
+    </p>
+
+    @form(action = controllers.nonresident.routes.MarketValueWhenSoldOrGaveAwayController.submitMarketValueWhenSold()) {
+        @formInputMoney(marketValueForm, "marketValue", Messages("calc.marketValue.gaveItAway.question"), hideLabel = true)
+
+        <button id="continue-button" type="submit" class="button">@Messages("calc.base.button.continue")</button>
+    }
 }
