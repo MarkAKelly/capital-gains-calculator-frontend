@@ -34,8 +34,8 @@ class QuestionAnswersRowNoLinkViewSpec extends UnitSpec {
 
       "have a div for the question with an id of 'id-question' which" which {
 
-        "has a class of 'grid-layout__column grid-layout__column--1-2'" in {
-          doc.select("div#id-question").attr("class") shouldBe "grid-layout__column grid-layout__column--1-2"
+        "has a class of 'grid-layout__column grid-layout__column--1-3'" in {
+          doc.select("div#id-question").attr("class") shouldBe "grid-layout__column grid-layout__column--1-3"
         }
 
         "has a span with a class of 'lede'" in {
@@ -49,8 +49,8 @@ class QuestionAnswersRowNoLinkViewSpec extends UnitSpec {
 
       "have a div for the answer with an id of 'id-answer'" which {
 
-        "has a class of 'grid-layout__column grid-layout__column--1-2'" in {
-          doc.select("div#id-answer").attr("class") shouldBe "grid-layout__column grid-layout__column--1-2"
+        "has a class of 'grid-layout__column grid-layout__column--1-3'" in {
+          doc.select("div#id-answer").attr("class") shouldBe "grid-layout__column grid-layout__column--1-3"
         }
 
         "has a change link with a class of 'lede' and 'summary-answer" in {
