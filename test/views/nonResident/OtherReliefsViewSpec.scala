@@ -19,7 +19,6 @@ package views.nonResident
 import assets.MessageLookup.{NonResident => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.nonresident.OtherReliefsForm._
-import models.nonresident.CalculationResultModel
 import org.jsoup.Jsoup
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -30,7 +29,9 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
   "The Other Reliefs Flat view" when {
 
     "not supplied with a pre-existing stored value and a taxable gain" should {
-      lazy val view = otherReliefs(otherReliefsForm)(fakeRequest)
+      val totalGain = 1234
+      val totalChargeableGain = 4321
+      lazy val view = otherReliefs(otherReliefsForm, totalChargeableGain, totalGain)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       s"have a title of ${messages.OtherReliefs.question}" in {
@@ -83,7 +84,7 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
       }
 
       s"have the question '${messages.OtherReliefs.question}'" in {
-        document.body.select("label").text should  include(messages.OtherReliefs.question)
+        document.body.select("label").text should include(messages.OtherReliefs.question)
       }
 
       "have an input using the id otherReliefs" in {
@@ -91,8 +92,13 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
       }
 
       "have the correct help text" in {
-        document.body().select("form .form-hint").text().replaceAll("[\\n]", " ") shouldBe
+        document.body().select("form div.form-hint").text().replaceAll("[\\n]", " ") shouldBe
           s"${messages.OtherReliefs.help} ${messages.OtherReliefs.helpTwo}"
+      }
+
+      "have the correct gain values in the additional help text" in {
+        val expectedText = messages.OtherReliefs.additionalHelp(totalGain, totalChargeableGain)
+        document.body().select("form p.form-hint").text() shouldBe expectedText
       }
 
       "have a button" which {
@@ -112,9 +118,30 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
       }
     }
 
+    "the gain and chargeable gain are negative" should {
+      val totalGain = -1234
+      val totalChargeableGain = -4321
+
+      lazy val view = otherReliefs(otherReliefsForm, totalChargeableGain, totalGain)(fakeRequest)
+      lazy val document = Jsoup.parse(view.body)
+
+      "have the correct additional help text" in {
+        val expectedText = messages.OtherReliefs.additionalHelp(totalGain, totalChargeableGain)
+        document.body().select("form p.form-hint").text() shouldBe expectedText
+      }
+
+      "have the words 'total loss' in the additional help text" in {
+        document.body().select("form p.form-hint").text() should include("total loss of £1,234")
+      }
+
+      "have the words 'allowable loss' in the additional help text" in {
+        document.body().select("form p.form-hint").text() should include("an allowable loss of £4,321")
+      }
+    }
+
     "supplied with an invalid map" should {
       val map = Map("otherReliefs" -> "-1000")
-      lazy val view = otherReliefs(otherReliefsForm.bind(map))(fakeRequest)
+      lazy val view = otherReliefs(otherReliefsForm.bind(map), 0, 0)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have an error summary" in {

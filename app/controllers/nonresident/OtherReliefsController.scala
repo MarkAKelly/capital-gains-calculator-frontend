@@ -18,6 +18,7 @@ package controllers.nonresident
 
 import common.KeystoreKeys
 import connectors.CalculatorConnector
+import constructors.nonresident.AnswersConstructor
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.OtherReliefsForm._
 import models.nonresident._
@@ -29,29 +30,53 @@ import scala.concurrent.Future
 
 object OtherReliefsController extends OtherReliefsController {
   val calcConnector = CalculatorConnector
+  val answersConstructor = AnswersConstructor
 }
 
 trait OtherReliefsController extends FrontendController with ValidActiveSession {
 
   val calcConnector: CalculatorConnector
+  val answersConstructor: AnswersConstructor
+
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
 
   val otherReliefs = ValidateSession.async { implicit request =>
 
-    calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
-      case Some(data) => Ok(calculation.nonresident.otherReliefs(otherReliefsForm.fill(data)))
-      case _ => Ok(calculation.nonresident.otherReliefs(otherReliefsForm))
+    def routeRequest(model: Option[OtherReliefsModel], totalGain: Option[TotalGainResultsModel]) = {
+      val gain = totalGain.fold(BigDecimal(0))(_.flatGain)
+      val chargeableGain = BigDecimal(0)
+
+      val result = model.fold(calculation.nonresident.otherReliefs(otherReliefsForm, chargeableGain, gain)) { data =>
+        calculation.nonresident.otherReliefs(otherReliefsForm.fill(data), chargeableGain, gain)
+      }
+
+      Ok(result)
     }
+
+    for {
+      answers <- answersConstructor.getNRTotalGainAnswers(hc)
+      gain <- calcConnector.calculateTotalGain(answers)
+      reliefs <- calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat)
+    } yield routeRequest(reliefs, gain)
+
   }
 
   val submitOtherReliefs = ValidateSession.async { implicit request =>
 
     def errorAction(form: Form[OtherReliefsModel]) = {
-      calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
-        case Some(data) => BadRequest(calculation.nonresident.otherReliefs(form))
-        case _ => BadRequest(calculation.nonresident.otherReliefs(form))
+
+      def routeRequest(totalGain: Option[TotalGainResultsModel]) = {
+        val gain = totalGain.fold(BigDecimal(0))(_.flatGain)
+        val chargeableGain = BigDecimal(0)
+
+        BadRequest(calculation.nonresident.otherReliefs(form, chargeableGain, gain))
       }
+
+      for {
+        answers <- answersConstructor.getNRTotalGainAnswers(hc)
+        gain <- calcConnector.calculateTotalGain(answers)
+      } yield routeRequest(gain)
     }
 
     def successAction(model: OtherReliefsModel) = {

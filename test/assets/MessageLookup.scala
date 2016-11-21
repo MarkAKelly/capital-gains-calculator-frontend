@@ -244,6 +244,16 @@ object MessageLookup {
       val errorDecimal = "There are too many numbers after the decimal point in your other reliefs"
       val errorNegative = "Enter a positive number for your other reliefs"
       val helpTwo = "Don't include any Private Residence Relief."
+      def additionalHelp(gain: Int, chargeableGain: Int): String = {
+        val locale = new java.util.Locale("en", "EN")
+        val amount = java.text.NumberFormat.getIntegerInstance(locale)
+
+        val gainText = if (gain < 0) "total loss" else "total gain"
+        val chargeableGainText = if (chargeableGain < 0) "an allowable loss" else "a taxable gain"
+        s"We've calculated that you've made $chargeableGainText of " +
+          s"£${amount.format(chargeableGain.abs)} and a $gainText of £${amount.format(gain.abs)} on your property. " +
+          "You'll need these figures to calculate other reliefs."
+      }
 
       def totalLoss(value: String): String = s"Total loss $value"
 

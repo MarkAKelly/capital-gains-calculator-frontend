@@ -1,3 +1,7 @@
+.panel-indent--wide {
+    border-left-width: 10px;
+}
+
 .poundSign {
     position:relative;
     margin-left:5px;
@@ -26,7 +30,6 @@
   padding-left: 65px;
   margin-left: -15px;
 }
-
 
 .notice-wrapper {
     border: 2px solid #BFC1C3;

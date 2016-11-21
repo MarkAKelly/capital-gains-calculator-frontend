@@ -306,7 +306,11 @@ calc.otherReliefs.errorDecimal = There are too many numbers after the decimal po
 calc.otherReliefs.errorNoValue = Enter the value for your relief
 calc.otherReliefs.help = For example, lettings relief.
 calc.otherReliefs.helpTwo = Don''t include any Private Residence Relief.
-
+calc.otherReliefs.gainInfo.part1 = We''ve calculated that you''ve made a taxable gain of
+calc.otherReliefs.gainInfo.part1.loss = We''ve calculated that you''ve made an allowable loss of
+calc.otherReliefs.gainInfo.part2 = and a total gain of
+calc.otherReliefs.gainInfo.part2.loss = and a total loss of
+calc.otherReliefs.gainInfo.part3 = on your property. You''ll need these figures to calculate other reliefs.
 ## Sold Or Given Away##
 calc.soldOrGivenAway.question = Did you sell or give away the property?
 calc.soldOrGivenAway.sold = I sold it
