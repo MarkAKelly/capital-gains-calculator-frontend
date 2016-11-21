@@ -152,7 +152,6 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         }
       }
 
-
       "when Acquisition Date is supplied and <= 5 April 2015" +
         "and no rebased value is supplied" should {
 
