@@ -122,7 +122,7 @@ class QuestionAnswersRowNoLinkViewSpec extends UnitSpec {
       val result = questionAnswerRowNoLink(model, 2)
       val doc = Jsoup.parse(result.body)
 
-      "have an answer 'Yes'" in {
+      "have an answer 'No'" in {
         doc.select("div#id-answer span").text() shouldBe "No"
       }
     }
