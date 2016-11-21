@@ -16,7 +16,7 @@
     </p>
 
     @form(action = controllers.nonresident.routes.MarketValueWhenSoldOrGaveAwayController.submitMarketValueWhenSold()) {
-        @formInputMoney(marketValueForm, "marketValue", Messages("calc.marketValue.sold.question"), hideLabel = true)
+        @formInputMoney(marketValueForm, "disposalValue", Messages("calc.marketValue.sold.question"), hideLabel = true)
 
         <button id="continue-button" type="submit" class="button">@Messages("calc.base.button.continue")</button>
     }
