@@ -23,6 +23,7 @@ import controllers.predicates.ValidActiveSession
 import forms.nonresident.AcquisitionCostsForm._
 import models.nonresident.{AcquisitionCostsModel, AcquisitionDateModel, BoughtForLessModel, HowBecameOwnerModel}
 import play.api.data.Form
+import play.api.mvc.{Call, Result}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation
@@ -81,9 +82,24 @@ trait AcquisitionCostsController extends FrontendController with ValidActiveSess
 
   val submitAcquisitionCosts = ValidateSession.async { implicit request =>
 
+    val getRedirectRoute: Future[Result] = {
+      val getAcquisitionDate = calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate)
+
+      def result(acquisitionDateModel: Option[AcquisitionDateModel]) = acquisitionDateModel match {
+        case Some(AcquisitionDateModel("Yes",_,_,_)) if TaxDates.dateAfterStart(acquisitionDateModel.get.get) =>
+          Future.successful(Redirect(routes.ImprovementsController.improvements()))
+        case _ => Future.successful(Redirect(routes.RebasedValueController.rebasedValue()))
+      }
+
+      for {
+        acquisitionDate <- getAcquisitionDate
+        result <- result(acquisitionDate)
+      } yield result
+    }
+
     def successAction(model: AcquisitionCostsModel) = {
       calcConnector.saveFormData(KeystoreKeys.acquisitionCosts, model)
-      Future.successful(Redirect(routes.ImprovementsController.improvements()))
+      getRedirectRoute
     }
 
     def errorAction(form: Form[AcquisitionCostsModel]) = {

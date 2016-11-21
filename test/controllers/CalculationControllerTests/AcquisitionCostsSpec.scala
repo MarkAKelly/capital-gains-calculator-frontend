@@ -162,8 +162,22 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
 
   "Calling the .submitAcquisitionCosts action" when {
 
-    "supplied with a valid form" should {
-      val target = setupTarget(None)
+    "supplied with a valid form and no acquisition date" should {
+      val target = setupTarget(None, acquisitionDateData = Some(AcquisitionDateModel("No", None, None, None)))
+      lazy val request = fakeRequestToPOSTWithSession(("acquisitionCosts", "1000"))
+      lazy val result = target.submitAcquisitionCosts(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      s"redirect to '${controllers.nonresident.routes.RebasedValueController.rebasedValue().url}'" in {
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.RebasedValueController.rebasedValue().url
+      }
+    }
+
+    "supplied with an acquisition date after the tax start" should{
+      val target = setupTarget(None, acquisitionDateData = Some(AcquisitionDateModel("Yes", Some(10), Some(5), Some(2016))))
       lazy val request = fakeRequestToPOSTWithSession(("acquisitionCosts", "1000"))
       lazy val result = target.submitAcquisitionCosts(request)
 
@@ -173,6 +187,20 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
 
       s"redirect to '${controllers.nonresident.routes.ImprovementsController.improvements().url}'" in {
         redirectLocation(result).get shouldBe controllers.nonresident.routes.ImprovementsController.improvements().url
+      }
+    }
+
+    "supplied with an acquisition date before the tax start" should {
+      val target = setupTarget(None, acquisitionDateData = Some(AcquisitionDateModel("Yes", Some(10), Some(5), Some(2000))))
+      lazy val request = fakeRequestToPOSTWithSession(("acquisitionCosts", "1000"))
+      lazy val result = target.submitAcquisitionCosts(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      s"redirect to '${controllers.nonresident.routes.RebasedValueController.rebasedValue().url}'" in {
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.RebasedValueController.rebasedValue().url
       }
     }
 
