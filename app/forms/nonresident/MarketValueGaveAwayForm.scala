@@ -16,15 +16,7 @@
 
 package forms.nonresident
 
-import common.Constants
-import common.Transformers._
-import common.Validation._
-import models.nonresident.MarketValueGaveAwayModel
-import play.api.data.Form
-import play.api.data.Forms._
 import play.api.i18n.Messages
-import play.api.i18n.Messages.Message
-import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object MarketValueGaveAwayForm extends MarketDisposalValueForm {
   override val errorNegative = Messages("calc.marketValue.error.gaveItAway.negative")

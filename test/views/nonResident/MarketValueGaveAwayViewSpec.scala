@@ -21,14 +21,13 @@ import controllers.helpers.FakeRequestHelper
 import forms.nonresident.MarketValueGaveAwayForm._
 import org.jsoup.Jsoup
 import org.scalatest.mock.MockitoSugar
-import play.api.i18n.Messages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.nonresident.marketValueGaveAway
 
 /**
   * Created by emma on 17/11/16.
   */
-class marketValueGaveAwayViewSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper{
+class MarketValueGaveAwayViewSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper{
   "The market value when gave away page" should {
 
     lazy val view = marketValueGaveAway(marketValueForm)(fakeRequestWithSession)

@@ -52,7 +52,7 @@ class MarketValueWhenSoldOrGaveAwayActionSpec extends UnitSpec with WithFakeAppl
 
   "MarketValueController" should {
     s"have a session timeout home link of '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
-      DisposalValueController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+      MarketValueWhenSoldOrGaveAwayController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
     }
   }
 
