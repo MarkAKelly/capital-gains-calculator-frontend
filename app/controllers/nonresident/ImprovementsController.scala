@@ -42,13 +42,13 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
 
   private def improvementsBackUrl(rebasedValue: Option[RebasedValueModel], acquisitionDate: Option[AcquisitionDateModel])
                                  (implicit hc: HeaderCarrier): Future[String] = (rebasedValue, acquisitionDate) match {
-    case (Some(RebasedValueModel(data)), Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year)))) if TaxDates.dateAfterStart(day, month, year)  =>
+    case (_, Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year)))) if TaxDates.dateAfterStart(day, month, year)  =>
       Future.successful(routes.AcquisitionCostsController.acquisitionCosts().url)
     case (Some(RebasedValueModel(None)), Some(AcquisitionDateModel("No", _, _, _))) =>
       Future.successful(routes.RebasedValueController.rebasedValue().url)
     case (Some(RebasedValueModel(Some(data))), Some(AcquisitionDateModel("No", _, _, _))) =>
       Future.successful(routes.RebasedCostsController.rebasedCosts().url)
-    case (Some(RebasedValueModel(Some(data))), Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year))))
+    case (_, Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year))))
       if !TaxDates.dateAfterStart(day, month, year) =>
       Future.successful(routes.RebasedCostsController.rebasedCosts().url)
     case (_, _) => Future.successful(missingDataRoute)

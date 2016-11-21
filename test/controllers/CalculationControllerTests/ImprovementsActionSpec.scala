@@ -68,7 +68,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
 
     "not supplied with a pre-existing stored model" should {
 
-      "when Acquisition Date is supplied and > 5 April 2016" should {
+      "when Acquisition Date is supplied and > 5 April 2015" should {
 
         val target = setupTarget(None, Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))), Some(RebasedValueModel(Some(1000))))
         lazy val result = target.improvements(fakeRequestWithSession)
@@ -90,7 +90,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         }
       }
 
-      "when Acquisition Date is supplied and <= 5 April 2016" +
+      "when Acquisition Date is supplied and <= 5 April 2015" +
         "and a rebased value is supplied" should {
 
         val target = setupTarget(
