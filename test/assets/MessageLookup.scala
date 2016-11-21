@@ -252,7 +252,7 @@ object MessageLookup {
 
     object MarketValue {
       val disposalGaveAwayQuestion = "What was the property worth when you gave it away?"
-      val disposalSoldQuestion = "Wht was the market value of the property when you sold it?"
+      val disposalSoldQuestion = "What was the market value of the property when you sold it?"
 
       val disposalHelpText = "You can use a valuation from a surveyor. " +
         "If you don't know the exact value, you must provide a realistic estimate."

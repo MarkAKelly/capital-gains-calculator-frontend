@@ -18,31 +18,31 @@ package views.nonResident
 
 import assets.MessageLookup
 import controllers.helpers.FakeRequestHelper
-import forms.nonresident.MarketValueGaveAwayForm._
+import forms.nonresident.MarketValueWhenSoldForm._
 import org.jsoup.Jsoup
 import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import views.html.calculation.nonresident.marketValueGaveAway
+import views.html.calculation.nonresident.marketValueSold
 
 /**
   * Created by emma on 17/11/16.
   */
-class marketValueGaveAwayViewSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper{
+class MarketValueWhenSoldViewSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper{
   "The market value when gave away page" should {
 
-    lazy val view = marketValueGaveAway(marketValueForm)(fakeRequestWithSession)
+    lazy val view = marketValueSold(marketValueForm)(fakeRequestWithSession)
     lazy val document = Jsoup.parse(view.body)
 
     "supplied with no errors" should {
       s"have a title of" in {
-        document.title() shouldBe MessageLookup.NonResident.MarketValue.disposalGaveAwayQuestion
+        document.title() shouldBe MessageLookup.NonResident.MarketValue.disposalSoldQuestion
       }
 
       s"have a header" which {
         lazy val header = document.select("h1")
-        s"has the text '${MessageLookup.NonResident.MarketValue.disposalGaveAwayQuestion}'" in {
-          header.text() shouldBe MessageLookup.NonResident.MarketValue.disposalGaveAwayQuestion
+        s"has the text '${MessageLookup.NonResident.MarketValue.disposalSoldQuestion}'" in {
+          header.text() shouldBe MessageLookup.NonResident.MarketValue.disposalSoldQuestion
         }
 
         s"has the class 'head-xlarge'" in {
@@ -69,8 +69,8 @@ class marketValueGaveAwayViewSpec extends UnitSpec with WithFakeApplication with
           form.attr("method") shouldBe "POST"
         }
 
-        s"has an action of '${controllers.nonresident.routes.MarketValueWhenSoldOrGaveAwayController.submitMarketValueWhenGaveAway()}'" in {
-          form.attr("action") shouldBe controllers.nonresident.routes.MarketValueWhenSoldOrGaveAwayController.submitMarketValueWhenGaveAway().url
+        s"has an action of '${controllers.nonresident.routes.MarketValueWhenSoldOrGaveAwayController.submitMarketValueWhenSold()}'" in {
+          form.attr("action") shouldBe controllers.nonresident.routes.MarketValueWhenSoldOrGaveAwayController.submitMarketValueWhenSold().url
         }
       }
 
@@ -93,12 +93,12 @@ class marketValueGaveAwayViewSpec extends UnitSpec with WithFakeApplication with
 
     "supplied with a form with errors" should {
       lazy val form = marketValueForm.bind(Map("disposalValue" -> "testData"))
-      lazy val view = marketValueGaveAway(form)(fakeRequest)
+      lazy val view = marketValueSold(form)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have an error summary" in {
-      document.select("#error-summary-display").size() shouldBe 1
+        document.select("#error-summary-display").size() shouldBe 1
       }
-      }
+    }
   }
 }
