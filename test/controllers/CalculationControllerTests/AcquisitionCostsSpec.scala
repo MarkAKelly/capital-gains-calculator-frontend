@@ -22,8 +22,7 @@ import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
 import controllers.helpers.FakeRequestHelper
 import controllers.nonresident.AcquisitionCostsController
-import models.nonresident.{AcquisitionCostsModel, AcquisitionDateModel, BoughtForLessModel}
-import models.resident.properties.HowBecameOwnerModel
+import models.nonresident.{AcquisitionCostsModel, AcquisitionDateModel, BoughtForLessModel, HowBecameOwnerModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._

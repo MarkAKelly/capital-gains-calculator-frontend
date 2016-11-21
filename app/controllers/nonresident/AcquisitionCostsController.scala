@@ -21,8 +21,7 @@ import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.AcquisitionCostsForm._
-import models.nonresident.{AcquisitionCostsModel, AcquisitionDateModel, BoughtForLessModel}
-import models.resident.properties.HowBecameOwnerModel
+import models.nonresident.{AcquisitionCostsModel, AcquisitionDateModel, BoughtForLessModel, HowBecameOwnerModel}
 import play.api.data.Form
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HeaderCarrier
