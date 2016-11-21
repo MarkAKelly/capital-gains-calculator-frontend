@@ -34,7 +34,7 @@ class CheckYourAnswersViewSpec extends UnitSpec with WithFakeApplication with Fa
       "provided with a valid sequence of question answers" should {
 
         val answersSequence = Seq(QuestionAnswerModel("dummyId", 200, "dummyQuestion", Some("google.com")))
-        lazy val view = checkYourAnswers(answersSequence, "hello")(fakeRequestWithSession)
+        lazy val view = checkYourAnswers(answersSequence, "some-back-link")(fakeRequestWithSession)
         lazy val document = Jsoup.parse(view.body)
 
         s"has the title text ${messages.question}" in {
@@ -52,7 +52,7 @@ class CheckYourAnswersViewSpec extends UnitSpec with WithFakeApplication with Fa
           }
 
           s"should have a route too 'back-link'" in {
-            document.body.getElementById("back-link").attr("href") shouldEqual controllers.nonresident.routes.OtherReliefsController.otherReliefs().url
+            document.body.getElementById("back-link").attr("href") shouldEqual "some-back-link"
           }
         }
 

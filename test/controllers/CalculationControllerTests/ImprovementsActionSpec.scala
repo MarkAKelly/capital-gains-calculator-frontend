@@ -179,8 +179,8 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.OtherReliefsController.otherReliefs()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsController.otherReliefs()}")
+      s"redirect to ${routes.CheckYourAnswersController.checkYourAnswers()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.CheckYourAnswersController.checkYourAnswers()}")
       }
     }
 
@@ -194,8 +194,8 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.OtherReliefsController.otherReliefs()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsController.otherReliefs()}")
+      s"redirect to ${routes.CheckYourAnswersController.checkYourAnswers()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.CheckYourAnswersController.checkYourAnswers()}")
       }
     }
 

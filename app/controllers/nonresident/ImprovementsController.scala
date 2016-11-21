@@ -120,7 +120,7 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
         },
         success => {
           calcConnector.saveFormData(KeystoreKeys.improvements, success)
-          Future.successful(Redirect(routes.OtherReliefsController.otherReliefs()))
+          Future.successful(Redirect(routes.CheckYourAnswersController.checkYourAnswers()))
         }
       )
     }
