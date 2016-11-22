@@ -58,7 +58,7 @@ trait MarketValueWhenSoldOrGaveAwayController extends FrontendController with Va
 
     def successAction(model: DisposalValueModel) = {
       calcConnector.saveFormData(KeystoreKeys.disposalMarketValue, model)
-      Future.successful(Redirect(routes.AcquisitionCostsController.acquisitionCosts()))
+      Future.successful(Redirect(routes.DisposalCostsController.disposalCosts()))
     }
 
     marketValueWhenSoldForm.bindFromRequest.fold(errorAction, successAction)
@@ -70,7 +70,7 @@ trait MarketValueWhenSoldOrGaveAwayController extends FrontendController with Va
 
     def successAction(model: DisposalValueModel) = {
       calcConnector.saveFormData(KeystoreKeys.disposalMarketValue, model)
-      Future.successful(Redirect(routes.AcquisitionCostsController.acquisitionCosts()))
+      Future.successful(Redirect(routes.DisposalCostsController.disposalCosts()))
     }
 
     marketValueWhenGaveAwayForm.bindFromRequest.fold(errorAction, successAction)
