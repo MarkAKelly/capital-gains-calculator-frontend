@@ -24,6 +24,7 @@ import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.nonresident.marketValueGaveAway
 import assets.MessageLookup.NonResident.{MarketValue => MarketValueMessages}
+import assets.MessageLookup.{NonResident => commonMessages}
 
 class MarketValueGaveAwayViewSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper{
   "The market value when gave away page" should {
@@ -58,6 +59,21 @@ class MarketValueGaveAwayViewSpec extends UnitSpec with WithFakeApplication with
         }
       }
 
+      "have a back link" which {
+        lazy val backLink = document.body().select("#back-link")
+
+        "has a class of 'back-link'" in {
+          backLink.attr("class") shouldBe "back-link"
+        }
+
+        "has the text" in {
+          backLink.text shouldBe commonMessages.back
+        }
+
+        s"has a route to 'sold-or-given-away'" in {
+          backLink.attr("href") shouldBe controllers.nonresident.routes.SoldOrGivenAwayController.soldOrGivenAway().url
+        }
+      }
 
       "have a form" which {
         lazy val form = document.body().select("form")
