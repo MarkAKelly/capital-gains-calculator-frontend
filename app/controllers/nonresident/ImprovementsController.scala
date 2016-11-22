@@ -112,13 +112,7 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
 
     def successAction(rebasedValue: Option[RebasedValueModel], acquisitionDate: Option[AcquisitionDateModel], improvements: ImprovementsModel) = {
       calcConnector.saveFormData(KeystoreKeys.improvements, improvements)
-      (rebasedValue, acquisitionDate) match {
-        case (_, Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year)))) if !TaxDates.dateAfterStart(day, month, year) =>
-          Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
-        case (Some(RebasedValueModel(Some(value))), _) =>
-          Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
-        case (_, _) => Future.successful(Redirect(routes.CheckYourAnswersController.checkYourAnswers()))
-      }
+      Future.successful(Redirect(routes.CheckYourAnswersController.checkYourAnswers()))
     }
 
     def routeRequest(rebasedValue: Option[RebasedValueModel],
