@@ -54,7 +54,7 @@ trait MarketValueWhenSoldOrGaveAwayController extends FrontendController with Va
 
   val submitMarketValueWhenSold = ValidateSession.async { implicit request =>
 
-    def errorAction(form: Form[DisposalValueModel]) = Future.successful(BadRequest(calculation.nonresident.disposalValue(form)))
+    def errorAction(form: Form[DisposalValueModel]) = Future.successful(BadRequest(calculation.nonresident.marketValueSold(form)))
 
     def successAction(model: DisposalValueModel) = {
       calcConnector.saveFormData(KeystoreKeys.disposalMarketValue, model)
@@ -66,7 +66,7 @@ trait MarketValueWhenSoldOrGaveAwayController extends FrontendController with Va
 
   val submitMarketValueWhenGaveAway = ValidateSession.async { implicit request =>
 
-    def errorAction(form: Form[DisposalValueModel]) = Future.successful(BadRequest(calculation.nonresident.disposalValue(form)))
+    def errorAction(form: Form[DisposalValueModel]) = Future.successful(BadRequest(calculation.nonresident.marketValueGaveAway(form)))
 
     def successAction(model: DisposalValueModel) = {
       calcConnector.saveFormData(KeystoreKeys.disposalMarketValue, model)

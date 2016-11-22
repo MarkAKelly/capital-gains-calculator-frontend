@@ -137,6 +137,21 @@ class MarketValueWhenSoldOrGaveAwayActionSpec extends UnitSpec with WithFakeAppl
         redirectLocation(result).get should include("/calculate-your-capital-gains/session-timeout")
       }
     }
+
+    "supplied with an invalid form" should {
+      lazy val target = setupTarget(None)
+      lazy val request = fakeRequestToPOSTWithSession(("disposalValue", "invalid text"))
+      lazy val result = target.submitMarketValueWhenSold(request)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "generate a 400 error" in {
+        status(result) shouldEqual 400
+      }
+
+      s"and lead to the current page reloading and return some HTML with title of ${marketValueMessages.disposalSoldQuestion}" in {
+        document.title shouldEqual marketValueMessages.disposalSoldQuestion
+      }
+    }
   }
 
   "The submitMarketValueWhenSold action" when {
@@ -167,6 +182,22 @@ class MarketValueWhenSoldOrGaveAwayActionSpec extends UnitSpec with WithFakeAppl
 
       "redirect to the AcquisitionCosts page" in {
         redirectLocation(result) shouldBe Some(controllers.nonresident.routes.AcquisitionCostsController.acquisitionCosts().url)
+      }
+    }
+
+
+    "supplied with an invalid form" should {
+      lazy val target = setupTarget(None)
+      lazy val request = fakeRequestToPOSTWithSession(("disposalValue", "invalid text"))
+      lazy val result = target.submitMarketValueWhenGaveAway(request)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "generate a 400 error" in {
+        status(result) shouldEqual 400
+      }
+
+      s"and lead to the current page reloading and return some HTML with title of ${marketValueMessages.disposalGaveAwayQuestion}" in {
+        document.title shouldEqual marketValueMessages.disposalGaveAwayQuestion
       }
     }
   }
