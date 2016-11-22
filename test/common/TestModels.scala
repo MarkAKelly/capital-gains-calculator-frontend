@@ -16,7 +16,6 @@
 
 package common
 
-import models._
 import common.nonresident.CustomerTypeKeys
 import models.nonresident._
 
@@ -52,7 +51,7 @@ object TestModels {
     Some(SoldForLessModel(true)),
     DisposalValueModel(950000),
     DisposalCostsModel(15000),
-    HowBecameOwnerModel("Bought"),
+    Some(HowBecameOwnerModel("Bought")),
     Some(BoughtForLessModel(false)),
     AcquisitionValueModel(1250000),
     AcquisitionCostsModel(20000),
