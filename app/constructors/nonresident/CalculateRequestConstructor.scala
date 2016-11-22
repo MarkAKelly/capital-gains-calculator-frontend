@@ -89,7 +89,7 @@ object CalculateRequestConstructor {
     val isClaimingPrr = isClaimingPRR(input)
     improvements(input) +
       acquisition(input) +
-      flatReliefs(input.otherReliefsModelFlat.otherReliefs) +
+      flatReliefs(Some(input.otherReliefsModelFlat.otherReliefs)) +
       privateResidenceReliefFlat(input) +
       isClaimingPrr +
       flatAcquisitionDate(isClaimingPrr, input.acquisitionDateModel)
@@ -109,7 +109,7 @@ object CalculateRequestConstructor {
     improvements(input) +
       taAcquisitionDate(input.acquisitionDateModel) +
       acquisition(input) +
-      taReliefs(input.otherReliefsModelTA.otherReliefs) +
+      taReliefs(Some(input.otherReliefsModelTA.otherReliefs)) +
       privateResidenceReliefTA(input) +
       isClaimingPRR(input)
   }
@@ -126,7 +126,7 @@ object CalculateRequestConstructor {
     rebasedImprovements(input.improvementsModel) +
       rebasedValue(input.rebasedValueModel.get.rebasedValueAmt.get) +
       revaluationCost(input.rebasedCostsModel.get) +
-      rebasedReliefs(input.otherReliefsModelRebased.otherReliefs) +
+      rebasedReliefs(Some(input.otherReliefsModelRebased.otherReliefs)) +
       privateResidenceReliefRebased(input) +
       isClaimingPrrRebased(input.privateResidenceReliefModel)
   }

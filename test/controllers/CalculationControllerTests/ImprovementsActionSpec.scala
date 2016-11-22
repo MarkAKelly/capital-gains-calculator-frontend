@@ -187,8 +187,8 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.OtherReliefsController.otherReliefs()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsController.otherReliefs()}")
+      s"redirect to ${routes.CheckYourAnswersController.checkYourAnswers()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.CheckYourAnswersController.checkYourAnswers()}")
       }
     }
 
@@ -202,8 +202,8 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.OtherReliefsController.otherReliefs()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsController.otherReliefs()}")
+      s"redirect to ${routes.CheckYourAnswersController.checkYourAnswers()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.CheckYourAnswersController.checkYourAnswers()}")
       }
     }
 
@@ -217,8 +217,22 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.CheckYourAnswersController.checkYourAnswers()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CheckYourAnswersController.checkYourAnswers()}")
+      s"redirect to ${routes.CalculationElectionController.calculationElection()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.CalculationElectionController.calculationElection()}")
+      }
+    }
+
+    "submitting a valid form with a rebased value" should {
+      val target = setupTarget(None, Some(AcquisitionDateModel("No", None, None, None)), Some(RebasedValueModel(Some(2000))))
+      lazy val request = fakeRequestToPOSTWithSession("isClaimingImprovements" -> "No", "improvementsAmt" -> "")
+      lazy val result = target.submitImprovements(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      s"redirect to ${routes.CalculationElectionController.calculationElection()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.CalculationElectionController.calculationElection()}")
       }
     }
 

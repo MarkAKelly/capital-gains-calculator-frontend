@@ -30,7 +30,7 @@ trait StartController extends FrontendController with ValidActiveSession {
   override val homeLink = controllers.nonresident.routes.CustomerTypeController.customerType().url
 
   val start = Action.async {implicit request =>
-    Future.successful(Redirect(nonresident.routes.CustomerTypeController.customerType()))
+    Future.successful(Redirect(nonresident.routes.DisposalDateController.disposalDate()))
   }
 }
 

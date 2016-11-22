@@ -127,6 +127,13 @@ object MessageLookup {
       val whyMoreDetailsTwo = "Higher totals sometimes qualify for larger reliefs, which can reduce the amount you owe."
     }
 
+    object CheckYourAnswers {
+      val question = "Check your answers"
+      val tableHeading = "You've told us"
+      val change = "Change"
+      val hiddenText = "your response to the question"
+    }
+
     object CurrentIncome {
       val question = "In the tax year when you stopped owning the property, what was your total UK income?"
       val linkOne = "Income Tax"
@@ -234,9 +241,8 @@ object MessageLookup {
     }
 
     object OtherReliefs {
-      val question = "Do you want to add other tax relief?"
-      val help = "For example, lettings relief"
-      val inputQuestion = "How much extra tax relief are you claiming?"
+      val help = "For example, lettings relief."
+      val question = "How much extra tax relief are you claiming?"
       val totalGain = "Total gain"
       val taxableGain = "Taxable gain"
       val lossCarriedForward = "Loss carried forward"
@@ -244,6 +250,17 @@ object MessageLookup {
       val updateRelief = "Update relief"
       val errorDecimal = "There are too many numbers after the decimal point in your other reliefs"
       val errorNegative = "Enter a positive number for your other reliefs"
+      val helpTwo = "Don't include any Private Residence Relief."
+      def additionalHelp(gain: Int, chargeableGain: Int): String = {
+        val locale = new java.util.Locale("en", "EN")
+        val amount = java.text.NumberFormat.getIntegerInstance(locale)
+
+        val gainText = if (gain < 0) "total loss" else "total gain"
+        val chargeableGainText = if (chargeableGain < 0) "an allowable loss" else "a taxable gain"
+        s"We've calculated that you've made $chargeableGainText of " +
+          s"£${amount.format(chargeableGain.abs)} and a $gainText of £${amount.format(gain.abs)} on your property. " +
+          "You'll need these figures to calculate other reliefs."
+      }
 
       def totalLoss(value: String): String = s"Total loss $value"
 

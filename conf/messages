@@ -308,8 +308,13 @@ calc.otherReliefs.button.updateRelief = Update relief
 calc.otherReliefs.errorMinimum = Enter a positive number for your other reliefs
 calc.otherReliefs.errorDecimal = There are too many numbers after the decimal point in your other reliefs
 calc.otherReliefs.errorNoValue = Enter the value for your relief
-calc.otherReliefs.help = For example, lettings relief
-
+calc.otherReliefs.help = For example, lettings relief.
+calc.otherReliefs.helpTwo = Don''t include any Private Residence Relief.
+calc.otherReliefs.gainInfo.part1 = We''ve calculated that you''ve made a taxable gain of
+calc.otherReliefs.gainInfo.part1.loss = We''ve calculated that you''ve made an allowable loss of
+calc.otherReliefs.gainInfo.part2 = and a total gain of
+calc.otherReliefs.gainInfo.part2.loss = and a total loss of
+calc.otherReliefs.gainInfo.part3 = on your property. You''ll need these figures to calculate other reliefs.
 ## Sold Or Given Away##
 calc.soldOrGivenAway.question = Did you sell or give away the property?
 calc.soldOrGivenAway.sold = I sold it
@@ -361,6 +366,12 @@ calc.summary.calculation.details.flatCalculation = How much you''ve gained on th
 calc.summary.calculation.details.rebasedCalculation = How much you''ve gained on the property since 5 April 2015
 calc.summary.calculation.details.lossCarriedForward = Loss carried forward
 calc.summary.warning.taxYear = Your total might be less accurate because you didn't sell or give away your property in this tax year
+
+## Check Your Answers ##
+calc.checkYourAnswers.title = Check your answers
+calc.checkYourAnswers.tableHeading = You''ve told us
+calc.checkYourAnswers.change = Change
+calc.checkYourAnswers.hidden.text =  your response to the question
 
 ###############################################################################################
 ## Resident messages ##
