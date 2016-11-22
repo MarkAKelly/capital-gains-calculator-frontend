@@ -19,6 +19,7 @@ package views.nonResident
 import assets.MessageLookup.{NonResident => messages}
 import common.TestModels
 import controllers.helpers.FakeRequestHelper
+import models.nonresident.TotalGainResultsModel
 import org.jsoup.Jsoup
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -29,8 +30,8 @@ class SummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
   "Summary view" when {
 
     "supplied with a disposal date within the valid tax years" should {
-      val calculationModel = TestModels.calcModelOneRate
-      lazy val view = summary(calculationModel, "back-link", displayDateWarning = false, "flat", "none", "individual")(fakeRequest)
+      val calculationModel = TotalGainResultsModel(1000, Some(2000), Some(3000))
+      lazy val view = summary(calculationModel, "back-link", displayDateWarning = false, "flat")(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       s"have a title of '${messages.Summary.title}'" in {
@@ -80,7 +81,7 @@ class SummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
         }
 
         s"has a value of £8,000.00" in {
-          document.select("#amount-you-owe-value span").text() shouldEqual "£8,000.00"
+          document.select("#amount-you-owe-value span").text() shouldEqual "£0.00"
         }
       }
 
@@ -142,8 +143,8 @@ class SummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
     }
 
     "supplied with a disposal date within the valid tax years" should {
-      val calculationModel = TestModels.calcModelOneRate
-      lazy val view = summary(calculationModel, "back-link", displayDateWarning = true, "flat", "none", "individual")(fakeRequest)
+      val calculationModel = TotalGainResultsModel(1000, Some(2000), Some(3000))
+      lazy val view = summary(calculationModel, "back-link", displayDateWarning = true, "flat")(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "display a tax year warning" in {

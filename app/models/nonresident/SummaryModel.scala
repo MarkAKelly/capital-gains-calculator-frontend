@@ -44,9 +44,9 @@ case class SummaryModel(
                         ) {
 
   def reliefApplied(): String = calculationElectionModel.calculationType match {
-    case CalculationType.flat if otherReliefsModelFlat.otherReliefs.getOrElse(BigDecimal(0)) > 0 => CalculationType.flat
-    case CalculationType.rebased if otherReliefsModelRebased.otherReliefs.getOrElse(BigDecimal(0)) > 0 => CalculationType.rebased
-    case CalculationType.timeApportioned if otherReliefsModelTA.otherReliefs.getOrElse(BigDecimal(0)) > 0 => CalculationType.timeApportioned
+    case CalculationType.flat if otherReliefsModelFlat.otherReliefs > 0 => CalculationType.flat
+    case CalculationType.rebased if otherReliefsModelRebased.otherReliefs > 0 => CalculationType.rebased
+    case CalculationType.timeApportioned if otherReliefsModelTA.otherReliefs > 0 => CalculationType.timeApportioned
     case _ => "none"
   }
 

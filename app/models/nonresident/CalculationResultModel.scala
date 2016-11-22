@@ -31,7 +31,7 @@ case class CalculationResultModel(taxOwed: BigDecimal,
   val taxableGain: BigDecimal = baseTaxGain + upperTaxGain.getOrElse(0)
 
   def calculationDetailsRows(calculationType: String): Seq[QuestionAnswerModel[Any]] =
-    CalculationDetailsConstructor.buildSection(this, calculationType)
+    Seq(QuestionAnswerModel[String]("", "", "", None))
 }
 
 object CalculationResultModel {

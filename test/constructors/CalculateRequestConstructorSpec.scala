@@ -33,7 +33,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
     None,
     AcquisitionDateModel("Yes", Some(9), Some(9), Some(1990)),
     AcquisitionValueModel(100000),
-    Some(RebasedValueModel("No", None)),
+    Some(RebasedValueModel(None)),
     None,
     ImprovementsModel("No", None),
     DisposalDateModel(10, 10, 2010),
@@ -42,9 +42,9 @@ class CalculateRequestConstructorSpec extends UnitSpec {
     DisposalCostsModel(0),
     AllowableLossesModel("No", None),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -64,7 +64,7 @@ class CalculateRequestConstructorSpec extends UnitSpec {
         Some(AnnualExemptAmountModel(5000)),
         AcquisitionDateModel("Yes", Some(9), Some(9), Some(1990)),
         AcquisitionValueModel(100000),
-        Some(RebasedValueModel("No", None)),
+        Some(RebasedValueModel(None)),
         None,
         ImprovementsModel("No", None),
         DisposalDateModel(10, 10, 2010),
@@ -73,9 +73,9 @@ class CalculateRequestConstructorSpec extends UnitSpec {
         DisposalCostsModel(0),
         AllowableLossesModel("Yes", Some(1000)),
         CalculationElectionModel("flat"),
-        OtherReliefsModel(None, None),
-        OtherReliefsModel(None, None),
-        OtherReliefsModel(None, None),
+        OtherReliefsModel(0),
+        OtherReliefsModel(0),
+        OtherReliefsModel(0),
         Some(PrivateResidenceReliefModel("No", None, None))
       )
 

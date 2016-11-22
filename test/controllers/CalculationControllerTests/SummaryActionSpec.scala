@@ -19,11 +19,13 @@ package controllers.CalculationControllerTests
 import assets.MessageLookup.NonResident.{Summary => messages}
 import assets.MessageLookup.{NonResident => commonMessages}
 import common.DefaultRoutes._
+import common.nonresident.CalculationType
 import common.{KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
+import constructors.nonresident.AnswersConstructor
 import controllers.helpers.FakeRequestHelper
 import controllers.nonresident.SummaryController
-import models.nonresident.{AcquisitionDateModel, CalculationResultModel, RebasedValueModel, SummaryModel}
+import models.nonresident._
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -38,30 +40,45 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget( summary: SummaryModel,
-                   result: CalculationResultModel,
-                   acquisitionDateData: Option[AcquisitionDateModel],
-                   rebasedValueData: Option[RebasedValueModel]
+  def setupTarget(summary: TotalGainAnswersModel,
+                  result: TotalGainResultsModel,
+                  calculationElectionModel: CalculationElectionModel
                  ): SummaryController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
+    val mockAnswersConstructor = mock[AnswersConstructor]
 
-    when(mockCalcConnector.createSummary(Matchers.any()))
+    when(mockAnswersConstructor.getNRTotalGainAnswers(Matchers.any()))
       .thenReturn(Future.successful(summary))
 
-    when(mockCalcConnector.calculateFlat(Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(Some(result)))
+    when(mockCalcConnector.fetchAndGetFormData[CalculationElectionModel](Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(Some(calculationElectionModel))
 
-    when(mockCalcConnector.calculateTA(Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(Some(result)))
-
-    when(mockCalcConnector.calculateRebased(Matchers.any())(Matchers.any()))
+    when(mockCalcConnector.calculateTotalGain(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(Some(result)))
 
     new SummaryController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
+      override val answersConstructor: AnswersConstructor = mockAnswersConstructor
     }
   }
+
+  val answerModel = TotalGainAnswersModel(
+    DisposalDateModel(10, 10, 2016),
+    SoldOrGivenAwayModel(false),
+    None,
+    DisposalValueModel(10000),
+    DisposalCostsModel(100),
+    Some(HowBecameOwnerModel("Gifted")),
+    None,
+    AcquisitionValueModel(5000),
+    AcquisitionCostsModel(200),
+    AcquisitionDateModel("No", None, None, None),
+    None,
+    None,
+    ImprovementsModel("No", None, None),
+    None
+  )
 
   "SummaryController" should {
     s"have a session timeout home link of '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
@@ -73,10 +90,9 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
     "provided with a valid session" should {
       val target = setupTarget(
-        TestModels.summaryIndividualFlatWithAEA,
-        TestModels.calcModelTwoRates,
-        Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        None
+        answerModel,
+        TotalGainResultsModel(1000, Some(2000), Some(3000)),
+        CalculationElectionModel(CalculationType.flat)
       )
       lazy val result = target.summary()(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
@@ -96,10 +112,9 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
     "provided with an invalid session" should {
       val target = setupTarget(
-        TestModels.summaryIndividualFlatWithAEA,
-        TestModels.calcModelTwoRates,
-        Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        None
+        answerModel,
+        TotalGainResultsModel(1000, Some(2000), Some(3000)),
+        CalculationElectionModel(CalculationType.flat)
       )
       lazy val result = target.summary()(fakeRequest)
 
@@ -115,10 +130,9 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
   "calling the .restart action" should {
     val target = setupTarget(
-      TestModels.summaryIndividualFlatWithAEA,
-      TestModels.calcModelTwoRates,
-      Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-      None
+      answerModel,
+      TotalGainResultsModel(1000, Some(2000), Some(3000)),
+      CalculationElectionModel(CalculationType.flat)
     )
     lazy val result = target.restart()(fakeRequestWithSession)
 

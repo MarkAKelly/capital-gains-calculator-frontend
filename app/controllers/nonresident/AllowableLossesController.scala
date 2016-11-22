@@ -42,7 +42,7 @@ trait AllowableLossesController extends FrontendController with ValidActiveSessi
       case Some(acquisitionData) if acquisitionData.hasAcquisitionDate == "Yes" =>
         Future.successful(routes.PrivateResidenceReliefController.privateResidenceRelief().url)
       case _ => calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
-        case Some(rebasedData) if rebasedData.hasRebasedValue == "Yes" =>
+        case Some(rebasedData) if rebasedData.rebasedValueAmt.isDefined =>
           Future.successful(routes.PrivateResidenceReliefController.privateResidenceRelief().url)
         case _ => Future.successful(routes.DisposalCostsController.disposalCosts().url)
       }
@@ -77,7 +77,7 @@ trait AllowableLossesController extends FrontendController with ValidActiveSessi
               Future.successful(Redirect(routes.OtherReliefsController.otherReliefs()))
             case _ =>
               calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
-                case Some(rebasedData) if rebasedData.hasRebasedValue == "Yes" =>
+                case Some(rebasedData) if rebasedData.rebasedValueAmt.isDefined =>
                   Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
                 case _ =>
                   calcConnector.saveFormData(KeystoreKeys.calculationElection, CalculationElectionModel("flat"))

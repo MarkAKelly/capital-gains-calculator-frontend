@@ -19,6 +19,7 @@ package controllers.CalculationControllerTests
 import assets.MessageLookup.NonResident.{OtherReliefs => messages}
 import common.TestModels
 import connectors.CalculatorConnector
+import constructors.nonresident.AnswersConstructor
 import controllers.helpers.FakeRequestHelper
 import controllers.nonresident.OtherReliefsController
 import models.nonresident._
@@ -36,13 +37,11 @@ class OtherReliefsActionSpec extends UnitSpec with WithFakeApplication with Mock
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget(
-                   getData: Option[OtherReliefsModel],
-                   summary: SummaryModel,
-                   result: CalculationResultModel
-                 ): OtherReliefsController = {
+  def setupTarget(getData: Option[OtherReliefsModel], summary: SummaryModel, result: CalculationResultModel): OtherReliefsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
+    val mockAnswersConstructor = mock[AnswersConstructor]
+    val totalGainResult = TotalGainResultsModel(0, None, None)
 
     when(mockCalcConnector.fetchAndGetFormData[OtherReliefsModel](Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -53,8 +52,15 @@ class OtherReliefsActionSpec extends UnitSpec with WithFakeApplication with Mock
     when(mockCalcConnector.calculateFlat(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(Some(result)))
 
+    when(mockAnswersConstructor.getNRTotalGainAnswers(Matchers.any()))
+      .thenReturn(Future.successful(Future.successful(TestModels.businessScenarioFiveModel)))
+
+    when(mockCalcConnector.calculateTotalGain(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(totalGainResult)))
+
     new OtherReliefsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
+      override val answersConstructor: AnswersConstructor = mockAnswersConstructor
     }
   }
 
@@ -67,11 +73,7 @@ class OtherReliefsActionSpec extends UnitSpec with WithFakeApplication with Mock
   "Calling the .otherReliefs action " when {
 
     "not supplied with a pre-existing stored model" should {
-      val target = setupTarget(
-        None,
-        TestModels.summaryIndividualFlatWithoutAEA,
-        TestModels.calcModelTwoRates
-      )
+      val target = setupTarget(None, TestModels.summaryIndividualFlatWithoutAEA, TestModels.calcModelTwoRates)
       lazy val result = target.otherReliefs(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -85,12 +87,8 @@ class OtherReliefsActionSpec extends UnitSpec with WithFakeApplication with Mock
     }
 
     "supplied with a pre-existing stored model" should {
-      val testOtherReliefsModel = OtherReliefsModel(Some("Yes"), Some(5000))
-      val target = setupTarget(
-        Some(testOtherReliefsModel),
-        TestModels.summaryIndividualFlatWithoutAEA,
-        TestModels.calcModelLoss
-      )
+      val testOtherReliefsModel = OtherReliefsModel(5000)
+      val target = setupTarget(Some(testOtherReliefsModel), TestModels.summaryIndividualFlatWithoutAEA, TestModels.calcModelLoss)
       lazy val result = target.otherReliefs(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -104,11 +102,7 @@ class OtherReliefsActionSpec extends UnitSpec with WithFakeApplication with Mock
     }
 
     "supplied without a valid session" should {
-      val target = setupTarget(
-        None,
-        TestModels.summaryIndividualFlatWithoutAEA,
-        TestModels.calcModelTwoRates
-      )
+      val target = setupTarget(None, TestModels.summaryIndividualFlatWithoutAEA, TestModels.calcModelTwoRates)
       lazy val result = target.otherReliefs(fakeRequest)
 
       "return a status of 303" in {
@@ -124,30 +118,22 @@ class OtherReliefsActionSpec extends UnitSpec with WithFakeApplication with Mock
   "Calling the .submitOtherReliefs action" when {
 
     "submitting a valid form" should {
-      val target = setupTarget(
-        None,
-        TestModels.summaryIndividualFlatWithoutAEA,
-        TestModels.calcModelTwoRates
-      )
-      lazy val request = fakeRequestToPOSTWithSession("isClaimingOtherReliefs" -> "Yes", "otherReliefs" -> "1000")
+      val target = setupTarget(None, TestModels.summaryIndividualFlatWithoutAEA, TestModels.calcModelTwoRates)
+      lazy val request = fakeRequestToPOSTWithSession("otherReliefs" -> "1000")
       lazy val result = target.submitOtherReliefs(request)
 
       "return a status of 303" in {
         status(result) shouldBe 303
       }
 
-      "redirect to the summary page" in {
-        redirectLocation(result).get shouldBe controllers.nonresident.routes.SummaryController.summary().url
+      "redirect to the check your answers page" in {
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.CheckYourAnswersController.checkYourAnswers().url
       }
     }
 
     "submitting an invalid form" should {
-      val target = setupTarget(
-        None,
-        TestModels.summaryIndividualFlatWithoutAEA,
-        TestModels.calcModelTwoRates
-      )
-      lazy val request = fakeRequestToPOSTWithSession("isClaimingOtherReliefs" -> "Yes", "otherReliefs" -> "")
+      val target = setupTarget(None, TestModels.summaryIndividualFlatWithoutAEA, TestModels.calcModelTwoRates)
+      lazy val request = fakeRequestToPOSTWithSession("otherReliefs" -> "")
       lazy val result = target.submitOtherReliefs(request)
       lazy val document = Jsoup.parse(bodyOf(result))
 

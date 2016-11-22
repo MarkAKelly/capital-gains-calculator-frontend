@@ -29,7 +29,9 @@ import scala.concurrent.Future
 
 class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
 
-  def setupMockedAnswersConstructor(totalGainAnswersModel: TotalGainAnswersModel): AnswersConstructor = {
+  def setupMockedAnswersConstructor(totalGainAnswersModel: TotalGainAnswersModel,
+                                    worthBeforeLegislationStartModel: Option[WorthBeforeLegislationStartModel] = None,
+                                    marketValueAcquisition: Option[AcquisitionValueModel] = None): AnswersConstructor = {
 
     val mockConnector = mock[CalculatorConnector]
 
@@ -49,10 +51,17 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
       .thenReturn(Future.successful(Some(totalGainAnswersModel.disposalCostsModel)))
 
     when(mockConnector.fetchAndGetFormData[HowBecameOwnerModel](Matchers.eq(KeystoreKeys.howBecameOwner))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(totalGainAnswersModel.howBecameOwnerModel)))
+      .thenReturn(Future.successful(totalGainAnswersModel.howBecameOwnerModel))
 
     when(mockConnector.fetchAndGetFormData[BoughtForLessModel](Matchers.eq(KeystoreKeys.boughtForLess))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(totalGainAnswersModel.boughtForLessModel))
+
+    when(mockConnector.fetchAndGetFormData[WorthBeforeLegislationStartModel](Matchers.eq(KeystoreKeys.worthBeforeLegislationStart))
+      (Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(worthBeforeLegislationStartModel))
+
+    when(mockConnector.fetchAndGetFormData[AcquisitionValueModel](Matchers.eq(KeystoreKeys.acquisitionMarketValue))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(marketValueAcquisition))
 
     when(mockConnector.fetchAndGetFormData[AcquisitionValueModel](Matchers.eq(KeystoreKeys.acquisitionValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(totalGainAnswersModel.acquisitionValueModel)))
@@ -86,7 +95,7 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
     None,
     DisposalValueModel(10000),
     DisposalCostsModel(100),
-    HowBecameOwnerModel("Gifted"),
+    Some(HowBecameOwnerModel("Gifted")),
     None,
     AcquisitionValueModel(5000),
     AcquisitionCostsModel(200),
@@ -103,22 +112,56 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
     Some(SoldForLessModel(false)),
     DisposalValueModel(10000),
     DisposalCostsModel(100),
-    HowBecameOwnerModel("Bought"),
+    Some(HowBecameOwnerModel("Bought")),
     Some(BoughtForLessModel(false)),
     AcquisitionValueModel(5000),
     AcquisitionCostsModel(200),
     AcquisitionDateModel("Yes", Some(1), Some(4), Some(2013)),
-    Some(RebasedValueModel("Yes", Some(7500))),
+    Some(RebasedValueModel(Some(7500))),
     Some(RebasedCostsModel("Yes", Some(150))),
     ImprovementsModel("Yes", Some(50), Some(25)),
-    Some(OtherReliefsModel(Some("Yes"), Some(1000)))
+    Some(OtherReliefsModel(1000))
+  )
+
+  val modelDateBeforeLegislationStart = TotalGainAnswersModel(
+    DisposalDateModel(10, 10, 2016),
+    SoldOrGivenAwayModel(true),
+    Some(SoldForLessModel(false)),
+    DisposalValueModel(10000),
+    DisposalCostsModel(100),
+    Some(HowBecameOwnerModel("Bought")),
+    Some(BoughtForLessModel(false)),
+    AcquisitionValueModel(5000),
+    AcquisitionCostsModel(200),
+    AcquisitionDateModel("Yes", Some(1), Some(4), Some(1967)),
+    Some(RebasedValueModel(Some(7500))),
+    Some(RebasedCostsModel("Yes", Some(150))),
+    ImprovementsModel("Yes", Some(50), Some(25)),
+    Some(OtherReliefsModel(1000))
+  )
+
+  val totalGainBoughtForLess = TotalGainAnswersModel(
+    DisposalDateModel(10, 10, 2016),
+    SoldOrGivenAwayModel(true),
+    Some(SoldForLessModel(false)),
+    DisposalValueModel(10000),
+    DisposalCostsModel(100),
+    Some(HowBecameOwnerModel("Bought")),
+    Some(BoughtForLessModel(true)),
+    AcquisitionValueModel(5000),
+    AcquisitionCostsModel(200),
+    AcquisitionDateModel("Yes", Some(1), Some(4), Some(2013)),
+    Some(RebasedValueModel(Some(7500))),
+    Some(RebasedCostsModel("Yes", Some(150))),
+    ImprovementsModel("Yes", Some(50), Some(25)),
+    Some(OtherReliefsModel(1000))
   )
 
   "Calling getNRTotalGainAnswers" should {
 
     "return a valid TotalGainAnswersModel with no optional values" in {
       val hc = mock[HeaderCarrier]
-      val constructor = setupMockedAnswersConstructor(totalGainNoOptionalModel)
+      val constructor = setupMockedAnswersConstructor(totalGainNoOptionalModel, marketValueAcquisition = Some(AcquisitionValueModel(5000)))
       val result = constructor.getNRTotalGainAnswers(hc)
 
       await(result) shouldBe totalGainNoOptionalModel
@@ -130,6 +173,31 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
       val result = constructor.getNRTotalGainAnswers(hc)
 
       await(result) shouldBe totalGainAllOptionalModel
+    }
+
+    "return a valid acquisition value of 4000 with an acquisition date before legislation start" in {
+      val hc = mock[HeaderCarrier]
+      val constructor = setupMockedAnswersConstructor(modelDateBeforeLegislationStart,
+        worthBeforeLegislationStartModel = Some(WorthBeforeLegislationStartModel(4000)))
+      val result = constructor.getNRTotalGainAnswers(hc)
+
+      await(result).acquisitionValueModel.acquisitionValueAmt shouldBe 4000
+    }
+
+    "return a valid acquisition value of 3000 with an property acquired without purchasing" in {
+      val hc = mock[HeaderCarrier]
+      val constructor = setupMockedAnswersConstructor(totalGainNoOptionalModel, marketValueAcquisition = Some(AcquisitionValueModel(3000)))
+      val result = constructor.getNRTotalGainAnswers(hc)
+
+      await(result).acquisitionValueModel.acquisitionValueAmt shouldBe 3000
+    }
+
+    "return a valid acquisition value of 2000 with a property bought for less" in {
+      val hc = mock[HeaderCarrier]
+      val constructor = setupMockedAnswersConstructor(totalGainBoughtForLess, marketValueAcquisition = Some(AcquisitionValueModel(2000)))
+      val result = constructor.getNRTotalGainAnswers(hc)
+
+      await(result).acquisitionValueModel.acquisitionValueAmt shouldBe 2000
     }
   }
 }

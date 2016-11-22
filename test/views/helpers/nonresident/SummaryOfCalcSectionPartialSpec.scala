@@ -52,8 +52,8 @@ class SummaryOfCalcSectionPartialSpec extends UnitSpec {
           doc.select("div.form-group > div").size shouldBe 2
         }
 
-        "should have internal divs for title, question and answer with class 'grid-layout__column grid-layout__column--1-2'" in {
-          doc.select("div.form-group > div").attr("class") shouldBe "grid-layout__column grid-layout__column--1-2"
+        "should have internal divs for title, question and answer with class 'grid-layout__column grid-layout__column--1-3'" in {
+          doc.select("div.form-group > div").attr("class") shouldBe "grid-layout__column grid-layout__column--1-3"
         }
       }
     }
@@ -81,8 +81,8 @@ class SummaryOfCalcSectionPartialSpec extends UnitSpec {
           doc.select("div.form-group > div").size shouldBe 4
         }
 
-        "should have internal divs for title, question and answer with class 'grid-layout__column grid-layout__column--1-2'" in {
-          doc.select("div.form-group > div").attr("class") shouldBe "grid-layout__column grid-layout__column--1-2"
+        "should have internal divs for title, question and answer with class 'grid-layout__column grid-layout__column--1-3'" in {
+          doc.select("div.form-group > div").attr("class") shouldBe "grid-layout__column grid-layout__column--1-3"
         }
       }
     }

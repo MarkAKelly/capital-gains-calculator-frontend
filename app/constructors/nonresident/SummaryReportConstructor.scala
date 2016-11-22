@@ -507,31 +507,11 @@ object SummaryReportConstructor {
             }),
             None
           ),
-          summary.otherReliefsModelFlat.isClaimingOtherReliefs match {
-            case Some("No") =>
-              SummaryDataItemModel(
-                Messages("calc.otherReliefs.questionTwo"),
-                summary.otherReliefsModelFlat.isClaimingOtherReliefs match {
-                  case Some(data) => summary.otherReliefsModelFlat.isClaimingOtherReliefs.get
-                  case None => "No"
-                },
-                None
-              )
-            case Some("Yes") => SummaryDataItemModel(
+          SummaryDataItemModel(
               Messages("calc.otherReliefs.question"),
-              "&pound;" + (summary.otherReliefsModelFlat.otherReliefs match {
-                case Some(data) => MoneyPounds(data).quantity
-                case None => "0.00"
-              }),
+              s"&pound;${summary.otherReliefsModelFlat.otherReliefs}",
               None)
-            case _ => SummaryDataItemModel(
-              Messages("calc.otherReliefs.question"),
-              "&pound;" + (summary.otherReliefsModelFlat.otherReliefs match {
-                case Some(data) => MoneyPounds(data).quantity
-                case None => "0.00"
-              }),
-              None)
-          })
+        )
         case "time" => Array(
           SummaryDataItemModel(
             Messages("calc.privateResidenceRelief.question"),
@@ -548,13 +528,9 @@ object SummaryReportConstructor {
           ),
           SummaryDataItemModel(
             Messages("calc.otherReliefs.question"),
-            "&pound;" + (summary.otherReliefsModelTA.otherReliefs match {
-              case Some(data) => MoneyPounds(data).quantity
-              case None => "0.00"
-            }),
-            None
+            s"&pound;${summary.otherReliefsModelTA.otherReliefs}",
+            None)
           )
-        )
         case "rebased" => Array(
           SummaryDataItemModel(
             Messages("calc.privateResidenceRelief.question"),
@@ -571,10 +547,7 @@ object SummaryReportConstructor {
           ),
           SummaryDataItemModel(
             Messages("calc.otherReliefs.question"),
-            "&pound;" + (summary.otherReliefsModelRebased.otherReliefs match {
-              case Some(data) => MoneyPounds(data).quantity
-              case None => "0.00"
-            }),
+            s"&pound;${summary.otherReliefsModelRebased.otherReliefs}",
             None
           )
         )

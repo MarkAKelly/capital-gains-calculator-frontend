@@ -20,7 +20,7 @@ import common.Dates._
 import common.KeystoreKeys
 import common.KeystoreKeys.{ResidentPropertyKeys, ResidentShareKeys}
 import config.{CalculatorSessionCache, WSHttp}
-import constructors.nonresident.CalculateRequestConstructor
+import constructors.nonresident.{CalculateRequestConstructor, TotalGainRequestConstructor}
 import constructors.resident.{shares, properties => propertyConstructor}
 import models._
 import play.api.libs.json.Format
@@ -51,6 +51,13 @@ trait CalculatorConnector {
 
   def fetchAndGetFormData[T](key: String)(implicit hc: HeaderCarrier, formats: Format[T]): Future[Option[T]] = {
     sessionCache.fetchAndGetEntry(key)
+  }
+
+  def calculateTotalGain(totalGainAnswersModel: nonresident.TotalGainAnswersModel)
+                        (implicit hc: HeaderCarrier): Future[Option[nonresident.TotalGainResultsModel]] = {
+    http.GET[Option[nonresident.TotalGainResultsModel]](s"$serviceUrl/capital-gains-calculator/non-resident/calculate-total-gain?${
+      TotalGainRequestConstructor.totalGainQuery(totalGainAnswersModel)
+    }")
   }
 
   def calculateFlat(input: nonresident.SummaryModel)(implicit hc: HeaderCarrier): Future[Option[nonresident.CalculationResultModel]] = {
@@ -102,7 +109,6 @@ trait CalculatorConnector {
     sessionCache.remove()
   }
 
-
   def createSummary(implicit hc: HeaderCarrier): Future[nonresident.SummaryModel] = {
     val customerType = fetchAndGetFormData[nonresident.CustomerTypeModel](KeystoreKeys.customerType).map(formData => formData.get)
     val disabledTrustee = fetchAndGetFormData[nonresident.DisabledTrusteeModel](KeystoreKeys.disabledTrustee)
@@ -123,12 +129,13 @@ trait CalculatorConnector {
     val calculationElection = fetchAndGetFormData[nonresident.CalculationElectionModel](KeystoreKeys.calculationElection).map(formData =>
       formData.getOrElse(nonresident.CalculationElectionModel("")))
     val otherReliefsFlat = fetchAndGetFormData[nonresident.OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map(formData =>
-      formData.getOrElse(nonresident.OtherReliefsModel(Some("No"), None)))
+      formData.getOrElse(nonresident.OtherReliefsModel(0)))
     val otherReliefsTA = fetchAndGetFormData[nonresident.OtherReliefsModel](KeystoreKeys.otherReliefsTA).map(formData =>
-      formData.getOrElse(nonresident.OtherReliefsModel(Some("No"), None)))
+      formData.getOrElse(nonresident.OtherReliefsModel(0)))
     val otherReliefsRebased = fetchAndGetFormData[nonresident.OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map(formData =>
-      formData.getOrElse(nonresident.OtherReliefsModel(Some("No"), None)))
+      formData.getOrElse(nonresident.OtherReliefsModel(0)))
     val privateResidenceRelief = fetchAndGetFormData[nonresident.PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief)
+
     for {
       customerTypeModel <- customerType
       disabledTrusteeModel <- disabledTrustee

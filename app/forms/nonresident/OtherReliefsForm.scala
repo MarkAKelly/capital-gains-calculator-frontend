@@ -27,52 +27,18 @@ import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object OtherReliefsForm {
 
-  private def isRealNumberOption(electionMade: Boolean): OtherReliefsModel => Boolean = {
-    model => (model.isClaimingOtherReliefs, model.otherReliefs) match {
-      case (Some("Yes"), _) => model.otherReliefs.isDefined
-      case _ if electionMade => model.otherReliefs.isDefined
-      case _ => true
-    }
-  }
-
-  private def isPositiveOption(electionMade: Boolean): OtherReliefsModel => Boolean = {
-    model => (model.isClaimingOtherReliefs, model.otherReliefs) match {
-      case (Some("Yes"), Some(value)) => isPositive(value)
-      case (_, Some(value)) if electionMade => isPositive(value)
-      case _ => true
-    }
-  }
-
-  private def decimalPlacesCheckOption(electionMade: Boolean): OtherReliefsModel => Boolean = {
-    model => (model.isClaimingOtherReliefs, model.otherReliefs) match {
-      case (Some("Yes"), Some(value)) => decimalPlacesCheck(value)
-      case (_, Some(value)) if electionMade => decimalPlacesCheck(value)
-      case _ => true
-    }
-  }
-
-  private def maxNumericOption(electionMade: Boolean): OtherReliefsModel => Boolean = {
-    model => (model.isClaimingOtherReliefs, model.otherReliefs) match {
-      case (Some("Yes"), Some(value)) => maxCheck(value)
-      case (_, Some(value)) if electionMade => maxCheck(value)
-      case _ => true
-    }
-  }
-
-  def otherReliefsForm (electionMade: Boolean): Form[OtherReliefsModel] =
+  val otherReliefsForm: Form[OtherReliefsModel] =
     Form(
       mapping(
-        "isClaimingOtherReliefs" -> optional(text)
-          .verifying(Messages("calc.common.error.fieldRequired"), isClaimingOtherReliefs => if (!electionMade) {isClaimingOtherReliefs.isDefined} else true)
-          .verifying(Messages("calc.common.error.fieldRequired"), isYesNoOption(electionMade)),
         "otherReliefs" -> text
-          .transform(stringToOptionBigDecimal, optionBigDecimalToString)
+          .verifying(Messages("error.real"), mandatoryCheck)
+          .verifying(Messages("error.real"), bigDecimalCheck)
+          .transform(stringToBigDecimal, bigDecimalToString)
+          .verifying(Messages("calc.otherReliefs.errorMinimum"), isPositive)
+          .verifying(Messages("calc.otherReliefs.errorDecimal"), decimalPlacesCheck)
+          .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
+            " " + Messages("calc.common.error.maxNumericExceeded.OrLess"),
+            maxCheck)
       )(OtherReliefsModel.apply)(OtherReliefsModel.unapply)
-        .verifying(Messages("error.real"), isRealNumberOption(electionMade))
-        .verifying(Messages("calc.otherReliefs.errorMinimum"), isPositiveOption(electionMade))
-        .verifying(Messages("calc.otherReliefs.errorDecimal"), decimalPlacesCheckOption(electionMade))
-        .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity +
-          " " + Messages("calc.common.error.maxNumericExceeded.OrLess"),
-          maxNumericOption(electionMade))
     )
 }

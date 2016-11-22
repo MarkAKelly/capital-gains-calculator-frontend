@@ -31,7 +31,7 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication with
     None,
     DisposalValueModel(150000),
     DisposalCostsModel(600),
-    HowBecameOwnerModel("Gifted"),
+    Some(HowBecameOwnerModel("Gifted")),
     None,
     AcquisitionValueModel(5000),
     AcquisitionCostsModel(200),
@@ -48,12 +48,12 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication with
     Some(SoldForLessModel(false)),
     DisposalValueModel(90000),
     DisposalCostsModel(0),
-    HowBecameOwnerModel("Bought"),
+    Some(HowBecameOwnerModel("Bought")),
     Some(BoughtForLessModel(false)),
     AcquisitionValueModel(5000),
     AcquisitionCostsModel(200),
     AcquisitionDateModel("Yes", Some(1), Some(4), Some(2013)),
-    Some(RebasedValueModel("Yes", Some(7500))),
+    Some(RebasedValueModel(Some(7500))),
     Some(RebasedCostsModel("Yes", Some(150))),
     ImprovementsModel("Yes", Some(50), Some(25)),
     None
@@ -65,12 +65,12 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication with
     Some(SoldForLessModel(true)),
     DisposalValueModel(10000),
     DisposalCostsModel(100),
-    HowBecameOwnerModel("Bought"),
+    Some(HowBecameOwnerModel("Bought")),
     Some(BoughtForLessModel(true)),
     AcquisitionValueModel(5000),
     AcquisitionCostsModel(200),
     AcquisitionDateModel("Yes", Some(1), Some(4), Some(2013)),
-    Some(RebasedValueModel("Yes", Some(7500))),
+    Some(RebasedValueModel(Some(7500))),
     Some(RebasedCostsModel("Yes", Some(150))),
     ImprovementsModel("Yes", Some(50), Some(25)),
     None
@@ -200,8 +200,8 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication with
         result.isDefined shouldBe true
       }
 
-      "have an id of nr:soldOrGivenAway" in {
-        assertExpectedResult[QuestionAnswerModel[Boolean]](result)(_.id shouldBe "nr:soldOrGivenAway")
+      "have an id of nr:soldForLess" in {
+        assertExpectedResult[QuestionAnswerModel[Boolean]](result)(_.id shouldBe "nr:soldForLess")
       }
 
       "have the data for the value 'false'" in {
