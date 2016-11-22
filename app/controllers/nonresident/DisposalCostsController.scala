@@ -42,9 +42,9 @@ trait DisposalCostsController extends FrontendController with ValidActiveSession
 
   private def backUrl(soldOrGivenAwayModel: Option[SoldOrGivenAwayModel], soldForLessModel: Option[SoldForLessModel]): Future[String] =
     (soldOrGivenAwayModel, soldForLessModel) match {
-    case (Some(SoldOrGivenAwayModel(soldIt)), _) if !soldIt => Future.successful(routes.MarketValueWhenSoldController.marketValueWhenSold().url)
+    case (Some(SoldOrGivenAwayModel(soldIt)), _) if !soldIt => Future.successful(routes.MarketValueWhenSoldOrGaveAwayController.marketValueWhenGaveAway().url)
     case (Some(SoldOrGivenAwayModel(soldIt)), Some(SoldForLessModel(soldForLess))) if soldIt && soldForLess =>
-      Future.successful(routes.MarketValueWhenSoldController.marketValueWhenSold().url)
+      Future.successful(routes.MarketValueWhenSoldOrGaveAwayController.marketValueWhenSold().url)
     case (Some(SoldOrGivenAwayModel(soldIt)), Some(SoldForLessModel(soldForLess))) if soldIt && !soldForLess =>
       Future.successful(routes.DisposalValueController.disposalValue().url)
     case (_, _) => Future.successful(missingDataRoute)

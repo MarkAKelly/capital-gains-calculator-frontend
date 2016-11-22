@@ -69,7 +69,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
     None,
     DisposalValueModel(10000),
     DisposalCostsModel(100),
-    HowBecameOwnerModel("Gifted"),
+    Some(HowBecameOwnerModel("Gifted")),
     None,
     AcquisitionValueModel(5000),
     AcquisitionCostsModel(200),
