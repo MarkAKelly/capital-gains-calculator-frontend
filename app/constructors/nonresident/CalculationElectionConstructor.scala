@@ -16,7 +16,7 @@
 
 package constructors.nonresident
 
-import common.{Dates, TaxDates}
+import common.TaxDates
 import connectors.CalculatorConnector
 import controllers.nonresident.routes
 import models.nonresident.{AcquisitionDateModel, CalculationResultModel, SummaryModel}
@@ -56,9 +56,9 @@ trait CalculationElectionConstructor {
     def withRebasedCheck(sequence: Seq[(String, String, String, Option[String], String, Option[BigDecimal])]) = {
       summary.acquisitionDateModel match {
         case AcquisitionDateModel("Yes", day, month, year)
-          if !TaxDates.dateAfterStart(day.get, month.get, year.get) && summary.rebasedValueModel.get.hasRebasedValue.equals("Yes") =>
+          if !TaxDates.dateAfterStart(day.get, month.get, year.get) && summary.rebasedValueModel.get.rebasedValueAmt.isDefined =>
           sequence.++(Seq(rebasedElementConstructor(rebasedResult, otherReliefsRebased)))
-        case AcquisitionDateModel("No", _, _, _) if summary.rebasedValueModel.get.hasRebasedValue.equals("Yes") =>
+        case AcquisitionDateModel("No", _, _, _) if summary.rebasedValueModel.get.rebasedValueAmt.isDefined =>
           sequence.++(Seq(rebasedElementConstructor(rebasedResult, otherReliefsRebased)))
         case _ => sequence
       }
@@ -74,7 +74,7 @@ trait CalculationElectionConstructor {
       routes.OtherReliefsRebasedController.otherReliefsRebased().toString(),
       otherReliefsRebased)
   }
-  
+
   private def flatElementConstructor(flatResult: Option[CalculationResultModel], otherReliefsFlat: Option[BigDecimal]) = {
     ("flat", flatResult.get.taxOwed.setScale(2).toString(),
       Messages("calc.calculationElection.message.flat"),

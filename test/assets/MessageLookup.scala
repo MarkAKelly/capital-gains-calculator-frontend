@@ -127,6 +127,13 @@ object MessageLookup {
       val whyMoreDetailsTwo = "Higher totals sometimes qualify for larger reliefs, which can reduce the amount you owe."
     }
 
+    object CheckYourAnswers {
+      val question = "Check your answers"
+      val tableHeading = "You've told us"
+      val change = "Change"
+      val hiddenText = "your response to the question"
+    }
+
     object CurrentIncome {
       val question = "In the tax year when you stopped owning the property, what was your total UK income?"
       val linkOne = "Income Tax"
@@ -234,9 +241,8 @@ object MessageLookup {
     }
 
     object OtherReliefs {
-      val question = "Do you want to add other tax relief?"
-      val help = "For example, lettings relief"
-      val inputQuestion = "How much extra tax relief are you claiming?"
+      val help = "For example, lettings relief."
+      val question = "How much extra tax relief are you claiming?"
       val totalGain = "Total gain"
       val taxableGain = "Taxable gain"
       val lossCarriedForward = "Loss carried forward"
@@ -244,6 +250,17 @@ object MessageLookup {
       val updateRelief = "Update relief"
       val errorDecimal = "There are too many numbers after the decimal point in your other reliefs"
       val errorNegative = "Enter a positive number for your other reliefs"
+      val helpTwo = "Don't include any Private Residence Relief."
+      def additionalHelp(gain: Int, chargeableGain: Int): String = {
+        val locale = new java.util.Locale("en", "EN")
+        val amount = java.text.NumberFormat.getIntegerInstance(locale)
+
+        val gainText = if (gain < 0) "total loss" else "total gain"
+        val chargeableGainText = if (chargeableGain < 0) "an allowable loss" else "a taxable gain"
+        s"We've calculated that you've made $chargeableGainText of " +
+          s"£${amount.format(chargeableGain.abs)} and a $gainText of £${amount.format(gain.abs)} on your property. " +
+          "You'll need these figures to calculate other reliefs."
+      }
 
       def totalLoss(value: String): String = s"Total loss $value"
 
@@ -291,7 +308,7 @@ object MessageLookup {
     }
 
     object RebasedCosts {
-      val question = "Did you pay for the valuation?"
+      val question = "Did you pay to have the property valued at 5 April 2015?"
       val inputQuestion = "How much did it cost to get the property valued?"
       val errorNegative = "Enter a positive number for your costs"
       val errorNoValue = "Enter the value for your costs"
@@ -301,22 +318,23 @@ object MessageLookup {
     }
 
     object RebasedValue {
-      val question = "Do you know how much the property was worth on 5 April 2015?"
-      val questionHelpText = "Only tell us if you owned the property on that date"
-      val inputQuestion = "What was the value of the property?"
-      val inputQuestionMandatory = "What was the property worth on 5 April 2015?"
-      val inputHelpText = "You can use a valuation from a surveyor or a property website."
+      val question = "What was the market value of the property on 5 April 2015?"
+
+      val questionOptionalText = "Only tell us if you owned the property on that date"
+
+      val inputHintText = "If you don't know the exact value, you must provide a realistic estimate. " +
+        "You might have to pay more if we think your estimate is unrealistic."
       val additionalContentTitle = "Why we're asking for this"
+      val helpHiddenContent = "This value lets us calculate your tax in different ways, which means you may have less tax to pay."
+
       val errorNoValue = "Enter a value for your property on 5 April 2015"
       val errorNegative = "Enter a positive value for your property on 5 April 2015"
       val errorDecimalPlaces = "The value for your property on 5 April 2015 has too many numbers after the decimal point"
-      val helpHiddenContentOne = "When you've answered the questions you'll have a choice about how we work out your total."
-      val helpHiddenContentTwo = "This value lets us calculate your tax in different ways, giving you more options."
+
 
       def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
-    //How Became Owner messages
     object HowBecameOwner {
       val question = "How did you become the owner?"
       val errorMandatory = "Tell us how you became the owner"
@@ -336,7 +354,19 @@ object MessageLookup {
       val errorNegativeNumber = "Enter a positive number for the market value of the property"
       val errorDecimalPlaces = "The market value of the property has too many numbers after the decimal point"
       val hintOne = "You can use a valuation from a surveyor."
-      val hintTwo = "If you don't know the exact value, you must provide a realistic estimate. You might have to pay more if we think your estimate is unrealistic."
+      val hintTwo = "If you don't know the exact value, you must provide a realistic estimate. " +
+        "You might have to pay more if we think your estimate is unrealistic."
+    }
+
+    object WorthBeforeLegislationStart {
+      val question = "What was the market value of the property on 31 March 1982?"
+      val expandableText = "You only need to pay tax on gains made after this date"
+      val expandableTitle = "Why we're asking for this"
+    }
+
+    //Worth When Inherited messages
+    object WorthWhenInherited {
+      val question = "What was the market value of the property when you inherited it?"
     }
 
     //Worth When Gifted To messages
@@ -361,9 +391,9 @@ object MessageLookup {
       val taxableGain = "Your taxable gain"
       val taxRate = "Your tax rate"
       val personalDetailsTitle = "Personal details"
-      val purchaseDetailsTitle = "Purchase details"
+      val purchaseDetailsTitle = "Owning the property"
       val propertyDetailsTitle = "Property details"
-      val saleDetailsTitle = "Sale details"
+      val salesDetailsTitle = "Selling or giving away the property"
       val deductionsTitle = "Deductions"
       val whatToDoNextText = "What to do next"
       val whatToDoNextContent = "You need to"

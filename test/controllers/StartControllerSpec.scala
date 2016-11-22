@@ -24,14 +24,14 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 class StartControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper{
 
   "Calling the .start method" should {
-    val result = StartController.start(fakeRequest)
+    lazy val result = StartController.start(fakeRequest)
 
     "return a 303" in {
       status(result) shouldBe 303
     }
 
-    "redirect to the customer type page" in {
-      redirectLocation(result) shouldBe Some(nonresident.routes.CustomerTypeController.customerType().url)
+    "redirect to the disposal date page" in {
+      redirectLocation(result) shouldBe Some(nonresident.routes.DisposalDateController.disposalDate().url)
     }
   }
 }

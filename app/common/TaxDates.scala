@@ -33,6 +33,8 @@ object TaxDates {
 
   def dateBeforeLegislationStart(day: Int, month: Int, year: Int): Boolean = constructDate(day, month, year).isBefore(legislationDate)
 
+  def dateBeforeLegislationStart(date: LocalDate): Boolean = date.isBefore(legislationDate)
+
   def dateAfter18Months(day: Int, month: Int, year: Int): Boolean = constructDate(day, month, year).isAfter(taxStartDatePlus18Months)
 
   def dateAfterOctober(date: LocalDate): Boolean = date.isAfter(taxStartDatePlus18Months)

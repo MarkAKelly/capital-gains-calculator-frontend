@@ -31,7 +31,7 @@ class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with Mo
   "Acquisition costs view" when {
 
     "supplied with no errors" should {
-      lazy val view = acquisitionCosts(acquisitionCostsForm)(fakeRequest)
+      lazy val view = acquisitionCosts(acquisitionCostsForm, "back-link")(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       s"have a title of '${messages.AcquisitionCosts.question}'" in {
@@ -45,8 +45,8 @@ class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with Mo
           backLink.text shouldBe MessageLookup.NonResident.back
         }
 
-        s"has a route to 'Acquisition Value'" in {
-          backLink.attr("href") shouldBe controllers.nonresident.routes.AcquisitionValueController.acquisitionValue().url
+        s"has a route to 'back-link'" in {
+          backLink.attr("href") shouldBe "back-link"
         }
 
         "has the class 'back-link'" in {
@@ -135,7 +135,7 @@ class AcquisitionCostsViewSpec extends UnitSpec with WithFakeApplication with Mo
 
     "supplied with errors" should {
       lazy val form = acquisitionCostsForm.bind(Map("acquisitionCosts" -> "a"))
-      lazy val view = acquisitionCosts(form)(fakeRequest)
+      lazy val view = acquisitionCosts(form, "back-link")(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have an error summary" in {

@@ -43,19 +43,19 @@ trait CalculationElectionController extends FrontendController with ValidActiveS
 
   private def getOtherReliefsFlat(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] =
     calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
-      case Some(data) => data.otherReliefs
+      case Some(data) => Some(data.otherReliefs)
       case _ => None
     }
 
   private def getOtherReliefsTA(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] =
     calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA).map {
-      case Some(data) => data.otherReliefs
+      case Some(data) => Some(data.otherReliefs)
       case _ => None
     }
 
   private def getOtherReliefsRebased(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] =
     calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map {
-      case Some(data) => data.otherReliefs
+      case Some(data) => Some(data.otherReliefs)
       case _ => None
     }
 
@@ -70,12 +70,12 @@ trait CalculationElectionController extends FrontendController with ValidActiveS
   }
 
   private def calcRebasedCall(summary: SummaryModel)(implicit hc: HeaderCarrier): Future[Option[CalculationResultModel]] = {
-    (summary.rebasedValueModel.getOrElse(RebasedValueModel("No", None)).hasRebasedValue, summary.acquisitionDateModel.hasAcquisitionDate) match {
-      case ("Yes", "Yes") if !TaxDates.dateAfterStart(summary.acquisitionDateModel.day.get,
+    (summary.rebasedValueModel.getOrElse(RebasedValueModel(None)).rebasedValueAmt.isDefined, summary.acquisitionDateModel.hasAcquisitionDate) match {
+      case (true, "Yes") if !TaxDates.dateAfterStart(summary.acquisitionDateModel.day.get,
         summary.acquisitionDateModel.month.get,
         summary.acquisitionDateModel.year.get) =>
         calcConnector.calculateRebased(summary)
-      case ("Yes", "No") => calcConnector.calculateRebased(summary)
+      case (true, "No") => calcConnector.calculateRebased(summary)
       case _ => Future(None)
     }
   }
