@@ -23,6 +23,7 @@ import org.jsoup.Jsoup
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.calculation.nonresident.marketValueGaveAway
+import assets.MessageLookup.NonResident.{MarketValue => MarketValueMessages}
 
 class MarketValueGaveAwayViewSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper{
   "The market value when gave away page" should {
@@ -31,14 +32,14 @@ class MarketValueGaveAwayViewSpec extends UnitSpec with WithFakeApplication with
     lazy val document = Jsoup.parse(view.body)
 
     "supplied with no errors" should {
-      s"have a title of" in {
-        document.title() shouldBe MessageLookup.NonResident.MarketValue.disposalGaveAwayQuestion
+      s"have a title of ${MarketValueMessages.disposalGaveAwayQuestion}" in {
+        document.title() shouldBe MarketValueMessages.disposalGaveAwayQuestion
       }
 
       s"have a header" which {
         lazy val header = document.select("h1")
-        s"has the text '${MessageLookup.NonResident.MarketValue.disposalGaveAwayQuestion}'" in {
-          header.text() shouldBe MessageLookup.NonResident.MarketValue.disposalGaveAwayQuestion
+        s"has the text '${MarketValueMessages.disposalGaveAwayQuestion}'" in {
+          header.text() shouldBe MarketValueMessages.disposalGaveAwayQuestion
         }
 
         s"has the class 'head-xlarge'" in {
@@ -48,9 +49,9 @@ class MarketValueGaveAwayViewSpec extends UnitSpec with WithFakeApplication with
 
       s"have a paragraph" which {
         lazy val helpText = document.select("p.form-hint")
-        s"has the help text'${MessageLookup.NonResident.MarketValue.disposalHelpText}'" in {
-          helpText.html() shouldBe MessageLookup.NonResident.MarketValue.disposalHelpText +
-            " <br> " + MessageLookup.NonResident.MarketValue.disposalHelpTextAdditional
+        s"has the help text'${MarketValueMessages.disposalHelpText}'" in {
+          helpText.html() shouldBe MarketValueMessages.disposalHelpText +
+            " <br> " + MarketValueMessages.disposalHelpTextAdditional
         }
         s"has the class 'form-hint'" in {
           helpText.attr("class") shouldBe "form-hint"
@@ -67,6 +68,14 @@ class MarketValueGaveAwayViewSpec extends UnitSpec with WithFakeApplication with
 
         s"has an action of '${controllers.nonresident.routes.MarketValueWhenSoldOrGaveAwayController.submitMarketValueWhenGaveAway()}'" in {
           form.attr("action") shouldBe controllers.nonresident.routes.MarketValueWhenSoldOrGaveAwayController.submitMarketValueWhenGaveAway().url
+        }
+
+        s"has the hidden text ${MessageLookup.NonResident.MarketValue.disposalGaveAwayQuestion}" in {
+          form.select("span.visuallyhidden").text() shouldBe MessageLookup.NonResident.MarketValue.disposalGaveAwayQuestion
+        }
+
+        s"has the input ID disposalValue" in {
+          form.select("input").attr("id") shouldBe "disposalValue"
         }
       }
 
