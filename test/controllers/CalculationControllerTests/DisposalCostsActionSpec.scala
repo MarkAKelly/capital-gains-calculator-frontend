@@ -127,7 +127,7 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Moc
       }
 
       "have a back link to the market value controller" in {
-        document.select("#back-link").attr("href") shouldEqual routes.MarketValueWhenSoldController.marketValueWhenSold().url
+        document.select("#back-link").attr("href") shouldEqual routes.MarketValueWhenSoldOrGaveAwayController.marketValueWhenGaveAway().url
       }
     }
 
@@ -145,7 +145,7 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Moc
       }
 
       "have a back link to the market value controller" in {
-        document.select("#back-link").attr("href") shouldEqual routes.MarketValueWhenSoldController.marketValueWhenSold().url
+        document.select("#back-link").attr("href") shouldEqual routes.MarketValueWhenSoldOrGaveAwayController.marketValueWhenSold().url
       }
     }
 
