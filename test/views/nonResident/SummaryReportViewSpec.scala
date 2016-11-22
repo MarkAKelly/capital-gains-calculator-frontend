@@ -19,6 +19,7 @@ package views.nonResident
 import assets.MessageLookup.{NonResident => nrMessages}
 import common.TestModels._
 import controllers.helpers.FakeRequestHelper
+import models.nonresident.{AcquisitionDateModel, ImprovementsModel, RebasedCostsModel, RebasedValueModel, _}
 import models.resident.TaxYearModel
 import org.jsoup.Jsoup
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -32,7 +33,24 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
 
       lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
 
-      lazy val view = summaryReport(businessScenarioOneModel, calcModelTwoRates, taxYear,
+      val answersModel = TotalGainAnswersModel(DisposalDateModel(5, 10, 2016),
+        SoldOrGivenAwayModel(true),
+        Some(SoldForLessModel(false)),
+        DisposalValueModel(1000),
+        DisposalCostsModel(100),
+        HowBecameOwnerModel("Gifted"),
+        Some(BoughtForLessModel(false)),
+        AcquisitionValueModel(2000),
+        AcquisitionCostsModel(200),
+        AcquisitionDateModel("Yes", Some(4), Some(10), Some(2013)),
+        Some(RebasedValueModel(Some(3000))),
+        Some(RebasedCostsModel("Yes", Some(300))),
+        ImprovementsModel("Yes", Some(10), Some(20)),
+        Some(OtherReliefsModel(1000)))
+
+      val resultsModel = TotalGainResultsModel(1000, Some(2000), Some(3000))
+
+      lazy val view = summaryReport(answersModel, resultsModel, taxYear,
         sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
       lazy val document = Jsoup.parse(view.body)
 
@@ -51,8 +69,8 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
           heading.select("span").text shouldEqual nrMessages.Summary.secondaryHeading
         }
 
-        "have a result amount currently set to £8,000.00" in {
-          heading.select("b").text shouldEqual "£8,000.00"
+        "have a result amount currently set to £0.00" in {
+          heading.select("b").text shouldEqual "£0.00"
         }
       }
 
@@ -68,12 +86,8 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
         document.select("#calculationDetails span.heading-large").text should include(nrMessages.Summary.calculationDetailsTitle)
       }
 
-      "have a 'Personal details' section that" in {
-        document.select("#personalDetails span.heading-large").text should include(nrMessages.Summary.personalDetailsTitle)
-      }
-
       "have a 'Purchase details' section that" in {
-        document.select("#acquisitionDetails span.heading-large").text should include(nrMessages.Summary.purchaseDetailsTitle)
+        document.select("#purchaseDetails span.heading-large").text should include(nrMessages.Summary.purchaseDetailsTitle)
       }
 
       "have a 'Property details' section that" in {
@@ -81,7 +95,7 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
       }
 
       "have a 'Sale details' section that" in {
-        document.select("#saleDetails span.heading-large").text should include(nrMessages.Summary.saleDetailsTitle)
+        document.select("#salesDetails span.heading-large").text should include(nrMessages.Summary.salesDetailsTitle)
       }
 
       "have a 'Deductions details' section that" in {
@@ -124,7 +138,23 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
 
     "provided with an invalid tax year" should {
       lazy val taxYear = TaxYearModel("2018/19", false, "2016/17")
-      lazy val view = summaryReport(businessScenarioOneModel, calcModelTwoRates, taxYear,
+      val answersModel = TotalGainAnswersModel(DisposalDateModel(5, 10, 2016),
+        SoldOrGivenAwayModel(true),
+        Some(SoldForLessModel(false)),
+        DisposalValueModel(1000),
+        DisposalCostsModel(100),
+        HowBecameOwnerModel("Gifted"),
+        Some(BoughtForLessModel(false)),
+        AcquisitionValueModel(2000),
+        AcquisitionCostsModel(200),
+        AcquisitionDateModel("Yes", Some(4), Some(10), Some(2013)),
+        Some(RebasedValueModel(Some(3000))),
+        Some(RebasedCostsModel("Yes", Some(300))),
+        ImprovementsModel("Yes", Some(10), Some(20)),
+        Some(OtherReliefsModel(1000)))
+
+      val resultsModel = TotalGainResultsModel(1000, Some(2000), Some(3000))
+      lazy val view = summaryReport(answersModel, resultsModel, taxYear,
         sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
       lazy val document = Jsoup.parse(view.body)
 
@@ -142,6 +172,83 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
         "has the correct message text" in {
           notice.select("strong").text() shouldBe nrMessages.Summary.basedOnYear("2016/17")
         }
+      }
+    }
+
+    "provided with a flat loss calculation" should {
+      lazy val taxYear = TaxYearModel("2016/17", true, "2016/17")
+
+      val answersModel = TotalGainAnswersModel(DisposalDateModel(5, 10, 2016),
+        SoldOrGivenAwayModel(true),
+        Some(SoldForLessModel(false)),
+        DisposalValueModel(1000),
+        DisposalCostsModel(100),
+        HowBecameOwnerModel("Gifted"),
+        Some(BoughtForLessModel(false)),
+        AcquisitionValueModel(2000),
+        AcquisitionCostsModel(200),
+        AcquisitionDateModel("Yes", Some(4), Some(10), Some(2013)),
+        Some(RebasedValueModel(Some(3000))),
+        Some(RebasedCostsModel("Yes", Some(300))),
+        ImprovementsModel("Yes", Some(10), Some(20)),
+        Some(OtherReliefsModel(1000)))
+
+      val resultsModel = TotalGainResultsModel(-1000, Some(2000), Some(3000))
+
+      lazy val view = summaryReport(answersModel, resultsModel, taxYear,
+        sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(view.body)
+
+      "have a heading" which {
+        lazy val heading = document.select("h1")
+
+        "has a class of 'heading-xlarge'" in {
+          heading.attr("class") shouldBe "heading-xlarge"
+        }
+
+        "has a span with the class 'pre-heading'" in {
+          heading.select("span").attr("class") shouldBe "pre-heading"
+        }
+
+        "has a span with the text 'You owe'" in {
+          heading.select("span").text shouldEqual nrMessages.Summary.secondaryHeading
+        }
+
+        "have a result amount currently set to £0.00" in {
+          heading.select("b").text shouldEqual "£0.00"
+        }
+      }
+
+      "have the HMRC logo with the HMRC name" in {
+        document.select("div.logo span").text shouldBe "HM Revenue & Customs"
+      }
+
+      "not have a notice summary" in {
+        document.select("div.notice-wrapper").isEmpty shouldBe true
+      }
+
+      "have a 'Calculation details' section that" in {
+        document.select("#calculationDetails span.heading-large").text should include(nrMessages.Summary.calculationDetailsTitle)
+      }
+
+      "have an 'Owning the property' section that" in {
+        document.select("#purchaseDetails span.heading-large").text should include(nrMessages.Summary.purchaseDetailsTitle)
+      }
+
+      "have a 'Property details' section that" in {
+        document.select("#propertyDetails span.heading-large").text should include(nrMessages.Summary.propertyDetailsTitle)
+      }
+
+      "have a 'Sale details' section that" in {
+        document.select("#salesDetails span.heading-large").text should include(nrMessages.Summary.salesDetailsTitle)
+      }
+
+      "have a 'Deductions details' section that" in {
+        document.select("#deductions span.heading-large").text should include(nrMessages.Summary.deductionsTitle)
+      }
+
+      "not have a 'Personal details' section that" in {
+        document.select("#personalDetails span.heading-large").text shouldBe ""
       }
     }
   }

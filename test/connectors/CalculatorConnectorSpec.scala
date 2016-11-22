@@ -200,9 +200,10 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
 
   }
 
-  def setupMockedConnector(totalGainAnswersModel: TotalGainAnswersModel): CalculatorConnector = {
+  def setupMockedConnector(totalGainAnswersModel: TotalGainAnswersModel, totalGainResultsModel: Option[TotalGainResultsModel] = None): CalculatorConnector = {
 
     val mockSessionCache = mock[SessionCache]
+    val mockHttpGet = mock[HttpGet]
 
     when(mockSessionCache.fetchAndGetEntry[DisposalDateModel](Matchers.eq(KeystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(totalGainAnswersModel.disposalDateModel)))
@@ -231,9 +232,12 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     when(mockSessionCache.fetchAndGetEntry[ImprovementsModel](Matchers.eq(KeystoreKeys.improvements))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(totalGainAnswersModel.improvementsModel)))
 
+    when(mockHttpGet.GET[Option[TotalGainResultsModel]](Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(totalGainResultsModel)
+
     new CalculatorConnector {
       override val sessionCache: SessionCache = mockSessionCache
-      override val http: HttpGet = WSHttp
+      override val http: HttpGet = mockHttpGet
       override val serviceUrl: String = ""
     }
   }
@@ -247,7 +251,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     None,
     AcquisitionDateModel("No", None, None, None),
     AcquisitionValueModel(100000),
-    Some(RebasedValueModel("No", None)),
+    Some(RebasedValueModel(None)),
     None,
     ImprovementsModel("No", None),
     DisposalDateModel(10, 10, 2010),
@@ -256,9 +260,9 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     DisposalCostsModel(0),
     AllowableLossesModel("No", None),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(Some("No"), None),
-    OtherReliefsModel(Some("No"), None),
-    OtherReliefsModel(Some("No"), None),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
     None
   )
 
@@ -271,7 +275,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     None,
     AcquisitionDateModel("Yes", Some(9), Some(9), Some(1999)),
     AcquisitionValueModel(100000),
-    Some(RebasedValueModel("No", None)),
+    Some(RebasedValueModel(None)),
     None,
     ImprovementsModel("No", None),
     DisposalDateModel(10, 10, 2010),
@@ -280,9 +284,9 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     DisposalCostsModel(0),
     AllowableLossesModel("No", None),
     CalculationElectionModel("time-apportioned-calculation"),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -295,7 +299,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     None,
     AcquisitionDateModel("Yes", Some(9), Some(9), Some(1999)),
     AcquisitionValueModel(100000),
-    Some(RebasedValueModel("Yes", Some(1000))),
+    Some(RebasedValueModel(Some(1000))),
     Some(RebasedCostsModel("No", None)),
     ImprovementsModel("No", None),
     DisposalDateModel(10, 10, 2010),
@@ -304,9 +308,9 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     DisposalCostsModel(0),
     AllowableLossesModel("No", None),
     CalculationElectionModel("rebased"),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -319,7 +323,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     None,
     AcquisitionDateModel("No", None, None, None),
     AcquisitionValueModel(100000),
-    Some(RebasedValueModel("No", None)),
+    Some(RebasedValueModel(None)),
     None,
     ImprovementsModel("No", None),
     DisposalDateModel(10, 10, 2010),
@@ -328,9 +332,9 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     DisposalCostsModel(0),
     AllowableLossesModel("No", None),
     CalculationElectionModel(""),
-    OtherReliefsModel(Some("No"), None),
-    OtherReliefsModel(Some("No"), None),
-    OtherReliefsModel(Some("No"), None),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
     None
   )
 
@@ -353,6 +357,33 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
 
       lazy val result = TargetCalculatorConnector.saveFormData(KeystoreKeys.customerType, testModel)
       await(result) shouldBe returnedCacheMap
+    }
+  }
+
+  "Calling calculateTotalGain" should {
+
+    val validResponse = TotalGainResultsModel(1000, None, None)
+    val model = TotalGainAnswersModel(DisposalDateModel(5, 10, 2016),
+      SoldOrGivenAwayModel(true),
+      Some(SoldForLessModel(false)),
+      DisposalValueModel(1000),
+      DisposalCostsModel(100),
+      HowBecameOwnerModel("Gifted"),
+      Some(BoughtForLessModel(false)),
+      AcquisitionValueModel(2000),
+      AcquisitionCostsModel(200),
+      AcquisitionDateModel("No", None, None, None),
+      Some(RebasedValueModel(None)),
+      Some(RebasedCostsModel("No", None)),
+      ImprovementsModel("Yes", Some(10), Some(20)),
+      None)
+    val target = setupMockedConnector(model, Some(validResponse))
+
+    "return a valid response" in {
+
+      val result = target.calculateTotalGain(model)
+
+      await(result) shouldBe Some(validResponse)
     }
   }
 
@@ -396,7 +427,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
   "Calling create summary" should {
 
     "produce a non-empty summary with calculation selection or reliefs provided" in {
-      mockFetchAndGetFormData(sumModelFlat, Some(CalculationElectionModel("flat")), Some(OtherReliefsModel(Some("No"), None)))
+      mockFetchAndGetFormData(sumModelFlat, Some(CalculationElectionModel("flat")), Some(OtherReliefsModel(0)))
       lazy val result = TargetCalculatorConnector.createSummary
       await(result) shouldBe sumModelFlat
     }

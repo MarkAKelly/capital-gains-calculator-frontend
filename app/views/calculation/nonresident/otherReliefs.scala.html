@@ -1,48 +1,55 @@
-@import models.nonresident._
-@import constructors.nonresident.SummaryConstructor
+@import models.nonresident.OtherReliefsModel
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 @import views.html.helpers._
 
-@(otherReliefsForm: Form[OtherReliefsModel], result: CalculationResultModel)(implicit request: Request[_])
+@(otherReliefsForm: Form[OtherReliefsModel], chargeableGain: BigDecimal, gain: BigDecimal)(implicit request: Request[_])
 
-@hiddenYesNoContent = {
-    <ul class="list">
-        <li id="totalGain">@SummaryConstructor.gainMessage(result)
-            <b> &pound;@{MoneyPounds(result.totalGain,0).quantity}</b>
-        </li>
+@helpContent = {
+    <div class="form-hint">
+        @Messages("calc.otherReliefs.help")
+        <br/>
+        @Messages("calc.otherReliefs.helpTwo")
+    </div>
 
-        <li id="taxableGain">@{if (result.taxableGain >= 0) Messages("calc.otherReliefs.taxableGain")
-            else Messages("calc.summary.calculation.details.lossCarriedForward")
+    <div class="panel-indent panel-indent--gutter panel-indent--wide">
+        <p class="form-hint">
+            @if(chargeableGain < 0) {
+                @Messages("calc.otherReliefs.gainInfo.part1.loss")
+            } else {
+                @Messages("calc.otherReliefs.gainInfo.part1")
             }
-            <b> &pound;@{MoneyPounds(result.taxableGain,0).quantity}</b>
-        </li>
-    </ul>
-
-    @formInputMoney(otherReliefsForm, "otherReliefs", Messages("calc.otherReliefs.question"))
+            <span class="bold-small">&pound;@MoneyPounds(chargeableGain, 0).quantity</span>
+            @if(gain < 0) {
+                @Messages("calc.otherReliefs.gainInfo.part2.loss")
+            } else {
+                @Messages("calc.otherReliefs.gainInfo.part2")
+            }
+            <span class="bold-small">&pound;@MoneyPounds(gain, 0).quantity</span>
+            @Messages("calc.otherReliefs.gainInfo.part3")
+        </p>
+    </div>
 }
 
-@main_template(Messages("calc.otherReliefs.questionTwo")) {
+@main_template(Messages("calc.otherReliefs.question")) {
 
-    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.AllowableLossesController.allowableLosses">@Messages("calc.base.back")</a>
+    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.ImprovementsController.improvements">@Messages("calc.base.back")</a>
 
     @errorSummary(otherReliefsForm, "other-reliefs", "otherReliefs")
 
-    <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
+    <h1 class="heading-xlarge">@Messages("calc.otherReliefs.question")</h1>
 
     <div class="form-group">
         @form(action = controllers.nonresident.routes.OtherReliefsController.submitOtherReliefs) {
 
-            @formHiddenYesNoRadio(
-                otherReliefsForm,
-                "isClaimingOtherReliefs",
-                Messages("calc.otherReliefs.questionTwo"),
-                hiddenYesNoContent,
-                Some(Messages("calc.otherReliefs.help"))
+            @formInputMoney(otherReliefsForm,
+                "otherReliefs",
+                Messages("calc.otherReliefs.question"),
+                hideLabel = true,
+                helpText = Some(helpContent.toString)
             )
 
-        <button class="button" class="button" id="continue-button">@Messages("calc.base.button.continue")</button>
-    }
-
+            <button class="button" class="button" id="continue-button">@Messages("calc.base.button.continue")</button>
+        }
     </div>
 }

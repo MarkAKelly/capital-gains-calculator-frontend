@@ -23,4 +23,3 @@ case class DisposalValueModel (disposalValue: BigDecimal)
 object DisposalValueModel {
   implicit val format = Json.format[DisposalValueModel]
 }
-

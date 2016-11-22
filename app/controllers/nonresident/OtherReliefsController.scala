@@ -16,73 +16,76 @@
 
 package controllers.nonresident
 
-import common.DefaultRoutes._
-import common.{Dates, KeystoreKeys, TaxDates}
+import common.KeystoreKeys
 import connectors.CalculatorConnector
+import constructors.nonresident.AnswersConstructor
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.OtherReliefsForm._
 import models.nonresident._
 import play.api.data.Form
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation
 
 import scala.concurrent.Future
 
 object OtherReliefsController extends OtherReliefsController {
   val calcConnector = CalculatorConnector
+  val answersConstructor = AnswersConstructor
 }
 
 trait OtherReliefsController extends FrontendController with ValidActiveSession {
 
   val calcConnector: CalculatorConnector
+  val answersConstructor: AnswersConstructor
+
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
 
   val otherReliefs = ValidateSession.async { implicit request =>
 
-    def action(dataResult: Option[CalculationResultModel]) = {
-      calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
-        case Some(data) => Ok(calculation.nonresident.otherReliefs(otherReliefsForm(false).fill(data), dataResult.get))
-        case _ => Ok(calculation.nonresident.otherReliefs(otherReliefsForm(false), dataResult.get))
+    def routeRequest(model: Option[OtherReliefsModel], totalGain: Option[TotalGainResultsModel]) = {
+      val gain = totalGain.fold(BigDecimal(0))(_.flatGain)
+      val chargeableGain = BigDecimal(0)
+
+      val result = model.fold(calculation.nonresident.otherReliefs(otherReliefsForm, chargeableGain, gain)) { data =>
+        calculation.nonresident.otherReliefs(otherReliefsForm.fill(data), chargeableGain, gain)
       }
+
+      Ok(result)
     }
 
     for {
-      construct <- calcConnector.createSummary(hc)
-      calculation <- calcConnector.calculateFlat(construct)
-      finalResult <- action(calculation)
-    } yield finalResult
+      answers <- answersConstructor.getNRTotalGainAnswers(hc)
+      gain <- calcConnector.calculateTotalGain(answers)
+      reliefs <- calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat)
+    } yield routeRequest(reliefs, gain)
+
   }
 
   val submitOtherReliefs = ValidateSession.async { implicit request =>
 
-    def errorAction(form: Form[OtherReliefsModel], construct: SummaryModel) = {
-      for {
-        calculation <- calcConnector.calculateFlat(construct)
-        route <- errorRoute(form, calculation)
-      } yield route
-    }
+    def errorAction(form: Form[OtherReliefsModel]) = {
 
-    def errorRoute(form: Form[OtherReliefsModel], dataResult: Option[CalculationResultModel]) = {
-      calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
-        case Some(data) if data.otherReliefs.isDefined => BadRequest(calculation.nonresident.otherReliefs(form, dataResult.get))
-        case _ => BadRequest(calculation.nonresident.otherReliefs(form, dataResult.get))
+      def routeRequest(totalGain: Option[TotalGainResultsModel]) = {
+        val gain = totalGain.fold(BigDecimal(0))(_.flatGain)
+        val chargeableGain = BigDecimal(0)
+
+        BadRequest(calculation.nonresident.otherReliefs(form, chargeableGain, gain))
       }
+
+      for {
+        answers <- answersConstructor.getNRTotalGainAnswers(hc)
+        gain <- calcConnector.calculateTotalGain(answers)
+      } yield routeRequest(gain)
     }
 
-    def successAction(model: OtherReliefsModel, construct: SummaryModel) = {
+    def successAction(model: OtherReliefsModel) = {
       calcConnector.saveFormData(KeystoreKeys.otherReliefsFlat, model)
-      Future.successful(Redirect(routes.SummaryController.summary()))
+      Future.successful(Redirect(routes.CheckYourAnswersController.checkYourAnswers()))
     }
 
-    def action(construct: SummaryModel) = otherReliefsForm(false).bindFromRequest.fold(
-      errors => errorAction(errors, construct),
-      success => successAction(success, construct))
-
-    for {
-      construct <- calcConnector.createSummary(hc)
-      finalResult <- action(construct)
-    } yield finalResult
+    otherReliefsForm.bindFromRequest.fold(
+      errors => errorAction(errors),
+      success => successAction(success))
   }
 }

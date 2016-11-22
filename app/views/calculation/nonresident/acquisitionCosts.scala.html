@@ -2,11 +2,11 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
 
-@(acquisitionCostsForm: Form[AcquisitionCostsModel])(implicit request: Request[_])
+@(acquisitionCostsForm: Form[AcquisitionCostsModel], backLink: String)(implicit request: Request[_])
 
 @main_template(Messages("calc.acquisitionCosts.question")) {
 
-    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.AcquisitionValueController.acquisitionValue">@Messages("calc.base.back")</a>
+    <a id="back-link" class="back-link" href="@backLink">@Messages("calc.base.back")</a>
 
     @errorSummary(acquisitionCostsForm, "acquisition-costs")
 

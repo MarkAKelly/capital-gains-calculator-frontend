@@ -16,8 +16,9 @@
 
 package controllers.nonresident
 
-import common.TaxDates
+import common.{KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
+import constructors.nonresident.AnswersConstructor
 import controllers.predicates.ValidActiveSession
 import models.nonresident._
 import play.api.mvc.{Action, AnyContent, Result}
@@ -29,6 +30,7 @@ import scala.concurrent.Future
 
 object SummaryController extends SummaryController {
   val calcConnector = CalculatorConnector
+  val answersConstructor = AnswersConstructor
 }
 
 trait SummaryController extends FrontendController with ValidActiveSession {
@@ -36,6 +38,7 @@ trait SummaryController extends FrontendController with ValidActiveSession {
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
   val calcConnector: CalculatorConnector
+  val answersConstructor: AnswersConstructor
 
   val summary = ValidateSession.async { implicit request =>
 
@@ -47,38 +50,25 @@ trait SummaryController extends FrontendController with ValidActiveSession {
       Future.successful(!TaxDates.dateInsideTaxYear(disposalDate.day, disposalDate.month, disposalDate.year))
     }
 
-    def reliefApplied(summaryModel: SummaryModel): Future[String] = {
-      Future.successful(summaryModel.reliefApplied())
+    def calculateDetails(summaryData: TotalGainAnswersModel): Future[Option[TotalGainResultsModel]] = {
+      calcConnector.calculateTotalGain(summaryData)
     }
 
-    def calculateDetails(summaryData: SummaryModel)(implicit headerCarrier: HeaderCarrier): Future[Option[CalculationResultModel]] = {
-      summaryData.calculationElectionModel.calculationType match {
-        case "flat" =>
-          calcConnector.calculateFlat(summaryData)(hc)
-        case "time" =>
-          calcConnector.calculateTA(summaryData)(hc)
-        case "rebased" =>
-          calcConnector.calculateRebased(summaryData)(hc)
-      }
-    }
-
-    def routeRequest(calculationResult: Option[CalculationResultModel],
+    def routeRequest(calculationResult: Option[TotalGainResultsModel],
                      backUrl: String, displayDateWarning: Boolean,
-                     calculationType: String, reliefApplied: String,
-                     customerType: String): Future[Result] = {
+                     calculationType: String): Future[Result] = {
       Future.successful(Ok(calculation.nonresident.summary(calculationResult.get, backUrl, displayDateWarning,
-        calculationType, reliefApplied, customerType)))
+        calculationType)))
     }
 
     for {
       backUrl <- summaryBackUrl
-      answers <- calcConnector.createSummary(hc)
+      answers <- answersConstructor.getNRTotalGainAnswers(hc)
       displayWarning <- displayDateWarning(answers.disposalDateModel)
-      calculationDetails <- calculateDetails(answers)(hc)
-      reliefApplied <- reliefApplied(answers)
+      calculationDetails <- calculateDetails(answers)
+      calculationType <- calcConnector.fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection)
       route <- routeRequest(calculationDetails, backUrl, displayWarning,
-        answers.calculationElectionModel.calculationType,
-        reliefApplied, answers.customerTypeModel.customerType)
+        calculationType.get.calculationType)
     } yield route
   }
 

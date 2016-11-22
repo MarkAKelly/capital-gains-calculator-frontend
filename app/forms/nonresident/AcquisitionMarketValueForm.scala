@@ -21,13 +21,13 @@ import common.Transformers._
 import common.Validation._
 import models.nonresident.AcquisitionValueModel
 import play.api.data.Forms._
-import play.api.data._
+import play.api.data.Form
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object AcquisitionMarketValueForm {
 
-  val acquisitionMarketValueForm = Form(
+  val acquisitionMarketValueForm: Form[AcquisitionValueModel] = Form(
     mapping(
       "acquisitionMarketValue" -> text
         .verifying(Messages("error.real"), mandatoryCheck)

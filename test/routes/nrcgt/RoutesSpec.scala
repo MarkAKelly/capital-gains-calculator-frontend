@@ -99,14 +99,14 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
   /* Market Value When Sold routes */
   "The URL for the marketValueWhenSold Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/market-value-when-sold" in {
-      val path = controllers.nonresident.routes.MarketValueWhenSoldController.marketValueWhenSold().url
+      val path = controllers.nonresident.routes.MarketValueWhenSoldOrGaveAwayController.marketValueWhenSold().url
       path shouldEqual "/calculate-your-capital-gains/non-resident/market-value-when-sold"
     }
   }
 
   "The URL for the submitMarketValueWhenSold Action" should {
     "be equal to /calculate-your-capital-gains/non-resident/market-value-when-sold" in {
-      val path = controllers.nonresident.routes.MarketValueWhenSoldController.submitMarketValueWhenSold().url
+      val path = controllers.nonresident.routes.MarketValueWhenSoldOrGaveAwayController.submitMarketValueWhenSold().url
       path shouldEqual "/calculate-your-capital-gains/non-resident/market-value-when-sold"
     }
   }
@@ -168,21 +168,6 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     "be equal to /calculate-your-capital-gains/non-resident/worth-before-legislation-start" in {
       val path = controllers.nonresident.routes.WorthBeforeLegislationStartController.submitWorthBeforeLegislationStart().url
       path shouldEqual "/calculate-your-capital-gains/non-resident/worth-before-legislation-start"
-    }
-  }
-
-  /* Worth On Legislation routes */
-  "The URL for the worthOnLegislationStart Action" should {
-    "be equal to /calculate-your-capital-gains/non-resident/worth-on-legislation-start" in {
-      val path = controllers.nonresident.routes.WorthOnLegislationStartController.worthOnLegislationStart().url
-      path shouldEqual "/calculate-your-capital-gains/non-resident/worth-on-legislation-start"
-    }
-  }
-
-  "The URL for the submitWorthOnLegislationStart Action" should {
-    "be equal to /calculate-your-capital-gains/non-resident/worth-on-legislation-start" in {
-      val path = controllers.nonresident.routes.WorthOnLegislationStartController.submitWorthOnLegislationStart().url
-      path shouldEqual "/calculate-your-capital-gains/non-resident/worth-on-legislation-start"
     }
   }
 
