@@ -49,7 +49,7 @@ object KeystoreKeys {
   val howBecameOwner = "nr:howBecameOwner"
   val soldOrGivenAway = "nr:soldOrGivenAway"
   val boughtForLess = "nr:boughtForLess"
-  val marketValueDisposal = "nr:marketValueDisposal"
+  val disposalMarketValue = "nr:disposalMarketValue"
   val acquisitionMarketValue = "nr:acquisitionMarketValue"
 
   object ResidentPropertyKeys {

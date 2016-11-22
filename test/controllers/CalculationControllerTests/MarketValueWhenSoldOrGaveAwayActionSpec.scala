@@ -31,9 +31,6 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
-/**
-  * Created by emma on 21/11/16.
-  */
 class MarketValueWhenSoldOrGaveAwayActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper{
 
   implicit val hc = new HeaderCarrier()

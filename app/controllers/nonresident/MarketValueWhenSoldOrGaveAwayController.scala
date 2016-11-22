@@ -39,14 +39,14 @@ trait MarketValueWhenSoldOrGaveAwayController extends FrontendController with Va
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
 
   val marketValueWhenSold = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.marketValueDisposal).map {
+    calcConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.disposalMarketValue).map {
       case Some(data) => Ok(calculation.nonresident.marketValueSold(marketValueWhenSoldForm.fill(data)))
       case None => Ok(calculation.nonresident.marketValueSold(marketValueWhenSoldForm))
     }
   }
 
   val marketValueWhenGaveAway = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.marketValueDisposal).map {
+    calcConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.disposalMarketValue).map {
       case Some(data) => Ok(calculation.nonresident.marketValueGaveAway(marketValueWhenGaveAwayForm.fill(data)))
       case None => Ok(calculation.nonresident.marketValueGaveAway(marketValueWhenGaveAwayForm))
     }
@@ -57,7 +57,7 @@ trait MarketValueWhenSoldOrGaveAwayController extends FrontendController with Va
     def errorAction(form: Form[DisposalValueModel]) = Future.successful(BadRequest(calculation.nonresident.disposalValue(form)))
 
     def successAction(model: DisposalValueModel) = {
-      calcConnector.saveFormData(KeystoreKeys.marketValueDisposal, model)
+      calcConnector.saveFormData(KeystoreKeys.disposalMarketValue, model)
       Future.successful(Redirect(routes.AcquisitionCostsController.acquisitionCosts()))
     }
 
@@ -69,7 +69,7 @@ trait MarketValueWhenSoldOrGaveAwayController extends FrontendController with Va
     def errorAction(form: Form[DisposalValueModel]) = Future.successful(BadRequest(calculation.nonresident.disposalValue(form)))
 
     def successAction(model: DisposalValueModel) = {
-      calcConnector.saveFormData(KeystoreKeys.marketValueDisposal, model)
+      calcConnector.saveFormData(KeystoreKeys.disposalMarketValue, model)
       Future.successful(Redirect(routes.AcquisitionCostsController.acquisitionCosts()))
     }
 

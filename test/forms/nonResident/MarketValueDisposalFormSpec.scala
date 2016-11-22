@@ -24,9 +24,7 @@ import forms.nonresident.MarketValueWhenSoldForm._
 import forms.resident.DisposalValueForm._
 import models.nonresident.DisposalValueModel
 import assets.MessageLookup.NonResident.{MarketValue => marketValueMessages}
-/**
-  * Created by emma on 21/11/16.
-  */
+
 class MarketValueDisposalFormSpec extends UnitSpec with WithFakeApplication {
 
   "Creating a form using an empty model" should {

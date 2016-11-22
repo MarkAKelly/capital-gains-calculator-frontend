@@ -18,9 +18,6 @@ package forms.nonresident
 
 import play.api.i18n.Messages
 
-/**
-  * Created by emma on 17/11/16.
-  */
 object MarketValueWhenSoldForm extends MarketDisposalValueForm {
   override val errorNegative = Messages("calc.marketValue.error.sold.negative")
   override val errorDecimalPlaces = Messages("calc.marketValue.error.sold.decimalPlaces")
