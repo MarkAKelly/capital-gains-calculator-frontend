@@ -16,12 +16,21 @@
 
 package controllers.nonresident
 
+import common.KeystoreKeys
+import common.nonresident.CalculationType
 import connectors.CalculatorConnector
-import controllers.predicates.ValidActiveSession
+import constructors.nonresident.{AnswersConstructor, CalculationElectionConstructor, YourAnswersConstructor}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+import controllers.predicates.ValidActiveSession
+import models.nonresident.CalculationElectionModel
+import views.html.calculation
+
+import scala.concurrent.Future
 
 object CheckYourAnswersController extends CheckYourAnswersController {
-  val calcConnector = CalculatorConnector
+  val calcElectionConstructor = CalculationElectionConstructor
+  val answersConstructor = AnswersConstructor
+  val calculatorConnector = CalculatorConnector
 }
 
 trait CheckYourAnswersController extends FrontendController with ValidActiveSession {
@@ -29,7 +38,23 @@ trait CheckYourAnswersController extends FrontendController with ValidActiveSess
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
 
-  val checkYourAnswers = TODO
+  val answersConstructor: AnswersConstructor
+  val calculatorConnector: CalculatorConnector
+  val backLink = controllers.nonresident.routes.ImprovementsController.improvements().url
 
-  val submitCheckYourAnswers = TODO
+
+  val checkYourAnswers = ValidateSession.async { implicit request =>
+
+    for {
+      model <- answersConstructor.getNRTotalGainAnswers
+      answers <- Future.successful(YourAnswersConstructor.fetchYourAnswers(model))
+    } yield {
+      Ok(calculation.nonresident.checkYourAnswers(answers, backLink))
+    }
+  }
+
+  val submitCheckYourAnswers = ValidateSession.async { implicit request =>
+    calculatorConnector.saveFormData[CalculationElectionModel](KeystoreKeys.calculationElection, CalculationElectionModel(CalculationType.flat))
+    Future.successful(Redirect(routes.SummaryController.summary()))
+  }
 }

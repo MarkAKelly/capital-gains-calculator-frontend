@@ -30,7 +30,7 @@ class OtherReliefsTAViewSpec extends UnitSpec with WithFakeApplication with Mock
   "The Other Reliefs TA view" when {
     "not supplied with a pre-existing stored value and a taxable gain" should {
       val model = CalculationResultModel(100, 1000, 100, 18, 0, None, None, None)
-      lazy val view = otherReliefsTA(otherReliefsForm(false), model, hasExistingReliefAmount = false)(fakeRequest)
+      lazy val view = otherReliefsTA(otherReliefsForm, model, hasExistingReliefAmount = false)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have a back link" which {
@@ -79,7 +79,7 @@ class OtherReliefsTAViewSpec extends UnitSpec with WithFakeApplication with Mock
       }
 
       s"have the question '${messages.OtherReliefs.question}'" in {
-        document.body.select("label").first().text shouldBe messages.OtherReliefs.inputQuestion
+        document.body.select("label").first().text shouldBe messages.OtherReliefs.question
       }
 
       s"have the help text '${messages.OtherReliefs.help}'" in {
@@ -126,7 +126,7 @@ class OtherReliefsTAViewSpec extends UnitSpec with WithFakeApplication with Mock
     "supplied with a pre-existing stored value and a negative taxable gain" should {
       val model = CalculationResultModel(100, 1000, -100, 18, 0, None, None, None)
       val map = Map("otherReliefs" -> "1000")
-      lazy val view = otherReliefsTA(otherReliefsForm(false).bind(map), model, hasExistingReliefAmount = true)(fakeRequest)
+      lazy val view = otherReliefsTA(otherReliefsForm.bind(map), model, hasExistingReliefAmount = true)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "has a list entry with the loss carried forward message and value" in {
@@ -153,7 +153,7 @@ class OtherReliefsTAViewSpec extends UnitSpec with WithFakeApplication with Mock
     "supplied with an invalid map" should {
       val model = CalculationResultModel(100, 1000, -100, 18, 0, None, None, None)
       val map = Map("otherReliefs" -> "-1000")
-      lazy val view = otherReliefsTA(otherReliefsForm(false).bind(map), model, hasExistingReliefAmount = true)(fakeRequest)
+      lazy val view = otherReliefsTA(otherReliefsForm.bind(map), model, hasExistingReliefAmount = true)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have an error summary" in {

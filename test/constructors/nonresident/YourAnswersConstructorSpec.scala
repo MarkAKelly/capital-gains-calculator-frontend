@@ -37,7 +37,7 @@ class YourAnswersConstructorSpec extends UnitSpec {
         Some(RebasedValueModel(Some(3000))),
         Some(RebasedCostsModel("Yes", Some(300))),
         ImprovementsModel("Yes", Some(10), Some(20)),
-        Some(OtherReliefsModel(Some("Yes"), Some(30))))
+        Some(OtherReliefsModel(30)))
       lazy val result = YourAnswersConstructor.fetchYourAnswers(model)
 
       "contain the answers from sale details" in {

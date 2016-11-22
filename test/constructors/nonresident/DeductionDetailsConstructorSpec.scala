@@ -54,7 +54,7 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
     None,
     None,
     ImprovementsModel("No", None, None),
-    Some(OtherReliefsModel(Some("No"), None))
+    Some(OtherReliefsModel(0))
   )
 
   val yesOtherReliefs = TotalGainAnswersModel(
@@ -71,7 +71,7 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
     None,
     None,
     ImprovementsModel("No", None, None),
-    Some(OtherReliefsModel(Some("Yes"), Some(1450)))
+    Some(OtherReliefsModel(1450))
   )
 
   private def assertExpectedResult[T](option: Option[T])(test: T => Unit) = assertOption("expected option is None")(option)(test)
@@ -81,64 +81,12 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
     "provided with reliefs" should {
       lazy val result = DeductionDetailsConstructor.deductionDetailsRows(yesOtherReliefs)
 
-      "have a sequence of size 2" in {
-        result.size shouldBe 2
-      }
-
-      "return a sequence with an other reliefs flat question" in {
-        result.contains(DeductionDetailsConstructor.otherReliefsFlatQuestionRow(yesOtherReliefs).get)
+      "have a sequence of size 1" in {
+        result.size shouldBe 1
       }
 
       "return a sequence with an other reliefs flat value" in {
-        result.contains(DeductionDetailsConstructor.otherReliefsFlatQuestionRow(yesOtherReliefs).get)
-      }
-    }
-  }
-
-  "Calling .otherReliefsFlatQuestionRow" when {
-
-    "no other reliefs data is found" should {
-      lazy val result = DeductionDetailsConstructor.otherReliefsFlatQuestionRow(noneOtherReliefs)
-
-      "return a None" in {
-        result shouldBe None
-      }
-    }
-
-    "an answer of 'No' to other reliefs is found" should {
-      lazy val result = DeductionDetailsConstructor.otherReliefsFlatQuestionRow(noOtherReliefs)
-
-      "return some value" in {
-        result.isDefined shouldBe true
-      }
-
-      "return an id of nr:otherReliefsFlat-question" in {
-        assertExpectedResult[QuestionAnswerModel[String]](result)(_.id shouldBe "nr:otherReliefsFlat-question")
-      }
-
-      "return a data value of No" in {
-        assertExpectedResult[QuestionAnswerModel[String]](result)(_.data shouldBe "No")
-      }
-
-      "return a question for Other Reliefs" in {
-        assertExpectedResult[QuestionAnswerModel[String]](result)(_.question shouldBe messages.OtherReliefs.question)
-      }
-
-      "return a link for the Other Reliefs page" in {
-        assertExpectedResult[QuestionAnswerModel[String]](result)(_.link shouldBe
-          Some(controllers.nonresident.routes.OtherReliefsController.otherReliefs().url))
-      }
-    }
-
-    "an answer of 'Yes' to other reliefs is found" should {
-      lazy val result = DeductionDetailsConstructor.otherReliefsFlatQuestionRow(yesOtherReliefs)
-
-      "return some value" in {
-        result.isDefined shouldBe true
-      }
-
-      "return a data value of Yes" in {
-        assertExpectedResult[QuestionAnswerModel[String]](result)(_.data shouldBe "Yes")
+        result.contains(DeductionDetailsConstructor.otherReliefsFlatValueRow(yesOtherReliefs).get)
       }
     }
   }
@@ -147,14 +95,6 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
 
     "no other reliefs data is found" should {
       lazy val result = DeductionDetailsConstructor.otherReliefsFlatValueRow(noneOtherReliefs)
-
-      "return a None" in {
-        result shouldBe None
-      }
-    }
-
-    "an answer of No to other reliefs is found" should {
-      lazy val result = DeductionDetailsConstructor.otherReliefsFlatValueRow(noOtherReliefs)
 
       "return a None" in {
         result shouldBe None
@@ -177,7 +117,7 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
       }
 
       "return a question for Other Reliefs Value" in {
-        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.question shouldBe messages.OtherReliefs.inputQuestion)
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.question shouldBe messages.OtherReliefs.question)
       }
 
       "return a link to the Other Reliefs page" in {

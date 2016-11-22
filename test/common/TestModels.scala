@@ -40,9 +40,9 @@ object TestModels {
     DisposalCostsModel(15000),
     AllowableLossesModel("No", None),
     CalculationElectionModel("rebased"),
-    OtherReliefsModel(Some("No"), None),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
     Some(PrivateResidenceReliefModel("Yes", Some(2847), Some(0)))
   )
 
@@ -60,7 +60,7 @@ object TestModels {
     None,
     None,
     ImprovementsModel("No", None),
-    Some(OtherReliefsModel(Some("No"), None))
+    Some(OtherReliefsModel(0))
   )
 
   val sumModelFlat = SummaryModel(
@@ -81,9 +81,9 @@ object TestModels {
     DisposalCostsModel(0),
     AllowableLossesModel("No", None),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(Some("No"), None),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
     None
   )
 
@@ -105,9 +105,9 @@ object TestModels {
     DisposalCostsModel(850),
     AllowableLossesModel("No", None),
     CalculationElectionModel("time"),
-    OtherReliefsModel(None, Some(2000)),
-    OtherReliefsModel(None, Some(1000)),
-    OtherReliefsModel(None, Some(500)),
+    OtherReliefsModel(2000),
+    OtherReliefsModel(1000),
+    OtherReliefsModel(500),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -129,9 +129,9 @@ object TestModels {
     DisposalCostsModel(850),
     AllowableLossesModel("No", None),
     CalculationElectionModel("rebased"),
-    OtherReliefsModel(None, Some(2000)),
-    OtherReliefsModel(None, Some(1000)),
-    OtherReliefsModel(None, Some(500)),
+    OtherReliefsModel(2000),
+    OtherReliefsModel(1000),
+    OtherReliefsModel(500),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -164,9 +164,9 @@ object TestModels {
     DisposalCostsModel(0),
     AllowableLossesModel("No", None),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
     None
   )
 
@@ -188,9 +188,9 @@ object TestModels {
     DisposalCostsModel(0),
     AllowableLossesModel("No", None),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
     None
   )
 
@@ -212,9 +212,9 @@ object TestModels {
     DisposalCostsModel(0),
     AllowableLossesModel("Yes", Some(0)),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(Some("No"), Some(0)),
-    OtherReliefsModel(None, Some(0)),
-    OtherReliefsModel(None, Some(0)),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
     None
   )
 
@@ -236,9 +236,9 @@ object TestModels {
     DisposalCostsModel(600),
     AllowableLossesModel("Yes", Some(50000)),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(Some("Yes"), Some(999)),
-    OtherReliefsModel(None, Some(888)),
-    OtherReliefsModel(None, Some(777)),
+    OtherReliefsModel(999),
+    OtherReliefsModel(888),
+    OtherReliefsModel(777),
     None
   )
 
@@ -260,9 +260,9 @@ object TestModels {
     DisposalCostsModel(0),
     AllowableLossesModel("No", None),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(Some("No"), None),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
     None
   )
 
@@ -284,9 +284,9 @@ object TestModels {
     DisposalCostsModel(0),
     AllowableLossesModel("No", None),
     CalculationElectionModel("time"),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -308,9 +308,9 @@ object TestModels {
     DisposalCostsModel(0),
     AllowableLossesModel("Yes", Some(50000)),
     CalculationElectionModel("time"),
-    OtherReliefsModel(None, Some(999)),
-    OtherReliefsModel(None, Some(888)),
-    OtherReliefsModel(None, Some(777)),
+    OtherReliefsModel(999),
+    OtherReliefsModel(888),
+    OtherReliefsModel(777),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -332,9 +332,9 @@ object TestModels {
     DisposalCostsModel(0),
     AllowableLossesModel("No", None),
     CalculationElectionModel("time"),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -356,9 +356,9 @@ object TestModels {
     DisposalCostsModel(0),
     AllowableLossesModel("Yes", Some(50000)),
     CalculationElectionModel("time"),
-    OtherReliefsModel(None, Some(999)),
-    OtherReliefsModel(None, Some(888)),
-    OtherReliefsModel(None, Some(777)),
+    OtherReliefsModel(999),
+    OtherReliefsModel(888),
+    OtherReliefsModel(777),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -380,9 +380,9 @@ object TestModels {
     DisposalCostsModel(0),
     AllowableLossesModel("Yes", Some(50000)),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(Some("Yes"), Some(999)),
-    OtherReliefsModel(None, Some(888)),
-    OtherReliefsModel(None, Some(777)),
+    OtherReliefsModel(999),
+    OtherReliefsModel(888),
+    OtherReliefsModel(777),
     None
   )
 
@@ -404,9 +404,9 @@ object TestModels {
     DisposalCostsModel(0),
     AllowableLossesModel("No", None),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(Some("No"), None),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
     None
   )
 
@@ -428,9 +428,9 @@ object TestModels {
     DisposalCostsModel(600),
     AllowableLossesModel("Yes", Some(50000)),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(Some("Yes"), Some(999)),
-    OtherReliefsModel(None, Some(888)),
-    OtherReliefsModel(None, Some(777)),
+    OtherReliefsModel(999),
+    OtherReliefsModel(888),
+    OtherReliefsModel(777),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -452,9 +452,9 @@ object TestModels {
     DisposalCostsModel(600),
     AllowableLossesModel("Yes", Some(50000)),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(None, Some(999)),
-    OtherReliefsModel(None, Some(888)),
-    OtherReliefsModel(None, Some(777)),
+    OtherReliefsModel(999),
+    OtherReliefsModel(888),
+    OtherReliefsModel(777),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -476,9 +476,9 @@ object TestModels {
     DisposalCostsModel(600),
     AllowableLossesModel("Yes", Some(50000)),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(None, Some(999)),
-    OtherReliefsModel(None, Some(888)),
-    OtherReliefsModel(None, Some(777)),
+    OtherReliefsModel(999),
+    OtherReliefsModel(888),
+    OtherReliefsModel(777),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -500,9 +500,9 @@ object TestModels {
     DisposalCostsModel(600),
     AllowableLossesModel("Yes", Some(50000)),
     CalculationElectionModel("rebased"),
-    OtherReliefsModel(None, Some(999)),
-    OtherReliefsModel(None, Some(888)),
-    OtherReliefsModel(None, Some(777)),
+    OtherReliefsModel(999),
+    OtherReliefsModel(888),
+    OtherReliefsModel(777),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -524,9 +524,9 @@ object TestModels {
     DisposalCostsModel(600),
     AllowableLossesModel("No", None),
     CalculationElectionModel("rebased"),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -548,9 +548,9 @@ object TestModels {
     DisposalCostsModel(600),
     AllowableLossesModel("Yes", Some(50000)),
     CalculationElectionModel("rebased"),
-    OtherReliefsModel(None, Some(999)),
-    OtherReliefsModel(None, Some(888)),
-    OtherReliefsModel(None, Some(777)),
+    OtherReliefsModel(999),
+    OtherReliefsModel(888),
+    OtherReliefsModel(777),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -572,9 +572,9 @@ object TestModels {
     DisposalCostsModel(600),
     AllowableLossesModel("No", None),
     CalculationElectionModel("rebased"),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -596,9 +596,9 @@ object TestModels {
     DisposalCostsModel(600),
     AllowableLossesModel("Yes", Some(50000)),
     CalculationElectionModel("rebased"),
-    OtherReliefsModel(None, Some(999)),
-    OtherReliefsModel(None, Some(888)),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(999),
+    OtherReliefsModel(888),
+    OtherReliefsModel(0),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -620,9 +620,9 @@ object TestModels {
     DisposalCostsModel(600),
     AllowableLossesModel("Yes", Some(50000)),
     CalculationElectionModel("rebased"),
-    OtherReliefsModel(None, Some(999)),
-    OtherReliefsModel(None, Some(888)),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(999),
+    OtherReliefsModel(888),
+    OtherReliefsModel(0),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -644,9 +644,9 @@ object TestModels {
     DisposalCostsModel(600),
     AllowableLossesModel("Yes", Some(50000)),
     CalculationElectionModel("rebased"),
-    OtherReliefsModel(None, Some(999)),
-    OtherReliefsModel(None, Some(888)),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(999),
+    OtherReliefsModel(888),
+    OtherReliefsModel(0),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -668,9 +668,9 @@ object TestModels {
     DisposalCostsModel(600),
     AllowableLossesModel("Yes", Some(50000)),
     CalculationElectionModel("rebased"),
-    OtherReliefsModel(None, Some(999)),
-    OtherReliefsModel(None, Some(888)),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(999),
+    OtherReliefsModel(888),
+    OtherReliefsModel(0),
     Some(PrivateResidenceReliefModel("Yes", Some(100), Some(50)))
   )
 
@@ -692,9 +692,9 @@ object TestModels {
     DisposalCostsModel(600),
     AllowableLossesModel("Yes", Some(50000)),
     CalculationElectionModel("rebased"),
-    OtherReliefsModel(None, Some(999)),
-    OtherReliefsModel(None, Some(888)),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(999),
+    OtherReliefsModel(888),
+    OtherReliefsModel(0),
     Some(PrivateResidenceReliefModel("Yes", Some(100), Some(50)))
   )
 
@@ -716,9 +716,9 @@ object TestModels {
     DisposalCostsModel(600),
     AllowableLossesModel("Yes", Some(50000)),
     CalculationElectionModel("rebased"),
-    OtherReliefsModel(None, Some(999)),
-    OtherReliefsModel(None, Some(888)),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(999),
+    OtherReliefsModel(888),
+    OtherReliefsModel(0),
     Some(PrivateResidenceReliefModel("Yes", Some(100), Some(50)))
   )
 
@@ -740,9 +740,9 @@ object TestModels {
     DisposalCostsModel(600),
     AllowableLossesModel("Yes", Some(50000)),
     CalculationElectionModel("rebased"),
-    OtherReliefsModel(None, Some(999)),
-    OtherReliefsModel(None, Some(888)),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(999),
+    OtherReliefsModel(888),
+    OtherReliefsModel(0),
     Some(PrivateResidenceReliefModel("Yes", Some(100), Some(50)))
   )
 
@@ -764,9 +764,9 @@ object TestModels {
     DisposalCostsModel(600),
     AllowableLossesModel("Yes", Some(50000)),
     CalculationElectionModel("rebased"),
-    OtherReliefsModel(None, Some(999)),
-    OtherReliefsModel(None, Some(888)),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(999),
+    OtherReliefsModel(888),
+    OtherReliefsModel(0),
     Some(PrivateResidenceReliefModel("Yes", Some(100), Some(50)))
   )
 
@@ -788,9 +788,9 @@ object TestModels {
     DisposalCostsModel(600),
     AllowableLossesModel("Yes", Some(50000)),
     CalculationElectionModel("rebased"),
-    OtherReliefsModel(None, Some(999)),
-    OtherReliefsModel(None, Some(888)),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(999),
+    OtherReliefsModel(888),
+    OtherReliefsModel(0),
     Some(PrivateResidenceReliefModel("Yes", Some(100), Some(50)))
   )
 
@@ -812,9 +812,9 @@ object TestModels {
     DisposalCostsModel(600),
     AllowableLossesModel("Yes", Some(50000)),
     CalculationElectionModel("rebased"),
-    OtherReliefsModel(None, Some(999)),
-    OtherReliefsModel(None, Some(888)),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(999),
+    OtherReliefsModel(888),
+    OtherReliefsModel(0),
     Some(PrivateResidenceReliefModel("Yes", Some(100), Some(50)))
   )
 
@@ -836,9 +836,9 @@ object TestModels {
     DisposalCostsModel(600),
     AllowableLossesModel("Yes", Some(50000)),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(None, Some(999)),
-    OtherReliefsModel(None, Some(888)),
-    OtherReliefsModel(None, Some(777)),
+    OtherReliefsModel(999),
+    OtherReliefsModel(888),
+    OtherReliefsModel(777),
     Some(PrivateResidenceReliefModel("Yes", Some(100), Some(50)))
   )
 
@@ -860,9 +860,9 @@ object TestModels {
     DisposalCostsModel(0),
     AllowableLossesModel("No", None),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, None),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
+    OtherReliefsModel(0),
     Some(PrivateResidenceReliefModel("No", None, None))
   )
 
@@ -884,9 +884,9 @@ object TestModels {
     DisposalCostsModel(600),
     AllowableLossesModel("Yes", Some(50000)),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(Some("Yes"), None),
-    OtherReliefsModel(None, Some(888)),
-    OtherReliefsModel(None, Some(777)),
+    OtherReliefsModel(0),
+    OtherReliefsModel(888),
+    OtherReliefsModel(777),
     None
   )
 
@@ -908,9 +908,9 @@ object TestModels {
     DisposalCostsModel(600),
     AllowableLossesModel("Yes", Some(50000)),
     CalculationElectionModel("flat"),
-    OtherReliefsModel(None, None),
-    OtherReliefsModel(None, Some(888)),
-    OtherReliefsModel(None, Some(777)),
+    OtherReliefsModel(0),
+    OtherReliefsModel(888),
+    OtherReliefsModel(777),
     None
   )
 

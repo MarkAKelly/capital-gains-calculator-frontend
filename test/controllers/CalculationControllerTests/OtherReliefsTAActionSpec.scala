@@ -91,12 +91,12 @@ class OtherReliefsTAActionSpec extends UnitSpec with WithFakeApplication with Mo
       }
 
       "load the otherReliefs TA page" in {
-        document.title() shouldBe messages.inputQuestion
+        document.title() shouldBe messages.question
       }
     }
 
     "supplied with a pre-existing stored model" should {
-      val testOtherReliefsModel = OtherReliefsModel(None, Some(5000))
+      val testOtherReliefsModel = OtherReliefsModel(5000)
       val target = setupTarget(
         Some(testOtherReliefsModel),
         TestModels.sumModelTA,
@@ -112,7 +112,7 @@ class OtherReliefsTAActionSpec extends UnitSpec with WithFakeApplication with Mo
       }
 
       "load the otherReliefs TA page" in {
-        document.title() shouldBe messages.inputQuestion
+        document.title() shouldBe messages.question
       }
     }
 
@@ -175,7 +175,7 @@ class OtherReliefsTAActionSpec extends UnitSpec with WithFakeApplication with Mo
       }
 
       "return to the other reliefs TA page" in {
-        document.title() shouldBe messages.inputQuestion
+        document.title() shouldBe messages.question
       }
     }
   }

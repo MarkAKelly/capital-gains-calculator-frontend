@@ -200,8 +200,8 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication with
         result.isDefined shouldBe true
       }
 
-      "have an id of nr:soldOrGivenAway" in {
-        assertExpectedResult[QuestionAnswerModel[Boolean]](result)(_.id shouldBe "nr:soldOrGivenAway")
+      "have an id of nr:soldForLess" in {
+        assertExpectedResult[QuestionAnswerModel[Boolean]](result)(_.id shouldBe "nr:soldForLess")
       }
 
       "have the data for the value 'false'" in {
