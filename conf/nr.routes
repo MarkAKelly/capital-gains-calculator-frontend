@@ -22,8 +22,13 @@ GET         /check-your-answers                 controllers.nonresident.CheckYou
 POST        /check-your-answers                 controllers.nonresident.CheckYourAnswersController.submitCheckYourAnswers
 
 #Market Value When Sold
-GET         /market-value-when-sold              controllers.nonresident.MarketValueWhenSoldController.marketValueWhenSold
-POST        /market-value-when-sold              controllers.nonresident.MarketValueWhenSoldController.submitMarketValueWhenSold
+GET         /market-value-when-sold              controllers.nonresident.MarketValueWhenSoldOrGaveAwayController.marketValueWhenSold
+POST        /market-value-when-sold              controllers.nonresident.MarketValueWhenSoldOrGaveAwayController.submitMarketValueWhenSold
+
+#Market Value When Gave Away
+
+GET         /market-value-when-gave-away        controllers.nonresident.MarketValueWhenSoldOrGaveAwayController.marketValueWhenGaveAway
+POST        /market-value-when-gave-away        controllers.nonresident.MarketValueWhenSoldOrGaveAwayController.submitMarketValueWhenGaveAway
 
 #Worth When Bought for Less
 GET         /worth-when-bought-for-less          controllers.nonresident.WorthWhenBoughtForLessController.worthWhenBoughtForLess

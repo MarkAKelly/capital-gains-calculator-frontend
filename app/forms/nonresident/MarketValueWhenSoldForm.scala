@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package models.nonresident
+package forms.nonresident
 
-import play.api.libs.json.Json
+import play.api.i18n.Messages
 
-case class DisposalValueModel (disposalValue: BigDecimal)
+object MarketValueWhenSoldForm extends MarketDisposalValueForm {
+  override val errorNegative = Messages("calc.marketValue.error.sold.negative")
+  override val errorDecimalPlaces = Messages("calc.marketValue.error.sold.decimalPlaces")
 
-object DisposalValueModel {
-  implicit val format = Json.format[DisposalValueModel]
+  val marketValueWhenSoldForm = marketValueForm
 }

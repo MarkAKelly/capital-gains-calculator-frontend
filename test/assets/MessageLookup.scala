@@ -267,6 +267,23 @@ object MessageLookup {
       def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
+    object MarketValue {
+      val disposalGaveAwayQuestion = "What was the property worth when you gave it away?"
+      val disposalSoldQuestion = "What was the market value of the property when you sold it?"
+
+      val disposalHelpText = "You can use a valuation from a surveyor. " +
+        "If you don't know the exact value, you must provide a realistic estimate."
+      val disposalHelpTextAdditional = "You might have to pay more if we think your estimate is unrealistic."
+
+      val disposalErrorDecimalPlacesGaveAway = "There are too many numbers after the decimal point in your market value" +
+        " at the point of giving away"
+      val disposalErrorDecimalPlacesSold = "There are too many numbers after the decimal point in your market value" +
+        " at the point of being sold"
+
+      val errorNegativeGaveAway = "Enter a positive number for the market value at the point of being given away"
+      val errorNegativeSold = "Enter a positive number for the market value at the point of being sold"
+    }
+
     object PersonalAllowance {
       val question = "In the tax year when you stopped owning the property, what was your UK Personal Allowance?"
       val linkOne = "Income Tax rates and Personal Allowances"
