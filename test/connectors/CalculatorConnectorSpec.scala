@@ -20,7 +20,6 @@ import java.util.UUID
 
 import common.KeystoreKeys
 import common.nonresident.CustomerTypeKeys
-import config.WSHttp
 import models.nonresident._
 import models.resident
 import models.resident.IncomeAnswersModel

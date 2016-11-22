@@ -19,7 +19,6 @@ package constructors.nonresident
 import common.{KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
 import models.nonresident._
-import models.resident.properties.gain.WorthWhenGiftedModel
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global

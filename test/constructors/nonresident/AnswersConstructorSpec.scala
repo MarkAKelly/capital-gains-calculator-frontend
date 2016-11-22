@@ -19,7 +19,6 @@ package constructors.nonresident
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import models.nonresident._
-import models.resident.properties.gain.WorthWhenGiftedModel
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -138,7 +137,7 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
     Some(RebasedValueModel(Some(7500))),
     Some(RebasedCostsModel("Yes", Some(150))),
     ImprovementsModel("Yes", Some(50), Some(25)),
-    Some(OtherReliefsModel(Some("Yes"), Some(1000)))
+    Some(OtherReliefsModel(1000))
   )
 
   val totalGainBoughtForLess = TotalGainAnswersModel(
@@ -155,7 +154,7 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
     Some(RebasedValueModel(Some(7500))),
     Some(RebasedCostsModel("Yes", Some(150))),
     ImprovementsModel("Yes", Some(50), Some(25)),
-    Some(OtherReliefsModel(Some("Yes"), Some(1000)))
+    Some(OtherReliefsModel(1000))
   )
 
   "Calling getNRTotalGainAnswers" should {
