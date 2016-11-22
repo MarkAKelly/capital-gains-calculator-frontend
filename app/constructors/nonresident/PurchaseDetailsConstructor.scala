@@ -18,8 +18,8 @@ package constructors.nonresident
 
 import java.time.LocalDate
 
-import common.KeystoreKeys
-import models.nonresident.{QuestionAnswerModel, TotalGainAnswersModel}
+import common.{KeystoreKeys, TaxDates}
+import models.nonresident._
 import play.api.i18n.Messages
 
 
@@ -27,12 +27,22 @@ object PurchaseDetailsConstructor {
 
   def getPurchaseDetailsSection(totalGainAnswersModel: TotalGainAnswersModel): Seq[QuestionAnswerModel[Any]] = {
 
+    val useRebasedValues =
+      totalGainAnswersModel.acquisitionDateModel match {
+        case AcquisitionDateModel("Yes",_,_,_) if !TaxDates.dateAfterStart(totalGainAnswersModel.acquisitionDateModel.get) => true
+        case AcquisitionDateModel("No",_,_,_) if totalGainAnswersModel.rebasedValueModel.get.rebasedValueAmt.isDefined => true
+        case _ => false
+      }
+
     val acquisitionDateAnswerData = acquisitionDateAnswerRow(totalGainAnswersModel)
     val acquisitionDateData = acquisitionDateRow(totalGainAnswersModel)
     val howBecameOwnerData = howBecameOwnerRow(totalGainAnswersModel)
     val boughtForLessData = boughtForLessRow(totalGainAnswersModel)
     val acquisitionValueData = acquisitionValueRow(totalGainAnswersModel)
     val acquisitionCostsData = acquisitionCostsRow(totalGainAnswersModel)
+    val rebasedValueData = rebasedValueRow(totalGainAnswersModel.rebasedValueModel, useRebasedValues)
+    val rebasedCostsQuestionData = rebasedCostsQuestionRow(totalGainAnswersModel.rebasedCostsModel, useRebasedValues)
+    val rebasedCostsData = rebasedCostsRow(totalGainAnswersModel.rebasedCostsModel, useRebasedValues)
 
     val items = Seq(
       acquisitionDateAnswerData,
@@ -40,7 +50,10 @@ object PurchaseDetailsConstructor {
       howBecameOwnerData,
       boughtForLessData,
       acquisitionValueData,
-      acquisitionCostsData
+      acquisitionCostsData,
+      rebasedValueData,
+      rebasedCostsQuestionData,
+      rebasedCostsData
     )
     items.flatten
   }
@@ -109,5 +122,40 @@ object PurchaseDetailsConstructor {
       Messages("calc.acquisitionCosts.question"),
       Some(controllers.nonresident.routes.AcquisitionCostsController.acquisitionCosts().url)
     ))
+  }
+
+  def rebasedValueRow(rebasedValueModel: Option[RebasedValueModel], useRebasedValues: Boolean): Option[QuestionAnswerModel[BigDecimal]] = {
+    if (useRebasedValues) {
+      Some(QuestionAnswerModel(
+        KeystoreKeys.rebasedValue,
+        rebasedValueModel.get.rebasedValueAmt.get,
+        s"${Messages("calc.nonResident.rebasedValue.question")} ${Messages("calc.nonResident.rebasedValue.date")}",
+        Some(controllers.nonresident.routes.RebasedValueController.rebasedValue().url)
+      ))
+    }
+    else None
+  }
+
+  def rebasedCostsQuestionRow(rebasedCostsModel: Option[RebasedCostsModel], useRebasedValues: Boolean): Option[QuestionAnswerModel[String]] = {
+    if (useRebasedValues) {
+      Some(QuestionAnswerModel(
+        s"${KeystoreKeys.rebasedCosts}-question",
+        rebasedCostsModel.get.hasRebasedCosts,
+        Messages("calc.rebasedCosts.question"),
+        Some(controllers.nonresident.routes.RebasedCostsController.rebasedCosts().url)
+      ))
+    } else None
+  }
+
+  def rebasedCostsRow(rebasedCostsModel: Option[RebasedCostsModel], useRebasedValues: Boolean): Option[QuestionAnswerModel[BigDecimal]] = {
+    (useRebasedValues, rebasedCostsModel) match {
+      case (true, Some(RebasedCostsModel("Yes", Some(value)))) => Some(QuestionAnswerModel(
+        KeystoreKeys.rebasedCosts,
+        value,
+        Messages("calc.rebasedCosts.questionTwo"),
+        Some(controllers.nonresident.routes.RebasedCostsController.rebasedCosts().url)
+      ))
+      case _ => None
+    }
   }
 }

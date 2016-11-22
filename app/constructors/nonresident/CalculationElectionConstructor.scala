@@ -17,7 +17,7 @@
 package constructors.nonresident
 
 import connectors.CalculatorConnector
-import models.nonresident.{CalculationResultModel, SummaryModel}
+import models.nonresident.TotalGainResultsModel
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.http.HeaderCarrier
 
@@ -29,56 +29,52 @@ trait CalculationElectionConstructor {
 
   val calcConnector: CalculatorConnector
 
-  def generateElection(
-                        summary: SummaryModel,
-                        hc: HeaderCarrier,
-                        flatResult: Option[CalculationResultModel],
-                        timeResult: Option[CalculationResultModel],
-                        rebasedResult: Option[CalculationResultModel]
+  def generateElection(hc: HeaderCarrier,
+                       totalGainResults: TotalGainResultsModel
                       ): Seq[(String, String, String, Option[String])] = {
 
-    (flatResult, timeResult, rebasedResult) match {
-      case (Some(flat), Some(time), Some(rebased)) =>
+    (totalGainResults.flatGain, totalGainResults.timeApportionedGain, totalGainResults.rebasedGain) match {
+      case (flat, Some(time), Some(rebased)) =>
         Seq(
-          (flatElementConstructor(flatResult), flatResult.get.totalGain),
-          (timeElementConstructor(timeResult), timeResult.get.totalGain),
-          (rebasedElementConstructor(rebasedResult), rebasedResult.get.totalGain)
+          (flatElementConstructor(), totalGainResults.flatGain),
+          (timeElementConstructor(), totalGainResults.timeApportionedGain.get),
+          (rebasedElementConstructor(), totalGainResults.rebasedGain.get)
         ).sortBy(_._2).reverse.map(_._1)
-      case (Some(flat), Some(time), None) =>
+      case (flat, Some(time), None) =>
         Seq(
-          (flatElementConstructor(flatResult), flatResult.get.totalGain), (timeElementConstructor(timeResult), timeResult.get.totalGain)
+          (flatElementConstructor(), totalGainResults.flatGain), (timeElementConstructor(), totalGainResults.timeApportionedGain.get)
         ).sortBy(_._2).reverse.map(_._1)
-      case (Some(flat), None, Some(rebased)) =>
+      case (flat, None, Some(rebased)) =>
         Seq(
-          (flatElementConstructor(flatResult), flatResult.get.totalGain), (rebasedElementConstructor(rebasedResult), rebasedResult.get.totalGain)
+          (flatElementConstructor(), totalGainResults.flatGain), (rebasedElementConstructor(), totalGainResults.rebasedGain.get)
         ).sortBy(_._2).reverse.map(_._1)
       case (_, _, _) =>
-        Seq(flatElementConstructor(flatResult))
+        Seq(flatElementConstructor())
     }
   }
 
-  private def rebasedElementConstructor(rebasedResult: Option[CalculationResultModel]) = {
+  private def rebasedElementConstructor() = {
     (
       "rebased",
-      rebasedResult.get.taxOwed.setScale(2).toString(),
+      BigDecimal(0).setScale(2).toString(),
       Messages("calc.calculationElection.message.rebased"),
       Some(Messages("calc.calculationElection.message.rebasedDate"))
       )
   }
 
-  private def flatElementConstructor(flatResult: Option[CalculationResultModel]) = {
+  private def flatElementConstructor() = {
     (
       "flat",
-      flatResult.get.taxOwed.setScale(2).toString(),
+      BigDecimal(0).setScale(2).toString(),
       Messages("calc.calculationElection.message.flat"),
       None
       )
   }
 
-  private def timeElementConstructor(timeResult: Option[CalculationResultModel]) = {
+  private def timeElementConstructor() = {
     (
       "time",
-      timeResult.get.taxOwed.setScale(2).toString(),
+      BigDecimal(0).setScale(2).toString(),
       Messages("calc.calculationElection.message.time"),
       Some(Messages("calc.calculationElection.message.timeDate"))
       )

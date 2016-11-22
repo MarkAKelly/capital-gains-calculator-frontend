@@ -95,8 +95,8 @@ class SoldForLessViewSpec extends UnitSpec with WithFakeApplication with Mockito
           form.attr("method") shouldBe "POST"
         }
 
-        s"has an action of '${controllers.nonresident.routes.SoldForLessController.submitSoldForLess.url}'" in {
-          form.attr("action") shouldBe controllers.nonresident.routes.SoldForLessController.submitSoldForLess.url
+        s"has an action of '${controllers.nonresident.routes.SoldForLessController.submitSoldForLess().url}'" in {
+          form.attr("action") shouldBe controllers.nonresident.routes.SoldForLessController.submitSoldForLess().url
         }
       }
 

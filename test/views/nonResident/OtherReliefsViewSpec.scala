@@ -19,7 +19,6 @@ package views.nonResident
 import assets.MessageLookup.{NonResident => messages}
 import controllers.helpers.FakeRequestHelper
 import forms.nonresident.OtherReliefsForm._
-import models.nonresident.CalculationResultModel
 import org.jsoup.Jsoup
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -30,8 +29,9 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
   "The Other Reliefs Flat view" when {
 
     "not supplied with a pre-existing stored value and a taxable gain" should {
-      val model = CalculationResultModel(100, 1000, 100, 18, 0, None, None, None)
-      lazy val view = otherReliefs(otherReliefsForm(false), model)(fakeRequest)
+      val totalGain = 1234
+      val totalChargeableGain = 4321
+      lazy val view = otherReliefs(otherReliefsForm, totalChargeableGain, totalGain)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       s"have a title of ${messages.OtherReliefs.question}" in {
@@ -45,9 +45,13 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
           backLink.text shouldEqual messages.back
         }
 
-        s"should have a route to 'allowable losses'" in {
+        "should have a class of back-link" in {
+          backLink.attr("class") shouldBe "back-link"
+        }
+
+        s"should have a route to 'improvements'" in {
           backLink.attr("href") shouldEqual
-            controllers.nonresident.routes.AllowableLossesController.allowableLosses().url
+            controllers.nonresident.routes.ImprovementsController.improvements().url
         }
       }
 
@@ -55,11 +59,11 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
         lazy val heading = document.body().select("h1")
 
         "has a class of heading-large" in {
-          heading.attr("class") shouldBe "heading-large"
+          heading.attr("class") shouldBe "heading-xlarge"
         }
 
-        s"has the text '${messages.pageHeading}'" in {
-          heading.text shouldBe messages.pageHeading
+        s"has the text '${messages.OtherReliefs.question}'" in {
+          heading.text shouldBe messages.OtherReliefs.question
         }
       }
 
@@ -80,31 +84,21 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
       }
 
       s"have the question '${messages.OtherReliefs.question}'" in {
-        document.body.select("legend").first().text shouldBe messages.OtherReliefs.question
-      }
-
-      "have include 'isClaimingOtherReliefs' as part of the id on the option inputs" in {
-        document.select("input").attr("id") should include ("isClaimingOtherReliefs")
+        document.body.select("label").text should include(messages.OtherReliefs.question)
       }
 
       "have an input using the id otherReliefs" in {
-        document.body().select("input[type=number]").attr("id") should include ("otherReliefs")
+        document.body().select("input[type=number]").attr("id") should include("otherReliefs")
       }
 
-      "have additional content" which {
-        lazy val content = document.select("form > div")
+      "have the correct help text" in {
+        document.body().select("form div.form-hint").text().replaceAll("[\\n]", " ") shouldBe
+          s"${messages.OtherReliefs.help} ${messages.OtherReliefs.helpTwo}"
+      }
 
-        "has a list of class list" in {
-          content.select("ul").attr("class") shouldBe "list"
-        }
-
-        "has a list entry with the total gain message and value" in {
-          content.select("li#totalGain").text() shouldBe s"${messages.OtherReliefs.totalGain} £1,000"
-        }
-
-        "has a list entry with the taxable gain message and value" in {
-          content.select("li#taxableGain").text() shouldBe s"${messages.OtherReliefs.taxableGain} £100"
-        }
+      "have the correct gain values in the additional help text" in {
+        val expectedText = messages.OtherReliefs.additionalHelp(totalGain, totalChargeableGain)
+        document.body().select("form p.form-hint").text() shouldBe expectedText
       }
 
       "have a button" which {
@@ -124,21 +118,30 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
       }
     }
 
-    "supplied with a pre-existing stored value and a negative taxable gain" should {
-      val model = CalculationResultModel(100, 1000, -100, 18, 0, None, None, None)
-      val map = Map("otherReliefs" -> "1000")
-      lazy val view = otherReliefs(otherReliefsForm(false).bind(map), model)(fakeRequest)
+    "the gain and chargeable gain are negative" should {
+      val totalGain = -1234
+      val totalChargeableGain = -4321
+
+      lazy val view = otherReliefs(otherReliefsForm, totalChargeableGain, totalGain)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
-      "has a list entry with the loss carried forward message and value" in {
-        document.select("li#taxableGain").text() shouldBe s"${messages.OtherReliefs.lossCarriedForward} £100"
+      "have the correct additional help text" in {
+        val expectedText = messages.OtherReliefs.additionalHelp(totalGain, totalChargeableGain)
+        document.body().select("form p.form-hint").text() shouldBe expectedText
+      }
+
+      "have the words 'total loss' in the additional help text" in {
+        document.body().select("form p.form-hint").text() should include("total loss of £1,234")
+      }
+
+      "have the words 'allowable loss' in the additional help text" in {
+        document.body().select("form p.form-hint").text() should include("an allowable loss of £4,321")
       }
     }
 
     "supplied with an invalid map" should {
-      val model = CalculationResultModel(100, 1000, -100, 18, 0, None, None, None)
       val map = Map("otherReliefs" -> "-1000")
-      lazy val view = otherReliefs(otherReliefsForm(false).bind(map), model)(fakeRequest)
+      lazy val view = otherReliefs(otherReliefsForm.bind(map), 0, 0)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have an error summary" in {
@@ -147,3 +150,4 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
     }
   }
 }
+

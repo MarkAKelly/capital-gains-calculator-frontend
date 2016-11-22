@@ -114,8 +114,9 @@ class SoldForLessControllerSpec extends UnitSpec with WithFakeApplication with F
         status(result) shouldBe 303
       }
 
-      "redirect to the private residence relief page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/non-resident/disposal-value")
+      "redirect to the market value when sold page" in {
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.MarketValueWhenSoldOrGaveAwayController.marketValueWhenSold().url
+
       }
     }
 

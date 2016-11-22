@@ -20,7 +20,7 @@ import common.{KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
-import constructors.nonresident.CalculationElectionConstructor
+import constructors.nonresident.{AnswersConstructor, CalculationElectionConstructor}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import play.api.mvc.AnyContentAsFormUrlEncoded
@@ -30,7 +30,6 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
-
 import common.nonresident.CalculationType
 import assets.MessageLookup.{NonResident => commonMessages}
 import assets.MessageLookup.NonResident.{CalculationElection => messages}
@@ -54,12 +53,16 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
                  ): CalculationElectionController = {
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
+    val mockAnswersConstructor = mock[AnswersConstructor]
 
     when(mockCalcConnector.createSummary(Matchers.any()))
       .thenReturn(summaryData)
 
-    when(mockCalcElectionConstructor.generateElection(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(),
-      Matchers.any()))
+    val flatReliefs = Some(otherReliefsFlat.getOrElse(OtherReliefsModel(0)).otherReliefs)
+    val timeReliefs = Some(otherReliefsTA.getOrElse(OtherReliefsModel(0)).otherReliefs)
+    val rebasedReliefs = Some(otherReliefsRebased.getOrElse(OtherReliefsModel(0)).otherReliefs)
+
+    when(mockCalcElectionConstructor.generateElection(Matchers.any(), Matchers.any()))
       .thenReturn(Seq(
         (s"${CalculationType.flat}", "8000.00", "flat calculation", None),
         (s"${CalculationType.timeApportioned}", "8000.00", "time apportioned calculation",
@@ -83,6 +86,7 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
     new CalculationElectionController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
       override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
+      override val calcAnswersConstructor: AnswersConstructor = mockAnswersConstructor
     }
   }
 
@@ -134,9 +138,9 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
         None,
         TestModels.summaryTrusteeTAWithoutAEA,
         None,
-        Some(OtherReliefsModel(None, Some(500))),
-        Some(OtherReliefsModel(None, Some(600))),
-        Some(OtherReliefsModel(None, Some(700)))
+        Some(OtherReliefsModel(500)),
+        Some(OtherReliefsModel(600)),
+        Some(OtherReliefsModel(700))
       )
       lazy val result = target.calculationElection(fakeRequest)
       lazy val document = Jsoup.parse(bodyOf(result))
