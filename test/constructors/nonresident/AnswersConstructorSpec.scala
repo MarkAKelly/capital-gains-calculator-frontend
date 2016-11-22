@@ -141,6 +141,23 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
     Some(OtherReliefsModel(Some("Yes"), Some(1000)))
   )
 
+  val totalGainBoughtForLess = TotalGainAnswersModel(
+    DisposalDateModel(10, 10, 2016),
+    SoldOrGivenAwayModel(true),
+    Some(SoldForLessModel(false)),
+    DisposalValueModel(10000),
+    DisposalCostsModel(100),
+    Some(HowBecameOwnerModel("Bought")),
+    Some(BoughtForLessModel(true)),
+    AcquisitionValueModel(5000),
+    AcquisitionCostsModel(200),
+    AcquisitionDateModel("Yes", Some(1), Some(4), Some(2013)),
+    Some(RebasedValueModel(Some(7500))),
+    Some(RebasedCostsModel("Yes", Some(150))),
+    ImprovementsModel("Yes", Some(50), Some(25)),
+    Some(OtherReliefsModel(Some("Yes"), Some(1000)))
+  )
+
   "Calling getNRTotalGainAnswers" should {
 
     "return a valid TotalGainAnswersModel with no optional values" in {
@@ -168,12 +185,20 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
       await(result).acquisitionValueModel.acquisitionValueAmt shouldBe 4000
     }
 
-    "return a valid acquisition value of 3000 with an property acquired through a gift" in {
+    "return a valid acquisition value of 3000 with an property acquired without purchasing" in {
       val hc = mock[HeaderCarrier]
       val constructor = setupMockedAnswersConstructor(totalGainNoOptionalModel, marketValueAcquisition = Some(AcquisitionValueModel(3000)))
       val result = constructor.getNRTotalGainAnswers(hc)
 
       await(result).acquisitionValueModel.acquisitionValueAmt shouldBe 3000
+    }
+
+    "return a valid acquisition value of 2000 with a property bought for less" in {
+      val hc = mock[HeaderCarrier]
+      val constructor = setupMockedAnswersConstructor(totalGainBoughtForLess, marketValueAcquisition = Some(AcquisitionValueModel(2000)))
+      val result = constructor.getNRTotalGainAnswers(hc)
+
+      await(result).acquisitionValueModel.acquisitionValueAmt shouldBe 2000
     }
   }
 }

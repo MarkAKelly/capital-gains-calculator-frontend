@@ -373,6 +373,14 @@ class PurchaseDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
         result.question shouldBe messages.WorthBeforeLegislationStart.question
       }
     }
+
+    "a value for bought for less is given" should {
+      lazy val result = PurchaseDetailsConstructor.acquisitionValueRow(totalGainForLess, useWorthBeforeLegislationStart = false).get
+
+      "have the question for market value when bought for less" in {
+        result.question shouldBe messages.WorthWhenBoughtForLess.question
+      }
+    }
   }
 
   "Calling .acquisitionCostsRow" when {

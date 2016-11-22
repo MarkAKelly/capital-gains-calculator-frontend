@@ -47,13 +47,18 @@ trait AnswersConstructor {
     val improvements = calculatorConnector.fetchAndGetFormData[ImprovementsModel](KeystoreKeys.improvements).map(data => data.get)
     val otherReliefsFlat = calculatorConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat)
 
-    def acquisitionValue(acquisitionDateModel: AcquisitionDateModel, howBecameOwnerModel: Option[HowBecameOwnerModel]): Future[AcquisitionValueModel] =
-      (acquisitionDateModel, howBecameOwnerModel) match {
-        case (AcquisitionDateModel("Yes",_,_,_),_) if TaxDates.dateBeforeLegislationStart(acquisitionDateModel.get) =>
+    def acquisitionValue(acquisitionDateModel: AcquisitionDateModel,
+                         howBecameOwnerModel: Option[HowBecameOwnerModel],
+                         boughtForLessModel: Option[BoughtForLessModel]): Future[AcquisitionValueModel] =
+      (acquisitionDateModel, howBecameOwnerModel, boughtForLessModel) match {
+        case (AcquisitionDateModel("Yes",_,_,_),_, _) if TaxDates.dateBeforeLegislationStart(acquisitionDateModel.get) =>
           calculatorConnector.fetchAndGetFormData[WorthBeforeLegislationStartModel](KeystoreKeys.worthBeforeLegislationStart).map(data =>
             AcquisitionValueModel(data.get.worthBeforeLegislationStart)
           )
-        case (_, Some(HowBecameOwnerModel(value))) if !value.equals("Bought") =>
+        case (_, Some(HowBecameOwnerModel(value)), _) if !value.equals("Bought") =>
+          calculatorConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.acquisitionMarketValue)
+            .map(data => data.get)
+        case (_, _, Some(BoughtForLessModel(true))) =>
           calculatorConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.acquisitionMarketValue)
             .map(data => data.get)
         case _ => calculatorConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.acquisitionValue).map(data => data.get)
@@ -68,7 +73,7 @@ trait AnswersConstructor {
       howBecameOwner <- howBecameOwner
       boughtForLess <- boughtForLess
       acquisitionDate <- acquisitionDate
-      acquisitionValue <- acquisitionValue(acquisitionDate, howBecameOwner)
+      acquisitionValue <- acquisitionValue(acquisitionDate, howBecameOwner, boughtForLess)
       acquisitionCosts <- acquisitionCosts
       rebasedValue <- rebasedValue
       rebasedCosts <- rebasedCosts

@@ -117,10 +117,13 @@ object PurchaseDetailsConstructor {
   }
 
   def acquisitionValueRow(totalGainAnswersModel: TotalGainAnswersModel, useWorthBeforeLegislationStart: Boolean): Option[QuestionAnswerModel[BigDecimal]] = {
-    val question = if (useWorthBeforeLegislationStart) Messages("calc.worthBeforeLegislationStart.question")
-    else if (totalGainAnswersModel.howBecameOwnerModel.get.gainedBy.equals("Gifted")) Messages("calc.worthWhenGiftedTo.question")
-    else if (totalGainAnswersModel.howBecameOwnerModel.get.gainedBy.equals("Inherited")) Messages("calc.worthWhenInherited.question")
-      else Messages("calc.acquisitionValue.question")
+    val question = (useWorthBeforeLegislationStart, totalGainAnswersModel.howBecameOwnerModel, totalGainAnswersModel.boughtForLessModel) match {
+      case (true, _, _) => Messages("calc.worthBeforeLegislationStart.question")
+      case (_, Some(HowBecameOwnerModel("Gifted")), _) => Messages("calc.worthWhenGiftedTo.question")
+      case (_, Some(HowBecameOwnerModel("Inherited")), _) => Messages("calc.worthWhenInherited.question")
+      case (_, _, Some(BoughtForLessModel(true))) => Messages("calc.worthWhenBoughtForLess.question")
+      case _ => Messages("calc.acquisitionValue.question")
+    }
 
     Some(QuestionAnswerModel(
       KeystoreKeys.acquisitionValue,
