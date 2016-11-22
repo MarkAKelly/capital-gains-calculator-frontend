@@ -16,10 +16,8 @@
 
 package constructors.nonresident
 
-import common.{Dates, TaxDates}
 import connectors.CalculatorConnector
-import controllers.nonresident.routes
-import models.nonresident.{AcquisitionDateModel, CalculationResultModel, SummaryModel}
+import models.nonresident.{CalculationResultModel, SummaryModel}
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.http.HeaderCarrier
 
@@ -36,58 +34,53 @@ trait CalculationElectionConstructor {
                         hc: HeaderCarrier,
                         flatResult: Option[CalculationResultModel],
                         timeResult: Option[CalculationResultModel],
-                        rebasedResult: Option[CalculationResultModel],
-                        otherReliefsFlat: Option[BigDecimal],
-                        otherReliefsTA: Option[BigDecimal],
-                        otherReliefsRebased: Option[BigDecimal]
-                      ): Seq[(String, String, String, Option[String], String, Option[BigDecimal])] = {
-    val flatSequence = Seq(flatElementConstructor(flatResult, otherReliefsFlat))
+                        rebasedResult: Option[CalculationResultModel]
+                      ): Seq[(String, String, String, Option[String])] = {
 
-    def withTimeCheck(sequence: Seq[(String, String, String, Option[String], String, Option[BigDecimal])]) = {
-      if (summary.acquisitionDateModel.hasAcquisitionDate.equals("Yes") &&
-        !TaxDates.dateAfterStart(summary.acquisitionDateModel.day.get,
-          summary.acquisitionDateModel.month.get,
-          summary.acquisitionDateModel.year.get)) {
-        sequence.++(Seq(timeElementConstructor(timeResult, otherReliefsTA)))
-      }
-      else sequence
+    (flatResult, timeResult, rebasedResult) match {
+      case (Some(flat), Some(time), Some(rebased)) =>
+        Seq(
+          (flatElementConstructor(flatResult), flatResult.get.totalGain),
+          (timeElementConstructor(timeResult), timeResult.get.totalGain),
+          (rebasedElementConstructor(rebasedResult), rebasedResult.get.totalGain)
+        ).sortBy(_._2).reverse.map(_._1)
+      case (Some(flat), Some(time), None) =>
+        Seq(
+          (flatElementConstructor(flatResult), flatResult.get.totalGain), (timeElementConstructor(timeResult), timeResult.get.totalGain)
+        ).sortBy(_._2).reverse.map(_._1)
+      case (Some(flat), None, Some(rebased)) =>
+        Seq(
+          (flatElementConstructor(flatResult), flatResult.get.totalGain), (rebasedElementConstructor(rebasedResult), rebasedResult.get.totalGain)
+        ).sortBy(_._2).reverse.map(_._1)
+      case (_, _, _) =>
+        Seq(flatElementConstructor(flatResult))
     }
-
-    def withRebasedCheck(sequence: Seq[(String, String, String, Option[String], String, Option[BigDecimal])]) = {
-      summary.acquisitionDateModel match {
-        case AcquisitionDateModel("Yes", day, month, year)
-          if !TaxDates.dateAfterStart(day.get, month.get, year.get) && summary.rebasedValueModel.get.hasRebasedValue.equals("Yes") =>
-          sequence.++(Seq(rebasedElementConstructor(rebasedResult, otherReliefsRebased)))
-        case AcquisitionDateModel("No", _, _, _) if summary.rebasedValueModel.get.hasRebasedValue.equals("Yes") =>
-          sequence.++(Seq(rebasedElementConstructor(rebasedResult, otherReliefsRebased)))
-        case _ => sequence
-      }
-    }
-
-    withRebasedCheck(withTimeCheck(flatSequence))
   }
 
-  private def rebasedElementConstructor(rebasedResult: Option[CalculationResultModel], otherReliefsRebased: Option[BigDecimal]) = {
-    ("rebased", rebasedResult.get.taxOwed.setScale(2).toString(),
+  private def rebasedElementConstructor(rebasedResult: Option[CalculationResultModel]) = {
+    (
+      "rebased",
+      rebasedResult.get.taxOwed.setScale(2).toString(),
       Messages("calc.calculationElection.message.rebased"),
-      Some(Messages("calc.calculationElection.message.rebasedDate")),
-      routes.OtherReliefsRebasedController.otherReliefsRebased().toString(),
-      otherReliefsRebased)
-  }
-  
-  private def flatElementConstructor(flatResult: Option[CalculationResultModel], otherReliefsFlat: Option[BigDecimal]) = {
-    ("flat", flatResult.get.taxOwed.setScale(2).toString(),
-      Messages("calc.calculationElection.message.flat"),
-      None,
-      routes.OtherReliefsController.otherReliefs().toString(),
-      otherReliefsFlat)
+      Some(Messages("calc.calculationElection.message.rebasedDate"))
+      )
   }
 
-  private def timeElementConstructor(timeResult: Option[CalculationResultModel], otherReliefsTa: Option[BigDecimal]) = {
-    ("time", timeResult.get.taxOwed.setScale(2).toString(),
+  private def flatElementConstructor(flatResult: Option[CalculationResultModel]) = {
+    (
+      "flat",
+      flatResult.get.taxOwed.setScale(2).toString(),
+      Messages("calc.calculationElection.message.flat"),
+      None
+      )
+  }
+
+  private def timeElementConstructor(timeResult: Option[CalculationResultModel]) = {
+    (
+      "time",
+      timeResult.get.taxOwed.setScale(2).toString(),
       Messages("calc.calculationElection.message.time"),
-      Some(Messages("calc.calculationElection.message.timeDate")),
-      routes.OtherReliefsTAController.otherReliefsTA().toString(),
-      otherReliefsTa)
+      Some(Messages("calc.calculationElection.message.timeDate"))
+      )
   }
 }

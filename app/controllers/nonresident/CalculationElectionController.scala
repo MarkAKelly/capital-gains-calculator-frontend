@@ -18,7 +18,7 @@ package controllers.nonresident
 
 import common.{KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
-import constructors.nonresident.CalculationElectionConstructor
+import constructors.nonresident.{AnswersConstructor, CalculationElectionConstructor}
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.CalculationElectionForm._
 import models.nonresident._
@@ -40,24 +40,7 @@ trait CalculationElectionController extends FrontendController with ValidActiveS
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
   val calcConnector: CalculatorConnector
   val calcElectionConstructor: CalculationElectionConstructor
-
-  private def getOtherReliefsFlat(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] =
-    calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
-      case Some(data) => data.otherReliefs
-      case _ => None
-    }
-
-  private def getOtherReliefsTA(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] =
-    calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA).map {
-      case Some(data) => data.otherReliefs
-      case _ => None
-    }
-
-  private def getOtherReliefsRebased(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] =
-    calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map {
-      case Some(data) => data.otherReliefs
-      case _ => None
-    }
+  val answersConstructor: AnswersConstructor
 
   private def calcTimeCall(summary: SummaryModel)(implicit hc: HeaderCarrier): Future[Option[CalculationResultModel]] = {
     summary.acquisitionDateModel.hasAcquisitionDate match {
@@ -83,7 +66,7 @@ trait CalculationElectionController extends FrontendController with ValidActiveS
   val calculationElection = ValidateSession.async { implicit request =>
 
     def action(construct: SummaryModel,
-               content: Seq[(String, String, String, Option[String], String, Option[BigDecimal])]) =
+               content: Seq[(String, String, String, Option[String])]) =
       calcConnector.fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection).map {
         case Some(data) =>
           Ok(calculation.nonresident.calculationElection(
@@ -104,12 +87,9 @@ trait CalculationElectionController extends FrontendController with ValidActiveS
       calcFlat <- calcConnector.calculateFlat(construct)
       calcTA <- calcTimeCall(construct)
       calcRebased <- calcRebasedCall(construct)
-      otherReliefsFlat <- getOtherReliefsFlat
-      otherReliefsTA <- getOtherReliefsTA
-      otherReliefsRebased <- getOtherReliefsRebased
       finalResult <- action(
         construct,
-        calcElectionConstructor.generateElection(construct, hc, calcFlat, calcTA, calcRebased, otherReliefsFlat, otherReliefsTA, otherReliefsRebased)
+        calcElectionConstructor.generateElection(construct, hc, calcFlat, calcTA, calcRebased)
       )
     } yield finalResult
   }
@@ -128,18 +108,14 @@ trait CalculationElectionController extends FrontendController with ValidActiveS
 
     def errorAction(form: Form[CalculationElectionModel]) = {
       for {
-        construct <- calcConnector.createSummary(hc)
+        construct <- answersConstructor.getNRTotalGainAnswers(hc)
         calcFlat <- calcConnector.calculateFlat(construct)
         calcTA <- calcTimeCall(construct)
-        otherReliefsFlat <- getOtherReliefsFlat
-        otherReliefsTA <- getOtherReliefsTA
-        otherReliefsRebased <- getOtherReliefsRebased
         calcRebased <- calcRebasedCall(construct)
       } yield {
         BadRequest(calculation.nonresident.calculationElection(
           form,
-          construct,
-          calcElectionConstructor.generateElection(construct, hc, calcFlat, calcTA, calcRebased, otherReliefsFlat, otherReliefsTA, otherReliefsRebased)
+          calcElectionConstructor.generateElection(construct, hc, calcFlat, calcTA, calcRebased)
         ))
       }
     }

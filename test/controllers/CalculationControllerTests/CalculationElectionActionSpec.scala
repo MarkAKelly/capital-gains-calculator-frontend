@@ -23,7 +23,6 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.CalculationElectionConstructor
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -59,18 +58,14 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
     when(mockCalcConnector.createSummary(Matchers.any()))
       .thenReturn(summaryData)
 
-    val flatReliefs = otherReliefsFlat match { case Some(x) => x.otherReliefs case _ => None }
-    val timeReliefs = otherReliefsTA match { case Some(x) => x.otherReliefs case _ => None }
-    val rebasedReliefs = otherReliefsRebased match { case Some(x) => x.otherReliefs case _ => None }
-
     when(mockCalcElectionConstructor.generateElection(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(),
-      Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any()))
+      Matchers.any()))
       .thenReturn(Seq(
-        (s"${CalculationType.flat}", "8000.00", "flat calculation", None, routes.OtherReliefsController.otherReliefs().toString(), flatReliefs),
+        (s"${CalculationType.flat}", "8000.00", "flat calculation", None),
         (s"${CalculationType.timeApportioned}", "8000.00", "time apportioned calculation",
-          Some(messages.taxStartDate), routes.OtherReliefsTAController.otherReliefsTA().toString(), timeReliefs),
+          Some(messages.taxStartDate)),
         (s"${CalculationType.rebased}", "10000.00", "rebased calculation",
-          Some(messages.taxStartDate), routes.OtherReliefsTAController.otherReliefsTA().toString(), rebasedReliefs)
+          Some(messages.taxStartDate))
       ))
     when(mockCalcConnector.calculateFlat(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(calc))
@@ -80,12 +75,7 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
       .thenReturn(Future.successful(calc))
     when(mockCalcConnector.fetchAndGetFormData[CalculationElectionModel](Matchers.eq(KeystoreKeys.calculationElection))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
-    when(mockCalcConnector.fetchAndGetFormData[OtherReliefsModel](Matchers.eq(KeystoreKeys.otherReliefsFlat))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(otherReliefsFlat))
-    when(mockCalcConnector.fetchAndGetFormData[OtherReliefsModel](Matchers.eq(KeystoreKeys.otherReliefsTA))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(otherReliefsTA))
-    when(mockCalcConnector.fetchAndGetFormData[OtherReliefsModel](Matchers.eq(KeystoreKeys.otherReliefsRebased))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(otherReliefsRebased))
+
     lazy val data = CacheMap("form-id", Map("data" -> Json.toJson(postData.getOrElse(CalculationElectionModel("")))))
     when(mockCalcConnector.saveFormData[CalculationElectionModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
@@ -116,17 +106,25 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
       "return a 200" in {
         status(result) shouldBe 200
       }
+
+      "be on the calculation election page" in {
+        document.title() shouldEqual messages.heading
+      }
     }
 
     "supplied with no pre-existing data and no acquisition date" should {
 
       val target = setupTarget(None, None, TestModels.summaryIndividualFlatWithAEA)
       lazy val result = target.calculationElection(fakeRequest)
+      lazy val document = Jsoup.parse(bodyOf(result))
 
       "return a 200" in {
         status(result) shouldBe 200
       }
 
+      "be on the calculation election page" in {
+        document.title() shouldEqual messages.heading
+      }
     }
 
     "supplied with pre-existing data and a value for flat, time and rebased reliefs" should {
@@ -146,6 +144,10 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
       "return a 200" in {
         status(result) shouldBe 200
       }
+
+      "be on the calculation election page" in {
+        document.title() shouldEqual messages.heading
+      }
     }
 
     "supplied with pre-existing data and no values for flat, time and rebased reliefs" should {
@@ -160,6 +162,10 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
 
       "return a 200" in {
         status(result) shouldBe 200
+      }
+
+      "be on the calculation election page" in {
+        document.title() shouldEqual messages.heading
       }
     }
   }

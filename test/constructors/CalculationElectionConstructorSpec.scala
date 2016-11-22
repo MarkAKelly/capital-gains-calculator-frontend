@@ -53,7 +53,7 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar {
       "produce a single entry sequence" in {
         mockFlatCalc
         TestCalculationElectionConstructor.generateElection(TestModels.summaryIndividualFlatWithoutAEA, hc, Some(TestModels.calcModelOneRate),
-          Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), None, None, None).size shouldBe 1
+          Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate)).size shouldBe 1
       }
     }
 
@@ -62,7 +62,7 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar {
       "produce a single entry sequence" in {
         mockFlatCalc
         TestCalculationElectionConstructor.generateElection(TestModels.summaryIndividualAcqDateAfter, hc, Some(TestModels.calcModelOneRate),
-          Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), None, None, None).size shouldBe 1
+          Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate)).size shouldBe 1
       }
     }
 
@@ -72,7 +72,7 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar {
         mockFlatCalc
         mockTimeCalc
         TestCalculationElectionConstructor.generateElection(TestModels.summaryTrusteeTAWithoutAEA, hc, Some(TestModels.calcModelOneRate),
-          Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), None, None, None).size shouldBe 2
+          Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate)).size shouldBe 2
       }
 
       "produce a three entry sequence if there is a value for the rebased calculation supplied." in {
@@ -80,14 +80,14 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar {
         mockTimeCalc
         mockRebasedCalc
         TestCalculationElectionConstructor.generateElection(TestModels.summaryIndividualRebased, hc, Some(TestModels.calcModelOneRate),
-          Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), None, None, None).size shouldBe 3
+          Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate)).size shouldBe 3
       }
 
       "produce a two entry sequence if there is a value for the rebased calculation supplied but the acquisition date is not supplied." in {
         mockFlatCalc
         mockRebasedCalc
         TestCalculationElectionConstructor.generateElection(TestModels.summaryIndividualRebasedNoAcqDate, hc, Some(TestModels.calcModelOneRate),
-          Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), None, None, None).size shouldBe 2
+          Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate)).size shouldBe 2
       }
     }
   }

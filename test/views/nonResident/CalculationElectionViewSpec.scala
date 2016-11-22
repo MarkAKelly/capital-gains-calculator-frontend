@@ -16,22 +16,15 @@
 
 package views.nonResident
 
-import common.TestModels
-import controllers.helpers.FakeRequestHelper
-import controllers.nonresident.routes
-import org.jsoup.Jsoup
-import play.api.i18n.Messages
-import forms.nonresident.CalculationElectionForm._
-import views.html.calculation.{nonresident => views}
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import assets.MessageLookup.NonResident.{CalculationElection => messages}
 import assets.MessageLookup.{NonResident => commonMessages}
-import models.nonresident.{CalculationElectionModel, CalculationResultModel, SummaryModel}
-import play.api.mvc.{AnyContentAsFormUrlEncoded, Result}
-import play.api.test.FakeRequest
-import uk.gov.hmrc.play.http.SessionKeys
-
-import scala.concurrent.Future
+import common.TestModels
+import controllers.helpers.FakeRequestHelper
+import forms.nonresident.CalculationElectionForm._
+import org.jsoup.Jsoup
+import play.api.i18n.Messages
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import views.html.calculation.{nonresident => views}
 
 class CalculationElectionViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
@@ -39,9 +32,8 @@ class CalculationElectionViewSpec extends UnitSpec with WithFakeApplication with
 
     lazy val form = calculationElectionForm
     lazy val summaryModel = TestModels.sumModelFlat
-    lazy val seq: Seq[(String, String, String, Option[String], String, Option[BigDecimal])] =
-      Seq(("flat", "2000", Messages("calc.calculationElection.message.flat"), None,
-      routes.OtherReliefsController.otherReliefs().toString(), Some(BigDecimal(500.0))))
+    lazy val seq: Seq[(String, String, String, Option[String])] =
+      Seq(("flat", "2000", Messages("calc.calculationElection.message.flat"), None))
     lazy val view = views.calculationElection(form, summaryModel, seq)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
@@ -106,22 +98,22 @@ class CalculationElectionViewSpec extends UnitSpec with WithFakeApplication with
       }
 
       s"contains the text ${messages.moreInformation}" in {
-        doc.body().getElementsByTag("h2").text should include (messages.moreInformation)
+        doc.body().getElementsByTag("h2").text should include(messages.moreInformation)
       }
     }
 
     "have the text in paragraphs" which {
 
       s"contains the text ${messages.moreInfoFirstP}" in {
-        doc.body().getElementsByTag("p").text should include (messages.moreInfoFirstP)
+        doc.body().getElementsByTag("p").text should include(messages.moreInfoFirstP)
       }
 
       s"contains the text ${messages.moreInfoSecondP}" in {
-        doc.body().getElementsByTag("p").text should include (messages.moreInfoSecondP)
+        doc.body().getElementsByTag("p").text should include(messages.moreInfoSecondP)
       }
 
       s"contains the text ${messages.moreInfoThirdP}" in {
-        doc.body().getElementsByTag("p").text should include (messages.moreInfoThirdP)
+        doc.body().getElementsByTag("p").text should include(messages.moreInfoThirdP)
       }
     }
 
@@ -134,7 +126,7 @@ class CalculationElectionViewSpec extends UnitSpec with WithFakeApplication with
     }
 
     s"display a concertina information box with '${messages.whyMoreDetailsOne} " in {
-      doc.select("div#details-content-0 p").text should include (messages.whyMoreDetailsOne)
+      doc.select("div#details-content-0 p").text should include(messages.whyMoreDetailsOne)
     }
 
     s"display a concertina information box with '${messages.whyMoreDetailsTwo} " in {
