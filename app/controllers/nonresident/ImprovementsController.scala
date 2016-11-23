@@ -19,9 +19,10 @@ package controllers.nonresident
 import common.DefaultRoutes._
 import common.{KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
+import constructors.nonresident.AnswersConstructor
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.ImprovementsForm._
-import models.nonresident.{AcquisitionDateModel, ImprovementsModel, RebasedValueModel}
+import models.nonresident.{AcquisitionDateModel, ImprovementsModel, RebasedValueModel, TotalGainResultsModel}
 import play.api.mvc.Result
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HeaderCarrier
@@ -31,11 +32,13 @@ import scala.concurrent.Future
 
 object ImprovementsController extends ImprovementsController {
   val calcConnector = CalculatorConnector
+  val answersConstructor = AnswersConstructor
 }
 
 trait ImprovementsController extends FrontendController with ValidActiveSession {
 
   val calcConnector: CalculatorConnector
+  val answersConstructor: AnswersConstructor
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
 
@@ -111,6 +114,14 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
 
   val submitImprovements = ValidateSession.async { implicit request =>
 
+    def getRoute(totalGainResultsModel: TotalGainResultsModel): Future[Result] = {
+      val optionSeq = Seq(totalGainResultsModel.rebasedGain, totalGainResultsModel.timeApportionedGain).flatten
+      val finalSeq = Seq(totalGainResultsModel.flatGain) ++ optionSeq
+
+      if (!finalSeq.forall(_ <= 0)) Future.successful(Redirect(routes.PrivateResidenceReliefController.privateResidenceRelief()))
+      else Future.successful(Redirect(routes.CheckYourAnswersController.checkYourAnswers()))
+    }
+
     def routeRequest(backUrl: String, improvementsOptions: Boolean): Future[Result] = {
       improvementsForm(improvementsOptions).bindFromRequest.fold(
         errors => {
@@ -120,7 +131,11 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
         },
         success => {
           calcConnector.saveFormData(KeystoreKeys.improvements, success)
-          Future.successful(Redirect(routes.CheckYourAnswersController.checkYourAnswers()))
+          for {
+            answers <- answersConstructor.getNRTotalGainAnswers
+            calcResult <- calcConnector.calculateTotalGain(answers)
+            result <- getRoute(calcResult.get)
+          } yield result
         }
       )
     }
