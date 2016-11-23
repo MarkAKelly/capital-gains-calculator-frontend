@@ -46,11 +46,9 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
   def setupTarget(getData: Option[CalculationElectionModel],
                   postData: Option[CalculationElectionModel],
                   summaryData: SummaryModel,
-                  calc: Option[CalculationResultModel] = None,
-                  otherReliefsFlat: Option[OtherReliefsModel] = None,
-                  otherReliefsTA: Option[OtherReliefsModel] = None,
-                  otherReliefsRebased: Option[OtherReliefsModel] = None
+                  calc: Option[Total] = None
                  ): CalculationElectionController = {
+
     val mockCalcConnector = mock[CalculatorConnector]
     val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
     val mockAnswersConstructor = mock[AnswersConstructor]
@@ -58,24 +56,9 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
     when(mockCalcConnector.createSummary(Matchers.any()))
       .thenReturn(summaryData)
 
-    val flatReliefs = Some(otherReliefsFlat.getOrElse(OtherReliefsModel(0)).otherReliefs)
-    val timeReliefs = Some(otherReliefsTA.getOrElse(OtherReliefsModel(0)).otherReliefs)
-    val rebasedReliefs = Some(otherReliefsRebased.getOrElse(OtherReliefsModel(0)).otherReliefs)
+    when(mockCalcConnector.calculateTotalGain(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(calc))
 
-    when(mockCalcElectionConstructor.generateElection(Matchers.any(), Matchers.any()))
-      .thenReturn(Seq(
-        (s"${CalculationType.flat}", "8000.00", "flat calculation", None),
-        (s"${CalculationType.timeApportioned}", "8000.00", "time apportioned calculation",
-          Some(messages.taxStartDate)),
-        (s"${CalculationType.rebased}", "10000.00", "rebased calculation",
-          Some(messages.taxStartDate))
-      ))
-    when(mockCalcConnector.calculateFlat(Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(calc))
-    when(mockCalcConnector.calculateTA(Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(calc))
-    when(mockCalcConnector.calculateRebased(Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(calc))
     when(mockCalcConnector.fetchAndGetFormData[CalculationElectionModel](Matchers.eq(KeystoreKeys.calculationElection))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
