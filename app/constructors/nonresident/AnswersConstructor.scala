@@ -49,10 +49,10 @@ trait AnswersConstructor {
                       soldForLessModel: Option[SoldForLessModel]): Future[DisposalValueModel] = (soldOrGivenAwayModel, soldForLessModel) match {
       case (SoldOrGivenAwayModel(true), Some(SoldForLessModel(true))) =>
         calculatorConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.disposalMarketValue).map(data => data.get)
-      case (SoldOrGivenAwayModel(false), Some(SoldForLessModel(false))) =>
-        calculatorConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.disposalMarketValue).map(data => data.get)
-      case _ =>
+      case (SoldOrGivenAwayModel(true), _) =>
         calculatorConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.disposalValue).map(data => data.get)
+      case _ =>
+        calculatorConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.disposalMarketValue).map(data => data.get)
     }
 
     def acquisitionValue(acquisitionDateModel: AcquisitionDateModel,
