@@ -53,7 +53,7 @@
     }
 
 
-    <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
+    <h1 class="heading-large">@Messages("calc.privateResidenceRelief.question")</h1>
 
     @form(action = controllers.nonresident.routes.PrivateResidenceReliefController.submitPrivateResidenceRelief) {
 
@@ -67,7 +67,8 @@
                     '_legend -> Messages("calc.privateResidenceRelief.question"),
                     '_labelAfter -> true,
                     '_labelClass -> "block-label",
-                    '_legendID -> "isClaimingPRR"
+                    '_legendID -> "isClaimingPRR",
+                    '_legendClass -> "visuallyhidden"
                 )
             </div>
         } else {
@@ -75,7 +76,8 @@
                 privateResidenceReliefForm,
                 "isClaimingPRR",
                 Messages("calc.privateResidenceRelief.question"),
-                hiddenContent
+                hiddenContent,
+                hideLegend = true
             )
         }
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>

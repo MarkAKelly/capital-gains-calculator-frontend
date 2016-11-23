@@ -59,8 +59,8 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
           heading.attr("class") shouldBe "heading-large"
         }
 
-        s"has the text '${messages.pageHeading}'" in {
-          heading.text shouldBe messages.pageHeading
+        s"has the text '${messages.PrivateResidenceRelief.question}'" in {
+          heading.text shouldBe messages.PrivateResidenceRelief.question
         }
       }
 
@@ -80,8 +80,14 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
         }
       }
 
-      s"have the question '${messages.PrivateResidenceRelief.question}'" in {
-        document.body.select("legend").text shouldBe messages.PrivateResidenceRelief.question
+      s"have a hidden legend '${messages.PrivateResidenceRelief.question}'" which {
+        lazy val legend = document.body.select("legend")
+        s"has the text '${messages.PrivateResidenceRelief.question}'" in {
+          legend.text shouldBe messages.PrivateResidenceRelief.question
+        }
+        s"has the class 'visuallyhidden'" in {
+          legend.attr("class") shouldBe "visuallyhidden"
+        }
       }
 
       "have inputs containing the id isClaimingPRR" in {
@@ -142,8 +148,15 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
       lazy val view = privateResidenceRelief(privateResidenceReliefForm(true, false), false, true, "date-input")(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
-      s"have the question '${messages.PrivateResidenceRelief.question}'" in {
-        document.body.select("legend").text shouldBe messages.PrivateResidenceRelief.question
+      s"have the question a hidden legend" which {
+        lazy val legend = document.body.select("legend")
+
+        s"has the text ${messages.PrivateResidenceRelief.question}" in {
+          legend.text shouldBe messages.PrivateResidenceRelief.question
+        }
+        "has the class 'visuallyhidden'" in {
+          legend.attr("class") shouldBe "visuallyhidden"
+        }
       }
 
       "have inputs containing the id isClaimingPRR" in {
