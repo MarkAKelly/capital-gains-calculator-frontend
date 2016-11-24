@@ -18,7 +18,7 @@
 
 @main_template(Messages("calc.calculationElection.question"), sidebarLinks = Some(sidebar)) {
 
-    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.AllowableLossesController.allowableLosses">@Messages("calc.base.back")</a>
+    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.CheckYourAnswersController.checkYourAnswers">@Messages("calc.base.back")</a>
 
     @errorSummary(calculationElectionForm, "calculation-election")
 
