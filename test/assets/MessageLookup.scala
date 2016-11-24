@@ -247,6 +247,11 @@ object MessageLookup {
       val linkTwo = "Previous tax years"
     }
 
+    object PreviousLossOrGain {
+      val question = "Did your previous properties result in a Capital Gains Tax loss or gain?"
+      val mandatoryCheck = "Please tell us whether you made a gain or loss"
+    }
+
     object OtherReliefs {
       val help = "For example, lettings relief."
       val question = "How much extra tax relief are you claiming?"
