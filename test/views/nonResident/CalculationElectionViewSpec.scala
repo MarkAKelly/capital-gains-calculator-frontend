@@ -62,7 +62,7 @@ class CalculationElectionViewSpec extends UnitSpec with WithFakeApplication with
       }
 
       "has a back link to 'back'" in {
-        doc.select("a#back-link").attr("href") shouldBe "/calculate-your-capital-gains/non-resident/allowable-losses"
+        doc.select("a#back-link").attr("href") shouldBe "/calculate-your-capital-gains/non-resident/check-your-answers"
       }
     }
 
