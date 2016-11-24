@@ -47,22 +47,31 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with
   "Calling generateElection" should {
 
     "when only a flat calculation result is provided" should {
+
+      val seq = TestCalculationElectionConstructor.generateElection(hc, onlyFlat)
       "produce an empty sequence" in {
-        TestCalculationElectionConstructor.generateElection(hc, onlyFlat).size shouldBe 0
+        seq.size shouldBe 1
+      }
+
+      "should have flat as the first element" in {
+        seq.head._1 shouldEqual "flat"
       }
     }
 
     "when a flat calculation and a rebased calculation result are provided" should {
 
       val seq = TestCalculationElectionConstructor.generateElection(hc, flatAndRebased)
+
       "produce two entries in the sequence" in {
         seq.size shouldBe 2
       }
 
       "should be returned with an order" which {
+
         "should have flat as the first element" in {
           seq.head._1 shouldEqual "flat"
         }
+
         "should have rebased as the second element" in {
           seq(1)._1 shouldEqual "rebased"
         }
@@ -72,14 +81,17 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with
     "when a flat calculation and a time calculation result are provided" should {
 
       val seq = TestCalculationElectionConstructor.generateElection(hc, flatAndTime)
+
       "produce two entries in the sequence" in {
         seq.size shouldBe 2
       }
 
       "should be returned with an order" which {
+
         "should have time as the first element" in {
           seq.head._1 shouldEqual "time"
         }
+
         "should have flat as the second element" in {
           seq(1)._1 shouldEqual "flat"
         }
@@ -89,17 +101,21 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with
     "when a flat, rebased and time are all provided" should {
 
       val seq = TestCalculationElectionConstructor.generateElection(hc, flatRebasedAndTime)
+      
       "produce a three entry sequence" in {
         seq.size shouldBe 3
       }
 
       "should be returned with an order" which {
+
         "should have time as the first element" in {
           seq.head._1 shouldEqual "time"
         }
+
         "should have flat as the second element" in {
           seq(1)._1 shouldEqual "flat"
         }
+
         "should have rebased as the third element" in {
           seq(2)._1 shouldEqual "rebased"
         }

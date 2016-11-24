@@ -33,24 +33,12 @@ trait CalculationElectionConstructor {
                        totalGainResults: TotalGainResultsModel
                       ): Seq[(String, String, String, Option[String])] = {
 
-    (totalGainResults.flatGain, totalGainResults.timeApportionedGain, totalGainResults.rebasedGain) match {
-      case (flat, Some(time), Some(rebased)) =>
-        Seq(
-          (flatElementConstructor(), totalGainResults.flatGain),
-          (timeElementConstructor(), totalGainResults.timeApportionedGain.get),
-          (rebasedElementConstructor(), totalGainResults.rebasedGain.get)
-        ).sortBy(_._2).map(_._1)
-      case (flat, Some(time), None) =>
-        Seq(
-          (flatElementConstructor(), totalGainResults.flatGain), (timeElementConstructor(), totalGainResults.timeApportionedGain.get)
-        ).sortBy(_._2).map(_._1)
-      case (flat, None, Some(rebased)) =>
-        Seq(
-          (flatElementConstructor(), totalGainResults.flatGain), (rebasedElementConstructor(), totalGainResults.rebasedGain.get)
-        ).sortBy(_._2).map(_._1)
-      case (_, _, _) =>
-        Seq()
-    }
+    val flatEl = Some((flatElementConstructor(), totalGainResults.flatGain))
+    val timeEl = totalGainResults.timeApportionedGain.collect { case el => (timeElementConstructor(), el)}
+    val rebasedEl = totalGainResults.rebasedGain.collect { case el => (rebasedElementConstructor(), el)}
+    // SortedSet
+    val items = Seq(flatEl, timeEl, rebasedEl).collect { case Some(item) => item}
+    items.sortBy(_._2).map(_._1)
   }
 
   private def rebasedElementConstructor() = {
