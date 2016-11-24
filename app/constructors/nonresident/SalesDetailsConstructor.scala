@@ -78,14 +78,14 @@ object SalesDetailsConstructor {
 
     val question = (answers.soldOrGivenAwayModel.soldIt, answers.soldForLessModel) match {
       case (true, Some(SoldForLessModel(true))) => Messages("calc.marketValue.sold.question")
-      case (true, _) => Messages("calc.disposalValue.question")
+      case (true, Some(_)) => Messages("calc.disposalValue.question")
       case _ => Messages("calc.marketValue.gaveItAway.question")
     }
 
     val route = (answers.soldOrGivenAwayModel.soldIt, answers.soldForLessModel) match {
       case (true, Some(SoldForLessModel(true))) =>
         controllers.nonresident.routes.MarketValueWhenSoldOrGaveAwayController.marketValueWhenSold().url
-      case (true, _) => controllers.nonresident.routes.DisposalValueController.disposalValue().url
+      case (true, Some(_)) => controllers.nonresident.routes.DisposalValueController.disposalValue().url
       case _ => controllers.nonresident.routes.MarketValueWhenSoldOrGaveAwayController.marketValueWhenGaveAway().url
     }
 
