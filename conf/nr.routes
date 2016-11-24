@@ -97,6 +97,22 @@ POST        /disposal-costs                     controllers.nonresident.Disposal
 GET         /private-residence-relief           controllers.nonresident.PrivateResidenceReliefController.privateResidenceRelief
 POST        /private-residence-relief           controllers.nonresident.PrivateResidenceReliefController.submitPrivateResidenceRelief
 
+#Previous Gain Or Loss
+GET         /previous-gain-or-loss              controllers.nonresident.PreviousGainOrLossController.previousGainOrLoss
+POST        /previous-gain-or-loss              controllers.nonresident.PreviousGainOrLossController.submitPreviousGainOrLoss
+
+#How Much Loss
+GET         /how-much-loss                      controllers.nonresident.HowMuchLossController.howMuchLoss
+POST        /how-much-loss                      controllers.nonresident.HowMuchLossController.submitHowMuchLoss
+
+#How Much Gain
+GET         /how-much-gain                      controllers.nonresident.HowMuchGainController.howMuchGain
+POST        /how-much-gain                      controllers.nonresident.HowMuchGainController.submitHowMuchGain
+
+#Brought Forward Losses
+GET         /brought-forward-losses             controllers.nonresident.BroughtForwardLossesController.broughtForwardLosses
+POST        /brought-forward-losses             controllers.nonresident.BroughtForwardLossesController.submitBroughtForwardLosses
+
 #Allowable Losses
 GET         /allowable-losses                   controllers.nonresident.AllowableLossesController.allowableLosses
 POST        /allowable-losses                   controllers.nonresident.AllowableLossesController.submitAllowableLosses
