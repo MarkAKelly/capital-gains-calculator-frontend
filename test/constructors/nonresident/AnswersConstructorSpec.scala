@@ -31,7 +31,8 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
 
   def setupMockedAnswersConstructor(totalGainAnswersModel: TotalGainAnswersModel,
                                     worthBeforeLegislationStartModel: Option[WorthBeforeLegislationStartModel] = None,
-                                    marketValueAcquisition: Option[AcquisitionValueModel] = None): AnswersConstructor = {
+                                    marketValueAcquisition: Option[AcquisitionValueModel] = None,
+                                    marketDisposalValue: Option[DisposalValueModel] = None): AnswersConstructor = {
 
     val mockConnector = mock[CalculatorConnector]
 
@@ -46,6 +47,9 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
 
     when(mockConnector.fetchAndGetFormData[DisposalValueModel](Matchers.eq(KeystoreKeys.disposalValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(totalGainAnswersModel.disposalValueModel)))
+
+    when(mockConnector.fetchAndGetFormData[DisposalValueModel](Matchers.eq(KeystoreKeys.disposalMarketValue))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(marketDisposalValue))
 
     when(mockConnector.fetchAndGetFormData[DisposalCostsModel](Matchers.eq(KeystoreKeys.disposalCosts))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(totalGainAnswersModel.disposalCostsModel)))
@@ -157,11 +161,29 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
     Some(OtherReliefsModel(1000))
   )
 
+  val totalGainSoldForLess = TotalGainAnswersModel(
+    DisposalDateModel(10, 10, 2016),
+    SoldOrGivenAwayModel(true),
+    Some(SoldForLessModel(true)),
+    DisposalValueModel(11000),
+    DisposalCostsModel(100),
+    Some(HowBecameOwnerModel("Bought")),
+    Some(BoughtForLessModel(true)),
+    AcquisitionValueModel(5000),
+    AcquisitionCostsModel(200),
+    AcquisitionDateModel("Yes", Some(1), Some(4), Some(2013)),
+    Some(RebasedValueModel(Some(7500))),
+    Some(RebasedCostsModel("Yes", Some(150))),
+    ImprovementsModel("Yes", Some(50), Some(25)),
+    Some(OtherReliefsModel(1000))
+  )
+
   "Calling getNRTotalGainAnswers" should {
 
     "return a valid TotalGainAnswersModel with no optional values" in {
       val hc = mock[HeaderCarrier]
-      val constructor = setupMockedAnswersConstructor(totalGainNoOptionalModel, marketValueAcquisition = Some(AcquisitionValueModel(5000)))
+      val constructor = setupMockedAnswersConstructor(totalGainNoOptionalModel, marketValueAcquisition = Some(AcquisitionValueModel(5000)),
+                                                      marketDisposalValue = Some(DisposalValueModel(10000)))
       val result = constructor.getNRTotalGainAnswers(hc)
 
       await(result) shouldBe totalGainNoOptionalModel
@@ -186,7 +208,8 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
 
     "return a valid acquisition value of 3000 with an property acquired without purchasing" in {
       val hc = mock[HeaderCarrier]
-      val constructor = setupMockedAnswersConstructor(totalGainNoOptionalModel, marketValueAcquisition = Some(AcquisitionValueModel(3000)))
+      val constructor = setupMockedAnswersConstructor(totalGainNoOptionalModel, marketValueAcquisition = Some(AcquisitionValueModel(3000)),
+                                                      marketDisposalValue = Some(DisposalValueModel(10000)))
       val result = constructor.getNRTotalGainAnswers(hc)
 
       await(result).acquisitionValueModel.acquisitionValueAmt shouldBe 3000
@@ -198,6 +221,32 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
       val result = constructor.getNRTotalGainAnswers(hc)
 
       await(result).acquisitionValueModel.acquisitionValueAmt shouldBe 2000
+    }
+
+    "return a valid disposal value of 10000 when sold and not sold for less" in {
+      val hc = mock[HeaderCarrier]
+      val constructor = setupMockedAnswersConstructor(totalGainAllOptionalModel)
+      val result = constructor.getNRTotalGainAnswers(hc)
+
+      await(result).disposalValueModel.disposalValue shouldBe 10000
+    }
+
+    "return a valid disposal value of 11000 when sold and sold for less" in {
+      val hc = mock[HeaderCarrier]
+      val constructor = setupMockedAnswersConstructor(totalGainSoldForLess, marketValueAcquisition = Some(AcquisitionValueModel(5000)),
+                                                      marketDisposalValue = Some(DisposalValueModel(11000)))
+      val result = constructor.getNRTotalGainAnswers(hc)
+
+      await(result).disposalValueModel.disposalValue shouldBe 11000
+    }
+
+    "return a valid disposal value of 10000 when given away" in {
+      val hc = mock[HeaderCarrier]
+      val constructor = setupMockedAnswersConstructor(totalGainNoOptionalModel, marketValueAcquisition = Some(AcquisitionValueModel(5000)),
+                                                      marketDisposalValue = Some(DisposalValueModel(10000)))
+      val result = constructor.getNRTotalGainAnswers(hc)
+
+      await(result).disposalValueModel.disposalValue shouldBe 10000
     }
   }
 }

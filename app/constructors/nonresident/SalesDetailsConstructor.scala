@@ -18,7 +18,7 @@ package constructors.nonresident
 
 import java.time.LocalDate
 
-import models.nonresident.{QuestionAnswerModel, SummaryModel, TotalGainAnswersModel}
+import models.nonresident.{QuestionAnswerModel, SoldForLessModel, SummaryModel, TotalGainAnswersModel}
 import common.{Dates, KeystoreKeys => keys}
 import play.api.i18n.Messages
 
@@ -75,10 +75,24 @@ object SalesDetailsConstructor {
   }
 
   def disposalValueRow(answers: TotalGainAnswersModel): Option[QuestionAnswerModel[BigDecimal]] = {
+
+    val question = (answers.soldOrGivenAwayModel.soldIt, answers.soldForLessModel) match {
+      case (true, Some(SoldForLessModel(true))) => Messages("calc.marketValue.sold.question")
+      case (true, Some(_)) => Messages("calc.disposalValue.question")
+      case _ => Messages("calc.marketValue.gaveItAway.question")
+    }
+
+    val route = (answers.soldOrGivenAwayModel.soldIt, answers.soldForLessModel) match {
+      case (true, Some(SoldForLessModel(true))) =>
+        controllers.nonresident.routes.MarketValueWhenSoldOrGaveAwayController.marketValueWhenSold().url
+      case (true, Some(_)) => controllers.nonresident.routes.DisposalValueController.disposalValue().url
+      case _ => controllers.nonresident.routes.MarketValueWhenSoldOrGaveAwayController.marketValueWhenGaveAway().url
+    }
+
     Some(QuestionAnswerModel[BigDecimal](keys.disposalValue,
       answers.disposalValueModel.disposalValue,
-      Messages("calc.disposalValue.question"),
-      Some(controllers.nonresident.routes.DisposalValueController.disposalValue().url)))
+      question,
+      Some(route)))
   }
 
   def disposalCostsRow(answers: TotalGainAnswersModel): Option[QuestionAnswerModel[BigDecimal]] = {

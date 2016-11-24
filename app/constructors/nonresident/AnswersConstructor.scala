@@ -35,7 +35,6 @@ trait AnswersConstructor {
     val disposalDate = calculatorConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.disposalDate).map(data => data.get)
     val soldOrGivenAway = calculatorConnector.fetchAndGetFormData[SoldOrGivenAwayModel](KeystoreKeys.soldOrGivenAway).map(data => data.get)
     val soldForLess = calculatorConnector.fetchAndGetFormData[SoldForLessModel](KeystoreKeys.NonResidentKeys.soldForLess)
-    val disposalValue = calculatorConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.disposalValue).map(data => data.get)
     val disposalCosts = calculatorConnector.fetchAndGetFormData[DisposalCostsModel](KeystoreKeys.disposalCosts).map(data => data.get)
     val howBecameOwner = calculatorConnector.fetchAndGetFormData[HowBecameOwnerModel](KeystoreKeys.howBecameOwner)
     val boughtForLess = calculatorConnector.fetchAndGetFormData[BoughtForLessModel](KeystoreKeys.boughtForLess)
@@ -45,6 +44,16 @@ trait AnswersConstructor {
     val rebasedCosts = calculatorConnector.fetchAndGetFormData[RebasedCostsModel](KeystoreKeys.rebasedCosts)
     val improvements = calculatorConnector.fetchAndGetFormData[ImprovementsModel](KeystoreKeys.improvements).map(data => data.get)
     val otherReliefsFlat = calculatorConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat)
+
+    def disposalValue(soldOrGivenAwayModel: SoldOrGivenAwayModel,
+                      soldForLessModel: Option[SoldForLessModel]): Future[DisposalValueModel] = (soldOrGivenAwayModel, soldForLessModel) match {
+      case (SoldOrGivenAwayModel(true), Some(SoldForLessModel(true))) =>
+        calculatorConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.disposalMarketValue).map(data => data.get)
+      case (SoldOrGivenAwayModel(true), Some(_)) =>
+        calculatorConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.disposalValue).map(data => data.get)
+      case _ =>
+        calculatorConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.disposalMarketValue).map(data => data.get)
+    }
 
     def acquisitionValue(acquisitionDateModel: AcquisitionDateModel,
                          howBecameOwnerModel: Option[HowBecameOwnerModel],
@@ -67,7 +76,7 @@ trait AnswersConstructor {
       disposalDate <- disposalDate
       soldOrGivenAway <- soldOrGivenAway
       soldForLess <- soldForLess
-      disposalValue <- disposalValue
+      disposalValue <- disposalValue(soldOrGivenAway, soldForLess)
       disposalCosts <- disposalCosts
       howBecameOwner <- howBecameOwner
       boughtForLess <- boughtForLess
