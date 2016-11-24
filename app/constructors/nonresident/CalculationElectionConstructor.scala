@@ -21,6 +21,8 @@ import models.nonresident.TotalGainResultsModel
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.http.HeaderCarrier
 
+import scala.concurrent.Future
+
 object CalculationElectionConstructor extends CalculationElectionConstructor {
   val calcConnector = CalculatorConnector
 }
@@ -31,14 +33,14 @@ trait CalculationElectionConstructor {
 
   def generateElection(hc: HeaderCarrier,
                        totalGainResults: TotalGainResultsModel
-                      ): Seq[(String, String, String, Option[String])] = {
+                      ): Future[Seq[(String, String, String, Option[String])]] = {
 
     val flatEl = Some((flatElementConstructor(), totalGainResults.flatGain))
     val timeEl = totalGainResults.timeApportionedGain.collect { case el => (timeElementConstructor(), el)}
     val rebasedEl = totalGainResults.rebasedGain.collect { case el => (rebasedElementConstructor(), el)}
     // SortedSet
     val items = Seq(flatEl, timeEl, rebasedEl).collect { case Some(item) => item}
-    items.sortBy(_._2).map(_._1)
+    Future.successful(items.sortBy(_._2).map(_._1))
   }
 
   private def rebasedElementConstructor() = {

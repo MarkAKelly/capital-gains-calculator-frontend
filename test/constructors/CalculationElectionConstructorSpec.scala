@@ -101,7 +101,7 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with
     "when a flat, rebased and time are all provided" should {
 
       val seq = TestCalculationElectionConstructor.generateElection(hc, flatRebasedAndTime)
-      
+
       "produce a three entry sequence" in {
         seq.size shouldBe 3
       }

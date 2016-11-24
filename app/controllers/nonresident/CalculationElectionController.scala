@@ -61,8 +61,8 @@ trait CalculationElectionController extends FrontendController with ValidActiveS
     for {
       answers <- calcAnswersConstructor.getNRTotalGainAnswers(hc)
       calculationResults <- calcConnector.calculateTotalGain(answers)(hc)
-      finalResult <- action(calcElectionConstructor.generateElection(hc, calculationResults.get)
-      )
+      content <- calcElectionConstructor.generateElection(hc, calculationResults.get)
+      finalResult <- action(content)
     } yield finalResult
   }
 
@@ -77,10 +77,11 @@ trait CalculationElectionController extends FrontendController with ValidActiveS
       for {
         answers <- calcAnswersConstructor.getNRTotalGainAnswers(hc)
         calculationResults <- calcConnector.calculateTotalGain(answers)(hc)
+        content <- calcElectionConstructor.generateElection(hc, calculationResults.get)
       } yield {
         BadRequest(calculation.nonresident.calculationElection(
           form,
-          calcElectionConstructor.generateElection(hc, calculationResults.get)
+          content
         ))
       }
     }
