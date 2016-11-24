@@ -164,8 +164,8 @@ class MarketValueWhenSoldOrGaveAwayActionSpec extends UnitSpec with WithFakeAppl
         status(result) shouldBe 303
       }
 
-      "redirect to the AcquisitionCosts page" in {
-        redirectLocation(result) shouldBe Some(controllers.nonresident.routes.AcquisitionCostsController.acquisitionCosts().url)
+      "redirect to the DisposalCosts page" in {
+        redirectLocation(result) shouldBe Some(controllers.nonresident.routes.DisposalCostsController.disposalCosts().url)
       }
     }
   }
@@ -180,8 +180,8 @@ class MarketValueWhenSoldOrGaveAwayActionSpec extends UnitSpec with WithFakeAppl
         status(result) shouldBe 303
       }
 
-      "redirect to the AcquisitionCosts page" in {
-        redirectLocation(result) shouldBe Some(controllers.nonresident.routes.AcquisitionCostsController.acquisitionCosts().url)
+      "redirect to the DisposalCosts page" in {
+        redirectLocation(result) shouldBe Some(controllers.nonresident.routes.DisposalCostsController.disposalCosts().url)
       }
     }
 

@@ -217,8 +217,8 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.CalculationElectionController.calculationElection()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationElectionController.calculationElection()}")
+      s"redirect to ${routes.CheckYourAnswersController.checkYourAnswers()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.CheckYourAnswersController.checkYourAnswers()}")
       }
     }
 
@@ -231,8 +231,8 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.CalculationElectionController.calculationElection()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CalculationElectionController.calculationElection()}")
+      s"redirect to ${routes.CheckYourAnswersController.checkYourAnswers()}" in {
+        redirectLocation(result) shouldBe Some(s"${routes.CheckYourAnswersController.checkYourAnswers()}")
       }
     }
 

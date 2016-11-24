@@ -29,7 +29,7 @@ class DisposalCostsViewSpec extends UnitSpec with WithFakeApplication with FakeR
   "Disposal Costs view" when {
 
     "supplied with no errors" should {
-      lazy val view = disposalCosts(disposalCostsForm)(fakeRequest)
+      lazy val view = disposalCosts(disposalCostsForm, "back-link")(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       s"have a title of '${messages.question}'" in {
@@ -47,8 +47,8 @@ class DisposalCostsViewSpec extends UnitSpec with WithFakeApplication with FakeR
           backLink.text shouldBe commonMessages.back
         }
 
-        s"has a route to 'disposal-value'" in {
-          backLink.attr("href") shouldBe controllers.nonresident.routes.DisposalValueController.disposalValue().url
+        s"has a route to 'back-link'" in {
+          backLink.attr("href") shouldBe "back-link"
         }
       }
 
@@ -139,7 +139,7 @@ class DisposalCostsViewSpec extends UnitSpec with WithFakeApplication with FakeR
 
     "supplied with errors" should {
       lazy val form = disposalCostsForm.bind(Map("disposalCosts" -> "a"))
-      lazy val view = disposalCosts(form)(fakeRequest)
+      lazy val view = disposalCosts(form, "back-link")(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have an error summary" in {
