@@ -31,10 +31,9 @@ class CalculationElectionViewSpec extends UnitSpec with WithFakeApplication with
   "The Calculation Election View" should {
 
     lazy val form = calculationElectionForm
-    lazy val summaryModel = TestModels.sumModelFlat
     lazy val seq: Seq[(String, String, String, Option[String])] =
       Seq(("flat", "2000", Messages("calc.calculationElection.message.flat"), None))
-    lazy val view = views.calculationElection(form, summaryModel, seq)(fakeRequest)
+    lazy val view = views.calculationElection(form, seq)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
     "have a h1 tag that" should {
@@ -139,7 +138,7 @@ class CalculationElectionViewSpec extends UnitSpec with WithFakeApplication with
 
     "supplied with errors" should {
       lazy val form = calculationElectionForm.bind(Map("calculationElection" -> "a"))
-      lazy val view = views.calculationElection(form, summaryModel, seq)(fakeRequest)
+      lazy val view = views.calculationElection(form, seq)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have an error summary" in {

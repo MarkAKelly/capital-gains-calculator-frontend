@@ -39,17 +39,17 @@ trait CalculationElectionConstructor {
           (flatElementConstructor(), totalGainResults.flatGain),
           (timeElementConstructor(), totalGainResults.timeApportionedGain.get),
           (rebasedElementConstructor(), totalGainResults.rebasedGain.get)
-        ).sortBy(_._2).reverse.map(_._1)
+        ).sortBy(_._2).map(_._1)
       case (flat, Some(time), None) =>
         Seq(
           (flatElementConstructor(), totalGainResults.flatGain), (timeElementConstructor(), totalGainResults.timeApportionedGain.get)
-        ).sortBy(_._2).reverse.map(_._1)
+        ).sortBy(_._2).map(_._1)
       case (flat, None, Some(rebased)) =>
         Seq(
           (flatElementConstructor(), totalGainResults.flatGain), (rebasedElementConstructor(), totalGainResults.rebasedGain.get)
-        ).sortBy(_._2).reverse.map(_._1)
+        ).sortBy(_._2).map(_._1)
       case (_, _, _) =>
-        Seq(flatElementConstructor())
+        Seq()
     }
   }
 
