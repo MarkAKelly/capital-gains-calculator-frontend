@@ -18,8 +18,8 @@ package models.nonresident
 
 import play.api.libs.json.Json
 
-case class PreviousLossModel(loss: BigDecimal)
+case class HowMuchLossModel(loss: BigDecimal)
 
-object PreviousLossModel {
-  implicit val formats = Json.format[PreviousLossModel]
+object HowMuchLossModel {
+  implicit val formats = Json.format[HowMuchLossModel]
 }

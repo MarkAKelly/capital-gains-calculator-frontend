@@ -16,18 +16,18 @@
 
 package forms.nonResident
 
-import models.nonresident.PreviousLossModel
+import models.nonresident.HowMuchLossModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import forms.nonresident.PreviousLossForm._
+import forms.nonresident.HowMuchLossForm._
 import assets.MessageLookup.{NonResident => messages}
 
-class PreviousLossFormSpec extends UnitSpec with WithFakeApplication {
+class HowMuchLossFormSpec extends UnitSpec with WithFakeApplication {
 
   "Creating a form" when {
 
     "passing in a model" should {
-      val model = PreviousLossModel(200)
-      lazy val form = previousLossForm.fill(model)
+      val model = HowMuchLossModel(200)
+      lazy val form = howMuchLossForm.fill(model)
 
       "return a valid form" in {
         form.data shouldBe Map("loss" -> "200")
@@ -36,20 +36,20 @@ class PreviousLossFormSpec extends UnitSpec with WithFakeApplication {
 
     "passing in a valid map" should {
       val map = Map("loss" -> "200")
-      lazy val form = previousLossForm.bind(map)
+      lazy val form = howMuchLossForm.bind(map)
 
       "return a form with no errors" in {
         form.errors.isEmpty shouldBe true
       }
 
       "return a valid form" in {
-        form.value shouldBe Some(PreviousLossModel(200))
+        form.value shouldBe Some(HowMuchLossModel(200))
       }
     }
 
     "passing in an invalid map with an empty value" should {
       val map = Map("loss" -> "")
-      lazy val form = previousLossForm.bind(map)
+      lazy val form = howMuchLossForm.bind(map)
 
       "return an invalid form with one error" in {
         form.errors.size shouldBe 1
@@ -62,7 +62,7 @@ class PreviousLossFormSpec extends UnitSpec with WithFakeApplication {
 
     "passing in an invalid map with a non-numeric value" should {
       val map = Map("loss" -> "a")
-      lazy val form = previousLossForm.bind(map)
+      lazy val form = howMuchLossForm.bind(map)
 
       "return an invalid form with one error" in {
         form.errors.size shouldBe 1
@@ -75,40 +75,40 @@ class PreviousLossFormSpec extends UnitSpec with WithFakeApplication {
 
     "passing in an invalid map with three decimal places" should {
       val map = Map("loss" -> "1850.456")
-      lazy val form = previousLossForm.bind(map)
+      lazy val form = howMuchLossForm.bind(map)
 
       "return an invalid form with one error" in {
         form.errors.size shouldBe 1
       }
 
-      s"return an error message of '${messages.PreviousLoss.errorDecimalPlaces}" in {
-        form.error("loss").get.message shouldBe messages.PreviousLoss.errorDecimalPlaces
+      s"return an error message of '${messages.HowMuchLoss.errorDecimalPlaces}" in {
+        form.error("loss").get.message shouldBe messages.HowMuchLoss.errorDecimalPlaces
       }
     }
 
     "passing in an invalid map with a negative value" should {
       val map = Map("loss" -> "-1200")
-      lazy val form = previousLossForm.bind(map)
+      lazy val form = howMuchLossForm.bind(map)
 
       "return an invalid form with one error" in {
         form.errors.size shouldBe 1
       }
 
-      s"return an error message of '${messages.PreviousLoss.errorNegative}" in {
-        form.error("loss").get.message shouldBe messages.PreviousLoss.errorNegative
+      s"return an error message of '${messages.HowMuchLoss.errorNegative}" in {
+        form.error("loss").get.message shouldBe messages.HowMuchLoss.errorNegative
       }
     }
 
     "passing in an invalid map with a value above 1 billion" should {
       val map = Map("loss" -> "1000000000.01")
-      lazy val form = previousLossForm.bind(map)
+      lazy val form = howMuchLossForm.bind(map)
 
       "return an invalid form with one error" in {
         form.errors.size shouldBe 1
       }
 
-      s"return an error message of '${messages.PreviousLoss.errorMaximum("1,000,000,000")}" in {
-        form.error("loss").get.message shouldBe messages.PreviousLoss.errorMaximum("1,000,000,000")
+      s"return an error message of '${messages.HowMuchLoss.errorMaximum("1,000,000,000")}" in {
+        form.error("loss").get.message shouldBe messages.HowMuchLoss.errorMaximum("1,000,000,000")
       }
     }
   }

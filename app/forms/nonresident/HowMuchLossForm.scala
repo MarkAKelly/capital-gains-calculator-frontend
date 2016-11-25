@@ -19,24 +19,24 @@ package forms.nonresident
 import common.Constants
 import common.Transformers._
 import common.Validation._
-import models.nonresident.PreviousLossModel
+import models.nonresident.HowMuchLossModel
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-object PreviousLossForm {
+object HowMuchLossForm {
 
-  val previousLossForm: Form[PreviousLossModel] = Form(
+  val howMuchLossForm: Form[HowMuchLossModel] = Form(
     mapping(
       "loss" -> text
         .verifying(Messages("calc.common.error.mandatoryAmount"), mandatoryCheck)
         .verifying(Messages("calc.common.error.mandatoryAmount"), bigDecimalCheck)
         .transform(stringToBigDecimal, bigDecimalToString)
-        .verifying(Messages("calc.previousLoss.errorMinimum"), isPositive)
-        .verifying(Messages("calc.previousLoss.errorDecimal"), decimalPlacesCheck)
+        .verifying(Messages("calc.howMuchLoss.errorMinimum"), isPositive)
+        .verifying(Messages("calc.howMuchLoss.errorDecimal"), decimalPlacesCheck)
         .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " +
           Messages("calc.common.error.maxNumericExceeded.OrLess"), maxCheck)
-    )(PreviousLossModel.apply)(PreviousLossModel.unapply)
+    )(HowMuchLossModel.apply)(HowMuchLossModel.unapply)
   )
 }

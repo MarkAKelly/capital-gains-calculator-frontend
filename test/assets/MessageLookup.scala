@@ -332,7 +332,8 @@ object MessageLookup {
       val gave = "I gave it away"
     }
 
-    object PreviousLoss {
+    object HowMuchLoss {
+      val question = "How much loss did you report?"
       val errorNegative = "Enter a positive number for your loss"
       val errorDecimalPlaces = "There are too many numbers after the decimal point in your loss"
 

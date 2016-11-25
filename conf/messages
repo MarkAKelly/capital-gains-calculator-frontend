@@ -272,8 +272,9 @@ calc.howBecameOwner.inherited= Inherited it
 calc.boughtForLess.question = Did you buy the property for less than it was worth because the seller wanted to help you?
 
 ## Previous Loss ##
-calc.previousLoss.errorMinimum = Enter a positive number for your loss
-calc.previousLoss.errorDecimal = There are too many numbers after the decimal point in your loss
+calc.howMuchLoss.question = How much loss did you report?
+calc.howMuchLoss.errorMinimum = Enter a positive number for your loss
+calc.howMuchLoss.errorDecimal = There are too many numbers after the decimal point in your loss
 
 ## Calculation Election ##
 calc.calculationElection.pageHeading = Working out your total
