@@ -50,7 +50,8 @@ trait HowMuchGainController extends FrontendController with ValidActiveSession {
 
     def successAction(model: HowMuchGainModel) = {
       calcConnector.saveFormData(KeystoreKeys.howMuchGain, model)
-      Future.successful(Redirect(routes.AnnualExemptAmountController.annualExemptAmount()))
+      if (model.howMuchGain > 0) Future.successful(Redirect(routes.BroughtForwardLossesController.broughtForwardLosses()))
+      else Future.successful(Redirect(routes.AnnualExemptAmountController.annualExemptAmount()))
     }
 
     howMuchGainForm.bindFromRequest.fold(errorAction, successAction)
