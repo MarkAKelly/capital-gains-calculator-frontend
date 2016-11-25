@@ -24,7 +24,8 @@ import play.api.i18n.Messages
 
 object DeductionDetailsConstructor {
 
-  def deductionDetailsRows(answers: TotalGainAnswersModel): Seq[QuestionAnswerModel[Any]] = {
+  def deductionDetailsRows(answers: TotalGainAnswersModel,
+                           privateResidenceReliefModel: Option[PrivateResidenceReliefModel] = None): Seq[QuestionAnswerModel[Any]] = {
     val otherReliefsFlatValue = otherReliefsFlatValueRow(answers)
 
     val sequence = Seq(otherReliefsFlatValue)

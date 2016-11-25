@@ -126,4 +126,16 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
       }
     }
   }
+
+  "Calling .privateResidenceReliefQuestionRow" when {
+
+    "a positive total gain on at least one calculation" should {
+
+      "return some value" in {
+
+      }
+
+    }
+
+  }
 }

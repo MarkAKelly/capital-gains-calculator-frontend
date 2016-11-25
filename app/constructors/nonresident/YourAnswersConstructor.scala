@@ -16,15 +16,16 @@
 
 package constructors.nonresident
 
-import models.nonresident.{QuestionAnswerModel, TotalGainAnswersModel}
+import models.nonresident.{PrivateResidenceReliefModel, QuestionAnswerModel, TotalGainAnswersModel}
 
 object YourAnswersConstructor {
 
-  def fetchYourAnswers(totalGainAnswersModel: TotalGainAnswersModel): Seq[QuestionAnswerModel[Any]] = {
+  def fetchYourAnswers(totalGainAnswersModel: TotalGainAnswersModel,
+                       privateResidenceReliefModel: Option[PrivateResidenceReliefModel] = None): Seq[QuestionAnswerModel[Any]] = {
     val salesDetailsRows = SalesDetailsConstructor.salesDetailsRows(totalGainAnswersModel)
     val purchaseDetailsRows = PurchaseDetailsConstructor.getPurchaseDetailsSection(totalGainAnswersModel)
     val propertyDetailsRows = PropertyDetailsConstructor.propertyDetailsRows(totalGainAnswersModel)
-    val deductionDetailsRows = DeductionDetailsConstructor.deductionDetailsRows(totalGainAnswersModel)
+    val deductionDetailsRows = DeductionDetailsConstructor.deductionDetailsRows(totalGainAnswersModel, privateResidenceReliefModel)
 
     salesDetailsRows ++ purchaseDetailsRows ++ propertyDetailsRows ++ deductionDetailsRows
   }
