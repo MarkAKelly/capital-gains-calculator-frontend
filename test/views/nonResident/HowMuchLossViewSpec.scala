@@ -87,8 +87,8 @@ class HowMuchLossViewSpec extends UnitSpec with WithFakeApplication with FakeReq
         }
       }
 
-      "have an input with the id 'howMuchLoss" in {
-        document.body().select("input").attr("id") shouldBe "howMuchLoss"
+      "have an input with the id 'loss" in {
+        document.body().select("input").attr("id") shouldBe "loss"
       }
 
       "have a button" which {

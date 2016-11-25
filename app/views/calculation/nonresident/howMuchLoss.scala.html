@@ -8,13 +8,13 @@
 
     <a id="back-link" class="back-link" href="@controllers.nonresident.routes.PreviousGainOrLossController.previousGainOrLoss">Back</a>
 
-    @errorSummary(howMuchLossForm, "howMuchLoss")
+    @errorSummary(howMuchLossForm, "loss")
 
     <h1 class="heading-xlarge">@Messages("calc.howMuchLoss.question")</h1>
 
     @form(action = controllers.nonresident.routes.HowMuchLossController.submitHowMuchLoss) {
 
-        @formInputMoney(howMuchLossForm, "howMuchLoss", Messages("calc.howMuchLoss.question"), hideLabel = true)
+        @formInputMoney(howMuchLossForm, "loss", Messages("calc.howMuchLoss.question"), hideLabel = true)
 
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
     }
