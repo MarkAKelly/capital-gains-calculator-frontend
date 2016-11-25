@@ -21,7 +21,7 @@ object KeystoreKeys {
   object NonResidentKeys{
 
     val soldForLess = "nr:soldForLess"
-
+    val previousLossOrGain = "nr:previousLossOrGain"
   }
 
   val customerType = "nr:customerType"

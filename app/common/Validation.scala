@@ -112,6 +112,7 @@ object Validation {
     case "Loss" => true
     case "Gain" => true
     case "Neither" => true
+    case "" => true
     case _ => false
   }
 

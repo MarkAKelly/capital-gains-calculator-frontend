@@ -1,10 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+@import models.nonresident.PreviousLossOrGainModel
+@import uk.gov.hmrc.play.views.html.helpers.form
+@import views.html.helpers._
 
-</body>
-</html>
+@import play.mvc.Results.Todo
+@(previousLossOrGainForm: Form[PreviousLossOrGainModel])(implicit request: Request[_])
+
+@main_template(Messages("calc.previousLossOrGain.errors.required")) {
+
+    @errorSummary(previousLossOrGainForm, "previousLossOrGain")
+
+    <h1 class="heading-xlarge">@Messages("calc.previousLossOrGain.question")</h1>
+
+    @form(action = controllers.nonresident.routes.PreviousLossOrGainControlller.submitPreviousLossOrGain) {
+        @formInputRadioGroup(
+            Seq(
+                
+            )
+        )
+    }
+
+}
