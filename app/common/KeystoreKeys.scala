@@ -50,6 +50,8 @@ object KeystoreKeys {
   val soldOrGivenAway = "nr:soldOrGivenAway"
   val boughtForLess = "nr:boughtForLess"
   val howMuchGain = "nr:howMuchGain"
+  val howMuchLoss = "nr:howMuchLoss"
+
 
 
   object ResidentPropertyKeys {

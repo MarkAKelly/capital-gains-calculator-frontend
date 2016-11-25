@@ -109,6 +109,20 @@ class HowMuchGainActionSpec extends UnitSpec with WithFakeApplication with Mocki
         status(result) shouldBe 303
       }
 
+      "redirect to the Brought Forward Losses page" in {
+        redirectLocation(result) shouldBe Some(controllers.nonresident.routes.BroughtForwardLossesController.broughtForwardLosses().url)
+      }
+    }
+
+    "a valid form is submitted with a zero value" should {
+      val target = setupTarget(None)
+      lazy val request = fakeRequestToPOSTWithSession(("howMuchGain", "0"))
+      lazy val result = target.submitHowMuchGain(request)
+
+      "return a status of 303" in {
+        status(result) shouldBe 303
+      }
+
       "redirect to the Annual Exempt Amount page" in {
         redirectLocation(result) shouldBe Some(controllers.nonresident.routes.AnnualExemptAmountController.annualExemptAmount().url)
       }
@@ -126,6 +140,19 @@ class HowMuchGainActionSpec extends UnitSpec with WithFakeApplication with Mocki
 
       "load the How Much Gain page" in {
         document.title shouldBe messages.question
+      }
+    }
+
+    "an invalid session is submitted" should {
+      val target = setupTarget(None)
+      lazy val result = target.howMuchGain(fakeRequest)
+
+      "return a status of 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the session timeout page" in {
+        redirectLocation(result).get should include("/calculate-your-capital-gains/session-timeout")
       }
     }
   }

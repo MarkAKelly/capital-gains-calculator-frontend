@@ -17,27 +17,19 @@
 package controllers.CalculationControllerTests
 
 import assets.MessageLookup.NonResident.{DisposalCosts => messages}
-import assets.MessageLookup.{NonResident => commonMessages}
-import common.{Constants, KeystoreKeys}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
-import play.api.libs.json.Json
-import uk.gov.hmrc.http.cache.client.CacheMap
+import controllers.nonresident.{DisposalCostsController, routes}
+import models.nonresident.DisposalCostsModel
+import org.jsoup._
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.mvc.AnyContentAsFormUrlEncoded
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import org.jsoup._
 import org.scalatest.mock.MockitoSugar
+import play.api.test.Helpers._
+import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
-import controllers.nonresident.{DisposalCostsController, routes}
-import models.nonresident.{AcquisitionDateModel, DisposalCostsModel, RebasedValueModel}
-import play.api.mvc.Result
-import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
