@@ -200,6 +200,13 @@ object MessageLookup {
       def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
+    object HowMuchGain {
+
+      val question = "What was your taxable gain?"
+      val errorNegativeNumber = "Enter a positive number for the amount on your taxable gain"
+      val errorDecimalPlaces = "Taxable Gain for has too many numbers after the decimal point"
+      }
+
     object Improvements {
       val helpOne = "Improvements are permanent changes that increase the value of a property, like adding extensions or garages."
       val helpTwo = "Normal maintenance costs don't count."
