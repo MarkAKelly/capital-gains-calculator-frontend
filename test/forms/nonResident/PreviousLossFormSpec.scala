@@ -16,7 +16,6 @@
 
 package forms.nonResident
 
-import assets.MessageLookup.NonResident
 import models.nonresident.PreviousLossModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import forms.nonresident.PreviousLossForm._
@@ -71,6 +70,45 @@ class PreviousLossFormSpec extends UnitSpec with WithFakeApplication {
 
       s"return an error message of '${messages.mandatoryAmount}" in {
         form.error("loss").get.message shouldBe messages.mandatoryAmount
+      }
+    }
+
+    "passing in an invalid map with three decimal places" should {
+      val map = Map("loss" -> "1850.456")
+      lazy val form = previousLossForm.bind(map)
+
+      "return an invalid form with one error" in {
+        form.errors.size shouldBe 1
+      }
+
+      s"return an error message of '${messages.PreviousLoss.errorDecimalPlaces}" in {
+        form.error("loss").get.message shouldBe messages.PreviousLoss.errorDecimalPlaces
+      }
+    }
+
+    "passing in an invalid map with a negative value" should {
+      val map = Map("loss" -> "-1200")
+      lazy val form = previousLossForm.bind(map)
+
+      "return an invalid form with one error" in {
+        form.errors.size shouldBe 1
+      }
+
+      s"return an error message of '${messages.PreviousLoss.errorNegative}" in {
+        form.error("loss").get.message shouldBe messages.PreviousLoss.errorNegative
+      }
+    }
+
+    "passing in an invalid map with a value above 1 billion" should {
+      val map = Map("loss" -> "1000000000.01")
+      lazy val form = previousLossForm.bind(map)
+
+      "return an invalid form with one error" in {
+        form.errors.size shouldBe 1
+      }
+
+      s"return an error message of '${messages.PreviousLoss.errorMaximum("1,000,000,000")}" in {
+        form.error("loss").get.message shouldBe messages.PreviousLoss.errorMaximum("1,000,000,000")
       }
     }
   }

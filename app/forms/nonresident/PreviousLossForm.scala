@@ -16,12 +16,14 @@
 
 package forms.nonresident
 
+import common.Constants
 import common.Transformers._
 import common.Validation._
 import models.nonresident.PreviousLossModel
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.Messages
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object PreviousLossForm {
 
@@ -31,6 +33,10 @@ object PreviousLossForm {
         .verifying(Messages("calc.common.error.mandatoryAmount"), mandatoryCheck)
         .verifying(Messages("calc.common.error.mandatoryAmount"), bigDecimalCheck)
         .transform(stringToBigDecimal, bigDecimalToString)
+        .verifying(Messages("calc.previousLoss.errorMinimum"), isPositive)
+        .verifying(Messages("calc.previousLoss.errorDecimal"), decimalPlacesCheck)
+        .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " +
+          Messages("calc.common.error.maxNumericExceeded.OrLess"), maxCheck)
     )(PreviousLossModel.apply)(PreviousLossModel.unapply)
   )
 }
