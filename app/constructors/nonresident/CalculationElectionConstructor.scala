@@ -35,11 +35,10 @@ trait CalculationElectionConstructor {
                        totalGainResults: TotalGainResultsModel
                       ): Future[Seq[(String, String, String, Option[String])]] = {
 
-    val flatEl = Some((flatElementConstructor(), totalGainResults.flatGain))
-    val timeEl = totalGainResults.timeApportionedGain.collect { case el => (timeElementConstructor(), el)}
-    val rebasedEl = totalGainResults.rebasedGain.collect { case el => (rebasedElementConstructor(), el)}
-    // SortedSet
-    val items = Seq(flatEl, timeEl, rebasedEl).collect { case Some(item) => item}
+    val flatElement = Some((flatElementConstructor(), totalGainResults.flatGain))
+    val timeElement = totalGainResults.timeApportionedGain.collect { case el => (timeElementConstructor(), el)}
+    val rebasedElement = totalGainResults.rebasedGain.collect { case el => (rebasedElementConstructor(), el)}
+    val items = Seq(flatElement, timeElement, rebasedElement).collect { case Some(item) => item}
     Future.successful(items.sortBy(_._2).map(_._1))
   }
 
