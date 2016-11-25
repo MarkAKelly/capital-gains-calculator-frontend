@@ -16,20 +16,21 @@
 
 package constructors
 
+import assets.MessageLookup.NonResident.{CalculationElection => messages}
 import common.TestModels
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
-import models.nonresident.CalculationResultModel
+import models.nonresident.{CalculationResultModel, TotalGainResultsModel}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.http.HeaderCarrier
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
-class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar {
+class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
 
   object TestCalculationElectionConstructor extends CalculationElectionConstructor {
     val calcConnector = mockCalcConnector
@@ -37,57 +38,87 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar {
 
   implicit val hc = new HeaderCarrier()
   val mockCalcConnector = mock[CalculatorConnector]
-  def mockFlatCalc: OngoingStubbing[Future[Option[CalculationResultModel]]] = when(mockCalcConnector.calculateFlat(Matchers.any())(Matchers.any()))
-    .thenReturn(Future.successful(Some(CalculationResultModel(8000, 10000, 6000, 20, 0, None, None, None))))
 
-  def mockTimeCalc: OngoingStubbing[Future[Option[CalculationResultModel]]] = when(mockCalcConnector.calculateTA(Matchers.any())(Matchers.any()))
-    .thenReturn(Future.successful(Some(CalculationResultModel(8000, 10000, 6000, 20, 0, None, None, None))))
-
-  def mockRebasedCalc: OngoingStubbing[Future[Option[CalculationResultModel]]] = when(mockCalcConnector.calculateRebased(Matchers.any())(Matchers.any()))
-    .thenReturn(Future.successful(Some(CalculationResultModel(8000, 10000, 6000, 20, 0, None, None, None))))
+  val onlyFlat = TotalGainResultsModel(BigDecimal(0), None, None)
+  val flatAndRebased = TotalGainResultsModel(BigDecimal(-100), Some(BigDecimal(-50)), None)
+  val flatAndTime = TotalGainResultsModel(BigDecimal(-20), None, Some(BigDecimal(-300)))
+  val flatRebasedAndTime = TotalGainResultsModel(BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(-300)))
 
   "Calling generateElection" should {
 
-    "when summary has no acquisition date" should {
+    "when only a flat calculation result is provided" should {
 
-      "produce a single entry sequence" in {
-        mockFlatCalc
-        TestCalculationElectionConstructor.generateElection(TestModels.summaryIndividualFlatWithoutAEA, hc, Some(TestModels.calcModelOneRate),
-          Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), None, None, None).size shouldBe 1
+      val seq = TestCalculationElectionConstructor.generateElection(hc, onlyFlat)
+      "produce an empty sequence" in {
+        seq.size shouldBe 1
+      }
+
+      "should have flat as the first element" in {
+        seq.head._1 shouldEqual "flat"
       }
     }
 
-    "when summary has an acquisition date after the tax start date" should {
+    "when a flat calculation and a rebased calculation result are provided" should {
 
-      "produce a single entry sequence" in {
-        mockFlatCalc
-        TestCalculationElectionConstructor.generateElection(TestModels.summaryIndividualAcqDateAfter, hc, Some(TestModels.calcModelOneRate),
-          Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), None, None, None).size shouldBe 1
+      val seq = TestCalculationElectionConstructor.generateElection(hc, flatAndRebased)
+
+      "produce two entries in the sequence" in {
+        seq.size shouldBe 2
+      }
+
+      "should be returned with an order" which {
+
+        "should have flat as the first element" in {
+          seq.head._1 shouldEqual "flat"
+        }
+
+        "should have rebased as the second element" in {
+          seq(1)._1 shouldEqual "rebased"
+        }
       }
     }
 
-    "when summary has an acquisition date before the tax start date" should {
+    "when a flat calculation and a time calculation result are provided" should {
 
-      "produce a two entry sequence if there is no value for rebased supplied." in {
-        mockFlatCalc
-        mockTimeCalc
-        TestCalculationElectionConstructor.generateElection(TestModels.summaryTrusteeTAWithoutAEA, hc, Some(TestModels.calcModelOneRate),
-          Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), None, None, None).size shouldBe 2
+      val seq = TestCalculationElectionConstructor.generateElection(hc, flatAndTime)
+
+      "produce two entries in the sequence" in {
+        seq.size shouldBe 2
       }
 
-      "produce a three entry sequence if there is a value for the rebased calculation supplied." in {
-        mockFlatCalc
-        mockTimeCalc
-        mockRebasedCalc
-        TestCalculationElectionConstructor.generateElection(TestModels.summaryIndividualRebased, hc, Some(TestModels.calcModelOneRate),
-          Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), None, None, None).size shouldBe 3
+      "should be returned with an order" which {
+
+        "should have time as the first element" in {
+          seq.head._1 shouldEqual "time"
+        }
+
+        "should have flat as the second element" in {
+          seq(1)._1 shouldEqual "flat"
+        }
+      }
+    }
+
+    "when a flat, rebased and time are all provided" should {
+
+      val seq = TestCalculationElectionConstructor.generateElection(hc, flatRebasedAndTime)
+
+      "produce a three entry sequence" in {
+        seq.size shouldBe 3
       }
 
-      "produce a two entry sequence if there is a value for the rebased calculation supplied but the acquisition date is not supplied." in {
-        mockFlatCalc
-        mockRebasedCalc
-        TestCalculationElectionConstructor.generateElection(TestModels.summaryIndividualRebasedNoAcqDate, hc, Some(TestModels.calcModelOneRate),
-          Some(TestModels.calcModelOneRate), Some(TestModels.calcModelOneRate), None, None, None).size shouldBe 2
+      "should be returned with an order" which {
+
+        "should have time as the first element" in {
+          seq.head._1 shouldEqual "time"
+        }
+
+        "should have flat as the second element" in {
+          seq(1)._1 shouldEqual "flat"
+        }
+
+        "should have rebased as the third element" in {
+          seq(2)._1 shouldEqual "rebased"
+        }
       }
     }
   }

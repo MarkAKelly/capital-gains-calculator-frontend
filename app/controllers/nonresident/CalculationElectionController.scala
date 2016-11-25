@@ -16,15 +16,14 @@
 
 package controllers.nonresident
 
-import common.{KeystoreKeys, TaxDates}
+import common.KeystoreKeys
 import connectors.CalculatorConnector
-import constructors.nonresident.CalculationElectionConstructor
+import constructors.nonresident.{AnswersConstructor, CalculationElectionConstructor}
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.CalculationElectionForm._
 import models.nonresident._
 import play.api.data.Form
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation
 
 import scala.concurrent.Future
@@ -32,6 +31,7 @@ import scala.concurrent.Future
 object CalculationElectionController extends CalculationElectionController {
   val calcConnector = CalculatorConnector
   val calcElectionConstructor = CalculationElectionConstructor
+  val calcAnswersConstructor = AnswersConstructor
 }
 
 trait CalculationElectionController extends FrontendController with ValidActiveSession {
@@ -40,77 +40,29 @@ trait CalculationElectionController extends FrontendController with ValidActiveS
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
   val calcConnector: CalculatorConnector
   val calcElectionConstructor: CalculationElectionConstructor
-
-  private def getOtherReliefsFlat(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] =
-    calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
-      case Some(data) => Some(data.otherReliefs)
-      case _ => None
-    }
-
-  private def getOtherReliefsTA(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] =
-    calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA).map {
-      case Some(data) => Some(data.otherReliefs)
-      case _ => None
-    }
-
-  private def getOtherReliefsRebased(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] =
-    calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map {
-      case Some(data) => Some(data.otherReliefs)
-      case _ => None
-    }
-
-  private def calcTimeCall(summary: SummaryModel)(implicit hc: HeaderCarrier): Future[Option[CalculationResultModel]] = {
-    summary.acquisitionDateModel.hasAcquisitionDate match {
-      case "Yes" if !TaxDates.dateAfterStart(summary.acquisitionDateModel.day.get,
-        summary.acquisitionDateModel.month.get,
-        summary.acquisitionDateModel.year.get) =>
-        calcConnector.calculateTA(summary)
-      case _ => Future(None)
-    }
-  }
-
-  private def calcRebasedCall(summary: SummaryModel)(implicit hc: HeaderCarrier): Future[Option[CalculationResultModel]] = {
-    (summary.rebasedValueModel.getOrElse(RebasedValueModel(None)).rebasedValueAmt.isDefined, summary.acquisitionDateModel.hasAcquisitionDate) match {
-      case (true, "Yes") if !TaxDates.dateAfterStart(summary.acquisitionDateModel.day.get,
-        summary.acquisitionDateModel.month.get,
-        summary.acquisitionDateModel.year.get) =>
-        calcConnector.calculateRebased(summary)
-      case (true, "No") => calcConnector.calculateRebased(summary)
-      case _ => Future(None)
-    }
-  }
+  val calcAnswersConstructor: AnswersConstructor
 
   val calculationElection = ValidateSession.async { implicit request =>
 
-    def action(construct: SummaryModel,
-               content: Seq[(String, String, String, Option[String], String, Option[BigDecimal])]) =
+    def action(content: Seq[(String, String, String, Option[String])]) =
       calcConnector.fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection).map {
         case Some(data) =>
           Ok(calculation.nonresident.calculationElection(
             calculationElectionForm.fill(data),
-            construct,
             content)
           )
         case None =>
           Ok(calculation.nonresident.calculationElection(
             calculationElectionForm,
-            construct,
             content)
           )
       }
 
     for {
-      construct <- calcConnector.createSummary(hc)
-      calcFlat <- calcConnector.calculateFlat(construct)
-      calcTA <- calcTimeCall(construct)
-      calcRebased <- calcRebasedCall(construct)
-      otherReliefsFlat <- getOtherReliefsFlat
-      otherReliefsTA <- getOtherReliefsTA
-      otherReliefsRebased <- getOtherReliefsRebased
-      finalResult <- action(
-        construct,
-        calcElectionConstructor.generateElection(construct, hc, calcFlat, calcTA, calcRebased, otherReliefsFlat, otherReliefsTA, otherReliefsRebased)
-      )
+      answers <- calcAnswersConstructor.getNRTotalGainAnswers(hc)
+      calculationResults <- calcConnector.calculateTotalGain(answers)(hc)
+      content <- calcElectionConstructor.generateElection(hc, calculationResults.get)
+      finalResult <- action(content)
     } yield finalResult
   }
 
@@ -118,28 +70,18 @@ trait CalculationElectionController extends FrontendController with ValidActiveS
 
     def successAction(model: CalculationElectionModel) = {
       calcConnector.saveFormData(KeystoreKeys.calculationElection, model)
-      request.body.asFormUrlEncoded.get("action").headOption match {
-        case Some("flat") => Future.successful(Redirect(routes.OtherReliefsFlatController.otherReliefsFlat()))
-        case Some("time") => Future.successful(Redirect(routes.OtherReliefsTAController.otherReliefsTA()))
-        case Some("rebased") => Future.successful(Redirect(routes.OtherReliefsRebasedController.otherReliefsRebased()))
-        case _ => Future.successful(Redirect(routes.SummaryController.summary()))
-      }
+      Future.successful(Redirect(routes.SummaryController.summary()))
     }
 
     def errorAction(form: Form[CalculationElectionModel]) = {
       for {
-        construct <- calcConnector.createSummary(hc)
-        calcFlat <- calcConnector.calculateFlat(construct)
-        calcTA <- calcTimeCall(construct)
-        otherReliefsFlat <- getOtherReliefsFlat
-        otherReliefsTA <- getOtherReliefsTA
-        otherReliefsRebased <- getOtherReliefsRebased
-        calcRebased <- calcRebasedCall(construct)
+        answers <- calcAnswersConstructor.getNRTotalGainAnswers(hc)
+        calculationResults <- calcConnector.calculateTotalGain(answers)(hc)
+        content <- calcElectionConstructor.generateElection(hc, calculationResults.get)
       } yield {
         BadRequest(calculation.nonresident.calculationElection(
           form,
-          construct,
-          calcElectionConstructor.generateElection(construct, hc, calcFlat, calcTA, calcRebased, otherReliefsFlat, otherReliefsTA, otherReliefsRebased)
+          content
         ))
       }
     }
