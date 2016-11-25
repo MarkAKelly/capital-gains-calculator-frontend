@@ -26,9 +26,12 @@ object DeductionDetailsConstructor {
 
   def deductionDetailsRows(answers: TotalGainAnswersModel,
                            privateResidenceReliefModel: Option[PrivateResidenceReliefModel] = None): Seq[QuestionAnswerModel[Any]] = {
-    val otherReliefsFlatValue = otherReliefsFlatValueRow(answers)
 
-    val sequence = Seq(otherReliefsFlatValue)
+    val otherReliefsFlatValue = otherReliefsFlatValueRow(answers)
+    val privateResidenceReliefQuestion = privateResidenceReliefQuestionRow(privateResidenceReliefModel)
+
+    val sequence = Seq(otherReliefsFlatValue,
+      privateResidenceReliefQuestion)
 
     sequence.flatten
   }
@@ -40,6 +43,18 @@ object DeductionDetailsConstructor {
         value,
         Messages("calc.otherReliefs.question"),
         Some(controllers.nonresident.routes.OtherReliefsController.otherReliefs().url)
+      ))
+      case _ => None
+    }
+  }
+
+  def privateResidenceReliefQuestionRow(answers: Option[PrivateResidenceReliefModel]): Option[QuestionAnswerModel[String]] = {
+    answers match {
+      case Some(_) => Some(QuestionAnswerModel(
+        keys.privateResidenceRelief,
+        answers.get.isClaimingPRR,
+        Messages("calc.privateResidenceRelief.question"),
+        Some(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url)
       ))
       case _ => None
     }

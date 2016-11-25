@@ -74,19 +74,25 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
     Some(OtherReliefsModel(1450))
   )
 
+  val yesPRRModel = PrivateResidenceReliefModel("Yes", None, None)
+
   private def assertExpectedResult[T](option: Option[T])(test: T => Unit) = assertOption("expected option is None")(option)(test)
 
   "Calling .deductionDetailsRows" when {
 
-    "provided with reliefs" should {
-      lazy val result = DeductionDetailsConstructor.deductionDetailsRows(yesOtherReliefs)
+    "provided with reliefs and prr" should {
+      lazy val result = DeductionDetailsConstructor.deductionDetailsRows(yesOtherReliefs, Some(yesPRRModel))
 
-      "have a sequence of size 1" in {
-        result.size shouldBe 1
+      "have a sequence of size 2" in {
+        result.size shouldBe 2
       }
 
       "return a sequence with an other reliefs flat value" in {
         result.contains(DeductionDetailsConstructor.otherReliefsFlatValueRow(yesOtherReliefs).get)
+      }
+
+      "return a sequence with a prr question answer" in {
+        result.contains(DeductionDetailsConstructor.privateResidenceReliefQuestionRow(Some(yesPRRModel)).get)
       }
     }
   }
@@ -129,13 +135,41 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
 
   "Calling .privateResidenceReliefQuestionRow" when {
 
-    "a positive total gain on at least one calculation" should {
+    "provided with no privateResidenceRelief model" should {
+      lazy val result = DeductionDetailsConstructor.privateResidenceReliefQuestionRow(None)
 
-      "return some value" in {
-
+      "return a None" in {
+        result shouldBe None
       }
-
     }
 
+    "provided with a privateResidenceRelief model" should {
+
+      "with answer 'Yes'" should {
+        val prrModel = PrivateResidenceReliefModel("Yes", None, None)
+        lazy val result = DeductionDetailsConstructor.privateResidenceReliefQuestionRow(Some(prrModel))
+
+        "return some value" in {
+          result.isDefined shouldBe true
+        }
+
+        "return an id of nr:privateResidenceRelief" in {
+          assertExpectedResult[QuestionAnswerModel[String]](result)(_.id shouldBe "nr:privateResidenceRelief")
+        }
+
+        "return a value of 'Yes'" in {
+          assertExpectedResult[QuestionAnswerModel[String]](result)(_.data shouldBe "Yes")
+        }
+
+        "return a question for Private Residence Relief" in {
+          assertExpectedResult[QuestionAnswerModel[String]](result)(_.question shouldBe messages.PrivateResidenceRelief.question)
+        }
+
+        "return a link to the Private Residence Relief page" in {
+          assertExpectedResult[QuestionAnswerModel[String]](result)(_.link shouldBe
+            Some(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url))
+        }
+      }
+    }
   }
 }
