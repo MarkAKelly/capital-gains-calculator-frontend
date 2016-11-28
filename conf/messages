@@ -323,6 +323,7 @@ calc.summary.secondaryHeading = You owe
 calc.summary.calculation.details.title = Calculation details
 calc.summary.calculation.details.totalGain = Your total gain
 calc.summary.calculation.details.totalLoss = Loss
+calc.summary.calculation.details.prrUsed = Private Resident Relief used
 calc.summary.calculation.details.usedAEA = Capital Gains Tax allowance used
 calc.summary.calculation.details.taxableGain = Your taxable gain
 calc.summary.calculation.details.taxRate = Your tax rate

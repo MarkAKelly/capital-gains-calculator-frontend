@@ -16,11 +16,12 @@
 
 package controllers.nonresident
 
+import common.nonresident.CalculationType
 import common.{KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
 import constructors.nonresident.AnswersConstructor
 import controllers.predicates.ValidActiveSession
-import models.nonresident._
+import models.nonresident.{CalculationResultsWithPRRModel, _}
 import play.api.mvc.{Action, AnyContent, Result}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HeaderCarrier
@@ -55,12 +56,17 @@ trait SummaryController extends FrontendController with ValidActiveSession {
       } else Future(None)
     }
 
-    def getAmountOwed(totalGainResultsModel: TotalGainResultsModel, calculationType: String): BigDecimal = {
+    def getAmountOwed(calculationResultsWithPRRModel: CalculationResultsWithPRRModel, calculationType: String): BigDecimal = {
       calculationType match {
-        case "flat" => totalGainResultsModel.flatGain
-        case "rebased" => totalGainResultsModel.rebasedGain.getOrElse(0.0)
-        case "time" => totalGainResultsModel.timeApportionedGain.getOrElse(0.0)
+        case CalculationType.flat => calculationResultsWithPRRModel.flatTaxableGain.taxableGain
+        case CalculationType.rebased => calculationResultsWithPRRModel.rebasedTaxableGain.get.taxableGain
+        case CalculationType.timeApportioned => calculationResultsWithPRRModel.timeApportionedTaxableGain.get.taxableGain
       }
+    }
+
+    def getSection(calculationResultsWithPRRModel: CalculationResultsWithPRRModel, isClaimingPRR: Boolean, totalGainResultsModel: TotalGainResultsModel,
+                   totalRes): Seq[QuestionAnswerModel[Any]] = {
+
     }
 
     def summaryBackUrl(implicit hc: HeaderCarrier): Future[String] = {

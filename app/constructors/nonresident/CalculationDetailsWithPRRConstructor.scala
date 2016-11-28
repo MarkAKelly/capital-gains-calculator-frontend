@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * WITHOUT WARRANTIED OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -17,26 +17,29 @@
 package constructors.nonresident
 
 import common.KeystoreKeys
-import controllers.nonresident.routes
-import models.nonresident.{QuestionAnswerModel, TotalGainResultsModel}
-import play.api.i18n.Messages
 import common.nonresident.CalculationType
+import controllers.nonresident.routes
+import models.nonresident.{CalculationResultsWithPRRModel, QuestionAnswerModel}
+import play.api.i18n.Messages
 
-object CalculationDetailsConstructor {
+object CalculationDetailsWithPRRConstructor {
 
-  def buildSection(calculation: TotalGainResultsModel, calculationType: String): Seq[QuestionAnswerModel[Any]] = {
+  def buildSection(calculation: CalculationResultsWithPRRModel, calculationType: String, prrUsed: BigDecimal): Seq[QuestionAnswerModel[Any]] = {
     val electionDetails = calculationElection(calculationType)
     val totalGainAmount = calculationType match {
-      case CalculationType.flat => calculation.flatGain
-      case CalculationType.timeApportioned => calculation.timeApportionedGain.get
-      case CalculationType.rebased => calculation.rebasedGain.get
+      case CalculationType.flat => calculation.flatTaxableGain.totalGain
+      case CalculationType.rebased => calculation.rebasedTaxableGain.get.totalGain
+      case CalculationType.timeApportioned => calculation.timeApportionedTaxableGain.get.totalGain
     }
     val totalGainDetails = totalGain(totalGainAmount)
     val totalLossDetails = totalLoss(totalGainAmount)
+    val prrDetails = prrUsedDetails(prrUsed)
     Seq(
       electionDetails,
+      totalGainAmount,
       totalGainDetails,
-      totalLossDetails
+      totalLossDetails,
+      prrDetails
     ).flatten
   }
 
@@ -82,4 +85,18 @@ object CalculationDetailsConstructor {
       Some(QuestionAnswerModel(id, answer, question, None))
     }
   }
+
+  def prrUsedDetails(prrUsed: BigDecimal): Option[QuestionAnswerModel[BigDecimal]] = {
+    if(prrUsed < BigDecimal(0)) None
+    else {
+      val id = "calcDetails:prrUsed"
+
+      val question = Messages("calc.summary.calculation.details.prrUsed")
+
+      val answer = prrUsed
+
+      Some(QuestionAnswerModel(id, answer, question, None))
+    }
+  }
+
 }
