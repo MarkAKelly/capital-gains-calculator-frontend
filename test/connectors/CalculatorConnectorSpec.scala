@@ -20,7 +20,6 @@ import java.util.UUID
 
 import common.KeystoreKeys
 import common.nonresident.CustomerTypeKeys
-import config.WSHttp
 import models.nonresident._
 import models.resident
 import models.resident.IncomeAnswersModel
@@ -259,7 +258,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     None,
     AcquisitionDateModel("No", None, None, None),
     AcquisitionValueModel(100000),
-    Some(RebasedValueModel("No", None)),
+    Some(RebasedValueModel(None)),
     None,
     ImprovementsModel("No", None),
     DisposalDateModel(10, 10, 2010),
@@ -283,7 +282,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     None,
     AcquisitionDateModel("Yes", Some(9), Some(9), Some(1999)),
     AcquisitionValueModel(100000),
-    Some(RebasedValueModel("No", None)),
+    Some(RebasedValueModel(None)),
     None,
     ImprovementsModel("No", None),
     DisposalDateModel(10, 10, 2010),
@@ -307,7 +306,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     None,
     AcquisitionDateModel("Yes", Some(9), Some(9), Some(1999)),
     AcquisitionValueModel(100000),
-    Some(RebasedValueModel("Yes", Some(1000))),
+    Some(RebasedValueModel(Some(1000))),
     Some(RebasedCostsModel("No", None)),
     ImprovementsModel("No", None),
     DisposalDateModel(10, 10, 2010),
@@ -331,7 +330,7 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     None,
     AcquisitionDateModel("No", None, None, None),
     AcquisitionValueModel(100000),
-    Some(RebasedValueModel("No", None)),
+    Some(RebasedValueModel(None)),
     None,
     ImprovementsModel("No", None),
     DisposalDateModel(10, 10, 2010),
@@ -376,12 +375,12 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
       Some(SoldForLessModel(false)),
       DisposalValueModel(1000),
       DisposalCostsModel(100),
-      HowBecameOwnerModel("Gifted"),
+      Some(HowBecameOwnerModel("Gifted")),
       Some(BoughtForLessModel(false)),
       AcquisitionValueModel(2000),
       AcquisitionCostsModel(200),
       AcquisitionDateModel("No", None, None, None),
-      Some(RebasedValueModel("No", None)),
+      Some(RebasedValueModel(None)),
       Some(RebasedCostsModel("No", None)),
       ImprovementsModel("Yes", Some(10), Some(20)),
       None)
@@ -403,12 +402,12 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
       Some(SoldForLessModel(false)),
       DisposalValueModel(1000),
       DisposalCostsModel(100),
-      HowBecameOwnerModel("Gifted"),
+      Some(HowBecameOwnerModel("Gifted")),
       Some(BoughtForLessModel(false)),
       AcquisitionValueModel(2000),
       AcquisitionCostsModel(200),
       AcquisitionDateModel("No", None, None, None),
-      Some(RebasedValueModel("No", None)),
+      Some(RebasedValueModel(None)),
       Some(RebasedCostsModel("No", None)),
       ImprovementsModel("Yes", Some(10), Some(20)),
       None)

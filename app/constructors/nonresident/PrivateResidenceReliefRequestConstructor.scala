@@ -53,7 +53,7 @@ object PrivateResidenceReliefRequestConstructor {
         if totalGainAnswersModel.acquisitionDateModel.get.plusMonths(18).isBefore(totalGainAnswersModel.disposalDateModel.get) &&
         !TaxDates.dateAfterStart(totalGainAnswersModel.acquisitionDateModel.get) =>
         s"&daysClaimedAfter=$value"
-      case (PrivateResidenceReliefModel("Yes", _, Some(value)), AcquisitionDateModel("No",_,_,_), Some(RebasedValueModel("Yes",_))) =>
+      case (PrivateResidenceReliefModel("Yes", _, Some(value)), AcquisitionDateModel("No",_,_,_), Some(RebasedValueModel(Some(_)))) =>
         s"&daysClaimedAfter=$value"
       case _ => ""
     }

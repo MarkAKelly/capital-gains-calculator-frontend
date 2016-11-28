@@ -29,7 +29,7 @@ class PropertyDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
     None,
     DisposalValueModel(150000),
     DisposalCostsModel(600),
-    HowBecameOwnerModel("Gifted"),
+    Some(HowBecameOwnerModel("Gifted")),
     None,
     AcquisitionValueModel(5000),
     AcquisitionCostsModel(200),
@@ -46,12 +46,12 @@ class PropertyDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
     Some(SoldForLessModel(false)),
     DisposalValueModel(90000),
     DisposalCostsModel(0),
-    HowBecameOwnerModel("Bought"),
+    Some(HowBecameOwnerModel("Bought")),
     Some(BoughtForLessModel(false)),
     AcquisitionValueModel(5000),
     AcquisitionCostsModel(200),
     AcquisitionDateModel("Yes", Some(1), Some(4), Some(2013)),
-    Some(RebasedValueModel("No", None)),
+    Some(RebasedValueModel(None)),
     Some(RebasedCostsModel("No", None)),
     ImprovementsModel("Yes", Some(50), None),
     None
@@ -63,12 +63,12 @@ class PropertyDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
     Some(SoldForLessModel(true)),
     DisposalValueModel(10000),
     DisposalCostsModel(100),
-    HowBecameOwnerModel("Bought"),
+    Some(HowBecameOwnerModel("Bought")),
     Some(BoughtForLessModel(true)),
     AcquisitionValueModel(5000),
     AcquisitionCostsModel(200),
     AcquisitionDateModel("Yes", Some(1), Some(4), Some(2013)),
-    Some(RebasedValueModel("Yes", Some(7500))),
+    Some(RebasedValueModel(Some(7500))),
     Some(RebasedCostsModel("Yes", Some(150))),
     ImprovementsModel("Yes", Some(50), Some(25)),
     None
@@ -90,7 +90,7 @@ class PropertyDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
       }
 
       "return a sequence with an improvements value" in {
-        result.contains(PropertyDetailsConstructor.improvementsTotalRow(allImprovements, true).get)
+        result.contains(PropertyDetailsConstructor.improvementsTotalRow(allImprovements, true, true).get)
       }
 
       "return a sequence with an improvements after value" in {
@@ -132,8 +132,8 @@ class PropertyDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
 
   "Calling improvementsTotalRow" when {
 
-    "supplied with a value of 50 and should be displayed it true" should {
-      lazy val result = PropertyDetailsConstructor.improvementsTotalRow(noRebasedImprovements, true)
+    "supplied with a value of 50 and no rebased value is used" should {
+      lazy val result = PropertyDetailsConstructor.improvementsTotalRow(noRebasedImprovements, true, false)
 
       "return some value" in {
         result.isDefined shouldBe true
@@ -157,10 +157,26 @@ class PropertyDetailsConstructorSpec extends UnitSpec with WithFakeApplication w
     }
 
     "supplied with no improvements value" should {
-      lazy val result = PropertyDetailsConstructor.improvementsTotalRow(noImprovements, false)
+      lazy val result = PropertyDetailsConstructor.improvementsTotalRow(noImprovements, false, false)
 
       "return a None" in {
         result shouldBe None
+      }
+    }
+
+    "supplied with a value of 50 alongside a rebased improvements value" should {
+      lazy val result = PropertyDetailsConstructor.improvementsTotalRow(allImprovements, true, true)
+
+      "return some value" in {
+        result.isDefined shouldBe true
+      }
+
+      "have the data for the value of 50" in {
+        assertExpectedResult(result)(_.data shouldBe BigDecimal(50))
+      }
+
+      "have the question for improvements values" in {
+        assertExpectedResult(result)(_.question shouldBe messages.questionThree)
       }
     }
   }

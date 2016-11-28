@@ -96,7 +96,7 @@ object DeductionDetailsConstructor {
             s" ${Messages("calc.privateResidenceRelief.questionBetween.partTwo")}",
           Some(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url)
         ))
-      case (Some(PrivateResidenceReliefModel("Yes", _, Some(value))), _, Some(RebasedValueModel("Yes",_)))
+      case (Some(PrivateResidenceReliefModel("Yes", _, Some(value))), _, Some(RebasedValueModel(Some(_))))
       if TaxDates.dateAfterOctober(answers.disposalDateModel.get) =>
         Some(QuestionAnswerModel(
           s"${keys.privateResidenceRelief}-daysClaimedAfter",

@@ -29,33 +29,29 @@ class RebasedValueViewSpec extends UnitSpec with WithFakeApplication with FakeRe
 
   "The rebased value view" when {
 
-    "not supplied with a pre-existing stored model and no acquisition date" should {
+    "not supplied with a pre-existing stored model" should {
 
-      lazy val view = rebasedValue(rebasedValueForm, "No")(fakeRequest)
+      lazy val view = rebasedValue(rebasedValueForm(false))(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       s"Have the title ${messages.question}" in {
         document.title shouldEqual messages.question
       }
 
-      s"Have the heading '${commonMessages.pageHeading}" in {
-        document.getElementsByTag("h1").text shouldBe commonMessages.pageHeading
+      s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+        document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
       }
 
-      s"have the question ${messages.question}" in {
-        document.select("#hasRebasedValue").text should include(messages.question)
-      }
+      "have a heading" which {
+        lazy val heading = document.body().select("h1")
 
-      s"have help text with the wording${messages.questionHelpText}" in {
-        document.getElementsByClass("form-hint").text should include(messages.questionHelpText)
-      }
+        "has a class of heading-xlarge" in {
+          heading.attr("class") shouldBe "heading-xlarge"
+        }
 
-      s"contain an input with the question ${messages.inputQuestion}" in {
-        document.getElementById("rebasedValueAmt").parent.text should include(messages.inputQuestion)
-      }
-
-      s"contain an input with the help text with the wording ${messages.inputHelpText}" in {
-        document.getElementsByClass("form-hint").text should include(messages.inputHelpText)
+        s"has the text '${messages.question}'" in {
+          heading.text shouldBe messages.question
+        }
       }
 
       "have a back link" which {
@@ -69,13 +65,49 @@ class RebasedValueViewSpec extends UnitSpec with WithFakeApplication with FakeRe
           backLink.text shouldBe commonMessages.back
         }
 
-        s"has a route to 'customer-type'" in {
-          backLink.attr("href") shouldBe routes.AcquisitionValueController.acquisitionValue().url
+        s"has a route to 'acquisition-costs'" in {
+          backLink.attr("href") shouldBe routes.AcquisitionCostsController.acquisitionCosts().url
         }
       }
 
-      s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
-        document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+      s"have a paragraph with the text ${messages.questionOptionalText}" in {
+        document.select("article > p").text shouldEqual messages.questionOptionalText
+      }
+
+      "have some hint text" which {
+        lazy val hintText = document.select("article > span")
+
+        "should have the class form-hint" in {
+          hintText.hasClass("form-hint") shouldEqual true
+        }
+
+        s"should have the text ${messages.inputHintText}" in {
+          hintText.text shouldEqual messages.inputHintText
+        }
+      }
+
+      s"Have a hidden help section" which {
+        lazy val hiddenHelp = document.select("details")
+
+        s"has a title ${messages.additionalContentTitle}" in {
+          hiddenHelp.select(".summary").text shouldEqual messages.additionalContentTitle
+        }
+
+        s"has the content ${messages.helpHiddenContent}" in {
+          hiddenHelp.select("div > p").text shouldEqual messages.helpHiddenContent
+        }
+      }
+
+      "have a form" which {
+        lazy val form = document.body().select("form")
+
+        "has a method of POST" in {
+          form.attr("method") shouldBe "POST"
+        }
+
+        s"has an action of '${controllers.nonresident.routes.RebasedValueController.submitRebasedValue().url}'" in {
+          form.attr("action") shouldBe controllers.nonresident.routes.RebasedValueController.submitRebasedValue().url
+        }
       }
 
       "have a button" which {
@@ -97,43 +129,12 @@ class RebasedValueViewSpec extends UnitSpec with WithFakeApplication with FakeRe
           button.text shouldEqual commonMessages.continue
         }
       }
-
-      s"Have a hidden help section" which {
-
-        lazy val hiddenHelp = document.select("details")
-
-        s"has a title ${messages.additionalContentTitle}" in {
-          hiddenHelp.select(".summary").text shouldEqual messages.additionalContentTitle
-        }
-
-        s"has first paragraph content of ${}" in {
-          hiddenHelp.select("p").first.text shouldEqual messages.helpHiddenContentOne
-        }
-
-        s"has second paragraph content of ${}" in {
-          hiddenHelp.select("p").last.text shouldEqual messages.helpHiddenContentTwo
-        }
-      }
-    }
-
-    "not supplied with a pre-existing stored model and an acquisition date" should {
-
-      lazy val view = rebasedValue(rebasedValueForm, "Yes")(fakeRequest)
-      lazy val document = Jsoup.parse(view.body)
-
-      s"Have the title ${messages.question}" in {
-        document.title shouldEqual messages.question
-      }
-
-      s"not contain the help text over the input with wording ${messages.questionHelpText}" in {
-        document.getElementsByClass("form-hint").text shouldNot include(messages.questionHelpText)
-      }
     }
 
     "supplied with a form with errors" should {
 
-      lazy val form = rebasedValueForm.bind(Map("hasRebasedValue" -> ""))
-      lazy val view = rebasedValue(form, "Yes")(fakeRequest)
+      lazy val form = rebasedValueForm(false).bind(Map("rebasedValueAmt" -> "euo1rh34889dsf"))
+      lazy val view = rebasedValue(form)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have an error summary" in {

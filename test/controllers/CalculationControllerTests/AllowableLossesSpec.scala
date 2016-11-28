@@ -212,7 +212,7 @@ class AllowableLossesSpec extends UnitSpec with WithFakeApplication with FakeReq
     }
 
     "submitting a valid form when no acquisition date is supplied and the property was revalued" should {
-      val rebased = RebasedValueModel("Yes", Some(BigDecimal(1000)))
+      val rebased = RebasedValueModel(Some(BigDecimal(1000)))
       val noDate = AcquisitionDateModel("No", None, None, None)
       lazy val result = executeTargetWithMockData("No", "", noDate, Some(rebased))
 
