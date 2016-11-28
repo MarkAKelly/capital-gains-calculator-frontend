@@ -2,21 +2,33 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
 
-@import play.mvc.Results.Todo
 @(previousLossOrGainForm: Form[PreviousLossOrGainModel])(implicit request: Request[_])
 
-@main_template(Messages("calc.previousLossOrGain.errors.required")) {
+@main_template(Messages("calc.previousLossOrGain.question")) {
+
+    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.OtherPropertiesController.otherProperties()">@Messages("calc.base.back")</a>
 
     @errorSummary(previousLossOrGainForm, "previousLossOrGain")
 
     <h1 class="heading-xlarge">@Messages("calc.previousLossOrGain.question")</h1>
 
-    @form(action = controllers.nonresident.routes.PreviousLossOrGainControlller.submitPreviousLossOrGain) {
+    @form(action = controllers.nonresident.routes.PreviousLossOrGainController.submitPreviousLossOrGain()) {
         @formInputRadioGroup(
+            field = previousLossOrGainForm("previousLossOrGain"),
             Seq(
-                
+                    "Loss" -> Messages("calc.previousLossOrGain.loss"),
+                    "Gain" -> Messages("calc.previousLossOrGain.gain"),
+                    "Neither" -> Messages("calc.previousLossOrGain.neither")),
+            '_legend -> Messages("calc.previousLossOrGain.question"),
+            '_legendID -> "previousLossOrGain",
+            '_legendClass -> "visuallyhidden",
+            '_labelAfter -> true,
+            '_labelClass -> "block-label",
+            '_groupClass -> "form-group radio-list",
+            '_fieldsetAttributes -> "aria-details = help"
             )
-        )
+        <input type="hidden" name="previousLossOrGain" value="" />
+        <button class="button yes-no-button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
     }
 
 }

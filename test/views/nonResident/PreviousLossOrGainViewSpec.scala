@@ -18,6 +18,7 @@ package views.nonResident
 
 
 import assets.MessageLookup.NonResident.{PreviousLossOrGain => messages}
+import assets.MessageLookup.{NonResident => commonMessages}
 import controllers.helpers.FakeRequestHelper
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -41,9 +42,76 @@ class PreviousLossOrGainViewSpec extends UnitSpec with WithFakeApplication with 
         lazy val heading = document.body().select("h1")
 
         "has a class of heading-large" in {
-          heading.attr("class") shouldBe "heading-large"
+          heading.attr("class") shouldBe "heading-xlarge"
         }
       }
+    }
+
+    "have a back button that" should {
+      lazy val backLink = document.select("a#back-link")
+
+      "have the correct back link text" in {
+        backLink.text shouldBe commonMessages.back
+      }
+
+      "have the back-link class" in {
+        backLink.hasClass("back-link") shouldBe true
+      }
+
+      "have a link to Other Properties" in {
+        backLink.attr("href") shouldBe controllers.nonresident.routes.OtherPropertiesController.otherProperties().url
+      }
+    }
+
+    "has a form" which {
+      lazy val form = document.getElementsByTag("form")
+
+      s"has the action '${controllers.nonresident.routes.PreviousLossOrGainController.submitPreviousLossOrGain().toString}" in {
+        form.attr("action") shouldBe controllers.nonresident.routes.PreviousLossOrGainController.submitPreviousLossOrGain().toString()
+      }
+
+      "has the method of POST" in {
+        form.attr("method") shouldBe "POST"
+      }
+    }
+
+    "has a series of options that" should {
+      s"have a label for the Loss option" in {
+        document.select("label:nth-of-type(1)").text() shouldEqual messages.loss
+      }
+      s"have a label for the Gain option" in {
+        document.select("label:nth-of-type(2)").text() shouldEqual messages.gain
+      }
+      s"have a label for the Neither option" in {
+        document.select("label:nth-of-type(3)").text() shouldEqual messages.neither
+      }
+    }
+
+    "has a continue button that" should {
+      lazy val continueButton = document.select("button#continue-button")
+
+      s"have the button text '${commonMessages.continue}" in {
+        continueButton.text shouldBe commonMessages.continue
+      }
+
+      "be of type submit" in {
+        continueButton.attr("type") shouldBe "submit"
+      }
+
+      "have the class 'button'" in {
+        continueButton.hasClass("button") shouldBe true
+      }
+    }
+
+  }
+
+  "PreviousLossOrGainView with form errors" should {
+    val form = previousLossOrGainForm.bind(Map("previousLossOrGain" -> ""))
+    lazy val view = previousLossOrGain(form)(fakeRequest)
+    lazy val doc = Jsoup.parse(view.body)
+
+    "display an error summary message regarding incorrect value being inputted" in {
+      doc.body.select(".form-group .error-notification").size shouldBe 1
     }
   }
 

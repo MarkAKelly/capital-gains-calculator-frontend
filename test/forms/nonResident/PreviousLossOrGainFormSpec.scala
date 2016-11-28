@@ -70,5 +70,22 @@ class PreviousLossOrGainFormSpec extends UnitSpec with WithFakeApplication{
         form.errors.head.message shouldBe messages.mandatoryCheck
       }
     }
+
+    "an invalid string is provided" should {
+      lazy val map = Map(("previousLossOrGain", ""))
+      lazy val form = previousLossOrGainForm.bind(map)
+
+      "produce a  form with errors" in {
+        form.hasErrors shouldBe true
+      }
+
+      "contain only one error" in {
+        form.errors.length shouldBe 1
+      }
+
+      s"contain the error message ${messages.mandatoryCheck}" in {
+        form.errors.head.message shouldBe messages.mandatoryCheck
+      }
+    }
   }
 }
