@@ -74,6 +74,40 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
     Some(OtherReliefsModel(1450))
   )
 
+  val within18Months = TotalGainAnswersModel(
+    DisposalDateModel(10, 10, 2016),
+    SoldOrGivenAwayModel(false),
+    None,
+    DisposalValueModel(150000),
+    DisposalCostsModel(600),
+    HowBecameOwnerModel("Gifted"),
+    None,
+    AcquisitionValueModel(5000),
+    AcquisitionCostsModel(200),
+    AcquisitionDateModel("Yes", Some(10), Some(4), Some(2015)),
+    None,
+    None,
+    ImprovementsModel("No", None, None),
+    Some(OtherReliefsModel(1450))
+  )
+
+  val validDates = TotalGainAnswersModel(
+    DisposalDateModel(10, 10, 2016),
+    SoldOrGivenAwayModel(false),
+    None,
+    DisposalValueModel(150000),
+    DisposalCostsModel(600),
+    HowBecameOwnerModel("Gifted"),
+    None,
+    AcquisitionValueModel(5000),
+    AcquisitionCostsModel(200),
+    AcquisitionDateModel("Yes", Some(10), Some(2), Some(2015)),
+    None,
+    None,
+    ImprovementsModel("No", None, None),
+    Some(OtherReliefsModel(1450))
+  )
+
   val yesPRRModel = PrivateResidenceReliefModel("Yes", None, None)
 
   private def assertExpectedResult[T](option: Option[T])(test: T => Unit) = assertOption("expected option is None")(option)(test)
@@ -169,6 +203,70 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
           assertExpectedResult[QuestionAnswerModel[String]](result)(_.link shouldBe
             Some(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url))
         }
+      }
+    }
+  }
+
+  "Calling .privateResidenceReliefDaysClaimedRow" when {
+
+    "provided with no privateResidenceReliefModel" should {
+      lazy val result = DeductionDetailsConstructor.privateResidenceReliefDaysClaimedRow(None, validDates)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "provided with an answer of 'No' to prr" should {
+      lazy val result = DeductionDetailsConstructor.privateResidenceReliefDaysClaimedRow(Some(PrivateResidenceReliefModel("No", None, None)), validDates)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "provided with no acquisition date" should {
+      lazy val result = DeductionDetailsConstructor.privateResidenceReliefDaysClaimedRow(
+        Some(PrivateResidenceReliefModel("Yes", Some(4), None)), yesOtherReliefs)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "provided with an an acquisition date and disposal date within 18 months of each other" should {
+      lazy val result = DeductionDetailsConstructor.privateResidenceReliefDaysClaimedRow(
+        Some(PrivateResidenceReliefModel("Yes", Some(4), None)), within18Months)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "provided with a valid value and conditions to use it" should {
+      lazy val result = DeductionDetailsConstructor.privateResidenceReliefDaysClaimedRow(
+        Some(PrivateResidenceReliefModel("Yes", Some(4), None)), validDates)
+
+      "return some value" in {
+        result.isDefined shouldBe true
+      }
+
+      "return an id of nr:privateResidenceRelief-daysClaimed" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.id shouldBe "nr:privateResidenceRelief-daysClaimed")
+      }
+
+      "return a value of '4'" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.data shouldBe 4)
+      }
+
+      "return a question for Private Residence Relief" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.question shouldBe
+          s"${messages.PrivateResidenceRelief.questionBefore} 10 April 2015 ${messages.PrivateResidenceRelief.questionEnd}")
+      }
+
+      "return a link to the Private Residence Relief page" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.link shouldBe
+          Some(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url))
       }
     }
   }
