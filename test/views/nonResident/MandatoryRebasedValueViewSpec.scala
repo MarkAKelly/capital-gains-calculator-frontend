@@ -16,134 +16,129 @@
 
 package views.nonResident
 
-import controllers.helpers.FakeRequestHelper
-import models.nonresident.RebasedValueModel
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import views.html.calculation.{nonresident => views}
-import forms.nonresident.RebasedValueForm._
-import org.jsoup.Jsoup
 import assets.MessageLookup.NonResident.{RebasedValue => messages}
 import assets.MessageLookup.{NonResident => commonMessages}
+import controllers.helpers.FakeRequestHelper
+import controllers.nonresident.routes
+import forms.nonresident.RebasedValueForm._
+import org.jsoup.Jsoup
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import views.html.calculation.nonresident.mandatoryRebasedValue
 
 class MandatoryRebasedValueViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
+  "The mandatory rebased value view" when {
 
+    "not supplied with a pre-existing stored model" should {
 
-  "The Mandatory Rebased Value View" should {
+      lazy val view = mandatoryRebasedValue(rebasedValueForm(true))(fakeRequest)
+      lazy val document = Jsoup.parse(view.body)
 
-    lazy val mandatoryRebasedValueForm = rebasedValueForm
-    lazy val view = views.mandatoryRebasedValue(mandatoryRebasedValueForm)(fakeRequest)
-    lazy val doc = Jsoup.parse(view.body)
+      s"Have the title ${messages.question}" in {
+        document.title shouldEqual messages.question
+      }
 
-    "have a charset of UTF-8" in {
-      doc.charset.toString shouldBe "UTF-8"
+      s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+        document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
+      }
+
+      "have a heading" which {
+        lazy val heading = document.body().select("h1")
+
+        "has a class of heading-xlarge" in {
+          heading.attr("class") shouldBe "heading-xlarge"
+        }
+
+        s"has the text '${messages.question}'" in {
+          heading.text shouldBe messages.question
+        }
+      }
+
+      "have a back link" which {
+        lazy val backLink = document.body().select("#back-link")
+
+        "has a class of 'back-link'" in {
+          backLink.attr("class") shouldBe "back-link"
+        }
+
+        "has the text" in {
+          backLink.text shouldBe commonMessages.back
+        }
+
+        s"has a route to 'acquisition-costs'" in {
+          backLink.attr("href") shouldBe routes.AcquisitionCostsController.acquisitionCosts().url
+        }
+      }
+
+      s"NOT have a paragraph with the text ${messages.questionOptionalText}" in {
+        document.select("article > p").text shouldEqual ""
+      }
+
+      "have some hint text" which {
+        lazy val hintText = document.select("article > span")
+
+        "should have the class form-hint" in {
+          hintText.hasClass("form-hint") shouldEqual true
+        }
+
+        s"should have the text ${messages.inputHintText}" in {
+          hintText.text shouldEqual messages.inputHintText
+        }
+      }
+
+      s"Have a hidden help section" which {
+        lazy val hiddenHelp = document.select("details")
+
+        s"has a title ${messages.additionalContentTitle}" in {
+          hiddenHelp.select(".summary").text shouldEqual messages.additionalContentTitle
+        }
+
+        s"has the content ${messages.helpHiddenContent}" in {
+          hiddenHelp.select("div > p").text shouldEqual messages.helpHiddenContent
+        }
+      }
+
+      "have a form" which {
+        lazy val form = document.body().select("form")
+
+        "has a method of POST" in {
+          form.attr("method") shouldBe "POST"
+        }
+
+        s"has an action of '${controllers.nonresident.routes.RebasedValueController.submitRebasedValue().url}'" in {
+          form.attr("action") shouldBe controllers.nonresident.routes.RebasedValueController.submitRebasedValue().url
+        }
+      }
+
+      "have a button" which {
+        lazy val button = document.select("button")
+
+        "has the class 'button'" in {
+          button.attr("class") shouldBe "button"
+        }
+
+        "has the type 'submit'" in {
+          button.attr("type") shouldBe "submit"
+        }
+
+        "has the id 'continue-button'" in {
+          button.attr("id") shouldBe "continue-button"
+        }
+
+        "has the text 'Continue'" in {
+          button.text shouldEqual commonMessages.continue
+        }
+      }
     }
 
-    s"have a title ${messages.inputQuestionMandatory}" in {
-      doc.title shouldBe messages.inputQuestionMandatory
-    }
+    "supplied with a form with errors" should {
 
-    "have a H1 tag that" should {
+      lazy val form = rebasedValueForm(true).bind(Map("rebasedValueAmt" -> ""))
+      lazy val view = mandatoryRebasedValue(form)(fakeRequest)
+      lazy val document = Jsoup.parse(view.body)
 
-      lazy val h1Tag = doc.select("h1")
-
-      s"have the page heading '${commonMessages.pageHeading}'" in {
-        h1Tag.text shouldBe commonMessages.pageHeading
-      }
-
-      "have the heading-large class" in {
-        h1Tag.hasClass("heading-large") shouldBe true
-      }
-    }
-
-    s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
-      doc.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
-    }
-
-    "have a back button" which {
-
-      lazy val backLink = doc.select("a#back-link")
-
-      "has the correct back link text" in {
-        backLink.text shouldBe commonMessages.back
-      }
-
-      "has the back-link class" in {
-        backLink.hasClass("back-link") shouldBe true
-      }
-
-      "has a back link to 'back'" in {
-        backLink.attr("href") shouldBe "/calculate-your-capital-gains/non-resident/acquisition-value"
-      }
-    }
-
-    "render a form tag" which {
-
-      lazy val form = doc.select("form")
-
-      "has a submit action" in {
-        form.attr("action") shouldEqual "/calculate-your-capital-gains/non-resident/rebased-value"
-      }
-
-      "with method type POST" in {
-        form.attr("method") shouldBe "POST"
-      }
-    }
-
-    "have a hidden Yes input" which {
-
-      lazy val dummyInput = doc.select("#hasRebasedValue")
-
-      "should have the name hasRebasedValue" in {
-        dummyInput.attr("name") shouldBe "hasRebasedValue"
-      }
-
-      "should have the value 'Yes'" in {
-        dummyInput.attr("value") shouldBe "Yes"
-      }
-
-      "should be hidden" in {
-        dummyInput.hasClass("visuallyhidden") shouldBe true
-      }
-    }
-
-    "have an input for the amount" which {
-
-      s"has a label with text ${messages.inputQuestionMandatory}" in {
-        doc.body.select("label > div > span").text shouldEqual messages.inputQuestionMandatory
-      }
-
-      s"should be of tag type input" in {
-        doc.body.getElementById("rebasedValueAmt").tagName() shouldEqual "input"
-      }
-    }
-
-    "have a continue button" which {
-
-      lazy val button = doc.select("button")
-
-      "has class 'button'" in {
-        button.hasClass("button") shouldEqual true
-      }
-
-      "has attribute 'type'" in {
-        button.hasAttr("type") shouldEqual true
-      }
-
-      "has type value of 'submit'" in {
-        button.attr("type") shouldEqual "submit"
-      }
-
-      "has attribute id" in {
-        button.hasAttr("id") shouldEqual true
-      }
-
-      "has id equal to continue-button" in {
-        button.attr("id") shouldEqual "continue-button"
-      }
-
-      s"has the text ${commonMessages.continue}" in {
-        button.text shouldEqual s"${commonMessages.continue}"
+      "have an error summary" in {
+        document.select("#error-summary-display").size() shouldBe 1
       }
     }
   }

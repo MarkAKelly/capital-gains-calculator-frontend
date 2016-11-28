@@ -16,6 +16,7 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup.NonResident.{SoldOrGivenAway => messages}
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
@@ -25,10 +26,9 @@ import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
+import play.api.test.Helpers._
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.NonResident.{SoldOrGivenAway => messages}
-import play.api.test.Helpers._
 
 import scala.concurrent.Future
 
@@ -117,7 +117,6 @@ class SoldOrGivenAwayActionSpec extends UnitSpec with WithFakeApplication with M
       }
     }
 
-    //TODO: Refactor test other route is implemented
     "a valid form is submitted with No" should {
       val target = setUpTarget(None)
       lazy val request = fakeRequestToPOSTWithSession("soldIt" -> "No")
@@ -127,8 +126,8 @@ class SoldOrGivenAwayActionSpec extends UnitSpec with WithFakeApplication with M
         status(result) shouldBe 303
       }
 
-      "redirect to the Sold For Less Page" in{
-        redirectLocation(result).get shouldBe controllers.nonresident.routes.SoldForLessController.soldForLess().url
+      "redirect to the Market Value When Gave Away Page" in{
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.MarketValueWhenSoldOrGaveAwayController.marketValueWhenGaveAway().url
       }
     }
 

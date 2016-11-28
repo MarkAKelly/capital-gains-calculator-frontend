@@ -158,7 +158,7 @@ class TotalGainRequestConstructorSpec extends UnitSpec {
   "Calling .rebasedValues" should {
 
     "produce a valid query string with an acquisition date before tax start and rebased value" in {
-      val result = TotalGainRequestConstructor.rebasedValues(Some(RebasedValueModel("Yes", Some(3000))),
+      val result = TotalGainRequestConstructor.rebasedValues(Some(RebasedValueModel(Some(3000))),
         Some(RebasedCostsModel("Yes", Some(300))),
         ImprovementsModel("Yes", None, Some(30)),
         AcquisitionDateModel("Yes", Some(1), Some(1), Some(2013)))
@@ -167,7 +167,7 @@ class TotalGainRequestConstructorSpec extends UnitSpec {
     }
 
     "produce an empty query string with no rebased value" in {
-      val result = TotalGainRequestConstructor.rebasedValues(Some(RebasedValueModel("No", None)),
+      val result = TotalGainRequestConstructor.rebasedValues(Some(RebasedValueModel(None)),
         None,
         ImprovementsModel("Yes", None, None),
         AcquisitionDateModel("Yes", Some(1), Some(1), Some(2013)))
@@ -185,7 +185,7 @@ class TotalGainRequestConstructorSpec extends UnitSpec {
     }
 
     "produce a valid query string with no acquisition date and with a rebased value" in {
-      val result = TotalGainRequestConstructor.rebasedValues(Some(RebasedValueModel("Yes", Some(3000))),
+      val result = TotalGainRequestConstructor.rebasedValues(Some(RebasedValueModel(Some(3000))),
         Some(RebasedCostsModel("Yes", Some(300))),
         ImprovementsModel("Yes", None, Some(30)),
         AcquisitionDateModel("No", None, None, None))
@@ -194,7 +194,7 @@ class TotalGainRequestConstructorSpec extends UnitSpec {
     }
 
     "produce an empty query string with no acquisition date or rebased value" in {
-      val result = TotalGainRequestConstructor.rebasedValues(Some(RebasedValueModel("No", None)),
+      val result = TotalGainRequestConstructor.rebasedValues(Some(RebasedValueModel(None)),
         None,
         ImprovementsModel("Yes", None, Some(30)),
         AcquisitionDateModel("No", None, None, None))
@@ -211,12 +211,12 @@ class TotalGainRequestConstructorSpec extends UnitSpec {
         Some(SoldForLessModel(false)),
         DisposalValueModel(1000),
         DisposalCostsModel(100),
-        HowBecameOwnerModel("Gifted"),
+        Some(HowBecameOwnerModel("Gifted")),
         Some(BoughtForLessModel(false)),
         AcquisitionValueModel(2000),
         AcquisitionCostsModel(200),
         AcquisitionDateModel("Yes", Some(4), Some(10), Some(2013)),
-        Some(RebasedValueModel("Yes", Some(3000))),
+        Some(RebasedValueModel(Some(3000))),
         Some(RebasedCostsModel("Yes", Some(300))),
         ImprovementsModel("Yes", Some(10), Some(20)),
         None)
