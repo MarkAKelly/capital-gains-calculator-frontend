@@ -20,7 +20,7 @@ import common.Dates._
 import common.KeystoreKeys
 import common.KeystoreKeys.{ResidentPropertyKeys, ResidentShareKeys}
 import config.{CalculatorSessionCache, WSHttp}
-import constructors.nonresident.{CalculateRequestConstructor, TotalGainRequestConstructor}
+import constructors.nonresident.{CalculateRequestConstructor, PrivateResidenceReliefRequestConstructor, TotalGainRequestConstructor}
 import constructors.resident.{shares, properties => propertyConstructor}
 import models.nonresident._
 import models.resident
@@ -60,6 +60,15 @@ trait CalculatorConnector {
   def calculateTotalGain(totalGainAnswersModel: TotalGainAnswersModel)(implicit hc: HeaderCarrier): Future[Option[TotalGainResultsModel]] = {
     http.GET[Option[TotalGainResultsModel]](s"$serviceUrl/capital-gains-calculator/non-resident/calculate-total-gain?${
       TotalGainRequestConstructor.totalGainQuery(totalGainAnswersModel)
+    }")
+  }
+
+  def calculateTaxableGainAfterPRR(totalGainAnswersModel: TotalGainAnswersModel,
+                                   privateResidenceReliefModel: models.nonresident.PrivateResidenceReliefModel)
+                                  (implicit hc: HeaderCarrier): Future[Option[CalculationResultsWithPRRModel]] = {
+    http.GET[Option[CalculationResultsWithPRRModel]](s"$serviceUrl/capital-gains-calculator/non-resident/calculate-gain-after-prr?${
+      TotalGainRequestConstructor.totalGainQuery(totalGainAnswersModel) +
+        PrivateResidenceReliefRequestConstructor.privateResidenceReliefQuery(totalGainAnswersModel, privateResidenceReliefModel)
     }")
   }
 

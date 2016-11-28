@@ -27,11 +27,12 @@ import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
 import assets.MessageLookup.NonResident.{Improvements => messages}
 import assets.MessageLookup.{NonResident => commonMessages}
+import constructors.nonresident.AnswersConstructor
 import controllers.helpers.FakeRequestHelper
 
 import scala.concurrent.Future
 import controllers.nonresident.{ImprovementsController, routes}
-import models.nonresident.{AcquisitionDateModel, ImprovementsModel, RebasedValueModel}
+import models.nonresident._
 
 class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
@@ -39,10 +40,12 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
 
   def setupTarget(getData: Option[ImprovementsModel],
                   acquisitionDateData: Option[AcquisitionDateModel],
-                  rebasedValueData: Option[RebasedValueModel] = None
+                  rebasedValueData: Option[RebasedValueModel] = None,
+                  totalGainResultsModel: Option[TotalGainResultsModel] = None
                  ): ImprovementsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
+    val mockAnswersConstructor = mock[AnswersConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[ImprovementsModel](Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -53,8 +56,15 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
     when(mockCalcConnector.fetchAndGetFormData[AcquisitionDateModel](Matchers.eq(KeystoreKeys.acquisitionDate))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(acquisitionDateData))
 
+    when(mockAnswersConstructor.getNRTotalGainAnswers(Matchers.any()))
+      .thenReturn(Future.successful(mock[TotalGainAnswersModel]))
+
+    when(mockCalcConnector.calculateTotalGain(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(totalGainResultsModel))
+
     new ImprovementsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
+      override val answersConstructor: AnswersConstructor = mockAnswersConstructor
     }
   }
 
@@ -102,7 +112,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         }
 
         s"have a 'Back' link to ${routes.DisposalCostsController.disposalCosts().url} " in {
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionCostsController.acquisitionCosts().url
+          document.body.getElementById("back-link").attr("href") shouldEqual controllers.nonresident.routes.AcquisitionCostsController.acquisitionCosts().url
         }
       }
 
@@ -122,8 +132,8 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
           document.body.getElementById("back-link").text shouldEqual commonMessages.back
         }
 
-        s"have a 'Back' link to ${routes.DisposalCostsController.disposalCosts().url} " in {
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionCostsController.acquisitionCosts().url
+        s"have a 'Back' link to ${controllers.nonresident.routes.DisposalCostsController.disposalCosts().url} " in {
+          document.body.getElementById("back-link").attr("href") shouldEqual controllers.nonresident.routes.AcquisitionCostsController.acquisitionCosts().url
         }
       }
 
@@ -141,8 +151,8 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
           document.body.getElementById("back-link").text shouldEqual commonMessages.back
         }
 
-        s"have a 'Back' link to ${routes.DisposalCostsController.disposalCosts().url} " in {
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionCostsController.acquisitionCosts().url
+        s"have a 'Back' link to ${controllers.nonresident.routes.DisposalCostsController.disposalCosts().url} " in {
+          document.body.getElementById("back-link").attr("href") shouldEqual controllers.nonresident.routes.AcquisitionCostsController.acquisitionCosts().url
         }
       }
 
@@ -160,8 +170,8 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
           document.body.getElementById("back-link").text shouldEqual commonMessages.back
         }
 
-        s"have a 'Back' link to ${routes.DisposalCostsController.disposalCosts().url}" in {
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.AcquisitionCostsController.acquisitionCosts().url
+        s"have a 'Back' link to ${controllers.nonresident.routes.DisposalCostsController.disposalCosts().url}" in {
+          document.body.getElementById("back-link").attr("href") shouldEqual controllers.nonresident.routes.AcquisitionCostsController.acquisitionCosts().url
         }
       }
     }
@@ -169,9 +179,9 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
 
   "In CalculationController calling the .submitImprovements action " when {
 
-    "submitting a valid form with 'Yes' and a value of 12045 for improvementsAmt" should {
+    "submitting a valid form with 'Yes' and a value of 12045 for improvementsAmt with no total gains on all calculation results" should {
 
-      val target = setupTarget(None, None)
+      val target = setupTarget(None, None, totalGainResultsModel = Some(TotalGainResultsModel(-1000, Some(0), None)))
       lazy val request = fakeRequestToPOSTWithSession("isClaimingImprovements" -> "Yes", "improvementsAmt" -> "12045")
       lazy val result = target.submitImprovements(request)
 
@@ -179,14 +189,14 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.CheckYourAnswersController.checkYourAnswers()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CheckYourAnswersController.checkYourAnswers()}")
+      s"redirect to ${controllers.nonresident.routes.CheckYourAnswersController.checkYourAnswers()}" in {
+        redirectLocation(result) shouldBe Some(s"${controllers.nonresident.routes.CheckYourAnswersController.checkYourAnswers()}")
       }
     }
 
-    "submitting a valid form with 'No' and no value" should {
+    "submitting a valid form with 'No' and no value with a total gain on at least on calculation" should {
 
-      val target = setupTarget(None, None)
+      val target = setupTarget(None, None, totalGainResultsModel = Some(TotalGainResultsModel(-1000, Some(0), Some(100))))
       lazy val request = fakeRequestToPOSTWithSession("isClaimingImprovements" -> "No", "improvementsAmt" -> "")
       lazy val result = target.submitImprovements(request)
 
@@ -194,8 +204,8 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.CheckYourAnswersController.checkYourAnswers()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CheckYourAnswersController.checkYourAnswers()}")
+      s"redirect to ${controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief()}" in {
+        redirectLocation(result) shouldBe Some(s"${controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief()}")
       }
     }
 

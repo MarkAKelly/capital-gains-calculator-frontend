@@ -16,26 +16,12 @@
 
 package models.nonresident
 
-import java.time.LocalDate
-
-import common.Dates
 import play.api.libs.json.Json
 
-import scala.util.{Success, Try}
+case class CalculationResultsWithPRRModel(flatTaxableGain: GainsAfterPRRModel,
+                                  rebasedTaxableGain: Option[GainsAfterPRRModel],
+                                  timeApportionedTaxableGain: Option[GainsAfterPRRModel])
 
-case class DisposalDateModel (day: Int, month: Int, year: Int)
-
-object DisposalDateModel {
-  implicit val format = Json.format[DisposalDateModel]
-
-  implicit val createDate: DisposalDateModel => Option[LocalDate] = model => {
-    val dateFormatter = Dates.formatter
-    Try {
-      LocalDate.parse(s"${model.day}/${model.month}/${model.year}", dateFormatter)
-    } match {
-      case Success(date) => Some(date)
-      case _ => None
-    }
-  }
-
+object CalculationResultsWithPRRModel {
+  implicit val formats = Json.format[CalculationResultsWithPRRModel]
 }
