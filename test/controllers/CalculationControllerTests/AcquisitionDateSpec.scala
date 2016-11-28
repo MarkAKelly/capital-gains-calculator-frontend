@@ -21,12 +21,13 @@ import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
 import controllers.helpers.FakeRequestHelper
 import controllers.nonresident.AcquisitionDateController
-import models.nonresident.AcquisitionDateModel
+import models.nonresident.{AcquisitionDateModel, BoughtForLessModel}
 import org.jsoup._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
@@ -109,6 +110,36 @@ class AcquisitionDateSpec extends UnitSpec with WithFakeApplication with Mockito
     "supplied with a valid model" should {
       val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("hasAcquisitionDate", "No"))
+      lazy val result = target.submitAcquisitionDate(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      s"redirect to ${controllers.nonresident.routes.HowBecameOwnerController.howBecameOwner().url}" in {
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.HowBecameOwnerController.howBecameOwner().url
+      }
+    }
+
+    "supplied with a valid model with date before the legislation start" should {
+      val target = setupTarget(None)
+      lazy val request = fakeRequestToPOSTWithSession(("hasAcquisitionDate", "Yes"), ("acquisitionDateDay", "31"),
+        ("acquisitionDateMonth", "03"), ("acquisitionDateYear", "1982"))
+      lazy val result = target.submitAcquisitionDate(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      s"redirect to ${controllers.nonresident.routes.WorthBeforeLegislationStartController.worthBeforeLegislationStart().url}" in {
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.WorthBeforeLegislationStartController.worthBeforeLegislationStart().url
+      }
+    }
+
+    "supplied with a valid model with date on the legislation start" should {
+      val target = setupTarget(None)
+      lazy val request = fakeRequestToPOSTWithSession(("hasAcquisitionDate", "Yes"), ("acquisitionDateDay", "01"),
+        ("acquisitionDateMonth", "04"), ("acquisitionDateYear", "1982"))
       lazy val result = target.submitAcquisitionDate(request)
 
       "return a 303" in {

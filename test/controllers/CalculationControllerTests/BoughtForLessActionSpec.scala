@@ -16,6 +16,7 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup.{NonResident => messages}
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.nonresident.BoughtForLessController
@@ -24,10 +25,10 @@ import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
+import play.api.test.Helpers._
+import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.{NonResident => messages}
-import play.api.test.Helpers._
 
 import scala.concurrent.Future
 
@@ -40,6 +41,9 @@ class BoughtForLessActionSpec extends UnitSpec with WithFakeApplication with Moc
 
     when(mockCalcConnector.fetchAndGetFormData[BoughtForLessModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.saveFormData[BoughtForLessModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(mock[CacheMap]))
 
     new BoughtForLessController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -97,23 +101,24 @@ class BoughtForLessActionSpec extends UnitSpec with WithFakeApplication with Moc
   }
 
   "Calling .submitBoughtForLess" when {
-    val target = setupTarget(None)
 
     "submitting a valid form with an answer of Yes" should {
       lazy val request = fakeRequestToPOSTWithSession(("boughtForLess", "Yes"))
+      lazy val target = setupTarget(None)
       lazy val result = target.submitBoughtForLess(request)
 
       "return a status of 303" in {
         status(result) shouldBe 303
       }
 
-      "redirect to the acquisitionValue page" in {
-        redirectLocation(result) shouldBe Some(controllers.nonresident.routes.AcquisitionValueController.acquisitionValue().url)
+      "redirect to the worthWhenBoughtForLess page" in {
+        redirectLocation(result) shouldBe Some(controllers.nonresident.routes.WorthWhenBoughtForLessController.worthWhenBoughtForLess().url)
       }
     }
 
     "submitting a valid form with an answer of No" should {
       lazy val request = fakeRequestToPOSTWithSession(("boughtForLess", "No"))
+      lazy val target = setupTarget(None)
       lazy val result = target.submitBoughtForLess(request)
 
       "return a status of 303" in {
@@ -127,6 +132,7 @@ class BoughtForLessActionSpec extends UnitSpec with WithFakeApplication with Moc
 
     "submitting an invalid form" should {
       lazy val request = fakeRequestToPOSTWithSession(("boughtForLess", ""))
+      lazy val target = setupTarget(None)
       lazy val result = target.submitBoughtForLess(request)
       lazy val document = Jsoup.parse(bodyOf(result))
 

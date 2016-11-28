@@ -31,7 +31,7 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication with
     None,
     DisposalValueModel(150000),
     DisposalCostsModel(600),
-    HowBecameOwnerModel("Gifted"),
+    Some(HowBecameOwnerModel("Gifted")),
     None,
     AcquisitionValueModel(5000),
     AcquisitionCostsModel(200),
@@ -48,12 +48,12 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication with
     Some(SoldForLessModel(false)),
     DisposalValueModel(90000),
     DisposalCostsModel(0),
-    HowBecameOwnerModel("Bought"),
+    Some(HowBecameOwnerModel("Bought")),
     Some(BoughtForLessModel(false)),
     AcquisitionValueModel(5000),
     AcquisitionCostsModel(200),
     AcquisitionDateModel("Yes", Some(1), Some(4), Some(2013)),
-    Some(RebasedValueModel("Yes", Some(7500))),
+    Some(RebasedValueModel(Some(7500))),
     Some(RebasedCostsModel("Yes", Some(150))),
     ImprovementsModel("Yes", Some(50), Some(25)),
     None
@@ -65,12 +65,12 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication with
     Some(SoldForLessModel(true)),
     DisposalValueModel(10000),
     DisposalCostsModel(100),
-    HowBecameOwnerModel("Bought"),
+    Some(HowBecameOwnerModel("Bought")),
     Some(BoughtForLessModel(true)),
     AcquisitionValueModel(5000),
     AcquisitionCostsModel(200),
     AcquisitionDateModel("Yes", Some(1), Some(4), Some(2013)),
-    Some(RebasedValueModel("Yes", Some(7500))),
+    Some(RebasedValueModel(Some(7500))),
     Some(RebasedCostsModel("Yes", Some(150))),
     ImprovementsModel("Yes", Some(50), Some(25)),
     None
@@ -232,7 +232,7 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication with
 
   "Calling disposalValueRow" when {
 
-    "supplied with a value of 150000" should {
+    "supplied with soldOrGivenAway answer false" should {
       lazy val result = SalesDetailsConstructor.disposalValueRow(totalGainGiven).get
 
       "have an id of nr:disposalValue" in {
@@ -241,6 +241,22 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication with
 
       "have the data for the value of 150000" in {
         result.data shouldBe BigDecimal(150000)
+      }
+
+      "have the question for market value gave away" in {
+        result.question shouldBe messages.MarketValue.disposalGaveAwayQuestion
+      }
+
+      "have a link to the market value when gave away page" in {
+        result.link shouldBe Some(controllers.nonresident.routes.MarketValueWhenSoldOrGaveAwayController.marketValueWhenGaveAway().url)
+      }
+    }
+
+    "supplied with soldOrGivenAway answer true and soldForLess answer false'" should {
+      lazy val result = SalesDetailsConstructor.disposalValueRow(totalGainSold).get
+
+      "have the data for 90000" in {
+        result.data shouldBe BigDecimal(90000)
       }
 
       "have the question for disposal value" in {
@@ -252,11 +268,19 @@ class SalesDetailsConstructorSpec extends UnitSpec with WithFakeApplication with
       }
     }
 
-    "supplied with a value of 90000" should {
-      lazy val result = SalesDetailsConstructor.disposalValueRow(totalGainSold).get
+    "supplied with soldOrGivenAway answer true and soldForLess answer true'" should {
+      lazy val result = SalesDetailsConstructor.disposalValueRow(totalGainForLess).get
 
-      "have the data for 90000" in {
-        result.data shouldBe BigDecimal(90000)
+      "have the data for 10000" in {
+        result.data shouldBe BigDecimal(10000)
+      }
+
+      "have the question for market value sold" in {
+        result.question shouldBe messages.MarketValue.disposalSoldQuestion
+      }
+
+      "have a link to the market value sold page" in {
+        result.link shouldBe Some(controllers.nonresident.routes.MarketValueWhenSoldOrGaveAwayController.marketValueWhenSold().url)
       }
     }
   }

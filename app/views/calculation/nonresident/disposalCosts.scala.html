@@ -2,7 +2,7 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
 
-@(disposalCostsForm: Form[DisposalCostsModel])(implicit request: Request[_])
+@(disposalCostsForm: Form[DisposalCostsModel], backLink: String)(implicit request: Request[_])
 
 @additionalContent = {
 
@@ -19,7 +19,7 @@
 
 @main_template(Messages("calc.disposalCosts.question")) {
 
-    <a id="back-link" class="back-link" href="@controllers.nonresident.routes.DisposalValueController.disposalValue">Back</a>
+    <a id="back-link" class="back-link" href="@backLink">Back</a>
 
     @errorSummary(disposalCostsForm, "disposal-costs")
 
