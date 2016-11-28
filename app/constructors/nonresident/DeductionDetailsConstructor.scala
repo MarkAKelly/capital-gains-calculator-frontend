@@ -17,7 +17,7 @@
 package constructors.nonresident
 
 import models.nonresident._
-import common.{Dates, KeystoreKeys => keys}
+import common.{Dates, TaxDates, KeystoreKeys => keys}
 import play.api.i18n.Messages
 
 object DeductionDetailsConstructor {
@@ -74,6 +74,31 @@ object DeductionDetailsConstructor {
           value,
           s"${Messages("calc.privateResidenceRelief.questionBefore.partOne")} ${Dates.dateMinusMonths(answers.disposalDateModel, 18)}" +
             s" ${Messages("calc.privateResidenceRelief.questionBefore.partTwo")}",
+          Some(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url)
+        ))
+      case _ => None
+    }
+  }
+
+  def privateResidenceReliefDaysClaimedAfterRow(prr: Option[PrivateResidenceReliefModel],
+                                                answers: TotalGainAnswersModel): Option[QuestionAnswerModel[BigDecimal]] = {
+    (prr, answers.acquisitionDateModel, answers.rebasedValueModel) match {
+      case (Some(PrivateResidenceReliefModel("Yes", _, Some(value))), AcquisitionDateModel("Yes",_,_,_), _)
+      if !TaxDates.dateAfterStart(answers.acquisitionDateModel.get) && TaxDates.dateAfterOctober(answers.disposalDateModel.get) =>
+        Some(QuestionAnswerModel(
+          s"${keys.privateResidenceRelief}-daysClaimedAfter",
+          value,
+          s"${Messages("calc.privateResidenceRelief.questionBetween.partOne")} 5 April 2015" +
+            s" ${Messages("calc.privateResidenceRelief.questionBetween.partTwo")} ${Dates.dateMinusMonths(answers.disposalDateModel, 18)}",
+          Some(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url)
+        ))
+      case (Some(PrivateResidenceReliefModel("Yes", _, Some(value))), _, Some(RebasedValueModel("Yes",_)))
+      if TaxDates.dateAfterOctober(answers.disposalDateModel.get) =>
+        Some(QuestionAnswerModel(
+          s"${keys.privateResidenceRelief}-daysClaimedAfter",
+          value,
+          s"${Messages("calc.privateResidenceRelief.questionBetween.partOne")} 5 April 2015" +
+            s" ${Messages("calc.privateResidenceRelief.questionBetween.partTwo")} ${Dates.dateMinusMonths(answers.disposalDateModel, 18)}",
           Some(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url)
         ))
       case _ => None

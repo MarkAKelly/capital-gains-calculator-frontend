@@ -58,7 +58,7 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
   )
 
   val yesOtherReliefs = TotalGainAnswersModel(
-    DisposalDateModel(10, 10, 2010),
+    DisposalDateModel(10, 10, 2018),
     SoldOrGivenAwayModel(false),
     None,
     DisposalValueModel(150000),
@@ -68,8 +68,8 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
     AcquisitionValueModel(5000),
     AcquisitionCostsModel(200),
     AcquisitionDateModel("No", None, None, None),
-    None,
-    None,
+    Some(RebasedValueModel("Yes", Some(1))),
+    Some(RebasedCostsModel("No", None)),
     ImprovementsModel("No", None, None),
     Some(OtherReliefsModel(1450))
   )
@@ -102,6 +102,40 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
     AcquisitionValueModel(5000),
     AcquisitionCostsModel(200),
     AcquisitionDateModel("Yes", Some(10), Some(2), Some(2015)),
+    None,
+    None,
+    ImprovementsModel("No", None, None),
+    Some(OtherReliefsModel(1450))
+  )
+
+  val acquisitionDateAfterStart = TotalGainAnswersModel(
+    DisposalDateModel(10, 10, 2018),
+    SoldOrGivenAwayModel(false),
+    None,
+    DisposalValueModel(150000),
+    DisposalCostsModel(600),
+    HowBecameOwnerModel("Gifted"),
+    None,
+    AcquisitionValueModel(5000),
+    AcquisitionCostsModel(200),
+    AcquisitionDateModel("Yes", Some(10), Some(2), Some(2016)),
+    None,
+    None,
+    ImprovementsModel("No", None, None),
+    Some(OtherReliefsModel(1450))
+  )
+
+  val disposalDateWithin18Months = TotalGainAnswersModel(
+    DisposalDateModel(10, 4, 2016),
+    SoldOrGivenAwayModel(false),
+    None,
+    DisposalValueModel(150000),
+    DisposalCostsModel(600),
+    HowBecameOwnerModel("Gifted"),
+    None,
+    AcquisitionValueModel(5000),
+    AcquisitionCostsModel(200),
+    AcquisitionDateModel("Yes", Some(10), Some(2), Some(1990)),
     None,
     None,
     ImprovementsModel("No", None, None),
@@ -262,6 +296,106 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
       "return a question for Private Residence Relief" in {
         assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.question shouldBe
           s"${messages.PrivateResidenceRelief.questionBefore} 10 April 2015 ${messages.PrivateResidenceRelief.questionEnd}")
+      }
+
+      "return a link to the Private Residence Relief page" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.link shouldBe
+          Some(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url))
+      }
+    }
+  }
+
+  "Calling privateResidenceReliefDaysClaimedAfterRow" when {
+
+    "provided with no privateResidenceReliefModel" should {
+      lazy val result = DeductionDetailsConstructor.privateResidenceReliefDaysClaimedAfterRow(None, validDates)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "provided with an answer of 'No' to prr" should {
+      lazy val result = DeductionDetailsConstructor.privateResidenceReliefDaysClaimedAfterRow(Some(PrivateResidenceReliefModel("No", None, None)), validDates)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "provided with an acquisition date after the start" should {
+      lazy val result = DeductionDetailsConstructor.privateResidenceReliefDaysClaimedAfterRow(
+        Some(PrivateResidenceReliefModel("Yes", None, Some(3))), acquisitionDateAfterStart)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "provided with a disposal date before the 18 month rebased period" should {
+      lazy val result = DeductionDetailsConstructor.privateResidenceReliefDaysClaimedAfterRow(
+        Some(PrivateResidenceReliefModel("Yes", None, Some(3))), disposalDateWithin18Months)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "provided with no acquisition date and no rebased value" should {
+      lazy val result = DeductionDetailsConstructor.privateResidenceReliefDaysClaimedAfterRow(
+        Some(PrivateResidenceReliefModel("Yes", None, Some(3))), noOtherReliefs)
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "provided with a rebased value and no acquisition date" should {
+      lazy val result = DeductionDetailsConstructor.privateResidenceReliefDaysClaimedAfterRow(
+        Some(PrivateResidenceReliefModel("Yes", None, Some(3))), yesOtherReliefs)
+
+      "return some value" in {
+        result.isDefined shouldBe true
+      }
+
+      "return an id of nr:privateResidenceRelief-daysClaimedAfter" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.id shouldBe "nr:privateResidenceRelief-daysClaimedAfter")
+      }
+
+      "return a value of '3'" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.data shouldBe 3)
+      }
+
+      "return a question for Private Residence Relief" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.question shouldBe
+          s"${messages.PrivateResidenceRelief.questionBetween} 5 April 2015 ${messages.PrivateResidenceRelief.questionEnd} 10 April 2017")
+      }
+
+      "return a link to the Private Residence Relief page" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.link shouldBe
+          Some(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url))
+      }
+    }
+
+    "provided with a valid acquisition date" should {
+      lazy val result = DeductionDetailsConstructor.privateResidenceReliefDaysClaimedAfterRow(
+        Some(PrivateResidenceReliefModel("Yes", None, Some(3))), validDates)
+
+      "return some value" in {
+        result.isDefined shouldBe true
+      }
+
+      "return an id of nr:privateResidenceRelief-daysClaimedAfter" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.id shouldBe "nr:privateResidenceRelief-daysClaimedAfter")
+      }
+
+      "return a value of '3'" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.data shouldBe 3)
+      }
+
+      "return a question for Private Residence Relief" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.question shouldBe
+          s"${messages.PrivateResidenceRelief.questionBetween} 5 April 2015 ${messages.PrivateResidenceRelief.questionEnd} 10 April 2015")
       }
 
       "return a link to the Private Residence Relief page" in {
