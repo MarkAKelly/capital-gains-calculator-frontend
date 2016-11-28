@@ -22,8 +22,8 @@ import connectors.CalculatorConnector
 import constructors.nonresident.AnswersConstructor
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.ImprovementsForm._
-import models.nonresident.{AcquisitionDateModel, ImprovementsModel, RebasedValueModel, TotalGainResultsModel}
-import play.api.mvc.Result
+import models.nonresident._
+import play.api.mvc.{Call, Result}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation
@@ -113,6 +113,11 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
   }
 
   val submitImprovements = ValidateSession.async { implicit request =>
+
+    def skipPRR(model: TotalGainAnswersModel): Call = (model.acquisitionDateModel.hasAcquisitionDate, model.rebasedValueModel) match {
+      case ("No", Some(None)) => controllers.nonresident.routes.CustomerTypeController.customerType()
+      case (_, _) => controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief()
+    }
 
     def getRoute(totalGainResultsModel: TotalGainResultsModel): Future[Result] = {
       val optionSeq = Seq(totalGainResultsModel.rebasedGain, totalGainResultsModel.timeApportionedGain).flatten
