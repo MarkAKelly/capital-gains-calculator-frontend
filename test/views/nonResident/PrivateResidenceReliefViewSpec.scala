@@ -47,8 +47,8 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
           backLink.text shouldBe messages.back
         }
 
-        s"has a route to 'customer-type'" in {
-          backLink.attr("href") shouldBe controllers.nonresident.routes.DisposalCostsController.disposalCosts().url
+        s"has a route to 'improvements'" in {
+          backLink.attr("href") shouldBe controllers.nonresident.routes.ImprovementsController.improvements().url
         }
       }
 
