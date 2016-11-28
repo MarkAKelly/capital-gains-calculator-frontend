@@ -42,6 +42,27 @@ trait SummaryController extends FrontendController with ValidActiveSession {
 
   val summary = ValidateSession.async { implicit request =>
 
+    def getPRRModel(implicit hc: HeaderCarrier, totalGainResultsModel: TotalGainResultsModel): Future[Option[PrivateResidenceReliefModel]] = {
+      val optionSeq = Seq(totalGainResultsModel.rebasedGain, totalGainResultsModel.timeApportionedGain).flatten
+      val finalSeq = Seq(totalGainResultsModel.flatGain) ++ optionSeq
+
+      if (!finalSeq.forall(_ <= 0)) {
+        val prrModel = calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief)
+
+        for {
+          prrModel <- prrModel
+        } yield prrModel
+      } else Future(None)
+    }
+
+    def getAmountOwed(totalGainResultsModel: TotalGainResultsModel, calculationType: String): BigDecimal = {
+      calculationType match {
+        case "flat" => totalGainResultsModel.flatGain
+        case "rebased" => totalGainResultsModel.rebasedGain.getOrElse(0.0)
+        case "time" => totalGainResultsModel.timeApportionedGain.getOrElse(0.0)
+      }
+    }
+
     def summaryBackUrl(implicit hc: HeaderCarrier): Future[String] = {
       Future.successful(routes.CheckYourAnswersController.checkYourAnswers().url)
     }
@@ -57,8 +78,8 @@ trait SummaryController extends FrontendController with ValidActiveSession {
     def routeRequest(calculationResult: Option[TotalGainResultsModel],
                      backUrl: String, displayDateWarning: Boolean,
                      calculationType: String): Future[Result] = {
-      Future.successful(Ok(calculation.nonresident.summary(calculationResult.get, backUrl, displayDateWarning,
-        calculationType)))
+      Future.successful(Ok(calculation.nonresident.summary(getAmountOwed(calculationResult.get, calculationType), calculationResult.get,
+        backUrl, displayDateWarning, calculationType)))
     }
 
     for {

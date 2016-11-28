@@ -31,7 +31,7 @@ class SummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
 
     "supplied with a disposal date within the valid tax years" should {
       val calculationModel = TotalGainResultsModel(1000, Some(2000), Some(3000))
-      lazy val view = summary(calculationModel, "back-link", displayDateWarning = false, "flat")(fakeRequest)
+      lazy val view = summary(1000.0, calculationModel, "back-link", displayDateWarning = false, "flat")(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       s"have a title of '${messages.Summary.title}'" in {
@@ -68,6 +68,8 @@ class SummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
         s"has a span with the text ${messages.Summary.calculationDetailsTitle}" in {
           heading.text() shouldBe messages.Summary.calculationDetailsTitle
         }
+
+
       }
 
       "not have a tax year warning" in {
@@ -80,8 +82,8 @@ class SummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
           document.select("#amount-you-owe-question span").text() shouldEqual messages.Summary.amountOwed
         }
 
-        s"has a value of £8,000.00" in {
-          document.select("#amount-you-owe-value span").text() shouldEqual "£0.00"
+        s"has a value of £1,000.00" in {
+          document.select("#amount-you-owe-value span").text() shouldEqual "£1,000.00"
         }
       }
 
@@ -144,7 +146,7 @@ class SummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
 
     "supplied with a disposal date within the valid tax years" should {
       val calculationModel = TotalGainResultsModel(1000, Some(2000), Some(3000))
-      lazy val view = summary(calculationModel, "back-link", displayDateWarning = true, "flat")(fakeRequest)
+      lazy val view = summary(0.0, calculationModel, "back-link", displayDateWarning = true, "flat")(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "display a tax year warning" in {
