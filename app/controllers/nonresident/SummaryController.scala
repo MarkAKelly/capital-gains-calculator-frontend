@@ -42,8 +42,12 @@ trait SummaryController extends FrontendController with ValidActiveSession {
 
   val summary = ValidateSession.async { implicit request =>
 
-    def summaryBackUrl(implicit hc: HeaderCarrier): Future[String] = {
-      Future.successful(routes.CheckYourAnswersController.checkYourAnswers().url)
+    def summaryBackUrl(model: Option[TotalGainResultsModel])(implicit hc: HeaderCarrier): Future[String] = model match {
+      case (Some(data)) if data.rebasedGain.isDefined || data.timeApportionedGain.isDefined =>
+        Future.successful(routes.CalculationElectionController.calculationElection().url)
+      case (Some(data)) =>
+        Future.successful(routes.CheckYourAnswersController.checkYourAnswers().url)
+      case (None) => Future.successful(common.DefaultRoutes.missingDataRoute)
     }
 
     def displayDateWarning(disposalDate: DisposalDateModel): Future[Boolean] = {
@@ -62,10 +66,10 @@ trait SummaryController extends FrontendController with ValidActiveSession {
     }
 
     for {
-      backUrl <- summaryBackUrl
       answers <- answersConstructor.getNRTotalGainAnswers(hc)
       displayWarning <- displayDateWarning(answers.disposalDateModel)
       calculationDetails <- calculateDetails(answers)
+      backUrl <- summaryBackUrl(calculationDetails)
       calculationType <- calcConnector.fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection)
       route <- routeRequest(calculationDetails, backUrl, displayWarning,
         calculationType.get.calculationType)

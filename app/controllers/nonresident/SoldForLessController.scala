@@ -52,7 +52,7 @@ trait SoldForLessController extends FrontendController with ValidActiveSession {
     def routeRequest(model: SoldForLessModel) = {
       //This has been written as such to make update to the routing in the second story much easier
       //It should require only a change to the tests and change to the else case
-      if (model.soldForLess) Future.successful(Redirect(routes.DisposalValueController.disposalValue()))
+      if (model.soldForLess) Future.successful(Redirect(routes.MarketValueWhenSoldOrGaveAwayController.marketValueWhenSold()))
       else Future.successful(Redirect(routes.DisposalValueController.disposalValue()))
     }
 

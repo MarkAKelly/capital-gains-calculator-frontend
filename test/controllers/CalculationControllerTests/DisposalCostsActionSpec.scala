@@ -18,37 +18,39 @@ package controllers.CalculationControllerTests
 
 import assets.MessageLookup.NonResident.{DisposalCosts => messages}
 import assets.MessageLookup.{NonResident => commonMessages}
-import common.{Constants, KeystoreKeys}
+import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
-import play.api.libs.json.Json
-import uk.gov.hmrc.http.cache.client.CacheMap
+import controllers.nonresident.{DisposalCostsController, routes}
+import models.nonresident._
+import org.jsoup._
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.mvc.AnyContentAsFormUrlEncoded
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import org.jsoup._
 import org.scalatest.mock.MockitoSugar
+import play.api.test.Helpers._
+import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
-import controllers.nonresident.{DisposalCostsController, routes}
-import models.nonresident.{AcquisitionDateModel, DisposalCostsModel, RebasedValueModel}
-import play.api.mvc.Result
-import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget(getData: Option[DisposalCostsModel]): DisposalCostsController = {
+  def setupTarget(getData: Option[DisposalCostsModel],
+                  soldOrGivenModel: Option[SoldOrGivenAwayModel],
+                  soldForLessModel: Option[SoldForLessModel]): DisposalCostsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
     when(mockCalcConnector.fetchAndGetFormData[DisposalCostsModel](Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.fetchAndGetFormData[SoldOrGivenAwayModel](Matchers.eq(KeystoreKeys.soldOrGivenAway))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(soldOrGivenModel))
+
+    when(mockCalcConnector.fetchAndGetFormData[SoldForLessModel](Matchers.eq(KeystoreKeys.NonResidentKeys.soldForLess))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(soldForLessModel))
 
     new DisposalCostsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -66,7 +68,7 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Moc
 
     "not supplied with a pre-existing stored model" should {
 
-      val target = setupTarget(None)
+      val target = setupTarget(None, None, None)
       lazy val result = target.disposalCosts(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -77,11 +79,15 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Moc
       s"have the title ${messages.question}" in {
         document.getElementsByTag("title").text shouldBe messages.question
       }
+
+      "have a back link ot the missing data route" in {
+        document.select("#back-link").attr("href") shouldEqual common.DefaultRoutes.missingDataRoute
+      }
     }
 
     "supplied with a pre-existing stored model" should {
 
-      val target = setupTarget(Some(DisposalCostsModel(1000)))
+      val target = setupTarget(Some(DisposalCostsModel(1000)), None, None)
       lazy val result = target.disposalCosts(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -95,7 +101,7 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Moc
     }
 
     "supplied with an invalid session" should {
-      val target = setupTarget(Some(DisposalCostsModel(1000)))
+      val target = setupTarget(Some(DisposalCostsModel(1000)), None, None)
       lazy val result = target.disposalCosts(fakeRequest)
 
       "return a 303" in {
@@ -106,13 +112,67 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Moc
         redirectLocation(result).get should include("/calculate-your-capital-gains/session-timeout")
       }
     }
+
+    "when the property was given away" should {
+      val target = setupTarget(None, Some(SoldOrGivenAwayModel(false)), Some(SoldForLessModel(true)))
+      lazy val result = target.disposalCosts(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 200" in {
+        status(result) shouldBe 200
+      }
+
+      s"have the title ${messages.question}" in {
+        document.getElementsByTag("title").text shouldBe messages.question
+      }
+
+      "have a back link to the market value controller" in {
+        document.select("#back-link").attr("href") shouldEqual routes.MarketValueWhenSoldOrGaveAwayController.marketValueWhenGaveAway().url
+      }
+    }
+
+    "when the property was sold and sold for less" should {
+      val target = setupTarget(None, Some(SoldOrGivenAwayModel(true)), Some(SoldForLessModel(true)))
+      lazy val result = target.disposalCosts(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 200" in {
+        status(result) shouldBe 200
+      }
+
+      s"have the title ${messages.question}" in {
+        document.getElementsByTag("title").text shouldBe messages.question
+      }
+
+      "have a back link to the market value controller" in {
+        document.select("#back-link").attr("href") shouldEqual routes.MarketValueWhenSoldOrGaveAwayController.marketValueWhenSold().url
+      }
+    }
+
+    "when the property was sold and not sold for less" should {
+      val target = setupTarget(None, Some(SoldOrGivenAwayModel(true)), Some(SoldForLessModel(false)))
+      lazy val result = target.disposalCosts(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 200" in {
+        status(result) shouldBe 200
+      }
+
+      s"have the title ${messages.question}" in {
+        document.getElementsByTag("title").text shouldBe messages.question
+      }
+
+      "have a back link to the market value controller" in {
+        document.select("#back-link").attr("href") shouldEqual routes.DisposalValueController.disposalValue().url
+      }
+    }
   }
 
   //POST Tests
   "In CalculationController calling the .submitDisposalCosts action" when {
 
     "submitting a valid form with 1000" should {
-      val target = setupTarget(None)
+      val target = setupTarget(None, None, None)
       lazy val request = fakeRequestToPOSTWithSession(("disposalCosts", "1000"))
       lazy val result = target.submitDisposalCosts(request)
 
@@ -126,7 +186,7 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Moc
     }
 
     "submitting an invalid form with no value" should {
-      val target = setupTarget(None)
+      val target = setupTarget(None, None, None)
       lazy val request = fakeRequestToPOSTWithSession(("disposalCosts", ""))
       lazy val result = target.submitDisposalCosts(request)
       lazy val document = Jsoup.parse(bodyOf(result))
