@@ -40,6 +40,22 @@ trait PrivateResidenceReliefController extends FrontendController with ValidActi
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
   val calcConnector: CalculatorConnector
 
+
+  // I have included this logic here as it will become necessary later when the routing needs to be decided based on zero gains.
+  //
+//  private def gainsZero(taxableGainsWithPRRModel: CalculationResultsWithPRRModel): Future[Boolean] = taxableGainsWithPRRModel match {
+//    case (CalculationResultsWithPRRModel(flat, None, None)) if flat.taxableGain <= 0.0 =>
+//      Future.successful(true)
+//    case (CalculationResultsWithPRRModel(flat, Some(rebased), None)) if flat.taxableGain <= 0.0 && rebased.taxableGain <= 0.0 =>
+//      Future.successful(true)
+//    case (CalculationResultsWithPRRModel(flat, None, Some(time)))if flat.taxableGain <= 0.0 && time.taxableGain <= 0.0 =>
+//      Future.successful(true)
+//    case (CalculationResultsWithPRRModel(flat, Some(rebased), Some(time)))if flat.taxableGain <= 0.0 && rebased.taxableGain <= 0.0
+  // && time.taxableGain <= 0.0 =>
+//      Future.successful(true)
+//    case (_) => Future.successful(false)
+//  }
+
   def getAcquisitionDate(implicit hc: HeaderCarrier): Future[Option[LocalDate]] =
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).map {
       case Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year))) => Some(Dates.constructDate(day, month, year))
@@ -112,10 +128,7 @@ trait PrivateResidenceReliefController extends FrontendController with ValidActi
         },
         success => {
           calcConnector.saveFormData(KeystoreKeys.privateResidenceRelief, success)
-          success match {
-            case PrivateResidenceReliefModel("Yes", _, _) => TODO.apply(request)
-            case _ => Future.successful(Redirect(routes.CustomerTypeController.customerType()))
-          }
+          Future.successful(Redirect(controllers.nonresident.routes.CheckYourAnswersController.checkYourAnswers().url))
         }
       )
     }
