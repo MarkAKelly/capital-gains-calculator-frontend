@@ -47,6 +47,18 @@ class PreviousLossOrGainViewSpec extends UnitSpec with WithFakeApplication with 
       }
     }
 
+    "have a legend that" should {
+      lazy val legend = document.body.select("legend")
+
+      s"have the text of ${messages.question}" in {
+        legend.text shouldBe messages.question
+      }
+
+      "be visually hidden" in {
+        legend.hasClass("visuallyhidden") shouldEqual true
+      }
+    }
+
     "have a back button that" should {
       lazy val backLink = document.select("a#back-link")
 

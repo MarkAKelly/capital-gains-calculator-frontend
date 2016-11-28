@@ -48,11 +48,11 @@ trait PreviousGainOrLossController extends FrontendController with ValidActiveSe
     implicit request =>
 
       def errorAction(form: Form[PreviousLossOrGainModel]) = {
-        Future.successful(BadRequest(views.previousLossOrGain))
+        Future.successful(BadRequest(views.previousLossOrGain(form)))
       }
       def successAction(model: PreviousLossOrGainModel) = {
         for {
-          save <- calcConnector.saveFormData[PreviousLossOrGainModel](KeystoreKeys.NonResidentKeys.previousLossOrGain)
+          save <- calcConnector.saveFormData[PreviousLossOrGainModel](KeystoreKeys.NonResidentKeys.previousLossOrGain, model)
           route <- routeRequest(model)
         } yield route
       }

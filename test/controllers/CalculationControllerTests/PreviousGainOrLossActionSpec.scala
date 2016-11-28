@@ -41,13 +41,16 @@ class PreviousGainOrLossActionSpec extends UnitSpec with WithFakeApplication wit
     when(mockCalcConnector.fetchAndGetFormData[PreviousLossOrGainModel](Matchers.eq(keystoreKeys.previousLossOrGain))(Matchers.any(), Matchers.any())).
       thenReturn(Future.successful(getData))
 
+    when(mockCalcConnector.saveFormData[PreviousLossOrGainModel](Matchers.eq(keystoreKeys.previousLossOrGain), Matchers.any())(Matchers.any(), Matchers.any())).
+      thenReturn(mock[CacheMap])
+
     new PreviousGainOrLossController {
       val calcConnector: CalculatorConnector = mockCalcConnector
       val config: AppConfig = mock[AppConfig]
     }
   }
 
-  "Calling .previousLossOrGain from the PreviousLossOrGainController" when {
+  "Calling .previousGainOrLoss from the PreviousGainOrLossController" when {
     "there is no keystore data" should {
       lazy val target = setupTarget(None)
       lazy val result = target.previousGainOrLoss(fakeRequestWithSession)
@@ -84,6 +87,61 @@ class PreviousGainOrLossActionSpec extends UnitSpec with WithFakeApplication wit
 
       "redirect to the session timeout page" in {
         redirectLocation(result).get should include("/calculate-your-capital-gains/session-timeout")
+      }
+    }
+  }
+
+  "Calling .submitPreviousGainOrLoss from the PreviousGainOrLossController" when {
+    "a valid form is submitted with the value 'Loss'" should {
+      lazy val target = setupTarget(None)
+      lazy val result = target.submitPreviousGainOrLoss(fakeRequestToPOSTWithSession(("previousLossOrGain", "Loss")))
+
+      "return a status of 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the how much loss page" in {
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.HowMuchLossController.howMuchLoss().url
+      }
+    }
+
+    "a valid form is submitted with the value 'Gain'" should {
+      lazy val target = setupTarget(None)
+      lazy val result = target.submitPreviousGainOrLoss(fakeRequestToPOSTWithSession(("previousLossOrGain", "Gain")))
+
+      "return a status of 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the how much gained page" in {
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.HowMuchGainController.howMuchGain().url
+      }
+    }
+
+    "a valid form is submitted with the value 'Neither" should {
+      lazy val target = setupTarget(None)
+      lazy val result = target.submitPreviousGainOrLoss(fakeRequestToPOSTWithSession(("previousLossOrGain","Neither")))
+
+      "return a status of 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the AEA page" in {
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.AnnualExemptAmountController.annualExemptAmount().url
+      }
+    }
+
+    "an invalid form is submitted" should {
+      lazy val target = setupTarget(None)
+      lazy val result = target.submitPreviousGainOrLoss(fakeRequestToPOSTWithSession(("previousLossOrGain", "invalid text")))
+      lazy val doc = Jsoup.parse(bodyOf(result))
+
+      "return a status of 400" in {
+        status(result) shouldBe 400
+      }
+
+      "return to the page" in {
+        doc.title shouldEqual messages.question
       }
     }
   }
