@@ -88,10 +88,32 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
   "Calling the .summary action" when {
 
-    "provided with a valid session" should {
+    "provided with a valid session and three potential calculations" should {
       val target = setupTarget(
         answerModel,
         TotalGainResultsModel(1000, Some(2000), Some(3000)),
+        CalculationElectionModel(CalculationType.flat)
+      )
+      lazy val result = target.summary()(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 200" in {
+        status(result) shouldBe 200
+      }
+
+      "load the summary page" in {
+        document.title() shouldBe messages.title
+      }
+
+      "has a back-link to the calculation election page" in {
+        document.select("#back-link").attr("href") shouldEqual controllers.nonresident.routes.CalculationElectionController.calculationElection().url
+      }
+    }
+
+    "provided with a valid session and only one (flat) calculation" should {
+      val target = setupTarget(
+        answerModel,
+        TotalGainResultsModel(1000, None, None),
         CalculationElectionModel(CalculationType.flat)
       )
       lazy val result = target.summary()(fakeRequestWithSession)
