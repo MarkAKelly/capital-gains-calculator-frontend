@@ -142,25 +142,33 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
     Some(OtherReliefsModel(1450))
   )
 
-  val yesPRRModel = PrivateResidenceReliefModel("Yes", None, None)
+  val yesPRRModel = PrivateResidenceReliefModel("Yes", Some(2), Some(3))
 
   private def assertExpectedResult[T](option: Option[T])(test: T => Unit) = assertOption("expected option is None")(option)(test)
 
   "Calling .deductionDetailsRows" when {
 
     "provided with reliefs and prr" should {
-      lazy val result = DeductionDetailsConstructor.deductionDetailsRows(yesOtherReliefs, Some(yesPRRModel))
+      lazy val result = DeductionDetailsConstructor.deductionDetailsRows(validDates, Some(yesPRRModel))
 
-      "have a sequence of size 2" in {
-        result.size shouldBe 2
+      "have a sequence of size 4" in {
+        result.size shouldBe 4
       }
 
       "return a sequence with an other reliefs flat value" in {
-        result.contains(DeductionDetailsConstructor.otherReliefsFlatValueRow(yesOtherReliefs).get)
+        result.contains(DeductionDetailsConstructor.otherReliefsFlatValueRow(validDates).get)
       }
 
       "return a sequence with a prr question answer" in {
         result.contains(DeductionDetailsConstructor.privateResidenceReliefQuestionRow(Some(yesPRRModel)).get)
+      }
+
+      "return a sequence with the days claimed answer" in {
+        result.contains(DeductionDetailsConstructor.privateResidenceReliefDaysClaimedRow(Some(yesPRRModel), validDates).get)
+      }
+
+      "return a sequence with the days claimed after answer" in {
+        result.contains(DeductionDetailsConstructor.privateResidenceReliefDaysClaimedAfterRow(Some(yesPRRModel), validDates).get)
       }
     }
   }
@@ -368,7 +376,7 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
 
       "return a question for Private Residence Relief" in {
         assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.question shouldBe
-          s"${messages.PrivateResidenceRelief.questionBetween} 5 April 2015 ${messages.PrivateResidenceRelief.questionEnd} 10 April 2017")
+          s"${messages.PrivateResidenceRelief.questionBetween} 10 April 2017 ${messages.PrivateResidenceRelief.questionEnd}")
       }
 
       "return a link to the Private Residence Relief page" in {
@@ -395,7 +403,7 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
 
       "return a question for Private Residence Relief" in {
         assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.question shouldBe
-          s"${messages.PrivateResidenceRelief.questionBetween} 5 April 2015 ${messages.PrivateResidenceRelief.questionEnd} 10 April 2015")
+          s"${messages.PrivateResidenceRelief.questionBetween} 10 April 2015 ${messages.PrivateResidenceRelief.questionEnd}")
       }
 
       "return a link to the Private Residence Relief page" in {

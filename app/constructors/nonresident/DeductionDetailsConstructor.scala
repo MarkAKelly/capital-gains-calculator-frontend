@@ -34,9 +34,13 @@ object DeductionDetailsConstructor {
 
     val otherReliefsFlatValue = otherReliefsFlatValueRow(answers)
     val privateResidenceReliefQuestion = privateResidenceReliefQuestionRow(privateResidenceReliefModel)
+    val privateResidenceReliefDaysClaimed = privateResidenceReliefDaysClaimedRow(privateResidenceReliefModel, answers)
+    val privateResidenceReliefDaysClaimedAfter = privateResidenceReliefDaysClaimedAfterRow(privateResidenceReliefModel, answers)
 
     val sequence = Seq(otherReliefsFlatValue,
-      privateResidenceReliefQuestion)
+      privateResidenceReliefQuestion,
+      privateResidenceReliefDaysClaimed,
+      privateResidenceReliefDaysClaimedAfter)
 
     sequence.flatten
   }
@@ -88,8 +92,8 @@ object DeductionDetailsConstructor {
         Some(QuestionAnswerModel(
           s"${keys.privateResidenceRelief}-daysClaimedAfter",
           value,
-          s"${Messages("calc.privateResidenceRelief.questionBetween.partOne")} 5 April 2015" +
-            s" ${Messages("calc.privateResidenceRelief.questionBetween.partTwo")} ${Dates.dateMinusMonths(answers.disposalDateModel, 18)}",
+          s"${Messages("calc.privateResidenceRelief.questionBetween.partOne")} ${Dates.dateMinusMonths(answers.disposalDateModel, 18)}" +
+            s" ${Messages("calc.privateResidenceRelief.questionBetween.partTwo")}",
           Some(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url)
         ))
       case (Some(PrivateResidenceReliefModel("Yes", _, Some(value))), _, Some(RebasedValueModel("Yes",_)))
@@ -97,8 +101,8 @@ object DeductionDetailsConstructor {
         Some(QuestionAnswerModel(
           s"${keys.privateResidenceRelief}-daysClaimedAfter",
           value,
-          s"${Messages("calc.privateResidenceRelief.questionBetween.partOne")} 5 April 2015" +
-            s" ${Messages("calc.privateResidenceRelief.questionBetween.partTwo")} ${Dates.dateMinusMonths(answers.disposalDateModel, 18)}",
+          s"${Messages("calc.privateResidenceRelief.questionBetween.partOne")} ${Dates.dateMinusMonths(answers.disposalDateModel, 18)}" +
+            s" ${Messages("calc.privateResidenceRelief.questionBetween.partTwo")}",
           Some(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url)
         ))
       case _ => None
