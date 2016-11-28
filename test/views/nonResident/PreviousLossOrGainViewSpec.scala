@@ -66,8 +66,8 @@ class PreviousLossOrGainViewSpec extends UnitSpec with WithFakeApplication with 
     "has a form" which {
       lazy val form = document.getElementsByTag("form")
 
-      s"has the action '${controllers.nonresident.routes.PreviousLossOrGainController.submitPreviousLossOrGain().toString}" in {
-        form.attr("action") shouldBe controllers.nonresident.routes.PreviousLossOrGainController.submitPreviousLossOrGain().toString()
+      s"has the action '${controllers.nonresident.routes.PreviousGainOrLossController.submitPreviousGainOrLoss().toString}" in {
+        form.attr("action") shouldBe controllers.nonresident.routes.PreviousGainOrLossController.submitPreviousGainOrLoss().toString()
       }
 
       "has the method of POST" in {

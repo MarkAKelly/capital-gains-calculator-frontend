@@ -17,7 +17,7 @@
 package controllers.CalculationControllerTests
 
 import connectors.CalculatorConnector
-import controllers.nonresident.PreviousLossOrGainController
+import controllers.nonresident.{PreviousGainOrLossController, PreviousLossOrGainController}
 import models.nonresident.PreviousLossOrGainModel
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -34,15 +34,15 @@ import org.jsoup.Jsoup
 
 import scala.concurrent.Future
 
-class PreviousLossOrGainActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
-  def setupTarget(getData: Option[PreviousLossOrGainModel]): PreviousLossOrGainController = {
+class PreviousGainOrLossActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
+  def setupTarget(getData: Option[PreviousLossOrGainModel]): PreviousGainOrLossController = {
     val mockCalcConnector = mock[CalculatorConnector]
 
     when(mockCalcConnector.fetchAndGetFormData[PreviousLossOrGainModel](Matchers.eq(keystoreKeys.previousLossOrGain))(Matchers.any(), Matchers.any())).
       thenReturn(Future.successful(getData))
 
-    new PreviousLossOrGainController {
-      override val calcConnector: CalculatorConnector = mockCalcConnector
+    new PreviousGainOrLossController {
+      val calcConnector: CalculatorConnector = mockCalcConnector
       val config: AppConfig = mock[AppConfig]
     }
   }
@@ -50,7 +50,7 @@ class PreviousLossOrGainActionSpec extends UnitSpec with WithFakeApplication wit
   "Calling .previousLossOrGain from the PreviousLossOrGainController" when {
     "there is no keystore data" should {
       lazy val target = setupTarget(None)
-      lazy val result = target.previousLossOrGain(fakeRequestWithSession)
+      lazy val result = target.previousGainOrLoss(fakeRequestWithSession)
 
       "return a status of 200" in {
         status(result) shouldEqual 200
@@ -63,7 +63,7 @@ class PreviousLossOrGainActionSpec extends UnitSpec with WithFakeApplication wit
 
     "there is keystore data" should {
       lazy val target = setupTarget(Some(PreviousLossOrGainModel("Loss")))
-      lazy val result = target.previousLossOrGain(fakeRequestWithSession)
+      lazy val result = target.previousGainOrLoss(fakeRequestWithSession)
 
       "return a status of 200" in {
         status(result) shouldEqual 200
@@ -76,7 +76,7 @@ class PreviousLossOrGainActionSpec extends UnitSpec with WithFakeApplication wit
 
     "there is no valid session" should {
       lazy val target = setupTarget(None)
-      lazy val result = target.previousLossOrGain(fakeRequest)
+      lazy val result = target.previousGainOrLoss(fakeRequest)
 
       "return a status of 303" in {
         status(result) shouldBe 303
