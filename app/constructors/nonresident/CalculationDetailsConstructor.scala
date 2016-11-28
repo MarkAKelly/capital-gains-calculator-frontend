@@ -18,13 +18,13 @@ package constructors.nonresident
 
 import common.KeystoreKeys
 import controllers.nonresident.routes
-import models.nonresident.{QuestionAnswerModel, TotalGainResultsModel}
+import models.nonresident.{GainsAfterPRRModel, QuestionAnswerModel, TotalGainResultsModel}
 import play.api.i18n.Messages
 import common.nonresident.CalculationType
 
 object CalculationDetailsConstructor {
 
-  def buildSection(calculation: TotalGainResultsModel, calculationType: String): Seq[QuestionAnswerModel[Any]] = {
+  def buildSection(calculation: TotalGainResultsModel, calculationType: String, gainsAfterPRR: Option[BigDecimal]): Seq[QuestionAnswerModel[Any]] = {
     val electionDetails = calculationElection(calculationType)
     val totalGainAmount = calculationType match {
       case CalculationType.flat => calculation.flatGain
@@ -33,6 +33,9 @@ object CalculationDetailsConstructor {
     }
     val totalGainDetails = totalGain(totalGainAmount)
     val totalLossDetails = totalLoss(totalGainAmount)
+    val prrDetails = gainsAfterPRR match {
+      case Some(gainsAfterPRRModel) =>
+    }
     Seq(
       electionDetails,
       totalGainDetails,
@@ -81,6 +84,10 @@ object CalculationDetailsConstructor {
 
       Some(QuestionAnswerModel(id, answer, question, None))
     }
+  }
+
+  def prrUsed(gainsAfterPRRModel: GainsAfterPRRModel): Option[QuestionAnswerModel[BigDecimal]] = {
+
   }
 
 }
