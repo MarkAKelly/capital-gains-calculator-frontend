@@ -44,6 +44,10 @@ class HowMuchGainViewSpec extends UnitSpec with WithFakeApplication with Mockito
           backLink.text shouldBe messages.back
         }
 
+        "has the class back-link" in {
+          backLink.attr("class") shouldBe "back-link"
+        }
+
         s"has a route to 'previous-gain-or-loss'" in {
           backLink.attr("href") shouldBe controllers.nonresident.routes.PreviousGainOrLossController.previousGainOrLoss().url
         }
