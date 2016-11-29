@@ -4,28 +4,12 @@
 
 @(currentIncomeForm: Form[CurrentIncomeModel])(implicit request: Request[_])
 
-@sidebar = {
-    <ul>
-        <li>
-            <a id="helpLink1" class="external-link" rel="external" href="https://www.gov.uk/income-tax/overview"
-                target="_blank" data-journey-click="help:govUK:incomeTaxOverview">
-                @Messages("calc.currentIncome.link.one")
-                <span>@Messages("calc.base.externalLink")</span>
-            </a>
-        </li>
-    </ul>
-    <ul>
-        <li>
-            <a id="helpLink2" class="external-link" rel="external" href="https://www.gov.uk/income-tax-rates/previous-tax-years"
-                target="_blank" data-journey-click="help:govUK:previousTaxYears">
-                @Messages("calc.currentIncome.link.two")
-                <span>@Messages("calc.base.externalLink")</span>
-            </a>
-        </li>
-    </ul>
+@helpContent = {
+    <span class="form-hint">@Messages("calc.currentIncome.helpText.line1")</span>
+    <span class="form-hint">@Messages("calc.currentIncome.helpText.line2")</span>
 }
 
-@main_template(Messages("calc.currentIncome.question"), sidebarLinks = Some(sidebar)) {
+@main_template(Messages("calc.currentIncome.question")) {
 
     <a id="back-link" class="back-link" href="@controllers.nonresident.routes.CustomerTypeController.customerType">Back</a>
 
@@ -35,7 +19,12 @@
 
     @form(action = controllers.nonresident.routes.CurrentIncomeController.submitCurrentIncome) {
 
-        @formInputMoney(currentIncomeForm, "currentIncome", Messages("calc.currentIncome.question"),Some(Messages("calc.currentIncome.helpText")))
+        @formInputMoney(
+            inputForm = currentIncomeForm,
+            fieldName = "currentIncome",
+            questionText = Messages("calc.currentIncome.question"),
+            additionalHTMLContent = Some(helpContent.body)
+        )
 
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
 
