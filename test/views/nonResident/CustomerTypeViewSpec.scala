@@ -42,11 +42,11 @@ class CustomerTypeViewSpec extends UnitSpec with WithFakeApplication with Mockit
         lazy val heading = document.body().select("h1")
 
         "has a class of heading-large" in {
-          heading.attr("class") shouldBe "heading-large"
+          heading.attr("class") shouldBe "heading-xlarge"
         }
 
         s"has the text '${commonMessages.pageHeading}'" in {
-          heading.text shouldBe commonMessages.pageHeading
+          heading.text shouldBe messages.question
         }
       }
 
@@ -66,8 +66,16 @@ class CustomerTypeViewSpec extends UnitSpec with WithFakeApplication with Mockit
         }
       }
 
-      s"have the question ${messages.question} as the legend of the input" in {
-        document.body.getElementsByTag("legend").text shouldEqual messages.question
+      s"have a legend" which {
+        lazy val legend = document.body.getElementsByTag("legend")
+        s"has the help text ${messages.question}" in {
+          legend.text shouldEqual messages.question
+        }
+
+        "has the class 'visually-hidden'" in {
+          legend.attr("class") shouldBe "visuallyhidden"
+        }
+
       }
 
       s"display a radio button with the option ${messages.individual}" in {
