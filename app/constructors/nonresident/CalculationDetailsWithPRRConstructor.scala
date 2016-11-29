@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIED OR CONDITIONS OF ANY KIND, either express or implied.
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -24,19 +24,20 @@ import play.api.i18n.Messages
 
 object CalculationDetailsWithPRRConstructor {
 
-  def buildSection(calculation: CalculationResultsWithPRRModel, calculationType: String, prrUsed: BigDecimal): Seq[QuestionAnswerModel[Any]] = {
+  def buildSection(calculation: CalculationResultsWithPRRModel, calculationType: String): Seq[QuestionAnswerModel[Any]] = {
     val electionDetails = calculationElection(calculationType)
-    val totalGainAmount = calculationType match {
-      case CalculationType.flat => calculation.flatTaxableGain.totalGain
-      case CalculationType.rebased => calculation.rebasedTaxableGain.get.totalGain
-      case CalculationType.timeApportioned => calculation.timeApportionedTaxableGain.get.totalGain
+    val correctModel = calculationType match {
+      case CalculationType.flat => calculation.flatTaxableGain
+      case CalculationType.rebased => calculation.rebasedTaxableGain.get
+      case CalculationType.timeApportioned => calculation.timeApportionedTaxableGain.get
     }
-    val totalGainDetails = totalGain(totalGainAmount)
-    val totalLossDetails = totalLoss(totalGainAmount)
-    val prrDetails = prrUsedDetails(prrUsed)
+    val taxableGainDetails = taxableGain(correctModel.taxableGain)
+    val totalGainDetails = totalGain(correctModel.totalGain)
+    val totalLossDetails = totalLoss(correctModel.totalGain)
+    val prrDetails = prrUsedDetails(correctModel.prrUsed)
     Seq(
       electionDetails,
-      totalGainAmount,
+      taxableGainDetails,
       totalGainDetails,
       totalLossDetails,
       prrDetails
@@ -86,8 +87,21 @@ object CalculationDetailsWithPRRConstructor {
     }
   }
 
+  def taxableGain(taxableGain: BigDecimal): Option[QuestionAnswerModel[BigDecimal]] = {
+    if (taxableGain <= BigDecimal(0)) None
+    else {
+      val id = "calcDetails:taxableGain"
+
+      val question = Messages("calc.summary.calculation.details.taxableGain")
+
+      val answer = taxableGain
+
+      Some(QuestionAnswerModel(id, answer, question, None))
+    }
+  }
+
   def prrUsedDetails(prrUsed: BigDecimal): Option[QuestionAnswerModel[BigDecimal]] = {
-    if(prrUsed < BigDecimal(0)) None
+    if(prrUsed <= BigDecimal(0)) None
     else {
       val id = "calcDetails:prrUsed"
 

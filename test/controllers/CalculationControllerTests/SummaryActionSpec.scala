@@ -20,12 +20,12 @@ import assets.MessageLookup.NonResident.{Summary => messages}
 import assets.MessageLookup.{NonResident => commonMessages}
 import common.DefaultRoutes._
 import common.nonresident.CalculationType
-import common.{KeystoreKeys, TestModels}
+import common.{Constants, KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
 import constructors.nonresident.AnswersConstructor
 import controllers.helpers.FakeRequestHelper
 import controllers.nonresident.SummaryController
-import models.nonresident._
+import models.nonresident.{PrivateResidenceReliefModel, _}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -42,7 +42,9 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
   def setupTarget(summary: TotalGainAnswersModel,
                   result: TotalGainResultsModel,
-                  calculationElectionModel: CalculationElectionModel
+                  calculationElectionModel: CalculationElectionModel,
+                  privateResidenceReliefModel: PrivateResidenceReliefModel,
+                  calculationResultsWithPRRModel: CalculationResultsWithPRRModel
                  ): SummaryController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
@@ -51,11 +53,17 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
     when(mockAnswersConstructor.getNRTotalGainAnswers(Matchers.any()))
       .thenReturn(Future.successful(summary))
 
-    when(mockCalcConnector.fetchAndGetFormData[CalculationElectionModel](Matchers.any())(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[CalculationElectionModel](Matchers.eq(KeystoreKeys.calculationElection))(Matchers.any(), Matchers.any()))
       .thenReturn(Some(calculationElectionModel))
 
     when(mockCalcConnector.calculateTotalGain(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(Some(result)))
+
+    when(mockCalcConnector.calculateTaxableGainAfterPRR(Matchers.any(), Matchers.any())(Matchers.any()))
+        .thenReturn(Future.successful(Some(calculationResultsWithPRRModel)))
+
+    when(mockCalcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.eq(KeystoreKeys.privateResidenceRelief))(Matchers.any(), Matchers.any()))
+      .thenReturn(Some(privateResidenceReliefModel))
 
     new SummaryController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -92,8 +100,11 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
       val target = setupTarget(
         answerModel,
         TotalGainResultsModel(1000, Some(2000), Some(3000)),
-        CalculationElectionModel(CalculationType.flat)
+        CalculationElectionModel(CalculationType.flat),
+        PrivateResidenceReliefModel("Yes", Some(1000), Some(10)),
+        CalculationResultsWithPRRModel(GainsAfterPRRModel(100, 0, 100), None, None)
       )
+
       lazy val result = target.summary()(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -114,7 +125,9 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
       val target = setupTarget(
         answerModel,
         TotalGainResultsModel(1000, Some(2000), Some(3000)),
-        CalculationElectionModel(CalculationType.flat)
+        CalculationElectionModel(CalculationType.flat),
+        PrivateResidenceReliefModel("Yes", Some(1000), Some(10)),
+        CalculationResultsWithPRRModel(GainsAfterPRRModel(100, 0, 100), None, None)
       )
       lazy val result = target.summary()(fakeRequest)
 
@@ -132,7 +145,9 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
     val target = setupTarget(
       answerModel,
       TotalGainResultsModel(1000, Some(2000), Some(3000)),
-      CalculationElectionModel(CalculationType.flat)
+      CalculationElectionModel(CalculationType.flat),
+      PrivateResidenceReliefModel("Yes", Some(1000), Some(10)),
+      CalculationResultsWithPRRModel(GainsAfterPRRModel(100, 0, 100), None, None)
     )
     lazy val result = target.restart()(fakeRequestWithSession)
 

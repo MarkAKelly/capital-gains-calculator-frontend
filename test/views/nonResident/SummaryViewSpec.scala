@@ -19,7 +19,7 @@ package views.nonResident
 import assets.MessageLookup.{NonResident => messages}
 import common.TestModels
 import controllers.helpers.FakeRequestHelper
-import models.nonresident.TotalGainResultsModel
+import models.nonresident.{QuestionAnswerModel, TotalGainResultsModel}
 import org.jsoup.Jsoup
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -30,8 +30,10 @@ class SummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
   "Summary view" when {
 
     "supplied with a disposal date within the valid tax years" should {
-      val calculationModel = TotalGainResultsModel(1000, Some(2000), Some(3000))
-      lazy val view = summary(1000.0, calculationModel, "back-link", displayDateWarning = false, "flat")(fakeRequest)
+      val questionAnswer = QuestionAnswerModel[String]("text", "1000", "test-question", None)
+      val seqQuestionAnswers = Seq(questionAnswer, questionAnswer)
+
+      lazy val view = summary(seqQuestionAnswers, "back-link", displayDateWarning = false, "flat")(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       s"have a title of '${messages.Summary.title}'" in {
@@ -68,8 +70,6 @@ class SummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
         s"has a span with the text ${messages.Summary.calculationDetailsTitle}" in {
           heading.text() shouldBe messages.Summary.calculationDetailsTitle
         }
-
-
       }
 
       "not have a tax year warning" in {
@@ -82,8 +82,8 @@ class SummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
           document.select("#amount-you-owe-question span").text() shouldEqual messages.Summary.amountOwed
         }
 
-        s"has a value of £1,000.00" in {
-          document.select("#amount-you-owe-value span").text() shouldEqual "£1,000.00"
+        s"has a value of £0.00" in {
+          document.select("#amount-you-owe-value span").text() shouldEqual "£0.00"
         }
       }
 
@@ -145,8 +145,9 @@ class SummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
     }
 
     "supplied with a disposal date within the valid tax years" should {
-      val calculationModel = TotalGainResultsModel(1000, Some(2000), Some(3000))
-      lazy val view = summary(0.0, calculationModel, "back-link", displayDateWarning = true, "flat")(fakeRequest)
+      val questionAnswer = QuestionAnswerModel[String]("text", "1000", "test-question", None)
+      val seqQuestionAnswers = Seq(questionAnswer, questionAnswer)
+      lazy val view = summary(seqQuestionAnswers, "back-link", displayDateWarning = true, "flat")(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "display a tax year warning" in {

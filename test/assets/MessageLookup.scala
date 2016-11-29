@@ -316,7 +316,6 @@ object MessageLookup {
       def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
-    //How Became Owner messages
     object HowBecameOwner {
       val question = "How did you become the owner?"
       val errorMandatory = "Tell us how you became the owner"
@@ -343,6 +342,7 @@ object MessageLookup {
       val usedAEA = "Capital Gains Tax allowance used"
       val taxableGain = "Your taxable gain"
       val taxRate = "Your tax rate"
+      val prrUSed = "Private resident relief used"
       val personalDetailsTitle = "Personal details"
       val purchaseDetailsTitle = "Owning the property"
       val propertyDetailsTitle = "Property details"

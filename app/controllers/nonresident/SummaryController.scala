@@ -56,17 +56,15 @@ trait SummaryController extends FrontendController with ValidActiveSession {
       } else Future(None)
     }
 
-    def getAmountOwed(calculationResultsWithPRRModel: CalculationResultsWithPRRModel, calculationType: String): BigDecimal = {
-      calculationType match {
-        case CalculationType.flat => calculationResultsWithPRRModel.flatTaxableGain.taxableGain
-        case CalculationType.rebased => calculationResultsWithPRRModel.rebasedTaxableGain.get.taxableGain
-        case CalculationType.timeApportioned => calculationResultsWithPRRModel.timeApportionedTaxableGain.get.taxableGain
+    def getSection(
+                    calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel],
+                    privateResidenceReliefModel: Option[PrivateResidenceReliefModel],
+                    totalGainResultsModel: TotalGainResultsModel,
+                    calculationType: String): Future[Seq[QuestionAnswerModel[Any]]] = {
+      privateResidenceReliefModel match {
+        case Some(model) if model.isClaimingPRR == "Yes" => Future.successful(calculationResultsWithPRRModel.get.calculationDetailsRows(calculationType))
+        case _ => Future.successful(totalGainResultsModel.calculationDetailsRows(calculationType))
       }
-    }
-
-    def getSection(calculationResultsWithPRRModel: CalculationResultsWithPRRModel, isClaimingPRR: Boolean, totalGainResultsModel: TotalGainResultsModel,
-                   totalRes): Seq[QuestionAnswerModel[Any]] = {
-
     }
 
     def summaryBackUrl(implicit hc: HeaderCarrier): Future[String] = {
@@ -81,10 +79,18 @@ trait SummaryController extends FrontendController with ValidActiveSession {
       calcConnector.calculateTotalGain(summaryData)
     }
 
-    def routeRequest(calculationResult: Option[TotalGainResultsModel],
+    def calculatePRR(answers: TotalGainAnswersModel, privateResidenceReliefModel: Option[PrivateResidenceReliefModel])
+      : Future[Option[CalculationResultsWithPRRModel]] = {
+        privateResidenceReliefModel match {
+          case Some(model) => calcConnector.calculateTaxableGainAfterPRR(answers, model)
+          case None => Future.successful(None)
+        }
+    }
+
+    def routeRequest(result: Seq[QuestionAnswerModel[Any]],
                      backUrl: String, displayDateWarning: Boolean,
                      calculationType: String): Future[Result] = {
-      Future.successful(Ok(calculation.nonresident.summary(getAmountOwed(calculationResult.get, calculationType), calculationResult.get,
+      Future.successful(Ok(calculation.nonresident.summary(result,
         backUrl, displayDateWarning, calculationType)))
     }
 
@@ -92,9 +98,13 @@ trait SummaryController extends FrontendController with ValidActiveSession {
       backUrl <- summaryBackUrl
       answers <- answersConstructor.getNRTotalGainAnswers(hc)
       displayWarning <- displayDateWarning(answers.disposalDateModel)
-      calculationDetails <- calculateDetails(answers)
+      totalGainResultsModel <- calculateDetails(answers)
+      privateResidentReliefModel <- getPRRModel(hc, totalGainResultsModel.get)
+      calculationResultsWithPRR <- calculatePRR(answers, privateResidentReliefModel)
       calculationType <- calcConnector.fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection)
-      route <- routeRequest(calculationDetails, backUrl, displayWarning,
+      results <- getSection(calculationResultsWithPRR, privateResidentReliefModel,
+        totalGainResultsModel.get, calculationType.get.calculationType)
+      route <- routeRequest(results, backUrl, displayWarning,
         calculationType.get.calculationType)
     } yield route
   }
