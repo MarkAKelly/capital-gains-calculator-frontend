@@ -4,10 +4,6 @@
 
 @(currentIncomeForm: Form[CurrentIncomeModel])(implicit request: Request[_])
 
-@helpContent = {
-    <span class="form-hint">@Messages("calc.currentIncome.helpText.line1")</span>
-    <span class="form-hint">@Messages("calc.currentIncome.helpText.line2")</span>
-}
 
 @main_template(Messages("calc.currentIncome.question")) {
 
@@ -15,15 +11,18 @@
 
     @errorSummary(currentIncomeForm, "current-income")
 
-    <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
+    <h1 class="heading-xlarge">@Messages("calc.currentIncome.question")</h1>
 
     @form(action = controllers.nonresident.routes.CurrentIncomeController.submitCurrentIncome) {
+
+        <span class="form-hint">@Messages("calc.currentIncome.helpText.line1")</span>
+        <span class="form-hint">@Messages("calc.currentIncome.helpText.line2")</span>
 
         @formInputMoney(
             inputForm = currentIncomeForm,
             fieldName = "currentIncome",
             questionText = Messages("calc.currentIncome.question"),
-            additionalHTMLContent = Some(helpContent.body)
+            hideLabel = true
         )
 
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>

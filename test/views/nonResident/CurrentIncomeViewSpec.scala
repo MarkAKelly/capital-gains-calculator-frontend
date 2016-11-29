@@ -73,7 +73,7 @@ class CurrentIncomeViewSpec extends UnitSpec with WithFakeApplication with Mocki
       }
 
       s"have the correct hint text" in {
-        document.body.select("label span.form-hint").text() shouldBe messages.CurrentIncome.helpText
+        document.body.select("span.form-hint").text() shouldBe messages.CurrentIncome.helpText
       }
 
       "have an input with the correct id" in {
