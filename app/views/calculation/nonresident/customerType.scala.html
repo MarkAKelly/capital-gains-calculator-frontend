@@ -10,7 +10,7 @@
 
   @errorSummary(customerTypeForm, "customer-type")
 
-  <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
+  <h1 class="heading-xlarge">@Messages("calc.customerType.question")</h1>
 
   @form(action = controllers.nonresident.routes.CustomerTypeController.submitCustomerType) {
 
@@ -22,7 +22,8 @@
                 CustomerTypeKeys.trustee ->Messages("calc.customerType.trustee"),
                 CustomerTypeKeys.personalRep ->Messages("calc.customerType.personalRep")),
             '_legend -> Messages("calc.customerType.question"),
-            '_labelClass -> "block-label"
+            '_labelClass -> "block-label",
+            '_legendClass -> "visuallyhidden"
         )
     </div>
 
