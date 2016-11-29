@@ -36,5 +36,6 @@ case class TotalGainAnswersModel(disposalDateModel: DisposalDateModel,
   lazy val salesDetailsRows: Seq[QuestionAnswerModel[Any]] = SalesDetailsConstructor.salesDetailsRows(this)
   lazy val purchaseDetailsRows: Seq[QuestionAnswerModel[Any]] = PurchaseDetailsConstructor.getPurchaseDetailsSection(this)
   lazy val propertyDetailsRows: Seq[QuestionAnswerModel[Any]] = PropertyDetailsConstructor.propertyDetailsRows(this)
-  lazy val deductionDetailsRows: Seq[QuestionAnswerModel[Any]] = DeductionDetailsConstructor.deductionDetailsRows(this)
+  def deductionDetailsRows(privateResidenceReliefModel: Option[PrivateResidenceReliefModel] = None): Seq[QuestionAnswerModel[Any]] =
+    DeductionDetailsConstructor.deductionDetailsRows(this, privateResidenceReliefModel)
 }
