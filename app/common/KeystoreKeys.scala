@@ -51,6 +51,7 @@ object KeystoreKeys {
   val boughtForLess = "nr:boughtForLess"
   val howMuchGain = "nr:howMuchGain"
   val howMuchLoss = "nr:howMuchLoss"
+  val broughtForwardLosses = "nr:broughtForwardLosses"
 
 
 

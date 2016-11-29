@@ -16,9 +16,16 @@
 
 package controllers.nonresident
 
+import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
+import models.nonresident.BroughtForwardLossesModel
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+import forms.nonresident.BroughtForwardLossesForm._
+import play.api.data.Form
+import views.html.calculation
+
+import scala.concurrent.Future
 
 object BroughtForwardLossesController extends BroughtForwardLossesController {
   val calcConnector = CalculatorConnector
@@ -26,10 +33,44 @@ object BroughtForwardLossesController extends BroughtForwardLossesController {
 
 trait BroughtForwardLossesController extends FrontendController with ValidActiveSession {
 
+  val calcConnector: CalculatorConnector
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
 
-  val broughtForwardLosses = TODO
+  def generateBackLink(): Future[String] = {
+    //TODO add logic based on to be created models
+    Future.successful("")
+  }
 
-  val submitBroughtForwardLosses = TODO
+  val broughtForwardLosses = ValidateSession.async { implicit request =>
+
+    val generateForm = calcConnector.fetchAndGetFormData[BroughtForwardLossesModel](KeystoreKeys.broughtForwardLosses).map {
+      case Some(data) => broughtForwardLossesForm.fill(data)
+      case _ => broughtForwardLossesForm
+    }
+
+    for {
+      backLink <- generateBackLink()
+      form <- generateForm
+    } yield Ok(calculation.nonresident.broughtForwardLosses(form, backLink))
+  }
+
+  val submitBroughtForwardLosses = ValidateSession.async { implicit request =>
+
+    def successAction(model: BroughtForwardLossesModel) = {
+      calcConnector.saveFormData[BroughtForwardLossesModel](KeystoreKeys.broughtForwardLosses, model)
+      Future.successful(Redirect(controllers.nonresident.routes.CheckYourAnswersController.checkYourAnswers()))
+    }
+
+    def errorAction(form: Form[BroughtForwardLossesModel]) = {
+      for {
+        backLink <- generateBackLink()
+      } yield BadRequest(calculation.nonresident.broughtForwardLosses(form, backLink))
+    }
+
+    broughtForwardLossesForm.bindFromRequest.fold(
+      errorAction,
+      successAction
+    )
+  }
 }
