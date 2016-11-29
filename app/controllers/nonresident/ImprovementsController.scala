@@ -138,10 +138,11 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
                        acquisitionDate: Option[AcquisitionDateModel],
                        improvements: ImprovementsModel
                      ): Future[Result] = {
-      calcConnector.saveFormData(KeystoreKeys.improvements, improvements)
+
       val skipPrivateResidence = skipPRR(acquisitionDate, rebasedValue)
 
       for {
+        save <- calcConnector.saveFormData(KeystoreKeys.improvements, improvements)
         allAnswersModel <- answersConstructor.getNRTotalGainAnswers
         gains <- calcConnector.calculateTotalGain(allAnswersModel)
       } yield successRouteRequest(gains, skipPrivateResidence)
