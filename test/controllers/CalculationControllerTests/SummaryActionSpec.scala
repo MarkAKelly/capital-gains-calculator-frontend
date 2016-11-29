@@ -18,12 +18,12 @@ package controllers.CalculationControllerTests
 
 import assets.MessageLookup.NonResident.{Summary => messages}
 import common.nonresident.CalculationType
-import common.{KeystoreKeys, TestModels}
+import common.KeystoreKeys
 import connectors.CalculatorConnector
 import constructors.nonresident.AnswersConstructor
 import controllers.helpers.FakeRequestHelper
 import controllers.nonresident.SummaryController
-import models.nonresident.{PrivateResidenceReliefModel, _}
+import models.nonresident._
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
