@@ -16,7 +16,6 @@
 
 package controllers.CalculationControllerTests
 
-import common.TestModels._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import play.api.test.Helpers._
@@ -27,6 +26,7 @@ import org.scalatest.mock.MockitoSugar
 import controllers.helpers.FakeRequestHelper
 import controllers.nonresident.ReportController
 import assets.MessageLookup.{SummaryPage => messages}
+import common.KeystoreKeys
 import constructors.nonresident.AnswersConstructor
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import models.nonresident._
@@ -34,14 +34,15 @@ import common.nonresident.CalculationType
 
 import scala.concurrent.Future
 
-class ReportSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
+class ReportActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
   def setupTarget
   (
     totalGainAnswersModel: TotalGainAnswersModel,
     totalGainResultsModel: Option[TotalGainResultsModel],
     taxYearModel: Option[TaxYearModel],
-    calculationElectionModel: CalculationElectionModel
+    calculationElectionModel: CalculationElectionModel,
+    prrModel: Option[PrivateResidenceReliefModel] = None
   ): ReportController = {
 
     lazy val mockCalculatorConnector = mock[CalculatorConnector]
@@ -50,7 +51,7 @@ class ReportSpec extends UnitSpec with WithFakeApplication with FakeRequestHelpe
     when(mockAnswersConstructor.getNRTotalGainAnswers(Matchers.any()))
       .thenReturn(Future.successful(totalGainAnswersModel))
 
-    when(mockCalculatorConnector.fetchAndGetFormData[CalculationElectionModel](Matchers.any())(Matchers.any(), Matchers.any()))
+    when(mockCalculatorConnector.fetchAndGetFormData[CalculationElectionModel](Matchers.eq(KeystoreKeys.calculationElection))(Matchers.any(), Matchers.any()))
       .thenReturn(Some(calculationElectionModel))
 
     when(mockCalculatorConnector.calculateTotalGain(Matchers.any())(Matchers.any()))
@@ -58,6 +59,10 @@ class ReportSpec extends UnitSpec with WithFakeApplication with FakeRequestHelpe
 
     when(mockCalculatorConnector.getTaxYear(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(taxYearModel))
+
+    when(mockCalculatorConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.eq(KeystoreKeys.privateResidenceRelief))
+      (Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(prrModel))
 
     new ReportController {
       override val calcConnector: CalculatorConnector = mockCalculatorConnector

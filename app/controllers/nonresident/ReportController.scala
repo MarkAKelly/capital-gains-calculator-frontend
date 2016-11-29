@@ -53,15 +53,20 @@ trait ReportController extends FrontendController with ValidActiveSession {
     calcConnector.calculateTotalGain(totalGainAnswersModel)
   }
 
+  def getPRRModel()(implicit hc: HeaderCarrier): Future[Option[PrivateResidenceReliefModel]] = {
+    calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief)
+  }
+
   val summaryReport = ValidateSession.async { implicit request =>
     for {
       summary <- answersConstructor.getNRTotalGainAnswers
       calculationType <- calcConnector.fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection)
       result <- resultModel(summary)(hc)
       taxYear <- getTaxYear(summary.disposalDateModel)
+      prrModel <- getPRRModel
 
     } yield {
-      PdfGenerator.ok(summaryView(summary, result.get, taxYear.get, calculationType.get.calculationType),
+      PdfGenerator.ok(summaryView(summary, result.get, taxYear.get, calculationType.get.calculationType, prrModel),
         host).toScala
         .withHeaders("Content-Disposition" ->s"""attachment; filename="${Messages("calc.summary.title")}.pdf"""")
     }
