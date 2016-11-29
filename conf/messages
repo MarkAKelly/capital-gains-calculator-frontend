@@ -93,10 +93,11 @@ calc.disabledTrustee.helptext = A person''s vulnerable if they''re disabled, or 
 calc.disabledTrustee.linkOne = Trusts and Capital Gains Tax
 
 ## Current Income ##
-calc.currentIncome.question = In the tax year when you stopped owning the property, what was your total UK income?
+calc.currentIncome.question = What was your total UK income in the tax year when you stopped owning the property?
 calc.currentIncome.link.one = Income Tax
 calc.currentIncome.link.two = Previous tax years
-calc.currentIncome.helpText = You can give an estimate if this was in the current tax year
+calc.currentIncome.helpText.line1 = Give a realistic estimate if this was in the current tax year.
+calc.currentIncome.helpText.line2 = Include your UK salary before tax, and anything else you pay UK income tax on. Do not include the money you made from selling the property.
 calc.currentIncome.errorNegative = Enter a positive number for your current income
 calc.currentIncome.errorDecimalPlaces = Your current income has too many numbers after the decimal point
 
@@ -204,6 +205,11 @@ calc.disposalValue.question = How much did you sell the property for?
 calc.disposalValue.errorNegative = Enter a positive number for the amount you sold the property for
 calc.disposalValue.errorDecimalPlaces = The amount you sold the property for has too many numbers after the decimal point
 
+## How Much Gain ##
+calc.howMuchGain.question = What was your taxable gain?
+calc.howMuchGain.errorNegative = Enter a positive number for the amount on your taxable gain
+calc.howMuchGain.errorDecimalPlaces = Taxable Gain for has too many numbers after the decimal point
+
 ## Sold For Less Non-resident ##
 calc.nonResident.soldForLess.question = Did you sell the property for less than it was worth to help the buyer?
 
@@ -287,6 +293,11 @@ calc.howBecameOwner.inherited= Inherited it
 
 ## Bought For Less ##
 calc.boughtForLess.question = Did you buy the property for less than it was worth because the seller wanted to help you?
+
+## Previous Loss ##
+calc.howMuchLoss.question = How much loss did you report?
+calc.howMuchLoss.errorMinimum = Enter a positive number for your loss
+calc.howMuchLoss.errorDecimal = There are too many numbers after the decimal point in your loss
 
 ## Calculation Election ##
 calc.calculationElection.pageHeading = Working out your total

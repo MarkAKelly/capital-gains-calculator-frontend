@@ -17,27 +17,26 @@
 package forms.nonresident
 
 import common.Constants
+import common.Transformers._
 import common.Validation._
-import models.nonresident.AcquisitionValueModel
+import models.nonresident.HowMuchGainModel
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
-import common.Transformers._
 
+object HowMuchGainForm {
 
-object AcquisitionValueForm {
-
-  val acquisitionValueForm = Form(
+  val howMuchGainForm = Form(
     mapping(
-      "acquisitionValue" -> text
-        .verifying(Messages("calc.common.error.mandatoryAmount"), mandatoryCheck)
-        .verifying(Messages("calc.common.error.mandatoryAmount"), bigDecimalCheck)
+      "howMuchGain" -> text
+        .verifying(Messages("error.real"), mandatoryCheck)
+        .verifying(Messages("error.real"), bigDecimalCheck)
         .transform(stringToBigDecimal, bigDecimalToString)
-        .verifying(Messages("calc.acquisitionValue.errorNegative"), isPositive)
-        .verifying(Messages("calc.acquisitionValue.errorDecimalPlaces"), decimalPlacesCheck)
+        .verifying(Messages("calc.howMuchGain.errorNegative"), isPositive)
+        .verifying(Messages("calc.howMuchGain.errorDecimalPlaces"), decimalPlacesCheck)
         .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " +
           Messages("calc.common.error.maxNumericExceeded.OrLess"), maxCheck)
-    )(AcquisitionValueModel.apply)(AcquisitionValueModel.unapply)
+    )(HowMuchGainModel.apply)(HowMuchGainModel.unapply)
   )
 }

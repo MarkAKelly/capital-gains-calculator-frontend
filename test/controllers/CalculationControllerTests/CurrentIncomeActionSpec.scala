@@ -39,7 +39,7 @@ import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 import scala.concurrent.Future
 
-class CurrentIncomeSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
+class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
   implicit val hc = new HeaderCarrier()
   def setupTarget(getData: Option[CurrentIncomeModel]): CurrentIncomeController = {

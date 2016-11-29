@@ -52,6 +52,8 @@ object KeystoreKeys {
   val disposalMarketValue = "nr:disposalMarketValue"
   val acquisitionMarketValue = "nr:acquisitionMarketValue"
   val worthBeforeLegislationStart = "nr:worthBeforeLegislation"
+  val howMuchGain = "nr:howMuchGain"
+  val howMuchLoss = "nr:howMuchLoss"
 
 
   object ResidentPropertyKeys {
