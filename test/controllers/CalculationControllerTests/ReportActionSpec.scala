@@ -130,7 +130,38 @@ class ReportActionSpec extends UnitSpec with WithFakeApplication with FakeReques
 
     }
 
-    "the calculation chosen is rebased" should {
+    "the calculation chosen is flat with some PRR" should {
+
+      lazy val taxYear = TaxYearModel("2016-12-12", true, "16")
+
+      lazy val target = setupTarget(
+        model,
+        Some(TotalGainResultsModel(1000, None, None)),
+        Some(taxYear),
+        CalculationElectionModel(CalculationType.flat),
+        Some(PrivateResidenceReliefModel("Yes", Some(200), None))
+      )
+
+      lazy val result = target.summaryReport(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return a pdf" in {
+        contentType(result) shouldBe Some("application/pdf")
+      }
+
+      "return a pdf as an attachment" in {
+        header("Content-Disposition", result).get should include("attachment")
+      }
+
+      "return the pdf with a filename of 'Summary'" in {
+        header("Content-Disposition", result).get should include(s"""filename="${messages.title}.pdf"""")
+      }
+    }
+
+      "the calculation chosen is rebased" should {
 
       lazy val taxYear = TaxYearModel("2016-12-12", true, "16")
 
