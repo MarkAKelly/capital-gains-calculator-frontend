@@ -57,8 +57,8 @@ object BroughtForwardLossesForm {
         .transform(stringToOptionalBigDecimal, optionalBigDecimalToString)
     )(BroughtForwardLossesModel.apply)(BroughtForwardLossesModel.unapply)
       .verifying(Messages("error.real"), verifyMandatory)
-      .verifying(Messages("calc.broughtForwardLoss.errorDecimal"), verifyDecimal)
-      .verifying(Messages("calc.broughtForwardLoss.errorNegative"), verifyPositive)
+      .verifying(Messages("calc.broughtForwardLosses.errorDecimal"), verifyDecimal)
+      .verifying(Messages("calc.broughtForwardLosses.errorNegative"), verifyPositive)
       .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " +
         Messages("calc.common.error.maxNumericExceeded.OrLess"), verifyMaximum)
   )
