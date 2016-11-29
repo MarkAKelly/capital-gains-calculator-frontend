@@ -31,7 +31,7 @@ class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with Fak
 
     "return some HTML that, when the hidden question is displayed" should {
 
-      lazy val view = otherProperties(otherPropertiesForm(true), "back-link", true)(fakeRequest)
+      lazy val view = otherProperties(otherPropertiesForm, "back-link")(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       s"have the title '${messages.question}'" in {
@@ -144,7 +144,7 @@ class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with Fak
 
     "return some HTML that, when the hidden question is not displayed" should {
 
-      lazy val view = otherProperties(otherPropertiesForm(false), "back-link", false)(fakeRequest)
+      lazy val view = otherProperties(otherPropertiesForm, "back-link")(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       s"have the title '${messages.question}'" in {
@@ -162,8 +162,8 @@ class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with Fak
 
     "when passed a form with errors" should {
 
-      lazy val form = otherPropertiesForm(true).bind(Map("otherProperties" -> "bad-data"))
-      lazy val view = otherProperties(form, "back-link", false)(fakeRequest)
+      lazy val form = otherPropertiesForm.bind(Map("otherProperties" -> "bad-data"))
+      lazy val view = otherProperties(form, "back-link")(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have an error summary" in {
