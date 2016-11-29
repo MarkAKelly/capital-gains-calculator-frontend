@@ -29,7 +29,7 @@ class CustomerTypeViewSpec extends UnitSpec with WithFakeApplication with Mockit
 
   "The Customer Type View" should {
 
-    lazy val view = customerType(customerTypeForm)(fakeRequest)
+    lazy val view = customerType(customerTypeForm, "")(fakeRequest)
     lazy val document = Jsoup.parse(view.body)
 
     "return some HTML that" which {

@@ -47,9 +47,9 @@ trait CustomerTypeController extends FrontendController with ValidActiveSession 
 
   private def customerTypeBackUrl(implicit hc: HeaderCarrier): Future[String] = {
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
-      case ("No", _, _, _)=>
+      case (Some(data)) if data.hasAcquisitionDate.equals("No") =>
         calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
-          case ("No", _) => Future.successful(routes.ImprovementsController.improvements().url)
+          case (Some(data)) if data.hasRebasedValue.equals("No") => Future.successful(routes.ImprovementsController.improvements().url)
           case _ => Future.successful(routes.PrivateResidenceReliefController.privateResidenceRelief().url)
         }
       case _ => Future.successful(routes.PrivateResidenceReliefController.privateResidenceRelief().url)
