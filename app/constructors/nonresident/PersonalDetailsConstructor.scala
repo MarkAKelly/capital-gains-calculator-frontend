@@ -111,23 +111,23 @@ object PersonalDetailsConstructor {
 
   def getOtherPropertiesAmountAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] =
     summaryModel.otherPropertiesModel match {
-    case (OtherPropertiesModel("Yes", Some(otherPropertiesAmount))) => Some(QuestionAnswerModel(
+    /*case (OtherPropertiesModel("Yes", Some(otherPropertiesAmount))) => Some(QuestionAnswerModel(
       KeystoreKeys.otherProperties + "Amount",
       otherPropertiesAmount,
       Messages("calc.otherProperties.questionTwo"),
-      Some(controllers.nonresident.routes.OtherPropertiesController.otherProperties().url)))
+      Some(controllers.nonresident.routes.OtherPropertiesController.otherProperties().url)))*/
     case _ => None
   }
 
   def getAnnualExemptAmountAnswer(summaryModel: SummaryModel): Option[QuestionAnswerModel[BigDecimal]] =
     summaryModel.otherPropertiesModel match {
-      case (OtherPropertiesModel("Yes", Some(x))) if x == BigDecimal(0) =>
+      /*case (OtherPropertiesModel("Yes", Some(x))) if x == BigDecimal(0) =>
         Some(QuestionAnswerModel(
           KeystoreKeys.annualExemptAmount,
           summaryModel.annualExemptAmountModel.get.annualExemptAmount,
           Messages("calc.annualExemptAmount.question"),
           Some(controllers.nonresident.routes.AnnualExemptAmountController.annualExemptAmount().url))
-        )
+        )*/
       case _ => None
   }
 

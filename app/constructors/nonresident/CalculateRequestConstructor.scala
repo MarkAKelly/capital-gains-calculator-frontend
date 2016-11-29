@@ -43,14 +43,14 @@ object CalculateRequestConstructor {
 
   def annualExemptAmount(otherPropertiesModel: OtherPropertiesModel, annualExemptAmountModel: Option[AnnualExemptAmountModel]): String = {
     otherPropertiesModel match {
-      case OtherPropertiesModel("Yes", Some(data)) if data == 0 => s"&annualExemptAmount=${annualExemptAmountModel.get.annualExemptAmount}"
+      //case OtherPropertiesModel("Yes", Some(data)) if data == 0 => s"&annualExemptAmount=${annualExemptAmountModel.get.annualExemptAmount}"
       case _ => ""
     }
   }
 
   def otherPropertiesAmount(otherPropertiesModel: OtherPropertiesModel): String = {
     otherPropertiesModel match {
-      case OtherPropertiesModel("Yes", Some(data)) => s"&otherPropertiesAmt=$data"
+      //case OtherPropertiesModel("Yes", Some(data)) => s"&otherPropertiesAmt=$data"
       case _ => ""
     }
   }
