@@ -17,13 +17,12 @@
 package controllers.CalculationControllerTests
 
 import connectors.CalculatorConnector
-import controllers.nonresident.{PreviousGainOrLossController, PreviousLossOrGainController}
+import controllers.nonresident.PreviousGainOrLossController
 import models.nonresident.PreviousLossOrGainModel
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import config.AppConfig
 import controllers.helpers.FakeRequestHelper
-import org.mockito.Mockito
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.mockito.Mockito._
 import org.mockito.Matchers
