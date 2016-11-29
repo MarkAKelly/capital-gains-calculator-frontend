@@ -19,9 +19,9 @@ package models.nonresident
 import constructors.nonresident.CalculationDetailsWithPRRConstructor
 import play.api.libs.json.Json
 
-case class CalculationResultsWithPRRModel(flatTaxableGain: GainsAfterPRRModel,
-                                  rebasedTaxableGain: Option[GainsAfterPRRModel],
-                                  timeApportionedTaxableGain: Option[GainsAfterPRRModel]){
+case class CalculationResultsWithPRRModel(flatResult: GainsAfterPRRModel,
+                                  rebasedResult: Option[GainsAfterPRRModel],
+                                  timeApportionedResult: Option[GainsAfterPRRModel]){
 
   def calculationDetailsRows(calculationType: String): Seq[QuestionAnswerModel[Any]] = CalculationDetailsWithPRRConstructor.buildSection(this, calculationType)
 }

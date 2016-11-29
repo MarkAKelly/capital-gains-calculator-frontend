@@ -17,10 +17,8 @@
 package controllers.CalculationControllerTests
 
 import assets.MessageLookup.NonResident.{Summary => messages}
-import assets.MessageLookup.{NonResident => commonMessages}
-import common.DefaultRoutes._
 import common.nonresident.CalculationType
-import common.{Constants, KeystoreKeys, TestModels}
+import common.{KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
 import constructors.nonresident.AnswersConstructor
 import controllers.helpers.FakeRequestHelper

@@ -55,11 +55,10 @@ trait SummaryController extends FrontendController with ValidActiveSession {
       } else Future(None)
     }
 
-    def getSection(
-                    calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel],
-                    privateResidenceReliefModel: Option[PrivateResidenceReliefModel],
-                    totalGainResultsModel: TotalGainResultsModel,
-                    calculationType: String): Future[Seq[QuestionAnswerModel[Any]]] = {
+    def getSection(calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel],
+                   privateResidenceReliefModel: Option[PrivateResidenceReliefModel],
+                   totalGainResultsModel: TotalGainResultsModel,
+                   calculationType: String): Future[Seq[QuestionAnswerModel[Any]]] = {
       privateResidenceReliefModel match {
         case Some(model) if model.isClaimingPRR == "Yes" => Future.successful(calculationResultsWithPRRModel.get.calculationDetailsRows(calculationType))
         case _ => Future.successful(totalGainResultsModel.calculationDetailsRows(calculationType))

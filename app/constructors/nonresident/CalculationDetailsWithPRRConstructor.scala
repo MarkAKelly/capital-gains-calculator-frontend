@@ -27,9 +27,9 @@ object CalculationDetailsWithPRRConstructor {
   def buildSection(calculation: CalculationResultsWithPRRModel, calculationType: String): Seq[QuestionAnswerModel[Any]] = {
     val electionDetails = calculationElection(calculationType)
     val correctModel = calculationType match {
-      case CalculationType.flat => calculation.flatTaxableGain
-      case CalculationType.rebased => calculation.rebasedTaxableGain.get
-      case CalculationType.timeApportioned => calculation.timeApportionedTaxableGain.get
+      case CalculationType.flat => calculation.flatResult
+      case CalculationType.rebased => calculation.rebasedResult.get
+      case CalculationType.timeApportioned => calculation.timeApportionedResult.get
     }
     val taxableGainDetails = taxableGain(correctModel.taxableGain)
     val totalGainDetails = totalGain(correctModel.totalGain)
@@ -101,7 +101,7 @@ object CalculationDetailsWithPRRConstructor {
   }
 
   def prrUsedDetails(prrUsed: BigDecimal): Option[QuestionAnswerModel[BigDecimal]] = {
-    if(prrUsed <= BigDecimal(0)) None
+    if(prrUsed < BigDecimal(0)) None
     else {
       val id = "calcDetails:prrUsed"
 

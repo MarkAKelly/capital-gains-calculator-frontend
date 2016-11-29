@@ -54,8 +54,8 @@ class CalculationDetailsWithPRRConstructorSpec extends UnitSpec with WithFakeApp
         result.exists(qa => qa.id == "calcDetails:taxableGain") shouldBe false
       }
 
-      "not have a prr question" in {
-        result.exists(qa => qa.id == "calcDetails:prrUsed") shouldBe false
+      "have a prr question" in {
+        result.exists(qa => qa.id == "calcDetails:prrUsed") shouldBe true
       }
 
 
@@ -372,8 +372,24 @@ class CalculationDetailsWithPRRConstructorSpec extends UnitSpec with WithFakeApp
 
       lazy val result = target.prrUsedDetails(0)
 
-      "return no prr used details" in {
-        result shouldBe None
+      "return some prr used details" in {
+        result should not be None
+      }
+
+      "return correct ID for the prr used details" in {
+        assertExpectedResult(result)(_.id shouldBe "calcDetails:prrUsed")
+      }
+
+      "return correct question for the prr used details" in {
+        assertExpectedResult(result)(_.question shouldBe messages.prrUSed)
+      }
+
+      "return correct answer for the prr used details" in {
+        assertExpectedResult(result)(_.data shouldBe 0)
+      }
+
+      "not return a link for the prr used details" in {
+        assertExpectedResult(result)(_.link shouldBe None)
       }
     }
 
