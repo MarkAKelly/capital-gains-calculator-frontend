@@ -2,11 +2,13 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
 
-@(customerTypeForm: Form[CustomerTypeModel])(implicit request: Request[_])
+@(customerTypeForm: Form[CustomerTypeModel], backUrl: String)(implicit request: Request[_])
 
 @import common.nonresident.CustomerTypeKeys
 
 @main_template(title = Messages("calc.customerType.question")) {
+
+    <a id="back-link" class="back-link" href="@backUrl">@Messages("calc.base.back")</a>
 
   @errorSummary(customerTypeForm, "customer-type")
 

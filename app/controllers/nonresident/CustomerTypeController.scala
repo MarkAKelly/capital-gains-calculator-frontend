@@ -24,11 +24,11 @@ import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.CustomerTypeForm._
-import models.nonresident.CustomerTypeModel
+import models.nonresident.{AcquisitionDateModel, CustomerTypeModel, RebasedValueModel}
 import play.api.mvc.{Action, Result}
 import play.api.data.Form
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.SessionKeys
+import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 import views.html.calculation.{nonresident => views}
 
 import scala.concurrent.Future
@@ -45,23 +45,38 @@ trait CustomerTypeController extends FrontendController with ValidActiveSession 
   val calcConnector: CalculatorConnector
   val calcElectionConstructor: CalculationElectionConstructor
 
+  private def customerTypeBackUrl(implicit hc: HeaderCarrier): Future[String] = {
+    calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
+      case ("No", _, _, _)=>
+        calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
+          case ("No", _) => Future.successful(routes.ImprovementsController.improvements().url)
+          case _ => Future.successful(routes.PrivateResidenceReliefController.privateResidenceRelief().url)
+        }
+      case _ => Future.successful(routes.PrivateResidenceReliefController.privateResidenceRelief().url)
+    }
+  }
+
   val customerType = Action.async { implicit request =>
-    if (request.session.get(SessionKeys.sessionId).isEmpty) {
-      val sessionId = UUID.randomUUID.toString
-      Future.successful(Ok(views.customerType(customerTypeForm)).withSession(request.session + (SessionKeys.sessionId -> s"session-$sessionId")))
+
+    def routeRequest(backUrl: String): Future[Result] =
+      calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).map{
+      case Some (data) => Ok (views.customerType (customerTypeForm.fill (data), backUrl) )
+      case None => Ok (views.customerType (customerTypeForm, backUrl) )
     }
-    else {
-      calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).map {
-        case Some(data) => Ok(views.customerType(customerTypeForm.fill(data)))
-        case None => Ok(views.customerType(customerTypeForm))
-      }
-    }
+
+    for {
+      backUrl <- customerTypeBackUrl
+      result <- routeRequest(backUrl)
+    } yield result
   }
 
   val submitCustomerType = ValidateSession.async { implicit request =>
 
     def errorAction(form: Form[CustomerTypeModel]) = {
-      Future.successful(BadRequest(views.customerType(form)))
+      for {
+        backUrl <- customerTypeBackUrl
+        result <- Future.successful(BadRequest(views.customerType(form, backUrl)))
+      } yield result
     }
 
     def successAction(model: CustomerTypeModel) = {
