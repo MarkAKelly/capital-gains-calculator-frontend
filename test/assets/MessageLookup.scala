@@ -349,6 +349,9 @@ object MessageLookup {
 
     object BroughtForwardLosses {
       val errorDecimalPlaces = "There are too many numbers after the decimal point in your brought forward loss"
+      val errorNegative = "Enter a positive number for your brought forward loss"
+
+      def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
     object Summary {

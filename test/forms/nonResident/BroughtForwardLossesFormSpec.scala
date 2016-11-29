@@ -136,5 +136,33 @@ class BroughtForwardLossesFormSpec extends UnitSpec with WithFakeApplication {
         form.error("").get.message shouldBe messages.BroughtForwardLosses.errorDecimalPlaces
       }
     }
+
+    "provided with a value with a negative value when a Yes is given" should {
+      val map = Map("isClaiming" -> "Yes",
+        "broughtForwardLoss" -> "-0.01")
+      lazy val form = broughtForwardLossesForm.bind(map)
+
+      "return a form with one error" in {
+        form.errors.size shouldBe 1
+      }
+
+      s"return the error message ${messages.BroughtForwardLosses.errorNegative}" in {
+        form.error("").get.message shouldBe messages.BroughtForwardLosses.errorNegative
+      }
+    }
+
+    "provided with a value above the maximum when a Yes is given" should {
+      val map = Map("isClaiming" -> "Yes",
+        "broughtForwardLoss" -> "1000000000.01")
+      lazy val form = broughtForwardLossesForm.bind(map)
+
+      "return a form with one error" in {
+        form.errors.size shouldBe 1
+      }
+
+      s"return the error message ${messages.BroughtForwardLosses.errorMaximum("1,000,000,000")}" in {
+        form.error("").get.message shouldBe messages.BroughtForwardLosses.errorMaximum("1,000,000,000")
+      }
+    }
   }
 }

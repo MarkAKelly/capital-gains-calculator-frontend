@@ -16,12 +16,14 @@
 
 package forms.nonresident
 
+import common.Constants
 import common.Transformers._
 import common.Validation._
 import models.nonresident.BroughtForwardLossesModel
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.Messages
+import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object BroughtForwardLossesForm {
 
@@ -32,6 +34,16 @@ object BroughtForwardLossesForm {
 
   val verifyDecimal: BroughtForwardLossesModel => Boolean = {
     case BroughtForwardLossesModel(true, Some(value)) => decimalPlacesCheck(value)
+    case _ => true
+  }
+
+  val verifyPositive: BroughtForwardLossesModel => Boolean = {
+    case BroughtForwardLossesModel(true, Some(value)) => isPositive(value)
+    case _ => true
+  }
+
+  val verifyMaximum: BroughtForwardLossesModel => Boolean = {
+    case BroughtForwardLossesModel(true, Some(value)) => maxCheck(value)
     case _ => true
   }
 
@@ -46,5 +58,8 @@ object BroughtForwardLossesForm {
     )(BroughtForwardLossesModel.apply)(BroughtForwardLossesModel.unapply)
       .verifying(Messages("error.real"), verifyMandatory)
       .verifying(Messages("calc.broughtForwardLoss.errorDecimal"), verifyDecimal)
+      .verifying(Messages("calc.broughtForwardLoss.errorNegative"), verifyPositive)
+      .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " +
+        Messages("calc.common.error.maxNumericExceeded.OrLess"), verifyMaximum)
   )
 }

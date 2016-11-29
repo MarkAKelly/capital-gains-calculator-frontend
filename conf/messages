@@ -283,6 +283,7 @@ calc.howMuchLoss.errorDecimal = There are too many numbers after the decimal poi
 
 ## Brought Forward Loss ##
 calc.broughtForwardLoss.errorDecimal = There are too many numbers after the decimal point in your brought forward loss
+calc.broughtForwardLoss.errorNegative = Enter a positive number for your brought forward loss
 
 ## Calculation Election ##
 calc.calculationElection.pageHeading = Working out your total
