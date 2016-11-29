@@ -57,5 +57,17 @@ object Dates {
       Future.successful(taxYearToString(year))
     }
   }
+
+  def getCurrentYear: Int = {
+    val now = LocalDate.now()
+    val year = now.getYear
+
+    if (now.isAfter(LocalDate.parse(s"${year.toString}-$taxYearEnd"))) {
+      year + 1
+    }
+    else {
+      year
+    }
+  }
 }
 

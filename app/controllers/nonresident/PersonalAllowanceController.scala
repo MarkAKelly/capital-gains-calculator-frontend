@@ -23,6 +23,8 @@ import forms.nonresident.PersonalAllowanceForm._
 import models.nonresident.PersonalAllowanceModel
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import views.html.calculation
+import common.Dates._
+
 
 import scala.concurrent.Future
 
@@ -44,7 +46,12 @@ trait PersonalAllowanceController extends FrontendController with ValidActiveSes
   }
 
   val submitPersonalAllowance = ValidateSession.async { implicit request =>
-    calcConnector.getPA(2017).flatMap { pa =>
+
+    // get the disposal date
+    // parse it into an int
+    // get the personal allowance from the tax year of disposal
+
+    calcConnector.getPA(getCurrentYear).flatMap { pa =>
       personalAllowanceForm(pa.get).bindFromRequest.fold(
         errors => Future.successful(BadRequest(calculation.nonresident.personalAllowance(errors))),
         success => {
