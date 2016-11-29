@@ -267,6 +267,23 @@ object MessageLookup {
       def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
 
+    object MarketValue {
+      val disposalGaveAwayQuestion = "What was the property worth when you gave it away?"
+      val disposalSoldQuestion = "What was the market value of the property when you sold it?"
+
+      val disposalHelpText = "You can use a valuation from a surveyor. " +
+        "If you don't know the exact value, you must provide a realistic estimate."
+      val disposalHelpTextAdditional = "You might have to pay more if we think your estimate is unrealistic."
+
+      val disposalErrorDecimalPlacesGaveAway = "There are too many numbers after the decimal point in your market value" +
+        " at the point of giving away"
+      val disposalErrorDecimalPlacesSold = "There are too many numbers after the decimal point in your market value" +
+        " at the point of being sold"
+
+      val errorNegativeGaveAway = "Enter a positive number for the market value at the point of being given away"
+      val errorNegativeSold = "Enter a positive number for the market value at the point of being sold"
+    }
+
     object PersonalAllowance {
       val question = "In the tax year when you stopped owning the property, what was your UK Personal Allowance?"
       val linkOne = "Income Tax rates and Personal Allowances"
@@ -291,7 +308,7 @@ object MessageLookup {
     }
 
     object RebasedCosts {
-      val question = "Did you pay for the valuation?"
+      val question = "Did you pay to have the property valued at 5 April 2015?"
       val inputQuestion = "How much did it cost to get the property valued?"
       val errorNegative = "Enter a positive number for your costs"
       val errorNoValue = "Enter the value for your costs"
@@ -301,17 +318,19 @@ object MessageLookup {
     }
 
     object RebasedValue {
-      val question = "Do you know how much the property was worth on 5 April 2015?"
-      val questionHelpText = "Only tell us if you owned the property on that date"
-      val inputQuestion = "What was the value of the property?"
-      val inputQuestionMandatory = "What was the property worth on 5 April 2015?"
-      val inputHelpText = "You can use a valuation from a surveyor or a property website."
+      val question = "What was the market value of the property on 5 April 2015?"
+
+      val questionOptionalText = "Only tell us if you owned the property on that date"
+
+      val inputHintText = "If you don't know the exact value, you must provide a realistic estimate. " +
+        "You might have to pay more if we think your estimate is unrealistic."
       val additionalContentTitle = "Why we're asking for this"
+      val helpHiddenContent = "This value lets us calculate your tax in different ways, which means you may have less tax to pay."
+
       val errorNoValue = "Enter a value for your property on 5 April 2015"
       val errorNegative = "Enter a positive value for your property on 5 April 2015"
       val errorDecimalPlaces = "The value for your property on 5 April 2015 has too many numbers after the decimal point"
-      val helpHiddenContentOne = "When you've answered the questions you'll have a choice about how we work out your total."
-      val helpHiddenContentTwo = "This value lets us calculate your tax in different ways, giving you more options."
+
 
       def errorMaximum(value: String): String = s"Enter an amount that's £$value or less"
     }
@@ -325,10 +344,39 @@ object MessageLookup {
     }
 
     object SoldOrGivenAway {
-
       val question = "Did you sell or give away the property?"
       val sold = "I sold it"
       val gave = "I gave it away"
+    }
+
+    //Acquisition Market Value messages
+    object AcquisitionMarketValue {
+      val errorNegativeNumber = "Enter a positive number for the market value of the property"
+      val errorDecimalPlaces = "The market value of the property has too many numbers after the decimal point"
+      val hintOne = "You can use a valuation from a surveyor."
+      val hintTwo = "If you don't know the exact value, you must provide a realistic estimate. " +
+        "You might have to pay more if we think your estimate is unrealistic."
+    }
+
+    object WorthBeforeLegislationStart {
+      val question = "What was the market value of the property on 31 March 1982?"
+      val expandableText = "You only need to pay tax on gains made after this date"
+      val expandableTitle = "Why we're asking for this"
+    }
+
+    //Worth When Inherited messages
+    object WorthWhenInherited {
+      val question = "What was the market value of the property when you inherited it?"
+    }
+
+    //Worth When Gifted To messages
+    object WorthWhenGiftedTo {
+      val question = "What was the market value of the property when you got it as a gift?"
+    }
+
+    //Worth When Bought for Less messages
+    object WorthWhenBoughtForLess {
+      val question = "What was the market value of the property when you bought it?"
     }
 
     object Summary {

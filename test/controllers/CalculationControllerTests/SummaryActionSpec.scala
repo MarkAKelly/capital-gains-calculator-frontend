@@ -43,8 +43,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
   def setupTarget(summary: TotalGainAnswersModel,
                   result: TotalGainResultsModel,
                   calculationElectionModel: CalculationElectionModel,
-                  privateResidenceReliefModel: PrivateResidenceReliefModel,
-                  calculationResultsWithPRRModel: CalculationResultsWithPRRModel
+                  privateResidenceReliefModel: Option[PrivateResidenceReliefModel],
+                  calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel]
                  ): SummaryController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
@@ -60,10 +60,10 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
       .thenReturn(Future.successful(Some(result)))
 
     when(mockCalcConnector.calculateTaxableGainAfterPRR(Matchers.any(), Matchers.any())(Matchers.any()))
-        .thenReturn(Future.successful(Some(calculationResultsWithPRRModel)))
+        .thenReturn(Future.successful(calculationResultsWithPRRModel))
 
     when(mockCalcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.eq(KeystoreKeys.privateResidenceRelief))(Matchers.any(), Matchers.any()))
-      .thenReturn(Some(privateResidenceReliefModel))
+      .thenReturn(privateResidenceReliefModel)
 
     new SummaryController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -77,7 +77,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
     None,
     DisposalValueModel(10000),
     DisposalCostsModel(100),
-    HowBecameOwnerModel("Gifted"),
+    Some(HowBecameOwnerModel("Gifted")),
     None,
     AcquisitionValueModel(5000),
     AcquisitionCostsModel(200),
@@ -96,15 +96,39 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
   "Calling the .summary action" when {
 
-    "provided with a valid session" should {
+    "provided with a valid session and three potential calculations" should {
       val target = setupTarget(
         answerModel,
         TotalGainResultsModel(1000, Some(2000), Some(3000)),
         CalculationElectionModel(CalculationType.flat),
-        PrivateResidenceReliefModel("Yes", Some(1000), Some(10)),
-        CalculationResultsWithPRRModel(GainsAfterPRRModel(100, 0, 100), None, None)
+        Some(PrivateResidenceReliefModel("Yes", Some(1000), Some(10))),
+        Some(CalculationResultsWithPRRModel(GainsAfterPRRModel(100, 0, 100), None, None))
       )
 
+      lazy val result = target.summary()(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 200" in {
+        status(result) shouldBe 200
+      }
+
+      "load the summary page" in {
+        document.title() shouldBe messages.title
+      }
+
+      "has a back-link to the calculation election page" in {
+        document.select("#back-link").attr("href") shouldEqual controllers.nonresident.routes.CalculationElectionController.calculationElection().url
+      }
+    }
+
+    "provided with a valid session and only one (flat) calculation" should {
+      val target = setupTarget(
+        answerModel,
+        TotalGainResultsModel(1000, None, None),
+        CalculationElectionModel(CalculationType.flat),
+        None,
+        None
+      )
       lazy val result = target.summary()(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -126,8 +150,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
         answerModel,
         TotalGainResultsModel(1000, Some(2000), Some(3000)),
         CalculationElectionModel(CalculationType.flat),
-        PrivateResidenceReliefModel("Yes", Some(1000), Some(10)),
-        CalculationResultsWithPRRModel(GainsAfterPRRModel(100, 0, 100), None, None)
+        Some(PrivateResidenceReliefModel("Yes", Some(1000), Some(10))),
+        Some(CalculationResultsWithPRRModel(GainsAfterPRRModel(100, 0, 100), None, None))
       )
       lazy val result = target.summary()(fakeRequest)
 
@@ -146,8 +170,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
       answerModel,
       TotalGainResultsModel(1000, Some(2000), Some(3000)),
       CalculationElectionModel(CalculationType.flat),
-      PrivateResidenceReliefModel("Yes", Some(1000), Some(10)),
-      CalculationResultsWithPRRModel(GainsAfterPRRModel(100, 0, 100), None, None)
+      Some(PrivateResidenceReliefModel("Yes", Some(1000), Some(10))),
+      Some(CalculationResultsWithPRRModel(GainsAfterPRRModel(100, 0, 100), None, None))
     )
     lazy val result = target.restart()(fakeRequestWithSession)
 

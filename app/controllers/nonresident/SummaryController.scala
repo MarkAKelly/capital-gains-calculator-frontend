@@ -16,7 +16,6 @@
 
 package controllers.nonresident
 
-import common.nonresident.CalculationType
 import common.{KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
 import constructors.nonresident.AnswersConstructor
@@ -67,8 +66,12 @@ trait SummaryController extends FrontendController with ValidActiveSession {
       }
     }
 
-    def summaryBackUrl(implicit hc: HeaderCarrier): Future[String] = {
-      Future.successful(routes.CheckYourAnswersController.checkYourAnswers().url)
+    def summaryBackUrl(model: Option[TotalGainResultsModel])(implicit hc: HeaderCarrier): Future[String] = model match {
+      case (Some(data)) if data.rebasedGain.isDefined || data.timeApportionedGain.isDefined =>
+        Future.successful(routes.CalculationElectionController.calculationElection().url)
+      case (Some(data)) =>
+        Future.successful(routes.CheckYourAnswersController.checkYourAnswers().url)
+      case (None) => Future.successful(common.DefaultRoutes.missingDataRoute)
     }
 
     def displayDateWarning(disposalDate: DisposalDateModel): Future[Boolean] = {
@@ -95,12 +98,12 @@ trait SummaryController extends FrontendController with ValidActiveSession {
     }
 
     for {
-      backUrl <- summaryBackUrl
       answers <- answersConstructor.getNRTotalGainAnswers(hc)
       displayWarning <- displayDateWarning(answers.disposalDateModel)
       totalGainResultsModel <- calculateDetails(answers)
       privateResidentReliefModel <- getPRRModel(hc, totalGainResultsModel.get)
       calculationResultsWithPRR <- calculatePRR(answers, privateResidentReliefModel)
+      backUrl <- summaryBackUrl(totalGainResultsModel)
       calculationType <- calcConnector.fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection)
       results <- getSection(calculationResultsWithPRR, privateResidentReliefModel,
         totalGainResultsModel.get, calculationType.get.calculationType)

@@ -116,14 +116,14 @@ class PrivateResidenceReliefActionSpec extends UnitSpec with WithFakeApplication
   "Calling the .getRebasedAmount method" should {
 
     "return a true if a value is found with the answer 'Yes'" in {
-      val target = setupTarget(None, rebasedValueData = Some(RebasedValueModel("Yes", Some(1000))))
+      val target = setupTarget(None, rebasedValueData = Some(RebasedValueModel(Some(1000))))
       val result = target.getRebasedAmount(hc: HeaderCarrier)
 
       await(result) shouldBe true
     }
 
     "return a false if a value is found with the answer 'No'" in {
-      val target = setupTarget(None, rebasedValueData = Some(RebasedValueModel("No", None)))
+      val target = setupTarget(None, rebasedValueData = Some(RebasedValueModel(None)))
       val result = target.getRebasedAmount(hc: HeaderCarrier)
 
       await(result) shouldBe false
@@ -291,7 +291,7 @@ class PrivateResidenceReliefActionSpec extends UnitSpec with WithFakeApplication
         None,
         disposalDateData = Some(DisposalDateModel(5, 8, 2015)),
         acquisitionDateData = Some(AcquisitionDateModel("No", None, None, None)),
-        rebasedValueData = Some(RebasedValueModel("Yes", Some(1000))))
+        rebasedValueData = Some(RebasedValueModel(Some(1000))))
       lazy val result = target.privateResidenceRelief(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -309,7 +309,7 @@ class PrivateResidenceReliefActionSpec extends UnitSpec with WithFakeApplication
         Some(PrivateResidenceReliefModel("Yes", None, None)),
         disposalDateData = Some(DisposalDateModel(5, 8, 2015)),
         acquisitionDateData = Some(AcquisitionDateModel("No", None, None, None)),
-        rebasedValueData = Some(RebasedValueModel("Yes", Some(1000))))
+        rebasedValueData = Some(RebasedValueModel(Some(1000))))
       lazy val result = target.privateResidenceRelief(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -327,7 +327,7 @@ class PrivateResidenceReliefActionSpec extends UnitSpec with WithFakeApplication
         None,
         disposalDateData = Some(DisposalDateModel(5, 8, 2015)),
         acquisitionDateData = Some(AcquisitionDateModel("No", None, None, None)),
-        rebasedValueData = Some(RebasedValueModel("Yes", Some(1000))))
+        rebasedValueData = Some(RebasedValueModel(Some(1000))))
       lazy val result = target.privateResidenceRelief(fakeRequest)
 
       "return a status of 303" in {
@@ -348,7 +348,7 @@ class PrivateResidenceReliefActionSpec extends UnitSpec with WithFakeApplication
         None,
         disposalDateData = Some(DisposalDateModel(5, 8, 2015)),
         acquisitionDateData = Some(AcquisitionDateModel("No", None, None, None)),
-        rebasedValueData = Some(RebasedValueModel("Yes", Some(1000))))
+        rebasedValueData = Some(RebasedValueModel(Some(1000))))
       lazy val request = fakeRequestToPOSTWithSession(("isClaimingPRR", "No"))
       lazy val result = target.submitPrivateResidenceRelief(request)
 
@@ -356,8 +356,8 @@ class PrivateResidenceReliefActionSpec extends UnitSpec with WithFakeApplication
         status(result) shouldBe 303
       }
 
-      "redirect to the Allowable Losses page" in {
-        redirectLocation(result).get shouldBe controllers.nonresident.routes.AllowableLossesController.allowableLosses().url
+      "redirect to the Check Your Answers page" in {
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.CheckYourAnswersController.checkYourAnswers().url
       }
     }
 
@@ -366,7 +366,7 @@ class PrivateResidenceReliefActionSpec extends UnitSpec with WithFakeApplication
         None,
         disposalDateData = Some(DisposalDateModel(5, 8, 2015)),
         acquisitionDateData = Some(AcquisitionDateModel("No", None, None, None)),
-        rebasedValueData = Some(RebasedValueModel("Yes", Some(1000))))
+        rebasedValueData = Some(RebasedValueModel(Some(1000))))
       lazy val request = fakeRequestToPOSTWithSession(("isClaimingPRR", ""))
       lazy val result = target.submitPrivateResidenceRelief(request)
       lazy val document = Jsoup.parse(bodyOf(result))
