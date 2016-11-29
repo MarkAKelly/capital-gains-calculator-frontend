@@ -356,8 +356,8 @@ class PrivateResidenceReliefActionSpec extends UnitSpec with WithFakeApplication
         status(result) shouldBe 303
       }
 
-      "redirect to the Allowable Losses page" in {
-        redirectLocation(result).get shouldBe controllers.nonresident.routes.AllowableLossesController.allowableLosses().url
+      "redirect to the Check Your Answers page" in {
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.CheckYourAnswersController.checkYourAnswers().url
       }
     }
 

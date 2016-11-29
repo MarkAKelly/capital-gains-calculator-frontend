@@ -70,12 +70,12 @@ object DeductionDetailsConstructor {
   }
 
   def privateResidenceReliefDaysClaimedRow(prr: Option[PrivateResidenceReliefModel],
-                                           answers: TotalGainAnswersModel): Option[QuestionAnswerModel[BigDecimal]] = {
+                                           answers: TotalGainAnswersModel): Option[QuestionAnswerModel[String]] = {
     prr match {
       case Some(PrivateResidenceReliefModel("Yes", Some(value), _)) if datesNotValidCheck(answers.acquisitionDateModel, answers.disposalDateModel) =>
         Some(QuestionAnswerModel(
           s"${keys.privateResidenceRelief}-daysClaimed",
-          value,
+          value.toString(),
           s"${Messages("calc.privateResidenceRelief.questionBefore.partOne")} ${Dates.dateMinusMonths(answers.disposalDateModel, 18)}" +
             s" ${Messages("calc.privateResidenceRelief.questionBefore.partTwo")}",
           Some(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url)
@@ -85,13 +85,13 @@ object DeductionDetailsConstructor {
   }
 
   def privateResidenceReliefDaysClaimedAfterRow(prr: Option[PrivateResidenceReliefModel],
-                                                answers: TotalGainAnswersModel): Option[QuestionAnswerModel[BigDecimal]] = {
+                                                answers: TotalGainAnswersModel): Option[QuestionAnswerModel[String]] = {
     (prr, answers.acquisitionDateModel, answers.rebasedValueModel) match {
       case (Some(PrivateResidenceReliefModel("Yes", _, Some(value))), AcquisitionDateModel("Yes",_,_,_), _)
       if !TaxDates.dateAfterStart(answers.acquisitionDateModel.get) && TaxDates.dateAfterOctober(answers.disposalDateModel.get) =>
         Some(QuestionAnswerModel(
           s"${keys.privateResidenceRelief}-daysClaimedAfter",
-          value,
+          value.toString(),
           s"${Messages("calc.privateResidenceRelief.questionBetween.partOne")} ${Dates.dateMinusMonths(answers.disposalDateModel, 18)}" +
             s" ${Messages("calc.privateResidenceRelief.questionBetween.partTwo")}",
           Some(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url)
@@ -100,7 +100,7 @@ object DeductionDetailsConstructor {
       if TaxDates.dateAfterOctober(answers.disposalDateModel.get) =>
         Some(QuestionAnswerModel(
           s"${keys.privateResidenceRelief}-daysClaimedAfter",
-          value,
+          value.toString(),
           s"${Messages("calc.privateResidenceRelief.questionBetween.partOne")} ${Dates.dateMinusMonths(answers.disposalDateModel, 18)}" +
             s" ${Messages("calc.privateResidenceRelief.questionBetween.partTwo")}",
           Some(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url)

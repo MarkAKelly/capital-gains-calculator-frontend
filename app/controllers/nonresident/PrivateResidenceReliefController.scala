@@ -17,11 +17,13 @@
 package controllers.nonresident
 
 import java.time.LocalDate
+
 import common.{Dates, KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.PrivateResidenceReliefForm._
 import models.nonresident.{AcquisitionDateModel, DisposalDateModel, PrivateResidenceReliefModel, RebasedValueModel}
+import play.api.mvc.Result
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation
@@ -97,7 +99,7 @@ trait PrivateResidenceReliefController extends FrontendController with ValidActi
 
   val submitPrivateResidenceRelief = ValidateSession.async { implicit request =>
 
-    def action(disposalDate: Option[LocalDate], acquisitionDate: Option[LocalDate], hasRebasedValue: Boolean) = {
+    def action(disposalDate: Option[LocalDate], acquisitionDate: Option[LocalDate], hasRebasedValue: Boolean): Future[Result] = {
 
       val showBetweenQuestion = displayBetweenQuestion(disposalDate, acquisitionDate, hasRebasedValue)
       val showBeforeQuestion = displayBeforeQuestion(disposalDate, acquisitionDate)
@@ -110,7 +112,7 @@ trait PrivateResidenceReliefController extends FrontendController with ValidActi
         },
         success => {
           calcConnector.saveFormData(KeystoreKeys.privateResidenceRelief, success)
-          Future.successful(Redirect(routes.AllowableLossesController.allowableLosses()))
+          Future.successful(Redirect(controllers.nonresident.routes.CheckYourAnswersController.checkYourAnswers().url))
         }
       )
     }

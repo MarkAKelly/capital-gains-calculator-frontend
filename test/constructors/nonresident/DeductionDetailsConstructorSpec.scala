@@ -294,20 +294,20 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
       }
 
       "return an id of nr:privateResidenceRelief-daysClaimed" in {
-        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.id shouldBe "nr:privateResidenceRelief-daysClaimed")
+        assertExpectedResult[QuestionAnswerModel[String]](result)(_.id shouldBe "nr:privateResidenceRelief-daysClaimed")
       }
 
       "return a value of '4'" in {
-        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.data shouldBe 4)
+        assertExpectedResult[QuestionAnswerModel[String]](result)(_.data shouldBe "4")
       }
 
       "return a question for Private Residence Relief" in {
-        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.question shouldBe
+        assertExpectedResult[QuestionAnswerModel[String]](result)(_.question shouldBe
           s"${messages.PrivateResidenceRelief.questionBefore} 10 April 2015 ${messages.PrivateResidenceRelief.questionEnd}")
       }
 
       "return a link to the Private Residence Relief page" in {
-        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.link shouldBe
+        assertExpectedResult[QuestionAnswerModel[String]](result)(_.link shouldBe
           Some(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url))
       }
     }
@@ -367,20 +367,20 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
       }
 
       "return an id of nr:privateResidenceRelief-daysClaimedAfter" in {
-        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.id shouldBe "nr:privateResidenceRelief-daysClaimedAfter")
+        assertExpectedResult[QuestionAnswerModel[String]](result)(_.id shouldBe "nr:privateResidenceRelief-daysClaimedAfter")
       }
 
       "return a value of '3'" in {
-        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.data shouldBe 3)
+        assertExpectedResult[QuestionAnswerModel[String]](result)(_.data shouldBe "3")
       }
 
       "return a question for Private Residence Relief" in {
-        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.question shouldBe
+        assertExpectedResult[QuestionAnswerModel[String]](result)(_.question shouldBe
           s"${messages.PrivateResidenceRelief.questionBetween} 10 April 2017 ${messages.PrivateResidenceRelief.questionEnd}")
       }
 
       "return a link to the Private Residence Relief page" in {
-        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.link shouldBe
+        assertExpectedResult[QuestionAnswerModel[String]](result)(_.link shouldBe
           Some(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url))
       }
     }
@@ -394,20 +394,20 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
       }
 
       "return an id of nr:privateResidenceRelief-daysClaimedAfter" in {
-        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.id shouldBe "nr:privateResidenceRelief-daysClaimedAfter")
+        assertExpectedResult[QuestionAnswerModel[String]](result)(_.id shouldBe "nr:privateResidenceRelief-daysClaimedAfter")
       }
 
       "return a value of '3'" in {
-        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.data shouldBe 3)
+        assertExpectedResult[QuestionAnswerModel[String]](result)(_.data shouldBe "3")
       }
 
       "return a question for Private Residence Relief" in {
-        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.question shouldBe
+        assertExpectedResult[QuestionAnswerModel[String]](result)(_.question shouldBe
           s"${messages.PrivateResidenceRelief.questionBetween} 10 April 2015 ${messages.PrivateResidenceRelief.questionEnd}")
       }
 
       "return a link to the Private Residence Relief page" in {
-        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.link shouldBe
+        assertExpectedResult[QuestionAnswerModel[String]](result)(_.link shouldBe
           Some(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url))
       }
     }
