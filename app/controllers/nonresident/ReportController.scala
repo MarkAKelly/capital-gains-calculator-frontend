@@ -53,20 +53,34 @@ trait ReportController extends FrontendController with ValidActiveSession {
     calcConnector.calculateTotalGain(totalGainAnswersModel)
   }
 
-  def getPRRModel()(implicit hc: HeaderCarrier): Future[Option[PrivateResidenceReliefModel]] = {
-    calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief)
+  def noPRR(acquisitionDateModel: AcquisitionDateModel, rebasedValueModel: Option[RebasedValueModel]): Future[Boolean] =
+    (acquisitionDateModel, rebasedValueModel) match {
+      case (AcquisitionDateModel("No", _, _, _), Some(rebasedValue)) if rebasedValue.rebasedValueAmt.isEmpty => Future.successful(true)
+      case (_, _) => Future.successful(false)
+    }
+
+  def getPRRModel(model: Option[TotalGainResultsModel], noPRR: Boolean)(implicit hc: HeaderCarrier): Future[Option[PrivateResidenceReliefModel]] = {
+
+    val optionSeq = Seq(model.get.rebasedGain, model.get.timeApportionedGain).flatten
+    val finalSeq = Seq(model.get.flatGain) ++ optionSeq
+
+    (!finalSeq.forall(_ <= 0), noPRR) match {
+      case (true, false) => calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief)
+      case (_, _) => Future.successful(None)
+    }
   }
 
   val summaryReport = ValidateSession.async { implicit request =>
     for {
-      summary <- answersConstructor.getNRTotalGainAnswers
+      answers <- answersConstructor.getNRTotalGainAnswers
       calculationType <- calcConnector.fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection)
-      result <- resultModel(summary)(hc)
-      taxYear <- getTaxYear(summary.disposalDateModel)
-      prrModel <- getPRRModel
+      totalGains <- resultModel(answers)(hc)
+      taxYear <- getTaxYear(answers.disposalDateModel)
+      noPRR <- noPRR(answers.acquisitionDateModel, answers.rebasedValueModel)
+      prrModel <- getPRRModel(totalGains, noPRR)
 
     } yield {
-      PdfGenerator.ok(summaryView(summary, result.get, taxYear.get, calculationType.get.calculationType, prrModel),
+      PdfGenerator.ok(summaryView(answers, totalGains.get, taxYear.get, calculationType.get.calculationType, prrModel),
         host).toScala
         .withHeaders("Content-Disposition" ->s"""attachment; filename="${Messages("calc.summary.title")}.pdf"""")
     }
