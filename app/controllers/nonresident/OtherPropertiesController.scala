@@ -67,5 +67,28 @@ trait OtherPropertiesController extends FrontendController with ValidActiveSessi
     } yield finalResult
   }
 
-  val submitOtherProperties = TODO
+  val submitOtherProperties = ValidateSession.async { implicit request =>
+    def errorAction(form: Form[OtherPropertiesModel]) = {
+      for {
+        url <- otherPropertiesBackUrl
+        result <- Future.successful(BadRequest(calculation.nonresident.otherProperties(form, url)))
+      } yield result
+    }
+
+    def successAction(model: OtherPropertiesModel) = {
+      for {
+        save <- calcConnector.saveFormData[OtherPropertiesModel](KeystoreKeys.otherProperties, model)
+        route <- routeRequest(model)
+      } yield route
+    }
+
+    def routeRequest(data: OtherPropertiesModel): Future[Result] = {
+      data.otherProperties match {
+        case "Yes" => Future.successful(Redirect(routes.PreviousGainOrLossController.previousGainOrLoss()))
+        case "No" => Future.successful(Redirect(routes.AllowableLossesController.allowableLosses()))
+      }
+    }
+
+    otherPropertiesForm.bindFromRequest.fold(errorAction, successAction)
+  }
 }
