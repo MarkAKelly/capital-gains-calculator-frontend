@@ -122,5 +122,19 @@ class BroughtForwardLossesFormSpec extends UnitSpec with WithFakeApplication {
         form.error("").get.message shouldBe messages.errorRealNumber
       }
     }
+
+    "provided with a value with three decimal places when a Yes is given" should {
+      val map = Map("isClaiming" -> "Yes",
+        "broughtForwardLoss" -> "100.001")
+      lazy val form = broughtForwardLossesForm.bind(map)
+
+      "return a form with one error" in {
+        form.errors.size shouldBe 1
+      }
+
+      s"return the error message ${messages.BroughtForwardLosses.errorDecimalPlaces}" in {
+        form.error("").get.message shouldBe messages.BroughtForwardLosses.errorDecimalPlaces
+      }
+    }
   }
 }

@@ -30,6 +30,11 @@ object BroughtForwardLossesForm {
     case _ => true
   }
 
+  val verifyDecimal: BroughtForwardLossesModel => Boolean = {
+    case BroughtForwardLossesModel(true, Some(value)) => decimalPlacesCheck(value)
+    case _ => true
+  }
+
   val broughtForwardLossesForm = Form(
     mapping(
       "isClaiming" -> text
@@ -40,5 +45,6 @@ object BroughtForwardLossesForm {
         .transform(stringToOptionalBigDecimal, optionalBigDecimalToString)
     )(BroughtForwardLossesModel.apply)(BroughtForwardLossesModel.unapply)
       .verifying(Messages("error.real"), verifyMandatory)
+      .verifying(Messages("calc.broughtForwardLoss.errorDecimal"), verifyDecimal)
   )
 }
