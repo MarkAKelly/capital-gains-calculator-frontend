@@ -22,10 +22,9 @@ import connectors.CalculatorConnector
 import constructors.nonresident.AnswersConstructor
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.ImprovementsForm._
-import models.nonresident.{AcquisitionDateModel, ImprovementsModel, RebasedValueModel, TotalGainResultsModel}
-import models.nonresident.{AcquisitionDateModel, ImprovementsModel, RebasedValueModel}
+import models.nonresident._
+import play.api.mvc.{Call, Result}
 import play.api.data.Form
-import play.api.mvc.Result
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation
@@ -55,7 +54,7 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
     case (Some(RebasedValueModel(Some(data))), Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year))))
       if !TaxDates.dateAfterStart(day, month, year) =>
       Future.successful(routes.RebasedCostsController.rebasedCosts().url)
-    case (_, _) => Future.successful(missingDataRoute)
+    case (_, _) => Future.successful(common.DefaultRoutes.missingDataRoute)
   }
 
   private def fetchAcquisitionDate(implicit headerCarrier: HeaderCarrier): Future[Option[AcquisitionDateModel]] = {
@@ -110,48 +109,49 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
 
   val submitImprovements = ValidateSession.async { implicit request =>
 
-//<<<<<<< HEAD
-//    def getRoute(totalGainResultsModel: TotalGainResultsModel): Future[Result] = {
-//      val optionSeq = Seq(totalGainResultsModel.rebasedGain, totalGainResultsModel.timeApportionedGain).flatten
-//      val finalSeq = Seq(totalGainResultsModel.flatGain) ++ optionSeq
-//
-//      if (!finalSeq.forall(_ <= 0)) Future.successful(Redirect(routes.PrivateResidenceReliefController.privateResidenceRelief()))
-//      else Future.successful(Redirect(routes.CheckYourAnswersController.checkYourAnswers()))
-//    }
-//
-//    def routeRequest(backUrl: String, improvementsOptions: Boolean): Future[Result] = {
-//      improvementsForm(improvementsOptions).bindFromRequest.fold(
-//        errors => {
-//            Future.successful(BadRequest(calculation.nonresident.improvements(errors,
-//              improvementsOptions,
-//              tempBackLink)))
-//        },
-//        success => {
-//          calcConnector.saveFormData(KeystoreKeys.improvements, success)
-//          for {
-//            answers <- answersConstructor.getNRTotalGainAnswers
-//            calcResult <- calcConnector.calculateTotalGain(answers)
-//            result <- getRoute(calcResult.get)
-//          } yield result
-//        }
-//      )
-//=======
+    def skipPRR(acquisitionDateModel: Option[AcquisitionDateModel], rebasedValueModel: Option[RebasedValueModel]): Boolean =
+      (acquisitionDateModel, rebasedValueModel) match {
+      case (Some(AcquisitionDateModel("No", _, _, _)), Some(rebasedValue)) if rebasedValue.rebasedValueAmt.isEmpty => true
+      case (_, _) => false
+    }
+
+    def successRouteRequest(model: Option[TotalGainResultsModel], skipPRR: Boolean): Future[Result] = {
+
+      if (model.isEmpty) Future.successful(Redirect(common.DefaultRoutes.missingDataRoute))
+      else {
+        val optionSeq = Seq(model.get.rebasedGain, model.get.timeApportionedGain).flatten
+        val finalSeq = Seq(model.get.flatGain) ++ optionSeq
+
+        (finalSeq.forall(_ >= 0), skipPRR) match {
+          case (true, false) => Future.successful(Redirect(routes.PrivateResidenceReliefController.privateResidenceRelief()))
+          case (_, true) => Future.successful(Redirect(controllers.nonresident.routes.CustomerTypeController.customerType()))
+          case (false, false) => Future.successful(Redirect(routes.CheckYourAnswersController.checkYourAnswers()))
+        }
+      }
+    }
+
     def errorAction(errors: Form[ImprovementsModel], backUrl: String, improvementsOptions: Boolean) = {
       Future.successful(BadRequest(calculation.nonresident.improvements(errors, improvementsOptions, backUrl)))
     }
 
-    def successAction(rebasedValue: Option[RebasedValueModel], acquisitionDate: Option[AcquisitionDateModel], improvements: ImprovementsModel) = {
+    def successAction( rebasedValue: Option[RebasedValueModel],
+                       acquisitionDate: Option[AcquisitionDateModel],
+                       improvements: ImprovementsModel,
+                       totalGains: Option[TotalGainResultsModel]
+                     ) = {
       calcConnector.saveFormData(KeystoreKeys.improvements, improvements)
-      Future.successful(Redirect(routes.CheckYourAnswersController.checkYourAnswers()))
+      val skipPrivateResidence = skipPRR(acquisitionDate, rebasedValue)
+      successRouteRequest(totalGains, skipPrivateResidence)
     }
 
     def routeRequest(rebasedValue: Option[RebasedValueModel],
                      acquisitionDate: Option[AcquisitionDateModel],
                      backUrl: String,
-                     improvementsOptions: Boolean): Future[Result] = {
+                     improvementsOptions: Boolean,
+                     totalGains: Option[TotalGainResultsModel]): Future[Result] = {
       improvementsForm(improvementsOptions).bindFromRequest.fold(
         errors => errorAction(errors, backUrl, improvementsOptions),
-        success => successAction(rebasedValue, acquisitionDate, success))
+        success => successAction(rebasedValue, acquisitionDate, success, totalGains))
     }
 
 
@@ -160,7 +160,9 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
       acquisitionDate <- fetchAcquisitionDate(hc)
       improvementsOptions <- displayImprovementsSectionCheck(rebasedValue, acquisitionDate)
       backUrl <- improvementsBackUrl(rebasedValue, acquisitionDate)
-      route <- routeRequest(rebasedValue, acquisitionDate, backUrl, improvementsOptions)
+      allAnswersModel <- answersConstructor.getNRTotalGainAnswers
+      totalGains <- calcConnector.calculateTotalGain(allAnswersModel)
+      route <- routeRequest(rebasedValue, acquisitionDate, backUrl, improvementsOptions, totalGains)
     } yield route
   }
 }
