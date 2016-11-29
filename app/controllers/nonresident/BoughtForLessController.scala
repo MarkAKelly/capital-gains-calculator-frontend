@@ -19,11 +19,11 @@ package controllers.nonresident
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
+import forms.nonresident.BoughtForLessForm._
 import models.nonresident.BoughtForLessModel
+import play.api.data.Form
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import views.html.calculation
-import forms.nonresident.BoughtForLessForm._
-import play.api.data.Form
 
 import scala.concurrent.Future
 
@@ -31,7 +31,7 @@ object BoughtForLessController extends BoughtForLessController {
   val calcConnector = CalculatorConnector
 }
 
-trait BoughtForLessController extends FrontendController with ValidActiveSession{
+trait BoughtForLessController extends FrontendController with ValidActiveSession {
 
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
@@ -46,15 +46,21 @@ trait BoughtForLessController extends FrontendController with ValidActiveSession
 
   val submitBoughtForLess = ValidateSession.async {implicit request =>
 
+    def errorAction(errors: Form[BoughtForLessModel]) = Future.successful(BadRequest(calculation.nonresident.boughtForLess(errors)))
+
+    def routeRequest(model: BoughtForLessModel) = {
+      if (model.boughtForLess) Future.successful(Redirect(routes.WorthWhenBoughtForLessController.worthWhenBoughtForLess()))
+      else Future.successful(Redirect(routes.AcquisitionValueController.acquisitionValue()))
+    }
+
     def successAction(model: BoughtForLessModel) = {
-      calcConnector.saveFormData[BoughtForLessModel](KeystoreKeys.boughtForLess, model)
-      Future.successful(Redirect(routes.AcquisitionValueController.acquisitionValue()))
+      for {
+        save <- calcConnector.saveFormData(KeystoreKeys.boughtForLess, model)
+        route <- routeRequest(model)
+      } yield route
     }
 
-    def errorAction(form: Form[BoughtForLessModel]) = {
-      Future.successful(BadRequest(calculation.nonresident.boughtForLess(form)))
-    }
 
-    boughtForLessForm.bindFromRequest.fold(errorAction, successAction)
+    boughtForLessForm.bindFromRequest().fold(errorAction, successAction)
   }
 }

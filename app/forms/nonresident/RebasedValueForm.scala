@@ -27,49 +27,18 @@ import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object RebasedValueForm {
 
-  def verifyAmountSupplied(data: RebasedValueModel): Boolean = {
-    data.hasRebasedValue match {
-      case "Yes" => data.rebasedValueAmt.isDefined
-      case "No" => true
-    }
-  }
+  def mandatoryField(data: Option[String], required: Boolean): Boolean = !(required && data.isEmpty)
 
-  def verifyPositive(data: RebasedValueModel): Boolean = {
-    data.hasRebasedValue match {
-      case "Yes" => isPositive(data.rebasedValueAmt.getOrElse(0))
-      case "No" => true
-    }
-  }
 
-  def verifyTwoDecimalPlaces(data: RebasedValueModel): Boolean = {
-    data.hasRebasedValue match {
-      case "Yes" => decimalPlacesCheck(data.rebasedValueAmt.getOrElse(0))
-      case "No" => true
-    }
-  }
-
-  def validateMax(data: RebasedValueModel): Boolean = {
-    data.hasRebasedValue match {
-      case "Yes" => maxCheck(data.rebasedValueAmt.getOrElse(0))
-      case "No" => true
-    }
-  }
-
-  val rebasedValueForm = Form(
+  def rebasedValueForm(required: Boolean): Form[RebasedValueModel] = Form(
     mapping(
-      "hasRebasedValue" -> text
-        .verifying(Messages("calc.common.error.fieldRequired"), mandatoryCheck)
-        .verifying(Messages("calc.common.error.fieldRequired"), yesNoCheck),
-      "rebasedValueAmt" -> text
-        .transform[Option[BigDecimal]](stringToOptionalBigDecimal, optionalBigDecimalToString)
+      "rebasedValueAmt" -> optional(text)
+        .verifying(Messages("calc.nonResident.rebasedValue.error.no.value.supplied"), data => mandatoryField(data, required))
+        .verifying(Messages("error.number"), data => bigDecimalCheck(data.getOrElse("")))
+        .transform[Option[BigDecimal]](optionalStringToOptionalBigDecimal, optionalBigDecimalToOptionalString)
+        .verifying(Messages("calc.nonResident.rebasedValue.errorNegative"), data => isPositive(data.getOrElse(0)))
+        .verifying(Messages("calc.nonResident.rebasedValue.errorDecimalPlaces"), data => decimalPlacesCheck(data.getOrElse(0)))
+        .verifying(Messages("calc.common.error.maxAmountExceeded", MoneyPounds(Constants.maxNumeric, 0).quantity), data => maxCheck(data.getOrElse(0)))
     )(RebasedValueModel.apply)(RebasedValueModel.unapply)
-      .verifying(Messages("calc.rebasedValue.error.no.value.supplied"),
-        rebasedValueForm => verifyAmountSupplied(rebasedValueForm))
-      .verifying(Messages("calc.rebasedValue.errorNegative"),
-        rebasedValueForm => verifyPositive(rebasedValueForm))
-      .verifying(Messages("calc.rebasedValue.errorDecimalPlaces"),
-        rebasedValueForm => verifyTwoDecimalPlaces(rebasedValueForm))
-      .verifying(Messages("calc.common.error.maxNumericExceeded") + MoneyPounds(Constants.maxNumeric, 0).quantity + " " + Messages("calc.common.error.maxNumericExceeded.OrLess"),
-        rebasedValueForm => validateMax(rebasedValueForm))
   )
 }

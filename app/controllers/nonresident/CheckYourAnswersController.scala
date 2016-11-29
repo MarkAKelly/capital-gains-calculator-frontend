@@ -20,9 +20,10 @@ import common.KeystoreKeys
 import common.nonresident.CalculationType
 import connectors.CalculatorConnector
 import constructors.nonresident.{AnswersConstructor, CalculationElectionConstructor, YourAnswersConstructor}
-import uk.gov.hmrc.play.frontend.controller.FrontendController
 import controllers.predicates.ValidActiveSession
-import models.nonresident.CalculationElectionModel
+import models.nonresident.{CalculationElectionModel, PrivateResidenceReliefModel, TotalGainResultsModel}
+import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation
 
 import scala.concurrent.Future
@@ -42,19 +43,46 @@ trait CheckYourAnswersController extends FrontendController with ValidActiveSess
   val calculatorConnector: CalculatorConnector
   val backLink = controllers.nonresident.routes.ImprovementsController.improvements().url
 
+  def getPRRModel(implicit hc: HeaderCarrier, totalGainResultsModel: TotalGainResultsModel): Future[Option[PrivateResidenceReliefModel]] = {
+    val optionSeq = Seq(totalGainResultsModel.rebasedGain, totalGainResultsModel.timeApportionedGain).flatten
+    val finalSeq = Seq(totalGainResultsModel.flatGain) ++ optionSeq
+
+    if (!finalSeq.forall(_ <= 0)) {
+      val prrModel = calculatorConnector.fetchAndGetFormData[PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief)
+
+      for {
+        prrModel <- prrModel
+      } yield prrModel
+    } else Future(None)
+  }
 
   val checkYourAnswers = ValidateSession.async { implicit request =>
 
     for {
       model <- answersConstructor.getNRTotalGainAnswers
-      answers <- Future.successful(YourAnswersConstructor.fetchYourAnswers(model))
+      totalGainResult <- calculatorConnector.calculateTotalGain(model)
+      prrModel <- getPRRModel(hc, totalGainResult.get)
+      answers <- Future.successful(YourAnswersConstructor.fetchYourAnswers(model, prrModel))
     } yield {
       Ok(calculation.nonresident.checkYourAnswers(answers, backLink))
     }
   }
 
   val submitCheckYourAnswers = ValidateSession.async { implicit request =>
-    calculatorConnector.saveFormData[CalculationElectionModel](KeystoreKeys.calculationElection, CalculationElectionModel(CalculationType.flat))
-    Future.successful(Redirect(routes.SummaryController.summary()))
+
+    def routeRequest(model: Option[TotalGainResultsModel]) = model match {
+      case (Some(data)) if data.rebasedGain.isDefined || data.timeApportionedGain.isDefined =>
+        Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
+      case (Some(data)) =>
+        calculatorConnector.saveFormData[CalculationElectionModel](KeystoreKeys.calculationElection, CalculationElectionModel(CalculationType.flat))
+        Future.successful(Redirect(routes.SummaryController.summary()))
+      case (None) => Future.successful(Redirect(common.DefaultRoutes.missingDataRoute))
+    }
+
+    for {
+      allAnswersModel <- answersConstructor.getNRTotalGainAnswers
+      totalGains <- calculatorConnector.calculateTotalGain(allAnswersModel)
+      route <- routeRequest(totalGains)
+    } yield route
   }
 }

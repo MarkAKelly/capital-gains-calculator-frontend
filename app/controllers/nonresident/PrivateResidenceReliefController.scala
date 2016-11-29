@@ -54,7 +54,7 @@ trait PrivateResidenceReliefController extends FrontendController with ValidActi
 
   def getRebasedAmount(implicit hc: HeaderCarrier): Future[Boolean] =
     calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).map {
-      case Some(data) if data.hasRebasedValue == "Yes" => true
+      case Some(data) if data.rebasedValueAmt.isDefined => true
       case _ => false
     }
 
