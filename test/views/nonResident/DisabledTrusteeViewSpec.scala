@@ -52,11 +52,11 @@ class DisabledTrusteeViewSpec extends UnitSpec with WithFakeApplication with Moc
         lazy val heading = document.body().select("h1")
 
         "has a class of heading-large" in {
-          heading.attr("class") shouldBe "heading-large"
+          heading.attr("class") shouldBe "heading-xlarge"
         }
 
-        s"has the text '${messages.pageHeading}'" in {
-          heading.text shouldBe messages.pageHeading
+        s"has the text '${messages.DisabledTrustee.question}'" in {
+          heading.text shouldBe messages.DisabledTrustee.question
         }
       }
 
@@ -95,6 +95,10 @@ class DisabledTrusteeViewSpec extends UnitSpec with WithFakeApplication with Moc
 
       s"have the question '${messages.DisabledTrustee.question}'" in {
         document.body.select("legend").first().text shouldBe messages.DisabledTrustee.question
+      }
+
+      "have a visuallyhidden legend" in {
+        document.body.select("legend").first().attr("class") shouldBe "visuallyhidden"
       }
 
       s"have the help text '${messages.DisabledTrustee.helpText}'" in {
