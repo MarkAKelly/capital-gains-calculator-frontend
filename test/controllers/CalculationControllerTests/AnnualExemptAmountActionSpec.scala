@@ -42,7 +42,7 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
                    getData: Option[AnnualExemptAmountModel],
                    customerType: String = CustomerTypeKeys.individual,
                    disabledTrustee: String = "",
-                   disposalDate: Option[DisposalDateModel]
+                   disposalDate: Option[DisposalDateModel] = Some(DisposalDateModel(12, 12, 2016))
                  ): AnnualExemptAmountController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
@@ -95,8 +95,8 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
       }
     }
 
-    "supplied with a pre-existing stored model and 2016/17 tax date and is disabled trustee" should {
-      val target = setupTarget(Some(AnnualExemptAmountModel(1000)), CustomerTypeKeys.trustee, "Yes", disposalDate = Some(DisposalDateModel(12, 12, 2016)))
+    "supplied with a pre-existing stored model and 2016/17 tax date and is non-disabled trustee" should {
+      val target = setupTarget(Some(AnnualExemptAmountModel(1000)), CustomerTypeKeys.trustee, "No", disposalDate = Some(DisposalDateModel(12, 12, 2016)))
       lazy val result = target.annualExemptAmount(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -109,11 +109,53 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
       }
 
       s"have the help text '${messages.hint("5,500")}'" in {
-        document.select("#input-hint").text() shouldBe messages.hint("5,500")
+        document.select("#input-hint").text() shouldBe messages.hint("5,550")
       }
     }
 
-    "supplied with a 2016/17 tax year date and is not a disabled trustee" should {
+    "supplied with a 2016/17 tax year date and is non-trustee" should {
+      val target = setupTarget(None, disposalDate = Some(DisposalDateModel(12, 12, 2016)))
+      lazy val result = target.annualExemptAmount(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 200" in {
+        status(result) shouldBe 200
+      }
+
+      s"have the help text '${messages.hint("11,100")}'" in {
+        document.select("#input-hint").text() shouldBe messages.hint("11,100")
+      }
+    }
+
+    "supplied with a 2016/17 tax year date and is disabled trustee" should {
+      val target = setupTarget(None, CustomerTypeKeys.trustee, "Yes", disposalDate = Some(DisposalDateModel(12, 12, 2016)))
+      lazy val result = target.annualExemptAmount(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 200" in {
+        status(result) shouldBe 200
+      }
+
+      s"have the help text '${messages.hint("11,100")}'" in {
+        document.select("#input-hint").text() shouldBe messages.hint("11,100")
+      }
+    }
+
+    "supplied with a 2015/16 tax year date and is non-disabled trustee" should {
+      val target = setupTarget(None, CustomerTypeKeys.trustee, "No", disposalDate = Some(DisposalDateModel(12, 12, 2016)))
+      lazy val result = target.annualExemptAmount(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 200" in {
+        status(result) shouldBe 200
+      }
+
+      s"have the help text '${messages.hint("5,500")}'" in {
+        document.select("#input-hint").text() shouldBe messages.hint("5,550")
+      }
+    }
+
+    "supplied with a 2015/16 tax year date and is non-trustee" should {
       val target = setupTarget(None, disposalDate = Some(DisposalDateModel(12, 12, 2015)))
       lazy val result = target.annualExemptAmount(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
@@ -136,13 +178,13 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
         status(result) shouldBe 200
       }
 
-      s"have the help text '${messages.hint("5,500")}'" in {
-        document.select("#input-hint").text() shouldBe messages.hint("5,500")
+      s"have the help text '${messages.hint("11,100")}'" in {
+        document.select("#input-hint").text() shouldBe messages.hint("11,100")
       }
     }
 
-    "supplied with a 2015/16 tax year date and is not disabled trustee" should {
-      val target = setupTarget(None, disposalDate = Some(DisposalDateModel(12, 12, 2015)))
+    "supplied with a date outside 2015/16, 2016/17 tax years and is non-trustee" should {
+      val target = setupTarget(None, disposalDate = Some(DisposalDateModel(12, 12, 2013)))
       lazy val result = target.annualExemptAmount(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -173,7 +215,7 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
   "Calling the .submitAnnualExemptAmount action" when {
 
     "submitting a valid form for a non-trustee" should {
-      val target = setupTarget(None, disposalDate = Some(DisposalDateModel(12, 12, 2016)))
+      val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("annualExemptAmount", "1000"))
       lazy val result = target.submitAnnualExemptAmount(request)
 
@@ -187,7 +229,7 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
     }
 
     "submitting a valid form for a non-vulnerable trustee" should {
-      val target = setupTarget(None, CustomerTypeKeys.trustee, "No", disposalDate = Some(DisposalDateModel(12, 12, 2016)))
+      val target = setupTarget(None, CustomerTypeKeys.trustee, "No")
       lazy val request = fakeRequestToPOSTWithSession(("annualExemptAmount", "1000"))
       lazy val result = target.submitAnnualExemptAmount(request)
 
@@ -201,7 +243,7 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
     }
 
     "submitting a valid form for a vulnerable trustee" should {
-      val target = setupTarget(None, CustomerTypeKeys.trustee, "Yes", disposalDate = Some(DisposalDateModel(12, 12, 2016)))
+      val target = setupTarget(None, CustomerTypeKeys.trustee, "Yes")
       lazy val request = fakeRequestToPOSTWithSession(("annualExemptAmount", "1000"))
       lazy val result = target.submitAnnualExemptAmount(request)
 
@@ -215,7 +257,7 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
     }
 
     "submitting an invalid form" should {
-      val target = setupTarget(None, CustomerTypeKeys.trustee, "Yes", disposalDate = Some(DisposalDateModel(12, 12, 2016)))
+      val target = setupTarget(None, CustomerTypeKeys.trustee, "Yes")
       lazy val request = fakeRequestToPOSTWithSession(("annualExemptAmount", "1000000"))
       lazy val result = target.submitAnnualExemptAmount(request)
       lazy val document = Jsoup.parse(bodyOf(result))

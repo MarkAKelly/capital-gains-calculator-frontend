@@ -23,7 +23,7 @@ import constructors.nonresident.CalculationElectionConstructor
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.AnnualExemptAmountForm._
 import models.nonresident.{AnnualExemptAmountModel, CustomerTypeModel, DisabledTrusteeModel, DisposalDateModel}
-import common.TaxDates
+import common.Dates
 import play.api.data.Form
 import play.api.mvc.Result
 import uk.gov.hmrc.play.frontend.controller.FrontendController
@@ -44,7 +44,7 @@ trait AnnualExemptAmountController extends FrontendController with ValidActiveSe
   val calcConnector: CalculatorConnector
   val calcElectionConstructor: CalculationElectionConstructor
 
-  def fetchMaxAEA(isFullAEA: Boolean, taxYear: Int)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
+  private def fetchMaxAEA(isFullAEA: Boolean, taxYear: Int)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
     if (isFullAEA) {
       calcConnector.getFullAEA(taxYear)
     }
@@ -61,21 +61,13 @@ trait AnnualExemptAmountController extends FrontendController with ValidActiveSe
     calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.disposalDate)
   }
 
-  def taxYearStringToInteger (taxYear: String): Future[Int] = {
-    Future.successful((taxYear.take(2) + taxYear.takeRight(2)).toInt)
-  }
-
-  def formatDisposalDate(disposalDateModel: DisposalDateModel): Future[String] = {
-    Future.successful(s"${disposalDateModel.year}-${disposalDateModel.month}-${disposalDateModel.day}")
-  }
-
-  def customerType(implicit hc: HeaderCarrier): Future[String] = {
+  private def customerType(implicit hc: HeaderCarrier): Future[String] = {
     calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).map {
       customerTypeModel => customerTypeModel.get.customerType
     }
   }
 
-  def trusteeAEA(customerTypeVal: String)(implicit hc: HeaderCarrier): Future[Boolean] = {
+  private def trusteeAEA(customerTypeVal: String)(implicit hc: HeaderCarrier): Future[Boolean] = {
     customerTypeVal match {
       case CustomerTypeKeys.trustee =>
         calcConnector.fetchAndGetFormData[DisabledTrusteeModel](KeystoreKeys.disabledTrustee).map {
@@ -89,19 +81,17 @@ trait AnnualExemptAmountController extends FrontendController with ValidActiveSe
 
     def routeRequest(model: Option[AnnualExemptAmountModel], maxAEA: BigDecimal): Future[Result] = {
       calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](KeystoreKeys.annualExemptAmount).map {
-        case Some(data) => Ok(calculation.nonresident.annualExemptAmount(annualExemptAmountForm().fill(data), 11100))
-        case None => Ok(calculation.nonresident.annualExemptAmount(annualExemptAmountForm(), 11100))
+        case Some(data) => Ok(calculation.nonresident.annualExemptAmount(annualExemptAmountForm().fill(data), maxAEA))
+        case None => Ok(calculation.nonresident.annualExemptAmount(annualExemptAmountForm(), maxAEA))
       }
     }
 
     for {
       disposalDate <- fetchDisposalDate(hc)
-      disposalDateString <- formatDisposalDate(disposalDate.get)
       customerTypeVal <- customerType(hc)
       isDisabledTrustee <- trusteeAEA(customerTypeVal)
-      taxYear <- calcConnector.getTaxYear(disposalDateString)
-      year <- taxYearStringToInteger(taxYear.get.calculationTaxYear)
-      maxAEA <- fetchMaxAEA(isDisabledTrustee, year)
+      taxYear <- Future.successful(Dates.getDisposalYear(disposalDate.get.day, disposalDate.get.month, disposalDate.get.year))
+      maxAEA <- fetchMaxAEA(isDisabledTrustee, taxYear)
       annualExemptAmount <- fetchAnnualExemptAmount(hc)
       finalResult <- routeRequest(annualExemptAmount, maxAEA.get)
     } yield finalResult
@@ -126,12 +116,10 @@ trait AnnualExemptAmountController extends FrontendController with ValidActiveSe
 
     for {
       disposalDate <- fetchDisposalDate(hc)
-      disposalDateString <- formatDisposalDate(disposalDate.get)
       customerTypeVal <- customerType(hc)
       isDisabledTrustee <- trusteeAEA(customerTypeVal)
-      taxYear <- calcConnector.getTaxYear(disposalDateString)
-      year <- taxYearStringToInteger(taxYear.get.calculationTaxYear)
-      maxAEA <- fetchMaxAEA(isDisabledTrustee, year)
+      taxYear <- Future.successful(Dates.getDisposalYear(disposalDate.get.day, disposalDate.get.month, disposalDate.get.year))
+      maxAEA <- fetchMaxAEA(isDisabledTrustee, taxYear)
       finalResult <- routeRequest(maxAEA.get)
     } yield finalResult
   }
