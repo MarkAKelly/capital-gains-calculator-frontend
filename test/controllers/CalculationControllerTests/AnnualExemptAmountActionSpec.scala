@@ -31,8 +31,8 @@ import org.jsoup._
 import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
-import controllers.nonresident.AnnualExemptAmountController
-import models.nonresident.{AnnualExemptAmountModel, CustomerTypeModel, DisabledTrusteeModel, DisposalDateModel}
+import controllers.nonresident.{AnnualExemptAmountController, routes}
+import models.nonresident._
 
 class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
@@ -42,7 +42,10 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
                    getData: Option[AnnualExemptAmountModel],
                    customerType: String = CustomerTypeKeys.individual,
                    disabledTrustee: String = "",
-                   disposalDate: Option[DisposalDateModel] = Some(DisposalDateModel(12, 12, 2016))
+                   disposalDate: Option[DisposalDateModel] = Some(DisposalDateModel(12, 12, 2016),
+                   previousLossOrGain: Option[PreviousLossOrGainModel] = Some("Neither"),
+                   howMuchLoss: Option[HowMuchLossModel] = None,
+                   howMuchGain: Option[HowMuchGainModel] = None
                  ): AnnualExemptAmountController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
@@ -207,6 +210,36 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
 
       "redirect to the session timeout page" in {
         redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+      }
+    }
+
+    "when there was no previous gain or loss" should {
+      val target = setupTarget(None, previousLossOrGain = Some(PreviousLossOrGainModel("Neither")))
+      lazy val result = target.annualExemptAmount(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "have a back link to previous-gain-or-loss" in {
+        document.select("#back-link").attr("href") shouldEqual routes.PreviousGainOrLossController.previousGainOrLoss().url
+      }
+    }
+
+    "when there was a previous loss of 0" should {
+      val target = setupTarget(None, previousLossOrGain = Some(PreviousLossOrGainModel("Loss")), howMuchLoss = Some(HowMuchLossModel(0)))
+      lazy val result = target.annualExemptAmount(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "have a back link to previous-gain-or-loss" in {
+        document.select("#back-link").attr("href") shouldEqual routes.HowMuchLossController.howMuchLoss().url
+      }
+    }
+
+    "when there was a previous gain of 0" should {
+      val target = setupTarget(None, previousLossOrGain = Some(PreviousLossOrGainModel("Gain")), howMuchGain = Some(HowMuchGainModel(0)))
+      lazy val result = target.annualExemptAmount(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "have a back link to previous-gain-or-loss" in {
+        document.select("#back-link").attr("href") shouldEqual routes.HowMuchGainController.howMuchGain().url
       }
     }
   }

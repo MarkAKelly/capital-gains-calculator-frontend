@@ -22,13 +22,14 @@ import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.AnnualExemptAmountForm._
-import models.nonresident.{AnnualExemptAmountModel, CustomerTypeModel, DisabledTrusteeModel, DisposalDateModel}
+import models.nonresident._
 import common.Dates
 import play.api.data.Form
 import play.api.mvc.Result
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation
+import common.DefaultRoutes._
 
 import scala.concurrent.Future
 
@@ -57,7 +58,27 @@ trait AnnualExemptAmountController extends FrontendController with ValidActiveSe
     calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](KeystoreKeys.annualExemptAmount)
   }
 
-  private def fetchDisposalDate(implicit headerCarrier: HeaderCarrier): Future[Option[DisposalDateModel]] = {
+  private def fetchPreviousGainOrLoss(implicit hc: HeaderCarrier): Future[String] = {
+    calcConnector.fetchAndGetFormData[PreviousLossOrGainModel](KeystoreKeys.previousLossOrGain).map {
+      previousLossOrGainModel => previousLossOrGainModel.get.previousLossOrGain
+    }
+  }
+
+  private def fetchPreviousLossAmount(gainOrLoss: String): Future[Option[HowMuchLossModel]] = {
+    gainOrLoss match {
+      case "Gain" => calcConnector.fetchAndGetFormData[HowMuchLossModel](KeystoreKeys.howMuchLoss)
+      case _ => Future.successful(None)
+    }
+  }
+
+  private def fetchPreviousGainAmount(gainOrLoss: String): Future[Option[HowMuchGainModel]] = {
+    gainOrLoss match {
+      case "Loss" => calcConnector.fetchAndGetFormData[HowMuchGainModel](KeystoreKeys.howMuchGain)
+      case _ => Future.successful(None)
+    }
+  }
+
+  private def fetchDisposalDate(implicit hc: HeaderCarrier): Future[Option[DisposalDateModel]] = {
     calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.disposalDate)
   }
 
@@ -77,9 +98,21 @@ trait AnnualExemptAmountController extends FrontendController with ValidActiveSe
     }
   }
 
+  private def backUrl(lossOrGain: PreviousLossOrGainModel, gainAmount: Option[HowMuchGainModel], lossAmount: Option[HowMuchLossModel]): Future[String] = {
+    (lossOrGain, gainAmount, lossAmount) match {
+      case (Some(PreviousLossOrGainModel("Neither")), None, None) =>
+        Future.successful(routes.PreviousGainOrLossController.previousGainOrLoss().url)
+      case (Some(PreviousLossOrGainModel("Gain")), Some(data), None) if data.howMuchGain == 0 =>
+        Future.successful(routes.HowMuchGainController.howMuchGain().url)
+      case (Some(PreviousLossOrGainModel("Loss")), None, Some(data)) if data.loss == 0 =>
+        Future.successful(routes.HowMuchLossController.howMuchLoss().url)
+      case _ => Future.successful(missingDataRoute)
+    }
+  }
+
   val annualExemptAmount = ValidateSession.async { implicit request =>
 
-    def routeRequest(model: Option[AnnualExemptAmountModel], maxAEA: BigDecimal): Future[Result] = {
+    def routeRequest(model: Option[AnnualExemptAmountModel], maxAEA: BigDecimal, backUrl: String): Future[Result] = {
       calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](KeystoreKeys.annualExemptAmount).map {
         case Some(data) => Ok(calculation.nonresident.annualExemptAmount(annualExemptAmountForm().fill(data), maxAEA))
         case None => Ok(calculation.nonresident.annualExemptAmount(annualExemptAmountForm(), maxAEA))
@@ -93,7 +126,11 @@ trait AnnualExemptAmountController extends FrontendController with ValidActiveSe
       taxYear <- Future.successful(Dates.getDisposalYear(disposalDate.get.day, disposalDate.get.month, disposalDate.get.year))
       maxAEA <- fetchMaxAEA(isDisabledTrustee, taxYear)
       annualExemptAmount <- fetchAnnualExemptAmount(hc)
-      finalResult <- routeRequest(annualExemptAmount, maxAEA.get)
+      previousLossOrGain <- fetchPreviousGainOrLoss(hc)
+      gainAmount <- fetchPreviousGainAmount(previousLossOrGain)
+      lossAmount <- fetchPreviousLossAmount(previousLossOrGain)
+      backUrl <- backUrl(previousLossOrGain, gainAmount, lossAmount)
+      finalResult <- routeRequest(annualExemptAmount, maxAEA.get, backUrl)
     } yield finalResult
   }
 
