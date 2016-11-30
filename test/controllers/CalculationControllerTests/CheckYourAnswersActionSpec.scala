@@ -27,6 +27,7 @@ import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.mockito.Mockito._
 import assets.MessageLookup.{NonResident => messages}
+import common.DefaultRoutes
 import connectors.CalculatorConnector
 
 import scala.concurrent.Future
@@ -76,6 +77,7 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
     Some(OtherReliefsModel(30)))
 
   val totalGainResultsModel = TotalGainResultsModel(0, Some(0), Some(0))
+  val totalGainWithValueResultsModel = TotalGainResultsModel(100, Some(-100), None)
 
   val modelWithOnlyFlat = TotalGainAnswersModel(DisposalDateModel(5, 10, 2016),
     SoldOrGivenAwayModel(true),
@@ -131,6 +133,24 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
 
       "redirect the user to the session timeout page" in {
         redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+      }
+    }
+
+    "provided with a valid session when eligible for prr and a total gain value" should {
+      lazy val target = setupTarget(modelWithMultipleGains, Some(totalGainWithValueResultsModel))
+      lazy val result = target.checkYourAnswers(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "load the check your answers page" in {
+        document.title() shouldBe messages.CheckYourAnswers.question
+      }
+
+      "have a back link to the private residence relief page" in {
+        document.select("#back-link").attr("href") shouldBe routes.PrivateResidenceReliefController.privateResidenceRelief().url
       }
     }
   }
