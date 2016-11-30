@@ -32,15 +32,14 @@
     @form(action = controllers.nonresident.routes.OtherPropertiesController.submitOtherProperties) {
 
         <fieldset>
-            <legend class = "visuallyhidden">
-                <p>@Messages("calc.otherProperties.question")</p>
-            </legend>
             <div class="inline form-group">
                 @formInputRadioGroup(
                     field = otherPropertiesForm("otherProperties"),
                     Seq(
                     "Yes"->Messages("calc.base.yes"),
                     "No"->Messages("calc.base.no")),
+                    '_legend -> Messages("calc.otherProperties.question"),
+                    '_helpText -> Messages("calc.otherProperties.question"),
                     '_labelAfter -> true,
                     '_labelClass -> "block-label",
                     '_legendID -> "otherProperties"

@@ -21,7 +21,7 @@ import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.OtherPropertiesForm._
-import models.nonresident.{AnnualExemptAmountModel, CurrentIncomeModel, CustomerTypeModel, OtherPropertiesModel}
+import models.nonresident.{CurrentIncomeModel, CustomerTypeModel, OtherPropertiesModel}
 import play.api.data.Form
 import play.api.mvc.Result
 import uk.gov.hmrc.play.frontend.controller.FrontendController

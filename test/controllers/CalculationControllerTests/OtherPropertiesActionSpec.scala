@@ -24,9 +24,8 @@ import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
@@ -184,7 +183,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
   // POST Tests
   "In CalculationController calling the .submitOtherProperties action" when {
 
-    "submitting a valid form with 'Yes' and a non-zero amount" should {
+    "submitting a valid form with 'Yes'" should {
 
       lazy val target = setupTarget(None)
       lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "Yes"))
