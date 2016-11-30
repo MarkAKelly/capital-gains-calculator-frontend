@@ -38,8 +38,8 @@ class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with Fak
         document.title shouldEqual messages.question
       }
 
-      "have the heading Calculate your tax (non-residents) " in {
-        document.body.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
+      s"have the heading ${messages.question}" in {
+        document.body.getElementsByTag("h1").text shouldEqual messages.question
       }
 
       s"have a 'Back' link to back-link" which {

@@ -100,7 +100,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
         }
 
         s"has a 'Back' link to ${routes.PersonalAllowanceController.personalAllowance().url}" in {
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.PersonalAllowanceController.personalAllowance().url
+          document.body.getElementById("back-link").attr("href").trim() shouldEqual routes.PersonalAllowanceController.personalAllowance().url
         }
       }
 
