@@ -16,15 +16,14 @@
 
 package controllers.nonresident
 
-import common.DefaultRoutes._
 import common.{KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
 import constructors.nonresident.AnswersConstructor
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.ImprovementsForm._
 import models.nonresident._
-import play.api.mvc.{Call, Result}
 import play.api.data.Form
+import play.api.mvc.Result
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation
@@ -45,7 +44,7 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
 
   private def improvementsBackUrl(rebasedValue: Option[RebasedValueModel], acquisitionDate: Option[AcquisitionDateModel])
                                  (implicit hc: HeaderCarrier): Future[String] = (rebasedValue, acquisitionDate) match {
-    case (_, Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year)))) if TaxDates.dateAfterStart(day, month, year)  =>
+    case (_, Some(AcquisitionDateModel("Yes", Some(day), Some(month), Some(year)))) if TaxDates.dateAfterStart(day, month, year) =>
       Future.successful(routes.AcquisitionCostsController.acquisitionCosts().url)
     case (Some(RebasedValueModel(None)), Some(AcquisitionDateModel("No", _, _, _))) =>
       Future.successful(routes.RebasedValueController.rebasedValue().url)
@@ -111,9 +110,9 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
 
     def skipPRR(acquisitionDateModel: Option[AcquisitionDateModel], rebasedValueModel: Option[RebasedValueModel]): Boolean =
       (acquisitionDateModel, rebasedValueModel) match {
-      case (Some(AcquisitionDateModel("No", _, _, _)), Some(rebasedValue)) if rebasedValue.rebasedValueAmt.isEmpty => true
-      case (_, _) => false
-    }
+        case (Some(AcquisitionDateModel("No", _, _, _)), Some(rebasedValue)) if rebasedValue.rebasedValueAmt.isEmpty => true
+        case (_, _) => false
+      }
 
     def successRouteRequest(model: Option[TotalGainResultsModel], skipPRR: Boolean): Result = {
 
@@ -122,10 +121,10 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
         val optionSeq = Seq(model.get.rebasedGain, model.get.timeApportionedGain).flatten
         val finalSeq = Seq(model.get.flatGain) ++ optionSeq
 
-        (finalSeq.forall(_ >= 0), skipPRR) match {
+        (!finalSeq.forall(_ <= 0), skipPRR) match {
           case (true, false) => Redirect(routes.PrivateResidenceReliefController.privateResidenceRelief())
-          case (_, true) => Redirect(controllers.nonresident.routes.CustomerTypeController.customerType())
-          case (false, false) => Redirect(routes.CheckYourAnswersController.checkYourAnswers())
+          case (true, true) => Redirect(controllers.nonresident.routes.CustomerTypeController.customerType())
+          case (_, _) => Redirect(routes.CheckYourAnswersController.checkYourAnswers())
         }
       }
     }
@@ -134,14 +133,15 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
       Future.successful(BadRequest(calculation.nonresident.improvements(errors, improvementsOptions, backUrl)))
     }
 
-    def successAction( rebasedValue: Option[RebasedValueModel],
-                       acquisitionDate: Option[AcquisitionDateModel],
-                       improvements: ImprovementsModel
+    def successAction(rebasedValue: Option[RebasedValueModel],
+                      acquisitionDate: Option[AcquisitionDateModel],
+                      improvements: ImprovementsModel
                      ): Future[Result] = {
-      calcConnector.saveFormData(KeystoreKeys.improvements, improvements)
+
       val skipPrivateResidence = skipPRR(acquisitionDate, rebasedValue)
 
       for {
+        save <- calcConnector.saveFormData(KeystoreKeys.improvements, improvements)
         allAnswersModel <- answersConstructor.getNRTotalGainAnswers
         gains <- calcConnector.calculateTotalGain(allAnswersModel)
       } yield successRouteRequest(gains, skipPrivateResidence)
@@ -156,7 +156,6 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
         success => successAction(rebasedValue, acquisitionDate, success)
       )
     }
-
 
     for {
       rebasedValue <- fetchRebasedValue(hc)

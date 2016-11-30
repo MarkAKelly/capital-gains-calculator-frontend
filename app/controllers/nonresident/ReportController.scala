@@ -53,15 +53,53 @@ trait ReportController extends FrontendController with ValidActiveSession {
     calcConnector.calculateTotalGain(totalGainAnswersModel)
   }
 
+  def noPRR(acquisitionDateModel: AcquisitionDateModel, rebasedValueModel: Option[RebasedValueModel]): Future[Boolean] =
+    (acquisitionDateModel, rebasedValueModel) match {
+      case (AcquisitionDateModel("No", _, _, _), Some(rebasedValue)) if rebasedValue.rebasedValueAmt.isEmpty => Future.successful(true)
+      case (_, _) => Future.successful(false)
+    }
+
+  def getPRRModel(model: Option[TotalGainResultsModel], noPRR: Boolean)(implicit hc: HeaderCarrier): Future[Option[PrivateResidenceReliefModel]] = {
+
+    val optionSeq = Seq(model.get.rebasedGain, model.get.timeApportionedGain).flatten
+    val finalSeq = Seq(model.get.flatGain) ++ optionSeq
+
+    (!finalSeq.forall(_ <= 0), noPRR) match {
+      case (true, false) => calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief)
+      case (_, _) => Future.successful(None)
+    }
+  }
+
+  def calculatePRR(answers: TotalGainAnswersModel, privateResidenceReliefModel: Option[PrivateResidenceReliefModel])(implicit hc: HeaderCarrier):
+  Future[Option[CalculationResultsWithPRRModel]] = {
+    privateResidenceReliefModel match {
+      case Some(model) => calcConnector.calculateTaxableGainAfterPRR(answers, model)
+      case None => Future.successful(None)
+    }
+  }
+
+  def generateCorrectDetails(calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel],
+                             privateResidenceReliefModel: Option[PrivateResidenceReliefModel],
+                             totalGainResultsModel: Option[TotalGainResultsModel],
+                             calculationType: String): Future[Seq[QuestionAnswerModel[Any]]] = {
+    privateResidenceReliefModel match {
+      case Some(model) if model.isClaimingPRR == "Yes" => Future.successful(calculationResultsWithPRRModel.get.calculationDetailsRows(calculationType))
+      case _ => Future.successful(totalGainResultsModel.get.calculationDetailsRows(calculationType))
+    }
+  }
+
   val summaryReport = ValidateSession.async { implicit request =>
     for {
-      summary <- answersConstructor.getNRTotalGainAnswers
+      answers <- answersConstructor.getNRTotalGainAnswers
       calculationType <- calcConnector.fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection)
-      result <- resultModel(summary)(hc)
-      taxYear <- getTaxYear(summary.disposalDateModel)
-
+      totalGains <- resultModel(answers)(hc)
+      taxYear <- getTaxYear(answers.disposalDateModel)
+      noPRR <- noPRR(answers.acquisitionDateModel, answers.rebasedValueModel)
+      prrModel <- getPRRModel(totalGains, noPRR)
+      totalGainsWithPRR <- calculatePRR(answers, prrModel)
+      calculationDetails <- generateCorrectDetails(totalGainsWithPRR, prrModel, totalGains, calculationType.get.calculationType)
     } yield {
-      PdfGenerator.ok(summaryView(summary, result.get, taxYear.get, calculationType.get.calculationType),
+      PdfGenerator.ok(summaryView(answers, calculationDetails, taxYear.get, calculationType.get.calculationType, prrModel),
         host).toScala
         .withHeaders("Content-Disposition" ->s"""attachment; filename="${Messages("calc.summary.title")}.pdf"""")
     }
