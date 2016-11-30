@@ -40,7 +40,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget(getData: Option[OtherPropertiesModel]): OtherPropertiesController = {
+  def setupTarget(getData: Option[OtherPropertiesModel], customerTypeData:Option[CustomerTypeModel] = None, currentIncomeData:Option[CurrentIncomeModel] = None): OtherPropertiesController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
@@ -50,11 +50,11 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
     when(mockCalcConnector.saveFormData[OtherPropertiesModel](Matchers.any(), Matchers.any()) (Matchers.any(), Matchers.any()))
       .thenReturn(mock[CacheMap])
 
-    /*when(mockCalcConnector.fetchAndGetFormData[CustomerTypeModel](Matchers.eq(KeystoreKeys.customerType))(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[CustomerTypeModel](Matchers.eq(KeystoreKeys.customerType))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(customerTypeData))
 
     when(mockCalcConnector.fetchAndGetFormData[CurrentIncomeModel](Matchers.eq(KeystoreKeys.currentIncome))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(currentIncomeData))*/
+      .thenReturn(Future.successful(currentIncomeData))
 
     new OtherPropertiesController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -87,7 +87,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
 
       "for a customer type of Individual" should {
 
-        val target = setupTarget(None)
+        val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)), Some(CurrentIncomeModel(100)))
         lazy val result = target.otherProperties(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -106,7 +106,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
 
       "for a Customer Type of Individual with no Current Income" should {
 
-        val target = setupTarget(None)
+        val target = setupTarget(None,Some(CustomerTypeModel(CustomerTypeKeys.individual)), Some(CurrentIncomeModel(0)))
         lazy val result = target.otherProperties(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -125,7 +125,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
 
       "for a Customer Type of Trustee" should {
 
-        val target = setupTarget(None)
+        val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.trustee)))
         lazy val result = target.otherProperties(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -144,7 +144,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
 
       "for a Customer Type of Personal Rep" should {
 
-        val target = setupTarget(None)
+        val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.personalRep)))
         lazy val result = target.otherProperties(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))
 

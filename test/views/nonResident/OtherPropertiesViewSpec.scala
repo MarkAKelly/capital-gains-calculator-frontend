@@ -117,10 +117,6 @@ class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with Fak
         document.body().select("input[type=radio]").attr("id") should include("otherProperties")
       }
 
-      "have inputs using the id otherPropertiesAmt" in {
-        document.body().select("input[type=number]").attr("id") should include("otherPropertiesAmt")
-      }
-
       "have a button" which {
         lazy val button = document.select("button")
 
