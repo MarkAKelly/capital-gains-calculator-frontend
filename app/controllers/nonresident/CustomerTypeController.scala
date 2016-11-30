@@ -16,8 +16,6 @@
 
 package controllers.nonresident
 
-import java.util.UUID
-
 import common.KeystoreKeys
 import common.nonresident.CustomerTypeKeys
 import connectors.CalculatorConnector
@@ -28,9 +26,8 @@ import models.nonresident.{AcquisitionDateModel, CustomerTypeModel, RebasedValue
 import play.api.mvc.{Action, Result}
 import play.api.data.Form
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation.{nonresident => views}
-
 import scala.concurrent.Future
 
 object CustomerTypeController extends CustomerTypeController {
@@ -40,15 +37,15 @@ object CustomerTypeController extends CustomerTypeController {
 
 trait CustomerTypeController extends FrontendController with ValidActiveSession {
 
-  override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
-  override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
+  override val sessionTimeoutUrl: String = controllers.nonresident.routes.SummaryController.restart().url
+  override val homeLink: String = controllers.nonresident.routes.DisposalDateController.disposalDate().url
   val calcConnector: CalculatorConnector
   val calcElectionConstructor: CalculationElectionConstructor
 
   def customerTypeBackUrl(implicit hc: HeaderCarrier): Future[String] = {
 
-    def goBackToImprovements(acquisitionData: AcquisitionDateModel, rebasedData: RebasedValueModel) = {
-      acquisitionData.hasAcquisitionDate == "No" && rebasedData.hasRebasedValue == "No"
+    def skipPRR(acquisitionDate: AcquisitionDateModel, rebasedValue: RebasedValueModel): Boolean = {
+      acquisitionDate.hasAcquisitionDate == "No" && rebasedValue.rebasedValueAmt.isEmpty
     }
 
     val acquisitionDateCall = calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate)
@@ -59,7 +56,7 @@ trait CustomerTypeController extends FrontendController with ValidActiveSession 
       rebasedValue <- rebasedValueCall
     } yield {
       (acquisitionDate, rebasedValue) match {
-        case (Some(date), Some(value)) if goBackToImprovements(date, value) => routes.ImprovementsController.improvements().url
+        case (Some(date), Some(value)) if skipPRR(date, value) => routes.ImprovementsController.improvements().url
         case _ => routes.PrivateResidenceReliefController.privateResidenceRelief().url
       }
     }
@@ -69,10 +66,10 @@ trait CustomerTypeController extends FrontendController with ValidActiveSession 
   val customerType = Action.async { implicit request =>
 
     def routeRequest(backUrl: String): Future[Result] =
-      calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).map{
-      case Some (data) => Ok (views.customerType (customerTypeForm.fill (data), backUrl) )
-      case None => Ok (views.customerType (customerTypeForm, backUrl) )
-    }
+      calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).map {
+        case Some(data) => Ok(views.customerType(customerTypeForm.fill(data), backUrl))
+        case None => Ok(views.customerType(customerTypeForm, backUrl))
+      }
 
     for {
       backUrl <- customerTypeBackUrl
@@ -91,18 +88,19 @@ trait CustomerTypeController extends FrontendController with ValidActiveSession 
 
     def successAction(model: CustomerTypeModel) = {
       for {
-        save <- calcConnector.saveFormData[CustomerTypeModel](KeystoreKeys.customerType, model)
+        _ <- calcConnector.saveFormData[CustomerTypeModel](KeystoreKeys.customerType, model)
         route <- routeRequest(model)
       } yield route
     }
 
     def routeRequest(data: CustomerTypeModel): Future[Result] = {
-      data.customerType match {
-
-        case CustomerTypeKeys.individual => Future.successful(Redirect(routes.CurrentIncomeController.currentIncome()))
-        case CustomerTypeKeys.trustee => Future.successful(Redirect(routes.DisabledTrusteeController.disabledTrustee()))
-        case CustomerTypeKeys.personalRep => Future.successful(Redirect(routes.OtherPropertiesController.otherProperties()))
+      val view  = data.customerType match {
+        case CustomerTypeKeys.individual => routes.CurrentIncomeController.currentIncome()
+        case CustomerTypeKeys.trustee => routes.DisabledTrusteeController.disabledTrustee()
+        case CustomerTypeKeys.personalRep => routes.OtherPropertiesController.otherProperties()
       }
+
+      Future.successful(Redirect(view))
     }
 
     customerTypeForm.bindFromRequest.fold(errorAction, successAction)
