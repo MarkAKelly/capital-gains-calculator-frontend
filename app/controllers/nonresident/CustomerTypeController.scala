@@ -45,15 +45,25 @@ trait CustomerTypeController extends FrontendController with ValidActiveSession 
   val calcConnector: CalculatorConnector
   val calcElectionConstructor: CalculationElectionConstructor
 
-  private def customerTypeBackUrl(implicit hc: HeaderCarrier): Future[String] = {
-    calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).flatMap {
-      case (Some(data)) if data.hasAcquisitionDate.equals("No") =>
-        calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue).flatMap {
-          case (Some(data)) if data.hasRebasedValue.equals("No") => Future.successful(routes.ImprovementsController.improvements().url)
-          case _ => Future.successful(routes.PrivateResidenceReliefController.privateResidenceRelief().url)
-        }
-      case _ => Future.successful(routes.PrivateResidenceReliefController.privateResidenceRelief().url)
+  def customerTypeBackUrl(implicit hc: HeaderCarrier): Future[String] = {
+
+    def goBackToImprovements(acquisitionData: AcquisitionDateModel, rebasedData: RebasedValueModel) = {
+      acquisitionData.hasAcquisitionDate == "No" && rebasedData.hasRebasedValue == "No"
     }
+
+    val acquisitionDateCall = calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate)
+    val rebasedValueCall = calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue)
+
+    for {
+      acquisitionDate <- acquisitionDateCall
+      rebasedValue <- rebasedValueCall
+    } yield {
+      (acquisitionDate, rebasedValue) match {
+        case (Some(date), Some(value)) if goBackToImprovements(date, value) => routes.ImprovementsController.improvements().url
+        case _ => routes.PrivateResidenceReliefController.privateResidenceRelief().url
+      }
+    }
+
   }
 
   val customerType = Action.async { implicit request =>
