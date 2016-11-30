@@ -123,6 +123,10 @@ class PreviousLossOrGainViewSpec extends UnitSpec with WithFakeApplication with 
           linkOne.text shouldBe messages.CGTlink
         }
 
+        "has the href to 'https://www.gov.uk/capital-gains-tax" in {
+          linkOne.attr("href") shouldBe "https://www.gov.uk/capital-gains-tax"
+        }
+
         "has a link with the class 'external-link'" in {
           linkOne.attr("class") shouldBe "external-link"
         }

@@ -193,7 +193,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
       }
 
       "should redirect to the acquisitionDate page" in {
-        redirectLocation(result) shouldBe Some(s"${routes.AcquisitionDateController.acquisitionDate()}")
+        redirecNtLocation(result) shouldBe Some(s"${routes.AcquisitionDateController.acquisitionDate()}")
       }
     }
 
