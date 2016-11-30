@@ -32,16 +32,17 @@ import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
 import controllers.nonresident.AnnualExemptAmountController
-import models.nonresident.{AnnualExemptAmountModel, CustomerTypeModel, DisabledTrusteeModel}
+import models.nonresident.{AnnualExemptAmountModel, CustomerTypeModel, DisabledTrusteeModel, DisposalDateModel}
 
-class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
+class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
   implicit val hc = new HeaderCarrier()
 
   def setupTarget(
                    getData: Option[AnnualExemptAmountModel],
                    customerType: String = CustomerTypeKeys.individual,
-                   disabledTrustee: String = ""
+                   disabledTrustee: String = "",
+                   disposalDate: Option[DisposalDateModel]
                  ): AnnualExemptAmountController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
@@ -52,6 +53,9 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
 
     when(mockCalcConnector.fetchAndGetFormData[CustomerTypeModel](Matchers.eq(KeystoreKeys.customerType))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(CustomerTypeModel(customerType))))
+
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(disposalDate))
 
     when(mockCalcConnector.fetchAndGetFormData[AnnualExemptAmountModel](Matchers.eq(KeystoreKeys.annualExemptAmount))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -78,7 +82,7 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
   "Calling the .annualExemptAmount action" when {
 
     "not supplied with a pre-existing stored model" should {
-      val target = setupTarget(None)
+      val target = setupTarget(None, disposalDate = Some(DisposalDateModel(12, 12, 2015)))
       lazy val result = target.annualExemptAmount(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -86,13 +90,13 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 200
       }
 
-      "have the title 'How much of your Capital Gains Tax allowance have you got left?'" in {
+      s"have the title '${messages.question}'" in {
         document.title shouldEqual messages.question
       }
     }
 
-    "supplied with a pre-existing stored model" should {
-      val target = setupTarget(Some(AnnualExemptAmountModel(1000)))
+    "supplied with a pre-existing stored model and 2016/17 tax date and is disabled trustee" should {
+      val target = setupTarget(Some(AnnualExemptAmountModel(1000)), CustomerTypeKeys.trustee, "Yes", disposalDate = Some(DisposalDateModel(12, 12, 2016)))
       lazy val result = target.annualExemptAmount(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -100,13 +104,59 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 200
       }
 
-      "have the title 'How much of your Capital Gains Tax allowance have you got left?'" in {
+      s"have the title '${messages.question}'" in {
         document.title shouldEqual messages.question
+      }
+
+      s"have the help text '${messages.hint("5,500")}'" in {
+        document.select("#input-hint").text() shouldBe messages.hint("5,500")
+      }
+    }
+
+    "supplied with a 2016/17 tax year date and is not a disabled trustee" should {
+      val target = setupTarget(None, disposalDate = Some(DisposalDateModel(12, 12, 2015)))
+      lazy val result = target.annualExemptAmount(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 200" in {
+        status(result) shouldBe 200
+      }
+
+      s"have the help text '${messages.hint("11,100")}'" in {
+        document.select("#input-hint").text() shouldBe messages.hint("11,100")
+      }
+    }
+
+    "supplied with a 2015/16 tax year date and is disabled trustee" should {
+      val target = setupTarget(None, CustomerTypeKeys.trustee, "Yes", disposalDate = Some(DisposalDateModel(12, 12, 2015)))
+      lazy val result = target.annualExemptAmount(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 200" in {
+        status(result) shouldBe 200
+      }
+
+      s"have the help text '${messages.hint("5,500")}'" in {
+        document.select("#input-hint").text() shouldBe messages.hint("5,500")
+      }
+    }
+
+    "supplied with a 2015/16 tax year date and is not disabled trustee" should {
+      val target = setupTarget(None, disposalDate = Some(DisposalDateModel(12, 12, 2015)))
+      lazy val result = target.annualExemptAmount(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a 200" in {
+        status(result) shouldBe 200
+      }
+
+      s"have the help text '${messages.hint("11,100")}'" in {
+        document.select("#input-hint").text() shouldBe messages.hint("11,100")
       }
     }
 
     "not supplied with a valid session" should {
-      val target = setupTarget(None)
+      val target = setupTarget(None, disposalDate = Some(DisposalDateModel(12, 12, 2016)))
       lazy val result = target.annualExemptAmount(fakeRequest)
 
       "return a 303" in {
@@ -123,7 +173,7 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
   "Calling the .submitAnnualExemptAmount action" when {
 
     "submitting a valid form for a non-trustee" should {
-      val target = setupTarget(None)
+      val target = setupTarget(None, disposalDate = Some(DisposalDateModel(12, 12, 2016)))
       lazy val request = fakeRequestToPOSTWithSession(("annualExemptAmount", "1000"))
       lazy val result = target.submitAnnualExemptAmount(request)
 
@@ -131,13 +181,13 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 303
       }
 
-      "should redirect to the Acquisition Date page" in {
-        redirectLocation(result) shouldBe Some(controllers.nonresident.routes.AcquisitionDateController.acquisitionDate().url)
+      "should redirect to the Brought Forward Losses page" in {
+        redirectLocation(result) shouldBe Some(controllers.nonresident.routes.BroughtForwardLossesController.broughtForwardLosses().url)
       }
     }
 
     "submitting a valid form for a non-vulnerable trustee" should {
-      val target = setupTarget(None, CustomerTypeKeys.trustee, "No")
+      val target = setupTarget(None, CustomerTypeKeys.trustee, "No", disposalDate = Some(DisposalDateModel(12, 12, 2016)))
       lazy val request = fakeRequestToPOSTWithSession(("annualExemptAmount", "1000"))
       lazy val result = target.submitAnnualExemptAmount(request)
 
@@ -145,13 +195,13 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 303
       }
 
-      "should redirect to the Acquisition Date page" in {
-        redirectLocation(result) shouldBe Some(controllers.nonresident.routes.AcquisitionDateController.acquisitionDate().url)
+      "should redirect to the Brought Forward Losses page" in {
+        redirectLocation(result) shouldBe Some(controllers.nonresident.routes.BroughtForwardLossesController.broughtForwardLosses().url)
       }
     }
 
     "submitting a valid form for a vulnerable trustee" should {
-      val target = setupTarget(None, CustomerTypeKeys.trustee, "Yes")
+      val target = setupTarget(None, CustomerTypeKeys.trustee, "Yes", disposalDate = Some(DisposalDateModel(12, 12, 2016)))
       lazy val request = fakeRequestToPOSTWithSession(("annualExemptAmount", "1000"))
       lazy val result = target.submitAnnualExemptAmount(request)
 
@@ -159,13 +209,13 @@ class AnnualExemptAmountSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 303
       }
 
-      "should redirect to the Acquisition Date page" in {
-        redirectLocation(result) shouldBe Some(controllers.nonresident.routes.AcquisitionDateController.acquisitionDate().url)
+      "should redirect to the Brought Forward Losses page" in {
+        redirectLocation(result) shouldBe Some(controllers.nonresident.routes.BroughtForwardLossesController.broughtForwardLosses().url)
       }
     }
 
     "submitting an invalid form" should {
-      val target = setupTarget(None, CustomerTypeKeys.trustee, "Yes")
+      val target = setupTarget(None, CustomerTypeKeys.trustee, "Yes", disposalDate = Some(DisposalDateModel(12, 12, 2016)))
       lazy val request = fakeRequestToPOSTWithSession(("annualExemptAmount", "1000000"))
       lazy val result = target.submitAnnualExemptAmount(request)
       lazy val document = Jsoup.parse(bodyOf(result))

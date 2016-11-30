@@ -124,6 +124,8 @@ calc.otherProperties.link.two = Previous tax years
 ## Annual Exempt Amount ##
 calc.annualExemptAmount.question = How much of your Capital Gains Tax allowance have you got left?
 calc.annualExemptAmount.link.one = Capital Gains Tax allowances
+calc.annualExemptAmount.helpOne = Your Capital Gains Tax allowance is
+calc.annualExemptAmount.helpTwo = a year. It''s the amount of capital gains you can make before you have to pay tax.
 calc.annualExemptAmount.errorMax = Enter a Capital Gains Tax allowance that''s £
 calc.annualExemptAmount.errorMaxEnd = or less
 calc.annualExemptAmount.errorNegative = Enter a positive number for your allowance

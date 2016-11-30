@@ -95,6 +95,7 @@ object MessageLookup {
     object AnnualExemptAmount {
       val question = "How much of your Capital Gains Tax allowance have you got left?"
       val link = "Capital Gains Tax allowances"
+      def hint(amount: String): String = s"Your Capital Gains Tax allowance is £$amount a year. It's the amount of capital gains you can make before you have to pay tax."
       val errorMaxStart = "Enter a Capital Gains Tax allowance that's £"
       val errorMaxEnd = "or less"
       val errorNegative = "Enter a positive number for your allowance"

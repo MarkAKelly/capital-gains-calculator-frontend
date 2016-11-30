@@ -1,8 +1,9 @@
 @import models.nonresident.AnnualExemptAmountModel
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
+@import uk.gov.hmrc.play.views.helpers._
 
-@(annualExemptAmountForm: Form[AnnualExemptAmountModel])(implicit request: Request[_])
+@(annualExemptAmountForm: Form[AnnualExemptAmountModel], maxAEA: BigDecimal)(implicit request: Request[_])
 
 @import views.html.helpers._
 
@@ -19,11 +20,15 @@
 
     @errorSummary(annualExemptAmountForm, "annual-exempt-amount")
 
-    <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
+    <h1 class="heading-xlarge">@Messages("calc.annualExemptAmount.question")</h1>
+
+    <span id="input-hint">
+       <p>@Messages("calc.annualExemptAmount.helpOne") £@MoneyPounds(maxAEA, 0).quantity @Messages("calc.annualExemptAmount.helpTwo")</p>
+    </span>
 
     @form(action = controllers.nonresident.routes.AnnualExemptAmountController.submitAnnualExemptAmount) {
 
-        @formInputMoney(annualExemptAmountForm, "annualExemptAmount", Messages("calc.annualExemptAmount.question"))
+        @formInputMoney(annualExemptAmountForm, "annualExemptAmount", Messages("calc.annualExemptAmount.question"), hideLabel = true)
 
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
 

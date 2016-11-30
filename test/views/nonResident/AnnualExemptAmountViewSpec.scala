@@ -22,25 +22,26 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import forms.nonresident.AnnualExemptAmountForm._
 import org.jsoup.Jsoup
 import views.html.calculation.nonresident.annualExemptAmount
-import assets.MessageLookup.{NonResident => messages}
+import assets.MessageLookup.NonResident.{AnnualExemptAmount => messages}
+import assets.MessageLookup.{NonResident => commonMessages}
 
 class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
   "Annual exempt amount view" when {
 
     "supplied with no errors" should {
-      lazy val view = annualExemptAmount(annualExemptAmountForm(BigDecimal(10000)))(fakeRequest)
+      lazy val view = annualExemptAmount(annualExemptAmountForm(BigDecimal(10000)), 11100)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
-      s"have a title of '${messages.AnnualExemptAmount.question}'" in {
-        document.title() shouldBe messages.AnnualExemptAmount.question
+      s"have a title of '${messages.question}'" in {
+        document.title() shouldBe messages.question
       }
 
       "have a back link" which {
         lazy val backLink = document.body().select("#back-link")
 
-        "has the text 'Back'" in {
-          backLink.text shouldBe messages.back
+        s"has the text '${commonMessages.back}'" in {
+          backLink.text shouldBe commonMessages.back
         }
 
         s"has a route to 'other-properties'" in {
@@ -52,15 +53,15 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
         document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
       }
 
-      "have a heading" which {
+      "have a title" which {
         lazy val heading = document.body().select("h1")
 
         "has a class of heading-large" in {
-          heading.attr("class") shouldBe "heading-large"
+          heading.attr("class") shouldBe "heading-xlarge"
         }
 
-        s"has the text '${messages.pageHeading}'" in {
-          heading.text shouldBe messages.pageHeading
+        s"has the text '${messages.question}'" in {
+          heading.text shouldBe messages.question
         }
       }
 
@@ -89,7 +90,7 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
         }
 
         "has a link with the correct text" in {
-          link.text() shouldBe s"${messages.AnnualExemptAmount.link} ${messages.externalLink}"
+          link.text() shouldBe s"${messages.link} ${commonMessages.externalLink}"
         }
       }
 
@@ -105,8 +106,8 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
         }
       }
 
-      s"have the question '${messages.AnnualExemptAmount.question}'" in {
-        document.body.select("label span").first().text shouldBe messages.AnnualExemptAmount.question
+      s"have the question '${messages.question}'" in {
+        document.body.select("label span").first().text shouldBe messages.question
       }
 
       "have an input with the id 'annualExemptAmount" in {
@@ -132,7 +133,7 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
 
     "supplied with errors" should {
       lazy val form = annualExemptAmountForm(BigDecimal(10000)).bind(Map("annualExemptAmount" -> "15000"))
-      lazy val view = annualExemptAmount(form)(fakeRequest)
+      lazy val view = annualExemptAmount(form, 11100)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have an error summary" in {
