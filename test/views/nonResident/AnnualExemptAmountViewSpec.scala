@@ -30,7 +30,7 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
   "Annual exempt amount view" when {
 
     "supplied with no errors" should {
-      lazy val view = annualExemptAmount(annualExemptAmountForm(BigDecimal(10000)), 11100)(fakeRequest)
+      lazy val view = annualExemptAmount(annualExemptAmountForm(BigDecimal(10000)), 11100, "back-url")(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       s"have a title of '${messages.question}'" in {
@@ -44,8 +44,8 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
           backLink.text shouldBe commonMessages.back
         }
 
-        s"has a route to 'other-properties'" in {
-          backLink.attr("href") shouldBe controllers.nonresident.routes.OtherPropertiesController.otherProperties().url
+        s"has a link to 'back-url'" in {
+          backLink.attr("href") shouldBe "back-url"
         }
       }
 
@@ -133,7 +133,7 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
 
     "supplied with errors" should {
       lazy val form = annualExemptAmountForm(BigDecimal(10000)).bind(Map("annualExemptAmount" -> "15000"))
-      lazy val view = annualExemptAmount(form, 11100)(fakeRequest)
+      lazy val view = annualExemptAmount(form, 11100, "back-url")(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have an error summary" in {

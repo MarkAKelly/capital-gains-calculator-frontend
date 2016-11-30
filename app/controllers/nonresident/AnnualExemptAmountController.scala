@@ -66,14 +66,14 @@ trait AnnualExemptAmountController extends FrontendController with ValidActiveSe
 
   private def fetchPreviousLossAmount(gainOrLoss: String): Future[Option[HowMuchLossModel]] = {
     gainOrLoss match {
-      case "Gain" => calcConnector.fetchAndGetFormData[HowMuchLossModel](KeystoreKeys.howMuchLoss)
+      case "Loss" => calcConnector.fetchAndGetFormData[HowMuchLossModel](KeystoreKeys.howMuchLoss)
       case _ => Future.successful(None)
     }
   }
 
   private def fetchPreviousGainAmount(gainOrLoss: String): Future[Option[HowMuchGainModel]] = {
     gainOrLoss match {
-      case "Loss" => calcConnector.fetchAndGetFormData[HowMuchGainModel](KeystoreKeys.howMuchGain)
+      case "Gain" => calcConnector.fetchAndGetFormData[HowMuchGainModel](KeystoreKeys.howMuchGain)
       case _ => Future.successful(None)
     }
   }
@@ -114,8 +114,8 @@ trait AnnualExemptAmountController extends FrontendController with ValidActiveSe
 
     def routeRequest(model: Option[AnnualExemptAmountModel], maxAEA: BigDecimal, backUrl: String): Future[Result] = {
       calcConnector.fetchAndGetFormData[AnnualExemptAmountModel](KeystoreKeys.annualExemptAmount).map {
-        case Some(data) => Ok(calculation.nonresident.annualExemptAmount(annualExemptAmountForm().fill(data), maxAEA))
-        case None => Ok(calculation.nonresident.annualExemptAmount(annualExemptAmountForm(), maxAEA))
+        case Some(data) => Ok(calculation.nonresident.annualExemptAmount(annualExemptAmountForm().fill(data), maxAEA, backUrl))
+        case None => Ok(calculation.nonresident.annualExemptAmount(annualExemptAmountForm(), maxAEA, backUrl))
       }
     }
 
@@ -136,8 +136,8 @@ trait AnnualExemptAmountController extends FrontendController with ValidActiveSe
 
   val submitAnnualExemptAmount = ValidateSession.async { implicit request =>
 
-    def errorAction(form: Form[AnnualExemptAmountModel], maxAEA: BigDecimal) = {
-      Future.successful(BadRequest(calculation.nonresident.annualExemptAmount(form, maxAEA)))
+    def errorAction(form: Form[AnnualExemptAmountModel], maxAEA: BigDecimal, backUrl: String) = {
+      Future.successful(BadRequest(calculation.nonresident.annualExemptAmount(form, maxAEA, backUrl)))
     }
 
     def successAction(model: AnnualExemptAmountModel) = {
@@ -145,9 +145,9 @@ trait AnnualExemptAmountController extends FrontendController with ValidActiveSe
       Future.successful(Redirect(routes.BroughtForwardLossesController.broughtForwardLosses()))
     }
 
-    def routeRequest(maxAEA: BigDecimal)(implicit hc: HeaderCarrier): Future[Result] = {
+    def routeRequest(maxAEA: BigDecimal, backUrl: String): Future[Result] = {
       annualExemptAmountForm(maxAEA).bindFromRequest.fold(
-        errors => errorAction(errors, maxAEA),
+        errors => errorAction(errors, maxAEA, backUrl),
         success => successAction(success))
     }
 
@@ -157,7 +157,11 @@ trait AnnualExemptAmountController extends FrontendController with ValidActiveSe
       isDisabledTrustee <- trusteeAEA(customerTypeVal)
       taxYear <- Future.successful(Dates.getDisposalYear(disposalDate.get.day, disposalDate.get.month, disposalDate.get.year))
       maxAEA <- fetchMaxAEA(isDisabledTrustee, taxYear)
-      finalResult <- routeRequest(maxAEA.get)
+      previousLossOrGain <- fetchPreviousGainOrLoss(hc)
+      gainAmount <- fetchPreviousGainAmount(previousLossOrGain)
+      lossAmount <- fetchPreviousLossAmount(previousLossOrGain)
+      backUrl <- backUrl(previousLossOrGain, gainAmount, lossAmount)
+      finalResult <- routeRequest(maxAEA.get, backUrl)
     } yield finalResult
   }
 }
