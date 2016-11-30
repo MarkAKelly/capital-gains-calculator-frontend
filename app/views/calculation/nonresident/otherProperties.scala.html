@@ -2,25 +2,7 @@
 @import uk.gov.hmrc.play.views.html.helpers.form
 @import views.html.helpers._
 
-@(otherPropertiesForm: Form[OtherPropertiesModel], backUrl: String, showHiddenQuestion: Boolean)(implicit request: Request[_])
-
-@helpTextWithLink = {
-    @Messages("calc.otherProperties.questionTwo.helpText.start")
-    <a id="helpTextLink" class="external-link" rel="external" href="https://www.gov.uk/capital-gains-tax/work-out-need-to-pay" target="_blank">
-        @Messages("calc.otherProperties.questionTwo.helpText.linkText")
-        <span>@Messages("calc.base.externalLink")</span>
-    </a>
-}
-
-@hiddenYesNoContent = {
-
-    @formInputMoney(
-        otherPropertiesForm,
-        "otherPropertiesAmt",
-        Messages("calc.otherProperties.questionTwo"),
-        Some(helpTextWithLink.toString())
-    )
-}
+@(otherPropertiesForm: Form[OtherPropertiesModel], backUrl: String)(implicit request: Request[_])
 
 @sidebar = {
     <ul>
@@ -45,33 +27,23 @@
 
     @errorSummary(otherPropertiesForm, "other-properties", "otherPropertiesAmt")
 
-    <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
+    <h1 class="heading-xlarge">@Messages("calc.otherProperties.question")</h1>
 
     @form(action = controllers.nonresident.routes.OtherPropertiesController.submitOtherProperties) {
 
         <fieldset>
-            <legend>
-                <p>@Messages("calc.otherProperties.question")</p>
-            </legend>
             <div class="inline form-group">
-            @if(showHiddenQuestion) {
-                @formHiddenYesNoRadio(
-                    otherPropertiesForm,
-                    "otherProperties",
-                    "",
-                    hiddenYesNoContent
-                )
-            } else {
                 @formInputRadioGroup(
                     field = otherPropertiesForm("otherProperties"),
                     Seq(
                     "Yes"->Messages("calc.base.yes"),
                     "No"->Messages("calc.base.no")),
+                    '_legend -> Messages("calc.otherProperties.question"),
+                    '_legendClass -> "visuallyhidden",
                     '_labelAfter -> true,
                     '_labelClass -> "block-label",
                     '_legendID -> "otherProperties"
                 )
-             }
             </div>
         </fieldset>
         <button class="button" type="submit" id="continue-button" >@Messages("calc.base.continue")</button>

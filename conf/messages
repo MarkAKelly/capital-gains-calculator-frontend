@@ -111,7 +111,7 @@ calc.personalAllowance.errorMaxLimit = Enter a Personal Allowance that''s £
 calc.personalAllowance.errorMaxLimitEnd = or less
 
 ## Other Properties ##
-calc.otherProperties.question = In the tax year when you stopped owning the property, did you sell or give away any other UK residential properties?
+calc.otherProperties.question = Did you sell or give away other UK residential properties in the tax year when you stopped owning the property?
 calc.otherProperties.questionTwo = What was your taxable gain?
 calc.otherProperties.questionTwo.helpText.start = How to
 calc.otherProperties.questionTwo.helpText.linkText = work out your total taxable gains

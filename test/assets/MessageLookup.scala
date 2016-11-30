@@ -236,7 +236,7 @@ object MessageLookup {
     }
 
     object OtherProperties {
-      val question = "In the tax year when you stopped owning the property, did you sell or give away any other UK residential properties?"
+      val question = "Did you sell or give away other UK residential properties in the tax year when you stopped owning the property?"
       val questionTwo = "What was your taxable gain?"
       val questionTwoHelpTextStart = "How to"
       val questionTwoHelpTextLinkText = "work out your total taxable gains"
