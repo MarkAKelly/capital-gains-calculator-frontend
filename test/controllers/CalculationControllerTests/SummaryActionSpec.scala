@@ -17,10 +17,8 @@
 package controllers.CalculationControllerTests
 
 import assets.MessageLookup.NonResident.{Summary => messages}
-import assets.MessageLookup.{NonResident => commonMessages}
-import common.DefaultRoutes._
 import common.nonresident.CalculationType
-import common.{KeystoreKeys, TestModels}
+import common.KeystoreKeys
 import connectors.CalculatorConnector
 import constructors.nonresident.AnswersConstructor
 import controllers.helpers.FakeRequestHelper
@@ -42,7 +40,9 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
   def setupTarget(summary: TotalGainAnswersModel,
                   result: TotalGainResultsModel,
-                  calculationElectionModel: CalculationElectionModel
+                  calculationElectionModel: CalculationElectionModel,
+                  privateResidenceReliefModel: Option[PrivateResidenceReliefModel],
+                  calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel]
                  ): SummaryController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
@@ -51,11 +51,17 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
     when(mockAnswersConstructor.getNRTotalGainAnswers(Matchers.any()))
       .thenReturn(Future.successful(summary))
 
-    when(mockCalcConnector.fetchAndGetFormData[CalculationElectionModel](Matchers.any())(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[CalculationElectionModel](Matchers.eq(KeystoreKeys.calculationElection))(Matchers.any(), Matchers.any()))
       .thenReturn(Some(calculationElectionModel))
 
     when(mockCalcConnector.calculateTotalGain(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(Some(result)))
+
+    when(mockCalcConnector.calculateTaxableGainAfterPRR(Matchers.any(), Matchers.any())(Matchers.any()))
+        .thenReturn(Future.successful(calculationResultsWithPRRModel))
+
+    when(mockCalcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.eq(KeystoreKeys.privateResidenceRelief))(Matchers.any(), Matchers.any()))
+      .thenReturn(privateResidenceReliefModel)
 
     new SummaryController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -92,8 +98,11 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
       val target = setupTarget(
         answerModel,
         TotalGainResultsModel(1000, Some(2000), Some(3000)),
-        CalculationElectionModel(CalculationType.flat)
+        CalculationElectionModel(CalculationType.flat),
+        Some(PrivateResidenceReliefModel("Yes", Some(1000), Some(10))),
+        Some(CalculationResultsWithPRRModel(GainsAfterPRRModel(100, 0, 100), None, None))
       )
+
       lazy val result = target.summary()(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -114,7 +123,9 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
       val target = setupTarget(
         answerModel,
         TotalGainResultsModel(1000, None, None),
-        CalculationElectionModel(CalculationType.flat)
+        CalculationElectionModel(CalculationType.flat),
+        None,
+        None
       )
       lazy val result = target.summary()(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
@@ -136,7 +147,9 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
       val target = setupTarget(
         answerModel,
         TotalGainResultsModel(1000, Some(2000), Some(3000)),
-        CalculationElectionModel(CalculationType.flat)
+        CalculationElectionModel(CalculationType.flat),
+        Some(PrivateResidenceReliefModel("Yes", Some(1000), Some(10))),
+        Some(CalculationResultsWithPRRModel(GainsAfterPRRModel(100, 0, 100), None, None))
       )
       lazy val result = target.summary()(fakeRequest)
 
@@ -154,7 +167,9 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
     val target = setupTarget(
       answerModel,
       TotalGainResultsModel(1000, Some(2000), Some(3000)),
-      CalculationElectionModel(CalculationType.flat)
+      CalculationElectionModel(CalculationType.flat),
+      Some(PrivateResidenceReliefModel("Yes", Some(1000), Some(10))),
+      Some(CalculationResultsWithPRRModel(GainsAfterPRRModel(100, 0, 100), None, None))
     )
     lazy val result = target.restart()(fakeRequestWithSession)
 

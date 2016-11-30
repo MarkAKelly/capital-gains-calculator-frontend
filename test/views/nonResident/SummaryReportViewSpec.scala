@@ -48,9 +48,10 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
         ImprovementsModel("Yes", Some(10), Some(20)),
         Some(OtherReliefsModel(1000)))
 
-      val resultsModel = TotalGainResultsModel(1000, Some(2000), Some(3000))
+      val questionAnswer = QuestionAnswerModel[String]("text", "1000", "test-question", None)
+      val seqQuestionAnswers = Seq(questionAnswer, questionAnswer)
 
-      lazy val view = summaryReport(answersModel, resultsModel, taxYear,
+      lazy val view = summaryReport(answersModel, seqQuestionAnswers, taxYear,
         sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
       lazy val document = Jsoup.parse(view.body)
 
@@ -153,8 +154,10 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
         ImprovementsModel("Yes", Some(10), Some(20)),
         Some(OtherReliefsModel(1000)))
 
-      val resultsModel = TotalGainResultsModel(1000, Some(2000), Some(3000))
-      lazy val view = summaryReport(answersModel, resultsModel, taxYear,
+      val questionAnswer = QuestionAnswerModel[String]("text", "1000", "test-question", None)
+      val seqQuestionAnswers = Seq(questionAnswer, questionAnswer)
+
+      lazy val view = summaryReport(answersModel, seqQuestionAnswers, taxYear,
         sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
       lazy val document = Jsoup.parse(view.body)
 
@@ -193,9 +196,10 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
         ImprovementsModel("Yes", Some(10), Some(20)),
         Some(OtherReliefsModel(1000)))
 
-      val resultsModel = TotalGainResultsModel(-1000, Some(2000), Some(3000))
+      val questionAnswer = QuestionAnswerModel[String]("text", "1000", "test-question", None)
+      val seqQuestionAnswers = Seq(questionAnswer, questionAnswer)
 
-      lazy val view = summaryReport(answersModel, resultsModel, taxYear,
+      lazy val view = summaryReport(answersModel, seqQuestionAnswers, taxYear,
         sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
       lazy val document = Jsoup.parse(view.body)
 
