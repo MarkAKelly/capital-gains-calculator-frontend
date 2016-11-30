@@ -42,7 +42,8 @@ class ReportActionSpec extends UnitSpec with WithFakeApplication with FakeReques
     totalGainResultsModel: Option[TotalGainResultsModel],
     taxYearModel: Option[TaxYearModel],
     calculationElectionModel: CalculationElectionModel,
-    prrModel: Option[PrivateResidenceReliefModel] = None
+    prrModel: Option[PrivateResidenceReliefModel] = None,
+    calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel] = None
   ): ReportController = {
 
     lazy val mockCalculatorConnector = mock[CalculatorConnector]
@@ -59,6 +60,9 @@ class ReportActionSpec extends UnitSpec with WithFakeApplication with FakeReques
 
     when(mockCalculatorConnector.getTaxYear(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(taxYearModel))
+
+    when(mockCalculatorConnector.calculateTaxableGainAfterPRR(Matchers.any(), Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(calculationResultsWithPRRModel))
 
     when(mockCalculatorConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.eq(KeystoreKeys.privateResidenceRelief))
       (Matchers.any(), Matchers.any()))
@@ -139,7 +143,8 @@ class ReportActionSpec extends UnitSpec with WithFakeApplication with FakeReques
         Some(TotalGainResultsModel(1000, None, None)),
         Some(taxYear),
         CalculationElectionModel(CalculationType.flat),
-        Some(PrivateResidenceReliefModel("Yes", Some(200), None))
+        Some(PrivateResidenceReliefModel("Yes", Some(200), None)),
+        Some(CalculationResultsWithPRRModel(GainsAfterPRRModel(10000, 2000, 1000), None, None))
       )
 
       lazy val result = target.summaryReport(fakeRequestWithSession)

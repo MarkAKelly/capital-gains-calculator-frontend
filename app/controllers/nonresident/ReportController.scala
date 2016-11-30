@@ -70,6 +70,24 @@ trait ReportController extends FrontendController with ValidActiveSession {
     }
   }
 
+  def calculatePRR(answers: TotalGainAnswersModel, privateResidenceReliefModel: Option[PrivateResidenceReliefModel])(implicit hc: HeaderCarrier):
+  Future[Option[CalculationResultsWithPRRModel]] = {
+    privateResidenceReliefModel match {
+      case Some(model) => calcConnector.calculateTaxableGainAfterPRR(answers, model)
+      case None => Future.successful(None)
+    }
+  }
+
+  def generateCorrectDetails(calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel],
+                             privateResidenceReliefModel: Option[PrivateResidenceReliefModel],
+                             totalGainResultsModel: Option[TotalGainResultsModel],
+                             calculationType: String): Future[Seq[QuestionAnswerModel[Any]]] = {
+    privateResidenceReliefModel match {
+      case Some(model) if model.isClaimingPRR == "Yes" => Future.successful(calculationResultsWithPRRModel.get.calculationDetailsRows(calculationType))
+      case _ => Future.successful(totalGainResultsModel.get.calculationDetailsRows(calculationType))
+    }
+  }
+
   val summaryReport = ValidateSession.async { implicit request =>
     for {
       answers <- answersConstructor.getNRTotalGainAnswers
@@ -78,9 +96,10 @@ trait ReportController extends FrontendController with ValidActiveSession {
       taxYear <- getTaxYear(answers.disposalDateModel)
       noPRR <- noPRR(answers.acquisitionDateModel, answers.rebasedValueModel)
       prrModel <- getPRRModel(totalGains, noPRR)
-
+      totalGainsWithPRR <- calculatePRR(answers, prrModel)
+      calculationDetails <- generateCorrectDetails(totalGainsWithPRR, prrModel, totalGains, calculationType.get.calculationType)
     } yield {
-      PdfGenerator.ok(summaryView(answers, totalGains.get, taxYear.get, calculationType.get.calculationType, prrModel),
+      PdfGenerator.ok(summaryView(answers, calculationDetails, taxYear.get, calculationType.get.calculationType, prrModel),
         host).toScala
         .withHeaders("Content-Disposition" ->s"""attachment; filename="${Messages("calc.summary.title")}.pdf"""")
     }
