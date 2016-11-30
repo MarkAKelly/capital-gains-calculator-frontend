@@ -253,6 +253,8 @@ object MessageLookup {
       val loss = "Loss"
       val gain = "Gain"
       val neither = "Neither, I broke even"
+      val CGTlink = "Capital Gains Tax"
+      val previousTaxLink = "Previous tax years"
     }
 
     object OtherReliefs {

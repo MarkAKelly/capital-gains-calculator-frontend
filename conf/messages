@@ -248,6 +248,8 @@ calc.previousLossOrGain.errors.required = Please tell us whether you made a gain
 calc.previousLossOrGain.loss = Loss
 calc.previousLossOrGain.gain = Gain
 calc.previousLossOrGain.neither = Neither, I broke even
+calc.previousLossOrGain.CGTLink = Capital Gains Tax
+calc.previousLossOrGain.previousTaxLink = Previous tax years
 
 ## Who did you give the property to ##
 calc.resident.whoDidYouGiveThePropertyTo.title = Who did you give the property to?
