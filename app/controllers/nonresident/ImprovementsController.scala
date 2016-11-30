@@ -123,8 +123,8 @@ trait ImprovementsController extends FrontendController with ValidActiveSession 
 
         (!finalSeq.forall(_ <= 0), skipPRR) match {
           case (true, false) => Redirect(routes.PrivateResidenceReliefController.privateResidenceRelief())
-          case (_, true) => Redirect(controllers.nonresident.routes.CustomerTypeController.customerType())
-          case (false, false) => Redirect(routes.CheckYourAnswersController.checkYourAnswers())
+          case (true, true) => Redirect(controllers.nonresident.routes.CustomerTypeController.customerType())
+          case (_, _) => Redirect(routes.CheckYourAnswersController.checkYourAnswers())
         }
       }
     }
