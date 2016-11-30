@@ -33,6 +33,7 @@ import controllers.helpers.FakeRequestHelper
 import scala.concurrent.Future
 import controllers.nonresident.{ImprovementsController, routes}
 import models.nonresident._
+import uk.gov.hmrc.http.cache.client.CacheMap
 
 class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
@@ -62,6 +63,8 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
     when(mockCalcConnector.calculateTotalGain(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(totalGainResultsModel))
 
+    when(mockCalcConnector.saveFormData[ImprovementsModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(mock[CacheMap]))
 
     new ImprovementsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -162,7 +165,6 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
           document.body.getElementById("back-link").attr("href") shouldEqual routes.RebasedValueController.rebasedValue().url
         }
       }
-
 
       "when Acquisition Date is supplied and <= 5 April 2015" +
         "and no rebased value is supplied" should {
