@@ -57,8 +57,14 @@ class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with Fak
         document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
       }
 
-      s"have the question '${messages.question}' as the legend of the input" in {
-        document.body.getElementsByTag("legend").text should include(messages.question)
+      s"have a legend of the input" which {
+        lazy val legend = document.body.getElementsByTag("legend")
+        s"has the text ${messages.question}" in {
+          legend.text should include(messages.question)
+        }
+        "has the class 'visuallyhidden'" in {
+          legend.attr("class") shouldBe "visuallyhidden"
+        }
       }
 
       "include a read more section" which {
