@@ -16,7 +16,6 @@
 
 package controllers.CalculationControllerTests
 
-import common.TestModels._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import play.api.test.Helpers._
@@ -27,6 +26,7 @@ import org.scalatest.mock.MockitoSugar
 import controllers.helpers.FakeRequestHelper
 import controllers.nonresident.ReportController
 import assets.MessageLookup.{SummaryPage => messages}
+import common.KeystoreKeys
 import constructors.nonresident.AnswersConstructor
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import models.nonresident._
@@ -34,14 +34,16 @@ import common.nonresident.CalculationType
 
 import scala.concurrent.Future
 
-class ReportSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
+class ReportActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
   def setupTarget
   (
     totalGainAnswersModel: TotalGainAnswersModel,
     totalGainResultsModel: Option[TotalGainResultsModel],
     taxYearModel: Option[TaxYearModel],
-    calculationElectionModel: CalculationElectionModel
+    calculationElectionModel: CalculationElectionModel,
+    prrModel: Option[PrivateResidenceReliefModel] = None,
+    calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel] = None
   ): ReportController = {
 
     lazy val mockCalculatorConnector = mock[CalculatorConnector]
@@ -50,7 +52,7 @@ class ReportSpec extends UnitSpec with WithFakeApplication with FakeRequestHelpe
     when(mockAnswersConstructor.getNRTotalGainAnswers(Matchers.any()))
       .thenReturn(Future.successful(totalGainAnswersModel))
 
-    when(mockCalculatorConnector.fetchAndGetFormData[CalculationElectionModel](Matchers.any())(Matchers.any(), Matchers.any()))
+    when(mockCalculatorConnector.fetchAndGetFormData[CalculationElectionModel](Matchers.eq(KeystoreKeys.calculationElection))(Matchers.any(), Matchers.any()))
       .thenReturn(Some(calculationElectionModel))
 
     when(mockCalculatorConnector.calculateTotalGain(Matchers.any())(Matchers.any()))
@@ -58,6 +60,13 @@ class ReportSpec extends UnitSpec with WithFakeApplication with FakeRequestHelpe
 
     when(mockCalculatorConnector.getTaxYear(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(taxYearModel))
+
+    when(mockCalculatorConnector.calculateTaxableGainAfterPRR(Matchers.any(), Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(calculationResultsWithPRRModel))
+
+    when(mockCalculatorConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.eq(KeystoreKeys.privateResidenceRelief))
+      (Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(prrModel))
 
     new ReportController {
       override val calcConnector: CalculatorConnector = mockCalculatorConnector
@@ -125,7 +134,39 @@ class ReportSpec extends UnitSpec with WithFakeApplication with FakeRequestHelpe
 
     }
 
-    "the calculation chosen is rebased" should {
+    "the calculation chosen is flat with some PRR" should {
+
+      lazy val taxYear = TaxYearModel("2016-12-12", true, "16")
+
+      lazy val target = setupTarget(
+        model,
+        Some(TotalGainResultsModel(1000, None, None)),
+        Some(taxYear),
+        CalculationElectionModel(CalculationType.flat),
+        Some(PrivateResidenceReliefModel("Yes", Some(200), None)),
+        Some(CalculationResultsWithPRRModel(GainsAfterPRRModel(10000, 2000, 1000), None, None))
+      )
+
+      lazy val result = target.summaryReport(fakeRequestWithSession)
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "return a pdf" in {
+        contentType(result) shouldBe Some("application/pdf")
+      }
+
+      "return a pdf as an attachment" in {
+        header("Content-Disposition", result).get should include("attachment")
+      }
+
+      "return the pdf with a filename of 'Summary'" in {
+        header("Content-Disposition", result).get should include(s"""filename="${messages.title}.pdf"""")
+      }
+    }
+
+      "the calculation chosen is rebased" should {
 
       lazy val taxYear = TaxYearModel("2016-12-12", true, "16")
 

@@ -20,7 +20,7 @@ import common.{KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
 import constructors.nonresident.AnswersConstructor
 import controllers.predicates.ValidActiveSession
-import models.nonresident._
+import models.nonresident.{CalculationResultsWithPRRModel, _}
 import play.api.mvc.{Action, AnyContent, Result}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HeaderCarrier
@@ -42,6 +42,29 @@ trait SummaryController extends FrontendController with ValidActiveSession {
 
   val summary = ValidateSession.async { implicit request =>
 
+    def getPRRModel(implicit hc: HeaderCarrier, totalGainResultsModel: TotalGainResultsModel): Future[Option[PrivateResidenceReliefModel]] = {
+      val optionSeq = Seq(totalGainResultsModel.rebasedGain, totalGainResultsModel.timeApportionedGain).flatten
+      val finalSeq = Seq(totalGainResultsModel.flatGain) ++ optionSeq
+
+      if (!finalSeq.forall(_ <= 0)) {
+        val prrModel = calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief)
+
+        for {
+          prrModel <- prrModel
+        } yield prrModel
+      } else Future(None)
+    }
+
+    def getSection(calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel],
+                   privateResidenceReliefModel: Option[PrivateResidenceReliefModel],
+                   totalGainResultsModel: TotalGainResultsModel,
+                   calculationType: String): Future[Seq[QuestionAnswerModel[Any]]] = {
+      privateResidenceReliefModel match {
+        case Some(model) if model.isClaimingPRR == "Yes" => Future.successful(calculationResultsWithPRRModel.get.calculationDetailsRows(calculationType))
+        case _ => Future.successful(totalGainResultsModel.calculationDetailsRows(calculationType))
+      }
+    }
+
     def summaryBackUrl(model: Option[TotalGainResultsModel])(implicit hc: HeaderCarrier): Future[String] = model match {
       case (Some(data)) if data.rebasedGain.isDefined || data.timeApportionedGain.isDefined =>
         Future.successful(routes.CalculationElectionController.calculationElection().url)
@@ -58,20 +81,32 @@ trait SummaryController extends FrontendController with ValidActiveSession {
       calcConnector.calculateTotalGain(summaryData)
     }
 
-    def routeRequest(calculationResult: Option[TotalGainResultsModel],
+    def calculatePRR(answers: TotalGainAnswersModel, privateResidenceReliefModel: Option[PrivateResidenceReliefModel])
+      : Future[Option[CalculationResultsWithPRRModel]] = {
+        privateResidenceReliefModel match {
+          case Some(model) => calcConnector.calculateTaxableGainAfterPRR(answers, model)
+          case None => Future.successful(None)
+        }
+    }
+
+    def routeRequest(result: Seq[QuestionAnswerModel[Any]],
                      backUrl: String, displayDateWarning: Boolean,
                      calculationType: String): Future[Result] = {
-      Future.successful(Ok(calculation.nonresident.summary(calculationResult.get, backUrl, displayDateWarning,
-        calculationType)))
+      Future.successful(Ok(calculation.nonresident.summary(result,
+        backUrl, displayDateWarning, calculationType)))
     }
 
     for {
       answers <- answersConstructor.getNRTotalGainAnswers(hc)
       displayWarning <- displayDateWarning(answers.disposalDateModel)
-      calculationDetails <- calculateDetails(answers)
-      backUrl <- summaryBackUrl(calculationDetails)
+      totalGainResultsModel <- calculateDetails(answers)
+      privateResidentReliefModel <- getPRRModel(hc, totalGainResultsModel.get)
+      calculationResultsWithPRR <- calculatePRR(answers, privateResidentReliefModel)
+      backUrl <- summaryBackUrl(totalGainResultsModel)
       calculationType <- calcConnector.fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection)
-      route <- routeRequest(calculationDetails, backUrl, displayWarning,
+      results <- getSection(calculationResultsWithPRR, privateResidentReliefModel,
+        totalGainResultsModel.get, calculationType.get.calculationType)
+      route <- routeRequest(results, backUrl, displayWarning,
         calculationType.get.calculationType)
     } yield route
   }

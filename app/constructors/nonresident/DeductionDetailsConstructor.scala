@@ -17,17 +17,30 @@
 package constructors.nonresident
 
 import models.nonresident._
-import common.{KeystoreKeys => keys}
-import common.nonresident.{CalculationType => calculationKeys}
-import controllers.nonresident.routes
+import common.{Dates, TaxDates, KeystoreKeys => keys}
 import play.api.i18n.Messages
 
 object DeductionDetailsConstructor {
 
-  def deductionDetailsRows(answers: TotalGainAnswersModel): Seq[QuestionAnswerModel[Any]] = {
-    val otherReliefsFlatValue = otherReliefsFlatValueRow(answers)
+  def datesNotValidCheck(acquisitionDateModel: AcquisitionDateModel, disposalDateModel: DisposalDateModel): Boolean = {
+    acquisitionDateModel match {
+      case AcquisitionDateModel("Yes",_,_,_) if acquisitionDateModel.get.plusMonths(18).isBefore(disposalDateModel.get)=> true
+      case _ => false
+    }
+  }
 
-    val sequence = Seq(otherReliefsFlatValue)
+  def deductionDetailsRows(answers: TotalGainAnswersModel,
+                           privateResidenceReliefModel: Option[PrivateResidenceReliefModel] = None): Seq[QuestionAnswerModel[Any]] = {
+
+    val otherReliefsFlatValue = otherReliefsFlatValueRow(answers)
+    val privateResidenceReliefQuestion = privateResidenceReliefQuestionRow(privateResidenceReliefModel)
+    val privateResidenceReliefDaysClaimed = privateResidenceReliefDaysClaimedRow(privateResidenceReliefModel, answers)
+    val privateResidenceReliefDaysClaimedAfter = privateResidenceReliefDaysClaimedAfterRow(privateResidenceReliefModel, answers)
+
+    val sequence = Seq(otherReliefsFlatValue,
+      privateResidenceReliefQuestion,
+      privateResidenceReliefDaysClaimed,
+      privateResidenceReliefDaysClaimedAfter)
 
     sequence.flatten
   }
@@ -40,6 +53,58 @@ object DeductionDetailsConstructor {
         Messages("calc.otherReliefs.question"),
         Some(controllers.nonresident.routes.OtherReliefsController.otherReliefs().url)
       ))
+      case _ => None
+    }
+  }
+
+  def privateResidenceReliefQuestionRow(prr: Option[PrivateResidenceReliefModel]): Option[QuestionAnswerModel[String]] = {
+    prr match {
+      case Some(PrivateResidenceReliefModel(answer, _, _)) => Some(QuestionAnswerModel(
+        keys.privateResidenceRelief,
+        answer,
+        Messages("calc.privateResidenceRelief.question"),
+        Some(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url)
+      ))
+      case _ => None
+    }
+  }
+
+  def privateResidenceReliefDaysClaimedRow(prr: Option[PrivateResidenceReliefModel],
+                                           answers: TotalGainAnswersModel): Option[QuestionAnswerModel[String]] = {
+    prr match {
+      case Some(PrivateResidenceReliefModel("Yes", Some(value), _)) if datesNotValidCheck(answers.acquisitionDateModel, answers.disposalDateModel) =>
+        Some(QuestionAnswerModel(
+          s"${keys.privateResidenceRelief}-daysClaimed",
+          value.toString(),
+          s"${Messages("calc.privateResidenceRelief.questionBefore.partOne")} ${Dates.dateMinusMonths(answers.disposalDateModel, 18)}" +
+            s" ${Messages("calc.privateResidenceRelief.questionBefore.partTwo")}",
+          Some(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url)
+        ))
+      case _ => None
+    }
+  }
+
+  def privateResidenceReliefDaysClaimedAfterRow(prr: Option[PrivateResidenceReliefModel],
+                                                answers: TotalGainAnswersModel): Option[QuestionAnswerModel[String]] = {
+    (prr, answers.acquisitionDateModel, answers.rebasedValueModel) match {
+      case (Some(PrivateResidenceReliefModel("Yes", _, Some(value))), AcquisitionDateModel("Yes",_,_,_), _)
+      if !TaxDates.dateAfterStart(answers.acquisitionDateModel.get) && TaxDates.dateAfterOctober(answers.disposalDateModel.get) =>
+        Some(QuestionAnswerModel(
+          s"${keys.privateResidenceRelief}-daysClaimedAfter",
+          value.toString(),
+          s"${Messages("calc.privateResidenceRelief.questionBetween.partOne")} ${Dates.dateMinusMonths(answers.disposalDateModel, 18)}" +
+            s" ${Messages("calc.privateResidenceRelief.questionBetween.partTwo")}",
+          Some(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url)
+        ))
+      case (Some(PrivateResidenceReliefModel("Yes", _, Some(value))), _, Some(RebasedValueModel(Some(_))))
+      if TaxDates.dateAfterOctober(answers.disposalDateModel.get) =>
+        Some(QuestionAnswerModel(
+          s"${keys.privateResidenceRelief}-daysClaimedAfter",
+          value.toString(),
+          s"${Messages("calc.privateResidenceRelief.questionBetween.partOne")} ${Dates.dateMinusMonths(answers.disposalDateModel, 18)}" +
+            s" ${Messages("calc.privateResidenceRelief.questionBetween.partTwo")}",
+          Some(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url)
+        ))
       case _ => None
     }
   }

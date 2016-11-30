@@ -405,6 +405,7 @@ object MessageLookup {
       val usedAEA = "Capital Gains Tax allowance used"
       val taxableGain = "Your taxable gain"
       val taxRate = "Your tax rate"
+      val prrUSed = "Private resident relief used"
       val personalDetailsTitle = "Personal details"
       val purchaseDetailsTitle = "Owning the property"
       val propertyDetailsTitle = "Property details"

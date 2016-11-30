@@ -16,13 +16,14 @@
 
 package controllers.nonresident
 
-import common.KeystoreKeys
+import common.{DefaultRoutes, KeystoreKeys}
 import common.nonresident.CalculationType
 import connectors.CalculatorConnector
 import constructors.nonresident.{AnswersConstructor, CalculationElectionConstructor, YourAnswersConstructor}
 import controllers.predicates.ValidActiveSession
-import models.nonresident.{CalculationElectionModel, TotalGainResultsModel}
+import models.nonresident._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation
 
 import scala.concurrent.Future
@@ -40,14 +41,39 @@ trait CheckYourAnswersController extends FrontendController with ValidActiveSess
 
   val answersConstructor: AnswersConstructor
   val calculatorConnector: CalculatorConnector
-  val backLink = controllers.nonresident.routes.ImprovementsController.improvements().url
 
+  def getBackLink(totalGainResultsModel: TotalGainResultsModel,
+                acquisitionDateController: AcquisitionDateModel,
+                rebasedValueModel: Option[RebasedValueModel]): Future[String] = {
+    val optionSeq = Seq(totalGainResultsModel.rebasedGain, totalGainResultsModel.timeApportionedGain).flatten
+    val finalSeq = Seq(totalGainResultsModel.flatGain) ++ optionSeq
+    if (!finalSeq.forall(_ <= 0))
+      Future.successful(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url)
+    else
+      Future.successful(controllers.nonresident.routes.ImprovementsController.improvements().url)
+  }
+
+  def getPRRModel(implicit hc: HeaderCarrier, totalGainResultsModel: TotalGainResultsModel): Future[Option[PrivateResidenceReliefModel]] = {
+    val optionSeq = Seq(totalGainResultsModel.rebasedGain, totalGainResultsModel.timeApportionedGain).flatten
+    val finalSeq = Seq(totalGainResultsModel.flatGain) ++ optionSeq
+
+    if (!finalSeq.forall(_ <= 0)) {
+      val prrModel = calculatorConnector.fetchAndGetFormData[PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief)
+
+      for {
+        prrModel <- prrModel
+      } yield prrModel
+    } else Future(None)
+  }
 
   val checkYourAnswers = ValidateSession.async { implicit request =>
 
     for {
       model <- answersConstructor.getNRTotalGainAnswers
-      answers <- Future.successful(YourAnswersConstructor.fetchYourAnswers(model))
+      totalGainResult <- calculatorConnector.calculateTotalGain(model)
+      prrModel <- getPRRModel(hc, totalGainResult.get)
+      answers <- Future.successful(YourAnswersConstructor.fetchYourAnswers(model, prrModel))
+      backLink <- getBackLink(totalGainResult.get, model.acquisitionDateModel, model.rebasedValueModel)
     } yield {
       Ok(calculation.nonresident.checkYourAnswers(answers, backLink))
     }
