@@ -29,11 +29,11 @@
 
     @errorSummary(personalAllowanceForm, "personal-allowance")
 
-    <h1 class="heading-xlarge">@Messages("calc.personalAllowance.question")</h1>
+    <h1 class="heading-xlarge">@Messages("calc.base.pageHeading")</h1>
 
     @form(action = controllers.nonresident.routes.PersonalAllowanceController.submitPersonalAllowance) {
 
-        @formInputMoney(personalAllowanceForm, "personalAllowance", Messages("calc.personalAllowance.question"), hideLabel = true)
+        @formInputMoney(personalAllowanceForm, "personalAllowance", Messages("calc.personalAllowance.question"))
 
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
 

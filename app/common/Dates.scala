@@ -58,11 +58,9 @@ object Dates {
     }
   }
 
-  def getCurrentYear: Int = {
-    val now = LocalDate.now()
-    val year = now.getYear
-
-    if (now.isAfter(LocalDate.parse(s"${year.toString}-$taxYearEnd"))) {
+  def getDisposalYear(day: Int, month: Int, year: Int): Int = {
+    val disposalYear = LocalDate.of(year, month, day)
+    if (disposalYear.isAfter(LocalDate.parse(s"${year.toString}-$taxYearEnd"))) {
       year + 1
     }
     else {
