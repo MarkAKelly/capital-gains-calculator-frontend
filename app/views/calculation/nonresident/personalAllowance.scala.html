@@ -4,36 +4,29 @@
 
 @(personalAllowanceForm: Form[PersonalAllowanceModel])(implicit request: Request[_])
 
-@sidebar = {
-    <ul>
-        <li>
-            <a id="helpLink1" class="external-link" rel="external" href="https://www.gov.uk/income-tax-rates/current-rates-and-allowances"
-                target="_blank" data-journey-click="help:govUK:currentRatesAndAllowances">
-                @Messages("calc.personalAllowance.linkOne")
-                <span>@Messages("calc.base.externalLink")</span>
-            </a>
-        </li>
-        <li>
-            <a id="helpLink2" class="external-link" rel="external" href="https://www.gov.uk/tax-uk-income-live-abroad/personal-allowance"
-                target="_blank" data-journey-click="help:govUK:personalAllowances">
-                @Messages("calc.personalAllowance.linkTwo")
-                <span>@Messages("calc.base.externalLink")</span>
-            </a>
-        </li>
-    </ul>
+@helpLink = {
+    <a id="helpLink2" class="external-link" rel="external" href="https://www.gov.uk/government/publications/rates-and-allowances-income-tax/income-tax-rates-and-allowances-current-and-past"
+       target="_blank" data-journey-click="help:govUK:personalAllowancesCurrentAndPast">
+        @Messages("calc.personalAllowance.link")
+        <span>@Messages("calc.base.externalLink")</span>
+    </a>
 }
 
-@main_template(Messages("calc.personalAllowance.question"), sidebarLinks = Some(sidebar)) {
+@helpAndLink = {
+    <p>@Messages("calc.personalAllowance.help") @helpLink</p>
+}
+
+@main_template(Messages("calc.personalAllowance.question")) {
 
     <a id="back-link" class="back-link" href="@controllers.nonresident.routes.CurrentIncomeController.currentIncome">@Messages("calc.base.back")</a>
 
     @errorSummary(personalAllowanceForm, "personal-allowance")
 
-    <h1 class="heading-xlarge">@Messages("calc.base.pageHeading")</h1>
+    <h1 class="heading-xlarge">@Messages("calc.personalAllowance.question")</h1>
 
     @form(action = controllers.nonresident.routes.PersonalAllowanceController.submitPersonalAllowance) {
 
-        @formInputMoney(personalAllowanceForm, "personalAllowance", Messages("calc.personalAllowance.question"))
+        @formInputMoneyHTML(personalAllowanceForm, "personalAllowance", Messages("calc.personalAllowance.question"), helpText = Some(helpAndLink), hideLabel = true)
 
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
 

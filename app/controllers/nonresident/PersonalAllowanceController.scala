@@ -16,15 +16,14 @@
 
 package controllers.nonresident
 
-import common.KeystoreKeys
+import common.{Dates, KeystoreKeys}
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.PersonalAllowanceForm._
-import models.nonresident.{DisposalDateModel, OtherReliefsModel, PersonalAllowanceModel}
+import models.nonresident.{DisposalDateModel, PersonalAllowanceModel}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import views.html.calculation
-import common.Dates._
-import uk.gov.hmrc.play.http.HeaderCarrier
+import play.api.data.Form
 
 import scala.concurrent.Future
 
@@ -47,29 +46,26 @@ trait PersonalAllowanceController extends FrontendController with ValidActiveSes
 
   val submitPersonalAllowance = ValidateSession.async { implicit request =>
 
-//    def getDisposalDate(implicit hc: HeaderCarrier): Future[Option[DisposalDateModel]] = {
-//      calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.disposalDate)
-//    }
-//
-//    def getDisposalYearPersonalAllowance()(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
-//
-//    }
-
-
-
-    // get the disposal date
-    // parse it into an int
-    // get the personal allowance from the tax year of disposal
-
-    calcConnector.getPA(2017).flatMap { pa =>
-      personalAllowanceForm(pa.get).bindFromRequest.fold(
-        errors => Future.successful(BadRequest(calculation.nonresident.personalAllowance(errors))),
-        success => {
-          calcConnector.saveFormData(KeystoreKeys.personalAllowance, success)
-          Future.successful(Redirect(routes.OtherPropertiesController.otherProperties()))
-        }
-      )
+    def getPersonalAllowanceForYear: Future[BigDecimal] = {
+      for {
+        disposalDate <- calcConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.disposalDate)
+        disposalYear <- Future.successful(Dates.getDisposalYear(disposalDate.get.day, disposalDate.get.month, disposalDate.get.year))
+        yearsAllowance <- calcConnector.getPA(disposalYear)
+      } yield yearsAllowance.get
     }
-  }
 
+    def errorAction(form: Form[PersonalAllowanceModel]) = {
+      Future.successful(BadRequest(calculation.nonresident.personalAllowance(form)))
+    }
+
+    def successAction(model: PersonalAllowanceModel) = {
+      calcConnector.saveFormData[PersonalAllowanceModel] (KeystoreKeys.personalAllowance, model)
+      Future.successful(Redirect(routes.OtherPropertiesController.otherProperties()))
+    }
+
+    for {
+      pA <- getPersonalAllowanceForYear
+      action <- personalAllowanceForm(pA).bindFromRequest.fold(errorAction, successAction)
+    } yield action
+  }
 }
