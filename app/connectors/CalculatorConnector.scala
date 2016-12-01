@@ -20,7 +20,7 @@ import common.Dates._
 import common.KeystoreKeys
 import common.KeystoreKeys.{ResidentPropertyKeys, ResidentShareKeys}
 import config.{CalculatorSessionCache, WSHttp}
-import constructors.nonresident.{CalculateRequestConstructor, PrivateResidenceReliefRequestConstructor, TotalGainRequestConstructor}
+import constructors.nonresident.{CalculateRequestConstructor, FinalTaxAnswersRequestConstructor, PrivateResidenceReliefRequestConstructor, TotalGainRequestConstructor}
 import constructors.resident.{shares, properties => propertyConstructor}
 import models._
 import play.api.libs.json.Format
@@ -68,6 +68,21 @@ trait CalculatorConnector {
         PrivateResidenceReliefRequestConstructor.privateResidenceReliefQuery(totalGainAnswersModel, privateResidenceReliefModel)
     }")
   }
+
+  //########################################################################################################################################
+
+  def calculateNRCGTTotalTax(totalGainAnswersModel: nonresident.TotalGainAnswersModel,
+                             privateResidenceReliefModel: nonresident.PrivateResidenceReliefModel,
+                             totalTaxPersonalDetailsModel: nonresident.TotalPersonalDetailsCalculationModel)(implicit hc: HeaderCarrier):
+  Future[Option[nonresident.CalculationResultsWithTaxOwedModel]] = {
+    http.GET[Option[nonresident.CalculationResultsWithTaxOwedModel]](s"$serviceUrl/capital-gains-calculator/non-resident/calculate-total-tax-owed?${
+      TotalGainRequestConstructor.totalGainQuery(totalGainAnswersModel) +
+        PrivateResidenceReliefRequestConstructor.privateResidenceReliefQuery(totalGainAnswersModel, privateResidenceReliefModel) +
+        FinalTaxAnswersRequestConstructor.additionalParametersQuery(totalTaxPersonalDetailsModel)
+    }")
+  }
+
+  //########################################################################################################################################
 
   def calculateFlat(input: nonresident.SummaryModel)(implicit hc: HeaderCarrier): Future[Option[nonresident.CalculationResultModel]] = {
     http.GET[Option[nonresident.CalculationResultModel]](s"$serviceUrl/capital-gains-calculator/calculate-flat?${
