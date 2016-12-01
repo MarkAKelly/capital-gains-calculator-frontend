@@ -40,10 +40,10 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
 
   def setupTarget(
                    getData: Option[AnnualExemptAmountModel],
-                   customerType: String = CustomerTypeKeys.individual,
+                   customerType: Option[CustomerTypeModel] = Some(CustomerTypeModel(CustomerTypeKeys.individual)),
                    disabledTrustee: String = "",
-                   disposalDate: Option[DisposalDateModel] = Some(DisposalDateModel(12, 12, 2016),
-                   previousLossOrGain: Option[PreviousLossOrGainModel] = Some("Neither"),
+                   disposalDate: Option[DisposalDateModel] = Some(DisposalDateModel(12, 12, 2016)),
+                   previousLossOrGain: Option[PreviousLossOrGainModel] = Some(PreviousLossOrGainModel("Neither")),
                    howMuchLoss: Option[HowMuchLossModel] = None,
                    howMuchGain: Option[HowMuchGainModel] = None
                  ): AnnualExemptAmountController = {
@@ -55,13 +55,22 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
       .thenReturn(Future.successful(Some(DisabledTrusteeModel(disabledTrustee))))
 
     when(mockCalcConnector.fetchAndGetFormData[CustomerTypeModel](Matchers.eq(KeystoreKeys.customerType))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(CustomerTypeModel(customerType))))
+      .thenReturn(Future.successful(customerType))
 
     when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(disposalDate))
 
     when(mockCalcConnector.fetchAndGetFormData[AnnualExemptAmountModel](Matchers.eq(KeystoreKeys.annualExemptAmount))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.fetchAndGetFormData[PreviousLossOrGainModel](Matchers.eq(KeystoreKeys.NonResidentKeys.previousLossOrGain))
+      (Matchers.any(), Matchers.any())).thenReturn(Future.successful(previousLossOrGain))
+
+    when(mockCalcConnector.fetchAndGetFormData[HowMuchGainModel](Matchers.eq(KeystoreKeys.howMuchGain))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(howMuchGain))
+
+    when(mockCalcConnector.fetchAndGetFormData[HowMuchLossModel](Matchers.eq(KeystoreKeys.howMuchLoss))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(howMuchLoss))
 
     when(mockCalcConnector.getFullAEA(Matchers.anyInt())(Matchers.any()))
       .thenReturn(Some(BigDecimal(11100)))
@@ -85,7 +94,7 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
   "Calling the .annualExemptAmount action" when {
 
     "not supplied with a pre-existing stored model" should {
-      val target = setupTarget(None, disposalDate = Some(DisposalDateModel(12, 12, 2015)))
+      val target = setupTarget(None)
       lazy val result = target.annualExemptAmount(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -99,7 +108,8 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
     }
 
     "supplied with a pre-existing stored model and 2016/17 tax date and is non-disabled trustee" should {
-      val target = setupTarget(Some(AnnualExemptAmountModel(1000)), CustomerTypeKeys.trustee, "No", disposalDate = Some(DisposalDateModel(12, 12, 2016)))
+      val target = setupTarget(getData = Some(AnnualExemptAmountModel(1000)), Some(CustomerTypeModel(CustomerTypeKeys.trustee)),
+                              "No", disposalDate = Some(DisposalDateModel(12, 12, 2016)))
       lazy val result = target.annualExemptAmount(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -117,7 +127,8 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
     }
 
     "supplied with a 2016/17 tax year date and is non-trustee" should {
-      val target = setupTarget(None, disposalDate = Some(DisposalDateModel(12, 12, 2016)))
+      val target = setupTarget(None,
+                              disposalDate = Some(DisposalDateModel(12, 12, 2016)))
       lazy val result = target.annualExemptAmount(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -131,7 +142,7 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
     }
 
     "supplied with a 2016/17 tax year date and is disabled trustee" should {
-      val target = setupTarget(None, CustomerTypeKeys.trustee, "Yes", disposalDate = Some(DisposalDateModel(12, 12, 2016)))
+      val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.trustee)), "Yes", disposalDate = Some(DisposalDateModel(12, 12, 2016)))
       lazy val result = target.annualExemptAmount(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -145,7 +156,7 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
     }
 
     "supplied with a 2015/16 tax year date and is non-disabled trustee" should {
-      val target = setupTarget(None, CustomerTypeKeys.trustee, "No", disposalDate = Some(DisposalDateModel(12, 12, 2016)))
+      val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.trustee)), "No", disposalDate = Some(DisposalDateModel(12, 12, 2016)))
       lazy val result = target.annualExemptAmount(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -173,7 +184,7 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
     }
 
     "supplied with a 2015/16 tax year date and is disabled trustee" should {
-      val target = setupTarget(None, CustomerTypeKeys.trustee, "Yes", disposalDate = Some(DisposalDateModel(12, 12, 2015)))
+      val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.trustee)), "Yes", disposalDate = Some(DisposalDateModel(12, 12, 2015)))
       lazy val result = target.annualExemptAmount(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -262,7 +273,7 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
     }
 
     "submitting a valid form for a non-vulnerable trustee" should {
-      val target = setupTarget(None, CustomerTypeKeys.trustee, "No")
+      val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.trustee)), "No")
       lazy val request = fakeRequestToPOSTWithSession(("annualExemptAmount", "1000"))
       lazy val result = target.submitAnnualExemptAmount(request)
 
@@ -276,7 +287,7 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
     }
 
     "submitting a valid form for a vulnerable trustee" should {
-      val target = setupTarget(None, CustomerTypeKeys.trustee, "Yes")
+      val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.trustee)), "Yes")
       lazy val request = fakeRequestToPOSTWithSession(("annualExemptAmount", "1000"))
       lazy val result = target.submitAnnualExemptAmount(request)
 
@@ -290,7 +301,7 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
     }
 
     "submitting an invalid form" should {
-      val target = setupTarget(None, CustomerTypeKeys.trustee, "Yes")
+      val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.trustee)), "Yes")
       lazy val request = fakeRequestToPOSTWithSession(("annualExemptAmount", "1000000"))
       lazy val result = target.submitAnnualExemptAmount(request)
       lazy val document = Jsoup.parse(bodyOf(result))
