@@ -275,9 +275,9 @@ object MessageLookup {
     }
 
     object PersonalAllowance {
-      val question = "In the tax year when you stopped owning the property, what was your UK Personal Allowance?"
-      val linkOne = "Income Tax rates and Personal Allowances"
-      val linkTwo = "Tax on your UK income if you live abroad"
+      val question = "What was your UK Personal Allowance in the tax year when you stopped owning the property?"
+      val link = "Personal Allowances"
+      val help = "This the amount of your income that you don’t pay tax on. Find out more about"
       val errorNegative = "Enter a positive number for your Personal Allowance"
       val errorDecimalPlaces = "Enter a whole number for your Personal Allowance"
       val errorMaxLimit = "Enter a Personal Allowance that's £"

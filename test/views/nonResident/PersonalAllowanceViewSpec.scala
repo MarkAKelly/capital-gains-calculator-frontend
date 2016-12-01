@@ -39,8 +39,16 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with M
         document.title shouldEqual messages.question
       }
 
-      s"has the heading ${commonMessages.pageHeading}" in {
-        document.body.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
+      "have a heading" which {
+        lazy val heading = document.body().select("h1")
+
+        "has a class of heading-large" in {
+          heading.attr("class") shouldBe "heading-xlarge"
+        }
+
+        s"has the text '${messages.question}'" in {
+          heading.text shouldBe messages.question
+        }
       }
 
       "have a back link" which {
@@ -63,8 +71,15 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with M
         document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
       }
 
-      s"has the question '${messages.question}' as the label of the input" in {
-        document.body.getElementsByTag("label").text should include(messages.question)
+      "has a label for the input" which {
+
+        s"has the question '${messages.question}'" in {
+          document.body.getElementsByTag("label").text should include(messages.question)
+        }
+
+        "has the class visuallyhidden" in {
+          document.select("label > div > span").hasClass("visuallyhidden") shouldEqual true
+        }
       }
 
       "display an input box for the Personal Allowance" in {
@@ -91,63 +106,36 @@ class PersonalAllowanceViewSpec extends UnitSpec with WithFakeApplication with M
         }
       }
 
-      "should contain a Read more sidebar that" should {
+      s"should have help text that" should {
 
-        lazy val sidebar = document.select("aside")
+        lazy val helpParagraph = document.select("span > p")
 
-        "have a header" in {
-          sidebar.select("h2").text shouldEqual commonMessages.readMore
+        s"have the text ${messages.help}" in {
+
         }
 
-        "have two links of" which {
+        "have a link" which {
 
-          lazy val linkOne = sidebar.select("a").first
-          lazy val linkTwo = sidebar.select("a").last
+          lazy val link = helpParagraph.select("a")
 
-          "the first" should {
-
-            s"have text ${messages.linkOne} ${commonMessages.externalLink}" in {
-              linkOne.text shouldEqual s"${messages.linkOne} ${commonMessages.externalLink}"
-            }
-
-            s"have an href to 'https://www.gov.uk/income-tax-rates/current-rates-and-allowances'" in {
-              linkOne.attr("href") shouldEqual "https://www.gov.uk/income-tax-rates/current-rates-and-allowances"
-            }
-
-            "have the class 'external-link'" in {
-              linkOne.attr("class") shouldBe "external-link"
-            }
-
-            "have a rel of 'external'" in {
-              linkOne.attr("rel") shouldBe "external"
-            }
-
-            "have a target of '_blank'" in {
-              linkOne.attr("target") shouldBe "_blank"
-            }
+          s"have text ${messages.link} ${commonMessages.externalLink}" in {
+            link.text shouldEqual s"${messages.link} ${commonMessages.externalLink}"
           }
 
-          "the second" should{
+          s"have an href to 'https://www.gov.uk/government/publications/rates-and-allowances-income-tax/income-tax-rates-and-allowances-current-and-past'" in {
+            link.attr("href") shouldEqual "https://www.gov.uk/government/publications/rates-and-allowances-income-tax/income-tax-rates-and-allowances-current-and-past"
+          }
 
-            s"have text ${messages.linkTwo} ${commonMessages.externalLink}" in {
-              linkTwo.text shouldEqual s"${messages.linkTwo} ${commonMessages.externalLink}"
-            }
+          "have the class 'external-link'" in {
+            link.attr("class") shouldBe "external-link"
+          }
 
-            s"have an href to 'https://www.gov.uk/tax-uk-income-live-abroad/personal-allowance'" in {
-              linkTwo.attr("href") shouldEqual "https://www.gov.uk/tax-uk-income-live-abroad/personal-allowance"
-            }
+          "have a rel of 'external'" in {
+            link.attr("rel") shouldBe "external"
+          }
 
-            "have the class 'external-link'" in {
-              linkTwo.attr("class") shouldBe "external-link"
-            }
-
-            "have a rel of 'external'" in {
-              linkTwo.attr("rel") shouldBe "external"
-            }
-
-            "have a target of '_blank'" in {
-              linkTwo.attr("target") shouldBe "_blank"
-            }
+          "have a target of '_blank'" in {
+            link.attr("target") shouldBe "_blank"
           }
         }
       }
