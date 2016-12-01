@@ -27,22 +27,30 @@ import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.mockito.Mockito._
 import assets.MessageLookup.{NonResident => messages}
+import common.DefaultRoutes
 import connectors.CalculatorConnector
 
 import scala.concurrent.Future
 import play.api.test.Helpers._
+import uk.gov.hmrc.play.http.HeaderCarrier
 
 class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
+  implicit val hc = new HeaderCarrier()
+
   def setupTarget(totalGainAnswersModel: TotalGainAnswersModel,
-                  totalGainsModel: Option[TotalGainResultsModel] = None
-                 ): CheckYourAnswersController = {
+                  totalGainsModel: Option[TotalGainResultsModel],
+                  privateResidenceReliefModel: Option[PrivateResidenceReliefModel] = None): CheckYourAnswersController = {
 
     val mockAnswersConstructor = mock[AnswersConstructor]
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockAnswersConstructor.getNRTotalGainAnswers(Matchers.any()))
-      .thenReturn(Future.successful(totalGainAnswersModel))
+    when(mockAnswersConstructor.getNRTotalGainAnswers(Matchers.any())).thenReturn(Future.successful(totalGainAnswersModel))
+
+    when(mockCalcConnector.calculateTotalGain(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(totalGainResultsModel)))
+
+    when(mockCalcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(privateResidenceReliefModel)
 
     when(mockCalcConnector.calculateTotalGain(Matchers.any())(Matchers.any()))
       .thenReturn(totalGainsModel)
@@ -67,6 +75,9 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
     Some(RebasedCostsModel("Yes", Some(300))),
     ImprovementsModel("Yes", Some(10), Some(20)),
     Some(OtherReliefsModel(30)))
+
+  val totalGainResultsModel = TotalGainResultsModel(0, Some(0), Some(0))
+  val totalGainWithValueResultsModel = TotalGainResultsModel(100, Some(-100), None)
 
   val modelWithOnlyFlat = TotalGainAnswersModel(DisposalDateModel(5, 10, 2016),
     SoldOrGivenAwayModel(true),
@@ -93,7 +104,8 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
   "Calling .checkYourAnswers" when {
 
     "provided with a valid session" should {
-      lazy val target = setupTarget(modelWithOnlyFlat)
+
+      lazy val target = setupTarget(modelWithOnlyFlat, Some(totalGainResultsModel))
       lazy val result = target.checkYourAnswers(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -111,7 +123,8 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
     }
 
     "provided with an invalid session" should {
-      lazy val target = setupTarget(modelWithOnlyFlat)
+
+      lazy val target = setupTarget(modelWithOnlyFlat, Some(totalGainResultsModel))
       lazy val result = target.checkYourAnswers(fakeRequest)
 
       "return a status of 303" in {
@@ -122,9 +135,28 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
         redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
       }
     }
+
+    "provided with a valid session when eligible for prr and a total gain value" should {
+      lazy val target = setupTarget(modelWithMultipleGains, Some(totalGainWithValueResultsModel))
+      lazy val result = target.checkYourAnswers(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "load the check your answers page" in {
+        document.title() shouldBe messages.CheckYourAnswers.question
+      }
+
+      "have a back link to the private residence relief page" in {
+        document.select("#back-link").attr("href") shouldBe routes.PrivateResidenceReliefController.privateResidenceRelief().url
+      }
+    }
   }
 
   "Calling .submitCheckYourAnswers" when {
+
 
     "provided with a valid model with multiple calculations avalible" should {
       lazy val results = Some(TotalGainResultsModel(1.0, Some(2.0), None))
@@ -168,7 +200,8 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
     }
 
     "provided with an invalid session" should {
-      lazy val target = setupTarget(modelWithOnlyFlat)
+
+      lazy val target = setupTarget(modelWithOnlyFlat, Some(totalGainResultsModel))
       lazy val result = target.submitCheckYourAnswers(fakeRequest)
 
       "return a status of 303" in {
@@ -177,6 +210,46 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
 
       "redirect the user to the session timeout page" in {
         redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+      }
+    }
+  }
+
+  "Calling .getPRRModel" should {
+
+    "with a totalGainResultsModel with at least one positive gain and a PRR model" should {
+
+      val totalGainResultsModelWithGain = TotalGainResultsModel(100, None, None)
+      val prrModel = PrivateResidenceReliefModel("Yes", Some(0))
+
+      val target = setupTarget(modelWithMultipleGains, Some(totalGainResultsModelWithGain), Some(prrModel))
+      lazy val result = target.getPRRModel(hc, totalGainResultsModelWithGain)
+
+      "return a PrivateResidenceReliefModel" in {
+        await(result.get) shouldEqual prrModel
+      }
+    }
+
+    "with a totalGainResultsModel with at least one positive gain but no PRR model" should {
+
+      val totalGainResultsModelWithGain = TotalGainResultsModel(100, None, None)
+
+      val target = setupTarget(modelWithMultipleGains, Some(totalGainResultsModelWithGain), None)
+      lazy val result = target.getPRRModel(hc, totalGainResultsModelWithGain)
+
+      "return a PrivateResidenceReliefModel" in {
+        await(result) shouldEqual None
+      }
+    }
+
+    "with a totalGainResultsModel with no positive gains" should {
+
+      val totalGainResultsModelWithNoGain = TotalGainResultsModel(-100, Some(0), Some(-1))
+
+      val target = setupTarget(modelWithMultipleGains, Some(totalGainResultsModelWithNoGain), None)
+      lazy val result = target.getPRRModel(hc, totalGainResultsModelWithNoGain)
+
+      "return a None" in {
+        await(result) shouldEqual None
       }
     }
   }

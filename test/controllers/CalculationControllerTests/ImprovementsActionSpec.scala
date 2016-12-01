@@ -27,11 +27,13 @@ import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
 import assets.MessageLookup.NonResident.{Improvements => messages}
 import assets.MessageLookup.{NonResident => commonMessages}
+import constructors.nonresident.AnswersConstructor
 import controllers.helpers.FakeRequestHelper
 
 import scala.concurrent.Future
 import controllers.nonresident.{ImprovementsController, routes}
-import models.nonresident.{AcquisitionDateModel, ImprovementsModel, RebasedValueModel}
+import models.nonresident._
+import uk.gov.hmrc.http.cache.client.CacheMap
 
 class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
@@ -39,10 +41,12 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
 
   def setupTarget(getData: Option[ImprovementsModel],
                   acquisitionDateData: Option[AcquisitionDateModel],
-                  rebasedValueData: Option[RebasedValueModel] = None
+                  rebasedValueData: Option[RebasedValueModel] = None,
+                  totalGainResultsModel: Option[TotalGainResultsModel] = None
                  ): ImprovementsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
+    val mockAnswersConstructor = mock[AnswersConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[ImprovementsModel](Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -53,8 +57,18 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
     when(mockCalcConnector.fetchAndGetFormData[AcquisitionDateModel](Matchers.eq(KeystoreKeys.acquisitionDate))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(acquisitionDateData))
 
+    when(mockAnswersConstructor.getNRTotalGainAnswers(Matchers.any()))
+      .thenReturn(Future.successful(mock[TotalGainAnswersModel]))
+
+    when(mockCalcConnector.calculateTotalGain(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(totalGainResultsModel))
+
+    when(mockCalcConnector.saveFormData[ImprovementsModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(mock[CacheMap]))
+
     new ImprovementsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
+      override val answersConstructor: AnswersConstructor = mockAnswersConstructor
     }
   }
 
@@ -70,7 +84,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
 
       "when Acquisition Date is supplied and > 5 April 2015" should {
 
-        val target = setupTarget(None, Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))), Some(RebasedValueModel(Some(1000))))
+        lazy val target = setupTarget(None, Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))), Some(RebasedValueModel(Some(1000))))
         lazy val result = target.improvements(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -93,7 +107,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
       "when Acquisition Date is supplied and <= 5 April 2015" +
         "and a rebased value is supplied" should {
 
-        val target = setupTarget(
+        lazy val target = setupTarget(
           None,
           Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2014))),
           Some(RebasedValueModel(Some(500)))
@@ -113,7 +127,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
       "when Acquisition Date is not supplied" +
         "and a rebased value is supplied" should {
 
-        val target = setupTarget(
+        lazy val target = setupTarget(
           None,
           //These values have been left in to make sure the controller is ignoring them as required
           Some(AcquisitionDateModel("No", Some(1), Some(1), Some(2014))),
@@ -134,7 +148,7 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
       "when Acquisition Date is not supplied" +
         "and a rebased value is supplied but left blank" should {
 
-        val target = setupTarget(
+        lazy val target = setupTarget(
           None,
           //These values have been left in to make sure the controller is ignoring them as required
           Some(AcquisitionDateModel("No", Some(1), Some(1), Some(2014))),
@@ -152,11 +166,10 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         }
       }
 
-
       "when Acquisition Date is supplied and <= 5 April 2015" +
         "and no rebased value is supplied" should {
 
-        val target = setupTarget(
+        lazy val target = setupTarget(
           None,
           Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2014))),
           Some(RebasedValueModel(None))
@@ -168,8 +181,8 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
           document.body.getElementById("back-link").text shouldEqual commonMessages.back
         }
 
-        s"have a 'Back' link to a missing data route ${routes.DisposalDateController.disposalDate().url} " in {
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.DisposalDateController.disposalDate().url
+        s"have a 'Back' link to a missing data route ${controllers.nonresident.routes.DisposalDateController.disposalDate().url} " in {
+          document.body.getElementById("back-link").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
         }
       }
     }
@@ -179,7 +192,8 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
 
     "submitting a valid form with 'Yes' and a value of 12045 for improvementsAmt and no acquisition date but a rebased value of None" should {
 
-      val target = setupTarget(None, Some(AcquisitionDateModel("No", Some(1), Some(1), Some(2016))), Some(RebasedValueModel(None)))
+      lazy val gainsModel = Some(TotalGainResultsModel(1000, Some(2000), None))
+      lazy val target = setupTarget(None, Some(AcquisitionDateModel("No", Some(1), Some(1), Some(2016))), Some(RebasedValueModel(None)), gainsModel)
       lazy val request = fakeRequestToPOSTWithSession("isClaimingImprovements" -> "Yes", "improvementsAmt" -> "12045")
       lazy val result = target.submitImprovements(request)
 
@@ -187,14 +201,15 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.CheckYourAnswersController.checkYourAnswers()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CheckYourAnswersController.checkYourAnswers()}")
+      s"redirect to ${controllers.nonresident.routes.CustomerTypeController.customerType()}" in {
+        redirectLocation(result) shouldBe Some(s"${controllers.nonresident.routes.CustomerTypeController.customerType()}")
       }
     }
 
-    "submitting a valid form with 'No' and an acquisition date after 5/4/2015" should {
+    "submitting a valid form with but no gains model returned" should {
 
-      val target = setupTarget(None, Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2016))))
+      lazy val gainsModel = None
+      lazy val target = setupTarget(None, Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2016))), gainsModel)
       lazy val request = fakeRequestToPOSTWithSession("isClaimingImprovements" -> "No", "improvementsAmt" -> "")
       lazy val result = target.submitImprovements(request)
 
@@ -202,14 +217,15 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.CheckYourAnswersController.checkYourAnswers()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CheckYourAnswersController.checkYourAnswers()}")
+      s"redirect to ${common.DefaultRoutes.missingDataRoute}" in {
+        redirectLocation(result) shouldBe Some(s"${common.DefaultRoutes.missingDataRoute}")
       }
     }
 
-    "submitting a valid form with 'No' and no value but with an acquisition date before 5/4/2015" should {
+    "submitting a valid form with 'No' and total gains of less than 0" should {
 
-      val target = setupTarget(None, Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2014))))
+      lazy val gainsModel = Some(TotalGainResultsModel(-1000, None, None))
+      lazy val target = setupTarget(None, Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2014))), None, gainsModel)
       lazy val request = fakeRequestToPOSTWithSession("isClaimingImprovements" -> "No", "improvementsAmt" -> "")
       lazy val result = target.submitImprovements(request)
 
@@ -223,7 +239,9 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
     }
 
     "submitting a valid form with a rebased value" should {
-      val target = setupTarget(None, Some(AcquisitionDateModel("No", None, None, None)), Some(RebasedValueModel(Some(2000))))
+
+      lazy val gainsModel = Some(TotalGainResultsModel(1000, Some(2000), None))
+      lazy val target = setupTarget(None, Some(AcquisitionDateModel("No", None, None, None)), Some(RebasedValueModel(Some(2000))), gainsModel)
       lazy val request = fakeRequestToPOSTWithSession("isClaimingImprovements" -> "No", "improvementsAmt" -> "")
       lazy val result = target.submitImprovements(request)
 
@@ -231,8 +249,8 @@ class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 303
       }
 
-      s"redirect to ${routes.CheckYourAnswersController.checkYourAnswers()}" in {
-        redirectLocation(result) shouldBe Some(s"${routes.CheckYourAnswersController.checkYourAnswers()}")
+      s"redirect to ${controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief()}" in {
+        redirectLocation(result) shouldBe Some(s"${controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief()}")
       }
     }
 
