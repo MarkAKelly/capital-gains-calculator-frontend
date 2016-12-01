@@ -22,14 +22,16 @@ import assets.MessageLookup.NonResident.{PrivateResidenceRelief => messages}
 import assets.MessageLookup.{NonResident => commonMessages}
 import common.KeystoreKeys
 import connectors.CalculatorConnector
+import constructors.nonresident.AnswersConstructor
 import controllers.helpers.FakeRequestHelper
 import controllers.nonresident.PrivateResidenceReliefController
-import models.nonresident.{AcquisitionDateModel, DisposalDateModel, PrivateResidenceReliefModel, RebasedValueModel}
+import models.nonresident._
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
@@ -44,10 +46,15 @@ class PrivateResidenceReliefActionSpec extends UnitSpec with WithFakeApplication
     getData: Option[PrivateResidenceReliefModel],
     disposalDateData: Option[DisposalDateModel] = None,
     acquisitionDateData: Option[AcquisitionDateModel] = None,
-    rebasedValueData: Option[RebasedValueModel] = None
+    rebasedValueData: Option[RebasedValueModel] = None,
+    calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel] = None
   ): PrivateResidenceReliefController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
+    val mockAnswersConstructor = mock[AnswersConstructor]
+
+    when(mockCalcConnector.saveFormData[PrivateResidenceReliefModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(mock[CacheMap])
 
     when(mockCalcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.eq(KeystoreKeys.privateResidenceRelief))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -61,8 +68,15 @@ class PrivateResidenceReliefActionSpec extends UnitSpec with WithFakeApplication
     when(mockCalcConnector.fetchAndGetFormData[RebasedValueModel](Matchers.eq(KeystoreKeys.rebasedValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(rebasedValueData))
 
+    when(mockCalcConnector.calculateTaxableGainAfterPRR(Matchers.any(), Matchers.any())(Matchers.any()))
+      .thenReturn(calculationResultsWithPRRModel)
+
+    when(mockAnswersConstructor.getNRTotalGainAnswers(Matchers.any()))
+      .thenReturn(mock[TotalGainAnswersModel])
+
     new PrivateResidenceReliefController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
+      override val answersConstructor: AnswersConstructor = mockAnswersConstructor
     }
   }
 
@@ -343,12 +357,14 @@ class PrivateResidenceReliefActionSpec extends UnitSpec with WithFakeApplication
   //POST Tests
   "Calling the .submitPrivateResidenceRelief action " when {
 
-    "submitting a valid form" should {
+    "submitting a valid form with no positive taxable gains" should {
+      val model = CalculationResultsWithPRRModel(GainsAfterPRRModel(1000, 0, 0), None, None)
       val target = setupTarget(
         None,
         disposalDateData = Some(DisposalDateModel(5, 8, 2015)),
         acquisitionDateData = Some(AcquisitionDateModel("No", None, None, None)),
-        rebasedValueData = Some(RebasedValueModel(Some(1000))))
+        rebasedValueData = Some(RebasedValueModel(Some(1000))),
+        calculationResultsWithPRRModel = Some(model))
       lazy val request = fakeRequestToPOSTWithSession(("isClaimingPRR", "No"))
       lazy val result = target.submitPrivateResidenceRelief(request)
 
@@ -358,6 +374,26 @@ class PrivateResidenceReliefActionSpec extends UnitSpec with WithFakeApplication
 
       "redirect to the Check Your Answers page" in {
         redirectLocation(result).get shouldBe controllers.nonresident.routes.CheckYourAnswersController.checkYourAnswers().url
+      }
+    }
+
+    "submitting a valid form with some positive taxable gains" should {
+      val model = CalculationResultsWithPRRModel(GainsAfterPRRModel(1000, 500, 0), None, None)
+      val target = setupTarget(
+        None,
+        disposalDateData = Some(DisposalDateModel(5, 8, 2015)),
+        acquisitionDateData = Some(AcquisitionDateModel("No", None, None, None)),
+        rebasedValueData = Some(RebasedValueModel(Some(1000))),
+        calculationResultsWithPRRModel = Some(model))
+      lazy val request = fakeRequestToPOSTWithSession(("isClaimingPRR", "No"))
+      lazy val result = target.submitPrivateResidenceRelief(request)
+
+      "return a status of 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the How Became Owner page" in {
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.HowBecameOwnerController.howBecameOwner().url
       }
     }
 

@@ -20,9 +20,11 @@ import java.time.LocalDate
 
 import common.{Dates, KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
+import constructors.nonresident.AnswersConstructor
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.PrivateResidenceReliefForm._
-import models.nonresident.{AcquisitionDateModel, DisposalDateModel, PrivateResidenceReliefModel, RebasedValueModel}
+import models.nonresident._
+import play.api.data.Form
 import play.api.mvc.Result
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HeaderCarrier
@@ -32,6 +34,7 @@ import scala.concurrent.Future
 
 object PrivateResidenceReliefController extends PrivateResidenceReliefController {
   val calcConnector = CalculatorConnector
+  val answersConstructor = AnswersConstructor
 }
 
 trait PrivateResidenceReliefController extends FrontendController with ValidActiveSession {
@@ -39,6 +42,7 @@ trait PrivateResidenceReliefController extends FrontendController with ValidActi
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
   val calcConnector: CalculatorConnector
+  val answersConstructor: AnswersConstructor
 
   def getAcquisitionDate(implicit hc: HeaderCarrier): Future[Option[LocalDate]] =
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).map {
@@ -72,7 +76,6 @@ trait PrivateResidenceReliefController extends FrontendController with ValidActi
       case _ => false
     }
 
-
   val privateResidenceRelief = ValidateSession.async { implicit request =>
 
     def action(disposalDate: Option[LocalDate], acquisitionDate: Option[LocalDate], hasRebasedValue: Boolean) = {
@@ -100,21 +103,38 @@ trait PrivateResidenceReliefController extends FrontendController with ValidActi
   val submitPrivateResidenceRelief = ValidateSession.async { implicit request =>
 
     def action(disposalDate: Option[LocalDate], acquisitionDate: Option[LocalDate], hasRebasedValue: Boolean): Future[Result] = {
-
       val showBetweenQuestion = displayBetweenQuestion(disposalDate, acquisitionDate, hasRebasedValue)
       val showBeforeQuestion = displayBeforeQuestion(disposalDate, acquisitionDate)
       val disposalDateLess18Months = Dates.dateMinusMonths(disposalDate, 18)
 
-      privateResidenceReliefForm(showBeforeQuestion, showBetweenQuestion).bindFromRequest.fold(
-        errors => {
-          Future.successful(BadRequest(calculation.nonresident.privateResidenceRelief(errors, showBetweenQuestion,
-            showBeforeQuestion, disposalDateLess18Months)))
-        },
-        success => {
-          calcConnector.saveFormData(KeystoreKeys.privateResidenceRelief, success)
-          Future.successful(Redirect(controllers.nonresident.routes.CheckYourAnswersController.checkYourAnswers().url))
-        }
-      )
+      def checkTaxableGainsZeroOrLess(calculationResultsWithPRRModel: CalculationResultsWithPRRModel) = {
+        val optionSeq = Seq(calculationResultsWithPRRModel.rebasedResult, calculationResultsWithPRRModel.timeApportionedResult).flatten
+        val finalSeq = Seq(calculationResultsWithPRRModel.flatResult) ++ optionSeq
+
+        Future.successful(finalSeq.forall(_.taxableGain <= 0))
+      }
+
+      def routeDestination(taxableGainsZeroOrLess: Boolean) = {
+        if (taxableGainsZeroOrLess) Future.successful(Redirect(controllers.nonresident.routes.CheckYourAnswersController.checkYourAnswers().url))
+        else Future.successful(Redirect(controllers.nonresident.routes.HowBecameOwnerController.howBecameOwner().url))
+      }
+
+      def errorAction(form: Form[PrivateResidenceReliefModel]) = {
+        Future.successful(BadRequest(calculation.nonresident.privateResidenceRelief(form, showBetweenQuestion,
+          showBeforeQuestion, disposalDateLess18Months)))
+      }
+
+      def successAction(model: PrivateResidenceReliefModel) = {
+        for {
+          _ <- calcConnector.saveFormData(KeystoreKeys.privateResidenceRelief, model)
+          answers <- answersConstructor.getNRTotalGainAnswers
+          results <- calcConnector.calculateTaxableGainAfterPRR(answers, model)
+          taxableGainsZeroOrLess <- checkTaxableGainsZeroOrLess(results.get)
+          route <- routeDestination(taxableGainsZeroOrLess)
+        } yield route
+      }
+
+      privateResidenceReliefForm(showBeforeQuestion, showBetweenQuestion).bindFromRequest.fold(errorAction, successAction)
     }
 
     for {
