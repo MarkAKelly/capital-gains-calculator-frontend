@@ -19,16 +19,16 @@ package models.nonresident
 import models.resident.{LossesBroughtForwardModel, LossesBroughtForwardValueModel}
 
 case class TotalPersonalDetailsCalculationModel(customerTypeModel: CustomerTypeModel,
-                                                currentIncomeModel: CurrentIncomeModel,
-                                                personalAllowanceModel: PersonalAllowanceModel,
-                                                trusteeModel: DisabledTrusteeModel,
+                                                currentIncomeModel: Option[CurrentIncomeModel],
+                                                personalAllowanceModel: Option[PersonalAllowanceModel],
+                                                trusteeModel: Option[DisabledTrusteeModel],
                                                 otherPropertiesModel: OtherPropertiesModel,
-                                                //In here will be the type of gain/loss model
-                                                howMuchLossModel: HowMuchLossModel,
-                                                howMuchGainModel: HowMuchGainModel,
-                                                annualExemptAmountModel: AnnualExemptAmountModel,
+                                                previousGainOrLoss: Option[PreviousLossOrGainModel],
+                                                howMuchLossModel: Option[HowMuchLossModel],
+                                                howMuchGainModel: Option[HowMuchGainModel],
+                                                annualExemptAmountModel: Option[AnnualExemptAmountModel],
                                                 broughtForwardModel: LossesBroughtForwardModel,
-                                                broughtForwardValueModel: LossesBroughtForwardValueModel
+                                                broughtForwardValueModel: Option[LossesBroughtForwardValueModel]
                                                ) {
 
 }

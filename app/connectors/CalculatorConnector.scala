@@ -73,12 +73,13 @@ trait CalculatorConnector {
 
   def calculateNRCGTTotalTax(totalGainAnswersModel: nonresident.TotalGainAnswersModel,
                              privateResidenceReliefModel: nonresident.PrivateResidenceReliefModel,
-                             totalTaxPersonalDetailsModel: nonresident.TotalPersonalDetailsCalculationModel)(implicit hc: HeaderCarrier):
+                             totalTaxPersonalDetailsModel: nonresident.TotalPersonalDetailsCalculationModel,
+                             maxAnnualExemptAmount: BigDecimal)(implicit hc: HeaderCarrier):
   Future[Option[nonresident.CalculationResultsWithTaxOwedModel]] = {
     http.GET[Option[nonresident.CalculationResultsWithTaxOwedModel]](s"$serviceUrl/capital-gains-calculator/non-resident/calculate-total-tax-owed?${
       TotalGainRequestConstructor.totalGainQuery(totalGainAnswersModel) +
         PrivateResidenceReliefRequestConstructor.privateResidenceReliefQuery(totalGainAnswersModel, privateResidenceReliefModel) +
-        FinalTaxAnswersRequestConstructor.additionalParametersQuery(totalTaxPersonalDetailsModel)
+        FinalTaxAnswersRequestConstructor.additionalParametersQuery(totalTaxPersonalDetailsModel, maxAnnualExemptAmount)
     }")
   }
 
