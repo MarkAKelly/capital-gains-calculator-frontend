@@ -20,12 +20,10 @@ import common.{Dates, KeystoreKeys}
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.PersonalAllowanceForm._
-import models.nonresident.{DisposalDateModel, OtherReliefsModel, PersonalAllowanceModel}
+import models.nonresident.{DisposalDateModel, PersonalAllowanceModel}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import views.html.calculation
-import common.Dates._
 import play.api.data.Form
-import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future
 
