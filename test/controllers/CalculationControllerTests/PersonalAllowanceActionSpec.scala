@@ -17,6 +17,7 @@
 package controllers.CalculationControllerTests
 
 import assets.MessageLookup.NonResident.{PersonalAllowance => messages}
+import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import org.mockito.Matchers
@@ -29,7 +30,7 @@ import org.scalatest.mock.MockitoSugar
 
 import scala.concurrent.Future
 import controllers.nonresident.{PersonalAllowanceController, routes}
-import models.nonresident.PersonalAllowanceModel
+import models.nonresident.{DisposalDateModel, PersonalAllowanceModel}
 
 class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
@@ -39,8 +40,11 @@ class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with
 
     val mockCalcConnector = mock[CalculatorConnector]
 
-    when(mockCalcConnector.fetchAndGetFormData[PersonalAllowanceModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[PersonalAllowanceModel](Matchers.eq(KeystoreKeys.personalAllowance))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(DisposalDateModel(6, 5, 2016))))
 
     when(mockCalcConnector.getPA(Matchers.anyInt(), Matchers.anyBoolean())(Matchers.any()))
       .thenReturn(Some(BigDecimal(11000)))
