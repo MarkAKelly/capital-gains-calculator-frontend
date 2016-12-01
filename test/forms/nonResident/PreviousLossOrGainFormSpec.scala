@@ -21,9 +21,6 @@ import models.nonresident.PreviousLossOrGainModel
 import forms.nonresident.PreviousLossOrGainForm._
 import assets.MessageLookup.NonResident.{PreviousLossOrGain => messages}
 
-/**
-  * Created by emma on 24/11/16.
-  */
 class PreviousLossOrGainFormSpec extends UnitSpec with WithFakeApplication{
   "Creating the form from a model" should {
 
@@ -72,7 +69,7 @@ class PreviousLossOrGainFormSpec extends UnitSpec with WithFakeApplication{
     }
 
     "an invalid string is provided" should {
-      lazy val map = Map(("previousLossOrGain", ""))
+      lazy val map = Map(("previousLossOrGain", "invalid text"))
       lazy val form = previousLossOrGainForm.bind(map)
 
       "produce a  form with errors" in {

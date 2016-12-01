@@ -120,7 +120,7 @@ class PreviousLossOrGainViewSpec extends UnitSpec with WithFakeApplication with 
         lazy val linkOne = document.body.getElementById("capitalGainsTaxHelp")
 
         s"have the text ${messages.CGTlink}" in {
-          linkOne.text shouldBe messages.CGTlink
+          linkOne.text shouldBe messages.CGTlink + " " + commonMessages.externalLink
         }
 
         "has the href to 'https://www.gov.uk/capital-gains-tax" in {
@@ -144,7 +144,7 @@ class PreviousLossOrGainViewSpec extends UnitSpec with WithFakeApplication with 
         lazy val linkTwo = document.body.getElementById("previousTaxYearsHelp")
 
         s"have the text ${messages.previousTaxLink}" in {
-          linkTwo.text shouldBe messages.previousTaxLink
+          linkTwo.text shouldBe messages.previousTaxLink + " " + commonMessages.externalLink
         }
 
         s"link two should have an href to 'https://www.gov.uk/income-tax-rates/previous-tax-years'" in {
