@@ -20,7 +20,7 @@ import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.nonresident.BroughtForwardLossesController
-import models.nonresident.BroughtForwardLossesModel
+import models.nonresident._
 import org.jsoup.Jsoup
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -28,14 +28,37 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import assets.MessageLookup.{NonResident => messages}
 import play.api.test.Helpers._
+import uk.gov.hmrc.play.http.HeaderCarrier
+
+import scala.concurrent.Future
 
 class BroughtForwardLossesActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
-  def setupTarget(getData: Option[BroughtForwardLossesModel]): BroughtForwardLossesController = {
+  implicit val hc = mock[HeaderCarrier]
+
+  def setupTarget(getData: Option[BroughtForwardLossesModel],
+                  otherPropertiesModel: Option[OtherPropertiesModel] = None,
+                  previousLossOrGainModel: Option[PreviousLossOrGainModel] = None,
+                  howMuchGainModel: Option[HowMuchGainModel] = None,
+                  howMuchLossModel: Option[HowMuchLossModel] = None): BroughtForwardLossesController = {
+
     val mockCalcConnector = mock[CalculatorConnector]
 
     when(mockCalcConnector.fetchAndGetFormData[BroughtForwardLossesModel](Matchers.eq(KeystoreKeys.broughtForwardLosses))(Matchers.any(), Matchers.any()))
       .thenReturn(getData)
+
+    when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.eq(KeystoreKeys.otherProperties))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(otherPropertiesModel))
+
+    when(mockCalcConnector.fetchAndGetFormData[PreviousLossOrGainModel]
+      (Matchers.eq(KeystoreKeys.NonResidentKeys.previousLossOrGain))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(previousLossOrGainModel))
+
+    when(mockCalcConnector.fetchAndGetFormData[HowMuchGainModel](Matchers.eq(KeystoreKeys.howMuchGain))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(howMuchGainModel))
+
+    when(mockCalcConnector.fetchAndGetFormData[HowMuchLossModel](Matchers.eq(KeystoreKeys.howMuchLoss))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(howMuchLossModel))
 
     new BroughtForwardLossesController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -55,6 +78,10 @@ class BroughtForwardLossesActionSpec extends UnitSpec with WithFakeApplication w
 
       "load the Brought Forward Losses page" in {
         document.title() shouldBe messages.BroughtForwardLosses.question
+      }
+
+      "have a back link to Annual Exempt Amount page" in {
+        document.select("#back-link").attr("href") shouldBe controllers.nonresident.routes.AnnualExemptAmountController.annualExemptAmount().url
       }
     }
 
@@ -128,6 +155,57 @@ class BroughtForwardLossesActionSpec extends UnitSpec with WithFakeApplication w
       "redirect the user to the session timeout page" in {
         redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
       }
+    }
+  }
+
+  "Calling generateBackLink" should {
+
+    "return a back link to the OtherProperties page when there is an answer of no to Other Properties" in {
+      val target = setupTarget(None, Some(OtherPropertiesModel("No")))
+      lazy val result = target.broughtForwardLosses(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      document.select("#back-link").attr("href") shouldBe controllers.nonresident.routes.OtherPropertiesController.otherProperties().url
+    }
+
+    "return a back link to the HowMuchGain page when there is a previous positive gain" in {
+      val target = setupTarget(None, Some(OtherPropertiesModel("Yes")), Some(PreviousLossOrGainModel("Gain")), Some(HowMuchGainModel(1)))
+      lazy val result = target.broughtForwardLosses(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      document.select("#back-link").attr("href") shouldBe controllers.nonresident.routes.HowMuchGainController.howMuchGain().url
+    }
+
+    "return a back link to the AnnualExemptAmount page when there is a previous gain of 0" in {
+      val target = setupTarget(None, Some(OtherPropertiesModel("Yes")), Some(PreviousLossOrGainModel("Gain")), Some(HowMuchGainModel(0)))
+      lazy val result = target.broughtForwardLosses(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      document.select("#back-link").attr("href") shouldBe controllers.nonresident.routes.AnnualExemptAmountController.annualExemptAmount().url
+    }
+
+    "return a back link to the HowMuchLoss page when there is a previous positive loss" in {
+      val target = setupTarget(None, Some(OtherPropertiesModel("Yes")), Some(PreviousLossOrGainModel("Loss")), howMuchLossModel = Some(HowMuchLossModel(1)))
+      lazy val result = target.broughtForwardLosses(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      document.select("#back-link").attr("href") shouldBe controllers.nonresident.routes.HowMuchLossController.howMuchLoss().url
+    }
+
+    "return a back link to the AnnualExemptAmount page when there is a previous loss of 0" in {
+      val target = setupTarget(None, Some(OtherPropertiesModel("Yes")), Some(PreviousLossOrGainModel("Loss")), howMuchLossModel = Some(HowMuchLossModel(0)))
+      lazy val result = target.broughtForwardLosses(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      document.select("#back-link").attr("href") shouldBe controllers.nonresident.routes.AnnualExemptAmountController.annualExemptAmount().url
+    }
+
+    "return a back link to the AnnualExemptAmount page when there is a previous disposal that breaks even" in {
+      val target = setupTarget(None, Some(OtherPropertiesModel("Yes")), Some(PreviousLossOrGainModel("Neither")))
+      lazy val result = target.broughtForwardLosses(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      document.select("#back-link").attr("href") shouldBe controllers.nonresident.routes.AnnualExemptAmountController.annualExemptAmount().url
     }
   }
 }

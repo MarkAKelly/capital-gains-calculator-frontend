@@ -19,10 +19,11 @@ package controllers.nonresident
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
-import models.nonresident.BroughtForwardLossesModel
+import models.nonresident._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import forms.nonresident.BroughtForwardLossesForm._
 import play.api.data.Form
+import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation
 
 import scala.concurrent.Future
@@ -37,9 +38,27 @@ trait BroughtForwardLossesController extends FrontendController with ValidActive
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
 
-  def generateBackLink(): Future[String] = {
-    //TODO add logic based on to be created models
-    Future.successful("")
+  def generateBackLink(implicit hc: HeaderCarrier): Future[String] = {
+    val getOtherProperties = calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.otherProperties)
+    val getGainOrLoss = calcConnector.fetchAndGetFormData[PreviousLossOrGainModel](KeystoreKeys.NonResidentKeys.previousLossOrGain)
+    val getGain = calcConnector.fetchAndGetFormData[HowMuchGainModel](KeystoreKeys.howMuchGain)
+    val getLoss = calcConnector.fetchAndGetFormData[HowMuchLossModel](KeystoreKeys.howMuchLoss)
+
+    for {
+      otherPropertiesModel <- getOtherProperties
+      gainOrLoss <- getGainOrLoss
+      gain <- getGain
+      loss <- getLoss
+    } yield {
+      (otherPropertiesModel, gainOrLoss) match {
+        case (Some(OtherPropertiesModel("No")), _) => controllers.nonresident.routes.OtherPropertiesController.otherProperties().url
+        case (_, Some(PreviousLossOrGainModel("Gain"))) if gain.get.howMuchGain > 0 =>
+          controllers.nonresident.routes.HowMuchGainController.howMuchGain().url
+        case (_, Some(PreviousLossOrGainModel("Loss"))) if loss.get.loss > 0 =>
+          controllers.nonresident.routes.HowMuchLossController.howMuchLoss().url
+        case _ => controllers.nonresident.routes.AnnualExemptAmountController.annualExemptAmount().url
+      }
+    }
   }
 
   val broughtForwardLosses = ValidateSession.async { implicit request =>
@@ -50,7 +69,7 @@ trait BroughtForwardLossesController extends FrontendController with ValidActive
     }
 
     for {
-      backLink <- generateBackLink()
+      backLink <- generateBackLink(hc)
       form <- generateForm
     } yield Ok(calculation.nonresident.broughtForwardLosses(form, backLink))
   }
@@ -64,7 +83,7 @@ trait BroughtForwardLossesController extends FrontendController with ValidActive
 
     def errorAction(form: Form[BroughtForwardLossesModel]) = {
       for {
-        backLink <- generateBackLink()
+        backLink <- generateBackLink(hc)
       } yield BadRequest(calculation.nonresident.broughtForwardLosses(form, backLink))
     }
 
