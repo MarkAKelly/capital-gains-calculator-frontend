@@ -82,5 +82,4 @@ object CalculationDetailsConstructor {
       Some(QuestionAnswerModel(id, answer, question, None))
     }
   }
-
 }

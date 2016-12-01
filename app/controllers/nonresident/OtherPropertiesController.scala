@@ -21,7 +21,7 @@ import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.OtherPropertiesForm._
-import models.nonresident.{AnnualExemptAmountModel, CurrentIncomeModel, CustomerTypeModel, OtherPropertiesModel}
+import models.nonresident.{CurrentIncomeModel, CustomerTypeModel, OtherPropertiesModel}
 import play.api.data.Form
 import play.api.mvc.Result
 import uk.gov.hmrc.play.frontend.controller.FrontendController
@@ -52,56 +52,43 @@ trait OtherPropertiesController extends FrontendController with ValidActiveSessi
       case _ => Future.successful(missingDataRoute)
     }
 
-  private def showOtherPropertiesAmt(implicit hc: HeaderCarrier): Future[Boolean] =
-    calcConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).map {
-      case Some(CustomerTypeModel("individual")) => true
-      case _ => false
-    }
-
   val otherProperties = ValidateSession.async { implicit request =>
 
-    def routeRequest(backUrl: String, showHiddenQuestion: Boolean): Future[Result] = {
+    def routeRequest(backUrl: String): Future[Result] = {
       calcConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.otherProperties).map {
-        case Some(data) => Ok(calculation.nonresident.otherProperties(otherPropertiesForm(showHiddenQuestion).fill(data), backUrl, showHiddenQuestion))
-        case _ => Ok(calculation.nonresident.otherProperties(otherPropertiesForm(showHiddenQuestion), backUrl, showHiddenQuestion))
+        case Some(data) => Ok(calculation.nonresident.otherProperties(otherPropertiesForm.fill(data), backUrl))
+        case _ => Ok(calculation.nonresident.otherProperties(otherPropertiesForm, backUrl))
       }
     }
 
     for {
       backUrl <- otherPropertiesBackUrl
-      showHiddenQuestion <- showOtherPropertiesAmt
-      finalResult <- routeRequest(backUrl, showHiddenQuestion)
+      finalResult <- routeRequest(backUrl)
     } yield finalResult
   }
 
   val submitOtherProperties = ValidateSession.async { implicit request =>
-
     def errorAction(form: Form[OtherPropertiesModel]) = {
       for {
-        backUrl <- otherPropertiesBackUrl
-        showHiddenQuestion <- showOtherPropertiesAmt
-        result <- Future.successful(BadRequest(calculation.nonresident.otherProperties(form, backUrl, showHiddenQuestion)))
+        url <- otherPropertiesBackUrl
+        result <- Future.successful(BadRequest(calculation.nonresident.otherProperties(form, url)))
       } yield result
     }
 
-    def successAction(model: OtherPropertiesModel, showHiddenQuestion: Boolean) = {
-      calcConnector.saveFormData(KeystoreKeys.otherProperties, model)
-      model match {
-        case OtherPropertiesModel("Yes", Some(value)) if value.equals(BigDecimal(0)) =>
-          Future.successful(Redirect(routes.AnnualExemptAmountController.annualExemptAmount()))
-        case OtherPropertiesModel("Yes", None) if !showHiddenQuestion =>
-          Future.successful(Redirect(routes.AnnualExemptAmountController.annualExemptAmount()))
-        case _ => calcConnector.saveFormData(KeystoreKeys.annualExemptAmount, AnnualExemptAmountModel(0))
-          Future.successful(Redirect(routes.AcquisitionDateController.acquisitionDate()))
+    def successAction(model: OtherPropertiesModel) = {
+      for {
+        save <- calcConnector.saveFormData[OtherPropertiesModel](KeystoreKeys.otherProperties, model)
+        route <- routeRequest(model)
+      } yield route
+    }
+
+    def routeRequest(data: OtherPropertiesModel): Future[Result] = {
+      data.otherProperties match {
+        case "Yes" => Future.successful(Redirect(routes.PreviousGainOrLossController.previousGainOrLoss()))
+        case "No" => Future.successful(Redirect(routes.AllowableLossesController.allowableLosses()))
       }
     }
 
-    def routeRequest(showHiddenQuestion: Boolean): Future[Result] = {
-      otherPropertiesForm(showHiddenQuestion).bindFromRequest.fold(errorAction, success => successAction(success, showHiddenQuestion))
-    }
-    for {
-      showHiddenQuestion <- showOtherPropertiesAmt
-      finalResult <- routeRequest(showHiddenQuestion)
-    } yield finalResult
+    otherPropertiesForm.bindFromRequest.fold(errorAction, successAction)
   }
 }

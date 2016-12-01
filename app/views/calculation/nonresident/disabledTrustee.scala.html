@@ -22,7 +22,7 @@
 
     @errorSummary(disabledTrusteeForm, "disabled-trustee")
 
-    <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
+    <h1 class="heading-xlarge">@Messages("calc.disabledTrustee.question")</h1>
 
         @form(action = controllers.nonresident.routes.DisabledTrusteeController.submitDisabledTrustee) {
 
@@ -37,6 +37,7 @@
                 '_labelAfter -> true,
                 '_labelClass -> "block-label",
                 '_legendID -> "isVulnerable",
+                '_legendClass -> "visuallyhidden",
                 '_groupClass -> "inline"
             )
         </div>

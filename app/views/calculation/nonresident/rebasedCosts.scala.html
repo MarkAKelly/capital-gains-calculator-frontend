@@ -10,7 +10,7 @@
 
     @errorSummary(rebasedCosts, "rebased-costs", "rebasedCosts")
 
-    <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
+    <h1 class="heading-xlarge">@Messages("calc.rebasedCosts.question")</h1>
 
     @form(action = controllers.nonresident.routes.RebasedCostsController.submitRebasedCosts) {
 
@@ -20,8 +20,9 @@
                               formInputMoney(rebasedCosts,
                                              "rebasedCosts",
                                              Messages("calc.rebasedCosts.questionTwo")
+                                            ),
+                               hideLegend = true
                               )
-        )
 
         <button class="button" type="submit" id="continue-button">@Messages("calc.base.continue")</button>
 

@@ -16,12 +16,16 @@
 
 package controllers.nonresident
 
+import common.DefaultRoutes._
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.DisposalCostsForm._
-import models.nonresident.DisposalCostsModel
+import models.nonresident.{DisposalCostsModel, SoldForLessModel, SoldOrGivenAwayModel}
+import play.api.data.Form
+import play.api.mvc.Result
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation
 
 import scala.concurrent.Future
@@ -36,20 +40,64 @@ trait DisposalCostsController extends FrontendController with ValidActiveSession
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
 
+  private def backUrl(soldOrGivenAwayModel: Option[SoldOrGivenAwayModel], soldForLessModel: Option[SoldForLessModel]): Future[String] =
+    (soldOrGivenAwayModel, soldForLessModel) match {
+    case (Some(SoldOrGivenAwayModel(soldIt)), _) if !soldIt => Future.successful(routes.MarketValueWhenSoldOrGaveAwayController.marketValueWhenGaveAway().url)
+    case (Some(SoldOrGivenAwayModel(soldIt)), Some(SoldForLessModel(soldForLess))) if soldIt && soldForLess =>
+      Future.successful(routes.MarketValueWhenSoldOrGaveAwayController.marketValueWhenSold().url)
+    case (Some(SoldOrGivenAwayModel(soldIt)), Some(SoldForLessModel(soldForLess))) if soldIt && !soldForLess =>
+      Future.successful(routes.DisposalValueController.disposalValue().url)
+    case (_, _) => Future.successful(missingDataRoute)
+  }
+
+  private def fetchSoldOrGivenAway(implicit headerCarrier: HeaderCarrier): Future[Option[SoldOrGivenAwayModel]] = {
+    calcConnector.fetchAndGetFormData[SoldOrGivenAwayModel](KeystoreKeys.soldOrGivenAway)
+  }
+
+  private def fetchSoldForLess(implicit headerCarrier: HeaderCarrier): Future[Option[SoldForLessModel]] = {
+    calcConnector.fetchAndGetFormData[SoldForLessModel](KeystoreKeys.NonResidentKeys.soldForLess)
+  }
+
   val disposalCosts = ValidateSession.async { implicit request =>
-    calcConnector.fetchAndGetFormData[DisposalCostsModel](KeystoreKeys.disposalCosts).map {
-      case Some(data) => Ok(calculation.nonresident.disposalCosts(disposalCostsForm.fill(data)))
-      case None => Ok(calculation.nonresident.disposalCosts(disposalCostsForm))
+
+    def routeRequest(backLink: String): Future[Result] = {
+      calcConnector.fetchAndGetFormData[DisposalCostsModel](KeystoreKeys.disposalCosts).map {
+        case Some(data) => Ok(calculation.nonresident.disposalCosts(disposalCostsForm.fill(data), backLink))
+        case None => Ok(calculation.nonresident.disposalCosts(disposalCostsForm, backLink))
+      }
     }
+
+    for {
+      soldOrGivenAway <- fetchSoldOrGivenAway
+      soldForLess <- fetchSoldForLess
+      backLink <- backUrl(soldOrGivenAway, soldForLess)
+      route <- routeRequest(backLink)
+    } yield route
   }
 
   val submitDisposalCosts = ValidateSession.async { implicit request =>
-    disposalCostsForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(calculation.nonresident.disposalCosts(errors))),
-      success => {
-        calcConnector.saveFormData(KeystoreKeys.disposalCosts, success)
-        Future.successful(Redirect(routes.AcquisitionDateController.acquisitionDate()))
-      }
-    )
+
+    def errorAction(errors: Form[DisposalCostsModel], backLink: String) = {
+      Future.successful(BadRequest(calculation.nonresident.disposalCosts(errors, backLink)))
+    }
+
+    def successAction(model: DisposalCostsModel) = {
+      calcConnector.saveFormData(KeystoreKeys.disposalCosts, model)
+      Future.successful(Redirect(routes.AcquisitionDateController.acquisitionDate()))
+    }
+
+    def routeRequest(backLink: String) = {
+      disposalCostsForm.bindFromRequest.fold(
+        errors => errorAction(errors, backLink),
+        success => successAction(success)
+      )
+    }
+
+    for {
+      soldOrGivenAway <- fetchSoldOrGivenAway
+      soldForLess <- fetchSoldForLess
+      backLink <- backUrl(soldOrGivenAway, soldForLess)
+      route <- routeRequest(backLink)
+    } yield route
   }
 }

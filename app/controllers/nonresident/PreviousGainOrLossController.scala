@@ -16,10 +16,17 @@
 
 package controllers.nonresident
 
+import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
+import forms.nonresident.PreviousLossOrGainForm._
+import models.nonresident.PreviousLossOrGainModel
+import play.api.data.Form
+import play.api.mvc.Result
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+import views.html.calculation.{nonresident => views}
 
+import scala.concurrent.Future
 object PreviousGainOrLossController extends PreviousGainOrLossController {
   val calcConnector = CalculatorConnector
 }
@@ -28,8 +35,36 @@ trait PreviousGainOrLossController extends FrontendController with ValidActiveSe
 
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
+  val calcConnector: CalculatorConnector
 
-  val previousGainOrLoss = TODO
+  val previousGainOrLoss = ValidateSession.async { implicit request =>
+    calcConnector.fetchAndGetFormData[PreviousLossOrGainModel](KeystoreKeys.NonResidentKeys.previousLossOrGain) map {
+      case Some(data) => Ok(views.previousLossOrGain(previousLossOrGainForm.fill(data)))
+      case None => Ok(views.previousLossOrGain(previousLossOrGainForm))
+    }
+  }
 
-  val submitPreviousGainOrLoss = TODO
+  val submitPreviousGainOrLoss = ValidateSession.async {
+    implicit request =>
+
+      def errorAction(form: Form[PreviousLossOrGainModel]) = {
+        Future.successful(BadRequest(views.previousLossOrGain(form)))
+      }
+      def successAction(model: PreviousLossOrGainModel) = {
+        for {
+          save <- calcConnector.saveFormData[PreviousLossOrGainModel](KeystoreKeys.NonResidentKeys.previousLossOrGain, model)
+          route <- routeRequest(model)
+        } yield route
+      }
+
+      def routeRequest(data: PreviousLossOrGainModel): Future[Result] = {
+        data.previousLossOrGain match {
+          case "Loss" => Future.successful(Redirect(routes.HowMuchLossController.howMuchLoss()))
+          case "Gain" => Future.successful(Redirect(routes.HowMuchGainController.howMuchGain()))
+          case "Neither" => Future.successful(Redirect(routes.AnnualExemptAmountController.annualExemptAmount()))
+        }
+      }
+
+      previousLossOrGainForm.bindFromRequest.fold(errorAction, successAction)
+  }
 }

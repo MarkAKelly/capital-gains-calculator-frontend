@@ -21,7 +21,7 @@ object KeystoreKeys {
   object NonResidentKeys{
 
     val soldForLess = "nr:soldForLess"
-
+    val previousLossOrGain = "nr:previousLossOrGain"
   }
 
   val customerType = "nr:customerType"
@@ -49,10 +49,12 @@ object KeystoreKeys {
   val howBecameOwner = "nr:howBecameOwner"
   val soldOrGivenAway = "nr:soldOrGivenAway"
   val boughtForLess = "nr:boughtForLess"
+  val disposalMarketValue = "nr:disposalMarketValue"
+  val acquisitionMarketValue = "nr:acquisitionMarketValue"
+  val worthBeforeLegislationStart = "nr:worthBeforeLegislation"
   val howMuchGain = "nr:howMuchGain"
   val howMuchLoss = "nr:howMuchLoss"
   val broughtForwardLosses = "nr:broughtForwardLosses"
-
 
 
   object ResidentPropertyKeys {

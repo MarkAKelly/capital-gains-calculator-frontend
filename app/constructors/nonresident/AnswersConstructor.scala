@@ -16,10 +16,11 @@
 
 package constructors.nonresident
 
-import common.KeystoreKeys
+import common.{KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
 import models.nonresident._
 import uk.gov.hmrc.play.http.HeaderCarrier
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -34,11 +35,9 @@ trait AnswersConstructor {
     val disposalDate = calculatorConnector.fetchAndGetFormData[DisposalDateModel](KeystoreKeys.disposalDate).map(data => data.get)
     val soldOrGivenAway = calculatorConnector.fetchAndGetFormData[SoldOrGivenAwayModel](KeystoreKeys.soldOrGivenAway).map(data => data.get)
     val soldForLess = calculatorConnector.fetchAndGetFormData[SoldForLessModel](KeystoreKeys.NonResidentKeys.soldForLess)
-    val disposalValue = calculatorConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.disposalValue).map(data => data.get)
     val disposalCosts = calculatorConnector.fetchAndGetFormData[DisposalCostsModel](KeystoreKeys.disposalCosts).map(data => data.get)
-    val howBecameOwner = calculatorConnector.fetchAndGetFormData[HowBecameOwnerModel](KeystoreKeys.howBecameOwner).map(data => data.get)
+    val howBecameOwner = calculatorConnector.fetchAndGetFormData[HowBecameOwnerModel](KeystoreKeys.howBecameOwner)
     val boughtForLess = calculatorConnector.fetchAndGetFormData[BoughtForLessModel](KeystoreKeys.boughtForLess)
-    val acquisitionValue = calculatorConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.acquisitionValue).map(data => data.get)
     val acquisitionCosts = calculatorConnector.fetchAndGetFormData[AcquisitionCostsModel](KeystoreKeys.acquisitionCosts).map(data => data.get)
     val acquisitionDate = calculatorConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).map(data => data.get)
     val rebasedValue = calculatorConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue)
@@ -46,17 +45,44 @@ trait AnswersConstructor {
     val improvements = calculatorConnector.fetchAndGetFormData[ImprovementsModel](KeystoreKeys.improvements).map(data => data.get)
     val otherReliefsFlat = calculatorConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat)
 
+    def disposalValue(soldOrGivenAwayModel: SoldOrGivenAwayModel,
+                      soldForLessModel: Option[SoldForLessModel]): Future[DisposalValueModel] = (soldOrGivenAwayModel, soldForLessModel) match {
+      case (SoldOrGivenAwayModel(true), Some(SoldForLessModel(true))) =>
+        calculatorConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.disposalMarketValue).map(data => data.get)
+      case (SoldOrGivenAwayModel(true), Some(_)) =>
+        calculatorConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.disposalValue).map(data => data.get)
+      case _ =>
+        calculatorConnector.fetchAndGetFormData[DisposalValueModel](KeystoreKeys.disposalMarketValue).map(data => data.get)
+    }
+
+    def acquisitionValue(acquisitionDateModel: AcquisitionDateModel,
+                         howBecameOwnerModel: Option[HowBecameOwnerModel],
+                         boughtForLessModel: Option[BoughtForLessModel]): Future[AcquisitionValueModel] =
+      (acquisitionDateModel, howBecameOwnerModel, boughtForLessModel) match {
+        case (AcquisitionDateModel("Yes",_,_,_),_, _) if TaxDates.dateBeforeLegislationStart(acquisitionDateModel.get) =>
+          calculatorConnector.fetchAndGetFormData[WorthBeforeLegislationStartModel](KeystoreKeys.worthBeforeLegislationStart).map(data =>
+            AcquisitionValueModel(data.get.worthBeforeLegislationStart)
+          )
+        case (_, Some(HowBecameOwnerModel(value)), _) if !value.equals("Bought") =>
+          calculatorConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.acquisitionMarketValue)
+            .map(data => data.get)
+        case (_, _, Some(BoughtForLessModel(true))) =>
+          calculatorConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.acquisitionMarketValue)
+            .map(data => data.get)
+        case _ => calculatorConnector.fetchAndGetFormData[AcquisitionValueModel](KeystoreKeys.acquisitionValue).map(data => data.get)
+      }
+
     for {
       disposalDate <- disposalDate
       soldOrGivenAway <- soldOrGivenAway
       soldForLess <- soldForLess
-      disposalValue <- disposalValue
+      disposalValue <- disposalValue(soldOrGivenAway, soldForLess)
       disposalCosts <- disposalCosts
       howBecameOwner <- howBecameOwner
       boughtForLess <- boughtForLess
-      acquisitionValue <- acquisitionValue
-      acquisitionCosts <- acquisitionCosts
       acquisitionDate <- acquisitionDate
+      acquisitionValue <- acquisitionValue(acquisitionDate, howBecameOwner, boughtForLess)
+      acquisitionCosts <- acquisitionCosts
       rebasedValue <- rebasedValue
       rebasedCosts <- rebasedCosts
       improvements <- improvements

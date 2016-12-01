@@ -31,11 +31,11 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
     None,
     Some(CurrentIncomeModel(30000.0)),
     Some(PersonalAllowanceModel(11000.0)),
-    OtherPropertiesModel("Yes", Some(250000.0)),
+    OtherPropertiesModel("Yes"),
     Some(AnnualExemptAmountModel(10000.0)),
     AcquisitionDateModel("Yes", Some(4), Some(9), Some(2016)),
     AcquisitionValueModel(300000.0),
-    Some(RebasedValueModel("Yes", Some(350000.0))),
+    Some(RebasedValueModel(Some(350000.0))),
     Some(RebasedCostsModel("Yes", Some(4000.0))),
     ImprovementsModel("Yes", Some(2000.0)),
     DisposalDateModel(5, 9, 2016),
@@ -55,7 +55,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
     Some(DisabledTrusteeModel("Yes")),
     None,
     None,
-    OtherPropertiesModel("Yes", Some(0)),
+    OtherPropertiesModel("Yes"),
     Some(AnnualExemptAmountModel(10000.0)),
     AcquisitionDateModel("No", None, None, None),
     AcquisitionValueModel(300000.0),
@@ -79,7 +79,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
     None,
     None,
     Some(PersonalAllowanceModel(0)),
-    OtherPropertiesModel("Yes", Some(0)),
+    OtherPropertiesModel("Yes"),
     Some(AnnualExemptAmountModel(0)),
     AcquisitionDateModel("No", None, None, None),
     AcquisitionValueModel(300000.0),
@@ -103,7 +103,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
     None,
     None,
     None,
-    OtherPropertiesModel("Yes", Some(0)),
+    OtherPropertiesModel("Yes"),
     Some(AnnualExemptAmountModel(100)),
     AcquisitionDateModel("No", None, None, None),
     AcquisitionValueModel(300000.0),
@@ -131,7 +131,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       lazy val result = target.getPersonalDetailsSection(sumModelTA)
 
       "return a Sequence[QuestionAnswerModel[Any]] with size 5" in {
-        result.size shouldBe 5
+        result.size shouldBe 4
       }
 
       "return a CustomerType item" in {
@@ -154,13 +154,13 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         result.exists(qa => qa.id == KeystoreKeys.otherProperties) shouldBe true
       }
 
-      "return a OtherPropertiesAmountAnswer item" in {
+     /* "return a OtherPropertiesAmountAnswer item" in {
         result.exists(qa => qa.id == KeystoreKeys.otherProperties + "Amount") shouldBe true
       }
 
       "not return a AnnualExemptAmountDataAnswer item" in {
         result.exists(qa => qa.id == KeystoreKeys.annualExemptAmount) shouldBe false
-      }
+      }*/
     }
 
     "using the summaryWithTrusteeValuesModel" should {
@@ -168,7 +168,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       lazy val result = target.getPersonalDetailsSection(summaryWithTrusteeValuesModel)
 
       "return a Sequence[QuestionAnswerModel[Any]] with size 5" in {
-        result.size shouldBe 5
+        result.size shouldBe 3
       }
 
       "return a CustomerType item" in {
@@ -187,17 +187,17 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         result.exists(qa => qa.id == KeystoreKeys.disabledTrustee) shouldBe true
       }
 
-      "return a OtherPropertiesAnswer item" in {
+      /*"return a OtherPropertiesAnswer item" in {
         result.exists(qa => qa.id == KeystoreKeys.otherProperties) shouldBe true
-      }
+      }*/
 
-      "return a OtherPropertiesAmountAnswer item" in {
+      /*"return a OtherPropertiesAmountAnswer item" in {
         result.exists(qa => qa.id == KeystoreKeys.otherProperties + "Amount") shouldBe true
       }
 
       "return a AnnualExemptAmountDataAnswer item" in {
         result.exists(qa => qa.id == KeystoreKeys.annualExemptAmount) shouldBe true
-      }
+      }*/
     }
 
     "using the summaryNoOptionsIndividualModel" should {
@@ -205,7 +205,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       lazy val result = target.getPersonalDetailsSection(summaryNoOptionsIndividualModel)
 
       "return a Sequence[QuestionAnswerModel[Any]] with size 5" in {
-        result.size shouldBe 5
+        result.size shouldBe 3
       }
 
       "return a CustomerType item" in {
@@ -228,13 +228,13 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         result.exists(qa => qa.id == KeystoreKeys.otherProperties) shouldBe true
       }
 
-      "return a OtherPropertiesAmountAnswer item" in {
+     /* "return a OtherPropertiesAmountAnswer item" in {
         result.exists(qa => qa.id == KeystoreKeys.otherProperties + "Amount") shouldBe true
       }
 
       "return a AnnualExemptAmountDataAnswer item" in {
         result.exists(qa => qa.id == KeystoreKeys.annualExemptAmount) shouldBe true
-      }
+      }*/
     }
 
     "using the summaryNoOptionsTrusteeModel" should {
@@ -242,7 +242,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       lazy val result = target.getPersonalDetailsSection(summaryWithTrusteeValuesModel)
 
       "return a Sequence[QuestionAnswerModel[Any]] with size 5" in {
-        result.size shouldBe 5
+        result.size shouldBe 3
       }
 
       "return a CustomerType item" in {
@@ -261,17 +261,17 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
         result.exists(qa => qa.id == KeystoreKeys.disabledTrustee) shouldBe true
       }
 
-      "return a OtherPropertiesAnswer item" in {
+      /*"return a OtherPropertiesAnswer item" in {
         result.exists(qa => qa.id == KeystoreKeys.otherProperties) shouldBe true
-      }
+      }*/
 
-      "return a OtherPropertiesAmountAnswer item" in {
+     /* "return a OtherPropertiesAmountAnswer item" in {
         result.exists(qa => qa.id == KeystoreKeys.otherProperties + "Amount") shouldBe true
       }
 
       "return a AnnualExemptAmountDataAnswer item" in {
         result.exists(qa => qa.id == KeystoreKeys.annualExemptAmount) shouldBe true
-      }
+      }*/
     }
   }
 
@@ -630,242 +630,240 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
     }
   }
 
-  "calling .getOtherPropertiesAnswer" when {
+//  "calling .getOtherPropertiesAnswer" when {
+//
+//    "a otherPropertiesAnswer of yes is given" should {
+//
+//      lazy val result = PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithAllOptionValuesModel)
+//
+//      "return some details for the OtherProperties" in {
+//        result should not be None
+//      }
+//
+//      s"return ${messages.yes}" in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.data shouldBe messages.yes
+//        }
+//      }
+//
+//      s"return an ID of ${KeystoreKeys.otherProperties}" in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.id shouldBe KeystoreKeys.otherProperties
+//        }
+//      }
+//
+//      s"return a question of ${messages.OtherProperties.question} " in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.question shouldBe messages.OtherProperties.question
+//        }
+//      }
+//
+//      s"return a link of ${routes.OtherPropertiesController.otherProperties().url}" in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.link.fold(cancel("link not supplied when expected")) { link =>
+//            link shouldBe routes.OtherPropertiesController.otherProperties().url
+//          }
+//        }
+//      }
+//    }
+//
+//    "a otherPropertiesAnswer of no is given" should {
+//
+//      lazy val result = PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryRepresentativeFlatWithoutAEA)
+//
+//      "return some details for the OtherProperties" in {
+//        result should not be None
+//      }
+//
+//      s"return data of ${messages.no}" in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.data shouldBe messages.no
+//        }
+//      }
+//
+//      s"return an ID of ${KeystoreKeys.otherProperties}" in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.id shouldBe KeystoreKeys.otherProperties
+//        }
+//      }
+//
+//      s"return a question of ${messages.OtherProperties.question} " in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.question shouldBe messages.OtherProperties.question
+//        }
+//      }
+//
+//      s"return a link of ${routes.OtherPropertiesController.otherProperties().url}" in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.link.fold(cancel("link not supplied when expected")) { link =>
+//            link shouldBe routes.OtherPropertiesController.otherProperties().url
+//          }
+//        }
+//      }
+//    }
+//  }
 
-    "a otherPropertiesAnswer of yes is given" should {
+//  "calling .getOtherPropertiesAmountAnswer" when {
+//
+//    "an otherPropertiesAmount of greater than 0 is given" should {
+//
+//      lazy val result = PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryWithAllOptionValuesModel)
+//
+//      "return some details for the OtherPropertiesAmount" in {
+//        result should not be None
+//      }
+//
+//      "return greater than 0" in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.data shouldBe summaryWithAllOptionValuesModel.otherPropertiesModel.otherPropertiesAmt.get
+//        }
+//      }
+//
+//      s"return an ID of ${KeystoreKeys.otherProperties} + Amount" in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.id shouldBe KeystoreKeys.otherProperties + "Amount"
+//        }
+//      }
+//
+//      s"return a question of ${messages.OtherProperties.questionTwo} " in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.question shouldBe messages.OtherProperties.questionTwo
+//        }
+//      }
+//
+//      s"return a URL of ${routes.OtherPropertiesController.otherProperties().url}" in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.link.fold(cancel("link not supplied when expected")) { link =>
+//            link shouldBe routes.OtherPropertiesController.otherProperties().url
+//          }
+//        }
+//      }
+//    }
+//
+//    "an otherPropertiesAmount of 0.0 is given" should {
+//
+//      lazy val result = target.getOtherPropertiesAmountAnswer(summaryWithTrusteeValuesModel)
+//
+//      "return some details for the OtherPropertiesAmount" in {
+//        result should not be None
+//      }
+//
+//      "return 0.0" in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.data shouldBe summaryWithTrusteeValuesModel.otherPropertiesModel.otherPropertiesAmt.get
+//        }
+//      }
+//
+//      s"return an ID of ${KeystoreKeys.otherProperties} + Amount" in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.id shouldBe KeystoreKeys.otherProperties + "Amount"
+//        }
+//      }
+//
+//      s"return a question of $messages.OtherProperties.questionTwo} " in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.question shouldBe messages.OtherProperties.questionTwo
+//        }
+//      }
+//
+//      s"return a URL of ${routes.OtherPropertiesController.otherProperties().url}" in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.link.fold(cancel("link not supplied when expected")) { link =>
+//            link shouldBe routes.OtherPropertiesController.otherProperties().url
+//          }
+//        }
+//      }
+//
+//    }
+//
+//    "no answer for otherPropertiesAmount is given" should {
+//
+//      lazy val result = target.getOtherPropertiesAmountAnswer(summaryOtherReliefsFlatYesNoValue)
+//
+//      "return a None" in {
+//        result shouldBe None
+//      }
+//    }
+  //}
 
-      lazy val result = PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryWithAllOptionValuesModel)
+//  "calling .getAnnualExemptAmountAnswer" when {
+//
+//    "no AnnualExemptAmount is given" should {
+//
+//      lazy val result = target.getAnnualExemptAmountAnswer(summaryWithAllOptionValuesModel)
+//
+//      "return a None" in {
+//        result shouldBe None
+//      }
+//    }
+//
+//    "an AnnualExemptAmount of greater than 0 is given" should {
+//
+//      lazy val result = target.getAnnualExemptAmountAnswer(summaryWithTrusteeValuesModel)
+//
+//      "return some details for the AnnualExemptAmount" in {
+//        result should not be None
+//      }
+//
+//      s"return a valid id of ${KeystoreKeys.annualExemptAmount}" in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.id shouldBe KeystoreKeys.annualExemptAmount
+//        }
+//      }
+//
+//      "return a valid data that is greater than 0" in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.data shouldBe summaryWithTrusteeValuesModel.annualExemptAmountModel.get.annualExemptAmount
+//        }
+//      }
+//
+//      s"return a valid question of ${messages.AnnualExemptAmount.question}" in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.question shouldBe messages.AnnualExemptAmount.question
+//        }
+//      }
+//
+//      s"return a valid link of ${routes.AnnualExemptAmountController.annualExemptAmount().url}" in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.link.fold(cancel("link not supplied when expected")) { link =>
+//            link shouldBe routes.AnnualExemptAmountController.annualExemptAmount().url
+//          }
+//        }
+//      }
+//    }
 
-      "return some details for the OtherProperties" in {
-        result should not be None
-      }
+//    "an AnnualExemptAmount of 0.0 is given" should {
+//
+//      lazy val result = target.getAnnualExemptAmountAnswer(summaryNoOptionsIndividualModel)
+//
+//      "return some details for the AnnualExemptAmount" in {
+//        result should not be None
+//      }
+//
+//      s"return a valid id of ${KeystoreKeys.annualExemptAmount}" in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.id shouldBe KeystoreKeys.annualExemptAmount
+//        }
+//      }
+//
+//      "return a valid data of 0.0" in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.data shouldBe summaryNoOptionsIndividualModel.annualExemptAmountModel.get.annualExemptAmount
+//        }
+//      }
+//
+//      s"return a valid question of ${messages.AnnualExemptAmount.question}" in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.question shouldBe messages.AnnualExemptAmount.question
+//        }
+//      }
+//
+//      s"return a valid link of ${routes.AnnualExemptAmountController.annualExemptAmount().url}" in {
+//        result.fold(cancel("expected result not computed")) { item =>
+//          item.link.fold(cancel("link not supplied when expected")) { link =>
+//            link shouldBe routes.AnnualExemptAmountController.annualExemptAmount().url
+//          }
+//        }
+//      }
 
-      s"return ${messages.yes}" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe messages.yes
-        }
-      }
-
-      s"return an ID of ${KeystoreKeys.otherProperties}" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.id shouldBe KeystoreKeys.otherProperties
-        }
-      }
-
-      s"return a question of ${messages.OtherProperties.question} " in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.question shouldBe messages.OtherProperties.question
-        }
-      }
-
-      s"return a link of ${routes.OtherPropertiesController.otherProperties().url}" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.link.fold(cancel("link not supplied when expected")) { link =>
-            link shouldBe routes.OtherPropertiesController.otherProperties().url
-          }
-        }
-      }
-    }
-
-    "a otherPropertiesAnswer of no is given" should {
-
-      lazy val result = PersonalDetailsConstructor.getOtherPropertiesAnswer(summaryRepresentativeFlatWithoutAEA)
-
-      "return some details for the OtherProperties" in {
-        result should not be None
-      }
-
-      s"return data of ${messages.no}" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe messages.no
-        }
-      }
-
-      s"return an ID of ${KeystoreKeys.otherProperties}" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.id shouldBe KeystoreKeys.otherProperties
-        }
-      }
-
-      s"return a question of ${messages.OtherProperties.question} " in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.question shouldBe messages.OtherProperties.question
-        }
-      }
-
-      s"return a link of ${routes.OtherPropertiesController.otherProperties().url}" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.link.fold(cancel("link not supplied when expected")) { link =>
-            link shouldBe routes.OtherPropertiesController.otherProperties().url
-          }
-        }
-      }
-    }
-  }
-
-  "calling .getOtherPropertiesAmountAnswer" when {
-
-    "an otherPropertiesAmount of greater than 0 is given" should {
-
-      lazy val result = PersonalDetailsConstructor.getOtherPropertiesAmountAnswer(summaryWithAllOptionValuesModel)
-
-      "return some details for the OtherPropertiesAmount" in {
-        result should not be None
-      }
-
-      "return greater than 0" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe summaryWithAllOptionValuesModel.otherPropertiesModel.otherPropertiesAmt.get
-        }
-      }
-
-      s"return an ID of ${KeystoreKeys.otherProperties} + Amount" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.id shouldBe KeystoreKeys.otherProperties + "Amount"
-        }
-      }
-
-      s"return a question of ${messages.OtherProperties.questionTwo} " in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.question shouldBe messages.OtherProperties.questionTwo
-        }
-      }
-
-      s"return a URL of ${routes.OtherPropertiesController.otherProperties().url}" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.link.fold(cancel("link not supplied when expected")) { link =>
-            link shouldBe routes.OtherPropertiesController.otherProperties().url
-          }
-        }
-      }
-    }
-
-    "an otherPropertiesAmount of 0.0 is given" should {
-
-      lazy val result = target.getOtherPropertiesAmountAnswer(summaryWithTrusteeValuesModel)
-
-      "return some details for the OtherPropertiesAmount" in {
-        result should not be None
-      }
-
-      "return 0.0" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe summaryWithTrusteeValuesModel.otherPropertiesModel.otherPropertiesAmt.get
-        }
-      }
-
-      s"return an ID of ${KeystoreKeys.otherProperties} + Amount" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.id shouldBe KeystoreKeys.otherProperties + "Amount"
-        }
-      }
-
-      s"return a question of $messages.OtherProperties.questionTwo} " in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.question shouldBe messages.OtherProperties.questionTwo
-        }
-      }
-
-      s"return a URL of ${routes.OtherPropertiesController.otherProperties().url}" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.link.fold(cancel("link not supplied when expected")) { link =>
-            link shouldBe routes.OtherPropertiesController.otherProperties().url
-          }
-        }
-      }
-
-    }
-
-    "no answer for otherPropertiesAmount is given" should {
-
-      lazy val result = target.getOtherPropertiesAmountAnswer(summaryOtherReliefsFlatYesNoValue)
-
-      "return a None" in {
-        result shouldBe None
-      }
-    }
-  }
-
-  "calling .getAnnualExemptAmountAnswer" when {
-
-    "no AnnualExemptAmount is given" should {
-
-      lazy val result = target.getAnnualExemptAmountAnswer(summaryWithAllOptionValuesModel)
-
-      "return a None" in {
-        result shouldBe None
-      }
-    }
-
-    "an AnnualExemptAmount of greater than 0 is given" should {
-
-      lazy val result = target.getAnnualExemptAmountAnswer(summaryWithTrusteeValuesModel)
-
-      "return some details for the AnnualExemptAmount" in {
-        result should not be None
-      }
-
-      s"return a valid id of ${KeystoreKeys.annualExemptAmount}" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.id shouldBe KeystoreKeys.annualExemptAmount
-        }
-      }
-
-      "return a valid data that is greater than 0" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe summaryWithTrusteeValuesModel.annualExemptAmountModel.get.annualExemptAmount
-        }
-      }
-
-      s"return a valid question of ${messages.AnnualExemptAmount.question}" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.question shouldBe messages.AnnualExemptAmount.question
-        }
-      }
-
-      s"return a valid link of ${routes.AnnualExemptAmountController.annualExemptAmount().url}" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.link.fold(cancel("link not supplied when expected")) { link =>
-            link shouldBe routes.AnnualExemptAmountController.annualExemptAmount().url
-          }
-        }
-      }
-    }
-
-    "an AnnualExemptAmount of 0.0 is given" should {
-
-      lazy val result = target.getAnnualExemptAmountAnswer(summaryNoOptionsIndividualModel)
-
-      "return some details for the AnnualExemptAmount" in {
-        result should not be None
-      }
-
-      s"return a valid id of ${KeystoreKeys.annualExemptAmount}" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.id shouldBe KeystoreKeys.annualExemptAmount
-        }
-      }
-
-      "return a valid data of 0.0" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe summaryNoOptionsIndividualModel.annualExemptAmountModel.get.annualExemptAmount
-        }
-      }
-
-      s"return a valid question of ${messages.AnnualExemptAmount.question}" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.question shouldBe messages.AnnualExemptAmount.question
-        }
-      }
-
-      s"return a valid link of ${routes.AnnualExemptAmountController.annualExemptAmount().url}" in {
-        result.fold(cancel("expected result not computed")) { item =>
-          item.link.fold(cancel("link not supplied when expected")) { link =>
-            link shouldBe routes.AnnualExemptAmountController.annualExemptAmount().url
-          }
-        }
-      }
-
-    }
-  }
 }

@@ -20,7 +20,6 @@ import java.util.UUID
 
 import common.KeystoreKeys
 import common.nonresident.CustomerTypeKeys
-import config.WSHttp
 import models.nonresident._
 import models.resident
 import models.resident.IncomeAnswersModel
@@ -200,7 +199,8 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
 
   }
 
-  def setupMockedConnector(totalGainAnswersModel: TotalGainAnswersModel, totalGainResultsModel: Option[TotalGainResultsModel] = None): CalculatorConnector = {
+  def setupMockedConnector(totalGainAnswersModel: TotalGainAnswersModel, totalGainResultsModel: Option[TotalGainResultsModel] = None,
+                           calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel] = None): CalculatorConnector = {
 
     val mockSessionCache = mock[SessionCache]
     val mockHttpGet = mock[HttpGet]
@@ -232,8 +232,15 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     when(mockSessionCache.fetchAndGetEntry[ImprovementsModel](Matchers.eq(KeystoreKeys.improvements))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(totalGainAnswersModel.improvementsModel)))
 
-    when(mockHttpGet.GET[Option[TotalGainResultsModel]](Matchers.any())(Matchers.any(), Matchers.any()))
-      .thenReturn(totalGainResultsModel)
+    if (totalGainResultsModel.isDefined) {
+      when(mockHttpGet.GET[Option[TotalGainResultsModel]](Matchers.any())(Matchers.any(), Matchers.any()))
+        .thenReturn(totalGainResultsModel)
+    }
+
+    if (calculationResultsWithPRRModel.isDefined) {
+      when(mockHttpGet.GET[Option[CalculationResultsWithPRRModel]](Matchers.any())(Matchers.any(), Matchers.any()))
+        .thenReturn(calculationResultsWithPRRModel)
+    }
 
     new CalculatorConnector {
       override val sessionCache: SessionCache = mockSessionCache
@@ -247,11 +254,11 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(11100)),
-    OtherPropertiesModel("No", None),
+    OtherPropertiesModel("No"),
     None,
     AcquisitionDateModel("No", None, None, None),
     AcquisitionValueModel(100000),
-    Some(RebasedValueModel("No", None)),
+    Some(RebasedValueModel(None)),
     None,
     ImprovementsModel("No", None),
     DisposalDateModel(10, 10, 2010),
@@ -271,11 +278,11 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(11100)),
-    OtherPropertiesModel("No", None),
+    OtherPropertiesModel("No"),
     None,
     AcquisitionDateModel("Yes", Some(9), Some(9), Some(1999)),
     AcquisitionValueModel(100000),
-    Some(RebasedValueModel("No", None)),
+    Some(RebasedValueModel(None)),
     None,
     ImprovementsModel("No", None),
     DisposalDateModel(10, 10, 2010),
@@ -295,11 +302,11 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(11100)),
-    OtherPropertiesModel("No", None),
+    OtherPropertiesModel("No"),
     None,
     AcquisitionDateModel("Yes", Some(9), Some(9), Some(1999)),
     AcquisitionValueModel(100000),
-    Some(RebasedValueModel("Yes", Some(1000))),
+    Some(RebasedValueModel(Some(1000))),
     Some(RebasedCostsModel("No", None)),
     ImprovementsModel("No", None),
     DisposalDateModel(10, 10, 2010),
@@ -319,11 +326,11 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
     None,
     Some(CurrentIncomeModel(1000)),
     Some(PersonalAllowanceModel(11100)),
-    OtherPropertiesModel("No", None),
+    OtherPropertiesModel("No"),
     None,
     AcquisitionDateModel("No", None, None, None),
     AcquisitionValueModel(100000),
-    Some(RebasedValueModel("No", None)),
+    Some(RebasedValueModel(None)),
     None,
     ImprovementsModel("No", None),
     DisposalDateModel(10, 10, 2010),
@@ -368,12 +375,12 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
       Some(SoldForLessModel(false)),
       DisposalValueModel(1000),
       DisposalCostsModel(100),
-      HowBecameOwnerModel("Gifted"),
+      Some(HowBecameOwnerModel("Gifted")),
       Some(BoughtForLessModel(false)),
       AcquisitionValueModel(2000),
       AcquisitionCostsModel(200),
       AcquisitionDateModel("No", None, None, None),
-      Some(RebasedValueModel("No", None)),
+      Some(RebasedValueModel(None)),
       Some(RebasedCostsModel("No", None)),
       ImprovementsModel("Yes", Some(10), Some(20)),
       None)
@@ -385,6 +392,33 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
 
       await(result) shouldBe Some(validResponse)
     }
+  }
+
+  "Calling calculateTaxableGainAfterPRR" should {
+
+    val validResponse = mock[CalculationResultsWithPRRModel]
+    val model = TotalGainAnswersModel(DisposalDateModel(5, 10, 2016),
+      SoldOrGivenAwayModel(true),
+      Some(SoldForLessModel(false)),
+      DisposalValueModel(1000),
+      DisposalCostsModel(100),
+      Some(HowBecameOwnerModel("Gifted")),
+      Some(BoughtForLessModel(false)),
+      AcquisitionValueModel(2000),
+      AcquisitionCostsModel(200),
+      AcquisitionDateModel("No", None, None, None),
+      Some(RebasedValueModel(None)),
+      Some(RebasedCostsModel("No", None)),
+      ImprovementsModel("Yes", Some(10), Some(20)),
+      None)
+    val target = setupMockedConnector(model, calculationResultsWithPRRModel = Some(validResponse))
+
+    "return a valid response" in {
+      val result = target.calculateTaxableGainAfterPRR(model, PrivateResidenceReliefModel("No", None, None))
+
+      await(result) shouldBe Some(validResponse)
+    }
+
   }
 
   "Calling calculateFlat" should {

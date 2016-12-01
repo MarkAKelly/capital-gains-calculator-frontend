@@ -32,7 +32,7 @@ class CurrentIncomeViewSpec extends UnitSpec with WithFakeApplication with Mocki
       lazy val view = currentIncome(currentIncomeForm)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
-      s"have a title of '${messages.CurrentIncome.question}'" in {
+      s"have the correct title" in {
         document.title() shouldBe messages.CurrentIncome.question
       }
 
@@ -52,7 +52,7 @@ class CurrentIncomeViewSpec extends UnitSpec with WithFakeApplication with Mocki
         }
       }
 
-      s"have a home link to '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
+      s"have a home link to the disposal date view'" in {
         document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
       }
 
@@ -63,20 +63,20 @@ class CurrentIncomeViewSpec extends UnitSpec with WithFakeApplication with Mocki
           form.attr("method") shouldBe "POST"
         }
 
-        s"has an action of '${controllers.nonresident.routes.CurrentIncomeController.submitCurrentIncome().url}'" in {
+        s"has a the correct action" in {
           form.attr("action") shouldBe controllers.nonresident.routes.CurrentIncomeController.submitCurrentIncome().url
         }
       }
 
-      s"have the question '${messages.CurrentIncome.question}'" in {
+      s"have the correct question" in {
         document.body.select("label span").first().text shouldBe messages.CurrentIncome.question
       }
 
-      s"have the help text '${messages.CurrentIncome.helpText}'" in {
-        document.body.select("label span.form-hint").text() shouldBe messages.CurrentIncome.helpText
+      s"have the correct hint text" in {
+        document.body.select("span.form-hint").text() shouldBe messages.CurrentIncome.helpText
       }
 
-      "have an input with the id 'currentIncome" in {
+      "have an input with the correct id" in {
         document.body().select("input").attr("id") shouldBe "currentIncome"
       }
 
@@ -93,43 +93,6 @@ class CurrentIncomeViewSpec extends UnitSpec with WithFakeApplication with Mocki
 
         "has the id 'continue-button'" in {
           button.attr("id") shouldBe "continue-button"
-        }
-      }
-
-      "have a sidebar" which {
-        lazy val sidebar = document.body().select("aside")
-        lazy val links = sidebar.select("a")
-
-        "contains two links" in {
-          links.size() shouldBe 2
-        }
-
-        "has links with the class 'external-link'" in {
-          links.attr("class") shouldBe "external-link"
-        }
-
-        "has links with a rel of 'external'" in {
-          links.attr("rel") shouldBe "external"
-        }
-
-        "has links with a target of '_blank'" in {
-          links.attr("target") shouldBe "_blank"
-        }
-
-        "has the first link with an href to 'https://www.gov.uk/income-tax/overview'" in {
-          sidebar.select("#helpLink1").attr("href") shouldBe "https://www.gov.uk/income-tax/overview"
-        }
-
-        "has the first link with the correct text" in {
-          sidebar.select("#helpLink1").text() shouldBe s"${messages.CurrentIncome.linkOne} ${messages.externalLink}"
-        }
-
-        "has the second link with an href to 'https://www.gov.uk/income-tax-rates/previous-tax-years'" in {
-          sidebar.select("#helpLink2").attr("href") shouldBe "https://www.gov.uk/income-tax-rates/previous-tax-years"
-        }
-
-        "has the second link with the correct text" in {
-          sidebar.select("#helpLink2").text() shouldBe s"${messages.CurrentIncome.linkTwo} ${messages.externalLink}"
         }
       }
     }
