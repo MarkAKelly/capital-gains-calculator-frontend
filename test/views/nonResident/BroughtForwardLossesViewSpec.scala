@@ -209,5 +209,15 @@ class BroughtForwardLossesViewSpec extends UnitSpec with WithFakeApplication wit
         }
       }
     }
+
+    "provided with errors" should {
+      lazy val form = broughtForwardLossesForm.bind(Map("isClaiming" -> "Yes", "broughtForwardLoss" -> ""))
+      lazy val view = broughtForwardLosses(form, "back-link")(fakeRequest)
+      lazy val document = Jsoup.parse(view.body)
+
+      "have an error summary" in {
+        document.select("#error-summary-display").size() shouldBe 1
+      }
+    }
   }
 }
