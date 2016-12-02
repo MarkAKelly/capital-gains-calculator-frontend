@@ -32,7 +32,8 @@ object FinalTaxAnswersRequestConstructor {
     currentIncome(model.customerTypeModel, model.currentIncomeModel) +
     personalAllowanceAmt(model.customerTypeModel, model.personalAllowanceModel) +
     allowableLoss(model.otherPropertiesModel, model.previousGainOrLoss, model.howMuchLossModel) +
-    previousGain(model.otherPropertiesModel, model.previousGainOrLoss, model.howMuchGainModel)
+    previousGain(model.otherPropertiesModel, model.previousGainOrLoss, model.howMuchGainModel) +
+    broughtForwardLosses(model.broughtForwardLossesModel)
 
   }
 
@@ -93,8 +94,13 @@ object FinalTaxAnswersRequestConstructor {
       case (YesNoKeys.yes, Some(PreviousLossOrGainModel(PreviousGainOrLossKeys.neither)), _, _) =>
         s"&annualExemptAmount=${annualExemptAmountModel.get.annualExemptAmount}"
       case (_, _, _, _) =>
-        s"&annualExemptAmount=${maxAnnualExemptAmount}"
+        s"&annualExemptAmount=$maxAnnualExemptAmount"
     }
   }
 
+  def broughtForwardLosses(model: BroughtForwardLossesModel): String = {
+    if (model.isClaiming) {
+      s"&broughtForwardLoss=${model.broughtForwardLoss}"
+    } else { "" }
+  }
 }

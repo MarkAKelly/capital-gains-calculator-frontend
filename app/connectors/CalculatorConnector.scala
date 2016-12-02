@@ -76,7 +76,7 @@ trait CalculatorConnector {
                              totalTaxPersonalDetailsModel: nonresident.TotalPersonalDetailsCalculationModel,
                              maxAnnualExemptAmount: BigDecimal)(implicit hc: HeaderCarrier):
   Future[Option[nonresident.CalculationResultsWithTaxOwedModel]] = {
-    http.GET[Option[nonresident.CalculationResultsWithTaxOwedModel]](s"$serviceUrl/capital-gains-calculator/non-resident/calculate-total-tax-owed?${
+    http.GET[Option[nonresident.CalculationResultsWithTaxOwedModel]](s"$serviceUrl/capital-gains-calculator/non-resident/calculate-tax-owed?${
       TotalGainRequestConstructor.totalGainQuery(totalGainAnswersModel) +
         PrivateResidenceReliefRequestConstructor.privateResidenceReliefQuery(totalGainAnswersModel, privateResidenceReliefModel) +
         FinalTaxAnswersRequestConstructor.additionalParametersQuery(totalTaxPersonalDetailsModel, maxAnnualExemptAmount)

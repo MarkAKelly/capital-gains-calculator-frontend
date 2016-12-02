@@ -91,4 +91,31 @@ trait AnswersConstructor {
       howBecameOwner, boughtForLess, acquisitionValue, acquisitionCosts, acquisitionDate,
       rebasedValue, rebasedCosts, improvements, otherReliefsFlat)
   }
+
+  def getPersonalDetailsAndPreviousCapitalGainsAnswers(implicit hc: HeaderCarrier): Future[TotalPersonalDetailsCalculationModel] = {
+    val customerType = calculatorConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType)
+    val currentIncome = calculatorConnector.fetchAndGetFormData[CurrentIncomeModel](KeystoreKeys.currentIncome)
+    val personalAllowance = calculatorConnector.fetchAndGetFormData[PersonalAllowanceModel](KeystoreKeys.personalAllowance)
+    val isVulnerableTrustee = calculatorConnector.fetchAndGetFormData[DisabledTrusteeModel](KeystoreKeys.disabledTrustee)
+    val otherProperties = calculatorConnector.fetchAndGetFormData[OtherPropertiesModel](KeystoreKeys.otherProperties)
+    val previousLossOrGain = calculatorConnector.fetchAndGetFormData[PreviousLossOrGainModel](KeystoreKeys.NonResidentKeys.previousLossOrGain)
+    val howMuchLoss = calculatorConnector.fetchAndGetFormData[HowMuchLossModel](KeystoreKeys.howMuchLoss)
+    val howMuchGain = calculatorConnector.fetchAndGetFormData[HowMuchGainModel](KeystoreKeys.howMuchGain)
+    val annualExemptAmount = calculatorConnector.fetchAndGetFormData[AnnualExemptAmountModel](KeystoreKeys.annualExemptAmount)
+    val broughtForwardLosses = calculatorConnector.fetchAndGetFormData[BroughtForwardLossesModel](KeystoreKeys.broughtForwardLosses)
+
+    for {
+      customerType <- customerType
+      currentIncome <- currentIncome
+      personalAllowance <- personalAllowance
+      isVulnerableTrustee <- isVulnerableTrustee
+      otherProperties <- otherProperties
+      previousLossOrGain <- previousLossOrGain
+      howMuchLoss <- howMuchLoss
+      howMuchGain <- howMuchGain
+      annualExemptAmount <- annualExemptAmount
+      broughtForwardLosses <- broughtForwardLosses
+    } yield TotalPersonalDetailsCalculationModel(customerType.get, currentIncome, personalAllowance, isVulnerableTrustee, otherProperties.get,
+      previousLossOrGain, howMuchLoss, howMuchGain, annualExemptAmount, broughtForwardLosses)
+  }
 }

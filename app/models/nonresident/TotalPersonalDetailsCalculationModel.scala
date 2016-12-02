@@ -16,8 +16,6 @@
 
 package models.nonresident
 
-import models.resident.{LossesBroughtForwardModel, LossesBroughtForwardValueModel}
-
 case class TotalPersonalDetailsCalculationModel(customerTypeModel: CustomerTypeModel,
                                                 currentIncomeModel: Option[CurrentIncomeModel],
                                                 personalAllowanceModel: Option[PersonalAllowanceModel],
@@ -27,8 +25,5 @@ case class TotalPersonalDetailsCalculationModel(customerTypeModel: CustomerTypeM
                                                 howMuchLossModel: Option[HowMuchLossModel],
                                                 howMuchGainModel: Option[HowMuchGainModel],
                                                 annualExemptAmountModel: Option[AnnualExemptAmountModel],
-                                                broughtForwardModel: LossesBroughtForwardModel,
-                                                broughtForwardValueModel: Option[LossesBroughtForwardValueModel]
-                                               ) {
-
-}
+                                                broughtForwardLossesModel: BroughtForwardLossesModel
+                                               )

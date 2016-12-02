@@ -18,7 +18,7 @@ package constructors.nonresident
 
 import common.KeystoreKeys
 import connectors.CalculatorConnector
-import models.nonresident._
+import models.nonresident.{TotalPersonalDetailsCalculationModel, _}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -38,55 +38,79 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
 
     when(mockConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(KeystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(totalGainAnswersModel.disposalDateModel)))
-
     when(mockConnector.fetchAndGetFormData[SoldOrGivenAwayModel](Matchers.eq(KeystoreKeys.soldOrGivenAway))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(totalGainAnswersModel.soldOrGivenAwayModel)))
-
     when(mockConnector.fetchAndGetFormData[SoldForLessModel](Matchers.eq(KeystoreKeys.NonResidentKeys.soldForLess))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(totalGainAnswersModel.soldForLessModel))
-
     when(mockConnector.fetchAndGetFormData[DisposalValueModel](Matchers.eq(KeystoreKeys.disposalValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(totalGainAnswersModel.disposalValueModel)))
-
     when(mockConnector.fetchAndGetFormData[DisposalValueModel](Matchers.eq(KeystoreKeys.disposalMarketValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(marketDisposalValue))
-
     when(mockConnector.fetchAndGetFormData[DisposalCostsModel](Matchers.eq(KeystoreKeys.disposalCosts))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(totalGainAnswersModel.disposalCostsModel)))
-
     when(mockConnector.fetchAndGetFormData[HowBecameOwnerModel](Matchers.eq(KeystoreKeys.howBecameOwner))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(totalGainAnswersModel.howBecameOwnerModel))
-
     when(mockConnector.fetchAndGetFormData[BoughtForLessModel](Matchers.eq(KeystoreKeys.boughtForLess))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(totalGainAnswersModel.boughtForLessModel))
-
     when(mockConnector.fetchAndGetFormData[WorthBeforeLegislationStartModel](Matchers.eq(KeystoreKeys.worthBeforeLegislationStart))
       (Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(worthBeforeLegislationStartModel))
-
     when(mockConnector.fetchAndGetFormData[AcquisitionValueModel](Matchers.eq(KeystoreKeys.acquisitionMarketValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(marketValueAcquisition))
-
     when(mockConnector.fetchAndGetFormData[AcquisitionValueModel](Matchers.eq(KeystoreKeys.acquisitionValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(totalGainAnswersModel.acquisitionValueModel)))
-
     when(mockConnector.fetchAndGetFormData[AcquisitionCostsModel](Matchers.eq(KeystoreKeys.acquisitionCosts))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(totalGainAnswersModel.acquisitionCostsModel)))
-
     when(mockConnector.fetchAndGetFormData[AcquisitionDateModel](Matchers.eq(KeystoreKeys.acquisitionDate))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(totalGainAnswersModel.acquisitionDateModel)))
-
     when(mockConnector.fetchAndGetFormData[RebasedValueModel](Matchers.eq(KeystoreKeys.rebasedValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(totalGainAnswersModel.rebasedValueModel))
-
     when(mockConnector.fetchAndGetFormData[RebasedCostsModel](Matchers.eq(KeystoreKeys.rebasedCosts))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(totalGainAnswersModel.rebasedCostsModel))
-
     when(mockConnector.fetchAndGetFormData[ImprovementsModel](Matchers.eq(KeystoreKeys.improvements))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(totalGainAnswersModel.improvementsModel)))
-
     when(mockConnector.fetchAndGetFormData[OtherReliefsModel](Matchers.eq(KeystoreKeys.otherReliefsFlat))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(totalGainAnswersModel.otherReliefsFlat))
+
+    new AnswersConstructor {
+      override val calculatorConnector: CalculatorConnector = mockConnector
+    }
+  }
+
+  def setupMockedFinalAnswersConstructor(totalPersonalDetailsCalculationModel: TotalPersonalDetailsCalculationModel): AnswersConstructor = {
+
+    val mockConnector = mock[CalculatorConnector]
+
+    when(mockConnector.fetchAndGetFormData[CustomerTypeModel](Matchers.eq(KeystoreKeys.customerType))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(totalPersonalDetailsCalculationModel.customerTypeModel)))
+
+    when(mockConnector.fetchAndGetFormData[CurrentIncomeModel](Matchers.eq(KeystoreKeys.currentIncome))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(totalPersonalDetailsCalculationModel.currentIncomeModel))
+
+    when(mockConnector.fetchAndGetFormData[PersonalAllowanceModel](Matchers.eq(KeystoreKeys.personalAllowance))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(totalPersonalDetailsCalculationModel.personalAllowanceModel))
+
+    when(mockConnector.fetchAndGetFormData[DisabledTrusteeModel](Matchers.eq(KeystoreKeys.disabledTrustee))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(totalPersonalDetailsCalculationModel.trusteeModel))
+
+    when(mockConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.eq(KeystoreKeys.otherProperties))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(totalPersonalDetailsCalculationModel.otherPropertiesModel)))
+
+    when(mockConnector.fetchAndGetFormData[PreviousLossOrGainModel](Matchers.eq(KeystoreKeys.NonResidentKeys.previousLossOrGain))
+      (Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(totalPersonalDetailsCalculationModel.previousGainOrLoss))
+
+    when(mockConnector.fetchAndGetFormData[HowMuchLossModel](Matchers.eq(KeystoreKeys.howMuchLoss))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(totalPersonalDetailsCalculationModel.howMuchLossModel))
+
+    when(mockConnector.fetchAndGetFormData[HowMuchGainModel](Matchers.eq(KeystoreKeys.howMuchGain))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(totalPersonalDetailsCalculationModel.howMuchGainModel))
+
+    when(mockConnector.fetchAndGetFormData[AnnualExemptAmountModel](Matchers.eq(KeystoreKeys.annualExemptAmount))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(totalPersonalDetailsCalculationModel.annualExemptAmountModel))
+
+    when(mockConnector.fetchAndGetFormData[BroughtForwardLossesModel](Matchers.eq(KeystoreKeys.broughtForwardLosses))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(totalPersonalDetailsCalculationModel.customerTypeModel)))
 
     new AnswersConstructor {
       override val calculatorConnector: CalculatorConnector = mockConnector
@@ -247,6 +271,29 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
       val result = constructor.getNRTotalGainAnswers(hc)
 
       await(result).disposalValueModel.disposalValue shouldBe 10000
+    }
+  }
+
+  "Calling .getPersonalDetailsAndPreviousCapitalGainsAnswers" should {
+
+    val model = TotalPersonalDetailsCalculationModel(
+      CustomerTypeModel("Individual"),
+      Some(CurrentIncomeModel(10000)),
+      Some(PersonalAllowanceModel(100)),
+      Some(DisabledTrusteeModel("Yes")),
+      OtherPropertiesModel("Yes"),
+      Some(PreviousLossOrGainModel("Loss")),
+      Some(HowMuchLossModel(100)),
+      Some(HowMuchGainModel(200)),
+      Some(AnnualExemptAmountModel(10000)),
+      BroughtForwardLossesModel("Yes", 1000)
+    )
+
+    val hc = mock[HeaderCarrier]
+    val constructor = setupMockedFinalAnswersConstructor(model)
+
+    "when called with the model with all options return all options" in {
+      await(constructor.getPersonalDetailsAndPreviousCapitalGainsAnswers(hc)) shouldEqual model
     }
   }
 }
