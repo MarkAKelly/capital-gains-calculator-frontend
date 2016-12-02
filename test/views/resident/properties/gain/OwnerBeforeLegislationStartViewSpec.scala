@@ -98,11 +98,11 @@ class OwnerBeforeLegislationStartViewSpec extends UnitSpec with WithFakeApplicat
       "are surrounded in a fieldset" which {
 
         "has the class form-group" in {
-          doc.select("#ownedBeforeLegislationStart").hasClass("form-group") shouldEqual true
+          doc.select("fieldset").hasClass("form-group") shouldEqual true
         }
 
         "has the class inline" in {
-          doc.select("#ownedBeforeLegislationStart").hasClass("inline") shouldEqual true
+          doc.select("fieldset").hasClass("inline") shouldEqual true
         }
       }
 
