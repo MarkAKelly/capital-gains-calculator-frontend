@@ -48,11 +48,9 @@
 
     @if(!labelAfter && elements.args.contains('_label)) {
         @if(labelHighlight){<strong>}
-        <div>
-            <span @if(elements.args.contains('_labelTextClass)) { class="@elements.args.get('_labelTextClass)"}>
-                @elements.label
-            </span>
-        </div>
+        <span @if(elements.args.contains('_labelTextClass)) { class="@elements.args.get('_labelTextClass)"}>
+            @elements.label
+        </span>
 
         @if(additionalHTMLContent) {
             <div class="indent">@elements.args.get('_additionalContent)</div>

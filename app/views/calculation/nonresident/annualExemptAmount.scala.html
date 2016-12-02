@@ -20,9 +20,9 @@
 
     <h1 class="heading-xlarge">@Messages("calc.annualExemptAmount.question")</h1>
 
-    <span id="input-hint">
+    <div id="input-hint">
        <p>@Messages("calc.annualExemptAmount.helpOne") £@MoneyPounds(maxAEA, 0).quantity @Messages("calc.annualExemptAmount.helpTwo")</p>
-    </span>
+    </div>
 
     @form(action = controllers.nonresident.routes.AnnualExemptAmountController.submitAnnualExemptAmount) {
 
