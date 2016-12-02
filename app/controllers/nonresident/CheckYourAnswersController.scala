@@ -66,8 +66,6 @@ trait CheckYourAnswersController extends FrontendController with ValidActiveSess
     } else Future(None)
   }
 
-  //Write a method that returns the calculation results including PRR as an option.
-
   def calculatePRRIfApplicable(totalGainAnswersModel: TotalGainAnswersModel,
                                privateResidenceReliefModel: Option[PrivateResidenceReliefModel])(implicit hc: HeaderCarrier):
   Future[Option[CalculationResultsWithPRRModel]] = {
