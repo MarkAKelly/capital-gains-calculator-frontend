@@ -18,7 +18,7 @@ package controllers.nonresident
 
 import common.{KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
-import constructors.nonresident.AnswersConstructor
+import constructors.nonresident.{AnswersConstructor, FinalTaxAnswersRequestConstructor}
 import controllers.predicates.ValidActiveSession
 import models.nonresident.{CalculationResultsWithPRRModel, _}
 import play.api.mvc.{Action, AnyContent, Result}
@@ -53,6 +53,24 @@ trait SummaryController extends FrontendController with ValidActiveSession {
           prrModel <- prrModel
         } yield prrModel
       } else Future(None)
+    }
+
+    def getFinalTaxAnswers(totalGainResultsModel: TotalGainResultsModel,
+                           calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel])
+                          (implicit hc: HeaderCarrier): Future[Option[TotalPersonalDetailsCalculationModel]] = {
+      val optionSeq = Seq(totalGainResultsModel.rebasedGain, totalGainResultsModel.timeApportionedGain).flatten
+      val finalSeq = Seq(totalGainResultsModel.flatGain) ++ optionSeq
+      lazy val finalAnswers = answersConstructor.getPersonalDetailsAndPreviousCapitalGainsAnswers
+      if (!finalSeq.forall(_ <= 0)) {
+        calculationResultsWithPRRModel match {
+          case Some(model)
+            if (Seq(model.flatResult) ++ Seq(model.rebasedResult, model.timeApportionedResult).flatten).forall(_.taxableGain <= 0) =>
+            Future.successful(None)
+          case _ => for {
+            answers <- finalAnswers
+          } yield Some(answers)
+        }
+      } else Future.successful(None)
     }
 
     def getSection(calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel],
