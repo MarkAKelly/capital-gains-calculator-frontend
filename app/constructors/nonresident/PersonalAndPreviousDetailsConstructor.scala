@@ -36,27 +36,27 @@ object PersonalAndPreviousDetailsConstructor {
     val customerTypeAnswerData = customerTypeAnswerRow(personalAndPreviousDetailsModel.customerTypeModel)
     val currentIncomeAnswerData = currentIncomeAnswerRow(
       personalAndPreviousDetailsModel.customerTypeModel,
-      personalAndPreviousDetailsModel.currentIncome)
+      personalAndPreviousDetailsModel.currentIncomeModel)
     val personalAllowanceAnswerData = personalAllowanceAnswerRow(
       personalAndPreviousDetailsModel.customerTypeModel,
       personalAndPreviousDetailsModel.personalAllowanceModel)
     val disabledTrusteeAnswerData = disabledTrusteeAnswerRow(
       personalAndPreviousDetailsModel.customerTypeModel,
       personalAndPreviousDetailsModel.trusteeModel)
-    val otherPropertiesAnswerData = otherPropertiesAnswerRow(personalAndPreviousDetailsModel.otherProperties)
+    val otherPropertiesAnswerData = otherPropertiesAnswerRow(personalAndPreviousDetailsModel.otherPropertiesModel)
     val previousGainsOrLossAnswerData = previousGainsOrLossAnswerRow(
-      personalAndPreviousDetailsModel.otherProperties,
+      personalAndPreviousDetailsModel.otherPropertiesModel,
       personalAndPreviousDetailsModel.previousGainOrLoss)
     val howMuchLossAnswerData = howMuchLossAnswerRow(
-      personalAndPreviousDetailsModel.otherProperties,
+      personalAndPreviousDetailsModel.otherPropertiesModel,
       personalAndPreviousDetailsModel.previousGainOrLoss,
       personalAndPreviousDetailsModel.howMuchLossModel)
     val howMuchGainAnswerData = howMuchGainAnswerRow(
-      personalAndPreviousDetailsModel.otherProperties,
+      personalAndPreviousDetailsModel.otherPropertiesModel,
       personalAndPreviousDetailsModel.previousGainOrLoss,
       personalAndPreviousDetailsModel.howMuchGainModel)
     val annualExemptAmountAnswerData = annualExemptAmountAnswerRow(
-      personalAndPreviousDetailsModel.otherProperties,
+      personalAndPreviousDetailsModel.otherPropertiesModel,
       personalAndPreviousDetailsModel.previousGainOrLoss,
       personalAndPreviousDetailsModel.howMuchLossModel,
       personalAndPreviousDetailsModel.howMuchGainModel,

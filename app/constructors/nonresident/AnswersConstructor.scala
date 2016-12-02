@@ -92,7 +92,7 @@ trait AnswersConstructor {
       rebasedValue, rebasedCosts, improvements, otherReliefsFlat)
   }
 
-  def getPersonalDetailsAndPreviousCapitalGainsAnswers(implicit hc: HeaderCarrier): Future[TotalPersonalDetailsCalculationModel] = {
+  def getPersonalDetailsAndPreviousCapitalGainsAnswers(implicit hc: HeaderCarrier): Future[Option[TotalPersonalDetailsCalculationModel]] = {
     val customerType = calculatorConnector.fetchAndGetFormData[CustomerTypeModel](KeystoreKeys.customerType).map(data => data.get)
     val currentIncome = calculatorConnector.fetchAndGetFormData[CurrentIncomeModel](KeystoreKeys.currentIncome)
     val personalAllowance = calculatorConnector.fetchAndGetFormData[PersonalAllowanceModel](KeystoreKeys.personalAllowance)
@@ -115,7 +115,7 @@ trait AnswersConstructor {
       howMuchGain <- howMuchGain
       annualExemptAmount <- annualExemptAmount
       broughtForwardLosses <- broughtForwardLosses
-    } yield TotalPersonalDetailsCalculationModel(customerType, currentIncome, personalAllowance, isVulnerableTrustee, otherProperties,
-      previousLossOrGain, howMuchLoss, howMuchGain, annualExemptAmount, broughtForwardLosses)
+    } yield Some(TotalPersonalDetailsCalculationModel(customerType, currentIncome, personalAllowance, isVulnerableTrustee, otherProperties,
+      previousLossOrGain, howMuchLoss, howMuchGain, annualExemptAmount, broughtForwardLosses))
   }
 }

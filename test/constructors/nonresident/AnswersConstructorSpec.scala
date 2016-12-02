@@ -293,7 +293,7 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
     val constructor = setupMockedFinalAnswersConstructor(model)
 
     "when called with the model with all options return all options" in {
-      await(constructor.getPersonalDetailsAndPreviousCapitalGainsAnswers(hc)) shouldEqual model
+      await(constructor.getPersonalDetailsAndPreviousCapitalGainsAnswers(hc)) shouldEqual Some(model)
     }
   }
 }

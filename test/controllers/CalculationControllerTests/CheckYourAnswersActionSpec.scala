@@ -19,7 +19,7 @@ package controllers.CalculationControllerTests
 import constructors.nonresident.AnswersConstructor
 import controllers.helpers.FakeRequestHelper
 import controllers.nonresident.CheckYourAnswersController
-import models.nonresident._
+import models.nonresident.{TotalPersonalDetailsCalculationModel, _}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import controllers.nonresident.routes
@@ -40,12 +40,15 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
 
   def setupTarget(totalGainAnswersModel: TotalGainAnswersModel,
                   totalGainsModel: Option[TotalGainResultsModel],
-                  privateResidenceReliefModel: Option[PrivateResidenceReliefModel] = None): CheckYourAnswersController = {
+                  privateResidenceReliefModel: Option[PrivateResidenceReliefModel] = None,
+                  totalPersonalDetailsModel: Option[TotalPersonalDetailsCalculationModel] = None): CheckYourAnswersController = {
 
     val mockAnswersConstructor = mock[AnswersConstructor]
     val mockCalcConnector = mock[CalculatorConnector]
 
     when(mockAnswersConstructor.getNRTotalGainAnswers(Matchers.any())).thenReturn(Future.successful(totalGainAnswersModel))
+
+    when(mockAnswersConstructor.getPersonalDetailsAndPreviousCapitalGainsAnswers(Matchers.any())).thenReturn(Future.successful(totalPersonalDetailsModel))
 
     when(mockCalcConnector.calculateTotalGain(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(totalGainResultsModel)))
 
