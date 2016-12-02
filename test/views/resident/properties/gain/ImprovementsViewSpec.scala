@@ -58,7 +58,7 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     }
 
     "have a hidden label" in {
-      val label = doc.select("label > div > span")
+      val label = doc.select("label > span")
       label.hasClass("visuallyhidden") shouldBe true
     }
 
@@ -111,12 +111,12 @@ class ImprovementsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
     }
 
     "have the correct label" in {
-      val label = doc.select("label")
+      val label = doc.select("label").first()
       label.text should startWith(messages.questionBefore)
     }
 
     "have a hidden label" in {
-      val label = doc.select("label > div > span")
+      val label = doc.select("label > span.visuallyhidden")
       label.hasClass("visuallyhidden") shouldBe true
     }
 

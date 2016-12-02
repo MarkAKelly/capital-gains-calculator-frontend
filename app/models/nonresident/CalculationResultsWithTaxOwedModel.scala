@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-package common.nonresident
+package models.nonresident
 
-object PreviousGainOrLossKeys {
-  val loss = "Loss"
-  val gain = "Gain"
-  val neither = "Neither"
+import play.api.libs.json.Json
+
+case class CalculationResultsWithTaxOwedModel (flatResult: TotalTaxOwedModel,
+                                               rebasedResult: Option[TotalTaxOwedModel],
+                                               timeApportionedResult: Option[TotalTaxOwedModel])
+
+object CalculationResultsWithTaxOwedModel {
+  implicit val formats = Json.format[CalculationResultsWithTaxOwedModel]
 }
