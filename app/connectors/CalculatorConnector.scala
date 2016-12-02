@@ -72,15 +72,24 @@ trait CalculatorConnector {
   //########################################################################################################################################
 
   def calculateNRCGTTotalTax(totalGainAnswersModel: nonresident.TotalGainAnswersModel,
-                             privateResidenceReliefModel: nonresident.PrivateResidenceReliefModel,
+                             privateResidenceReliefModel: Option[nonresident.PrivateResidenceReliefModel],
                              totalTaxPersonalDetailsModel: nonresident.TotalPersonalDetailsCalculationModel,
                              maxAnnualExemptAmount: BigDecimal)(implicit hc: HeaderCarrier):
   Future[Option[nonresident.CalculationResultsWithTaxOwedModel]] = {
-    http.GET[Option[nonresident.CalculationResultsWithTaxOwedModel]](s"$serviceUrl/capital-gains-calculator/non-resident/calculate-tax-owed?${
-      TotalGainRequestConstructor.totalGainQuery(totalGainAnswersModel) +
-        PrivateResidenceReliefRequestConstructor.privateResidenceReliefQuery(totalGainAnswersModel, privateResidenceReliefModel) +
-        FinalTaxAnswersRequestConstructor.additionalParametersQuery(totalTaxPersonalDetailsModel, maxAnnualExemptAmount)
-    }")
+
+    privateResidenceReliefModel match {
+      case Some(prrModel) =>
+        http.GET[Option[nonresident.CalculationResultsWithTaxOwedModel]](s"$serviceUrl/capital-gains-calculator/non-resident/calculate-tax-owed?${
+          TotalGainRequestConstructor.totalGainQuery(totalGainAnswersModel) +
+            PrivateResidenceReliefRequestConstructor.privateResidenceReliefQuery(totalGainAnswersModel, prrModel) +
+            FinalTaxAnswersRequestConstructor.additionalParametersQuery(totalTaxPersonalDetailsModel, maxAnnualExemptAmount)
+        }")
+      case None =>
+        http.GET[Option[nonresident.CalculationResultsWithTaxOwedModel]](s"$serviceUrl/capital-gains-calculator/non-resident/calculate-tax-owed?${
+          TotalGainRequestConstructor.totalGainQuery(totalGainAnswersModel) +
+            FinalTaxAnswersRequestConstructor.additionalParametersQuery(totalTaxPersonalDetailsModel, maxAnnualExemptAmount)
+        }")
+    }
   }
 
   //########################################################################################################################################

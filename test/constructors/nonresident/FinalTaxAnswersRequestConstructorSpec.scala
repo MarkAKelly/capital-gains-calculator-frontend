@@ -57,7 +57,7 @@ class FinalTaxAnswersRequestConstructorSpec extends UnitSpec {
         Some(HowMuchLossModel(100))) shouldEqual "&allowableLoss=100"
     }
 
-    "produce a black query string when the user claims other properties and that was a gain" in {
+    "produce a blank query string when the user claims other properties and that was a gain" in {
       FinalTaxAnswersRequestConstructor.allowableLoss(
         OtherPropertiesModel("Yes"),
         Some(PreviousLossOrGainModel("Gain")),
