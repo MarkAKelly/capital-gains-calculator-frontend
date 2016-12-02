@@ -76,7 +76,7 @@ class WorthWhenGiftedViewSpec extends UnitSpec with WithFakeApplication with Fak
     }
 
     s"have a label for an input with text ${messages.question}" in {
-      doc.select("label > div > span.visuallyhidden").text() shouldEqual messages.question
+      doc.select("label > span.visuallyhidden").text() shouldEqual messages.question
     }
 
     s"have an input field with id amount " in {
