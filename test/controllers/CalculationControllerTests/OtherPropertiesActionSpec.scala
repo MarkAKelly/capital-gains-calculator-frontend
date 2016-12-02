@@ -209,8 +209,8 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
         status(result) shouldBe 303
       }
 
-      "should redirect to the acquisitionDate page" in {
-        redirectLocation(result) shouldBe Some(s"${routes.AllowableLossesController.allowableLosses()}")
+      "should redirect to the broughtForwardLosses page" in {
+        redirectLocation(result) shouldBe Some(s"${routes.BroughtForwardLossesController.broughtForwardLosses()}")
       }
     }
 

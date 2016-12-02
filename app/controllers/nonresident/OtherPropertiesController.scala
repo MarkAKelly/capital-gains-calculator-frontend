@@ -85,7 +85,7 @@ trait OtherPropertiesController extends FrontendController with ValidActiveSessi
     def routeRequest(data: OtherPropertiesModel): Future[Result] = {
       data.otherProperties match {
         case "Yes" => Future.successful(Redirect(routes.PreviousGainOrLossController.previousGainOrLoss()))
-        case "No" => Future.successful(Redirect(routes.AllowableLossesController.allowableLosses()))
+        case "No" => Future.successful(Redirect(routes.BroughtForwardLossesController.broughtForwardLosses()))
       }
     }
 
