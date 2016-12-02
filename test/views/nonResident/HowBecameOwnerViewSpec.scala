@@ -31,7 +31,7 @@ class HowBecameOwnerViewSpec extends UnitSpec with WithFakeApplication with Mock
 
     "supplied with no errors" should {
 
-      lazy val view = howBecameOwner(howBecameOwnerForm, "back-link")(fakeRequest)
+      lazy val view = howBecameOwner(howBecameOwnerForm)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       s"have a title of '${messages.question}'" in {
@@ -50,7 +50,7 @@ class HowBecameOwnerViewSpec extends UnitSpec with WithFakeApplication with Mock
         }
 
         s"has a route to 'back-link'" in {
-          backLink.attr("href") shouldBe "back-link"
+          backLink.attr("href") shouldBe controllers.nonresident.routes.AcquisitionDateController.acquisitionDate().url
         }
       }
 
@@ -120,7 +120,7 @@ class HowBecameOwnerViewSpec extends UnitSpec with WithFakeApplication with Mock
     "supplied with a form with errors" should {
 
       lazy val form = howBecameOwnerForm.bind(Map("gainedBy" -> "a"))
-      lazy val view = howBecameOwner(form, "back-link")(fakeRequest)
+      lazy val view = howBecameOwner(form)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have an error summary" in {

@@ -17,13 +17,11 @@
 package controllers.nonresident
 
 
-
-import common.{KeystoreKeys, TaxDates}
+import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.HowBecameOwnerForm._
 import models.nonresident.{AcquisitionDateModel, HowBecameOwnerModel, RebasedValueModel}
-import models.resident.DisposalDateModel
 import play.api.data.Form
 import play.api.mvc.Result
 import uk.gov.hmrc.play.frontend.controller.FrontendController
@@ -34,21 +32,13 @@ import scala.concurrent.Future
 
 object HowBecameOwnerController extends HowBecameOwnerController {
   val calcConnector = CalculatorConnector
-  }
+}
 
 trait HowBecameOwnerController extends FrontendController with ValidActiveSession {
 
   val calcConnector: CalculatorConnector
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
-
-  def backLink(acquisitionDateModel: AcquisitionDateModel, rebasedValueModel: Option[RebasedValueModel]): Future[String] = {
-    (acquisitionDateModel, rebasedValueModel) match {
-      case (AcquisitionDateModel("No",_,_,_), Some(RebasedValueModel(None))) =>
-        Future.successful(controllers.nonresident.routes.ImprovementsController.improvements.url)
-      case _ => Future.successful(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url)
-    }
-  }
 
   def getAcquisitionDate(implicit hc: HeaderCarrier): Future[Option[AcquisitionDateModel]] = {
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate)
@@ -59,29 +49,16 @@ trait HowBecameOwnerController extends FrontendController with ValidActiveSessio
   }
 
   val howBecameOwner = ValidateSession.async { implicit request =>
-
-    def getRoute(backLink: String) = {
-      calcConnector.fetchAndGetFormData[HowBecameOwnerModel](KeystoreKeys.howBecameOwner).map {
-        case Some(data) => Ok(views.howBecameOwner(howBecameOwnerForm.fill(data), backLink))
-        case None => Ok(views.howBecameOwner(howBecameOwnerForm, backLink))
-      }
+    calcConnector.fetchAndGetFormData[HowBecameOwnerModel](KeystoreKeys.howBecameOwner).map {
+      case Some(data) => Ok(views.howBecameOwner(howBecameOwnerForm.fill(data)))
+      case None => Ok(views.howBecameOwner(howBecameOwnerForm))
     }
-    for {
-      acquisitionDate <- getAcquisitionDate
-      rebasedValue <- getRebasedValue
-      backLink <- backLink(acquisitionDate.get, rebasedValue)
-      route <- getRoute(backLink)
-    } yield route
   }
 
   val submitHowBecameOwner = ValidateSession.async { implicit request =>
 
     def errorAction(form: Form[HowBecameOwnerModel]) = {
-      for {
-        acquisitionDate <- getAcquisitionDate
-        rebasedValue <- getRebasedValue
-        backLink <- backLink(acquisitionDate.get, rebasedValue)
-      } yield BadRequest(views.howBecameOwner(form, backLink))
+      Future.successful(BadRequest(views.howBecameOwner(form)))
     }
 
     def successAction(model: HowBecameOwnerModel) = {

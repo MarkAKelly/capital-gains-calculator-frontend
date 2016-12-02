@@ -76,10 +76,6 @@ class HowBecameOwnerActionSpec extends UnitSpec with WithFakeApplication with Fa
       s"return some html with title of ${messages.question}" in {
         doc.title shouldEqual messages.question
       }
-
-      "have a back link to private residence relief" in {
-        doc.select("#back-link").attr("href") shouldBe controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url
-      }
     }
 
     "provided with a valid session with stored data and is not valid for prr" should {
@@ -93,10 +89,6 @@ class HowBecameOwnerActionSpec extends UnitSpec with WithFakeApplication with Fa
 
       s"return some html with title of ${messages.question}" in {
         doc.title shouldEqual messages.question
-      }
-
-      "have a back link to improvements" in {
-        doc.select("#back-link").attr("href") shouldBe controllers.nonresident.routes.ImprovementsController.improvements().url
       }
     }
 
