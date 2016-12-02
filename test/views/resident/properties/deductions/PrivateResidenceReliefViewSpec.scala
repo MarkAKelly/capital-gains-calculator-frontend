@@ -135,10 +135,6 @@ class PrivateResidenceReliefViewSpec extends UnitSpec with WithFakeApplication w
 
         lazy val radioButtons = doc.body.getElementsByTag("fieldset")
 
-        "are contained within a fieldset with id 'isClaiming'" in {
-          radioButtons.attr("id") shouldBe "isClaiming"
-        }
-
         "has a legend" which {
 
           "exists" in {
