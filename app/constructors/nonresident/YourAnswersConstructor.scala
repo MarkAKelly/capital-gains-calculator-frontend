@@ -21,11 +21,13 @@ import models.nonresident.{PrivateResidenceReliefModel, QuestionAnswerModel, Tot
 object YourAnswersConstructor {
 
   def fetchYourAnswers(totalGainAnswersModel: TotalGainAnswersModel,
-                       privateResidenceReliefModel: Option[PrivateResidenceReliefModel] = None): Seq[QuestionAnswerModel[Any]] = {
+                       privateResidenceReliefModel: Option[PrivateResidenceReliefModel] = None,
+                       personalAndPreviousDetailsModel: Option[TotalPersonalDetailsCalculationModel] = None): Seq[QuestionAnswerModel[Any]] = {
     val salesDetailsRows = SalesDetailsConstructor.salesDetailsRows(totalGainAnswersModel)
     val purchaseDetailsRows = PurchaseDetailsConstructor.getPurchaseDetailsSection(totalGainAnswersModel)
     val propertyDetailsRows = PropertyDetailsConstructor.propertyDetailsRows(totalGainAnswersModel)
     val deductionDetailsRows = DeductionDetailsConstructor.deductionDetailsRows(totalGainAnswersModel, privateResidenceReliefModel)
+    val personalAndPreviousDetailsRows = PersonalAndPreviousDetailsConstructor.personalAndPreviousDetailsRows(personalAndPreviousDetailsModel)
 
     salesDetailsRows ++ purchaseDetailsRows ++ propertyDetailsRows ++ deductionDetailsRows
   }
