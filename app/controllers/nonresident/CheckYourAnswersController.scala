@@ -66,12 +66,41 @@ trait CheckYourAnswersController extends FrontendController with ValidActiveSess
     } else Future(None)
   }
 
+  def checkAndGetFinalSectionsAnswers(implicit hc: HeaderCarrier,
+                                      totalGainResultsModel: TotalGainResultsModel,
+                                      calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel]):
+  Future[Option[TotalPersonalDetailsCalculationModel]] = {
+
+    calculationResultsWithPRRModel match {
+
+      case Some(data) =>
+      case None => {
+        val optionalBaseSeq = Seq(totalGainResultsModel.rebasedGain, totalGainResultsModel.timeApportionedGain).flatten
+        val finalBaseSeq = Seq(totalGainResultsModel.flatGain) ++ optionalBaseSeq
+
+        if (!finalBaseSeq.forall(_ <= 0)) {
+          val personalAndPreviousDetailsModel = answersConstructor.getPersonalDetailsAndPreviousCapitalGainsAnswers(hc)
+          for {
+            prrModel <- prrModel
+          } yield prrModel
+        } else Future(None)
+
+      }
+    }
+  }
+
   val checkYourAnswers = ValidateSession.async { implicit request =>
 
     for {
       model <- answersConstructor.getNRTotalGainAnswers
       totalGainResult <- calculatorConnector.calculateTotalGain(model)
       prrModel <- getPRRModel(hc, totalGainResult.get)
+
+
+
+
+
+
       answers <- Future.successful(YourAnswersConstructor.fetchYourAnswers(model, prrModel))
       backLink <- getBackLink(totalGainResult.get, model.acquisitionDateModel, model.rebasedValueModel)
     } yield {
