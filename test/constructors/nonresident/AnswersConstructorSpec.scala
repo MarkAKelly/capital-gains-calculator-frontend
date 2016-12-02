@@ -110,7 +110,7 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
       .thenReturn(Future.successful(totalPersonalDetailsCalculationModel.annualExemptAmountModel))
 
     when(mockConnector.fetchAndGetFormData[BroughtForwardLossesModel](Matchers.eq(KeystoreKeys.broughtForwardLosses))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(totalPersonalDetailsCalculationModel.customerTypeModel)))
+      .thenReturn(Future.successful(Some(totalPersonalDetailsCalculationModel.broughtForwardLossesModel)))
 
     new AnswersConstructor {
       override val calculatorConnector: CalculatorConnector = mockConnector
@@ -286,7 +286,7 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
       Some(HowMuchLossModel(100)),
       Some(HowMuchGainModel(200)),
       Some(AnnualExemptAmountModel(10000)),
-      BroughtForwardLossesModel("Yes", 1000)
+      BroughtForwardLossesModel(true, Some(1000))
     )
 
     val hc = mock[HeaderCarrier]

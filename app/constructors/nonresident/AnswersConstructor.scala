@@ -116,6 +116,6 @@ trait AnswersConstructor {
       annualExemptAmount <- annualExemptAmount
       broughtForwardLosses <- broughtForwardLosses
     } yield TotalPersonalDetailsCalculationModel(customerType.get, currentIncome, personalAllowance, isVulnerableTrustee, otherProperties.get,
-      previousLossOrGain, howMuchLoss, howMuchGain, annualExemptAmount, broughtForwardLosses)
+      previousLossOrGain, howMuchLoss, howMuchGain, annualExemptAmount, broughtForwardLosses.get)
   }
 }

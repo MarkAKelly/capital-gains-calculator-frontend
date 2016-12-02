@@ -100,7 +100,7 @@ object FinalTaxAnswersRequestConstructor {
 
   def broughtForwardLosses(model: BroughtForwardLossesModel): String = {
     if (model.isClaiming) {
-      s"&broughtForwardLoss=${model.broughtForwardLoss}"
+      s"&broughtForwardLoss=${model.broughtForwardLoss.get}"
     } else { "" }
   }
 }

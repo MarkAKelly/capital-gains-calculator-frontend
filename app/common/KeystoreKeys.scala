@@ -54,6 +54,7 @@ object KeystoreKeys {
   val worthBeforeLegislationStart = "nr:worthBeforeLegislation"
   val howMuchGain = "nr:howMuchGain"
   val howMuchLoss = "nr:howMuchLoss"
+  val broughtForwardLosses = "nr:broughtForwardLosses"
 
 
   object ResidentPropertyKeys {

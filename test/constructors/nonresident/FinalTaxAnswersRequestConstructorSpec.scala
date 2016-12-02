@@ -23,29 +23,29 @@ class FinalTaxAnswersRequestConstructorSpec extends UnitSpec {
 
   "Calling .customerType" should {
     "produce a valid query string" in {
-      FinalTaxAnswersRequestConstructor.customerType(CustomerTypeModel("Individual")) shouldEqual "&customerType=Individual"
+      FinalTaxAnswersRequestConstructor.customerType(CustomerTypeModel("individual")) shouldEqual "&customerType=individual"
     }
   }
 
   "Calling .currentIncome" should {
     "produce a valid query string when Customer type is individual" in {
-      FinalTaxAnswersRequestConstructor.currentIncome(CustomerTypeModel("Individual"), Some(CurrentIncomeModel(10000))) shouldEqual
+      FinalTaxAnswersRequestConstructor.currentIncome(CustomerTypeModel("individual"), Some(CurrentIncomeModel(10000))) shouldEqual
       "&currentIncome=10000"
     }
 
     "produce a blank query string when Customer type is anything else" in {
-      FinalTaxAnswersRequestConstructor.currentIncome(CustomerTypeModel("Trustee"), Some(CurrentIncomeModel(10000))) shouldEqual ""
+      FinalTaxAnswersRequestConstructor.currentIncome(CustomerTypeModel("trustee"), Some(CurrentIncomeModel(10000))) shouldEqual ""
     }
   }
 
   "Calling .personalAllowanceAmt" should {
     "produce a valid query string when Customer type is individual" in {
-      FinalTaxAnswersRequestConstructor.personalAllowanceAmt(CustomerTypeModel("Individual"), Some(PersonalAllowanceModel(10000))) shouldEqual
+      FinalTaxAnswersRequestConstructor.personalAllowanceAmt(CustomerTypeModel("individual"), Some(PersonalAllowanceModel(10000))) shouldEqual
       "&personalAllowanceAmt=10000"
     }
 
     "produce a blank query string when Customer type is anything else" in {
-      FinalTaxAnswersRequestConstructor.personalAllowanceAmt(CustomerTypeModel("Trustee"), Some(PersonalAllowanceModel(10000))) shouldEqual ""
+      FinalTaxAnswersRequestConstructor.personalAllowanceAmt(CustomerTypeModel("trustee"), Some(PersonalAllowanceModel(10000))) shouldEqual ""
     }
   }
 
@@ -145,11 +145,11 @@ class FinalTaxAnswersRequestConstructorSpec extends UnitSpec {
   "Calling .broughtForwardLosses" should {
 
     "produce a valid query string when claiming" in {
-      FinalTaxAnswersRequestConstructor.broughtForwardLosses(BroughtForwardLossesModel(true, 10000)) shouldEqual "&broughtForwardLoss=10000"
+      FinalTaxAnswersRequestConstructor.broughtForwardLosses(BroughtForwardLossesModel(true, Some(10000))) shouldEqual "&broughtForwardLoss=10000"
     }
 
     "produce a blank query string when not claiming" in {
-      FinalTaxAnswersRequestConstructor.broughtForwardLosses(BroughtForwardLossesModel(false, 10000)) shouldEqual ""
+      FinalTaxAnswersRequestConstructor.broughtForwardLosses(BroughtForwardLossesModel(false, Some(10000))) shouldEqual ""
     }
   }
 }
