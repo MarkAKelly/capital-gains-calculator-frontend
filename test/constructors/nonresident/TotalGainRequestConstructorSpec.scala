@@ -135,7 +135,7 @@ class TotalGainRequestConstructorSpec extends UnitSpec {
         DisposalDateModel(15, 10, 2018),
         AcquisitionDateModel("No", None, None, None))
 
-      result shouldBe ""
+      result shouldBe "&disposalDate=2018-10-15"
     }
 
     "produce an empty string with missing acquisition date" in {
@@ -143,7 +143,7 @@ class TotalGainRequestConstructorSpec extends UnitSpec {
         DisposalDateModel(15, 10, 2018),
         AcquisitionDateModel("Yes", None, None, None))
 
-      result shouldBe ""
+      result shouldBe "&disposalDate=2018-10-15"
     }
 
     "produce an empty string with an acquisition date after tax start" in {
@@ -151,7 +151,7 @@ class TotalGainRequestConstructorSpec extends UnitSpec {
         DisposalDateModel(15, 10, 2018),
         AcquisitionDateModel("Yes", Some(4), Some(5), Some(2016)))
 
-      result shouldBe ""
+      result shouldBe "&disposalDate=2018-10-15"
     }
   }
 
