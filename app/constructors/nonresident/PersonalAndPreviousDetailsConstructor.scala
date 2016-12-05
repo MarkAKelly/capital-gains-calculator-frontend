@@ -152,11 +152,17 @@ object PersonalAndPreviousDetailsConstructor {
   def previousGainsOrLossAnswerRow(otherPropertiesModel: OtherPropertiesModel,
                                    previousLossOrGainModel: Option[PreviousLossOrGainModel]): Option[QuestionAnswerModel[String]] = {
 
+    val message = previousLossOrGainModel.get.previousLossOrGain match {
+      case PreviousGainOrLossKeys.gain => Messages("calc.previousLossOrGain.gain")
+      case PreviousGainOrLossKeys.loss => Messages("calc.previousLossOrGain.loss")
+      case PreviousGainOrLossKeys.neither => Messages("calc.previousLossOrGain.neither")
+    }
+
     otherPropertiesModel.otherProperties match {
       case YesNoKeys.yes =>
         Some(QuestionAnswerModel(
           s"${KeystoreKeys.NonResidentKeys.previousLossOrGain}-question",
-          previousLossOrGainModel.get.previousLossOrGain,
+          message,
           Messages("calc.previousLossOrGain.question"),
           Some(controllers.nonresident.routes.PreviousGainOrLossController.previousGainOrLoss().url)
         ))

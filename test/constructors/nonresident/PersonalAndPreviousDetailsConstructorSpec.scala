@@ -525,7 +525,7 @@ class PersonalAndPreviousDetailsConstructorSpec extends UnitSpec with WithFakeAp
 
       s"return the correct answer" in {
         result.fold(cancel("expected result not computed")) { item =>
-          item.data shouldBe PreviousGainOrLossKeys.neither
+          item.data shouldBe messages.PreviousLossOrGain.neither
         }
       }
 
