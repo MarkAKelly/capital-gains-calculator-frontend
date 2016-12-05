@@ -49,12 +49,8 @@ trait CalculationElectionController extends FrontendController with ValidActiveS
       val optionSeq = Seq(totalGainResultsModel.rebasedGain, totalGainResultsModel.timeApportionedGain).flatten
       val finalSeq = Seq(totalGainResultsModel.flatGain) ++ optionSeq
 
-      if (!finalSeq.forall(_ <= 0)) {
-        val prrModel = calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief)
-
-        for {
-          prrModel <- prrModel
-        } yield prrModel
+      if (finalSeq.exists(_ > 0)) {
+        calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief)
       } else Future(None)
     }
 
