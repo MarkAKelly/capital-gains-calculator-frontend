@@ -16,28 +16,21 @@
 
 package constructors
 
-import assets.MessageLookup.NonResident.{CalculationElection => messages}
-import common.TestModels
 import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
-import models.nonresident.{CalculationResultModel, TotalGainResultsModel}
-import org.mockito.Matchers
-import org.mockito.Mockito._
-import org.mockito.stubbing.OngoingStubbing
+import models.nonresident.TotalGainResultsModel
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-import scala.concurrent.Future
-
 class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
 
   object TestCalculationElectionConstructor extends CalculationElectionConstructor {
-    val calcConnector = mockCalcConnector
+    val calcConnector: CalculatorConnector = mockCalcConnector
   }
 
   implicit val hc = new HeaderCarrier()
-  val mockCalcConnector = mock[CalculatorConnector]
+  val mockCalcConnector: CalculatorConnector = mock[CalculatorConnector]
 
   val onlyFlat = TotalGainResultsModel(BigDecimal(0), None, None)
   val flatAndRebased = TotalGainResultsModel(BigDecimal(-100), Some(BigDecimal(-50)), None)
@@ -48,76 +41,76 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with
 
     "when only a flat calculation result is provided" should {
 
-      val seq = TestCalculationElectionConstructor.generateElection(hc, onlyFlat)
-      "produce an empty sequence" in {
-        seq.size shouldBe 1
+      val calculations = TestCalculationElectionConstructor.generateElection(hc, onlyFlat)
+      "produce sequence with one element" in {
+        calculations.size shouldBe 1
       }
 
-      "should have flat as the first element" in {
-        seq.head._1 shouldEqual "flat"
+      "contain a flat calculation" in {
+        calculations.head._1 shouldEqual "flat"
       }
     }
 
     "when a flat calculation and a rebased calculation result are provided" should {
 
-      val seq = TestCalculationElectionConstructor.generateElection(hc, flatAndRebased)
+      val calculations = TestCalculationElectionConstructor.generateElection(hc, flatAndRebased)
 
       "produce two entries in the sequence" in {
-        seq.size shouldBe 2
+        calculations.size shouldBe 2
       }
 
       "should be returned with an order" which {
 
-        "should have flat as the first element" in {
-          seq.head._1 shouldEqual "flat"
+        "contain a flat calculation" in {
+          calculations.head._1 shouldEqual "flat"
         }
 
         "should have rebased as the second element" in {
-          seq(1)._1 shouldEqual "rebased"
+          calculations(1)._1 shouldEqual "rebased"
         }
       }
     }
 
     "when a flat calculation and a time calculation result are provided" should {
 
-      val seq = TestCalculationElectionConstructor.generateElection(hc, flatAndTime)
+      val calculations = TestCalculationElectionConstructor.generateElection(hc, flatAndTime)
 
       "produce two entries in the sequence" in {
-        seq.size shouldBe 2
+        calculations.size shouldBe 2
       }
 
       "should be returned with an order" which {
 
-        "should have time as the first element" in {
-          seq.head._1 shouldEqual "time"
+        "contain a time calculation" in {
+          calculations.head._1 shouldEqual "time"
         }
 
         "should have flat as the second element" in {
-          seq(1)._1 shouldEqual "flat"
+          calculations(1)._1 shouldEqual "flat"
         }
       }
     }
 
     "when a flat, rebased and time are all provided" should {
 
-      val seq = TestCalculationElectionConstructor.generateElection(hc, flatRebasedAndTime)
+      val calculations = TestCalculationElectionConstructor.generateElection(hc, flatRebasedAndTime)
 
       "produce a three entry sequence" in {
-        seq.size shouldBe 3
+        calculations.size shouldBe 3
       }
 
       "should be returned with an order" which {
 
-        "should have time as the first element" in {
-          seq.head._1 shouldEqual "time"
+        "contain a time calculation" in {
+          calculations.head._1 shouldEqual "time"
         }
 
         "should have flat as the second element" in {
-          seq(1)._1 shouldEqual "flat"
+          calculations(1)._1 shouldEqual "flat"
         }
 
         "should have rebased as the third element" in {
-          seq(2)._1 shouldEqual "rebased"
+          calculations(2)._1 shouldEqual "rebased"
         }
       }
     }
