@@ -26,15 +26,15 @@ object FinalTaxAnswersRequestConstructor {
 
   def additionalParametersQuery(model: TotalPersonalDetailsCalculationModel,
                                 maxAnnualExemptAmount: BigDecimal): String = {
-
     customerType(model.customerTypeModel) +
     isVulnerable(model.customerTypeModel, model.trusteeModel) +
     currentIncome(model.customerTypeModel, model.currentIncomeModel) +
     personalAllowanceAmt(model.customerTypeModel, model.personalAllowanceModel) +
     allowableLoss(model.otherPropertiesModel, model.previousGainOrLoss, model.howMuchLossModel) +
     previousGain(model.otherPropertiesModel, model.previousGainOrLoss, model.howMuchGainModel) +
-    broughtForwardLosses(model.broughtForwardLossesModel)
-
+    broughtForwardLosses(model.broughtForwardLossesModel) +
+    annualExemptAmount(model.otherPropertiesModel, model.previousGainOrLoss, model.howMuchLossModel, model.howMuchGainModel,
+      model.annualExemptAmountModel, maxAnnualExemptAmount)
   }
 
   def customerType(model: CustomerTypeModel): String = {

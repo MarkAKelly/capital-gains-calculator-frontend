@@ -24,6 +24,7 @@ import constructors.nonresident.AnswersConstructor
 import controllers.helpers.FakeRequestHelper
 import controllers.nonresident.SummaryController
 import models.nonresident._
+import models.resident.TaxYearModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -42,14 +43,20 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
                   result: TotalGainResultsModel,
                   calculationElectionModel: CalculationElectionModel,
                   privateResidenceReliefModel: Option[PrivateResidenceReliefModel],
-                  calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel]
+                  calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel],
+                  finalSummaryModel: TotalPersonalDetailsCalculationModel,
+                  taxOwedResult: Option[CalculationResultsWithTaxOwedModel] = None
                  ): SummaryController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
     val mockAnswersConstructor = mock[AnswersConstructor]
 
+
     when(mockAnswersConstructor.getNRTotalGainAnswers(Matchers.any()))
       .thenReturn(Future.successful(summary))
+
+    when(mockAnswersConstructor.getPersonalDetailsAndPreviousCapitalGainsAnswers(Matchers.any()))
+      .thenReturn(Future.successful(finalSummaryModel))
 
     when(mockCalcConnector.fetchAndGetFormData[CalculationElectionModel](Matchers.eq(KeystoreKeys.calculationElection))(Matchers.any(), Matchers.any()))
       .thenReturn(Some(calculationElectionModel))
@@ -62,6 +69,18 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
 
     when(mockCalcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.eq(KeystoreKeys.privateResidenceRelief))(Matchers.any(), Matchers.any()))
       .thenReturn(privateResidenceReliefModel)
+
+    when(mockCalcConnector.getFullAEA(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(BigDecimal(11000))))
+
+    when(mockCalcConnector.getPartialAEA(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(BigDecimal(5500))))
+
+    when(mockCalcConnector.calculateNRCGTTotalTax(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(taxOwedResult))
+
+    when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(TaxYearModel("2015/16", true, "2015/16"))))
 
     new SummaryController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -86,6 +105,19 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
     None
   )
 
+  val finalAnswersModel = TotalPersonalDetailsCalculationModel(
+    CustomerTypeModel("representative"),
+    None,
+    None,
+    None,
+    OtherPropertiesModel("No"),
+    None,
+    None,
+    None,
+    None,
+    BroughtForwardLossesModel(false, None)
+  )
+
   "SummaryController" should {
     s"have a session timeout home link of '${controllers.nonresident.routes.DisposalDateController.disposalDate().url}'" in {
       SummaryController.homeLink shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
@@ -100,7 +132,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
         TotalGainResultsModel(1000, Some(2000), Some(3000)),
         CalculationElectionModel(CalculationType.flat),
         Some(PrivateResidenceReliefModel("Yes", Some(1000), Some(10))),
-        Some(CalculationResultsWithPRRModel(GainsAfterPRRModel(100, 0, 100), None, None))
+        Some(CalculationResultsWithPRRModel(GainsAfterPRRModel(100, 0, 100), None, None)),
+        finalAnswersModel
       )
 
       lazy val result = target.summary()(fakeRequestWithSession)
@@ -125,7 +158,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
         TotalGainResultsModel(1000, None, None),
         CalculationElectionModel(CalculationType.flat),
         None,
-        None
+        None,
+        finalAnswersModel
       )
       lazy val result = target.summary()(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
@@ -149,7 +183,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
         TotalGainResultsModel(1000, Some(2000), Some(3000)),
         CalculationElectionModel(CalculationType.flat),
         Some(PrivateResidenceReliefModel("Yes", Some(1000), Some(10))),
-        Some(CalculationResultsWithPRRModel(GainsAfterPRRModel(100, 0, 100), None, None))
+        Some(CalculationResultsWithPRRModel(GainsAfterPRRModel(100, 0, 100), None, None)),
+        finalAnswersModel
       )
       lazy val result = target.summary()(fakeRequest)
 
@@ -169,7 +204,8 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
       TotalGainResultsModel(1000, Some(2000), Some(3000)),
       CalculationElectionModel(CalculationType.flat),
       Some(PrivateResidenceReliefModel("Yes", Some(1000), Some(10))),
-      Some(CalculationResultsWithPRRModel(GainsAfterPRRModel(100, 0, 100), None, None))
+      Some(CalculationResultsWithPRRModel(GainsAfterPRRModel(100, 0, 100), None, None)),
+      finalAnswersModel
     )
     lazy val result = target.restart()(fakeRequestWithSession)
 

@@ -33,7 +33,7 @@ class SummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
       val questionAnswer = QuestionAnswerModel[String]("text", "1000", "test-question", None)
       val seqQuestionAnswers = Seq(questionAnswer, questionAnswer)
 
-      lazy val view = summary(seqQuestionAnswers, "back-link", displayDateWarning = false, "flat")(fakeRequest)
+      lazy val view = summary(seqQuestionAnswers, "back-link", displayDateWarning = false, "flat", None)(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       s"have a title of '${messages.Summary.title}'" in {
@@ -147,7 +147,7 @@ class SummaryViewSpec extends UnitSpec with WithFakeApplication with FakeRequest
     "supplied with a disposal date within the valid tax years" should {
       val questionAnswer = QuestionAnswerModel[String]("text", "1000", "test-question", None)
       val seqQuestionAnswers = Seq(questionAnswer, questionAnswer)
-      lazy val view = summary(seqQuestionAnswers, "back-link", displayDateWarning = true, "flat")(fakeRequest)
+      lazy val view = summary(seqQuestionAnswers, "back-link", displayDateWarning = true, "flat", Some(100))(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "display a tax year warning" in {

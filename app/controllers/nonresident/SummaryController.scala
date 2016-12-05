@@ -18,13 +18,15 @@ package controllers.nonresident
 
 import common.{KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
-import constructors.nonresident.{AnswersConstructor, FinalTaxAnswersRequestConstructor}
+import constructors.nonresident.AnswersConstructor
 import controllers.predicates.ValidActiveSession
 import models.nonresident.{CalculationResultsWithPRRModel, _}
+import models.resident.TaxYearModel
 import play.api.mvc.{Action, AnyContent, Result}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation
+import common.nonresident.CalculationType
 
 import scala.concurrent.Future
 
@@ -73,12 +75,39 @@ trait SummaryController extends FrontendController with ValidActiveSession {
       } else Future.successful(None)
     }
 
+    def getMaxAEA(totalPersonalDetailsCalculationModel: Option[TotalPersonalDetailsCalculationModel],
+                  taxYear: Option[TaxYearModel]): Future[Option[BigDecimal]] = {
+      totalPersonalDetailsCalculationModel match {
+        case Some(data) if data.customerTypeModel.customerType.equals("trustee") && data.trusteeModel.get.isVulnerable.equals("No") =>
+          calcConnector.getPartialAEA(TaxDates.taxYearStringToInteger(taxYear.get.calculationTaxYear))
+        case _ => calcConnector.getFullAEA(TaxDates.taxYearStringToInteger(taxYear.get.calculationTaxYear))
+      }
+    }
+
+    def getTaxYear(totalGainAnswersModel: TotalGainAnswersModel): Future[Option[TaxYearModel]] = {
+      val date = totalGainAnswersModel.disposalDateModel
+      calcConnector.getTaxYear(s"${date.year}-${date.month}-${date.day}")
+    }
+
+    def getTaxOwed(calculationResultsWithTaxOwedModel: Option[CalculationResultsWithTaxOwedModel],
+                   calculationElection: String): Future[Option[BigDecimal]] = {
+      (calculationResultsWithTaxOwedModel, calculationElection) match {
+        case (Some(model), CalculationType.flat) => Future.successful(Some(model.flatResult.taxOwed))
+        case (Some(model), CalculationType.rebased) => Future.successful(model.rebasedResult.map(_.taxOwed))
+        case (Some(model), CalculationType.timeApportioned) => Future.successful(model.timeApportionedResult.map(_.taxOwed))
+        case _ => Future.successful(None)
+      }
+    }
+
     def getSection(calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel],
                    privateResidenceReliefModel: Option[PrivateResidenceReliefModel],
                    totalGainResultsModel: TotalGainResultsModel,
-                   calculationType: String): Future[Seq[QuestionAnswerModel[Any]]] = {
-      privateResidenceReliefModel match {
-        case Some(model) if model.isClaimingPRR == "Yes" => Future.successful(calculationResultsWithPRRModel.get.calculationDetailsRows(calculationType))
+                   calculationType: String,
+                   calculationResultsWithTaxOwedModel: Option[CalculationResultsWithTaxOwedModel],
+                   taxYear: Option[TaxYearModel]): Future[Seq[QuestionAnswerModel[Any]]] = {
+      (calculationResultsWithTaxOwedModel, privateResidenceReliefModel) match {
+        case (Some(model), _) => Future.successful(model.calculationDetailsRows(calculationType, taxYear.get.taxYearSupplied))
+        case (_, Some(model)) if model.isClaimingPRR == "Yes" => Future.successful(calculationResultsWithPRRModel.get.calculationDetailsRows(calculationType))
         case _ => Future.successful(totalGainResultsModel.calculationDetailsRows(calculationType))
       }
     }
@@ -107,11 +136,23 @@ trait SummaryController extends FrontendController with ValidActiveSession {
         }
     }
 
+    def calculateTaxOwed(totalGainAnswersModel: TotalGainAnswersModel,
+                         privateResidenceReliefModel: Option[PrivateResidenceReliefModel],
+                         totalPersonalDetailsCalculationModel: Option[TotalPersonalDetailsCalculationModel],
+                         maxAEA: BigDecimal): Future[Option[CalculationResultsWithTaxOwedModel]] = {
+      totalPersonalDetailsCalculationModel match {
+        case Some(data) => calcConnector.calculateNRCGTTotalTax(totalGainAnswersModel,
+          privateResidenceReliefModel, totalPersonalDetailsCalculationModel.get, maxAEA)
+        case _ => Future.successful(None)
+      }
+    }
+
     def routeRequest(result: Seq[QuestionAnswerModel[Any]],
                      backUrl: String, displayDateWarning: Boolean,
-                     calculationType: String): Future[Result] = {
+                     calculationType: String,
+                     taxOwed: Option[BigDecimal]): Future[Result] = {
       Future.successful(Ok(calculation.nonresident.summary(result,
-        backUrl, displayDateWarning, calculationType)))
+        backUrl, displayDateWarning, calculationType, taxOwed)))
     }
 
     for {
@@ -120,12 +161,17 @@ trait SummaryController extends FrontendController with ValidActiveSession {
       totalGainResultsModel <- calculateDetails(answers)
       privateResidentReliefModel <- getPRRModel(hc, totalGainResultsModel.get)
       calculationResultsWithPRR <- calculatePRR(answers, privateResidentReliefModel)
+      finalAnswers <- getFinalTaxAnswers(totalGainResultsModel.get, calculationResultsWithPRR)
+      taxYear <- getTaxYear(answers)
+      maxAEA <- getMaxAEA(finalAnswers, taxYear)
+      finalResult <- calculateTaxOwed(answers, privateResidentReliefModel, finalAnswers, maxAEA.get)
       backUrl <- summaryBackUrl(totalGainResultsModel)
       calculationType <- calcConnector.fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection)
       results <- getSection(calculationResultsWithPRR, privateResidentReliefModel,
-        totalGainResultsModel.get, calculationType.get.calculationType)
+        totalGainResultsModel.get, calculationType.get.calculationType, finalResult, taxYear)
+      taxOwed <- getTaxOwed(finalResult, calculationType.get.calculationType)
       route <- routeRequest(results, backUrl, displayWarning,
-        calculationType.get.calculationType)
+        calculationType.get.calculationType, taxOwed)
     } yield route
   }
 
