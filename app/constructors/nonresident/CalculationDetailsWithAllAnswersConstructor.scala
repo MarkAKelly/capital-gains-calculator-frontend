@@ -37,11 +37,11 @@ object CalculationDetailsWithAllAnswersConstructor {
       case Some(value) => CalculationDetailsWithPRRConstructor.prrUsedDetails(value)
       case _ => None
     }
-    val allowableLossesUsed = allowableLossesUsed(correctModel.allowableLossesUsed)
-    val annualExemptAmountUsed = annualExemptAmountUsed(correctModel.aeaUsed)
-    val annualExemptAmountRemaining = annualExemptAmountRemaining(correctModel.aeaRemaining)
-    val lossesRemaining = lossesRemaining(correctModel.taxableGain)
-    val taxRates = taxRates(correctModel.taxGain, correctModel.taxOwed, correctModel.upperTaxGain, correctModel.upperTaxRate)
+    val allowableLossesUsed = allowableLossesUsedRow(correctModel.allowableLossesUsed, taxYear)
+    val annualExemptAmountUsed = aeaUsedRow(correctModel.aeaUsed)
+    val annualExemptAmountRemaining = aeaRemainingRow(correctModel.aeaRemaining)
+    val lossesRemaining = lossesRemainingRow(correctModel.taxableGain)
+    val taxRates = taxRatesRow(correctModel.taxGain, correctModel.taxRate, correctModel.upperTaxGain, correctModel.upperTaxRate)
 
     Seq(
       electionDetails,
@@ -57,7 +57,7 @@ object CalculationDetailsWithAllAnswersConstructor {
     ).flatten
   }
 
-  def allowableLossesUsed(allowableLossUsed: Option[BigDecimal], taxYear: String): Option[QuestionAnswerModel[BigDecimal]] = {
+  def allowableLossesUsedRow(allowableLossUsed: Option[BigDecimal], taxYear: String): Option[QuestionAnswerModel[BigDecimal]] = {
     allowableLossUsed match {
       case Some(data) if data > 0 =>
         val id = "calcDetails:allowableLossesUsed"
@@ -67,7 +67,7 @@ object CalculationDetailsWithAllAnswersConstructor {
     }
   }
 
-  def aeaUsed(annualExemptAmountUsed: Option[BigDecimal]): Option[QuestionAnswerModel[BigDecimal]] = {
+  def aeaUsedRow(annualExemptAmountUsed: Option[BigDecimal]): Option[QuestionAnswerModel[BigDecimal]] = {
     annualExemptAmountUsed match {
       case Some(data) if data > 0 =>
         val id = "calcDetails:annualExemptAmountUsed"
@@ -77,13 +77,13 @@ object CalculationDetailsWithAllAnswersConstructor {
     }
   }
 
-  def aeaRemaining(annualExemptAmountRemaining: BigDecimal): Option[QuestionAnswerModel[BigDecimal]] = {
+  def aeaRemainingRow(annualExemptAmountRemaining: BigDecimal): Option[QuestionAnswerModel[BigDecimal]] = {
     val id = "calcDetails:annualExemptAmountRemaining"
     val question = Messages("calc.summary.calculation.details.remainingAEA")
     Some(QuestionAnswerModel(id, annualExemptAmountRemaining, question, None))
   }
 
-  def broughtForwardLossesRemaining(broughtForwardLossesRemaining: Option[BigDecimal], taxYear: String): Option[QuestionAnswerModel[BigDecimal]] = {
+  def broughtForwardLossesRemainingRow(broughtForwardLossesRemaining: Option[BigDecimal], taxYear: String): Option[QuestionAnswerModel[BigDecimal]] = {
     broughtForwardLossesRemaining match {
       case Some(data) if data > 0 =>
         val id = "calcDetails:broughtForwardLossesUsed"
@@ -93,28 +93,28 @@ object CalculationDetailsWithAllAnswersConstructor {
     }
   }
 
-  def lossesRemaining(taxableGain: BigDecimal): Option[QuestionAnswerModel[BigDecimal]] = {
+  def lossesRemainingRow(taxableGain: BigDecimal): Option[QuestionAnswerModel[BigDecimal]] = {
     //TODO add correct wording from designers to messages
-    if (taxableGain <= 0) {
+    if (taxableGain < 0) {
       val id = "calcDetails:lossesRemaining"
       val question = Messages("calc.summary.calculation.details.lossesRemaining")
       Some(QuestionAnswerModel(id, taxableGain.abs, question, None))
     } else None
   }
 
-  def taxRates(taxableGain: BigDecimal,
-               taxRate: Int,
-               additionalTaxableGain: Option[BigDecimal],
-               additionalTaxRate: Option[Int]): Option[QuestionAnswerModel[Any]] = {
+  def taxRatesRow(taxableGain: BigDecimal,
+                  taxRate: Int,
+                  additionalTaxableGain: Option[BigDecimal],
+                  additionalTaxRate: Option[Int]): Option[QuestionAnswerModel[Any]] = {
     val id = "calcDetails:taxRate"
-    val question = Messages("calc.summary.calculation.details.taxRate ")
+    val question = Messages("calc.summary.calculation.details.taxRate")
 
     (taxableGain, additionalTaxableGain) match {
-      case (_, Some(value)) if taxableGain > 0 =>
-        val value = (taxableGain,value)
+      case (_, Some(additionalGain)) if taxableGain > 0 =>
+        val value = (taxableGain, taxRate, additionalGain, additionalTaxRate.get)
         Some(QuestionAnswerModel(id, value, question, None))
       case _ if taxableGain > 0 =>
-        val value = Messages("calc.summary.calculation.details.taxRateValue", s"£${MoneyPounds(taxableGain, 2)}")
+        val value = Messages("calc.summary.calculation.details.taxRateValue", s"£${MoneyPounds(taxableGain, 2).quantity}", taxRate)
         Some(QuestionAnswerModel(id, value, question, None))
       case _ => None
     }

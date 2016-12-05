@@ -21,15 +21,15 @@ import play.api.libs.json.Json
 case class TotalTaxOwedModel (taxOwed: BigDecimal,
                          taxGain: Double,
                          taxRate: Int,
-                         upperTaxGain: Option[Double] = None,
+                         upperTaxGain: Option[BigDecimal] = None,
                          upperTaxRate: Option[Int] = None,
                          totalGain: BigDecimal,
-                         taxableGain: Double,
-                         prrUsed: Option[Double],
-                         allowableLossesUsed: Option[Double],
-                         aeaUsed: Option[Double],
-                         aeaRemaining: Double,
-                         broughtForwardLossesUsed: Option[Double])
+                         taxableGain: BigDecimal,
+                         prrUsed: Option[BigDecimal],
+                         allowableLossesUsed: Option[BigDecimal],
+                         aeaUsed: Option[BigDecimal],
+                         aeaRemaining: BigDecimal,
+                         broughtForwardLossesUsed: Option[BigDecimal])
 
 object TotalTaxOwedModel {
   implicit val formats = Json.format[TotalTaxOwedModel]

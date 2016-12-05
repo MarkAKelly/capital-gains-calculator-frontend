@@ -399,6 +399,7 @@ calc.summary.calculation.details.usedAEA = Capital Gains Tax allowance used
 calc.summary.calculation.details.remainingAEA = Capital Gains Tax allowance remaining
 calc.summary.calculation.details.broughtForwardLossesUsed = Remaining loss from tax years before {0}
 calc.summary.calculation.details.taxableGain = Your taxable gain
+calc.summary.calculation.details.lossesRemaining = Carried forward loss
 calc.summary.calculation.details.taxRate = Tax rate
 calc.summary.calculation.details.taxRateValue = {0} at {1}%
 calc.summary.personal.details.title = Personal details
