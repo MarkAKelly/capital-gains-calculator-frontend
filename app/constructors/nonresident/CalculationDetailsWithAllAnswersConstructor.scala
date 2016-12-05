@@ -38,6 +38,7 @@ object CalculationDetailsWithAllAnswersConstructor {
       case _ => None
     }
     val allowableLossesUsed = allowableLossesUsedRow(correctModel.allowableLossesUsed, taxYear)
+    val broughtForwardLossesUsed = broughtForwardLossesUsedRow(correctModel.broughtForwardLossesUsed, taxYear)
     val annualExemptAmountUsed = aeaUsedRow(correctModel.aeaUsed)
     val annualExemptAmountRemaining = aeaRemainingRow(correctModel.aeaRemaining)
     val lossesRemaining = lossesRemainingRow(correctModel.taxableGain)
@@ -51,6 +52,7 @@ object CalculationDetailsWithAllAnswersConstructor {
       allowableLossesUsed,
       annualExemptAmountUsed,
       annualExemptAmountRemaining,
+      broughtForwardLossesUsed,
       taxableGainDetails,
       lossesRemaining,
       taxRates
@@ -83,8 +85,8 @@ object CalculationDetailsWithAllAnswersConstructor {
     Some(QuestionAnswerModel(id, annualExemptAmountRemaining, question, None))
   }
 
-  def broughtForwardLossesRemainingRow(broughtForwardLossesRemaining: Option[BigDecimal], taxYear: String): Option[QuestionAnswerModel[BigDecimal]] = {
-    broughtForwardLossesRemaining match {
+  def broughtForwardLossesUsedRow(broughtForwardLossesUsed: Option[BigDecimal], taxYear: String): Option[QuestionAnswerModel[BigDecimal]] = {
+    broughtForwardLossesUsed match {
       case Some(data) if data > 0 =>
         val id = "calcDetails:broughtForwardLossesUsed"
         val question = Messages("calc.summary.calculation.details.broughtForwardLossesUsed", taxYear)

@@ -59,7 +59,7 @@ class CalculationDetailsWithAllAnswersConstructorSpec extends UnitSpec with With
     }
 
     "return a sequence containing the brought forward losses row" in {
-      result.contains(CalculationDetailsWithAllAnswersConstructor.broughtForwardLossesRemainingRow(Some(12), "2016/17").get)
+      result.contains(CalculationDetailsWithAllAnswersConstructor.broughtForwardLossesUsedRow(Some(12), "2016/17").get)
     }
 
     "return a sequence containing the tax rates row" in {
@@ -183,7 +183,7 @@ class CalculationDetailsWithAllAnswersConstructorSpec extends UnitSpec with With
   "Calling broughtForwardLossesRemainingRow" when {
 
     "a brought forward loss has been used" should {
-      lazy val result = CalculationDetailsWithAllAnswersConstructor.broughtForwardLossesRemainingRow(Some(1000), "2016/17")
+      lazy val result = CalculationDetailsWithAllAnswersConstructor.broughtForwardLossesUsedRow(Some(1000), "2016/17")
 
       "have a question answer model" in {
         result.isDefined shouldBe true
@@ -207,7 +207,7 @@ class CalculationDetailsWithAllAnswersConstructorSpec extends UnitSpec with With
     }
 
     "a brought forward loss of 0 has been used" should {
-      lazy val result = CalculationDetailsWithAllAnswersConstructor.broughtForwardLossesRemainingRow(Some(0), "2016/17")
+      lazy val result = CalculationDetailsWithAllAnswersConstructor.broughtForwardLossesUsedRow(Some(0), "2016/17")
 
       "return a None" in {
         result.isDefined shouldBe false
@@ -215,7 +215,7 @@ class CalculationDetailsWithAllAnswersConstructorSpec extends UnitSpec with With
     }
 
     "a None is returned for brought forward losses used" should {
-      lazy val result = CalculationDetailsWithAllAnswersConstructor.broughtForwardLossesRemainingRow(None, "2016/17")
+      lazy val result = CalculationDetailsWithAllAnswersConstructor.broughtForwardLossesUsedRow(None, "2016/17")
 
       "return a None" in {
         result.isDefined shouldBe false
