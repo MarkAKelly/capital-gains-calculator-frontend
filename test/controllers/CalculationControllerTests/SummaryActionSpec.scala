@@ -56,7 +56,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
       .thenReturn(Future.successful(summary))
 
     when(mockAnswersConstructor.getPersonalDetailsAndPreviousCapitalGainsAnswers(Matchers.any()))
-      .thenReturn(Future.successful(finalSummaryModel))
+      .thenReturn(Future.successful(Some(finalSummaryModel)))
 
     when(mockCalcConnector.fetchAndGetFormData[CalculationElectionModel](Matchers.eq(KeystoreKeys.calculationElection))(Matchers.any(), Matchers.any()))
       .thenReturn(Some(calculationElectionModel))

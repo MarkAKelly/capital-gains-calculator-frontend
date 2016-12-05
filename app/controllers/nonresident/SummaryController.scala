@@ -71,7 +71,7 @@ trait SummaryController extends FrontendController with ValidActiveSession {
             Future.successful(None)
           case _ => for {
             answers <- finalAnswers
-          } yield Some(answers)
+          } yield answers
         }
       } else Future.successful(None)
     }
