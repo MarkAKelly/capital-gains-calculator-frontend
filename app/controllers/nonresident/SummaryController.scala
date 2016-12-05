@@ -17,6 +17,7 @@
 package controllers.nonresident
 
 import common.{KeystoreKeys, TaxDates}
+import common.nonresident.CustomerTypeKeys
 import connectors.CalculatorConnector
 import constructors.nonresident.AnswersConstructor
 import controllers.predicates.ValidActiveSession
@@ -78,7 +79,9 @@ trait SummaryController extends FrontendController with ValidActiveSession {
     def getMaxAEA(totalPersonalDetailsCalculationModel: Option[TotalPersonalDetailsCalculationModel],
                   taxYear: Option[TaxYearModel]): Future[Option[BigDecimal]] = {
       totalPersonalDetailsCalculationModel match {
-        case Some(data) if data.customerTypeModel.customerType.equals("trustee") && data.trusteeModel.get.isVulnerable.equals("No") =>
+        case Some(data) if data.customerTypeModel.customerType.equals(CustomerTypeKeys.trustee) && data.trusteeModel.get.isVulnerable.equals("No") =>
+          calcConnector.getPartialAEA(TaxDates.taxYearStringToInteger(taxYear.get.calculationTaxYear))
+        case Some(data) if data.customerTypeModel.customerType.equals(CustomerTypeKeys.personalRep) =>
           calcConnector.getPartialAEA(TaxDates.taxYearStringToInteger(taxYear.get.calculationTaxYear))
         case _ => calcConnector.getFullAEA(TaxDates.taxYearStringToInteger(taxYear.get.calculationTaxYear))
       }
