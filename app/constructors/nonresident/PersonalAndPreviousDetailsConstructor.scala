@@ -152,10 +152,11 @@ object PersonalAndPreviousDetailsConstructor {
   def previousGainsOrLossAnswerRow(otherPropertiesModel: OtherPropertiesModel,
                                    previousLossOrGainModel: Option[PreviousLossOrGainModel]): Option[QuestionAnswerModel[String]] = {
 
-    val message = previousLossOrGainModel.get.previousLossOrGain match {
-      case PreviousGainOrLossKeys.gain => Messages("calc.previousLossOrGain.gain")
-      case PreviousGainOrLossKeys.loss => Messages("calc.previousLossOrGain.loss")
-      case PreviousGainOrLossKeys.neither => Messages("calc.previousLossOrGain.neither")
+    val message = previousLossOrGainModel match {
+      case Some(model) if model.previousLossOrGain == PreviousGainOrLossKeys.gain => Messages("calc.previousLossOrGain.gain")
+      case Some(model) if model.previousLossOrGain == PreviousGainOrLossKeys.loss => Messages("calc.previousLossOrGain.loss")
+      case Some(model) if model.previousLossOrGain == PreviousGainOrLossKeys.neither => Messages("calc.previousLossOrGain.neither")
+      case _ => ""
     }
 
     otherPropertiesModel.otherProperties match {
