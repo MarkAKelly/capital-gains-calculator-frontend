@@ -18,7 +18,7 @@ package constructors.nonresident
 
 import common.KeystoreKeys
 import connectors.CalculatorConnector
-import models.nonresident.{TotalPersonalDetailsCalculationModel, _}
+import models.nonresident._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar

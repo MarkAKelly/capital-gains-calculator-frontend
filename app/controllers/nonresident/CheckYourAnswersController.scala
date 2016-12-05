@@ -83,8 +83,8 @@ trait CheckYourAnswersController extends FrontendController with ValidActiveSess
     calculationResultsWithPRRModel match {
 
       case Some(data) =>
-        val optionalSeq = Seq(calculationResultsWithPRRModel.get.rebasedResult, calculationResultsWithPRRModel.get.timeApportionedResult).flatten
-        val finalSeq = Seq(calculationResultsWithPRRModel.get.flatResult) ++ optionalSeq
+        val optionalSeq = Seq(data.rebasedResult, data.timeApportionedResult).flatten
+        val finalSeq = Seq(data.flatResult) ++ optionalSeq
 
         if (!finalSeq.forall(_.taxableGain <= 0)) {
           val personalAndPreviousDetailsModel = answersConstructor.getPersonalDetailsAndPreviousCapitalGainsAnswers(hc)

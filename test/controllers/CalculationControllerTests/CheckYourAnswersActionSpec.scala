@@ -19,7 +19,7 @@ package controllers.CalculationControllerTests
 import constructors.nonresident.AnswersConstructor
 import controllers.helpers.FakeRequestHelper
 import controllers.nonresident.CheckYourAnswersController
-import models.nonresident.{TotalPersonalDetailsCalculationModel, _}
+import models.nonresident._
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import controllers.nonresident.routes
@@ -27,7 +27,6 @@ import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.mockito.Mockito._
 import assets.MessageLookup.{NonResident => messages}
-import common.DefaultRoutes
 import connectors.CalculatorConnector
 
 import scala.concurrent.Future

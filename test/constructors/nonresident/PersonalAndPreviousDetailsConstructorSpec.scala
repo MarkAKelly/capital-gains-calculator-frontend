@@ -46,7 +46,7 @@ class PersonalAndPreviousDetailsConstructorSpec extends UnitSpec with WithFakeAp
       PersonalAndPreviousDetailsConstructor.personalAndPreviousDetailsRows(None) shouldEqual Seq()
     }
 
-    "when called with a valid model return a sequence of size 7" in {
+    "when called with a valid model return a sequence of size 8" in {
       PersonalAndPreviousDetailsConstructor.personalAndPreviousDetailsRows(Some(modelIndividual)).size shouldEqual 8
     }
 
@@ -303,7 +303,7 @@ class PersonalAndPreviousDetailsConstructorSpec extends UnitSpec with WithFakeAp
 
   "calling .disabledTrusteeAnswerRow" when {
 
-    "a customer type of trustee and some income" should {
+    "a customer type of trustee and is a disabled trustee" should {
 
       lazy val result =
         PersonalAndPreviousDetailsConstructor.disabledTrusteeAnswerRow(CustomerTypeModel(CustomerTypeKeys.trustee), Some(DisabledTrusteeModel(YesNoKeys.yes)))
@@ -339,7 +339,7 @@ class PersonalAndPreviousDetailsConstructorSpec extends UnitSpec with WithFakeAp
       }
     }
 
-    "a customer type of anything but trustee and some income" should {
+    "a customer type of anything but trustee and is a disabled trustee" should {
 
       lazy val result =
         PersonalAndPreviousDetailsConstructor.disabledTrusteeAnswerRow(
