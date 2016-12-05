@@ -81,8 +81,6 @@ trait SummaryController extends FrontendController with ValidActiveSession {
       totalPersonalDetailsCalculationModel match {
         case Some(data) if data.customerTypeModel.customerType.equals(CustomerTypeKeys.trustee) && data.trusteeModel.get.isVulnerable.equals("No") =>
           calcConnector.getPartialAEA(TaxDates.taxYearStringToInteger(taxYear.get.calculationTaxYear))
-        case Some(data) if data.customerTypeModel.customerType.equals(CustomerTypeKeys.personalRep) =>
-          calcConnector.getPartialAEA(TaxDates.taxYearStringToInteger(taxYear.get.calculationTaxYear))
         case _ => calcConnector.getFullAEA(TaxDates.taxYearStringToInteger(taxYear.get.calculationTaxYear))
       }
     }
