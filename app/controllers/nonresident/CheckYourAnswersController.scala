@@ -66,13 +66,57 @@ trait CheckYourAnswersController extends FrontendController with ValidActiveSess
     } else Future(None)
   }
 
+  def calculatePRRIfApplicable(totalGainAnswersModel: TotalGainAnswersModel,
+                               privateResidenceReliefModel: Option[PrivateResidenceReliefModel])(implicit hc: HeaderCarrier):
+  Future[Option[CalculationResultsWithPRRModel]] = {
+
+    privateResidenceReliefModel match {
+      case Some(data) => calculatorConnector.calculateTaxableGainAfterPRR(totalGainAnswersModel, data)
+      case None => Future.successful(None)
+    }
+  }
+
+  def checkAndGetFinalSectionsAnswers(totalGainResultsModel: TotalGainResultsModel,
+                                      calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel])(implicit hc: HeaderCarrier):
+  Future[Option[TotalPersonalDetailsCalculationModel]] = {
+
+    calculationResultsWithPRRModel match {
+
+      case Some(data) =>
+        val optionalSeq = Seq(data.rebasedResult, data.timeApportionedResult).flatten
+        val finalSeq = Seq(data.flatResult) ++ optionalSeq
+
+        if (!finalSeq.forall(_.taxableGain <= 0)) {
+          val personalAndPreviousDetailsModel = answersConstructor.getPersonalDetailsAndPreviousCapitalGainsAnswers(hc)
+          for {
+            personalAndPreviousDetailsAnswers <- personalAndPreviousDetailsModel
+          } yield personalAndPreviousDetailsAnswers
+        } else Future(None)
+
+
+      case None =>
+        val optionalBaseSeq = Seq(totalGainResultsModel.rebasedGain, totalGainResultsModel.timeApportionedGain).flatten
+        val finalBaseSeq = Seq(totalGainResultsModel.flatGain) ++ optionalBaseSeq
+
+        if (!finalBaseSeq.forall(_ <= 0)) {
+          val personalAndPreviousDetailsModel = answersConstructor.getPersonalDetailsAndPreviousCapitalGainsAnswers(hc)
+          for {
+            personalAndPreviousDetailsAnswers <- personalAndPreviousDetailsModel
+          } yield personalAndPreviousDetailsAnswers
+        } else Future(None)
+
+    }
+  }
+
   val checkYourAnswers = ValidateSession.async { implicit request =>
 
     for {
       model <- answersConstructor.getNRTotalGainAnswers
       totalGainResult <- calculatorConnector.calculateTotalGain(model)
       prrModel <- getPRRModel(hc, totalGainResult.get)
-      answers <- Future.successful(YourAnswersConstructor.fetchYourAnswers(model, prrModel))
+      totalGainWithPRRResult <- calculatePRRIfApplicable(model, prrModel)
+      finalAnswers <- checkAndGetFinalSectionsAnswers(totalGainResult.get, totalGainWithPRRResult)
+      answers <- Future.successful(YourAnswersConstructor.fetchYourAnswers(model, prrModel, finalAnswers))
       backLink <- getBackLink(totalGainResult.get, model.acquisitionDateModel, model.rebasedValueModel)
     } yield {
       Ok(calculation.nonresident.checkYourAnswers(answers, backLink))
