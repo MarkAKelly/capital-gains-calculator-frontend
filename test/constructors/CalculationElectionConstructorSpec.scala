@@ -25,10 +25,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
 
-  object TestCalculationElectionConstructor extends CalculationElectionConstructor {
-    val calcConnector: CalculatorConnector = mockCalcConnector
-  }
-
+  val target = CalculationElectionConstructor
   implicit val hc = new HeaderCarrier()
   val mockCalcConnector: CalculatorConnector = mock[CalculatorConnector]
 
@@ -41,7 +38,7 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with
 
     "when only a flat calculation result is provided" should {
 
-      val calculations = TestCalculationElectionConstructor.generateElection(hc, onlyFlat)
+      val calculations = target.generateElection(hc, onlyFlat)
       "produce sequence with one element" in {
         calculations.size shouldBe 1
       }
@@ -53,7 +50,7 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with
 
     "when a flat calculation and a rebased calculation result are provided" should {
 
-      val calculations = TestCalculationElectionConstructor.generateElection(hc, flatAndRebased)
+      val calculations = target.generateElection(hc, flatAndRebased)
 
       "produce two entries in the sequence" in {
         calculations.size shouldBe 2
@@ -73,7 +70,7 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with
 
     "when a flat calculation and a time calculation result are provided" should {
 
-      val calculations = TestCalculationElectionConstructor.generateElection(hc, flatAndTime)
+      val calculations = target.generateElection(hc, flatAndTime)
 
       "produce two entries in the sequence" in {
         calculations.size shouldBe 2
@@ -93,7 +90,7 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with
 
     "when a flat, rebased and time are all provided" should {
 
-      val calculations = TestCalculationElectionConstructor.generateElection(hc, flatRebasedAndTime)
+      val calculations = target.generateElection(hc, flatRebasedAndTime)
 
       "produce a three entry sequence" in {
         calculations.size shouldBe 3

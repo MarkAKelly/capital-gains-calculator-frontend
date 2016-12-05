@@ -48,7 +48,6 @@ class CustomerTypeActionSpec extends UnitSpec with WithFakeApplication with Mock
                   rebasedValueData: Option[RebasedValueModel] = None): CustomerTypeController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
-    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[CustomerTypeModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -64,7 +63,6 @@ class CustomerTypeActionSpec extends UnitSpec with WithFakeApplication with Mock
 
     new CustomerTypeController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
   }
 

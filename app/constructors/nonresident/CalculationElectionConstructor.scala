@@ -16,20 +16,14 @@
 
 package constructors.nonresident
 
-import connectors.CalculatorConnector
 import models.nonresident.TotalGainResultsModel
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.http.HeaderCarrier
-
 import scala.concurrent.Future
 
-object CalculationElectionConstructor extends CalculationElectionConstructor {
-  val calcConnector = CalculatorConnector
-}
+object CalculationElectionConstructor extends CalculationElectionConstructor
 
 trait CalculationElectionConstructor {
-
-  val calcConnector: CalculatorConnector
 
   def generateElection(hc: HeaderCarrier,
                        totalGainResults: TotalGainResultsModel
@@ -48,7 +42,7 @@ trait CalculationElectionConstructor {
       BigDecimal(0).setScale(2).toString(),
       Messages("calc.calculationElection.message.rebased"),
       Some(Messages("calc.calculationElection.message.rebasedDate"))
-      )
+    )
   }
 
   private def flatElementConstructor() = {
@@ -57,7 +51,7 @@ trait CalculationElectionConstructor {
       BigDecimal(0).setScale(2).toString(),
       Messages("calc.calculationElection.message.flat"),
       None
-      )
+    )
   }
 
   private def timeElementConstructor() = {
@@ -66,6 +60,6 @@ trait CalculationElectionConstructor {
       BigDecimal(0).setScale(2).toString(),
       Messages("calc.calculationElection.message.time"),
       Some(Messages("calc.calculationElection.message.timeDate"))
-      )
+    )
   }
 }

@@ -30,8 +30,8 @@ import scala.concurrent.Future
 
 object CalculationElectionController extends CalculationElectionController {
   val calcConnector = CalculatorConnector
-  val calcElectionConstructor = CalculationElectionConstructor
   val calcAnswersConstructor = AnswersConstructor
+  val calcElectionConstructor = CalculationElectionConstructor
 }
 
 trait CalculationElectionController extends FrontendController with ValidActiveSession {
