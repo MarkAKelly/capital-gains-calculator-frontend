@@ -45,13 +45,45 @@ trait CalculationElectionController extends FrontendController with ValidActiveS
 
   val calculationElection = ValidateSession.async { implicit request =>
 
-    def getPRRModel(implicit hc: HeaderCarrier, totalGainResultsModel: TotalGainResultsModel): Future[Option[PrivateResidenceReliefModel]] = {
+    def getPRRResponse(implicit hc: HeaderCarrier, totalGainResultsModel: TotalGainResultsModel): Future[Option[PrivateResidenceReliefModel]] = {
       val optionSeq = Seq(totalGainResultsModel.rebasedGain, totalGainResultsModel.timeApportionedGain).flatten
       val finalSeq = Seq(totalGainResultsModel.flatGain) ++ optionSeq
 
       if (finalSeq.exists(_ > 0)) {
         calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief)
       } else Future(None)
+    }
+
+    def getPRRIfApplicable(totalGainAnswersModel: TotalGainAnswersModel,
+                                 privateResidenceReliefModel: Option[PrivateResidenceReliefModel])(implicit hc: HeaderCarrier):
+    Future[Option[CalculationResultsWithPRRModel]] = {
+
+      privateResidenceReliefModel match {
+        case Some(data) => calcConnector.calculateTaxableGainAfterPRR(totalGainAnswersModel, data)
+        case None => Future.successful(None)
+      }
+    }
+
+    def getFinalSectionsAnswers(totalGainResultsModel: TotalGainResultsModel,
+                                        calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel])(implicit hc: HeaderCarrier):
+    Future[Option[TotalPersonalDetailsCalculationModel]] = {
+
+      calculationResultsWithPRRModel match {
+
+        case Some(data) =>
+          val results = data.flatResult :: List(data.rebasedResult, data.timeApportionedResult).flatten
+
+          if (results.exists(_.taxableGain > 0)) {
+            calcAnswersConstructor.getPersonalDetailsAndPreviousCapitalGainsAnswers(hc)
+          } else Future(None)
+
+        case None =>
+          val gains = totalGainResultsModel.flatGain :: List(totalGainResultsModel.rebasedGain, totalGainResultsModel.timeApportionedGain).flatten
+
+          if (gains.exists(_ > 0)) {
+            calcAnswersConstructor.getPersonalDetailsAndPreviousCapitalGainsAnswers(hc)
+          } else Future(None)
+      }
     }
 
     def action(content: Seq[(String, String, String, Option[String])]) =
@@ -71,7 +103,11 @@ trait CalculationElectionController extends FrontendController with ValidActiveS
     for {
       totalGainAnswers <- calcAnswersConstructor.getNRTotalGainAnswers(hc)
       totalGain <- calcConnector.calculateTotalGain(totalGainAnswers)(hc)
-      content <- calcElectionConstructor.generateElection(totalGain.get, None, None)
+      prrAnswers <- getPRRResponse
+      totalGainWithPRR <- getPRRIfApplicable(totalGainAnswers, prrAnswers)
+      allAnswers <- getFinalSectionsAnswers(totalGain.get, totalGainWithPRR)
+      taxOwed <- calcConnector.calculateNRCGTTotalTax(totalGainAnswers, prrAnswers, )
+      content <- calcElectionConstructor.generateElection(totalGain.get, totalGainWithPRR, taxOwed)
       finalResult <- action(content)
     } yield finalResult
   }
