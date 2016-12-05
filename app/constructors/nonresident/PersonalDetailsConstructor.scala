@@ -36,7 +36,7 @@ object PersonalDetailsConstructor {
         val otherPropertiesData = getOtherPropertiesAnswer(data.otherPropertiesModel)
         val previousGainOrLossData = previousGainOrLossAnswer(data.otherPropertiesModel, data.previousGainOrLoss)
         val howMuchGainData = howMuchGainAnswer(data.otherPropertiesModel, data.previousGainOrLoss, data.howMuchGainModel)
-        val howMuchLossData = howMuchLoss(data.otherPropertiesModel, data.previousGainOrLoss, data.howMuchLossModel)
+        val howMuchLossData = howMuchLossAnswer(data.otherPropertiesModel, data.previousGainOrLoss, data.howMuchLossModel)
         val annualExemptAmountData = getAnnualExemptAmountAnswer(data.otherPropertiesModel,
           data.previousGainOrLoss, data.annualExemptAmountModel, data.howMuchGainModel, data.howMuchLossModel)
         val broughtForwardLossesQuestionData = getBroughtForwardLossesQuestion(data.broughtForwardLossesModel)
@@ -154,9 +154,9 @@ object PersonalDetailsConstructor {
     }
   }
 
-  def howMuchLoss(otherPropertiesModel: OtherPropertiesModel,
-                  previousLossOrGainModel: Option[PreviousLossOrGainModel],
-                  howMuchLossModel: Option[HowMuchLossModel]): Option[QuestionAnswerModel[BigDecimal]] = {
+  def howMuchLossAnswer(otherPropertiesModel: OtherPropertiesModel,
+                        previousLossOrGainModel: Option[PreviousLossOrGainModel],
+                        howMuchLossModel: Option[HowMuchLossModel]): Option[QuestionAnswerModel[BigDecimal]] = {
     (otherPropertiesModel, previousLossOrGainModel) match {
       case (OtherPropertiesModel("Yes"), Some(PreviousLossOrGainModel(PreviousGainOrLossKeys.loss))) =>
         Some(QuestionAnswerModel(

@@ -43,6 +43,10 @@
     @summarySectionNoLink("propertyDetails", Messages("calc.summary.property.details.title"), totalGain.propertyDetailsRows)
     @summarySectionNoLink("salesDetails", Messages("calc.summary.sale.details.title"), totalGain.salesDetailsRows)
     @summarySectionNoLink("deductions", Messages("calc.summary.deductions.title"), totalGain.deductionDetailsRows(pRRModel))
+    @{if (finalAnswers.isDefined)
+        summarySectionNoLink("personalDetails", Messages("calc.summary.personal.details.title"), finalAnswers.get.personalDetailsRows)
+    }
+
 
     <div id="whatToDoNext" class="form-group">
         <h2 class="heading-medium">@Messages("calc.summary.next.fullMessage")</h2>

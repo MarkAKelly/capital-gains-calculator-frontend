@@ -31,6 +31,7 @@ import constructors.nonresident.AnswersConstructor
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import models.nonresident._
 import common.nonresident.CalculationType
+import common.nonresident.CustomerTypeKeys
 
 import scala.concurrent.Future
 
@@ -108,7 +109,7 @@ class ReportActionSpec extends UnitSpec with WithFakeApplication with FakeReques
     Some(OtherReliefsModel(30)))
 
   val finalAnswersModel = TotalPersonalDetailsCalculationModel(
-    CustomerTypeModel("representative"),
+    CustomerTypeModel(CustomerTypeKeys.personalRep),
     None,
     None,
     None,

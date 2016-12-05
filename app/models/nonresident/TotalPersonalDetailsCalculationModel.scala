@@ -16,6 +16,8 @@
 
 package models.nonresident
 
+import constructors.nonresident.PersonalDetailsConstructor
+
 case class TotalPersonalDetailsCalculationModel(customerTypeModel: CustomerTypeModel,
                                                 currentIncomeModel: Option[CurrentIncomeModel],
                                                 personalAllowanceModel: Option[PersonalAllowanceModel],
@@ -26,4 +28,7 @@ case class TotalPersonalDetailsCalculationModel(customerTypeModel: CustomerTypeM
                                                 howMuchGainModel: Option[HowMuchGainModel],
                                                 annualExemptAmountModel: Option[AnnualExemptAmountModel],
                                                 broughtForwardLossesModel: BroughtForwardLossesModel
-                                               )
+                                               ) {
+
+  lazy val personalDetailsRows = PersonalDetailsConstructor.getPersonalDetailsSection(Some(this))
+}

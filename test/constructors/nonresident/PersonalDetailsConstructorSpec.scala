@@ -556,7 +556,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
   "Calling howMuchLossAnswer" when {
 
     "no other properties have been disposed" should {
-      lazy val result = PersonalDetailsConstructor.howMuchLoss(OtherPropertiesModel("No"), None, None)
+      lazy val result = PersonalDetailsConstructor.howMuchLossAnswer(OtherPropertiesModel("No"), None, None)
 
       "return a None" in {
         result shouldBe None
@@ -564,7 +564,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
     }
 
     "other properties have not made a loss" should {
-      lazy val result = PersonalDetailsConstructor.howMuchLoss(OtherPropertiesModel("Yes"),
+      lazy val result = PersonalDetailsConstructor.howMuchLossAnswer(OtherPropertiesModel("Yes"),
         Some(PreviousLossOrGainModel(PreviousGainOrLossKeys.gain)), None)
 
       "return a None" in {
@@ -573,7 +573,7 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
     }
 
     "other properties have made a loss" should {
-      lazy val result = PersonalDetailsConstructor.howMuchLoss(OtherPropertiesModel("Yes"),
+      lazy val result = PersonalDetailsConstructor.howMuchLossAnswer(OtherPropertiesModel("Yes"),
         Some(PreviousLossOrGainModel(PreviousGainOrLossKeys.loss)), Some(HowMuchLossModel(1000)))
 
       "return a Some" in {
