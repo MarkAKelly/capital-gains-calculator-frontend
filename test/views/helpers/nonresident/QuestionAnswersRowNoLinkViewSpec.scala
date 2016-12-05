@@ -133,11 +133,11 @@ class QuestionAnswersRowNoLinkViewSpec extends UnitSpec with WithFakeApplication
       lazy val doc = Jsoup.parse(result.body)
 
       "have a message for one tax rate" in {
-        doc.select("div#id-answer span p").first().text() shouldBe "£1,000 at 10%"
+        doc.select("div#id-answer span p").first().text() shouldBe "£1,000.00 at 10%"
       }
 
       "have a message for the additional tax rate" in {
-        doc.select("div#id-answer span p").last().text() shouldBe "£2,000 at 20%"
+        doc.select("div#id-answer span p").last().text() shouldBe "£2,000.00 at 20%"
       }
     }
   }

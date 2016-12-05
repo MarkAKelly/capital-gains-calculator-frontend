@@ -116,10 +116,10 @@ object CalculationDetailsWithAllAnswersConstructor {
         val value = (taxableGain, taxRate, additionalGain, additionalTaxRate.get)
         Some(QuestionAnswerModel(id, value, question, None))
       case (_, Some(additionalGain)) =>
-        val value = Messages("calc.summary.calculation.details.taxRateValue", s"£${MoneyPounds(additionalGain, 0).quantity}", additionalTaxRate.get)
+        val value = Messages("calc.summary.calculation.details.taxRateValue", s"£${MoneyPounds(additionalGain, 2).quantity}", additionalTaxRate.get)
         Some(QuestionAnswerModel(id, value, question, None))
       case _ if taxableGain > 0 =>
-        val value = Messages("calc.summary.calculation.details.taxRateValue", s"£${MoneyPounds(taxableGain, 0).quantity}", taxRate)
+        val value = Messages("calc.summary.calculation.details.taxRateValue", s"£${MoneyPounds(taxableGain, 2).quantity}", taxRate)
         Some(QuestionAnswerModel(id, value, question, None))
       case _ => None
     }

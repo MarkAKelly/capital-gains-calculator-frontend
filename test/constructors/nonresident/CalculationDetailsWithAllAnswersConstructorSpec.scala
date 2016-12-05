@@ -292,7 +292,7 @@ class CalculationDetailsWithAllAnswersConstructorSpec extends UnitSpec with With
       }
 
       "have a value of 1000" in {
-        assertExpectedResult[QuestionAnswerModel[Any]](result)(_.data shouldBe "£1,000 at 10%")
+        assertExpectedResult[QuestionAnswerModel[Any]](result)(_.data shouldBe "£1,000.00 at 10%")
       }
 
       "have no link" in {
@@ -340,7 +340,7 @@ class CalculationDetailsWithAllAnswersConstructorSpec extends UnitSpec with With
       }
 
       "have a tuple containing the upper tax rate" in {
-        assertExpectedResult[QuestionAnswerModel[Any]](result)(_.data shouldBe "£2,000 at 20%")
+        assertExpectedResult[QuestionAnswerModel[Any]](result)(_.data shouldBe "£2,000.00 at 20%")
       }
 
       "have no link" in {
