@@ -4,7 +4,7 @@
 @import controllers.nonresident.routes.{ReportController => routes}
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-@(totalGain: TotalGainAnswersModel, result: Seq[QuestionAnswerModel[Any]], taxYear: TaxYearModel, electionType: String, pRRModel: Option[PrivateResidenceReliefModel] = None)(implicit request: Request[_])
+@(totalGain: TotalGainAnswersModel, result: Seq[QuestionAnswerModel[Any]], taxYear: TaxYearModel, electionType: String, pRRModel: Option[PrivateResidenceReliefModel] = None, finalAnswers: Option[TotalPersonalDetailsCalculationModel] = None)(implicit request: Request[_])
 
 <!DOCTYPE html>
 <html>

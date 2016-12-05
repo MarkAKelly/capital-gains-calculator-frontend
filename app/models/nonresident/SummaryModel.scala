@@ -50,7 +50,7 @@ case class SummaryModel(
     case _ => "none"
   }
 
-  val personalDetailsRows: Seq[QuestionAnswerModel[Any]] = PersonalDetailsConstructor.getPersonalDetailsSection(this)
+  val personalDetailsRows: Seq[QuestionAnswerModel[Any]] = Seq(QuestionAnswerModel[String]("", "", "", None))
   val saleDetailsRows: Seq[QuestionAnswerModel[Any]] = Seq(QuestionAnswerModel[String]("", "", "", None))
   val purchaseDetailsRows: Seq[QuestionAnswerModel[Any]] = Seq(QuestionAnswerModel[String]("", "", "", None))
   val propertyDetailsRows: Seq[QuestionAnswerModel[Any]] = Seq(QuestionAnswerModel[String]("", "", "", None))
