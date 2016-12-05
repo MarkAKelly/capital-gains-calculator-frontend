@@ -16,11 +16,18 @@
 
 package models.nonresident
 
+import constructors.nonresident.CalculationDetailsWithAllAnswersConstructor
 import play.api.libs.json.Json
 
 case class CalculationResultsWithTaxOwedModel (flatResult: TotalTaxOwedModel,
                                                rebasedResult: Option[TotalTaxOwedModel],
-                                               timeApportionedResult: Option[TotalTaxOwedModel])
+                                               timeApportionedResult: Option[TotalTaxOwedModel]) {
+
+  def calculationDetailsRows(calculationType: String,
+                             taxYear: String): Seq[QuestionAnswerModel[Any]] = {
+    CalculationDetailsWithAllAnswersConstructor.buildSection(this, calculationType, taxYear)
+  }
+}
 
 object CalculationResultsWithTaxOwedModel {
   implicit val formats = Json.format[CalculationResultsWithTaxOwedModel]

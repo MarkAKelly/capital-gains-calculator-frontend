@@ -263,6 +263,15 @@
     float: left;
 }
 
+.pdf-non-resident .grid-layout__column--1-2 {
+    width: 50%;
+    vertical-align: top;
+    box-sizing: border-box;
+    display: table;
+    text-align: left;
+    float: left;
+}
+
 .pdf-non-resident .pdf-header {
     width: 100%;
 }

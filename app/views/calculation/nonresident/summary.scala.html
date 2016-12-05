@@ -6,7 +6,7 @@
 @import views.html.helpers._
 
 @import common.TaxDates
-@(result: Seq[QuestionAnswerModel[Any]], backUrl: String, displayDateWarning: Boolean, calculationType: String)(implicit request: Request[_])
+@(result: Seq[QuestionAnswerModel[Any]], backUrl: String, displayDateWarning: Boolean, calculationType: String, taxOwed: Option[BigDecimal])(implicit request: Request[_])
 
 @main_template(Messages("calc.summary.title"), articleLayout = false) {
 
@@ -18,7 +18,7 @@
 
     <div class=font-medium" data-metrics="summary:calc-election:@calculationType">
 
-        @amountYouOweRow(0, 2)
+        @amountYouOweRow(taxOwed.getOrElse(0), 2)
         @summaryOfCalcSection("calculationDetails", result, 0)
 
     </div>

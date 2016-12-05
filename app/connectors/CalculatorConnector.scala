@@ -23,6 +23,7 @@ import config.{CalculatorSessionCache, WSHttp}
 import constructors.nonresident.{CalculateRequestConstructor, FinalTaxAnswersRequestConstructor, PrivateResidenceReliefRequestConstructor, TotalGainRequestConstructor}
 import constructors.resident.{shares, properties => propertyConstructor}
 import models._
+import models.nonresident.PrivateResidenceReliefModel
 import play.api.libs.json.Format
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -87,6 +88,7 @@ trait CalculatorConnector {
       case None =>
         http.GET[Option[nonresident.CalculationResultsWithTaxOwedModel]](s"$serviceUrl/capital-gains-calculator/non-resident/calculate-tax-owed?${
           TotalGainRequestConstructor.totalGainQuery(totalGainAnswersModel) +
+            PrivateResidenceReliefRequestConstructor.privateResidenceReliefQuery(totalGainAnswersModel, PrivateResidenceReliefModel("No", None, None)) +
             FinalTaxAnswersRequestConstructor.additionalParametersQuery(totalTaxPersonalDetailsModel, maxAnnualExemptAmount)
         }")
     }

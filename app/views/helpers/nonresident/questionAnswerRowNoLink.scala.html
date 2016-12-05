@@ -5,16 +5,20 @@
 
 @(questionAnswer: QuestionAnswerModel[Any], decimalPlaces: Int)
 
-<div id="@{s"${questionAnswer.id}-question"}" class="grid-layout__column grid-layout__column--1-3">
+<div id="@{s"${questionAnswer.id}-question"}" class="grid-layout__column grid-layout__column--1-2">
     <span class="lede">@questionAnswer.question</span>
 </div>
-<div id="@questionAnswer.id-answer" class="grid-layout__column grid-layout__column--1-3">
+<div id="@questionAnswer.id-answer" class="grid-layout__column grid-layout__column--1-2">
     <span class="lede summary-answer">@{questionAnswer.data match {
         case string: String => string
         case int: Int => int.toString
         case bigDecimal: BigDecimal => s"£${MoneyPounds(bigDecimal, decimalPlaces).quantity}"
         case date: LocalDate => datePageFormatNoZero.format(date)
         case boolean: Boolean => if (boolean) "Yes" else "No"
+        case (taxGain: BigDecimal, taxRate: Int, additionalGain: BigDecimal, additionalRate: Int) => {
+            <p class="lede summary-answer">{Messages("calc.summary.calculation.details.taxRateValue", s"£${MoneyPounds(taxGain, 2).quantity}", taxRate)}</p>
+            <p class="lede summary-answer">{Messages("calc.summary.calculation.details.taxRateValue", s"£${MoneyPounds(additionalGain, 2).quantity}", additionalRate)}</p>
+        }
         case _ => ""
         }
     }</span>
