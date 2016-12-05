@@ -41,9 +41,9 @@ trait CalculationElectionConstructor {
   }
 
   private def buildElectionWithTotalGain(data: TotalGainResultsModel) = {
-    val flatElement = Some(flatElementConstructor(data.flatGain, data))
-    val rebasedElement = data.rebasedGain.collect { case amount => rebasedElementConstructor(amount, data) }
-    val timeElement = data.timeApportionedGain.collect { case amount => timeElementConstructor(amount, data) }
+    val flatElement = Some(flatElementConstructor(0.0, data))
+    val rebasedElement = data.rebasedGain.collect { case amount => rebasedElementConstructor(0.0, data) }
+    val timeElement = data.timeApportionedGain.collect { case amount => timeElementConstructor(0.0, data) }
     val options = Seq(flatElement, rebasedElement, timeElement).flatten
 
     options
@@ -52,9 +52,9 @@ trait CalculationElectionConstructor {
   }
 
   private def buildElectionWithPrr(data: CalculationResultsWithPRRModel) = {
-    val flatElement = Some(flatElementConstructor(data.flatResult.taxableGain, data.flatResult))
-    val rebasedElement = data.rebasedResult.collect { case result => rebasedElementConstructor(result.taxableGain, result) }
-    val timeElement = data.timeApportionedResult.collect { case result => timeElementConstructor(result.taxableGain, result) }
+    val flatElement = Some(flatElementConstructor(0.0, data.flatResult))
+    val rebasedElement = data.rebasedResult.collect { case result => rebasedElementConstructor(0.0, result) }
+    val timeElement = data.timeApportionedResult.collect { case result => timeElementConstructor(0.0, result) }
     val options = Seq(flatElement, rebasedElement, timeElement).flatten
 
     options
@@ -63,9 +63,9 @@ trait CalculationElectionConstructor {
   }
 
   private def buildElectionWithTaxOwed(data: CalculationResultsWithTaxOwedModel) = {
-    val flatElement = Some(flatElementConstructor(data.flatResult.taxableGain, data.flatResult))
-    val rebasedElement = data.rebasedResult.collect { case result => rebasedElementConstructor(result.taxableGain, result) }
-    val timeElement = data.timeApportionedResult.collect { case result => timeElementConstructor(result.taxableGain, result) }
+    val flatElement = Some(flatElementConstructor(data.flatResult.taxOwed, data.flatResult))
+    val rebasedElement = data.rebasedResult.collect { case result => rebasedElementConstructor(result.taxOwed, result) }
+    val timeElement = data.timeApportionedResult.collect { case result => timeElementConstructor(result.taxOwed, result) }
     val options = Seq(flatElement, rebasedElement, timeElement).flatten
 
     options
