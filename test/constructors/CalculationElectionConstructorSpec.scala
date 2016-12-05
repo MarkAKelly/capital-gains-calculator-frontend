@@ -16,19 +16,14 @@
 
 package constructors
 
-import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
 import models.nonresident.TotalGainResultsModel
 import org.scalatest.mock.MockitoSugar
-import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
 
   val target = CalculationElectionConstructor
-  implicit val hc = new HeaderCarrier()
-  val mockCalcConnector: CalculatorConnector = mock[CalculatorConnector]
-
   val onlyFlat = TotalGainResultsModel(BigDecimal(0), None, None)
   val flatAndRebased = TotalGainResultsModel(BigDecimal(-100), Some(BigDecimal(-50)), None)
   val flatAndTime = TotalGainResultsModel(BigDecimal(-20), None, Some(BigDecimal(-300)))
@@ -38,7 +33,7 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with
 
     "when only a flat calculation result is provided" should {
 
-      val calculations = target.generateElection(hc, onlyFlat)
+      val calculations = target.generateElection(onlyFlat, None, None)
       "produce sequence with one element" in {
         calculations.size shouldBe 1
       }
@@ -50,7 +45,7 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with
 
     "when a flat calculation and a rebased calculation result are provided" should {
 
-      val calculations = target.generateElection(hc, flatAndRebased)
+      val calculations = target.generateElection(flatAndRebased, None, None)
 
       "produce two entries in the sequence" in {
         calculations.size shouldBe 2
@@ -70,7 +65,7 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with
 
     "when a flat calculation and a time calculation result are provided" should {
 
-      val calculations = target.generateElection(hc, flatAndTime)
+      val calculations = target.generateElection(flatAndTime, None, None)
 
       "produce two entries in the sequence" in {
         calculations.size shouldBe 2
@@ -90,7 +85,7 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with
 
     "when a flat, rebased and time are all provided" should {
 
-      val calculations = target.generateElection(hc, flatRebasedAndTime)
+      val calculations = target.generateElection(flatRebasedAndTime, None, None)
 
       "produce a three entry sequence" in {
         calculations.size shouldBe 3

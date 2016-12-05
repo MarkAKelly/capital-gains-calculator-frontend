@@ -16,50 +16,90 @@
 
 package constructors.nonresident
 
-import models.nonresident.TotalGainResultsModel
+import models.nonresident._
 import play.api.i18n.Messages
-import uk.gov.hmrc.play.http.HeaderCarrier
 import scala.concurrent.Future
 
 object CalculationElectionConstructor extends CalculationElectionConstructor
 
 trait CalculationElectionConstructor {
 
-  def generateElection(hc: HeaderCarrier,
-                       totalGainResults: TotalGainResultsModel
+  case class CalculationElectionOption[T](calcType: String, amount: BigDecimal, message: String, date: Option[String], data: T)
+
+  def generateElection(totalGain: TotalGainResultsModel,
+                       totalGainWithPrr: Option[CalculationResultsWithPRRModel],
+                       taxOwed: Option[CalculationResultsWithTaxOwedModel]
                       ): Future[Seq[(String, String, String, Option[String])]] = {
 
-    val flatElement = Some((flatElementConstructor(), totalGainResults.flatGain))
-    val timeElement = totalGainResults.timeApportionedGain.collect { case el => (timeElementConstructor(), el)}
-    val rebasedElement = totalGainResults.rebasedGain.collect { case el => (rebasedElementConstructor(), el)}
-    val items = Seq(flatElement, timeElement, rebasedElement).collect { case Some(item) => item}
-    Future.successful(items.sortBy(_._2).map(_._1))
+    val electionOptions = (totalGain, totalGainWithPrr, taxOwed) match {
+      case (_, _, Some(data)) => buildElectionWithTaxOwed(data)
+      case (_, Some(data), _) => buildElectionWithPrr(data)
+      case _ => buildElectionWithTotalGain(totalGain)
+    }
+
+    Future.successful(electionOptions)
   }
 
-  private def rebasedElementConstructor() = {
-    (
+  private def buildElectionWithTotalGain(data: TotalGainResultsModel) = {
+    val flatElement = Some(flatElementConstructor(data.flatGain, data))
+    val rebasedElement = data.rebasedGain.collect { case amount => rebasedElementConstructor(amount, data) }
+    val timeElement = data.timeApportionedGain.collect { case amount => timeElementConstructor(amount, data) }
+    val options = Seq(flatElement, rebasedElement, timeElement).flatten
+
+    options
+      .sortBy(option => option.amount)
+      .map(o => (o.calcType, o.amount.toString(), o.message, o.date))
+  }
+
+  private def buildElectionWithPrr(data: CalculationResultsWithPRRModel) = {
+    val flatElement = Some(flatElementConstructor(data.flatResult.taxableGain, data.flatResult))
+    val rebasedElement = data.rebasedResult.collect { case result => rebasedElementConstructor(result.taxableGain, result) }
+    val timeElement = data.timeApportionedResult.collect { case result => timeElementConstructor(result.taxableGain, result) }
+    val options = Seq(flatElement, rebasedElement, timeElement).flatten
+
+    options
+      .sortBy(option => (option.data.totalGain, option.data.taxableGain))
+      .map(o => (o.calcType, o.amount.toString(), o.message, o.date))
+  }
+
+  private def buildElectionWithTaxOwed(data: CalculationResultsWithTaxOwedModel) = {
+    val flatElement = Some(flatElementConstructor(data.flatResult.taxableGain, data.flatResult))
+    val rebasedElement = data.rebasedResult.collect { case result => rebasedElementConstructor(result.taxableGain, result) }
+    val timeElement = data.timeApportionedResult.collect { case result => timeElementConstructor(result.taxableGain, result) }
+    val options = Seq(flatElement, rebasedElement, timeElement).flatten
+
+    options
+      .sortBy(option => (option.data.totalGain, option.data.taxableGain, option.data.taxOwed))
+      .map(o => (o.calcType, o.amount.toString(), o.message, o.date))
+  }
+
+  private def rebasedElementConstructor[T](amount: BigDecimal, data: T) = {
+    CalculationElectionOption(
       "rebased",
-      BigDecimal(0).setScale(2).toString(),
+      amount.setScale(2),
       Messages("calc.calculationElection.message.rebased"),
-      Some(Messages("calc.calculationElection.message.rebasedDate"))
+      Some(Messages("calc.calculationElection.message.rebasedDate")),
+      data
     )
   }
 
-  private def flatElementConstructor() = {
-    (
+  private def flatElementConstructor[T](amount: BigDecimal, data: T) = {
+    CalculationElectionOption(
       "flat",
-      BigDecimal(0).setScale(2).toString(),
+      amount.setScale(2),
       Messages("calc.calculationElection.message.flat"),
-      None
+      None,
+      data
     )
   }
 
-  private def timeElementConstructor() = {
-    (
+  private def timeElementConstructor[T](amount: BigDecimal, data: T) = {
+    CalculationElectionOption(
       "time",
-      BigDecimal(0).setScale(2).toString(),
+      amount.setScale(2),
       Messages("calc.calculationElection.message.time"),
-      Some(Messages("calc.calculationElection.message.timeDate"))
+      Some(Messages("calc.calculationElection.message.timeDate")),
+      data
     )
   }
 }

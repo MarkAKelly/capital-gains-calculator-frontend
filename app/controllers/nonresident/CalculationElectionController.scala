@@ -24,6 +24,7 @@ import forms.nonresident.CalculationElectionForm._
 import models.nonresident._
 import play.api.data.Form
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation
 
 import scala.concurrent.Future
@@ -44,6 +45,19 @@ trait CalculationElectionController extends FrontendController with ValidActiveS
 
   val calculationElection = ValidateSession.async { implicit request =>
 
+    def getPRRModel(implicit hc: HeaderCarrier, totalGainResultsModel: TotalGainResultsModel): Future[Option[PrivateResidenceReliefModel]] = {
+      val optionSeq = Seq(totalGainResultsModel.rebasedGain, totalGainResultsModel.timeApportionedGain).flatten
+      val finalSeq = Seq(totalGainResultsModel.flatGain) ++ optionSeq
+
+      if (!finalSeq.forall(_ <= 0)) {
+        val prrModel = calcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief)
+
+        for {
+          prrModel <- prrModel
+        } yield prrModel
+      } else Future(None)
+    }
+
     def action(content: Seq[(String, String, String, Option[String])]) =
       calcConnector.fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection).map {
         case Some(data) =>
@@ -59,9 +73,9 @@ trait CalculationElectionController extends FrontendController with ValidActiveS
       }
 
     for {
-      answers <- calcAnswersConstructor.getNRTotalGainAnswers(hc)
-      calculationResults <- calcConnector.calculateTotalGain(answers)(hc)
-      content <- calcElectionConstructor.generateElection(hc, calculationResults.get)
+      totalGainAnswers <- calcAnswersConstructor.getNRTotalGainAnswers(hc)
+      totalGain <- calcConnector.calculateTotalGain(totalGainAnswers)(hc)
+      content <- calcElectionConstructor.generateElection(totalGain.get, None, None)
       finalResult <- action(content)
     } yield finalResult
   }
@@ -77,7 +91,7 @@ trait CalculationElectionController extends FrontendController with ValidActiveS
       for {
         answers <- calcAnswersConstructor.getNRTotalGainAnswers(hc)
         calculationResults <- calcConnector.calculateTotalGain(answers)(hc)
-        content <- calcElectionConstructor.generateElection(hc, calculationResults.get)
+        content <- calcElectionConstructor.generateElection(calculationResults.get, None, None)
       } yield {
         BadRequest(calculation.nonresident.calculationElection(
           form,
