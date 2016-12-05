@@ -28,10 +28,6 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
   val target = PersonalDetailsConstructor
 
-  "calling .getPersonalDetailsSection" when {
-
-  }
-
   "calling .getCustomerTypeAnswer" when {
 
     "a customer type of individual" should {
@@ -719,6 +715,81 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
       "return a None" in {
         result shouldBe None
+      }
+    }
+  }
+
+  "Calling .broughtForwardLossesQuestion" should {
+    lazy val result = PersonalDetailsConstructor.getBroughtForwardLossesQuestion(BroughtForwardLossesModel(false, None))
+
+    "return a Some" in {
+      result.isDefined shouldBe true
+    }
+
+    "return data of false" in {
+      result.fold(cancel("expected result not computed")) { item =>
+        item.data shouldBe false
+      }
+    }
+
+    s"return a question of ${messages.BroughtForwardLosses.question}" in {
+      result.fold(cancel("expected result not computed")) { item =>
+        item.question shouldBe messages.BroughtForwardLosses.question
+      }
+    }
+
+    s"return an id of ${KeystoreKeys.broughtForwardLosses}" in {
+      result.fold(cancel("expected result not computed")) { item =>
+        item.id shouldBe s"${KeystoreKeys.broughtForwardLosses}-question"
+      }
+    }
+
+    s"return a link of ${routes.BroughtForwardLossesController.broughtForwardLosses().url}" in {
+      result.fold(cancel("expected result not computed")) { item =>
+        item.link shouldBe Some(routes.BroughtForwardLossesController.broughtForwardLosses().url)
+      }
+    }
+  }
+
+  "Calling .broughtForwardLossesAnswer" when {
+
+    "an answer of no is given" should {
+      lazy val result = PersonalDetailsConstructor.getBroughtForwardLossesAnswer(BroughtForwardLossesModel(false, None))
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "an answer of yes is given" should {
+      lazy val result = PersonalDetailsConstructor.getBroughtForwardLossesAnswer(BroughtForwardLossesModel(true, Some(1000)))
+
+      "return a Some" in {
+        result.isDefined shouldBe true
+      }
+
+      "return data of 1000" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.data shouldBe 1000
+        }
+      }
+
+      s"return a question of ${messages.BroughtForwardLosses.inputQuestion}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.question shouldBe messages.BroughtForwardLosses.inputQuestion
+        }
+      }
+
+      s"return an id of ${KeystoreKeys.broughtForwardLosses}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.id shouldBe s"${KeystoreKeys.broughtForwardLosses}"
+        }
+      }
+
+      s"return a link of ${routes.BroughtForwardLossesController.broughtForwardLosses().url}" in {
+        result.fold(cancel("expected result not computed")) { item =>
+          item.link shouldBe Some(routes.BroughtForwardLossesController.broughtForwardLosses().url)
+        }
       }
     }
   }

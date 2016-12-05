@@ -25,26 +25,42 @@ import scala.math.BigDecimal
 
 object PersonalDetailsConstructor {
 
-  def getPersonalDetailsSection(summaryModel: TotalPersonalDetailsCalculationModel): Seq[QuestionAnswerModel[Any]] = {
+  def getPersonalDetailsSection(summaryModel: Option[TotalPersonalDetailsCalculationModel]): Seq[QuestionAnswerModel[Any]] = {
 
-    val customerTypeData = getCustomerTypeAnswer(summaryModel.customerTypeModel)
-    val currentIncomeData = getCurrentIncomeAnswer(summaryModel.customerTypeModel, summaryModel.currentIncomeModel)
-    val personalAllowanceData = getPersonalAllowanceAnswer(summaryModel.customerTypeModel, summaryModel.personalAllowanceModel)
-    val disabledTrusteeData = getDisabledTrusteeAnswer(summaryModel.customerTypeModel, summaryModel.trusteeModel)
-    val otherPropertiesData = getOtherPropertiesAnswer(summaryModel.otherPropertiesModel)
-    val annualExemptAmountData = getAnnualExemptAmountAnswer(summaryModel.otherPropertiesModel,
-      summaryModel.previousGainOrLoss, summaryModel.annualExemptAmountModel, summaryModel.howMuchGainModel, summaryModel.howMuchLossModel)
+    summaryModel match {
+      case Some(data) =>
+        val customerTypeData = getCustomerTypeAnswer(data.customerTypeModel)
+        val currentIncomeData = getCurrentIncomeAnswer(data.customerTypeModel, data.currentIncomeModel)
+        val personalAllowanceData = getPersonalAllowanceAnswer(data.customerTypeModel, data.personalAllowanceModel)
+        val disabledTrusteeData = getDisabledTrusteeAnswer(data.customerTypeModel, data.trusteeModel)
+        val otherPropertiesData = getOtherPropertiesAnswer(data.otherPropertiesModel)
+        val previousGainOrLossData = previousGainOrLossAnswer(data.otherPropertiesModel, data.previousGainOrLoss)
+        val howMuchGainData = howMuchGainAnswer(data.otherPropertiesModel, data.previousGainOrLoss, data.howMuchGainModel)
+        val howMuchLossData = howMuchLoss(data.otherPropertiesModel, data.previousGainOrLoss, data.howMuchLossModel)
+        val annualExemptAmountData = getAnnualExemptAmountAnswer(data.otherPropertiesModel,
+          data.previousGainOrLoss, data.annualExemptAmountModel, data.howMuchGainModel, data.howMuchLossModel)
+        val broughtForwardLossesQuestionData = getBroughtForwardLossesQuestion(data.broughtForwardLossesModel)
+        val broughtForwardLossesAnswerData = getBroughtForwardLossesAnswer(data.broughtForwardLossesModel)
 
-    val items = Seq(
-      customerTypeData,
-      currentIncomeData,
-      personalAllowanceData,
-      disabledTrusteeData,
-      otherPropertiesData,
-      annualExemptAmountData
-    )
+        val items = Seq(
+          customerTypeData,
+          currentIncomeData,
+          personalAllowanceData,
+          disabledTrusteeData,
+          otherPropertiesData,
+          previousGainOrLossData,
+          howMuchGainData,
+          howMuchLossData,
+          annualExemptAmountData,
+          broughtForwardLossesQuestionData,
+          broughtForwardLossesAnswerData
+        )
 
-    items.flatten
+        items.flatten
+      case _ => Seq()
+    }
+
+
   }
 
   def getCustomerTypeAnswer(customerTypeModel: CustomerTypeModel): Option[QuestionAnswerModel[String]] = {
@@ -153,7 +169,6 @@ object PersonalDetailsConstructor {
     }
   }
 
-  //TEST
   def getAnnualExemptAmountAnswer(otherPropertiesModel: OtherPropertiesModel,
                                   previousLossOrGainModel: Option[PreviousLossOrGainModel],
                                   annualExemptAmountModel: Option[AnnualExemptAmountModel],
@@ -187,6 +202,28 @@ object PersonalDetailsConstructor {
           question,
           route)
         )
+      case _ => None
+    }
+  }
+
+  def getBroughtForwardLossesQuestion(broughtForwardLossesModel: BroughtForwardLossesModel): Option[QuestionAnswerModel[Boolean]] = {
+    Some(QuestionAnswerModel(
+      s"${KeystoreKeys.broughtForwardLosses}-question",
+      broughtForwardLossesModel.isClaiming,
+      Messages("calc.broughtForwardLosses.question"),
+      Some(controllers.nonresident.routes.BroughtForwardLossesController.broughtForwardLosses().url)
+    ))
+  }
+
+  def getBroughtForwardLossesAnswer(broughtForwardLossesModel: BroughtForwardLossesModel): Option[QuestionAnswerModel[BigDecimal]] = {
+    broughtForwardLossesModel match {
+      case BroughtForwardLossesModel(true, Some(data)) =>
+        Some(QuestionAnswerModel(
+          KeystoreKeys.broughtForwardLosses,
+          data,
+          Messages("calc.broughtForwardLosses.inputQuestion"),
+          Some(controllers.nonresident.routes.BroughtForwardLossesController.broughtForwardLosses().url)
+        ))
       case _ => None
     }
   }
