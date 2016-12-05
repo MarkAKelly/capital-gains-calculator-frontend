@@ -160,7 +160,7 @@ trait ReportController extends FrontendController with ValidActiveSession {
         totalGains.get, calculationType.get.calculationType, finalResult, taxYear)
       taxOwed <- getTaxOwed(finalResult, calculationType.get.calculationType)
     } yield {
-      PdfGenerator.ok(summaryView(answers, results, taxYear.get, calculationType.get.calculationType, prrModel, finalAnswers),
+      PdfGenerator.ok(summaryView(answers, results, taxYear.get, calculationType.get.calculationType, prrModel, finalAnswers, taxOwed.getOrElse(0)),
         host).toScala
         .withHeaders("Content-Disposition" ->s"""attachment; filename="${Messages("calc.summary.title")}.pdf"""")
     }

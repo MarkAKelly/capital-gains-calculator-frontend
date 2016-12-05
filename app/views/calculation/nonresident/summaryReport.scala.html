@@ -4,7 +4,7 @@
 @import controllers.nonresident.routes.{ReportController => routes}
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
-@(totalGain: TotalGainAnswersModel, result: Seq[QuestionAnswerModel[Any]], taxYear: TaxYearModel, electionType: String, pRRModel: Option[PrivateResidenceReliefModel] = None, finalAnswers: Option[TotalPersonalDetailsCalculationModel] = None)(implicit request: Request[_])
+@(totalGain: TotalGainAnswersModel, result: Seq[QuestionAnswerModel[Any]], taxYear: TaxYearModel, electionType: String, pRRModel: Option[PrivateResidenceReliefModel] = None, finalAnswers: Option[TotalPersonalDetailsCalculationModel] = None, taxOwed: BigDecimal)(implicit request: Request[_])
 
 <!DOCTYPE html>
 <html>
@@ -20,7 +20,7 @@
     <div class="header-container">
         <h1 class="heading-xlarge">
             <span class="pre-heading">@Messages("calc.summary.secondaryHeading")</span>
-            <b>&pound;0.00</b>
+            <b>&pound;@MoneyPounds(taxOwed, 2).quantity</b>
         </h1>
         <div class="logo">
             <span class="organisation-logo organisation-logo-medium">HM Revenue &amp; Customs</span>
