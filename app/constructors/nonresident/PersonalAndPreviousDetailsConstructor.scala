@@ -128,7 +128,7 @@ object PersonalAndPreviousDetailsConstructor {
                                disabledTrusteeModel: Option[DisabledTrusteeModel]): Option[QuestionAnswerModel[String]] = {
 
     (customerTypeModel.customerType, disabledTrusteeModel) match {
-      case (CustomerTypeKeys.individual, Some(data)) =>
+      case (CustomerTypeKeys.trustee, Some(data)) =>
         Some(QuestionAnswerModel(
           s"${KeystoreKeys.disabledTrustee}-question",
           data.isVulnerable,
@@ -157,8 +157,8 @@ object PersonalAndPreviousDetailsConstructor {
         Some(QuestionAnswerModel(
           s"${KeystoreKeys.NonResidentKeys.previousLossOrGain}-question",
           previousLossOrGainModel.get.previousLossOrGain,
-          Messages("calc.otherProperties.question"),
-          Some(controllers.nonresident.routes.OtherPropertiesController.otherProperties().url)
+          Messages("calc.previousLossOrGain.question"),
+          Some(controllers.nonresident.routes.PreviousGainOrLossController.previousGainOrLoss().url)
         ))
       case _ => None
     }
