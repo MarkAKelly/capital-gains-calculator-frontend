@@ -18,7 +18,7 @@ package constructors.nonresident
 
 import common.KeystoreKeys
 import connectors.CalculatorConnector
-import models.nonresident.{TotalPersonalDetailsCalculationModel, _}
+import models.nonresident._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -293,7 +293,7 @@ class AnswersConstructorSpec extends UnitSpec with MockitoSugar {
     val constructor = setupMockedFinalAnswersConstructor(model)
 
     "when called with the model with all options return all options" in {
-      await(constructor.getPersonalDetailsAndPreviousCapitalGainsAnswers(hc)) shouldEqual model
+      await(constructor.getPersonalDetailsAndPreviousCapitalGainsAnswers(hc)) shouldEqual Some(model)
     }
   }
 }
