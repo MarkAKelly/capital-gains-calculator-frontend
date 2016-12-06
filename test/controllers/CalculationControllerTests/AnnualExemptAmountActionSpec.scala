@@ -49,7 +49,6 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
                  ): AnnualExemptAmountController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
-    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[DisabledTrusteeModel](Matchers.eq(KeystoreKeys.disabledTrustee))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(DisabledTrusteeModel(disabledTrustee))))
@@ -80,7 +79,6 @@ class AnnualExemptAmountActionSpec extends UnitSpec with WithFakeApplication wit
 
     new AnnualExemptAmountController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
   }
 

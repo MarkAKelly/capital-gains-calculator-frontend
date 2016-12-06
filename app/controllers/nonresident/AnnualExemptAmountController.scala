@@ -35,7 +35,6 @@ import scala.concurrent.Future
 
 object AnnualExemptAmountController extends AnnualExemptAmountController{
   val calcConnector = CalculatorConnector
-  val calcElectionConstructor = CalculationElectionConstructor
 }
 
 trait AnnualExemptAmountController extends FrontendController with ValidActiveSession {
@@ -43,7 +42,7 @@ trait AnnualExemptAmountController extends FrontendController with ValidActiveSe
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
   val calcConnector: CalculatorConnector
-  val calcElectionConstructor: CalculationElectionConstructor
+  val calcElectionConstructor = CalculationElectionConstructor
 
   private def fetchMaxAEA(isFullAEA: Boolean, taxYear: Int)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
     if (isFullAEA) {

@@ -32,7 +32,6 @@ import scala.concurrent.Future
 
 object CustomerTypeController extends CustomerTypeController {
   val calcConnector = CalculatorConnector
-  val calcElectionConstructor = CalculationElectionConstructor
 }
 
 trait CustomerTypeController extends FrontendController with ValidActiveSession {
@@ -40,7 +39,7 @@ trait CustomerTypeController extends FrontendController with ValidActiveSession 
   override val sessionTimeoutUrl: String = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink: String = controllers.nonresident.routes.DisposalDateController.disposalDate().url
   val calcConnector: CalculatorConnector
-  val calcElectionConstructor: CalculationElectionConstructor
+  val calcElectionConstructor = CalculationElectionConstructor
 
   def customerTypeBackUrl(implicit hc: HeaderCarrier): Future[String] = {
 
