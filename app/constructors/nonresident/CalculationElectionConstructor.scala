@@ -42,8 +42,8 @@ trait CalculationElectionConstructor {
 
   private def buildElectionWithTotalGain(data: TotalGainResultsModel) = {
     val flatElement = Some(flatElementConstructor(0.0, data.flatGain))
-    val rebasedElement = data.rebasedGain.collect { case amount => rebasedElementConstructor(0.0, amount) }
-    val timeElement = data.timeApportionedGain.collect { case amount => timeElementConstructor(0.0, amount) }
+    val rebasedElement = data.rebasedGain.collect { case totalGain => rebasedElementConstructor(0.0, totalGain) }
+    val timeElement = data.timeApportionedGain.collect { case totalGain => timeElementConstructor(0.0, totalGain) }
     val options = Seq(flatElement, rebasedElement, timeElement).flatten
 
     options
