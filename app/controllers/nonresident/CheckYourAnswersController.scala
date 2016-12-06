@@ -43,14 +43,19 @@ trait CheckYourAnswersController extends FrontendController with ValidActiveSess
   val calculatorConnector: CalculatorConnector
 
   def getBackLink(totalGainResultsModel: TotalGainResultsModel,
-                acquisitionDateController: AcquisitionDateModel,
-                rebasedValueModel: Option[RebasedValueModel]): Future[String] = {
-    val optionSeq = Seq(totalGainResultsModel.rebasedGain, totalGainResultsModel.timeApportionedGain).flatten
-    val finalSeq = Seq(totalGainResultsModel.flatGain) ++ optionSeq
-    if (!finalSeq.forall(_ <= 0))
-      Future.successful(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url)
-    else
-      Future.successful(controllers.nonresident.routes.ImprovementsController.improvements().url)
+                  acquisitionDateController: AcquisitionDateModel,
+                  totalTaxOwedAnswers: Option[TotalPersonalDetailsCalculationModel]): Future[String] = totalTaxOwedAnswers match {
+
+    case Some(data) =>
+      Future.successful(controllers.nonresident.routes.BroughtForwardLossesController.broughtForwardLosses().url)
+    case _ =>
+      val optionSeq = Seq(totalGainResultsModel.rebasedGain, totalGainResultsModel.timeApportionedGain).flatten
+      val finalSeq = Seq(totalGainResultsModel.flatGain) ++ optionSeq
+      if (!finalSeq.forall(_ <= 0))
+        Future.successful(controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url)
+      else
+        Future.successful(controllers.nonresident.routes.ImprovementsController.improvements().url)
+
   }
 
   def getPRRModel(implicit hc: HeaderCarrier, totalGainResultsModel: TotalGainResultsModel): Future[Option[PrivateResidenceReliefModel]] = {
@@ -117,7 +122,7 @@ trait CheckYourAnswersController extends FrontendController with ValidActiveSess
       totalGainWithPRRResult <- calculatePRRIfApplicable(model, prrModel)
       finalAnswers <- checkAndGetFinalSectionsAnswers(totalGainResult.get, totalGainWithPRRResult)
       answers <- Future.successful(YourAnswersConstructor.fetchYourAnswers(model, prrModel, finalAnswers))
-      backLink <- getBackLink(totalGainResult.get, model.acquisitionDateModel, model.rebasedValueModel)
+      backLink <- getBackLink(totalGainResult.get, model.acquisitionDateModel, finalAnswers)
     } yield {
       Ok(calculation.nonresident.checkYourAnswers(answers, backLink))
     }
