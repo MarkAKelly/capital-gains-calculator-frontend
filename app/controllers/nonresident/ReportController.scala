@@ -19,7 +19,7 @@ package controllers.nonresident
 import common.nonresident.{CalculationType, CustomerTypeKeys}
 import common.{KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
-import constructors.nonresident.AnswersConstructor
+import constructors.nonresident.{AnswersConstructor, OtherReliefsDetailsConstructor}
 import controllers.predicates.ValidActiveSession
 import it.innove.play.pdf.PdfGenerator
 import models.nonresident._
@@ -142,6 +142,17 @@ trait ReportController extends FrontendController with ValidActiveSession {
     }
   }
 
+  def getOtherReliefs(calculationResultsWithTaxOwedModel: Option[CalculationResultsWithTaxOwedModel],
+                      calculationElectionModel: Option[CalculationElectionModel])
+                     (implicit hc: HeaderCarrier): Future[Option[OtherReliefsModel]] = {
+    (calculationResultsWithTaxOwedModel, calculationElectionModel.map(_.calculationType)) match {
+      case (Some(data), Some(CalculationType.flat)) => calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat)
+      case (Some(data), Some(CalculationType.rebased)) => calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased)
+      case (Some(data), Some(CalculationType.timeApportioned)) => calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA)
+      case _ => Future.successful(None)
+    }
+  }
+
   val summaryReport = ValidateSession.async { implicit request =>
     for {
       answers <- answersConstructor.getNRTotalGainAnswers
@@ -156,12 +167,13 @@ trait ReportController extends FrontendController with ValidActiveSession {
       maxAEA <- getMaxAEA(finalAnswers, taxYear)
       finalResult <- calculateTaxOwed(answers, prrModel, finalAnswers, maxAEA.get)
       calculationType <- calcConnector.fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection)
+      otherReliefs <- getOtherReliefs(finalResult, calculationType)
       results <- getSection(totalGainsWithPRR, prrModel,
         totalGains.get, calculationType.get.calculationType, finalResult, taxYear)
       taxOwed <- getTaxOwed(finalResult, calculationType.get.calculationType)
     } yield {
-      PdfGenerator.ok(summaryView(answers, results, taxYear.get, calculationType.get.calculationType, prrModel, finalAnswers, taxOwed.getOrElse(0)),
-        host).toScala
+      PdfGenerator.ok(summaryView(answers, results, taxYear.get, calculationType.get.calculationType, prrModel,
+        finalAnswers, taxOwed.getOrElse(0), otherReliefs), host).toScala
         .withHeaders("Content-Disposition" ->s"""attachment; filename="${Messages("calc.summary.title")}.pdf"""")
     }
   }

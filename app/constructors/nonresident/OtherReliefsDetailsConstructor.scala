@@ -21,24 +21,22 @@ import common.nonresident.CalculationType
 import common.KeystoreKeys
 import play.api.i18n.Messages
 
-object OtherReliefsRequestConstructor {
+object OtherReliefsDetailsConstructor {
 
-  def getOtherReliefsSection(flatReliefs: Option[OtherReliefsModel],
-                             rebasedReliefs: Option[OtherReliefsModel],
-                             timeApportionedReliefs: Option[OtherReliefsModel],
-                             calculationElectionModel: CalculationElectionModel): Seq[QuestionAnswerModel[Any]] = {
+  def getOtherReliefsSection(otherReliefs: Option[OtherReliefsModel],
+                             calculationElection: String): Seq[QuestionAnswerModel[Any]] = {
 
-    val flatReliefsRow = getOtherReliefsFlatRow(flatReliefs, calculationElectionModel)
-    val rebasedReliefsRow = getOtherReliefsRebasedRow(rebasedReliefs, calculationElectionModel)
-    val timeApportionedReliefsRow = getOtherReliefsTimeApportionedRow(timeApportionedReliefs, calculationElectionModel)
+    val flatReliefsRow = getOtherReliefsFlatRow(otherReliefs, calculationElection)
+    val rebasedReliefsRow = getOtherReliefsRebasedRow(otherReliefs, calculationElection)
+    val timeApportionedReliefsRow = getOtherReliefsTimeApportionedRow(otherReliefs, calculationElection)
 
     Seq(flatReliefsRow, rebasedReliefsRow, timeApportionedReliefsRow).flatten
   }
 
   def getOtherReliefsRebasedRow(rebasedReliefs: Option[OtherReliefsModel],
-                                calculationElectionModel: CalculationElectionModel): Option[QuestionAnswerModel[BigDecimal]] = {
-    (calculationElectionModel, rebasedReliefs) match {
-      case (CalculationElectionModel(CalculationType.rebased), Some(OtherReliefsModel(value))) if value > 0 =>
+                                calculationElection: String): Option[QuestionAnswerModel[BigDecimal]] = {
+    (calculationElection, rebasedReliefs) match {
+      case (CalculationType.rebased, Some(OtherReliefsModel(value))) if value > 0 =>
         Some(QuestionAnswerModel(
           s"${KeystoreKeys.otherReliefsRebased}",
           value,
@@ -50,9 +48,9 @@ object OtherReliefsRequestConstructor {
   }
 
   def getOtherReliefsTimeApportionedRow(timeApportionedReliefs: Option[OtherReliefsModel],
-                                        calculationElectionModel: CalculationElectionModel): Option[QuestionAnswerModel[BigDecimal]] = {
-    (calculationElectionModel, timeApportionedReliefs) match {
-      case (CalculationElectionModel(CalculationType.timeApportioned), Some(OtherReliefsModel(value))) if value > 0 =>
+                                        calculationElection: String): Option[QuestionAnswerModel[BigDecimal]] = {
+    (calculationElection, timeApportionedReliefs) match {
+      case (CalculationType.timeApportioned, Some(OtherReliefsModel(value))) if value > 0 =>
         Some(QuestionAnswerModel(
           s"${KeystoreKeys.otherReliefsTA}",
           value,
@@ -64,9 +62,9 @@ object OtherReliefsRequestConstructor {
   }
 
   def getOtherReliefsFlatRow(flatReliefs: Option[OtherReliefsModel],
-                             calculationElectionModel: CalculationElectionModel): Option[QuestionAnswerModel[BigDecimal]] = {
-    (calculationElectionModel, flatReliefs) match {
-      case (CalculationElectionModel(CalculationType.flat), Some(OtherReliefsModel(value))) if value > 0 =>
+                             calculationElection: String): Option[QuestionAnswerModel[BigDecimal]] = {
+    (calculationElection, flatReliefs) match {
+      case (CalculationType.flat, Some(OtherReliefsModel(value))) if value > 0 =>
         Some(QuestionAnswerModel(
           s"${KeystoreKeys.otherReliefsFlat}",
           value,
