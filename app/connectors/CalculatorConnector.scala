@@ -81,7 +81,8 @@ trait CalculatorConnector {
     http.GET[Option[nonresident.CalculationResultsWithTaxOwedModel]](s"$serviceUrl/capital-gains-calculator/non-resident/calculate-tax-owed?${
       TotalGainRequestConstructor.totalGainQuery(totalGainAnswersModel) +
         PrivateResidenceReliefRequestConstructor.privateResidenceReliefQuery(totalGainAnswersModel, privateResidenceReliefModel) +
-        FinalTaxAnswersRequestConstructor.additionalParametersQuery(totalTaxPersonalDetailsModel, maxAnnualExemptAmount)
+        FinalTaxAnswersRequestConstructor.additionalParametersQuery(totalTaxPersonalDetailsModel, maxAnnualExemptAmount) +
+        OtherReliefsRequestConstructor.otherReliefsQuery(otherReliefs)
     }")
   }
 

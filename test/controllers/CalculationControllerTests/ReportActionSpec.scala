@@ -32,6 +32,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import models.nonresident._
 import common.nonresident.CalculationType
 import common.nonresident.CustomerTypeKeys
+import org.apache.xpath.functions.FuncRound
 
 import scala.concurrent.Future
 
@@ -85,6 +86,15 @@ class ReportActionSpec extends UnitSpec with WithFakeApplication with FakeReques
 
     when(mockCalculatorConnector.getTaxYear(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(Some(TaxYearModel("2015/16", true, "2015/16"))))
+
+    when(mockCalculatorConnector.fetchAndGetFormData[OtherReliefsModel](Matchers.eq(KeystoreKeys.otherReliefsFlat))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(None))
+
+    when(mockCalculatorConnector.fetchAndGetFormData[OtherReliefsModel](Matchers.eq(KeystoreKeys.otherReliefsRebased))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(None))
+
+    when(mockCalculatorConnector.fetchAndGetFormData[OtherReliefsModel](Matchers.eq(KeystoreKeys.otherReliefsTA))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(None))
 
     new ReportController {
       override val calcConnector: CalculatorConnector = mockCalculatorConnector
