@@ -20,7 +20,7 @@ import common.Dates._
 import common.KeystoreKeys
 import common.KeystoreKeys.{ResidentPropertyKeys, ResidentShareKeys}
 import config.{CalculatorSessionCache, WSHttp}
-import constructors.nonresident.{CalculateRequestConstructor, FinalTaxAnswersRequestConstructor, PrivateResidenceReliefRequestConstructor, TotalGainRequestConstructor}
+import constructors.nonresident._
 import constructors.resident.{shares, properties => propertyConstructor}
 import models._
 import play.api.libs.json.Format
@@ -74,7 +74,8 @@ trait CalculatorConnector {
   def calculateNRCGTTotalTax(totalGainAnswersModel: nonresident.TotalGainAnswersModel,
                              privateResidenceReliefModel: Option[nonresident.PrivateResidenceReliefModel],
                              totalTaxPersonalDetailsModel: nonresident.TotalPersonalDetailsCalculationModel,
-                             maxAnnualExemptAmount: BigDecimal)(implicit hc: HeaderCarrier):
+                             maxAnnualExemptAmount: BigDecimal,
+                             otherReliefs: Option[nonresident.AllOtherReliefsModel] = None)(implicit hc: HeaderCarrier):
   Future[Option[nonresident.CalculationResultsWithTaxOwedModel]] = {
 
     http.GET[Option[nonresident.CalculationResultsWithTaxOwedModel]](s"$serviceUrl/capital-gains-calculator/non-resident/calculate-tax-owed?${
