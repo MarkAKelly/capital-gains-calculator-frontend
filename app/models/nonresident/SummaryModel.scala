@@ -17,31 +17,30 @@
 package models.nonresident
 
 import common.nonresident.CalculationType
-import constructors.nonresident._
 
 case class SummaryModel(
-                          customerTypeModel: CustomerTypeModel,
-                          disabledTrusteeModel: Option[DisabledTrusteeModel],
-                          currentIncomeModel : Option[CurrentIncomeModel],
-                          personalAllowanceModel: Option[PersonalAllowanceModel],
-                          otherPropertiesModel: OtherPropertiesModel,
-                          annualExemptAmountModel: Option[AnnualExemptAmountModel],
-                          acquisitionDateModel: AcquisitionDateModel,
-                          acquisitionValueModel: AcquisitionValueModel,
-                          rebasedValueModel: Option[RebasedValueModel],
-                          rebasedCostsModel: Option[RebasedCostsModel],
-                          improvementsModel: ImprovementsModel,
-                          disposalDateModel: DisposalDateModel,
-                          disposalValueModel: DisposalValueModel,
-                          acquisitionCostsModel: AcquisitionCostsModel,
-                          disposalCostsModel : DisposalCostsModel,
-                          allowableLossesModel : AllowableLossesModel,
-                          calculationElectionModel: CalculationElectionModel,
-                          otherReliefsModelFlat : OtherReliefsModel,
-                          otherReliefsModelTA: OtherReliefsModel,
-                          otherReliefsModelRebased: OtherReliefsModel,
-                          privateResidenceReliefModel: Option[PrivateResidenceReliefModel]
-                        ) {
+                         customerTypeModel: CustomerTypeModel,
+                         disabledTrusteeModel: Option[DisabledTrusteeModel],
+                         currentIncomeModel: Option[CurrentIncomeModel],
+                         personalAllowanceModel: Option[PersonalAllowanceModel],
+                         otherPropertiesModel: OtherPropertiesModel,
+                         annualExemptAmountModel: Option[AnnualExemptAmountModel],
+                         acquisitionDateModel: AcquisitionDateModel,
+                         acquisitionValueModel: AcquisitionValueModel,
+                         rebasedValueModel: Option[RebasedValueModel],
+                         rebasedCostsModel: Option[RebasedCostsModel],
+                         improvementsModel: ImprovementsModel,
+                         disposalDateModel: DisposalDateModel,
+                         disposalValueModel: DisposalValueModel,
+                         acquisitionCostsModel: AcquisitionCostsModel,
+                         disposalCostsModel: DisposalCostsModel,
+                         allowableLossesModel: AllowableLossesModel,
+                         calculationElectionModel: CalculationElectionModel,
+                         otherReliefsModelFlat: OtherReliefsModel,
+                         otherReliefsModelTA: OtherReliefsModel,
+                         otherReliefsModelRebased: OtherReliefsModel,
+                         privateResidenceReliefModel: Option[PrivateResidenceReliefModel]
+                       ) {
 
   def reliefApplied(): String = calculationElectionModel.calculationType match {
     case CalculationType.flat if otherReliefsModelFlat.otherReliefs > 0 => CalculationType.flat
@@ -50,10 +49,11 @@ case class SummaryModel(
     case _ => "none"
   }
 
-  val personalDetailsRows: Seq[QuestionAnswerModel[Any]] = PersonalDetailsConstructor.getPersonalDetailsSection(this)
+  val personalDetailsRows: Seq[QuestionAnswerModel[Any]] = Seq(QuestionAnswerModel[String]("", "", "", None))
   val saleDetailsRows: Seq[QuestionAnswerModel[Any]] = Seq(QuestionAnswerModel[String]("", "", "", None))
   val purchaseDetailsRows: Seq[QuestionAnswerModel[Any]] = Seq(QuestionAnswerModel[String]("", "", "", None))
   val propertyDetailsRows: Seq[QuestionAnswerModel[Any]] = Seq(QuestionAnswerModel[String]("", "", "", None))
+
   def deductionsDetailsRows(result: CalculationResultModel): Seq[QuestionAnswerModel[Any]] =
     Seq(QuestionAnswerModel[String]("", "", "", None))
 }

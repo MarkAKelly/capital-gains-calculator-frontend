@@ -45,15 +45,15 @@ trait CurrentIncomeController extends FrontendController with ValidActiveSession
 
   val submitCurrentIncome = ValidateSession.async { implicit request =>
 
-    def routeRequest(success: CurrentIncomeModel) = {
-      if (success.currentIncome > 0) Future.successful(Redirect(routes.PersonalAllowanceController.personalAllowance()))
+    def routeRequest(model: CurrentIncomeModel) = {
+      if (model.currentIncome > 0) Future.successful(Redirect(routes.PersonalAllowanceController.personalAllowance()))
       else Future.successful(Redirect(routes.OtherPropertiesController.otherProperties()))
     }
 
-    def successAction(success: CurrentIncomeModel) = {
+    def successAction(model: CurrentIncomeModel) = {
       for {
-        save <- calcConnector.saveFormData(KeystoreKeys.currentIncome, success)
-        route <- routeRequest(success)
+        _ <- calcConnector.saveFormData(KeystoreKeys.currentIncome, model)
+        route <- routeRequest(model)
       } yield route
     }
 

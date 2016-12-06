@@ -31,15 +31,15 @@ class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with Fak
 
     "return some HTML that, when the hidden question is displayed" should {
 
-      lazy val view = otherProperties(otherPropertiesForm(true), "back-link", true)(fakeRequest)
+      lazy val view = otherProperties(otherPropertiesForm, "back-link")(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       s"have the title '${messages.question}'" in {
         document.title shouldEqual messages.question
       }
 
-      "have the heading Calculate your tax (non-residents) " in {
-        document.body.getElementsByTag("h1").text shouldEqual commonMessages.pageHeading
+      s"have the heading ${messages.question}" in {
+        document.body.getElementsByTag("h1").text shouldEqual messages.question
       }
 
       s"have a 'Back' link to back-link" which {
@@ -57,8 +57,14 @@ class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with Fak
         document.select("#homeNavHref").attr("href") shouldEqual controllers.nonresident.routes.DisposalDateController.disposalDate().url
       }
 
-      s"have the question '${messages.question}' as the legend of the input" in {
-        document.body.getElementsByTag("legend").text should include(messages.question)
+      s"have a legend of the input" which {
+        lazy val legend = document.body.getElementsByTag("legend")
+        s"has the text ${messages.question}" in {
+          legend.text should include(messages.question)
+        }
+        "has the class 'visuallyhidden'" in {
+          legend.attr("class") shouldBe "visuallyhidden"
+        }
       }
 
       "include a read more section" which {
@@ -117,10 +123,6 @@ class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with Fak
         document.body().select("input[type=radio]").attr("id") should include("otherProperties")
       }
 
-      "have inputs using the id otherPropertiesAmt" in {
-        document.body().select("input[type=number]").attr("id") should include("otherPropertiesAmt")
-      }
-
       "have a button" which {
         lazy val button = document.select("button")
 
@@ -144,7 +146,7 @@ class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with Fak
 
     "return some HTML that, when the hidden question is not displayed" should {
 
-      lazy val view = otherProperties(otherPropertiesForm(false), "back-link", false)(fakeRequest)
+      lazy val view = otherProperties(otherPropertiesForm, "back-link")(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       s"have the title '${messages.question}'" in {
@@ -162,8 +164,8 @@ class OtherPropertiesViewSpec extends UnitSpec with WithFakeApplication with Fak
 
     "when passed a form with errors" should {
 
-      lazy val form = otherPropertiesForm(true).bind(Map("otherProperties" -> "bad-data"))
-      lazy val view = otherProperties(form, "back-link", false)(fakeRequest)
+      lazy val form = otherPropertiesForm.bind(Map("otherProperties" -> "bad-data"))
+      lazy val view = otherProperties(form, "back-link")(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have an error summary" in {

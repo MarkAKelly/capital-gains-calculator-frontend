@@ -17,12 +17,11 @@
 package controllers.CalculationControllerTests
 
 import assets.MessageLookup.NonResident.{DisposalCosts => messages}
-import assets.MessageLookup.{NonResident => commonMessages}
 import common.KeystoreKeys
+import models.nonresident._
 import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import controllers.nonresident.{DisposalCostsController, routes}
-import models.nonresident._
 import org.jsoup._
 import org.mockito.Matchers
 import org.mockito.Mockito._

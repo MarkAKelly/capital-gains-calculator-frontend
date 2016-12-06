@@ -24,9 +24,8 @@ import connectors.CalculatorConnector
 import controllers.helpers.FakeRequestHelper
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import org.scalatest.mock.MockitoSugar
@@ -34,19 +33,21 @@ import org.scalatest.mock.MockitoSugar
 import scala.concurrent.Future
 import controllers.nonresident.{OtherPropertiesController, routes}
 import models.nonresident.{CurrentIncomeModel, CustomerTypeModel, OtherPropertiesModel}
+import uk.gov.hmrc.http.cache.client.CacheMap
 
 class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget(getData: Option[OtherPropertiesModel],
-                  customerTypeData: Option[CustomerTypeModel],
-                  currentIncomeData: Option[CurrentIncomeModel] = None): OtherPropertiesController = {
+  def setupTarget(getData: Option[OtherPropertiesModel], customerTypeData:Option[CustomerTypeModel] = None, currentIncomeData:Option[CurrentIncomeModel] = None): OtherPropertiesController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
 
     when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
+
+    when(mockCalcConnector.saveFormData[OtherPropertiesModel](Matchers.any(), Matchers.any()) (Matchers.any(), Matchers.any()))
+      .thenReturn(mock[CacheMap])
 
     when(mockCalcConnector.fetchAndGetFormData[CustomerTypeModel](Matchers.eq(KeystoreKeys.customerType))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(customerTypeData))
@@ -69,7 +70,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
   "Calling the CalculationController.otherProperties" when {
 
     "no session is active" should {
-      lazy val target = setupTarget(None, None)
+      lazy val target = setupTarget(None)
       lazy val result = target.otherProperties(fakeRequest)
 
       "return a 303" in {
@@ -85,7 +86,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
 
       "for a customer type of Individual" should {
 
-        val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
+        val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)), Some(CurrentIncomeModel(100)))
         lazy val result = target.otherProperties(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -98,13 +99,13 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
         }
 
         s"has a 'Back' link to ${routes.PersonalAllowanceController.personalAllowance().url}" in {
-          document.body.getElementById("back-link").attr("href") shouldEqual routes.PersonalAllowanceController.personalAllowance().url
+          document.body.getElementById("back-link").attr("href").trim() shouldEqual routes.PersonalAllowanceController.personalAllowance().url
         }
       }
 
       "for a Customer Type of Individual with no Current Income" should {
 
-        val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)), Some(CurrentIncomeModel(0)))
+        val target = setupTarget(None,Some(CustomerTypeModel(CustomerTypeKeys.individual)), Some(CurrentIncomeModel(0)))
         lazy val result = target.otherProperties(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -160,7 +161,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
       }
 
       "if no customer type model exists" should {
-        val target = setupTarget(None, None, None)
+        val target = setupTarget(None)
         lazy val result = target.otherProperties(fakeRequestWithSession)
         lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -182,70 +183,41 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
   // POST Tests
   "In CalculationController calling the .submitOtherProperties action" when {
 
-    "submitting a valid form with 'Yes' and a non-zero amount" should {
+    "submitting a valid form with 'Yes'" should {
 
-      lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
-      lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "Yes"), ("otherPropertiesAmt", "2100"))
+      lazy val target = setupTarget(None)
+      lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "Yes"))
       lazy val result = target.submitOtherProperties(request)
 
       "return a 303" in {
         status(result) shouldBe 303
       }
 
-      "should redirect to the acquisitionDate page" in {
-        redirectLocation(result) shouldBe Some(s"${routes.AcquisitionDateController.acquisitionDate()}")
+      "should redirect to the previous gain or loss page" in {
+        redirectLocation(result) shouldBe Some(s"${routes.PreviousGainOrLossController.previousGainOrLoss()}")
       }
     }
 
-    "submitting a valid form with 'Yes' and a nil amount" should {
-
-      lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
-      lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "Yes"), ("otherPropertiesAmt", "0"))
-      lazy val result = target.submitOtherProperties(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "should redirect to the annualExemptAmountPage page" in {
-        redirectLocation(result) shouldBe Some(s"${routes.AnnualExemptAmountController.annualExemptAmount()}")
-      }
-    }
 
     "submitting a valid form with 'No'" should {
 
-      lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
-      lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "No"), ("otherPropertiesAmt", ""))
+      lazy val target = setupTarget(None)
+      lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "No"))
       lazy val result = target.submitOtherProperties(request)
 
       "return a 303" in {
         status(result) shouldBe 303
       }
 
-      "should redirect to the acquisitionDate page" in {
-        redirectLocation(result) shouldBe Some(s"${routes.AcquisitionDateController.acquisitionDate()}")
-      }
-    }
-
-    "submitting a valid form with 'No' and an invalid amount" should {
-
-      lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
-      lazy val request = fakeRequestToPOSTWithSession(("otherProperties", "No"), ("otherPropertiesAmt", "-1238.12381"))
-      lazy val result = target.submitOtherProperties(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "should redirect to the acquisitionDate page" in {
-        redirectLocation(result) shouldBe Some(s"${routes.AcquisitionDateController.acquisitionDate()}")
+      "should redirect to the broughtForwardLosses page" in {
+        redirectLocation(result) shouldBe Some(s"${routes.BroughtForwardLossesController.broughtForwardLosses()}")
       }
     }
 
     "submitting an form with no data" should {
 
-      lazy val target = setupTarget(None, Some(CustomerTypeModel(CustomerTypeKeys.individual)))
-      lazy val request = fakeRequestToPOSTWithSession(("otherProperties", ""), ("otherPropertiesAmt", ""))
+      lazy val target = setupTarget(None)
+      lazy val request = fakeRequestToPOSTWithSession(("otherProperties", ""))
       lazy val result = target.submitOtherProperties(request)
 
       "return a 400" in {
@@ -253,7 +225,7 @@ class OtherPropertiesActionSpec extends UnitSpec with WithFakeApplication with M
       }
 
       "return to the other properties page" in {
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.question
+        Jsoup.parse(bodyOf(result)).select("title").text shouldEqual messages.question
       }
     }
   }

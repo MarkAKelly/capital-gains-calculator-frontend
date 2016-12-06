@@ -435,6 +435,66 @@ class RoutesSpec extends UnitSpec with WithFakeApplication with Matchers {
     }
   }
 
+  /* Previous Gain Or Loss routes */
+  "The URL for the previousGainOrLoss Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/previous-gain-or-loss" in {
+      val path = controllers.nonresident.routes.PreviousGainOrLossController.previousGainOrLoss().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/previous-gain-or-loss"
+    }
+  }
+
+  "The URL for the submitPreviousGainOrLoss Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/previous-gain-or-loss" in {
+      val path = controllers.nonresident.routes.PreviousGainOrLossController.submitPreviousGainOrLoss().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/previous-gain-or-loss"
+    }
+  }
+
+  /* How Much Loss routes */
+  "The URL for the howMuchLoss Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/how-much-loss" in {
+      val path = controllers.nonresident.routes.HowMuchLossController.howMuchLoss().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/how-much-loss"
+    }
+  }
+
+  "The URL for the submitHowMuchLoss Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/how-much-loss" in {
+      val path = controllers.nonresident.routes.HowMuchLossController.submitHowMuchLoss().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/how-much-loss"
+    }
+  }
+
+  /* How Much Gain routes */
+  "The URL for the howMuchGain Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/how-much-gain" in {
+      val path = controllers.nonresident.routes.HowMuchGainController.howMuchGain().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/how-much-gain"
+    }
+  }
+
+  "The URL for the submitHowMuchGain Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/how-much-gain" in {
+      val path = controllers.nonresident.routes.HowMuchGainController.submitHowMuchGain().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/how-much-gain"
+    }
+  }
+
+  /* Brought Forward Losses routes */
+  "The URL for the broughtForwardLosses Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/brought-forward-losses" in {
+      val path = controllers.nonresident.routes.BroughtForwardLossesController.broughtForwardLosses().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/brought-forward-losses"
+    }
+  }
+
+  "The URL for the submitBroughtForwardLosses Action" should {
+    "be equal to /calculate-your-capital-gains/non-resident/brought-forward-losses" in {
+      val path = controllers.nonresident.routes.BroughtForwardLossesController.submitBroughtForwardLosses().url
+      path shouldEqual "/calculate-your-capital-gains/non-resident/brought-forward-losses"
+    }
+  }
+
   /* Calculation Election routes */
   "The URL for the calculationElection Action" should {
     "be equal to /calculate/your-capital-gains/non-resident/calculation-election" in {

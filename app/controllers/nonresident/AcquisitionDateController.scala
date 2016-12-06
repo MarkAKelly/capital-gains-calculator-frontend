@@ -31,7 +31,6 @@ import scala.concurrent.Future
 
 object AcquisitionDateController extends AcquisitionDateController {
   val calcConnector = CalculatorConnector
-  val calcElectionConstructor = CalculationElectionConstructor
 }
 
 trait AcquisitionDateController extends FrontendController with ValidActiveSession {
@@ -39,7 +38,7 @@ trait AcquisitionDateController extends FrontendController with ValidActiveSessi
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
   val calcConnector: CalculatorConnector
-  val calcElectionConstructor: CalculationElectionConstructor
+  val calcElectionConstructor = CalculationElectionConstructor
 
   val acquisitionDate = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate).map {

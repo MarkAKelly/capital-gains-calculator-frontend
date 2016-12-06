@@ -16,108 +16,245 @@
 
 package constructors
 
-import assets.MessageLookup.NonResident.{CalculationElection => messages}
-import common.TestModels
-import connectors.CalculatorConnector
 import constructors.nonresident.CalculationElectionConstructor
-import models.nonresident.{CalculationResultModel, TotalGainResultsModel}
-import org.mockito.Matchers
-import org.mockito.Mockito._
-import org.mockito.stubbing.OngoingStubbing
+import models.nonresident._
 import org.scalatest.mock.MockitoSugar
-import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-
-import scala.concurrent.Future
 
 class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
 
-  object TestCalculationElectionConstructor extends CalculationElectionConstructor {
-    val calcConnector = mockCalcConnector
-  }
-
-  implicit val hc = new HeaderCarrier()
-  val mockCalcConnector = mock[CalculatorConnector]
-
+  val target = CalculationElectionConstructor
   val onlyFlat = TotalGainResultsModel(BigDecimal(0), None, None)
   val flatAndRebased = TotalGainResultsModel(BigDecimal(-100), Some(BigDecimal(-50)), None)
   val flatAndTime = TotalGainResultsModel(BigDecimal(-20), None, Some(BigDecimal(-300)))
   val flatRebasedAndTime = TotalGainResultsModel(BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(-300)))
 
-  "Calling generateElection" should {
+  "Calling generateElection with only a TotalGainsResultsModel" should {
 
     "when only a flat calculation result is provided" should {
 
-      val seq = TestCalculationElectionConstructor.generateElection(hc, onlyFlat)
-      "produce an empty sequence" in {
-        seq.size shouldBe 1
+      val calculations = target.generateElection(onlyFlat, None, None)
+      "produce sequence with one element" in {
+        calculations.size shouldBe 1
       }
 
-      "should have flat as the first element" in {
-        seq.head._1 shouldEqual "flat"
+      "contain a flat calculation" in {
+        calculations.head._1 shouldEqual "flat"
       }
     }
 
     "when a flat calculation and a rebased calculation result are provided" should {
 
-      val seq = TestCalculationElectionConstructor.generateElection(hc, flatAndRebased)
+      val calculations = target.generateElection(flatAndRebased, None, None)
 
       "produce two entries in the sequence" in {
-        seq.size shouldBe 2
+        calculations.size shouldBe 2
       }
 
       "should be returned with an order" which {
 
-        "should have flat as the first element" in {
-          seq.head._1 shouldEqual "flat"
+        "contain a flat calculation" in {
+          calculations.head._1 shouldEqual "flat"
         }
 
         "should have rebased as the second element" in {
-          seq(1)._1 shouldEqual "rebased"
+          calculations(1)._1 shouldEqual "rebased"
         }
       }
     }
 
     "when a flat calculation and a time calculation result are provided" should {
 
-      val seq = TestCalculationElectionConstructor.generateElection(hc, flatAndTime)
+      val calculations = target.generateElection(flatAndTime, None, None)
 
       "produce two entries in the sequence" in {
-        seq.size shouldBe 2
+        calculations.size shouldBe 2
       }
 
       "should be returned with an order" which {
 
-        "should have time as the first element" in {
-          seq.head._1 shouldEqual "time"
+        "contain a time calculation" in {
+          calculations.head._1 shouldEqual "time"
         }
 
         "should have flat as the second element" in {
-          seq(1)._1 shouldEqual "flat"
+          calculations(1)._1 shouldEqual "flat"
         }
       }
     }
 
     "when a flat, rebased and time are all provided" should {
 
-      val seq = TestCalculationElectionConstructor.generateElection(hc, flatRebasedAndTime)
+      val calculations = target.generateElection(flatRebasedAndTime, None, None)
 
       "produce a three entry sequence" in {
-        seq.size shouldBe 3
+        calculations.size shouldBe 3
       }
 
       "should be returned with an order" which {
 
-        "should have time as the first element" in {
-          seq.head._1 shouldEqual "time"
+        "contain a time calculation" in {
+          calculations.head._1 shouldEqual "time"
         }
 
         "should have flat as the second element" in {
-          seq(1)._1 shouldEqual "flat"
+          calculations(1)._1 shouldEqual "flat"
         }
 
         "should have rebased as the third element" in {
-          seq(2)._1 shouldEqual "rebased"
+          calculations(2)._1 shouldEqual "rebased"
+        }
+      }
+    }
+  }
+
+  //order: rebased, flat
+  val totalGainsAfterPRRFlatAndTASortByTotalGain = CalculationResultsWithPRRModel(
+    GainsAfterPRRModel(2, 1, 0),
+    Some(GainsAfterPRRModel(1, 1, 0)),
+    None
+  )
+
+  //order: rebased, flat
+  val totalGainsAfterPRRFlatAndTASortByTaxableGain = CalculationResultsWithPRRModel(
+    GainsAfterPRRModel(2, 3, 0),
+    Some(GainsAfterPRRModel(2, 1, 0)),
+    None
+  )
+
+  //order: time, rebased, flat
+  val totalGainsAllSortByTotalGain = CalculationResultsWithPRRModel(
+    GainsAfterPRRModel(3, 1, 0),
+    Some(GainsAfterPRRModel(2, 1, 0)),
+    Some(GainsAfterPRRModel(1, 4, 0))
+  )
+
+  //order: rebased, flat, time
+  val totalGainsAllSortByTaxableGain = CalculationResultsWithPRRModel(
+    GainsAfterPRRModel(3, 3, 0),
+    Some(GainsAfterPRRModel(3, 1, 0)),
+    Some(GainsAfterPRRModel(3, 4, 0))
+  )
+
+  "Calling generateElection with a TotalGainsResultsModel, and a CalculationResultsWithPRRModel" should {
+
+    "when a flat calculation and a rebased PRR calculation result are provided" should {
+
+      val calculations = target.generateElection(flatAndRebased, Some(totalGainsAfterPRRFlatAndTASortByTotalGain), None)
+
+      "produce two entries in the sequence" in {
+        calculations.size shouldBe 2
+      }
+
+      "should be returned with an order" which {
+
+        "contain a rebased as the first element" in {
+          calculations.head._1 shouldEqual "rebased"
+        }
+
+        "should have flat as the second element" in {
+          calculations(1)._1 shouldEqual "flat"
+        }
+      }
+    }
+
+    "when a flat calculation and a rebased calculation result are provided that should be ordered by taxable gain" should {
+
+      val calculations = target.generateElection(flatAndTime, Some(totalGainsAfterPRRFlatAndTASortByTaxableGain), None)
+
+      "produce two entries in the sequence" in {
+        calculations.size shouldBe 2
+      }
+
+      "should be returned with an order" which {
+
+        "contain a rebased calculation" in {
+          calculations.head._1 shouldEqual "rebased"
+        }
+
+        "should have flat as the second element" in {
+          calculations(1)._1 shouldEqual "flat"
+        }
+      }
+    }
+
+    "when a flat, rebased and time prr result should be sorted by total gain" should {
+
+      val calculations = target.generateElection(flatRebasedAndTime, Some(totalGainsAllSortByTotalGain), None)
+
+      "produce a three entry sequence" in {
+        calculations.size shouldBe 3
+      }
+
+      "should be returned with an order" which {
+
+        "contain a time calculation" in {
+          calculations.head._1 shouldEqual "time"
+        }
+
+        "should have rebased as the second element" in {
+          calculations(1)._1 shouldEqual "rebased"
+        }
+
+        "should have flat as the third element" in {
+          calculations(2)._1 shouldEqual "flat"
+        }
+      }
+    }
+
+    "when a flat, rebased and time prr result should be sorted by taxable gain" should {
+
+      val calculations = target.generateElection(flatRebasedAndTime, Some(totalGainsAllSortByTaxableGain), None)
+
+      "produce a three entry sequence" in {
+        calculations.size shouldBe 3
+      }
+
+      "should be returned with an order" which {
+
+        "contain a rebased calculation" in {
+          calculations.head._1 shouldEqual "rebased"
+        }
+
+        "should have flat as the second element" in {
+          calculations(1)._1 shouldEqual "flat"
+        }
+
+        "should have time as the third element" in {
+          calculations(2)._1 shouldEqual "time"
+        }
+      }
+    }
+  }
+
+  val calculationResultsTotalSortByTaxOwed = CalculationResultsWithTaxOwedModel(
+    TotalTaxOwedModel(4, 1, 1, Some(1), Some(1), 1, 1, Some(1), Some(1), Some(1), Some(1), 1, Some(1)),
+    Some(TotalTaxOwedModel(1, 1, 1, Some(1), Some(1), 1, 1, Some(1), Some(1), Some(1), Some(1), 1, Some(1))),
+    Some(TotalTaxOwedModel(2, 1, 1, Some(1), Some(1), 1, 1, Some(1), Some(1), Some(1), Some(1), 1, Some(1)))
+  )
+
+  "Calling generateElection with a TotalGainsResultsModel, and a CalculationResultsWithTaxOwedModel" should {
+
+    "when a flat, rebased and time prr result should be sorted by taxable gain" should {
+
+      val calculations = target.generateElection(flatRebasedAndTime, None, Some(calculationResultsTotalSortByTaxOwed))
+
+      "produce a three entry sequence" in {
+        calculations.size shouldBe 3
+      }
+
+      "should be returned with an order" which {
+
+        "contain a rebased calculation" in {
+          calculations.head._1 shouldEqual "rebased"
+        }
+
+        "should have time as the second element" in {
+          calculations(1)._1 shouldEqual "time"
+        }
+
+        "should have flat as the third element" in {
+          calculations(2)._1 shouldEqual "flat"
         }
       }
     }
