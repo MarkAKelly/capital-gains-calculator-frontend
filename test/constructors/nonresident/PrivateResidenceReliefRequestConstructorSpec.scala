@@ -110,11 +110,11 @@ class PrivateResidenceReliefRequestConstructorSpec extends UnitSpec{
 
     "return a string made up of the smaller substring methods" in {
       val privateResidenceReliefModel = PrivateResidenceReliefModel("Yes", Some(4), Some(5))
-      val result = PrivateResidenceReliefRequestConstructor.privateResidenceReliefQuery(modelWithValidDates, privateResidenceReliefModel)
+      val result = PrivateResidenceReliefRequestConstructor.privateResidenceReliefQuery(modelWithValidDates, Some(privateResidenceReliefModel))
 
-      result shouldBe PrivateResidenceReliefRequestConstructor.eligibleForPrivateResidenceRelief(privateResidenceReliefModel) +
-      PrivateResidenceReliefRequestConstructor.daysClaimed(modelWithValidDates, privateResidenceReliefModel) +
-      PrivateResidenceReliefRequestConstructor.daysClaimedAfter(modelWithValidDates, privateResidenceReliefModel)
+      result shouldBe PrivateResidenceReliefRequestConstructor.eligibleForPrivateResidenceRelief(Some(privateResidenceReliefModel)) +
+      PrivateResidenceReliefRequestConstructor.daysClaimed(modelWithValidDates, Some(privateResidenceReliefModel)) +
+      PrivateResidenceReliefRequestConstructor.daysClaimedAfter(modelWithValidDates, Some(privateResidenceReliefModel))
     }
   }
 
@@ -122,14 +122,14 @@ class PrivateResidenceReliefRequestConstructorSpec extends UnitSpec{
 
     "return a true" in {
       val privateResidenceReliefModel = PrivateResidenceReliefModel("Yes", Some(4), Some(1))
-      val result = PrivateResidenceReliefRequestConstructor.eligibleForPrivateResidenceRelief(privateResidenceReliefModel)
+      val result = PrivateResidenceReliefRequestConstructor.eligibleForPrivateResidenceRelief(Some(privateResidenceReliefModel))
 
       result shouldBe "&claimingPRR=true"
     }
 
     "return a false" in {
       val privateResidenceReliefModel = PrivateResidenceReliefModel("No", None, None)
-      val result = PrivateResidenceReliefRequestConstructor.eligibleForPrivateResidenceRelief(privateResidenceReliefModel)
+      val result = PrivateResidenceReliefRequestConstructor.eligibleForPrivateResidenceRelief(Some(privateResidenceReliefModel))
 
       result shouldBe "&claimingPRR=false"
     }
@@ -139,21 +139,21 @@ class PrivateResidenceReliefRequestConstructorSpec extends UnitSpec{
 
     "return a blank string when acquisition and disposal date are within 18 months of each other" in {
       val privateResidenceReliefModel = PrivateResidenceReliefModel("Yes", Some(4), Some(5))
-      val result = PrivateResidenceReliefRequestConstructor.daysClaimed(modelDatesWithin18Months, privateResidenceReliefModel)
+      val result = PrivateResidenceReliefRequestConstructor.daysClaimed(modelDatesWithin18Months, Some(privateResidenceReliefModel))
 
       result shouldBe ""
     }
 
     "return a blank string with prr not claimed" in {
       val privateResidenceReliefModel = PrivateResidenceReliefModel("No", Some(4), Some(5))
-      val result = PrivateResidenceReliefRequestConstructor.daysClaimed(modelWithValidDates, privateResidenceReliefModel)
+      val result = PrivateResidenceReliefRequestConstructor.daysClaimed(modelWithValidDates, Some(privateResidenceReliefModel))
 
       result shouldBe ""
     }
 
     "return a valid string with valid dates" in {
       val privateResidenceReliefModel = PrivateResidenceReliefModel("Yes", Some(4), Some(5))
-      val result = PrivateResidenceReliefRequestConstructor.daysClaimed(modelWithValidDates, privateResidenceReliefModel)
+      val result = PrivateResidenceReliefRequestConstructor.daysClaimed(modelWithValidDates, Some(privateResidenceReliefModel))
 
       result shouldBe "&daysClaimed=4"
     }
@@ -163,35 +163,35 @@ class PrivateResidenceReliefRequestConstructorSpec extends UnitSpec{
 
     "return a blank string when acquisition and disposal date are within 18 months of each other" in {
       val privateResidenceReliefModel = PrivateResidenceReliefModel("Yes", Some(4), Some(5))
-      val result = PrivateResidenceReliefRequestConstructor.daysClaimedAfter(modelDatesWithin18Months, privateResidenceReliefModel)
+      val result = PrivateResidenceReliefRequestConstructor.daysClaimedAfter(modelDatesWithin18Months, Some(privateResidenceReliefModel))
 
       result shouldBe ""
     }
 
     "return a blank string when acquisition date is after tax start date" in {
       val privateResidenceReliefModel = PrivateResidenceReliefModel("Yes", Some(4), Some(5))
-      val result = PrivateResidenceReliefRequestConstructor.daysClaimedAfter(modelDatesAcquisitionDateAfterStart, privateResidenceReliefModel)
+      val result = PrivateResidenceReliefRequestConstructor.daysClaimedAfter(modelDatesAcquisitionDateAfterStart, Some(privateResidenceReliefModel))
 
       result shouldBe ""
     }
 
     "return a blank string when no acquisition date or rebased value is provided" in {
       val privateResidenceReliefModel = PrivateResidenceReliefModel("Yes", Some(4), Some(5))
-      val result = PrivateResidenceReliefRequestConstructor.daysClaimedAfter(modelNoAcquisitionOrRebased, privateResidenceReliefModel)
+      val result = PrivateResidenceReliefRequestConstructor.daysClaimedAfter(modelNoAcquisitionOrRebased, Some(privateResidenceReliefModel))
 
       result shouldBe ""
     }
 
     "return a value for days claimed after with a valid acquisition date" in {
       val privateResidenceReliefModel = PrivateResidenceReliefModel("Yes", Some(4), Some(5))
-      val result = PrivateResidenceReliefRequestConstructor.daysClaimedAfter(modelWithValidDates, privateResidenceReliefModel)
+      val result = PrivateResidenceReliefRequestConstructor.daysClaimedAfter(modelWithValidDates, Some(privateResidenceReliefModel))
 
       result shouldBe "&daysClaimedAfter=5"
     }
 
     "return a value for days claimed after with a rebased value" in {
       val privateResidenceReliefModel = PrivateResidenceReliefModel("Yes", Some(4), Some(5))
-      val result = PrivateResidenceReliefRequestConstructor.daysClaimedAfter(modelWithRebasedValue, privateResidenceReliefModel)
+      val result = PrivateResidenceReliefRequestConstructor.daysClaimedAfter(modelWithRebasedValue, Some(privateResidenceReliefModel))
 
       result shouldBe "&daysClaimedAfter=5"
     }
