@@ -431,7 +431,7 @@ object MessageLookup {
       val usedAEA = "Capital Gains Tax allowance used"
       val remainingAEA = "Capital Gains Tax allowance remaining"
       def usedAllowableLosses(taxYear: String): String = s"Loss used from $taxYear tax year"
-      def usedBroughtForwardLosses(taxYear: String): String = s"Remaining loss from tax years before $taxYear"
+      def usedBroughtForwardLosses(taxYear: String): String = s"Loss used from tax years before $taxYear"
       val lossesRemaining = "Carried forward loss"
       val taxableGain = "Your taxable gain"
       val taxRate = "Tax rate"
