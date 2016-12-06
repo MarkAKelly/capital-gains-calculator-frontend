@@ -28,7 +28,11 @@ object OtherReliefsRequestConstructor {
                              timeApportionedReliefs: Option[OtherReliefsModel],
                              calculationElectionModel: CalculationElectionModel): Seq[QuestionAnswerModel[Any]] = {
 
-    ???
+    val flatReliefsRow = getOtherReliefsFlatRow(flatReliefs, calculationElectionModel)
+    val rebasedReliefsRow = getOtherReliefsRebasedRow(rebasedReliefs, calculationElectionModel)
+    val timeApportionedReliefsRow = getOtherReliefsTimeApportionedRow(timeApportionedReliefs, calculationElectionModel)
+
+    Seq(flatReliefsRow, rebasedReliefsRow, timeApportionedReliefsRow).flatten
   }
 
   def getOtherReliefsRebasedRow(rebasedReliefs: Option[OtherReliefsModel],

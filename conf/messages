@@ -402,6 +402,7 @@ calc.summary.calculation.details.taxableGain = Your taxable gain
 calc.summary.calculation.details.lossesRemaining = Carried forward loss
 calc.summary.calculation.details.taxRate = Tax rate
 calc.summary.calculation.details.taxRateValue = {0} at {1}%
+calc.summary.calculation.details.otherReliefsUsed = Other tax reliefs used
 calc.summary.personal.details.title = Personal details
 calc.summary.purchase.details.title = Owning the property
 calc.summary.property.details.title = Property details
