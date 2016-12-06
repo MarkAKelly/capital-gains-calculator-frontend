@@ -52,7 +52,7 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
       val seqQuestionAnswers = Seq(questionAnswer, questionAnswer)
 
       lazy val view = summaryReport(answersModel, seqQuestionAnswers, taxYear,
-        sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+        sumModelFlat.calculationElectionModel.calculationType, None, taxOwed = BigDecimal(1000))(fakeRequestWithSession)
       lazy val document = Jsoup.parse(view.body)
 
       "have a heading" which {
@@ -70,8 +70,8 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
           heading.select("span").text shouldEqual nrMessages.Summary.secondaryHeading
         }
 
-        "have a result amount currently set to £0.00" in {
-          heading.select("b").text shouldEqual "£0.00"
+        "have a result amount currently set to £1,000.00" in {
+          heading.select("b").text shouldEqual "£1,000.00"
         }
       }
 
@@ -158,7 +158,7 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
       val seqQuestionAnswers = Seq(questionAnswer, questionAnswer)
 
       lazy val view = summaryReport(answersModel, seqQuestionAnswers, taxYear,
-        sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+        sumModelFlat.calculationElectionModel.calculationType,None, taxOwed = BigDecimal(1000))(fakeRequestWithSession)
       lazy val document = Jsoup.parse(view.body)
 
       "have a notice summary" which {
@@ -200,7 +200,7 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
       val seqQuestionAnswers = Seq(questionAnswer, questionAnswer)
 
       lazy val view = summaryReport(answersModel, seqQuestionAnswers, taxYear,
-        sumModelFlat.calculationElectionModel.calculationType)(fakeRequestWithSession)
+        sumModelFlat.calculationElectionModel.calculationType, None, taxOwed = BigDecimal(1000))(fakeRequestWithSession)
       lazy val document = Jsoup.parse(view.body)
 
       "have a heading" which {
@@ -218,8 +218,8 @@ class SummaryReportViewSpec extends UnitSpec with WithFakeApplication with FakeR
           heading.select("span").text shouldEqual nrMessages.Summary.secondaryHeading
         }
 
-        "have a result amount currently set to £0.00" in {
-          heading.select("b").text shouldEqual "£0.00"
+        "have a result amount currently set to £1,000.00" in {
+          heading.select("b").text shouldEqual "£1,000.00"
         }
       }
 

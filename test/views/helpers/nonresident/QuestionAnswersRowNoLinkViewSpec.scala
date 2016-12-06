@@ -20,10 +20,10 @@ import java.time.LocalDate
 
 import models.nonresident.QuestionAnswerModel
 import org.jsoup.Jsoup
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.helpers.nonresident.questionAnswerRowNoLink
 
-class QuestionAnswersRowNoLinkViewSpec extends UnitSpec {
+class QuestionAnswersRowNoLinkViewSpec extends UnitSpec with WithFakeApplication {
 
   "Creating questionAnswerRow" when {
 
@@ -34,8 +34,8 @@ class QuestionAnswersRowNoLinkViewSpec extends UnitSpec {
 
       "have a div for the question with an id of 'id-question' which" which {
 
-        "has a class of 'grid-layout__column grid-layout__column--1-3'" in {
-          doc.select("div#id-question").attr("class") shouldBe "grid-layout__column grid-layout__column--1-3"
+        "has a class of 'grid-layout__column grid-layout__column--1-2'" in {
+          doc.select("div#id-question").attr("class") shouldBe "grid-layout__column grid-layout__column--1-2"
         }
 
         "has a span with a class of 'lede'" in {
@@ -49,8 +49,8 @@ class QuestionAnswersRowNoLinkViewSpec extends UnitSpec {
 
       "have a div for the answer with an id of 'id-answer'" which {
 
-        "has a class of 'grid-layout__column grid-layout__column--1-3'" in {
-          doc.select("div#id-answer").attr("class") shouldBe "grid-layout__column grid-layout__column--1-3"
+        "has a class of 'grid-layout__column grid-layout__column--1-2'" in {
+          doc.select("div#id-answer").attr("class") shouldBe "grid-layout__column grid-layout__column--1-2"
         }
 
         "has a change link with a class of 'lede' and 'summary-answer" in {
@@ -124,6 +124,20 @@ class QuestionAnswersRowNoLinkViewSpec extends UnitSpec {
 
       "have an answer 'No'" in {
         doc.select("div#id-answer span").text() shouldBe "No"
+      }
+    }
+
+    "passing in a tax rates tuple" should {
+      val model = QuestionAnswerModel[(BigDecimal, Int, BigDecimal, Int)]("id", (1000, 10, 2000, 20), "question", Some("change-link"))
+      lazy val result = questionAnswerRowNoLink(model, 2)
+      lazy val doc = Jsoup.parse(result.body)
+
+      "have a message for one tax rate" in {
+        doc.select("div#id-answer span p").first().text() shouldBe "£1,000.00 at 10%"
+      }
+
+      "have a message for the additional tax rate" in {
+        doc.select("div#id-answer span p").last().text() shouldBe "£2,000.00 at 20%"
       }
     }
   }

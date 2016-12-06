@@ -88,7 +88,7 @@ class RebasedCostsViewSpec extends UnitSpec with WithFakeApplication with FakeRe
       }
 
       s"have the input question '${messages.RebasedCosts.inputQuestion}'" in {
-        document.body().select("div.panel-indent label div span").text() shouldBe messages.RebasedCosts.inputQuestion
+        document.body().select("div.panel-indent label span").first().text() shouldBe messages.RebasedCosts.inputQuestion
       }
 
       "have a value input with the id 'rebasedCosts'" in {

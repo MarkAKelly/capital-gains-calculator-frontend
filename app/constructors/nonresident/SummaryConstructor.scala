@@ -222,11 +222,11 @@ object SummaryConstructor {
                     "&pound;" + MoneyPounds(summary.personalAllowanceModel.get.personalAllowanceAmt).quantity,
                     Some(routes.PersonalAllowanceController.personalAllowance().toString())
                   ),
-                  SummaryDataItemModel(
-                    Messages("calc.otherProperties.questionTwo"),
-                    "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
-                    Some(routes.OtherPropertiesController.otherProperties().toString())
-                  ),
+//                  SummaryDataItemModel(
+//                    Messages("calc.otherProperties.questionTwo"),
+//                    "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
+//                    Some(routes.OtherPropertiesController.otherProperties().toString())
+//                  ),
                   SummaryDataItemModel(
                     Messages("calc.annualExemptAmount.question"),
                     "&pound;" + MoneyPounds(summary.annualExemptAmountModel.get.annualExemptAmount).quantity,
@@ -245,11 +245,11 @@ object SummaryConstructor {
                     "&pound;" + MoneyPounds(summary.currentIncomeModel.get.currentIncome).quantity,
                     Some(routes.CurrentIncomeController.currentIncome().toString())
                   ),
-                  SummaryDataItemModel(
-                    Messages("calc.otherProperties.questionTwo"),
-                    "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
-                    Some(routes.OtherPropertiesController.otherProperties().toString())
-                  ),
+//                  SummaryDataItemModel(
+//                    Messages("calc.otherProperties.questionTwo"),
+//                    "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
+//                    Some(routes.OtherPropertiesController.otherProperties().toString())
+//                  ),
                   SummaryDataItemModel(
                     Messages("calc.annualExemptAmount.question"),
                     "&pound;" + MoneyPounds(summary.annualExemptAmountModel.get.annualExemptAmount).quantity,

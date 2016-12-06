@@ -17,28 +17,36 @@
 package controllers.nonresident
 
 
-
 import common.KeystoreKeys
 import connectors.CalculatorConnector
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.HowBecameOwnerForm._
-import models.nonresident.HowBecameOwnerModel
+import models.nonresident.{AcquisitionDateModel, HowBecameOwnerModel, RebasedValueModel}
 import play.api.data.Form
 import play.api.mvc.Result
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation.{nonresident => views}
 
 import scala.concurrent.Future
 
 object HowBecameOwnerController extends HowBecameOwnerController {
   val calcConnector = CalculatorConnector
-  }
+}
 
 trait HowBecameOwnerController extends FrontendController with ValidActiveSession {
 
   val calcConnector: CalculatorConnector
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
+
+  def getAcquisitionDate(implicit hc: HeaderCarrier): Future[Option[AcquisitionDateModel]] = {
+    calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate)
+  }
+
+  def getRebasedValue(implicit hc: HeaderCarrier): Future[Option[RebasedValueModel]] = {
+    calcConnector.fetchAndGetFormData[RebasedValueModel](KeystoreKeys.rebasedValue)
+  }
 
   val howBecameOwner = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[HowBecameOwnerModel](KeystoreKeys.howBecameOwner).map {

@@ -16,28 +16,23 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup.NonResident.{CalculationElection => messages}
 import common.{KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
-import play.api.libs.json.Json
-import uk.gov.hmrc.http.cache.client.CacheMap
 import constructors.nonresident.{AnswersConstructor, CalculationElectionConstructor}
-import org.mockito.Matchers
-import org.mockito.Mockito._
-import play.api.mvc.AnyContentAsFormUrlEncoded
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import org.jsoup._
-import org.scalatest.mock.MockitoSugar
-import common.nonresident.CalculationType
-import assets.MessageLookup.NonResident.{CalculationElection => messages}
 import controllers.helpers.FakeRequestHelper
-
-import scala.concurrent.Future
 import controllers.nonresident.{CalculationElectionController, routes}
 import models.nonresident._
-import play.api.mvc.Result
+import models.resident.TaxYearModel
+import org.jsoup._
+import org.mockito.Matchers
+import org.mockito.Mockito._
+import org.scalatest.mock.MockitoSugar
+import play.api.test.Helpers._
+import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+
+import scala.concurrent.Future
 
 class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
@@ -46,7 +41,9 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
   def setupTarget(getData: Option[CalculationElectionModel],
                   postData: Option[CalculationElectionModel],
                   totalGainResultsModel: Option[TotalGainResultsModel],
-                  contentElements: Seq[(String, String, String, Option[String])]
+                  contentElements: Seq[(String, String, String, Option[String])],
+                  finalSummaryModel: TotalPersonalDetailsCalculationModel,
+                  taxOwedResult: Option[CalculationResultsWithTaxOwedModel] = None
                  ): CalculationElectionController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
@@ -62,8 +59,23 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
     when(mockCalcConnector.calculateTotalGain(Matchers.any())(Matchers.any()))
       .thenReturn(totalGainResultsModel)
 
-    when(mockCalcElectionConstructor.generateElection(Matchers.any(), Matchers.any()))
+    when(mockCalcElectionConstructor.generateElection(Matchers.any(), Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(contentElements))
+
+    when(mockCalcAnswersConstructor.getPersonalDetailsAndPreviousCapitalGainsAnswers(Matchers.any()))
+      .thenReturn(Future.successful(Some(finalSummaryModel)))
+
+    when(mockCalcConnector.getFullAEA(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(BigDecimal(11000))))
+
+    when(mockCalcConnector.getPartialAEA(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(BigDecimal(5500))))
+
+    when(mockCalcConnector.calculateNRCGTTotalTax(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(taxOwedResult))
+
+    when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(TaxYearModel("2015/16", true, "2015/16"))))
 
     new CalculationElectionController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -78,6 +90,19 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
     }
   }
 
+  val finalAnswersModel = TotalPersonalDetailsCalculationModel(
+    CustomerTypeModel("representative"),
+    None,
+    None,
+    None,
+    OtherPropertiesModel("No"),
+    None,
+    None,
+    None,
+    None,
+    BroughtForwardLossesModel(false, None)
+  )
+
   // GET Tests
   "In CalculationController calling the .calculationElection action" when {
 
@@ -89,7 +114,8 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
         None,
         None,
         Some(TotalGainResultsModel(0, Some(0), Some(0))),
-        seq
+        seq,
+        finalAnswersModel
       )
       lazy val result = target.calculationElection(fakeRequest)
 
@@ -98,7 +124,7 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
       }
 
       "redirect to the session timeout page" in {
-        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+        redirectLocation(result).get should include("/calculate-your-capital-gains/session-timeout")
       }
     }
 
@@ -108,7 +134,8 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
         None,
         None,
         Some(TotalGainResultsModel(0, Some(0), Some(0))),
-        seq
+        seq,
+        finalAnswersModel
       )
       lazy val result = target.calculationElection(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
@@ -127,7 +154,8 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
         Some(CalculationElectionModel("flat")),
         None,
         Some(TotalGainResultsModel(0, Some(0), Some(0))),
-        seq
+        seq,
+        finalAnswersModel
       )
       lazy val result = target.calculationElection(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
@@ -153,7 +181,8 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
         None,
         None,
         Some(TotalGainResultsModel(0, Some(0), Some(0))),
-        seq
+        seq,
+        finalAnswersModel
       )
       lazy val result = target.submitCalculationElection(request)
 
@@ -173,7 +202,8 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
         None,
         None,
         Some(TotalGainResultsModel(0, Some(0), Some(0))),
-        seq
+        seq,
+        finalAnswersModel
       )
       lazy val result = target.submitCalculationElection(request)
       lazy val document = Jsoup.parse(bodyOf(result))

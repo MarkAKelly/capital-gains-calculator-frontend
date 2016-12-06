@@ -16,23 +16,21 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup.{NonResident => messages}
+import connectors.CalculatorConnector
 import constructors.nonresident.AnswersConstructor
 import controllers.helpers.FakeRequestHelper
-import controllers.nonresident.CheckYourAnswersController
+import controllers.nonresident.{CheckYourAnswersController, routes}
 import models.nonresident._
 import org.jsoup.Jsoup
 import org.mockito.Matchers
-import controllers.nonresident.routes
-import org.scalatest.mock.MockitoSugar
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.mockito.Mockito._
-import assets.MessageLookup.{NonResident => messages}
-import common.DefaultRoutes
-import connectors.CalculatorConnector
-
-import scala.concurrent.Future
+import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+
+import scala.concurrent.Future
 
 class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
@@ -41,12 +39,18 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
   def setupTarget(totalGainAnswersModel: TotalGainAnswersModel,
                   totalGainsModel: Option[TotalGainResultsModel],
                   privateResidenceReliefModel: Option[PrivateResidenceReliefModel] = None,
+                  totalPersonalDetailsModel: Option[TotalPersonalDetailsCalculationModel] = None,
                   calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel] = None): CheckYourAnswersController = {
 
     val mockAnswersConstructor = mock[AnswersConstructor]
     val mockCalcConnector = mock[CalculatorConnector]
 
     when(mockAnswersConstructor.getNRTotalGainAnswers(Matchers.any())).thenReturn(Future.successful(totalGainAnswersModel))
+
+    when(mockAnswersConstructor.getPersonalDetailsAndPreviousCapitalGainsAnswers(Matchers.any())).thenReturn(Future.successful(totalPersonalDetailsModel))
+
+    when(mockCalcConnector.calculateTaxableGainAfterPRR(Matchers.any(), Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(calculationResultsWithPRRModel))
 
     when(mockCalcConnector.calculateTotalGain(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(totalGainResultsModel)))
 
@@ -98,6 +102,17 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
     ImprovementsModel("Yes", Some(10), Some(20)),
     Some(OtherReliefsModel(30)))
 
+  val individualModel = TotalPersonalDetailsCalculationModel(CustomerTypeModel("Individual"),
+    Some(CurrentIncomeModel(9000)),
+    Some(PersonalAllowanceModel(1000)),
+    None,
+    OtherPropertiesModel("No"),
+    Some(PreviousLossOrGainModel("Gain")),
+    None,
+    Some(HowMuchGainModel(9000)),
+    None,
+    BroughtForwardLossesModel(isClaiming = false, None))
+
   "Check Your Answers Controller" should {
 
     "have the correct AnswersConstructor" in {
@@ -136,7 +151,7 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "redirect the user to the session timeout page" in {
-        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+        redirectLocation(result).get should include("/calculate-your-capital-gains/session-timeout")
       }
     }
 
@@ -213,7 +228,7 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "redirect the user to the session timeout page" in {
-        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+        redirectLocation(result).get should include("/calculate-your-capital-gains/session-timeout")
       }
     }
   }
@@ -320,6 +335,37 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
       lazy val result = target.redirectRoute(None, totalGainModel)
 
       redirectLocation(result) shouldBe Some(controllers.nonresident.routes.SummaryController.summary().url)
+    }
+  }
+
+  "Calling .calculatePRRIfApplicable" should {
+
+    "with no privateResidenceReliefModel" should {
+
+      val totalGainResultsModelWithGain = TotalGainResultsModel(100, None, None)
+      val prrModel = None
+
+      val target = setupTarget(modelWithMultipleGains, Some(totalGainResultsModelWithGain), prrModel, None)
+      lazy val result = target.calculatePRRIfApplicable(modelWithMultipleGains, prrModel)
+
+      "return a None" in {
+        await(result) shouldEqual None
+      }
+    }
+
+    "with a valid PRR model" should {
+
+      val totalGainResultsModelWithGain = TotalGainResultsModel(100, Some(100), None)
+      val prrModel = PrivateResidenceReliefModel("Yes", Some(3), None)
+      val calculationResultsWithPRRModel = CalculationResultsWithPRRModel(GainsAfterPRRModel(100, 0, 0), None, None)
+
+      val target = setupTarget(modelWithMultipleGains, Some(totalGainResultsModelWithGain),
+        Some(prrModel), Some(individualModel), Some(calculationResultsWithPRRModel))
+      lazy val result = target.calculatePRRIfApplicable(modelWithMultipleGains, Some(prrModel))
+
+      "return a CalculationResultsWithPRRModel" in {
+        await(result.get) shouldEqual calculationResultsWithPRRModel
+      }
     }
   }
 }

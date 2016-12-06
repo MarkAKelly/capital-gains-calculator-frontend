@@ -87,11 +87,11 @@ class WorthWhenSoldForLessViewSpec extends UnitSpec with WithFakeApplication wit
           lazy val label = doc.select("label")
 
           s"has the text ${messages.question}" in {
-            label.select("div > span").text() shouldEqual messages.question
+            label.select("span.visuallyhidden").text() shouldEqual messages.question
           }
 
           "has the class visually hidden" in {
-            label.select("div > span").hasClass("visuallyhidden") shouldEqual true
+            label.select("span.visuallyhidden").hasClass("visuallyhidden") shouldEqual true
           }
 
           "is tied to the input field" in {

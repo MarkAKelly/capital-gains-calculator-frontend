@@ -18,7 +18,7 @@ package models.nonresident
 
 import play.api.libs.json.Json
 
-case class OtherPropertiesModel(otherProperties: String, otherPropertiesAmt: Option[BigDecimal])
+case class OtherPropertiesModel(otherProperties: String)
 
 object OtherPropertiesModel {
   implicit val format = Json.format[OtherPropertiesModel]
