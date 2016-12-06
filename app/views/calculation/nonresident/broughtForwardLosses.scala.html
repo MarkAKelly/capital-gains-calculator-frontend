@@ -6,12 +6,11 @@
 
 @hiddenContent = {
     <div class="form-group">
-        @input(
-        broughtForwardLossesForm("broughtForwardLoss"),
-        '_label -> Messages("calc.broughtForwardLosses.inputQuestion"),
-        '_type -> "text",
-        '_inputClass -> "form-group input--no-spinner",
-        '_type -> "number"
+        @formInputMoneyHTML(
+            broughtForwardLossesForm,
+            "broughtForwardLoss",
+            Messages("calc.improvements.questionTwo"),
+            hideLabel = true
         )
     </div>
 }
