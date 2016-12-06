@@ -16,7 +16,7 @@
 
 package controllers.nonresident
 
-import common.{DefaultRoutes, KeystoreKeys}
+import common.KeystoreKeys
 import common.nonresident.CalculationType
 import connectors.CalculatorConnector
 import constructors.nonresident.{AnswersConstructor, CalculationElectionConstructor, YourAnswersConstructor}

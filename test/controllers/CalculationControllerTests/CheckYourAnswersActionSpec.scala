@@ -200,7 +200,7 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
         status(result) shouldBe 303
       }
 
-      "redirect the user to the summary page" in {
+      "redirect the user to the other reliefs page" in {
         redirectLocation(result).get shouldBe controllers.nonresident.routes.OtherReliefsController.otherReliefs().url
       }
     }
