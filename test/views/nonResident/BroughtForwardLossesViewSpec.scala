@@ -125,7 +125,7 @@ class BroughtForwardLossesViewSpec extends UnitSpec with WithFakeApplication wit
       }
 
       s"have a hidden question of ${messages.BroughtForwardLosses.inputQuestion}" in {
-        document.select("label[for=broughtForwardLoss]").text() shouldBe messages.BroughtForwardLosses.inputQuestion
+        document.select("label[for=broughtForwardLoss]").text() startsWith messages.BroughtForwardLosses.inputQuestion
       }
 
       "have an input id of 'broughtForwardLoss'" in {
