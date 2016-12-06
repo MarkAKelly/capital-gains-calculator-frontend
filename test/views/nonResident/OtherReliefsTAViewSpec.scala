@@ -54,11 +54,11 @@ class OtherReliefsTAViewSpec extends UnitSpec with WithFakeApplication with Mock
         lazy val heading = document.body().select("h1")
 
         "has a class of heading-large" in {
-          heading.attr("class") shouldBe "heading-large"
+          heading.attr("class") shouldBe "heading-xlarge"
         }
 
         s"has the text '${messages.pageHeading}'" in {
-          heading.text shouldBe messages.pageHeading
+          heading.text shouldBe messages.OtherReliefs.question
         }
       }
 
@@ -78,8 +78,14 @@ class OtherReliefsTAViewSpec extends UnitSpec with WithFakeApplication with Mock
         }
       }
 
-      s"have the question '${messages.OtherReliefs.question}'" in {
-        document.body.select("label").first().text shouldBe messages.OtherReliefs.question
+      s"have a label" which {
+        lazy val label = document.body.select("label").first()
+        s"has the text '${messages.OtherReliefs.question}'" in {
+          label.text shouldBe messages.OtherReliefs.question
+        }
+        "has the class 'visuallyhidden'" in {
+          label.attr("class") shouldBe "visuallyhidden"
+        }
       }
 
       s"have the help text '${messages.OtherReliefs.help}'" in {

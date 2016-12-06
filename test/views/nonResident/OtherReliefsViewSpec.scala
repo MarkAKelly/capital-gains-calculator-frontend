@@ -51,7 +51,7 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
 
         s"should have a route to 'improvements'" in {
           backLink.attr("href") shouldEqual
-            controllers.nonresident.routes.ImprovementsController.improvements().url
+            controllers.nonresident.routes.CheckYourAnswersController.checkYourAnswers().url
         }
       }
 

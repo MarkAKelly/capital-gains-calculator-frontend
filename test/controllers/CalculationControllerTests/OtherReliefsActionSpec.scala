@@ -126,8 +126,8 @@ class OtherReliefsActionSpec extends UnitSpec with WithFakeApplication with Mock
         status(result) shouldBe 303
       }
 
-      "redirect to the check your answers page" in {
-        redirectLocation(result).get shouldBe controllers.nonresident.routes.CheckYourAnswersController.checkYourAnswers().url
+      "redirect to the summary page" in {
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.SummaryController.summary().url
       }
     }
 

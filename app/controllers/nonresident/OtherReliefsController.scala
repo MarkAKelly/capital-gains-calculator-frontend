@@ -81,7 +81,7 @@ trait OtherReliefsController extends FrontendController with ValidActiveSession 
 
     def successAction(model: OtherReliefsModel) = {
       calcConnector.saveFormData(KeystoreKeys.otherReliefsFlat, model)
-      Future.successful(Redirect(routes.CheckYourAnswersController.checkYourAnswers()))
+      Future.successful(Redirect(routes.SummaryController.summary()))
     }
 
     otherReliefsForm.bindFromRequest.fold(

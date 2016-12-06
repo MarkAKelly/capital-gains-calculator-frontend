@@ -12,11 +12,11 @@
 
     @errorSummary(otherReliefsForm, "other-reliefs-time-apportionment")
 
-    <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
+    <h1 class="heading-xlarge">@Messages("calc.otherReliefs.question")</h1>
 
     @form(action = controllers.nonresident.routes.OtherReliefsTAController.submitOtherReliefsTA) {
 
-        <label for="otherReliefs">@Messages("calc.otherReliefs.question")</label>
+        <label for="otherReliefs" class="visuallyhidden">@Messages("calc.otherReliefs.question")</label>
 
         <span class="form-hint">@Messages("calc.otherReliefs.help")</span>
 
