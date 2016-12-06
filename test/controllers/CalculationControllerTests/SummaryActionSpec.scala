@@ -76,7 +76,7 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
     when(mockCalcConnector.getPartialAEA(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(Some(BigDecimal(5500))))
 
-    when(mockCalcConnector.calculateNRCGTTotalTax(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+    when(mockCalcConnector.calculateNRCGTTotalTax(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(taxOwedResult))
 
     when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
