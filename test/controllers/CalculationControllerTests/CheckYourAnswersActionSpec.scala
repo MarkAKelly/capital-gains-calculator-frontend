@@ -100,12 +100,12 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
     ImprovementsModel("Yes", Some(10), Some(20)),
     Some(OtherReliefsModel(30)))
 
-  val individualModel = TotalPersonalDetailsCalculationModel(CustomerTypeModel("Individual"),
+  val individualModel = TotalPersonalDetailsCalculationModel(CustomerTypeModel("individual"),
     Some(CurrentIncomeModel(9000)),
     Some(PersonalAllowanceModel(1000)),
     None,
     OtherPropertiesModel("No"),
-    Some(PreviousLossOrGainModel("Gain")),
+    Some(PreviousLossOrGainModel("gain")),
     None,
     Some(HowMuchGainModel(9000)),
     None,
@@ -168,6 +168,25 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
 
       "have a back link to the private residence relief page" in {
         document.select("#back-link").attr("href") shouldBe routes.PrivateResidenceReliefController.privateResidenceRelief().url
+      }
+    }
+
+    "provided with a valid session when the final answers have been answered and are applicable" should {
+
+      lazy val target = setupTarget(modelWithOnlyFlat, Some(totalGainWithValueResultsModel), None, Some(individualModel))
+      lazy val result = target.checkYourAnswers(fakeRequestWithSession)
+      lazy val document = Jsoup.parse(bodyOf(result))
+
+      "return a status of 200" in {
+        status(result) shouldBe 200
+      }
+
+      "load the check your answers page" in {
+        document.title() shouldBe messages.CheckYourAnswers.question
+      }
+
+      "have a back link to the brought forward losses page" in {
+        document.select("#back-link").attr("href") shouldBe routes.BroughtForwardLossesController.broughtForwardLosses().url
       }
     }
   }
