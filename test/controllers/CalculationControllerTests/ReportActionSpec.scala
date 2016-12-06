@@ -80,7 +80,7 @@ class ReportActionSpec extends UnitSpec with WithFakeApplication with FakeReques
     when(mockCalculatorConnector.getPartialAEA(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(Some(BigDecimal(5500))))
 
-    when(mockCalculatorConnector.calculateNRCGTTotalTax(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+    when(mockCalculatorConnector.calculateNRCGTTotalTax(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(taxOwedResult))
 
     when(mockCalculatorConnector.getTaxYear(Matchers.any())(Matchers.any()))
