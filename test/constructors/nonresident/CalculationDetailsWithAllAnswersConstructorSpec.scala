@@ -323,5 +323,29 @@ class CalculationDetailsWithAllAnswersConstructorSpec extends UnitSpec with With
         assertExpectedResult[QuestionAnswerModel[Any]](result)(_.link shouldBe None)
       }
     }
+
+    "there is only an additional rate" should {
+      lazy val result = CalculationDetailsWithAllAnswersConstructor.taxRatesRow(0, 0, Some(2000), Some(20))
+
+      "have a question answer model" in {
+        result.isDefined shouldBe true
+      }
+
+      s"have a question of ${messages.Summary.taxRate}" in {
+        assertExpectedResult[QuestionAnswerModel[Any]](result)(_.question shouldBe messages.Summary.taxRate)
+      }
+
+      "have an id of calcDetails:taxRate" in {
+        assertExpectedResult[QuestionAnswerModel[Any]](result)(_.id shouldBe "calcDetails:taxRate")
+      }
+
+      "have a tuple containing the upper tax rate" in {
+        assertExpectedResult[QuestionAnswerModel[Any]](result)(_.data shouldBe "£2,000.00 at 20%")
+      }
+
+      "have no link" in {
+        assertExpectedResult[QuestionAnswerModel[Any]](result)(_.link shouldBe None)
+      }
+    }
   }
 }
