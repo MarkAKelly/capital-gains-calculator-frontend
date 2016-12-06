@@ -41,13 +41,13 @@ trait CalculationElectionConstructor {
   }
 
   private def buildElectionWithTotalGain(data: TotalGainResultsModel) = {
-    val flatElement = Some(flatElementConstructor(0.0, data))
-    val rebasedElement = data.rebasedGain.collect { case amount => rebasedElementConstructor(0.0, data) }
-    val timeElement = data.timeApportionedGain.collect { case amount => timeElementConstructor(0.0, data) }
+    val flatElement = Some(flatElementConstructor(0.0, data.flatGain))
+    val rebasedElement = data.rebasedGain.collect { case amount => rebasedElementConstructor(0.0, amount) }
+    val timeElement = data.timeApportionedGain.collect { case amount => timeElementConstructor(0.0, amount) }
     val options = Seq(flatElement, rebasedElement, timeElement).flatten
 
     options
-      .sortBy(option => option.amount)
+      .sortBy(option => option.data)
       .map(o => (o.calcType, o.amount.toString(), o.message, o.date))
   }
 
