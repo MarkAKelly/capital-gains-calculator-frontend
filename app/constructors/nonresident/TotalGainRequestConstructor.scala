@@ -89,7 +89,7 @@ object TotalGainRequestConstructor {
       case (DisposalDateModel(dDay, dMonth, dYear), AcquisitionDateModel("Yes", Some(aDay), Some(aMonth), Some(aYear)))
         if !TaxDates.dateAfterStart(acquisitionDateModel.get) =>
         s"&disposalDate=$dYear-$dMonth-$dDay&acquisitionDate=$aYear-$aMonth-$aDay"
-      case _ => ""
+      case (DisposalDateModel(dDay, dMonth, dYear), _) => s"&disposalDate=$dYear-$dMonth-$dDay"
     }
   }
 }

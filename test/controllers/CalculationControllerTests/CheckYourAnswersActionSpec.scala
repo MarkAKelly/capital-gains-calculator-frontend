@@ -27,7 +27,6 @@ import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.mockito.Mockito._
 import assets.MessageLookup.{NonResident => messages}
-import common.DefaultRoutes
 import connectors.CalculatorConnector
 
 import scala.concurrent.Future
@@ -40,12 +39,19 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
 
   def setupTarget(totalGainAnswersModel: TotalGainAnswersModel,
                   totalGainsModel: Option[TotalGainResultsModel],
-                  privateResidenceReliefModel: Option[PrivateResidenceReliefModel] = None): CheckYourAnswersController = {
+                  privateResidenceReliefModel: Option[PrivateResidenceReliefModel] = None,
+                  totalPersonalDetailsModel: Option[TotalPersonalDetailsCalculationModel] = None,
+                  calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel] = None): CheckYourAnswersController = {
 
     val mockAnswersConstructor = mock[AnswersConstructor]
     val mockCalcConnector = mock[CalculatorConnector]
 
     when(mockAnswersConstructor.getNRTotalGainAnswers(Matchers.any())).thenReturn(Future.successful(totalGainAnswersModel))
+
+    when(mockAnswersConstructor.getPersonalDetailsAndPreviousCapitalGainsAnswers(Matchers.any())).thenReturn(Future.successful(totalPersonalDetailsModel))
+
+    when(mockCalcConnector.calculateTaxableGainAfterPRR(Matchers.any(), Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(calculationResultsWithPRRModel))
 
     when(mockCalcConnector.calculateTotalGain(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(totalGainResultsModel)))
 
@@ -93,6 +99,17 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
     None,
     ImprovementsModel("Yes", Some(10), Some(20)),
     Some(OtherReliefsModel(30)))
+
+  val individualModel = TotalPersonalDetailsCalculationModel(CustomerTypeModel("Individual"),
+    Some(CurrentIncomeModel(9000)),
+    Some(PersonalAllowanceModel(1000)),
+    None,
+    OtherPropertiesModel("No"),
+    Some(PreviousLossOrGainModel("Gain")),
+    None,
+    Some(HowMuchGainModel(9000)),
+    None,
+    BroughtForwardLossesModel(isClaiming = false, None))
 
   "Check Your Answers Controller" should {
 
@@ -250,6 +267,37 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
 
       "return a None" in {
         await(result) shouldEqual None
+      }
+    }
+  }
+
+  "Calling .calculatePRRIfApplicable" should {
+
+    "with no privateResidenceReliefModel" should {
+
+      val totalGainResultsModelWithGain = TotalGainResultsModel(100, None, None)
+      val prrModel = None
+
+      val target = setupTarget(modelWithMultipleGains, Some(totalGainResultsModelWithGain), prrModel, None)
+      lazy val result = target.calculatePRRIfApplicable(modelWithMultipleGains, prrModel)
+
+      "return a None" in {
+        await(result) shouldEqual None
+      }
+    }
+
+    "with a valid PRR model" should {
+
+      val totalGainResultsModelWithGain = TotalGainResultsModel(100, Some(100), None)
+      val prrModel = PrivateResidenceReliefModel("Yes", Some(3), None)
+      val calculationResultsWithPRRModel = CalculationResultsWithPRRModel(GainsAfterPRRModel(100, 0, 0), None, None)
+
+      val target = setupTarget(modelWithMultipleGains, Some(totalGainResultsModelWithGain),
+        Some(prrModel), Some(individualModel), Some(calculationResultsWithPRRModel))
+      lazy val result = target.calculatePRRIfApplicable(modelWithMultipleGains, Some(prrModel))
+
+      "return a CalculationResultsWithPRRModel" in {
+        await(result.get) shouldEqual calculationResultsWithPRRModel
       }
     }
   }

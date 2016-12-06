@@ -18,7 +18,6 @@ package forms.nonresident
 
 import common.Constants
 import common.Validation._
-import models._
 import models.nonresident.AcquisitionValueModel
 import play.api.data.Forms._
 import play.api.data._

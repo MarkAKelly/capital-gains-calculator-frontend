@@ -221,11 +221,11 @@ object SummaryReportConstructor {
                     "&pound;" + MoneyPounds(summary.personalAllowanceModel.get.personalAllowanceAmt).quantity,
                     None
                   ),
-                  SummaryDataItemModel(
-                    Messages("calc.otherProperties.questionTwo"),
-                    "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
-                    None
-                  ),
+//                  SummaryDataItemModel(
+//                    Messages("calc.otherProperties.questionTwo"),
+//                    "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
+//                    None
+//                  ),
                   SummaryDataItemModel(
                     Messages("calc.annualExemptAmount.question"),
                     "&pound;" + MoneyPounds(summary.annualExemptAmountModel.get.annualExemptAmount).quantity,
@@ -244,11 +244,11 @@ object SummaryReportConstructor {
                     "&pound;" + MoneyPounds(summary.currentIncomeModel.get.currentIncome).quantity,
                     None
                   ),
-                  SummaryDataItemModel(
-                    Messages("calc.otherProperties.questionTwo"),
-                    "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
-                    None
-                  ),
+//                  SummaryDataItemModel(
+//                    Messages("calc.otherProperties.questionTwo"),
+//                    "&pound;" + MoneyPounds(summary.otherPropertiesModel.otherPropertiesAmt.get).quantity,
+//                    None
+//                  ),
                   SummaryDataItemModel(
                     Messages("calc.annualExemptAmount.question"),
                     "&pound;" + MoneyPounds(summary.annualExemptAmountModel.get.annualExemptAmount).quantity,

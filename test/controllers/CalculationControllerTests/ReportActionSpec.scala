@@ -31,6 +31,7 @@ import constructors.nonresident.AnswersConstructor
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import models.nonresident._
 import common.nonresident.CalculationType
+import common.nonresident.CustomerTypeKeys
 
 import scala.concurrent.Future
 
@@ -43,7 +44,9 @@ class ReportActionSpec extends UnitSpec with WithFakeApplication with FakeReques
     taxYearModel: Option[TaxYearModel],
     calculationElectionModel: CalculationElectionModel,
     prrModel: Option[PrivateResidenceReliefModel] = None,
-    calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel] = None
+    calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel] = None,
+    finalSummaryModel: TotalPersonalDetailsCalculationModel,
+    taxOwedResult: Option[CalculationResultsWithTaxOwedModel] = None
   ): ReportController = {
 
     lazy val mockCalculatorConnector = mock[CalculatorConnector]
@@ -51,6 +54,9 @@ class ReportActionSpec extends UnitSpec with WithFakeApplication with FakeReques
 
     when(mockAnswersConstructor.getNRTotalGainAnswers(Matchers.any()))
       .thenReturn(Future.successful(totalGainAnswersModel))
+
+    when(mockAnswersConstructor.getPersonalDetailsAndPreviousCapitalGainsAnswers(Matchers.any()))
+      .thenReturn(Future.successful(Some(finalSummaryModel)))
 
     when(mockCalculatorConnector.fetchAndGetFormData[CalculationElectionModel](Matchers.eq(KeystoreKeys.calculationElection))(Matchers.any(), Matchers.any()))
       .thenReturn(Some(calculationElectionModel))
@@ -67,6 +73,18 @@ class ReportActionSpec extends UnitSpec with WithFakeApplication with FakeReques
     when(mockCalculatorConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.eq(KeystoreKeys.privateResidenceRelief))
       (Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(prrModel))
+
+    when(mockCalculatorConnector.getFullAEA(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(BigDecimal(11000))))
+
+    when(mockCalculatorConnector.getPartialAEA(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(BigDecimal(5500))))
+
+    when(mockCalculatorConnector.calculateNRCGTTotalTax(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(taxOwedResult))
+
+    when(mockCalculatorConnector.getTaxYear(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(TaxYearModel("2015/16", true, "2015/16"))))
 
     new ReportController {
       override val calcConnector: CalculatorConnector = mockCalculatorConnector
@@ -90,6 +108,19 @@ class ReportActionSpec extends UnitSpec with WithFakeApplication with FakeReques
     ImprovementsModel("Yes", Some(10), Some(20)),
     Some(OtherReliefsModel(30)))
 
+  val finalAnswersModel = TotalPersonalDetailsCalculationModel(
+    CustomerTypeModel(CustomerTypeKeys.personalRep),
+    None,
+    None,
+    None,
+    OtherPropertiesModel("No"),
+    None,
+    None,
+    None,
+    None,
+    BroughtForwardLossesModel(false, None)
+  )
+
   "ReportController" should {
     "use the correct calculator connector" in {
       ReportController.calcConnector shouldBe CalculatorConnector
@@ -111,7 +142,8 @@ class ReportActionSpec extends UnitSpec with WithFakeApplication with FakeReques
         model,
         Some(TotalGainResultsModel(1000, None, None)),
         Some(taxYear),
-        CalculationElectionModel(CalculationType.flat)
+        CalculationElectionModel(CalculationType.flat),
+        finalSummaryModel = finalAnswersModel
       )
 
       lazy val result = target.summaryReport(fakeRequestWithSession)
@@ -144,7 +176,8 @@ class ReportActionSpec extends UnitSpec with WithFakeApplication with FakeReques
         Some(taxYear),
         CalculationElectionModel(CalculationType.flat),
         Some(PrivateResidenceReliefModel("Yes", Some(200), None)),
-        Some(CalculationResultsWithPRRModel(GainsAfterPRRModel(10000, 2000, 1000), None, None))
+        Some(CalculationResultsWithPRRModel(GainsAfterPRRModel(10000, 2000, 1000), None, None)),
+        finalSummaryModel = finalAnswersModel
       )
 
       lazy val result = target.summaryReport(fakeRequestWithSession)
@@ -174,7 +207,8 @@ class ReportActionSpec extends UnitSpec with WithFakeApplication with FakeReques
         model,
         Some(TotalGainResultsModel(1000, Some(2000), None)),
         Some(taxYear),
-        CalculationElectionModel(CalculationType.rebased)
+        CalculationElectionModel(CalculationType.rebased),
+        finalSummaryModel = finalAnswersModel
       )
 
       lazy val result = target.summaryReport(fakeRequestWithSession)
@@ -205,7 +239,8 @@ class ReportActionSpec extends UnitSpec with WithFakeApplication with FakeReques
         model,
         Some(TotalGainResultsModel(1000, None, Some(3000))),
         Some(taxYear),
-        CalculationElectionModel(CalculationType.timeApportioned)
+        CalculationElectionModel(CalculationType.timeApportioned),
+        finalSummaryModel = finalAnswersModel
       )
 
       lazy val result = target.summaryReport(fakeRequestWithSession)
@@ -234,7 +269,8 @@ class ReportActionSpec extends UnitSpec with WithFakeApplication with FakeReques
         model,
         Some(TotalGainResultsModel(1000, None, None)),
         Some(taxYear),
-        CalculationElectionModel(CalculationType.flat)
+        CalculationElectionModel(CalculationType.flat),
+        finalSummaryModel = finalAnswersModel
       )
 
       lazy val result = target.summaryReport(fakeRequest)
