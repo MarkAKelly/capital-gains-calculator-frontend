@@ -16,10 +16,10 @@
 
 package controllers.nonresident
 
-import common.{KeystoreKeys, TaxDates}
 import common.nonresident.{CalculationType, CustomerTypeKeys}
+import common.{KeystoreKeys, TaxDates}
 import connectors.CalculatorConnector
-import constructors.nonresident.{AnswersConstructor, SummaryConstructor}
+import constructors.nonresident.AnswersConstructor
 import controllers.predicates.ValidActiveSession
 import it.innove.play.pdf.PdfGenerator
 import models.nonresident._
