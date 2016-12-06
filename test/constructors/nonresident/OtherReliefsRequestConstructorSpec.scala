@@ -77,4 +77,110 @@ class OtherReliefsRequestConstructorSpec extends UnitSpec with AssertHelpers wit
       }
     }
   }
+
+  "Calling .getOtherReliefsTimeApportionedRow" when {
+
+    "provided with no model" should {
+      val result = OtherReliefsRequestConstructor.getOtherReliefsTimeApportionedRow(None, CalculationElectionModel(CalculationType.timeApportioned))
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "provided with no value for other reliefs" should {
+      val result = OtherReliefsRequestConstructor.getOtherReliefsTimeApportionedRow(Some(OtherReliefsModel(0)),
+        CalculationElectionModel(CalculationType.timeApportioned))
+
+      "should return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "provided with a calculation type which is not time apportioned" should {
+      val result = OtherReliefsRequestConstructor.getOtherReliefsTimeApportionedRow(Some(OtherReliefsModel(10)), CalculationElectionModel(CalculationType.flat))
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "provided with a time apportioned calculation and other reliefs value" should {
+      lazy val result = OtherReliefsRequestConstructor.getOtherReliefsTimeApportionedRow(Some(OtherReliefsModel(10)),
+        CalculationElectionModel(CalculationType.timeApportioned))
+
+      "return a QuestionAnswerModel" in {
+        result.isDefined shouldBe true
+      }
+
+      s"have a question of ${messages.OtherReliefs.question}" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.question shouldBe messages.OtherReliefs.question)
+      }
+
+      s"have an id of ${KeystoreKeys.otherReliefsTA}" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.id shouldBe KeystoreKeys.otherReliefsTA)
+      }
+
+      "have a value of 10" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.data shouldBe 10)
+      }
+
+      "have no link" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.link shouldBe None)
+      }
+    }
+  }
+
+  "Calling .getOtherReliefsFlatRow" when {
+
+    "provided with no model" should {
+      val result = OtherReliefsRequestConstructor.getOtherReliefsFlatRow(None, CalculationElectionModel(CalculationType.flat))
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "provided with no value for other reliefs" should {
+      val result = OtherReliefsRequestConstructor.getOtherReliefsFlatRow(Some(OtherReliefsModel(0)),
+        CalculationElectionModel(CalculationType.flat))
+
+      "should return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "provided with a calculation type which is not flat" should {
+      val result = OtherReliefsRequestConstructor.getOtherReliefsFlatRow(Some(OtherReliefsModel(10)), CalculationElectionModel(CalculationType.rebased))
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
+    "provided with a flat calculation and other reliefs value" should {
+      lazy val result = OtherReliefsRequestConstructor.getOtherReliefsFlatRow(Some(OtherReliefsModel(10)),
+        CalculationElectionModel(CalculationType.flat))
+
+      "return a QuestionAnswerModel" in {
+        result.isDefined shouldBe true
+      }
+
+      s"have a question of ${messages.OtherReliefs.question}" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.question shouldBe messages.OtherReliefs.question)
+      }
+
+      s"have an id of ${KeystoreKeys.otherReliefsFlat}" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.id shouldBe KeystoreKeys.otherReliefsFlat)
+      }
+
+      "have a value of 10" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.data shouldBe 10)
+      }
+
+      "have no link" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.link shouldBe None)
+      }
+    }
+  }
 }

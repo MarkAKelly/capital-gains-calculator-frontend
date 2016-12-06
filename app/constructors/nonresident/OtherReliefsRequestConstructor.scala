@@ -45,4 +45,31 @@ object OtherReliefsRequestConstructor {
     }
   }
 
+  def getOtherReliefsTimeApportionedRow(timeApportionedReliefs: Option[OtherReliefsModel],
+                                calculationElectionModel: CalculationElectionModel): Option[QuestionAnswerModel[BigDecimal]] = {
+    (calculationElectionModel, timeApportionedReliefs) match {
+      case (CalculationElectionModel(CalculationType.timeApportioned), Some(OtherReliefsModel(value))) if value > 0 =>
+        Some(QuestionAnswerModel(
+          s"${KeystoreKeys.otherReliefsTA}",
+          value,
+          Messages("calc.otherReliefs.question"),
+          None
+        ))
+      case _ => None
+    }
+  }
+
+  def getOtherReliefsFlatRow(flatReliefs: Option[OtherReliefsModel],
+                                calculationElectionModel: CalculationElectionModel): Option[QuestionAnswerModel[BigDecimal]] = {
+    (calculationElectionModel, flatReliefs) match {
+      case (CalculationElectionModel(CalculationType.flat), Some(OtherReliefsModel(value))) if value > 0 =>
+        Some(QuestionAnswerModel(
+          s"${KeystoreKeys.otherReliefsFlat}",
+          value,
+          Messages("calc.otherReliefs.question"),
+          None
+        ))
+      case _ => None
+    }
+  }
 }
