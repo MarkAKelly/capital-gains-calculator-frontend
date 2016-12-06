@@ -16,8 +16,8 @@
         case date: LocalDate => datePageFormatNoZero.format(date)
         case boolean: Boolean => if (boolean) "Yes" else "No"
         case (taxGain: BigDecimal, taxRate: Int, additionalGain: BigDecimal, additionalRate: Int) => {
-            <p class="lede summary-answer">{Messages("calc.summary.calculation.details.taxRateValue", s"£${MoneyPounds(taxGain, 2).quantity}", taxRate)}</p>
-            <p class="lede summary-answer">{Messages("calc.summary.calculation.details.taxRateValue", s"£${MoneyPounds(additionalGain, 2).quantity}", additionalRate)}</p>
+            <p class="lede">{Messages("calc.summary.calculation.details.taxRateValue", s"£${MoneyPounds(taxGain, 2).quantity}", taxRate)}</p>
+            <p class="lede">{Messages("calc.summary.calculation.details.taxRateValue", s"£${MoneyPounds(additionalGain, 2).quantity}", additionalRate)}</p>
         }
         case _ => ""
         }
