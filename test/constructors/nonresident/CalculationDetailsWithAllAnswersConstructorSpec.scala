@@ -348,4 +348,47 @@ class CalculationDetailsWithAllAnswersConstructorSpec extends UnitSpec with With
       }
     }
   }
+
+  "Calling otherReliefsUsedRow" should {
+
+    "other reliefs have been used" should {
+      lazy val result = CalculationDetailsWithAllAnswersConstructor.otherReliefsUsedRow(Some(1000))
+
+      "have a question answer model" in {
+        result.isDefined shouldBe true
+      }
+
+      s"have a question of ${messages.Summary.otherReliefsUsed}" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.question shouldBe messages.Summary.otherReliefsUsed)
+      }
+
+      "have an id of calcDetails:otherReliefsUsed" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.id shouldBe "calcDetails:otherReliefsUsed")
+      }
+
+      "have a value of 1000" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.data shouldBe 1000)
+      }
+
+      "have no link" in {
+        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.link shouldBe None)
+      }
+    }
+
+    "an aea of 0 has been used" should {
+      lazy val result = CalculationDetailsWithAllAnswersConstructor.otherReliefsUsedRow(Some(0))
+
+      "return a None" in {
+        result.isDefined shouldBe false
+      }
+    }
+
+    "a None is returned for aea used" should {
+      lazy val result = CalculationDetailsWithAllAnswersConstructor.otherReliefsUsedRow(None)
+
+      "return a None" in {
+        result.isDefined shouldBe false
+      }
+    }
+  }
 }

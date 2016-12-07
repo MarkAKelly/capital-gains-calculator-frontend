@@ -381,7 +381,7 @@ class CalculationDetailsWithPRRConstructorSpec extends UnitSpec with WithFakeApp
       }
 
       "return correct question for the prr used details" in {
-        assertExpectedResult(result)(_.question shouldBe messages.prrUSed)
+        assertExpectedResult(result)(_.question shouldBe messages.prrUsed)
       }
 
       "return correct answer for the prr used details" in {
@@ -406,7 +406,7 @@ class CalculationDetailsWithPRRConstructorSpec extends UnitSpec with WithFakeApp
       }
 
       "return correct question for the prr used details" in {
-        assertExpectedResult(result)(_.question shouldBe messages.prrUSed)
+        assertExpectedResult(result)(_.question shouldBe messages.prrUsed)
       }
 
       "return correct answer for the prr used details" in {
