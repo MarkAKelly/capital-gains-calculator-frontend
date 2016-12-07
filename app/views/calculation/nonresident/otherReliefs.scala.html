@@ -6,13 +6,13 @@
 @(otherReliefsForm: Form[OtherReliefsModel], chargeableGain: BigDecimal, gain: BigDecimal)(implicit request: Request[_])
 
 @helpContent = {
-    <div class="form-hint">
+    <div id="otherReliefHelp" class="form-hint">
         @Messages("calc.otherReliefs.help")
         <br/>
         @Messages("calc.otherReliefs.helpTwo")
     </div>
 
-    <div class="panel-indent panel-indent--gutter panel-indent--wide">
+    <div id="otherReliefHelpTwo" class="panel-indent panel-indent--gutter panel-indent--wide">
         <p class="form-hint">
             @if(chargeableGain < 0) {
                 @Messages("calc.otherReliefs.gainInfo.part1.loss")
@@ -40,16 +40,18 @@
     <h1 class="heading-xlarge">@Messages("calc.otherReliefs.question")</h1>
 
     <div class="form-group">
+
+        @helpContent
+
         @form(action = controllers.nonresident.routes.OtherReliefsController.submitOtherReliefs) {
 
             @formInputMoney(otherReliefsForm,
                 "otherReliefs",
                 Messages("calc.otherReliefs.question"),
-                hideLabel = true,
-                helpText = Some(helpContent.toString)
+                hideLabel = true
             )
 
-            <button class="button" class="button" id="continue-button">@Messages("calc.base.button.continue")</button>
+            <button class="button" id="continue-button">@Messages("calc.base.button.continue")</button>
         }
     </div>
 }
