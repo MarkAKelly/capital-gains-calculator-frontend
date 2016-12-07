@@ -127,15 +127,15 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
 
       "have the correct additional help text" in {
         val expectedText = messages.OtherReliefs.additionalHelp(totalGain, totalChargeableGain)
-        document.body().select("form p.form-hint").text() shouldBe expectedText
+        document.body().select("#otherReliefHelpTwo").text() shouldBe expectedText
       }
 
       "have the words 'total loss' in the additional help text" in {
-        document.body().select("form p.form-hint").text() should include("total loss of £1,234")
+        document.body().select("#otherReliefHelpTwo").text() should include("total loss of £1,234")
       }
 
       "have the words 'allowable loss' in the additional help text" in {
-        document.body().select("form p.form-hint").text() should include("an allowable loss of £4,321")
+        document.body().select("#otherReliefHelpTwo").text() should include("an allowable loss of £4,321")
       }
     }
 
