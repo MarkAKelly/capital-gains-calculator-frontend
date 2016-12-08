@@ -195,6 +195,66 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
       }
     }
 
+    "submitting a valid calculation election using the flat reliefs button" should {
+      lazy val request = fakeRequestToPOSTWithSession(("calculationElection", "flat"), ("action", "flat"))
+      lazy val target = setupTarget(
+        None,
+        None,
+        Some(TotalGainResultsModel(0, Some(0), Some(0))),
+        seq,
+        finalAnswersModel
+      )
+      lazy val result = target.submitCalculationElection(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the other reliefs flat page" in {
+        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsFlatController.otherReliefsFlat()}")
+      }
+    }
+
+    "submitting a valid calculation election using the rebased reliefs button" should {
+      lazy val request = fakeRequestToPOSTWithSession(("calculationElection", "rebased"), ("action", "rebased"))
+      lazy val target = setupTarget(
+        None,
+        None,
+        Some(TotalGainResultsModel(0, Some(0), Some(0))),
+        seq,
+        finalAnswersModel
+      )
+      lazy val result = target.submitCalculationElection(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the other reliefs rebased page" in {
+        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsRebasedController.otherReliefsRebased()}")
+      }
+    }
+
+    "submitting a valid calculation election using the time apportioned reliefs button" should {
+      lazy val request = fakeRequestToPOSTWithSession(("calculationElection", "time"), ("action", "time"))
+      lazy val target = setupTarget(
+        None,
+        None,
+        Some(TotalGainResultsModel(0, Some(0), Some(0))),
+        seq,
+        finalAnswersModel
+      )
+      lazy val result = target.submitCalculationElection(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the other reliefs flat page" in {
+        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsTAController.otherReliefsTA()}")
+      }
+    }
+
     "submitting an invalid calculation election" should {
 
       lazy val request = fakeRequestToPOSTWithSession(("calculationElection", "fehuifoh"))
