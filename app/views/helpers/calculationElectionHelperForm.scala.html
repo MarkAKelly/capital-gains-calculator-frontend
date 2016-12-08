@@ -1,4 +1,4 @@
-@(field: Field, radioOptions: Seq[(String, String, String, Option[String])], args: (Symbol, Any)*)(implicit lang: play.api.i18n.Lang)
+@(field: Field, radioOptions: Seq[(String, String, String, Option[String], Option[BigDecimal])], args: (Symbol, Any)*)(implicit lang: play.api.i18n.Lang)
 
 @import play.api.i18n._
 @import views.html.helper._
@@ -26,7 +26,7 @@
         }
         @elements.errors.map{error => <span class="error-notification">@Messages("calc.base.optionReqError")</span>}
 
-        @radioOptions.map { case (value, amount, message, dateMessage) =>
+        @radioOptions.map { case (value, amount, message, dateMessage, otherReliefs) =>
             @defining(s"${elements.field.name}-${value.toLowerCase.replace(" ","_")}")  { inputId =>
                 <div>
                     <label for="@inputId"
@@ -45,6 +45,21 @@
                             <p id="@radioParaId"><span class="bold-xsmall block">@Messages("calc.calculationElection.based")</span><br> @message <span class="no-wrap">@dateMessage</span></p>
                         }
                     </label>
+
+                    @{
+                        if(otherReliefs.isDefined && otherReliefs.get > 0){
+                            <div class="panel panel-indent additional-option-block">
+                                <span class="align-bottom">@Messages("calc.calculationElection.someOtherRelief")</span>
+                                <button id="@value-button" name="action" value="@value" class="button button--link">
+                                    <span class="bold-medium">&pound;@MoneyPounds(otherReliefs.getOrElse(0)).quantity</span>
+                                </button>
+                            </div>
+                            } else if (otherReliefs.isDefined) {
+                            <div class="panel panel-indent additional-option-block">
+                                <button id="@value-button" name="action" value="@value" class="button button--link">@Messages("calc.calculationElection.otherRelief")</button>
+                            </div>
+                        }
+                    }
                 </div>
             }
         }

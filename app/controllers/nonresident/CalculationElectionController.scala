@@ -113,7 +113,7 @@ trait CalculationElectionController extends FrontendController with ValidActiveS
       }
     }
 
-    def action(content: Seq[(String, String, String, Option[String])]) =
+    def action(content: Seq[(String, String, String, Option[String], Option[BigDecimal])]) =
       calcConnector.fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection).map {
         case Some(data) =>
           Ok(calculation.nonresident.calculationElection(
