@@ -20,7 +20,7 @@ import common.Dates._
 import common.KeystoreKeys
 import common.KeystoreKeys.{ResidentPropertyKeys, ResidentShareKeys}
 import config.{CalculatorSessionCache, WSHttp}
-import constructors.nonresident.{CalculateRequestConstructor, PrivateResidenceReliefRequestConstructor, TotalGainRequestConstructor}
+import constructors.nonresident._
 import constructors.resident.{shares, properties => propertyConstructor}
 import models._
 import play.api.libs.json.Format
@@ -65,9 +65,28 @@ trait CalculatorConnector {
                                   (implicit hc: HeaderCarrier): Future[Option[nonresident.CalculationResultsWithPRRModel]] = {
     http.GET[Option[nonresident.CalculationResultsWithPRRModel]](s"$serviceUrl/capital-gains-calculator/non-resident/calculate-gain-after-prr?${
       TotalGainRequestConstructor.totalGainQuery(totalGainAnswersModel) +
-        PrivateResidenceReliefRequestConstructor.privateResidenceReliefQuery(totalGainAnswersModel, privateResidenceReliefModel)
+        PrivateResidenceReliefRequestConstructor.privateResidenceReliefQuery(totalGainAnswersModel, Some(privateResidenceReliefModel))
     }")
   }
+
+  //########################################################################################################################################
+
+  def calculateNRCGTTotalTax(totalGainAnswersModel: nonresident.TotalGainAnswersModel,
+                             privateResidenceReliefModel: Option[nonresident.PrivateResidenceReliefModel],
+                             totalTaxPersonalDetailsModel: nonresident.TotalPersonalDetailsCalculationModel,
+                             maxAnnualExemptAmount: BigDecimal,
+                             otherReliefs: Option[nonresident.AllOtherReliefsModel] = None)(implicit hc: HeaderCarrier):
+  Future[Option[nonresident.CalculationResultsWithTaxOwedModel]] = {
+
+    http.GET[Option[nonresident.CalculationResultsWithTaxOwedModel]](s"$serviceUrl/capital-gains-calculator/non-resident/calculate-tax-owed?${
+      TotalGainRequestConstructor.totalGainQuery(totalGainAnswersModel) +
+        PrivateResidenceReliefRequestConstructor.privateResidenceReliefQuery(totalGainAnswersModel, privateResidenceReliefModel) +
+        FinalTaxAnswersRequestConstructor.additionalParametersQuery(totalTaxPersonalDetailsModel, maxAnnualExemptAmount) +
+        OtherReliefsRequestConstructor.otherReliefsQuery(otherReliefs)
+    }")
+  }
+
+  //########################################################################################################################################
 
   def calculateFlat(input: nonresident.SummaryModel)(implicit hc: HeaderCarrier): Future[Option[nonresident.CalculationResultModel]] = {
     http.GET[Option[nonresident.CalculationResultModel]](s"$serviceUrl/capital-gains-calculator/calculate-flat?${
@@ -114,7 +133,7 @@ trait CalculatorConnector {
     http.GET[Option[resident.TaxYearModel]](s"$serviceUrl/capital-gains-calculator/tax-year?date=$taxYear")
   }
 
-  def clearKeystore(implicit hc: HeaderCarrier):Future[HttpResponse] = {
+  def clearKeystore(implicit hc: HeaderCarrier): Future[HttpResponse] = {
     sessionCache.remove()
   }
 
@@ -226,7 +245,7 @@ trait CalculatorConnector {
       case _ => None
     }
 
-    val acquisitionValue = fetchAndGetFormData[resident.AcquisitionValueModel](ResidentPropertyKeys.acquisitionValue).map{
+    val acquisitionValue = fetchAndGetFormData[resident.AcquisitionValueModel](ResidentPropertyKeys.acquisitionValue).map {
       case Some(data) => Some(data.amount)
       case _ => None
     }
@@ -309,6 +328,7 @@ trait CalculatorConnector {
       boughtForLessThanWorth
     )
   }
+
   //scalastyle:on
 
   def getPropertyDeductionAnswers(implicit hc: HeaderCarrier): Future[resident.properties.ChargeableGainAnswers] = {
@@ -428,6 +448,7 @@ trait CalculatorConnector {
       acquisitionCosts
     )
   }
+
   //scalastyle:on
 
   def getShareDeductionAnswers(implicit hc: HeaderCarrier): Future[resident.shares.DeductionGainAnswersModel] = {

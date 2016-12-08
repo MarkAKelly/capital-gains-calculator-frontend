@@ -22,24 +22,24 @@ import models.nonresident.{AcquisitionDateModel, PrivateResidenceReliefModel, Re
 object PrivateResidenceReliefRequestConstructor {
 
   def privateResidenceReliefQuery(totalGainAnswersModel: TotalGainAnswersModel,
-                                  privateResidenceReliefModel: PrivateResidenceReliefModel): String = {
+                                  privateResidenceReliefModel: Option[PrivateResidenceReliefModel]): String = {
     eligibleForPrivateResidenceRelief(privateResidenceReliefModel) +
     daysClaimed(totalGainAnswersModel, privateResidenceReliefModel) +
     daysClaimedAfter(totalGainAnswersModel, privateResidenceReliefModel)
   }
 
-  def eligibleForPrivateResidenceRelief(privateResidenceReliefModel: PrivateResidenceReliefModel): String = {
+  def eligibleForPrivateResidenceRelief(privateResidenceReliefModel: Option[PrivateResidenceReliefModel]): String = {
     privateResidenceReliefModel match {
-      case PrivateResidenceReliefModel("Yes", _, _) => "&claimingPRR=true"
+      case Some(PrivateResidenceReliefModel("Yes", _, _)) => "&claimingPRR=true"
       case _ => "&claimingPRR=false"
     }
   }
 
   def daysClaimed(totalGainAnswersModel: TotalGainAnswersModel,
-                  privateResidenceReliefModel: PrivateResidenceReliefModel): String = {
+                  privateResidenceReliefModel: Option[PrivateResidenceReliefModel]): String = {
 
     (privateResidenceReliefModel, totalGainAnswersModel.acquisitionDateModel) match {
-      case (PrivateResidenceReliefModel("Yes", Some(value), _), AcquisitionDateModel("Yes",_,_,_))
+      case (Some(PrivateResidenceReliefModel("Yes", Some(value), _)), AcquisitionDateModel("Yes",_,_,_))
         if totalGainAnswersModel.acquisitionDateModel.get.plusMonths(18).isBefore(totalGainAnswersModel.disposalDateModel.get) =>
         s"&daysClaimed=$value"
       case _ => ""
@@ -47,13 +47,13 @@ object PrivateResidenceReliefRequestConstructor {
   }
 
   def daysClaimedAfter(totalGainAnswersModel: TotalGainAnswersModel,
-                       privateResidenceReliefModel: PrivateResidenceReliefModel): String = {
+                       privateResidenceReliefModel: Option[PrivateResidenceReliefModel]): String = {
     (privateResidenceReliefModel, totalGainAnswersModel.acquisitionDateModel, totalGainAnswersModel.rebasedValueModel) match {
-      case (PrivateResidenceReliefModel("Yes", _, Some(value)), AcquisitionDateModel("Yes",_,_,_), _)
+      case (Some(PrivateResidenceReliefModel("Yes", _, Some(value))), AcquisitionDateModel("Yes",_,_,_), _)
         if totalGainAnswersModel.acquisitionDateModel.get.plusMonths(18).isBefore(totalGainAnswersModel.disposalDateModel.get) &&
         !TaxDates.dateAfterStart(totalGainAnswersModel.acquisitionDateModel.get) =>
         s"&daysClaimedAfter=$value"
-      case (PrivateResidenceReliefModel("Yes", _, Some(value)), AcquisitionDateModel("No",_,_,_), Some(RebasedValueModel(Some(_)))) =>
+      case (Some(PrivateResidenceReliefModel("Yes", _, Some(value))), AcquisitionDateModel("No",_,_,_), Some(RebasedValueModel(Some(_)))) =>
         s"&daysClaimedAfter=$value"
       case _ => ""
     }

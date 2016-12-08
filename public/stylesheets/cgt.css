@@ -263,6 +263,15 @@
     float: left;
 }
 
+.pdf-non-resident .grid-layout__column--1-2 {
+    width: 50%;
+    vertical-align: top;
+    box-sizing: border-box;
+    display: table;
+    text-align: left;
+    float: left;
+}
+
 .pdf-non-resident .pdf-header {
     width: 100%;
 }
@@ -274,4 +283,13 @@
     border-bottom: 2px solid #BFC1C3;
     position: relative;
         right: 1.2em;
+}
+
+.money-label {
+    display:block;
+}
+
+.pdf-non-resident p.lede {
+    position: relative;
+        bottom: 1.0em
 }

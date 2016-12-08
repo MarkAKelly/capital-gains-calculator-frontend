@@ -49,7 +49,7 @@ class HowBecameOwnerViewSpec extends UnitSpec with WithFakeApplication with Mock
           backLink.text shouldBe commonMessages.back
         }
 
-        s"has a route to 'sold-or-given-away'" in {
+        s"has a route to acquisition date" in {
           backLink.attr("href") shouldBe controllers.nonresident.routes.AcquisitionDateController.acquisitionDate().url
         }
       }

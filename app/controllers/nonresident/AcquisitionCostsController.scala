@@ -32,7 +32,6 @@ import scala.concurrent.Future
 
 object AcquisitionCostsController extends AcquisitionCostsController{
   val calcConnector = CalculatorConnector
-  val calcElectionConstructor = CalculationElectionConstructor
 }
 
 trait AcquisitionCostsController extends FrontendController with ValidActiveSession {
@@ -40,7 +39,7 @@ trait AcquisitionCostsController extends FrontendController with ValidActiveSess
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
   val calcConnector: CalculatorConnector
-  val calcElectionConstructor: CalculationElectionConstructor
+  val calcElectionConstructor = CalculationElectionConstructor
 
   def getBackLink(implicit hc:HeaderCarrier): Future[String] = {
     val getAcquisitionDate = calcConnector.fetchAndGetFormData[AcquisitionDateModel](KeystoreKeys.acquisitionDate)

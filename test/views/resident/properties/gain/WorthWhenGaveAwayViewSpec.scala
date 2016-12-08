@@ -96,11 +96,11 @@ class WorthWhenGaveAwayViewSpec extends UnitSpec with WithFakeApplication with F
           lazy val label = doc.select("label")
 
           s"has the text ${messages.title}" in {
-            label.select("div > span").text() shouldEqual messages.title
+            label.select("span").first().text() shouldEqual messages.title
           }
 
           "has the class visually hidden" in {
-            label.select("div > span").hasClass("visuallyhidden") shouldEqual true
+            label.select("span").hasClass("visuallyhidden") shouldEqual true
           }
 
           "is tied to the input field" in {

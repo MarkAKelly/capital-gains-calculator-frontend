@@ -24,12 +24,13 @@ import org.jsoup.Jsoup
 import assets.MessageLookup.NonResident.{CustomerType => messages}
 import assets.MessageLookup.{NonResident => commonMessages}
 import controllers.helpers.FakeRequestHelper
+import controllers.nonresident.PrivateResidenceReliefController
 
 class CustomerTypeViewSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
   "The Customer Type View" should {
-
-    lazy val view = customerType(customerTypeForm)(fakeRequest)
+    val dummyBackLink = controllers.nonresident.routes.PrivateResidenceReliefController.privateResidenceRelief().url
+    lazy val view = customerType(customerTypeForm, dummyBackLink)(fakeRequest)
     lazy val document = Jsoup.parse(view.body)
 
     "return some HTML that" which {
@@ -42,11 +43,11 @@ class CustomerTypeViewSpec extends UnitSpec with WithFakeApplication with Mockit
         lazy val heading = document.body().select("h1")
 
         "has a class of heading-large" in {
-          heading.attr("class") shouldBe "heading-large"
+          heading.attr("class") shouldBe "heading-xlarge"
         }
 
         s"has the text '${commonMessages.pageHeading}'" in {
-          heading.text shouldBe commonMessages.pageHeading
+          heading.text shouldBe messages.question
         }
       }
 
@@ -66,8 +67,27 @@ class CustomerTypeViewSpec extends UnitSpec with WithFakeApplication with Mockit
         }
       }
 
-      s"have the question ${messages.question} as the legend of the input" in {
-        document.body.getElementsByTag("legend").text shouldEqual messages.question
+      s"have a legend" which {
+        lazy val legend = document.body.getElementsByTag("legend")
+        s"has the help text ${messages.question}" in {
+          legend.text shouldEqual messages.question
+        }
+
+        "has the class 'visually-hidden'" in {
+          legend.attr("class") shouldBe "visuallyhidden"
+        }
+
+        s"have a back link" which {
+          lazy val backLink = document.getElementById("back-link")
+          s"has the href value ${dummyBackLink}" in {
+            backLink.attr("href") shouldBe dummyBackLink
+          }
+
+          s"has the class 'back-link'" in {
+            backLink.attr("class") shouldBe "back-link"
+          }
+        }
+
       }
 
       s"display a radio button with the option ${messages.individual}" in {

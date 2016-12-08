@@ -43,7 +43,6 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
                   boughtForLessData: Option[BoughtForLessModel] = None): AcquisitionCostsController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
-    val mockCalcElectionConstructor = mock[CalculationElectionConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[AcquisitionCostsModel](Matchers.eq(KeystoreKeys.acquisitionCosts))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -59,7 +58,6 @@ class AcquisitionCostsSpec extends UnitSpec with WithFakeApplication with Mockit
 
     new AcquisitionCostsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val calcElectionConstructor: CalculationElectionConstructor = mockCalcElectionConstructor
     }
   }
 
