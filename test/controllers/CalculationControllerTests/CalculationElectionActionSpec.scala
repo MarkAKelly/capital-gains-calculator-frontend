@@ -59,7 +59,7 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
     when(mockCalcConnector.calculateTotalGain(Matchers.any())(Matchers.any()))
       .thenReturn(totalGainResultsModel)
 
-    when(mockCalcElectionConstructor.generateElection(Matchers.any(), Matchers.any(), Matchers.any()))
+    when(mockCalcElectionConstructor.generateElection(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(contentElements))
 
     when(mockCalcAnswersConstructor.getPersonalDetailsAndPreviousCapitalGainsAnswers(Matchers.any()))

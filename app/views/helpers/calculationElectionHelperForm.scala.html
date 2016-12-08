@@ -49,14 +49,14 @@
                     @{
                         if(otherReliefs.isDefined && otherReliefs.get > 0){
                             <div class="panel panel-indent additional-option-block">
-                                <span class="align-bottom">@Messages("calc.calculationElection.someOtherRelief")</span>
-                                <button id="@value-button" name="action" value="@value" class="button button--link">
-                                    <span class="bold-medium">&pound;@MoneyPounds(otherReliefs.getOrElse(0)).quantity</span>
+                                <span class="align-bottom">{Messages("calc.calculationElection.someOtherRelief")}</span>
+                                <button id={s"$value-button"} name="action" value={value} class="button button--link">
+                                    <span class="bold-medium">&pound;{MoneyPounds(otherReliefs.getOrElse(0)).quantity}</span>
                                 </button>
                             </div>
                             } else if (otherReliefs.isDefined) {
                             <div class="panel panel-indent additional-option-block">
-                                <button id="@value-button" name="action" value="@value" class="button button--link">@Messages("calc.calculationElection.otherRelief")</button>
+                                <button id={s"$value-button"} name="action" value={value} class="button button--link">{Messages("calc.calculationElection.otherRelief")}</button>
                             </div>
                         }
                     }
