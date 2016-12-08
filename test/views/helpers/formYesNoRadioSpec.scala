@@ -17,7 +17,7 @@
 package views.helpers
 
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import forms.nonresident.AcquisitionCostsForm._
+import forms.resident.OtherPropertiesForm._
 import org.jsoup.Jsoup
 import views.html.helpers._
 import assets.MessageLookup.{NonResident => messages}
@@ -27,27 +27,27 @@ class formYesNoRadioSpec extends UnitSpec with WithFakeApplication {
   "formYesNoRadio" when {
 
     "not supplied with help text or a legend class" should {
-      lazy val helper = formYesNoRadio(acquisitionCostsForm.apply("acquisitionCosts"), "legend")
+      lazy val helper = formYesNoRadio(otherPropertiesForm.apply("hasOtherProperties"), "legend")
       lazy val document = Jsoup.parse(helper.body)
 
-      "contain inputs with the id acquisitionCosts" in {
-        document.select("input").attr("id") should include ("acquisitionCosts")
+      "contain inputs with the id hasOtherProperties" in {
+        document.select("input").attr("id") should include ("hasOtherProperties")
       }
 
       "contain an input with the value 'Yes'" in {
-        document.select("[for=acquisitionCosts-yes] input").attr("value") shouldBe "Yes"
+        document.select("[for=hasOtherProperties-yes] input").attr("value") shouldBe "Yes"
       }
 
       "contain an input with the value 'No'" in {
-        document.select("[for=acquisitionCosts-no] input").attr("value") shouldBe "No"
+        document.select("[for=hasOtherProperties-no] input").attr("value") shouldBe "No"
       }
 
       s"contain an label with the message ${messages.yes}" in {
-        document.select("[for=acquisitionCosts-yes]").text() shouldBe messages.yes
+        document.select("[for=hasOtherProperties-yes]").text() shouldBe messages.yes
       }
 
       s"contain an label with the message ${messages.no}" in {
-        document.select("[for=acquisitionCosts-no]").text() shouldBe messages.no
+        document.select("[for=hasOtherProperties-no]").text() shouldBe messages.no
       }
 
       "have a legend" which {
@@ -61,8 +61,8 @@ class formYesNoRadioSpec extends UnitSpec with WithFakeApplication {
           legend.text() shouldBe "legend"
         }
 
-        "have a legend with the id 'acquisitionCosts'" in {
-          legend.attr("id") shouldBe "acquisitionCosts"
+        "have a legend with the id 'hasOtherProperties'" in {
+          legend.attr("id") shouldBe "hasOtherProperties"
         }
       }
 
@@ -80,7 +80,7 @@ class formYesNoRadioSpec extends UnitSpec with WithFakeApplication {
     }
 
     "supplied with help text but no legend" should {
-      lazy val helper = formYesNoRadio(acquisitionCostsForm.apply("acquisitionCosts"), "legend", helpText = Some("help"))
+      lazy val helper = formYesNoRadio(otherPropertiesForm.apply("hasOtherProperties"), "legend", helpText = Some("help"))
       lazy val document = Jsoup.parse(helper.body)
 
       "have some help text of help" in {
@@ -93,7 +93,7 @@ class formYesNoRadioSpec extends UnitSpec with WithFakeApplication {
     }
 
     "supplied with no help text but with a legend" should {
-      lazy val helper = formYesNoRadio(acquisitionCostsForm.apply("acquisitionCosts"), "legend", legendClass = Some("class"))
+      lazy val helper = formYesNoRadio(otherPropertiesForm.apply("hasOtherProperties"), "legend", legendClass = Some("class"))
       lazy val document = Jsoup.parse(helper.body)
 
       "not have any help text" in {
@@ -106,7 +106,7 @@ class formYesNoRadioSpec extends UnitSpec with WithFakeApplication {
     }
 
     "supplied with both help text and a legend" should {
-      lazy val helper = formYesNoRadio(acquisitionCostsForm.apply("acquisitionCosts"), "legend", helpText = Some("help"), legendClass = Some("class"))
+      lazy val helper = formYesNoRadio(otherPropertiesForm.apply("hasOtherProperties"), "legend", helpText = Some("help"), legendClass = Some("class"))
       lazy val document = Jsoup.parse(helper.body)
 
       "have some help text of help" in {

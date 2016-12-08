@@ -15,10 +15,13 @@
 *@
 
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import views.html.calculation.resident._
 
 @(partialUrl: String, redirectUrl: String)(implicit request: Request[_], cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever)
 
-@main_template(Messages("feedback.thankyou.title")) {
+@resident_main_template(Messages("feedback.title"),
+                        homeLink = controllers.resident.properties.routes.PropertiesController.introduction().url,
+                        navTitle = Messages("calc.base.resident.properties.home")) {
     @cachedStaticHtmlPartialRetriever.getPartialContent(partialUrl)
     <a id="back" href='@redirectUrl' role="button" tabindex="0" class="button">@Messages("calc.base.back")</a>
 }

@@ -17,13 +17,10 @@
 package connectors
 
 import common.Dates._
-import common.KeystoreKeys
 import common.KeystoreKeys.{ResidentPropertyKeys, ResidentShareKeys}
 import config.{CalculatorSessionCache, WSHttp}
-import constructors.nonresident.{CalculateRequestConstructor, FinalTaxAnswersRequestConstructor, PrivateResidenceReliefRequestConstructor, TotalGainRequestConstructor}
 import constructors.resident.{shares, properties => propertyConstructor}
 import models._
-import models.nonresident.PrivateResidenceReliefModel
 import play.api.libs.json.Format
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -54,72 +51,6 @@ trait CalculatorConnector {
     sessionCache.fetchAndGetEntry(key)
   }
 
-  def calculateTotalGain(totalGainAnswersModel: nonresident.TotalGainAnswersModel)
-                        (implicit hc: HeaderCarrier): Future[Option[nonresident.TotalGainResultsModel]] = {
-    http.GET[Option[nonresident.TotalGainResultsModel]](s"$serviceUrl/capital-gains-calculator/non-resident/calculate-total-gain?${
-      TotalGainRequestConstructor.totalGainQuery(totalGainAnswersModel)
-    }")
-  }
-
-  def calculateTaxableGainAfterPRR(totalGainAnswersModel: nonresident.TotalGainAnswersModel,
-                                   privateResidenceReliefModel: nonresident.PrivateResidenceReliefModel)
-                                  (implicit hc: HeaderCarrier): Future[Option[nonresident.CalculationResultsWithPRRModel]] = {
-    http.GET[Option[nonresident.CalculationResultsWithPRRModel]](s"$serviceUrl/capital-gains-calculator/non-resident/calculate-gain-after-prr?${
-      TotalGainRequestConstructor.totalGainQuery(totalGainAnswersModel) +
-        PrivateResidenceReliefRequestConstructor.privateResidenceReliefQuery(totalGainAnswersModel, privateResidenceReliefModel)
-    }")
-  }
-
-  //########################################################################################################################################
-
-  def calculateNRCGTTotalTax(totalGainAnswersModel: nonresident.TotalGainAnswersModel,
-                             privateResidenceReliefModel: Option[nonresident.PrivateResidenceReliefModel],
-                             totalTaxPersonalDetailsModel: nonresident.TotalPersonalDetailsCalculationModel,
-                             maxAnnualExemptAmount: BigDecimal)(implicit hc: HeaderCarrier):
-  Future[Option[nonresident.CalculationResultsWithTaxOwedModel]] = {
-
-    privateResidenceReliefModel match {
-      case Some(prrModel) =>
-        http.GET[Option[nonresident.CalculationResultsWithTaxOwedModel]](s"$serviceUrl/capital-gains-calculator/non-resident/calculate-tax-owed?${
-          TotalGainRequestConstructor.totalGainQuery(totalGainAnswersModel) +
-            PrivateResidenceReliefRequestConstructor.privateResidenceReliefQuery(totalGainAnswersModel, prrModel) +
-            FinalTaxAnswersRequestConstructor.additionalParametersQuery(totalTaxPersonalDetailsModel, maxAnnualExemptAmount)
-        }")
-      case None =>
-        http.GET[Option[nonresident.CalculationResultsWithTaxOwedModel]](s"$serviceUrl/capital-gains-calculator/non-resident/calculate-tax-owed?${
-          TotalGainRequestConstructor.totalGainQuery(totalGainAnswersModel) +
-            PrivateResidenceReliefRequestConstructor.privateResidenceReliefQuery(totalGainAnswersModel, PrivateResidenceReliefModel("No", None, None)) +
-            FinalTaxAnswersRequestConstructor.additionalParametersQuery(totalTaxPersonalDetailsModel, maxAnnualExemptAmount)
-        }")
-    }
-  }
-
-  //########################################################################################################################################
-
-  def calculateFlat(input: nonresident.SummaryModel)(implicit hc: HeaderCarrier): Future[Option[nonresident.CalculationResultModel]] = {
-    http.GET[Option[nonresident.CalculationResultModel]](s"$serviceUrl/capital-gains-calculator/calculate-flat?${
-      CalculateRequestConstructor.baseCalcUrl(input)
-    }${
-      CalculateRequestConstructor.flatCalcUrlExtra(input)
-    }")
-  }
-
-  def calculateTA(input: nonresident.SummaryModel)(implicit hc: HeaderCarrier): Future[Option[nonresident.CalculationResultModel]] = {
-    http.GET[Option[nonresident.CalculationResultModel]](s"$serviceUrl/capital-gains-calculator/calculate-time-apportioned?${
-      CalculateRequestConstructor.baseCalcUrl(input)
-    }${
-      CalculateRequestConstructor.taCalcUrlExtra(input)
-    }")
-  }
-
-  def calculateRebased(input: nonresident.SummaryModel)(implicit hc: HeaderCarrier): Future[Option[nonresident.CalculationResultModel]] = {
-    http.GET[Option[nonresident.CalculationResultModel]](s"$serviceUrl/capital-gains-calculator/calculate-rebased?${
-      CalculateRequestConstructor.baseCalcUrl(input)
-    }${
-      CalculateRequestConstructor.rebasedCalcUrlExtra(input)
-    }")
-  }
-
   def getFullAEA(taxYear: Int)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {
     http.GET[Option[BigDecimal]](s"$serviceUrl/capital-gains-calculator/tax-rates-and-bands/max-full-aea?taxYear=$taxYear")
   }
@@ -143,61 +74,6 @@ trait CalculatorConnector {
 
   def clearKeystore(implicit hc: HeaderCarrier):Future[HttpResponse] = {
     sessionCache.remove()
-  }
-
-  def createSummary(implicit hc: HeaderCarrier): Future[nonresident.SummaryModel] = {
-    val customerType = fetchAndGetFormData[nonresident.CustomerTypeModel](KeystoreKeys.customerType).map(formData => formData.get)
-    val disabledTrustee = fetchAndGetFormData[nonresident.DisabledTrusteeModel](KeystoreKeys.disabledTrustee)
-    val currentIncome = fetchAndGetFormData[nonresident.CurrentIncomeModel](KeystoreKeys.currentIncome)
-    val personalAllowance = fetchAndGetFormData[nonresident.PersonalAllowanceModel](KeystoreKeys.personalAllowance)
-    val otherProperties = fetchAndGetFormData[nonresident.OtherPropertiesModel](KeystoreKeys.otherProperties).map(formData => formData.get)
-    val annualExemptAmount = fetchAndGetFormData[nonresident.AnnualExemptAmountModel](KeystoreKeys.annualExemptAmount)
-    val acquisitionDate = fetchAndGetFormData[nonresident.AcquisitionDateModel](KeystoreKeys.acquisitionDate).map(formData => formData.get)
-    val acquisitionValue = fetchAndGetFormData[nonresident.AcquisitionValueModel](KeystoreKeys.acquisitionValue).map(formData => formData.get)
-    val rebasedValue = fetchAndGetFormData[nonresident.RebasedValueModel](KeystoreKeys.rebasedValue)
-    val rebasedCosts = fetchAndGetFormData[nonresident.RebasedCostsModel](KeystoreKeys.rebasedCosts)
-    val improvements = fetchAndGetFormData[nonresident.ImprovementsModel](KeystoreKeys.improvements).map(formData => formData.get)
-    val disposalDate = fetchAndGetFormData[nonresident.DisposalDateModel](KeystoreKeys.disposalDate).map(formData => formData.get)
-    val disposalValue = fetchAndGetFormData[nonresident.DisposalValueModel](KeystoreKeys.disposalValue).map(formData => formData.get)
-    val acquisitionCosts = fetchAndGetFormData[nonresident.AcquisitionCostsModel](KeystoreKeys.acquisitionCosts).map(formData => formData.get)
-    val disposalCosts = fetchAndGetFormData[nonresident.DisposalCostsModel](KeystoreKeys.disposalCosts).map(formData => formData.get)
-    val allowableLosses = fetchAndGetFormData[nonresident.AllowableLossesModel](KeystoreKeys.allowableLosses).map(formData => formData.get)
-    val calculationElection = fetchAndGetFormData[nonresident.CalculationElectionModel](KeystoreKeys.calculationElection).map(formData =>
-      formData.getOrElse(nonresident.CalculationElectionModel("")))
-    val otherReliefsFlat = fetchAndGetFormData[nonresident.OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map(formData =>
-      formData.getOrElse(nonresident.OtherReliefsModel(0)))
-    val otherReliefsTA = fetchAndGetFormData[nonresident.OtherReliefsModel](KeystoreKeys.otherReliefsTA).map(formData =>
-      formData.getOrElse(nonresident.OtherReliefsModel(0)))
-    val otherReliefsRebased = fetchAndGetFormData[nonresident.OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map(formData =>
-      formData.getOrElse(nonresident.OtherReliefsModel(0)))
-    val privateResidenceRelief = fetchAndGetFormData[nonresident.PrivateResidenceReliefModel](KeystoreKeys.privateResidenceRelief)
-
-    for {
-      customerTypeModel <- customerType
-      disabledTrusteeModel <- disabledTrustee
-      currentIncomeModel <- currentIncome
-      personalAllowanceModel <- personalAllowance
-      otherPropertiesModel <- otherProperties
-      annualExemptAmountModel <- annualExemptAmount
-      acquisitionDateModel <- acquisitionDate
-      acquisitionValueModel <- acquisitionValue
-      rebasedValueModel <- rebasedValue
-      rebasedCostsModel <- rebasedCosts
-      improvementsModel <- improvements
-      disposalDateModel <- disposalDate
-      disposalValueModel <- disposalValue
-      acquisitionCostsModel <- acquisitionCosts
-      disposalCostsModel <- disposalCosts
-      allowableLossesModel <- allowableLosses
-      calculationElectionModel <- calculationElection
-      otherReliefsFlatModel <- otherReliefsFlat
-      otherReliefsTAModel <- otherReliefsTA
-      otherReliefsRebasedModel <- otherReliefsRebased
-      privateResidenceReliefModel <- privateResidenceRelief
-    } yield nonresident.SummaryModel(customerTypeModel, disabledTrusteeModel, currentIncomeModel, personalAllowanceModel, otherPropertiesModel,
-      annualExemptAmountModel, acquisitionDateModel, acquisitionValueModel, rebasedValueModel, rebasedCostsModel, improvementsModel,
-      disposalDateModel, disposalValueModel, acquisitionCostsModel, disposalCostsModel, allowableLossesModel,
-      calculationElectionModel, otherReliefsFlatModel, otherReliefsTAModel, otherReliefsRebasedModel, privateResidenceReliefModel)
   }
 
   //Rtt property calculation methods

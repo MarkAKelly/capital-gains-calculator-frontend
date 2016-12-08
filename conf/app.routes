@@ -10,6 +10,3 @@ GET         /thankyou               controllers.FeedbackController.thankyou
 
 #Session Timeout route
 GET         /session-timeout        controllers.TimeoutController.timeout(restartUrl: String, homeLink: String)
-
-#Redirect routes
-GET         /                       controllers.StartController.start

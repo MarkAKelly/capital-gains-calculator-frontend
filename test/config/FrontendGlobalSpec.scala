@@ -27,19 +27,6 @@ class FrontendGlobalSpec extends UnitSpec with WithFakeApplication {
   //############# Tests for homeLink ##########################
   "Rendering the error_template by causing an error" when {
 
-    "on the non-resident journey" should {
-
-      s"have a link to the non-resident start journey '${controllers.nonresident.routes.CustomerTypeController.customerType().url}'" in {
-
-        val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/non-resident/error").withSession(SessionKeys.sessionId -> "12345")
-        val result = standardErrorTemplate("test", "teat-heading", "test-message")(fakeRequest)
-        val doc = Jsoup.parse(result.body)
-
-        doc.getElementById("homeNavHref").attr("href") shouldBe controllers.nonresident.routes.CustomerTypeController.customerType().url
-      }
-
-    }
-
     "on the resident/properties journey" should {
 
       s"have a link to the resident/properties start journey '${controllers.resident.properties.routes.PropertiesController.introduction().url}'" in {
