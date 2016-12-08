@@ -223,7 +223,8 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
     "a personal allowance of greater than 0 is given" should {
 
-      lazy val result = target.getPersonalAllowanceAnswer(CustomerTypeModel(CustomerTypeKeys.individual), Some(PersonalAllowanceModel(10000)))
+      lazy val result = target.getPersonalAllowanceAnswer(CustomerTypeModel(CustomerTypeKeys.individual), Some(PersonalAllowanceModel(10000)),
+        Some(CurrentIncomeModel(10000)))
 
       "return some details for the PersonalAllowance" in {
         result should not be None
@@ -258,7 +259,8 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
 
     "a personal allowance of 0 is given" should {
 
-      lazy val result = target.getPersonalAllowanceAnswer(CustomerTypeModel(CustomerTypeKeys.individual), Some(PersonalAllowanceModel(0)))
+      lazy val result = target.getPersonalAllowanceAnswer(CustomerTypeModel(CustomerTypeKeys.individual), Some(PersonalAllowanceModel(0)),
+        Some(CurrentIncomeModel(10000)))
 
       "return some details for the PersonalAllowance" in {
         result should not be None
@@ -291,9 +293,19 @@ class PersonalDetailsConstructorSpec extends UnitSpec with WithFakeApplication {
       }
     }
 
+    "personal allowance is not given as current income of 0 is given" should {
+
+      lazy val result = target.getPersonalAllowanceAnswer(CustomerTypeModel(CustomerTypeKeys.individual), Some(PersonalAllowanceModel(100)),
+        Some(CurrentIncomeModel(0)))
+
+      "return a None" in {
+        result shouldBe None
+      }
+    }
+
     "no personal allowance is given" should {
 
-      lazy val result = target.getPersonalAllowanceAnswer(CustomerTypeModel(CustomerTypeKeys.trustee), None)
+      lazy val result = target.getPersonalAllowanceAnswer(CustomerTypeModel(CustomerTypeKeys.trustee), None, None)
 
       "return a None" in {
         result shouldBe None
