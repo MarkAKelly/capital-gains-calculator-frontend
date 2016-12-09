@@ -54,11 +54,12 @@ object FinalTaxAnswersRequestConstructor {
     } else { "" }
   }
 
-  def personalAllowanceAmt(customerTypeModel: CustomerTypeModel, personalAllowanceModel: Option[PersonalAllowanceModel]): String = {
-    if(customerTypeModel.customerType == CustomerTypeKeys.individual) {
-      s"&personalAllowanceAmt=${personalAllowanceModel.get.personalAllowanceAmt}"
-    } else { "" }
-  }
+  def personalAllowanceAmt(customerTypeModel: CustomerTypeModel, personalAllowanceModel: Option[PersonalAllowanceModel]): String =
+    (customerTypeModel.customerType, personalAllowanceModel) match {
+        case (CustomerTypeKeys.individual, Some(model)) => s"&personalAllowanceAmt=${model.personalAllowanceAmt}"
+        case _ => ""
+      }
+
 
   def allowableLoss(otherPropertiesModel: OtherPropertiesModel,
                     previousLossOrGainModel: Option[PreviousLossOrGainModel],

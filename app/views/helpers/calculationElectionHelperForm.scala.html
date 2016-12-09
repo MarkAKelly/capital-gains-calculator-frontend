@@ -28,39 +28,41 @@
 
         @radioOptions.map { case (value, amount, message, dateMessage, otherReliefs) =>
             @defining(s"${elements.field.name}-${value.toLowerCase.replace(" ","_")}")  { inputId =>
-                <div>
-                    <label for="@inputId"
-                        @elements.args.get('_labelClass).map{labelClass => class="@labelClass@field.value.filter( _ == value).map{_ => selected}"}>
-                        <input
-                            type="radio"
-                            id="@inputId"
-                            name="@elements.field.name"
-                            value="@value"
-                            aria-expanded="false"
-                            @elements.args.get('_inputClass).map{inputClass => class="@inputClass"}
-                            @if(elements.args.contains('_dataAttributes) ){ @elements.args.get('_dataAttributes)}
-                            @field.value.filter( _ == value).map{_ => checked="checked"}/>
-                        <span class="bold-medium">&pound;@MoneyPounds(BigDecimal(amount)).quantity</span>
-                        @defining(s"${value.toLowerCase.replace(" ","_")}-para") { radioParaId =>
-                            <p id="@radioParaId"><span class="bold-xsmall block">@Messages("calc.calculationElection.based")</span><br> @message <span class="no-wrap">@dateMessage</span></p>
-                        }
-                    </label>
-
-                    @{
-                        if(otherReliefs.isDefined && otherReliefs.get > 0){
-                            <div class="panel panel-indent additional-option-block">
-                                <span class="align-bottom">{Messages("calc.calculationElection.someOtherRelief")}</span>
-                                <button id={s"$value-button"} name="action" value={value} class="button button--link">
-                                    <span class="bold-medium">&pound;{MoneyPounds(otherReliefs.getOrElse(0)).quantity}</span>
-                                </button>
-                            </div>
-                            } else if (otherReliefs.isDefined) {
-                            <div class="panel panel-indent additional-option-block">
-                                <button id={s"$value-button"} name="action" value={value} class="button button--link">{Messages("calc.calculationElection.otherRelief")}</button>
-                            </div>
-                        }
+                <label for="@inputId"
+                    @elements.args.get('_labelClass).map{labelClass => class="@labelClass@field.value.filter( _ == value).map{_ => selected}"}>
+                    <input
+                        type="radio"
+                        id="@inputId"
+                        name="@elements.field.name"
+                        value="@value"
+                        aria-expanded="false"
+                        @elements.args.get('_inputClass).map{inputClass => class="@inputClass"}
+                        @if(elements.args.contains('_dataAttributes) ){ @elements.args.get('_dataAttributes)}
+                        @field.value.filter( _ == value).map{_ => checked="checked"} />
+                    <span class="bold-medium">&pound;@MoneyPounds(BigDecimal(amount)).quantity</span>
+                    @defining(s"${value.toLowerCase.replace(" ","_")}-para") { radioParaId =>
+                        <span class="election-text" id="@radioParaId">
+                            <span class="bold-xsmall block">@Messages("calc.calculationElection.based")</span>
+                            <span>@message</span>
+                            <span class="no-wrap">@dateMessage</span>
+                        </span>
                     }
-                </div>
+                </label>
+
+                @{
+                    if(otherReliefs.isDefined && otherReliefs.get > 0){
+                        <div class="panel panel-indent additional-option-block">
+                            <span class="align-bottom">{Messages("calc.calculationElection.someOtherRelief")}</span>
+                            <button id={s"$value-button"} name="action" value={value} class="button button--link">
+                                <span class="bold-medium">&pound;{MoneyPounds(otherReliefs.getOrElse(0)).quantity}</span>
+                            </button>
+                        </div>
+                        } else if (otherReliefs.isDefined) {
+                        <div class="panel panel-indent additional-option-block">
+                            <button id={s"$value-button"} name="action" value={value} class="button button--link">{Messages("calc.calculationElection.otherRelief")}</button>
+                        </div>
+                    }
+                }
             }
         }
 

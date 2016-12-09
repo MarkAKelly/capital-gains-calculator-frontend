@@ -18,7 +18,6 @@ package views.nonResident
 
 import assets.MessageLookup.NonResident.{CalculationElection => messages}
 import assets.MessageLookup.{NonResident => commonMessages}
-import common.TestModels
 import controllers.helpers.FakeRequestHelper
 import forms.nonresident.CalculationElectionForm._
 import org.jsoup.Jsoup
