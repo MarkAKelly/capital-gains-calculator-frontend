@@ -4,7 +4,7 @@
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 @import views.html.helpers._
 
-@(otherReliefsForm: Form[OtherReliefsModel], result: CalculationResultModel, hasExistingReliefAmount: Boolean)(implicit request: Request[_])
+@(otherReliefsForm: Form[OtherReliefsModel], result: CalculationResultsWithTaxOwedModel, hasExistingReliefAmount: Boolean)(implicit request: Request[_])
 
 @main_template(Messages("calc.otherReliefs.question")) {
 

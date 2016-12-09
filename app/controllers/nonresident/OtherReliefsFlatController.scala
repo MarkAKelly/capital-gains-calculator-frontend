@@ -18,14 +18,15 @@ package controllers.nonresident
 
 import common.KeystoreKeys
 import connectors.CalculatorConnector
+import constructors.nonresident.AnswersConstructor
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.OtherReliefsForm._
-import models.nonresident.{CalculationResultModel, OtherReliefsModel}
+import models.nonresident._
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import views.html.calculation
-
+import common.nonresident.OtherReliefsTaxableGainCalculation._
 import scala.concurrent.Future
 
 object OtherReliefsFlatController extends OtherReliefsFlatController {
@@ -37,20 +38,35 @@ trait OtherReliefsFlatController extends FrontendController with ValidActiveSess
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
   val calcConnector: CalculatorConnector
+  val answersConstructor: AnswersConstructor
 
   val otherReliefsFlat: Action[AnyContent] = ValidateSession.async { implicit request =>
 
-    def action(dataResult: Option[CalculationResultModel]) = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
-      case Some(data) => Ok(calculation.nonresident.otherReliefsFlat(otherReliefsForm.fill(data),
-        dataResult.get, hasExistingReliefAmount = true))
-      case _ => Ok(calculation.nonresident.otherReliefsFlat(otherReliefsForm, dataResult.get, hasExistingReliefAmount = false))
+    def routeRequest(model: Option[OtherReliefsModel],
+                     totalGain: Option[TotalGainResultsModel],
+                     chargeableGainResult: Option[CalculationResultsWithTaxOwedModel]) = {
+      val hasExistingRelief = model.isDefined
+      val gain = totalGain.fold(BigDecimal(0))(_.flatGain)
+      val chargeableGain = chargeableGainResult.fold(BigDecimal(0))(_.flatResult.taxableGain)
+
+      val result = model.fold(calculation.nonresident.otherReliefsFlat(otherReliefsForm, chargeableGainResult.get, hasExistingRelief)) { data =>
+        calculation.nonresident.otherReliefsFlat(otherReliefsForm.fill(data), chargeableGainResult.get, hasExistingRelief)
+      }
+
+      Ok(result)
     }
 
     for {
-      construct <- calcConnector.createSummary(hc)
-      calculation <- calcConnector.calculateFlat(construct)
-      finalResult <- action(calculation)
-    } yield finalResult
+      answers <- answersConstructor.getNRTotalGainAnswers(hc)
+      gain <- calcConnector.calculateTotalGain(answers)(hc)
+      prrAnswers <- getPRRResponse(gain.get, calcConnector)
+      totalGainWithPRR <- getPRRIfApplicable(answers, prrAnswers, calcConnector)(hc)
+      allAnswers <- getFinalSectionsAnswers(gain.get, totalGainWithPRR, calcConnector, answersConstructor)(hc)
+      taxYear <- getTaxYear(answers, calcConnector)(hc)
+      maxAEA <- getMaxAEA(allAnswers, taxYear, calcConnector)(hc)
+      chargeableGainResult <- getChargeableGain(answers, prrAnswers, allAnswers, maxAEA.get, calcConnector)(hc)
+      reliefs <- calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat)
+    } yield routeRequest(reliefs, gain, chargeableGainResult)
   }
 
   val submitOtherReliefsFlat = ValidateSession.async { implicit request =>
