@@ -84,7 +84,7 @@ trait OtherReliefsFlatController extends FrontendController with ValidActiveSess
       Future.successful(Redirect(routes.CalculationElectionController.calculationElection()))
     }
 
-    def errorRoute(dataResult: Option[CalculationResultModel], form: Form[OtherReliefsModel]) = {
+    def errorRoute(dataResult: Option[CalculationResultsWithTaxOwedModel], form: Form[OtherReliefsModel]) = {
       calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat).map {
         case Some(data) => BadRequest(calculation.nonresident.otherReliefsFlat(form,
           dataResult.get, hasExistingReliefAmount = true))
