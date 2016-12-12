@@ -93,12 +93,12 @@ object TaxableGainCalculation {
   }
 
   def getChargeableGain(totalGainAnswersModel: TotalGainAnswersModel,
-                                    prrModel: Option[PrivateResidenceReliefModel],
-                                    totalTaxOwedModel: Option[TotalPersonalDetailsCalculationModel],
-                                    maxAEA: BigDecimal,
-                                    calcConnector: CalculatorConnector)(implicit hc: HeaderCarrier): Future[Option[CalculationResultsWithTaxOwedModel]] = {
+                        prrModel: Option[PrivateResidenceReliefModel],
+                        personalDetailsModel: Option[TotalPersonalDetailsCalculationModel],
+                        maxAEA: BigDecimal,
+                        calcConnector: CalculatorConnector)(implicit hc: HeaderCarrier): Future[Option[CalculationResultsWithTaxOwedModel]] = {
 
-    totalTaxOwedModel match {
+    personalDetailsModel match {
       case Some(data) => calcConnector.calculateNRCGTTotalTax(totalGainAnswersModel, prrModel, data, maxAEA)
       case None => Future(None)
     }

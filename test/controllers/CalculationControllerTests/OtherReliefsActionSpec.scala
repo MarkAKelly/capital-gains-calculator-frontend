@@ -39,10 +39,9 @@ class OtherReliefsActionSpec extends UnitSpec with WithFakeApplication with Mock
   implicit val hc = new HeaderCarrier()
 
   def setupTarget(getData: Option[OtherReliefsModel],
-                  gainResult: CalculationResultModel,
-                  chargeableGainResult: Option[CalculationResultsWithTaxOwedModel] = None,
-                  finalSummaryModel: TotalPersonalDetailsCalculationModel,
-                  totalGainResult: Option[TotalGainResultsModel] = Some(TotalGainResultsModel(200, None, None)),
+                  calculationResultsModel: CalculationResultsWithTaxOwedModel,
+                  personalDetailsModel: TotalPersonalDetailsCalculationModel,
+                  totalGainResultModel: TotalGainResultsModel = TotalGainResultsModel(200, None, None),
                   calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel] = None
                  ): OtherReliefsController = {
 
@@ -55,17 +54,14 @@ class OtherReliefsActionSpec extends UnitSpec with WithFakeApplication with Mock
     when(mockCalcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.eq(KeystoreKeys.privateResidenceRelief))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(PrivateResidenceReliefModel("No", None))))
 
-    when(mockCalcConnector.calculateFlat(Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(Some(gainResult)))
-
     when(mockAnswersConstructor.getNRTotalGainAnswers(Matchers.any()))
-      .thenReturn(Future.successful(Future.successful(TestModels.businessScenarioFiveModel)))
+      .thenReturn(Future.successful(TestModels.businessScenarioFiveModel))
 
     when(mockCalcConnector.calculateTotalGain(Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(Future.successful(totalGainResult)))
+      .thenReturn(Future.successful(Some(totalGainResultModel)))
 
     when(mockAnswersConstructor.getPersonalDetailsAndPreviousCapitalGainsAnswers(Matchers.any()))
-      .thenReturn(Future.successful(Some(finalSummaryModel)))
+      .thenReturn(Future.successful(Some(personalDetailsModel)))
 
     when(mockCalcConnector.calculateTaxableGainAfterPRR(Matchers.any(), Matchers.any())(Matchers.any()))
       .thenReturn(calculationResultsWithPRRModel)
@@ -77,10 +73,10 @@ class OtherReliefsActionSpec extends UnitSpec with WithFakeApplication with Mock
       .thenReturn(Future.successful(Some(BigDecimal(5500))))
 
     when(mockCalcConnector.calculateNRCGTTotalTax(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(chargeableGainResult))
+      .thenReturn(Future.successful(Some(calculationResultsModel)))
 
     when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(Some(TaxYearModel("2015/16", true, "2015/16"))))
+      .thenReturn(Future.successful(Some(TaxYearModel("2015/16", isValidYear = true, "2015/16"))))
 
     new OtherReliefsController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
@@ -94,7 +90,7 @@ class OtherReliefsActionSpec extends UnitSpec with WithFakeApplication with Mock
     }
   }
 
-  val finalAnswersModel = TotalPersonalDetailsCalculationModel(
+  val personalDetailsModel = TotalPersonalDetailsCalculationModel(
     CustomerTypeModel("individual"),
     Some(CurrentIncomeModel(20000)),
     Some(PersonalAllowanceModel(0)),
@@ -107,21 +103,18 @@ class OtherReliefsActionSpec extends UnitSpec with WithFakeApplication with Mock
     BroughtForwardLossesModel(false, None)
   )
 
-  val chargeableGainResultModel = CalculationResultsWithTaxOwedModel(
+  val calculationResultsModel = CalculationResultsWithTaxOwedModel(
     TotalTaxOwedModel(100, 100, 20, None, None, 200, 100, None, None, None, None, 0, None),
     None,
     None
   )
 
-  val calcResultModel = CalculationResultModel(100, 100, 100, 20, 0, None, None, None)
-
   "Calling the .otherReliefs action " when {
 
-    "not supplied with a pre-existing stored model" should {
+    "not supplied with a pre-existing stored model and a chargeable gain of £100 and total gain of £200" should {
       val target = setupTarget(None,
-        TestModels.calcModelTwoRates,
-        None,
-        finalAnswersModel)
+        calculationResultsModel,
+        personalDetailsModel)
       lazy val result = target.otherReliefs(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -132,14 +125,17 @@ class OtherReliefsActionSpec extends UnitSpec with WithFakeApplication with Mock
       "load the other reliefs page" in {
         document.title() shouldBe messages.question
       }
+
+      s"show help text with text '${messages.additionalHelp(200, 100)}'" in {
+        document.body().select("#otherReliefHelpTwo").select("p").text() shouldBe messages.additionalHelp(200, 100)
+      }
     }
 
     "supplied with a pre-existing stored model" should {
       val testOtherReliefsModel = OtherReliefsModel(5000)
       val target = setupTarget(Some(testOtherReliefsModel),
-        TestModels.calcModelLoss,
-        Some(chargeableGainResultModel),
-        finalAnswersModel)
+        calculationResultsModel,
+        personalDetailsModel)
       lazy val result = target.otherReliefs(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -154,9 +150,8 @@ class OtherReliefsActionSpec extends UnitSpec with WithFakeApplication with Mock
 
     "supplied without a valid session" should {
       val target = setupTarget(None,
-        TestModels.calcModelTwoRates,
-        Some(chargeableGainResultModel),
-        finalAnswersModel)
+        calculationResultsModel,
+        personalDetailsModel)
       lazy val result = target.otherReliefs(fakeRequest)
 
       "return a status of 303" in {
@@ -167,32 +162,14 @@ class OtherReliefsActionSpec extends UnitSpec with WithFakeApplication with Mock
         redirectLocation(result).get should include("/calculate-your-capital-gains/session-timeout")
       }
     }
-
-    "supplied with a chargeable gain of £100 and total gain of £200" should {
-      val target = setupTarget(None,
-        calcResultModel,
-        Some(chargeableGainResultModel),
-        finalAnswersModel)
-      lazy val result = target.otherReliefs(fakeRequestWithSession)
-      lazy val document = Jsoup.parse(bodyOf(result))
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      s"show help text with text '${messages.additionalHelp(200, 100)}'" in {
-        document.body().select("#otherReliefHelpTwo").select("p").text() shouldBe messages.additionalHelp(200, 100)
-      }
-    }
   }
 
   "Calling the .submitOtherReliefs action" when {
 
     "submitting a valid form" should {
       val target = setupTarget(None,
-        TestModels.calcModelTwoRates,
-        None,
-        finalAnswersModel)
+        calculationResultsModel,
+        personalDetailsModel)
       lazy val request = fakeRequestToPOSTWithSession("otherReliefs" -> "1000")
       lazy val result = target.submitOtherReliefs(request)
 
@@ -207,9 +184,8 @@ class OtherReliefsActionSpec extends UnitSpec with WithFakeApplication with Mock
 
     "submitting an invalid form" should {
       val target = setupTarget(None,
-        TestModels.calcModelTwoRates,
-        None,
-        finalAnswersModel)
+        calculationResultsModel,
+        personalDetailsModel)
       lazy val request = fakeRequestToPOSTWithSession("otherReliefs" -> "")
       lazy val result = target.submitOtherReliefs(request)
       lazy val document = Jsoup.parse(bodyOf(result))
