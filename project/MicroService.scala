@@ -17,15 +17,15 @@
 import sbt.Keys._
 import sbt.Tests.{Group, SubProcess}
 import sbt._
+import uk.gov.hmrc.{DefaultBuildSettings, SbtAutoBuildPlugin}
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
+import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 import uk.gov.hmrc.versioning.SbtGitVersioning
 
 
 trait MicroService {
 
-  import uk.gov.hmrc._
-  import DefaultBuildSettings._
+  import DefaultBuildSettings.{scalaSettings, defaultSettings, addTestReportOption}
   import TestPhases._
 
   val appName: String
