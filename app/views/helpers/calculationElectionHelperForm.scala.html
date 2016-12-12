@@ -28,6 +28,7 @@
 
         @radioOptions.map { case (value, amount, message, dateMessage, otherReliefs) =>
             @defining(s"${elements.field.name}-${value.toLowerCase.replace(" ","_")}")  { inputId =>
+               <div>
                 <label for="@inputId"
                     @elements.args.get('_labelClass).map{labelClass => class="@labelClass@field.value.filter( _ == value).map{_ => selected}"}>
                     <input
@@ -63,8 +64,8 @@
                         </div>
                     }
                 }
+                   </div>
             }
         }
 
     </fieldset>
-</div>
