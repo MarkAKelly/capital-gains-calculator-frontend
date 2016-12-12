@@ -293,3 +293,9 @@
     position: relative;
         bottom: 1.0em
 }
+
+span.election-text > .block {
+    display: block;
+    clear: both;
+    margin-top: 1em;
+}
