@@ -98,7 +98,7 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
 
       val target = setupTarget(
         None,
-        TestModels.totalGainAnswersModelWithRebased,
+        TestModels.totalGainAnswersModelWithRebasedTA,
         TestModels.calculationResultsModelWithRebased,
         TestModels.personalDetailsCalculationModelIndividual)
       lazy val result = target.otherReliefsFlat(fakeRequestWithSession)
@@ -125,7 +125,7 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
       val testOtherReliefsModel = OtherReliefsModel(5000)
       val target = setupTarget(
         Some(testOtherReliefsModel),
-        TestModels.totalGainAnswersModelWithRebased,
+        TestModels.totalGainAnswersModelWithRebasedTA,
         TestModels.calculationResultsModelWithRebased,
         TestModels.personalDetailsCalculationModelIndividual)
       lazy val result = target.otherReliefsFlat(fakeRequestWithSession)
@@ -143,7 +143,7 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
     "supplied with an invalid session" should {
       val target = setupTarget(
         None,
-        TestModels.totalGainAnswersModelWithRebased,
+        TestModels.totalGainAnswersModelWithRebasedTA,
         TestModels.calculationResultsModelWithRebased,
         TestModels.personalDetailsCalculationModelIndividual)
       lazy val result = target.otherReliefsFlat(fakeRequest)
@@ -163,7 +163,7 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
     "submitting a valid form" should {
       val target = setupTarget(
         None,
-        TestModels.totalGainAnswersModelWithRebased,
+        TestModels.totalGainAnswersModelWithRebasedTA,
         TestModels.calculationResultsModelWithRebased,
         TestModels.personalDetailsCalculationModelIndividual)
       lazy val request = fakeRequestToPOSTWithSession(("isClaimingOtherReliefs", "Yes"), ("otherReliefs", "1000"))
@@ -181,7 +181,7 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
     "submitting an invalid form" should {
       val target = setupTarget(
         None,
-        TestModels.totalGainAnswersModelWithRebased,
+        TestModels.totalGainAnswersModelWithRebasedTA,
         TestModels.calculationResultsModelWithRebased,
         TestModels.personalDetailsCalculationModelIndividual)
       lazy val request = fakeRequestToPOSTWithSession(("isClaimingOtherReliefs", "Yes"), ("otherReliefs", "-1000"))

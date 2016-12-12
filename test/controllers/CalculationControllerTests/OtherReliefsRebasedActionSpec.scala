@@ -98,7 +98,7 @@ class OtherReliefsRebasedActionSpec extends UnitSpec with WithFakeApplication wi
 
       val target = setupTarget(
         None,
-        TestModels.totalGainAnswersModelWithRebased,
+        TestModels.totalGainAnswersModelWithRebasedTA,
         TestModels.calculationResultsModelWithRebased,
         TestModels.personalDetailsCalculationModelIndividual
       )
@@ -126,7 +126,7 @@ class OtherReliefsRebasedActionSpec extends UnitSpec with WithFakeApplication wi
       val testOtherReliefsModel = OtherReliefsModel(5000)
       val target = setupTarget(
         Some(testOtherReliefsModel),
-        TestModels.totalGainAnswersModelWithRebased,
+        TestModels.totalGainAnswersModelWithRebasedTA,
         TestModels.calculationResultsModelWithRebased,
         TestModels.personalDetailsCalculationModelIndividual
       )
@@ -145,7 +145,7 @@ class OtherReliefsRebasedActionSpec extends UnitSpec with WithFakeApplication wi
     "supplied with an invalid session" should {
       val target = setupTarget(
         None,
-        TestModels.totalGainAnswersModelWithRebased,
+        TestModels.totalGainAnswersModelWithRebasedTA,
         TestModels.calculationResultsModelWithRebased,
         TestModels.personalDetailsCalculationModelIndividual
       )
@@ -166,7 +166,7 @@ class OtherReliefsRebasedActionSpec extends UnitSpec with WithFakeApplication wi
     "submitting a valid form" should {
       val target = setupTarget(
         None,
-        TestModels.totalGainAnswersModelWithRebased,
+        TestModels.totalGainAnswersModelWithRebasedTA,
         TestModels.calculationResultsModelWithRebased,
         TestModels.personalDetailsCalculationModelIndividual
       )
@@ -185,7 +185,7 @@ class OtherReliefsRebasedActionSpec extends UnitSpec with WithFakeApplication wi
     "submitting an invalid form" should {
       val target = setupTarget(
         None,
-        TestModels.totalGainAnswersModelWithRebased,
+        TestModels.totalGainAnswersModelWithRebasedTA,
         TestModels.calculationResultsModelWithRebased,
         TestModels.personalDetailsCalculationModelIndividual
       )

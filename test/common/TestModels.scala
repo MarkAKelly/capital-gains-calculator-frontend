@@ -913,7 +913,7 @@ object TestModels {
     None
   )
 
-  val totalGainAnswersModelWithRebased = TotalGainAnswersModel(
+  val totalGainAnswersModelWithRebasedTA = TotalGainAnswersModel(
     DisposalDateModel(5, 6, 2016),
     SoldOrGivenAwayModel(true),
     Some(SoldForLessModel(true)),
@@ -934,6 +934,12 @@ object TestModels {
     TotalTaxOwedModel(100, 100, 20, None, None, 200, 100, None, None, None, None, 0, None),
     Some(TotalTaxOwedModel(500, 500, 20, None, None, 500, 500, None, None, None, None, 0, None)),
     None
+  )
+
+  val calculationResultsModelWithTA = CalculationResultsWithTaxOwedModel(
+    TotalTaxOwedModel(100, 100, 20, None, None, 200, 100, None, None, None, None, 0, None),
+    None,
+    Some(TotalTaxOwedModel(500, 500, 20, None, None, 200, 100, None, None, None, None, 0, None))
   )
 
   val personalDetailsCalculationModelIndividual = TotalPersonalDetailsCalculationModel(
