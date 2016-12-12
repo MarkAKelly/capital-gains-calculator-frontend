@@ -75,7 +75,7 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
       .thenReturn(Future.successful(Some(BigDecimal(5500))))
 
     when(mockCalcConnector.calculateNRCGTTotalTax(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(Some(calculationResultsModel)))
+      .thenReturn(Future.successful(Some(TestModels.calculationResultsModelWithRebased)))
 
     when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(Some(TaxYearModel("2015/16", isValidYear = true, "2015/16"))))
@@ -92,51 +92,15 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
     }
   }
 
-  val gainAnswersModel = TotalGainAnswersModel(
-    DisposalDateModel(5, 6, 2016),
-    SoldOrGivenAwayModel(true),
-    Some(SoldForLessModel(true)),
-    DisposalValueModel(950000),
-    DisposalCostsModel(15000),
-    Some(HowBecameOwnerModel("Bought")),
-    Some(BoughtForLessModel(false)),
-    AcquisitionValueModel(1250000),
-    AcquisitionCostsModel(20000),
-    AcquisitionDateModel("Yes", Some(10), Some(10), Some(2001)),
-    Some(RebasedValueModel(Some(950000))),
-    Some(RebasedCostsModel("No", None)),
-    ImprovementsModel("No", None),
-    Some(OtherReliefsModel(0))
-  )
-
-  val personalDetailsModel = TotalPersonalDetailsCalculationModel(
-    CustomerTypeModel("individual"),
-    Some(CurrentIncomeModel(20000)),
-    Some(PersonalAllowanceModel(0)),
-    None,
-    OtherPropertiesModel("Yes"),
-    Some(PreviousLossOrGainModel("Neither")),
-    None,
-    None,
-    Some(AnnualExemptAmountModel(0)),
-    BroughtForwardLossesModel(false, None)
-  )
-
-  val calculationResultsModel = CalculationResultsWithTaxOwedModel(
-    TotalTaxOwedModel(100, 100, 20, None, None, 200, 100, None, None, None, None, 0, None),
-    Some(TotalTaxOwedModel(500, 500, 20, None, None, 500, 500, None, None, None, None, 0, None)),
-    None
-  )
-
   "Calling the .otherReliefsFlat action " when {
 
     "not supplied with a pre-existing stored model and a chargeable gain of £100 and total gain of £200" should {
 
       val target = setupTarget(
         None,
-        gainAnswersModel,
-        calculationResultsModel,
-        personalDetailsModel)
+        TestModels.totalGainAnswersModelWithRebased,
+        TestModels.calculationResultsModelWithRebased,
+        TestModels.personalDetailsCalculationModelIndividual)
       lazy val result = target.otherReliefsFlat(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -161,9 +125,9 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
       val testOtherReliefsModel = OtherReliefsModel(5000)
       val target = setupTarget(
         Some(testOtherReliefsModel),
-        gainAnswersModel,
-        calculationResultsModel,
-        personalDetailsModel)
+        TestModels.totalGainAnswersModelWithRebased,
+        TestModels.calculationResultsModelWithRebased,
+        TestModels.personalDetailsCalculationModelIndividual)
       lazy val result = target.otherReliefsFlat(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
 
@@ -179,9 +143,9 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
     "supplied with an invalid session" should {
       val target = setupTarget(
         None,
-        gainAnswersModel,
-        calculationResultsModel,
-        personalDetailsModel)
+        TestModels.totalGainAnswersModelWithRebased,
+        TestModels.calculationResultsModelWithRebased,
+        TestModels.personalDetailsCalculationModelIndividual)
       lazy val result = target.otherReliefsFlat(fakeRequest)
 
       "return a status of 303" in {
@@ -199,9 +163,9 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
     "submitting a valid form" should {
       val target = setupTarget(
         None,
-        gainAnswersModel,
-        calculationResultsModel,
-        personalDetailsModel)
+        TestModels.totalGainAnswersModelWithRebased,
+        TestModels.calculationResultsModelWithRebased,
+        TestModels.personalDetailsCalculationModelIndividual)
       lazy val request = fakeRequestToPOSTWithSession(("isClaimingOtherReliefs", "Yes"), ("otherReliefs", "1000"))
       lazy val result = target.submitOtherReliefsFlat(request)
 
@@ -217,9 +181,9 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
     "submitting an invalid form" should {
       val target = setupTarget(
         None,
-        gainAnswersModel,
-        calculationResultsModel,
-        personalDetailsModel)
+        TestModels.totalGainAnswersModelWithRebased,
+        TestModels.calculationResultsModelWithRebased,
+        TestModels.personalDetailsCalculationModelIndividual)
       lazy val request = fakeRequestToPOSTWithSession(("isClaimingOtherReliefs", "Yes"), ("otherReliefs", "-1000"))
       lazy val result = target.submitOtherReliefsFlat(request)
       lazy val document = Jsoup.parse(bodyOf(result))

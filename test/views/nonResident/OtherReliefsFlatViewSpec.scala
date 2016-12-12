@@ -29,7 +29,7 @@ class OtherReliefsFlatViewSpec extends UnitSpec with WithFakeApplication with Mo
 
   "The Other Reliefs Flat view" when {
     "not supplied with a pre-existing stored value and a taxable gain" should {
-      lazy val view = otherReliefsFlat(otherReliefsForm,hasExistingReliefAmount = false, BigDecimal(2000), BigDecimal(2500))(fakeRequest)
+      lazy val view = otherReliefsFlat(otherReliefsForm, hasExistingReliefAmount = false, BigDecimal(2000), BigDecimal(2500))(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have a back link" which {

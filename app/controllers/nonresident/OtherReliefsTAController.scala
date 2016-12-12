@@ -64,9 +64,9 @@ trait OtherReliefsTAController extends FrontendController with ValidActiveSessio
 
     def errorRoute(form: Form[OtherReliefsModel], dataResult: Option[CalculationResultModel]) = {
       calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map {
-        case Some(data) => BadRequest(calculation.nonresident.otherReliefsRebased(form,
+        case Some(data) => BadRequest(calculation.nonresident.otherReliefsTA(form,
           dataResult.get, hasExistingReliefAmount = true))
-        case _ => BadRequest(calculation.nonresident.otherReliefsRebased(form, dataResult.get, hasExistingReliefAmount = false))
+        case _ => BadRequest(calculation.nonresident.otherReliefsTA(form, dataResult.get, hasExistingReliefAmount = false))
       }
     }
 

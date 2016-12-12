@@ -19,9 +19,11 @@ package controllers.CalculationControllerTests
 import assets.MessageLookup.NonResident.{OtherReliefs => messages}
 import common.{KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
+import constructors.nonresident.AnswersConstructor
 import controllers.helpers.FakeRequestHelper
 import controllers.nonresident.OtherReliefsRebasedController
 import models.nonresident._
+import models.resident.TaxYearModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -36,33 +38,51 @@ class OtherReliefsRebasedActionSpec extends UnitSpec with WithFakeApplication wi
 
   implicit val hc = new HeaderCarrier()
 
-  def setupTarget(
-                   getData: Option[OtherReliefsModel],
-                   summary: SummaryModel,
-                   result: CalculationResultModel,
-                   acquisitionDateData: Option[AcquisitionDateModel],
-                   rebasedValueData: Option[RebasedValueModel]
+  def setupTarget(getData: Option[OtherReliefsModel],
+                  gainAnswers: TotalGainAnswersModel,
+                  calculationResultsModel: CalculationResultsWithTaxOwedModel,
+                  personalDetailsModel: TotalPersonalDetailsCalculationModel,
+                  totalGainResultModel: TotalGainResultsModel = TotalGainResultsModel(200, Some(500), None),
+                  calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel] = None
                  ): OtherReliefsRebasedController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
+    val mockAnswersConstructor = mock[AnswersConstructor]
+
 
     when(mockCalcConnector.fetchAndGetFormData[OtherReliefsModel](Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
-    when(mockCalcConnector.fetchAndGetFormData[RebasedValueModel](Matchers.eq(KeystoreKeys.rebasedValue))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(rebasedValueData))
+    when(mockCalcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.eq(KeystoreKeys.privateResidenceRelief))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(PrivateResidenceReliefModel("No", None))))
 
-    when(mockCalcConnector.fetchAndGetFormData[AcquisitionDateModel](Matchers.eq(KeystoreKeys.acquisitionDate))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(acquisitionDateData))
+    when(mockAnswersConstructor.getNRTotalGainAnswers(Matchers.any()))
+      .thenReturn(Future.successful(gainAnswers))
 
-    when(mockCalcConnector.createSummary(Matchers.any()))
-      .thenReturn(Future.successful(summary))
+    when(mockCalcConnector.calculateTotalGain(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(totalGainResultModel)))
 
-    when(mockCalcConnector.calculateRebased(Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(Some(result)))
+    when(mockAnswersConstructor.getPersonalDetailsAndPreviousCapitalGainsAnswers(Matchers.any()))
+      .thenReturn(Future.successful(Some(personalDetailsModel)))
+
+    when(mockCalcConnector.calculateTaxableGainAfterPRR(Matchers.any(), Matchers.any())(Matchers.any()))
+      .thenReturn(calculationResultsWithPRRModel)
+
+    when(mockCalcConnector.getFullAEA(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(BigDecimal(11000))))
+
+    when(mockCalcConnector.getPartialAEA(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(BigDecimal(5500))))
+
+    when(mockCalcConnector.calculateNRCGTTotalTax(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(TestModels.calculationResultsModelWithRebased)))
+
+    when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(TaxYearModel("2015/16", isValidYear = true, "2015/16"))))
 
     new OtherReliefsRebasedController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
+      override val answersConstructor: AnswersConstructor = mockAnswersConstructor
     }
   }
 
@@ -74,14 +94,13 @@ class OtherReliefsRebasedActionSpec extends UnitSpec with WithFakeApplication wi
 
   "Calling the .otherReliefsRebased action " when {
 
-    "not supplied with a pre-existing stored model" should {
+    "not supplied with a pre-existing stored model and a chargeable gain of £500 and total gain of £500" should {
 
       val target = setupTarget(
         None,
-        TestModels.summaryIndividualRebasedAcqDateAfter,
-        TestModels.calcModelTwoRates,
-        Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        None
+        TestModels.totalGainAnswersModelWithRebased,
+        TestModels.calculationResultsModelWithRebased,
+        TestModels.personalDetailsCalculationModelIndividual
       )
       lazy val result = target.otherReliefsRebased(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
@@ -90,8 +109,16 @@ class OtherReliefsRebasedActionSpec extends UnitSpec with WithFakeApplication wi
         status(result) shouldBe 200
       }
 
-      "load the otherReliefs flat page" in {
+      "load the otherReliefs rebased page" in {
         document.title() shouldBe messages.question
+      }
+
+      s"have a total gain message with text '${messages.totalGain}' £500" in {
+        document.getElementById("totalGain").text() shouldBe s"${messages.totalGain} £500"
+      }
+
+      s"have a taxable gain message with text '${messages.taxableGain}' £500" in {
+        document.getElementById("taxableGain").text() shouldBe s"${messages.taxableGain} £500"
       }
     }
 
@@ -99,10 +126,9 @@ class OtherReliefsRebasedActionSpec extends UnitSpec with WithFakeApplication wi
       val testOtherReliefsModel = OtherReliefsModel(5000)
       val target = setupTarget(
         Some(testOtherReliefsModel),
-        TestModels.summaryIndividualRebasedAcqDateAfter,
-        TestModels.calcModelLoss,
-        Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        None
+        TestModels.totalGainAnswersModelWithRebased,
+        TestModels.calculationResultsModelWithRebased,
+        TestModels.personalDetailsCalculationModelIndividual
       )
       lazy val result = target.otherReliefsRebased(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
@@ -111,7 +137,7 @@ class OtherReliefsRebasedActionSpec extends UnitSpec with WithFakeApplication wi
         status(result) shouldBe 200
       }
 
-      "load the otherReliefs flat page" in {
+      "load the otherReliefs rebased page" in {
         document.title() shouldBe messages.question
       }
     }
@@ -119,10 +145,9 @@ class OtherReliefsRebasedActionSpec extends UnitSpec with WithFakeApplication wi
     "supplied with an invalid session" should {
       val target = setupTarget(
         None,
-        TestModels.summaryIndividualRebasedAcqDateAfter,
-        TestModels.calcModelTwoRates,
-        Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        None
+        TestModels.totalGainAnswersModelWithRebased,
+        TestModels.calculationResultsModelWithRebased,
+        TestModels.personalDetailsCalculationModelIndividual
       )
       lazy val result = target.otherReliefsRebased(fakeRequest)
 
@@ -141,10 +166,9 @@ class OtherReliefsRebasedActionSpec extends UnitSpec with WithFakeApplication wi
     "submitting a valid form" should {
       val target = setupTarget(
         None,
-        TestModels.summaryIndividualRebasedAcqDateAfter,
-        TestModels.calcModelLoss,
-        Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        None
+        TestModels.totalGainAnswersModelWithRebased,
+        TestModels.calculationResultsModelWithRebased,
+        TestModels.personalDetailsCalculationModelIndividual
       )
       lazy val request = fakeRequestToPOSTWithSession(("isClaimingOtherReliefs", "Yes"), ("otherReliefs", "1000"))
       lazy val result = target.submitOtherReliefsRebased(request)
@@ -161,10 +185,9 @@ class OtherReliefsRebasedActionSpec extends UnitSpec with WithFakeApplication wi
     "submitting an invalid form" should {
       val target = setupTarget(
         None,
-        TestModels.summaryIndividualRebasedAcqDateAfter,
-        TestModels.calcModelLoss,
-        Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        None
+        TestModels.totalGainAnswersModelWithRebased,
+        TestModels.calculationResultsModelWithRebased,
+        TestModels.personalDetailsCalculationModelIndividual
       )
       lazy val request = fakeRequestToPOSTWithSession(("isClaimingOtherReliefs", "Yes"), ("otherReliefs", "-1000"))
       lazy val result = target.submitOtherReliefsRebased(request)
@@ -174,7 +197,7 @@ class OtherReliefsRebasedActionSpec extends UnitSpec with WithFakeApplication wi
         status(result) shouldBe 400
       }
 
-      "return to the other reliefs flat page" in {
+      "return to the other reliefs rebased page" in {
         document.title() shouldBe messages.question
       }
     }
