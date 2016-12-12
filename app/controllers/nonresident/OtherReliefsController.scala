@@ -16,19 +16,16 @@
 
 package controllers.nonresident
 
-import common.{KeystoreKeys, TaxDates}
-import common.nonresident.CustomerTypeKeys
+import common.KeystoreKeys
 import connectors.CalculatorConnector
 import constructors.nonresident.AnswersConstructor
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.OtherReliefsForm._
 import models.nonresident._
-import models.resident.TaxYearModel
 import play.api.data.Form
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.HeaderCarrier
 import views.html.calculation
-import common.nonresident.OtherReliefsTaxableGainCalculation._
+import common.nonresident.TaxableGainCalculation._
 
 import scala.concurrent.Future
 

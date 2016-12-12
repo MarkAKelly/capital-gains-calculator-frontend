@@ -19,6 +19,7 @@ package controllers.CalculationControllerTests
 import assets.MessageLookup.NonResident.{OtherReliefs => messages}
 import common.{KeystoreKeys, TestModels}
 import connectors.CalculatorConnector
+import constructors.nonresident.AnswersConstructor
 import controllers.helpers.FakeRequestHelper
 import controllers.nonresident.OtherReliefsFlatController
 import models.nonresident._
@@ -45,6 +46,7 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
                  ): OtherReliefsFlatController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
+    val mockAnswersConstructor = mock[AnswersConstructor]
 
     when(mockCalcConnector.fetchAndGetFormData[OtherReliefsModel](Matchers.any())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
@@ -63,6 +65,7 @@ class OtherReliefsFlatActionSpec extends UnitSpec with WithFakeApplication with 
 
     new OtherReliefsFlatController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
+      override val answersConstructor: AnswersConstructor = mockAnswersConstructor
     }
   }
 

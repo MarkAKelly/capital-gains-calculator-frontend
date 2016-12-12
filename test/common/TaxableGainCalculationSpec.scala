@@ -16,7 +16,7 @@
 
 package common
 
-import assets.MessageLookup.NonResident.OtherReliefs
+import assets.MessageLookup.NonResident.{OtherReliefs => messages}
 import connectors.CalculatorConnector
 import constructors.nonresident.AnswersConstructor
 import controllers.helpers.FakeRequestHelper
@@ -29,28 +29,10 @@ import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import assets.MessageLookup.NonResident.{OtherReliefs => messages}
-import scala.concurrent.ExecutionContext.Implicits.global
-import assets.MessageLookup.NonResident.{OtherReliefs => messages}
-import common.{KeystoreKeys, TestModels}
-import connectors.CalculatorConnector
-import constructors.nonresident.AnswersConstructor
-import controllers.helpers.FakeRequestHelper
-import controllers.nonresident.OtherReliefsController
-import models.nonresident._
-import models.resident.TaxYearModel
-import org.jsoup.Jsoup
-import org.mockito.Matchers
-import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
-import play.api.test.Helpers._
-import uk.gov.hmrc.play.http.HeaderCarrier
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
-import scala.concurrent.Future
 
-class OtherRelievesTaxableGainCalculationSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper{
+class TaxableGainCalculationSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper{
 
   implicit val hc = new HeaderCarrier()
 

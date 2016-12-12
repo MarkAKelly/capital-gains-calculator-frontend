@@ -29,7 +29,7 @@ import scala.concurrent.Future
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-object OtherReliefsTaxableGainCalculation {
+object TaxableGainCalculation {
 
   def getPRRResponse(totalGainResultsModel: TotalGainResultsModel,
                      calcConnector: CalculatorConnector)(implicit hc: HeaderCarrier):
