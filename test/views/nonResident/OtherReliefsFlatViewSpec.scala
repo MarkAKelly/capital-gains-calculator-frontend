@@ -29,8 +29,7 @@ class OtherReliefsFlatViewSpec extends UnitSpec with WithFakeApplication with Mo
 
   "The Other Reliefs Flat view" when {
     "not supplied with a pre-existing stored value and a taxable gain" should {
-      val model = CalculationResultModel(100, 1000, 100, 18, 0, None, None, None)
-      lazy val view = otherReliefsFlat(otherReliefsForm, model, hasExistingReliefAmount = false)(fakeRequest)
+      lazy val view = otherReliefsFlat(otherReliefsForm, hasExistingReliefAmount = false, BigDecimal(2000), BigDecimal(2500))(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have a back link" which {
@@ -49,12 +48,12 @@ class OtherReliefsFlatViewSpec extends UnitSpec with WithFakeApplication with Mo
       "have a heading" which {
         lazy val heading = document.body().select("h1")
 
-        "has a class of heading-large" in {
-          heading.attr("class") shouldBe "heading-large"
+        "has a class of heading-xlarge" in {
+          heading.attr("class") shouldBe "heading-xlarge"
         }
 
         s"has the text '${messages.pageHeading}'" in {
-          heading.text shouldBe messages.pageHeading
+          heading.text shouldBe messages.OtherReliefs.question
         }
       }
 
@@ -74,8 +73,14 @@ class OtherReliefsFlatViewSpec extends UnitSpec with WithFakeApplication with Mo
         }
       }
 
-      s"have the question '${messages.OtherReliefs.question}'" in {
-        document.body.select("label").first().text shouldBe messages.OtherReliefs.question
+      s"have a label" which {
+        lazy val label = document.body.select("label").first()
+        s"has the text '${messages.OtherReliefs.question}'" in {
+          label.text shouldBe messages.OtherReliefs.question
+        }
+        "has the class 'visuallyhidden'" in {
+          label.attr("class") shouldBe "visuallyhidden"
+        }
       }
 
       s"have the help text '${messages.OtherReliefs.help}'" in {
@@ -85,8 +90,8 @@ class OtherReliefsFlatViewSpec extends UnitSpec with WithFakeApplication with Mo
       "have additional content" which {
         lazy val content = document.select("form > div")
 
-        "has a class of panel-indent" in {
-          content.attr("class") shouldBe "panel-indent"
+        "has a class of panel-indent gain-padding" in {
+          content.attr("class") shouldBe "panel-indent gain-padding"
         }
 
         "has a list of class list" in {
@@ -94,11 +99,11 @@ class OtherReliefsFlatViewSpec extends UnitSpec with WithFakeApplication with Mo
         }
 
         "has a list entry with the total gain message and value" in {
-          content.select("li#totalGain").text() shouldBe s"${messages.OtherReliefs.totalGain} £1,000"
+          content.select("li#totalGain").text() shouldBe s"${messages.OtherReliefs.totalGain} £2,500"
         }
 
         "has a list entry with the taxable gain message and value" in {
-          content.select("li#taxableGain").text() shouldBe s"${messages.OtherReliefs.taxableGain} £100"
+          content.select("li#taxableGain").text() shouldBe s"${messages.OtherReliefs.taxableGain} £2,000"
         }
       }
 
@@ -120,13 +125,12 @@ class OtherReliefsFlatViewSpec extends UnitSpec with WithFakeApplication with Mo
     }
 
     "supplied with a pre-existing stored value and a negative taxable gain" should {
-      val model = CalculationResultModel(100, 1000, -100, 18, 0, None, None, None)
       val map = Map("otherReliefs" -> "1000")
-      lazy val view = otherReliefsFlat(otherReliefsForm.bind(map), model, hasExistingReliefAmount = true)(fakeRequest)
+      lazy val view = otherReliefsFlat(otherReliefsForm.bind(map), hasExistingReliefAmount = true, BigDecimal(-1000), BigDecimal(2000))(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "has a list entry with the loss carried forward message and value" in {
-        document.select("li#taxableGain").text() shouldBe s"${messages.OtherReliefs.lossCarriedForward} £100"
+        document.select("li#taxableGain").text() shouldBe s"${messages.OtherReliefs.lossCarriedForward} £1,000"
       }
 
       "have a button" which {
@@ -149,7 +153,7 @@ class OtherReliefsFlatViewSpec extends UnitSpec with WithFakeApplication with Mo
     "supplied with an invalid map" should {
       val model = CalculationResultModel(100, 1000, -100, 18, 0, None, None, None)
       val map = Map("otherReliefs" -> "-1000")
-      lazy val view = otherReliefsFlat(otherReliefsForm.bind(map), model, hasExistingReliefAmount = true)(fakeRequest)
+      lazy val view = otherReliefsFlat(otherReliefsForm.bind(map), hasExistingReliefAmount = true, BigDecimal(2000), BigDecimal(2000))(fakeRequest)
       lazy val document = Jsoup.parse(view.body)
 
       "have an error summary" in {

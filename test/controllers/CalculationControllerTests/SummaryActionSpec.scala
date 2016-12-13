@@ -76,11 +76,20 @@ class SummaryActionSpec extends UnitSpec with WithFakeApplication with MockitoSu
     when(mockCalcConnector.getPartialAEA(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(Some(BigDecimal(5500))))
 
-    when(mockCalcConnector.calculateNRCGTTotalTax(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+    when(mockCalcConnector.calculateNRCGTTotalTax(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(taxOwedResult))
 
     when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(Some(TaxYearModel("2015/16", true, "2015/16"))))
+
+    when(mockCalcConnector.fetchAndGetFormData[OtherReliefsModel](Matchers.eq(KeystoreKeys.otherReliefsFlat))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(None))
+
+    when(mockCalcConnector.fetchAndGetFormData[OtherReliefsModel](Matchers.eq(KeystoreKeys.otherReliefsRebased))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(None))
+
+    when(mockCalcConnector.fetchAndGetFormData[OtherReliefsModel](Matchers.eq(KeystoreKeys.otherReliefsTA))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(None))
 
     new SummaryController {
       override val calcConnector: CalculatorConnector = mockCalcConnector

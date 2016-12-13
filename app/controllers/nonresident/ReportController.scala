@@ -92,10 +92,11 @@ trait ReportController extends FrontendController with ValidActiveSession {
   def calculateTaxOwed(totalGainAnswersModel: TotalGainAnswersModel,
                        privateResidenceReliefModel: Option[PrivateResidenceReliefModel],
                        totalPersonalDetailsCalculationModel: Option[TotalPersonalDetailsCalculationModel],
-                       maxAEA: BigDecimal)(implicit hc: HeaderCarrier): Future[Option[CalculationResultsWithTaxOwedModel]] = {
+                       maxAEA: BigDecimal,
+                       otherReliefs: Option[AllOtherReliefsModel])(implicit hc: HeaderCarrier): Future[Option[CalculationResultsWithTaxOwedModel]] = {
     totalPersonalDetailsCalculationModel match {
       case Some(data) => calcConnector.calculateNRCGTTotalTax(totalGainAnswersModel,
-        privateResidenceReliefModel, totalPersonalDetailsCalculationModel.get, maxAEA)
+        privateResidenceReliefModel, totalPersonalDetailsCalculationModel.get, maxAEA, otherReliefs)
       case _ => Future.successful(None)
     }
   }
@@ -142,6 +143,35 @@ trait ReportController extends FrontendController with ValidActiveSession {
     }
   }
 
+  def getAllOtherReliefs(totalPersonalDetailsCalculationModel: Option[TotalPersonalDetailsCalculationModel])
+                        (implicit hc: HeaderCarrier): Future[Option[AllOtherReliefsModel]] = {
+    totalPersonalDetailsCalculationModel match {
+      case Some(data) => {
+        val flat = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat)
+        val rebased = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased)
+        val time = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA)
+
+        for {
+          flatReliefs <- flat
+          rebasedReliefs <- rebased
+          timeReliefs <- time
+        } yield Some(AllOtherReliefsModel(flatReliefs, rebasedReliefs, timeReliefs))
+      }
+      case _ => Future.successful(None)
+    }
+  }
+
+  def getOtherReliefs(calculationResultsWithTaxOwedModel: Option[CalculationResultsWithTaxOwedModel],
+                      calculationElectionModel: Option[CalculationElectionModel])
+                     (implicit hc: HeaderCarrier): Future[Option[OtherReliefsModel]] = {
+    (calculationResultsWithTaxOwedModel, calculationElectionModel.map(_.calculationType)) match {
+      case (Some(data), Some(CalculationType.flat)) => calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat)
+      case (Some(data), Some(CalculationType.rebased)) => calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased)
+      case (Some(data), Some(CalculationType.timeApportioned)) => calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA)
+      case _ => Future.successful(None)
+    }
+  }
+
   val summaryReport = ValidateSession.async { implicit request =>
     for {
       answers <- answersConstructor.getNRTotalGainAnswers
@@ -152,16 +182,18 @@ trait ReportController extends FrontendController with ValidActiveSession {
       prrModel <- getPRRModel(totalGains, noPRR)
       totalGainsWithPRR <- calculatePRR(answers, prrModel)
       finalAnswers <- getFinalTaxAnswers(totalGains.get, totalGainsWithPRR)
+      otherReliefsModel <- getAllOtherReliefs(finalAnswers)
       taxYear <- getTaxYear(answers)
       maxAEA <- getMaxAEA(finalAnswers, taxYear)
-      finalResult <- calculateTaxOwed(answers, prrModel, finalAnswers, maxAEA.get)
+      finalResult <- calculateTaxOwed(answers, prrModel, finalAnswers, maxAEA.get, otherReliefsModel)
       calculationType <- calcConnector.fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection)
+      otherReliefs <- getOtherReliefs(finalResult, calculationType)
       results <- getSection(totalGainsWithPRR, prrModel,
         totalGains.get, calculationType.get.calculationType, finalResult, taxYear)
       taxOwed <- getTaxOwed(finalResult, calculationType.get.calculationType)
     } yield {
-      PdfGenerator.ok(summaryView(answers, results, taxYear.get, calculationType.get.calculationType, prrModel, finalAnswers, taxOwed.getOrElse(0)),
-        host).toScala
+      PdfGenerator.ok(summaryView(answers, results, taxYear.get, calculationType.get.calculationType, prrModel,
+        finalAnswers, taxOwed.getOrElse(0), otherReliefs), host).toScala
         .withHeaders("Content-Disposition" ->s"""attachment; filename="${Messages("calc.summary.title")}.pdf"""")
     }
   }

@@ -25,6 +25,7 @@ import models.nonresident._
 import play.api.data.Form
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import views.html.calculation
+import common.nonresident.TaxableGainCalculation._
 
 import scala.concurrent.Future
 
@@ -43,9 +44,11 @@ trait OtherReliefsController extends FrontendController with ValidActiveSession 
 
   val otherReliefs = ValidateSession.async { implicit request =>
 
-    def routeRequest(model: Option[OtherReliefsModel], totalGain: Option[TotalGainResultsModel]) = {
+    def routeRequest(model: Option[OtherReliefsModel],
+                     totalGain: Option[TotalGainResultsModel],
+                     chargeableGainResult: Option[CalculationResultsWithTaxOwedModel]) = {
       val gain = totalGain.fold(BigDecimal(0))(_.flatGain)
-      val chargeableGain = BigDecimal(0)
+      val chargeableGain = chargeableGainResult.fold(BigDecimal(0))(_.flatResult.taxableGain)
 
       val result = model.fold(calculation.nonresident.otherReliefs(otherReliefsForm, chargeableGain, gain)) { data =>
         calculation.nonresident.otherReliefs(otherReliefsForm.fill(data), chargeableGain, gain)
@@ -56,9 +59,15 @@ trait OtherReliefsController extends FrontendController with ValidActiveSession 
 
     for {
       answers <- answersConstructor.getNRTotalGainAnswers(hc)
-      gain <- calcConnector.calculateTotalGain(answers)
+      gain <- calcConnector.calculateTotalGain(answers)(hc)
+      prrAnswers <- getPRRResponse(gain.get, calcConnector)
+      totalGainWithPRR <- getPRRIfApplicable(answers, prrAnswers, calcConnector)(hc)
+      allAnswers <- getFinalSectionsAnswers(gain.get, totalGainWithPRR, calcConnector, answersConstructor)(hc)
+      taxYear <- getTaxYear(answers, calcConnector)(hc)
+      maxAEA <- getMaxAEA(allAnswers, taxYear, calcConnector)(hc)
+      chargeableGainResult <- getChargeableGain(answers, prrAnswers, allAnswers, maxAEA.get, calcConnector)(hc)
       reliefs <- calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat)
-    } yield routeRequest(reliefs, gain)
+    } yield routeRequest(reliefs, gain, chargeableGainResult)
 
   }
 
@@ -66,22 +75,28 @@ trait OtherReliefsController extends FrontendController with ValidActiveSession 
 
     def errorAction(form: Form[OtherReliefsModel]) = {
 
-      def routeRequest(totalGain: Option[TotalGainResultsModel]) = {
+      def routeRequest(totalGain: Option[TotalGainResultsModel], chargeableGainResult: Option[CalculationResultsWithTaxOwedModel]) = {
         val gain = totalGain.fold(BigDecimal(0))(_.flatGain)
-        val chargeableGain = BigDecimal(0)
+        val chargeableGain = chargeableGainResult.fold(BigDecimal(0))(_.flatResult.taxableGain)
 
         BadRequest(calculation.nonresident.otherReliefs(form, chargeableGain, gain))
       }
 
       for {
         answers <- answersConstructor.getNRTotalGainAnswers(hc)
-        gain <- calcConnector.calculateTotalGain(answers)
-      } yield routeRequest(gain)
+        gain <- calcConnector.calculateTotalGain(answers)(hc)
+        prrAnswers <- getPRRResponse(gain.get, calcConnector)(hc)
+        totalGainWithPRR <- getPRRIfApplicable(answers, prrAnswers, calcConnector)(hc)
+        allAnswers <- getFinalSectionsAnswers(gain.get, totalGainWithPRR, calcConnector, answersConstructor)(hc)
+        taxYear <- getTaxYear(answers, calcConnector)(hc)
+        maxAEA <- getMaxAEA(allAnswers, taxYear, calcConnector)(hc)
+        chargeableGainResult <- getChargeableGain(answers, prrAnswers, allAnswers, maxAEA.get, calcConnector)(hc)
+      } yield routeRequest(gain, chargeableGainResult)
     }
 
     def successAction(model: OtherReliefsModel) = {
       calcConnector.saveFormData(KeystoreKeys.otherReliefsFlat, model)
-      Future.successful(Redirect(routes.CheckYourAnswersController.checkYourAnswers()))
+      Future.successful(Redirect(routes.SummaryController.summary()))
     }
 
     otherReliefsForm.bindFromRequest.fold(

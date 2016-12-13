@@ -16,22 +16,21 @@
 
 package controllers.CalculationControllerTests
 
+import assets.MessageLookup.{NonResident => messages}
+import connectors.CalculatorConnector
 import constructors.nonresident.AnswersConstructor
 import controllers.helpers.FakeRequestHelper
-import controllers.nonresident.CheckYourAnswersController
+import controllers.nonresident.{CheckYourAnswersController, routes}
 import models.nonresident._
 import org.jsoup.Jsoup
 import org.mockito.Matchers
-import controllers.nonresident.routes
-import org.scalatest.mock.MockitoSugar
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.mockito.Mockito._
-import assets.MessageLookup.{NonResident => messages}
-import connectors.CalculatorConnector
-
-import scala.concurrent.Future
+import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+
+import scala.concurrent.Future
 
 class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
@@ -60,6 +59,9 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
 
     when(mockCalcConnector.calculateTotalGain(Matchers.any())(Matchers.any()))
       .thenReturn(totalGainsModel)
+
+    when(mockCalcConnector.calculateTaxableGainAfterPRR(Matchers.any(), Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(calculationResultsWithPRRModel))
 
     new CheckYourAnswersController {
       override val answersConstructor: AnswersConstructor = mockAnswersConstructor
@@ -149,7 +151,7 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "redirect the user to the session timeout page" in {
-        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+        redirectLocation(result).get should include("/calculate-your-capital-gains/session-timeout")
       }
     }
 
@@ -194,7 +196,7 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
   "Calling .submitCheckYourAnswers" when {
 
 
-    "provided with a valid model with multiple calculations avalible" should {
+    "provided with a valid model with multiple calculations available" should {
       lazy val results = Some(TotalGainResultsModel(1.0, Some(2.0), None))
       lazy val target = setupTarget(modelWithMultipleGains, results)
       lazy val result = target.submitCheckYourAnswers(fakeRequestWithSession)
@@ -208,7 +210,7 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
       }
     }
 
-    "provided with a valid model with only one calculation avalible" should {
+    "provided with a valid model with only one calculation available" should {
       lazy val results = Some(TotalGainResultsModel(1.0, None, None))
       lazy val target = setupTarget(modelWithOnlyFlat, results)
       lazy val result = target.submitCheckYourAnswers(fakeRequestWithSession)
@@ -217,12 +219,12 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
         status(result) shouldBe 303
       }
 
-      "redirect the user to the summary page" in {
-        redirectLocation(result).get shouldBe controllers.nonresident.routes.SummaryController.summary().url
+      "redirect the user to the other reliefs page" in {
+        redirectLocation(result).get shouldBe controllers.nonresident.routes.OtherReliefsController.otherReliefs().url
       }
     }
 
-    "provided with a valid session but no calculations avalible" should {
+    "provided with a valid session but no calculations available" should {
       lazy val target = setupTarget(modelWithOnlyFlat, None)
       lazy val result = target.submitCheckYourAnswers(fakeRequestWithSession)
 
@@ -245,7 +247,7 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
       }
 
       "redirect the user to the session timeout page" in {
-        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+        redirectLocation(result).get should include("/calculate-your-capital-gains/session-timeout")
       }
     }
   }
@@ -258,7 +260,7 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
       val prrModel = PrivateResidenceReliefModel("Yes", Some(0))
 
       val target = setupTarget(modelWithMultipleGains, Some(totalGainResultsModelWithGain), Some(prrModel))
-      lazy val result = target.getPRRModel(hc, totalGainResultsModelWithGain)
+      lazy val result = target.getPRRModel(Some(totalGainResultsModelWithGain))
 
       "return a PrivateResidenceReliefModel" in {
         await(result.get) shouldEqual prrModel
@@ -270,7 +272,7 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
       val totalGainResultsModelWithGain = TotalGainResultsModel(100, None, None)
 
       val target = setupTarget(modelWithMultipleGains, Some(totalGainResultsModelWithGain), None)
-      lazy val result = target.getPRRModel(hc, totalGainResultsModelWithGain)
+      lazy val result = target.getPRRModel(Some(totalGainResultsModelWithGain))
 
       "return a PrivateResidenceReliefModel" in {
         await(result) shouldEqual None
@@ -282,11 +284,76 @@ class CheckYourAnswersActionSpec extends UnitSpec with WithFakeApplication with 
       val totalGainResultsModelWithNoGain = TotalGainResultsModel(-100, Some(0), Some(-1))
 
       val target = setupTarget(modelWithMultipleGains, Some(totalGainResultsModelWithNoGain), None)
-      lazy val result = target.getPRRModel(hc, totalGainResultsModelWithNoGain)
+      lazy val result = target.getPRRModel(Some(totalGainResultsModelWithNoGain))
 
       "return a None" in {
         await(result) shouldEqual None
       }
+    }
+
+    "with no totalGainsResultsModel" should {
+      val target = setupTarget(modelWithMultipleGains, None, None)
+
+      lazy val result = target.getPRRModel(None)
+
+      "return a None" in {
+        await(result) shouldEqual None
+      }
+    }
+  }
+
+  "Calling .calculateTaxableGainWithPRR" should {
+
+    "return a None with no acquisition date or rebased value" in {
+      val target = setupTarget(modelWithOnlyFlat, Some(totalGainResultsModel))
+      val result = target.calculateTaxableGainWithPRR(None, modelWithOnlyFlat)
+
+      await(result) shouldBe None
+    }
+
+    "return Some value with valid prr" in {
+      val model = mock[CalculationResultsWithPRRModel]
+      val target = setupTarget(modelWithMultipleGains, Some(totalGainResultsModel), calculationResultsWithPRRModel = Some(model))
+      val result = target.calculateTaxableGainWithPRR(Some(PrivateResidenceReliefModel("Yes", Some(1), Some(2))), modelWithMultipleGains)
+
+      await(result) shouldBe Some(model)
+    }
+  }
+
+  "Calling .redirectRoute" should {
+
+    "route to other reliefs when a taxable gain greater than 0 is found" in {
+      val prrCalcModel = CalculationResultsWithPRRModel(GainsAfterPRRModel(100, 10, 90), None, None)
+      val totalGainModel = TotalGainResultsModel(100, None, None)
+      val target = setupTarget(modelWithMultipleGains, None)
+      lazy val result = target.redirectRoute(Some(prrCalcModel), totalGainModel)
+
+      redirectLocation(result) shouldBe Some(controllers.nonresident.routes.OtherReliefsController.otherReliefs().url)
+    }
+
+    "route to the summary when a taxable gain of 0 or less is found" in {
+      val prrCalcModel = CalculationResultsWithPRRModel(GainsAfterPRRModel(100, 0, 100), None, None)
+      val totalGainModel = TotalGainResultsModel(100, None, None)
+      val target = setupTarget(modelWithMultipleGains, None)
+      lazy val result = target.redirectRoute(Some(prrCalcModel), totalGainModel)
+
+      redirectLocation(result) shouldBe Some(controllers.nonresident.routes.SummaryController.summary().url)
+    }
+
+    "route to other reliefs when no taxable gain is found with a total gain greater than 0" in {
+      val totalGainModel = TotalGainResultsModel(100, None, None)
+      val target = setupTarget(modelWithMultipleGains, None)
+      lazy val result = target.redirectRoute(None, totalGainModel)
+
+      redirectLocation(result) shouldBe Some(controllers.nonresident.routes.OtherReliefsController.otherReliefs().url)
+    }
+
+    "route to the summary when no taxable gain is found with a total gain of 0 or less" in {
+      val totalGainModel = TotalGainResultsModel(0, None, None)
+      val target = setupTarget(modelWithMultipleGains, None)
+      lazy val result = target.redirectRoute(None, totalGainModel)
+
+      redirectLocation(result) shouldBe Some(controllers.nonresident.routes.SummaryController.summary().url)
     }
   }
 

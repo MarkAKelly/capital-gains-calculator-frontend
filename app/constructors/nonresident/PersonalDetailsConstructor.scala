@@ -31,7 +31,7 @@ object PersonalDetailsConstructor {
       case Some(data) =>
         val customerTypeData = getCustomerTypeAnswer(data.customerTypeModel)
         val currentIncomeData = getCurrentIncomeAnswer(data.customerTypeModel, data.currentIncomeModel)
-        val personalAllowanceData = getPersonalAllowanceAnswer(data.customerTypeModel, data.personalAllowanceModel)
+        val personalAllowanceData = getPersonalAllowanceAnswer(data.customerTypeModel, data.personalAllowanceModel, data.currentIncomeModel)
         val disabledTrusteeData = getDisabledTrusteeAnswer(data.customerTypeModel, data.trusteeModel)
         val otherPropertiesData = getOtherPropertiesAnswer(data.otherPropertiesModel)
         val previousGainOrLossData = previousGainOrLossAnswer(data.otherPropertiesModel, data.previousGainOrLoss)
@@ -92,18 +92,29 @@ object PersonalDetailsConstructor {
     }
 
   //Customer type needs to be individual
-  def getPersonalAllowanceAnswer(customerTypeModel: CustomerTypeModel,
-                                 personalAllowanceModel: Option[PersonalAllowanceModel]): Option[QuestionAnswerModel[BigDecimal]] =
+  def getPersonalAllowanceAnswer(customerTypeModel: CustomerTypeModel, personalAllowanceModel: Option[PersonalAllowanceModel],
+                                 currentIncomeModel: Option[CurrentIncomeModel]): Option[QuestionAnswerModel[BigDecimal]] = {
+
+    val checkCurrentIncome: BigDecimal =
+      currentIncomeModel match {
+        case Some(model) => model.currentIncome
+        case None => 0
+      }
+
     (customerTypeModel.customerType, personalAllowanceModel) match {
       case (CustomerTypeKeys.individual, Some(PersonalAllowanceModel(value))) =>
-        Some(QuestionAnswerModel(
-          KeystoreKeys.personalAllowance,
-          value,
-          Messages("calc.personalAllowance.question"),
-          Some(controllers.nonresident.routes.PersonalAllowanceController.personalAllowance().url))
-        )
+        if (checkCurrentIncome > 0) {
+          Some(QuestionAnswerModel(
+            KeystoreKeys.personalAllowance,
+            value,
+            Messages("calc.personalAllowance.question"),
+            Some(controllers.nonresident.routes.PersonalAllowanceController.personalAllowance().url))
+          )
+        }
+        else None
       case _ => None
     }
+  }
 
   //Customer type needs to be trustee
   def getDisabledTrusteeAnswer(customerTypeModel: CustomerTypeModel, trusteeModel: Option[DisabledTrusteeModel]): Option[QuestionAnswerModel[String]] =

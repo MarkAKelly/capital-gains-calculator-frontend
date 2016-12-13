@@ -17,7 +17,7 @@
 package constructors.nonresident
 
 import common.nonresident.CalculationType
-import models.nonresident.{CalculationResultsWithTaxOwedModel, QuestionAnswerModel}
+import models.nonresident.{CalculationResultsWithTaxOwedModel, OtherReliefsModel, QuestionAnswerModel}
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
@@ -37,6 +37,7 @@ object CalculationDetailsWithAllAnswersConstructor {
       case Some(value) => CalculationDetailsWithPRRConstructor.prrUsedDetails(value)
       case _ => None
     }
+    val otherReliefsUsed = otherReliefsUsedRow(correctModel.otherReliefsUsed)
     val allowableLossesUsed = allowableLossesUsedRow(correctModel.allowableLossesUsed, taxYear)
     val broughtForwardLossesUsed = broughtForwardLossesUsedRow(correctModel.broughtForwardLossesUsed, taxYear)
     val annualExemptAmountUsed = aeaUsedRow(correctModel.aeaUsed)
@@ -49,6 +50,7 @@ object CalculationDetailsWithAllAnswersConstructor {
       totalGainDetails,
       totalLossDetails,
       prrDetails,
+      otherReliefsUsed,
       allowableLossesUsed,
       annualExemptAmountUsed,
       annualExemptAmountRemaining,
@@ -120,6 +122,16 @@ object CalculationDetailsWithAllAnswersConstructor {
         Some(QuestionAnswerModel(id, value, question, None))
       case _ if taxableGain > 0 =>
         val value = Messages("calc.summary.calculation.details.taxRateValue", s"£${MoneyPounds(taxableGain, 2).quantity}", taxRate)
+        Some(QuestionAnswerModel(id, value, question, None))
+      case _ => None
+    }
+  }
+
+  def otherReliefsUsedRow(otherReliefsUsed: Option[BigDecimal]): Option[QuestionAnswerModel[BigDecimal]] = {
+    otherReliefsUsed match {
+      case Some(value) if value > 0 =>
+        val id = "calcDetails:otherReliefsUsed"
+        val question = Messages("calc.summary.calculation.details.otherReliefsUsed")
         Some(QuestionAnswerModel(id, value, question, None))
       case _ => None
     }
