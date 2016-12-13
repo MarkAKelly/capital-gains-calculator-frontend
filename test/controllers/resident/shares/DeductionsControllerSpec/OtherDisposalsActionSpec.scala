@@ -53,80 +53,80 @@ class OtherDisposalsActionSpec extends UnitSpec with WithFakeApplication with Fa
     }
   }
 
-  "Calling .otherDisposals from the DeductionsController" when {
-    "request has a valid session and no keystore value" should {
-
-      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val result = target.otherDisposals(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      "return some html" in {
-        contentType(result) shouldBe Some("text/html")
-      }
-
-      s"have a title of ${messages.title("2015/16")}" in {
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title("2015/16")
-      }
-    }
-
-    "request has no session" should {
-
-      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val result = target.otherDisposals(fakeRequest)
-
-      "return a status of 303" in {
-        status(result) shouldBe 303
-      }
-    }
-  }
-
-  "Calling .submitOtherDisposals from the DeductionsController" when {
-    "a valid form 'Yes' is submitted" should {
-
-      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val request = fakeRequestToPOSTWithSession(("hasOtherProperties", "Yes"))
-      lazy val result = target.submitOtherDisposals(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the allowable losses page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/allowable-losses")
-      }
-    }
-
-    "a valid form 'No' is submitted" should {
-
-      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val request = fakeRequestToPOSTWithSession(("hasOtherProperties", "No"))
-      lazy val result = target.submitOtherDisposals(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the allowable losses page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/losses-brought-forward")
-      }
-    }
-
-    "an invalid form is submitted" should {
-
-      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val request = fakeRequestToPOSTWithSession(("hasOtherProperties", ""))
-      lazy val result = target.submitOtherDisposals(request)
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      "render the other properties page" in {
-        Jsoup.parse(bodyOf(result)).title() shouldEqual messages.title("2015/16")
-      }
-    }
-  }
+//  "Calling .otherDisposals from the DeductionsController" when {
+//    "request has a valid session and no keystore value" should {
+//
+//      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val result = target.otherDisposals(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "return some html" in {
+//        contentType(result) shouldBe Some("text/html")
+//      }
+//
+//      s"have a title of ${messages.title("2015/16")}" in {
+//        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title("2015/16")
+//      }
+//    }
+//
+//    "request has no session" should {
+//
+//      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val result = target.otherDisposals(fakeRequest)
+//
+//      "return a status of 303" in {
+//        status(result) shouldBe 303
+//      }
+//    }
+//  }
+//
+//  "Calling .submitOtherDisposals from the DeductionsController" when {
+//    "a valid form 'Yes' is submitted" should {
+//
+//      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val request = fakeRequestToPOSTWithSession(("hasOtherProperties", "Yes"))
+//      lazy val result = target.submitOtherDisposals(request)
+//
+//      "return a 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the allowable losses page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/allowable-losses")
+//      }
+//    }
+//
+//    "a valid form 'No' is submitted" should {
+//
+//      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val request = fakeRequestToPOSTWithSession(("hasOtherProperties", "No"))
+//      lazy val result = target.submitOtherDisposals(request)
+//
+//      "return a 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the allowable losses page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/losses-brought-forward")
+//      }
+//    }
+//
+//    "an invalid form is submitted" should {
+//
+//      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val request = fakeRequestToPOSTWithSession(("hasOtherProperties", ""))
+//      lazy val result = target.submitOtherDisposals(request)
+//
+//      "return a 400" in {
+//        status(result) shouldBe 400
+//      }
+//
+//      "render the other properties page" in {
+//        Jsoup.parse(bodyOf(result)).title() shouldEqual messages.title("2015/16")
+//      }
+//    }
+//  }
 }

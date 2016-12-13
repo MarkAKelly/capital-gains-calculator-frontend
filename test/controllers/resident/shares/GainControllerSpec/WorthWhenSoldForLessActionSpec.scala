@@ -54,79 +54,79 @@ class WorthWhenSoldForLessActionSpec extends UnitSpec with WithFakeApplication w
     }
   }
 
-  "Calling .worthWhenSoldForLess from the GainCalculationController" when {
-    "there is no keystore data" should {
-      lazy val target = setupTarget(None)
-      lazy val result = target.worthWhenSoldForLess(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldEqual 200
-      }
-
-      s"return some html with title of ${MessageLookup.Resident.Shares.WorthWhenSoldForLess.question}" in {
-        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.Resident.Shares.WorthWhenSoldForLess.question
-      }
-    }
-
-    "there is keystore data" should {
-      lazy val target = setupTarget(Some(WorthWhenSoldForLessModel(100)))
-      lazy val result = target.worthWhenSoldForLess(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldEqual 200
-      }
-
-      s"return some html with title of ${MessageLookup.Resident.Shares.WorthWhenSoldForLess.question}" in {
-        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.Resident.Shares.WorthWhenSoldForLess.question
-      }
-    }
-  }
-
-  "Calling .worthWhenSoldForLess from the GainCalculationController with no session" should {
-
-    lazy val target = setupTarget(None)
-    lazy val result = target.worthWhenSoldForLess(fakeRequest)
-
-    "return a status of 303" in {
-      status(result) shouldBe 303
-    }
-
-    "return you to the session timeout page" in {
-      redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
-    }
-  }
-
-  "Calling .submitWorthWhenSoldForLess from the GainController" should {
-    lazy val target = setupTarget(None)
-    lazy val request = fakeRequestToPOSTWithSession(("amount", "100"))
-    lazy val result = target.submitWorthWhenSoldForLess(request)
-
-    "when supplied with a valid form" which {
-
-      "redirect" in {
-        status(result) shouldEqual 303
-      }
-
-      "to the disposal costs page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/disposal-costs")
-      }
-    }
-  }
-
-  "Calling .submitWorthWhenSoldForLess from the GainController" should {
-    lazy val target = setupTarget(None)
-    lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
-    lazy val result = target.submitWorthWhenSoldForLess(request)
-
-    "when supplied with an invalid form" which {
-
-      "error" in {
-        status(result) shouldEqual 400
-      }
-
-      "stay on the shares Worth When Sold page" in {
-        Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.Resident.Shares.WorthWhenSoldForLess.question
-      }
-    }
-  }
+//  "Calling .worthWhenSoldForLess from the GainCalculationController" when {
+//    "there is no keystore data" should {
+//      lazy val target = setupTarget(None)
+//      lazy val result = target.worthWhenSoldForLess(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldEqual 200
+//      }
+//
+//      s"return some html with title of ${MessageLookup.Resident.Shares.WorthWhenSoldForLess.question}" in {
+//        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.Resident.Shares.WorthWhenSoldForLess.question
+//      }
+//    }
+//
+//    "there is keystore data" should {
+//      lazy val target = setupTarget(Some(WorthWhenSoldForLessModel(100)))
+//      lazy val result = target.worthWhenSoldForLess(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldEqual 200
+//      }
+//
+//      s"return some html with title of ${MessageLookup.Resident.Shares.WorthWhenSoldForLess.question}" in {
+//        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.Resident.Shares.WorthWhenSoldForLess.question
+//      }
+//    }
+//  }
+//
+//  "Calling .worthWhenSoldForLess from the GainCalculationController with no session" should {
+//
+//    lazy val target = setupTarget(None)
+//    lazy val result = target.worthWhenSoldForLess(fakeRequest)
+//
+//    "return a status of 303" in {
+//      status(result) shouldBe 303
+//    }
+//
+//    "return you to the session timeout page" in {
+//      redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+//    }
+//  }
+//
+//  "Calling .submitWorthWhenSoldForLess from the GainController" should {
+//    lazy val target = setupTarget(None)
+//    lazy val request = fakeRequestToPOSTWithSession(("amount", "100"))
+//    lazy val result = target.submitWorthWhenSoldForLess(request)
+//
+//    "when supplied with a valid form" which {
+//
+//      "redirect" in {
+//        status(result) shouldEqual 303
+//      }
+//
+//      "to the disposal costs page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/disposal-costs")
+//      }
+//    }
+//  }
+//
+//  "Calling .submitWorthWhenSoldForLess from the GainController" should {
+//    lazy val target = setupTarget(None)
+//    lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
+//    lazy val result = target.submitWorthWhenSoldForLess(request)
+//
+//    "when supplied with an invalid form" which {
+//
+//      "error" in {
+//        status(result) shouldEqual 400
+//      }
+//
+//      "stay on the shares Worth When Sold page" in {
+//        Jsoup.parse(bodyOf(result)).title() shouldEqual MessageLookup.Resident.Shares.WorthWhenSoldForLess.question
+//      }
+//    }
+//  }
 }

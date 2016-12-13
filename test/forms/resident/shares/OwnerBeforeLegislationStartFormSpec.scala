@@ -23,58 +23,58 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class OwnerBeforeLegislationStartFormSpec extends UnitSpec with WithFakeApplication {
 
-  "Creating the OwnerBeforeLegislationStart form from valid inputs" should {
-
-    "return a populated form using .fill" in {
-      val model = OwnerBeforeLegislationStartModel(true)
-      val form = ownerBeforeLegislationStartForm.fill(model)
-      form.value.get shouldBe OwnerBeforeLegislationStartModel(true)
-    }
-
-    "return a populated form using .bind with an answer of Yes" in {
-      val form = ownerBeforeLegislationStartForm.bind(Map(("ownerBeforeLegislationStart", "Yes")))
-      form.value.get shouldBe OwnerBeforeLegislationStartModel(true)
-    }
-
-    "return a populated form using .bind with an answer of No" in {
-      val form = ownerBeforeLegislationStartForm.bind(Map(("ownerBeforeLegislationStart", "No")))
-      form.value.get shouldBe OwnerBeforeLegislationStartModel(false)
-    }
-  }
-
-  "Creating the OwnerBeforeLegislationStart form from invalid inputs" when {
-
-    "supplied with no selection" should {
-      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownerBeforeLegislationStart", "")))
-
-      "return a form with errors" in {
-        form.hasErrors shouldBe true
-      }
-
-      "raise 1 form error" in {
-        form.errors.length shouldBe 1
-      }
-
-      s"return a form with the error message ${Messages.errorNoSelect}" in {
-        form.error("ownerBeforeLegislationStart").get.message shouldBe Messages.errorNoSelect
-      }
-
-    }
-
-    "supplied with an incorrect selection" should {
-      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownerBeforeLegislationStart", "true")))
-
-      "return a form with errors" in {
-        form.hasErrors shouldBe true
-      }
-
-      "raise 1 form error" in {
-        form.errors.length shouldBe 1
-      }
-
-      s"return a form with the error message ${Messages.errorNoSelect}" in {
-        form.error("ownerBeforeLegislationStart").get.message shouldBe Messages.errorNoSelect
-      }
-    }
-  }
+//  "Creating the OwnerBeforeLegislationStart form from valid inputs" should {
+//
+//    "return a populated form using .fill" in {
+//      val model = OwnerBeforeLegislationStartModel(true)
+//      val form = ownerBeforeLegislationStartForm.fill(model)
+//      form.value.get shouldBe OwnerBeforeLegislationStartModel(true)
+//    }
+//
+//    "return a populated form using .bind with an answer of Yes" in {
+//      val form = ownerBeforeLegislationStartForm.bind(Map(("ownerBeforeLegislationStart", "Yes")))
+//      form.value.get shouldBe OwnerBeforeLegislationStartModel(true)
+//    }
+//
+//    "return a populated form using .bind with an answer of No" in {
+//      val form = ownerBeforeLegislationStartForm.bind(Map(("ownerBeforeLegislationStart", "No")))
+//      form.value.get shouldBe OwnerBeforeLegislationStartModel(false)
+//    }
+//  }
+//
+//  "Creating the OwnerBeforeLegislationStart form from invalid inputs" when {
+//
+//    "supplied with no selection" should {
+//      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownerBeforeLegislationStart", "")))
+//
+//      "return a form with errors" in {
+//        form.hasErrors shouldBe true
+//      }
+//
+//      "raise 1 form error" in {
+//        form.errors.length shouldBe 1
+//      }
+//
+//      s"return a form with the error message ${Messages.errorNoSelect}" in {
+//        form.error("ownerBeforeLegislationStart").get.message shouldBe Messages.errorNoSelect
+//      }
+//
+//    }
+//
+//    "supplied with an incorrect selection" should {
+//      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownerBeforeLegislationStart", "true")))
+//
+//      "return a form with errors" in {
+//        form.hasErrors shouldBe true
+//      }
+//
+//      "raise 1 form error" in {
+//        form.errors.length shouldBe 1
+//      }
+//
+//      s"return a form with the error message ${Messages.errorNoSelect}" in {
+//        form.error("ownerBeforeLegislationStart").get.message shouldBe Messages.errorNoSelect
+//      }
+//    }
+//  }
 }

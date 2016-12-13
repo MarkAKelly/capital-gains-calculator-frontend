@@ -49,70 +49,70 @@ class DisposalValueActionSpec extends UnitSpec with WithFakeApplication with Fak
     }
   }
 
-  "Calling .disposalValue from the GainCalculationController" when {
-    "there is no keystore data" should {
-      lazy val target = setupTarget(None)
-      lazy val result = target.disposalValue(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldEqual 200
-      }
-    }
-
-    "there is keystore data" should {
-      lazy val target = setupTarget(Some(DisposalValueModel(100)))
-      lazy val result = target.disposalValue(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldEqual 200
-      }
-    }
-  }
-
-  "Calling .disposalValue from the GainCalculationController" should {
-
-    lazy val target = setupTarget(None)
-    lazy val result = target.disposalValue(fakeRequestWithSession)
-
-    "return a status of 200" in {
-      status(result) shouldBe 200
-    }
-
-    s"return some html with title of ${messages.question}" in {
-      contentType(result) shouldBe Some("text/html")
-      Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual messages.question
-    }
-  }
-
-  "Calling .disposalValue from the GainCalculationController with no session" should {
-
-    lazy val target = setupTarget(None)
-    lazy val result = target.disposalValue(fakeRequest)
-
-    "return a status of 303" in {
-      status(result) shouldBe 303
-    }
-  }
-
-  "Calling .submitDisposalValue from the GainController" should {
-    lazy val target = setupTarget(None)
-    lazy val request = fakeRequestToPOSTWithSession(("amount", "100"))
-    lazy val result = target.submitDisposalValue(request)
-
-    "re-direct to the disposal Costs page when supplied with a valid form" in {
-      status(result) shouldEqual 303
-      redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/disposal-costs")
-    }
-  }
-
-  "Calling .submitDisposalValue from the GainController" should {
-    lazy val target = setupTarget(None)
-    lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
-    lazy val result = target.submitDisposalValue(request)
-
-    "render the disposal value page when supplied with an invalid form" in {
-      status(result) shouldEqual 400
-      Jsoup.parse(bodyOf(result)).title() shouldEqual messages.question
-    }
-  }
+//  "Calling .disposalValue from the GainCalculationController" when {
+//    "there is no keystore data" should {
+//      lazy val target = setupTarget(None)
+//      lazy val result = target.disposalValue(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldEqual 200
+//      }
+//    }
+//
+//    "there is keystore data" should {
+//      lazy val target = setupTarget(Some(DisposalValueModel(100)))
+//      lazy val result = target.disposalValue(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldEqual 200
+//      }
+//    }
+//  }
+//
+//  "Calling .disposalValue from the GainCalculationController" should {
+//
+//    lazy val target = setupTarget(None)
+//    lazy val result = target.disposalValue(fakeRequestWithSession)
+//
+//    "return a status of 200" in {
+//      status(result) shouldBe 200
+//    }
+//
+//    s"return some html with title of ${messages.question}" in {
+//      contentType(result) shouldBe Some("text/html")
+//      Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual messages.question
+//    }
+//  }
+//
+//  "Calling .disposalValue from the GainCalculationController with no session" should {
+//
+//    lazy val target = setupTarget(None)
+//    lazy val result = target.disposalValue(fakeRequest)
+//
+//    "return a status of 303" in {
+//      status(result) shouldBe 303
+//    }
+//  }
+//
+//  "Calling .submitDisposalValue from the GainController" should {
+//    lazy val target = setupTarget(None)
+//    lazy val request = fakeRequestToPOSTWithSession(("amount", "100"))
+//    lazy val result = target.submitDisposalValue(request)
+//
+//    "re-direct to the disposal Costs page when supplied with a valid form" in {
+//      status(result) shouldEqual 303
+//      redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/disposal-costs")
+//    }
+//  }
+//
+//  "Calling .submitDisposalValue from the GainController" should {
+//    lazy val target = setupTarget(None)
+//    lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
+//    lazy val result = target.submitDisposalValue(request)
+//
+//    "render the disposal value page when supplied with an invalid form" in {
+//      status(result) shouldEqual 400
+//      Jsoup.parse(bodyOf(result)).title() shouldEqual messages.question
+//    }
+//  }
 }

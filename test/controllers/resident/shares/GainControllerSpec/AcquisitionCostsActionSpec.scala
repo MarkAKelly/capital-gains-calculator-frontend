@@ -72,215 +72,215 @@ class AcquisitionCostsActionSpec extends UnitSpec with WithFakeApplication with 
     }
   }
 
-  "Calling .acquisitionCosts from the shares GainCalculationController" when {
-
-    "there is no keystore data" should {
-
-      lazy val target = setupTarget(
-        acquisitionCostsData = None,
-        ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
-        inheritedThemData = Some(DidYouInheritThemModel(false)),
-        gainAnswersModel,
-        BigDecimal(0)
-      )
-      lazy val result = target.acquisitionCosts(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      "return some html" in {
-        contentType(result) shouldBe Some("text/html")
-      }
-
-      "display the Acquisition Costs view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
-      }
-    }
-
-    "there is some keystore data" should {
-
-      lazy val target = setupTarget(
-        acquisitionCostsData = Some(AcquisitionCostsModel(1000)),
-        ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
-        inheritedThemData = Some(DidYouInheritThemModel(false)),
-        gainAnswersModel,
-        BigDecimal(0)
-      )
-      lazy val result = target.acquisitionCosts(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      "return some html" in {
-        contentType(result) shouldBe Some("text/html")
-      }
-
-      "display the Acquisition Costs view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
-      }
-    }
-
-    "testing the back links" when {
-
-      "the property was owned before the tax came in (1 April 1982)" should {
-
-        lazy val target = setupTarget(
-          acquisitionCostsData = None,
-          ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(true)),
-          inheritedThemData = None,
-          gainAnswersModel,
-          BigDecimal(0)
-        )
-        lazy val result = target.acquisitionCosts(fakeRequestWithSession)
-
-        "return a status of 200" in {
-          status(result) shouldBe 200
-        }
-
-        s"have a back-link to '${controllers.resident.shares.routes.GainController.valueBeforeLegislationStart().url}'" in {
-          status(result) shouldBe 200
-        }
-      }
-
-      "the property was acquired after the tax came in (1 April 1982) and it was inherited" should {
-
-        lazy val target = setupTarget(
-          acquisitionCostsData = None,
-          ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
-          inheritedThemData = Some(DidYouInheritThemModel(true)),
-          gainAnswersModel,
-          BigDecimal(0)
-        )
-        lazy val result = target.acquisitionCosts(fakeRequestWithSession)
-
-        "return a status of 200" in {
-          status(result) shouldBe 200
-        }
-
-        s"have a back-link to '${controllers.resident.shares.routes.GainController.worthWhenInherited().url}'" in {
-          status(result) shouldBe 200
-        }
-      }
-
-      "the property was acquired after the tax came in (1 April 1982) and it was not inherited" should {
-
-        lazy val target = setupTarget(
-          acquisitionCostsData = None,
-          ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
-          inheritedThemData = Some(DidYouInheritThemModel(false)),
-          gainAnswersModel,
-          BigDecimal(0)
-        )
-        lazy val result = target.acquisitionCosts(fakeRequestWithSession)
-
-        "return a status of 200" in {
-          status(result) shouldBe 200
-        }
-
-        s"have a back-link to '${controllers.resident.shares.routes.GainController.acquisitionValue().url}'" in {
-          status(result) shouldBe 200
-        }
-      }
-    }
-  }
-
-  "request has an invalid session" should {
-
-    lazy val result = GainController.acquisitionCosts(fakeRequest)
-
-    "return a status of 303" in {
-      status(result) shouldBe 303
-    }
-
-    "return you to the session timeout page" in {
-      redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
-    }
-  }
-
-  "Calling .submitAcquisitionCosts from the shares GainCalculationController" when {
-
-    "a valid form is submitted that results in a zero gain" should {
-      lazy val target = setupTarget(
-        acquisitionCostsData = None,
-        ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
-        inheritedThemData = Some(DidYouInheritThemModel(false)),
-        gainAnswersModel,
-        BigDecimal(0)
-      )
-      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
-      lazy val result = target.submitAcquisitionCosts(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the summary page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/summary")
-      }
-    }
-
-    "a valid form is submitted that results in a loss" should {
-      lazy val target = setupTarget(
-        acquisitionCostsData = None,
-        ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
-        inheritedThemData = Some(DidYouInheritThemModel(false)),
-        gainAnswersModel,
-        BigDecimal(-1500)
-      )
-      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
-      lazy val result = target.submitAcquisitionCosts(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the summary page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/summary")
-      }
-    }
-
-    "a valid form is submitted that results in a gain" should {
-      lazy val target = setupTarget(
-        acquisitionCostsData = None,
-        ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
-        inheritedThemData = Some(DidYouInheritThemModel(false)),
-        gainAnswersModel,
-        BigDecimal(1000)
-      )
-      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
-      lazy val result = target.submitAcquisitionCosts(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the summary page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/other-disposals")
-      }
-    }
-
-    "an invalid form is submitted" should {
-      lazy val target = setupTarget(
-        acquisitionCostsData = None,
-        ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
-        inheritedThemData = Some(DidYouInheritThemModel(false)),
-        gainAnswersModel,
-        BigDecimal(0)
-      )
-      lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
-      lazy val result = target.submitAcquisitionCosts(request)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      "render the acquisition costs page" in {
-        doc.title() shouldEqual messages.title
-      }
-    }
-  }
+//  "Calling .acquisitionCosts from the shares GainCalculationController" when {
+//
+//    "there is no keystore data" should {
+//
+//      lazy val target = setupTarget(
+//        acquisitionCostsData = None,
+//        ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
+//        inheritedThemData = Some(DidYouInheritThemModel(false)),
+//        gainAnswersModel,
+//        BigDecimal(0)
+//      )
+//      lazy val result = target.acquisitionCosts(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "return some html" in {
+//        contentType(result) shouldBe Some("text/html")
+//      }
+//
+//      "display the Acquisition Costs view" in {
+//        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+//      }
+//    }
+//
+//    "there is some keystore data" should {
+//
+//      lazy val target = setupTarget(
+//        acquisitionCostsData = Some(AcquisitionCostsModel(1000)),
+//        ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
+//        inheritedThemData = Some(DidYouInheritThemModel(false)),
+//        gainAnswersModel,
+//        BigDecimal(0)
+//      )
+//      lazy val result = target.acquisitionCosts(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "return some html" in {
+//        contentType(result) shouldBe Some("text/html")
+//      }
+//
+//      "display the Acquisition Costs view" in {
+//        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+//      }
+//    }
+//
+//    "testing the back links" when {
+//
+//      "the property was owned before the tax came in (1 April 1982)" should {
+//
+//        lazy val target = setupTarget(
+//          acquisitionCostsData = None,
+//          ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(true)),
+//          inheritedThemData = None,
+//          gainAnswersModel,
+//          BigDecimal(0)
+//        )
+//        lazy val result = target.acquisitionCosts(fakeRequestWithSession)
+//
+//        "return a status of 200" in {
+//          status(result) shouldBe 200
+//        }
+//
+//        s"have a back-link to '${controllers.resident.shares.routes.GainController.valueBeforeLegislationStart().url}'" in {
+//          status(result) shouldBe 200
+//        }
+//      }
+//
+//      "the property was acquired after the tax came in (1 April 1982) and it was inherited" should {
+//
+//        lazy val target = setupTarget(
+//          acquisitionCostsData = None,
+//          ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
+//          inheritedThemData = Some(DidYouInheritThemModel(true)),
+//          gainAnswersModel,
+//          BigDecimal(0)
+//        )
+//        lazy val result = target.acquisitionCosts(fakeRequestWithSession)
+//
+//        "return a status of 200" in {
+//          status(result) shouldBe 200
+//        }
+//
+//        s"have a back-link to '${controllers.resident.shares.routes.GainController.worthWhenInherited().url}'" in {
+//          status(result) shouldBe 200
+//        }
+//      }
+//
+//      "the property was acquired after the tax came in (1 April 1982) and it was not inherited" should {
+//
+//        lazy val target = setupTarget(
+//          acquisitionCostsData = None,
+//          ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
+//          inheritedThemData = Some(DidYouInheritThemModel(false)),
+//          gainAnswersModel,
+//          BigDecimal(0)
+//        )
+//        lazy val result = target.acquisitionCosts(fakeRequestWithSession)
+//
+//        "return a status of 200" in {
+//          status(result) shouldBe 200
+//        }
+//
+//        s"have a back-link to '${controllers.resident.shares.routes.GainController.acquisitionValue().url}'" in {
+//          status(result) shouldBe 200
+//        }
+//      }
+//    }
+//  }
+//
+//  "request has an invalid session" should {
+//
+//    lazy val result = GainController.acquisitionCosts(fakeRequest)
+//
+//    "return a status of 303" in {
+//      status(result) shouldBe 303
+//    }
+//
+//    "return you to the session timeout page" in {
+//      redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+//    }
+//  }
+//
+//  "Calling .submitAcquisitionCosts from the shares GainCalculationController" when {
+//
+//    "a valid form is submitted that results in a zero gain" should {
+//      lazy val target = setupTarget(
+//        acquisitionCostsData = None,
+//        ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
+//        inheritedThemData = Some(DidYouInheritThemModel(false)),
+//        gainAnswersModel,
+//        BigDecimal(0)
+//      )
+//      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+//      lazy val result = target.submitAcquisitionCosts(request)
+//
+//      "return a 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the summary page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/summary")
+//      }
+//    }
+//
+//    "a valid form is submitted that results in a loss" should {
+//      lazy val target = setupTarget(
+//        acquisitionCostsData = None,
+//        ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
+//        inheritedThemData = Some(DidYouInheritThemModel(false)),
+//        gainAnswersModel,
+//        BigDecimal(-1500)
+//      )
+//      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+//      lazy val result = target.submitAcquisitionCosts(request)
+//
+//      "return a 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the summary page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/summary")
+//      }
+//    }
+//
+//    "a valid form is submitted that results in a gain" should {
+//      lazy val target = setupTarget(
+//        acquisitionCostsData = None,
+//        ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
+//        inheritedThemData = Some(DidYouInheritThemModel(false)),
+//        gainAnswersModel,
+//        BigDecimal(1000)
+//      )
+//      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+//      lazy val result = target.submitAcquisitionCosts(request)
+//
+//      "return a 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the summary page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/other-disposals")
+//      }
+//    }
+//
+//    "an invalid form is submitted" should {
+//      lazy val target = setupTarget(
+//        acquisitionCostsData = None,
+//        ownedBeforeStartOfTaxData = Some(OwnerBeforeLegislationStartModel(false)),
+//        inheritedThemData = Some(DidYouInheritThemModel(false)),
+//        gainAnswersModel,
+//        BigDecimal(0)
+//      )
+//      lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
+//      lazy val result = target.submitAcquisitionCosts(request)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a 400" in {
+//        status(result) shouldBe 400
+//      }
+//
+//      "render the acquisition costs page" in {
+//        doc.title() shouldEqual messages.title
+//      }
+//    }
+//  }
 
 }

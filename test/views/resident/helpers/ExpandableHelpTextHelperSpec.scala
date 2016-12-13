@@ -26,54 +26,54 @@ class ExpandableHelpTextHelperSpec extends UnitSpec with WithFakeApplication{
   val content = expandableHelpTextHelper("testQ", Html("someHtml"))
   val doc = Jsoup.parse(content.body)
 
-  "Expandable Help Text Helper" should {
-
-    "have a details tag" which {
-
-      val details = doc.select("details#help")
-
-      "has the id 'help'" in {
-        details.attr("id") shouldBe "help"
-      }
-
-      "has the role of 'group'" in {
-        details.attr("role") shouldBe "group"
-      }
-    }
-
-    "have a header summary" which {
-
-      val summary = doc.select("summary")
-
-      "has the role 'button'" in {
-        summary.attr("role") shouldBe "button"
-      }
-
-      "has 'aria-controls' of 'details-content-0" in {
-        summary.attr("aria-controls") shouldBe "details-content-0"
-      }
-
-      "has span with a class of 'summary'" in {
-        summary.select("span").hasClass("summary") shouldBe true
-      }
-
-      "contains text 'testQ'" in {
-        summary.select("summary").text shouldBe "testQ"
-      }
-    }
-
-    "have hidden html" which {
-
-      val hiddenHtml = doc.select("div")
-
-      "has the class 'panel-indent'" in {
-        hiddenHtml.hasClass("panel-indent") shouldBe true
-      }
-
-      "contains additional html text" in {
-        hiddenHtml.text shouldBe "someHtml"
-      }
-
-    }
-  }
+//  "Expandable Help Text Helper" should {
+//
+//    "have a details tag" which {
+//
+//      val details = doc.select("details#help")
+//
+//      "has the id 'help'" in {
+//        details.attr("id") shouldBe "help"
+//      }
+//
+//      "has the role of 'group'" in {
+//        details.attr("role") shouldBe "group"
+//      }
+//    }
+//
+//    "have a header summary" which {
+//
+//      val summary = doc.select("summary")
+//
+//      "has the role 'button'" in {
+//        summary.attr("role") shouldBe "button"
+//      }
+//
+//      "has 'aria-controls' of 'details-content-0" in {
+//        summary.attr("aria-controls") shouldBe "details-content-0"
+//      }
+//
+//      "has span with a class of 'summary'" in {
+//        summary.select("span").hasClass("summary") shouldBe true
+//      }
+//
+//      "contains text 'testQ'" in {
+//        summary.select("summary").text shouldBe "testQ"
+//      }
+//    }
+//
+//    "have hidden html" which {
+//
+//      val hiddenHtml = doc.select("div")
+//
+//      "has the class 'panel-indent'" in {
+//        hiddenHtml.hasClass("panel-indent") shouldBe true
+//      }
+//
+//      "contains additional html text" in {
+//        hiddenHtml.text shouldBe "someHtml"
+//      }
+//
+//    }
+//  }
 }

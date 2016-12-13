@@ -23,46 +23,46 @@ import assets.MessageLookup.{OtherProperties => messages}
 
 class OtherPropertiesFormSpec extends UnitSpec with WithFakeApplication {
 
-  "Creating the form for Other Properties from a valid selection" should {
-    "return a populated form using .fill" in {
-      val model = OtherPropertiesModel(true)
-      val form = otherPropertiesForm.fill(model)
-
-      form.value.get shouldBe OtherPropertiesModel(true)
-    }
-
-    "return a valid model if supplied with valid selection" in {
-      val form = otherPropertiesForm.bind(Map(("hasOtherProperties", "Yes")))
-      form.value shouldBe Some(OtherPropertiesModel(true))
-    }
-  }
-
-  "Creating the form for Other Properties from invalid selection" when {
-
-    "supplied with no selection" should {
-
-      lazy val form = otherPropertiesForm.bind(Map(("hasOtherProperties", "")))
-
-      "return a form with errors" in {
-        form.hasErrors shouldBe true
-      }
-
-      s"return a form with the error message ${messages.errorSelect("2015/16")}" in {
-        form.error("hasOtherProperties").get.message shouldBe messages.errorSelect("2015/16")
-      }
-    }
-
-    "supplied with non Yes/No selection" should {
-      lazy val form = otherPropertiesForm.bind(Map(("hasOtherProperties", "abc")))
-
-      "return a form with errors" in {
-        form.hasErrors shouldBe true
-      }
-
-      s"return a form with the error message ${messages.errorSelect("2015/16")}" in {
-        form.error("hasOtherProperties").get.message shouldBe messages.errorSelect("2015/16")
-      }
-    }
-  }
+//  "Creating the form for Other Properties from a valid selection" should {
+//    "return a populated form using .fill" in {
+//      val model = OtherPropertiesModel(true)
+//      val form = otherPropertiesForm.fill(model)
+//
+//      form.value.get shouldBe OtherPropertiesModel(true)
+//    }
+//
+//    "return a valid model if supplied with valid selection" in {
+//      val form = otherPropertiesForm.bind(Map(("hasOtherProperties", "Yes")))
+//      form.value shouldBe Some(OtherPropertiesModel(true))
+//    }
+//  }
+//
+//  "Creating the form for Other Properties from invalid selection" when {
+//
+//    "supplied with no selection" should {
+//
+//      lazy val form = otherPropertiesForm.bind(Map(("hasOtherProperties", "")))
+//
+//      "return a form with errors" in {
+//        form.hasErrors shouldBe true
+//      }
+//
+//      s"return a form with the error message ${messages.errorSelect("2015/16")}" in {
+//        form.error("hasOtherProperties").get.message shouldBe messages.errorSelect("2015/16")
+//      }
+//    }
+//
+//    "supplied with non Yes/No selection" should {
+//      lazy val form = otherPropertiesForm.bind(Map(("hasOtherProperties", "abc")))
+//
+//      "return a form with errors" in {
+//        form.hasErrors shouldBe true
+//      }
+//
+//      s"return a form with the error message ${messages.errorSelect("2015/16")}" in {
+//        form.error("hasOtherProperties").get.message shouldBe messages.errorSelect("2015/16")
+//      }
+//    }
+//  }
 
 }

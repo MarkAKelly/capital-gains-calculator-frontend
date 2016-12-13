@@ -49,84 +49,84 @@ class DisposalCostsActionSpec extends UnitSpec with WithFakeApplication with Fak
     }
   }
 
-  "Calling .disposalCosts from the GainCalculationController with session" when {
-
-    "supplied with no pre-existing stored data" should {
-
-      lazy val target = setupTarget(None)
-      lazy val result = target.disposalCosts(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      "return some html" in {
-        contentType(result) shouldBe Some("text/html")
-      }
-
-      "display the Disposal Costs view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
-      }
-    }
-
-    "supplied with pre-existing stored data" should {
-
-      lazy val target = setupTarget(Some(DisposalCostsModel(100.99)))
-      lazy val result = target.disposalCosts(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      "have the amount 100.99 pre-populated into the input field" in {
-        doc.getElementById("amount").attr("value") shouldBe "100.99"
-      }
-    }
-  }
-
-  "Calling .disposalCosts from the GainCalculationController with no session" should {
-
-    lazy val target = setupTarget(None)
-    lazy val result = target.disposalCosts(fakeRequest)
-
-    "return a status of 303" in {
-      status(result) shouldBe 303
-    }
-
-    "return you to the session timeout view" in {
-      redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
-    }
-  }
-
-  "calling .submitDisposalCosts from the GainCalculationController" when {
-
-    "given a valid form should" should {
-
-      lazy val target = setupTarget(Some(DisposalCostsModel(100.99)))
-      lazy val request = fakeRequestToPOSTWithSession(("amount", "100"))
-      lazy val result = target.submitDisposalCosts(request)
-
-      "return a status of 303" in {
-        status(result) shouldBe 303
-      }
-
-      s"redirect to '${controllers.resident.shares.routes.GainController.acquisitionValue().toString}'" in {
-        redirectLocation(result).get shouldBe controllers.resident.shares.routes.GainController.ownerBeforeLegislationStart().toString
-      }
-    }
-
-    "given an invalid form" should {
-
-      lazy val target = setupTarget(Some(DisposalCostsModel(100.99)))
-      lazy val request = fakeRequestToPOSTWithSession(("amount", "-100"))
-      lazy val result = target.submitDisposalCosts(request)
-
-      "return a status of 400" in {
-        status(result) shouldBe 400
-      }
-
-    }
-
-  }
+//  "Calling .disposalCosts from the GainCalculationController with session" when {
+//
+//    "supplied with no pre-existing stored data" should {
+//
+//      lazy val target = setupTarget(None)
+//      lazy val result = target.disposalCosts(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "return some html" in {
+//        contentType(result) shouldBe Some("text/html")
+//      }
+//
+//      "display the Disposal Costs view" in {
+//        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+//      }
+//    }
+//
+//    "supplied with pre-existing stored data" should {
+//
+//      lazy val target = setupTarget(Some(DisposalCostsModel(100.99)))
+//      lazy val result = target.disposalCosts(fakeRequestWithSession)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "have the amount 100.99 pre-populated into the input field" in {
+//        doc.getElementById("amount").attr("value") shouldBe "100.99"
+//      }
+//    }
+//  }
+//
+//  "Calling .disposalCosts from the GainCalculationController with no session" should {
+//
+//    lazy val target = setupTarget(None)
+//    lazy val result = target.disposalCosts(fakeRequest)
+//
+//    "return a status of 303" in {
+//      status(result) shouldBe 303
+//    }
+//
+//    "return you to the session timeout view" in {
+//      redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+//    }
+//  }
+//
+//  "calling .submitDisposalCosts from the GainCalculationController" when {
+//
+//    "given a valid form should" should {
+//
+//      lazy val target = setupTarget(Some(DisposalCostsModel(100.99)))
+//      lazy val request = fakeRequestToPOSTWithSession(("amount", "100"))
+//      lazy val result = target.submitDisposalCosts(request)
+//
+//      "return a status of 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      s"redirect to '${controllers.resident.shares.routes.GainController.acquisitionValue().toString}'" in {
+//        redirectLocation(result).get shouldBe controllers.resident.shares.routes.GainController.ownerBeforeLegislationStart().toString
+//      }
+//    }
+//
+//    "given an invalid form" should {
+//
+//      lazy val target = setupTarget(Some(DisposalCostsModel(100.99)))
+//      lazy val request = fakeRequestToPOSTWithSession(("amount", "-100"))
+//      lazy val result = target.submitDisposalCosts(request)
+//
+//      "return a status of 400" in {
+//        status(result) shouldBe 400
+//      }
+//
+//    }
+//
+//  }
 }

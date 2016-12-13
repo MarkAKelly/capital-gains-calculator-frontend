@@ -45,43 +45,43 @@ class OutsideTaxYearsActionSpec extends UnitSpec with WithFakeApplication with F
     }
   }
 
-  "Calling .outsideTaxYears from the resident/shares GainCalculationController" when {
-
-    "there is a valid session" should {
-      lazy val target = setupTarget(Some(DisposalDateModel(10, 10, 2018)), Some(TaxYearModel("2018/19", false, "2016/17")))
-      lazy val result = target.outsideTaxYears(fakeRequestWithSession)
-
-      "return a 200" in {
-        status(result) shouldBe 200
-      }
-
-      "return some html" in {
-        contentType(result) shouldBe Some("text/html")
-      }
-
-      s"return a title of ${messages.title}" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
-      }
-
-      s"have a back link to '${controllers.resident.shares.routes.GainController.disposalDate().url}'" in {
-        Jsoup.parse(bodyOf(result)).getElementById("back-link").attr("href") shouldBe controllers.resident.shares.routes.GainController.disposalDate().url
-      }
-
-      s"have a continue link to '${controllers.resident.shares.routes.GainController.sellForLess().url}'" in {
-        Jsoup.parse(bodyOf(result)).getElementById("continue-button").attr("href") shouldBe controllers.resident.shares.routes.GainController.sellForLess().url
-      }
-    }
-
-    "there is no valid session" should {
-      lazy val result = GainController.outsideTaxYears(fakeRequest)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "return you to the session timeout page" in {
-        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
-      }
-    }
-  }
+//  "Calling .outsideTaxYears from the resident/shares GainCalculationController" when {
+//
+//    "there is a valid session" should {
+//      lazy val target = setupTarget(Some(DisposalDateModel(10, 10, 2018)), Some(TaxYearModel("2018/19", false, "2016/17")))
+//      lazy val result = target.outsideTaxYears(fakeRequestWithSession)
+//
+//      "return a 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "return some html" in {
+//        contentType(result) shouldBe Some("text/html")
+//      }
+//
+//      s"return a title of ${messages.title}" in {
+//        Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+//      }
+//
+//      s"have a back link to '${controllers.resident.shares.routes.GainController.disposalDate().url}'" in {
+//        Jsoup.parse(bodyOf(result)).getElementById("back-link").attr("href") shouldBe controllers.resident.shares.routes.GainController.disposalDate().url
+//      }
+//
+//      s"have a continue link to '${controllers.resident.shares.routes.GainController.sellForLess().url}'" in {
+//        Jsoup.parse(bodyOf(result)).getElementById("continue-button").attr("href") shouldBe controllers.resident.shares.routes.GainController.sellForLess().url
+//      }
+//    }
+//
+//    "there is no valid session" should {
+//      lazy val result = GainController.outsideTaxYears(fakeRequest)
+//
+//      "return a 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "return you to the session timeout page" in {
+//        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+//      }
+//    }
+//  }
 }

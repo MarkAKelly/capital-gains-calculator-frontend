@@ -57,103 +57,103 @@ class AllowableLossesActionSpec extends UnitSpec with WithFakeApplication with F
     }
   }
 
-  "Calling .allowableLosses from the resident DeductionsController" when {
-
-    "request has a valid session and no keystore value" should {
-
-      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val result = target.allowableLosses(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      "return some html" in {
-        contentType(result) shouldBe Some("text/html")
-      }
-
-      s"return a title of ${messages.title("2015/16")}" in {
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title("2015/16")
-      }
-    }
-
-    "request has a valid session and some keystore value" should {
-
-      lazy val target = setupTarget(Some(AllowableLossesModel(true)), Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val result = target.allowableLosses(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      "return some html" in {
-        contentType(result) shouldBe Some("text/html")
-      }
-
-      s"return a title of ${messages.title("2015/16")}" in {
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title("2015/16")
-      }
-    }
-
-    "request has an invalid session" should {
-
-      lazy val target = setupTarget(None, None, None)
-      lazy val result = target.allowableLosses(fakeRequest)
-
-      "return a status of 303" in {
-        status(result) shouldBe 303
-      }
-
-      "return you to the session timeout page" in {
-        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
-      }
-    }
-  }
-
-  "Calling .submitAllowableLosses from the DeductionsController" when {
-
-    "a valid form 'Yes' is submitted" should {
-      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "Yes"))
-      lazy val result = target.submitAllowableLosses(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the allowable losses value page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/allowable-losses-value")
-      }
-    }
-
-    "a valid form 'No' is submitted" should {
-      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "No"))
-      lazy val result = target.submitAllowableLosses(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the losses brought forward page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/losses-brought-forward")
-      }
-    }
-
-    "an invalid form is submitted" should {
-      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", ""))
-      lazy val result = target.submitAllowableLosses(request)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      "render the allowable losses" in {
-        doc.title() shouldEqual messages.title("2015/16")
-      }
-    }
-  }
+//  "Calling .allowableLosses from the resident DeductionsController" when {
+//
+//    "request has a valid session and no keystore value" should {
+//
+//      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val result = target.allowableLosses(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "return some html" in {
+//        contentType(result) shouldBe Some("text/html")
+//      }
+//
+//      s"return a title of ${messages.title("2015/16")}" in {
+//        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title("2015/16")
+//      }
+//    }
+//
+//    "request has a valid session and some keystore value" should {
+//
+//      lazy val target = setupTarget(Some(AllowableLossesModel(true)), Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val result = target.allowableLosses(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "return some html" in {
+//        contentType(result) shouldBe Some("text/html")
+//      }
+//
+//      s"return a title of ${messages.title("2015/16")}" in {
+//        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title("2015/16")
+//      }
+//    }
+//
+//    "request has an invalid session" should {
+//
+//      lazy val target = setupTarget(None, None, None)
+//      lazy val result = target.allowableLosses(fakeRequest)
+//
+//      "return a status of 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "return you to the session timeout page" in {
+//        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+//      }
+//    }
+//  }
+//
+//  "Calling .submitAllowableLosses from the DeductionsController" when {
+//
+//    "a valid form 'Yes' is submitted" should {
+//      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "Yes"))
+//      lazy val result = target.submitAllowableLosses(request)
+//
+//      "return a 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the allowable losses value page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/allowable-losses-value")
+//      }
+//    }
+//
+//    "a valid form 'No' is submitted" should {
+//      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "No"))
+//      lazy val result = target.submitAllowableLosses(request)
+//
+//      "return a 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the losses brought forward page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/losses-brought-forward")
+//      }
+//    }
+//
+//    "an invalid form is submitted" should {
+//      lazy val target = setupTarget(None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", ""))
+//      lazy val result = target.submitAllowableLosses(request)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a 400" in {
+//        status(result) shouldBe 400
+//      }
+//
+//      "render the allowable losses" in {
+//        doc.title() shouldEqual messages.title("2015/16")
+//      }
+//    }
+//  }
 }
 

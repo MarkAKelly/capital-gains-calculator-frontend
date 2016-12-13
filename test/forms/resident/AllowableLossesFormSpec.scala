@@ -23,56 +23,56 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class AllowableLossesFormSpec extends UnitSpec with WithFakeApplication {
 
-  "Creating a form using a valid model" should {
-
-    "return a form with the data specified in the model" in {
-      lazy val model = AllowableLossesModel(true)
-      lazy val form = allowableLossesForm.fill(model)
-      form.value shouldBe Some(model)
-    }
-  }
-
-  "Creating a form using a valid map" should {
-
-    "return a form with the data specified in the model" in {
-      lazy val form = allowableLossesForm.bind(Map(("isClaiming", "Yes")))
-      form.value shouldBe Some(AllowableLossesModel(true))
-    }
-  }
-
-  "Creating a form using an invalid map" when {
-
-    "supplied with no data" should {
-      lazy val form = allowableLossesForm.bind(Map(("isClaiming", "")))
-
-      "return a form with errors" in {
-        form.hasErrors shouldBe true
-      }
-
-      "return 1 error" in {
-        form.errors.size shouldBe 1
-      }
-
-      s"return an error with message ${messages.errorSelect("2015/16")}" in {
-        form.error("isClaiming").get.message shouldBe messages.errorSelect("2015/16")
-      }
-    }
-
-    "supplied with invalid data" should {
-      lazy val form = allowableLossesForm.bind(Map(("isClaiming", "a")))
-
-      "return a form with errors" in {
-        form.hasErrors shouldBe true
-      }
-
-      "return 1 error" in {
-        form.errors.size shouldBe 1
-      }
-
-      s"return an error with message ${messages.errorSelect("2015/16")}" in {
-        form.error("isClaiming").get.message shouldBe messages.errorSelect("2015/16")
-      }
-    }
-  }
+//  "Creating a form using a valid model" should {
+//
+//    "return a form with the data specified in the model" in {
+//      lazy val model = AllowableLossesModel(true)
+//      lazy val form = allowableLossesForm.fill(model)
+//      form.value shouldBe Some(model)
+//    }
+//  }
+//
+//  "Creating a form using a valid map" should {
+//
+//    "return a form with the data specified in the model" in {
+//      lazy val form = allowableLossesForm.bind(Map(("isClaiming", "Yes")))
+//      form.value shouldBe Some(AllowableLossesModel(true))
+//    }
+//  }
+//
+//  "Creating a form using an invalid map" when {
+//
+//    "supplied with no data" should {
+//      lazy val form = allowableLossesForm.bind(Map(("isClaiming", "")))
+//
+//      "return a form with errors" in {
+//        form.hasErrors shouldBe true
+//      }
+//
+//      "return 1 error" in {
+//        form.errors.size shouldBe 1
+//      }
+//
+//      s"return an error with message ${messages.errorSelect("2015/16")}" in {
+//        form.error("isClaiming").get.message shouldBe messages.errorSelect("2015/16")
+//      }
+//    }
+//
+//    "supplied with invalid data" should {
+//      lazy val form = allowableLossesForm.bind(Map(("isClaiming", "a")))
+//
+//      "return a form with errors" in {
+//        form.hasErrors shouldBe true
+//      }
+//
+//      "return 1 error" in {
+//        form.errors.size shouldBe 1
+//      }
+//
+//      s"return an error with message ${messages.errorSelect("2015/16")}" in {
+//        form.error("isClaiming").get.message shouldBe messages.errorSelect("2015/16")
+//      }
+//    }
+//  }
 
 }
