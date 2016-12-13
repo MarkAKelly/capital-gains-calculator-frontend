@@ -49,95 +49,95 @@ class OwnerBeforeLegislationStartActionSpec extends UnitSpec with WithFakeApplic
     }
   }
 
-  "Calling .ownedBeforeEightyTwo from the resident GainController" when {
-
-    "request has a valid session and no keystore value" should {
-
-      lazy val target = setupTarget(None)
-      lazy val result = target.ownerBeforeLegislationStart(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      s"return some html with title of ${Messages.title}" in {
-        contentType(result) shouldBe Some("text/html")
-        Jsoup.parse(bodyOf(result)).title shouldEqual Messages.title
-      }
-    }
-
-    "request has a valid session and some keystore value" should {
-
-      lazy val target = setupTarget(Some(OwnerBeforeLegislationStartModel(true)))
-      lazy val result = target.ownerBeforeLegislationStart(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-    }
-
-    "request has an invalid session" should {
-
-      lazy val target = setupTarget(None)
-      lazy val result = target.ownerBeforeLegislationStart(fakeRequest)
-
-      "return a status of 303" in {
-        status(result) shouldBe 303
-      }
-
-      "return you to the session timeout page" in {
-        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
-      }
-    }
-  }
-
-  "Calling .submitOwnedBeforeEightyTwo from the resident GainCalculator" when {
-
-    "a valid form with the answer 'Yes' is submitted" should {
-
-      lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("ownerBeforeLegislationStart", "Yes"))
-      lazy val result = target.submitOwnerBeforeLegislationStart(request)
-
-      "return a status of 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the valueBeforeLegislationStart page" in {
-        redirectLocation(result) shouldBe Some(controllers.resident.shares.routes.GainController.valueBeforeLegislationStart().toString)
-      }
-    }
-
-    "a valid form with the answer 'No' is submitted" should {
-
-      lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("ownerBeforeLegislationStart", "No"))
-      lazy val result = target.submitOwnerBeforeLegislationStart(request)
-
-      "return a status of 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the disposal value page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/did-you-inherit-them")
-      }
-    }
-
-    "an invalid form with the answer '' is submitted" should {
-
-      lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("ownerBeforeLegislationStart", ""))
-      lazy val result = target.submitOwnerBeforeLegislationStart(request)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a status of 400" in {
-        status(result) shouldBe 400
-      }
-
-      "render the Sell For Less page" in {
-        doc.title() shouldEqual Messages.title
-      }
-    }
-  }
+//  "Calling .ownedBeforeEightyTwo from the resident GainController" when {
+//
+//    "request has a valid session and no keystore value" should {
+//
+//      lazy val target = setupTarget(None)
+//      lazy val result = target.ownerBeforeLegislationStart(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      s"return some html with title of ${Messages.title}" in {
+//        contentType(result) shouldBe Some("text/html")
+//        Jsoup.parse(bodyOf(result)).title shouldEqual Messages.title
+//      }
+//    }
+//
+//    "request has a valid session and some keystore value" should {
+//
+//      lazy val target = setupTarget(Some(OwnerBeforeLegislationStartModel(true)))
+//      lazy val result = target.ownerBeforeLegislationStart(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//    }
+//
+//    "request has an invalid session" should {
+//
+//      lazy val target = setupTarget(None)
+//      lazy val result = target.ownerBeforeLegislationStart(fakeRequest)
+//
+//      "return a status of 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "return you to the session timeout page" in {
+//        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+//      }
+//    }
+//  }
+//
+//  "Calling .submitOwnedBeforeEightyTwo from the resident GainCalculator" when {
+//
+//    "a valid form with the answer 'Yes' is submitted" should {
+//
+//      lazy val target = setupTarget(None)
+//      lazy val request = fakeRequestToPOSTWithSession(("ownerBeforeLegislationStart", "Yes"))
+//      lazy val result = target.submitOwnerBeforeLegislationStart(request)
+//
+//      "return a status of 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the valueBeforeLegislationStart page" in {
+//        redirectLocation(result) shouldBe Some(controllers.resident.shares.routes.GainController.valueBeforeLegislationStart().toString)
+//      }
+//    }
+//
+//    "a valid form with the answer 'No' is submitted" should {
+//
+//      lazy val target = setupTarget(None)
+//      lazy val request = fakeRequestToPOSTWithSession(("ownerBeforeLegislationStart", "No"))
+//      lazy val result = target.submitOwnerBeforeLegislationStart(request)
+//
+//      "return a status of 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the disposal value page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/did-you-inherit-them")
+//      }
+//    }
+//
+//    "an invalid form with the answer '' is submitted" should {
+//
+//      lazy val target = setupTarget(None)
+//      lazy val request = fakeRequestToPOSTWithSession(("ownerBeforeLegislationStart", ""))
+//      lazy val result = target.submitOwnerBeforeLegislationStart(request)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a status of 400" in {
+//        status(result) shouldBe 400
+//      }
+//
+//      "render the Sell For Less page" in {
+//        doc.title() shouldEqual Messages.title
+//      }
+//    }
+//  }
 }

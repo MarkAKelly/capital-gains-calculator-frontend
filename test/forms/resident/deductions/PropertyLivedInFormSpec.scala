@@ -23,60 +23,60 @@ import assets.MessageLookup.{PropertyLivedIn => messages}
 
 class PropertyLivedInFormSpec extends UnitSpec with WithFakeApplication {
 
-  "Creating the PropertyLivedIn form from valid inputs" should {
-
-    "return a populated form using .fill" in {
-      val model = PropertyLivedInModel(true)
-      val form = propertyLivedInForm.fill(model)
-
-      form.value.get shouldBe PropertyLivedInModel(true)
-    }
-
-    "return a populated form using .bind with an answer of Yes" in {
-      val form = propertyLivedInForm.bind(Map(("livedInProperty", "Yes")))
-
-      form.value.get shouldBe PropertyLivedInModel(true)
-    }
-
-    "return a populated form using .bind with an answer of No" in {
-      val form = propertyLivedInForm.bind(Map(("livedInProperty", "No")))
-
-      form.value.get shouldBe PropertyLivedInModel(false)
-    }
-  }
-
-  "Creating the PropertyLivedIn form from invalid inputs" when {
-
-    "supplied with no selection" should {
-      lazy val form = propertyLivedInForm.bind(Map(("livedInProperty", "")))
-
-      "return a form with errors" in {
-        form.hasErrors shouldBe true
-      }
-
-      "raise 1 form error" in {
-        form.errors.length shouldBe 1
-      }
-
-      s"return a form with the error message ${messages.errorNoSelect}" in {
-        form.error("livedInProperty").get.message shouldBe messages.errorNoSelect
-      }
-    }
-
-    "supplied with an incorrect selection" should {
-      lazy val form = propertyLivedInForm.bind(Map(("livedInProperty", "true")))
-
-      "return a form with errors" in {
-        form.hasErrors shouldBe true
-      }
-
-      "raise 1 form error" in {
-        form.errors.length shouldBe 1
-      }
-
-      s"return a form with the error message ${messages.errorNoSelect}" in {
-        form.error("livedInProperty").get.message shouldBe messages.errorNoSelect
-      }
-    }
-  }
+//  "Creating the PropertyLivedIn form from valid inputs" should {
+//
+//    "return a populated form using .fill" in {
+//      val model = PropertyLivedInModel(true)
+//      val form = propertyLivedInForm.fill(model)
+//
+//      form.value.get shouldBe PropertyLivedInModel(true)
+//    }
+//
+//    "return a populated form using .bind with an answer of Yes" in {
+//      val form = propertyLivedInForm.bind(Map(("livedInProperty", "Yes")))
+//
+//      form.value.get shouldBe PropertyLivedInModel(true)
+//    }
+//
+//    "return a populated form using .bind with an answer of No" in {
+//      val form = propertyLivedInForm.bind(Map(("livedInProperty", "No")))
+//
+//      form.value.get shouldBe PropertyLivedInModel(false)
+//    }
+//  }
+//
+//  "Creating the PropertyLivedIn form from invalid inputs" when {
+//
+//    "supplied with no selection" should {
+//      lazy val form = propertyLivedInForm.bind(Map(("livedInProperty", "")))
+//
+//      "return a form with errors" in {
+//        form.hasErrors shouldBe true
+//      }
+//
+//      "raise 1 form error" in {
+//        form.errors.length shouldBe 1
+//      }
+//
+//      s"return a form with the error message ${messages.errorNoSelect}" in {
+//        form.error("livedInProperty").get.message shouldBe messages.errorNoSelect
+//      }
+//    }
+//
+//    "supplied with an incorrect selection" should {
+//      lazy val form = propertyLivedInForm.bind(Map(("livedInProperty", "true")))
+//
+//      "return a form with errors" in {
+//        form.hasErrors shouldBe true
+//      }
+//
+//      "raise 1 form error" in {
+//        form.errors.length shouldBe 1
+//      }
+//
+//      s"return a form with the error message ${messages.errorNoSelect}" in {
+//        form.error("livedInProperty").get.message shouldBe messages.errorNoSelect
+//      }
+//    }
+//  }
 }

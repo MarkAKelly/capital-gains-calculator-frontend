@@ -55,113 +55,113 @@ class SellForLessActionSpec extends UnitSpec with WithFakeApplication with FakeR
     }
   }
 
-  "Calling .sellForLess from the resident shares GainController" when {
-
-    "request has a valid session and no keystore value" should {
-
-      lazy val target = setupTarget(None)
-      lazy val result = target.sellForLess(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      s"return some html with title of ${messages.title}" in {
-        contentType(result) shouldBe Some("text/html")
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
-      }
-    }
-
-    "in a known tax year" should {
-      lazy val target = setupTarget(None)
-      lazy val result = target.sellForLess(fakeRequestWithSession)
-
-      "have a back link to the disposal date page" in {
-        Jsoup.parse(bodyOf(result)).getElementById("back-link").attr("href") shouldEqual routes.GainController.disposalDate().url
-      }
-    }
-
-    "outside a known tax year" should {
-      lazy val target = setupTarget(None, false)
-      lazy val result = target.sellForLess(fakeRequestWithSession)
-
-      "have a back link to the outside tax years page" in {
-        Jsoup.parse(bodyOf(result)).getElementById("back-link").attr("href") shouldEqual routes.GainController.outsideTaxYears().url
-      }
-    }
-
-    "request has a valid session and some keystore value" should {
-
-      lazy val target = setupTarget(Some(SellForLessModel(true)))
-      lazy val result = target.sellForLess(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-    }
-
-    "request has an invalid session" should {
-
-      lazy val target = setupTarget(None)
-      lazy val result = target.sellForLess(fakeRequest)
-
-      "return a status of 303" in {
-        status(result) shouldBe 303
-      }
-
-      "return you to the session timeout page" in {
-        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
-      }
-    }
-  }
-
-  "Calling .submitSellForLess from the resident shares GainCalculator" when {
-
-    "a valid form with the answer 'Yes' is submitted" should {
-
-      lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("sellForLess", "Yes"))
-      lazy val result = target.submitSellForLess(request)
-
-      "return a status of 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the worth when sold page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/worth-when-sold-for-less")
-      }
-    }
-
-    "a valid form with the answer 'No' is submitted" should {
-
-      lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("sellForLess", "No"))
-      lazy val result = target.submitSellForLess(request)
-
-      "return a status of 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the disposal value page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/disposal-value")
-      }
-    }
-
-    "an invalid form with the answer '' is submitted" should {
-
-      lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("sellForLess", ""))
-      lazy val result = target.submitSellForLess(request)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a status of 400" in {
-        status(result) shouldBe 400
-      }
-
-      "render the Sell For Less page" in {
-        doc.title() shouldEqual messages.title
-      }
-    }
-  }
+//  "Calling .sellForLess from the resident shares GainController" when {
+//
+//    "request has a valid session and no keystore value" should {
+//
+//      lazy val target = setupTarget(None)
+//      lazy val result = target.sellForLess(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      s"return some html with title of ${messages.title}" in {
+//        contentType(result) shouldBe Some("text/html")
+//        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+//      }
+//    }
+//
+//    "in a known tax year" should {
+//      lazy val target = setupTarget(None)
+//      lazy val result = target.sellForLess(fakeRequestWithSession)
+//
+//      "have a back link to the disposal date page" in {
+//        Jsoup.parse(bodyOf(result)).getElementById("back-link").attr("href") shouldEqual routes.GainController.disposalDate().url
+//      }
+//    }
+//
+//    "outside a known tax year" should {
+//      lazy val target = setupTarget(None, false)
+//      lazy val result = target.sellForLess(fakeRequestWithSession)
+//
+//      "have a back link to the outside tax years page" in {
+//        Jsoup.parse(bodyOf(result)).getElementById("back-link").attr("href") shouldEqual routes.GainController.outsideTaxYears().url
+//      }
+//    }
+//
+//    "request has a valid session and some keystore value" should {
+//
+//      lazy val target = setupTarget(Some(SellForLessModel(true)))
+//      lazy val result = target.sellForLess(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//    }
+//
+//    "request has an invalid session" should {
+//
+//      lazy val target = setupTarget(None)
+//      lazy val result = target.sellForLess(fakeRequest)
+//
+//      "return a status of 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "return you to the session timeout page" in {
+//        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+//      }
+//    }
+//  }
+//
+//  "Calling .submitSellForLess from the resident shares GainCalculator" when {
+//
+//    "a valid form with the answer 'Yes' is submitted" should {
+//
+//      lazy val target = setupTarget(None)
+//      lazy val request = fakeRequestToPOSTWithSession(("sellForLess", "Yes"))
+//      lazy val result = target.submitSellForLess(request)
+//
+//      "return a status of 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the worth when sold page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/worth-when-sold-for-less")
+//      }
+//    }
+//
+//    "a valid form with the answer 'No' is submitted" should {
+//
+//      lazy val target = setupTarget(None)
+//      lazy val request = fakeRequestToPOSTWithSession(("sellForLess", "No"))
+//      lazy val result = target.submitSellForLess(request)
+//
+//      "return a status of 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the disposal value page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/disposal-value")
+//      }
+//    }
+//
+//    "an invalid form with the answer '' is submitted" should {
+//
+//      lazy val target = setupTarget(None)
+//      lazy val request = fakeRequestToPOSTWithSession(("sellForLess", ""))
+//      lazy val result = target.submitSellForLess(request)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a status of 400" in {
+//        status(result) shouldBe 400
+//      }
+//
+//      "render the Sell For Less page" in {
+//        doc.title() shouldEqual messages.title
+//      }
+//    }
+//  }
 }

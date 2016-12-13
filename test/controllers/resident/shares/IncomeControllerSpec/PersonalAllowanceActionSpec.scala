@@ -66,100 +66,100 @@ class PersonalAllowanceActionSpec extends UnitSpec with WithFakeApplication with
     }
   }
 
-  "Calling .personalAllowance from the IncomeController" when {
-
-    "there is no keystore data" should {
-
-      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
-      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
-      lazy val target = setupTarget(None, disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
-      lazy val result = target.personalAllowance(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      "return some html" in {
-        contentType(result) shouldBe Some("text/html")
-      }
-
-      "display the Personal Allowance view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.question("2015/16")
-      }
-    }
-
-    "there is some keystore data" should {
-
-      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
-      lazy val taxYearModel = TaxYearModel("2016/17", true, "2016/17")
-      lazy val target = setupTarget(Some(PersonalAllowanceModel(1000)), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
-      lazy val result = target.personalAllowance(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      "return some html" in {
-        contentType(result) shouldBe Some("text/html")
-      }
-
-      "display the Personal Allowance view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.inYearQuestion
-      }
-    }
-  }
-
-  "request has an invalid session" should {
-
-    lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
-    lazy val taxYearModel = TaxYearModel("2017/18", false, "2016/17")
-    lazy val target = setupTarget(None, disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
-    lazy val result = target.personalAllowance(fakeRequest)
-
-    "return a status of 303" in {
-      status(result) shouldBe 303
-    }
-
-    "return you to the session timeout page" in {
-      redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
-    }
-  }
-
-  "Calling .submitPersonalAllowance from the IncomeController" when {
-
-    "a valid form is submitted" should {
-
-      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
-      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
-      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
-      lazy val target = setupTarget(Some(PersonalAllowanceModel(1000)), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
-      lazy val result = target.submitPersonalAllowance(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the summary page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/summary")
-      }
-    }
-
-    "an invalid form is submitted" should {
-
-      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
-      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
-      lazy val target = setupTarget(None, disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
-      lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
-      lazy val result = target.submitPersonalAllowance(request)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      "render the personal allowance page" in {
-        doc.title() shouldEqual messages.question("2015/16")
-      }
-    }
-  }
+//  "Calling .personalAllowance from the IncomeController" when {
+//
+//    "there is no keystore data" should {
+//
+//      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+//      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+//      lazy val target = setupTarget(None, disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
+//      lazy val result = target.personalAllowance(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "return some html" in {
+//        contentType(result) shouldBe Some("text/html")
+//      }
+//
+//      "display the Personal Allowance view" in {
+//        Jsoup.parse(bodyOf(result)).title shouldBe messages.question("2015/16")
+//      }
+//    }
+//
+//    "there is some keystore data" should {
+//
+//      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+//      lazy val taxYearModel = TaxYearModel("2016/17", true, "2016/17")
+//      lazy val target = setupTarget(Some(PersonalAllowanceModel(1000)), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
+//      lazy val result = target.personalAllowance(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "return some html" in {
+//        contentType(result) shouldBe Some("text/html")
+//      }
+//
+//      "display the Personal Allowance view" in {
+//        Jsoup.parse(bodyOf(result)).title shouldBe messages.inYearQuestion
+//      }
+//    }
+//  }
+//
+//  "request has an invalid session" should {
+//
+//    lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+//    lazy val taxYearModel = TaxYearModel("2017/18", false, "2016/17")
+//    lazy val target = setupTarget(None, disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
+//    lazy val result = target.personalAllowance(fakeRequest)
+//
+//    "return a status of 303" in {
+//      status(result) shouldBe 303
+//    }
+//
+//    "return you to the session timeout page" in {
+//      redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+//    }
+//  }
+//
+//  "Calling .submitPersonalAllowance from the IncomeController" when {
+//
+//    "a valid form is submitted" should {
+//
+//      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+//      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+//      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+//      lazy val target = setupTarget(Some(PersonalAllowanceModel(1000)), disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
+//      lazy val result = target.submitPersonalAllowance(request)
+//
+//      "return a 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the summary page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/shares/summary")
+//      }
+//    }
+//
+//    "an invalid form is submitted" should {
+//
+//      lazy val disposalDateModel = DisposalDateModel(10, 10, 2015)
+//      lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
+//      lazy val target = setupTarget(None, disposalDateModel = disposalDateModel, taxYearModel = taxYearModel)
+//      lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
+//      lazy val result = target.submitPersonalAllowance(request)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a 400" in {
+//        status(result) shouldBe 400
+//      }
+//
+//      "render the personal allowance page" in {
+//        doc.title() shouldEqual messages.question("2015/16")
+//      }
+//    }
+//  }
 }

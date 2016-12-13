@@ -67,148 +67,148 @@ class PreviousTaxableGainsActionSpec extends UnitSpec with WithFakeApplication w
     }
   }
 
-  "Calling .previousTaxableGains from the IncomeController" when {
-
-    "there is no keystore data" should {
-
-      lazy val target = setupTarget(None)
-      lazy val result = target.previousTaxableGains(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      "return some html" in {
-        contentType(result) shouldBe Some("text/html")
-      }
-
-      "display the previous taxable gains view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.title("2015/16")
-      }
-    }
-
-    "there is some keystore data" should {
-
-      lazy val target = setupTarget(Some(PreviousTaxableGainsModel(1000)))
-      lazy val result = target.previousTaxableGains(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      "return some html" in {
-        contentType(result) shouldBe Some("text/html")
-      }
-
-      "display the Improvements view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.title("2015/16")
-      }
-    }
-
-    "other shares have been specified" should {
-      "return a back link to the AEA page" in {
-        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = true,
-          allowableLossesModel = Some(AllowableLossesModel(false)), allowableLossesValueModel = None)
-        val result = target.previousTaxableGains(fakeRequestWithSession)
-        val doc = Jsoup.parse(bodyOf(result))
-
-        val link = doc.select("#back-link")
-        link.attr("href") shouldBe controllers.resident.shares.routes.DeductionsController.annualExemptAmount().toString
-      }
-    }
-
-    "other shares have been specified with an allowable loss of 0" should {
-      "return a back link to the AEA page" in {
-        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = true,
-          allowableLossesModel = Some(AllowableLossesModel(true)), allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(0))))
-        val result = target.previousTaxableGains(fakeRequestWithSession)
-        val doc = Jsoup.parse(bodyOf(result))
-
-        val link = doc.select("#back-link")
-        link.attr("href") shouldBe controllers.resident.shares.routes.DeductionsController.annualExemptAmount().toString
-      }
-    }
-
-    "other shares have been specified with a non-zero allowable loss" should {
-      "return a back link to the losses brought forward page" in {
-        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = true,
-          allowableLossesModel = Some(AllowableLossesModel(true)), allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(1000))))
-        val result = target.previousTaxableGains(fakeRequestWithSession)
-        val doc = Jsoup.parse(bodyOf(result))
-
-        val link = doc.select("#back-link")
-        link.attr("href") shouldBe controllers.resident.shares.routes.DeductionsController.lossesBroughtForwardValue().toString
-      }
-    }
-
-    "no other shares AND brought forward losses specified" should {
-      "return a back link to the brought forward input page" in {
-        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = false, lossesBroughtForward = true,
-          allowableLossesModel = None, allowableLossesValueModel = None)
-        val result = target.previousTaxableGains(fakeRequestWithSession)
-        val doc = Jsoup.parse(bodyOf(result))
-
-        val link = doc.select("#back-link")
-        link.attr("href") shouldBe controllers.resident.shares.routes.DeductionsController.lossesBroughtForwardValue().toString
-      }
-    }
-
-    "no other shares AND brought forward losses NOT specified" should {
-      "return a back link to the brought forward choice page" in {
-        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = false, lossesBroughtForward = false,
-          allowableLossesModel = None, allowableLossesValueModel = None)
-        val result = target.previousTaxableGains(fakeRequestWithSession)
-        val doc = Jsoup.parse(bodyOf(result))
-
-        val link = doc.select("#back-link")
-        link.attr("href") shouldBe controllers.resident.shares.routes.DeductionsController.lossesBroughtForward().toString
-      }
-    }
-  }
-
-  "request has an invalid session" should {
-
-    lazy val target = setupTarget(None)
-    lazy val result = target.previousTaxableGains(fakeRequest)
-
-    "return a status of 303" in {
-      status(result) shouldBe 303
-    }
-
-    "return you to the session timeout page" in {
-      redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
-    }
-  }
-
-  "Calling .submitPreviousTaxableGains from the IncomeController" when {
-
-    "an invalid form is submitted" should {
-      lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
-      lazy val result = target.submitPreviousTaxableGains(request)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      "render the previous taxable gains page" in {
-        doc.title() shouldEqual messages.title("2015/16")
-      }
-    }
-
-    "a valid form is submitted" should {
-      lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
-      lazy val result = target.submitPreviousTaxableGains(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      s"redirect to ${controllers.resident.shares.routes.IncomeController.currentIncome()}" in {
-        redirectLocation(result).get shouldBe controllers.resident.shares.routes.IncomeController.currentIncome().toString
-      }
-    }
-  }
+//  "Calling .previousTaxableGains from the IncomeController" when {
+//
+//    "there is no keystore data" should {
+//
+//      lazy val target = setupTarget(None)
+//      lazy val result = target.previousTaxableGains(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "return some html" in {
+//        contentType(result) shouldBe Some("text/html")
+//      }
+//
+//      "display the previous taxable gains view" in {
+//        Jsoup.parse(bodyOf(result)).title shouldBe messages.title("2015/16")
+//      }
+//    }
+//
+//    "there is some keystore data" should {
+//
+//      lazy val target = setupTarget(Some(PreviousTaxableGainsModel(1000)))
+//      lazy val result = target.previousTaxableGains(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "return some html" in {
+//        contentType(result) shouldBe Some("text/html")
+//      }
+//
+//      "display the Improvements view" in {
+//        Jsoup.parse(bodyOf(result)).title shouldBe messages.title("2015/16")
+//      }
+//    }
+//
+//    "other shares have been specified" should {
+//      "return a back link to the AEA page" in {
+//        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = true,
+//          allowableLossesModel = Some(AllowableLossesModel(false)), allowableLossesValueModel = None)
+//        val result = target.previousTaxableGains(fakeRequestWithSession)
+//        val doc = Jsoup.parse(bodyOf(result))
+//
+//        val link = doc.select("#back-link")
+//        link.attr("href") shouldBe controllers.resident.shares.routes.DeductionsController.annualExemptAmount().toString
+//      }
+//    }
+//
+//    "other shares have been specified with an allowable loss of 0" should {
+//      "return a back link to the AEA page" in {
+//        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = true,
+//          allowableLossesModel = Some(AllowableLossesModel(true)), allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(0))))
+//        val result = target.previousTaxableGains(fakeRequestWithSession)
+//        val doc = Jsoup.parse(bodyOf(result))
+//
+//        val link = doc.select("#back-link")
+//        link.attr("href") shouldBe controllers.resident.shares.routes.DeductionsController.annualExemptAmount().toString
+//      }
+//    }
+//
+//    "other shares have been specified with a non-zero allowable loss" should {
+//      "return a back link to the losses brought forward page" in {
+//        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = true,
+//          allowableLossesModel = Some(AllowableLossesModel(true)), allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(1000))))
+//        val result = target.previousTaxableGains(fakeRequestWithSession)
+//        val doc = Jsoup.parse(bodyOf(result))
+//
+//        val link = doc.select("#back-link")
+//        link.attr("href") shouldBe controllers.resident.shares.routes.DeductionsController.lossesBroughtForwardValue().toString
+//      }
+//    }
+//
+//    "no other shares AND brought forward losses specified" should {
+//      "return a back link to the brought forward input page" in {
+//        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = false, lossesBroughtForward = true,
+//          allowableLossesModel = None, allowableLossesValueModel = None)
+//        val result = target.previousTaxableGains(fakeRequestWithSession)
+//        val doc = Jsoup.parse(bodyOf(result))
+//
+//        val link = doc.select("#back-link")
+//        link.attr("href") shouldBe controllers.resident.shares.routes.DeductionsController.lossesBroughtForwardValue().toString
+//      }
+//    }
+//
+//    "no other shares AND brought forward losses NOT specified" should {
+//      "return a back link to the brought forward choice page" in {
+//        val target = setupTarget(Some(PreviousTaxableGainsModel(1000)), otherProperties = false, lossesBroughtForward = false,
+//          allowableLossesModel = None, allowableLossesValueModel = None)
+//        val result = target.previousTaxableGains(fakeRequestWithSession)
+//        val doc = Jsoup.parse(bodyOf(result))
+//
+//        val link = doc.select("#back-link")
+//        link.attr("href") shouldBe controllers.resident.shares.routes.DeductionsController.lossesBroughtForward().toString
+//      }
+//    }
+//  }
+//
+//  "request has an invalid session" should {
+//
+//    lazy val target = setupTarget(None)
+//    lazy val result = target.previousTaxableGains(fakeRequest)
+//
+//    "return a status of 303" in {
+//      status(result) shouldBe 303
+//    }
+//
+//    "return you to the session timeout page" in {
+//      redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+//    }
+//  }
+//
+//  "Calling .submitPreviousTaxableGains from the IncomeController" when {
+//
+//    "an invalid form is submitted" should {
+//      lazy val target = setupTarget(None)
+//      lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
+//      lazy val result = target.submitPreviousTaxableGains(request)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a 400" in {
+//        status(result) shouldBe 400
+//      }
+//
+//      "render the previous taxable gains page" in {
+//        doc.title() shouldEqual messages.title("2015/16")
+//      }
+//    }
+//
+//    "a valid form is submitted" should {
+//      lazy val target = setupTarget(None)
+//      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+//      lazy val result = target.submitPreviousTaxableGains(request)
+//
+//      "return a 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      s"redirect to ${controllers.resident.shares.routes.IncomeController.currentIncome()}" in {
+//        redirectLocation(result).get shouldBe controllers.resident.shares.routes.IncomeController.currentIncome().toString
+//      }
+//    }
+//  }
 }

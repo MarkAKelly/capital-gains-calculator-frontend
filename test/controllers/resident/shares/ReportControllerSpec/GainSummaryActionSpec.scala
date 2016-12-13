@@ -58,82 +58,82 @@ class GainSummaryActionSpec extends UnitSpec with WithFakeApplication with FakeR
     }
   }
 
-  "Calling .gainSummaryReport from the ReportController" when {
-
-    "a negative total gain is returned" should {
-      lazy val yourAnswersSummaryModel = GainAnswersModel(
-        disposalDate = Dates.constructDate(10, 10, 2018),
-        soldForLessThanWorth = false,
-        disposalValue = Some(3000),
-        worthWhenSoldForLess = None,
-        disposalCosts = 10,
-        ownerBeforeLegislationStart = false,
-        valueBeforeLegislationStart = None,
-        inheritedTheShares = Some(false),
-        worthWhenInherited = None,
-        acquisitionValue = Some(5000),
-        acquisitionCosts = 5
-      )
-      lazy val target = setupTarget(
-        yourAnswersSummaryModel,
-        -6000,
-        taxYearModel = Some(TaxYearModel("2015/2016", true, "2015/16"))
-      )
-      lazy val result = target.gainSummaryReport(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      "return a pdf" in {
-        contentType(result) shouldBe Some("application/pdf")
-      }
-
-      "should return the pdf as an attachment" in {
-        header("Content-Disposition", result).get should include("attachment")
-      }
-
-      "should have a filename of 'Summary.pdf'" in {
-        header("Content-Disposition", result).get should include(s"""filename="${messages.title}.pdf"""")
-      }
-    }
-
-    "a zero total gain is returned with an invalid tax year" should {
-      lazy val yourAnswersSummaryModel = GainAnswersModel(
-        disposalDate = Dates.constructDate(10, 10, 2018),
-        soldForLessThanWorth = false,
-        disposalValue = Some(3000),
-        worthWhenSoldForLess = None,
-        disposalCosts = 10,
-        ownerBeforeLegislationStart = false,
-        valueBeforeLegislationStart = None,
-        inheritedTheShares = Some(false),
-        worthWhenInherited = None,
-        acquisitionValue = Some(5000),
-        acquisitionCosts = 5
-      )
-      lazy val target = setupTarget(
-        yourAnswersSummaryModel,
-        -6000,
-        taxYearModel = Some(TaxYearModel("2013/2014", false, "2015/16"))
-      )
-      lazy val result = target.gainSummaryReport(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      "return a pdf" in {
-        contentType(result) shouldBe Some("application/pdf")
-      }
-
-      "should return the pdf as an attachment" in {
-        header("Content-Disposition", result).get should include("attachment")
-      }
-
-      "should have a filename of 'Summary'" in {
-        header("Content-Disposition", result).get should include(s"""filename="${messages.title}.pdf"""")
-      }
-    }
-  }
+//  "Calling .gainSummaryReport from the ReportController" when {
+//
+//    "a negative total gain is returned" should {
+//      lazy val yourAnswersSummaryModel = GainAnswersModel(
+//        disposalDate = Dates.constructDate(10, 10, 2018),
+//        soldForLessThanWorth = false,
+//        disposalValue = Some(3000),
+//        worthWhenSoldForLess = None,
+//        disposalCosts = 10,
+//        ownerBeforeLegislationStart = false,
+//        valueBeforeLegislationStart = None,
+//        inheritedTheShares = Some(false),
+//        worthWhenInherited = None,
+//        acquisitionValue = Some(5000),
+//        acquisitionCosts = 5
+//      )
+//      lazy val target = setupTarget(
+//        yourAnswersSummaryModel,
+//        -6000,
+//        taxYearModel = Some(TaxYearModel("2015/2016", true, "2015/16"))
+//      )
+//      lazy val result = target.gainSummaryReport(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "return a pdf" in {
+//        contentType(result) shouldBe Some("application/pdf")
+//      }
+//
+//      "should return the pdf as an attachment" in {
+//        header("Content-Disposition", result).get should include("attachment")
+//      }
+//
+//      "should have a filename of 'Summary.pdf'" in {
+//        header("Content-Disposition", result).get should include(s"""filename="${messages.title}.pdf"""")
+//      }
+//    }
+//
+//    "a zero total gain is returned with an invalid tax year" should {
+//      lazy val yourAnswersSummaryModel = GainAnswersModel(
+//        disposalDate = Dates.constructDate(10, 10, 2018),
+//        soldForLessThanWorth = false,
+//        disposalValue = Some(3000),
+//        worthWhenSoldForLess = None,
+//        disposalCosts = 10,
+//        ownerBeforeLegislationStart = false,
+//        valueBeforeLegislationStart = None,
+//        inheritedTheShares = Some(false),
+//        worthWhenInherited = None,
+//        acquisitionValue = Some(5000),
+//        acquisitionCosts = 5
+//      )
+//      lazy val target = setupTarget(
+//        yourAnswersSummaryModel,
+//        -6000,
+//        taxYearModel = Some(TaxYearModel("2013/2014", false, "2015/16"))
+//      )
+//      lazy val result = target.gainSummaryReport(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "return a pdf" in {
+//        contentType(result) shouldBe Some("application/pdf")
+//      }
+//
+//      "should return the pdf as an attachment" in {
+//        header("Content-Disposition", result).get should include("attachment")
+//      }
+//
+//      "should have a filename of 'Summary'" in {
+//        header("Content-Disposition", result).get should include(s"""filename="${messages.title}.pdf"""")
+//      }
+//    }
+//  }
 }

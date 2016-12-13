@@ -77,184 +77,184 @@ class CurrentIncomeActionSpec extends UnitSpec with WithFakeApplication with Fak
     }
   }
 
-  "Calling .currentIncome from the IncomeController with a session" when {
-
-    "supplied with no pre-existing stored data for 2015/16" should {
-
-      lazy val target = setupTarget(None, disposalDate = Some(DisposalDateModel(10, 10, 2015)), taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val result = target.currentIncome(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      "return some html" in {
-        contentType(result) shouldBe Some("text/html")
-      }
-
-      "display the Current Income view for 2015/16" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.title("2015/16")
-      }
-
-      "supplied with no pre-existing stored data for 2016/17" should {
-
-        lazy val target = setupTarget(None, disposalDate = Some(DisposalDateModel(10, 10, 2016)), taxYear =
-          Some(TaxYearModel(Dates.getCurrentTaxYear, true, Dates.getCurrentTaxYear)))
-        lazy val result = target.currentIncome(fakeRequestWithSession)
-
-        "return a status of 200" in {
-          status(result) shouldBe 200
-        }
-
-        "return some html" in {
-          contentType(result) shouldBe Some("text/html")
-        }
-
-        "display the Current Income for 2016/17 view" in {
-          Jsoup.parse(bodyOf(result)).title shouldBe messages.currentYearTitle
-        }
-      }
-    }
-
-    "supplied with pre-existing stored data" should {
-
-      lazy val target = setupTarget(Some(CurrentIncomeModel(40000)), disposalDate = Some(DisposalDateModel(10, 10, 2015)),
-        taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val result = target.currentIncome(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      "have the amount 40000 pre-populated into the input field" in {
-        doc.getElementById("amount").attr("value") shouldBe "40000"
-      }
-    }
-
-    "other shares have been selected and 0 has been entered into the annual exempt amount" should {
-
-      lazy val target = setupTarget(None, allowableLossesModel = Some(AllowableLossesModel(true)), allowableLossesValueModel =
-        Some(AllowableLossesValueModel(BigDecimal(0))), disposalDate = Some(DisposalDateModel(10, 10, 2015)),
-        taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val result = target.currentIncome(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a 200" in {
-        status(result) shouldBe 200
-      }
-
-      "have a back link with the address /calculate-your-capital-gains/resident/shares/previous-taxable-gains" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/previous-taxable-gains"
-      }
-    }
-
-    "other shares have been selected and non-zero has been entered into the annual exempt amount" should {
-
-      lazy val target = setupTarget(None, annualExemptAmount = 10, allowableLossesModel = Some(AllowableLossesModel(false)),
-                                    allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(0))),
-                                    disposalDate = Some(DisposalDateModel(10, 10, 2015)), taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val result = target.currentIncome(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a 200" in {
-        status(result) shouldBe 200
-      }
-
-      "have a back link with the address /calculate-your-capital-gains/resident/shares/annual-exempt-amount" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/annual-exempt-amount"
-      }
-    }
-
-    "other shares has been selected but a non-zero value for allowable losses has been entered" should {
-
-      lazy val target = setupTarget(None, otherProperties = true, lossesBroughtForward = false, allowableLossesModel = Some(AllowableLossesModel(true)),
-                                    allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(10000))),
-                                    disposalDate = Some(DisposalDateModel(10, 10, 2015)), taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val result = target.currentIncome(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a 200" in {
-        status(result) shouldBe 200
-      }
-
-      "have a back link with the address /calculate-your-capital-gains/resident/shares/losses-brought-forward" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/losses-brought-forward"
-      }
-    }
-
-    "other shares has not been selected and neither has brought forward losses" should {
-
-      lazy val target = setupTarget(None, otherProperties = false, lossesBroughtForward = false, disposalDate = Some(DisposalDateModel(10, 10, 2015)),
-                                    taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val result = target.currentIncome(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a 200" in {
-        status(result) shouldBe 200
-      }
-
-      "have a back link with the address /calculate-your-capital-gains/resident/shares/losses-brought-forward" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/losses-brought-forward"
-      }
-    }
-
-    "other shares has not been selected and brought forward losses has been selected" should {
-
-      lazy val target = setupTarget(None, otherProperties = false, disposalDate = Some(DisposalDateModel(10, 10, 2015)),
-                                    taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val result = target.currentIncome(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a 200" in {
-        status(result) shouldBe 200
-      }
-
-      "have a back link with the address /calculate-your-capital-gains/resident/shares/losses-brought-forward-value" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/losses-brought-forward-value"
-      }
-    }
-  }
-
-  "Calling .currentIncome from the IncomeController with no session" should {
-
-    lazy val result = IncomeController.currentIncome(fakeRequest)
-
-    "return a status of 303" in {
-      status(result) shouldBe 303
-    }
-
-    "return you to the session timeout view" in {
-      redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
-    }
-  }
-
-  "calling .submitCurrentIncome from the IncomeController" when {
-
-    "given a valid form should" should {
-
-      lazy val target = setupTarget(Some(CurrentIncomeModel(40000)), disposalDate = Some(DisposalDateModel(10, 10, 2015)),
-                                    taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val result = target.submitCurrentIncome(fakeRequestToPOSTWithSession(("amount", "40000")))
-
-      "return a status of 303" in {
-        status(result) shouldBe 303
-      }
-
-      s"redirect to '${controllers.resident.shares.routes.IncomeController.personalAllowance().toString}'" in {
-        redirectLocation(result).get shouldBe controllers.resident.shares.routes.IncomeController.personalAllowance().toString
-      }
-    }
-
-    "given an invalid form" should {
-
-      lazy val target = setupTarget(Some(CurrentIncomeModel(-40000)), otherProperties = false,
-                                    disposalDate = Some(DisposalDateModel(10, 10, 2015)), taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val result = target.submitCurrentIncome(fakeRequestToPOSTWithSession(("amount", "-40000")))
-
-      "return a status of 400" in {
-        status(result) shouldBe 400
-      }
-    }
-  }
+//  "Calling .currentIncome from the IncomeController with a session" when {
+//
+//    "supplied with no pre-existing stored data for 2015/16" should {
+//
+//      lazy val target = setupTarget(None, disposalDate = Some(DisposalDateModel(10, 10, 2015)), taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val result = target.currentIncome(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "return some html" in {
+//        contentType(result) shouldBe Some("text/html")
+//      }
+//
+//      "display the Current Income view for 2015/16" in {
+//        Jsoup.parse(bodyOf(result)).title shouldBe messages.title("2015/16")
+//      }
+//
+//      "supplied with no pre-existing stored data for 2016/17" should {
+//
+//        lazy val target = setupTarget(None, disposalDate = Some(DisposalDateModel(10, 10, 2016)), taxYear =
+//          Some(TaxYearModel(Dates.getCurrentTaxYear, true, Dates.getCurrentTaxYear)))
+//        lazy val result = target.currentIncome(fakeRequestWithSession)
+//
+//        "return a status of 200" in {
+//          status(result) shouldBe 200
+//        }
+//
+//        "return some html" in {
+//          contentType(result) shouldBe Some("text/html")
+//        }
+//
+//        "display the Current Income for 2016/17 view" in {
+//          Jsoup.parse(bodyOf(result)).title shouldBe messages.currentYearTitle
+//        }
+//      }
+//    }
+//
+//    "supplied with pre-existing stored data" should {
+//
+//      lazy val target = setupTarget(Some(CurrentIncomeModel(40000)), disposalDate = Some(DisposalDateModel(10, 10, 2015)),
+//        taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val result = target.currentIncome(fakeRequestWithSession)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "have the amount 40000 pre-populated into the input field" in {
+//        doc.getElementById("amount").attr("value") shouldBe "40000"
+//      }
+//    }
+//
+//    "other shares have been selected and 0 has been entered into the annual exempt amount" should {
+//
+//      lazy val target = setupTarget(None, allowableLossesModel = Some(AllowableLossesModel(true)), allowableLossesValueModel =
+//        Some(AllowableLossesValueModel(BigDecimal(0))), disposalDate = Some(DisposalDateModel(10, 10, 2015)),
+//        taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val result = target.currentIncome(fakeRequestWithSession)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "have a back link with the address /calculate-your-capital-gains/resident/shares/previous-taxable-gains" in {
+//        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/previous-taxable-gains"
+//      }
+//    }
+//
+//    "other shares have been selected and non-zero has been entered into the annual exempt amount" should {
+//
+//      lazy val target = setupTarget(None, annualExemptAmount = 10, allowableLossesModel = Some(AllowableLossesModel(false)),
+//                                    allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(0))),
+//                                    disposalDate = Some(DisposalDateModel(10, 10, 2015)), taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val result = target.currentIncome(fakeRequestWithSession)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "have a back link with the address /calculate-your-capital-gains/resident/shares/annual-exempt-amount" in {
+//        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/annual-exempt-amount"
+//      }
+//    }
+//
+//    "other shares has been selected but a non-zero value for allowable losses has been entered" should {
+//
+//      lazy val target = setupTarget(None, otherProperties = true, lossesBroughtForward = false, allowableLossesModel = Some(AllowableLossesModel(true)),
+//                                    allowableLossesValueModel = Some(AllowableLossesValueModel(BigDecimal(10000))),
+//                                    disposalDate = Some(DisposalDateModel(10, 10, 2015)), taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val result = target.currentIncome(fakeRequestWithSession)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "have a back link with the address /calculate-your-capital-gains/resident/shares/losses-brought-forward" in {
+//        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/losses-brought-forward"
+//      }
+//    }
+//
+//    "other shares has not been selected and neither has brought forward losses" should {
+//
+//      lazy val target = setupTarget(None, otherProperties = false, lossesBroughtForward = false, disposalDate = Some(DisposalDateModel(10, 10, 2015)),
+//                                    taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val result = target.currentIncome(fakeRequestWithSession)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "have a back link with the address /calculate-your-capital-gains/resident/shares/losses-brought-forward" in {
+//        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/losses-brought-forward"
+//      }
+//    }
+//
+//    "other shares has not been selected and brought forward losses has been selected" should {
+//
+//      lazy val target = setupTarget(None, otherProperties = false, disposalDate = Some(DisposalDateModel(10, 10, 2015)),
+//                                    taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val result = target.currentIncome(fakeRequestWithSession)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "have a back link with the address /calculate-your-capital-gains/resident/shares/losses-brought-forward-value" in {
+//        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/shares/losses-brought-forward-value"
+//      }
+//    }
+//  }
+//
+//  "Calling .currentIncome from the IncomeController with no session" should {
+//
+//    lazy val result = IncomeController.currentIncome(fakeRequest)
+//
+//    "return a status of 303" in {
+//      status(result) shouldBe 303
+//    }
+//
+//    "return you to the session timeout view" in {
+//      redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+//    }
+//  }
+//
+//  "calling .submitCurrentIncome from the IncomeController" when {
+//
+//    "given a valid form should" should {
+//
+//      lazy val target = setupTarget(Some(CurrentIncomeModel(40000)), disposalDate = Some(DisposalDateModel(10, 10, 2015)),
+//                                    taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val result = target.submitCurrentIncome(fakeRequestToPOSTWithSession(("amount", "40000")))
+//
+//      "return a status of 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      s"redirect to '${controllers.resident.shares.routes.IncomeController.personalAllowance().toString}'" in {
+//        redirectLocation(result).get shouldBe controllers.resident.shares.routes.IncomeController.personalAllowance().toString
+//      }
+//    }
+//
+//    "given an invalid form" should {
+//
+//      lazy val target = setupTarget(Some(CurrentIncomeModel(-40000)), otherProperties = false,
+//                                    disposalDate = Some(DisposalDateModel(10, 10, 2015)), taxYear = Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val result = target.submitCurrentIncome(fakeRequestToPOSTWithSession(("amount", "-40000")))
+//
+//      "return a status of 400" in {
+//        status(result) shouldBe 400
+//      }
+//    }
+//  }
 }
