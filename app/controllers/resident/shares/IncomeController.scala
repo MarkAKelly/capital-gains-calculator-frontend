@@ -21,7 +21,6 @@ import views.html.calculation.{resident => commonViews}
 import views.html.calculation.resident.shares.{income => views}
 import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
-import controllers.predicates.FeatureLock
 import forms.resident.income.PersonalAllowanceForm._
 import forms.resident.income.CurrentIncomeForm._
 import models.resident._
@@ -33,13 +32,14 @@ import forms.resident.income.PreviousTaxableGainsForm._
 
 import scala.concurrent.Future
 import common.resident.JourneyKeys
+import controllers.predicates.ValidActiveSession
 import play.api.i18n.Messages
 
 object IncomeController extends IncomeController {
   val calcConnector = CalculatorConnector
 }
 
-trait IncomeController extends FeatureLock {
+trait IncomeController extends ValidActiveSession {
 
   val calcConnector: CalculatorConnector
 
@@ -111,7 +111,7 @@ trait IncomeController extends FeatureLock {
     }
   }
 
-  val previousTaxableGains = FeatureLockForRTTShares.async { implicit request =>
+  val previousTaxableGains = ValidateSession.async { implicit request =>
 
     def routeRequest(backUrl: String, calculationYear: String): Future[Result] = {
       calcConnector.fetchAndGetFormData[PreviousTaxableGainsModel](keystoreKeys.previousTaxableGains).map {
@@ -131,7 +131,7 @@ trait IncomeController extends FeatureLock {
     } yield finalResult
   }
 
-  val submitPreviousTaxableGains = FeatureLockForRTTShares.async { implicit request =>
+  val submitPreviousTaxableGains = ValidateSession.async { implicit request =>
 
     def errorAction (errors: Form[PreviousTaxableGainsModel], backUrl: String, taxYear: String) = {
       Future.successful(BadRequest(commonViews.previousTaxableGains(errors, backUrl, previousTaxableGainsPostAction,
@@ -174,7 +174,7 @@ trait IncomeController extends FeatureLock {
     }
   }
 
-  val currentIncome = FeatureLockForRTTShares.async { implicit request =>
+  val currentIncome = ValidateSession.async { implicit request =>
 
     def routeRequest(backUrl: String, taxYear: TaxYearModel, currentTaxYear: String): Future[Result] = {
 
@@ -196,7 +196,7 @@ trait IncomeController extends FeatureLock {
     } yield finalResult
   }
 
-  val submitCurrentIncome = FeatureLockForRTTShares.async { implicit request =>
+  val submitCurrentIncome = ValidateSession.async { implicit request =>
 
     def routeRequest(taxYearModel: TaxYearModel, currentTaxYear: String): Future[Result] = {
 
@@ -232,7 +232,7 @@ trait IncomeController extends FeatureLock {
   private val backLinkPersonalAllowance = Some(controllers.resident.shares.routes.IncomeController.currentIncome().toString)
   private val postActionPersonalAllowance = controllers.resident.shares.routes.IncomeController.submitPersonalAllowance()
 
-  val personalAllowance = FeatureLockForRTTShares.async { implicit request =>
+  val personalAllowance = ValidateSession.async { implicit request =>
 
     def fetchStoredPersonalAllowance(): Future[Form[PersonalAllowanceModel]] = {
       calcConnector.fetchAndGetFormData[PersonalAllowanceModel](keystoreKeys.personalAllowance).map {
@@ -258,7 +258,7 @@ trait IncomeController extends FeatureLock {
     } yield route
   }
 
-  val submitPersonalAllowance = FeatureLockForRTTShares.async { implicit request =>
+  val submitPersonalAllowance = ValidateSession.async { implicit request =>
 
     def getMaxPA(year: Int): Future[Option[BigDecimal]] = {
       calcConnector.getPA(year, isEligibleBlindPersonsAllowance = true)(hc)

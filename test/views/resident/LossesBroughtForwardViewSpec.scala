@@ -27,7 +27,7 @@ import views.html.calculation.{resident => views}
 
 class LossesBroughtForwardViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  lazy val postAction = controllers.resident.properties.routes.DeductionsController.submitLossesBroughtForward()
+  lazy val postAction = controllers.resident.shares.routes.DeductionsController.submitLossesBroughtForward()
 
   "Reliefs view" should {
 

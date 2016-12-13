@@ -111,7 +111,7 @@ class SellForLessActionSpec extends UnitSpec with WithFakeApplication with FakeR
       }
 
       "return you to the session timeout page" in {
-        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+        redirectLocation(result).get should include ("/calculate-your-capital-gains/resident/shares/session-timeout")
       }
     }
   }

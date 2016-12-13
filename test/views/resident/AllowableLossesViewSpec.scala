@@ -26,11 +26,11 @@ import views.html.calculation.{resident => views}
 
 class AllowableLossesViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  lazy val postAction = controllers.resident.properties.routes.DeductionsController.submitAllowableLosses()
+  lazy val postAction = controllers.resident.shares.routes.DeductionsController.submitAllowableLosses()
 
   "Allowable Losses view" should {
 
-    lazy val backLink = Some(controllers.resident.properties.routes.DeductionsController.otherProperties().toString())
+    lazy val backLink = Some(controllers.resident.shares.routes.DeductionsController.otherDisposals().toString())
     lazy val view = views.allowableLosses(allowableLossesForm, TaxYearModel("2015/16", true, "2015/16"), postAction, backLink, "home", "navTitle")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 

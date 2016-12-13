@@ -20,8 +20,7 @@ import java.util.UUID
 
 import common.KeystoreKeys.{ResidentShareKeys => keystoreKeys}
 import connectors.CalculatorConnector
-import controllers.predicates.FeatureLock
-import play.api.mvc.Result
+import play.api.mvc.{Action, Result}
 import uk.gov.hmrc.play.http.{HeaderCarrier, SessionKeys}
 
 import scala.concurrent.Future
@@ -40,6 +39,7 @@ import forms.resident.shares.gain.DidYouInheritThemForm._
 import forms.resident.shares.gain.ValueBeforeLegislationStartForm._
 import models.resident._
 import common.{Dates, TaxDates}
+import controllers.predicates.ValidActiveSession
 import models.resident.shares.OwnerBeforeLegislationStartModel
 import models.resident.shares.gain.ValueBeforeLegislationStartModel
 import models.resident.shares.gain.DidYouInheritThemModel
@@ -50,7 +50,7 @@ object GainController extends GainController {
   val calcConnector = CalculatorConnector
 }
 
-trait GainController extends FeatureLock {
+trait GainController extends ValidActiveSession {
 
   val calcConnector: CalculatorConnector
 
@@ -59,7 +59,7 @@ trait GainController extends FeatureLock {
   override val sessionTimeoutUrl = homeLink
 
   //################# Disposal Date Actions ####################
-  val disposalDate = FeatureLockForRTTShares.asyncNoTimeout { implicit request =>
+  val disposalDate = Action.async { implicit request =>
     if (request.session.get(SessionKeys.sessionId).isEmpty) {
       val sessionId = UUID.randomUUID.toString
       Future.successful(Ok(views.disposalDate(disposalDateForm, homeLink)).withSession(request.session + (SessionKeys.sessionId -> s"session-$sessionId")))
@@ -72,7 +72,7 @@ trait GainController extends FeatureLock {
     }
   }
 
-  val submitDisposalDate = FeatureLockForRTTShares.async { implicit request =>
+  val submitDisposalDate = ValidateSession.async { implicit request =>
 
     def routeRequest(taxYearResult: Option[TaxYearModel]): Future[Result] = {
       if (taxYearResult.isDefined && !taxYearResult.get.isValidYear) Future.successful(Redirect(routes.GainController.outsideTaxYears()))
@@ -99,7 +99,7 @@ trait GainController extends FeatureLock {
     } yield if (taxYear.get.isValidYear) routes.GainController.disposalDate().url else routes.GainController.outsideTaxYears().url
   }
 
-  val sellForLess = FeatureLockForRTTShares.async { implicit request =>
+  val sellForLess = ValidateSession.async { implicit request =>
 
     def routeRequest(model: Option[SellForLessModel], backLink: String) = {
       val view = model match {
@@ -120,7 +120,7 @@ trait GainController extends FeatureLock {
 
   }
 
-  val submitSellForLess = FeatureLockForRTTShares.async { implicit request =>
+  val submitSellForLess = ValidateSession.async { implicit request =>
     sellForLessForm.bindFromRequest.fold(
       errors => {
         for {
@@ -139,14 +139,14 @@ trait GainController extends FeatureLock {
   }
 
   //################ Worth When Sold Actions ######################
-  val worthWhenSoldForLess = FeatureLockForRTT.async { implicit request =>
+  val worthWhenSoldForLess = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[WorthWhenSoldForLessModel](keystoreKeys.worthWhenSoldForLess).map {
       case Some(data) => Ok(views.worthWhenSoldForLess(worthWhenSoldForLessForm.fill(data), homeLink))
       case _ => Ok(views.worthWhenSoldForLess(worthWhenSoldForLessForm, homeLink))
     }
   }
 
-  val submitWorthWhenSoldForLess = FeatureLockForRTT.async { implicit request =>
+  val submitWorthWhenSoldForLess = ValidateSession.async { implicit request =>
 
     worthWhenSoldForLessForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.worthWhenSoldForLess(errors, homeLink))),
@@ -159,7 +159,7 @@ trait GainController extends FeatureLock {
 
 
   //################ Outside Tax Years Actions ######################
-  val outsideTaxYears = FeatureLockForRTTShares.async { implicit request =>
+  val outsideTaxYears = ValidateSession.async { implicit request =>
     for {
       disposalDate <- calcConnector.fetchAndGetFormData[DisposalDateModel](keystoreKeys.disposalDate)
       taxYear <- calcConnector.getTaxYear(s"${disposalDate.get.year}-${disposalDate.get.month}-${disposalDate.get.day}")
@@ -177,14 +177,14 @@ trait GainController extends FeatureLock {
   }
 
   //################ Disposal Value Actions ######################
-  val disposalValue = FeatureLockForRTTShares.async { implicit request =>
+  val disposalValue = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[DisposalValueModel](keystoreKeys.disposalValue).map {
       case Some(data) => Ok(views.disposalValue(disposalValueForm.fill(data), homeLink))
       case None => Ok(views.disposalValue(disposalValueForm, homeLink))
     }
   }
 
-  val submitDisposalValue = FeatureLockForRTTShares.async { implicit request =>
+  val submitDisposalValue = ValidateSession.async { implicit request =>
     disposalValueForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.disposalValue(errors, homeLink))),
       success => {
@@ -195,14 +195,14 @@ trait GainController extends FeatureLock {
   }
 
   //################# Disposal Costs Actions ########################
-  val disposalCosts = FeatureLockForRTTShares.async { implicit request =>
+  val disposalCosts = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[DisposalCostsModel](keystoreKeys.disposalCosts).map {
       case Some(data) => Ok(views.disposalCosts(disposalCostsForm.fill(data), homeLink))
       case None => Ok(views.disposalCosts(disposalCostsForm, homeLink))
     }
   }
 
-  val submitDisposalCosts = FeatureLockForRTTShares.async { implicit request =>
+  val submitDisposalCosts = ValidateSession.async { implicit request =>
     disposalCostsForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.disposalCosts(errors, homeLink))),
       success => {
@@ -215,14 +215,14 @@ trait GainController extends FeatureLock {
   //################# Owned Before 1982 Actions ########################
   private val ownerBeforeLegislationStartBackLink = Some(controllers.resident.shares.routes.GainController.disposalCosts().url)
 
-  val ownerBeforeLegislationStart = FeatureLockForRTTShares.async { implicit request =>
+  val ownerBeforeLegislationStart = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[OwnerBeforeLegislationStartModel](keystoreKeys.ownerBeforeLegislationStart).map {
       case Some(data) => Ok(views.ownerBeforeLegislationStart(ownerBeforeLegislationStartForm.fill(data), homeLink, ownerBeforeLegislationStartBackLink))
       case None => Ok(views.ownerBeforeLegislationStart(ownerBeforeLegislationStartForm, homeLink, ownerBeforeLegislationStartBackLink))
     }
   }
 
-  val submitOwnerBeforeLegislationStart = FeatureLockForRTTShares.async { implicit request =>
+  val submitOwnerBeforeLegislationStart = ValidateSession.async { implicit request =>
     ownerBeforeLegislationStartForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.ownerBeforeLegislationStart(errors, homeLink, ownerBeforeLegislationStartBackLink))),
       success => {
@@ -236,14 +236,14 @@ trait GainController extends FeatureLock {
   }
 
   //################# What were they worth on 31 March 1982 Actions ########################
-  val valueBeforeLegislationStart =  FeatureLockForRTT.async { implicit request =>
+  val valueBeforeLegislationStart =  ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[ValueBeforeLegislationStartModel](keystoreKeys.valueBeforeLegislationStart).map {
       case Some(data) => Ok(views.valueBeforeLegislationStart(valueBeforeLegislationStartForm.fill(data)))
       case None => Ok(views.valueBeforeLegislationStart(valueBeforeLegislationStartForm))
     }
   }
 
-  val submitValueBeforeLegislationStart = FeatureLockForRTT.async { implicit request =>
+  val submitValueBeforeLegislationStart = ValidateSession.async { implicit request =>
     valueBeforeLegislationStartForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.valueBeforeLegislationStart(errors))),
       success => {
@@ -254,14 +254,14 @@ trait GainController extends FeatureLock {
   }
 
   //################# Did you Inherit the Shares Actions ########################
-  val didYouInheritThem = FeatureLockForRTTShares.async { implicit request =>
+  val didYouInheritThem = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[DidYouInheritThemModel](keystoreKeys.didYouInheritThem).map {
       case Some(data) => Ok(views.didYouInheritThem(didYouInheritThemForm.fill(data)))
       case None => Ok(views.didYouInheritThem(didYouInheritThemForm))
     }
   }
 
-  val submitDidYouInheritThem = FeatureLockForRTTShares.async { implicit request =>
+  val submitDidYouInheritThem = ValidateSession.async { implicit request =>
     didYouInheritThemForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.didYouInheritThem(errors))),
       success => {
@@ -273,14 +273,14 @@ trait GainController extends FeatureLock {
   }
 
   //################# Worth when Inherited Actions ########################
-  val worthWhenInherited = FeatureLockForRTTShares.async { implicit request =>
+  val worthWhenInherited = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[WorthWhenInheritedModel](keystoreKeys.worthWhenInherited).map {
       case Some(data) => Ok(views.worthWhenInherited(worthWhenInheritedForm.fill(data)))
       case None => Ok(views.worthWhenInherited(worthWhenInheritedForm))
     }
   }
 
-  val submitWorthWhenInherited = FeatureLockForRTTShares.async { implicit request =>
+  val submitWorthWhenInherited = ValidateSession.async { implicit request =>
     worthWhenInheritedForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.worthWhenInherited(errors))),
       success => {
@@ -291,14 +291,14 @@ trait GainController extends FeatureLock {
   }
 
   //################# Acquisition Value Actions ########################
-  val acquisitionValue = FeatureLockForRTTShares.async { implicit request =>
+  val acquisitionValue = ValidateSession.async { implicit request =>
     calcConnector.fetchAndGetFormData[AcquisitionValueModel](keystoreKeys.acquisitionValue).map {
       case Some(data) => Ok(views.acquisitionValue(acquisitionValueForm.fill(data), homeLink))
       case None => Ok(views.acquisitionValue(acquisitionValueForm, homeLink))
     }
   }
 
-  val submitAcquisitionValue = FeatureLockForRTTShares.async { implicit request =>
+  val submitAcquisitionValue = ValidateSession.async { implicit request =>
     acquisitionValueForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.acquisitionValue(errors, homeLink))),
       success => {
@@ -315,7 +315,7 @@ trait GainController extends FeatureLock {
       case (_,_) => routes.GainController.acquisitionValue().url
   }
 
-  val acquisitionCosts = FeatureLockForRTTShares.async { implicit request =>
+  val acquisitionCosts = ValidateSession.async { implicit request =>
 
     def routeRequest(backLink: String): Future[Result] = {
       calcConnector.fetchAndGetFormData[AcquisitionCostsModel](keystoreKeys.acquisitionCosts).map {
@@ -331,7 +331,7 @@ trait GainController extends FeatureLock {
     } yield route
   }
 
-  val submitAcquisitionCosts = FeatureLockForRTTShares.async { implicit request =>
+  val submitAcquisitionCosts = ValidateSession.async { implicit request =>
 
     def errorAction(errors: Form[AcquisitionCostsModel], backLink: String) = {
       Future.successful(BadRequest(views.acquisitionCosts(errors, Some(backLink), homeLink)))

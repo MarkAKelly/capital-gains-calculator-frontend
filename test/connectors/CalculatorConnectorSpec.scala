@@ -21,7 +21,6 @@ import java.util.UUID
 import common.KeystoreKeys
 import models.resident
 import models.resident.IncomeAnswersModel
-import models.resident.properties.ChargeableGainAnswers
 import models.resident.shares.{DeductionGainAnswersModel, GainAnswersModel}
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -46,43 +45,6 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
   }
 
   implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(sessionId.toString)))
-
-  def mockResidentPropertyFetchAndGetFormData(): Unit = {
-
-    when(mockSessionCache.fetchAndGetEntry[resident.OtherPropertiesModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.otherProperties))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(resident.OtherPropertiesModel(false))))
-
-    when(mockSessionCache.fetchAndGetEntry[resident.AllowableLossesModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.allowableLosses))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(mock[resident.AllowableLossesModel])))
-
-    when(mockSessionCache.fetchAndGetEntry[resident.AllowableLossesValueModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.allowableLossesValue))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(mock[resident.AllowableLossesValueModel])))
-
-    when(mockSessionCache.fetchAndGetEntry[resident.LossesBroughtForwardModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.lossesBroughtForward))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(mock[resident.LossesBroughtForwardModel])))
-
-    when(mockSessionCache.fetchAndGetEntry[resident.LossesBroughtForwardValueModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.lossesBroughtForwardValue))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(mock[resident.LossesBroughtForwardValueModel])))
-
-    when(mockSessionCache.fetchAndGetEntry[resident.AnnualExemptAmountModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.annualExemptAmount))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(mock[resident.AnnualExemptAmountModel])))
-
-    when(mockSessionCache.fetchAndGetEntry[resident.properties.PropertyLivedInModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.propertyLivedIn))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(resident.properties.PropertyLivedInModel(false))))
-
-    when(mockSessionCache.fetchAndGetEntry[resident.properties.LettingsReliefModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.lettingsRelief))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(mock[resident.properties.LettingsReliefModel])))
-
-    when(mockSessionCache.fetchAndGetEntry[resident.properties.LettingsReliefValueModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.lettingsReliefValue))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(mock[resident.properties.LettingsReliefValueModel])))
-
-
-    when(mockSessionCache.fetchAndGetEntry[resident.PrivateResidenceReliefModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.privateResidenceRelief))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(mock[resident.PrivateResidenceReliefModel])))
-
-    when(mockSessionCache.fetchAndGetEntry[resident.properties.PrivateResidenceReliefValueModel](Matchers.eq(KeystoreKeys.ResidentPropertyKeys.prrValue))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(mock[resident.properties.PrivateResidenceReliefValueModel])))
-  }
 
   def mockResidentSharesFetchAndGetFormData(): Unit = {
     when(mockSessionCache.fetchAndGetEntry[resident.AcquisitionCostsModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.acquisitionCosts))(Matchers.any(), Matchers.any()))
@@ -150,16 +112,6 @@ class CalculatorConnectorSpec extends UnitSpec with MockitoSugar {
 
     when(mockSessionCache.fetchAndGetEntry[resident.LossesBroughtForwardValueModel](Matchers.eq(KeystoreKeys.ResidentShareKeys.lossesBroughtForwardValue))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(Some(mock[resident.LossesBroughtForwardValueModel])))
-  }
-
-  "Calling getPropertyDeductionAnswers" should {
-
-    "return a valid ChargeableGainAnswersModel" in {
-      val hc = mock[HeaderCarrier]
-      mockResidentPropertyFetchAndGetFormData()
-      lazy val result = TargetCalculatorConnector.getPropertyDeductionAnswers(hc)
-      await(result).isInstanceOf[ChargeableGainAnswers] shouldBe true
-    }
   }
 
   "Calling getShareGainAnswers" should {

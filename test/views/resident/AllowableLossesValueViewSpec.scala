@@ -31,7 +31,7 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
 
     lazy val taxYearModel = TaxYearModel("2015/16", true, "2015/16")
     lazy val view = views.allowableLossesValue(allowableLossesValueForm, taxYearModel, "home",
-      controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue(),
+      controllers.resident.shares.routes.DeductionsController.submitAllowableLossesValue(),
       Some("back"), "navTitle")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 
@@ -47,7 +47,7 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
       doc.select("span.header__menu__proposition-name").text() shouldBe "navTitle"
     }
 
-    s"have the home link too ${controllers.resident.properties.routes.GainController.disposalDate().toString()}" in {
+    s"have the home link too ${controllers.resident.shares.routes.GainController.disposalDate().toString()}" in {
       doc.select("#homeNavHref").attr("href") shouldEqual "home"
     }
 
@@ -85,8 +85,8 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
 
       lazy val form = doc.getElementsByTag("form")
 
-      s"has the action url '${controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue().toString}'" in {
-        form.attr("action") shouldBe controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue().toString
+      s"has the action url '${controllers.resident.shares.routes.DeductionsController.submitAllowableLossesValue().toString}'" in {
+        form.attr("action") shouldBe controllers.resident.shares.routes.DeductionsController.submitAllowableLossesValue().toString
       }
 
       "has the method of POST" in {
@@ -152,7 +152,7 @@ class AllowableLossesValueViewSpec extends UnitSpec with WithFakeApplication wit
     val form = allowableLossesValueForm.bind(Map("amount" -> ""))
     lazy val view = views.allowableLossesValue(form, TaxYearModel("2015/16", true, "2015/16"),
       "home",
-      controllers.resident.properties.routes.DeductionsController.submitAllowableLossesValue(),
+      controllers.resident.shares.routes.DeductionsController.submitAllowableLossesValue(),
       Some("back"), "navTitle")(fakeRequestWithSession)
     lazy val doc = Jsoup.parse(view.body)
 

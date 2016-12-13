@@ -21,7 +21,7 @@ import java.time.LocalDate
 
 import common.Dates
 import connectors.CalculatorConnector
-import controllers.predicates.FeatureLock
+import controllers.predicates.ValidActiveSession
 import models.resident._
 import models.resident.shares.{DeductionGainAnswersModel, GainAnswersModel}
 import play.api.mvc.Result
@@ -34,14 +34,14 @@ object SummaryController extends SummaryController {
   val calculatorConnector = CalculatorConnector
 }
 
-trait SummaryController extends FeatureLock {
+trait SummaryController extends ValidActiveSession {
 
   val calculatorConnector: CalculatorConnector
 
   override val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
   override val sessionTimeoutUrl = homeLink
 
-  val summary = FeatureLockForRTTShares.async { implicit request =>
+  val summary = ValidateSession.async { implicit request =>
 
 
     def getMaxAEA(taxYear: Int)(implicit hc: HeaderCarrier): Future[Option[BigDecimal]] = {

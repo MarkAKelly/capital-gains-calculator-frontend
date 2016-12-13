@@ -21,7 +21,7 @@ import java.time.LocalDate
 
 import common.Dates
 import connectors.CalculatorConnector
-import controllers.predicates.FeatureLock
+import controllers.predicates.ValidActiveSession
 import it.innove.play.pdf.PdfGenerator
 import models.resident.TaxYearModel
 import play.api.i18n.Messages
@@ -35,7 +35,7 @@ object ReportController extends ReportController {
   val calcConnector = CalculatorConnector
 }
 
-trait ReportController extends FeatureLock {
+trait ReportController extends ValidActiveSession {
 
   val calcConnector: CalculatorConnector
 
@@ -55,7 +55,7 @@ trait ReportController extends FeatureLock {
   }
 
   //###### Gain Summary Report ########\\
-  val gainSummaryReport = FeatureLockForRTTShares.async { implicit request =>
+  val gainSummaryReport = ValidateSession.async { implicit request =>
     for {
       answers <- calcConnector.getShareGainAnswers
       taxYear <- getTaxYear(answers.disposalDate)
@@ -65,7 +65,7 @@ trait ReportController extends FeatureLock {
   }
 
   //#####Deductions summary actions#####\\
-  val deductionsReport = FeatureLockForRTTShares.async { implicit request =>
+  val deductionsReport = ValidateSession.async { implicit request =>
     for {
       answers <- calcConnector.getShareGainAnswers
       taxYear <- getTaxYear(answers.disposalDate)
@@ -82,7 +82,7 @@ trait ReportController extends FeatureLock {
 
   //#####Final summary actions#####\\
 
-  val finalSummaryReport = FeatureLockForRTTShares.async { implicit request =>
+  val finalSummaryReport = ValidateSession.async { implicit request =>
     for {
       answers <- calcConnector.getShareGainAnswers
       taxYear <- getTaxYear(answers.disposalDate)

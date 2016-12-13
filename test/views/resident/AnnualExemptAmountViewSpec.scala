@@ -27,9 +27,9 @@ import views.html.calculation.{resident => views}
 
 class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
   "The Annual Exempt Amount view" should {
-    lazy val postAction = controllers.resident.properties.routes.DeductionsController.submitAnnualExemptAmount()
-    lazy val backLink = Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForward().toString)
-    lazy val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
+    lazy val postAction = controllers.resident.shares.routes.DeductionsController.submitAnnualExemptAmount()
+    lazy val backLink = Some(controllers.resident.shares.routes.DeductionsController.lossesBroughtForward().toString)
+    lazy val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
     lazy val view = views.annualExemptAmount(annualExemptAmountForm(), backLink, postAction, homeLink, JourneyKeys.properties, "navTitle")(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
     "have a charset of UTF-8" in {
@@ -49,7 +49,7 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
         homeLink.text() shouldBe "Home"
       }
       "has a link to the resident properties disposal date page" in {
-        homeLink.attr("href") shouldBe controllers.resident.properties.routes.GainController.disposalDate().url
+        homeLink.attr("href") shouldBe controllers.resident.shares.routes.GainController.disposalDate().url
       }
     }
 
@@ -62,7 +62,7 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
         backLink.hasClass("back-link") shouldBe true
       }
       "have a link to Brought Forward Losses" in {
-        backLink.attr("href") shouldBe controllers.resident.properties.routes.DeductionsController.lossesBroughtForward().toString
+        backLink.attr("href") shouldBe controllers.resident.shares.routes.DeductionsController.lossesBroughtForward().toString
       }
     }
     "have a H1 tag that" should {
@@ -76,8 +76,8 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
     }
     "have a form" which {
       lazy val form = doc.getElementsByTag("form")
-      s"has the action '${controllers.resident.properties.routes.DeductionsController.submitAnnualExemptAmount().toString}'" in {
-        form.attr("action") shouldBe controllers.resident.properties.routes.DeductionsController.submitAnnualExemptAmount().toString
+      s"has the action '${controllers.resident.shares.routes.DeductionsController.submitAnnualExemptAmount().toString}'" in {
+        form.attr("action") shouldBe controllers.resident.shares.routes.DeductionsController.submitAnnualExemptAmount().toString
       }
       "has the method of POST" in {
         form.attr("method") shouldBe "POST"
@@ -136,7 +136,7 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
   }
 
   "Annual Exempt Amount view with stored values" should {
-    lazy val postAction = controllers.resident.properties.routes.DeductionsController.submitAnnualExemptAmount()
+    lazy val postAction = controllers.resident.shares.routes.DeductionsController.submitAnnualExemptAmount()
     lazy val backLink = Some(controllers.resident.shares.routes.DeductionsController.lossesBroughtForwardValue().toString)
     lazy val form = annualExemptAmountForm().bind(Map(("amount", "1000")))
     lazy val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
@@ -174,8 +174,8 @@ class AnnualExemptAmountViewSpec extends UnitSpec with WithFakeApplication with 
 
   "Annual Exempt Amount View with form with errors" which {
     "is due to mandatory field error" should {
-      lazy val postAction = controllers.resident.properties.routes.DeductionsController.submitAnnualExemptAmount()
-      lazy val backLink = Some(controllers.resident.properties.routes.DeductionsController.lossesBroughtForwardValue().toString)
+      lazy val postAction = controllers.resident.shares.routes.DeductionsController.submitAnnualExemptAmount()
+      lazy val backLink = Some(controllers.resident.shares.routes.DeductionsController.lossesBroughtForwardValue().toString)
       val form = annualExemptAmountForm().bind(Map("amount" -> ""))
       lazy val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
       lazy val view = views.annualExemptAmount(form, backLink, postAction, homeLink, JourneyKeys.properties, "navTitle")(fakeRequest)
