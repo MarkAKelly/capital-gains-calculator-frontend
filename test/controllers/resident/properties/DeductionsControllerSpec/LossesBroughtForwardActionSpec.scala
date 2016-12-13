@@ -35,289 +35,289 @@ import scala.concurrent.Future
 
 class LossesBroughtForwardActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  val gainModel = mock[YourAnswersSummaryModel]
-  val summaryModel = mock[ChargeableGainAnswers]
-  val chargeableGainModel = mock[ChargeableGainResultModel]
-
-  def setupTarget(lossesBroughtForwardData: Option[LossesBroughtForwardModel],
-                  otherPropertiesData: Option[OtherPropertiesModel],
-                  allowableLossesData: Option[AllowableLossesModel],
-                  gainAnswers: YourAnswersSummaryModel,
-                  chargeableGainAnswers: ChargeableGainAnswers,
-                  chargeableGain: ChargeableGainResultModel,
-                  allowableLossesValueModel: Option[AllowableLossesValueModel], disposalDate: Option[DisposalDateModel],
-                  taxYear: Option[TaxYearModel]): DeductionsController = {
-
-    val mockCalcConnector = mock[CalculatorConnector]
-
-    when(mockCalcConnector.fetchAndGetFormData[LossesBroughtForwardModel](Matchers.eq(keystoreKeys.lossesBroughtForward))
-      (Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(lossesBroughtForwardData))
-
-    when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.eq(keystoreKeys.otherProperties))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(otherPropertiesData))
-
-    when(mockCalcConnector.fetchAndGetFormData[AllowableLossesModel](Matchers.eq(keystoreKeys.allowableLosses))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(allowableLossesData))
-
-    when(mockCalcConnector.fetchAndGetFormData[AllowableLossesValueModel](Matchers.eq(keystoreKeys.allowableLossesValue))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(allowableLossesValueModel))
-
-    when(mockCalcConnector.getPropertyGainAnswers(Matchers.any()))
-      .thenReturn(Future.successful(gainAnswers))
-
-    when(mockCalcConnector.getPropertyDeductionAnswers(Matchers.any()))
-      .thenReturn(Future.successful(chargeableGainAnswers))
-
-    when(mockCalcConnector.calculateRttPropertyChargeableGain(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(Some(chargeableGain)))
-
-    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(keystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
-      .thenReturn(disposalDate)
-
-    when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
-      .thenReturn(taxYear)
-
-    new DeductionsController {
-      override val calcConnector: CalculatorConnector = mockCalcConnector
-      val config = mock[AppConfig]
-    }
-  }
-
-  "Calling .lossesBroughtForward from the resident DeductionsController" when {
-
-    "request has a valid session and no keystore value" should {
-
-      lazy val target = setupTarget(None, Some(OtherPropertiesModel(false)), None, gainModel,
-        summaryModel, chargeableGainModel, None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val result = target.lossesBroughtForward(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      s"return some html with " in {
-        contentType(result) shouldBe Some("text/html")
-      }
-
-      s"return a title of ${messages.title("2015/16")}" in {
-        doc.title shouldEqual messages.title("2015/16")
-      }
-    }
-
-    "request has no session" should {
-
-      lazy val target = setupTarget(None, None, None, gainModel, summaryModel, chargeableGainModel, None, None, None)
-      lazy val result = target.lossesBroughtForward(fakeRequest)
-
-      "return a status of 303" in {
-        status(result) shouldBe 303
-      }
-    }
-
-    "no other properties have been selected" should {
-
-      lazy val target = setupTarget(None, Some(OtherPropertiesModel(false)), None, gainModel,
-        summaryModel, chargeableGainModel, None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val result = target.lossesBroughtForward(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a 200" in {
-        status(result) shouldBe 200
-      }
-
-      "have a back link with the address /calculate-your-capital-gains/resident/properties/other-properties" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/other-properties"
-      }
-    }
-
-    "other properties have been selected" should {
-
-      lazy val target = setupTarget(None, Some(OtherPropertiesModel(true)), None, gainModel,
-        summaryModel, chargeableGainModel, None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val result = target.lossesBroughtForward(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a 200" in {
-        status(result) shouldBe 200
-      }
-
-      "have a back link with the address /calculate-your-capital-gains/resident/properties/allowable-losses" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/allowable-losses"
-      }
-    }
-
-    "other properties have been selected but no allowable losses" should {
-
-      lazy val target = setupTarget(None, Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(false)), gainModel,
-        summaryModel, chargeableGainModel, None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val result = target.lossesBroughtForward(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a 200" in {
-        status(result) shouldBe 200
-      }
-
-      "have a back link with the address /calculate-your-capital-gains/resident/properties/allowable-losses" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/allowable-losses"
-      }
-    }
-
-    "other properties have been selected and allowable losses are claimed" should {
-
-      lazy val target = setupTarget(None, Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(true)), gainModel,
-        summaryModel, chargeableGainModel, None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val result = target.lossesBroughtForward(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a 200" in {
-        status(result) shouldBe 200
-      }
-
-      "have a back link with the address /calculate-your-capital-gains/resident/properties/allowable-losses-value" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/allowable-losses-value"
-      }
-    }
-  }
-
-  "Calling .submitLossesBroughtForward from the DeductionsController" when {
-
-    "a valid form 'No' and no other properties are claimed and chargeable gain is £1000" should {
-
-      lazy val target = setupTarget(Some(LossesBroughtForwardModel(false)), Some(OtherPropertiesModel(false)), None, gainModel,
-        summaryModel, ChargeableGainResultModel(1000, 1000, 0, 0, 0, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)),
-          Some(BigDecimal(0)), 0, 0), None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val request = fakeRequestToPOSTWithSession(("option", "No"))
-      lazy val result = target.submitLossesBroughtForward(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the current income page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/current-income")
-      }
-    }
-
-    "a valid form 'No' and no other properties are claimed and chargeable gain is zero" should {
-
-      lazy val target = setupTarget(Some(LossesBroughtForwardModel(false)), Some(OtherPropertiesModel(false)), None, gainModel,
-        summaryModel, ChargeableGainResultModel(1000, 0, 0, 0, 1000, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)),
-          Some(BigDecimal(0)), 0, 0), None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val request = fakeRequestToPOSTWithSession(("option", "No"))
-      lazy val result = target.submitLossesBroughtForward(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the summary page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/summary")
-      }
-    }
-
-    "a valid form 'No' and no other properties are claimed and has a positive chargeable gain of £1,000" should {
-
-      lazy val target = setupTarget(Some(LossesBroughtForwardModel(false)), Some(OtherPropertiesModel(false)), None, gainModel,
-        summaryModel, ChargeableGainResultModel(1000, -1000, 0, 0, 2000, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)),
-          Some(BigDecimal(0)), 0, 0), None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val request = fakeRequestToPOSTWithSession(("option", "No"))
-      lazy val result = target.submitLossesBroughtForward(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the summary page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/summary")
-      }
-    }
-
-    "a valid form 'No' is and other properties are claimed with non-zero allowable losses" should {
-
-      lazy val target = setupTarget(Some(LossesBroughtForwardModel(false)), Some(OtherPropertiesModel(true)),
-        Some(AllowableLossesModel(true)), gainModel, summaryModel, ChargeableGainResultModel(0, 0, 0, 0, 0, BigDecimal(0),
-          BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0), Some(AllowableLossesValueModel(1000)),
-        Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val request = fakeRequestToPOSTWithSession(("option", "No"))
-      lazy val result = target.submitLossesBroughtForward(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the summary" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/summary")
-      }
-    }
-
-    "a valid form 'No' is and other properties are claimed with zero allowable losses" should {
-
-      lazy val target = setupTarget(Some(LossesBroughtForwardModel(false)), Some(OtherPropertiesModel(true)),
-        Some(AllowableLossesModel(true)), gainModel, summaryModel, ChargeableGainResultModel(0, 0, 0, 0, 0, BigDecimal(0),
-          BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0), Some(AllowableLossesValueModel(0)), Some(DisposalDateModel(10, 10, 2015)),
-        Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val request = fakeRequestToPOSTWithSession(("option", "No"))
-      lazy val result = target.submitLossesBroughtForward(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the annual exempt amount page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/annual-exempt-amount")
-      }
-    }
-
-    "a valid form 'Yes' is and other properties are not claimed" should {
-
-      lazy val target = setupTarget(Some(LossesBroughtForwardModel(true)), Some(OtherPropertiesModel(false)),
-        None, gainModel, summaryModel, ChargeableGainResultModel(0, 0, 0, 0, 0, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)),
-          Some(BigDecimal(0)), 0, 0), None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val request = fakeRequestToPOSTWithSession(("option", "Yes"))
-      lazy val result = target.submitLossesBroughtForward(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the losses brought forward value page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/losses-brought-forward-value")
-      }
-    }
-
-    "a valid form 'Yes' is and other properties are claimed" should {
-
-      lazy val target = setupTarget(Some(LossesBroughtForwardModel(true)), Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(false)),
-        gainModel, summaryModel, ChargeableGainResultModel(0, 0, 0, 0, 0, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0),
-        None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val request = fakeRequestToPOSTWithSession(("option", "Yes"))
-      lazy val result = target.submitLossesBroughtForward(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the losses brought forward value page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/losses-brought-forward-value")
-      }
-    }
-
-    "an invalid form is submitted" should {
-
-      lazy val target = setupTarget(Some(LossesBroughtForwardModel(true)), Some(OtherPropertiesModel(false)), None, gainModel,
-        summaryModel, chargeableGainModel, None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
-      lazy val request = fakeRequestToPOSTWithSession(("option", ""))
-      lazy val result = target.submitLossesBroughtForward(request)
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      "render the brought forward losses page" in {
-        Jsoup.parse(bodyOf(result)).title() shouldEqual messages.title("2015/16")
-      }
-    }
-  }
+//  val gainModel = mock[YourAnswersSummaryModel]
+//  val summaryModel = mock[ChargeableGainAnswers]
+//  val chargeableGainModel = mock[ChargeableGainResultModel]
+//
+//  def setupTarget(lossesBroughtForwardData: Option[LossesBroughtForwardModel],
+//                  otherPropertiesData: Option[OtherPropertiesModel],
+//                  allowableLossesData: Option[AllowableLossesModel],
+//                  gainAnswers: YourAnswersSummaryModel,
+//                  chargeableGainAnswers: ChargeableGainAnswers,
+//                  chargeableGain: ChargeableGainResultModel,
+//                  allowableLossesValueModel: Option[AllowableLossesValueModel], disposalDate: Option[DisposalDateModel],
+//                  taxYear: Option[TaxYearModel]): DeductionsController = {
+//
+//    val mockCalcConnector = mock[CalculatorConnector]
+//
+//    when(mockCalcConnector.fetchAndGetFormData[LossesBroughtForwardModel](Matchers.eq(keystoreKeys.lossesBroughtForward))
+//      (Matchers.any(), Matchers.any()))
+//      .thenReturn(Future.successful(lossesBroughtForwardData))
+//
+//    when(mockCalcConnector.fetchAndGetFormData[OtherPropertiesModel](Matchers.eq(keystoreKeys.otherProperties))(Matchers.any(), Matchers.any()))
+//      .thenReturn(Future.successful(otherPropertiesData))
+//
+//    when(mockCalcConnector.fetchAndGetFormData[AllowableLossesModel](Matchers.eq(keystoreKeys.allowableLosses))(Matchers.any(), Matchers.any()))
+//      .thenReturn(Future.successful(allowableLossesData))
+//
+//    when(mockCalcConnector.fetchAndGetFormData[AllowableLossesValueModel](Matchers.eq(keystoreKeys.allowableLossesValue))(Matchers.any(), Matchers.any()))
+//      .thenReturn(Future.successful(allowableLossesValueModel))
+//
+//    when(mockCalcConnector.getPropertyGainAnswers(Matchers.any()))
+//      .thenReturn(Future.successful(gainAnswers))
+//
+//    when(mockCalcConnector.getPropertyDeductionAnswers(Matchers.any()))
+//      .thenReturn(Future.successful(chargeableGainAnswers))
+//
+//    when(mockCalcConnector.calculateRttPropertyChargeableGain(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+//      .thenReturn(Future.successful(Some(chargeableGain)))
+//
+//    when(mockCalcConnector.fetchAndGetFormData[DisposalDateModel](Matchers.eq(keystoreKeys.disposalDate))(Matchers.any(), Matchers.any()))
+//      .thenReturn(disposalDate)
+//
+//    when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
+//      .thenReturn(taxYear)
+//
+//    new DeductionsController {
+//      override val calcConnector: CalculatorConnector = mockCalcConnector
+//      val config = mock[AppConfig]
+//    }
+//  }
+//
+//  "Calling .lossesBroughtForward from the resident DeductionsController" when {
+//
+//    "request has a valid session and no keystore value" should {
+//
+//      lazy val target = setupTarget(None, Some(OtherPropertiesModel(false)), None, gainModel,
+//        summaryModel, chargeableGainModel, None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val result = target.lossesBroughtForward(fakeRequestWithSession)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      s"return some html with " in {
+//        contentType(result) shouldBe Some("text/html")
+//      }
+//
+//      s"return a title of ${messages.title("2015/16")}" in {
+//        doc.title shouldEqual messages.title("2015/16")
+//      }
+//    }
+//
+//    "request has no session" should {
+//
+//      lazy val target = setupTarget(None, None, None, gainModel, summaryModel, chargeableGainModel, None, None, None)
+//      lazy val result = target.lossesBroughtForward(fakeRequest)
+//
+//      "return a status of 303" in {
+//        status(result) shouldBe 303
+//      }
+//    }
+//
+//    "no other properties have been selected" should {
+//
+//      lazy val target = setupTarget(None, Some(OtherPropertiesModel(false)), None, gainModel,
+//        summaryModel, chargeableGainModel, None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val result = target.lossesBroughtForward(fakeRequestWithSession)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "have a back link with the address /calculate-your-capital-gains/resident/properties/other-properties" in {
+//        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/other-properties"
+//      }
+//    }
+//
+//    "other properties have been selected" should {
+//
+//      lazy val target = setupTarget(None, Some(OtherPropertiesModel(true)), None, gainModel,
+//        summaryModel, chargeableGainModel, None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val result = target.lossesBroughtForward(fakeRequestWithSession)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "have a back link with the address /calculate-your-capital-gains/resident/properties/allowable-losses" in {
+//        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/allowable-losses"
+//      }
+//    }
+//
+//    "other properties have been selected but no allowable losses" should {
+//
+//      lazy val target = setupTarget(None, Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(false)), gainModel,
+//        summaryModel, chargeableGainModel, None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val result = target.lossesBroughtForward(fakeRequestWithSession)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "have a back link with the address /calculate-your-capital-gains/resident/properties/allowable-losses" in {
+//        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/allowable-losses"
+//      }
+//    }
+//
+//    "other properties have been selected and allowable losses are claimed" should {
+//
+//      lazy val target = setupTarget(None, Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(true)), gainModel,
+//        summaryModel, chargeableGainModel, None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val result = target.lossesBroughtForward(fakeRequestWithSession)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "have a back link with the address /calculate-your-capital-gains/resident/properties/allowable-losses-value" in {
+//        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/allowable-losses-value"
+//      }
+//    }
+//  }
+//
+//  "Calling .submitLossesBroughtForward from the DeductionsController" when {
+//
+//    "a valid form 'No' and no other properties are claimed and chargeable gain is £1000" should {
+//
+//      lazy val target = setupTarget(Some(LossesBroughtForwardModel(false)), Some(OtherPropertiesModel(false)), None, gainModel,
+//        summaryModel, ChargeableGainResultModel(1000, 1000, 0, 0, 0, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)),
+//          Some(BigDecimal(0)), 0, 0), None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val request = fakeRequestToPOSTWithSession(("option", "No"))
+//      lazy val result = target.submitLossesBroughtForward(request)
+//
+//      "return a 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the current income page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/current-income")
+//      }
+//    }
+//
+//    "a valid form 'No' and no other properties are claimed and chargeable gain is zero" should {
+//
+//      lazy val target = setupTarget(Some(LossesBroughtForwardModel(false)), Some(OtherPropertiesModel(false)), None, gainModel,
+//        summaryModel, ChargeableGainResultModel(1000, 0, 0, 0, 1000, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)),
+//          Some(BigDecimal(0)), 0, 0), None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val request = fakeRequestToPOSTWithSession(("option", "No"))
+//      lazy val result = target.submitLossesBroughtForward(request)
+//
+//      "return a 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the summary page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/summary")
+//      }
+//    }
+//
+//    "a valid form 'No' and no other properties are claimed and has a positive chargeable gain of £1,000" should {
+//
+//      lazy val target = setupTarget(Some(LossesBroughtForwardModel(false)), Some(OtherPropertiesModel(false)), None, gainModel,
+//        summaryModel, ChargeableGainResultModel(1000, -1000, 0, 0, 2000, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)),
+//          Some(BigDecimal(0)), 0, 0), None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val request = fakeRequestToPOSTWithSession(("option", "No"))
+//      lazy val result = target.submitLossesBroughtForward(request)
+//
+//      "return a 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the summary page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/summary")
+//      }
+//    }
+//
+//    "a valid form 'No' is and other properties are claimed with non-zero allowable losses" should {
+//
+//      lazy val target = setupTarget(Some(LossesBroughtForwardModel(false)), Some(OtherPropertiesModel(true)),
+//        Some(AllowableLossesModel(true)), gainModel, summaryModel, ChargeableGainResultModel(0, 0, 0, 0, 0, BigDecimal(0),
+//          BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0), Some(AllowableLossesValueModel(1000)),
+//        Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val request = fakeRequestToPOSTWithSession(("option", "No"))
+//      lazy val result = target.submitLossesBroughtForward(request)
+//
+//      "return a 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the summary" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/summary")
+//      }
+//    }
+//
+//    "a valid form 'No' is and other properties are claimed with zero allowable losses" should {
+//
+//      lazy val target = setupTarget(Some(LossesBroughtForwardModel(false)), Some(OtherPropertiesModel(true)),
+//        Some(AllowableLossesModel(true)), gainModel, summaryModel, ChargeableGainResultModel(0, 0, 0, 0, 0, BigDecimal(0),
+//          BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0), Some(AllowableLossesValueModel(0)), Some(DisposalDateModel(10, 10, 2015)),
+//        Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val request = fakeRequestToPOSTWithSession(("option", "No"))
+//      lazy val result = target.submitLossesBroughtForward(request)
+//
+//      "return a 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the annual exempt amount page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/annual-exempt-amount")
+//      }
+//    }
+//
+//    "a valid form 'Yes' is and other properties are not claimed" should {
+//
+//      lazy val target = setupTarget(Some(LossesBroughtForwardModel(true)), Some(OtherPropertiesModel(false)),
+//        None, gainModel, summaryModel, ChargeableGainResultModel(0, 0, 0, 0, 0, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)),
+//          Some(BigDecimal(0)), 0, 0), None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val request = fakeRequestToPOSTWithSession(("option", "Yes"))
+//      lazy val result = target.submitLossesBroughtForward(request)
+//
+//      "return a 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the losses brought forward value page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/losses-brought-forward-value")
+//      }
+//    }
+//
+//    "a valid form 'Yes' is and other properties are claimed" should {
+//
+//      lazy val target = setupTarget(Some(LossesBroughtForwardModel(true)), Some(OtherPropertiesModel(true)), Some(AllowableLossesModel(false)),
+//        gainModel, summaryModel, ChargeableGainResultModel(0, 0, 0, 0, 0, BigDecimal(0), BigDecimal(0), Some(BigDecimal(0)), Some(BigDecimal(0)), 0, 0),
+//        None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val request = fakeRequestToPOSTWithSession(("option", "Yes"))
+//      lazy val result = target.submitLossesBroughtForward(request)
+//
+//      "return a 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the losses brought forward value page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/losses-brought-forward-value")
+//      }
+//    }
+//
+//    "an invalid form is submitted" should {
+//
+//      lazy val target = setupTarget(Some(LossesBroughtForwardModel(true)), Some(OtherPropertiesModel(false)), None, gainModel,
+//        summaryModel, chargeableGainModel, None, Some(DisposalDateModel(10, 10, 2015)), Some(TaxYearModel("2015/16", true, "2015/16")))
+//      lazy val request = fakeRequestToPOSTWithSession(("option", ""))
+//      lazy val result = target.submitLossesBroughtForward(request)
+//
+//      "return a 400" in {
+//        status(result) shouldBe 400
+//      }
+//
+//      "render the brought forward losses page" in {
+//        Jsoup.parse(bodyOf(result)).title() shouldEqual messages.title("2015/16")
+//      }
+//    }
+//  }
 }

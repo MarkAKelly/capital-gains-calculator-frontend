@@ -36,125 +36,124 @@ import play.api.test.Helpers._
 
 class WhoDidYouGiveItToActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar{
 
-  def setupTarget(getData: Option[WhoDidYouGiveItToModel]) : GainController = {
-    val mockCalcConnector = mock[CalculatorConnector]
-    when(mockCalcConnector.fetchAndGetFormData[WhoDidYouGiveItToModel](Matchers.eq(keystoreKeys.whoDidYouGiveItTo))(Matchers.any(), Matchers.any())).
-      thenReturn(Future.successful(getData))
-
-    when(mockCalcConnector.saveFormData[WhoDidYouGiveItToModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
-        .thenReturn(Future.successful(mock[CacheMap]))
-
-    new GainController {
-      override val calcConnector: CalculatorConnector = mockCalcConnector
-      val config: AppConfig = mock[AppConfig]
-    }
-  }
-
-  "Calling .whoDidYouGiveItTo from the GainsController" when {
-    "there is no keystore data" should {
-      lazy val target = setupTarget(None)
-      lazy val result = target.whoDidYouGiveItTo(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldEqual 200
-      }
-
-      s"return some html with title of ${MessageLookup.WhoDidYouGiveItTo.title}" in {
-        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.WhoDidYouGiveItTo.title
-      }
-    }
-
-    "there is keystore data" should {
-      lazy val target = setupTarget(Some(WhoDidYouGiveItToModel("Charity")))
-      lazy val result = target.whoDidYouGiveItTo(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldEqual 200
-      }
-
-      s"return some html with title of ${MessageLookup.WhoDidYouGiveItTo.title}" in {
-        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.WhoDidYouGiveItTo.title
-      }
-    }
-  }
-
-  "Calling .whoDidYouGiveItTo from the GainsController with no session" should{
-    lazy val target = setupTarget(None)
-    lazy val result = target.whoDidYouGiveItTo(fakeRequest)
-
-    "return a status of 303" in {
-      status(result) shouldBe 303
-    }
-
-    "to the session timeout page" in {
-      redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/session-timeout?restartUrl=%2Fcalculate-your-capital-gains" +
-        "%2Fresident%2Fproperties%2F&homeLink=%2Fcalculate-your-capital-gains%2Fresident%2Fproperties%2F")
-    }
-
-  }
-
-  "Calling .submitWhoDidYouGiveItTo from the GainController with a Charity value" should {
-    lazy val target = setupTarget(None)
-    lazy val request = fakeRequestToPOSTWithSession(("whoDidYouGiveItTo","Charity"))
-    lazy val result = target.submitWhoDidYouGiveItTo(request)
-
-    "when supplied with a valid form" which {
-      "redirects" in {
-        status(result) shouldEqual 303
-      }
-
-      "to the You Have No Tax To Pay page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/no-tax-to-pay")
-      }
-    }
-  }
-
-  "Calling .submitWhoDidYouGiveItTo from the GainController with a Spouse value" should {
-    lazy val target = setupTarget(None)
-    lazy val request = fakeRequestToPOSTWithSession(("whoDidYouGiveItTo", "Spouse"))
-    lazy val result = target.submitWhoDidYouGiveItTo(request)
-
-    "when supplied with a valid form" which {
-      "redirects" in {
-        status(result) shouldEqual 303
-      }
-
-      "to the You Have No Tax To Pay page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/no-tax-to-pay")
-      }
-    }
-  }
-
-  "Calling .submitWhoDidYouGiveItTo from the GainController with a Someone Else value" should {
-    lazy val target = setupTarget(None)
-    lazy val request = fakeRequestToPOSTWithSession(("whoDidYouGiveItTo", "Other"))
-    lazy val result = target.submitWhoDidYouGiveItTo(request)
-
-    "when supplied with a valid form" which{
-      "redirect" in {
-        status(result) shouldEqual 303
-      }
-
-      "to the page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/worth-when-gave-away")
-      }
-    }
-  }
-
-  "Calling .submitWhoDidYouGiveIt to from the GainController with an invalid value/bad request" should {
-    lazy val target = setupTarget(None)
-    lazy val request = fakeRequestToPOSTWithSession(("whoDidYouGiveItTo", "blah"))
-    lazy val result = target.submitWhoDidYouGiveItTo(request)
-
-    "when supplied with an invalid form" which {
-      "will generate a 400 error" in {
-        status(result) shouldEqual 400
-      }
-      s"and lead to the current page reloading and return some HTML with title of ${MessageLookup.WhoDidYouGiveItTo.title} " in {
-        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.WhoDidYouGiveItTo.title
-
-      }
-    }
-  }
-
+//  def setupTarget(getData: Option[WhoDidYouGiveItToModel]) : GainController = {
+//    val mockCalcConnector = mock[CalculatorConnector]
+//    when(mockCalcConnector.fetchAndGetFormData[WhoDidYouGiveItToModel](Matchers.eq(keystoreKeys.whoDidYouGiveItTo))(Matchers.any(), Matchers.any())).
+//      thenReturn(Future.successful(getData))
+//
+//    when(mockCalcConnector.saveFormData[WhoDidYouGiveItToModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+//        .thenReturn(Future.successful(mock[CacheMap]))
+//
+//    new GainController {
+//      override val calcConnector: CalculatorConnector = mockCalcConnector
+//      val config: AppConfig = mock[AppConfig]
+//    }
+//  }
+//
+//  "Calling .whoDidYouGiveItTo from the GainsController" when {
+//    "there is no keystore data" should {
+//      lazy val target = setupTarget(None)
+//      lazy val result = target.whoDidYouGiveItTo(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldEqual 200
+//      }
+//
+//      s"return some html with title of ${MessageLookup.WhoDidYouGiveItTo.title}" in {
+//        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.WhoDidYouGiveItTo.title
+//      }
+//    }
+//
+//    "there is keystore data" should {
+//      lazy val target = setupTarget(Some(WhoDidYouGiveItToModel("Charity")))
+//      lazy val result = target.whoDidYouGiveItTo(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldEqual 200
+//      }
+//
+//      s"return some html with title of ${MessageLookup.WhoDidYouGiveItTo.title}" in {
+//        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.WhoDidYouGiveItTo.title
+//      }
+//    }
+//  }
+//
+//  "Calling .whoDidYouGiveItTo from the GainsController with no session" should{
+//    lazy val target = setupTarget(None)
+//    lazy val result = target.whoDidYouGiveItTo(fakeRequest)
+//
+//    "return a status of 303" in {
+//      status(result) shouldBe 303
+//    }
+//
+//    "to the session timeout page" in {
+//      redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/session-timeout?restartUrl=%2Fcalculate-your-capital-gains" +
+//        "%2Fresident%2Fproperties%2F&homeLink=%2Fcalculate-your-capital-gains%2Fresident%2Fproperties%2F")
+//    }
+//
+//  }
+//
+//  "Calling .submitWhoDidYouGiveItTo from the GainController with a Charity value" should {
+//    lazy val target = setupTarget(None)
+//    lazy val request = fakeRequestToPOSTWithSession(("whoDidYouGiveItTo","Charity"))
+//    lazy val result = target.submitWhoDidYouGiveItTo(request)
+//
+//    "when supplied with a valid form" which {
+//      "redirects" in {
+//        status(result) shouldEqual 303
+//      }
+//
+//      "to the You Have No Tax To Pay page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/no-tax-to-pay")
+//      }
+//    }
+//  }
+//
+//  "Calling .submitWhoDidYouGiveItTo from the GainController with a Spouse value" should {
+//    lazy val target = setupTarget(None)
+//    lazy val request = fakeRequestToPOSTWithSession(("whoDidYouGiveItTo", "Spouse"))
+//    lazy val result = target.submitWhoDidYouGiveItTo(request)
+//
+//    "when supplied with a valid form" which {
+//      "redirects" in {
+//        status(result) shouldEqual 303
+//      }
+//
+//      "to the You Have No Tax To Pay page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/no-tax-to-pay")
+//      }
+//    }
+//  }
+//
+//  "Calling .submitWhoDidYouGiveItTo from the GainController with a Someone Else value" should {
+//    lazy val target = setupTarget(None)
+//    lazy val request = fakeRequestToPOSTWithSession(("whoDidYouGiveItTo", "Other"))
+//    lazy val result = target.submitWhoDidYouGiveItTo(request)
+//
+//    "when supplied with a valid form" which{
+//      "redirect" in {
+//        status(result) shouldEqual 303
+//      }
+//
+//      "to the page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/worth-when-gave-away")
+//      }
+//    }
+//  }
+//
+//  "Calling .submitWhoDidYouGiveIt to from the GainController with an invalid value/bad request" should {
+//    lazy val target = setupTarget(None)
+//    lazy val request = fakeRequestToPOSTWithSession(("whoDidYouGiveItTo", "blah"))
+//    lazy val result = target.submitWhoDidYouGiveItTo(request)
+//
+//    "when supplied with an invalid form" which {
+//      "will generate a 400 error" in {
+//        status(result) shouldEqual 400
+//      }
+//      s"and lead to the current page reloading and return some HTML with title of ${MessageLookup.WhoDidYouGiveItTo.title} " in {
+//        Jsoup.parse(bodyOf(result)).select("h1").text shouldEqual MessageLookup.WhoDidYouGiveItTo.title
+//
+//      }
+//    }
+//  }
 }

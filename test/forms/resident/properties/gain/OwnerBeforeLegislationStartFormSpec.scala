@@ -23,75 +23,75 @@ import assets.MessageLookup.Resident.Properties.{OwnerBeforeLegislationStart => 
 
 class OwnerBeforeLegislationStartFormSpec  extends UnitSpec with WithFakeApplication {
 
-  "Creating a form without a model" should {
-
-    "create an empty form" in {
-      lazy val form = ownerBeforeLegislationStartForm
-      form.data.isEmpty shouldEqual true
-    }
-  }
-
-  "Creating a form using a valid model" should {
-
-    "return a form with the answer of Yes" in {
-      lazy val model = OwnerBeforeLegislationStartModel(true)
-      lazy val form = ownerBeforeLegislationStartForm.fill(model)
-      form.data.get("ownedBeforeLegislationStart") shouldEqual Some("Yes")
-    }
-
-    "return a form with the answer of No" in {
-      lazy val model = OwnerBeforeLegislationStartModel(false)
-      lazy val form = ownerBeforeLegislationStartForm.fill(model)
-      form.data.get("ownedBeforeLegislationStart") shouldEqual Some("No")
-    }
-  }
-
-  "Creating a form using a valid map" should {
-
-    "return a form with a value of Yes" in {
-      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownedBeforeLegislationStart", "Yes")))
-      form.value shouldEqual Some(OwnerBeforeLegislationStartModel(true))
-    }
-
-    "return a form with a value of No" in {
-      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownedBeforeLegislationStart", "No")))
-      form.value shouldEqual Some(OwnerBeforeLegislationStartModel(false))
-    }
-  }
-
-  "Creating a form using an invalid map" when {
-
-    "supplied with no data" should {
-      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownedBeforeLegislationStart", "")))
-
-      "return a form with errors" in {
-        form.hasErrors shouldEqual true
-      }
-
-      "return 1 error" in {
-        form.errors.size shouldEqual 1
-      }
-
-      s"return an error with message ${messages.errorSelectAnOption}" in {
-        form.error("ownedBeforeLegislationStart").get.message shouldEqual messages.errorSelectAnOption
-      }
-    }
-
-    "supplied with invalid data" should {
-      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownedBeforeLegislationStart", "a")))
-
-      "return a form with errors" in {
-        form.hasErrors shouldEqual true
-      }
-
-      "return 1 error" in {
-        form.errors.size shouldEqual 1
-      }
-
-      s"return an error with message ${messages.errorSelectAnOption}" in {
-        form.error("ownedBeforeLegislationStart").get.message shouldEqual messages.errorSelectAnOption
-      }
-    }
-  }
+//  "Creating a form without a model" should {
+//
+//    "create an empty form" in {
+//      lazy val form = ownerBeforeLegislationStartForm
+//      form.data.isEmpty shouldEqual true
+//    }
+//  }
+//
+//  "Creating a form using a valid model" should {
+//
+//    "return a form with the answer of Yes" in {
+//      lazy val model = OwnerBeforeLegislationStartModel(true)
+//      lazy val form = ownerBeforeLegislationStartForm.fill(model)
+//      form.data.get("ownedBeforeLegislationStart") shouldEqual Some("Yes")
+//    }
+//
+//    "return a form with the answer of No" in {
+//      lazy val model = OwnerBeforeLegislationStartModel(false)
+//      lazy val form = ownerBeforeLegislationStartForm.fill(model)
+//      form.data.get("ownedBeforeLegislationStart") shouldEqual Some("No")
+//    }
+//  }
+//
+//  "Creating a form using a valid map" should {
+//
+//    "return a form with a value of Yes" in {
+//      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownedBeforeLegislationStart", "Yes")))
+//      form.value shouldEqual Some(OwnerBeforeLegislationStartModel(true))
+//    }
+//
+//    "return a form with a value of No" in {
+//      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownedBeforeLegislationStart", "No")))
+//      form.value shouldEqual Some(OwnerBeforeLegislationStartModel(false))
+//    }
+//  }
+//
+//  "Creating a form using an invalid map" when {
+//
+//    "supplied with no data" should {
+//      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownedBeforeLegislationStart", "")))
+//
+//      "return a form with errors" in {
+//        form.hasErrors shouldEqual true
+//      }
+//
+//      "return 1 error" in {
+//        form.errors.size shouldEqual 1
+//      }
+//
+//      s"return an error with message ${messages.errorSelectAnOption}" in {
+//        form.error("ownedBeforeLegislationStart").get.message shouldEqual messages.errorSelectAnOption
+//      }
+//    }
+//
+//    "supplied with invalid data" should {
+//      lazy val form = ownerBeforeLegislationStartForm.bind(Map(("ownedBeforeLegislationStart", "a")))
+//
+//      "return a form with errors" in {
+//        form.hasErrors shouldEqual true
+//      }
+//
+//      "return 1 error" in {
+//        form.errors.size shouldEqual 1
+//      }
+//
+//      s"return an error with message ${messages.errorSelectAnOption}" in {
+//        form.error("ownedBeforeLegislationStart").get.message shouldEqual messages.errorSelectAnOption
+//      }
+//    }
+//  }
 
 }

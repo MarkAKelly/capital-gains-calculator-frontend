@@ -25,96 +25,96 @@ import assets.MessageLookup.{WhoDidYouGiveItTo => messages}
 import assets.MessageLookup.{Resident => commonMessages}
 
 class WhoDidYouGiveItToViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
-  "Property Recipient view" should {
-
-  lazy val view = views.whoDidYouGiveItTo(whoDidYouGiveItToForm)(fakeRequest)
-  lazy val doc = Jsoup.parse(view.body)
-
-  "have a charset of UTF-8" in {
-    doc.charset().toString shouldBe "UTF-8"
-  }
-
-  s"have a title of ${messages.title}" in {
-    doc.title() shouldBe messages.title
-  }
-
-    "have a back button that" should {
-      lazy val backLink = doc.select("a#back-link")
-
-      "have the correct back link text" in {
-        backLink.text shouldBe commonMessages.back
-      }
-
-      "have the back-link class" in {
-        backLink.hasClass("back-link") shouldBe true
-      }
-
-      "have a link to Did You Sell or Give Away" in {
-        backLink.attr("href") shouldBe controllers.resident.properties.routes.GainController.sellOrGiveAway().toString()
-      }
-    }
-    "have a H1 tag that" should {
-      lazy val heading = doc.select("h1")
-
-      s"have the page heading '${messages.title}'" in {
-        heading.text shouldBe messages.title
-      }
-      "have the heading-large class" in {
-        heading.hasClass("heading-large") shouldBe true
-      }
-    }
-
-    "have a form" which {
-      lazy val form = doc.getElementsByTag("form")
-
-      s"has the action '${controllers.resident.properties.routes.GainController.submitWhoDidYouGiveItTo().toString}" in {
-        form.attr("action") shouldBe controllers.resident.properties.routes.GainController.submitWhoDidYouGiveItTo().toString
-      }
-
-      "has the method of POST" in {
-        form.attr("method") shouldBe "POST"
-        }
-
-    }
-
-    "have additional content that" should {
-      s"have a label for the Your Spouse or Civil Partner option" in {
-        doc.select("label:nth-of-type(1)").text() shouldEqual messages.spouse
-      }
-
-      s"have a label for the A Charity option" in {
-        doc.select("label:nth-of-type(2)").text() shouldEqual messages.charity
-      }
-
-      s"have a label for the Someone Else option" in {
-        doc.select("label:nth-of-type(3)").text() shouldEqual messages.other
-      }
-    }
-
-    "has a continue button that" should {
-      lazy val continueButton = doc.select("button#continue-button")
-
-      s"have the button text '${commonMessages.continue}'" in {
-        continueButton.text shouldBe commonMessages.continue
-      }
-
-      "be of type submit" in {
-        continueButton.attr("type") shouldBe "submit"
-      }
-
-      "have the class 'button'" in {
-        continueButton.hasClass("button") shouldBe true
-      }
-    }
-  }
-
-  "WhoDidYouGiveItToView with form with errors" should {
-    val form = whoDidYouGiveItToForm.bind(Map("whoDidYouGiveItTo" -> ""))
-    lazy val view = views.whoDidYouGiveItTo(form)(fakeRequest)
-    lazy val doc = Jsoup.parse(view.body)
-
-    "display an error summary message regarding incorrect value being inputted" in {
-      doc.body.select(".form-group .error-notification").size shouldBe 1
-    }
-  }
+//  "Property Recipient view" should {
+//
+//  lazy val view = views.whoDidYouGiveItTo(whoDidYouGiveItToForm)(fakeRequest)
+//  lazy val doc = Jsoup.parse(view.body)
+//
+//  "have a charset of UTF-8" in {
+//    doc.charset().toString shouldBe "UTF-8"
+//  }
+//
+//  s"have a title of ${messages.title}" in {
+//    doc.title() shouldBe messages.title
+//  }
+//
+//    "have a back button that" should {
+//      lazy val backLink = doc.select("a#back-link")
+//
+//      "have the correct back link text" in {
+//        backLink.text shouldBe commonMessages.back
+//      }
+//
+//      "have the back-link class" in {
+//        backLink.hasClass("back-link") shouldBe true
+//      }
+//
+//      "have a link to Did You Sell or Give Away" in {
+//        backLink.attr("href") shouldBe controllers.resident.properties.routes.GainController.sellOrGiveAway().toString()
+//      }
+//    }
+//    "have a H1 tag that" should {
+//      lazy val heading = doc.select("h1")
+//
+//      s"have the page heading '${messages.title}'" in {
+//        heading.text shouldBe messages.title
+//      }
+//      "have the heading-large class" in {
+//        heading.hasClass("heading-large") shouldBe true
+//      }
+//    }
+//
+//    "have a form" which {
+//      lazy val form = doc.getElementsByTag("form")
+//
+//      s"has the action '${controllers.resident.properties.routes.GainController.submitWhoDidYouGiveItTo().toString}" in {
+//        form.attr("action") shouldBe controllers.resident.properties.routes.GainController.submitWhoDidYouGiveItTo().toString
+//      }
+//
+//      "has the method of POST" in {
+//        form.attr("method") shouldBe "POST"
+//        }
+//
+//    }
+//
+//    "have additional content that" should {
+//      s"have a label for the Your Spouse or Civil Partner option" in {
+//        doc.select("label:nth-of-type(1)").text() shouldEqual messages.spouse
+//      }
+//
+//      s"have a label for the A Charity option" in {
+//        doc.select("label:nth-of-type(2)").text() shouldEqual messages.charity
+//      }
+//
+//      s"have a label for the Someone Else option" in {
+//        doc.select("label:nth-of-type(3)").text() shouldEqual messages.other
+//      }
+//    }
+//
+//    "has a continue button that" should {
+//      lazy val continueButton = doc.select("button#continue-button")
+//
+//      s"have the button text '${commonMessages.continue}'" in {
+//        continueButton.text shouldBe commonMessages.continue
+//      }
+//
+//      "be of type submit" in {
+//        continueButton.attr("type") shouldBe "submit"
+//      }
+//
+//      "have the class 'button'" in {
+//        continueButton.hasClass("button") shouldBe true
+//      }
+//    }
+//  }
+//
+//  "WhoDidYouGiveItToView with form with errors" should {
+//    val form = whoDidYouGiveItToForm.bind(Map("whoDidYouGiveItTo" -> ""))
+//    lazy val view = views.whoDidYouGiveItTo(form)(fakeRequest)
+//    lazy val doc = Jsoup.parse(view.body)
+//
+//    "display an error summary message regarding incorrect value being inputted" in {
+//      doc.body.select(".form-group .error-notification").size shouldBe 1
+//    }
+//  }
 }

@@ -25,45 +25,45 @@ import assets.MessageLookup.{Resident => commonMessages}
 
 class NoTaxToPayViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "No Tax to Pay View when gifted to spouse" should {
-    lazy val view = views.noTaxToPay(false)(fakeRequest)
-    lazy val doc = Jsoup.parse(view.body)
-
-    "have a charset of UTF-8" in {
-      doc.charset().toString shouldBe "UTF-8"
-    }
-
-    s"have a title of ${messages.title}" in {
-      doc.title() shouldBe messages.title
-    }
-
-    "have a back link to back-link" in {
-      doc.body().select("a#back-link").attr("href") shouldBe "/calculate-your-capital-gains/resident/properties/who-did-you-give-it-to"
-    }
-
-    "have a home link to home-link" in {
-      doc.body().select("a#homeNavHref").attr("href") shouldBe "/calculate-your-capital-gains/resident/properties/"
-    }
-
-    "have a navTitle for resident properties" in {
-      doc.body().select("span.header__menu__proposition-name").text() shouldBe commonMessages.homeText
-    }
-
-    s"have a header of ${messages.title}" in {
-      doc.body().select("h1.heading-large").text() shouldBe messages.title
-    }
-
-    "have text explaining why tax is not owed" in {
-      doc.body().select("div#content p").text() shouldBe messages.spouseText
-    }
-  }
-
-  "No Tax to Pay View when gifted to charity" should {
-    lazy val view = views.noTaxToPay(true)(fakeRequest)
-    lazy val doc = Jsoup.parse(view.body)
-
-    "have text explaining why tax is not owed" in {
-      doc.body().select("div#content p").text() shouldBe messages.charityText
-    }
-  }
+//  "No Tax to Pay View when gifted to spouse" should {
+//    lazy val view = views.noTaxToPay(false)(fakeRequest)
+//    lazy val doc = Jsoup.parse(view.body)
+//
+//    "have a charset of UTF-8" in {
+//      doc.charset().toString shouldBe "UTF-8"
+//    }
+//
+//    s"have a title of ${messages.title}" in {
+//      doc.title() shouldBe messages.title
+//    }
+//
+//    "have a back link to back-link" in {
+//      doc.body().select("a#back-link").attr("href") shouldBe "/calculate-your-capital-gains/resident/properties/who-did-you-give-it-to"
+//    }
+//
+//    "have a home link to home-link" in {
+//      doc.body().select("a#homeNavHref").attr("href") shouldBe "/calculate-your-capital-gains/resident/properties/"
+//    }
+//
+//    "have a navTitle for resident properties" in {
+//      doc.body().select("span.header__menu__proposition-name").text() shouldBe commonMessages.homeText
+//    }
+//
+//    s"have a header of ${messages.title}" in {
+//      doc.body().select("h1.heading-large").text() shouldBe messages.title
+//    }
+//
+//    "have text explaining why tax is not owed" in {
+//      doc.body().select("div#content p").text() shouldBe messages.spouseText
+//    }
+//  }
+//
+//  "No Tax to Pay View when gifted to charity" should {
+//    lazy val view = views.noTaxToPay(true)(fakeRequest)
+//    lazy val doc = Jsoup.parse(view.body)
+//
+//    "have text explaining why tax is not owed" in {
+//      doc.body().select("div#content p").text() shouldBe messages.charityText
+//    }
+//  }
 }
