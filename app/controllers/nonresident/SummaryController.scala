@@ -140,10 +140,11 @@ trait SummaryController extends FrontendController with ValidActiveSession {
     def calculateTaxOwed(totalGainAnswersModel: TotalGainAnswersModel,
                          privateResidenceReliefModel: Option[PrivateResidenceReliefModel],
                          totalPersonalDetailsCalculationModel: Option[TotalPersonalDetailsCalculationModel],
-                         maxAEA: BigDecimal): Future[Option[CalculationResultsWithTaxOwedModel]] = {
+                         maxAEA: BigDecimal,
+                         otherReliefs: Option[AllOtherReliefsModel]): Future[Option[CalculationResultsWithTaxOwedModel]] = {
       totalPersonalDetailsCalculationModel match {
         case Some(data) => calcConnector.calculateNRCGTTotalTax(totalGainAnswersModel,
-          privateResidenceReliefModel, totalPersonalDetailsCalculationModel.get, maxAEA)
+          privateResidenceReliefModel, totalPersonalDetailsCalculationModel.get, maxAEA, otherReliefs)
         case _ => Future.successful(None)
       }
     }
@@ -156,6 +157,24 @@ trait SummaryController extends FrontendController with ValidActiveSession {
         backUrl, displayDateWarning, calculationType, taxOwed)))
     }
 
+    def getAllOtherReliefs(totalPersonalDetailsCalculationModel: Option[TotalPersonalDetailsCalculationModel])
+                          (implicit hc: HeaderCarrier): Future[Option[AllOtherReliefsModel]] = {
+      totalPersonalDetailsCalculationModel match {
+        case Some(data) => {
+          val flat = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsFlat)
+          val rebased = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased)
+          val time = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsTA)
+
+          for {
+            flatReliefs <- flat
+            rebasedReliefs <- rebased
+            timeReliefs <- time
+          } yield Some(AllOtherReliefsModel(flatReliefs, rebasedReliefs, timeReliefs))
+        }
+        case _ => Future.successful(None)
+      }
+    }
+
     for {
       answers <- answersConstructor.getNRTotalGainAnswers(hc)
       displayWarning <- displayDateWarning(answers.disposalDateModel)
@@ -163,9 +182,10 @@ trait SummaryController extends FrontendController with ValidActiveSession {
       privateResidentReliefModel <- getPRRModel(hc, totalGainResultsModel.get)
       calculationResultsWithPRR <- calculatePRR(answers, privateResidentReliefModel)
       finalAnswers <- getFinalTaxAnswers(totalGainResultsModel.get, calculationResultsWithPRR)
+      otherReliefsModel <- getAllOtherReliefs(finalAnswers)
       taxYear <- getTaxYear(answers)
       maxAEA <- getMaxAEA(finalAnswers, taxYear)
-      finalResult <- calculateTaxOwed(answers, privateResidentReliefModel, finalAnswers, maxAEA.get)
+      finalResult <- calculateTaxOwed(answers, privateResidentReliefModel, finalAnswers, maxAEA.get, otherReliefsModel)
       backUrl <- summaryBackUrl(totalGainResultsModel)
       calculationType <- calcConnector.fetchAndGetFormData[CalculationElectionModel](KeystoreKeys.calculationElection)
       results <- getSection(calculationResultsWithPRR, privateResidentReliefModel,

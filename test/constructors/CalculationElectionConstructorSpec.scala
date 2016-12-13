@@ -33,7 +33,7 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with
 
     "when only a flat calculation result is provided" should {
 
-      val calculations = target.generateElection(onlyFlat, None, None)
+      val calculations = target.generateElection(onlyFlat, None, None, None)
       "produce sequence with one element" in {
         calculations.size shouldBe 1
       }
@@ -45,7 +45,7 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with
 
     "when a flat calculation and a rebased calculation result are provided" should {
 
-      val calculations = target.generateElection(flatAndRebased, None, None)
+      val calculations = target.generateElection(flatAndRebased, None, None, None)
 
       "produce two entries in the sequence" in {
         calculations.size shouldBe 2
@@ -65,7 +65,7 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with
 
     "when a flat calculation and a time calculation result are provided" should {
 
-      val calculations = target.generateElection(flatAndTime, None, None)
+      val calculations = target.generateElection(flatAndTime, None, None, None)
 
       "produce two entries in the sequence" in {
         calculations.size shouldBe 2
@@ -85,7 +85,7 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with
 
     "when a flat, rebased and time are all provided" should {
 
-      val calculations = target.generateElection(flatRebasedAndTime, None, None)
+      val calculations = target.generateElection(flatRebasedAndTime, None, None, None)
 
       "produce a three entry sequence" in {
         calculations.size shouldBe 3
@@ -140,7 +140,7 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with
 
     "when a flat calculation and a rebased PRR calculation result are provided" should {
 
-      val calculations = target.generateElection(flatAndRebased, Some(totalGainsAfterPRRFlatAndTASortByTotalGain), None)
+      val calculations = target.generateElection(flatAndRebased, Some(totalGainsAfterPRRFlatAndTASortByTotalGain), None, None)
 
       "produce two entries in the sequence" in {
         calculations.size shouldBe 2
@@ -160,7 +160,7 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with
 
     "when a flat calculation and a rebased calculation result are provided that should be ordered by taxable gain" should {
 
-      val calculations = target.generateElection(flatAndTime, Some(totalGainsAfterPRRFlatAndTASortByTaxableGain), None)
+      val calculations = target.generateElection(flatAndTime, Some(totalGainsAfterPRRFlatAndTASortByTaxableGain), None, None)
 
       "produce two entries in the sequence" in {
         calculations.size shouldBe 2
@@ -180,7 +180,7 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with
 
     "when a flat, rebased and time prr result should be sorted by total gain" should {
 
-      val calculations = target.generateElection(flatRebasedAndTime, Some(totalGainsAllSortByTotalGain), None)
+      val calculations = target.generateElection(flatRebasedAndTime, Some(totalGainsAllSortByTotalGain), None, None)
 
       "produce a three entry sequence" in {
         calculations.size shouldBe 3
@@ -204,7 +204,7 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with
 
     "when a flat, rebased and time prr result should be sorted by taxable gain" should {
 
-      val calculations = target.generateElection(flatRebasedAndTime, Some(totalGainsAllSortByTaxableGain), None)
+      val calculations = target.generateElection(flatRebasedAndTime, Some(totalGainsAllSortByTaxableGain), None, None)
 
       "produce a three entry sequence" in {
         calculations.size shouldBe 3
@@ -228,16 +228,16 @@ class CalculationElectionConstructorSpec extends UnitSpec with MockitoSugar with
   }
 
   val calculationResultsTotalSortByTaxOwed = CalculationResultsWithTaxOwedModel(
-    TotalTaxOwedModel(4, 1, 1, Some(1), Some(1), 1, 1, Some(1), Some(1), Some(1), 1, Some(1)),
-    Some(TotalTaxOwedModel(1, 1, 1, Some(1), Some(1), 1, 1, Some(1), Some(1), Some(1), 1, Some(1))),
-    Some(TotalTaxOwedModel(2, 1, 1, Some(1), Some(1), 1, 1, Some(1), Some(1), Some(1), 1, Some(1)))
+    TotalTaxOwedModel(4, 1, 1, Some(1), Some(1), 1, 1, Some(1), Some(1), Some(1), Some(1), 1, Some(1)),
+    Some(TotalTaxOwedModel(1, 1, 1, Some(1), Some(1), 1, 1, Some(1), Some(1), Some(1), Some(1), 1, Some(1))),
+    Some(TotalTaxOwedModel(2, 1, 1, Some(1), Some(1), 1, 1, Some(1), Some(1), Some(1), Some(1), 1, Some(1)))
   )
 
   "Calling generateElection with a TotalGainsResultsModel, and a CalculationResultsWithTaxOwedModel" should {
 
     "when a flat, rebased and time prr result should be sorted by taxable gain" should {
 
-      val calculations = target.generateElection(flatRebasedAndTime, None, Some(calculationResultsTotalSortByTaxOwed))
+      val calculations = target.generateElection(flatRebasedAndTime, None, Some(calculationResultsTotalSortByTaxOwed), None)
 
       "produce a three entry sequence" in {
         calculations.size shouldBe 3

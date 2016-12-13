@@ -41,7 +41,7 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
   def setupTarget(getData: Option[CalculationElectionModel],
                   postData: Option[CalculationElectionModel],
                   totalGainResultsModel: Option[TotalGainResultsModel],
-                  contentElements: Seq[(String, String, String, Option[String])],
+                  contentElements: Seq[(String, String, String, Option[String], Option[BigDecimal])],
                   finalSummaryModel: TotalPersonalDetailsCalculationModel,
                   taxOwedResult: Option[CalculationResultsWithTaxOwedModel] = None
                  ): CalculationElectionController = {
@@ -59,7 +59,7 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
     when(mockCalcConnector.calculateTotalGain(Matchers.any())(Matchers.any()))
       .thenReturn(totalGainResultsModel)
 
-    when(mockCalcElectionConstructor.generateElection(Matchers.any(), Matchers.any(), Matchers.any()))
+    when(mockCalcElectionConstructor.generateElection(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(contentElements))
 
     when(mockCalcAnswersConstructor.getPersonalDetailsAndPreviousCapitalGainsAnswers(Matchers.any()))
@@ -71,7 +71,7 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
     when(mockCalcConnector.getPartialAEA(Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(Some(BigDecimal(5500))))
 
-    when(mockCalcConnector.calculateNRCGTTotalTax(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+    when(mockCalcConnector.calculateNRCGTTotalTax(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
       .thenReturn(Future.successful(taxOwedResult))
 
     when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
@@ -106,7 +106,7 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
   // GET Tests
   "In CalculationController calling the .calculationElection action" when {
 
-    lazy val seq = Seq(("flat", "300", "A question", Some("Another bit of a question")))
+    lazy val seq = Seq(("flat", "300", "A question", Some("Another bit of a question"), Some(BigDecimal(100))))
 
     "supplied with no pre-existing session" should {
 
@@ -172,7 +172,7 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
 
   "In CalculationController calling the .submitCalculationElection action" when {
 
-    lazy val seq = Seq(("flat", "300", "A question", Some("Another bit of a question")))
+    lazy val seq = Seq(("flat", "300", "A question", Some("Another bit of a question"), None))
 
     "submitting a valid calculation election" should {
 
@@ -192,6 +192,66 @@ class CalculationElectionActionSpec extends UnitSpec with WithFakeApplication wi
 
       "redirect to the summary page" in {
         redirectLocation(result) shouldBe Some(s"${routes.SummaryController.summary()}")
+      }
+    }
+
+    "submitting a valid calculation election using the flat reliefs button" should {
+      lazy val request = fakeRequestToPOSTWithSession(("calculationElection", "flat"), ("action", "flat"))
+      lazy val target = setupTarget(
+        None,
+        None,
+        Some(TotalGainResultsModel(0, Some(0), Some(0))),
+        seq,
+        finalAnswersModel
+      )
+      lazy val result = target.submitCalculationElection(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the other reliefs flat page" in {
+        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsFlatController.otherReliefsFlat()}")
+      }
+    }
+
+    "submitting a valid calculation election using the rebased reliefs button" should {
+      lazy val request = fakeRequestToPOSTWithSession(("calculationElection", "rebased"), ("action", "rebased"))
+      lazy val target = setupTarget(
+        None,
+        None,
+        Some(TotalGainResultsModel(0, Some(0), Some(0))),
+        seq,
+        finalAnswersModel
+      )
+      lazy val result = target.submitCalculationElection(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the other reliefs rebased page" in {
+        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsRebasedController.otherReliefsRebased()}")
+      }
+    }
+
+    "submitting a valid calculation election using the time apportioned reliefs button" should {
+      lazy val request = fakeRequestToPOSTWithSession(("calculationElection", "time"), ("action", "time"))
+      lazy val target = setupTarget(
+        None,
+        None,
+        Some(TotalGainResultsModel(0, Some(0), Some(0))),
+        seq,
+        finalAnswersModel
+      )
+      lazy val result = target.submitCalculationElection(request)
+
+      "return a 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to the other reliefs flat page" in {
+        redirectLocation(result) shouldBe Some(s"${routes.OtherReliefsTAController.otherReliefsTA()}")
       }
     }
 

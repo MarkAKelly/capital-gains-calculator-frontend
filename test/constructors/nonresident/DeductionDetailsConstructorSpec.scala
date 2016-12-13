@@ -151,12 +151,8 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
     "provided with reliefs and prr" should {
       lazy val result = DeductionDetailsConstructor.deductionDetailsRows(validDates, Some(yesPRRModel))
 
-      "have a sequence of size 4" in {
-        result.size shouldBe 4
-      }
-
-      "return a sequence with an other reliefs flat value" in {
-        result.contains(DeductionDetailsConstructor.otherReliefsFlatValueRow(validDates).get)
+      "have a sequence of size 3" in {
+        result.size shouldBe 3
       }
 
       "return a sequence with a prr question answer" in {
@@ -169,42 +165,6 @@ class DeductionDetailsConstructorSpec extends UnitSpec with WithFakeApplication 
 
       "return a sequence with the days claimed after answer" in {
         result.contains(DeductionDetailsConstructor.privateResidenceReliefDaysClaimedAfterRow(Some(yesPRRModel), validDates).get)
-      }
-    }
-  }
-
-  "Calling .otherReliefsFlatValueRow" when {
-
-    "no other reliefs data is found" should {
-      lazy val result = DeductionDetailsConstructor.otherReliefsFlatValueRow(noneOtherReliefs)
-
-      "return a None" in {
-        result shouldBe None
-      }
-    }
-
-    "an answer of Yes to other reliefs is found" should {
-      lazy val result = DeductionDetailsConstructor.otherReliefsFlatValueRow(yesOtherReliefs)
-
-      "return some value" in {
-        result.isDefined shouldBe true
-      }
-
-      "return an id of nr:otherReliefsFlat" in {
-        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.id shouldBe "nr:otherReliefsFlat")
-      }
-
-      "return a value of 1450" in {
-        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.data shouldBe 1450)
-      }
-
-      "return a question for Other Reliefs Value" in {
-        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.question shouldBe messages.OtherReliefs.question)
-      }
-
-      "return a link to the Other Reliefs page" in {
-        assertExpectedResult[QuestionAnswerModel[BigDecimal]](result)(_.link shouldBe
-          Some(controllers.nonresident.routes.OtherReliefsController.otherReliefs().url))
       }
     }
   }

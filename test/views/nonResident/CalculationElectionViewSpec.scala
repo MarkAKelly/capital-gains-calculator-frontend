@@ -18,7 +18,6 @@ package views.nonResident
 
 import assets.MessageLookup.NonResident.{CalculationElection => messages}
 import assets.MessageLookup.{NonResident => commonMessages}
-import common.TestModels
 import controllers.helpers.FakeRequestHelper
 import forms.nonresident.CalculationElectionForm._
 import org.jsoup.Jsoup
@@ -31,8 +30,8 @@ class CalculationElectionViewSpec extends UnitSpec with WithFakeApplication with
   "The Calculation Election View" should {
 
     lazy val form = calculationElectionForm
-    lazy val seq: Seq[(String, String, String, Option[String])] =
-      Seq(("flat", "2000", Messages("calc.calculationElection.message.flat"), None))
+    lazy val seq: Seq[(String, String, String, Option[String], Option[BigDecimal])] =
+      Seq(("flat", "2000", Messages("calc.calculationElection.message.flat"), None, None))
     lazy val view = views.calculationElection(form, seq)(fakeRequest)
     lazy val doc = Jsoup.parse(view.body)
 

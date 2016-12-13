@@ -17,11 +17,13 @@
 package controllers.CalculationControllerTests
 
 import assets.MessageLookup.NonResident.{OtherReliefs => messages}
-import common.{KeystoreKeys, TestModels}
+import common.KeystoreKeys
 import connectors.CalculatorConnector
+import constructors.nonresident.AnswersConstructor
 import controllers.helpers.FakeRequestHelper
 import controllers.nonresident.OtherReliefsTAController
 import models.nonresident._
+import models.resident.TaxYearModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -29,6 +31,7 @@ import org.scalatest.mock.MockitoSugar
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import common.TestModels
 
 import scala.concurrent.Future
 
@@ -38,31 +41,49 @@ class OtherReliefsTAActionSpec extends UnitSpec with WithFakeApplication with Mo
 
   def setupTarget(
                    getData: Option[OtherReliefsModel],
-                   summary: SummaryModel,
-                   result: CalculationResultModel,
-                   acquisitionDateData: Option[AcquisitionDateModel],
-                   rebasedValueData: Option[RebasedValueModel]
+                   gainAnswers: TotalGainAnswersModel,
+                   calculationResultsModel: CalculationResultsWithTaxOwedModel,
+                   personalDetailsModel: TotalPersonalDetailsCalculationModel,
+                   totalGainResultModel: TotalGainResultsModel = TotalGainResultsModel(200, Some(100), Some(200)),
+                   calculationResultsWithPRRModel: Option[CalculationResultsWithPRRModel] = None
                  ): OtherReliefsTAController = {
 
     val mockCalcConnector = mock[CalculatorConnector]
+    val mockAnswersConstructor = mock[AnswersConstructor]
 
-    when(mockCalcConnector.fetchAndGetFormData[OtherReliefsModel](Matchers.any())(Matchers.any(), Matchers.any()))
+    when(mockCalcConnector.fetchAndGetFormData[OtherReliefsModel](Matchers.eq(KeystoreKeys.otherReliefsTA))(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(getData))
 
-    when(mockCalcConnector.fetchAndGetFormData[RebasedValueModel](Matchers.eq(KeystoreKeys.rebasedValue))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(rebasedValueData))
+    when(mockCalcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.eq(KeystoreKeys.privateResidenceRelief))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(Some(PrivateResidenceReliefModel("No", None))))
 
-    when(mockCalcConnector.fetchAndGetFormData[AcquisitionDateModel](Matchers.eq(KeystoreKeys.acquisitionDate))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(acquisitionDateData))
+    when(mockAnswersConstructor.getNRTotalGainAnswers(Matchers.any()))
+      .thenReturn(Future.successful(gainAnswers))
 
-    when(mockCalcConnector.createSummary(Matchers.any()))
-      .thenReturn(Future.successful(summary))
+    when(mockCalcConnector.calculateTotalGain(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(totalGainResultModel)))
 
-    when(mockCalcConnector.calculateTA(Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(Some(result)))
+    when(mockAnswersConstructor.getPersonalDetailsAndPreviousCapitalGainsAnswers(Matchers.any()))
+      .thenReturn(Future.successful(Some(personalDetailsModel)))
+
+    when(mockCalcConnector.calculateTaxableGainAfterPRR(Matchers.any(), Matchers.any())(Matchers.any()))
+      .thenReturn(calculationResultsWithPRRModel)
+
+    when(mockCalcConnector.getFullAEA(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(BigDecimal(11000))))
+
+    when(mockCalcConnector.getPartialAEA(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(BigDecimal(5500))))
+
+    when(mockCalcConnector.calculateNRCGTTotalTax(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(TestModels.calculationResultsModelWithTA)))
+
+    when(mockCalcConnector.getTaxYear(Matchers.any())(Matchers.any()))
+      .thenReturn(Future.successful(Some(TaxYearModel("2015/16", isValidYear = true, "2015/16"))))
 
     new OtherReliefsTAController {
       override val calcConnector: CalculatorConnector = mockCalcConnector
+      override val answersConstructor: AnswersConstructor = mockAnswersConstructor
     }
   }
 
@@ -74,14 +95,13 @@ class OtherReliefsTAActionSpec extends UnitSpec with WithFakeApplication with Mo
 
   "Calling the .otherReliefsTA action " when {
 
-    "not supplied with a pre-existing stored model" should {
+    "not supplied with a pre-existing stored model and a chargeable gain of £100 and total gain of £200" should {
 
       val target = setupTarget(
         None,
-        TestModels.sumModelTA,
-        TestModels.calcModelTwoRates,
-        Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        None
+        TestModels.totalGainAnswersModelWithRebasedTA,
+        TestModels.calculationResultsModelWithTA,
+        TestModels.personalDetailsCalculationModelIndividual
       )
       lazy val result = target.otherReliefsTA(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
@@ -93,16 +113,23 @@ class OtherReliefsTAActionSpec extends UnitSpec with WithFakeApplication with Mo
       "load the otherReliefs TA page" in {
         document.title() shouldBe messages.question
       }
+
+      s"have a total gain message with text '${messages.totalGain}' £200" in {
+        document.getElementById("totalGain").text() shouldBe s"${messages.totalGain} £200"
+      }
+
+      s"have a taxable gain message with text '${messages.taxableGain}' £100" in {
+        document.getElementById("taxableGain").text() shouldBe s"${messages.taxableGain} £100"
+      }
     }
 
     "supplied with a pre-existing stored model" should {
       val testOtherReliefsModel = OtherReliefsModel(5000)
       val target = setupTarget(
         Some(testOtherReliefsModel),
-        TestModels.sumModelTA,
-        TestModels.calcModelLoss,
-        Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        None
+        TestModels.totalGainAnswersModelWithRebasedTA,
+        TestModels.calculationResultsModelWithTA,
+        TestModels.personalDetailsCalculationModelIndividual
       )
       lazy val result = target.otherReliefsTA(fakeRequestWithSession)
       lazy val document = Jsoup.parse(bodyOf(result))
@@ -119,10 +146,9 @@ class OtherReliefsTAActionSpec extends UnitSpec with WithFakeApplication with Mo
     "supplied with an invalid session" should {
       val target = setupTarget(
         None,
-        TestModels.sumModelTA,
-        TestModels.calcModelTwoRates,
-        Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        None
+        TestModels.totalGainAnswersModelWithRebasedTA,
+        TestModels.calculationResultsModelWithTA,
+        TestModels.personalDetailsCalculationModelIndividual
       )
       lazy val result = target.otherReliefsTA(fakeRequest)
 
@@ -141,10 +167,9 @@ class OtherReliefsTAActionSpec extends UnitSpec with WithFakeApplication with Mo
     "submitting a valid form" should {
       val target = setupTarget(
         None,
-        TestModels.sumModelTA,
-        TestModels.calcModelLoss,
-        Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        None
+        TestModels.totalGainAnswersModelWithRebasedTA,
+        TestModels.calculationResultsModelWithTA,
+        TestModels.personalDetailsCalculationModelIndividual
       )
       lazy val request = fakeRequestToPOSTWithSession(("isClaimingOtherReliefs", "Yes"), ("otherReliefs", "1000"))
       lazy val result = target.submitOtherReliefsTA(request)
@@ -161,10 +186,9 @@ class OtherReliefsTAActionSpec extends UnitSpec with WithFakeApplication with Mo
     "submitting an invalid form" should {
       val target = setupTarget(
         None,
-        TestModels.sumModelTA,
-        TestModels.calcModelLoss,
-        Some(AcquisitionDateModel("Yes", Some(1), Some(1), Some(2017))),
-        None
+        TestModels.totalGainAnswersModelWithRebasedTA,
+        TestModels.calculationResultsModelWithTA,
+        TestModels.personalDetailsCalculationModelIndividual
       )
       lazy val request = fakeRequestToPOSTWithSession(("isClaimingOtherReliefs", "Yes"), ("otherReliefs", "-1000"))
       lazy val result = target.submitOtherReliefsTA(request)

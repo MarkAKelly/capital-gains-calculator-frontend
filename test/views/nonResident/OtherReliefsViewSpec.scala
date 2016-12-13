@@ -49,16 +49,16 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
           backLink.attr("class") shouldBe "back-link"
         }
 
-        s"should have a route to 'improvements'" in {
+        s"should have a route to 'check-your-answers'" in {
           backLink.attr("href") shouldEqual
-            controllers.nonresident.routes.ImprovementsController.improvements().url
+            controllers.nonresident.routes.CheckYourAnswersController.checkYourAnswers().url
         }
       }
 
       "have a heading" which {
         lazy val heading = document.body().select("h1")
 
-        "has a class of heading-large" in {
+        "has a class of heading-xlarge" in {
           heading.attr("class") shouldBe "heading-xlarge"
         }
 
@@ -92,13 +92,13 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
       }
 
       "have the correct help text" in {
-        document.body().select("form div.form-hint").text().replaceAll("[\\n]", " ") shouldBe
+        document.body().select("#otherReliefHelp").text().replaceAll("[\\n]", " ") shouldBe
           s"${messages.OtherReliefs.help} ${messages.OtherReliefs.helpTwo}"
       }
 
       "have the correct gain values in the additional help text" in {
         val expectedText = messages.OtherReliefs.additionalHelp(totalGain, totalChargeableGain)
-        document.body().select("form p.form-hint").text() shouldBe expectedText
+        document.body().select("#otherReliefHelpTwo").select("p").text() shouldBe expectedText
       }
 
       "have a button" which {
@@ -127,15 +127,15 @@ class OtherReliefsViewSpec extends UnitSpec with WithFakeApplication with Mockit
 
       "have the correct additional help text" in {
         val expectedText = messages.OtherReliefs.additionalHelp(totalGain, totalChargeableGain)
-        document.body().select("form p.form-hint").text() shouldBe expectedText
+        document.body().select("#otherReliefHelpTwo").text() shouldBe expectedText
       }
 
       "have the words 'total loss' in the additional help text" in {
-        document.body().select("form p.form-hint").text() should include("total loss of £1,234")
+        document.body().select("#otherReliefHelpTwo").text() should include("total loss of £1,234")
       }
 
       "have the words 'allowable loss' in the additional help text" in {
-        document.body().select("form p.form-hint").text() should include("an allowable loss of £4,321")
+        document.body().select("#otherReliefHelpTwo").text() should include("an allowable loss of £4,321")
       }
     }
 
