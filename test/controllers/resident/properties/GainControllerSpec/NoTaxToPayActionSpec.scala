@@ -34,69 +34,69 @@ import scala.concurrent.Future
 
 class NoTaxToPayActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  def setupTarget(givenTo: String): GainController = {
-
-    val mockCalcConnector = mock[CalculatorConnector]
-
-    when(mockCalcConnector.fetchAndGetFormData[WhoDidYouGiveItToModel](Matchers.eq(ResidentPropertyKeys.whoDidYouGiveItTo))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(WhoDidYouGiveItToModel(givenTo))))
-
-    new GainController {
-      override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val config: AppConfig = ApplicationConfig
-    }
-  }
-
-  "Calling .noTaxToPay" when {
-
-    "A valid session is provided when gifted to charity" should {
-      lazy val target = setupTarget("Charity")
-      lazy val result = target.noTaxToPay(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      s"return some html with title of ${messages.title}" in {
-        doc.title shouldEqual messages.title
-      }
-
-      "have text explaining why tax is not owed" in {
-        doc.body().select("div#content p").text() shouldBe messages.charityText
-      }
-    }
-
-    "A valid session is provided when gifted to a spouse" should {
-      lazy val target = setupTarget("Spouse")
-      lazy val result = target.noTaxToPay(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      s"return some html with title of ${messages.title}" in {
-        doc.title shouldEqual messages.title
-      }
-
-      "have text explaining why tax is not owed" in {
-        doc.body().select("div#content p").text() shouldBe messages.spouseText
-      }
-    }
-
-    "An invalid session is provided" should {
-      lazy val target = setupTarget("Other")
-      lazy val result = target.noTaxToPay(fakeRequest)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a status of 303" in {
-        status(result) shouldBe 303
-      }
-
-      "return you to the session timeout page" in {
-        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
-      }
-    }
-  }
+//  def setupTarget(givenTo: String): GainController = {
+//
+//    val mockCalcConnector = mock[CalculatorConnector]
+//
+//    when(mockCalcConnector.fetchAndGetFormData[WhoDidYouGiveItToModel](Matchers.eq(ResidentPropertyKeys.whoDidYouGiveItTo))(Matchers.any(), Matchers.any()))
+//      .thenReturn(Future.successful(Some(WhoDidYouGiveItToModel(givenTo))))
+//
+//    new GainController {
+//      override val calcConnector: CalculatorConnector = mockCalcConnector
+//      override val config: AppConfig = ApplicationConfig
+//    }
+//  }
+//
+//  "Calling .noTaxToPay" when {
+//
+//    "A valid session is provided when gifted to charity" should {
+//      lazy val target = setupTarget("Charity")
+//      lazy val result = target.noTaxToPay(fakeRequestWithSession)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      s"return some html with title of ${messages.title}" in {
+//        doc.title shouldEqual messages.title
+//      }
+//
+//      "have text explaining why tax is not owed" in {
+//        doc.body().select("div#content p").text() shouldBe messages.charityText
+//      }
+//    }
+//
+//    "A valid session is provided when gifted to a spouse" should {
+//      lazy val target = setupTarget("Spouse")
+//      lazy val result = target.noTaxToPay(fakeRequestWithSession)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      s"return some html with title of ${messages.title}" in {
+//        doc.title shouldEqual messages.title
+//      }
+//
+//      "have text explaining why tax is not owed" in {
+//        doc.body().select("div#content p").text() shouldBe messages.spouseText
+//      }
+//    }
+//
+//    "An invalid session is provided" should {
+//      lazy val target = setupTarget("Other")
+//      lazy val result = target.noTaxToPay(fakeRequest)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a status of 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "return you to the session timeout page" in {
+//        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+//      }
+//    }
+//  }
 }

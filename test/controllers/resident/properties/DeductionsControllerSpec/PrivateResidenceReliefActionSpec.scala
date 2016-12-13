@@ -35,115 +35,115 @@ import scala.concurrent.Future
 
 class PrivateResidenceReliefActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  def setupTarget(getData: Option[PrivateResidenceReliefModel]): DeductionsController= {
-
-    val mockCalcConnector = mock[CalculatorConnector]
-
-    when(mockCalcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.eq(keyStoreKeys.privateResidenceRelief))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(getData))
-
-    when(mockCalcConnector.saveFormData[PrivateResidenceReliefModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(mock[CacheMap]))
-
-    new DeductionsController {
-      override val calcConnector: CalculatorConnector = mockCalcConnector
-      override val config: AppConfig = ApplicationConfig
-    }
-  }
-
-  "Calling .propertyLivedIn from the resident DeductionsController" when {
-
-    "request has a valid session and no keystore value" should {
-
-      lazy val target = setupTarget(None)
-      lazy val result = target.privateResidenceRelief(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      s"return some html with title of ${messages.title}" in {
-        contentType(result) shouldBe Some("text/html")
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
-      }
-    }
-
-    "request has a valid session and some keystore value" should {
-
-      lazy val target = setupTarget(Some(PrivateResidenceReliefModel(true)))
-      lazy val result = target.privateResidenceRelief(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      s"return some html with title of ${messages.title}" in {
-        contentType(result) shouldBe Some("text/html")
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
-      }
-    }
-
-    "request has an invalid session" should {
-
-      lazy val target = setupTarget(None)
-      lazy val result = target.privateResidenceRelief(fakeRequest)
-
-      "return a status of 303" in {
-        status(result) shouldBe 303
-      }
-
-      "return you to the session timeout page" in {
-        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
-      }
-    }
-  }
-
-  "Calling .submitPrivateResidenceRelief from the resident DeductionsCalculator" when {
-
-    "a valid form with the answer 'Yes' is submitted" should {
-
-      lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "Yes"))
-      lazy val result = target.submitPrivateResidenceRelief(request)
-
-      "return a status of 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the private residence relief page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/private-residence-relief-value")
-      }
-    }
-
-    "a valid form with the answer 'No' is submitted" should {
-
-      lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "No"))
-      lazy val result = target.submitPrivateResidenceRelief(request)
-
-      "return a status of 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the other properties page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/other-properties")
-      }
-    }
-
-    "an invalid form with the answer '' is submitted" should {
-
-      lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", ""))
-      lazy val result = target.submitPrivateResidenceRelief(request)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a status of 400" in {
-        status(result) shouldBe 400
-      }
-
-      "render the Property Lived In page" in {
-        doc.title() shouldEqual messages.title
-      }
-    }
-  }
+//  def setupTarget(getData: Option[PrivateResidenceReliefModel]): DeductionsController= {
+//
+//    val mockCalcConnector = mock[CalculatorConnector]
+//
+//    when(mockCalcConnector.fetchAndGetFormData[PrivateResidenceReliefModel](Matchers.eq(keyStoreKeys.privateResidenceRelief))(Matchers.any(), Matchers.any()))
+//      .thenReturn(Future.successful(getData))
+//
+//    when(mockCalcConnector.saveFormData[PrivateResidenceReliefModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+//      .thenReturn(Future.successful(mock[CacheMap]))
+//
+//    new DeductionsController {
+//      override val calcConnector: CalculatorConnector = mockCalcConnector
+//      override val config: AppConfig = ApplicationConfig
+//    }
+//  }
+//
+//  "Calling .propertyLivedIn from the resident DeductionsController" when {
+//
+//    "request has a valid session and no keystore value" should {
+//
+//      lazy val target = setupTarget(None)
+//      lazy val result = target.privateResidenceRelief(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      s"return some html with title of ${messages.title}" in {
+//        contentType(result) shouldBe Some("text/html")
+//        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+//      }
+//    }
+//
+//    "request has a valid session and some keystore value" should {
+//
+//      lazy val target = setupTarget(Some(PrivateResidenceReliefModel(true)))
+//      lazy val result = target.privateResidenceRelief(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      s"return some html with title of ${messages.title}" in {
+//        contentType(result) shouldBe Some("text/html")
+//        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+//      }
+//    }
+//
+//    "request has an invalid session" should {
+//
+//      lazy val target = setupTarget(None)
+//      lazy val result = target.privateResidenceRelief(fakeRequest)
+//
+//      "return a status of 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "return you to the session timeout page" in {
+//        redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+//      }
+//    }
+//  }
+//
+//  "Calling .submitPrivateResidenceRelief from the resident DeductionsCalculator" when {
+//
+//    "a valid form with the answer 'Yes' is submitted" should {
+//
+//      lazy val target = setupTarget(None)
+//      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "Yes"))
+//      lazy val result = target.submitPrivateResidenceRelief(request)
+//
+//      "return a status of 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the private residence relief page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/private-residence-relief-value")
+//      }
+//    }
+//
+//    "a valid form with the answer 'No' is submitted" should {
+//
+//      lazy val target = setupTarget(None)
+//      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "No"))
+//      lazy val result = target.submitPrivateResidenceRelief(request)
+//
+//      "return a status of 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the other properties page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/other-properties")
+//      }
+//    }
+//
+//    "an invalid form with the answer '' is submitted" should {
+//
+//      lazy val target = setupTarget(None)
+//      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", ""))
+//      lazy val result = target.submitPrivateResidenceRelief(request)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a status of 400" in {
+//        status(result) shouldBe 400
+//      }
+//
+//      "render the Property Lived In page" in {
+//        doc.title() shouldEqual messages.title
+//      }
+//    }
+//  }
 }

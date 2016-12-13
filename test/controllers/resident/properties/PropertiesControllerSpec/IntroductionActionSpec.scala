@@ -26,21 +26,21 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class IntroductionActionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with FakeRequestHelper {
 
-  "Calling the introduction action" should {
-
-    lazy val result = PropertiesController.introduction(fakeRequest)
-
-    "return a status of 200" in {
-      status(result) shouldBe 200
-    }
-
-    "return some html" in {
-      contentType(result) shouldBe Some("text/html")
-    }
-
-    "display the introduction view" in {
-      Jsoup.parse(bodyOf(result)).title shouldBe messages.title
-    }
-
-  }
+//  "Calling the introduction action" should {
+//
+//    lazy val result = PropertiesController.introduction(fakeRequest)
+//
+//    "return a status of 200" in {
+//      status(result) shouldBe 200
+//    }
+//
+//    "return some html" in {
+//      contentType(result) shouldBe Some("text/html")
+//    }
+//
+//    "display the introduction view" in {
+//      Jsoup.parse(bodyOf(result)).title shouldBe messages.title
+//    }
+//
+//  }
 }
