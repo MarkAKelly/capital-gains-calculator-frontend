@@ -31,10 +31,6 @@ object Dates {
 
   def constructDate(day: Int, month: Int, year: Int): LocalDate = LocalDate.parse(s"$day/$month/$year", formatter)
 
-  def dateMinusMonths(date: Option[LocalDate], months: Int): String = date.fold("") {
-    a => a.minus(months, ChronoUnit.MONTHS).format(datePageFormatNoZero)
-  }
-
   def getDay(date: LocalDate): Int = date.getDayOfMonth
 
   def getMonth(date: LocalDate): Int = date.getMonthValue
@@ -55,16 +51,6 @@ object Dates {
     }
     else {
       Future.successful(taxYearToString(year))
-    }
-  }
-
-  def getDisposalYear(day: Int, month: Int, year: Int): Int = {
-    val disposalYear = LocalDate.of(year, month, day)
-    if (disposalYear.isAfter(LocalDate.parse(s"${year.toString}-$taxYearEnd"))) {
-      year + 1
-    }
-    else {
-      year
     }
   }
 }

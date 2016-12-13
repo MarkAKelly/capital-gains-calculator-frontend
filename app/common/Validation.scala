@@ -27,21 +27,6 @@ object Validation {
     case _ => false
   }
 
-  def isIntNumber(input: String): Boolean = Try(input.toInt) match {
-    case Success(_) => true
-    case Failure(_) => false
-  }
-
-  def isBigDecimalNumber(input: String): Boolean = Try(BigDecimal(input)) match {
-    case Success(_) => true
-    case Failure(_) => false
-  }
-
-  def isDoubleNumber(input: String): Boolean = Try(input.toDouble) match {
-    case Success(_) => true
-    case Failure(_) => false
-  }
-
   val bigDecimalCheck: String => Boolean = input => Try(BigDecimal(input)) match {
     case Success(_) => true
     case Failure(_) if input.trim == "" => true
@@ -54,8 +39,6 @@ object Validation {
     case Failure(_) => false
   }
 
-  val isGreaterThanZero: BigDecimal => Boolean = amount => amount > 0
-
   val mandatoryCheck: String => Boolean = input => input.trim != ""
 
   val decimalPlacesCheck: BigDecimal => Boolean = input => input.scale < 3
@@ -66,8 +49,6 @@ object Validation {
 
   val maxCheck: BigDecimal => Boolean = input => input <= Constants.maxNumeric
 
-  def maxPRRCheck(gain: BigDecimal): BigDecimal => Boolean = input => input <= gain
-
   val isPositive: BigDecimal => Boolean = input => input >= 0
 
   val yesNoCheck: String => Boolean = {
@@ -75,49 +56,5 @@ object Validation {
     case "No" => true
     case "" => true
     case _ => false
-  }
-
-  val fullPartNoneCheck: String => Boolean = {
-    case "Full" => true
-    case "Part" => true
-    case "None" => true
-    case "" => true
-    case _ => false
-  }
-
-  val givenAwayCheck: String => Boolean = {
-    case "Given" => true
-    case "Sold" => true
-    case "" => true
-    case _ => false
-  }
-
-  val howBecameOwnerCheck: String => Boolean = {
-    case "Bought" => true
-    case "Gifted" => true
-    case "Inherited" => true
-    case "" => true
-    case _ => false
-  }
-
-  val whoDidYouGiveItToCheck: String => Boolean = {
-    case "Spouse" => true
-    case "Charity" => true
-    case "Other" => true
-    case "" => true
-    case _ => false
-  }
-
-  val previousLossOrGainCheck: String => Boolean = {
-    case "Loss" => true
-    case "Gain" => true
-    case "Neither" => true
-    case "" => true
-    case _ => false
-  }
-
-  def isYesNoOption(electionMade: Boolean): Option[String] => Boolean = {
-    case Some(value) if !electionMade => yesNoCheck(value)
-    case _ => true
   }
 }

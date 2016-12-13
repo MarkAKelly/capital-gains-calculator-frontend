@@ -58,19 +58,4 @@ class DatesSpec extends UnitSpec {
       } yield date.length shouldEqual 7
     }
   }
-
-  "Calling returnDisposalYear" should {
-
-    "when called with 5/4/2016" in {
-      Dates.getDisposalYear(5, 4, 2016) shouldEqual 2016
-    }
-
-    "when called with 6/4/2016" in {
-      Dates.getDisposalYear(6, 4, 2016) shouldEqual 2017
-    }
-
-    "when called with 5/4/2015" in {
-      Dates.getDisposalYear(5, 4, 2015) shouldEqual 2015
-    }
-  }
 }

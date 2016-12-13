@@ -107,18 +107,6 @@ class ValidationSpec extends UnitSpec {
     "with a value of 999999999.99" in {
       maxCheck(999999999.99) shouldBe true
     }
-
-    //############# Tests for isBigDecimalNumber ##########################################
-    "calling common.Validation.isBigDecimalNumber" should {
-
-      "return false with a non-numeric value" in {
-        isBigDecimalNumber("a") shouldBe false
-      }
-
-      "return true with a valid numeric value" in {
-        isBigDecimalNumber("100") shouldBe true
-      }
-    }
   }
 
   //############# Tests for yesNoCheck ##########################################
@@ -292,30 +280,5 @@ class ValidationSpec extends UnitSpec {
       }
     }
 
-  }
-
-  "calling isYesNoOption" when {
-
-    "calculation is not elected" should {
-
-      "return a result from the yesNoCheck when there is a Some" in {
-        isYesNoOption(false)(Some("No")) shouldBe yesNoCheck("No")
-      }
-
-      "return a true when there is a None" in {
-        isYesNoOption(false)(None) shouldBe true
-      }
-    }
-
-    "calculation is elected" should {
-
-      "return a true when there is a Some" in {
-        isYesNoOption(true)(Some("Yes")) shouldBe true
-      }
-
-      "return a true when there is a None" in {
-        isYesNoOption(true)(None) shouldBe true
-      }
-    }
   }
 }

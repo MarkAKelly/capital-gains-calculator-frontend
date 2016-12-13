@@ -27,20 +27,7 @@ object TaxDates {
   val taxYearStartDate = LocalDate.parse("5/4/2016", formatter)
   val taxYearEndDate = LocalDate.parse("5/4/2017", formatter)
 
-  def dateAfterStart(day: Int, month: Int, year: Int): Boolean = constructDate(day, month, year).isAfter(taxStartDate)
-
   def dateAfterStart(date: LocalDate): Boolean = date.isAfter(taxStartDate)
-
-  def dateBeforeLegislationStart(day: Int, month: Int, year: Int): Boolean = constructDate(day, month, year).isBefore(legislationDate)
-
-  def dateBeforeLegislationStart(date: LocalDate): Boolean = date.isBefore(legislationDate)
-
-  def dateAfter18Months(day: Int, month: Int, year: Int): Boolean = constructDate(day, month, year).isAfter(taxStartDatePlus18Months)
-
-  def dateAfterOctober(date: LocalDate): Boolean = date.isAfter(taxStartDatePlus18Months)
-
-  def dateInsideTaxYear(day: Int, month: Int, year: Int): Boolean =
-    constructDate(day, month, year).isAfter(taxYearStartDate) && constructDate(day, month, year).isBefore(taxYearEndDate)
 
   def dateInsideAcceptedTaxYears(day: Int, month: Int, year: Int): Boolean =
     constructDate(day, month, year).isAfter(taxStartDate) && constructDate(day, month, year).isBefore(taxYearEndDate)
