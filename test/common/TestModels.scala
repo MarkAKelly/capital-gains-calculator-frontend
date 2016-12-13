@@ -913,4 +913,45 @@ object TestModels {
     None
   )
 
+  val totalGainAnswersModelWithRebasedTA = TotalGainAnswersModel(
+    DisposalDateModel(5, 6, 2016),
+    SoldOrGivenAwayModel(true),
+    Some(SoldForLessModel(true)),
+    DisposalValueModel(950000),
+    DisposalCostsModel(15000),
+    Some(HowBecameOwnerModel("Bought")),
+    Some(BoughtForLessModel(false)),
+    AcquisitionValueModel(1250000),
+    AcquisitionCostsModel(20000),
+    AcquisitionDateModel("Yes", Some(10), Some(10), Some(2001)),
+    Some(RebasedValueModel(Some(950000))),
+    Some(RebasedCostsModel("No", None)),
+    ImprovementsModel("No", None),
+    Some(OtherReliefsModel(0))
+  )
+
+  val calculationResultsModelWithRebased = CalculationResultsWithTaxOwedModel(
+    TotalTaxOwedModel(100, 100, 20, None, None, 200, 100, None, None, None, None, 0, None),
+    Some(TotalTaxOwedModel(500, 500, 20, None, None, 500, 500, None, None, None, None, 0, None)),
+    None
+  )
+
+  val calculationResultsModelWithTA = CalculationResultsWithTaxOwedModel(
+    TotalTaxOwedModel(100, 100, 20, None, None, 200, 100, None, None, None, None, 0, None),
+    None,
+    Some(TotalTaxOwedModel(500, 500, 20, None, None, 200, 100, None, None, None, None, 0, None))
+  )
+
+  val personalDetailsCalculationModelIndividual = TotalPersonalDetailsCalculationModel(
+    CustomerTypeModel("individual"),
+    Some(CurrentIncomeModel(20000)),
+    Some(PersonalAllowanceModel(0)),
+    None,
+    OtherPropertiesModel("Yes"),
+    Some(PreviousLossOrGainModel("Neither")),
+    None,
+    None,
+    Some(AnnualExemptAmountModel(0)),
+    BroughtForwardLossesModel(false, None)
+  )
 }

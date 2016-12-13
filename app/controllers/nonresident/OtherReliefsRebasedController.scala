@@ -17,11 +17,14 @@
 package controllers.nonresident
 
 import common.KeystoreKeys
+import common.nonresident.TaxableGainCalculation._
 import connectors.CalculatorConnector
+import constructors.nonresident.AnswersConstructor
 import controllers.predicates.ValidActiveSession
 import forms.nonresident.OtherReliefsForm._
-import models.nonresident.{CalculationResultModel, OtherReliefsModel}
+import models.nonresident.{CalculationResultsWithTaxOwedModel, OtherReliefsModel, TotalGainResultsModel}
 import play.api.data.Form
+import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import views.html.calculation
 
@@ -29,42 +32,68 @@ import scala.concurrent.Future
 
 object OtherReliefsRebasedController extends OtherReliefsRebasedController{
   val calcConnector = CalculatorConnector
+  val answersConstructor = AnswersConstructor
 }
 
 trait OtherReliefsRebasedController extends FrontendController with ValidActiveSession {
   override val sessionTimeoutUrl = controllers.nonresident.routes.SummaryController.restart().url
   override val homeLink = controllers.nonresident.routes.DisposalDateController.disposalDate().url
   val calcConnector: CalculatorConnector
+  val answersConstructor: AnswersConstructor
 
-  val otherReliefsRebased = ValidateSession.async { implicit request =>
-    def action(dataResult: Option[CalculationResultModel]) = calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map {
-      case Some(data) => Ok(calculation.nonresident.otherReliefsRebased(otherReliefsForm.fill(data),
-        dataResult.get, hasExistingReliefAmount = true))
-      case _ => Ok(calculation.nonresident.otherReliefsRebased(otherReliefsForm, dataResult.get, hasExistingReliefAmount = false))
+  val otherReliefsRebased: Action[AnyContent] = ValidateSession.async { implicit request =>
+
+    def routeRequest(model: Option[OtherReliefsModel],
+                     totalGain: Option[TotalGainResultsModel],
+                     chargeableGainResult: Option[CalculationResultsWithTaxOwedModel]) = {
+      val hasExistingRelief = model.isDefined
+      val gain = totalGain.fold(BigDecimal(0))(_.rebasedGain.get)
+      val chargeableGain = chargeableGainResult.fold(BigDecimal(0))(_.rebasedResult.get.taxableGain)
+
+      val result = model.fold(calculation.nonresident.otherReliefsRebased(otherReliefsForm, hasExistingRelief, chargeableGain, gain)) { data =>
+        calculation.nonresident.otherReliefsRebased(otherReliefsForm.fill(data), hasExistingRelief, chargeableGain, gain)
+      }
+
+      Ok(result)
     }
 
     for {
-      construct <- calcConnector.createSummary(hc)
-      calculation <- calcConnector.calculateRebased(construct)
-      finalResult <- action(calculation)
-    } yield finalResult
+      answers <- answersConstructor.getNRTotalGainAnswers(hc)
+      gain <- calcConnector.calculateTotalGain(answers)(hc)
+      prrAnswers <- getPRRResponse(gain.get, calcConnector)
+      totalGainWithPRR <- getPRRIfApplicable(answers, prrAnswers, calcConnector)(hc)
+      allAnswers <- getFinalSectionsAnswers(gain.get, totalGainWithPRR, calcConnector, answersConstructor)(hc)
+      taxYear <- getTaxYear(answers, calcConnector)(hc)
+      maxAEA <- getMaxAEA(allAnswers, taxYear, calcConnector)(hc)
+      chargeableGainResult <- getChargeableGain(answers, prrAnswers, allAnswers, maxAEA.get, calcConnector)(hc)
+      reliefs <- calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased)
+    } yield routeRequest(reliefs, gain, chargeableGainResult)
   }
 
   val submitOtherReliefsRebased = ValidateSession.async { implicit request =>
 
     def errorAction(form: Form[OtherReliefsModel]) = {
       for {
-        construct <- calcConnector.createSummary(hc)
-        calculation <- calcConnector.calculateRebased(construct)
-        route <- errorRoute(form, calculation)
+        answers <- answersConstructor.getNRTotalGainAnswers(hc)
+        gain <- calcConnector.calculateTotalGain(answers)(hc)
+        prrAnswers <- getPRRResponse(gain.get, calcConnector)
+        totalGainWithPRR <- getPRRIfApplicable(answers, prrAnswers, calcConnector)(hc)
+        allAnswers <- getFinalSectionsAnswers(gain.get, totalGainWithPRR, calcConnector, answersConstructor)(hc)
+        taxYear <- getTaxYear(answers, calcConnector)(hc)
+        maxAEA <- getMaxAEA(allAnswers, taxYear, calcConnector)(hc)
+        chargeableGainResult <- getChargeableGain(answers, prrAnswers, allAnswers, maxAEA.get, calcConnector)(hc)
+        route <- errorRoute(gain, chargeableGainResult, form)
       } yield route
     }
 
-    def errorRoute(form: Form[OtherReliefsModel], dataResult: Option[CalculationResultModel]) = {
+    def errorRoute(totalGain: Option[TotalGainResultsModel], chargeableGainResult: Option[CalculationResultsWithTaxOwedModel],
+                   form: Form[OtherReliefsModel]) = {
+      val gain = totalGain.fold(BigDecimal(0))(_.rebasedGain.get)
+      val chargeableGain = chargeableGainResult.fold(BigDecimal(0))(_.rebasedResult.get.taxableGain)
       calcConnector.fetchAndGetFormData[OtherReliefsModel](KeystoreKeys.otherReliefsRebased).map {
-        case Some(data) => BadRequest(calculation.nonresident.otherReliefsRebased(form, dataResult.get,
-          hasExistingReliefAmount = true))
-        case _ => BadRequest(calculation.nonresident.otherReliefsRebased(form, dataResult.get, hasExistingReliefAmount = false))
+
+        case Some(data) => BadRequest(calculation.nonresident.otherReliefsRebased(form, hasExistingReliefAmount = true, chargeableGain, gain))
+        case _ => BadRequest(calculation.nonresident.otherReliefsRebased(form, hasExistingReliefAmount = false, chargeableGain, gain))
       }
     }
 

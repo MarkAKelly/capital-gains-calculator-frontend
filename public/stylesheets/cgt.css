@@ -294,6 +294,10 @@
         bottom: 1.0em
 }
 
+.gain-padding {
+    margin-bottom: 0.75em
+}
+
 span.election-text > .block {
     display: block;
     clear: both;

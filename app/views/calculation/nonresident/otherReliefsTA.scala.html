@@ -4,7 +4,7 @@
 @import uk.gov.hmrc.play.views.helpers.MoneyPounds
 @import views.html.helpers._
 
-@(otherReliefsForm: Form[OtherReliefsModel], result: CalculationResultModel, hasExistingReliefAmount: Boolean)(implicit request: Request[_])
+@(otherReliefsForm: Form[OtherReliefsModel], hasExistingReliefAmount: Boolean, chargeableGain: BigDecimal, gain: BigDecimal)(implicit request: Request[_])
 
 @main_template(Messages("calc.otherReliefs.question")) {
 
@@ -12,25 +12,33 @@
 
     @errorSummary(otherReliefsForm, "other-reliefs-time-apportionment")
 
-    <h1 class="heading-large">@Messages("calc.base.pageHeading")</h1>
+    <h1 class="heading-xlarge">@Messages("calc.otherReliefs.question")</h1>
 
     @form(action = controllers.nonresident.routes.OtherReliefsTAController.submitOtherReliefsTA) {
 
-        <label for="otherReliefs">@Messages("calc.otherReliefs.question")</label>
+        <label for="otherReliefs" class="visuallyhidden">@Messages("calc.otherReliefs.question")</label>
 
         <span class="form-hint">@Messages("calc.otherReliefs.help")</span>
 
 
-        <div class="panel-indent">
+        <div class="panel-indent gain-padding">
             <ul class="list">
-                <li id="totalGain">@SummaryConstructor.gainMessage(result)
-                    <b> &pound;@{MoneyPounds(result.totalGain,0).quantity}</b>
+                <li id="totalGain">
+                    @if(gain < 0) {
+                        @Messages("calc.otherReliefs.totalLoss")
+                    } else {
+                        @Messages("calc.otherReliefs.totalGain")
+                    }
+                    <b> &pound;@{MoneyPounds(gain,0).quantity}</b>
                 </li>
 
-                <li id="taxableGain">@{if (result.taxableGain >= 0) Messages("calc.otherReliefs.taxableGain")
-                    else Messages("calc.summary.calculation.details.lossCarriedForward")
+                <li id="taxableGain">
+                    @if(chargeableGain >= 0) {
+                        @Messages("calc.otherReliefs.taxableGain")
+                    } else {
+                        @Messages("calc.summary.calculation.details.lossCarriedForward")
                     }
-                    <b> &pound;@{MoneyPounds(result.taxableGain,0).quantity}</b>
+                    <b> &pound;@{MoneyPounds(chargeableGain,0).quantity}</b>
                 </li>
             </ul>
         </div>
