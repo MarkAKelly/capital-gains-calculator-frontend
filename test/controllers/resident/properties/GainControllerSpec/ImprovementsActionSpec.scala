@@ -36,168 +36,168 @@ import scala.concurrent.Future
 
 class ImprovementsActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  val summaryModel = mock[YourAnswersSummaryModel]
-
-  def setupTarget(getData: Option[ImprovementsModel],
-                  gainAnswers: YourAnswersSummaryModel,
-                  totalGain: BigDecimal,
-                  prrEnabled: Boolean = true,
-                  ownerBeforeAprilNineteenEightyTwo: Boolean = false): GainController = {
-
-    val mockCalcConnector = mock[CalculatorConnector]
-    val mockConfig = mock[AppConfig]
-
-    when(mockCalcConnector.fetchAndGetFormData[ImprovementsModel](Matchers.eq(keystoreKeys.improvements))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(getData))
-
-    when(mockCalcConnector.fetchAndGetFormData[OwnerBeforeLegislationStartModel]
-      (Matchers.eq(keystoreKeys.ownerBeforeLegislationStart))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(Some(OwnerBeforeLegislationStartModel(ownerBeforeAprilNineteenEightyTwo))))
-
-    when(mockCalcConnector.getPropertyGainAnswers(Matchers.any()))
-      .thenReturn(Future.successful(gainAnswers))
-
-    when(mockCalcConnector.calculateRttPropertyGrossGain(Matchers.any())(Matchers.any()))
-      .thenReturn(Future.successful(totalGain))
-
-    when(mockCalcConnector.saveFormData[ImprovementsModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(mock[CacheMap]))
-
-    when(mockConfig.featureRTTPRREnabled)
-      .thenReturn(prrEnabled)
-
-    new GainController {
-      override val calcConnector: CalculatorConnector = mockCalcConnector
-      val config: AppConfig = mockConfig
-    }
-  }
-
-  "Calling .improvements from the GainCalculationController" when {
-
-    "there is no keystore data" should {
-
-      lazy val target = setupTarget(None, summaryModel, BigDecimal(0))
-      lazy val result = target.improvements(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      "return some html" in {
-        contentType(result) shouldBe Some("text/html")
-      }
-
-      "display the improvements view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.question
-      }
-    }
-
-    "there is some keystore data" should {
-
-      lazy val target = setupTarget(Some(ImprovementsModel(1000)), summaryModel, BigDecimal(0))
-      lazy val result = target.improvements(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      "return some html" in {
-        contentType(result) shouldBe Some("text/html")
-      }
-
-      "display the Improvements view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.question
-      }
-    }
-
-    "the property was owned before April 1982" should {
-      lazy val target = setupTarget(Some(ImprovementsModel(1000)), summaryModel, BigDecimal(0), ownerBeforeAprilNineteenEightyTwo = true)
-      lazy val result = target.improvements(fakeRequestWithSession)
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      "return some html" in {
-        contentType(result) shouldBe Some("text/html")
-      }
-
-      "display the Improvements view" in {
-        Jsoup.parse(bodyOf(result)).title shouldBe messages.questionBefore
-      }
-    }
-  }
-
-  "request has an invalid session" should {
-
-    lazy val result = GainController.improvements(fakeRequest)
-
-    "return a status of 303" in {
-      status(result) shouldBe 303
-    }
-
-    "return you to the session timeout page" in {
-      redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
-    }
-  }
-
-  "Calling .submitImprovements from the GainCalculationConroller" when {
-
-    "a valid form is submitted with a zero gain result" should {
-      lazy val target = setupTarget(None, summaryModel, BigDecimal(0))
-      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
-      lazy val result = target.submitImprovements(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the summary page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/summary")
-      }
-    }
-
-    "a valid form is submitted with a negative gain result" should {
-      lazy val target = setupTarget(None, summaryModel, BigDecimal(-1000))
-      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
-      lazy val result = target.submitImprovements(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the summary page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/summary")
-      }
-    }
-
-    "a valid form is submitted with a positive gain result" should {
-      lazy val target = setupTarget(None, summaryModel, BigDecimal(1000), false)
-      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
-      lazy val result = target.submitImprovements(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the other-properties page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/property-lived-in")
-      }
-    }
-
-    "an invalid form is submitted" should {
-      lazy val target = setupTarget(None, summaryModel, BigDecimal(1000))
-      lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
-      lazy val result = target.submitImprovements(request)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      "render the Improvements page" in {
-        doc.title() shouldEqual messages.question
-      }
-    }
-  }
+//  val summaryModel = mock[YourAnswersSummaryModel]
+//
+//  def setupTarget(getData: Option[ImprovementsModel],
+//                  gainAnswers: YourAnswersSummaryModel,
+//                  totalGain: BigDecimal,
+//                  prrEnabled: Boolean = true,
+//                  ownerBeforeAprilNineteenEightyTwo: Boolean = false): GainController = {
+//
+//    val mockCalcConnector = mock[CalculatorConnector]
+//    val mockConfig = mock[AppConfig]
+//
+//    when(mockCalcConnector.fetchAndGetFormData[ImprovementsModel](Matchers.eq(keystoreKeys.improvements))(Matchers.any(), Matchers.any()))
+//      .thenReturn(Future.successful(getData))
+//
+//    when(mockCalcConnector.fetchAndGetFormData[OwnerBeforeLegislationStartModel]
+//      (Matchers.eq(keystoreKeys.ownerBeforeLegislationStart))(Matchers.any(), Matchers.any()))
+//      .thenReturn(Future.successful(Some(OwnerBeforeLegislationStartModel(ownerBeforeAprilNineteenEightyTwo))))
+//
+//    when(mockCalcConnector.getPropertyGainAnswers(Matchers.any()))
+//      .thenReturn(Future.successful(gainAnswers))
+//
+//    when(mockCalcConnector.calculateRttPropertyGrossGain(Matchers.any())(Matchers.any()))
+//      .thenReturn(Future.successful(totalGain))
+//
+//    when(mockCalcConnector.saveFormData[ImprovementsModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+//      .thenReturn(Future.successful(mock[CacheMap]))
+//
+//    when(mockConfig.featureRTTPRREnabled)
+//      .thenReturn(prrEnabled)
+//
+//    new GainController {
+//      override val calcConnector: CalculatorConnector = mockCalcConnector
+//      val config: AppConfig = mockConfig
+//    }
+//  }
+//
+//  "Calling .improvements from the GainCalculationController" when {
+//
+//    "there is no keystore data" should {
+//
+//      lazy val target = setupTarget(None, summaryModel, BigDecimal(0))
+//      lazy val result = target.improvements(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "return some html" in {
+//        contentType(result) shouldBe Some("text/html")
+//      }
+//
+//      "display the improvements view" in {
+//        Jsoup.parse(bodyOf(result)).title shouldBe messages.question
+//      }
+//    }
+//
+//    "there is some keystore data" should {
+//
+//      lazy val target = setupTarget(Some(ImprovementsModel(1000)), summaryModel, BigDecimal(0))
+//      lazy val result = target.improvements(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "return some html" in {
+//        contentType(result) shouldBe Some("text/html")
+//      }
+//
+//      "display the Improvements view" in {
+//        Jsoup.parse(bodyOf(result)).title shouldBe messages.question
+//      }
+//    }
+//
+//    "the property was owned before April 1982" should {
+//      lazy val target = setupTarget(Some(ImprovementsModel(1000)), summaryModel, BigDecimal(0), ownerBeforeAprilNineteenEightyTwo = true)
+//      lazy val result = target.improvements(fakeRequestWithSession)
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      "return some html" in {
+//        contentType(result) shouldBe Some("text/html")
+//      }
+//
+//      "display the Improvements view" in {
+//        Jsoup.parse(bodyOf(result)).title shouldBe messages.questionBefore
+//      }
+//    }
+//  }
+//
+//  "request has an invalid session" should {
+//
+//    lazy val result = GainController.improvements(fakeRequest)
+//
+//    "return a status of 303" in {
+//      status(result) shouldBe 303
+//    }
+//
+//    "return you to the session timeout page" in {
+//      redirectLocation(result).get should include ("/calculate-your-capital-gains/session-timeout")
+//    }
+//  }
+//
+//  "Calling .submitImprovements from the GainCalculationConroller" when {
+//
+//    "a valid form is submitted with a zero gain result" should {
+//      lazy val target = setupTarget(None, summaryModel, BigDecimal(0))
+//      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+//      lazy val result = target.submitImprovements(request)
+//
+//      "return a 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the summary page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/summary")
+//      }
+//    }
+//
+//    "a valid form is submitted with a negative gain result" should {
+//      lazy val target = setupTarget(None, summaryModel, BigDecimal(-1000))
+//      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+//      lazy val result = target.submitImprovements(request)
+//
+//      "return a 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the summary page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/summary")
+//      }
+//    }
+//
+//    "a valid form is submitted with a positive gain result" should {
+//      lazy val target = setupTarget(None, summaryModel, BigDecimal(1000), false)
+//      lazy val request = fakeRequestToPOSTWithSession(("amount", "1000"))
+//      lazy val result = target.submitImprovements(request)
+//
+//      "return a 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the other-properties page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/property-lived-in")
+//      }
+//    }
+//
+//    "an invalid form is submitted" should {
+//      lazy val target = setupTarget(None, summaryModel, BigDecimal(1000))
+//      lazy val request = fakeRequestToPOSTWithSession(("amount", ""))
+//      lazy val result = target.submitImprovements(request)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a 400" in {
+//        status(result) shouldBe 400
+//      }
+//
+//      "render the Improvements page" in {
+//        doc.title() shouldEqual messages.question
+//      }
+//    }
+//  }
 }

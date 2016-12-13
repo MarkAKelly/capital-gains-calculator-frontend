@@ -35,109 +35,109 @@ import scala.concurrent.Future
 
 class LettingsReliefActionSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper with MockitoSugar {
 
-  def setupTarget(getData: Option[LettingsReliefModel]): DeductionsController = {
-
-    val mockCalcConnector = mock[CalculatorConnector]
-    val mockAppConfig = mock[AppConfig]
-
-    when(mockCalcConnector.fetchAndGetFormData[LettingsReliefModel](Matchers.eq(keystoreKeys.lettingsRelief))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(getData))
-
-    when(mockCalcConnector.saveFormData[LettingsReliefModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(mock[CacheMap]))
-
-    new DeductionsController {
-      override val calcConnector: CalculatorConnector = mockCalcConnector
-      val config = mockAppConfig
-    }
-  }
-
-  "Calling .lettingsRelief from the resident DeductionsController" when {
-
-    "request has a valid session and no keystore value" should {
-
-      lazy val target = setupTarget(None)
-      lazy val result = target.lettingsRelief(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      s"return some html with title of ${messages.title}" in {
-        contentType(result) shouldBe Some("text/html")
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
-      }
-
-      "have a back link to the PRR value page" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/private-residence-relief-value"
-      }
-    }
-
-    "request has a valid session and some keystore value" should {
-
-      lazy val target = setupTarget(Some(LettingsReliefModel(true)))
-      lazy val result = target.lettingsRelief(fakeRequestWithSession)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a status of 200" in {
-        status(result) shouldBe 200
-      }
-
-      s"return some html with title of ${messages.title}" in {
-        contentType(result) shouldBe Some("text/html")
-        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
-      }
-
-      "have a back link to PRR value page" in {
-        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/private-residence-relief-value"
-      }
-    }
-  }
-
-  "Calling .submitLettingsRelief from the DeductionsController" when {
-
-    "a valid form 'Yes' is submitted" should {
-      lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "Yes"))
-      lazy val result = target.submitLettingsRelief(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the lettings relief value page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/lettings-relief-value")
-      }
-    }
-
-    "a valid form 'No' is submitted" should {
-      lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "No"))
-      lazy val result = target.submitLettingsRelief(request)
-
-      "return a 303" in {
-        status(result) shouldBe 303
-      }
-
-      "redirect to the other properties page" in {
-        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/other-properties")
-      }
-    }
-
-    "an invalid form is submitted" should {
-      lazy val target = setupTarget(None)
-      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", ""))
-      lazy val result = target.submitLettingsRelief(request)
-      lazy val doc = Jsoup.parse(bodyOf(result))
-
-      "return a 400" in {
-        status(result) shouldBe 400
-      }
-
-      "render the lettings-relief page" in {
-        doc.title() shouldEqual messages.title
-      }
-    }
-  }
+//  def setupTarget(getData: Option[LettingsReliefModel]): DeductionsController = {
+//
+//    val mockCalcConnector = mock[CalculatorConnector]
+//    val mockAppConfig = mock[AppConfig]
+//
+//    when(mockCalcConnector.fetchAndGetFormData[LettingsReliefModel](Matchers.eq(keystoreKeys.lettingsRelief))(Matchers.any(), Matchers.any()))
+//      .thenReturn(Future.successful(getData))
+//
+//    when(mockCalcConnector.saveFormData[LettingsReliefModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+//      .thenReturn(Future.successful(mock[CacheMap]))
+//
+//    new DeductionsController {
+//      override val calcConnector: CalculatorConnector = mockCalcConnector
+//      val config = mockAppConfig
+//    }
+//  }
+//
+//  "Calling .lettingsRelief from the resident DeductionsController" when {
+//
+//    "request has a valid session and no keystore value" should {
+//
+//      lazy val target = setupTarget(None)
+//      lazy val result = target.lettingsRelief(fakeRequestWithSession)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      s"return some html with title of ${messages.title}" in {
+//        contentType(result) shouldBe Some("text/html")
+//        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+//      }
+//
+//      "have a back link to the PRR value page" in {
+//        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/private-residence-relief-value"
+//      }
+//    }
+//
+//    "request has a valid session and some keystore value" should {
+//
+//      lazy val target = setupTarget(Some(LettingsReliefModel(true)))
+//      lazy val result = target.lettingsRelief(fakeRequestWithSession)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a status of 200" in {
+//        status(result) shouldBe 200
+//      }
+//
+//      s"return some html with title of ${messages.title}" in {
+//        contentType(result) shouldBe Some("text/html")
+//        Jsoup.parse(bodyOf(result)).title shouldEqual messages.title
+//      }
+//
+//      "have a back link to PRR value page" in {
+//        doc.select("#back-link").attr("href") shouldEqual "/calculate-your-capital-gains/resident/properties/private-residence-relief-value"
+//      }
+//    }
+//  }
+//
+//  "Calling .submitLettingsRelief from the DeductionsController" when {
+//
+//    "a valid form 'Yes' is submitted" should {
+//      lazy val target = setupTarget(None)
+//      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "Yes"))
+//      lazy val result = target.submitLettingsRelief(request)
+//
+//      "return a 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the lettings relief value page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/lettings-relief-value")
+//      }
+//    }
+//
+//    "a valid form 'No' is submitted" should {
+//      lazy val target = setupTarget(None)
+//      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", "No"))
+//      lazy val result = target.submitLettingsRelief(request)
+//
+//      "return a 303" in {
+//        status(result) shouldBe 303
+//      }
+//
+//      "redirect to the other properties page" in {
+//        redirectLocation(result) shouldBe Some("/calculate-your-capital-gains/resident/properties/other-properties")
+//      }
+//    }
+//
+//    "an invalid form is submitted" should {
+//      lazy val target = setupTarget(None)
+//      lazy val request = fakeRequestToPOSTWithSession(("isClaiming", ""))
+//      lazy val result = target.submitLettingsRelief(request)
+//      lazy val doc = Jsoup.parse(bodyOf(result))
+//
+//      "return a 400" in {
+//        status(result) shouldBe 400
+//      }
+//
+//      "render the lettings-relief page" in {
+//        doc.title() shouldEqual messages.title
+//      }
+//    }
+//  }
 }
