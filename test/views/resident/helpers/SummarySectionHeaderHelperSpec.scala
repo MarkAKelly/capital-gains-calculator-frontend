@@ -25,21 +25,21 @@ class SummarySectionHeaderHelperSpec extends UnitSpec {
   val TestObject = summarySectionHeaderHelper("Heading")
   val h2 = Jsoup.parse(TestObject.body).select("H2")
 
-  "The Summary Section Header Helper" should {
-
-    s"have a H2 tag" which {
-
-      "has the class 'heading-large'" in {
-        h2.hasClass("heading-large") shouldBe true
-      }
-
-      "has the class 'summary-underline'" in {
-        h2.hasClass("summary-underline") shouldBe true
-      }
-
-      "has the text 'Heading'" in {
-        h2.text shouldBe "Heading"
-      }
-    }
-  }
+//  "The Summary Section Header Helper" should {
+//
+//    s"have a H2 tag" which {
+//
+//      "has the class 'heading-large'" in {
+//        h2.hasClass("heading-large") shouldBe true
+//      }
+//
+//      "has the class 'summary-underline'" in {
+//        h2.hasClass("summary-underline") shouldBe true
+//      }
+//
+//      "has the text 'Heading'" in {
+//        h2.text shouldBe "Heading"
+//      }
+//    }
+//  }
 }

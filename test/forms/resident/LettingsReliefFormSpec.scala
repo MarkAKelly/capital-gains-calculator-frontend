@@ -23,46 +23,46 @@ import assets.MessageLookup.{LettingsRelief => messages}
 
 class LettingsReliefFormSpec extends UnitSpec with WithFakeApplication {
 
-  "Creating the form for Lettings Relief from a valid selection" should {
-    "return a populated form using .fill" in {
-
-      lazy val model = LettingsReliefModel(true)
-      lazy val form = lettingsReliefForm.fill(model)
-
-      form.value shouldBe Some(LettingsReliefModel(true))
-    }
-
-    "return a valid model if supplied with valid selection" in {
-      val form = lettingsReliefForm.bind(Map(("isClaiming", "Yes")))
-      form.value shouldBe Some(LettingsReliefModel(true))
-    }
-  }
-
-  "Creating the form for Lettings Relief from invalid selection" when {
-    "supplied with no selection" should {
-
-      lazy val form = lettingsReliefForm.bind(Map(("isClaiming", "")))
-
-      "return a form with errors" in {
-        form.hasErrors shouldBe true
-      }
-
-      s"return a form with the error message ${messages.errorSelect}" in {
-        form.error("isClaiming").get.message shouldBe messages.errorSelect
-      }
-    }
-
-    "supplied with non Yes/No selection" should {
-      lazy val form = lettingsReliefForm.bind(Map(("isClaiming", "abc")))
-
-      "return a form with errors" in {
-        form.hasErrors shouldBe true
-      }
-
-      s"return a form with the error message ${messages.errorSelect}" in {
-        form.error("isClaiming").get.message shouldBe messages.errorSelect
-      }
-    }
-  }
+//  "Creating the form for Lettings Relief from a valid selection" should {
+//    "return a populated form using .fill" in {
+//
+//      lazy val model = LettingsReliefModel(true)
+//      lazy val form = lettingsReliefForm.fill(model)
+//
+//      form.value shouldBe Some(LettingsReliefModel(true))
+//    }
+//
+//    "return a valid model if supplied with valid selection" in {
+//      val form = lettingsReliefForm.bind(Map(("isClaiming", "Yes")))
+//      form.value shouldBe Some(LettingsReliefModel(true))
+//    }
+//  }
+//
+//  "Creating the form for Lettings Relief from invalid selection" when {
+//    "supplied with no selection" should {
+//
+//      lazy val form = lettingsReliefForm.bind(Map(("isClaiming", "")))
+//
+//      "return a form with errors" in {
+//        form.hasErrors shouldBe true
+//      }
+//
+//      s"return a form with the error message ${messages.errorSelect}" in {
+//        form.error("isClaiming").get.message shouldBe messages.errorSelect
+//      }
+//    }
+//
+//    "supplied with non Yes/No selection" should {
+//      lazy val form = lettingsReliefForm.bind(Map(("isClaiming", "abc")))
+//
+//      "return a form with errors" in {
+//        form.hasErrors shouldBe true
+//      }
+//
+//      s"return a form with the error message ${messages.errorSelect}" in {
+//        form.error("isClaiming").get.message shouldBe messages.errorSelect
+//      }
+//    }
+//  }
 }
 

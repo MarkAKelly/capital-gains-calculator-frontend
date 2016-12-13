@@ -22,83 +22,83 @@ import assets.MessageLookup.{LossesBroughtForward => messages}
 
 class LossesBroughtForwardFormSpec extends UnitSpec with WithFakeApplication {
 
-  "Creating the form with an empty model" should {
-
-    lazy val form = lossesBroughtForwardForm
-
-    "create an empty form" in {
-      form.data.isEmpty shouldEqual true
-    }
-  }
-
-  "Creating a form with an valid 'yes' model" should {
-
-    lazy val form = lossesBroughtForwardForm.bind(Map("option" -> "Yes"))
-
-    "create a form with the data from the model" in {
-      form.data("option") shouldEqual "Yes"
-    }
-
-    "raise no form error" in {
-      form.hasErrors shouldBe false
-    }
-
-    "raise 0 form errors" in {
-      form.errors.length shouldBe 0
-    }
-  }
-
-  "Creating a form with a valid 'no' model" should {
-
-    lazy val form = lossesBroughtForwardForm.bind(Map("option" -> "No"))
-
-    "create a form with the data from the model" in {
-      form.data("option") shouldEqual "No"
-    }
-
-    "raise no form error" in {
-      form.hasErrors shouldBe false
-    }
-
-    "raise 0 form errors" in {
-      form.errors.length shouldBe 0
-    }
-  }
-
-  "Creating a form using an invalid post" when {
-
-    "supplied with no data for option" should {
-
-      lazy val form = lossesBroughtForwardForm.bind(Map("option" -> ""))
-
-      "raise form error" in {
-        form.hasErrors shouldBe true
-      }
-
-      "raise 1 form error" in {
-        form.errors.length shouldBe 1
-      }
-
-      "associate the correct error message to the error" in {
-        form.error("option").get.message shouldBe messages.errorSelect("2015/16")
-      }
-
-      "supplied with invalid data for option" should {
-
-        lazy val form = lossesBroughtForwardForm.bind(Map("option" -> "asdas"))
-
-        "raise form error" in {
-          form.hasErrors shouldBe true
-        }
-
-        "raise 1 form error" in {
-          form.errors.length shouldBe 1
-        }
-
-        "associate the correct error message to the error" in {
-          form.error("option").get.message shouldBe messages.errorSelect("2015/16")
-        }
-      }
-    }
-  }
+//  "Creating the form with an empty model" should {
+//
+//    lazy val form = lossesBroughtForwardForm
+//
+//    "create an empty form" in {
+//      form.data.isEmpty shouldEqual true
+//    }
+//  }
+//
+//  "Creating a form with an valid 'yes' model" should {
+//
+//    lazy val form = lossesBroughtForwardForm.bind(Map("option" -> "Yes"))
+//
+//    "create a form with the data from the model" in {
+//      form.data("option") shouldEqual "Yes"
+//    }
+//
+//    "raise no form error" in {
+//      form.hasErrors shouldBe false
+//    }
+//
+//    "raise 0 form errors" in {
+//      form.errors.length shouldBe 0
+//    }
+//  }
+//
+//  "Creating a form with a valid 'no' model" should {
+//
+//    lazy val form = lossesBroughtForwardForm.bind(Map("option" -> "No"))
+//
+//    "create a form with the data from the model" in {
+//      form.data("option") shouldEqual "No"
+//    }
+//
+//    "raise no form error" in {
+//      form.hasErrors shouldBe false
+//    }
+//
+//    "raise 0 form errors" in {
+//      form.errors.length shouldBe 0
+//    }
+//  }
+//
+//  "Creating a form using an invalid post" when {
+//
+//    "supplied with no data for option" should {
+//
+//      lazy val form = lossesBroughtForwardForm.bind(Map("option" -> ""))
+//
+//      "raise form error" in {
+//        form.hasErrors shouldBe true
+//      }
+//
+//      "raise 1 form error" in {
+//        form.errors.length shouldBe 1
+//      }
+//
+//      "associate the correct error message to the error" in {
+//        form.error("option").get.message shouldBe messages.errorSelect("2015/16")
+//      }
+//
+//      "supplied with invalid data for option" should {
+//
+//        lazy val form = lossesBroughtForwardForm.bind(Map("option" -> "asdas"))
+//
+//        "raise form error" in {
+//          form.hasErrors shouldBe true
+//        }
+//
+//        "raise 1 form error" in {
+//          form.errors.length shouldBe 1
+//        }
+//
+//        "associate the correct error message to the error" in {
+//          form.error("option").get.message shouldBe messages.errorSelect("2015/16")
+//        }
+//      }
+//    }
+//  }
 }

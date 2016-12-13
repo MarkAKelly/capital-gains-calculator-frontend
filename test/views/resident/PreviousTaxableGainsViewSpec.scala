@@ -27,147 +27,147 @@ import views.html.calculation.{resident => views}
 
 class PreviousTaxableGainsViewSpec extends UnitSpec with WithFakeApplication with FakeRequestHelper {
 
-  "Previous taxable gains view" should {
-
-    lazy val postAction = controllers.resident.properties.routes.IncomeController.previousTaxableGains()
-    lazy val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
-    lazy val view = views.previousTaxableGains(previousTaxableGainsForm, "#", postAction, homeLink, JourneyKeys.properties, "2016/17", "navTitle")(fakeRequest)
-    lazy val doc = Jsoup.parse(view.body)
-
-    "have a charset of UTF-8" in {
-      doc.charset.toString shouldBe "UTF-8"
-    }
-
-    s"have a title of ${messages.title("2016/17")}" in {
-      doc.title shouldBe messages.title("2016/17")
-    }
-
-    "have a dynamic navTitle of navTitle" in {
-      doc.select("span.header__menu__proposition-name").text() shouldBe "navTitle"
-    }
-
-    "have a H1 tag that" should {
-
-      lazy val heading = doc.select("h1")
-
-      s"have the page heading '${messages.title("2016/17")}'" in {
-        heading.text shouldBe messages.title("2016/17")
-      }
-
-      "have the heading-large class" in {
-        heading.hasClass("heading-large") shouldBe true
-      }
-    }
-
-    "have a home link that" should {
-      lazy val homeLink = doc.select("a#homeNavHref")
-      "has the text 'Home'" in {
-        homeLink.text() shouldBe "Home"
-      }
-      "has a link to the resident properties disposal date page" in {
-        homeLink.attr("href") shouldBe controllers.resident.properties.routes.GainController.disposalDate().url
-      }
-    }
-
-    "have the correct back link" in {
-      val link = doc.select("#back-link")
-      link.attr("href") shouldBe "#"
-    }
-
-    "have the correct label" in {
-      val label = doc.select("label")
-      label.text should startWith(messages.question("2016/17"))
-    }
-
-    "have a hidden label" in {
-      val label = doc.select("label > span")
-      label.hasClass("visuallyhidden") shouldBe true
-    }
-
-    "have a sidebar" in {
-      lazy val sidebar = doc.select("aside")
-      sidebar.hasClass("sidebar") shouldBe true
-    }
-
-    "have an external link" which {
-      lazy val link = doc.select("a#helpLink1")
-
-      s"has the text ${messages.helpLinkOne}" in {
-        link.text() should include(messages.helpLinkOne)
-      }
-
-      s"has a visually hidden external link message" in {
-        link.select("span#opensInANewTab").text() shouldBe commonMessages.externalLink
-      }
-
-      "links to https://www.gov.uk/capital-gains-tax/work-out-need-to-pay" in {
-        link.attr("href") shouldBe "https://www.gov.uk/capital-gains-tax/work-out-need-to-pay"
-      }
-    }
-
-    "not display an error summary message for the amount" in {
-      doc.body.select("#amount-error-summary").size shouldBe 0
-    }
-
-    "not display an error message for the input" in {
-      doc.body.select(".form-group .error-notification").size shouldBe 0
-    }
-
-    "have a form with an action for properties" in {
-      doc.body.select("form").attr("action") shouldBe controllers.resident.properties.routes.IncomeController.previousTaxableGains().url
-    }
-  }
-
-  "Previous taxable gains view with form without errors" should {
-
-    val form = previousTaxableGainsForm.bind(Map("amount" -> "100"))
-    lazy val postAction = controllers.resident.shares.routes.IncomeController.previousTaxableGains()
-    lazy val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
-    lazy val view = views.previousTaxableGains(form, "#", postAction, homeLink, JourneyKeys.properties, "2016/17", "navTitle")(fakeRequest)
-    lazy val doc = Jsoup.parse(view.body)
-
-    "have a home link that" should {
-      lazy val homeLink = doc.select("a#homeNavHref")
-      "has the text 'Home'" in {
-        homeLink.text() shouldBe "Home"
-      }
-      "has a link to the resident shares disposal date page" in {
-        homeLink.attr("href") shouldBe controllers.resident.shares.routes.GainController.disposalDate().url
-      }
-    }
-
-    "display the value of the form" in {
-      doc.body.select("#amount").attr("value") shouldEqual "100"
-    }
-
-    "display no error summary message for the amount" in {
-      doc.body.select("#amount-error-summary").size shouldBe 0
-    }
-
-    "display no error message for the input" in {
-      doc.body.select(".form-group .error-notification").size shouldBe 0
-    }
-
-    "have a form with an action for shares" in {
-      doc.body.select("form").attr("action") shouldBe controllers.resident.shares.routes.IncomeController.previousTaxableGains().url
-    }
-  }
-
-  "Previous taxable gains view with form with errors" should {
-
-    val form = previousTaxableGainsForm.bind(Map("amount" -> ""))
-    lazy val postAction = controllers.resident.properties.routes.IncomeController.previousTaxableGains()
-    lazy val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
-    lazy val view = views.previousTaxableGains(form, "#", postAction, homeLink, JourneyKeys.properties, "2016/17", "navTitle")(fakeRequest)
-    lazy val doc = Jsoup.parse(view.body)
-
-    "display an error summary message for the amount" in {
-      doc.body.select("#amount-error-summary").size shouldBe 1
-    }
-
-    "display an error message for the input" in {
-      doc.body.select(".form-group .error-notification").size shouldBe 1
-    }
-  }
+//  "Previous taxable gains view" should {
+//
+//    lazy val postAction = controllers.resident.properties.routes.IncomeController.previousTaxableGains()
+//    lazy val homeLink = controllers.resident.properties.routes.GainController.disposalDate().url
+//    lazy val view = views.previousTaxableGains(previousTaxableGainsForm, "#", postAction, homeLink, JourneyKeys.properties, "2016/17", "navTitle")(fakeRequest)
+//    lazy val doc = Jsoup.parse(view.body)
+//
+//    "have a charset of UTF-8" in {
+//      doc.charset.toString shouldBe "UTF-8"
+//    }
+//
+//    s"have a title of ${messages.title("2016/17")}" in {
+//      doc.title shouldBe messages.title("2016/17")
+//    }
+//
+//    "have a dynamic navTitle of navTitle" in {
+//      doc.select("span.header__menu__proposition-name").text() shouldBe "navTitle"
+//    }
+//
+//    "have a H1 tag that" should {
+//
+//      lazy val heading = doc.select("h1")
+//
+//      s"have the page heading '${messages.title("2016/17")}'" in {
+//        heading.text shouldBe messages.title("2016/17")
+//      }
+//
+//      "have the heading-large class" in {
+//        heading.hasClass("heading-large") shouldBe true
+//      }
+//    }
+//
+//    "have a home link that" should {
+//      lazy val homeLink = doc.select("a#homeNavHref")
+//      "has the text 'Home'" in {
+//        homeLink.text() shouldBe "Home"
+//      }
+//      "has a link to the resident properties disposal date page" in {
+//        homeLink.attr("href") shouldBe controllers.resident.properties.routes.GainController.disposalDate().url
+//      }
+//    }
+//
+//    "have the correct back link" in {
+//      val link = doc.select("#back-link")
+//      link.attr("href") shouldBe "#"
+//    }
+//
+//    "have the correct label" in {
+//      val label = doc.select("label")
+//      label.text should startWith(messages.question("2016/17"))
+//    }
+//
+//    "have a hidden label" in {
+//      val label = doc.select("label > span")
+//      label.hasClass("visuallyhidden") shouldBe true
+//    }
+//
+//    "have a sidebar" in {
+//      lazy val sidebar = doc.select("aside")
+//      sidebar.hasClass("sidebar") shouldBe true
+//    }
+//
+//    "have an external link" which {
+//      lazy val link = doc.select("a#helpLink1")
+//
+//      s"has the text ${messages.helpLinkOne}" in {
+//        link.text() should include(messages.helpLinkOne)
+//      }
+//
+//      s"has a visually hidden external link message" in {
+//        link.select("span#opensInANewTab").text() shouldBe commonMessages.externalLink
+//      }
+//
+//      "links to https://www.gov.uk/capital-gains-tax/work-out-need-to-pay" in {
+//        link.attr("href") shouldBe "https://www.gov.uk/capital-gains-tax/work-out-need-to-pay"
+//      }
+//    }
+//
+//    "not display an error summary message for the amount" in {
+//      doc.body.select("#amount-error-summary").size shouldBe 0
+//    }
+//
+//    "not display an error message for the input" in {
+//      doc.body.select(".form-group .error-notification").size shouldBe 0
+//    }
+//
+//    "have a form with an action for properties" in {
+//      doc.body.select("form").attr("action") shouldBe controllers.resident.properties.routes.IncomeController.previousTaxableGains().url
+//    }
+//  }
+//
+//  "Previous taxable gains view with form without errors" should {
+//
+//    val form = previousTaxableGainsForm.bind(Map("amount" -> "100"))
+//    lazy val postAction = controllers.resident.shares.routes.IncomeController.previousTaxableGains()
+//    lazy val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
+//    lazy val view = views.previousTaxableGains(form, "#", postAction, homeLink, JourneyKeys.properties, "2016/17", "navTitle")(fakeRequest)
+//    lazy val doc = Jsoup.parse(view.body)
+//
+//    "have a home link that" should {
+//      lazy val homeLink = doc.select("a#homeNavHref")
+//      "has the text 'Home'" in {
+//        homeLink.text() shouldBe "Home"
+//      }
+//      "has a link to the resident shares disposal date page" in {
+//        homeLink.attr("href") shouldBe controllers.resident.shares.routes.GainController.disposalDate().url
+//      }
+//    }
+//
+//    "display the value of the form" in {
+//      doc.body.select("#amount").attr("value") shouldEqual "100"
+//    }
+//
+//    "display no error summary message for the amount" in {
+//      doc.body.select("#amount-error-summary").size shouldBe 0
+//    }
+//
+//    "display no error message for the input" in {
+//      doc.body.select(".form-group .error-notification").size shouldBe 0
+//    }
+//
+//    "have a form with an action for shares" in {
+//      doc.body.select("form").attr("action") shouldBe controllers.resident.shares.routes.IncomeController.previousTaxableGains().url
+//    }
+//  }
+//
+//  "Previous taxable gains view with form with errors" should {
+//
+//    val form = previousTaxableGainsForm.bind(Map("amount" -> ""))
+//    lazy val postAction = controllers.resident.properties.routes.IncomeController.previousTaxableGains()
+//    lazy val homeLink = controllers.resident.shares.routes.GainController.disposalDate().url
+//    lazy val view = views.previousTaxableGains(form, "#", postAction, homeLink, JourneyKeys.properties, "2016/17", "navTitle")(fakeRequest)
+//    lazy val doc = Jsoup.parse(view.body)
+//
+//    "display an error summary message for the amount" in {
+//      doc.body.select("#amount-error-summary").size shouldBe 1
+//    }
+//
+//    "display an error message for the input" in {
+//      doc.body.select(".form-group .error-notification").size shouldBe 1
+//    }
+//  }
 
 }
